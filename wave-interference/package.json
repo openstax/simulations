@@ -1,0 +1,34 @@
+{
+  "name": "wave-interference",
+  "version": "0.0.0",
+  "description": "A wave interference simulation",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Connexions/simulations.git"
+  },
+  "keywords": [
+    "simulation",
+    "sim"
+  ],
+  "bugs": {
+    "url": "https://github.com/Connexions/simulations/issues"
+  },
+  "homepage": "https://github.com/Connexions/simulations",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-less": "^0.11.4",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-targethtml": "^0.2.6",
+    "less": "^1.7.4",
+    "matchdep": "^0.3.0"
+  }
+}
