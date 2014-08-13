@@ -7991,6 +7991,7 @@ button.close {
 }
 .control-panel {
   width: 100%;
+  z-index: 1;
 }
 @media (min-width: 768px) {
   .control-panel {
@@ -8030,4 +8031,27 @@ html {
   top: 0;
   left: 0;
   background-color: #fff;
+  z-index: 0;
+}
+.playback-controls-wrapper {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+  z-index: 1;
+}
+.playback-controls-wrapper > .playback-btn {
+  background: #21366b;
+  color: #fff;
+  outline: none;
+  border: none;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  text-align: center;
+}
+.playback-controls-wrapper > .playback-btn:hover {
+  opacity: 0.8;
+}
+.playback-controls-wrapper > .playback-btn:active {
+  border: 1px solid #fff;
 }

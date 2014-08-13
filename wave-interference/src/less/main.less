@@ -26,4 +26,31 @@ body {
 	top: 0;
 	left: 0;
 	background-color: #fff;
+	z-index: @canvas-z-index;
+}
+
+.playback-controls-wrapper {
+	position: absolute;
+	bottom: 10px;
+	left: 10px;
+	z-index: @above-canvas;
+
+	> .playback-btn {
+		background: @link-color;
+		color: #fff;
+		outline: none;
+		border: none;
+		border-radius: 50%;
+		width: 28px;
+		height: 28px;
+		text-align: center;
+
+		&:hover {
+			opacity: 0.8;
+		}
+
+		&:active {
+			border: 1px solid #fff;
+		}
+	}
 }
