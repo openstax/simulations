@@ -6,6 +6,7 @@
 		require(['jquery', 'views/app'], function($, AppView) {
 			var appView = new AppView();
 
+
 			appView.render();
 
 			$('body').append(appView.el);

@@ -3,15 +3,15 @@ define([
 	'underscore', 
 	'backbone',
 
-	'module',
-], function ($, _, Backbone, ModuleView) {
+	'views/sim',
+], function ($, _, Backbone, SimView) {
 
 	'use strict';
 
-	var SoundModuleView = ModuleView.extend({
+	var SoundModuleView = SimView.extend({
 
 		initialize: function(options) {
-			Module.prototype.initialize.apply(this, [ options ]);
+			SimView.prototype.initialize.apply(this, [ options ]);
 
 			this.model = new Backbone.Model({
 				title: 'Sound'
