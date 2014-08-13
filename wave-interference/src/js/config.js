@@ -6,7 +6,8 @@
 			jquery:     '../../bower_components/jquery/dist/jquery',
 			underscore: '../../bower_components/lodash/dist/lodash',
 			backbone:   '../../bower_components/backbone/backbone',
-			text:       '../../bower_components/requirejs-text/text'
+			text:       '../../bower_components/requirejs-text/text',
+			pixi:       '../../bower_components/pixi/bin/pixi'
 		},
 
 		packages: [{

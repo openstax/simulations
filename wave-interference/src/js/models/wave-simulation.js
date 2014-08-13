@@ -19,7 +19,24 @@ define([
 		
 		initialize: function(options) {
 			
+			
 		},
+
+		play: function() {
+
+		},
+
+		pause: function() {
+
+		},
+
+		step: function(milliseconds) {
+
+		},
+
+		reset: function() {
+
+		}
 	});
 
 	return WaveSimulation;

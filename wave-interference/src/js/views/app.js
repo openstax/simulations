@@ -63,11 +63,21 @@ define([
 		},
 
 		selectTab: function($tab) {
+			// Activate the right tab, deactivating the others
 			var selector = $tab.data('content-selector');
 			$tab.add(this.$(selector))
 				.addClass('active')
 				.siblings()
 				.removeClass('active');	
+
+			// Play the right sim, pausing the others
+			var simKey = $tab.data('sim');
+			_.each(this.sims, function(sim, key){
+				if (key == simKey)
+					sim.play();
+				else
+					sim.pause();
+			}, this);
 		}
 	});
 

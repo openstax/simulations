@@ -15,9 +15,10 @@
 				// For demoing
 				$(document).bind('keydown', function(event) {
 					if (event.which === 66)
-						$('body').togglClass('better');
-					console.log(event.which);
+						$('body').toggleClass('better');
 				});	
+
+				$(window).trigger('resize');
 			});
 	
 		});

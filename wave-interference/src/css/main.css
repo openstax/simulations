@@ -7930,6 +7930,8 @@ button.close {
 }
 .sim-content {
   display: none;
+  min-height: 600px;
+  position: relative;
 }
 .sim-content.active {
   display: block;
@@ -7993,7 +7995,9 @@ button.close {
 @media (min-width: 768px) {
   .control-panel {
     width: 290px;
-    float: right;
+    position: absolute;
+    right: 0;
+    top: 20px;
   }
 }
 .control-panel > .control-panel-tabs {
@@ -8018,4 +8022,11 @@ button.close {
 html {
   max-width: 960px;
   margin: 10px auto 0 auto;
+}
+.simulation-canvas {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
