@@ -29,16 +29,24 @@
 				}
 			}
 
-			> .panel-fieldset {
-				width: 100%;
-				background-color: @gray-lightest;
-				margin-top: 2px;
-				padding: 16px;
-			}
+			
 		}
 	}
 }
 
+.panel-fieldset {
+	width: 100%;
+	background-color: @gray-lightest;
+	margin-top: 2px;
+	padding: 16px;
+}
+
+body:not(.better) #faucet-controls {
+	width: auto;
+	position: absolute;
+	bottom: 200px;
+	left: 0px;
+}
 
 // For the tools/properties panel
 // Should be identical to tabs found in ".media-tabs" in webview
@@ -60,7 +68,6 @@
 		font-size: 0;
 		list-style-type: none;
 		color: @link-color;
-		border-bottom: 2px solid white;
 
 		> li {
 			display: inline-block;

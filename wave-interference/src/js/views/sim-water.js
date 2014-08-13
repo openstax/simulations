@@ -35,7 +35,22 @@ define([
 
 		renderContent: function() {
 			this.$el.html(this.template());
-		}
+
+			$(window)
+				.off('better', $.proxy(this.reattachFaucetControls, this))
+				.on( 'better', $.proxy(this.reattachFaucetControls, this))
+				.off('worse',  $.proxy(this.detachFaucetControls, this))
+				.on( 'worse',  $.proxy(this.detachFaucetControls, this));
+			this.detachFaucetControls();
+		},
+
+		detachFaucetControls: function() {
+			this.$('#faucet-controls').appendTo(this.$el);
+		},
+
+		reattachFaucetControls: function() {
+			this.$('#faucet-controls').prependTo(this.$('.properties-panel'));
+		},
 	});
 
 	return WaterSimView;
