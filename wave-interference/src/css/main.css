@@ -1,3 +1,111 @@
-body {
-  color: white;
+/* App Mixins */
+/*
+ * All application-specific LESS mixins, sans Bootstrap mixins, are included in this file.
+ * Only `main.less` and `mixins.less` should import this file directly.
+ */
+.clearfix:before,
+.clearfix:after {
+  content: " ";
+  display: table;
+}
+.clearfix:after {
+  clear: both;
+}
+.module-tabs > ul {
+  margin: 0 0 30px 0;
+  padding: 0 0 0 30px;
+  font-size: 0;
+  list-style-type: none;
+  color: #21366b;
+  border-bottom: 1px solid #cdcdcd;
+}
+.module-tabs > ul > li {
+  display: inline-block;
+  padding: 7px 10px;
+  margin-right: 3px;
+  font-size: 1.4rem;
+  background-color: #ededed;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.module-tabs > ul > li > .tab-title {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.module-tabs > ul > li > .tab-title::after {
+  font-weight: bold;
+  margin-left: 5px;
+  vertical-align: top;
+  content: "+";
+}
+.module-tabs > ul > li.active {
+  color: #ededed;
+  background-color: #21366b;
+}
+.module-tabs > ul > li.active > .tab-title::after {
+  content: "\2212";
+}
+.module-tabs > ul > li.disabled {
+  cursor: not-allowed;
+  pointer-events: none;
+  opacity: 0.65;
+}
+.module-content {
+  display: none;
+}
+.panel-tabs {
+  color: #21366b;
+  background-color: #ededed;
+}
+.panel-tabs > ul {
+  margin: 0;
+  padding: 0 0 0 30px;
+  font-size: 0;
+  list-style-type: none;
+  color: #21366b;
+  border-bottom: 2px solid white;
+}
+.panel-tabs > ul > li {
+  display: inline-block;
+  padding: 7px 10px;
+  margin-right: 3px;
+  font-size: 1.5rem;
+  background-color: white;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.panel-tabs > ul > li > .tab-title {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.panel-tabs > ul > li > .tab-title .fa {
+  margin-right: 5px;
+  font-size: 1.6rem;
+  vertical-align: middle;
+}
+.panel-tabs > ul > li > .tab-title::after {
+  font-weight: bold;
+  margin-left: 5px;
+  vertical-align: top;
+  content: "+";
+}
+.panel-tabs > ul > li.active > .tab-title::after {
+  content: "\2212";
+}
+.panel-tabs > ul > .inactive {
+  background-image: -webkit-linear-gradient(top, #ffffff 60%, #ededed 100%);
+  background-image: -o-linear-gradient(top, #ffffff 60%, #ededed 100%);
+  background-image: linear-gradient(to bottom, #ffffff 60%, #ededed 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffededed', GradientType=0);
+}
+.panel-tabs > div {
+  display: none;
+  background-color: white;
 }

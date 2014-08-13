@@ -12,9 +12,13 @@
   ],
   "dependencies": {
     "jquery": "~2.1.1",
+    "lodash": "~2.4.1",
+    "backbone": "~1.1.2",
     "font-awesome": "~4.1.0",
     "requirejs": "~2.1.14",
+    "requirejs-text": "~2.0.12",
     "require-css": "~0.1.5",
-    "require-less": "~0.1.2"
+    "require-less": "~0.1.2",
+    "bootstrap": "~3.2.0"
   }
 }

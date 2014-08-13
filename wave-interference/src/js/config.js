@@ -3,7 +3,10 @@
 
 	require.config({
 		paths: {
-			jquery: '../../bower_components/jquery/dist/jquery',
+			jquery:     '../../bower_components/jquery/dist/jquery',
+			underscore: '../../bower_components/lodash/dist/lodash',
+			backbone:   '../../bower_components/backbone/backbone',
+			text:       '../../bower_components/requirejs-text/text'
 		},
 
 		packages: [{
@@ -15,5 +18,6 @@
 			location: '../../bower_components/require-less',
 			main: 'less'
 		}],
+
 	});
 })();

@@ -1,0 +1,114 @@
+
+// For the different wave types
+// Should be identical to tabs found in ".media-footer" in webview
+.module-tabs {
+	> ul {
+		margin: 0 0 30px 0;
+		padding: 0 0 0 30px;
+		font-size: 0;
+		list-style-type: none;
+		color: @link-color;
+		border-bottom: 1px solid @gray-light;
+
+		> li {
+			display: inline-block;
+			padding: 7px 10px;
+			margin-right: 3px;
+			font-size: 1.4rem;
+			background-color: @gray-lightest;
+			cursor: pointer;
+			.user-select(none);
+
+			> .tab-title {
+				margin-left: 2px;
+				vertical-align: middle;
+
+				&::after {
+					font-weight: bold;
+					margin-left: 5px;
+					vertical-align: top;
+					content: "+";
+				}
+			}
+
+			&.active {
+				color: @gray-lightest;
+				background-color: @link-color;
+
+				> .tab-title::after {
+					content: "\2212"; // &minus; (−)
+				}
+			}
+
+			&.disabled {
+				cursor: not-allowed;
+				pointer-events: none;
+				opacity: 0.65;
+			}
+		}
+	}
+}
+
+.module-content {
+	display: none;
+}
+
+
+// For the tools/properties panel
+// Should be identical to tabs found in ".media-tabs" in webview
+.panel-tabs {
+	color: @brand-primary;
+	background-color: @gray-lightest; 
+
+	> ul {
+		margin: 0;
+		padding: 0 0 0 30px;
+		font-size: 0;
+		list-style-type: none;
+		color: @link-color;
+		border-bottom: 2px solid white;
+
+		> li {
+			display: inline-block;
+			padding: 7px 10px;
+			margin-right: 3px;
+			font-size: 1.5rem;
+			background-color: white;
+			cursor: pointer;
+			.user-select(none);
+
+			> .tab-title {
+				margin-left: 2px;
+				vertical-align: middle;
+
+				.fa {
+					margin-right: 5px;
+					font-size: 1.6rem;
+					vertical-align: middle;
+				}
+
+				&::after {
+					font-weight: bold;
+					margin-left: 5px;
+					vertical-align: top;
+					content: "+";
+				}
+			}
+
+			&.active > .tab-title::after {
+				content: "\2212"; // &minus; (−)
+			}
+		}
+
+		> .inactive {
+			#gradient.vertical(#fff; #ededed; 60%; 100%);
+		}
+	}
+
+	> div {
+		display: none;
+		background-color: white;
+	}
+}
+
+

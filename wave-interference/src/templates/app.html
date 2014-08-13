@@ -1,0 +1,16 @@
+
+<nav class="module-tabs">
+	<ul>
+		<% _.each(modules, function(module, index){ %>
+		<li class="tab" data-index="<%= index %>">
+			<span class="tab-title"><%= module.title %></span>
+		</li>
+		<% }); %>
+	</ul>
+</nav>
+
+<div class="modules">
+	<% _.each(modules, function(module, index){ %>
+	<div class="module-content" id="module-<%= index %>"></div>
+	<% }); %>
+</div>

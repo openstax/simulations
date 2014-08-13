@@ -1,0 +1,9 @@
+@import "/bower_components/bootstrap/less/mixins.less"; // Bootstrap Mixins
+
+/* App Mixins */
+@import "./mixins-app.less";
+
+// HACK: Include Bootstrap clearfix class to support extending clearfix
+.clearfix {
+  .clearfix();
+}

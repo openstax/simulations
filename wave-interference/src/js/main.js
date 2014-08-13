@@ -3,8 +3,12 @@
 
 	// Load the config
 	require(['config'], function () {
-		require(['jquery'], function($) {
-			$('body').css('background-color', '#333').html('Hello World');
+		require(['jquery', 'views/app'], function($, AppView) {
+			var appView = new AppView();
+
+			appView.render();
+
+			$('body').append(appView.el);
 		});
 	});
 

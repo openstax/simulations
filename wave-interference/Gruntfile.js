@@ -103,7 +103,6 @@ module.exports = function(grunt){
 				unused: true,
 				strict: true,
 				trailing: true,
-				maxparams: 3,
 				maxlen: 120,
 				maxcomplexity: 10,
 
