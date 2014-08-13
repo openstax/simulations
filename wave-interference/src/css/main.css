@@ -7887,7 +7887,7 @@ button.close {
   clear: both;
 }
 .sim-tabs > ul {
-  margin: 0 0 30px 0;
+  margin: 0;
   padding: 0 0 0 30px;
   font-size: 0;
   list-style-type: none;
@@ -8029,4 +8029,5 @@ html {
   position: absolute;
   top: 0;
   left: 0;
+  background-color: #fff;
 }

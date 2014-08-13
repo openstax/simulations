@@ -20,13 +20,19 @@ define([
 		initialize: function(options) {
 			options = options || {};
 
-			this.stage = new PIXI.Stage();
+			this.stage = new PIXI.Stage(0xFFFFFF);
 
 			this.waveSimulation = new WaveSimulation({
 				stage:      this.stage,
 				damping:    options.simulationDamping,
 				dimensions: options.simulationDimensions
 			});
+
+			this.delta = 0;
+			this.lastUpdated = Date.now();
+			this.paused = false;
+
+			this.update = _.bind(this.update, this);
 		},
 
 		render: function() {
@@ -60,19 +66,31 @@ define([
 		},
 
 		play: function() {
-			this.waveSimulation.play();
+			this.lastUpdated = Date.now();
+			//this.waveSimulation.play();
+			requestAnimFrame(this.update);
 		},
 
 		pause: function() {
-			this.waveSimulation.pause();
+			//this.waveSimulation.pause();
+			this.paused = true;
 		},
 
 		step: function(milliseconds) {
-			this.waveSimulation.step(milliseconds);
+			//this.waveSimulation.step(milliseconds);
 		},
 
 		reset: function() {
 			this.waveSimulation.reset();
+		},
+
+		update: function(timestamp) {
+			if (this.paused)
+				return;
+
+			this.delta = timestamp - this.lastUpdated;
+			this.renderer.render(this.stage);
+			requestAnimFrame(this.update);
 		}
 
 	});
