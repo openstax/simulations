@@ -8050,8 +8050,14 @@ html {
   text-align: center;
 }
 .playback-controls-wrapper > .playback-btn:hover {
-  opacity: 0.8;
+  opacity: 0.9;
 }
 .playback-controls-wrapper > .playback-btn:active {
   border: 1px solid #fff;
+}
+.sim-view.playing .playback-controls-wrapper > .playback-btn.play-btn {
+  display: none;
+}
+.sim-view:not(.playing) .playback-controls-wrapper > .playback-btn.pause-btn {
+  display: none;
 }

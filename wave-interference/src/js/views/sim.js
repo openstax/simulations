@@ -109,6 +109,7 @@ define([
 		 */
 		play: function(event) {
 			this.updater.play();
+			this.$el.addClass('playing');
 		},
 
 		/**
@@ -116,6 +117,7 @@ define([
 		 */
 		pause: function(event) {
 			this.updater.pause();
+			this.$el.removeClass('playing');
 		},
 
 		/**

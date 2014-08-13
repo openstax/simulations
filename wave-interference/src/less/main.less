@@ -46,11 +46,18 @@ body {
 		text-align: center;
 
 		&:hover {
-			opacity: 0.8;
+			opacity: 0.9;
 		}
 
 		&:active {
 			border: 1px solid #fff;
+		}
+
+		.sim-view.playing &.play-btn {
+			display: none;
+		}
+		.sim-view:not(.playing) &.pause-btn {
+			display: none;
 		}
 	}
 }
