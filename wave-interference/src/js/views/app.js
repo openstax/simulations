@@ -74,9 +74,9 @@ define([
 			var simKey = $tab.data('sim');
 			_.each(this.sims, function(sim, key){
 				if (key == simKey)
-					sim.play();
+					sim.resume();
 				else
-					sim.pause();
+					sim.halt();
 			}, this);
 		}
 	});

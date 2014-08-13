@@ -5,10 +5,14 @@ define([
 	'pixi',
 
 	'models/wave-simulation',
-	'utils/updater'
-], function ($, _, Backbone, PIXI, WaveSimulation, Updater) {
+	'utils/updater',
+
+	'text!../../templates/sim.html',
+], function ($, _, Backbone, PIXI, WaveSimulation, Updater, simHTML) {
 
 	'use strict';
+
+	var simTemplate = _.template(simHTML);
 
 	var SimView = Backbone.View.extend({
 
@@ -49,6 +53,10 @@ define([
 			this.updater = new Updater();
 			this.updater.addFrameListener(this.update);
 
+			// We want it to start playing when they first open the tab
+			this.resumePaused = false;
+			this.$el.addClass('playing');
+
 			// Test code
 			this.graphics = new PIXI.Graphics().beginFill(0x8888FF).moveTo(-50, -50).lineTo(50, 100).lineTo(100,-50).lineTo(-50,-50).endFill();
 			this.graphics.position.x = 200;
@@ -84,7 +92,11 @@ define([
 		/**
 		 * Renders page content. Should be overriden by child classes
 		 */
-		renderContent: function() {},
+		renderContent: function() {
+			// this.$el.append(simTemplate({
+			// 	controlPanels: this.controlPanels || []
+			// }));
+		},
 
 		/**
 		 * Initializes a renderer and prepends a canvas to the root element
@@ -105,7 +117,7 @@ define([
 		},
 
 		/**
-		 * Plays the simulation
+		 * Click event handler that plays the simulation
 		 */
 		play: function(event) {
 			this.updater.play();
@@ -113,7 +125,7 @@ define([
 		},
 
 		/**
-		 * Pauses the simulation
+		 * Click event handler that pauses the simulation
 		 */
 		pause: function(event) {
 			this.updater.pause();
@@ -121,21 +133,40 @@ define([
 		},
 
 		/**
-		 * Plays the simulation for a specified duration
+		 * Click event handler that plays the simulation for a specified duration
 		 */
 		step: function(event) {
-			
 			var milliseconds = 100;
 			this.play();
 			setTimeout(_.bind(this.pause, true), milliseconds);
 		},
 
 		/**
-		 * Resets the simulation back to time zero.
+		 * Click event handler that resets the simulation back to time zero.
 		 */
 		reset: function(event) {
 			this.updater.reset();
 			this.waveSimulation.reset();
+		},
+
+		/**
+		 * If we switch to a new sim, we pause this one,
+		 *   but we want to save whether or not it was
+		 *   paused already so it doesn't resume when we
+		 *   don't want it to.
+		 */
+		halt: function() {
+			this.updater.pause();
+		},
+
+		/**
+		 * Used from the outside to continue execution but
+		 *   paying attention to whether it was already
+		 *   paused or not before it was halted.
+		 */
+		resume: function() {
+			if (this.$el.hasClass('playing'))
+				this.updater.play();
 		},
 
 		update: function(delta) {
@@ -151,7 +182,7 @@ define([
 				this.direction = 1;
 			// End test code
 
-			console.log(this.model.get('title') + ' ' + delta);
+			//console.log(this.model.get('title') + ' ' + delta);
 			
 			// Update the model
 			this.waveSimulation.update(this.updater.total);
