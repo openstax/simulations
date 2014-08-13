@@ -7936,59 +7936,6 @@ button.close {
 .sim-content.active {
   display: block;
 }
-.panel-tabs {
-  color: #21366b;
-  background-color: #ededed;
-}
-.panel-tabs > ul {
-  margin: 0;
-  padding: 0 0 0 30px;
-  font-size: 0;
-  list-style-type: none;
-  color: #21366b;
-  border-bottom: 2px solid white;
-}
-.panel-tabs > ul > li {
-  display: inline-block;
-  padding: 7px 10px;
-  margin-right: 3px;
-  font-size: 1.5rem;
-  background-color: white;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-.panel-tabs > ul > li > .tab-title {
-  margin-left: 2px;
-  vertical-align: middle;
-}
-.panel-tabs > ul > li > .tab-title .fa {
-  margin-right: 5px;
-  font-size: 1.6rem;
-  vertical-align: middle;
-}
-.panel-tabs > ul > li > .tab-title::after {
-  font-weight: bold;
-  margin-left: 5px;
-  vertical-align: top;
-  content: "+";
-}
-.panel-tabs > ul > li.active > .tab-title::after {
-  content: "\2212";
-}
-.panel-tabs > ul > .inactive {
-  background-image: -webkit-linear-gradient(top, #ffffff 60%, #ededed 100%);
-  background-image: -o-linear-gradient(top, #ffffff 60%, #ededed 100%);
-  background-image: linear-gradient(to bottom, #ffffff 60%, #ededed 100%);
-  background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffededed', GradientType=0);
-}
-.panel-tabs > div {
-  display: none;
-  background-color: white;
-}
 .control-panel {
   width: 100%;
   z-index: 1;
@@ -8019,6 +7966,65 @@ button.close {
   background-color: #ededed;
   margin-top: 2px;
   padding: 16px;
+}
+.panel-tabs {
+  display: none;
+}
+.better .panel-tabs {
+  display: block;
+  color: #21366b;
+  background-color: #ededed;
+  padding-top: 8px;
+}
+.better .panel-tabs > ul {
+  margin: 0;
+  padding: 0;
+  text-align: center;
+  font-size: 0;
+  list-style-type: none;
+  color: #21366b;
+  border-bottom: 2px solid white;
+}
+.better .panel-tabs > ul > li {
+  display: inline-block;
+  padding: 7px 10px;
+  margin-right: 3px;
+  font-size: 1.5rem;
+  background-color: white;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.better .panel-tabs > ul > li > .tab-title {
+  margin-left: 2px;
+  vertical-align: middle;
+}
+.better .panel-tabs > ul > li > .tab-title .fa {
+  margin-right: 5px;
+  font-size: 1.6rem;
+  vertical-align: middle;
+}
+.better .panel-tabs > ul > li > .tab-title::after {
+  font-weight: bold;
+  margin-left: 5px;
+  vertical-align: top;
+  content: "+";
+}
+.better .panel-tabs > ul > li.active > .tab-title::after {
+  content: "\2212";
+}
+.better .panel-tabs > ul > li:not(.active) {
+  background-image: -webkit-linear-gradient(top, #ffffff 60%, #ededed 100%);
+  background-image: -o-linear-gradient(top, #ffffff 60%, #ededed 100%);
+  background-image: linear-gradient(to bottom, #ffffff 60%, #ededed 100%);
+  background-repeat: repeat-x;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ffffffff', endColorstr='#ffededed', GradientType=0);
+}
+.better .panel-tabs > div {
+  display: none;
+  background-color: white;
 }
 html {
   max-width: 960px;

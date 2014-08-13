@@ -38,3 +38,69 @@
 		}
 	}
 }
+
+
+// For the tools/properties panel
+// Should be identical to tabs found in ".media-tabs" in webview
+
+.panel-tabs {
+	display: none;
+}
+
+.better .panel-tabs {
+	display: block;
+	color: @brand-primary;
+	background-color: @gray-lightest; 
+	padding-top: 8px;
+
+	> ul {
+		margin: 0;
+		padding: 0;
+		text-align: center;
+		font-size: 0;
+		list-style-type: none;
+		color: @link-color;
+		border-bottom: 2px solid white;
+
+		> li {
+			display: inline-block;
+			padding: 7px 10px;
+			margin-right: 3px;
+			font-size: 1.5rem;
+			background-color: white;
+			cursor: pointer;
+			.user-select(none);
+
+			> .tab-title {
+				margin-left: 2px;
+				vertical-align: middle;
+
+				.fa {
+					margin-right: 5px;
+					font-size: 1.6rem;
+					vertical-align: middle;
+				}
+
+				&::after {
+					font-weight: bold;
+					margin-left: 5px;
+					vertical-align: top;
+					content: "+";
+				}
+			}
+
+			&.active > .tab-title::after {
+				content: "\2212"; // &minus; (−)
+			}
+
+			&:not(.active) {
+				#gradient.vertical(#fff; #ededed; 60%; 100%);
+			}
+		}
+	}
+
+	> div {
+		display: none;
+		background-color: white;
+	}
+}

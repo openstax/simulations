@@ -17,7 +17,8 @@ define([
 		className: 'app-view',
 
 		events: {
-			'click .tab' : 'tabClicked'
+			'click .tab' : 'tabClicked',
+			'tab-selected .sim-tab' : 'simTabSelected'
 		},
 
 		initialize: function(options) {
@@ -44,34 +45,36 @@ define([
 			// Then render views for each sim
 			_.each(this.sims, this.renderSim, this);
 
-			this.selectTab(this.$('.tab').first());
+			this.$('.sim-tab').first().click();
 
 			return this;
 		},
 
 		renderSim: function(sim, key) {
 			sim.render();
-
 			this.$('#sim-' + key).append(sim.el);
 		},
 
 		tabClicked: function(event) {
-			var $target = $(event.target).closest('.tab');
-			if (!$target.hasClass('active')) {
-				this.selectTab($target);
+			var $tab = $(event.target).closest('.tab');
+			if (!$tab.hasClass('active')) {
+				// Activate the right tab, deactivating the others
+				var selector = $tab.data('content-selector');
+				$tab.add(this.$(selector))
+					.addClass('active')
+					.siblings()
+					.removeClass('active');
+				$tab.trigger('tab-selected');
 			}
 		},
 
-		selectTab: function($tab) {
-			// Activate the right tab, deactivating the others
-			var selector = $tab.data('content-selector');
-			$tab.add(this.$(selector))
-				.addClass('active')
-				.siblings()
-				.removeClass('active');	
+		simTabSelected: function(event) {
+			var $tab = $(event.target).closest('.sim-tab');
+			this.simSelected($tab.data('sim'));
+		},
 
+		simSelected: function(simKey) {
 			// Play the right sim, pausing the others
-			var simKey = $tab.data('sim');
 			_.each(this.sims, function(sim, key){
 				if (key == simKey)
 					sim.resume();
@@ -79,6 +82,7 @@ define([
 					sim.halt();
 			}, this);
 		}
+
 	});
 
 	return AppView;

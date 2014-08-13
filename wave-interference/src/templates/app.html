@@ -2,7 +2,7 @@
 <nav class="sim-tabs">
 	<ul>
 		<% _.each(sims, function(title, key){ %>
-		<li class="tab" data-sim="<%= key %>" data-content-selector="#sim-<%= key %>">
+		<li class="tab sim-tab" data-sim="<%= key %>" data-content-selector="#sim-<%= key %>">
 			<span class="tab-title"><%= title %></span>
 		</li>
 		<% }); %>

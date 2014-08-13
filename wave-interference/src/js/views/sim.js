@@ -7,12 +7,10 @@ define([
 	'models/wave-simulation',
 	'utils/updater',
 
-	'text!../../templates/sim.html',
-], function ($, _, Backbone, PIXI, WaveSimulation, Updater, simHTML) {
+	'text!../../templates/sim-playback.html',
+], function ($, _, Backbone, PIXI, WaveSimulation, Updater, playbackControls) {
 
 	'use strict';
-
-	var simTemplate = _.template(simHTML);
 
 	var SimView = Backbone.View.extend({
 
@@ -85,6 +83,7 @@ define([
 
 			this.renderContent();
 			this.renderCanvas();
+			this.renderPlaybackControls();
 
 			return this;
 		},
@@ -92,10 +91,10 @@ define([
 		/**
 		 * Renders page content. Should be overriden by child classes
 		 */
-		renderContent: function() {
-			// this.$el.append(simTemplate({
-			// 	controlPanels: this.controlPanels || []
-			// }));
+		renderContent: function() {},
+
+		renderPlaybackControls: function() {
+			this.$el.append(playbackControls);
 		},
 
 		/**

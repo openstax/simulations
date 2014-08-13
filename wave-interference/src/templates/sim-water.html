@@ -1,10 +1,17 @@
 <div class="control-panel">
 	<div class="panel-tabs">
-
+		<ul>
+			<li class="tab tools-tab active" data-content-selector=".tools-panel">
+				<span class="tab-title"><span class="fa fa-cog"></span>Tools</span>
+			</li>
+			<li class="tab properties-tab" data-content-selector=".properties-panel">
+				<span class="tab-title"><span class="fa fa-sliders"></span>Properties</span>
+			</li>
+		</ul>
 	</div>
 
 	<div class="panel-content-wrapper">
-		<form class="panel-content tools-panel">
+		<form class="panel-content tools-panel active">
 			<fieldset class="panel-fieldset">
 				This the tools panel
 			</fieldset>
@@ -15,12 +22,4 @@
 			</fieldset>
 		</form>
 	</div>
-</div>
-
-
-<div class="playback-controls-wrapper">
-	<button class="playback-btn reset-btn"><span class="fa fa-undo"></span></button>
-	<button class="playback-btn play-btn"><span class="fa fa-play"></span></button>
-	<button class="playback-btn pause-btn"><span class="fa fa-pause"></span></button>
-	<button class="playback-btn step-btn"><span class="fa fa-step-forward"></span></button>
 </div>
