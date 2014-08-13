@@ -28,8 +28,8 @@ define([
 				dimensions: options.simulationDimensions
 			});
 
-			this.delta = 0;
-			this.lastUpdated = Date.now();
+			this.delta;
+			this.lastUpdated;
 			this.paused = false;
 
 			this.update = _.bind(this.update, this);
@@ -47,7 +47,7 @@ define([
 		renderContent: function() {},
 
 		renderCanvas: function() {
-			this.renderer = PIXI.autoDetectRenderer();
+			this.renderer = PIXI.autoDetectRenderer(null, null, null, false, true); // Turn on antialiasing
 
 			var $renderer = $(this.renderer.view);
 			$renderer.addClass('simulation-canvas');
@@ -66,7 +66,8 @@ define([
 		},
 
 		play: function() {
-			this.lastUpdated = Date.now();
+			this.paused = false;
+			this.lastUpdated = null;
 			//this.waveSimulation.play();
 			requestAnimFrame(this.update);
 		},
@@ -74,6 +75,7 @@ define([
 		pause: function() {
 			//this.waveSimulation.pause();
 			this.paused = true;
+			this.lastUpdated = null;
 		},
 
 		step: function(milliseconds) {
@@ -88,7 +90,15 @@ define([
 			if (this.paused)
 				return;
 
-			this.delta = timestamp - this.lastUpdated;
+			if (this.lastUpdated)
+				this.delta = timestamp - this.lastUpdated;
+			else
+				this.delta = 0;
+
+			this.lastUpdated = timestamp;
+			
+			this.waveSimulation.update(this.delta);
+
 			this.renderer.render(this.stage);
 			requestAnimFrame(this.update);
 		}
