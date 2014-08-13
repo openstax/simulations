@@ -56,6 +56,9 @@
 .sim-content {
   display: none;
 }
+.sim-content.active {
+  display: block;
+}
 .panel-tabs {
   color: #21366b;
   background-color: #ededed;

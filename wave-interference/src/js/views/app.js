@@ -44,7 +44,6 @@ define([
 			// Then render views for each sim
 			_.each(this.sims, this.renderSim, this);
 
-			// This has to run after it gets added to the dom apparently? let's fix that
 			this.selectTab(this.$('.tab').first());
 
 			return this;
@@ -65,11 +64,7 @@ define([
 
 		selectTab: function($tab) {
 			var selector = $tab.data('content-selector');
-			$(selector)
-				.show()
-				.siblings()
-				.hide();
-			$tab
+			$tab.add(this.$(selector))
 				.addClass('active')
 				.siblings()
 				.removeClass('active');	
