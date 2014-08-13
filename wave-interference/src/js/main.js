@@ -4,12 +4,22 @@
 	// Load the config
 	require(['config'], function () {
 		require(['jquery', 'views/app'], function($, AppView) {
-			var appView = new AppView();
 
+			$(function(){
+				var appView = new AppView();
 
-			appView.render();
+				appView.render();
 
-			$('body').append(appView.el);
+				$('body').append(appView.el);
+
+				// For demoing
+				$(document).bind('keydown', function(event) {
+					if (event.which === 66)
+						$('body').togglClass('better');
+					console.log(event.which);
+				});	
+			});
+	
 		});
 	});
 

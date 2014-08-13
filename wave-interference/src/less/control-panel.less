@@ -4,18 +4,34 @@
 
 	@media (min-width: @screen-sm-min) {
 		width: 290px;
+		float: right;
 	}
 
-	> .panels {
-		> .control-panel-tabs {
-			width: 100%;
-			background-color: @gray-lightest;
-		}
+	> .control-panel-tabs {
+		width: 100%;
+		background-color: @gray-lightest;
 
-		> .panel {
-			width: 100%;
-			background-color: @gray-lightest;
-			margin-top: 2px;
+	}
+
+	> .panel-content-wrapper {
+		
+		> .panel-content {
+			display: block;
+
+			.better & {
+				display: none;
+
+				&.active {
+					display: block;
+				}
+			}
+
+			> .panel-fieldset {
+				width: 100%;
+				background-color: @gray-lightest;
+				margin-top: 2px;
+				padding: 16px;
+			}
 		}
 	}
 }
