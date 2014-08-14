@@ -143,9 +143,14 @@ define([
 		 * Click event handler that plays the simulation for a specified duration
 		 */
 		step: function(event) {
-			var milliseconds = 100;
-			this.play();
-			setTimeout(_.bind(this.pause, true), milliseconds);
+			var milliseconds = 20;
+
+			// Set the UI to pause mode
+			this.pause();
+
+			// Play until a certain number of milliseconds has elapsed.
+			this.updater.play();
+			setTimeout(_.bind(this.updater.pause, this.updater), milliseconds);
 		},
 
 		/**
