@@ -21,6 +21,8 @@
     "require-less": "~0.1.2",
     "bootstrap": "~3.2.0",
     "pixi": "~1.6.1",
-    "qunit": "~1.15.0"
+    "qunit": "~1.15.0",
+    "sinon": "~1.10.3",
+    "sinon-qunit": "~2.0.0"
   }
 }
