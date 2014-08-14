@@ -18,7 +18,7 @@ define([
 			time: 0
 		},
 		
-		initialize: function(options) {
+		initialize: function() {
 			
 		},
 

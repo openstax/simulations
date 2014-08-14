@@ -1,7 +1,7 @@
 (function () {
 	'use strict';
 
-	require.config({
+	var config = {
 		paths: {
 			jquery:     '../../bower_components/jquery/dist/jquery',
 			underscore: '../../bower_components/lodash/dist/lodash',
@@ -21,6 +21,10 @@
 			location: '../../bower_components/require-less',
 			main: 'less'
 		}],
+	};
 
-	});
+	if (typeof window._TEST_MODE !== 'undefined' && window._TEST_MODE === true)
+		config.baseUrl = '../js/';
+
+	require.config(config);
 })();

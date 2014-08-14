@@ -137,7 +137,21 @@ module.exports = function(grunt){
 				browser: true,
 				devel: false
 			},
-			source: ['src/**/*.js']
+			source: [
+				'src/**/*.js',
+				'!src/test/**/*.js'
+			],
+			test: [
+				'src/test/**/*.js'
+			]
+		},
+		mocha: {
+			// Test all files ending in .html anywhere inside the test directory.
+			browser: ['test/**/*.html'],
+			options: {
+				reporter: 'Nyan', // Duh!
+				run: true
+			}
 		}
 	});
 
@@ -156,7 +170,9 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('test', [
-		'jshint'
+		'mocha'
 	]);
+
+	grunt.registerTask('lint', ['jshint']);
 
 };

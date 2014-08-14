@@ -21,7 +21,7 @@ define([
 			'tab-selected .sim-tab' : 'simTabSelected'
 		},
 
-		initialize: function(options) {
+		initialize: function() {
 			this.sims = {
 				water: new WaterSimView(),
 				sound: new SoundSimView(),
