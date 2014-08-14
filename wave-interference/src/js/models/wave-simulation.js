@@ -1,8 +1,7 @@
 define([
 	'underscore', 
-	'backbone',
-	'pixi'
-], function (_, Backbone, PIXI) {
+	'backbone'
+], function (_, Backbone) {
 
 	'use strict';
 

@@ -5,7 +5,7 @@
 
 define([
 	'pixi'
-], function (PIXI) {
+], function () {
 
 	'use strict';
 
@@ -23,7 +23,7 @@ define([
 
 		this.total = 0;
 
-		var frame = (function() {
+		var frame = function() {
 			now   = Date.now();
 			delta = now - last;
 			last  = now;
@@ -33,7 +33,7 @@ define([
 				listeners[i](delta);
 
 			animationFrame = window.requestAnimFrame(frame);
-		}).bind(this);
+		}.bind(this);
 
 		this.play = function() {
 			if (!playing) {

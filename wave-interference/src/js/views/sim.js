@@ -55,7 +55,13 @@ define([
 			this.$el.addClass('playing');
 
 			// Test code
-			this.graphics = new PIXI.Graphics().beginFill(0x8888FF).moveTo(-50, -50).lineTo(50, 100).lineTo(100,-50).lineTo(-50,-50).endFill();
+			this.graphics = new PIXI.Graphics()
+				.beginFill(0x8888FF)
+				.moveTo(-50, -50)
+				.lineTo(50, 100)
+				.lineTo(100,-50)
+				.lineTo(-50,-50)
+				.endFill();
 			this.graphics.position.x = 200;
 			this.graphics.position.y = 200;
 			this.direction = 1;
