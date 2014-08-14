@@ -3,7 +3,9 @@
 
 define([
 	'underscore'
-], function() {
+], function(_) {
+
+	'use strict';
 
 	var Lattice2D = function(options) {
 
@@ -43,12 +45,12 @@ define([
 	 *                                                               -- Patrick
 	 */
 
-	var sum
-	  , count
-	  , i
-	  , j
-	  , clone
-	  , row;
+	var sum,
+	    count,
+	    i,
+	    j,
+	    clone,
+	    row;
 
 	_.extend(Lattice2D.prototype, {
 
@@ -100,13 +102,22 @@ define([
 		 *   this Lattice2D.
 		 */
 		copy: function(source) {
-			for (i = 0; i < this.w; i++) {
-				for (j = 0; j < this.h; j++) {
-					this.data[i][j] = source.data[i][j];
+			if (source.h != this.h || source.w != this.h) {
+				/*
+				 * If it changed size, we can't get around recreating
+				 *   the whole array.
+				 */
+				this.w = source.w;
+				this.h = source.h;
+				this.data = source.clone().data;
+			}
+			else {
+				for (i = 0; i < this.w; i++) {
+					for (j = 0; j < this.h; j++) {
+						this.data[i][j] = source.data[i][j];
+					}
 				}
 			}
-			this.w = source.w;
-			this.h = source.h;
 		}
 	});
 

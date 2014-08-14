@@ -100,7 +100,7 @@ module.exports = function(grunt){
 				nonew: true,
 				quotmark: 'single',
 				undef: true,
-				unused: true,
+				unused: 'vars',
 				strict: true,
 				trailing: true,
 				maxlen: 120,
@@ -170,6 +170,7 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('test', [
+		'jshint:source',
 		'mocha'
 	]);
 
