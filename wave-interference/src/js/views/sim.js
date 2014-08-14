@@ -24,7 +24,6 @@ define([
 		 * Dom event listeners
 		 */
 		events: {
-			'resize window'   : 'resize',
 			'click .play-btn' : 'play',
 			'click .pause-btn': 'pause',
 			'click .step-btn' : 'step',
@@ -61,6 +60,8 @@ define([
 			this.graphics.position.y = 200;
 			this.direction = 1;
 			this.stage.addChild(this.graphics);
+
+			$(window).bind('resize', $.proxy(this.resize, this));
 		},
 
 		/**
@@ -104,7 +105,7 @@ define([
 			this.renderer = PIXI.autoDetectRenderer(null, null, null, false, true); // Turn on antialiasing
 
 			var $renderer = $(this.renderer.view);
-			$renderer.addClass('simulation-canvas');
+			$renderer.addClass('sim-canvas');
 			this.$el.prepend($renderer);
 		},
 
@@ -112,7 +113,7 @@ define([
 		 * Called on a window resize to resize the canvas
 		 */
 		resize: function(event) {
-			this.renderer.resize(this.$el.width(), this.$el.height());
+			this.renderer.resize(this.$el.parent().width(), this.$el.parent().height());
 		},
 
 		/**
@@ -175,7 +176,7 @@ define([
 			this.graphics.rotation += (Math.PI / 8000) * delta;
 			this.graphics.position.x += (200 / 1000) * delta * this.direction;
 
-			if (this.graphics.position.x > 700)
+			if (this.graphics.position.x > 860)
 				this.direction = -1;
 			else if (this.graphics.position.x < 100)
 				this.direction = 1;
