@@ -7,7 +7,9 @@
 			underscore: '../../bower_components/lodash/dist/lodash',
 			backbone:   '../../bower_components/backbone/backbone',
 			text:       '../../bower_components/requirejs-text/text',
-			pixi:       '../../bower_components/pixi/bin/pixi'
+			pixi:       '../../bower_components/pixi/bin/pixi',
+
+			templates:  '../templates'
 		},
 
 		packages: [{

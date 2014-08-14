@@ -5,7 +5,7 @@ define([
 
 	'views/sim',
 
-	'text!../../templates/sim-water.html',
+	'text!templates/sim-water.html',
 ], function ($, _, Backbone, SimView, template) {
 
 	'use strict';

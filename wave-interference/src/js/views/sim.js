@@ -7,7 +7,7 @@ define([
 	'models/wave-simulation',
 	'utils/updater',
 
-	'text!../../templates/sim-playback.html',
+	'text!templates/sim-playback.html',
 ], function ($, _, Backbone, PIXI, WaveSimulation, Updater, playbackControls) {
 
 	'use strict';
