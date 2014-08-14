@@ -28,6 +28,8 @@
     "grunt-contrib-requirejs": "^0.4.4",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-targethtml": "^0.2.6",
+    "grunt-lib-phantomjs": "~0.3",
+    "grunt-mocha": "~0.3.1",
     "less": "^1.7.4",
     "matchdep": "^0.3.0"
   }

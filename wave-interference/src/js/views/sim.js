@@ -119,7 +119,7 @@ define([
 		 * Called on a window resize to resize the canvas
 		 */
 		resize: function(event) {
-			$area = this.$el.parents('.sims');
+			var $area = this.$el.parents('.sims');
 			this.renderer.resize($area.width(), $area.height());
 		},
 
