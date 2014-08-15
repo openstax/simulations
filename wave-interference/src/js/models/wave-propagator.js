@@ -50,7 +50,11 @@ define([
 	    h,
 	    clone,
 	    row,
-	    cSquared;
+	    cSquared,
+	    sample,
+	    plat,
+	    prev1,
+	    prev2;
 
 	_.extend(WavePropagator.prototype, {
 
@@ -74,7 +78,10 @@ define([
 			// Copy simulation's lattice values to padded lattice
 			this.plat.copyArea(lattice, lattice.w, lattice.h, this.dampX, this.dampY, 0, 0);
 
+			// Perform propagation on padded lattice
+			this._propagate();
 
+			// TODO: perform damping
 
 			// Copy simulation's new lattice values back from the padded lattice
 			lattice.copyArea(this.plat, this.plat.w, this.plat.h, 0, 0, this.dampX, this.dampY);
@@ -86,6 +93,12 @@ define([
 		 *   http://www.mtnmath.com/whatth/node47.html
 		 */
 		_propagate: function() {
+
+			// Avoid object lookups when possible
+			plat  = this.plat.data;
+			prev1 = this.prev1.data;
+			prev2 = this.prev2.data;
+
 			cSquared = 0.5 * 0.5;
 
 			/*
@@ -93,10 +106,17 @@ define([
 			 *   when collecting samples with a 3x3 cell area.
 			 */
 			w = this.plat.w - 1;
-			h = this.play.h - 1;
+			h = this.plat.h - 1;
 			for (i = 1; i < w; i++) {
 				for (j = 1; j < h; j++) {
-					
+
+					// TODO: check for potentials
+
+					sample = prev1[i - 1][j] + prev1[i + 1][j]
+					       + prev1[i][j - 1] + prev1[i][j + 1]
+					       + (-4 * prev1[i][j]);
+
+					plat[i][j] = (cSquared * sample) + (2 * prev1[i][j]) - prev2[i][j];
 				}
 			}
 		},
