@@ -4,9 +4,10 @@ define([
 	'backbone',
 
 	'views/sim',
+	'models/sim-water',
 
 	'text!templates/sim-water.html',
-], function ($, _, Backbone, SimView, template) {
+], function ($, _, Backbone, SimView, WaterSimulation, template) {
 
 	'use strict';
 
@@ -17,16 +18,11 @@ define([
 		className: 'sim-view',
 
 		initialize: function(options) {
-			SimView.prototype.initialize.apply(this, [ _.extend({}, options, {
-				simulationDamping: {
-					x: 20,
-					y: 20
-				},
-				simulationDimensions: {
-					w: 60,
-					h: 60
-				}
-			}) ]);
+			options = _.extend({
+				waveSimulation: new WaterSimulation()
+			}, options);
+			
+			SimView.prototype.initialize.apply(this, [ options ]);
 
 			this.model = new Backbone.Model({
 				title: 'Water'

@@ -4,7 +4,7 @@ define([
 	'backbone',
 	'pixi',
 
-	'models/wave-simulation',
+	'models/sim-wave',
 	'utils/updater',
 
 	'text!templates/sim-playback.html',
@@ -40,10 +40,7 @@ define([
 
 			this.stage = new PIXI.Stage(0xFFFFFF);
 
-			this.waveSimulation = new WaveSimulation({
-				damping:    options.simulationDamping,
-				dimensions: options.simulationDimensions
-			});
+			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
 			this.update = _.bind(this.update, this);
 

@@ -4,13 +4,18 @@ define([
 	'backbone',
 
 	'views/sim',
-], function ($, _, Backbone, SimView) {
+	'models/sim-light'
+], function ($, _, Backbone, SimView, LightSimulation) {
 
 	'use strict';
 
 	var LightModuleView = SimView.extend({
 
 		initialize: function(options) {
+			options = _.extend({
+				waveSimulation: new LightSimulation()
+			}, options);
+			
 			SimView.prototype.initialize.apply(this, [ options ]);
 
 			this.model = new Backbone.Model({
