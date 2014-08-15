@@ -1,27 +1,28 @@
 define([
 	'underscore', 
-	'models/sim-wave'
+	'models/wave-sim'
 ], function (_, WaveSimulation) {
 
 	'use strict';
 
-	var WaterSimulation = WaveSimulation.extend({
+	var SoundSimulation = WaveSimulation.extend({
 
 		defaults: _.extend({}, WaveSimulation.prototype.defaults, {
 
-			// Values from PhET's WaterModule class
+			// Values from PhET's SoundModule class
 
 			dimensions: {
-				w: 10,
-				h: 10
+				w: 100,
+				h: 100
 			},
 			units: {
 				distance: 'cm',
-				time: 's'
-			}
+				time: 'ms'
+			},
+			timeScale: 1.0 / 1.42 
 		})
 
 	});
 
-	return WaterSimulation;
+	return SoundSimulation;
 });

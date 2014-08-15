@@ -4,7 +4,7 @@ define([
 	'backbone',
 
 	'views/sim',
-	'models/sim-sound'
+	'models/wave-sim-sound'
 ], function ($, _, Backbone, SimView, SoundSimulation) {
 
 	'use strict';

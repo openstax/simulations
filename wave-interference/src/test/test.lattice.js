@@ -41,8 +41,6 @@ describe('Lattice2D', function(){
 
 	it('should copy a lattice', function(){
 		var lattice1 = new Lattice2D({
-			w: 3,
-			h: 3,
 			data: [
 				[2, 0, 1],
 				[0, 5, 4],
@@ -54,5 +52,47 @@ describe('Lattice2D', function(){
 		lattice2.copy(lattice1);
 
 		chai.expect(lattice1).to.deep.equal(lattice2);
+	});
+
+	it('should copy a lattice area', function(){
+		// Check copying from smaller to larger
+		var lattice1 = new Lattice2D({
+			data: [
+				[2, 8, 1],
+				[8, 5, 4],
+				[3, 8, 9]
+			]
+		});
+		var lattice2 = new Lattice2D({
+			w: 5,
+			h: 5,
+			initialValue: 0
+		});
+		var expectedResult = [
+			[0, 0, 0, 0, 0],
+			[0, 2, 8, 1, 0],
+			[0, 8, 5, 4, 0],
+			[0, 3, 8, 9, 0],
+			[0, 0, 0, 0, 0]
+		];
+		lattice2.copyArea(lattice1, 3, 3, 0, 0, 1, 1);
+		chai.expect(lattice2.data).to.deep.equal(expectedResult);
+
+		// Check copying from larger to smaller
+		lattice1 = new Lattice2D({
+			data: expectedResult
+		})
+		lattice2 = new Lattice2D({
+			w: 3,
+			h: 3,
+			initialValue: 0
+		});
+		expectedResult = [
+			[2, 8, 1],
+			[8, 5, 4],
+			[3, 8, 9]
+		];
+		lattice2.copyArea(lattice1, 3, 3, 1, 1, 0, 0);console.log(lattice2.data); console.log(expectedResult);
+		chai.expect(lattice2.data).to.deep.equal(expectedResult);
 	});
 });

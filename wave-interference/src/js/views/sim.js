@@ -4,7 +4,7 @@ define([
 	'backbone',
 	'pixi',
 
-	'models/sim-wave',
+	'models/wave-sim',
 	'utils/updater',
 
 	'text!templates/sim-playback.html',

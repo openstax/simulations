@@ -1,6 +1,6 @@
 define([
 	'underscore', 
-	'models/sim-wave'
+	'models/wave-sim'
 ], function (_, WaveSimulation) {
 
 	'use strict';

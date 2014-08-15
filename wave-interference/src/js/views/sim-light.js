@@ -4,7 +4,7 @@ define([
 	'backbone',
 
 	'views/sim',
-	'models/sim-light'
+	'models/wave-sim-light'
 ], function ($, _, Backbone, SimView, LightSimulation) {
 
 	'use strict';

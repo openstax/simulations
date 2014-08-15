@@ -4,7 +4,7 @@ define([
 	'backbone',
 
 	'views/sim',
-	'models/sim-water',
+	'models/wave-sim-water',
 
 	'text!templates/sim-water.html',
 ], function ($, _, Backbone, SimView, WaterSimulation, template) {

@@ -11,15 +11,13 @@ define([
 
 		// Default values
 		options = _.extend({
-			w: 60,
-			h: 60,
 			initialValue: 0
 		}, options);
 		
 		// Object properties
 		this.data = options.data || []; // The lattice point values
-		this.w = options.w;
-		this.h = options.h;
+		this.w = options.w || (options.data && options.data.length ? options.data[0].length : 60);
+		this.h = options.h || (options.data ? options.data.length : 60);
 
 		// Set initial value of lattice points
 		if (!options.data) {
@@ -81,14 +79,7 @@ define([
 		 *   reuse them with my "copy" function down below.
 		 */
 		clone: function() {
-			clone = [];
-			for (i = 0; i < this.w; i++) {
-				row = [];
-				for (j = 0; j < this.h; j++) {
-					row.push(this.data[i][j]);
-				}
-				clone.push(row);
-			}
+			clone = this._deepCloneArray(this.data);
 
 			return new Lattice2D({
 				w: this.w,
@@ -98,8 +89,24 @@ define([
 		},
 
 		/**
+		 * Used internally in a couple places
+		 */
+		_deepCloneArray: function(src) {
+			clone = [];
+			for (i = 0; i < src.length; i++) {
+				row = [];
+				for (j = 0; j < src[i].length; j++) {
+					row.push(src[i][j]);
+				}
+				clone.push(row);
+			}
+			return clone;
+		},
+
+		/**
 		 * This function copies the data from a source Lattice2D into
-		 *   this Lattice2D.
+		 *   this Lattice2D. Forces it to change size if the source
+		 *   is a different size.
 		 */
 		copy: function(source) {
 			if (source.h != this.h || source.w != this.h) {
@@ -109,7 +116,7 @@ define([
 				 */
 				this.w = source.w;
 				this.h = source.h;
-				this.data = source.clone().data;
+				this.data = this._deepCloneArray(source.data);
 			}
 			else {
 				for (i = 0; i < this.w; i++) {
@@ -118,7 +125,21 @@ define([
 					}
 				}
 			}
-		}
+		},
+
+		/**
+		 * Copies just a specified area from a source lattice to a 
+		 *   specified area in this one.
+		 */
+		copyArea: function(source, w, h, srcOffsetX, srcOffsetY, dstOffsetX, dstOffsetY) {
+			for (i = 0; i < w; i++) {
+				for (j = 0; j < h; j++) {
+					this.data[i + dstOffsetX][j + dstOffsetY] = source.data[i + srcOffsetX][j + srcOffsetY];
+				}
+			}
+		},
+
+
 	});
 
 	return Lattice2D;
