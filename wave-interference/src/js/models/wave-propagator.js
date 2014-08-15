@@ -22,7 +22,9 @@ define([
 		this.dampY = options.damping.y;
 
 		// Simulation's lattice
-		this.lattice = options.lattice || throw 'WavePropagator requires an initial lattice to function!';
+		this.lattice = options.lattice;
+		if (_.isUndefined(this.lattice))
+			throw 'WavePropagator requires an initial lattice to function!';
 
 		// Lattice that is padded on every side by the damping scale
 		this.plat = this.createPaddedLattice();
@@ -42,14 +44,11 @@ define([
 	 *                                                               -- Patrick
 	 */
 
-	var sum,
-	    count,
-	    i,
+	var i,
 	    j,
 	    w,
 	    h,
 	    clone,
-	    row,
 	    cSquared,
 	    sample,
 	    plat,
@@ -127,9 +126,9 @@ define([
 		 *   lattice's actual edge, dy could take it out of bounds!
 		 */
 		dampHorizontalEdge: function(lattice, y, dy) {
-			for (i = 0; i < lattice.w, i++)
+			for (i = 0; i < lattice.w; i++)
 				lattice.data[i][y] = this.prev2[i][y + dy];
-		}
+		},
 
 		/**
 		 * This function is meant for the padded lattice col that corresponds
@@ -137,15 +136,15 @@ define([
 		 *   lattice's actual edge, dx could take it out of bounds!
 		 */
 		dampVerticalEdge: function(lattice, x, dx) {
-			for (j = 0; j < lattice.h, j++)
+			for (j = 0; j < lattice.h; j++)
 				lattice.data[x][j] = this.prev2[x + dx][j];
-		}
+		},
 
 		/**
 		 * From "getDamp(int depthInDampingRegion)" in DampedClassicalWavePropagator
 		 */
 		getDampingCoefficient: function(depthInDampingRegion) {
-			return ( 1 - depthInDampRegion * 0.0001 );
+			return ( 1 - depthInDampingRegion * 0.0001 );
 		},
 
 		/**

@@ -93,6 +93,8 @@ module.exports = function(grunt){
 				forin: true,
 				immed: true,
 				latedef: true,
+				laxbreak: true,
+				laxcomma: true,
 				newcap: true,
 				noarg: true,
 				noempty: true,
@@ -121,8 +123,6 @@ module.exports = function(grunt){
 				globalstrict: false,
 				iterator: false,
 				lastsemic: false,
-				laxbreak: false,
-				laxcomma: false,
 				loopfunc: false,
 				multistr: false,
 				proto: false,
@@ -147,7 +147,7 @@ module.exports = function(grunt){
 		},
 		mocha: {
 			// Test all files ending in .html anywhere inside the test directory.
-			browser: ['test/**/*.html'],
+			browser: ['src/test/**/*.html'],
 			options: {
 				reporter: 'Nyan', // Duh!
 				run: true
