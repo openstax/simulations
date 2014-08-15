@@ -129,7 +129,11 @@ define([
 
 		/**
 		 * Copies just a specified area from a source lattice to a 
-		 *   specified area in this one.
+		 *   specified area in this one.  This function has a lot
+		 *   of parameters, and while it would be cleaner to use
+		 *   an options object, I want to minimize load on the
+		 *   garbage collector in this function because it is used 
+		 *   multiple times each frame.
 		 */
 		copyArea: function(source, w, h, srcOffsetX, srcOffsetY, dstOffsetX, dstOffsetY) {
 			for (i = 0; i < w; i++) {
