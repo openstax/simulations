@@ -2,8 +2,9 @@ define([
 	'underscore', 
 	'backbone',
 
-	'models/lattice2d'
-], function (_, Backbone, Lattice2D) {
+	'models/lattice2d',
+	'models/oscillator'
+], function (_, Backbone, Lattice2D, Oscillator) {
 
 	'use strict';
 
@@ -23,6 +24,10 @@ define([
 			},
 			time: 0,
 			timeScale: 1.0,
+
+			oscillatorCount: 1,
+			frequency: 0.5,
+			amplitude: 1.0
 		},
 		
 		initialize: function(options) {
@@ -46,6 +51,12 @@ define([
 				h: options.latticeSize.h,
 				initialValue: 0
 			});
+
+			this.on('change:oscillatorCount', this.initOscillators);
+			this.on('change:frequency',       this.changeFrequency);
+			this.on('change:amplitude',       this.changeAmplitude);
+
+			this.initOscillators();
 		},
 
 		update: function(time) {
@@ -66,6 +77,33 @@ define([
 
 		h: function() {
 			return this.get('dimensions').h;
+		},
+
+		initOscillators: function() {
+			console.log('oscillator count: ' + this.get('oscillatorCount'));
+			this.oscillators = [];
+			for (var i = 0; i < this.get('oscillatorCount'); i++) {
+				this.oscillators.push(new Oscillator({
+					frequency: this.get('frequency'),
+					amplitude: this.get('amplitude'),
+					lattice:   this.lattice,
+					x: 4,
+					y: 4,
+					radius: 2
+				}));
+			}
+		},
+
+		changeFrequency: function(model, value) {
+			_.each(this.oscillators, function(oscillator) {
+				oscillator.frequency = value;
+			}, this);
+		},
+
+		changeAmplitude: function(model, value) {
+			_.each(this.oscillators, function(oscillator) {
+				oscillator.amplitude = value;
+			}, this);
 		}
 	});
 

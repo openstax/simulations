@@ -8196,7 +8196,7 @@ input[type="radio"] {
 input[type="radio"] + label {
   display: inline-block;
   position: relative;
-  padding-left: 20px;
+  padding-left: 26px;
   margin-bottom: 12px;
   line-height: 16px;
   -webkit-touch-callout: none;

@@ -27,7 +27,11 @@ define([
 			'click .play-btn' : 'play',
 			'click .pause-btn': 'pause',
 			'click .step-btn' : 'step',
-			'click .reset-btn': 'reset'
+			'click .reset-btn': 'reset',
+
+			'change .oscillator-count': 'changeOscillatorCount',
+			'change .frequency'       : 'changeFrequency',
+			'change .amplitude'       : 'changeAmplitude'
 		},
 
 		/**
@@ -65,6 +69,8 @@ define([
 			this.stage.addChild(this.graphics);
 
 			$(window).bind('resize', $.proxy(this.resize, this));
+
+
 		},
 
 		/**
@@ -191,15 +197,30 @@ define([
 				this.direction = 1;
 			// End test code
 
-			//console.log(this.model.get('title') + ' ' + delta);
+			
 			
 			// Update the model
 			this.waveSimulation.update(this.updater.total);
 
 			// Render everything
 			this.renderer.render(this.stage);
-		}
+		},
 
+		/**
+		 * Click event handler for oscillator count radio buttons
+		 */
+		changeOscillatorCount: function(event) {
+			var val = parseInt($(event.target).val());
+			this.waveSimulation.set('oscillatorCount', val);
+		},
+
+		changeFrequency: function(event) {
+			this.waveSimulation.set('frequency', $(event.target).val());
+		},
+
+		changeAmplitude: function(event) {
+			this.waveSimulation.set('amplitude', $(event.target).val());
+		}
 	});
 
 	return SimView;

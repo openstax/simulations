@@ -18,6 +18,10 @@ define([
 		tagName: 'section',
 		className: 'sim-view',
 
+		events: _.extend(SimView.prototype.events, {
+			
+		}),
+
 		initialize: function(options) {
 			options = _.extend({
 				waveSimulation: new WaterSimulation()
