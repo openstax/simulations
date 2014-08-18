@@ -58,6 +58,15 @@ define([
 					max: 2
 				}
 			});
+
+			this.$('#drip-spacing').noUiSlider({
+				start: 3,
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: 10
+				}
+			});
 		},
 
 		detachFaucetControls: function() {

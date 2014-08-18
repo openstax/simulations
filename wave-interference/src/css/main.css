@@ -7970,6 +7970,7 @@ button.close {
 }
 body:not(.better) #faucet-controls {
   width: auto;
+  min-width: 200px;
   position: absolute;
   bottom: 200px;
   left: 0px;
@@ -8184,6 +8185,61 @@ body:not(.better) #faucet-controls {
 }
 [disabled] .noUi-handle {
   cursor: not-allowed;
+}
+[disabled] .noUi-handle:before,
+[disabled] .noUi-handle:after {
+  background: #B8B8B8;
+}
+input[type="radio"] {
+  display: none;
+}
+input[type="radio"] + label {
+  display: inline-block;
+  position: relative;
+  padding-left: 20px;
+  margin-bottom: 12px;
+  line-height: 16px;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+input[type="radio"] + label:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border: 2px solid #333;
+  border-radius: 50%;
+  cursor: pointer;
+}
+input[type="radio"] + label:after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 0;
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  margin-top: 0;
+  margin-left: 0;
+  background: #21366b;
+  border-radius: 50%;
+  -webkit-transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+  -o-transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+  transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+}
+input[type="radio"]:checked + label:after {
+  width: 14px;
+  height: 14px;
+  margin-top: 0;
+  margin-left: 0;
+  margin-top: -7px;
+  margin-left: -7px;
 }
 html {
   max-width: 960px;
