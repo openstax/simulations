@@ -8032,6 +8032,159 @@ body:not(.better) #faucet-controls {
   display: none;
   background-color: white;
 }
+/* Functional styling;
+ * These styles are required for noUiSlider to function.
+ * You don't need to change these rules to apply your design.
+ */
+.noUi-target,
+.noUi-target * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -ms-touch-action: none;
+  -ms-user-select: none;
+  -moz-user-select: none;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+}
+.noUi-base {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+.noUi-origin {
+  position: absolute;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+.noUi-handle {
+  position: relative;
+  z-index: 1;
+}
+.noUi-stacking .noUi-handle {
+  /* This class is applied to the lower origin when
+   its values is > 50%. */
+  z-index: 10;
+}
+.noUi-stacking + .noUi-origin {
+  /* Fix stacking order in IE7, which incorrectly
+   creates a new context for the origins. */
+  *z-index: -1;
+}
+.noUi-state-tap .noUi-origin {
+  -webkit-transition: left 0.3s, top 0.3s;
+  transition: left 0.3s, top 0.3s;
+}
+.noUi-state-drag * {
+  cursor: inherit !important;
+}
+/* Slider size and handle placement;
+ */
+.noUi-horizontal {
+  height: 2px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+}
+/* 
+ * These all us to click above and below and still
+ *   trigger a click event on .noUi-base. 
+ *
+ *                                       - Patrick
+ */
+.noUi-horizontal .noUi-base:before,
+.noUi-horizontal .noUi-base:after {
+  content: '';
+  position: absolute;
+  height: 14px;
+  left: 0;
+  width: 100%;
+}
+.noUi-horizontal .noUi-base:before {
+  bottom: 2px;
+}
+.noUi-horizontal .noUi-base:after {
+  top: 2px;
+}
+.noUi-horizontal .noUi-handle {
+  width: 26px;
+  height: 26px;
+  left: -12px;
+  top: -12px;
+}
+.noUi-horizontal.noUi-extended {
+  padding: 0 15px;
+}
+.noUi-horizontal.noUi-extended .noUi-origin {
+  right: -15px;
+}
+.noUi-vertical {
+  width: 18px;
+}
+.noUi-vertical .noUi-handle {
+  width: 28px;
+  height: 34px;
+  left: -6px;
+  top: -17px;
+}
+.noUi-vertical.noUi-extended {
+  padding: 15px 0;
+}
+.noUi-vertical.noUi-extended .noUi-origin {
+  bottom: -15px;
+}
+/* Styling;
+ */
+.noUi-background {
+  background: #FAFAFA;
+}
+.noUi-connect {
+  background: #21366b;
+  -webkit-transition: background 450ms;
+  transition: background 450ms;
+}
+/* Handles and cursors;
+ */
+.noUi-dragable {
+  cursor: w-resize;
+}
+.noUi-vertical .noUi-dragable {
+  cursor: n-resize;
+}
+.noUi-handle {
+  text-align: center;
+}
+.noUi-handle:after {
+  content: '';
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -6px;
+  margin-left: -6px;
+  background: #21366b;
+  border-radius: 50%;
+  -webkit-transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+  -o-transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+  transition: width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease;
+}
+.noUi-active:after {
+  width: 100%;
+  height: 100%;
+  margin-top: -50%;
+  margin-left: -50%;
+}
+/* Disabled state;
+ */
+[disabled].noUi-connect,
+[disabled] .noUi-connect {
+  background: #B8B8B8;
+}
+[disabled] .noUi-handle {
+  cursor: not-allowed;
+}
 html {
   max-width: 960px;
   margin: 10px auto 0 auto;
