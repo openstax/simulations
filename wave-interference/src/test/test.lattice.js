@@ -11,8 +11,8 @@ describe('Lattice2D', function(){
 	});
 
 	it('should create a new lattice with initial values', function(){
-		var h = 3;
-		var w = 3;
+		var height = 3;
+		var width = 3;
 		var val = -2;
 
 		var data = [
@@ -22,13 +22,13 @@ describe('Lattice2D', function(){
 		];
 
 		var lattice = new Lattice2D({
-			w: w,
-			h: h,
+			width: width,
+			height: height,
 			initialValue: val
 		});
 
-		chai.expect(lattice.h).to.equal(h);
-		chai.expect(lattice.w).to.equal(w);
+		chai.expect(lattice.height).to.equal(height);
+		chai.expect(lattice.width).to.equal(width);
 		chai.expect(lattice.data).to.deep.equal(data);
 	});
 
@@ -64,8 +64,8 @@ describe('Lattice2D', function(){
 			]
 		});
 		var lattice2 = new Lattice2D({
-			w: 5,
-			h: 5,
+			width: 5,
+			height: 5,
 			initialValue: 0
 		});
 		var expectedResult = [
@@ -83,8 +83,8 @@ describe('Lattice2D', function(){
 			data: expectedResult
 		})
 		lattice2 = new Lattice2D({
-			w: 3,
-			h: 3,
+			width: 3,
+			height: 3,
 			initialValue: 0
 		});
 		expectedResult = [

@@ -15,8 +15,8 @@ define([
 				y: 20
 			},
 			dimensions: {
-				w: 100,
-				h: 100
+				width: 100,
+				height: 100
 			},
 			units: {
 				distance: 'm',
@@ -41,14 +41,14 @@ define([
 				 *   precision. Conversions
 				 */
 				latticeSize: {
-					w: 60,
-					h: 60
+					width: 60,
+					height: 60
 				}
 			}, options);
 
 			this.lattice = new Lattice2D({
-				w: options.latticeSize.w,
-				h: options.latticeSize.h,
+				width: options.latticeSize.width,
+				height: options.latticeSize.height,
 				initialValue: 0
 			});
 
@@ -71,16 +71,7 @@ define([
 			
 		},
 
-		w: function() {
-			return this.get('dimensions').w;
-		},
-
-		h: function() {
-			return this.get('dimensions').h;
-		},
-
 		initOscillators: function() {
-			console.log('oscillator count: ' + this.get('oscillatorCount'));
 			this.oscillators = [];
 			for (var i = 0; i < this.get('oscillatorCount'); i++) {
 				this.oscillators.push(new Oscillator({

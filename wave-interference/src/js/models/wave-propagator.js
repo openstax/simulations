@@ -27,11 +27,11 @@ define([
 			throw 'WavePropagator requires an initial lattice to function!';
 
 		// Lattice that is padded on every side by the damping scale
-		this.plat = this.createPaddedLattice();
+		this.paddedLat = this.createPaddedLattice();
 
 		// Lattices from previous steps
-		this.prev1 = this.plat.clone();
-		this.prev2 = this.plat.clone();
+		this.prevLat1 = this.paddedLat.clone();
+		this.prevLat2 = this.paddedLat.clone();
 	};
 
 	/*
@@ -51,9 +51,9 @@ define([
 	    clone,
 	    cSquared,
 	    sample,
-	    plat,
-	    prev1,
-	    prev2;
+	    paddedLat,
+	    prevLat1,
+	    prevLat2;
 
 	_.extend(WavePropagator.prototype, {
 
@@ -65,7 +65,7 @@ define([
 		 *   after propagation is performed on every cell in the padded lattice,
 		 *   the rows and columns in the padded lattice that correspond to the
 		 *   true lattice's edges are damped, and then the whole lattice is
-		 *   copied to the historical this.prev1 and this.prev2 in succession.
+		 *   copied to the historical this.prevLat1 and this.prevLat2 in succession.
 		 *   After that, we perform extra damping on the entire lattice.
 		 *   Finally, we copy the relevant region of the padded lattice back to
 		 *   the simulation's true lattice and are finished.
@@ -75,7 +75,7 @@ define([
 		 */
 		propagate: function(lattice) {
 			// Copy simulation's lattice values to padded lattice
-			this.plat.copyArea(lattice, lattice.w, lattice.h, this.dampX, this.dampY, 0, 0);
+			this.paddedLat.copyArea(lattice, lattice.w, lattice.h, this.dampX, this.dampY, 0, 0);
 
 			// Perform propagation on padded lattice
 			this._propagate();
@@ -83,7 +83,7 @@ define([
 			// TODO: perform damping
 
 			// Copy simulation's new lattice values back from the padded lattice
-			lattice.copyArea(this.plat, this.plat.w, this.plat.h, 0, 0, this.dampX, this.dampY);
+			lattice.copyArea(this.paddedLat, this.paddedLat.w, this.paddedLat.h, 0, 0, this.dampX, this.dampY);
 		},
 
 		/**
@@ -94,28 +94,34 @@ define([
 		_propagate: function() {
 
 			// Avoid object lookups when possible
-			plat  = this.plat.data;
-			prev1 = this.prev1.data;
-			prev2 = this.prev2.data;
+			paddedLat = this.paddedLat.data;
+			prevLat1  = this.prevLat1.data;
+			prevLat2  = this.prevLat2.data;
 
+			/*
+			 * c^2 is a coefficient from PhET's equation representing the squared
+			 *   velocity. I think it's actually supposed to be dependent on the
+			 *   distance from the epicenter, but it's a constant in PhET's code
+			 *   and in the approximation equation given in Paul Budnik's book.
+			 */
 			cSquared = 0.5 * 0.5;
 
 			/*
 			 * We're starting with a border of 1 so we don't go out of bounds
 			 *   when collecting samples with a 3x3 cell area.
 			 */
-			w = this.plat.w - 1;
-			h = this.plat.h - 1;
+			w = this.paddedLat.w - 1;
+			h = this.paddedLat.h - 1;
 			for (i = 1; i < w; i++) {
 				for (j = 1; j < h; j++) {
 
 					// TODO: check for potentials
 
-					sample = prev1[i - 1][j] + prev1[i + 1][j]
-					       + prev1[i][j - 1] + prev1[i][j + 1]
-					       + (-4 * prev1[i][j]);
+					sample = prevLat1[i - 1][j] + prevLat1[i + 1][j]
+					       + prevLat1[i][j - 1] + prevLat1[i][j + 1]
+					       + (-4 * prevLat1[i][j]);
 
-					plat[i][j] = (cSquared * sample) + (2 * prev1[i][j]) - prev2[i][j];
+					paddedLat[i][j] = (cSquared * sample) + (2 * prevLat1[i][j]) - prevLat2[i][j];
 				}
 			}
 		},
@@ -127,7 +133,7 @@ define([
 		 */
 		dampHorizontalEdge: function(lattice, y, dy) {
 			for (i = 0; i < lattice.w; i++)
-				lattice.data[i][y] = this.prev2[i][y + dy];
+				lattice.data[i][y] = this.prevLat2[i][y + dy];
 		},
 
 		/**
@@ -137,7 +143,7 @@ define([
 		 */
 		dampVerticalEdge: function(lattice, x, dx) {
 			for (j = 0; j < lattice.h; j++)
-				lattice.data[x][j] = this.prev2[x + dx][j];
+				lattice.data[x][j] = this.prevLat2[x + dx][j];
 		},
 
 		/**

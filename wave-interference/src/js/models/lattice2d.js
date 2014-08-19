@@ -15,16 +15,16 @@ define([
 		}, options);
 		
 		// Object properties
-		this.data = options.data || []; // The lattice point values
-		this.w = options.w || (options.data && options.data.length ? options.data[0].length : 60);
-		this.h = options.h || (options.data ? options.data.length : 60);
+		this.data   = options.data || []; // The lattice point values
+		this.width  = options.width || (options.data && options.data.length ? options.data[0].length : 60);
+		this.height = options.height || (options.data ? options.data.length : 60);
 
 		// Set initial value of lattice points
 		if (!options.data) {
 			var row, x, y;
-			for (x = 0; x < this.w; x++) {
+			for (x = 0; x < this.width; x++) {
 				row = [];
-				for (y = 0; y < this.h; y++) {
+				for (y = 0; y < this.height; y++) {
 					row.push(options.initialValue);
 				}
 				this.data.push(row);
@@ -82,9 +82,9 @@ define([
 			clone = this._deepCloneArray(this.data);
 
 			return new Lattice2D({
-				w: this.w,
-				h: this.h,
-				data: clone
+				width:  this.width,
+				height: this.height,
+				data:   clone
 			});
 		},
 
@@ -109,18 +109,18 @@ define([
 		 *   is a different size.
 		 */
 		copy: function(source) {
-			if (source.h != this.h || source.w != this.h) {
+			if (source.height != this.height || source.width != this.height) {
 				/*
 				 * If it changed size, we can't get around recreating
 				 *   the whole array.
 				 */
-				this.w = source.w;
-				this.h = source.h;
-				this.data = this._deepCloneArray(source.data);
+				this.width  = source.width;
+				this.height = source.height;
+				this.data   = this._deepCloneArray(source.data);
 			}
 			else {
-				for (i = 0; i < this.w; i++) {
-					for (j = 0; j < this.h; j++) {
+				for (i = 0; i < this.width; i++) {
+					for (j = 0; j < this.height; j++) {
 						this.data[i][j] = source.data[i][j];
 					}
 				}
@@ -135,9 +135,9 @@ define([
 		 *   garbage collector in this function because it is used 
 		 *   multiple times each frame.
 		 */
-		copyArea: function(source, w, h, srcOffsetX, srcOffsetY, dstOffsetX, dstOffsetY) {
-			for (i = 0; i < w; i++) {
-				for (j = 0; j < h; j++) {
+		copyArea: function(source, width, height, srcOffsetX, srcOffsetY, dstOffsetX, dstOffsetY) {
+			for (i = 0; i < width; i++) {
+				for (j = 0; j < height; j++) {
 					this.data[i + dstOffsetX][j + dstOffsetY] = source.data[i + srcOffsetX][j + srcOffsetY];
 				}
 			}

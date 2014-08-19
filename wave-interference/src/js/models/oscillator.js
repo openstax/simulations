@@ -36,22 +36,18 @@ define([
 		this.pulseEnabled = false;
 	};
 
-	/* &#^%#$%#$%
-	 * Big question:
-	 *   why is [phase] independent of time?
-	 *  ohhh, okay, it is only used for pulse
-	 *  so really i should be naming it something to do with pulse, like pulsePhase
-	 */
 
 	var lat,
-		w,
-		h,
-	    val,
+		width,
+		height,
+	    oscillatingValue,
 	    i,
 	    j,
+	    x,
+	    y,
 	    xMax,
 	    yMax,
-	    r,
+	    radius,
 	    twoPI = Math.PI * 2;
 
 	_.extend(Oscillator.prototype, {
@@ -62,26 +58,33 @@ define([
 		 */
 		update: function(time) {
 			if (this.enabled) {
-				val = this.value(time);
+				oscillatingValue = this.oscillatingValue(time);
 
-				lat  = this.lattice.data;
-				w    = this.lattice.w;
-				h    = this.lattice.h;
-				r    = this.radius;
-				xMax = this.x + r;
-				yMax = this.y + r;
+				lat    = this.lattice.data;
+				width  = this.lattice.width;
+				height = this.lattice.height;
+				radius = this.radius;
+				x      = this.x;
+				y      = this.y;
+				xMax   = x + radius;
+				yMax   = y + radius;
 
-				for (i = this.x - r; i < xMax; i++) {
-					for (j = this.y - r; j < yMax; j++) {
-						if (Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < r) {
-							if (i < w && j < h)
-								lat[i][j] = val;
+				/*
+				 * Within the circle of radius [radius] centered around [x, y], fill
+				 *   in those cells with the current calculated oscillating value.
+				 */
+				for (i = x - radius; i < xMax; i++) {
+					for (j = y - radius; j < yMax; j++) {
+						if (Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < radius) {
+							// Make sure we don't go out of bounds if we're on an edge
+							if (i < width && i >= 0 && j < height && j >= 0)
+								lat[i][j] = oscillatingValue;
 						}
 					}
 				}
 			}
 
-			if (this.pulseEnabled && this.cosArg() + pulsePhase > twoPI) {
+			if (this.pulseEnabled && this.cosArg() + this.pulsePhase > twoPI) {
 				this.pulseEnabled = false;
 				this.pulsePhase = 0;
 				this.enabled = true;
@@ -90,8 +93,9 @@ define([
 
 		/**
 		 * Returns the value of an oscillating lattice cell at a given time.
+		 * This function corresponds with PhET's Oscillator.getValue()
 		 */
-		value: function(time) {
+		oscillatingValue: function(time) {
 			return this.amplitude * Math.cos(this.cosArg(time) + this.pulsePhase);
 		},
 
