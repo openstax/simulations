@@ -159,7 +159,7 @@ module.exports = function(grunt){
 				timeout: 15000
 			}
 		},
-		test: {
+		build_tests: {
 			options: {
 				template: 'test/index.template.html',
 				runner: 'test/index.html',
@@ -169,6 +169,22 @@ module.exports = function(grunt){
 	});
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+	grunt.registerTask('build_tests', function(){
+		var options = this.options();
+		
+		// Get all the files and prepend the '../' relative path
+		var tests = grunt.file.expand(options.files).map(function(file){
+			grunt.log.write('../' + file);
+			return '../' + file;
+		});
+
+		// Build the template, replacing {{ test }} with the list of test files
+		var template = grunt.file.read(options.template).replace('{{ tests }}', JSON.stringify(tests));
+
+		// Write template to tests directory and run tests
+		grunt.file.write(options.runner, template);
+	});
 
 	grunt.registerTask('default', [
 		'watch'
@@ -183,25 +199,11 @@ module.exports = function(grunt){
 		//'uglify:dist'
 	]);
 
-	grunt.registerTask('test', function(){
-		var options = this.options();
-		
-		// Get all the files and prepend the '../' relative path
-		var tests = grunt.file.expand(options.files).map(function(file){
-			grunt.log.write('../' + file);
-			return '../' + file;
-		});
-
-		// Build the template, replacing {{ test }} with the list of test files
-		var template = grunt.file.read(options.template).replace('{{ tests }}', JSON.stringify(tests));
-
-		// Write template to tests directory and run tests
-		grunt.file.write(options.runner, template);
-		grunt.task.run(
-			'jshint:source',
-			'mocha'
-		);
-	});
+	grunt.registerTask('test', [
+		'build_tests',
+		'jshint:source',
+		'mocha'
+	]);
 
 	grunt.registerTask('lint', ['jshint']);
 

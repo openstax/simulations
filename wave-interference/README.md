@@ -22,7 +22,10 @@ Original simulation Copyright 2002-2011, University of Colorado.
 
 To run command-line tests, run `grunt test` from the root `wave-interference` directory.
 
-To view tests in a browser, you first need to set up a server (check out the Hosting section below) and then go to [http://localhost:8000/test/](http://localhost:8000/test/).
+To view tests in a browser, you first need to 
+1. set up a server (check out the Hosting section below)
+2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`) 
+3. then go to [http://localhost:8000/test/](http://localhost:8000/test/). 
 
 ##### Building
 
