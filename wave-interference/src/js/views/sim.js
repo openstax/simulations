@@ -33,6 +33,8 @@ define([
 			'change .frequency'       : 'changeFrequency',
 			'change .amplitude'       : 'changeAmplitude',
 			'change .barrier-style'   : 'changeBarrierStyle',
+
+			'click .add-barrier': 'addBarrier'
 		},
 
 		/**
@@ -208,6 +210,10 @@ define([
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().removeAttr('disabled');
 			else
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().attr('disabled', 'disabled');
+		},
+
+		addBarrier: function(event) {
+			event.preventDefault();
 		}
 	});
 

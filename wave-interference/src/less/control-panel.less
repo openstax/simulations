@@ -32,13 +32,37 @@
 			
 		}
 	}
-}
 
-.panel-fieldset {
-	width: 100%;
-	background-color: @gray-lightest;
-	margin-top: 2px;
-	padding: 16px;
+	.panel-fieldset,
+	.panel-btn {
+		width: 100%;
+		background-color: @gray-lightest;
+		margin-top: 2px;
+		padding: 16px;
+	}
+
+	.btn.panel-btn {
+		color: @brand-primary;
+		font-weight: bold;
+		position: relative;
+		border-radius: 0;
+
+		&:hover {
+			color: @brand-primary;
+			opacity: 0.9;
+		}
+
+		&:active {
+			box-shadow: none;
+			color: #fff;
+			background-color: @brand-primary;
+			opacity: 1;
+		}
+
+		&:focus {
+			outline: none;
+		}
+	}
 }
 
 body:not(.better) #faucet-controls {

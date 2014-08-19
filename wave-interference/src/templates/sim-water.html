@@ -13,8 +13,13 @@
 	<div class="panel-content-wrapper">
 		<form class="panel-content tools-panel active">
 			<fieldset class="panel-fieldset">
-				This is the tools panel
+				<input type="checkbox" id="measuring-tape-check" class="measuring-tape-check">
+				<label for="measuring-tape-check">Measuring Tape</label><br>
+
+				<input type="checkbox" id="stopwatch-check" class="stopwatch-check">
+				<label for="stopwatch-check">Stopwatch</label>
 			</fieldset>
+			<button class="btn panel-btn add-detector"><span class="fa fa-plus"></span> Add Detector</button>
 		</form>
 		<form class="panel-content properties-panel">
 			<fieldset class="panel-fieldset" id="faucet-controls">
@@ -57,6 +62,7 @@
 				<label for="slit-separation" class="slider-label" disabled>Slit Separation</label>
 				<div class="slider slit-separation" id="slit-separation" disabled></div>
 			</fieldset>
+			<button class="btn panel-btn add-barrier"><span class="fa fa-plus"></span> Add Wall</button>
 		</form>
 	</div>
 </div>
