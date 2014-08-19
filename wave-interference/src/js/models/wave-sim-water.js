@@ -19,7 +19,11 @@ define([
 				distance: 'cm',
 				time: 's'
 			}
-		})
+		}),
+
+		// update: function(time, delta) {
+		// 	WaveSimulation.prototype.update.apply(this, [time, delta]);
+		// },
 
 	});
 

@@ -30,7 +30,7 @@ define([
 			this.total += delta;
 
 			for (i = 0; i < listeners.length; i++)
-				listeners[i](delta);
+				listeners[i](this.total, delta);
 
 			animationFrame = window.requestAnimFrame(frame);
 		}.bind(this);

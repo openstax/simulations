@@ -32,6 +32,7 @@ define([
 			this.model = new Backbone.Model({
 				title: 'Water'
 			});
+
 		},
 
 		renderContent: function() {
@@ -80,6 +81,10 @@ define([
 		reattachFaucetControls: function() {
 			this.$('#faucet-controls').prependTo(this.$('.properties-panel'));
 		},
+
+		// update: function(time, delta) {
+		// 	SimView.prototype.update.apply(this, [time, delta]);
+		// }
 	});
 
 	return WaterSimView;

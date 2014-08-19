@@ -55,19 +55,6 @@ define([
 			this.resumePaused = false;
 			this.$el.addClass('playing');
 
-			// Test code
-			this.graphics = new PIXI.Graphics()
-				.beginFill(0x8888FF)
-				.moveTo(-50, -50)
-				.lineTo(50, 100)
-				.lineTo(100,-50)
-				.lineTo(-50,-50)
-				.endFill();
-			this.graphics.position.x = 200;
-			this.graphics.position.y = 200;
-			this.direction = 1;
-			this.stage.addChild(this.graphics);
-
 			$(window).bind('resize', $.proxy(this.resize, this));
 
 
@@ -184,21 +171,7 @@ define([
 				this.updater.play();
 		},
 
-		update: function(delta) {
-
-
-			// Test code
-			this.graphics.rotation += (Math.PI / 8000) * delta;
-			this.graphics.position.x += (200 / 1000) * delta * this.direction;
-
-			if (this.graphics.position.x > 860)
-				this.direction = -1;
-			else if (this.graphics.position.x < 100)
-				this.direction = 1;
-			// End test code
-
-			
-			
+		update: function(time, delta) {
 			// Update the model
 			this.waveSimulation.update(this.updater.total);
 
@@ -212,6 +185,11 @@ define([
 		changeOscillatorCount: function(event) {
 			var val = parseInt($(event.target).val());
 			this.waveSimulation.set('oscillatorCount', val);
+
+			if (val > 1)
+				this.$('.oscillator-spacing').removeAttr('disabled');
+			else
+				this.$('.oscillator-spacing').attr('disabled', 'disabled');
 		},
 
 		changeFrequency: function(event) {

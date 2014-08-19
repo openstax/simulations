@@ -59,7 +59,7 @@ define([
 			this.initOscillators();
 		},
 
-		update: function(time) {
+		update: function(time, delta) {
 			
 		},
 
