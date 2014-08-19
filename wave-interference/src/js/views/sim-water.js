@@ -72,6 +72,15 @@ define([
 					max: 10
 				}
 			});
+
+			this.$('.slit-width, .barrier-location, .slit-separation').noUiSlider({
+				start: 20,
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: 100
+				}
+			});
 		},
 
 		detachFaucetControls: function() {

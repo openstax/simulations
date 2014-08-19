@@ -31,7 +31,8 @@ define([
 
 			'change .oscillator-count': 'changeOscillatorCount',
 			'change .frequency'       : 'changeFrequency',
-			'change .amplitude'       : 'changeAmplitude'
+			'change .amplitude'       : 'changeAmplitude',
+			'change .barrier-style'   : 'changeBarrierStyle',
 		},
 
 		/**
@@ -187,9 +188,9 @@ define([
 			this.waveSimulation.set('oscillatorCount', val);
 
 			if (val > 1)
-				this.$('.oscillator-spacing').removeAttr('disabled');
+				this.$('.oscillator-spacing').prev().addBack().removeAttr('disabled');
 			else
-				this.$('.oscillator-spacing').attr('disabled', 'disabled');
+				this.$('.oscillator-spacing').prev().addBack().attr('disabled', 'disabled');
 		},
 
 		changeFrequency: function(event) {
@@ -198,6 +199,15 @@ define([
 
 		changeAmplitude: function(event) {
 			this.waveSimulation.set('amplitude', $(event.target).val());
+		},
+
+		changeBarrierStyle: function(event) {
+			var val = parseInt($(event.target).val());
+
+			if (val > 0)
+				$(event.target).parents('fieldset').find('.slider').prev().addBack().removeAttr('disabled');
+			else
+				$(event.target).parents('fieldset').find('.slider').prev().addBack().attr('disabled', 'disabled');
 		}
 	});
 

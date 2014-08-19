@@ -33,8 +33,29 @@
 				<input type="radio" name="faucets" value="2" id="faucets-2" class="oscillator-count">
 				<label for="faucets-2">Two Faucet</label><br>
 
-				<label for="drip-spacing">Spacing</label><br>
-				<div class="slider oscillator-spacing" id="drip-spacing" disabled="disabled"></div>
+				<label for="drip-spacing" class="slider-label" disabled>Spacing</label>
+				<div class="slider oscillator-spacing" id="drip-spacing" disabled></div>
+			</fieldset>
+			<fieldset class="panel-fieldset">
+				<!-- <legend>Barriers</legend> -->
+
+				<input type="radio" name="barrier" value="0" id="barrier-none" class="barrier-style" checked>
+				<label for="barrier-none">No Barrier</label><br>
+
+				<input type="radio" name="barrier" value="1" id="barrier-one-slit" class="barrier-style">
+				<label for="barrier-one-slit">One Slit</label><br>
+
+				<input type="radio" name="barrier" value="2" id="barrier-two-slits" class="barrier-style">
+				<label for="barrier-two-slits">Two Slits</label><br>
+
+				<label for="slit-width" class="slider-label" disabled>Slit Width</label>
+				<div class="slider slit-width" id="slit-width" disabled></div>
+
+				<label for="barrier-location" class="slider-label" disabled>Barrier Location</label>
+				<div class="slider barrier-location" id="barrier-location" disabled></div>
+
+				<label for="slit-separation" class="slider-label" disabled>Slit Separation</label>
+				<div class="slider slit-separation" id="slit-separation" disabled></div>
 			</fieldset>
 		</form>
 	</div>
