@@ -22,7 +22,8 @@ Original simulation Copyright 2002-2011, University of Colorado.
 
 To run command-line tests, run `grunt test` from the root `wave-interference` directory.
 
-To view tests in a browser, you first need to 
+To view tests in a browser, you first need to
+
 1. set up a server (check out the Hosting section below)
 2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`) 
 3. then go to [http://localhost:8000/test/](http://localhost:8000/test/). 
@@ -36,6 +37,7 @@ The `dist` directory containing the built site will be added to the root `wave-i
 ##### Updating
 
 From the root `wave-interference` directory, run `npm run-script upgrade`, which executes the following commands:
+
 1. `npm update`
 2. `bower update`
 
