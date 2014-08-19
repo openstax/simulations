@@ -41,7 +41,7 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
 ##### For Development
 
 1. Install [nginx](http://nginx.org/)
-2. Set up a virtual host pointing to your `wave-interference/dist/` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, it can be as simple as this one:
+2. Set up a virtual host pointing to your `wave-interference/dist` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, it can be as simple as this one:
 
 ```
 server {

@@ -143,18 +143,27 @@ module.exports = function(grunt){
 			},
 			source: [
 				'src/**/*.js',
-				'!src/test/**/*.js'
+				'!test/**/*.js'
 			],
 			test: [
-				'src/test/**/*.js'
+				'test/**/*.js'
 			]
 		},
 		mocha: {
 			// Test all files ending in .html anywhere inside the test directory.
-			browser: ['src/test/**/*.html'],
+			browser: ['test/index.html'],
 			options: {
-				reporter: 'Nyan', // Duh!
-				run: true
+				reporter: 'Spec',
+				run: false,
+				log: false,
+				timeout: 15000
+			}
+		},
+		test: {
+			options: {
+				template: 'test/index.template.html',
+				runner: 'test/index.html',
+				files: 'test/**/*.js'
 			}
 		}
 	});
@@ -174,10 +183,25 @@ module.exports = function(grunt){
 		//'uglify:dist'
 	]);
 
-	grunt.registerTask('test', [
-		'jshint:source',
-		'mocha'
-	]);
+	grunt.registerTask('test', function(){
+		var options = this.options();
+		
+		// Get all the files and prepend the '../' relative path
+		var tests = grunt.file.expand(options.files).map(function(file){
+			grunt.log.write('../' + file);
+			return '../' + file;
+		});
+
+		// Build the template, replacing {{ test }} with the list of test files
+		var template = grunt.file.read(options.template).replace('{{ tests }}', JSON.stringify(tests));
+
+		// Write template to tests directory and run tests
+		grunt.file.write(options.runner, template);
+		grunt.task.run(
+			'jshint:source',
+			'mocha'
+		);
+	});
 
 	grunt.registerTask('lint', ['jshint']);
 

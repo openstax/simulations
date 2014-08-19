@@ -10,7 +10,7 @@
 			pixi:       '../../bower_components/pixi/bin/pixi',
 			nouislider: '../../bower_components/nouislider/jquery.nouislider.min',
 
-			templates:  '../templates'
+			templates:  '../templates/'
 		},
 
 		packages: [{
@@ -23,9 +23,6 @@
 			main: 'less'
 		}],
 	};
-
-	if (typeof window._TEST_MODE !== 'undefined' && window._TEST_MODE === true)
-		config.baseUrl = '../js/';
 
 	require.config(config);
 })();

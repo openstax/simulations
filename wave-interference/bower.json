@@ -21,7 +21,7 @@
     "require-less": "~0.1.2",
     "bootstrap": "~3.2.0",
     "pixi": "~1.6.1",
-    "sinon": "~1.10.3",
+    "sinonjs": "~1.10.2",
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "nouislider": "~6.2.0"
