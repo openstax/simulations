@@ -19,6 +19,10 @@ module.exports = function(grunt){
 				flatten: true,
 				src: ['bower_components/font-awesome/fonts/**'],
 				dest: 'dist/fonts/'
+			},
+			bower_components: {
+				src: 'bower_components/**',
+				dest: 'dist/'
 			}
 		},
 		requirejs: {
@@ -165,6 +169,7 @@ module.exports = function(grunt){
 		'requirejs:compile',
 		'copy',
 		'less:dist',
+		'targethtml'
 		//'clean',
 		//'uglify:dist'
 	]);
