@@ -88,7 +88,12 @@
 			}
 		}
 
-
+		.heatmap-axis-label {
+			width: 100%;
+			text-align: center;
+			line-height: (@heatmap-container-padding * 0.5);
+			padding-top: (@heatmap-container-padding * 0.5);
+		}
 	}
 
 	.heatmap-y {
@@ -149,7 +154,7 @@
 			}
 		}
 
-		.heatmap-y-label {
+		.heatmap-axis-label {
 			position: absolute;
 			display: block;
 
@@ -172,6 +177,11 @@
 
 	.heatmap-number {
 		font-size: 10px;
+		color: #888;
+	}
+
+	.heatmap-axis-label {
+		font-size: 12px;
 		color: #888;
 	}
 }
