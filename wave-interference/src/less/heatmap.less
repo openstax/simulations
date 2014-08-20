@@ -1,0 +1,24 @@
+
+.heatmap-container {
+	max-width: 100%;
+	width: @heatmap-container-width;
+	height: @heatmap-container-width;
+	position: absolute;
+	top: 20px;
+	left: 0;
+	background-color: @gray-lightest;
+
+	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
+		left: @heatmap-container-left-margin;
+	}
+
+	.heatmap-canvas {
+		position: absolute;
+		top: 20px;
+		left: 20px;
+		width: (@heatmap-container-width - 40);
+		height: (@heatmap-container-width - 40);
+		background-color: #000;
+		border: 1px solid #bbb;
+	}
+}

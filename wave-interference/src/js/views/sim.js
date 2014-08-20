@@ -6,9 +6,10 @@ define([
 
 	'models/wave-sim',
 	'utils/updater',
+	'views/heatmap',
 
 	'text!templates/sim-playback.html',
-], function ($, _, Backbone, PIXI, WaveSimulation, Updater, playbackControls) {
+], function ($, _, Backbone, PIXI, WaveSimulation, Updater, HeatmapView, playbackControls) {
 
 	'use strict';
 
@@ -45,9 +46,11 @@ define([
 		initialize: function(options) {
 			options = options || {};
 
-			this.stage = new PIXI.Stage(0xFFFFFF);
-
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
+
+			this.heatmapView = new HeatmapView({
+				waveSimulation: this.waveSimulation
+			});
 
 			this.update = _.bind(this.update, this);
 
@@ -57,10 +60,6 @@ define([
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
 			this.$el.addClass('playing');
-
-			$(window).bind('resize', $.proxy(this.resize, this));
-
-
 		},
 
 		/**
@@ -82,8 +81,10 @@ define([
 			this.$el.empty();
 
 			this.renderContent();
-			this.renderCanvas();
 			this.renderPlaybackControls();
+
+			this.heatmapView.render();
+			this.$el.append(this.heatmapView.el);
 
 			return this;
 		},
@@ -95,25 +96,6 @@ define([
 
 		renderPlaybackControls: function() {
 			this.$el.append(playbackControls);
-		},
-
-		/**
-		 * Initializes a renderer and prepends a canvas to the root element
-		 */
-		renderCanvas: function() {
-			this.renderer = PIXI.autoDetectRenderer(null, null, null, false, true); // Turn on antialiasing
-
-			var $renderer = $(this.renderer.view);
-			$renderer.addClass('sim-canvas');
-			this.$el.prepend($renderer);
-		},
-
-		/**
-		 * Called on a window resize to resize the canvas
-		 */
-		resize: function(event) {
-			var $area = this.$el.parents('.sims');
-			this.renderer.resize($area.width(), $area.height());
 		},
 
 		/**
@@ -176,10 +158,10 @@ define([
 
 		update: function(time, delta) {
 			// Update the model
-			this.waveSimulation.update(this.updater.total);
+			this.waveSimulation.update(time, delta);
 
-			// Render everything
-			this.renderer.render(this.stage);
+			// Update the heatmap
+			this.heatmapView.update(time, delta);
 		},
 
 		/**
