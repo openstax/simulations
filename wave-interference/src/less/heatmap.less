@@ -85,9 +85,10 @@
 						right: 0;
 					}
 				}
-				
 			}
 		}
+
+
 	}
 
 	.heatmap-y {
@@ -145,8 +146,27 @@
 						bottom: 0;
 					}
 				}
-				
 			}
+		}
+
+		.heatmap-y-label {
+			position: absolute;
+			display: block;
+
+			left: 0px;
+			top: 20px;     // -+-- arbitrary offsets that work for "y (cm)" but not for anything else
+			right: 0px;    //  |
+			bottom: -38px; // -|
+
+			/* width: 207px; */
+			height: 20px;
+			margin-top: auto;
+			margin-bottom: auto;
+			margin-left: 0px;
+
+			.rotate(-90deg);
+			.transform-origin(top left);
+			text-align: center;
 		}
 	}
 
