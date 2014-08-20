@@ -14,11 +14,66 @@
 
 	.heatmap-canvas {
 		position: absolute;
-		top: 20px;
-		left: 20px;
-		width: (@heatmap-container-width - 40);
-		height: (@heatmap-container-width - 40);
+		top: @heatmap-container-padding;
+		left: @heatmap-container-padding;
+		width: (@heatmap-container-width - @heatmap-container-padding * 2);
+		height: (@heatmap-container-width - @heatmap-container-padding * 2);
 		background-color: #000;
 		border: 1px solid #bbb;
+	}
+
+	.heatmap-x {
+		position: absolute;
+		height: @heatmap-container-padding;
+		bottom: 0;
+		left: @heatmap-container-padding;
+		right: @heatmap-container-padding;
+
+		.heatmap-x-numbers {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+
+		 	.heatmap-number {
+				float: left;
+				height: 100%;
+				position: relative;
+				
+				> span {
+					position: absolute;
+					display: block;
+					width: 100%;
+					height: 100%;
+					left: -50%;
+					text-align: center;
+				}
+
+				&:last-child {
+					position: absolute;
+					right: 0;
+
+					& > span {
+						left: auto;
+						right: -50%;	
+					}
+				}
+				
+			}
+		}
+	}
+
+	.heatmap-y {
+		position: absolute;
+		width: @heatmap-container-padding;
+		left: 0;
+		top: @heatmap-container-padding;
+		bottom: @heatmap-container-padding;
+	}
+
+	.heatmap-number {
+		font-size: 8px;
+		color: #888;
 	}
 }

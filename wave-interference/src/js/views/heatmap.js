@@ -23,11 +23,36 @@ define([
 		template: _.template(html),
 
 		initialize: function(options) {
+
+			// Default values
+			options = _.extend({
+				title: 'Top View',
+				x: {
+					start: 0,
+					end: 100,
+					step: 10,
+					label: 'x (cm)'
+				},
+				y: {
+					start: 0,
+					end: 100,
+					step: 10,
+					label: 'y (cm)'
+				}
+			}, options);
+
 			// Save options
 			if (options.waveSimulation)
 				this.waveSimulation   = options.waveSimulation;
 			else
 				throw 'HeatmapView requires a WaveSimulation model to render.';
+
+			// Save graph information for rendering
+			this.graphInfo = {
+				title: options.title,
+				x: options.x,
+				y: options.y
+			};
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.resize, this));
@@ -50,11 +75,7 @@ define([
 		 * Renders html container
 		 */
 		renderContainer: function() {
-			this.$el.html(this.template({
-				x: {
-					min: 0
-				}
-			}));
+			this.$el.html(this.template(this.graphInfo));
 		},
 
 		/**

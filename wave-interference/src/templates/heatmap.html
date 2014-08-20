@@ -1,5 +1,22 @@
-<div class="heatmap-container">
-
+<figure class="heatmap-container">
+	<figcaption class="heatmap-title"><%= title %></figcaption>
 	<canvas class="heatmap-canvas"></canvas>
-
-</div>
+	<div class="heatmap-y">
+		<label class="heatmap-y-label"></label>
+		<div class="heatmap-y-numbers">
+		<% var height = 100.0 / Math.ceil((y.end - y.start) / y.step); %>
+		<% for (var j = y.start; j <= y.end; j += y.step) { %>
+			<div style="height: <%= height %>%"><%= j %></div>
+		<% } %>
+		</div>
+	</div>
+	<div class="heatmap-x">
+		<label class="heatmap-x-label"></label>
+		<div class="heatmap-x-numbers">
+		<% var width = 100.0 / Math.ceil((x.end - x.start) / x.step); %>
+		<% for (var i = x.start; i <= x.end; i += x.step) { %>
+			<div class="heatmap-number" style="width: <%= width %>%"><span><%= i %></span></div>
+		<% } %>
+		</div>
+	</div>
+</figure>
