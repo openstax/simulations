@@ -51,7 +51,9 @@ define([
 		 */
 		renderContainer: function() {
 			this.$el.html(this.template({
-
+				x: {
+					min: 0
+				}
 			}));
 		},
 
@@ -99,11 +101,10 @@ define([
 					particle = new PIXI.Sprite(texture);
 
 					particle.anchor.x = particle.anchor.y = 0.5;
-					particle.alpha = Math.random();
 					particle.tint = 0x21366B;
 
 					particle.position.x = xSpacing * i;
-					particle.position.y = ySpacing * j;
+					particle.position.y = ySpacing * (height - j - 1); // Reverse bottom to top with offset
 
 					row.push(particle);
 					this.spriteBatch.addChild(particle);
@@ -131,23 +132,15 @@ define([
 		},
 
 		updateParticles: function() {
-			lat    = this.waveSimulation.lattice;
-			width  = lat.width;
-			height = lat.height;
+			lat    = this.waveSimulation.lattice.data;
+			width  = this.waveSimulation.lattice.width;
+			height = this.waveSimulation.lattice.height;
 
 			particles = this.particles;
 
-			// just for testing
-			var alpha = 0;
-
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					alpha = particles[i][j].alpha + Math.random() * 0.2 - 0.1;
-					if (alpha > 1)
-						alpha = 1;
-					if (alpha < 0)
-						alpha = 0;
-					particles[i][j].alpha = alpha;
+					particles[i][j].alpha = lat[i][j];
 				}
 			}
 		},
