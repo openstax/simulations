@@ -47,35 +47,35 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
 
 1. Install [nginx](http://nginx.org/)
 2. Set up a virtual host pointing to your `wave-interference/dist` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, do something like this (replacing `path-to-simulations` appropriately):
-```
-server {
-    listen 8000;
-    server_name $hostname;
-    root /path-to-simulations/simulations/wave-interference/dist/;
-    index index.html;
-    try_files $uri $uri/ /index.html;
 
-    location ~ ^.*/bower_components/(.*)$ {
-        alias /path-to-simulations/simulations/wave-interference/bower_components/$1;
-    }
+        server {
+          listen 8000;
+          server_name $hostname;
+          root /path-to-simulations/simulations/wave-interference/dist/;
+          index index.html;
+          try_files $uri $uri/ /index.html;
 
-    location ~ ^.*/test/(.*)$ {
-        alias /path-to-simulations/simulations/wave-interference/test/$1;
-    }
+          location ~ ^.*/bower_components/(.*)$ {
+            alias /path-to-simulations/simulations/wave-interference/bower_components/$1;
+          }
 
-    location ~ ^.*/(data|js|css|img|templates)/(.*) {
-        try_files $uri $uri/ /$1/$2 /test/$1/$2;
-    }
+          location ~ ^.*/test/(.*)$ {
+            alias /path-to-simulations/simulations/wave-interference/test/$1;
+          }
 
-    location ~ ^.*/test/(.*)/(.*) {
-        try_files $uri $uri/ /test/$1 /test/$2 /test/index.html;
-    }
+          location ~ ^.*/(data|js|css|img|templates)/(.*) {
+            try_files $uri $uri/ /$1/$2 /test/$1/$2;
+          }
 
-    location ~ ^.*/test/(.*) {
-        try_files $uri $uri/ /test/$1 /test/index.html;
-    }
-}
-```
+          location ~ ^.*/test/(.*)/(.*) {
+            try_files $uri $uri/ /test/$1 /test/$2 /test/index.html;
+          }
+
+          location ~ ^.*/test/(.*) {
+            try_files $uri $uri/ /test/$1 /test/index.html;
+          }
+        }
+
 3. Run `sudo nginx` to start the server.
 4. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
 
