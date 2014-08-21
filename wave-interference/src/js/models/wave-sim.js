@@ -69,25 +69,10 @@ define([
 
 		update: function(time, delta) {
 
-			this.propagator.propagate();
 			this.oscillators[0].update(time);
+			this.propagator.propagate();
+			
 
-			// var lat = this.lattice.data;
-			// var width = this.lattice.width;
-			// var height = this.lattice.height;
-
-			// var val;
-
-			// for (var i = 0; i < width; i++) {
-			// 	for (var j = 0; j < height; j++) {
-			// 		val = lat[i][j] + Math.random() * 0.2 - 0.1;
-			// 		if (val > 1)
-			// 			val = 1;
-			// 		if (val < 0)
-			// 			val = 0;
-			// 		lat[i][j] = val;
-			// 	}
-			// }
 		},
 
 		reset: function() {

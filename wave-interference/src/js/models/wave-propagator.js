@@ -30,8 +30,8 @@ define([
 		this.paddedLat = this.createPaddedLattice(this.lattice);
 
 		// Lattices from previous steps
-		this.prevLat1 = this.paddedLat.clone();
-		this.prevLat2 = this.paddedLat.clone();
+		// this.prevLat1 = this.paddedLat.clone();
+		// this.prevLat2 = this.paddedLat.clone();
 	};
 
 	/*
@@ -46,14 +46,14 @@ define([
 
 	var i,
 	    j,
-	    w,
-	    h,
+	    width,
+	    height,
 	    clone,
 	    cSquared,
 	    sample,
-	    paddedLat,
-	    prevLat1,
-	    prevLat2;
+	    paddedLatData,
+	    prevLat1Data,
+	    prevLat2Data;
 
 	_.extend(WavePropagator.prototype, {
 
@@ -92,11 +92,16 @@ define([
 		 *   http://www.mtnmath.com/whatth/node47.html
 		 */
 		_propagate: function() {
+			if (!this.prevLat1 || !this.prevLat2) {
+				this.prevLat1 = this.paddedLat.clone();
+				this.prevLat2 = this.paddedLat.clone();
+				return;
+			}
 
 			// Avoid object lookups when possible
-			paddedLat = this.paddedLat.data;
-			prevLat1  = this.prevLat1.data;
-			prevLat2  = this.prevLat2.data;
+			paddedLatData = this.paddedLat.data;
+			prevLat1Data  = this.prevLat1.data;
+			prevLat2Data  = this.prevLat2.data;
 
 			/*
 			 * c^2 is a coefficient from PhET's equation representing the squared
@@ -110,20 +115,24 @@ define([
 			 * We're starting with a border of 1 so we don't go out of bounds
 			 *   when collecting samples with a 3x3 cell area.
 			 */
-			w = this.paddedLat.w - 1;
-			h = this.paddedLat.h - 1;
-			for (i = 1; i < w; i++) {
-				for (j = 1; j < h; j++) {
+			width  = this.paddedLat.width - 1;
+			height = this.paddedLat.height - 1;
+			for (i = 1; i < width; i++) {
+				for (j = 1; j < height; j++) {
 
 					// TODO: check for potentials
 
-					sample = prevLat1[i - 1][j] + prevLat1[i + 1][j]
-					       + prevLat1[i][j - 1] + prevLat1[i][j + 1]
-					       + (-4 * prevLat1[i][j]);
+					sample = prevLat1Data[i - 1][j] + prevLat1Data[i + 1][j]
+					       + prevLat1Data[i][j - 1] + prevLat1Data[i][j + 1]
+					       + (-4 * prevLat1Data[i][j]);
 
-					paddedLat[i][j] = (cSquared * sample) + (2 * prevLat1[i][j]) - prevLat2[i][j];
+					paddedLatData[i][j] = (cSquared * sample) + (2 * prevLat1Data[i][j]) - prevLat2Data[i][j];
 				}
 			}
+
+			// Save history of lattice states for propagation and damping
+			this.prevLat2.copy(this.prevLat1);
+			this.prevLat1.copy(this.paddedLat);
 		},
 
 		/**
@@ -132,7 +141,7 @@ define([
 		 *   lattice's actual edge, dy could take it out of bounds!
 		 */
 		dampHorizontalEdge: function(lattice, y, dy) {
-			for (i = 0; i < lattice.w; i++)
+			for (i = 0; i < lattice.width; i++)
 				lattice.data[i][y] = this.prevLat2[i][y + dy];
 		},
 
@@ -142,7 +151,7 @@ define([
 		 *   lattice's actual edge, dx could take it out of bounds!
 		 */
 		dampVerticalEdge: function(lattice, x, dx) {
-			for (j = 0; j < lattice.h; j++)
+			for (j = 0; j < lattice.height; j++)
 				lattice.data[x][j] = this.prevLat2[x + dx][j];
 		},
 
