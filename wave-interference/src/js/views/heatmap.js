@@ -177,7 +177,7 @@ define([
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * 0.6;
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * 0.5;
 				}
 			}
 		},

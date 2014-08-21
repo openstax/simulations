@@ -25,11 +25,19 @@ define([
 		 * Dom event listeners
 		 */
 		events: {
+			// Playback controls
 			'click .play-btn' : 'play',
 			'click .pause-btn': 'pause',
 			'click .step-btn' : 'step',
 			'click .reset-btn': 'reset',
 
+			// General Control-Panel
+			'click .panel-btn': 'panelButtonClicked',
+
+			// Tools
+			'click .add-detector' : 'addDetector',
+
+			// Simulation properties
 			'change .oscillator-count':   'changeOscillatorCount',
 			'slide  .oscillator-spacing': 'changeOscillatorSpacing',
 
@@ -217,8 +225,21 @@ define([
 		},
 
 		addBarrier: function(event) {
+			
+		},
+
+		addDetector: function(event) {
+			
+		},
+
+		panelButtonClicked: function(event) {
 			event.preventDefault();
-		}
+
+			$(event.target).addClass('clicked');
+			setTimeout(function(){
+				$(event.target).removeClass('clicked');
+			}, 500);
+		},
 	});
 
 	return SimView;
