@@ -7,3 +7,10 @@
 .clearfix {
   .clearfix();
 }
+
+.transform(@transform) {
+  -webkit-transform: @transform;
+     -moz-transform: @transform;
+      -ms-transform: @transform; // IE9 only
+          transform: @transform;
+}

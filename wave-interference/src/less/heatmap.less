@@ -10,6 +10,10 @@
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		left: @heatmap-container-left-margin;
+
+		.better & {
+			left: 100px; // Width of oscillator object graphics?
+		}
 	}
 
 	.heatmap-title {
@@ -157,20 +161,19 @@
 		.heatmap-axis-label {
 			position: absolute;
 			display: block;
-
 			left: 0px;
-			top: 20px;     // -+-- arbitrary offsets that work for "y (cm)" but not for anything else
-			right: 0px;    //  |
-			bottom: -38px; // -|
-
-			/* width: 207px; */
+			top: 0;
+			right: 0px;
+			bottom: 0;
+			max-width: none;
+			width: 350px;
 			height: 20px;
 			margin-top: auto;
 			margin-bottom: auto;
-			margin-left: 0px;
+			margin-left: 10px;
 
-			.rotate(-90deg);
-			.transform-origin(top left);
+			.transform(~"rotate(-90deg) translateY(-175px)");
+			.transform-origin(center center);
 			text-align: center;
 		}
 	}
