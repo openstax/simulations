@@ -31,9 +31,23 @@ define([
 			'click .reset-btn': 'reset',
 
 			'change .oscillator-count': 'changeOscillatorCount',
-			'change .frequency'       : 'changeFrequency',
-			'change .amplitude'       : 'changeAmplitude',
 			'change .barrier-style'   : 'changeBarrierStyle',
+
+			/*
+			 * Note: the heatmap view looks smoother when we listen for the
+			 *   'change' event instead of the 'slide' event, but then changes
+			 *   only become live when sliding is finished.  The problem
+			 *   with changing frequency quickly is that it has a drastic
+			 *   effect on the sine function. Changing the frequency
+			 *   modifies the input into the sine function, so changing
+			 *   it quickly produces wildly different values, and we get
+			 *   short, sporadic waves in our oscillator as we slide the
+			 *   frequency handle, and then it takes a second to normalize.
+			 *   This was also a problem in the original sim, but I was hoping
+			 *   we could fix it in this version.
+			 */
+			'slide .frequency'       : 'changeFrequency',
+			'slide .amplitude'       : 'changeAmplitude',
 
 			'click .add-barrier': 'addBarrier'
 		},

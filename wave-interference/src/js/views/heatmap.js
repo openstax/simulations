@@ -79,13 +79,15 @@ define([
 
 			this.$('.cross-section-slider').noUiSlider({
 				start: (this.graphInfo.y.end - this.graphInfo.y.start) / 2,
-				connect: 'lower',
+				direction: 'rtl',
 				orientation: 'vertical',
 				range: {
 					min: this.graphInfo.y.start,
 					max: this.graphInfo.y.end
 				}
-			});
+			}).find('.noUi-handle')
+				.append('<div class="handle-left">')
+				.append('<div class="handle-right">');
 		},
 
 		/**
