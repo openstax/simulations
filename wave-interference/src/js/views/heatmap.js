@@ -76,6 +76,16 @@ define([
 		 */
 		renderContainer: function() {
 			this.$el.html(this.template(this.graphInfo));
+
+			this.$('.cross-section-slider').noUiSlider({
+				start: (this.graphInfo.y.end - this.graphInfo.y.start) / 2,
+				connect: 'lower',
+				orientation: 'vertical',
+				range: {
+					min: this.graphInfo.y.start,
+					max: this.graphInfo.y.end
+				}
+			});
 		},
 
 		/**
