@@ -22,6 +22,10 @@ define([
 
 		template: _.template(html),
 
+		events: {
+			'slide .cross-section-slider' : 'moveCrossSection',
+		},
+
 		initialize: function(options) {
 
 			// Default values
@@ -202,6 +206,10 @@ define([
 
 			// Render everything
 			this.renderer.render(this.stage);
+		},
+
+		moveCrossSection: function(event) {
+			console.log($(event.target).val());
 		}
 
 	});
