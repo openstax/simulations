@@ -146,8 +146,10 @@ define([
 		 * Click event handler that resets the simulation back to time zero.
 		 */
 		reset: function(event) {
+			this.pause();
 			this.updater.reset();
 			this.waveSimulation.reset();
+			this.update(0, 0);
 		},
 
 		/**

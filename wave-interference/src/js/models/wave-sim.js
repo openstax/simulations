@@ -9,8 +9,14 @@ define([
 
 	'use strict';
 
+	var i;
+
 	var WaveSimulation = Backbone.Model.extend({
 		defaults: {
+			latticeSize: {
+				width: 60,
+				height: 60
+			},
 			damping: {
 				x: 20,
 				y: 20
@@ -33,23 +39,19 @@ define([
 		
 		initialize: function(options) {
 
-			// Default options
-			options = _.extend({
-				/**
-				 * Lattice size should only matter internally.
-				 * It's basically the simulation's level of 
-				 *   precision. Conversions
-				 */
-				latticeSize: {
-					width: 60,
-					height: 60
-				}
-			}, options);
+			this.initComponents();
 
+			// Event listeners
+			this.on('change:oscillatorCount', this.initOscillators);
+			this.on('change:frequency',       this.changeFrequency);
+			this.on('change:amplitude',       this.changeAmplitude);
+		},
+
+		initComponents: function() {
 			// Lattice
 			this.lattice = new Lattice2D({
-				width: options.latticeSize.width,
-				height: options.latticeSize.height,
+				width:  this.get('latticeSize').width,
+				height: this.get('latticeSize').height,
 				initialValue: 0
 			});
 
@@ -60,41 +62,37 @@ define([
 
 			// Oscillators
 			this.initOscillators();
-
-			// Event listeners
-			this.on('change:oscillatorCount', this.initOscillators);
-			this.on('change:frequency',       this.changeFrequency);
-			this.on('change:amplitude',       this.changeAmplitude);
-		},
-
-		update: function(time, delta) {
-
-			this.propagator.propagate();
-			this.oscillators[0].update(time);
-
-		},
-
-		reset: function() {
-
-		},
-
-		resize: function() {
-			
 		},
 
 		initOscillators: function() {
 			this.oscillators = [];
-			for (var i = 0; i < this.get('oscillatorCount'); i++) {
+			for (i = 0; i < this.get('oscillatorCount'); i++) {
 				this.oscillators.push(new Oscillator({
 					frequency: this.get('frequency'),
 					amplitude: this.get('amplitude'),
 					x: 4,
 					y: 30,
 					radius: 2,
+					enabled: !i, // Only enable the first one
 
 					waveSimulation: this,
 				}));
 			}
+		},
+
+		update: function(time, delta) {
+			this.propagator.propagate();
+
+			for (i = 0; i < this.oscillators.length; i++)
+				this.oscillators[i].update(time);
+		},
+
+		reset: function() {
+			this.initComponents();
+		},
+
+		resize: function() {
+			
 		},
 
 		isValidPoint: function(x, y) {
