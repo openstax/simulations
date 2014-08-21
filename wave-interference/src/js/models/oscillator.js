@@ -21,10 +21,10 @@ define([
 
 		this.enabled = options.enabled;
 
-		if (options.lattice)
-			this.lattice   = options.lattice;
+		if (options.waveSimulation)
+			this.waveSimulation = options.waveSimulation;
 		else
-			throw 'Oscillator requires a lattice to run.';
+			throw 'Oscillator requires a wave simulation to run.';
 
 		if (_.isNumber(options.x) && _.isNumber(options.y)) {
 			this.x = options.x;
@@ -40,8 +40,7 @@ define([
 
 
 	var lat,
-		width,
-		height,
+		waveSim,
 	    oscillatingValue,
 	    i,
 	    j,
@@ -63,14 +62,12 @@ define([
 				// Oscillator wants time in seconds, not milliseconds
 				oscillatingValue = this.oscillatingValue(time / 1000);
 
-				lat    = this.lattice.data;
-				width  = this.lattice.width;
-				height = this.lattice.height;
-				radius = this.radius;
-				x      = this.x;
-				y      = this.y;
-				xMax   = x + radius;
-				yMax   = y + radius;
+				waveSim = this.waveSimulation;
+				radius  = this.radius;
+				x       = this.x;
+				y       = this.y;
+				xMax    = x + radius;
+				yMax    = y + radius;
 
 				/*
 				 * Within the circle of radius [radius] centered around [x, y], fill
@@ -80,8 +77,8 @@ define([
 					for (j = y - radius; j < yMax; j++) {
 						if (Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < radius) {
 							// Make sure we don't go out of bounds if we're on an edge
-							if (i < width && i >= 0 && j < height && j >= 0)
-								lat[i][j] = oscillatingValue;
+							if (waveSim.isValidPoint(i, j))
+								waveSim.setSourceValue(i, j, oscillatingValue);
 						}
 					}
 				}

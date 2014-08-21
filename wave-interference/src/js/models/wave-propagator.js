@@ -30,8 +30,8 @@ define([
 		this.paddedLat = this.createPaddedLattice(this.lattice);
 
 		// Lattices from previous steps
-		// this.prevLat1 = this.paddedLat.clone();
-		// this.prevLat2 = this.paddedLat.clone();
+		this.prevLat1 = this.paddedLat.clone();
+		this.prevLat2 = this.paddedLat.clone();
 	};
 
 	/*
@@ -58,7 +58,7 @@ define([
 	_.extend(WavePropagator.prototype, {
 
 		/**
-		 * This function is a mixture of ClassicalWavePropagator.propagage and
+		 * This function is a mixture of ClassicalWavePropagator.propagate and
 		 *   DampedClassicalWavePropagator.propagate.  It starts off by copying
 		 *   the simulation's true lattice to a padded version where extra
 		 *   damped values propagate into the padded "damping" region. Then
@@ -92,11 +92,6 @@ define([
 		 *   http://www.mtnmath.com/whatth/node47.html
 		 */
 		_propagate: function() {
-			if (!this.prevLat1 || !this.prevLat2) {
-				this.prevLat1 = this.paddedLat.clone();
-				this.prevLat2 = this.paddedLat.clone();
-				return;
-			}
 
 			// Avoid object lookups when possible
 			paddedLatData = this.paddedLat.data;
@@ -173,6 +168,20 @@ define([
 			});
 			return clone;
 		},
+
+		/**
+		 * Because the value of lattice[x][y] during propagation is always a function
+		 *   of prevLat1[x][y] and prevLat2[x][y], we need to set these historical
+		 *   lattice point values if we ever want a change in a point's value to last 
+		 *   through  propagation.  The oscillator calls this function instead of 
+		 *   applying its oscillating values directly to the current lattice because
+		 *   that current lattice will just be overriden when it passes through the
+		 *   propagation function.
+		 */
+		setSourceValue: function(x, y, val) {
+			this.prevLat1.data[x + this.dampX][y + this.dampY] = val;
+			this.prevLat2.data[x + this.dampX][y + this.dampY] = val;
+		}
 	});
 
 	return WavePropagator;

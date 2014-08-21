@@ -69,9 +69,8 @@ define([
 
 		update: function(time, delta) {
 
-			this.oscillators[0].update(time);
 			this.propagator.propagate();
-			
+			this.oscillators[0].update(time);
 
 		},
 
@@ -89,12 +88,21 @@ define([
 				this.oscillators.push(new Oscillator({
 					frequency: this.get('frequency'),
 					amplitude: this.get('amplitude'),
-					lattice:   this.lattice,
 					x: 4,
 					y: 30,
-					radius: 2
+					radius: 2,
+
+					waveSimulation: this,
 				}));
 			}
+		},
+
+		isValidPoint: function(x, y) {
+			return (x < this.lattice.width && x >= 0 && y < this.lattice.height && y >= 0);
+		},
+
+		setSourceValue: function(x, y, val) {
+			this.propagator.setSourceValue(x, y, val);
 		},
 
 		changeFrequency: function(model, value) {
