@@ -65,6 +65,21 @@
 		left: 0;
 		border-top: 2px dashed rgba(0, 0, 0, 0.2);
 
+		&:before,
+		&:after {
+			content: '';
+			position: absolute;
+			height: 6px;
+			left: 0;
+			width: 100%;
+		}
+		&:before {
+			bottom: 2px;
+		}
+		&:after {
+			top: 2px;
+		}
+
 		> .handle-left,
 		> .handle-right {
 			position: absolute;
