@@ -33,6 +33,7 @@ define([
 			timeScale: 1.0,
 
 			oscillatorCount: 1,
+			oscillatorSpacing: 0.5,
 			frequency: 0.5,
 			amplitude: 1.0
 		},
@@ -42,7 +43,9 @@ define([
 			this.initComponents();
 
 			// Event listeners
-			this.on('change:oscillatorCount', this.initOscillators);
+			this.on('change:oscillatorCount',   this.initOscillators);
+			this.on('change:oscillatorSpacing', this.calculateOscillatorSpacing);
+
 			this.on('change:frequency',       this.changeFrequency);
 			this.on('change:amplitude',       this.changeAmplitude);
 		},
@@ -65,18 +68,50 @@ define([
 		},
 
 		initOscillators: function() {
-			this.oscillators = [];
+			this.oscillators = [];	
+
 			for (i = 0; i < this.get('oscillatorCount'); i++) {
 				this.oscillators.push(new Oscillator({
 					frequency: this.get('frequency'),
 					amplitude: this.get('amplitude'),
 					x: 4,
-					y: 30,
+					y: 0,
 					radius: 2,
-					enabled: !i, // Only enable the first one
 
 					waveSimulation: this,
 				}));
+			}
+
+			this.calculateOscillatorSpacing();
+		},
+
+		/**
+		 * This function finds the y positions for oscillators given the
+		 *   percent spacing between them and the height of the lattice.
+		 *   It's a generalized solution that takes any oscillator count
+		 *   greater than zero. It basically finds the maximum distance
+		 *   between each point and multiplies that by the spacing
+		 *   modifier and offsets each of them from the vertical center
+		 *   (and if there are an odd number of oscillators, one is in
+		 *   the center).
+		 */
+		calculateOscillatorSpacing: function() {
+			var count = this.get('oscillatorCount');
+			var maxDistance = count > 1 ? this.lattice.height / (count - (count % 2)) : 0;
+			var percentMaxDistance = this.get('oscillatorSpacing');
+			var midpoint = this.lattice.height / 2;
+
+			var middleIndex = (count - 1) / 2;
+			var distanceFromMiddleIndex;
+
+			for (i = 0; i < count; i++) {
+				distanceFromMiddleIndex = Math.ceil(Math.abs(i - middleIndex));
+
+				if (i - middleIndex > 0)
+					this.oscillators[i].y = parseInt(midpoint + (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
+				else
+					this.oscillators[i].y = parseInt(midpoint - (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
+				console.log(this.oscillators[i].y);
 			}
 		},
 

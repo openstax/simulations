@@ -65,11 +65,11 @@ define([
 			});
 
 			this.$('#drip-spacing').noUiSlider({
-				start: 3,
+				start: 0.5,
 				connect: 'lower',
 				range: {
 					min: 0,
-					max: 10
+					max: 1
 				}
 			});
 

@@ -30,8 +30,8 @@ define([
 			'click .step-btn' : 'step',
 			'click .reset-btn': 'reset',
 
-			'change .oscillator-count': 'changeOscillatorCount',
-			'change .barrier-style'   : 'changeBarrierStyle',
+			'change .oscillator-count':   'changeOscillatorCount',
+			'slide  .oscillator-spacing': 'changeOscillatorSpacing',
 
 			/*
 			 * Note: the heatmap view looks smoother when we listen for the
@@ -49,6 +49,7 @@ define([
 			'slide .frequency'       : 'changeFrequency',
 			'slide .amplitude'       : 'changeAmplitude',
 
+			'change .barrier-style'   : 'changeBarrierStyle',
 			'click .add-barrier': 'addBarrier'
 		},
 
@@ -180,6 +181,14 @@ define([
 			this.heatmapView.update(time, delta);
 		},
 
+		changeFrequency: function(event) {
+			this.waveSimulation.set('frequency', $(event.target).val());
+		},
+
+		changeAmplitude: function(event) {
+			this.waveSimulation.set('amplitude', $(event.target).val());
+		},
+
 		/**
 		 * Click event handler for oscillator count radio buttons
 		 */
@@ -193,12 +202,9 @@ define([
 				this.$('.oscillator-spacing').prev().addBack().attr('disabled', 'disabled');
 		},
 
-		changeFrequency: function(event) {
-			this.waveSimulation.set('frequency', $(event.target).val());
-		},
-
-		changeAmplitude: function(event) {
-			this.waveSimulation.set('amplitude', $(event.target).val());
+		changeOscillatorSpacing: function(event) {
+			var val = parseFloat($(event.target).val());
+			this.waveSimulation.set('oscillatorSpacing', val);
 		},
 
 		changeBarrierStyle: function(event) {
