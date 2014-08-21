@@ -109,7 +109,7 @@ module.exports = function(grunt){
 				unused: 'vars',
 				strict: true,
 				trailing: true,
-				maxlen: 120,
+				//maxlen: 120,
 				maxcomplexity: 10,
 
 				// Relaxing Options

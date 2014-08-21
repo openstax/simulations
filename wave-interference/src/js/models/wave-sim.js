@@ -3,8 +3,9 @@ define([
 	'backbone',
 
 	'models/lattice2d',
-	'models/oscillator'
-], function (_, Backbone, Lattice2D, Oscillator) {
+	'models/oscillator',
+	'models/wave-propagator'
+], function (_, Backbone, Lattice2D, Oscillator, WavePropagator) {
 
 	'use strict';
 
@@ -32,8 +33,7 @@ define([
 		
 		initialize: function(options) {
 
-			this.oscillators = [];
-
+			// Default options
 			options = _.extend({
 				/**
 				 * Lattice size should only matter internally.
@@ -46,36 +46,48 @@ define([
 				}
 			}, options);
 
+			// Lattice
 			this.lattice = new Lattice2D({
 				width: options.latticeSize.width,
 				height: options.latticeSize.height,
 				initialValue: 0
 			});
 
+			// Wave propagator
+			this.propagator = new WavePropagator({
+				lattice: this.lattice
+			});
+
+			// Oscillators
+			this.initOscillators();
+
+			// Event listeners
 			this.on('change:oscillatorCount', this.initOscillators);
 			this.on('change:frequency',       this.changeFrequency);
 			this.on('change:amplitude',       this.changeAmplitude);
-
-			this.initOscillators();
 		},
 
 		update: function(time, delta) {
-			var lat = this.lattice.data;
-			var width = this.lattice.width;
-			var height = this.lattice.height;
 
-			var val;
+			this.propagator.propagate();
+			this.oscillators[0].update(time);
 
-			for (var i = 0; i < width; i++) {
-				for (var j = 0; j < height; j++) {
-					val = lat[i][j] + Math.random() * 0.2 - 0.1;
-					if (val > 1)
-						val = 1;
-					if (val < 0)
-						val = 0;
-					lat[i][j] = val;
-				}
-			}
+			// var lat = this.lattice.data;
+			// var width = this.lattice.width;
+			// var height = this.lattice.height;
+
+			// var val;
+
+			// for (var i = 0; i < width; i++) {
+			// 	for (var j = 0; j < height; j++) {
+			// 		val = lat[i][j] + Math.random() * 0.2 - 0.1;
+			// 		if (val > 1)
+			// 			val = 1;
+			// 		if (val < 0)
+			// 			val = 0;
+			// 		lat[i][j] = val;
+			// 	}
+			// }
 		},
 
 		reset: function() {
@@ -94,7 +106,7 @@ define([
 					amplitude: this.get('amplitude'),
 					lattice:   this.lattice,
 					x: 4,
-					y: 4,
+					y: 30,
 					radius: 2
 				}));
 			}

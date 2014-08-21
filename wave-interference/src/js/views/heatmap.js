@@ -161,9 +161,18 @@ define([
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					particles[i][j].alpha = lat[i][j];
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]);
 				}
 			}
+		},
+
+		alphaFromCellValue: function(value) {
+			value = (value + 1.0) / 2.0;
+			if (value > 1)
+				return 1;
+			if (value < 0)
+				return 0;
+			return value;
 		},
 
 		/**

@@ -27,7 +27,7 @@ define([
 			throw 'WavePropagator requires an initial lattice to function!';
 
 		// Lattice that is padded on every side by the damping scale
-		this.paddedLat = this.createPaddedLattice();
+		this.paddedLat = this.createPaddedLattice(this.lattice);
 
 		// Lattices from previous steps
 		this.prevLat1 = this.paddedLat.clone();
@@ -73,9 +73,9 @@ define([
 		 * Original discrete wave propagation model from:
 		 *   http://www.mtnmath.com/whatth/node47.html
 		 */
-		propagate: function(lattice) {
+		propagate: function() {
 			// Copy simulation's lattice values to padded lattice
-			this.paddedLat.copyArea(lattice, lattice.w, lattice.h, this.dampX, this.dampY, 0, 0);
+			this.paddedLat.copyArea(this.lattice, this.lattice.width, this.lattice.height, 0, 0, this.dampX, this.dampY);
 
 			// Perform propagation on padded lattice
 			this._propagate();
@@ -83,7 +83,7 @@ define([
 			// TODO: perform damping
 
 			// Copy simulation's new lattice values back from the padded lattice
-			lattice.copyArea(this.paddedLat, this.paddedLat.w, this.paddedLat.h, 0, 0, this.dampX, this.dampY);
+			this.lattice.copyArea(this.paddedLat, this.lattice.width, this.lattice.height, this.dampX, this.dampY, 0, 0);
 		},
 
 		/**
@@ -158,13 +158,13 @@ define([
 		 */
 		createPaddedLattice: function(lattice) {
 			clone = new Lattice2D({
-				w: lattice.w + this.dampX * 2,
-				h: lattice.h + this.dampY * 2,
+				width:  lattice.width  + this.dampX * 2,
+				height: lattice.height + this.dampY * 2,
 				initialValue: 0
 			});
 			return clone;
 		},
 	});
 
-	return Lattice2D;
+	return WavePropagator;
 });

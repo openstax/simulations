@@ -19,6 +19,8 @@ define([
 		this.amplitude = options.amplitude;
 		this.radius    = options.radius;
 
+		this.enabled = options.enabled;
+
 		if (options.lattice)
 			this.lattice   = options.lattice;
 		else
@@ -58,7 +60,8 @@ define([
 		 */
 		update: function(time) {
 			if (this.enabled) {
-				oscillatingValue = this.oscillatingValue(time);
+				// Oscillator wants time in seconds, not milliseconds
+				oscillatingValue = this.oscillatingValue(time / 1000);
 
 				lat    = this.lattice.data;
 				width  = this.lattice.width;
