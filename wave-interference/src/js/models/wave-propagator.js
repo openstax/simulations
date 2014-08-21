@@ -46,6 +46,7 @@ define([
 
 	var i,
 	    j,
+	    k,
 	    width,
 	    height,
 	    clone,
@@ -53,7 +54,9 @@ define([
 	    sample,
 	    paddedLatData,
 	    prevLat1Data,
-	    prevLat2Data;
+	    prevLat2Data,
+	    depthInDampingRegion,
+	    dampingCoefficient;
 
 	_.extend(WavePropagator.prototype, {
 
@@ -80,7 +83,8 @@ define([
 			// Perform propagation on padded lattice
 			this._propagate();
 
-			// TODO: perform damping
+			// Extra damping on all lattice points
+			this.dampScale();
 
 			// Copy simulation's new lattice values back from the padded lattice
 			this.lattice.copyArea(this.paddedLat, this.lattice.width, this.lattice.height, this.dampX, this.dampY, 0, 0);
@@ -125,6 +129,13 @@ define([
 				}
 			}
 
+			// Damp all the edges
+			this.dampHorizontalEdge(0,       1);
+			this.dampHorizontalEdge(height, -1);
+
+			this.dampVerticalEdge(0,      1);
+			this.dampVerticalEdge(width, -1);
+
 			// Save history of lattice states for propagation and damping
 			this.prevLat2.copy(this.prevLat1);
 			this.prevLat1.copy(this.paddedLat);
@@ -135,9 +146,9 @@ define([
 		 *   to the simulation lattice's edge.  If it is performed on a
 		 *   lattice's actual edge, dy could take it out of bounds!
 		 */
-		dampHorizontalEdge: function(lattice, y, dy) {
-			for (i = 0; i < lattice.width; i++)
-				lattice.data[i][y] = this.prevLat2[i][y + dy];
+		dampHorizontalEdge: function(y, dy) {
+			for (i = 0; i < this.paddedLat.width; i++)
+				this.paddedLat.data[i][y] = this.prevLat2.data[i][y + dy];
 		},
 
 		/**
@@ -145,9 +156,68 @@ define([
 		 *   to the simulation lattice's edge.  If it is performed on a
 		 *   lattice's actual edge, dx could take it out of bounds!
 		 */
-		dampVerticalEdge: function(lattice, x, dx) {
-			for (j = 0; j < lattice.height; j++)
-				lattice.data[x][j] = this.prevLat2[x + dx][j];
+		dampVerticalEdge: function(x, dx) {
+			for (j = 0; j < this.paddedLat.height; j++)
+				this.paddedLat.data[x][j] = this.prevLat2.data[x + dx][j];
+		},
+
+
+		dampScale: function() {
+			this.dampVertical(  0,                          1, this.dampY / 2); // start at left edge and go right
+			this.dampVertical(  this.paddedLat.width - 1,  -1, this.dampY / 2); // start at right edge and go left
+			this.dampHorizontal(0,                          1, this.dampX / 2); // start at top edge and go down
+			this.dampHorizontal(this.paddedLat.height - 1, -1, this.dampX / 2); // start at bottom edge and go up
+		},
+
+		/**
+		 * This function is from PhET's DampedClassicalWavePropagator class.
+		 *   I don't know where they got this algorithm, so when I renamed
+		 *   the variables, it was to convey my own understanding of what is
+		 *   happening.
+		 * What it does is scale down the values of all the lattice points 
+		 *   at a given x value on towards the right or left (depending on
+		 *   the direction) with decreasing damping strength as it farther 
+		 *   from the xOrigin.
+		 */
+		dampVertical: function(xOrigin, direction, xDistance) {
+			paddedLatData = this.paddedLat.data;
+			prevLat1Data  = this.prevLat1.data;
+
+			height = this.paddedLat.height;
+
+			for (j = 0; j < height; j++) {
+				for (k = 0; k < xDistance; k++) {
+					// xDistance - k is distance from the final x location
+					dampingCoefficient = this.getDampingCoefficient(xDistance - k);
+
+					i = xOrigin + (k * direction);
+
+					paddedLatData[i][j] *= dampingCoefficient;
+					prevLat1Data[i][j]  *= dampingCoefficient;
+				}
+			}
+		},
+
+		/**
+		 * See notes for dampVertical.
+		 */
+		dampHorizontal: function(yOrigin, direction, yDistance) {
+			paddedLatData = this.paddedLat.data;
+			prevLat1Data  = this.prevLat1.data;
+
+			width  = this.paddedLat.width;
+
+			for (i = 0; i < width; i++) {
+				for (k = 0; k < yDistance; k++) {
+					// xDistance - k is distance from the final y location
+					dampingCoefficient = this.getDampingCoefficient(yDistance - k);
+
+					j = yOrigin + (k * direction);
+
+					paddedLatData[i][j] *= dampingCoefficient;
+					prevLat1Data[i][j]  *= dampingCoefficient;
+				}
+			}
 		},
 
 		/**
