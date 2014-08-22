@@ -14,7 +14,8 @@ define([
 
 		initialize: function(options) {
 			options = _.extend({
-				waveSimulation: new SoundSimulation()
+				waveSimulation: new SoundSimulation(),
+				heatmapBrightness: 0.5
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);

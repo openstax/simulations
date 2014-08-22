@@ -67,12 +67,15 @@ define([
 		 * @params options
 		 */
 		initialize: function(options) {
-			options = options || {};
+			options = _.extend({
+				heatmapBrightness: 0.5
+			}, options);
 
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
 			this.heatmapView = new HeatmapView({
-				waveSimulation: this.waveSimulation
+				waveSimulation: this.waveSimulation,
+				brightness: options.heatmapBrightness
 			});
 
 			this.update = _.bind(this.update, this);
@@ -141,7 +144,7 @@ define([
 		 * Click event handler that plays the simulation for a specified duration
 		 */
 		step: function(event) {
-			var milliseconds = 20;
+			var milliseconds = 50;
 
 			// Set the UI to pause mode
 			this.pause();
@@ -187,6 +190,7 @@ define([
 
 			// Update the heatmap
 			this.heatmapView.update(time, delta);
+			console.log(time);
 		},
 
 		changeFrequency: function(event) {

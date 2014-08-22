@@ -16,7 +16,8 @@ define([
 		height,
 	    i,
 	    j,
-	    particles;
+	    particles,
+	    brightness;
 
 	var HeatmapView = Backbone.View.extend({
 
@@ -42,7 +43,8 @@ define([
 					end: 100,
 					step: 10,
 					label: 'y (cm)'
-				}
+				},
+				brightness: 0.5
 			}, options);
 
 			// Save options
@@ -57,6 +59,9 @@ define([
 				x: options.x,
 				y: options.y
 			};
+
+			// The alpha modifer for particles
+			this.brightness = options.brightness;
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.resize, this));
@@ -138,7 +143,6 @@ define([
 					particle = new PIXI.Sprite(texture);
 
 					particle.anchor.x = particle.anchor.y = 0.5;
-					particle.tint = 0x21366B;
 
 					particle.position.x = xSpacing * i;
 					particle.position.y = ySpacing * (height - j - 1); // Reverse bottom to top with offset
@@ -173,11 +177,13 @@ define([
 			width  = this.waveSimulation.lattice.width;
 			height = this.waveSimulation.lattice.height;
 
+			brightness = this.brightness;
+
 			particles = this.particles;
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * 0.5;
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * brightness;
 				}
 			}
 		},

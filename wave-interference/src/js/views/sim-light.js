@@ -13,7 +13,8 @@ define([
 
 		initialize: function(options) {
 			options = _.extend({
-				waveSimulation: new LightSimulation()
+				waveSimulation: new LightSimulation(),
+				heatmapBrightness: 0.5
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);

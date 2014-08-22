@@ -38,7 +38,11 @@ define([
 		this.play = function() {
 			if (!playing) {
 				playing = true;
-				last = Date.now();
+				/*
+				 * Subtract the last delta so we don't do two frames 
+				 * at the same this.total time after unpausing.
+				 */
+				last = Date.now() - delta;
 				frame();	
 			}
 		};
