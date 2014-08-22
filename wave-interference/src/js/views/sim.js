@@ -190,7 +190,6 @@ define([
 
 			// Update the heatmap
 			this.heatmapView.update(time, delta);
-			console.log(time);
 		},
 
 		changeFrequency: function(event) {
