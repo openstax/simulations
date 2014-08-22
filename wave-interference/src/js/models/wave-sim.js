@@ -48,6 +48,10 @@ define([
 
 			this.on('change:frequency',       this.changeFrequency);
 			this.on('change:amplitude',       this.changeAmplitude);
+
+			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
+			this.accumulator = 0;
+			this.time = 0;
 		},
 
 		initComponents: function() {
@@ -115,11 +119,32 @@ define([
 			}
 		},
 
+		/**
+		 * Because we need to update the simulation on a fixed interval
+		 *   for accuracy--especially since the propagator isn't based
+		 *   off of time but acts in discrete steps--we need a way to
+		 *   keep track of step intervals independent of the varying
+		 *   intervals created by window.requestAnimationFrame. This 
+		 *   clever solution was found here: 
+		 *
+		 *   http://gamesfromwithin.com/casey-and-the-clearly-deterministic-contraptions
+		 */
 		update: function(time, delta) {
-			this.propagator.propagate();
 
-			for (i = 0; i < this.oscillators.length; i++)
-				this.oscillators[i].update(time);
+			this.accumulator += delta;
+
+			while (this.accumulator >= this.timestep) {
+				this.time += this.timestep;
+
+				this.propagator.propagate();
+
+				for (i = 0; i < this.oscillators.length; i++)
+					this.oscillators[i].update(this.time);
+				
+				this.accumulator -= this.timestep;
+			}
+
+			return this.accumulator / this.timestep;
 		},
 
 		reset: function() {

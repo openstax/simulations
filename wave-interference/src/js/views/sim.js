@@ -78,10 +78,13 @@ define([
 				brightness: options.heatmapBrightness
 			});
 
+			// Updater stuff
 			this.update = _.bind(this.update, this);
 
 			this.updater = new Updater();
 			this.updater.addFrameListener(this.update);
+
+			this.interpolationFactor = 0;
 
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
@@ -186,10 +189,10 @@ define([
 
 		update: function(time, delta) {
 			// Update the model
-			this.waveSimulation.update(time, delta);
+			this.interpolationFactor = this.waveSimulation.update(time, delta);
 
 			// Update the heatmap
-			this.heatmapView.update(time, delta);
+			this.heatmapView.update(this.interpolationFactor);
 		},
 
 		changeFrequency: function(event) {

@@ -12,6 +12,8 @@ define([
 	 * "Local" variables for functions to share and recycle
 	 */
 	var lat,
+		prevLat,
+		interpolatedValue,
 		width,
 		height,
 	    i,
@@ -49,7 +51,7 @@ define([
 
 			// Save options
 			if (options.waveSimulation)
-				this.waveSimulation   = options.waveSimulation;
+				this.waveSimulation = options.waveSimulation;
 			else
 				throw 'HeatmapView requires a WaveSimulation model to render.';
 
@@ -62,6 +64,9 @@ define([
 
 			// The alpha modifer for particles
 			this.brightness = options.brightness;
+
+			// To keep track of history so we can interpolate values
+			this.previousLattice = this.waveSimulation.lattice.clone();
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.resize, this));
@@ -172,10 +177,12 @@ define([
 			return new PIXI.Texture.fromCanvas(canvas);
 		},
 
-		updateParticles: function() {
+		updateParticles: function(interpolationFactor) {
 			lat    = this.waveSimulation.lattice.data;
 			width  = this.waveSimulation.lattice.width;
 			height = this.waveSimulation.lattice.height;
+
+			//prevLat = this.previousLattice.data;
 
 			brightness = this.brightness;
 
@@ -183,9 +190,12 @@ define([
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * brightness;
+					//interpolatedValue = prevLat[i][j] * (1 - interpolationFactor) + lat[i][j] * interpolationFactor;
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]/*interpolationFactor*/) * brightness;
 				}
 			}
+
+			//this.previousLattice.copy(this.waveSimulation.lattice);
 		},
 
 		alphaFromCellValue: function(value) {
@@ -205,17 +215,17 @@ define([
 			this.initParticles();
 		},
 
-		update: function(time, delta) {
+		update: function(interpolationFactor) {
 			// Update particles to match new lattice
 			if (this.particles)
-				this.updateParticles();
+				this.updateParticles(interpolationFactor);
 
 			// Render everything
 			this.renderer.render(this.stage);
 		},
 
 		moveCrossSection: function(event) {
-			console.log($(event.target).val());
+			//console.log($(event.target).val());
 		}
 
 	});
