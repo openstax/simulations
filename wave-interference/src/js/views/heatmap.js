@@ -69,7 +69,7 @@ define([
 			this.previousLattice = this.waveSimulation.lattice.clone();
 
 			// Bind events
-			$(window).bind('resize', $.proxy(this.resize, this));
+			$(window).bind('resize', $.proxy(this.windowResized, this));
 		},
 
 		/**
@@ -126,6 +126,8 @@ define([
 			// Create a specialized container for rendering lots of particles
 			this.spriteBatch = new PIXI.SpriteBatch();
 			this.stage.addChild(this.spriteBatch);
+
+			this.initParticles();
 		},
 
 		initParticles: function() {
@@ -134,10 +136,7 @@ define([
 			width  = this.waveSimulation.lattice.width;
 			height = this.waveSimulation.lattice.height;
 
-			var xSpacing = this.$canvas.width()  / (width - 1);
-			var ySpacing = this.$canvas.height() / (height - 1);
-
-			var texture = this.generateParticleTexture(Math.max(xSpacing, ySpacing) * 2);
+			var texture = this.generateParticleTexture(0);
 			var particle;
 			var row;
 
@@ -146,16 +145,33 @@ define([
 				for (j = 0; j < height; j++) {
 					// Create a particle representing this cell
 					particle = new PIXI.Sprite(texture);
-
 					particle.anchor.x = particle.anchor.y = 0.5;
-
-					particle.position.x = xSpacing * i;
-					particle.position.y = ySpacing * (height - j - 1); // Reverse bottom to top with offset
 
 					row.push(particle);
 					this.spriteBatch.addChild(particle);
 				}
 				this.particles.push(row);
+			}
+		},
+
+		positionParticles: function() {
+			width  = this.waveSimulation.lattice.width;
+			height = this.waveSimulation.lattice.height;
+
+			
+			var xSpacing = this.$canvas.width()  / (width - 1);
+			var ySpacing = this.$canvas.height() / (height - 1);
+
+			var texture = this.generateParticleTexture(Math.max(xSpacing, ySpacing) * 2);
+			var particle;
+
+			for (i = 0; i < width; i++) {
+				for (j = 0; j < height; j++) {
+					particle = particles[i][j];
+					particle.setTexture(texture);
+					particle.position.x = xSpacing * i;
+					particle.position.y = ySpacing * (height - j - 1); // Reverse bottom to top with offset
+				}
 			}
 		},
 
@@ -210,12 +226,24 @@ define([
 		/**
 		 * Called on a window resize to resize the canvas
 		 */
+		windowResized: function(event) {
+			this.resizeOnNextUpdate = true;
+		},
+
 		resize: function(event) {
-			this.renderer.resize(this.$canvas.width(), this.$canvas.height());
-			this.initParticles();
+			var width  = this.$canvas.width();
+			var height = this.$canvas.height();
+			if (width != this.renderer.width || height != this.renderer.height) {
+				this.renderer.resize(width, height);
+				this.positionParticles();
+				this.resizeOnNextUpdate = false;
+			}
 		},
 
 		update: function(interpolationFactor) {
+			if (this.resizeOnNextUpdate)
+				this.resize();
+
 			// Update particles to match new lattice
 			if (this.particles)
 				this.updateParticles(interpolationFactor);
