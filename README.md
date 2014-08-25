@@ -3,6 +3,11 @@ OpenStax Simulations
 
 This repository holds all simulations that will be embedded into OpenStax textbooks.
 
+Running Code
+------------
+
+See individual simulation READMEs for instructions on running simulations.
+
 License
 -------
 
