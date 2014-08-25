@@ -115,7 +115,6 @@ define([
 					this.oscillators[i].y = parseInt(midpoint + (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
 				else
 					this.oscillators[i].y = parseInt(midpoint - (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
-				console.log(this.oscillators[i].y);
 			}
 		},
 

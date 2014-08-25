@@ -55,7 +55,6 @@ define([
 	    paddedLatData,
 	    prevLat1Data,
 	    prevLat2Data,
-	    depthInDampingRegion,
 	    dampingCoefficient;
 
 	_.extend(WavePropagator.prototype, {

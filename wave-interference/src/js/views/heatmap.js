@@ -12,8 +12,6 @@ define([
 	 * "Local" variables for functions to share and recycle
 	 */
 	var lat,
-		prevLat,
-		interpolatedValue,
 		width,
 		height,
 	    i,

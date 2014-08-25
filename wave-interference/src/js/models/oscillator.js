@@ -39,8 +39,7 @@ define([
 	};
 
 
-	var lat,
-		waveSim,
+	var waveSim,
 	    oscillatingValue,
 	    i,
 	    j,
