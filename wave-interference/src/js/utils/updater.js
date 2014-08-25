@@ -3,11 +3,11 @@
  * https://gist.github.com/greypants/3739036
  */
 
-define([
-	'pixi'
-], function () {
+define(function (require) {
 
 	'use strict';
+
+	require('pixi');
 
 	var Updater = function() {
 

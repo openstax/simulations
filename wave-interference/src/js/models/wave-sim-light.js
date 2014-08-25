@@ -16,8 +16,8 @@ define([
 				y: 40
 			},
 			dimensions: {
-				w: 4200,
-				h: 4200
+				width: 4200,
+				height: 4200
 			},
 			units: {
 				distance: 'nm',

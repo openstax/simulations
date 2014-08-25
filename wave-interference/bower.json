@@ -24,6 +24,6 @@
     "sinonjs": "~1.10.2",
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
-    "nouislider": "~6.2.0"
+    "nouislider": "~7.0.1"
   }
 }

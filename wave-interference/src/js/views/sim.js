@@ -1,17 +1,16 @@
-define([
-	'jquery', 
-	'underscore', 
-	'backbone',
-	'pixi',
-
-	'models/wave-sim',
-	'utils/updater',
-	'views/heatmap',
-
-	'text!templates/sim-playback.html',
-], function ($, _, Backbone, PIXI, WaveSimulation, Updater, HeatmapView, playbackControls) {
+define(function (require) {
 
 	'use strict';
+
+	var $                = require('jquery');
+	var _                = require('underscore');
+	var Backbone         = require('backbone');
+	var PIXI             = require('pixi');
+	var WaveSimulation   = require('models/wave-sim');
+	var Updater          = require('utils/updater');
+	var HeatmapView      = require('views/heatmap');
+	var playbackControls = require('text!templates/sim-playback.html');
+
 
 	var SimView = Backbone.View.extend({
 
@@ -222,7 +221,7 @@ define([
 		},
 
 		changeOscillatorSpacing: function(event) {
-			var val = parseFloat($(event.target).val());
+			var val = parseFloat($(event.target).val()) / this.waveSimulation.get('dimensions').height;
 			this.waveSimulation.set('oscillatorSpacing', val);
 		},
 

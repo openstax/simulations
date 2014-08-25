@@ -12,8 +12,8 @@ define([
 			// Values from PhET's WaterModule class
 
 			dimensions: {
-				w: 10,
-				h: 10
+				width: 10,
+				height: 10
 			},
 			units: {
 				distance: 'cm',

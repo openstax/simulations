@@ -66,12 +66,18 @@ define([
 			});
 
 			this.$('#drip-spacing').noUiSlider({
-				start: 0.5,
+				start: this.waveSimulation.get('dimensions').height / 2,
 				connect: 'lower',
 				range: {
 					min: 0,
-					max: 1
+					'50%': this.waveSimulation.get('dimensions').height / 2,
+					max: this.waveSimulation.get('dimensions').height
 				}
+			});
+
+			this.$('#drip-spacing').noUiSlider_pips({
+				mode: 'range',
+				density: 5
 			});
 
 			this.$('.slit-width, .barrier-location, .slit-separation').noUiSlider({

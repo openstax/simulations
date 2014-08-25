@@ -12,8 +12,8 @@ define([
 			// Values from PhET's SoundModule class
 
 			dimensions: {
-				w: 100,
-				h: 100
+				width: 100,
+				height: 100
 			},
 			units: {
 				distance: 'cm',
