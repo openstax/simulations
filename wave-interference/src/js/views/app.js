@@ -27,6 +27,12 @@ define([
 				sound: new SoundSimView(),
 				light: new LightSimView()
 			};
+
+			this.on('remove', function() {
+				_.each(this.sims, function(sim, key) {
+					sim.remove();
+				});
+			});
 		},
 
 		render: function() {

@@ -89,6 +89,11 @@ define([
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
 			this.$el.addClass('playing');
+
+			this.on('remove', function() {
+				this.unbind();
+				this.updater.pause();
+			});
 		},
 
 		/**

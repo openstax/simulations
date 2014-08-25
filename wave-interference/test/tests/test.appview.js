@@ -1,89 +1,75 @@
+define(function(require) {
 
+	describe('AppView', function() {
 
-describe('AppView', function() {
+		var $ = require('jquery');
+		var AppView = require('views/app');
 
-	var appView, $;
-
-	before(function(done){
-		require(['jquery'], function(jQuery) {
-			$ = jQuery;
-
+		var before = function() {
 			$('#app-stylesheet').removeAttr('disabled');
 
-			done();
-		});
-	});
-
-	beforeEach(function(done) {
-		require(['jquery', 'views/app'], function(jQuery, AppView) {
 			appView = new AppView();
-
-			// Render main app view
 			appView.render();
 
-			// Prepend to body
 			$('body').prepend(appView.el);
 
 			// Trigger window resize to update canvases
 			$(window).trigger('resize');
+		};
 
-			done();
-		});
-	});
+		var beforeEach = function() {
+			
+		};
 
-	afterEach(function() {
-		appView.remove();
-	});
+		var afterEach = function() {
+			
+		};
 
-	after(function(done) {
-		require(['jquery'], function($) {
+		var after = function() {
+			appView.remove();
 			$('#app-stylesheet').attr('disabled', 'disabled');
-			done();
-		});
-	});
+		};
 
-	describe('Tabs', function(done) {
-		require(['jquery', 'views/app'], function($, AppView) {
-			$('#app-stylesheet').removeAttr('disabled');
-			appView = new AppView();
+		describe('Tabs', function() {
 
-			// Render main app view
-			appView.render();
+			before(before);
+			//beforeEach(beforeEach);
 
-			// Prepend to body
-			$('body').prepend(appView.el);
+			after(after);
+			//afterEach(afterEach);
 
-			// Trigger window resize to update canvases
-			$(window).trigger('resize');
-
-
-
-
-
-			var $tab = appView.$('.sim-tab').last();
+			var $tab  = appView.$('.sim-tab').last();
+			var $tab2 = appView.$('.sim-tab').first();
 
 			var tabSpy   = sinon.spy();
 			var childSpy = sinon.spy();
 
+			$tab.bind('tab-selected', function(){
+				console.log('hey');
+			});
+
 			$tab.bind('tab-selected', tabSpy);
-			$tab.click();
+			appView.tabClicked({target: $tab[0]});
+
+			// Activate another tab to deactivate the testing one
+			appView.tabClicked({target: $tab2[0]});
 
 			$tab.bind('tab-selected', childSpy);
-			$tab.children().first().click();
+			appView.tabClicked({target: $tab.children().first()[0]});
 
-			it('should trigger "tab-selected" event one time on tab click', function() {
-				chai.expect(tabSpy.calledOnce).to.be.ok;
+			it('should trigger "tab-selected" event on tab click', function() {
+				// Called once for child and once on self
+				chai.expect(tabSpy.callCount).to.equal(2);
 			});
 
 			it('should trigger "tab-selected" event one time when a child is clicked', function() {
 				chai.expect(childSpy.calledOnce).to.be.ok;
 			});
-
-			done();
 		});
-	});
 
+	});
 });
+
 
 describe('Easy schmeezy', function(){
 	it('Should be 1.', function() {
