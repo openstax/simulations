@@ -46,7 +46,7 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
 ##### For Development
 
 1. Install [nginx](http://nginx.org/)
-2. Set up a virtual host pointing to your `wave-interference/dist` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, do something like this (replacing `path-to-simulations` appropriately):
+2. Set up a virtual host pointing to your `wave-interference/src` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, do something like this (replacing `path-to-simulations` appropriately):
 
         server {
           listen 8000;
@@ -77,7 +77,8 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
         }
 
 3. Run `sudo nginx` to start the server.
-4. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
+4. In the root of `simulations/wave-interference/`, run `grunt less:development`. Alternatively, if you are going to make changes to the LESS source, just run `grunt watch` to start a watcher that watches for changes in LESS files and recompiles automatically.
+5. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
 
 
 License
