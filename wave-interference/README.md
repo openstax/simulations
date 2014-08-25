@@ -14,7 +14,7 @@ Original simulation Copyright 2002-2011, University of Colorado.
 #### Installing
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
-2. Run `npm install -g grunt-cli bower` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli) and [bower](http://bower.io/).
+2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
 3. From the root `wave-interference` directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
