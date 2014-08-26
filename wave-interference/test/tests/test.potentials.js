@@ -37,6 +37,9 @@ describe('Potentials', function(){
 
 		// Should be within the bounds
 		chai.expect(barrier.getPotential(5, 0, 0)).to.be.ok;
+
+		// Should be within the bounds
+		var p = barrier.getPotential(-5, 2, 0)
 		
 		// Should not be within the bounds
 		chai.expect(barrier.getPotential(5, -1, 0)).to.not.be.ok;

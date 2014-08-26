@@ -75,10 +75,10 @@ define([
 				}
 			});
 
-			this.$('#drip-spacing').noUiSlider_pips({
-				mode: 'range',
-				density: 5
-			});
+			// this.$('#drip-spacing').noUiSlider_pips({
+			// 	mode: 'range',
+			// 	density: 5
+			// });
 
 			this.$('.slit-width, .barrier-location, .slit-separation').noUiSlider({
 				start: 20,
