@@ -1,10 +1,10 @@
 
-define([
-	'underscore',
-	'models/lattice2d'
-], function(_, Lattice2D) {
+define(function(require) {
 
 	'use strict';
+
+	var _         = require('underscore');
+	var Lattice2D = require('models/lattice2d');
 
 	var WavePropagator = function(options) {
 

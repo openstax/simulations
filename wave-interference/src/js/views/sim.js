@@ -5,7 +5,6 @@ define(function (require) {
 	var $                = require('jquery');
 	var _                = require('underscore');
 	var Backbone         = require('backbone');
-	var PIXI             = require('pixi');
 	var WaveSimulation   = require('models/wave-sim');
 	var Updater          = require('utils/updater');
 	var HeatmapView      = require('views/heatmap');

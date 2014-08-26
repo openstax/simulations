@@ -1,11 +1,11 @@
-define(function (require) {
+// define(function (require) {
 
-	'use strict';
+// 	'use strict';
 
-	var _                = require('underscore');
-	var PIXI             = require('pixi');
+// 	var _                = require('underscore');
+// 	var PIXI             = require('pixi');
 
-	var BarrierView;
+// 	var BarrierView;
 
-	return BarrierView;
-});
+// 	return BarrierView;
+// });

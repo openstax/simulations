@@ -1,11 +1,11 @@
 
 // Maybe later I should make these little models node.js compatible too.
 
-define([
-	'underscore'
-], function(_) {
+define(function(require) {
 
 	'use strict';
+
+	var _ = require('underscore');
 
 	var Lattice2D = function(options) {
 
