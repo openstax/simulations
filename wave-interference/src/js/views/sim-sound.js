@@ -5,7 +5,7 @@ define([
 	'pixi',
 
 	'views/sim',
-	'models/wave-sim-sound'
+	'models/wave-sim/sound'
 ], function ($, _, Backbone, PIXI, SimView, SoundSimulation) {
 
 	'use strict';

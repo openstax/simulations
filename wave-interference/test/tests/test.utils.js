@@ -30,11 +30,13 @@ describe('Utils', function(){
 		var twoA = Utils.distanceFromSegment(-2, 1, start.x, start.y, end.x, end.y);
 		chai.expect(twoA).to.be.below(2.01);
 		chai.expect(twoA).to.be.above(1.99);
-		console.log(twoA);
 
 		var twoB = Utils.distanceFromSegment(5, 3, start.x, start.y, end.x, end.y);
 		chai.expect(twoB).to.be.below(2.01);
 		chai.expect(twoB).to.be.above(1.99);
-		console.log(twoB);
+
+		var three = Utils.distanceFromSegment(5, -2, start.x, start.y, end.x, end.y);
+		chai.expect(three).to.be.below(3.01);
+		chai.expect(three).to.be.above(2.99);
 	});
 });

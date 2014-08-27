@@ -5,7 +5,7 @@ define([
 	'nouislider',
 
 	'views/sim',
-	'models/wave-sim-water',
+	'models/wave-sim/water',
 
 	'text!templates/sim-water.html',
 ], function ($, _, Backbone, noui, SimView, WaterSimulation, template) {
