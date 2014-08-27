@@ -7,6 +7,9 @@ define(function (require) {
 
 	'use strict';
 
+	var dist,
+	    lengthSquared;
+
 	return {
 
 		/* 
@@ -41,6 +44,39 @@ define(function (require) {
 				 */	
 				return Math.abs( (x1 - x0) * (y1 - y) - (x0 - x) * (y1 - y0) ) / this.lineLength(x0, y0, x1, y1);
 			}
+		},
+
+		sqr: function(x) {
+			return x * x;
+		},
+
+		distanceSquared: function(x0, y0, x1, y1) {
+			return this.sqr(x1 - x0) + this.sqr(y1 - y0);
+		},
+
+		/*
+		 * From http://stackoverflow.com/a/1501725 by Grumdrig. This one's better.
+		 */
+		distanceFromSegmentSquared: function(x, y, x0, y0, x1, y1) {
+			lengthSquared = this.distanceSquared(x0, y0, x1, y1);
+
+			if (lengthSquared == 0) 
+				return this.distanceSquared(x, y, x0, y0);
+
+			// Get the magnitude of the projection of vector from the point to (x0, y0) on the segment
+			dist = ((x - x0) * (x1 - x0) + (y - y0) * (y1 - y0)) / lengthSquared;
+
+			if (dist < 0) 
+				return dist2(x, y, x0, y0);
+
+			if (dist > 1) 
+				return dist2(x, y, x1, y1);
+
+			return distanceSquared(x, y, x0 + dist * (x1 - x0), y0 + dist * (y1 - y0));
+		},
+
+		distanceFromSegment: function(x, y, x0, y0, x1, y1) {
+			return Math.sqrt(this.distanceFromSegmentSquared(x, y, x0, y0, x1, y1));
 		}
 	};
 });

@@ -80,6 +80,13 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
 4. In the root of `simulations/wave-interference/`, run `grunt less:development`. Alternatively, if you are going to make changes to the LESS source, just run `grunt watch` to start a watcher that watches for changes in LESS files and recompiles automatically.
 5. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
 
+##### Easy Button
+1. Install the Apache-based webserver [AMPPS](http://www.ampps.com/downloads).
+2. Locate the `www` root directory.
+3. Clone the project into that directory so it looks like `www/simulations/`
+4. Run the LESS build script from the _other_ Step 4.
+5. Go to [http://localhost/simulations/wave-interference/](http://localhost/simulations/wave-interference/) in your browser to view the simulation.
+
 
 License
 -------
