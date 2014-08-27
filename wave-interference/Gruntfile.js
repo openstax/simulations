@@ -192,6 +192,11 @@ module.exports = function(grunt){
 		grunt.file.write(options.runner, template);
 	});
 
+	grunt.registerTask('replace_bower_components', function() {
+		var config = grunt.file.read('dist/js/config.js').replace(/\.\.\/\.\.\/bower_components\//g, '../bower_components/');
+		grunt.file.write('dist/js/config.js', config);
+	});
+
 	grunt.registerTask('default', [
 		'watch'
 	]);
@@ -199,6 +204,7 @@ module.exports = function(grunt){
 	grunt.registerTask('dist', [
 		'requirejs:compile',
 		'copy',
+		'replace_bower_components',
 		'less:dist',
 		'targethtml'
 		//'clean',
