@@ -1,0 +1,68 @@
+<div class="control-panel">
+	<div class="panel-tabs">
+		<ul>
+			<li class="tab tools-tab" data-content-selector=".tools-panel">
+				<span class="tab-title"><span class="fa fa-cog"></span>Tools</span>
+			</li>
+			<li class="tab properties-tab active" data-content-selector=".properties-panel">
+				<span class="tab-title"><span class="fa fa-sliders"></span>Properties</span>
+			</li>
+		</ul>
+	</div>
+
+	<div class="panel-content-wrapper">
+		<form class="panel-content tools-panel">
+			<fieldset class="panel-fieldset">
+				<input type="checkbox" id="measuring-tape-check" class="measuring-tape-check">
+				<label for="measuring-tape-check">Measuring Tape</label><br>
+
+				<input type="checkbox" id="stopwatch-check" class="stopwatch-check">
+				<label for="stopwatch-check">Stopwatch</label>
+			</fieldset>
+			<button class="btn panel-btn add-detector"><span class="fa fa-plus"></span> Add Detector</button>
+		</form>
+		<form class="panel-content properties-panel active">
+			<fieldset class="panel-fieldset" id="faucet-controls">
+				<label for="water-frequency">Frequency</label>
+				<div class="slider frequency" id="water-frequency"></div>
+
+				<label for="water-amplitude">Amplitude</label>
+				<div class="slider amplitude" id="water-amplitude"></div>
+			</fieldset>
+			<fieldset class="panel-fieldset">
+				<!-- <legend>Faucets</legend> -->
+
+				<input type="radio" name="faucets" value="1" id="faucets-1" class="oscillator-count" checked>
+				<label for="faucets-1">One Faucet</label><br>
+
+				<input type="radio" name="faucets" value="2" id="faucets-2" class="oscillator-count">
+				<label for="faucets-2">Two Faucet</label><br>
+
+				<label for="drip-spacing" class="slider-label" disabled>Spacing</label>
+				<div class="slider oscillator-spacing" id="drip-spacing" disabled></div>
+			</fieldset>
+			<fieldset class="panel-fieldset">
+				<!-- <legend>Barriers</legend> -->
+
+				<input type="radio" name="barrier" value="0" id="barrier-none" class="barrier-style" checked>
+				<label for="barrier-none">No Barrier</label><br>
+
+				<input type="radio" name="barrier" value="1" id="barrier-one-slit" class="barrier-style">
+				<label for="barrier-one-slit">One Slit</label><br>
+
+				<input type="radio" name="barrier" value="2" id="barrier-two-slits" class="barrier-style">
+				<label for="barrier-two-slits">Two Slits</label><br>
+
+				<label for="slit-width" class="slider-label" disabled>Slit Width</label>
+				<div class="slider slit-width" id="slit-width" disabled></div>
+
+				<label for="barrier-location" class="slider-label" disabled>Barrier Location</label>
+				<div class="slider barrier-location" id="barrier-location" disabled></div>
+
+				<label for="slit-separation" class="slider-label" disabled>Slit Separation</label>
+				<div class="slider slit-separation" id="slit-separation" disabled></div>
+			</fieldset>
+			<button class="btn panel-btn add-barrier"><span class="fa fa-plus"></span> Add Wall</button>
+		</form>
+	</div>
+</div>

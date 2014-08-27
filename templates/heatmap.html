@@ -1,0 +1,29 @@
+<figure class="heatmap-container">
+
+	<figcaption class="heatmap-title"><%= title %></figcaption>
+
+	<canvas class="heatmap-canvas"></canvas>
+
+	<div class="heatmap-y">
+		<label class="heatmap-axis-label"><%= y.label %></label>
+		<div class="heatmap-y-numbers">
+		<% var height = 100.0 / Math.ceil((y.end - y.start) / y.step); %>
+		<% for (var j = y.end; j >= 0; j -= y.step) { %>
+			<div class="heatmap-number" style="height: <%= height %>%"><span><%= j %></span></div>
+		<% } %>
+		</div>
+	</div>
+
+	<div class="heatmap-x">
+		<label class="heatmap-axis-label"><%= x.label %></label>
+		<div class="heatmap-x-numbers">
+		<% var width = 100.0 / Math.ceil((x.end - x.start) / x.step); %>
+		<% for (var i = x.start; i <= x.end; i += x.step) { %>
+			<div class="heatmap-number" style="width: <%= width %>%"><span><%= i %></span></div>
+		<% } %>
+		</div>
+	</div>
+
+	<div class="cross-section-slider"></div>
+
+</figure>

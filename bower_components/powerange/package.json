@@ -1,0 +1,25 @@
+{
+    "name": "powerange"
+  , "version": "0.0.2"
+  , "description": "iOS 7 style range slider"
+  , "main": "powerange.js"
+  , "repository": {
+        "type": "git"
+      , "url": "git://github.com/abpetkov/powerange.git"
+    }
+  , "author": "Alexander Petkov <abpetkov@gmail.com> (https://github.com/abpetkov)"
+  , "license": "MIT"
+  , "bugs": {
+      "url": "https://github.com/abpetkov/powerange/issues"
+    }
+  , "devDependencies": {
+        "grunt": "~0.4.2"
+      , "grunt-contrib-clean": "~0.4.0"
+      , "grunt-contrib-watch": "~0.5.3"
+      , "grunt-contrib-uglify": "~0.1.2"
+      , "grunt-contrib-cssmin": "~0.4.1"
+      , "grunt-component-build": "~0.4.1"
+      , "matchdep": "~0.3.0"
+    }
+  , "homepage": "https://abpetkov.github.io/powerange"
+}
