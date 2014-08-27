@@ -80,4 +80,46 @@ describe('Potentials', function(){
 		// Should be too far below
 		chai.expect(potential.getPotential(10, 4, 0)).to.not.be.ok;
 	});
+
+	it('should composite potentials correctly', function(){
+		var box = new BoxPotential({
+			x: 2,
+			y: 0,
+			width: 6,
+			height: 4,
+			potentialValue: 5
+		});
+
+		var segment = new SegmentPotential({
+			start: {
+				x: 0,
+				y: 1
+			},
+			end: {
+				x: 10,
+				y: 1
+			},
+			thickness: 1,
+			potentialValue: 3
+		});
+
+		/* ..........
+		 * ..555555..
+		 * ..555555..
+		 * 3388888833
+		 * ..555555..
+		 */
+
+		var composite = new CompositePotential();
+		composite.add(box);
+		composite.add(segment);
+
+		chai.expect(composite.getPotential( 0, 0, 0)).to.equal(0);
+		chai.expect(composite.getPotential( 0, 1, 0)).to.equal(3);
+		chai.expect(composite.getPotential( 3, 0, 0)).to.equal(5);
+		chai.expect(composite.getPotential(10, 1, 0)).to.equal(3);
+		chai.expect(composite.getPotential( 4, 1, 0)).to.equal(8);
+		chai.expect(composite.getPotential( 3, 3, 0)).to.equal(5);
+		chai.expect(composite.getPotential( 9, 3, 0)).to.equal(0);
+	});
 });

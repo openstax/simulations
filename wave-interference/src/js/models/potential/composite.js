@@ -27,7 +27,7 @@ define(function(require) {
 		 */
 		getPotential: function(x, y, time) {
 			sum = 0;
-			for (i = 0; i < this.potentials.lenth; i++)
+			for (i = 0; i < this.potentials.length; i++)
 				sum += this.potentials[i].getPotential(x, y, time);
 			return sum;
 		},
