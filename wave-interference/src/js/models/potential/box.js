@@ -4,7 +4,6 @@ define(function(require) {
 	'use strict';
 
 	var _         = require('underscore');
-	var Utils     = require('utils/utils');
 	var Potential = require('models/potential');
 
 	/**
