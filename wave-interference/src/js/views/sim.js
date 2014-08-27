@@ -231,6 +231,8 @@ define(function (require) {
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().removeAttr('disabled');
 			else
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().attr('disabled', 'disabled');
+
+			this.waveSimulation.set('barrierStyle', val);
 		},
 
 		addBarrier: function(event) {

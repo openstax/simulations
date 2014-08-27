@@ -1,13 +1,16 @@
-define([
-	'underscore', 
-	'backbone',
-
-	'models/lattice2d',
-	'models/oscillator',
-	'models/wave-propagator'
-], function (_, Backbone, Lattice2D, Oscillator, WavePropagator) {
+define(function (require) {
 
 	'use strict';
+
+	var _              = require('underscore');
+	var Backbone       = require('backbone');
+
+	var Lattice2D      = require('models/lattice2d');
+	var Oscillator     = require('models/oscillator');
+	var WavePropagator = require('models/wave-propagator');
+	var Barrier        = require('models/barrier');
+
+	var CompositePotential = require('models/potential/composite');
 
 	var i;
 
@@ -35,12 +38,15 @@ define([
 			oscillatorCount: 1,
 			oscillatorSpacing: 0.5,
 			frequency: 0.5,
-			amplitude: 1.0
+			amplitude: 1.0,
+
+			barrierX: null,
+			barrierSlitWidth: 10,
+			barrierSlitSeparation: 12,
+			barrierStyle: 0
 		},
 		
 		initialize: function(options) {
-
-			this.initComponents();
 
 			// Event listeners
 			this.on('change:oscillatorCount',   this.initOscillators);
@@ -52,9 +58,17 @@ define([
 			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
 			this.accumulator = 0;
 			this.time = 0;
+
+			if (this.get('barrierX') === null)
+				this.set('barrierX', parseInt(this.get('latticeSize').width * 0.75));
+
+			this.initComponents();
 		},
 
 		initComponents: function() {
+			// Composite Potential
+			this.potential = new CompositePotential();
+
 			// Lattice
 			this.lattice = new Lattice2D({
 				width:  this.get('latticeSize').width,
@@ -64,7 +78,12 @@ define([
 
 			// Wave propagator
 			this.propagator = new WavePropagator({
-				lattice: this.lattice
+				lattice: this.lattice,
+				potential: this.potential
+			});
+
+			this.barrier = new Barrier({
+				waveSimulation: this
 			});
 
 			// Oscillators
@@ -172,6 +191,14 @@ define([
 			_.each(this.oscillators, function(oscillator) {
 				oscillator.amplitude = value;
 			}, this);
+		},
+
+		addPotential: function(potential) {
+			this.potential.add(potential);
+		},
+
+		removePotential: function(potential) {
+			this.potential.remove(potential);
 		}
 	});
 
