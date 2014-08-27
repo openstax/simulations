@@ -85,7 +85,7 @@ From the root `wave-interference` directory, run `npm run-script upgrade`, which
 2. Locate the `www` root directory.
 3. Clone the project into that directory so it looks like `www/simulations/`
 4. Run the LESS build script from the _other_ Step 4.
-5. Go to [http://localhost/simulations/wave-interference/](http://localhost/simulations/wave-interference/) in your browser to view the simulation.
+5. Go to [http://localhost/simulations/wave-interference/src/](http://localhost/simulations/wave-interference/src/) in your browser to view the simulation.
 
 
 License
