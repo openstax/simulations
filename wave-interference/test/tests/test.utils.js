@@ -23,6 +23,18 @@ describe('Utils', function(){
 			y: 1
 		};
 
-		chai.expect(Utils.distanceFromSegment(5, 1, start.x, start.y, end.x, end.y)).to.be.below(0.1);
+		var zero = Utils.distanceFromSegment(5, 1, start.x, start.y, end.x, end.y);
+		chai.expect(zero).to.be.below(0.01);
+		chai.expect(zero).to.be.above(-.01);
+
+		var twoA = Utils.distanceFromSegment(-2, 1, start.x, start.y, end.x, end.y);
+		chai.expect(twoA).to.be.below(2.01);
+		chai.expect(twoA).to.be.above(1.99);
+		console.log(twoA);
+
+		var twoB = Utils.distanceFromSegment(5, 3, start.x, start.y, end.x, end.y);
+		chai.expect(twoB).to.be.below(2.01);
+		chai.expect(twoB).to.be.above(1.99);
+		console.log(twoB);
 	});
 });
