@@ -11,6 +11,7 @@ define(function (require) {
 	var Barrier        = require('models/barrier');
 
 	var CompositePotential = require('models/potential/composite');
+	var SegmentPotential   = require('models/potential/segment');
 
 	var i;
 
@@ -94,6 +95,19 @@ define(function (require) {
 			this.barrier = new Barrier({
 				waveSimulation: this
 			});
+
+			this.segment = new SegmentPotential({
+				start: {
+					x: 5,
+					y: 55
+				},
+				end: {
+					x: 20,
+					y: 45
+				},
+				thickness: 2
+			});
+			this.potential.add(this.segment);
 
 			// Oscillators
 			this.initOscillators();

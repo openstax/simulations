@@ -39,4 +39,26 @@ describe('Utils', function(){
 		chai.expect(three).to.be.below(3.01);
 		chai.expect(three).to.be.above(2.99);
 	});
+
+	it('should calculate a unitized normal vector to a line', function(){
+		var start = {
+			x: 0,
+			y: 1
+		};
+		var end = {
+			x: 10,
+			y: 1
+		};
+
+		var expected = {
+			x: 0,
+			y: 1
+		};
+
+		var result = Utils.normalVectorFromLine(start.x, start.y, end.x, end.y);
+		chai.expect(result.x).to.be.below(expected.x + 0.01);
+		chai.expect(result.x).to.be.above(expected.x - 0.01);
+		chai.expect(result.y).to.be.below(expected.y + 0.01);
+		chai.expect(result.y).to.be.above(expected.y - 0.01);
+	});
 });

@@ -8,9 +8,16 @@ define(function (require) {
 	'use strict';
 
 	var dist,
-	    lengthSquared;
+	    lengthSquared,
+	    i,
+	    j,
+	    magnitude;
 
 	return {
+
+		sqr: function(x) {
+			return x * x;
+		},
 
 		/* 
 		 * Just classic Pythagoras, Babe!
@@ -46,10 +53,6 @@ define(function (require) {
 			}
 		},
 
-		sqr: function(x) {
-			return x * x;
-		},
-
 		distanceSquared: function(x0, y0, x1, y1) {
 			return this.sqr(x1 - x0) + this.sqr(y1 - y0);
 		},
@@ -77,6 +80,27 @@ define(function (require) {
 
 		distanceFromSegment: function(x, y, x0, y0, x1, y1) {
 			return Math.sqrt(this.distanceFromSegmentSquared(x, y, x0, y0, x1, y1));
+		},
+
+		/**
+		 * Get the normal to the line segment and then convert it
+		 *   into a unit vector.
+		 */
+		normalVectorFromLine: function(x0, y0, x1, y1) {
+			// Normal vector to the line
+			i = (y1 - y0) * -1;
+			j =  x1 - x0;
+
+			// Unitize
+			magnitude = Math.sqrt(this.sqr(i) + this.sqr(j));
+
+			i /= magnitude;
+			j /= magnitude;
+
+			return {
+				x: i,
+				y: j
+			};
 		}
 	};
 });
