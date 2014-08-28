@@ -25,7 +25,8 @@ define(function(require) {
 				y: 0
 			},
 			thickness: 2,
-			potentialValue: 100
+			potentialValue: 100,
+			enabled: true
 		}, options);
 
 		this.start = options.start;
@@ -34,6 +35,8 @@ define(function(require) {
 		this.thickness = options.thickness;
 
 		this.potentialValue = options.potentialValue;
+
+		this.enabled = options.enabled;
 	};
 
 	_.extend(SegmentPotential.prototype, Potential.prototype, {
@@ -43,6 +46,9 @@ define(function(require) {
 		 *   it will return the SegmentPotential's potential value.
 		 */
 		getPotential: function(x, y, time) {
+			if (!this.enabled)
+				return 0;
+
 			if (Utils.distanceFromSegment(x, y, this.start.x, this.start.y, this.end.x, this.end.y) <= this.thickness / 2)
 				return this.potentialValue;
 			else

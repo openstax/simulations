@@ -16,9 +16,9 @@ define(function(require) {
 
 		this.style = 0;
 
-		this.topBox    = new BoxPotential({ width: 2 });
-		this.middleBox = new BoxPotential({ width: 2 });
-		this.bottomBox = new BoxPotential({ width: 2 });
+		this.topBox    = new BoxPotential({ width: 2, enabled: false });
+		this.middleBox = new BoxPotential({ width: 2, enabled: false });
+		this.bottomBox = new BoxPotential({ width: 2, enabled: false });
 
 		this.waveSimulation.addPotential(this.topBox);
 		this.waveSimulation.addPotential(this.middleBox);
@@ -60,9 +60,9 @@ define(function(require) {
 		},
 
 		changeBarrierType0: function() {
-			this.topBox.height    = 0;
-			this.middleBox.height = 0;
-			this.bottomBox.height = 0;
+			this.topBox.enabled    = false;
+			this.middleBox.enabled = false;
+			this.bottomBox.enabled = false;
 		},
 
 		changeBarrierType1: function() {
@@ -73,14 +73,16 @@ define(function(require) {
 			var slitCenter = Math.round(latHeight / 2.0);
 			var boxHeight  = slitCenter - Math.round(slitSize / 2.0);
 
-			this.bottomBox.height = boxHeight;
 			this.topBox.height    = boxHeight;
-
+			this.middleBox.height = 0;
+			this.bottomBox.height = boxHeight;
+			
 			this.bottomBox.y = 0;
 			this.topBox.y = latHeight - boxHeight;
 
-			// Discount the middle one; we don't want it.
-			this.middleBox.height = 0;
+			this.topBox.enabled    = true;
+			this.middleBox.enabled = false;
+			this.bottomBox.enabled = true;
 		},
 
 		changeBarrierType2: function() {
@@ -101,6 +103,10 @@ define(function(require) {
 			this.bottomBox.y = 0;
 			this.middleBox.y = endBoxesHeight + slitSize;
 			this.topBox.y    = this.middleBox.y + this.middleBox.height + slitSize;
+
+			this.topBox.enabled    = true;
+			this.middleBox.enabled = true;
+			this.bottomBox.enabled = true;
 		}
 	});
 

@@ -161,8 +161,6 @@ define(function (require) {
 				
 				this.accumulator -= this.timestep;
 			}
-
-			return this.accumulator / this.timestep;
 		},
 
 		reset: function() {

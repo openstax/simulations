@@ -19,7 +19,8 @@ define(function(require) {
 			y: 0,
 			width: 2,
 			height: 2,
-			potentialValue: 100
+			potentialValue: 100,
+			enabled: true
 		}, options);
 
 		this.x = options.x;
@@ -29,6 +30,8 @@ define(function(require) {
 		this.height = options.height;
 
 		this.potentialValue = options.potentialValue;
+
+		this.enabled = options.enabled;
 	};
 
 	_.extend(BoxPotential.prototype, Potential.prototype, {
@@ -38,6 +41,9 @@ define(function(require) {
 		 *   return the BoxPotential's potential value.
 		 */
 		getPotential: function(x, y, time) {
+			if (!this.enabled)
+				return 0;
+			
 			if (x >= this.x && y >= this.y && x <= this.x + this.width && y <= this.y + this.height)
 				return this.potentialValue;
 			else

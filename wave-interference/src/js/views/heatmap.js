@@ -247,6 +247,8 @@ define([
 			var width  = this.$canvas.width();
 			var height = this.$canvas.height();
 			if (width != this.renderer.width || height != this.renderer.height) {
+				this.width  = width;
+				this.height = height;
 				this.renderer.resize(width, height);
 				this.positionParticles();
 				this.barrierView.update();
@@ -254,13 +256,15 @@ define([
 			}
 		},
 
-		update: function(interpolationFactor) {
+		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
 			// Update particles to match new lattice
 			if (this.particles)
-				this.updateParticles(interpolationFactor);
+				this.updateParticles();
+
+			this.barrierView.update(time, delta);
 
 			// Render everything
 			this.renderer.render(this.stage);

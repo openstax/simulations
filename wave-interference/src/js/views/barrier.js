@@ -22,7 +22,7 @@ define(function (require) {
 		else
 			throw 'BarrierView requires a HeatmapView to render.';
 
-		this.listenTo(this.barrier, 'change', this.update);
+		//this.listenTo(this.barrier, 'change', this.update);
 	};
 
 	var topBox,
@@ -30,12 +30,14 @@ define(function (require) {
 	    bottomBox,
 	    xSpacing,
 	    ySpacing,
+	    halfYSpacing,
 	    height;
 
 	_.extend(BarrierView.prototype, Backbone.Events, {
 
 		render: function() {
 			this.graphics = new PIXI.Graphics();
+			this.graphics.alpha = 0;
 
 			this.update();
 
@@ -46,24 +48,40 @@ define(function (require) {
 			this.heatmapView.stage.removeChild(this.graphics);
 		},
 
-		update: function() {
-			this.graphics.clear();
+		update: function(time, delta) {
 
-			this.graphics.beginFill(0xFFFFFF);
-			this.graphics.lineStyle(2, 0x21366B, 1);
+			if (this.barrier.style > 0) {
+				this.graphics.clear();
 
-			height = this.heatmapView.waveSimulation.lattice.height;
+				if (this.graphics.alpha < 1)
+					this.graphics.alpha += delta * 0.005;
 
-			topBox    = this.barrier.topBox;
-			middleBox = this.barrier.middleBox;
-			bottomBox = this.barrier.bottomBox;
+				this.graphics.beginFill(0xFFFFFF, 0.5);
+				this.graphics.lineStyle(2, 0xFFFFFF, 0.9);
+				// this.graphics.beginFill(0xFFFFFF, 0.5);
+				// this.graphics.lineStyle(2, 0x21366B, 1);
 
-			xSpacing = this.heatmapView.xSpacing;
-			ySpacing = this.heatmapView.ySpacing;
+				height = this.heatmapView.waveSimulation.lattice.height;
 
-			this.graphics.drawRect(xSpacing * topBox.x,    ySpacing * topBox.y,    xSpacing * topBox.width,    ySpacing * topBox.height);
-			this.graphics.drawRect(xSpacing * middleBox.x, ySpacing * middleBox.y, xSpacing * middleBox.width, ySpacing * middleBox.height);
-			this.graphics.drawRect(xSpacing * bottomBox.x, ySpacing * bottomBox.y, xSpacing * bottomBox.width, ySpacing * bottomBox.height);
+				topBox    = this.barrier.topBox;
+				middleBox = this.barrier.middleBox;
+				bottomBox = this.barrier.bottomBox;
+
+				xSpacing = this.heatmapView.xSpacing;
+				ySpacing = this.heatmapView.ySpacing;
+				halfYSpacing = ySpacing / 2.0;
+
+				this.graphics.drawRect(xSpacing * topBox.x,    ySpacing * topBox.y - halfYSpacing,    xSpacing * topBox.width,    ySpacing * topBox.height + halfYSpacing);
+				this.graphics.drawRect(xSpacing * middleBox.x, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width, ySpacing * middleBox.height);
+				this.graphics.drawRect(xSpacing * bottomBox.x, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width, ySpacing * bottomBox.height);	
+			}
+			else if (this.graphics.alpha > 0){
+				this.graphics.alpha -= delta * 0.005;
+
+				if (this.graphics.alpha < 0)
+					this.graphics.alpha = 0;
+			}
+
 		}
 
 	});

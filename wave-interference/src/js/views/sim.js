@@ -192,10 +192,10 @@ define(function (require) {
 
 		update: function(time, delta) {
 			// Update the model
-			this.interpolationFactor = this.waveSimulation.update(time, delta);
+			this.waveSimulation.update(time, delta);
 
 			// Update the heatmap
-			this.heatmapView.update(this.interpolationFactor);
+			this.heatmapView.update(time, delta);
 		},
 
 		changeFrequency: function(event) {
