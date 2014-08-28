@@ -14,6 +14,8 @@ define(function(require) {
 		else
 			throw 'Barrier requires a WaveSimulation model to operate.';
 
+		this.style = 0;
+
 		this.topBox    = new BoxPotential({ width: 2 });
 		this.middleBox = new BoxPotential({ width: 2 });
 		this.bottomBox = new BoxPotential({ width: 2 });
@@ -42,7 +44,8 @@ define(function(require) {
 		 * This code closely follows PhET's VerticleDoubleSlit.update()
 		 */
 		changeDimensions: function() {
-			switch (this.waveSimulation.get('barrierStyle')) {
+			this.style = this.waveSimulation.get('barrierStyle');
+			switch (this.style) {
 				case 0:
 					this.changeBarrierType0();
 					break;
@@ -53,6 +56,7 @@ define(function(require) {
 					this.changeBarrierType2();
 					break;
 			}
+			this.trigger('change');
 		},
 
 		changeBarrierType0: function() {

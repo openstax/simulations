@@ -3,8 +3,9 @@ define([
 	'underscore', 
 	'backbone',
 	'pixi',
+	'views/barrier',
 	'text!templates/heatmap.html'
-], function ($, _, Backbone, PIXI, html) {
+], function ($, _, Backbone, PIXI, BarrierView, html) {
 
 	'use strict';
 
@@ -68,6 +69,9 @@ define([
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
+
+			this.xSpacing = 1;
+			this.ySpacing = 1;
 		},
 
 		/**
@@ -126,6 +130,15 @@ define([
 			this.stage.addChild(this.spriteBatch);
 
 			this.initParticles();
+			this.initComponents();
+		},
+
+		initComponents: function() {
+			this.barrierView = new BarrierView({
+				heatmapView: this,
+				barrier: this.waveSimulation.barrier
+			});
+			this.barrierView.render();
 		},
 
 		initParticles: function() {
@@ -156,7 +169,6 @@ define([
 			width  = this.waveSimulation.lattice.width;
 			height = this.waveSimulation.lattice.height;
 
-			
 			var xSpacing = this.$canvas.width()  / (width - 1);
 			var ySpacing = this.$canvas.height() / (height - 1);
 
@@ -171,6 +183,9 @@ define([
 					particle.position.y = ySpacing * (height - j - 1); // Reverse bottom to top with offset
 				}
 			}
+
+			this.xSpacing = xSpacing;
+			this.ySpacing = ySpacing;
 		},
 
 		generateParticleTexture: function(radius) {
@@ -234,6 +249,7 @@ define([
 			if (width != this.renderer.width || height != this.renderer.height) {
 				this.renderer.resize(width, height);
 				this.positionParticles();
+				this.barrierView.update();
 				this.resizeOnNextUpdate = false;
 			}
 		},
