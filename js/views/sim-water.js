@@ -5,7 +5,7 @@ define([
 	'nouislider',
 
 	'views/sim',
-	'models/wave-sim-water',
+	'models/wave-sim/water',
 
 	'text!templates/sim-water.html',
 ], function ($, _, Backbone, noui, SimView, WaterSimulation, template) {
@@ -80,12 +80,30 @@ define([
 			// 	density: 5
 			// });
 
-			this.$('.slit-width, .barrier-location, .slit-separation').noUiSlider({
-				start: 20,
+			this.$('.slit-width').noUiSlider({
+				start: this.waveSimulation.get('barrierSlitWidth'),
 				connect: 'lower',
 				range: {
 					min: 0,
-					max: 100
+					max: this.waveSimulation.get('dimensions').height / 2
+				}
+			});
+
+			this.$('.barrier-location').noUiSlider({
+				start: this.waveSimulation.get('barrierX'),
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: this.waveSimulation.get('dimensions').width
+				}
+			});
+
+			this.$('.slit-separation').noUiSlider({
+				start: this.waveSimulation.get('barrierSlitSeparation'),
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: this.waveSimulation.get('dimensions').height * .75
 				}
 			});
 		},

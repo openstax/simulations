@@ -1,13 +1,16 @@
-define([
-	'underscore', 
-	'backbone',
-
-	'models/lattice2d',
-	'models/oscillator',
-	'models/wave-propagator'
-], function (_, Backbone, Lattice2D, Oscillator, WavePropagator) {
+define(function (require) {
 
 	'use strict';
+
+	var _              = require('underscore');
+	var Backbone       = require('backbone');
+
+	var Lattice2D      = require('models/lattice2d');
+	var Oscillator     = require('models/oscillator');
+	var WavePropagator = require('models/wave-propagator');
+	var Barrier        = require('models/barrier');
+
+	var CompositePotential = require('models/potential/composite');
 
 	var i;
 
@@ -35,12 +38,15 @@ define([
 			oscillatorCount: 1,
 			oscillatorSpacing: 0.5,
 			frequency: 0.5,
-			amplitude: 1.0
+			amplitude: 1.0,
+
+			barrierX: null,
+			barrierSlitWidth: null,
+			barrierSlitSeparation: null,
+			barrierStyle: 0
 		},
 		
 		initialize: function(options) {
-
-			this.initComponents();
 
 			// Event listeners
 			this.on('change:oscillatorCount',   this.initOscillators);
@@ -48,13 +54,30 @@ define([
 
 			this.on('change:frequency',       this.changeFrequency);
 			this.on('change:amplitude',       this.changeAmplitude);
+			this.on('change:dimensions change:latticeSize', this.resize);
 
 			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
 			this.accumulator = 0;
 			this.time = 0;
+
+			// Set default barrier properties
+			if (this.get('barrierX') === null)
+				this.set('barrierX', this.get('dimensions').width * 0.75);
+			if (this.get('barrierSlitWidth') === null)
+				this.set('barrierSlitWidth', this.get('dimensions').height / 5);
+			if (this.get('barrierSlitSeparation') === null)
+				this.set('barrierSlitSeparation', this.get('dimensions').height / 5);
+
+			// Set latticeSize:dimensions ratio
+			this.resize();
+
+			this.initComponents();
 		},
 
 		initComponents: function() {
+			// Composite Potential
+			this.potential = new CompositePotential();
+
 			// Lattice
 			this.lattice = new Lattice2D({
 				width:  this.get('latticeSize').width,
@@ -64,7 +87,12 @@ define([
 
 			// Wave propagator
 			this.propagator = new WavePropagator({
-				lattice: this.lattice
+				lattice: this.lattice,
+				potential: this.potential
+			});
+
+			this.barrier = new Barrier({
+				waveSimulation: this
 			});
 
 			// Oscillators
@@ -142,8 +170,6 @@ define([
 				
 				this.accumulator -= this.timestep;
 			}
-
-			return this.accumulator / this.timestep;
 		},
 
 		reset: function() {
@@ -151,7 +177,8 @@ define([
 		},
 
 		resize: function() {
-			
+			this.widthRatio  = this.get('latticeSize').width / this.get('dimensions').width;
+			this.heightRatio = this.get('latticeSize').height / this.get('dimensions').height;
 		},
 
 		isValidPoint: function(x, y) {
@@ -172,6 +199,14 @@ define([
 			_.each(this.oscillators, function(oscillator) {
 				oscillator.amplitude = value;
 			}, this);
+		},
+
+		addPotential: function(potential) {
+			this.potential.add(potential);
+		},
+
+		removePotential: function(potential) {
+			this.potential.remove(potential);
 		}
 	});
 

@@ -56,7 +56,10 @@ define(function (require) {
 			'slide .amplitude'       : 'changeAmplitude',
 
 			'change .barrier-style'   : 'changeBarrierStyle',
-			'click .add-barrier': 'addBarrier'
+			'slide .slit-width'       : 'changeSlitWidth',
+			'slide .barrier-location' : 'changeBarrierX',
+			'slide .slit-separation'  : 'changeSlitSeparation',
+			'click .add-barrier'      : 'addBarrier'
 		},
 
 		/**
@@ -72,6 +75,18 @@ define(function (require) {
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
 			this.heatmapView = new HeatmapView({
+				x: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
+					label: 'x (' + this.waveSimulation.get('units').distance + ')'
+				},
+				y: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').height,
+					step: this.waveSimulation.get('dimensions').height / 10,
+					label: 'y (' + this.waveSimulation.get('units').distance + ')'
+				},
 				waveSimulation: this.waveSimulation,
 				brightness: options.heatmapBrightness
 			});
@@ -192,10 +207,10 @@ define(function (require) {
 
 		update: function(time, delta) {
 			// Update the model
-			this.interpolationFactor = this.waveSimulation.update(time, delta);
+			this.waveSimulation.update(time, delta);
 
 			// Update the heatmap
-			this.heatmapView.update(this.interpolationFactor);
+			this.heatmapView.update(time, delta);
 		},
 
 		changeFrequency: function(event) {
@@ -231,6 +246,23 @@ define(function (require) {
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().removeAttr('disabled');
 			else
 				$(event.target).parents('fieldset').find('.slider').prev().addBack().attr('disabled', 'disabled');
+
+			this.waveSimulation.set('barrierStyle', val);
+		},
+
+		changeSlitWidth: function(event) {
+			var val = parseFloat($(event.target).val());
+			this.waveSimulation.set('barrierSlitWidth', val);
+		},
+
+		changeBarrierX: function(event) {
+			var val = parseFloat($(event.target).val());
+			this.waveSimulation.set('barrierX', val);
+		},
+
+		changeSlitSeparation: function(event) {
+			var val = parseFloat($(event.target).val());
+			this.waveSimulation.set('barrierSlitSeparation', val);
 		},
 
 		addBarrier: function(event) {

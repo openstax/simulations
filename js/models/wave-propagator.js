@@ -5,6 +5,8 @@ define(function(require) {
 
 	var _         = require('underscore');
 	var Lattice2D = require('models/lattice2d');
+	var Potential = require('models/potential');
+	var BoxPotential = require('models/potential/box');
 
 	var WavePropagator = function(options) {
 
@@ -17,7 +19,7 @@ define(function(require) {
 		}, options);
 		
 		// Object properties
-		this.potentials = options.potentials || []; // The lattice point values
+		this.potential = options.potential || new Potential(); // The lattice point values
 		this.dampX = options.damping.x;
 		this.dampY = options.damping.y;
 
@@ -49,9 +51,12 @@ define(function(require) {
 	    k,
 	    width,
 	    height,
+	    dampX,
+	    dampY,
 	    clone,
 	    cSquared,
 	    sample,
+	    potential,
 	    paddedLatData,
 	    prevLat1Data,
 	    prevLat2Data,
@@ -101,6 +106,11 @@ define(function(require) {
 			prevLat1Data  = this.prevLat1.data;
 			prevLat2Data  = this.prevLat2.data;
 
+			potential = this.potential;
+
+			dampX = this.dampX;
+			dampY = this.dampY;
+
 			/*
 			 * c^2 is a coefficient from PhET's equation representing the squared
 			 *   velocity. I think it's actually supposed to be dependent on the
@@ -117,14 +127,16 @@ define(function(require) {
 			height = this.paddedLat.height - 1;
 			for (i = 1; i < width; i++) {
 				for (j = 1; j < height; j++) {
+					if (potential.getPotential(i - dampX, j - dampY, 0) !== 0) {
+						paddedLatData[i][j] = 0;
+					}
+					else {
+						sample = prevLat1Data[i - 1][j] + prevLat1Data[i + 1][j]
+						       + prevLat1Data[i][j - 1] + prevLat1Data[i][j + 1]
+						       + (-4 * prevLat1Data[i][j]);
 
-					// TODO: check for potentials
-
-					sample = prevLat1Data[i - 1][j] + prevLat1Data[i + 1][j]
-					       + prevLat1Data[i][j - 1] + prevLat1Data[i][j + 1]
-					       + (-4 * prevLat1Data[i][j]);
-
-					paddedLatData[i][j] = (cSquared * sample) + (2 * prevLat1Data[i][j]) - prevLat2Data[i][j];
+						paddedLatData[i][j] = (cSquared * sample) + (2 * prevLat1Data[i][j]) - prevLat2Data[i][j];
+					}
 				}
 			}
 
