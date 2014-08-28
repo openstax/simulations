@@ -32,6 +32,10 @@ define(function (require) {
 			this.graphics = new PIXI.Graphics();
 			this.graphics.alpha = 0;
 
+			this.graphics.mousedown = this.graphics.touchstart = function(data){
+				console.log('moving barriers');
+			};
+
 			this.update(0, 0);
 
 			this.heatmapView.stage.addChild(this.graphics);

@@ -99,6 +99,7 @@ define(function(require) {
 				start: (this.graphInfo.y.end - this.graphInfo.y.start) / 2,
 				direction: 'rtl',
 				orientation: 'vertical',
+				behaviour: 'none',
 				range: {
 					min: this.graphInfo.y.start,
 					max: this.graphInfo.y.end
