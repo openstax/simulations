@@ -41,8 +41,8 @@ define(function (require) {
 			amplitude: 1.0,
 
 			barrierX: null,
-			barrierSlitWidth: 10,
-			barrierSlitSeparation: 12,
+			barrierSlitWidth: null,
+			barrierSlitSeparation: null,
 			barrierStyle: 0
 		},
 		
@@ -54,13 +54,22 @@ define(function (require) {
 
 			this.on('change:frequency',       this.changeFrequency);
 			this.on('change:amplitude',       this.changeAmplitude);
+			this.on('change:dimensions change:latticeSize', this.resize);
 
 			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
 			this.accumulator = 0;
 			this.time = 0;
 
+			// Set default barrier properties
 			if (this.get('barrierX') === null)
-				this.set('barrierX', parseInt(this.get('latticeSize').width * 0.75));
+				this.set('barrierX', this.get('dimensions').width * 0.75);
+			if (this.get('barrierSlitWidth') === null)
+				this.set('barrierSlitWidth', this.get('dimensions').height / 5);
+			if (this.get('barrierSlitSeparation') === null)
+				this.set('barrierSlitSeparation', this.get('dimensions').height / 5);
+
+			// Set latticeSize:dimensions ratio
+			this.resize();
 
 			this.initComponents();
 		},
@@ -168,7 +177,8 @@ define(function (require) {
 		},
 
 		resize: function() {
-			
+			this.widthRatio  = this.get('latticeSize').width / this.get('dimensions').width;
+			this.heightRatio = this.get('latticeSize').height / this.get('dimensions').height;
 		},
 
 		isValidPoint: function(x, y) {

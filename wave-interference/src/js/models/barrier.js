@@ -37,7 +37,7 @@ define(function(require) {
 	_.extend(Barrier.prototype, Backbone.Events, {
 
 		changeX: function() {
-			this.topBox.x = this.middleBox.x = this.bottomBox.x = this.waveSimulation.get('barrierX');
+			this.topBox.x = this.middleBox.x = this.bottomBox.x = this.waveSimulation.get('barrierX') * this.waveSimulation.widthRatio;
 		},
 
 		/**
@@ -67,8 +67,8 @@ define(function(require) {
 
 		changeBarrierType1: function() {
 			var latHeight  = this.waveSimulation.get('latticeSize').height;
-			var separation = this.waveSimulation.get('barrierSlitSeparation');
-			var slitSize   = this.waveSimulation.get('barrierSlitWidth');
+			var separation = this.waveSimulation.get('barrierSlitSeparation') * this.waveSimulation.heightRatio;
+			var slitSize   = this.waveSimulation.get('barrierSlitWidth') * this.waveSimulation.heightRatio;
 
 			var slitCenter = Math.round(latHeight / 2.0);
 			var boxHeight  = slitCenter - Math.round(slitSize / 2.0);
@@ -87,8 +87,8 @@ define(function(require) {
 
 		changeBarrierType2: function() {
 			var latHeight  = this.waveSimulation.get('latticeSize').height;
-			var separation = this.waveSimulation.get('barrierSlitSeparation');
-			var slitSize   = this.waveSimulation.get('barrierSlitWidth');
+			var separation = this.waveSimulation.get('barrierSlitSeparation') * this.waveSimulation.heightRatio;
+			var slitSize   = this.waveSimulation.get('barrierSlitWidth') * this.waveSimulation.heightRatio;
 
 			var middleBoxHeight = separation - slitSize;
 			if (middleBoxHeight < 1)
