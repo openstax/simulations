@@ -7,11 +7,6 @@ define(function (require) {
 
 	var BarrierView = function(options) {
 
-		// Default values
-		options = _.extend({
-			
-		}, options);
-
 		if (options.barrier)
 			this.barrier = options.barrier;
 		else
@@ -21,8 +16,6 @@ define(function (require) {
 			this.heatmapView = options.heatmapView;
 		else
 			throw 'BarrierView requires a HeatmapView to render.';
-
-		//this.listenTo(this.barrier, 'change', this.update);
 	};
 
 	var topBox,
@@ -30,16 +23,16 @@ define(function (require) {
 	    bottomBox,
 	    xSpacing,
 	    ySpacing,
-	    halfYSpacing,
-	    height;
+	    halfXSpacing,
+	    halfYSpacing;
 
-	_.extend(BarrierView.prototype, Backbone.Events, {
+	_.extend(BarrierView.prototype, {
 
 		render: function() {
 			this.graphics = new PIXI.Graphics();
 			this.graphics.alpha = 0;
 
-			this.update();
+			this.update(0, 0);
 
 			this.heatmapView.stage.addChild(this.graphics);
 		},
@@ -61,19 +54,18 @@ define(function (require) {
 				// this.graphics.beginFill(0xFFFFFF, 0.5);
 				// this.graphics.lineStyle(2, 0x21366B, 1);
 
-				height = this.heatmapView.waveSimulation.lattice.height;
-
 				topBox    = this.barrier.topBox;
 				middleBox = this.barrier.middleBox;
 				bottomBox = this.barrier.bottomBox;
 
 				xSpacing = this.heatmapView.xSpacing;
 				ySpacing = this.heatmapView.ySpacing;
+				halfXSpacing = xSpacing / 2.0;
 				halfYSpacing = ySpacing / 2.0;
 
-				this.graphics.drawRect(xSpacing * topBox.x,    ySpacing * topBox.y - halfYSpacing,    xSpacing * topBox.width,    ySpacing * topBox.height + halfYSpacing);
-				this.graphics.drawRect(xSpacing * middleBox.x, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width, ySpacing * middleBox.height);
-				this.graphics.drawRect(xSpacing * bottomBox.x, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width, ySpacing * bottomBox.height);	
+				this.graphics.drawRect(xSpacing * topBox.x    - halfXSpacing, ySpacing * topBox.y    - halfYSpacing, xSpacing * topBox.width,    ySpacing * topBox.height + halfYSpacing);
+				this.graphics.drawRect(xSpacing * middleBox.x - halfXSpacing, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width, ySpacing * middleBox.height);
+				this.graphics.drawRect(xSpacing * bottomBox.x - halfXSpacing, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width, ySpacing * bottomBox.height);	
 			}
 			else if (this.graphics.alpha > 0){
 				this.graphics.alpha -= delta * 0.005;

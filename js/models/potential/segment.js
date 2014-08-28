@@ -55,6 +55,10 @@ define(function(require) {
 				return 0;
 		},
 
+		getNormalUnitVector: function() {
+			return Utils.normalVectorFromLine(this.start.x, this.start.y, this.end.x, this.end.y);
+		}
+
 	});
 
 	return SegmentPotential;

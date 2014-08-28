@@ -1,13 +1,15 @@
-define([
-	'jquery', 
-	'underscore', 
-	'backbone',
-	'pixi',
-	'views/barrier',
-	'text!templates/heatmap.html'
-], function ($, _, Backbone, PIXI, BarrierView, html) {
+define(function(require) {
 
 	'use strict';
+
+	var $        = require('jquery');
+	var _        = require('underscore');
+	var Backbone = require('backbone');
+	var PIXI     = require('pixi');
+	var html     = require('text!templates/heatmap.html');
+
+	var BarrierView          = require('views/barrier');
+	var SegmentPotentialView = require('views/segment-potential');
 
 	/*
 	 * "Local" variables for functions to share and recycle
@@ -116,8 +118,8 @@ define([
 				this.$canvas.width(),  // Width
 				this.$canvas.height(), // Height
 				this.$canvas[0],       // Canvas element
-				true,                  // Antialiasing
-				false                  // Transparent background
+				true,                  // Transparent background
+				true                   // Antialiasing
 			);
 		},
 
@@ -139,6 +141,12 @@ define([
 				barrier: this.waveSimulation.barrier
 			});
 			this.barrierView.render();
+
+			this.segmentPotentialView = new SegmentPotentialView({
+				heatmapView: this,
+				segment: this.waveSimulation.segment
+			});
+			this.segmentPotentialView.render();
 		},
 
 		initParticles: function() {
@@ -265,6 +273,7 @@ define([
 				this.updateParticles();
 
 			this.barrierView.update(time, delta);
+			this.segmentPotentialView.update(time, delta);
 
 			// Render everything
 			this.renderer.render(this.stage);
