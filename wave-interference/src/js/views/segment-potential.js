@@ -94,14 +94,23 @@ define(function (require) {
 			eX = segment.end.x * xSpacing - halfXSpacing;
 			eY = (height - segment.end.y) * ySpacing - halfYSpacing;
 
-			firstX = sX - i - j;
-			firstY = sY + i - j;
+			firstX = sX + i + j;
+			firstY = sY - i + j;
 
 			this.graphics.moveTo(firstX, firstY);
-			this.graphics.lineTo(sX - j + i, sY + i + j);
-			this.graphics.lineTo(eX + j + i, eY - i + j);
-			this.graphics.lineTo(eX + j - i, eY - i - j);
+			this.graphics.lineTo(sX + j - i, sY - i - j);
+			this.graphics.lineTo(eX - j - i, eY + i - j);
+			this.graphics.lineTo(eX - j + i, eY + i + j);
 			this.graphics.lineTo(firstX, firstY);	
+
+			this.graphics.endFill();
+			this.graphics.beginFill(0x21366B, 1);
+			this.graphics.lineStyle(1, 0x21366B, 0.5);
+
+			this.graphics.drawCircle(sX, sY, (segment.thickness / 2.0) * xSpacing - 1);
+			this.graphics.drawCircle(eX, eY, (segment.thickness / 2.0) * xSpacing - 1);
+
+			this.graphics.endFill();
 		}
 
 	});
