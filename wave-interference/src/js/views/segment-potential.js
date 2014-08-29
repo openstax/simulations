@@ -84,6 +84,8 @@ define(function (require) {
 				this.draggingStart = true;
 			else
 				this.draggingEnd = true;
+
+			$(event.target).addClass('active');
 		},
 
 		handleMove: function(event) {
@@ -112,8 +114,11 @@ define(function (require) {
 		},
 
 		handleUp: function(event) {
-			this.draggingStart = false;
-			this.draggingEnd   = false;
+			if (this.draggingStart || this.draggingEnd) {
+				this.draggingStart = false;
+				this.draggingEnd   = false;
+				this.$('.segment-handle').removeClass('active');
+			}
 		},
 
 		update: function(time, delta) {
@@ -152,18 +157,13 @@ define(function (require) {
 
 			// Set the width so it spans the two points
 			this.$el.css({
-				width: lineLength,
+				width: lineLength + segment.thickness * xSpacing,
 				height: segment.thickness * xSpacing,
 				transform: 'translateX(' + startX + 'px) translateY(' + startY + 'px) rotateZ(' + (-angle) + 'deg)'
 			});
 			
 			// Make sure the handles are circles
 			this.$('.segment-handle').width(this.$('.segment-handle').height());
-		},
-
-		handleStyle: function(handle) {
-			handle.beginFill(0x21366B, 1);
-			handle.lineStyle(1, 0x21366B, 0.5);
 		},
 
 	});
