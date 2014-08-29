@@ -1,11 +1,11 @@
 @import "cross-section-slider.less";
 @import "mixins/graph-view.less";
 
-.heatmap-container {
+.graph-container {
 	position: absolute;
-	top: 20px;
+	top: (20 + @heatmap-container-width + 20);
 	left: 0;
-	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
+	.grid-view(graph, @heatmap-container-width, 200px, @heatmap-container-padding);
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		left: @heatmap-container-left-margin;
@@ -13,5 +13,9 @@
 		.better & {
 			left: 100px; // Width of oscillator object graphics?
 		}
+	}
+
+	& .graph-canvas {
+		background-color: #fff;
 	}
 }
