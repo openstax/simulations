@@ -21,6 +21,8 @@ define(function (require) {
 	    startY,
 	    i,
 	    j,
+	    x,
+	    y,
 	    position;
 
 	var SegmentPotentialView = Backbone.View.extend({
@@ -32,11 +34,9 @@ define(function (require) {
 
 		events: {
 			'mousedown  .segment-handle' : 'handleDown',
-			'mousemove  .segment-handle' : 'handleMove',
-			'mouseup    .segment-handle' : 'handleUp',
+			//'mouseup    .segment-handle' : 'handleUp',
 			'touchstart .segment-handle' : 'handleDown',
-			'touchmove  .segment-handle' : 'handleMove',
-			'touchend   .segment-handle' : 'handleUp'
+			//'touchend   .segment-handle' : 'handleUp'
 		},
 
 		initialize: function(options) {
@@ -58,6 +58,7 @@ define(function (require) {
 
 			this.listenTo(this.heatmapView, 'resize', function(){
 				this.resizeOnNextUpdate = true;
+				this.dragOffset = this.$dragFrame.offset();
 			});
 		},
 
@@ -69,40 +70,48 @@ define(function (require) {
 
 		renderBox: function() {
 			this.$el.html(this.template());
+
+			this.$dragFrame = this.heatmapView.$('.potential-views');
+			this.$dragFrame
+				.bind('mousemove touchmove', _.bind(this.handleMove, this))
+				.bind('mouseup touchend',    _.bind(this.handleUp, this));
 		},
 
-		remove: function() {
-			this.heatmapView.stage.removeChild(this.box);
-			this.heatmapView.stage.removeChild(this.startHandle);
-			this.heatmapView.stage.removeChild(this.endHandle);
-		},
+		handleDown: function(event) {
+			event.preventDefault();
 
-		handleDown: function(data) {
-			data.originalEvent.preventDefault();
-
-			if (data.target == this.startHandle)
+			if ($(event.target).index() === 0)
 				this.draggingStart = true;
 			else
 				this.draggingEnd = true;
 		},
 
-		handleMove: function(data) {
+		handleMove: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
+				x = event.pageX - this.dragOffset.left;
+				y = event.pageY - this.dragOffset.top;
+
 				xSpacing = this.heatmapView.xSpacing;
 				ySpacing = this.heatmapView.ySpacing;
 
-				position = data.getLocalPosition(this.heatmapView.stage);
-				position.x = (position.x - (xSpacing / 2.0)) / xSpacing;
-				position.y = this.heatmapView.waveSimulation.lattice.height - (position.y - (ySpacing / 2.0)) / ySpacing;
+				// position = data.getLocalPosition(this.heatmapView.stage);
+				x = (x - (xSpacing / 2.0)) / xSpacing;
+				y = this.heatmapView.waveSimulation.lattice.height - (y - (ySpacing / 2.0)) / ySpacing;
 
-				if (this.draggingStart)
-					this.segment.start = position;
-				if (this.draggingEnd)
-					this.segment.end = position;
+				if (this.draggingStart) {
+					this.segment.start.x = x;
+					this.segment.start.y = y;
+				}
+				if (this.draggingEnd) {
+					this.segment.end.x = x;
+					this.segment.end.y = y;
+				}
+
+				this.resizeOnNextUpdate = true;
 			}
 		},
 
-		handleUp: function(data) {
+		handleUp: function(event) {
 			this.draggingStart = false;
 			this.draggingEnd   = false;
 		},
@@ -129,6 +138,7 @@ define(function (require) {
 			padding = (segment.thickness / 2) * ySpacing;
 
 			angle = segment.getAngle();
+			console.log(angle);
 
 			lineLength = Utils.lineLength(
 				segment.start.x * xSpacing, 
