@@ -19,3 +19,56 @@
 #sim-water .heatmap-container .heatmap-canvas {
 	background-color: #0D6A7C;
 }
+
+.potential-views {
+	position: absolute;
+	top: @heatmap-container-padding;
+	left: @heatmap-container-padding;
+	bottom: @heatmap-container-padding;
+	right: @heatmap-container-padding;
+}
+
+.segment-view {
+	position: absolute;
+	background: rgba(255, 255, 255, 0.5);
+	border: 2px solid #FFF;
+	.transform-origin(left center);
+	//.box-sizing(content-box);
+
+	> .segment-handle {
+		height: 100%;
+		position: absolute;
+		top: 0;
+		cursor: move;
+
+		&.segment-handle-left {
+			left: 0;
+		}
+
+		&.segment-handle-right {
+			right: 0;
+		}
+
+		&:after {
+			content: '';
+			display: block;
+			border-radius: 50%;
+			background-color: @link-color;
+			width: 100%;
+			height: 100%;
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			margin-top: -50%;
+			margin-left: -50%;
+			.transition(~"width 0.12s ease, height 0.12s ease, margin-top 0.12s ease, margin-left 0.12s ease");
+		}
+
+		&.active:after {
+			width: 250%;
+			height: 250%;
+			margin-top: -125%;
+			margin-left: -125%;
+		}
+	}
+}

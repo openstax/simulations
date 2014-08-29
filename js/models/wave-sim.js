@@ -44,7 +44,9 @@ define(function (require) {
 			barrierX: null,
 			barrierSlitWidth: null,
 			barrierSlitSeparation: null,
-			barrierStyle: 0
+			barrierStyle: 0,
+
+			crossSectionY: null
 		},
 		
 		initialize: function(options) {
@@ -68,6 +70,9 @@ define(function (require) {
 				this.set('barrierSlitWidth', this.get('dimensions').height / 5);
 			if (this.get('barrierSlitSeparation') === null)
 				this.set('barrierSlitSeparation', this.get('dimensions').height / 5);
+
+			if (this.get('crossSectionY') === null)
+				this.set('crossSectionY', this.get('dimensions').height / 2);
 
 			// Set latticeSize:dimensions ratio
 			this.resize();

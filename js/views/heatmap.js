@@ -26,6 +26,9 @@ define(function(require) {
 
 		template: _.template(html),
 
+		tagName: 'figure',
+		className: 'heatmap-container',
+
 		events: {
 			'slide .cross-section-slider' : 'moveCrossSection',
 		},
@@ -148,6 +151,7 @@ define(function(require) {
 				segment: this.waveSimulation.segment
 			});
 			this.segmentPotentialView.render();
+			this.$('.potential-views').append(this.segmentPotentialView.el);
 		},
 
 		initParticles: function() {
@@ -262,6 +266,7 @@ define(function(require) {
 				this.positionParticles();
 				this.barrierView.update();
 				this.resizeOnNextUpdate = false;
+				this.trigger('resize');
 			}
 		},
 
@@ -281,7 +286,7 @@ define(function(require) {
 		},
 
 		moveCrossSection: function(event) {
-			//console.log($(event.target).val());
+			this.waveSimulation.set('crossSectionY', $(event.target).val());
 		}
 
 	});
