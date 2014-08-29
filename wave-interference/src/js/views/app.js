@@ -27,11 +27,12 @@ define([
 				sound: new SoundSimView(),
 				light: new LightSimView()
 			};
+		},
 
-			this.on('remove', function() {
-				_.each(this.sims, function(sim, key) {
-					sim.remove();
-				});
+		remove: function() {
+			Backbone.View.prototype.remove.apply(this);
+			_.each(this.sims, function(sim, key) {
+				sim.remove();
 			});
 		},
 

@@ -121,11 +121,12 @@ define(function (require) {
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
 			this.$el.addClass('playing');
+		},
 
-			this.on('remove', function() {
-				this.unbind();
-				this.updater.pause();
-			});
+		remove: function() {
+			Backbone.View.prototype.remove.apply(this);
+			this.unbind();
+			this.updater.pause();
 		},
 
 		/**

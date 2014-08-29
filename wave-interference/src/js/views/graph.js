@@ -5,7 +5,7 @@ define(function(require) {
 	var $        = require('jquery');
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	var PIXI     = require('pixi');
+	//var PIXI     = require('pixi');
 	var html     = require('text!templates/graph.html');
 
 	/*
@@ -15,8 +15,11 @@ define(function(require) {
 		latWidth,
 		height,
 		xSpacing,
+		points,
 	    i,
 	    j;
+	    // cx,
+	    // cy;
 
 	var GraphView = Backbone.View.extend({
 
@@ -40,7 +43,8 @@ define(function(require) {
 					step: 10,
 					label: 'y (cm)',
 					showNumbers: false
-				}
+				},
+				lineThickness: 5,
 			}, options);
 
 			// Save options
@@ -62,6 +66,8 @@ define(function(require) {
 
 			// Ratio between pixels and cell width
 			this.xSpacing = 1;
+
+			this.points = [];
 		},
 
 		/**
@@ -90,23 +96,29 @@ define(function(require) {
 		initRenderer: function() {
 			this.$canvas = this.$('.graph-canvas');
 
-			this.renderer = PIXI.autoDetectRenderer(
-				this.$canvas.width(),  // Width
-				this.$canvas.height(), // Height
-				this.$canvas[0],       // Canvas element
-				true,                  // Transparent background
-				true                   // Antialiasing
-			);
+			this.context = this.$canvas[0].getContext('2d');
+
+			// this.renderer = PIXI.autoDetectRenderer(
+			// 	this.$canvas.width(),  // Width
+			// 	this.$canvas.height(), // Height
+			// 	this.$canvas[0],       // Canvas element
+			// 	true,                  // Transparent background
+			// 	true                   // Antialiasing
+			// );
 		},
 
 		initGraphics: function() {
 			// Create a stage to hold everything
-			this.stage = new PIXI.Stage(0xFFFFFF);
+			// this.stage = new PIXI.Stage(0xFFFFFF);
 
-			this.curve = new PIXI.Graphics();
-			this.curve.position.x = 0;
+			// this.curve = new PIXI.Graphics();
+			// this.curve.position.x = 0;
 
-			this.stage.addChild(this.curve);
+			// this.stage.addChild(this.curve);
+
+			// this.lineGradient = this.context.createRadialGradient(radius, radius, 0, radius, radius, radius);
+			// gradient.addColorStop(0, 'rgba(255,255,255,1)');
+			// gradient.addColorStop(1, 'rgba(255,255,255,0)');
 		},
 
 		/**
@@ -119,14 +131,14 @@ define(function(require) {
 		resize: function(event) {
 			var width  = this.$canvas.width();
 			var height = this.$canvas.height();
-			if (width != this.renderer.width || height != this.renderer.height) {
+			//if (width != this.renderer.width || height != this.renderer.height) {
 				this.width  = width;
 				this.height = height;
-				this.renderer.resize(width, height);
+				//this.renderer.resize(width, height);
 				//this.curve.position.y = height / 2;
 				this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
 				this.resizeOnNextUpdate = false;
-			}
+			//}
 		},
 
 		update: function(time, delta) {
@@ -136,11 +148,11 @@ define(function(require) {
 			this.drawCurve();
 
 			// Render everything
-			this.renderer.render(this.stage);
+			//this.renderer.render(this.stage);
 		},
 
 		drawCurve: function() {
-			this.curve.clear();
+			//this.curve.clear();
 
 			lat        = this.waveSimulation.lattice.data;
 			latWidth   = this.waveSimulation.lattice.width;
@@ -149,12 +161,43 @@ define(function(require) {
 			height     = this.height;
 			xSpacing   = this.xSpacing;
 
-			this.curve.lineStyle(2, 0x0D6A7C, 1);
-			this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
+			/* TODO: when I feel like it, use bezier curves to smooth it out
+			 *
+			 * Maybe port this Catmull-Rom curve to bezier conversion:
+			 *   http://schepers.cc/svg/path/catmullrom2bezier.js
+			 * Article:
+			 *   http://schepers.cc/getting-to-the-point
+			 */
+			points = this.points;
+
+			for (i = 0; i < latWidth; i++) {
+				points[i] = ((lat[i][j] - 2) / -4) * height;
+				console.log(points[i], height / 2);
+			}
+			console.log('//');
+
+			this.context.fillStyle = '#fff';
+			this.context.fillRect(0, 0, this.width, this.height);
+
+			//this.curve.lineStyle(2, 0x0D6A7C, 1);
+			//this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
+			this.context.beginPath();
+			this.context.moveTo(0, points[0]);
 
 			for (i = 1; i < latWidth; i++) {
-				this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
+				//this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
+				this.context.lineTo(i * xSpacing, points[i]);
+				// cx = ((i + i + 1) * xSpacing) >> 1;
+				// cy = (points[i] + points[i + 1]) >> 1;
+				// this.context.quadraticCurveTo(cx, cy, i * xSpacing, points[i]);
 			}
+
+			//this.context.quadraticCurveTo((latWidth - 1) * xSpacing, points[latWidth - 1], latWidth - 1 * xSpacing, points[latWidth - 1]);
+
+			this.context.lineWidth = 4;
+			this.context.lineJoin = 'round';
+			this.context.strokeStyle = '#0D6A7C';
+			this.context.stroke();
 			
 		}
 	});

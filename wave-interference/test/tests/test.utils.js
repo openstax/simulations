@@ -61,4 +61,20 @@ describe('Utils', function(){
 		chai.expect(result.y).to.be.below(expected.y + 0.01);
 		chai.expect(result.y).to.be.above(expected.y - 0.01);
 	});
+
+	it('should convert various color formats to rgba', function(){
+		var expected = 'rgba(255,0,0,0.5)';
+
+		chai.expect(Utils.toRgba('#ff0000', 0.5)).to.equal(expected);
+		chai.expect(Utils.toRgba( 'ff0000', 0.5)).to.equal(expected);
+		chai.expect(Utils.toRgba('rgb(255, 0,0)', 0.5)).to.equal(expected);
+		chai.expect(Utils.toRgba('rgba(255, 0, 0, 0.5)')).to.equal(expected);
+
+		expected = 'rgba(0,0,255,1)';
+
+		chai.expect(Utils.toRgba('#0000ff', 1)).to.equal(expected);
+		chai.expect(Utils.toRgba('#0000ff')).to.equal(expected);
+		chai.expect(Utils.toRgba('rgb(0,0,255,0.3)', 1)).to.equal(expected);
+		chai.expect(Utils.toRgba('rgb(0,0,255,1)')).to.equal(expected);
+	});
 });
