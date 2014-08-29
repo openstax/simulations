@@ -5,24 +5,8 @@ define(function (require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
-
-	var SegmentPotentialView = function(options) {
-
-		// Default values
-		options = _.extend({
-			
-		}, options);
-
-		if (options.segment)
-			this.segment = options.segment;
-		else
-			throw 'SegmentPotentialView requires a Barrier model.';
-
-		if (options.heatmapView)
-			this.heatmapView = options.heatmapView;
-		else
-			throw 'SegmentPotentialView requires a HeatmapView to render.';
-	};
+	var Utils    = require('utils/utils');
+	var html     = require('text!templates/segment.html');
 
 	var segment,
 	    xSpacing,
@@ -31,84 +15,60 @@ define(function (require) {
 	    halfXSpacing,
 	    padding,
 	    height,
-	    scaledNormal,
-	    sX,
-	    sY,
-	    eX,
-	    eY,
-	    firstX,
-	    firstY,
+	    angle,
+	    lineLength,
+	    startX,
+	    startY,
 	    i,
 	    j,
 	    position;
 
-	_.extend(SegmentPotentialView.prototype, Backbone.Events, {
+	var SegmentPotentialView = Backbone.View.extend({
+
+		template: _.template(html),
+
+		tagName: 'div',
+		className: 'segment-view',
+
+		events: {
+			'mousedown  .segment-handle' : 'handleDown',
+			'mousemove  .segment-handle' : 'handleMove',
+			'mouseup    .segment-handle' : 'handleUp',
+			'touchstart .segment-handle' : 'handleDown',
+			'touchmove  .segment-handle' : 'handleMove',
+			'touchend   .segment-handle' : 'handleUp'
+		},
+
+		initialize: function(options) {
+
+			// Default values
+			options = _.extend({
+				
+			}, options);
+
+			if (options.segment)
+				this.segment = options.segment;
+			else
+				throw 'SegmentPotentialView requires a Barrier model.';
+
+			if (options.heatmapView)
+				this.heatmapView = options.heatmapView;
+			else
+				throw 'SegmentPotentialView requires a HeatmapView to render.';
+
+			this.listenTo(this.heatmapView, 'resize', function(){
+				this.resizeOnNextUpdate = true;
+			});
+		},
 
 		render: function() {
 			this.renderBox();
-			this.renderHandles();
 			
 			this.update(0, 0);
 		},
 
 		renderBox: function() {
-			this.box = new PIXI.Graphics();
-			this.box.alpha = 0;
-			this.box.interactive = true;
-			this.box.buttonMode = true;
-			this.box.defaultCursor = 'move';
-			this.heatmapView.stage.addChild(this.box);
-
-			this.box.mousedown = this.box.touchstart = function(data){
-				console.log('moving box');
-			};
-
-			
-		},
-
-		renderHandles: function() {
-			this.startHandle = new PIXI.Graphics();
-			this.endHandle   = new PIXI.Graphics();
-
-			this.startHandle.hitArea = new PIXI.Circle(0, 0, (this.segment.thickness / 2) * this.heatmapView.xSpacing);
-			this.endHandle.hitArea   = new PIXI.Circle(0, 0, (this.segment.thickness / 2) * this.heatmapView.xSpacing);
-
-			this.startHandle.interactive   = true;
-			this.startHandle.buttonMode    = true;
-			this.startHandle.defaultCursor = 'move';
-
-			this.endHandle.interactive   = true;
-			this.endHandle.buttonMode    = true;
-			this.endHandle.defaultCursor = 'move';
-
-			var handleDown = _.bind(this.handleDown, this);
-
-			this.startHandle.mousedown  = handleDown;
-			this.startHandle.touchstart = handleDown;
-			this.endHandle.mousedown    = handleDown;
-			this.endHandle.touchstart   = handleDown;
-
-			var handleMove = _.bind(this.handleMove, this);
-
-			this.startHandle.mousemove = handleMove;
-			this.startHandle.touchmove = handleMove;
-			this.endHandle.mousemove   = handleMove;
-			this.endHandle.touchmove   = handleMove;
-				
-			var handleUp = _.bind(this.handleUp, this);
-
-			this.startHandle.mouseup         = handleUp;
-			this.startHandle.mouseupoutside  = handleUp;
-			this.startHandle.touchend        = handleUp;
-			this.startHandle.touchendoutside = handleUp;
-			this.endHandle.mouseup           = handleUp;
-			this.endHandle.mouseupoutside    = handleUp;
-			this.endHandle.touchend          = handleUp;
-			this.endHandle.touchendoutside   = handleUp;
-				
-
-			this.heatmapView.stage.addChild(this.startHandle);
-			this.heatmapView.stage.addChild(this.endHandle);
+			this.$el.html(this.template());
 		},
 
 		remove: function() {
@@ -153,10 +113,11 @@ define(function (require) {
 			if (!segment.enabled)
 				return;
 
-				this.box.clear();
+			// If there aren't any changes, don't do anything.
+			if (!this.resizeOnNextUpdate)
+				return;
 
-			if (this.box.alpha < 1)
-				this.box.alpha += delta * 0.005;
+			this.resizeOnNextUpdate = false;
 
 			height = this.heatmapView.waveSimulation.lattice.height;
 
@@ -165,64 +126,29 @@ define(function (require) {
 			halfYSpacing = ySpacing / 2.0;
 			halfXSpacing = xSpacing / 2.0;
 
-			padding = (segment.thickness / 2.0);
+			padding = (segment.thickness / 2) * ySpacing;
 
-			/*
-			 * I'm using the normal vector and thickness to paint lines
-			 *   around the four corners of the rectangle that surrounds
-			 *   at the appropriate thickness.
-			 * Each offset vector is the sum of two vectors that are
-			 *   derrived from the scaled normal vector.
-			 */
+			angle = segment.getAngle();
 
-			scaledNormal = segment.getNormalUnitVector();
-			scaledNormal.x *= padding * xSpacing;
-			scaledNormal.y *= padding * ySpacing * -1;
-			i = scaledNormal.x;
-			j = scaledNormal.y;
+			lineLength = Utils.lineLength(
+				segment.start.x * xSpacing, 
+				segment.start.y * ySpacing, 
+				segment.end.x * xSpacing, 
+				segment.end.y * ySpacing
+			);
 
-			sX = segment.start.x * xSpacing - halfXSpacing;
-			sY = (height - segment.start.y) * ySpacing - halfYSpacing;
-			eX = segment.end.x * xSpacing - halfXSpacing;
-			eY = (height - segment.end.y) * ySpacing - halfYSpacing;
+			startX = segment.start.x * xSpacing - halfXSpacing;
+			startY = (height - segment.start.y) * ySpacing - halfYSpacing - padding;
 
-			firstX = Math.round(sX + i + j);
-			firstY = Math.round(sY - i + j);
-
-			this.box.beginFill(0xFFFFFF, 0.5);
-			this.box.lineStyle(2, 0xFFFFFF, 1);
-
-			this.box.moveTo(firstX, firstY);
-			this.box.lineTo(sX + j - i, sY - i - j);
-			this.box.lineTo(eX - j - i, eY + i - j);
-			this.box.lineTo(eX - j + i, eY + i + j);
-			this.box.lineTo(firstX, firstY);	
-
-			this.box.endFill();
-
-			this.startHandle.position.x = sX;
-			this.startHandle.position.y = sY;
-			this.endHandle.position.x   = eX;
-			this.endHandle.position.y   = eY;
-
-			this.startHandle.hitArea.radius = padding * xSpacing;
-			this.endHandle.hitArea.radius   = padding * xSpacing;
-
-			this.startHandle.clear();
-			this.handleStyle(this.startHandle);
-			if (this.draggingStart)
-				this.startHandle.drawCircle(0, 0, parseInt(padding * xSpacing - 1 + (xSpacing * 0.4)));
-			else
-				this.startHandle.drawCircle(0, 0, parseInt(padding * xSpacing - 1));
-			this.startHandle.endFill();
-
-			this.endHandle.clear();
-			this.handleStyle(this.endHandle);
-			if (this.draggingEnd)
-				this.endHandle.drawCircle(0, 0, parseInt(padding * xSpacing - 1 + (xSpacing * 0.4)));
-			else
-				this.endHandle.drawCircle(0, 0, parseInt(padding * xSpacing - 1));
-			this.endHandle.endFill();
+			// Set the width so it spans the two points
+			this.$el.css({
+				width: lineLength,
+				height: segment.thickness * xSpacing,
+				transform: 'translateX(' + startX + 'px) translateY(' + startY + 'px) rotateZ(' + (-angle) + 'deg)'
+			});
+			
+			// Make sure the handles are circles
+			this.$('.segment-handle').width(this.$('.segment-handle').height());
 		},
 
 		handleStyle: function(handle) {

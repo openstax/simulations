@@ -57,6 +57,13 @@ define(function(require) {
 
 		getNormalUnitVector: function() {
 			return Utils.normalVectorFromLine(this.start.x, this.start.y, this.end.x, this.end.y);
+		},
+
+		/**
+		 * Returns angle of line in degrees where zero is pointing to the right and goes clockwise
+		 */
+		getAngle: function() {
+			return Utils.angleFromLine(this.start.x, this.start.y, this.end.x, this.end.y);
 		}
 
 	});

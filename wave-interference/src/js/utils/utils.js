@@ -104,6 +104,17 @@ define(function (require) {
 		},
 
 		/**
+		 * Returns angle of line in degrees where zero is pointing to the right and goes clockwise
+		 */
+		angleFromLine: function(x0, y0, x1, y1) {
+			// Slope vector
+			i = x1 - x0;
+			j = y1 - y0;
+
+			return Math.atan(j / i) * (180 / Math.PI);
+		},
+
+		/**
 		 * http://stackoverflow.com/a/5624139
 		 */
 		hexToRgb: function(hex) {

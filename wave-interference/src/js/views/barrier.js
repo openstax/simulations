@@ -67,9 +67,9 @@ define(function (require) {
 				halfXSpacing = xSpacing / 2.0;
 				halfYSpacing = ySpacing / 2.0;
 
-				this.graphics.drawRect(xSpacing * topBox.x    - halfXSpacing, ySpacing * topBox.y    - halfYSpacing, xSpacing * topBox.width,    ySpacing * topBox.height + halfYSpacing);
-				this.graphics.drawRect(xSpacing * middleBox.x - halfXSpacing, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width, ySpacing * middleBox.height);
-				this.graphics.drawRect(xSpacing * bottomBox.x - halfXSpacing, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width, ySpacing * bottomBox.height);	
+				this.graphics.drawRect(xSpacing * topBox.x    - halfXSpacing, ySpacing * topBox.y    - halfYSpacing, xSpacing * topBox.width    - 2, ySpacing * topBox.height + halfYSpacing);
+				this.graphics.drawRect(xSpacing * middleBox.x - halfXSpacing, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width - 2, ySpacing * middleBox.height);
+				this.graphics.drawRect(xSpacing * bottomBox.x - halfXSpacing, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width - 2, ySpacing * bottomBox.height);	
 			}
 			else if (this.graphics.alpha > 0){
 				this.graphics.alpha -= delta * 0.005;
