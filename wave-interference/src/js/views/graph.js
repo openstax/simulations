@@ -135,7 +135,8 @@ define(function(require) {
 			//if (width != this.renderer.width || height != this.renderer.height) {
 				this.width  = width;
 				this.height = height;
-				//this.renderer.resize(width, height);
+				this.$canvas[0].width = this.$canvas.width();
+				this.$canvas[0].height = this.$canvas.height();
 				//this.curve.position.y = height / 2;
 				this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
 				this.resizeOnNextUpdate = false;
@@ -162,6 +163,9 @@ define(function(require) {
 			height     = this.height;
 			xSpacing   = this.xSpacing;
 
+			this.context.fillStyle = '#fff';
+			this.context.fillRect(0, 0, this.width, this.height);
+
 			/* TODO: when I feel like it, use bezier curves to smooth it out
 			 *
 			 * Maybe port this Catmull-Rom curve to bezier conversion:
@@ -173,17 +177,12 @@ define(function(require) {
 
 			for (i = 0; i < latWidth; i++) {
 				points[i] = ((lat[i][j] - 2) / -4) * height;
-				console.log(points[i], height / 2);
 			}
-			console.log('//');
-
-			this.context.fillStyle = '#fff';
-			this.context.fillRect(0, 0, this.width, this.height);
 
 			//this.curve.lineStyle(2, 0x0D6A7C, 1);
 			//this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
 			this.context.beginPath();
-			this.context.moveTo(0, points[0]);
+			this.context.moveTo(-1, points[0]);
 
 			for (i = 1; i < latWidth; i++) {
 				//this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
@@ -195,7 +194,7 @@ define(function(require) {
 
 			//this.context.quadraticCurveTo((latWidth - 1) * xSpacing, points[latWidth - 1], latWidth - 1 * xSpacing, points[latWidth - 1]);
 
-			this.context.lineWidth = 4;
+			this.context.lineWidth = 3;
 			this.context.lineJoin = 'round';
 			this.context.strokeStyle = this.lineColor;
 			this.context.stroke();
