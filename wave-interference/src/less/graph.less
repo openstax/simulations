@@ -1,11 +1,11 @@
 @import "cross-section-slider.less";
 @import "mixins/graph-view.less";
 
-.graph-container {
+.heatmap-container {
 	position: absolute;
-	top: (20 + @heatmap-container-width + 20);
+	top: 20px;
 	left: 0;
-	.grid-view(graph, @heatmap-container-width, 200px, @heatmap-container-padding);
+	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		left: @heatmap-container-left-margin;

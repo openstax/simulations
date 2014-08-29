@@ -8,7 +8,7 @@
 		<label class="heatmap-axis-label"><%= y.label %></label>
 		<div class="heatmap-y-numbers">
 		<% var height = 100.0 / Math.ceil((y.end - y.start) / y.step); %>
-		<% for (var j = y.end; j >= 0; j -= y.step) { %>
+		<% for (var j = y.end; j >= y.start; j -= y.step) { %>
 			<div class="heatmap-number" style="height: <%= height %>%"><span><%= j %></span></div>
 		<% } %>
 		</div>
