@@ -1,0 +1,27 @@
+<figure class="graph-container">
+
+	<figcaption class="graph-title"><%= title %></figcaption>
+
+	<canvas class="graph-canvas"></canvas>
+
+	<div class="graph-y">
+		<label class="graph-axis-label"><%= y.label %></label>
+		<div class="graph-y-numbers">
+		<% var height = 100.0 / Math.ceil((y.end - y.start) / y.step); %>
+		<% for (var j = y.end; j >= y.start; j -= y.step) { %>
+			<div class="graph-number" style="height: <%= height %>%"><span><%= y.showNumbers ? j : '' %></span></div>
+		<% } %>
+		</div>
+	</div>
+
+	<div class="graph-x">
+		<label class="graph-axis-label"><%= x.label %></label>
+		<div class="graph-x-numbers">
+		<% var width = 100.0 / Math.ceil((x.end - x.start) / x.step); %>
+		<% for (var i = x.start; i <= x.end; i += x.step) { %>
+			<div class="graph-number" style="width: <%= width %>%"><span><%= x.showNumbers ? i : '' %></span></div>
+		<% } %>
+		</div>
+	</div>
+
+</figure>

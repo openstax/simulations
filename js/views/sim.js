@@ -8,6 +8,7 @@ define(function (require) {
 	var WaveSimulation   = require('models/wave-sim');
 	var Updater          = require('utils/updater');
 	var HeatmapView      = require('views/heatmap');
+	var GraphView        = require('views/graph');
 	var playbackControls = require('text!templates/sim-playback.html');
 
 
@@ -91,6 +92,24 @@ define(function (require) {
 				brightness: options.heatmapBrightness
 			});
 
+			this.graphView = new GraphView({
+				x: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
+					label: 'x (' + this.waveSimulation.get('units').distance + ')',
+					showNumbers: true
+				},
+				y: {
+					start: -1,
+					end: 1,
+					step: 0.5,
+					label: 'Water Level',
+					showNumbers: false
+				},
+				waveSimulation: this.waveSimulation
+			});
+
 			// Updater stuff
 			this.update = _.bind(this.update, this);
 
@@ -132,6 +151,9 @@ define(function (require) {
 
 			this.heatmapView.render();
 			this.$el.append(this.heatmapView.el);
+
+			this.graphView.render();
+			this.$el.append(this.graphView.el);
 
 			return this;
 		},
