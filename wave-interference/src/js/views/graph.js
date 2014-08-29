@@ -6,6 +6,7 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 	//var PIXI     = require('pixi');
+	var Utils     = require('utils/utils');
 	var html     = require('text!templates/graph.html');
 
 	/*
@@ -45,6 +46,7 @@ define(function(require) {
 					showNumbers: false
 				},
 				lineThickness: 5,
+				lineColor: '#000'
 			}, options);
 
 			// Save options
@@ -59,6 +61,9 @@ define(function(require) {
 				x: options.x,
 				y: options.y
 			};
+
+			this.lineThickness = options.lineThickness;
+			this.lineColor = options.lineColor;
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
@@ -115,10 +120,6 @@ define(function(require) {
 			// this.curve.position.x = 0;
 
 			// this.stage.addChild(this.curve);
-
-			// this.lineGradient = this.context.createRadialGradient(radius, radius, 0, radius, radius, radius);
-			// gradient.addColorStop(0, 'rgba(255,255,255,1)');
-			// gradient.addColorStop(1, 'rgba(255,255,255,0)');
 		},
 
 		/**
@@ -196,7 +197,7 @@ define(function(require) {
 
 			this.context.lineWidth = 4;
 			this.context.lineJoin = 'round';
-			this.context.strokeStyle = '#0D6A7C';
+			this.context.strokeStyle = this.lineColor;
 			this.context.stroke();
 			
 		}
