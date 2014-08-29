@@ -281,7 +281,7 @@ define(function(require) {
 		},
 
 		moveCrossSection: function(event) {
-			//console.log($(event.target).val());
+			this.waveSimulation.set('crossSectionY', $(event.target).val());
 		}
 
 	});

@@ -233,6 +233,8 @@ define(function (require) {
 
 			// Update the heatmap
 			this.heatmapView.update(time, delta);
+
+			this.graphView.update(time, delta);
 		},
 
 		changeFrequency: function(event) {

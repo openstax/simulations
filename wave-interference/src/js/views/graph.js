@@ -12,8 +12,9 @@ define(function(require) {
 	 * "Local" variables for functions to share and recycle
 	 */
 	var lat,
-		width,
+		latWidth,
 		height,
+		xSpacing,
 	    i,
 	    j;
 
@@ -102,6 +103,10 @@ define(function(require) {
 			// Create a stage to hold everything
 			this.stage = new PIXI.Stage(0xFFFFFF);
 
+			this.curve = new PIXI.Graphics();
+			this.curve.position.x = 0;
+
+			this.stage.addChild(this.curve);
 		},
 
 		/**
@@ -118,6 +123,8 @@ define(function(require) {
 				this.width  = width;
 				this.height = height;
 				this.renderer.resize(width, height);
+				//this.curve.position.y = height / 2;
+				this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
 				this.resizeOnNextUpdate = false;
 			}
 		},
@@ -126,13 +133,28 @@ define(function(require) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			
+			this.drawCurve();
 
 			// Render everything
 			this.renderer.render(this.stage);
 		},
 
 		drawCurve: function() {
+			this.curve.clear();
+
+			lat        = this.waveSimulation.lattice.data;
+			latWidth   = this.waveSimulation.lattice.width;
+			j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
+
+			height     = this.height;
+			xSpacing   = this.xSpacing;
+
+			this.curve.lineStyle(2, 0x0D6A7C, 1);
+			this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
+
+			for (i = 1; i < latWidth; i++) {
+				this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
+			}
 			
 		}
 	});
