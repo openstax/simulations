@@ -23,6 +23,8 @@ define(function (require) {
 	    j,
 	    x,
 	    y,
+	    dx,
+	    dy,
 	    position;
 
 	var SegmentPotentialView = Backbone.View.extend({
@@ -34,9 +36,9 @@ define(function (require) {
 
 		events: {
 			'mousedown  .segment-handle' : 'handleDown',
-			//'mouseup    .segment-handle' : 'handleUp',
 			'touchstart .segment-handle' : 'handleDown',
-			//'touchend   .segment-handle' : 'handleUp'
+			'mousedown' : 'boxDown',
+			'touchstart': 'boxDown'
 		},
 
 		initialize: function(options) {
@@ -59,6 +61,10 @@ define(function (require) {
 			this.listenTo(this.heatmapView, 'resize', function(){
 				this.resizeOnNextUpdate = true;
 				this.dragOffset = this.$dragFrame.offset();
+				this.dragBounds = {
+					width:  this.$dragFrame.width(),
+					height: this.$dragFrame.height()
+				};
 			});
 		},
 
@@ -73,8 +79,8 @@ define(function (require) {
 
 			this.$dragFrame = this.heatmapView.$('.potential-views');
 			this.$dragFrame
-				.bind('mousemove touchmove', _.bind(this.handleMove, this))
-				.bind('mouseup touchend',    _.bind(this.handleUp, this));
+				.bind('mousemove touchmove', _.bind(this.drag, this))
+				.bind('mouseup touchend',    _.bind(this.dragEnd, this));
 		},
 
 		handleDown: function(event) {
@@ -88,8 +94,22 @@ define(function (require) {
 			$(event.target).addClass('active');
 		},
 
-		handleMove: function(event) {
+		boxDown: function(event) {
+			if (event.target === this.el) {
+				event.preventDefault();
+				this.$el.addClass('active');
+				this.draggingBox = true;
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
+			}
+		},
+
+		drag: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
+
+				// if (this.outOfBounds(event.pageX, event.pageY))
+				// 	this.dragEnd();
+
 				x = event.pageX - this.dragOffset.left;
 				y = event.pageY - this.dragOffset.top;
 
@@ -100,24 +120,63 @@ define(function (require) {
 				x = (x - (xSpacing / 2.0)) / xSpacing;
 				y = this.heatmapView.waveSimulation.lattice.height - (y - (ySpacing / 2.0)) / ySpacing;
 
-				if (this.draggingStart) {
-					this.segment.start.x = x;
-					this.segment.start.y = y;
+				segment = this.segment;
+
+				if (!this.outOfBounds(event.pageX, event.pageY) && 
+					this.heatmapView.waveSimulation.isValidPoint(x, y)) {
+
+					if (this.draggingStart) {
+						segment.start.x = x;
+						segment.start.y = y;
+					}
+					if (this.draggingEnd) {
+						segment.end.x = x;
+						segment.end.y = y;
+					}	
 				}
-				if (this.draggingEnd) {
-					this.segment.end.x = x;
-					this.segment.end.y = y;
+
+				this.resizeOnNextUpdate = true;
+			}
+			else if (this.draggingBox) {
+
+				// if (this.outOfBounds(event.pageX, event.pageY))
+				// 	this.dragEnd();
+
+				dx = event.pageX - this.dragX;
+				dy = event.pageY - this.dragY;
+
+				// Convert to lattice space
+				dx = dx / this.heatmapView.xSpacing;
+				dy = dy / this.heatmapView.ySpacing * -1;
+
+				segment = this.segment;
+
+				if (!this.outOfBounds(event.pageX, event.pageY) &&
+					this.heatmapView.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy) &&
+					this.heatmapView.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
+
+					segment.start.x += dx;
+					segment.start.y += dy;
+					segment.end.x += dx;
+					segment.end.y += dy;
 				}
+
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
 
 				this.resizeOnNextUpdate = true;
 			}
 		},
 
-		handleUp: function(event) {
+		dragEnd: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
 				this.draggingStart = false;
 				this.draggingEnd   = false;
 				this.$('.segment-handle').removeClass('active');
+			}
+			else if (this.draggingBox) {
+				this.draggingBox = false;
+				this.$el.removeClass('active');
 			}
 		},
 
@@ -165,6 +224,11 @@ define(function (require) {
 			// Make sure the handles are circles
 			this.$('.segment-handle').width(this.$('.segment-handle').height());
 		},
+
+		outOfBounds: function(x, y) {
+			return (x > this.dragOffset.left + this.dragBounds.width  || x < this.dragOffset.left ||
+				    y > this.dragOffset.top  + this.dragBounds.height || y < this.dragOffset.top);
+		}
 
 	});
 
