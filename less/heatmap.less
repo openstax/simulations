@@ -34,6 +34,12 @@
 	border: 2px solid #FFF;
 	.transform-origin(left center);
 	//.box-sizing(content-box);
+	.transition(~"border 0.12s ease, background 0.12s ease");
+
+	&.active {
+		border-color: @link-color;
+		background: fadeout(@link-color, 40%);
+	}
 
 	> .segment-handle {
 		height: 100%;
@@ -65,10 +71,10 @@
 		}
 
 		&.active:after {
-			width: 250%;
-			height: 250%;
-			margin-top: -125%;
-			margin-left: -125%;
+			width: 350%;
+			height: 350%;
+			margin-top: -175%;
+			margin-left: -175%;
 		}
 	}
 }
