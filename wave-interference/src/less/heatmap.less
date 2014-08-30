@@ -26,8 +26,6 @@
 	left: @heatmap-container-padding;
 	bottom: @heatmap-container-padding;
 	right: @heatmap-container-padding;
-	pointer-events: none;
-	z-index: 10;
 }
 
 .segment-view {
@@ -37,7 +35,6 @@
 	.transform-origin(left center);
 	//.box-sizing(content-box);
 	.transition(~"border 0.12s ease, background 0.12s ease");
-	pointer-events: auto;
 
 	&.active {
 		border-color: @link-color;
