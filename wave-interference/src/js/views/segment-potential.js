@@ -26,7 +26,8 @@ define(function (require) {
 	    dx,
 	    dy,
 	    position,
-	    transform;
+	    transform,
+	    transformOrigin;
 
 	var SegmentPotentialView = Backbone.View.extend({
 
@@ -223,6 +224,7 @@ define(function (require) {
 			startY = (height - segment.start.y) * ySpacing - halfYSpacing - padding;
 
 			transform = 'translateX(' + startX + 'px) translateY(' + startY + 'px) rotateZ(' + (-angle) + 'deg)';
+			transformOrigin = padding + 'px center';
 
 			// Set the width so it spans the two points
 			this.$el.css({
@@ -232,7 +234,12 @@ define(function (require) {
 				'-webkit-transform': transform,
 				'-ms-transform': transform,
 				'-o-transform': transform,
-				'transform': transform
+				'transform': transform,
+
+				'-webkit-transform-origin': transformOrigin,
+				'-moz-transform-origin': transformOrigin,
+				'-ms-transform-origin': transformOrigin,
+				'transform-origin': transformOrigin,
 			});
 			
 			// Make sure the handles are circles
