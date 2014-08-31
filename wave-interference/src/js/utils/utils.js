@@ -111,7 +111,7 @@ define(function (require) {
 			i = x1 - x0;
 			j = y1 - y0;
 
-			return Math.atan(j / i) * (180 / Math.PI);
+			return Math.atan2(j, i) * (180 / Math.PI);
 		},
 
 		/**

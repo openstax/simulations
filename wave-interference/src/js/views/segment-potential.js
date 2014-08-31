@@ -58,6 +58,8 @@ define(function (require) {
 			else
 				throw 'SegmentPotentialView requires a HeatmapView to render.';
 
+			this.waveSimulation = this.waveSimulation;
+
 			this.listenTo(this.heatmapView, 'resize', function(){
 				this.resizeOnNextUpdate = true;
 				this.dragOffset = this.$dragFrame.offset();
@@ -118,12 +120,12 @@ define(function (require) {
 
 				// position = data.getLocalPosition(this.heatmapView.stage);
 				x = (x - (xSpacing / 2.0)) / xSpacing;
-				y = this.heatmapView.waveSimulation.lattice.height - (y - (ySpacing / 2.0)) / ySpacing;
+				y = this.waveSimulation.lattice.height - (y - (ySpacing / 2.0)) / ySpacing;
 
 				segment = this.segment;
 
 				if (!this.outOfBounds(event.pageX, event.pageY) && 
-					this.heatmapView.waveSimulation.isValidPoint(x, y)) {
+					this.waveSimulation.isValidPoint(x, y)) {
 
 					if (this.draggingStart) {
 						segment.start.x = x;
@@ -152,8 +154,8 @@ define(function (require) {
 				segment = this.segment;
 
 				if (!this.outOfBounds(event.pageX, event.pageY) &&
-					this.heatmapView.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy) &&
-					this.heatmapView.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
+					this.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy) &&
+					this.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
 
 					segment.start.x += dx;
 					segment.start.y += dy;
@@ -192,7 +194,7 @@ define(function (require) {
 
 			this.resizeOnNextUpdate = false;
 
-			height = this.heatmapView.waveSimulation.lattice.height;
+			height = this.waveSimulation.lattice.height;
 
 			xSpacing = this.heatmapView.xSpacing;
 			ySpacing = this.heatmapView.ySpacing;
@@ -202,7 +204,6 @@ define(function (require) {
 			padding = (segment.thickness / 2) * ySpacing;
 
 			angle = segment.getAngle();
-			console.log(angle);
 
 			lineLength = Utils.lineLength(
 				segment.start.x * xSpacing, 
