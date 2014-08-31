@@ -25,7 +25,8 @@ define(function (require) {
 	    y,
 	    dx,
 	    dy,
-	    position;
+	    position,
+	    transform;
 
 	var SegmentPotentialView = Backbone.View.extend({
 
@@ -58,7 +59,7 @@ define(function (require) {
 			else
 				throw 'SegmentPotentialView requires a HeatmapView to render.';
 
-			this.waveSimulation = this.waveSimulation;
+			this.waveSimulation = this.heatmapView.waveSimulation;
 
 			this.listenTo(this.heatmapView, 'resize', function(){
 				this.resizeOnNextUpdate = true;
@@ -83,6 +84,10 @@ define(function (require) {
 			this.$dragFrame
 				.bind('mousemove touchmove', _.bind(this.drag, this))
 				.bind('mouseup touchend',    _.bind(this.dragEnd, this));
+
+			this.heatmapView.$('.cross-section-slider')
+				.bind('mousemove touchmove', _.bind(this.drag, this))
+				.bind('mouseup touchend', _.bind(this.dragEnd, this));
 		},
 
 		handleDown: function(event) {
@@ -92,6 +97,9 @@ define(function (require) {
 				this.draggingStart = true;
 			else
 				this.draggingEnd = true;
+
+			this.dragX = event.pageX;
+			this.dragY = event.pageY;
 
 			$(event.target).addClass('active');
 		},
@@ -109,33 +117,28 @@ define(function (require) {
 		drag: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
 
-				// if (this.outOfBounds(event.pageX, event.pageY))
-				// 	this.dragEnd();
+				dx = event.pageX - this.dragX;
+				dy = event.pageY - this.dragY;
 
-				x = event.pageX - this.dragOffset.left;
-				y = event.pageY - this.dragOffset.top;
-
-				xSpacing = this.heatmapView.xSpacing;
-				ySpacing = this.heatmapView.ySpacing;
-
-				// position = data.getLocalPosition(this.heatmapView.stage);
-				x = (x - (xSpacing / 2.0)) / xSpacing;
-				y = this.waveSimulation.lattice.height - (y - (ySpacing / 2.0)) / ySpacing;
+				// Convert to lattice space
+				dx = dx / this.heatmapView.xSpacing;
+				dy = dy / this.heatmapView.ySpacing * -1;
 
 				segment = this.segment;
 
-				if (!this.outOfBounds(event.pageX, event.pageY) && 
-					this.waveSimulation.isValidPoint(x, y)) {
-
-					if (this.draggingStart) {
-						segment.start.x = x;
-						segment.start.y = y;
+				if (!this.outOfBounds(event.pageX, event.pageY)) {
+					if (this.draggingStart && this.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy)) {
+						segment.start.x += dx;
+						segment.start.y += dy;
 					}
-					if (this.draggingEnd) {
-						segment.end.x = x;
-						segment.end.y = y;
+					if (this.draggingEnd && this.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
+						segment.end.x += dx;
+						segment.end.y += dy;
 					}	
 				}
+
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
 
 				this.resizeOnNextUpdate = true;
 			}
@@ -215,11 +218,17 @@ define(function (require) {
 			startX = segment.start.x * xSpacing - halfXSpacing;
 			startY = (height - segment.start.y) * ySpacing - halfYSpacing - padding;
 
+			transform = 'translateX(' + startX + 'px) translateY(' + startY + 'px) rotateZ(' + (-angle) + 'deg)';
+
 			// Set the width so it spans the two points
 			this.$el.css({
 				width: lineLength + segment.thickness * xSpacing,
 				height: segment.thickness * xSpacing,
-				transform: 'translateX(' + startX + 'px) translateY(' + startY + 'px) rotateZ(' + (-angle) + 'deg)'
+
+				'-webkit-transform': transform,
+				'-ms-transform': transform,
+				'-o-transform': transform,
+				'transform': transform
 			});
 			
 			// Make sure the handles are circles
