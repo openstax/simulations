@@ -61,18 +61,13 @@ define(function (require) {
 
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
-			this.listenTo(this.heatmapView, 'resize', function(){
-				this.resizeOnNextUpdate = true;
-				this.dragOffset = this.$dragFrame.offset();
-				this.dragBounds = {
-					width:  this.$dragFrame.width(),
-					height: this.$dragFrame.height()
-				};
-			});
+			this.listenTo(this.heatmapView, 'resize', this.resize);
 		},
 
 		render: function() {
 			this.renderBox();
+
+			this.resize();
 			
 			this.update(0, 0);
 		},
@@ -88,6 +83,15 @@ define(function (require) {
 			this.heatmapView.$('.cross-section-slider')
 				.bind('mousemove touchmove', _.bind(this.drag, this))
 				.bind('mouseup touchend', _.bind(this.dragEnd, this));
+		},
+
+		resize: function(){
+			this.updateOnNextFrame = true;
+			this.dragOffset = this.$dragFrame.offset();
+			this.dragBounds = {
+				width:  this.$dragFrame.width(),
+				height: this.$dragFrame.height()
+			};
 		},
 
 		handleDown: function(event) {
@@ -140,7 +144,7 @@ define(function (require) {
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
 
-				this.resizeOnNextUpdate = true;
+				this.updateOnNextFrame = true;
 			}
 			else if (this.draggingBox) {
 
@@ -169,7 +173,7 @@ define(function (require) {
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
 
-				this.resizeOnNextUpdate = true;
+				this.updateOnNextFrame = true;
 			}
 		},
 
@@ -192,10 +196,10 @@ define(function (require) {
 				return;
 
 			// If there aren't any changes, don't do anything.
-			if (!this.resizeOnNextUpdate)
+			if (!this.updateOnNextFrame)
 				return;
 
-			this.resizeOnNextUpdate = false;
+			this.updateOnNextFrame = false;
 
 			height = this.waveSimulation.lattice.height;
 

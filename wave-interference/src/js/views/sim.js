@@ -60,7 +60,8 @@ define(function (require) {
 			'slide .slit-width'       : 'changeSlitWidth',
 			'slide .barrier-location' : 'changeBarrierX',
 			'slide .slit-separation'  : 'changeSlitSeparation',
-			'click .add-barrier'      : 'addBarrier'
+
+			'click .add-segment-potential' : 'addSegmentPotential'
 		},
 
 		/**
@@ -290,8 +291,8 @@ define(function (require) {
 			this.waveSimulation.set('barrierSlitSeparation', val);
 		},
 
-		addBarrier: function(event) {
-			
+		addSegmentPotential: function(event) {
+			this.waveSimulation.addSegmentPotential();
 		},
 
 		addDetector: function(event) {

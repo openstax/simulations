@@ -72,11 +72,16 @@ define(function(require) {
 			// To keep track of history so we can interpolate values
 			this.previousLattice = this.waveSimulation.lattice.clone();
 
+			// Array for holding SegmentPotentialViews
+			this.segmentPotentialViews = [];
+
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
 
 			this.xSpacing = 1;
 			this.ySpacing = 1;
+
+			this.listenTo(this.waveSimulation, 'segment-potential-added', this.addSegmentPotentialView);
 		},
 
 		/**
@@ -145,13 +150,6 @@ define(function(require) {
 				barrier: this.waveSimulation.barrier
 			});
 			this.barrierView.render();
-
-			this.segmentPotentialView = new SegmentPotentialView({
-				heatmapView: this,
-				segment: this.waveSimulation.segment
-			});
-			this.segmentPotentialView.render();
-			this.$('.potential-views').append(this.segmentPotentialView.el);
 		},
 
 		initParticles: function() {
@@ -279,7 +277,9 @@ define(function(require) {
 				this.updateParticles();
 
 			this.barrierView.update(time, delta);
-			this.segmentPotentialView.update(time, delta);
+
+			for (i = 0; i < this.segmentPotentialViews.length; i++)
+				this.segmentPotentialViews[i].update(time, delta);
 
 			// Render everything
 			this.renderer.render(this.stage);
@@ -287,6 +287,27 @@ define(function(require) {
 
 		moveCrossSection: function(event) {
 			this.waveSimulation.set('crossSectionY', $(event.target).val());
+		},
+
+		addSegmentPotentialView: function(segmentPotential) {
+			var segmentPotentialView = new SegmentPotentialView({
+				heatmapView: this,
+				segment: segmentPotential
+			});
+			segmentPotentialView.render();
+
+			this.$('.potential-views').append(segmentPotentialView.el);
+
+			this.segmentPotentialViews.push(segmentPotentialView);
+
+			// Make sure it renders the first time because it's set to render only when there are changes.
+			segmentPotentialView.updateOnNextFrame = true;
+		},
+
+		removeSegmentPotentialView: function(segmentPotential) {
+			this.segmentPotentialViews = _.filter(this.segmentPotentialViews, function(view) {
+				return view.segment !== segmentPotential;
+			});
 		}
 
 	});
