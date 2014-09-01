@@ -19,8 +19,10 @@ define(function (require) {
 	    //i,
 	    //j,
 	    x,
+	    y,
 	    dx,
 	    dy,
+	    range,
 	    topBox,
 	    middleBox,
 	    bottomBox;
@@ -75,7 +77,6 @@ define(function (require) {
 			else
 				this.draggingBottomHandle = true;
 
-			this.dragX = event.pageX;
 			this.dragY = event.pageY;
 
 			this.$el.addClass('dragging-handles');
@@ -95,12 +96,23 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
 				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
-				// Change stuff
+				if (this.draggingTopHandle)
+					dy *= -1;
 
-				this.dragX = event.pageX;
+				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
+					range = this.waveSimulation.get('barrierSlitWidthRange');
+
+					y = this.waveSimulation.get('barrierSlitWidth') + (dy / this.waveSimulation.heightRatio);
+
+					if (y >= range.min && y <= range.max) {
+						this.waveSimulation.set('barrierSlitWidth', y);
+					}
+				}
+				else
+					this.dragEnd();
+
 				this.dragY = event.pageY;
 
 				this.updateOnNextFrame = true;
@@ -119,10 +131,6 @@ define(function (require) {
 					if (this.waveSimulation.isValidPoint(topBox.x + dx, middleBox.y)) {
 
 						x = topBox.x + dx;
-
-						// topBox.x    = x;
-						// middleBox.x = x;
-						// bottomBox.x = x;
 
 						this.waveSimulation.set('barrierX', x / this.waveSimulation.widthRatio);
 					}
