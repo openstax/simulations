@@ -26,7 +26,7 @@
 	left: @heatmap-container-padding;
 	bottom: @heatmap-container-padding;
 	right: @heatmap-container-padding;
-	//overflow: hidden;
+	overflow: hidden;
 }
 
 .potential-view() {
@@ -38,7 +38,6 @@
 	position: absolute;
 	.potential-view();
 	.transform-origin(left center);
-	//.box-sizing(content-box);
 	.transition(~"border 0.12s ease, background 0.12s ease");
 
 	&.active {
@@ -95,6 +94,22 @@
 		.potential-view();
 		position: absolute;
 		width: 100%;
+
+		> .width-handle {
+			height: 10px;
+			position: absolute;
+			left: -2px;
+			right: -2px;
+			cursor: ns-resize;
+		}
+
+		> .width-handle-top {
+			top: -2px;
+		}
+
+		> .width-handle-bottom {
+			bottom: -2px;
+		}
 	}
 
 	> .barrier-top {
@@ -109,4 +124,13 @@
 		bottom: 0;
 	}
 
+	&.dragging-handles .width-handle-top {
+		//#gradient > .vertical(@start-color: fadeout(@link-color, 20%); @end-color: transparent);
+		border-top: 6px solid @link-color;
+	}
+
+	&.dragging-handles .width-handle-bottom {
+		//#gradient > .vertical(@start-color: transparent; @end-color: fadeout(@link-color, 20%));
+		border-bottom: 6px solid @link-color;
+	}
 }

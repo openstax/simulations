@@ -90,18 +90,18 @@ define(function (require) {
 			};
 		},
 
-		handleDown: function(event) {
+		widthHandleDown: function(event) {
 			event.preventDefault();
 
-			if ($(event.target).index() === 0)
-				this.draggingStart = true;
+			if ($(event.target).hasClass('width-handle-top'))
+				this.draggingTopHandle = true;
 			else
-				this.draggingEnd = true;
+				this.draggingBottomHandle = true;
 
 			this.dragX = event.pageX;
 			this.dragY = event.pageY;
 
-			$(event.target).addClass('active');
+			this.$el.addClass('dragging-handles');
 		},
 
 		boxDown: function(event) {
@@ -153,15 +153,15 @@ define(function (require) {
 		},
 
 		dragEnd: function(event) {
-			// if (this.draggingStart || this.draggingEnd) {
-			// 	this.draggingStart = false;
-			// 	this.draggingEnd   = false;
-			// 	this.$('.segment-handle').removeClass('active');
-			// }
-			// else if (this.draggingBox) {
-			// 	this.draggingBox = false;
-			// 	this.$el.removeClass('active');
-			// }
+			if (this.draggingTopHandle || this.draggingBottomHandle) {
+				this.draggingTopHandle    = false;
+				this.draggingBottomHandle = false;
+				this.$el.removeClass('dragging-handles');
+			}
+			else if (this.draggingBox) {
+				this.draggingBox = false;
+				this.$el.removeClass('active');
+			}
 		},
 
 		update: function(time, delta) {
