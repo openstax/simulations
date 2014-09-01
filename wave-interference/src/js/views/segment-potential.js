@@ -2,11 +2,13 @@ define(function (require) {
 
 	'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
-	var Utils    = require('utils/utils');
-	var html     = require('text!templates/segment.html');
+	var $ = require('jquery');
+	var _ = require('underscore');
+
+	var HeatmapDraggable = require('views/heatmap-draggable');
+
+	var Utils = require('utils/utils');
+	var html  = require('text!templates/segment.html');
 
 	var segment,
 	    xSpacing,
@@ -24,7 +26,7 @@ define(function (require) {
 	    transform,
 	    transformOrigin;
 
-	var SegmentPotentialView = Backbone.View.extend({
+	var SegmentPotentialView = HeatmapDraggable.extend({
 
 		template: _.template(html),
 
@@ -39,55 +41,23 @@ define(function (require) {
 		},
 
 		initialize: function(options) {
-
-			// Default values
-			options = _.extend({
-				
-			}, options);
+			HeatmapDraggable.prototype.initialize.apply(this, [options]);
 
 			if (options.segment)
 				this.segment = options.segment;
 			else
 				throw 'SegmentPotentialView requires a Barrier model.';
-
-			if (options.heatmapView)
-				this.heatmapView = options.heatmapView;
-			else
-				throw 'SegmentPotentialView requires a HeatmapView to render.';
-
-			this.waveSimulation = this.heatmapView.waveSimulation;
-
-			this.listenTo(this.heatmapView, 'resize', this.resize);
 		},
 
 		render: function() {
 			this.renderBox();
-
+			this.bindDragEvents();
 			this.resize();
-			
 			this.update(0, 0);
 		},
 
 		renderBox: function() {
 			this.$el.html(this.template());
-
-			this.$dragFrame = this.heatmapView.$('.potential-views');
-			this.$dragFrame
-				.bind('mousemove touchmove', _.bind(this.drag, this))
-				.bind('mouseup touchend',    _.bind(this.dragEnd, this));
-
-			this.heatmapView.$('.cross-section-slider')
-				.bind('mousemove touchmove', _.bind(this.drag, this))
-				.bind('mouseup touchend', _.bind(this.dragEnd, this));
-		},
-
-		resize: function(){
-			this.updateOnNextFrame = true;
-			this.dragOffset = this.$dragFrame.offset();
-			this.dragBounds = {
-				width:  this.$dragFrame.width(),
-				height: this.$dragFrame.height()
-			};
 		},
 
 		handleDown: function(event) {
@@ -98,6 +68,8 @@ define(function (require) {
 			else
 				this.draggingEnd = true;
 
+			this.fixTouchEvents(event);
+
 			this.dragX = event.pageX;
 			this.dragY = event.pageY;
 
@@ -107,8 +79,13 @@ define(function (require) {
 		boxDown: function(event) {
 			if (event.target === this.el) {
 				event.preventDefault();
+
 				this.$el.addClass('active');
+
 				this.draggingBox = true;
+
+				this.fixTouchEvents(event);
+
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
 			}
@@ -117,25 +94,25 @@ define(function (require) {
 		drag: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
 
-				dx = event.pageX - this.dragX;
-				dy = event.pageY - this.dragY;
+				this.fixTouchEvents(event);
 
-				// Convert to lattice space
-				dx = dx / this.heatmapView.xSpacing;
-				dy = dy / this.heatmapView.ySpacing * -1;
+				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
 				segment = this.segment;
 
-				if (!this.outOfBounds(event.pageX, event.pageY)) {
-					if (this.draggingStart && this.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy)) {
+				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
+					if (this.draggingStart && this.heatmapView.isVisiblePoint(segment.start.x + dx, segment.start.y + dy)) {
 						segment.start.x += dx;
 						segment.start.y += dy;
 					}
-					if (this.draggingEnd && this.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
+					if (this.draggingEnd && this.heatmapView.isVisiblePoint(segment.end.x   + dx, segment.end.y   + dy)) {
 						segment.end.x += dx;
 						segment.end.y += dy;
-					}	
+					}
 				}
+				else
+					this.dragEnd();
 
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
@@ -144,24 +121,25 @@ define(function (require) {
 			}
 			else if (this.draggingBox) {
 
-				dx = event.pageX - this.dragX;
-				dy = event.pageY - this.dragY;
+				this.fixTouchEvents(event);
 
-				// Convert to lattice space
-				dx = dx / this.heatmapView.xSpacing;
-				dy = dy / this.heatmapView.ySpacing * -1;
+				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
 				segment = this.segment;
 
-				if (!this.outOfBounds(event.pageX, event.pageY) &&
-					this.waveSimulation.isValidPoint(segment.start.x + dx, segment.start.y + dy) &&
-					this.waveSimulation.isValidPoint(segment.end.x   + dx, segment.end.y   + dy)) {
+				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
+					if (this.heatmapView.isVisiblePoint(segment.start.x + dx, segment.start.y + dy) &&
+						this.heatmapView.isVisiblePoint(segment.end.x   + dx, segment.end.y   + dy)) {
 
-					segment.start.x += dx;
-					segment.start.y += dy;
-					segment.end.x += dx;
-					segment.end.y += dy;
+						segment.start.x += dx;
+						segment.start.y += dy;
+						segment.end.x += dx;
+						segment.end.y += dy;
+					}
 				}
+				else
+					this.dragEnd();
 
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
@@ -236,13 +214,7 @@ define(function (require) {
 			
 			// Make sure the handles are circles
 			this.$('.segment-handle').width(this.$('.segment-handle').height());
-		},
-
-		outOfBounds: function(x, y) {
-			return (x > this.dragOffset.left + this.dragBounds.width  || x < this.dragOffset.left ||
-				    y > this.dragOffset.top  + this.dragBounds.height || y < this.dragOffset.top);
 		}
-
 	});
 
 	return SegmentPotentialView;

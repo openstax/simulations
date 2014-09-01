@@ -309,6 +309,10 @@ define(function(require) {
 			this.segmentPotentialViews = _.filter(this.segmentPotentialViews, function(view) {
 				return view.segment !== segmentPotential;
 			});
+		},
+
+		isVisiblePoint: function(x, y) {
+			return (x < this.waveSimulation.lattice.width - 1 && x >= 0 && y < this.waveSimulation.lattice.height - 1 && y >= 0)
 		}
 
 	});

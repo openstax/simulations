@@ -3,10 +3,12 @@ define(function (require) {
 
 	'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
-	var html     = require('text!templates/barrier.html');
+	var $ = require('jquery');
+	var _ = require('underscore');
+
+	var HeatmapDraggable = require('views/heatmap-draggable');
+
+	var html = require('text!templates/barrier.html');
 
 	var xSpacing,
 	    ySpacing,
@@ -22,7 +24,7 @@ define(function (require) {
 	    middleBox,
 	    bottomBox;
 
-	var SegmentPotentialView = Backbone.View.extend({
+	var SegmentPotentialView = HeatmapDraggable.extend({
 
 		template: _.template(html),
 
@@ -37,20 +39,13 @@ define(function (require) {
 		},
 
 		initialize: function(options) {
-
+			HeatmapDraggable.prototype.initialize.apply(this, [options]);
+			
 			if (options.barrier)
 				this.barrier = options.barrier;
 			else
 				throw 'BarrierView requires a Barrier model.';
 
-			if (options.heatmapView)
-				this.heatmapView = options.heatmapView;
-			else
-				throw 'BarrierView requires a HeatmapView to render.';
-
-			this.waveSimulation = this.heatmapView.waveSimulation;
-
-			this.listenTo(this.heatmapView, 'resize', this.resize);
 			this.listenTo(this.waveSimulation, 'change:barrierStyle change:barrierX change:barrierSlitWidth change:barrierSlitSeparation', function(){
 				this.updateOnNextFrame = true;
 			});
@@ -58,9 +53,8 @@ define(function (require) {
 
 		render: function() {
 			this.renderBoxes();
-
+			this.bindDragEvents();
 			this.resize();
-			
 			this.update(0, 0);
 		},
 
@@ -70,24 +64,6 @@ define(function (require) {
 			this.$topBox = this.$('.barrier-top');
 			this.$middleBox = this.$('.barrier-middle');
 			this.$bottomBox = this.$('.barrier-bottom');
-
-			this.$dragFrame = this.heatmapView.$('.potential-views');
-			this.$dragFrame
-				.bind('mousemove touchmove', _.bind(this.drag, this))
-				.bind('mouseup touchend',    _.bind(this.dragEnd, this));
-
-			this.heatmapView.$('.cross-section-slider')
-				.bind('mousemove touchmove', _.bind(this.drag, this))
-				.bind('mouseup touchend', _.bind(this.dragEnd, this));
-		},
-
-		resize: function(){
-			this.updateOnNextFrame = true;
-			this.dragOffset = this.$dragFrame.offset();
-			this.dragBounds = {
-				width:  this.$dragFrame.width(),
-				height: this.$dragFrame.height()
-			};
 		},
 
 		widthHandleDown: function(event) {
@@ -117,12 +93,10 @@ define(function (require) {
 		drag: function(event) {
 			if (this.draggingStart || this.draggingEnd) {
 
-				dx = event.pageX - this.dragX;
-				dy = event.pageY - this.dragY;
+				this.fixTouchEvents(event);
 
-				// Convert to lattice space
-				dx = dx / this.heatmapView.xSpacing;
-				dy = dy / this.heatmapView.ySpacing * -1;
+				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
 				// Change stuff
 
@@ -133,15 +107,10 @@ define(function (require) {
 			}
 			else if (this.draggingBarrier) {
 
-				// if (this.outOfBounds(event.pageX, event.pageY))
-				// 	this.dragEnd();
+				this.fixTouchEvents(event);
 
-				dx = event.pageX - this.dragX;
-				dy = event.pageY - this.dragY;
-
-				// Convert to lattice space
-				dx = dx / this.heatmapView.xSpacing;
-				dy = dy / this.heatmapView.ySpacing * -1;
+				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
 				// Change stuff
 
@@ -204,11 +173,6 @@ define(function (require) {
 			else {
 				this.$el.hide();
 			}
-		},
-
-		outOfBounds: function(x, y) {
-			return (x > this.dragOffset.left + this.dragBounds.width  || x < this.dragOffset.left ||
-				    y > this.dragOffset.top  + this.dragBounds.height || y < this.dragOffset.top);
 		}
 
 	});
