@@ -79,14 +79,14 @@ define(function (require) {
 			this.heatmapView = new HeatmapView({
 				x: {
 					start: 0,
-					end: 60,//this.waveSimulation.get('dimensions').width,
-					step: 10,//this.waveSimulation.get('dimensions').width / 10,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
 					label: 'x (' + this.waveSimulation.get('units').distance + ')'
 				},
 				y: {
 					start: 0,
-					end: 60,//this.waveSimulation.get('dimensions').height,
-					step: 10,//this.waveSimulation.get('dimensions').height / 10,
+					end: this.waveSimulation.get('dimensions').height,
+					step: this.waveSimulation.get('dimensions').height / 10,
 					label: 'y (' + this.waveSimulation.get('units').distance + ')'
 				},
 				waveSimulation: this.waveSimulation,
