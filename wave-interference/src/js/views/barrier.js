@@ -51,18 +51,25 @@ define(function (require) {
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
 			this.listenTo(this.heatmapView, 'resize', this.resize);
+			this.listenTo(this.waveSimulation, 'change:barrierStyle change:barrierX change:barrierSlitWidth changeBarrierSlitSeparation', function(){
+				this.updateOnNextFrame = true;
+			});
 		},
 
 		render: function() {
-			this.renderBox();
+			this.renderBoxes();
 
 			this.resize();
 			
 			this.update(0, 0);
 		},
 
-		renderBox: function() {
+		renderBoxes: function() {
 			this.$el.html(this.template());
+
+			this.$topBox = this.$('.barrier-top');
+			this.$middleBox = this.$('.barrier-middle');
+			this.$bottomBox = this.$('.barrier-bottom');
 
 			this.$dragFrame = this.heatmapView.$('.potential-views');
 			this.$dragFrame
@@ -158,17 +165,11 @@ define(function (require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.barrier.enabled)
-				return;
-
 			// If there aren't any changes, don't do anything.
 			if (!this.updateOnNextFrame)
 				return;
 
 			this.updateOnNextFrame = false;
-
-			// Make sure the handles are circles
-			this.$('.segment-handle').width(this.$('.segment-handle').height());
 
 			if (this.barrier.style > 0) {
 				topBox    = this.barrier.topBox;

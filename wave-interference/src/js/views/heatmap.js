@@ -150,6 +150,7 @@ define(function(require) {
 				barrier: this.waveSimulation.barrier
 			});
 			this.barrierView.render();
+			this.$('.potential-views').append(this.barrierView.el);
 		},
 
 		initParticles: function() {
