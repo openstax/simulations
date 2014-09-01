@@ -51,7 +51,7 @@ define(function (require) {
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
 			this.listenTo(this.heatmapView, 'resize', this.resize);
-			this.listenTo(this.waveSimulation, 'change:barrierStyle change:barrierX change:barrierSlitWidth changeBarrierSlitSeparation', function(){
+			this.listenTo(this.waveSimulation, 'change:barrierStyle change:barrierX change:barrierSlitWidth change:barrierSlitSeparation', function(){
 				this.updateOnNextFrame = true;
 			});
 		},
@@ -182,14 +182,27 @@ define(function (require) {
 				halfYSpacing = ySpacing / 2.0;
 
 				// The width should be the same size on all of them, so which one is arbitrary.
-				this.$el.width(xSpacing * middleBox.width - 2);
+				this.$el.css({
+					width: xSpacing * topBox.width,
+					left:  xSpacing * topBox.x/* - halfXSpacing*/,
+					display: 'block'
+				});
 
 				this.$topBox.height(   ySpacing * topBox.height);
 				this.$bottomBox.height(ySpacing * bottomBox.height);
-				this.$middleBox.css({
-					'height': ySpacing * middleBox.height + 'px',
-					'margin-top': -(halfYSpacing * middleBox.height) + 'px'
-				});
+
+				if (this.barrier.style == 2) {
+					this.$middleBox.css({
+						'height': ySpacing * middleBox.height + 'px',
+						'margin-top': -(halfYSpacing * middleBox.height) + 'px',
+						'display': 'block'
+					});
+				}
+				else
+					this.$middleBox.hide();
+			}
+			else {
+				this.$el.hide();
 			}
 		},
 

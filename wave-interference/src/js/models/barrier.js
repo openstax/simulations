@@ -16,6 +16,7 @@ define(function(require) {
 
 		this.style = 0;
 
+		// In PhET's simulation, they are 2 wide
 		this.topBox    = new BoxPotential({ width: 2, enabled: false });
 		this.middleBox = new BoxPotential({ width: 2, enabled: false });
 		this.bottomBox = new BoxPotential({ width: 2, enabled: false });
