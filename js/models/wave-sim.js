@@ -71,6 +71,20 @@ define(function (require) {
 			if (this.get('barrierSlitSeparation') === null)
 				this.set('barrierSlitSeparation', this.get('dimensions').height / 5);
 
+			// Ranges
+			this.set('barrierSlitWidthRange', {
+				min: 0,
+				max: this.get('dimensions').height * 0.5
+			});
+			this.set('barrierXRange', {
+				min: 0,
+				max: this.get('dimensions').width
+			});
+			this.set('barrierSlitSeparationRange', {
+				min: 0,
+				max: this.get('dimensions').height * 0.75
+			});
+
 			if (this.get('crossSectionY') === null)
 				this.set('crossSectionY', this.get('dimensions').height / 2);
 
