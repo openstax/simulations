@@ -34,6 +34,11 @@
 	border: 2px solid #FFF;
 }
 
+.potential-view-active() {
+	border-color: @link-color;
+	background: fadeout(@link-color, 40%);
+}
+
 .segment-view {
 	position: absolute;
 	.potential-view();
@@ -41,8 +46,7 @@
 	.transition(~"border 0.12s ease, background 0.12s ease");
 
 	&.active {
-		border-color: @link-color;
-		background: fadeout(@link-color, 40%);
+		.potential-view-active();
 	}
 
 	> .segment-handle {
@@ -88,19 +92,18 @@
 	top: 0;
 	bottom: 0;
 
-	> .barrier-top,
-	> .barrier-middle,
-	> .barrier-bottom {
+	> .barrier-box {
 		.potential-view();
 		position: absolute;
 		width: 100%;
+		cursor: ew-resize;
 
 		> .width-handle {
 			height: 10px;
 			position: absolute;
 			left: -2px;
 			right: -2px;
-			cursor: ns-resize;
+			cursor: row-resize;
 		}
 
 		> .width-handle-top {
@@ -132,5 +135,9 @@
 	&.dragging-handles .width-handle-bottom {
 		//#gradient > .vertical(@start-color: transparent; @end-color: fadeout(@link-color, 20%));
 		border-bottom: 6px solid @link-color;
+	}
+
+	&.dragging-barrier > .barrier-box {
+		.potential-view-active();
 	}
 }

@@ -104,11 +104,11 @@ define(function (require) {
 			this.$el.addClass('dragging-handles');
 		},
 
-		boxDown: function(event) {
-			if (event.target === this.el) {
+		barrierDown: function(event) {
+			if ($(event.target).hasClass('barrier-box')) {
 				event.preventDefault();
-				this.$el.addClass('active');
-				this.draggingBox = true;
+				this.$el.addClass('dragging-barrier');
+				this.draggingBarrier = true;
 				this.dragX = event.pageX;
 				this.dragY = event.pageY;
 			}
@@ -131,7 +131,7 @@ define(function (require) {
 
 				this.updateOnNextFrame = true;
 			}
-			else if (this.draggingBox) {
+			else if (this.draggingBarrier) {
 
 				// if (this.outOfBounds(event.pageX, event.pageY))
 				// 	this.dragEnd();
@@ -158,9 +158,9 @@ define(function (require) {
 				this.draggingBottomHandle = false;
 				this.$el.removeClass('dragging-handles');
 			}
-			else if (this.draggingBox) {
-				this.draggingBox = false;
-				this.$el.removeClass('active');
+			else if (this.draggingBarrier) {
+				this.draggingBarrier = false;
+				this.$el.removeClass('dragging-barrier');
 			}
 		},
 
