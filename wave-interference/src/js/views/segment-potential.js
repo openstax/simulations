@@ -2,9 +2,9 @@ define(function (require) {
 
 	'use strict';
 
+	var $        = require('jquery');
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	var PIXI     = require('pixi');
 	var Utils    = require('utils/utils');
 	var html     = require('text!templates/segment.html');
 
@@ -19,13 +19,8 @@ define(function (require) {
 	    lineLength,
 	    startX,
 	    startY,
-	    i,
-	    j,
-	    x,
-	    y,
 	    dx,
 	    dy,
-	    position,
 	    transform,
 	    transformOrigin;
 
@@ -148,9 +143,6 @@ define(function (require) {
 				this.updateOnNextFrame = true;
 			}
 			else if (this.draggingBox) {
-
-				// if (this.outOfBounds(event.pageX, event.pageY))
-				// 	this.dragEnd();
 
 				dx = event.pageX - this.dragX;
 				dy = event.pageY - this.dragY;

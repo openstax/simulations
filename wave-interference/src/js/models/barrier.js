@@ -31,9 +31,6 @@ define(function(require) {
 		this.changeDimensions();
 	};
 
-
-	var i;
-
 	_.extend(Barrier.prototype, Backbone.Events, {
 
 		changeX: function() {
@@ -67,7 +64,6 @@ define(function(require) {
 
 		changeBarrierType1: function() {
 			var latHeight  = this.waveSimulation.get('latticeSize').height;
-			var separation = this.waveSimulation.get('barrierSlitSeparation') * this.waveSimulation.heightRatio;
 			var slitSize   = this.waveSimulation.get('barrierSlitWidth') * this.waveSimulation.heightRatio;
 
 			var slitCenter = Math.round(latHeight / 2.0);

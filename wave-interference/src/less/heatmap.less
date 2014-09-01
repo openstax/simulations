@@ -28,10 +28,14 @@
 	right: @heatmap-container-padding;
 }
 
-.segment-view {
-	position: absolute;
+.potential-view() {
 	background: rgba(255, 255, 255, 0.5);
 	border: 2px solid #FFF;
+}
+
+.segment-view {
+	position: absolute;
+	.potential-view();
 	.transform-origin(left center);
 	//.box-sizing(content-box);
 	.transition(~"border 0.12s ease, background 0.12s ease");
@@ -77,4 +81,31 @@
 			margin-left: -150%;
 		}
 	}
+}
+
+.barrier-view {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+
+	> .barrier-top,
+	> .barrier-middle,
+	> .barrier-bottom {
+		.potential-view();
+		position: absolute;
+		width: 100%;
+	}
+
+	> .barrier-top {
+		top: 0;
+	}
+
+	> .barrier-middle {
+		top: 50%;
+	}
+
+	> .barrier-bottom {
+		bottom: 0;
+	}
+
 }

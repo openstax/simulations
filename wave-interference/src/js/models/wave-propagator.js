@@ -6,7 +6,6 @@ define(function(require) {
 	var _         = require('underscore');
 	var Lattice2D = require('models/lattice2d');
 	var Potential = require('models/potential');
-	var BoxPotential = require('models/potential/box');
 
 	var WavePropagator = function(options) {
 

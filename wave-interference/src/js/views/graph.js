@@ -6,7 +6,6 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 	//var PIXI     = require('pixi');
-	var Utils     = require('utils/utils');
 	var html     = require('text!templates/graph.html');
 
 	/*

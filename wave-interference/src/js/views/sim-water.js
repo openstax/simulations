@@ -103,7 +103,7 @@ define([
 				connect: 'lower',
 				range: {
 					min: 0,
-					max: this.waveSimulation.get('dimensions').height * .75
+					max: this.waveSimulation.get('dimensions').height * 0.75
 				}
 			});
 		},

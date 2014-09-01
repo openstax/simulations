@@ -1,63 +1,176 @@
+
 define(function (require) {
 
 	'use strict';
 
-	var _    = require('underscore');
-	var PIXI = require('pixi');
+	var $        = require('jquery');
+	var _        = require('underscore');
+	var Backbone = require('backbone');
+	var html     = require('text!templates/barrier.html');
 
-	var BarrierView = function(options) {
-
-		if (options.barrier)
-			this.barrier = options.barrier;
-		else
-			throw 'BarrierView requires a Barrier model.';
-
-		if (options.heatmapView)
-			this.heatmapView = options.heatmapView;
-		else
-			throw 'BarrierView requires a HeatmapView to render.';
-	};
-
-	var topBox,
-	    middleBox,
-	    bottomBox,
-	    xSpacing,
+	var xSpacing,
 	    ySpacing,
+	    halfYSpacing,
 	    halfXSpacing,
-	    halfYSpacing;
+	    //padding,
+	    //height,
+	    //i,
+	    //j,
+	    dx,
+	    dy,
+	    topBox,
+	    middleBox,
+	    bottomBox;
 
-	_.extend(BarrierView.prototype, {
+	var SegmentPotentialView = Backbone.View.extend({
 
-		render: function() {
-			this.graphics = new PIXI.Graphics();
-			this.graphics.alpha = 0;
+		template: _.template(html),
 
-			this.graphics.mousedown = this.graphics.touchstart = function(data){
-				console.log('moving barriers');
-			};
+		tagName: 'div',
+		className: 'barrier-view',
 
-			this.update(0, 0);
-
-			this.heatmapView.stage.addChild(this.graphics);
+		events: {
+			'mousedown  .width-handle' : 'widthHandleDown',
+			'touchstart .width-handle' : 'widthHandleDown',
+			'mousedown' : 'barrierDown',
+			'touchstart': 'barrierDown'
 		},
 
-		remove: function() {
-			this.heatmapView.stage.removeChild(this.graphics);
+		initialize: function(options) {
+
+			if (options.barrier)
+				this.barrier = options.barrier;
+			else
+				throw 'BarrierView requires a Barrier model.';
+
+			if (options.heatmapView)
+				this.heatmapView = options.heatmapView;
+			else
+				throw 'BarrierView requires a HeatmapView to render.';
+
+			this.waveSimulation = this.heatmapView.waveSimulation;
+
+			this.listenTo(this.heatmapView, 'resize', this.resize);
+		},
+
+		render: function() {
+			this.renderBox();
+
+			this.resize();
+			
+			this.update(0, 0);
+		},
+
+		renderBox: function() {
+			this.$el.html(this.template());
+
+			this.$dragFrame = this.heatmapView.$('.potential-views');
+			this.$dragFrame
+				.bind('mousemove touchmove', _.bind(this.drag, this))
+				.bind('mouseup touchend',    _.bind(this.dragEnd, this));
+
+			this.heatmapView.$('.cross-section-slider')
+				.bind('mousemove touchmove', _.bind(this.drag, this))
+				.bind('mouseup touchend', _.bind(this.dragEnd, this));
+		},
+
+		resize: function(){
+			this.updateOnNextFrame = true;
+			this.dragOffset = this.$dragFrame.offset();
+			this.dragBounds = {
+				width:  this.$dragFrame.width(),
+				height: this.$dragFrame.height()
+			};
+		},
+
+		handleDown: function(event) {
+			event.preventDefault();
+
+			if ($(event.target).index() === 0)
+				this.draggingStart = true;
+			else
+				this.draggingEnd = true;
+
+			this.dragX = event.pageX;
+			this.dragY = event.pageY;
+
+			$(event.target).addClass('active');
+		},
+
+		boxDown: function(event) {
+			if (event.target === this.el) {
+				event.preventDefault();
+				this.$el.addClass('active');
+				this.draggingBox = true;
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
+			}
+		},
+
+		drag: function(event) {
+			if (this.draggingStart || this.draggingEnd) {
+
+				dx = event.pageX - this.dragX;
+				dy = event.pageY - this.dragY;
+
+				// Convert to lattice space
+				dx = dx / this.heatmapView.xSpacing;
+				dy = dy / this.heatmapView.ySpacing * -1;
+
+				// Change stuff
+
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
+
+				this.updateOnNextFrame = true;
+			}
+			else if (this.draggingBox) {
+
+				// if (this.outOfBounds(event.pageX, event.pageY))
+				// 	this.dragEnd();
+
+				dx = event.pageX - this.dragX;
+				dy = event.pageY - this.dragY;
+
+				// Convert to lattice space
+				dx = dx / this.heatmapView.xSpacing;
+				dy = dy / this.heatmapView.ySpacing * -1;
+
+				// Change stuff
+
+				this.dragX = event.pageX;
+				this.dragY = event.pageY;
+
+				this.updateOnNextFrame = true;
+			}
+		},
+
+		dragEnd: function(event) {
+			// if (this.draggingStart || this.draggingEnd) {
+			// 	this.draggingStart = false;
+			// 	this.draggingEnd   = false;
+			// 	this.$('.segment-handle').removeClass('active');
+			// }
+			// else if (this.draggingBox) {
+			// 	this.draggingBox = false;
+			// 	this.$el.removeClass('active');
+			// }
 		},
 
 		update: function(time, delta) {
+			if (!this.barrier.enabled)
+				return;
+
+			// If there aren't any changes, don't do anything.
+			if (!this.updateOnNextFrame)
+				return;
+
+			this.updateOnNextFrame = false;
+
+			// Make sure the handles are circles
+			this.$('.segment-handle').width(this.$('.segment-handle').height());
 
 			if (this.barrier.style > 0) {
-				this.graphics.clear();
-
-				if (this.graphics.alpha < 1)
-					this.graphics.alpha += delta * 0.005;
-
-				this.graphics.beginFill(0xFFFFFF, 0.5);
-				this.graphics.lineStyle(2, 0xFFFFFF, 0.9);
-				// this.graphics.beginFill(0xFFFFFF, 0.5);
-				// this.graphics.lineStyle(2, 0x21366B, 1);
-
 				topBox    = this.barrier.topBox;
 				middleBox = this.barrier.middleBox;
 				bottomBox = this.barrier.bottomBox;
@@ -67,20 +180,25 @@ define(function (require) {
 				halfXSpacing = xSpacing / 2.0;
 				halfYSpacing = ySpacing / 2.0;
 
-				this.graphics.drawRect(xSpacing * topBox.x    - halfXSpacing, ySpacing * topBox.y    - halfYSpacing, xSpacing * topBox.width    - 2, ySpacing * topBox.height + halfYSpacing);
-				this.graphics.drawRect(xSpacing * middleBox.x - halfXSpacing, ySpacing * middleBox.y - halfYSpacing, xSpacing * middleBox.width - 2, ySpacing * middleBox.height);
-				this.graphics.drawRect(xSpacing * bottomBox.x - halfXSpacing, ySpacing * bottomBox.y - halfYSpacing, xSpacing * bottomBox.width - 2, ySpacing * bottomBox.height);	
-			}
-			else if (this.graphics.alpha > 0){
-				this.graphics.alpha -= delta * 0.005;
+				// The width should be the same size on all of them, so which one is arbitrary.
+				this.$el.width(xSpacing * middleBox.width - 2);
 
-				if (this.graphics.alpha < 0)
-					this.graphics.alpha = 0;
+				this.$topBox.height(   ySpacing * topBox.height);
+				this.$bottomBox.height(ySpacing * bottomBox.height);
+				this.$middleBox.css({
+					'height': ySpacing * middleBox.height + 'px',
+					'margin-top': -(halfYSpacing * middleBox.height) + 'px'
+				});
 			}
+		},
 
+		outOfBounds: function(x, y) {
+			return (x > this.dragOffset.left + this.dragBounds.width  || x < this.dragOffset.left ||
+				    y > this.dragOffset.top  + this.dragBounds.height || y < this.dragOffset.top);
 		}
 
 	});
 
-	return BarrierView;
+	return SegmentPotentialView;
 });
+
