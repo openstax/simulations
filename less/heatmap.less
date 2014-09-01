@@ -26,19 +26,27 @@
 	left: @heatmap-container-padding;
 	bottom: @heatmap-container-padding;
 	right: @heatmap-container-padding;
+	overflow: hidden;
+}
+
+.potential-view() {
+	background: rgba(255, 255, 255, 0.5);
+	border: 2px solid #FFF;
+}
+
+.potential-view-active() {
+	border-color: @link-color;
+	background: fadeout(@link-color, 40%);
 }
 
 .segment-view {
 	position: absolute;
-	background: rgba(255, 255, 255, 0.5);
-	border: 2px solid #FFF;
+	.potential-view();
 	.transform-origin(left center);
-	//.box-sizing(content-box);
 	.transition(~"border 0.12s ease, background 0.12s ease");
 
 	&.active {
-		border-color: @link-color;
-		background: fadeout(@link-color, 40%);
+		.potential-view-active();
 	}
 
 	> .segment-handle {
@@ -71,10 +79,65 @@
 		}
 
 		&.active:after {
-			width: 350%;
-			height: 350%;
-			margin-top: -175%;
-			margin-left: -175%;
+			width: 300%;
+			height: 300%;
+			margin-top: -150%;
+			margin-left: -150%;
 		}
+	}
+}
+
+.barrier-view {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+
+	> .barrier-box {
+		.potential-view();
+		position: absolute;
+		width: 100%;
+		cursor: ew-resize;
+
+		> .width-handle {
+			height: 10px;
+			position: absolute;
+			left: -2px;
+			right: -2px;
+			cursor: row-resize;
+		}
+
+		> .width-handle-top {
+			top: -2px;
+		}
+
+		> .width-handle-bottom {
+			bottom: -2px;
+		}
+	}
+
+	> .barrier-top {
+		top: 0;
+	}
+
+	> .barrier-middle {
+		top: 50%;
+	}
+
+	> .barrier-bottom {
+		bottom: 0;
+	}
+
+	&.dragging-handles .width-handle-top {
+		//#gradient > .vertical(@start-color: fadeout(@link-color, 20%); @end-color: transparent);
+		border-top: 6px solid @link-color;
+	}
+
+	&.dragging-handles .width-handle-bottom {
+		//#gradient > .vertical(@start-color: transparent; @end-color: fadeout(@link-color, 20%));
+		border-bottom: 6px solid @link-color;
+	}
+
+	&.dragging-barrier > .barrier-box {
+		.potential-view-active();
 	}
 }

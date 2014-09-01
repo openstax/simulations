@@ -60,7 +60,8 @@ define(function (require) {
 			'slide .slit-width'       : 'changeSlitWidth',
 			'slide .barrier-location' : 'changeBarrierX',
 			'slide .slit-separation'  : 'changeSlitSeparation',
-			'click .add-barrier'      : 'addBarrier'
+
+			'click .add-segment-potential' : 'addSegmentPotential'
 		},
 
 		/**
@@ -118,6 +119,9 @@ define(function (require) {
 
 			this.interpolationFactor = 0;
 
+			this.listenTo(this.waveSimulation, 'change:barrierX',         this.updateBarrierX);
+			this.listenTo(this.waveSimulation, 'change:barrierSlitWidth', this.updateBarrierSlitWidth);
+
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
 			this.$el.addClass('playing');
@@ -155,6 +159,12 @@ define(function (require) {
 
 			this.graphView.render();
 			this.$el.append(this.graphView.el);
+
+			// Name and cache barrier sliders for quick and easy access
+			this.$slitWidth      = this.$('.properties-panel .slit-width').prev().addBack();
+			this.$barrierX       = this.$('.properties-panel .barrier-location').prev().addBack();
+			this.$slitSeparation = this.$('.properties-panel .slit-separation').prev().addBack();
+			this.$barrierSliders = this.$slitWidth.add(this.$barrierX).add(this.$slitSeparation);
 
 			return this;
 		},
@@ -267,31 +277,65 @@ define(function (require) {
 		changeBarrierStyle: function(event) {
 			var val = parseInt($(event.target).val());
 
-			if (val > 0)
-				$(event.target).parents('fieldset').find('.slider').prev().addBack().removeAttr('disabled');
-			else
-				$(event.target).parents('fieldset').find('.slider').prev().addBack().attr('disabled', 'disabled');
+			switch (val) {
+				case 1:
+					this.$slitWidth.removeAttr('disabled');
+					this.$barrierX.removeAttr('disabled');
+					this.$slitSeparation.attr('disabled', 'disabled');
+					break;
+				case 2:
+					this.$barrierSliders.removeAttr('disabled');
+					break;
+				default: 
+					this.$barrierSliders.attr('disabled', 'disabled');
+			} 
 
 			this.waveSimulation.set('barrierStyle', val);
 		},
 
 		changeSlitWidth: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierSlitWidth', val);
+			this.setFromInput('barrierSlitWidth', val);
 		},
 
 		changeBarrierX: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierX', val);
+			this.setFromInput('barrierX', val);
 		},
 
 		changeSlitSeparation: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierSlitSeparation', val);
+			this.setFromInput('barrierSlitSeparation', val);
 		},
 
-		addBarrier: function(event) {
-			
+		updateBarrierX: function() {
+			this.updateInput(this.$barrierX, this.waveSimulation.get('barrierX'));
+		},
+
+		updateBarrierSlitWidth: function() {
+			this.updateInput(this.$slitWidth, this.waveSimulation.get('barrierSlitWidth'));
+		},
+
+		setFromInput: function(property, value) {
+			if (this.updatingProperty)
+				return;
+
+			this.inputtingProperty = true;
+			this.waveSimulation.set(property, value);
+			this.inputtingProperty = false;
+		},
+
+		updateInput: function($input, value) {
+			if (this.inputtingProperty)
+				return;
+
+			this.updatingProperty = true;
+			$input.val(value);
+			this.updatingProperty = false;
+		},
+
+		addSegmentPotential: function(event) {
+			this.waveSimulation.addSegmentPotential();
 		},
 
 		addDetector: function(event) {

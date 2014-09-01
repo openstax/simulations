@@ -101,19 +101,6 @@ define(function (require) {
 				waveSimulation: this
 			});
 
-			this.segment = new SegmentPotential({
-				start: {
-					x: 5,
-					y: 55
-				},
-				end: {
-					x: 20,
-					y: 45
-				},
-				thickness: 2
-			});
-			this.potential.add(this.segment);
-
 			// Oscillators
 			this.initOscillators();
 		},
@@ -206,6 +193,22 @@ define(function (require) {
 
 		setSourceValue: function(x, y, val) {
 			this.propagator.setSourceValue(x, y, val);
+		},
+
+		addSegmentPotential: function() {
+			var segment = new SegmentPotential({
+				start: {
+					x: 20,
+					y: 40
+				},
+				end: {
+					x: 40,
+					y: 20
+				},
+				thickness: 3
+			});
+			this.potential.add(segment);
+			this.trigger('segment-potential-added', segment);
 		},
 
 		changeFrequency: function(model, value) {

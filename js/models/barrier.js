@@ -16,6 +16,7 @@ define(function(require) {
 
 		this.style = 0;
 
+		// In PhET's simulation, they are 2 wide
 		this.topBox    = new BoxPotential({ width: 2, enabled: false });
 		this.middleBox = new BoxPotential({ width: 2, enabled: false });
 		this.bottomBox = new BoxPotential({ width: 2, enabled: false });
@@ -30,9 +31,6 @@ define(function(require) {
 		this.changeX();
 		this.changeDimensions();
 	};
-
-
-	var i;
 
 	_.extend(Barrier.prototype, Backbone.Events, {
 
@@ -67,7 +65,6 @@ define(function(require) {
 
 		changeBarrierType1: function() {
 			var latHeight  = this.waveSimulation.get('latticeSize').height;
-			var separation = this.waveSimulation.get('barrierSlitSeparation') * this.waveSimulation.heightRatio;
 			var slitSize   = this.waveSimulation.get('barrierSlitWidth') * this.waveSimulation.heightRatio;
 
 			var slitCenter = Math.round(latHeight / 2.0);
