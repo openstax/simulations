@@ -18,6 +18,7 @@ define(function (require) {
 	    //height,
 	    //i,
 	    //j,
+	    x,
 	    dx,
 	    dy,
 	    topBox,
@@ -40,7 +41,7 @@ define(function (require) {
 
 		initialize: function(options) {
 			HeatmapDraggable.prototype.initialize.apply(this, [options]);
-			
+
 			if (options.barrier)
 				this.barrier = options.barrier;
 			else
@@ -86,12 +87,11 @@ define(function (require) {
 				this.$el.addClass('dragging-barrier');
 				this.draggingBarrier = true;
 				this.dragX = event.pageX;
-				this.dragY = event.pageY;
 			}
 		},
 
 		drag: function(event) {
-			if (this.draggingStart || this.draggingEnd) {
+			if (this.draggingTopHandle || this.draggingBottomHandle) {
 
 				this.fixTouchEvents(event);
 
@@ -110,12 +110,27 @@ define(function (require) {
 				this.fixTouchEvents(event);
 
 				dx = this.toLatticeXScale(event.pageX - this.dragX);
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
 
-				// Change stuff
+				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
+					topBox    = this.barrier.topBox;
+					middleBox = this.barrier.middleBox;
+					bottomBox = this.barrier.bottomBox;
+
+					if (this.waveSimulation.isValidPoint(topBox.x + dx, middleBox.y)) {
+
+						x = topBox.x + dx;
+
+						// topBox.x    = x;
+						// middleBox.x = x;
+						// bottomBox.x = x;
+
+						this.waveSimulation.set('barrierX', x / this.waveSimulation.widthRatio);
+					}
+				}
+				else
+					this.dragEnd();
 
 				this.dragX = event.pageX;
-				this.dragY = event.pageY;
 
 				this.updateOnNextFrame = true;
 			}

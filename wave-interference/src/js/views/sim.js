@@ -119,6 +119,9 @@ define(function (require) {
 
 			this.interpolationFactor = 0;
 
+			this.listenTo(this.waveSimulation, 'change:barrierX',         this.updateBarrierX);
+			this.listenTo(this.waveSimulation, 'change:barrierSlitWidth', this.updateBarrierSlitWidth);
+
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
 			this.$el.addClass('playing');
@@ -292,17 +295,43 @@ define(function (require) {
 
 		changeSlitWidth: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierSlitWidth', val);
+			this.setFromInput('barrierSlitWidth', val);
 		},
 
 		changeBarrierX: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierX', val);
+			this.setFromInput('barrierX', val);
 		},
 
 		changeSlitSeparation: function(event) {
 			var val = parseFloat($(event.target).val());
-			this.waveSimulation.set('barrierSlitSeparation', val);
+			this.setFromInput('barrierSlitSeparation', val);
+		},
+
+		updateBarrierX: function() {
+			this.updateInput(this.$barrierX, this.waveSimulation.get('barrierX'));
+		},
+
+		updateBarrierSlitWidth: function() {
+			this.updateInput(this.$slitWidth, this.waveSimulation.get('barrierSlitWidth'));
+		},
+
+		setFromInput: function(property, value) {
+			if (this.updatingProperty)
+				return;
+
+			this.inputtingProperty = true;
+			this.waveSimulation.set(property, value);
+			this.inputtingProperty = false;
+		},
+
+		updateInput: function($input, value) {
+			if (this.inputtingProperty)
+				return;
+
+			this.updatingProperty = true;
+			$input.val(value);
+			this.updatingProperty = false;
 		},
 
 		addSegmentPotential: function(event) {
