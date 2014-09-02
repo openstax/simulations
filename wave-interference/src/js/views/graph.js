@@ -49,7 +49,7 @@ define(function(require) {
 				},
 				lineThickness: 5,
 				lineColor: '#000',
-				gridColor: '#BBB'
+				gridColor: '#ddd'
 			}, options);
 
 			// Save options
