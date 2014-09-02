@@ -1,14 +1,14 @@
 <fieldset class="panel-fieldset">
 	<!-- <legend>Barriers</legend> -->
 
-	<input type="radio" name="barrier" value="0" id="barrier-none" class="barrier-style" checked>
-	<label for="barrier-none">No Barrier</label><br>
+	<input type="radio" name="barrier" value="0" id="barrier-none-<%= unique %>" class="barrier-style" checked>
+	<label for="barrier-none-<%= unique %>">No Barrier</label><br>
 
-	<input type="radio" name="barrier" value="1" id="barrier-one-slit" class="barrier-style">
-	<label for="barrier-one-slit">One Slit</label><br>
+	<input type="radio" name="barrier" value="1" id="barrier-one-slit-<%= unique %>" class="barrier-style">
+	<label for="barrier-one-slit-<%= unique %>">One Slit</label><br>
 
-	<input type="radio" name="barrier" value="2" id="barrier-two-slits" class="barrier-style">
-	<label for="barrier-two-slits">Two Slits</label><br>
+	<input type="radio" name="barrier" value="2" id="barrier-two-slits-<%= unique %>" class="barrier-style">
+	<label for="barrier-two-slits-<%= unique %>">Two Slits</label><br>
 
 	<label for="slit-width" class="slider-label" disabled>Slit Width</label>
 	<div class="slider slit-width" id="slit-width" disabled></div>

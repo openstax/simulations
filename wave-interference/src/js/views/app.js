@@ -43,7 +43,7 @@ define([
 			};
 
 			_.each(this.sims, function(sim, key) {
-				data.sims[key] = sim.get('title');
+				data.sims[key] = sim.title;
 			});
 
 			// Render basic page structure

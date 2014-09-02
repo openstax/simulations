@@ -89,8 +89,13 @@ define(function (require) {
 		 */
 		initialize: function(options) {
 			options = _.extend({
-				heatmapBrightness: 0.5
+				heatmapBrightness: 0.5,
+				title: 'Simulation',
+				name: 'sim'
 			}, options);
+
+			this.title = options.title;
+			this.name  = options.name;
 
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
@@ -156,18 +161,6 @@ define(function (require) {
 		},
 
 		/**
-		 * Makes Simulation model properties accesssible
-		 *
-		 * @params key
-		 */
-		get: function(key) {
-			if (this.model)
-				return this.model.get(key);
-			else
-				return null;
-		},
-
-		/**
 		 * Renders everything
 		 */
 		render: function() {
@@ -204,7 +197,12 @@ define(function (require) {
 			// Run the template for the oscillator controls
 			var oscillatorControls = _.template(oscillatorControlsHtml)({ 
 				oscillatorName:       this.waveSimulation.get('oscillatorName'),
-				oscillatorNamePlural: this.waveSimulation.get('oscillatorNamePlural')
+				oscillatorNamePlural: this.waveSimulation.get('oscillatorNamePlural'),
+				unique: this.cid
+			});
+
+			var barrierControls = _.template(barrierControlsHtml)({
+				unique: this.cid
 			});
 
 			// Fill the tools section of the control panel
@@ -215,7 +213,7 @@ define(function (require) {
 			$controlPanel.find('.properties-panel')
 				.append(waveControlsHtml)
 				.append(oscillatorControls)
-				.append(barrierControlsHtml);
+				.append(barrierControls);
 
 			// Initialize all of the sliders
 			$controlPanel.find('.frequency').noUiSlider({

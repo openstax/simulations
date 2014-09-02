@@ -23,15 +23,11 @@ define([
 		initialize: function(options) {
 			options = _.extend({
 				waveSimulation: new WaterSimulation(),
-				heatmapBrightness: 0.5
+				heatmapBrightness: 0.5,
+				title: 'Water'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
-
-			this.model = new Backbone.Model({
-				title: 'Water'
-			});
-
 		},
 	});
 

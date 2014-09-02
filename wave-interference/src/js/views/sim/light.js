@@ -14,14 +14,11 @@ define([
 		initialize: function(options) {
 			options = _.extend({
 				waveSimulation: new LightSimulation(),
-				heatmapBrightness: 0.5
+				heatmapBrightness: 0.5,
+				title: 'Light'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
-
-			this.model = new Backbone.Model({
-				title: 'Light'
-			});
 		},
 
 	});

@@ -22,7 +22,6 @@ define(function (require) {
 		},
 
 		initialize: function(options) {
-
 			if (options.heatmapView)
 				this.heatmapView = options.heatmapView;
 			else
@@ -45,7 +44,7 @@ define(function (require) {
 		},
 
 		render: function() {
-			this.$el.html(this.template());
+			this.$el.html(this.template({ unique: this.cid }));
 
 			this.resize();
 			this.update(0, 0);

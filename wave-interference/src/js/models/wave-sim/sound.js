@@ -19,7 +19,10 @@ define([
 				distance: 'cm',
 				time: 'ms'
 			},
-			timeScale: 1.0 / 1.42 
+			timeScale: 1.0 / 1.42,
+
+			oscillatorName: 'Speaker',
+			oscillatorNamePlural: 'Speakers',
 		})
 
 	});

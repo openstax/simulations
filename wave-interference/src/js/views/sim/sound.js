@@ -15,14 +15,11 @@ define([
 		initialize: function(options) {
 			options = _.extend({
 				waveSimulation: new SoundSimulation(),
-				heatmapBrightness: 0.5
+				heatmapBrightness: 0.5,
+				title: 'Sound'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
-
-			this.model = new Backbone.Model({
-				title: 'Sound'
-			});
 		},
 
 		update: function(time, delta) {

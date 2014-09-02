@@ -23,7 +23,10 @@ define([
 				distance: 'nm',
 				time: 'femtoseconds'
 			},
-			timeScale: 3.6
+			timeScale: 3.6,
+
+			oscillatorName: 'Light',
+			oscillatorNamePlural: 'Lights',
 		})
 
 	});
