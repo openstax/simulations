@@ -12,3 +12,10 @@
      -moz-column-rule: @column-rule;
           column-rule: @column-rule;
 }
+
+.keyframes (@name, @fromRules, @toRules) {
+    @-webkit-keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
+       @-moz-keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
+         @-o-keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
+            @keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
+}

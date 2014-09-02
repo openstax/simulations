@@ -1,0 +1,35 @@
+.btn:focus, .btn:active:focus, .btn.active:focus {
+	outline: none !important; // overriding bootstrap default behavior
+}
+
+.animated-button(@bg-color: @brand-primary, @color: #fff, @animationName: panel-btn-clicked, @duration: 400ms) {
+	&:active {
+		color: @color;
+		background-color: @bg-color;
+		.box-shadow(none);
+	}
+
+	&.clicked {
+		box-shadow: none;
+		.animation-name(@animationName);
+		.animation-duration(@duration);
+		.animation-timing-function(cubic-bezier(.16,.72,.37,.88));
+		opacity: 1;
+	}
+}
+
+.keyframes(btn-clicked, {
+	color: #fff;
+	background-color: @brand-primary;
+},{
+	color: #222;
+	background-color: #C0C0C0;
+});
+
+.keyframes(panel-btn-clicked, {
+	color: #fff;
+	background-color: @brand-primary;
+},{
+	color: @brand-primary;
+	background-color: @gray-lightest;
+});

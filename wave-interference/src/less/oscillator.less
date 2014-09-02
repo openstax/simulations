@@ -1,0 +1,33 @@
+.oscillator-view {
+	position: absolute;
+	left: -200px;
+	top: 0;
+	
+	> .oscillator-controls {
+		width: 170px;
+		background-color: @gray-lightest;
+		padding: 16px;
+
+		> .on-off-controls {
+			display: inline-block;
+			margin-bottom: -12px;
+		}
+
+		> .btn-oscillator-pulse {
+			float: right;
+			margin-top: 10px;
+
+			.animated-button(@brand-primary, #fff, btn-clicked, 1200ms);
+		}
+	}
+
+	> .oscillator-graphic {
+
+	}
+
+	&.water > .oscillator-graphic {
+		width: 200px;
+		height: 114px;
+		background-image: url(img/phet/faucet.png);
+	}
+}
