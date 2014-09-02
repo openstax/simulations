@@ -31,6 +31,7 @@ define(function(require) {
 
 		events: {
 			'slide .cross-section-slider' : 'moveCrossSection',
+			'set   .cross-section-slider' : 'stopCrossSection'
 		},
 
 		initialize: function(options) {
@@ -288,6 +289,16 @@ define(function(require) {
 
 		moveCrossSection: function(event) {
 			this.waveSimulation.set('crossSectionY', $(event.target).val());
+
+			if (!this.crossSectionMoving) {
+				this.crossSectionMoving = true;
+				this.trigger('cross-section-slide-start');
+			}
+		},
+
+		stopCrossSection: function(event) {
+			this.crossSectionMoving = false;
+			this.trigger('cross-section-slide-stop');
 		},
 
 		addSegmentPotentialView: function(segmentPotential) {

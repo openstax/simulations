@@ -17,5 +17,10 @@
 
 	& .graph-canvas {
 		background-color: #fff;
+		.transition(~"border 0.2s ease");
+
+		&.changing {
+			border: 2px solid @link-color;
+		}
 	}
 }

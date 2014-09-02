@@ -197,7 +197,16 @@ define(function(require) {
 			this.context.lineJoin = 'round';
 			this.context.strokeStyle = this.lineColor;
 			this.context.stroke();
-			
+		},
+
+		startChanging: function() {
+			if (this.$canvas)
+				this.$canvas.addClass('changing');
+		},
+
+		stopChanging: function() {
+			if (this.$canvas)
+				this.$canvas.removeClass('changing');
 		}
 	});
 

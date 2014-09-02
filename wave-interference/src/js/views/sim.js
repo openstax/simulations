@@ -94,6 +94,7 @@ define(function (require) {
 			});
 
 			this.graphView = new GraphView({
+				title: 'Cross-Section Side View',
 				x: {
 					start: 0,
 					end: this.waveSimulation.get('dimensions').width,
@@ -121,6 +122,9 @@ define(function (require) {
 
 			this.listenTo(this.waveSimulation, 'change:barrierX',         this.updateBarrierX);
 			this.listenTo(this.waveSimulation, 'change:barrierSlitWidth', this.updateBarrierSlitWidth);
+
+			this.listenTo(this.heatmapView, 'cross-section-slide-start', this.crossSectionSlideStart);
+			this.listenTo(this.heatmapView, 'cross-section-slide-stop',  this.crossSectionSlideStop);
 
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
@@ -350,6 +354,14 @@ define(function (require) {
 				$(event.target).removeClass('clicked');
 			}, 500);
 		},
+
+		crossSectionSlideStart: function() {
+			this.graphView.startChanging();
+		},
+
+		crossSectionSlideStop: function(){
+			this.graphView.stopChanging();
+		}
 	});
 
 	return SimView;
