@@ -46,6 +46,12 @@
 			opacity: 0.9;
 		}
 
+		&:active {
+			color: #fff;
+			background-color: @brand-primary;
+			.box-shadow(none);
+		}
+
 		.animated-button(@brand-primary, #fff, panel-btn-clicked);
 
 		&:focus {
@@ -62,7 +68,7 @@
 	padding: 16px;
 }
 
-body:not(.better) #faucet-controls {
+body:not(.better) .wave-properties {
 	width: auto;
 	min-width: 200px;
 	position: absolute;

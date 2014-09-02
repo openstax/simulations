@@ -23,6 +23,14 @@ define(function(require) {
 	    particles,
 	    brightness;
 
+	/**
+	 * HeatmapView is the main focus of the app.  It shows the values of the 2D lattice
+	 *   on a graph with two axes (default x and y but dependent on the WaveSimulation).
+	 *   Includes the containing panel, the (colored) heatmap itself, axis labels and 
+	 *   measurements, and interactive components including the barriers, cross-section
+	 *   slider, and (for now) oscillator controls.
+	 *
+	 */
 	var HeatmapView = Backbone.View.extend({
 
 		template: _.template(html),
@@ -52,7 +60,8 @@ define(function(require) {
 					step: 10,
 					label: 'y (cm)'
 				},
-				brightness: 0.5
+				brightness: 0.5,
+				color: '#0D6A7C'
 			}, options);
 
 			// Save options
@@ -71,6 +80,9 @@ define(function(require) {
 			// The alpha modifer for particles
 			this.brightness = options.brightness;
 
+			// Background color for canvas
+			this.color = options.color;
+
 			// To keep track of history so we can interpolate values
 			this.previousLattice = this.waveSimulation.lattice.clone();
 
@@ -87,6 +99,8 @@ define(function(require) {
 
 			// Listeners
 			this.listenTo(this.waveSimulation, 'segment-potential-added', this.renderSegmentPotentialView);
+
+			this.on('change:color', this.changeColor);
 		},
 
 		/**
@@ -98,6 +112,7 @@ define(function(require) {
 			this.renderContainer();
 			this.initRenderer();
 			this.initGraphics();
+			this.changeColor();
 
 			return this;
 		},
@@ -307,6 +322,10 @@ define(function(require) {
 		stopCrossSection: function(event) {
 			this.crossSectionMoving = false;
 			this.trigger('cross-section-slide-stop');
+		},
+
+		changeColor: function() {
+			this.$canvas.css('background-color', this.color);
 		},
 
 		renderSegmentPotentialView: function(segmentPotential) {

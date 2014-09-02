@@ -1,0 +1,23 @@
+<fieldset class="panel-fieldset">
+	<!-- <legend>Barriers</legend> -->
+
+	<input type="radio" name="barrier" value="0" id="barrier-none" class="barrier-style" checked>
+	<label for="barrier-none">No Barrier</label><br>
+
+	<input type="radio" name="barrier" value="1" id="barrier-one-slit" class="barrier-style">
+	<label for="barrier-one-slit">One Slit</label><br>
+
+	<input type="radio" name="barrier" value="2" id="barrier-two-slits" class="barrier-style">
+	<label for="barrier-two-slits">Two Slits</label><br>
+
+	<label for="slit-width" class="slider-label" disabled>Slit Width</label>
+	<div class="slider slit-width" id="slit-width" disabled></div>
+
+	<label for="barrier-location" class="slider-label" disabled>Barrier Location</label>
+	<div class="slider barrier-location" id="barrier-location" disabled></div>
+
+	<label for="slit-separation" class="slider-label" disabled>Slit Separation</label>
+	<div class="slider slit-separation" id="slit-separation" disabled></div>
+</fieldset>
+
+<button class="btn panel-btn add-segment-potential"><span class="fa fa-plus"></span> Add Wall</button>

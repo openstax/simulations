@@ -18,7 +18,10 @@ define([
 			units: {
 				distance: 'cm',
 				time: 's'
-			}
+			},
+
+			oscillatorName: 'Faucet',
+			oscillatorNamePlural: 'Faucets',
 		}),
 
 		// update: function(time, delta) {

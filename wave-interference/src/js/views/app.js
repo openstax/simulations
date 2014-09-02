@@ -5,9 +5,9 @@ define([
 
 	'text!templates/app.html',
 
-	'views/sim-water',
-	'views/sim-sound',
-	'views/sim-light'
+	'views/sim/water',
+	'views/sim/sound',
+	'views/sim/light'
 ], function ($, _, Backbone, template, WaterSimView, SoundSimView, LightSimView) {
 	'use strict';
 

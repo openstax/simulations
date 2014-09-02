@@ -17,7 +17,8 @@ define(function (require) {
 		className: 'oscillator-view',
 
 		events: {
-			'click .btn-oscillator-pulse' : 'pulseClicked'
+			'click .btn-oscillator-pulse' : 'pulseClicked',
+			'change .oscillator-on-off'   : 'changeState',
 		},
 
 		initialize: function(options) {
@@ -80,6 +81,14 @@ define(function (require) {
 					.removeClass('clicked')
 					.prop('disabled', false);
 			}, 1200);
+		},
+
+		changeState: function(event) {
+			var enabled = parseInt($(event.target).val());
+
+			this.$('.btn-oscillator-pulse').prop('disabled', enabled);
+
+			this.oscillator.enabled = enabled;
 		}
 
 	});

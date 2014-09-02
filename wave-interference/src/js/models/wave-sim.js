@@ -36,6 +36,9 @@ define(function (require) {
 			time: 0,
 			timeScale: 1.0,
 
+			oscillatorName: 'Oscillator',
+			oscillatorNamePlural: 'Oscillators',
+
 			oscillatorCount: 1,
 			oscillatorSpacing: 0.5,
 			frequency: 0.5,
