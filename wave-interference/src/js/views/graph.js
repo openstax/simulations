@@ -11,10 +11,13 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-	var lat,
+	var context,
+	    lat,
 		latWidth,
 		height,
 		xSpacing,
+		gridCellWidth,
+		gridCellHeight,
 		points,
 	    i,
 	    j;
@@ -45,7 +48,8 @@ define(function(require) {
 					showNumbers: false
 				},
 				lineThickness: 5,
-				lineColor: '#000'
+				lineColor: '#000',
+				gridColor: '#BBB'
 			}, options);
 
 			// Save options
@@ -63,6 +67,7 @@ define(function(require) {
 
 			this.lineThickness = options.lineThickness;
 			this.lineColor = options.lineColor;
+			this.gridColor = options.gridColor;
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
@@ -155,15 +160,42 @@ define(function(require) {
 		drawCurve: function() {
 			//this.curve.clear();
 
-			lat        = this.waveSimulation.lattice.data;
-			latWidth   = this.waveSimulation.lattice.width;
+			lat      = this.waveSimulation.lattice.data;
+			latWidth = this.waveSimulation.lattice.width;
+	
+			height   = this.height;
+			xSpacing = this.xSpacing;
+
+			context = this.context;
+
+			// Draw background
+			context.fillStyle = '#fff';
+			context.fillRect(0, 0, this.width, this.height);
+
+			// Draw Grid
+			context.beginPath();
+
+			gridCellHeight = Math.round((this.height + 2) / 4);
+			gridCellWidth  = Math.round((this.width  + 2) / 10);
+
+			// Draw latitudinal grid lines
+			for (j = 1; j <= 3; j++) {
+				context.moveTo(0, gridCellHeight * j - 0.5);
+				context.lineTo(this.width, gridCellHeight * j - 0.5);
+			}
+
+			// Draw longitudinal grid lines
+			for (i = 1; i <= 9; i++) {
+				context.moveTo(gridCellWidth * i - 0.5, 0);
+				context.lineTo(gridCellWidth * i - 0.5, this.height);
+			}
+
+			context.lineWidth   = 1;
+			context.strokeStyle = this.gridColor;
+			context.stroke();
+
+			// Set row to where the cross section line is closest to
 			j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
-
-			height     = this.height;
-			xSpacing   = this.xSpacing;
-
-			this.context.fillStyle = '#fff';
-			this.context.fillRect(0, 0, this.width, this.height);
 
 			/* TODO: when I feel like it, use bezier curves to smooth it out
 			 *
@@ -180,33 +212,37 @@ define(function(require) {
 
 			//this.curve.lineStyle(2, 0x0D6A7C, 1);
 			//this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
-			this.context.beginPath();
-			this.context.moveTo(-1, points[0]);
+			context.beginPath();
+			context.moveTo(-1, points[0]);
 
 			for (i = 1; i < latWidth; i++) {
 				//this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
-				this.context.lineTo(i * xSpacing, points[i]);
+				context.lineTo(i * xSpacing, points[i]);
 				// cx = ((i + i + 1) * xSpacing) >> 1;
 				// cy = (points[i] + points[i + 1]) >> 1;
-				// this.context.quadraticCurveTo(cx, cy, i * xSpacing, points[i]);
+				// context.quadraticCurveTo(cx, cy, i * xSpacing, points[i]);
 			}
 
-			//this.context.quadraticCurveTo((latWidth - 1) * xSpacing, points[latWidth - 1], latWidth - 1 * xSpacing, points[latWidth - 1]);
+			//context.quadraticCurveTo((latWidth - 1) * xSpacing, points[latWidth - 1], latWidth - 1 * xSpacing, points[latWidth - 1]);
 
-			this.context.lineWidth = 3;
-			this.context.lineJoin = 'round';
-			this.context.strokeStyle = this.lineColor;
-			this.context.stroke();
+			context.lineWidth = 3;
+			context.lineJoin = 'round';
+			context.strokeStyle = this.lineColor;
+			context.stroke();
 		},
 
 		startChanging: function() {
-			if (this.$canvas)
+			if (this.$canvas) {
+				this.changing = true;
 				this.$canvas.addClass('changing');
+			}
 		},
 
 		stopChanging: function() {
-			if (this.$canvas)
+			if (this.$canvas) {
+				this.changing = false;
 				this.$canvas.removeClass('changing');
+			}
 		}
 	});
 
