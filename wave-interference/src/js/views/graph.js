@@ -14,6 +14,7 @@ define(function(require) {
 	var context,
 	    lat,
 		latWidth,
+		latHeight,
 		height,
 		xSpacing,
 		gridCellWidth,
@@ -160,8 +161,9 @@ define(function(require) {
 		drawCurve: function() {
 			//this.curve.clear();
 
-			lat      = this.waveSimulation.lattice.data;
-			latWidth = this.waveSimulation.lattice.width;
+			lat       = this.waveSimulation.lattice.data;
+			latWidth  = this.waveSimulation.lattice.width;
+			latHeight = this.waveSimulation.lattice.height;
 	
 			height   = this.height;
 			xSpacing = this.xSpacing;
@@ -196,7 +198,9 @@ define(function(require) {
 
 			// Set row to where the cross section line is closest to
 			j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
-
+			if (j > latHeight - 1)
+				j = latHeight - 1;
+			
 			/* TODO: when I feel like it, use bezier curves to smooth it out
 			 *
 			 * Maybe port this Catmull-Rom curve to bezier conversion:
