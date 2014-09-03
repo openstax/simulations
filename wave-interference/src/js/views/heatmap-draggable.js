@@ -16,7 +16,7 @@ define(function (require) {
 
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
-			this.listenTo(this.heatmapView, 'resize', this.resize);
+			this.listenTo(this.heatmapView, 'resized', this.resize);
 		},
 
 		bindDragEvents: function() {

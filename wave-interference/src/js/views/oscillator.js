@@ -2,6 +2,7 @@ define(function (require) {
 
 	'use strict';
 
+	var $        = require('jquery');
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
@@ -34,7 +35,7 @@ define(function (require) {
 
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
-			this.listenTo(this.heatmapView, 'resize', this.resize);
+			this.listenTo(this.heatmapView, 'resized', this.resize);
 		},
 
 		resize: function(){
