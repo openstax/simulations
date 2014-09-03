@@ -9,9 +9,22 @@ define(function (require) {
 	var Updater          = require('utils/updater');
 	var HeatmapView      = require('views/heatmap');
 	var GraphView        = require('views/graph');
-	var playbackControls = require('text!templates/sim-playback.html');
 
+	// Templates
+	var simHtml                = require('text!templates/sim.html');
+	var controlPanelHtml       = require('text!templates/control-panel.html');
+	var toolsHtml              = require('text!templates/control-panel-components/tools.html');
+	var waveControlsHtml       = require('text!templates/control-panel-components/wave.html');
+	var oscillatorControlsHtml = require('text!templates/control-panel-components/oscillators.html');
+	var barrierControlsHtml    = require('text!templates/control-panel-components/barriers.html');
+	var playbackControlsHtml   = require('text!templates/playback-controls.html');
 
+	/**
+	 * SimView represents a tab in the simulation.  SimView is extended to create
+	 *   three new views representing the water, sound, and light tabs.  SimViews
+	 *   interface with a WaveSimulation and contain all necessary views for 
+	 *   visualizing and interacting with a wave simulation.
+	 */
 	var SimView = Backbone.View.extend({
 
 		/**
@@ -19,6 +32,11 @@ define(function (require) {
 		 */
 		tagName: 'section',
 		className: 'sim-view',
+
+		/**
+		 * Template for rendering the basic scaffolding
+		 */
+		template: _.template(simHtml),
 
 		/**
 		 * Dom event listeners
@@ -71,8 +89,13 @@ define(function (require) {
 		 */
 		initialize: function(options) {
 			options = _.extend({
-				heatmapBrightness: 0.5
+				heatmapBrightness: 0.5,
+				title: 'Simulation',
+				name: 'sim'
 			}, options);
+
+			this.title = options.title;
+			this.name  = options.name;
 
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
@@ -138,31 +161,16 @@ define(function (require) {
 		},
 
 		/**
-		 * Makes Simulation model properties accesssible
-		 *
-		 * @params key
-		 */
-		get: function(key) {
-			if (this.model)
-				return this.model.get(key);
-			else
-				return null;
-		},
-
-		/**
-		 * Renders content and simulation canvas
+		 * Renders everything
 		 */
 		render: function() {
 			this.$el.empty();
 
-			this.renderContent();
+			this.renderScaffolding();
+			this.renderControlPanel();
+			this.renderHeatmapView();
+			this.renderGraphView();
 			this.renderPlaybackControls();
-
-			this.heatmapView.render();
-			this.$el.append(this.heatmapView.el);
-
-			this.graphView.render();
-			this.$el.append(this.graphView.el);
 
 			// Name and cache barrier sliders for quick and easy access
 			this.$slitWidth      = this.$('.properties-panel .slit-width').prev().addBack();
@@ -176,10 +184,133 @@ define(function (require) {
 		/**
 		 * Renders page content. Should be overriden by child classes
 		 */
-		renderContent: function() {},
+		renderScaffolding: function() {
+			this.$el.html(this.template());
+		},
 
+		/**
+		 * Renders the control panel and all its controls.
+		 */
+		renderControlPanel: function() {
+			var $controlPanel = $(controlPanelHtml);
+
+			// Run the template for the oscillator controls
+			var oscillatorControls = _.template(oscillatorControlsHtml)({ 
+				oscillatorName:       this.waveSimulation.get('oscillatorName'),
+				oscillatorNamePlural: this.waveSimulation.get('oscillatorNamePlural'),
+				unique: this.cid
+			});
+
+			var barrierControls = _.template(barrierControlsHtml)({
+				unique: this.cid
+			});
+
+			// Fill the tools section of the control panel
+			$controlPanel.find('.tools-panel')
+				.append(toolsHtml);
+
+			// Fill the properties section of the control panel
+			$controlPanel.find('.properties-panel')
+				.append(waveControlsHtml)
+				.append(oscillatorControls)
+				.append(barrierControls);
+
+			// Initialize all of the sliders
+			$controlPanel.find('.frequency').noUiSlider({
+				start: 0.5,
+				connect: 'lower',
+				range: {
+					min: 0.01,
+					max: 3
+				}
+			});
+
+			$controlPanel.find('.amplitude').noUiSlider({
+				start: 1.0,
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: 2
+				}
+			});
+
+			$controlPanel.find('.oscillator-spacing').noUiSlider({
+				start: this.waveSimulation.get('dimensions').height / 2,
+				connect: 'lower',
+				range: {
+					min: 0,
+					'50%': this.waveSimulation.get('dimensions').height / 2,
+					max: this.waveSimulation.get('dimensions').height
+				}
+			});
+
+			// this.$('#drip-spacing').noUiSlider_pips({
+			// 	mode: 'range',
+			// 	density: 5
+			// });
+
+			$controlPanel.find('.slit-width').noUiSlider({
+				start: this.waveSimulation.get('barrierSlitWidth'),
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: this.waveSimulation.get('dimensions').height / 2
+				}
+			});
+
+			$controlPanel.find('.barrier-location').noUiSlider({
+				start: this.waveSimulation.get('barrierX'),
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: this.waveSimulation.get('dimensions').width
+				}
+			});
+
+			$controlPanel.find('.slit-separation').noUiSlider({
+				start: this.waveSimulation.get('barrierSlitSeparation'),
+				connect: 'lower',
+				range: {
+					min: 0,
+					max: this.waveSimulation.get('dimensions').height * 0.75
+				}
+			});
+
+			// Place it in the view
+			this.$('#control-panel-placeholder').replaceWith($controlPanel);
+
+			// Do special things on 'better' mode
+			$(window)
+				.off('better', $.proxy(this.reattachFaucetControls, this))
+				.on( 'better', $.proxy(this.reattachFaucetControls, this))
+				.off('worse',  $.proxy(this.detachFaucetControls, this))
+				.on( 'worse',  $.proxy(this.detachFaucetControls, this));
+			this.detachFaucetControls();
+		},
+
+		/**
+		 * Renders the heatmap view
+		 */
+		renderHeatmapView: function() {
+			this.heatmapView.render();
+			this.$('.heatmap-column').append(this.heatmapView.el);
+		},
+
+		/**
+		 * Renders the graph view
+		 */
+		renderGraphView: function() {
+			this.graphView.render();
+			this.$('.heatmap-column').append(this.graphView.el);
+		},
+
+		
+
+		/**
+		 * Renders the playback controls
+		 */
 		renderPlaybackControls: function() {
-			this.$el.append(playbackControls);
+			this.$('#playback-controls-placeholder').replaceWith(playbackControlsHtml);
 		},
 
 		/**
@@ -242,6 +373,10 @@ define(function (require) {
 				this.updater.play();
 		},
 
+		/**
+		 * This is run every tick of the updater.  It updates the wave
+		 *   simulation and the views.
+		 */
 		update: function(time, delta) {
 			// Update the model
 			this.waveSimulation.update(time, delta);
@@ -252,10 +387,16 @@ define(function (require) {
 			this.graphView.update(time, delta);
 		},
 
+		/**
+		 * Respond to changes from the frequency slider
+		 */
 		changeFrequency: function(event) {
 			this.waveSimulation.set('frequency', $(event.target).val());
 		},
 
+		/**
+		 * Respond to changes from the amplitude slider
+		 */
 		changeAmplitude: function(event) {
 			this.waveSimulation.set('amplitude', $(event.target).val());
 		},
@@ -273,11 +414,17 @@ define(function (require) {
 				this.$('.oscillator-spacing').prev().addBack().attr('disabled', 'disabled');
 		},
 
+		/**
+		 * Respond to changes from the oscillator spacing slider
+		 */
 		changeOscillatorSpacing: function(event) {
 			var val = parseFloat($(event.target).val()) / this.waveSimulation.get('dimensions').height;
 			this.waveSimulation.set('oscillatorSpacing', val);
 		},
 
+		/**
+		 * Respond to clicks on the barrier style radio buttons
+		 */
 		changeBarrierStyle: function(event) {
 			var val = parseInt($(event.target).val());
 
@@ -297,29 +444,48 @@ define(function (require) {
 			this.waveSimulation.set('barrierStyle', val);
 		},
 
+		/**
+		 * Respond to changes from the barrier slit width slider
+		 */
 		changeSlitWidth: function(event) {
 			var val = parseFloat($(event.target).val());
 			this.setFromInput('barrierSlitWidth', val);
 		},
 
+		/**
+		 * Respond to changes from the barrier location slider
+		 */
 		changeBarrierX: function(event) {
 			var val = parseFloat($(event.target).val());
 			this.setFromInput('barrierX', val);
 		},
 
+		/**
+		 * Respond to changes from the barrier slit separation slider
+		 */
 		changeSlitSeparation: function(event) {
 			var val = parseFloat($(event.target).val());
 			this.setFromInput('barrierSlitSeparation', val);
 		},
 
+		/**
+		 * Set the barrier location slider to match changes in the wave simulation properties
+		 */
 		updateBarrierX: function() {
 			this.updateInput(this.$barrierX, this.waveSimulation.get('barrierX'));
 		},
 
+		/**
+		 * Set the barrier slit width slider to match changes in the wave simulation properties
+		 */
 		updateBarrierSlitWidth: function() {
 			this.updateInput(this.$slitWidth, this.waveSimulation.get('barrierSlitWidth'));
 		},
 
+		/**
+		 * Helper function for setting properties on the waveSimulation without causing a
+		 *   loop of updates between the wave simulation model and the view
+		 */
 		setFromInput: function(property, value) {
 			if (this.updatingProperty)
 				return;
@@ -329,6 +495,10 @@ define(function (require) {
 			this.inputtingProperty = false;
 		},
 
+		/**
+		 * Helper function for updating inputs from the wave simulation without causing a
+		 *   loop of updates between the wave simulation model and the view
+		 */
 		updateInput: function($input, value) {
 			if (this.inputtingProperty)
 				return;
@@ -338,6 +508,9 @@ define(function (require) {
 			this.updatingProperty = false;
 		},
 
+		/**
+		 * Tells the wave simulation to add a segment potential
+		 */
 		addSegmentPotential: function(event) {
 			this.waveSimulation.addSegmentPotential();
 		},
@@ -346,6 +519,9 @@ define(function (require) {
 			
 		},
 
+		/**
+		 * This just add and removes classes for an animation on panel buttons.
+		 */
 		panelButtonClicked: function(event) {
 			event.preventDefault();
 
@@ -355,13 +531,31 @@ define(function (require) {
 			}, 500);
 		},
 
+		/**
+		 * Tell the graph view that we're making changes to the cross section location.
+		 */
 		crossSectionSlideStart: function() {
 			this.graphView.startChanging();
 		},
 
+		/**
+		 * Tell the graph view that we've stopped making changes to the cross section 
+		 *   location.
+		 */
 		crossSectionSlideStop: function(){
 			this.graphView.stopChanging();
-		}
+		},
+
+
+		/**
+		 * Temporary functions used for toggling the 'better' view
+		 */
+		detachFaucetControls: function() {
+			this.$('.wave-properties').appendTo(this.$el);
+		},
+		reattachFaucetControls: function() {
+			this.$('.wave-properties').prependTo(this.$('.properties-panel'));
+		},
 	});
 
 	return SimView;

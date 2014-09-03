@@ -8,6 +8,7 @@ define(function(require) {
 	var PIXI     = require('pixi');
 	var html     = require('text!templates/heatmap.html');
 
+	var OscillatorView       = require('views/oscillator');
 	var BarrierView          = require('views/barrier');
 	var SegmentPotentialView = require('views/segment-potential');
 
@@ -22,6 +23,14 @@ define(function(require) {
 	    particles,
 	    brightness;
 
+	/**
+	 * HeatmapView is the main focus of the app.  It shows the values of the 2D lattice
+	 *   on a graph with two axes (default x and y but dependent on the WaveSimulation).
+	 *   Includes the containing panel, the (colored) heatmap itself, axis labels and 
+	 *   measurements, and interactive components including the barriers, cross-section
+	 *   slider, and (for now) oscillator controls.
+	 *
+	 */
 	var HeatmapView = Backbone.View.extend({
 
 		template: _.template(html),
@@ -51,7 +60,8 @@ define(function(require) {
 					step: 10,
 					label: 'y (cm)'
 				},
-				brightness: 0.5
+				brightness: 0.5,
+				color: '#0D6A7C'
 			}, options);
 
 			// Save options
@@ -70,19 +80,27 @@ define(function(require) {
 			// The alpha modifer for particles
 			this.brightness = options.brightness;
 
+			// Background color for canvas
+			this.color = options.color;
+
 			// To keep track of history so we can interpolate values
 			this.previousLattice = this.waveSimulation.lattice.clone();
 
-			// Array for holding SegmentPotentialViews
+			// Lists of views for updating
 			this.segmentPotentialViews = [];
+			this.oscillatorViews = [];
 
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
 
+			// Cached calculations of lattice-canvas ratios
 			this.xSpacing = 1;
 			this.ySpacing = 1;
 
-			this.listenTo(this.waveSimulation, 'segment-potential-added', this.addSegmentPotentialView);
+			// Listeners
+			this.listenTo(this.waveSimulation, 'segment-potential-added', this.renderSegmentPotentialView);
+
+			this.on('change:color', this.changeColor);
 		},
 
 		/**
@@ -94,6 +112,7 @@ define(function(require) {
 			this.renderContainer();
 			this.initRenderer();
 			this.initGraphics();
+			this.changeColor();
 
 			return this;
 		},
@@ -152,6 +171,10 @@ define(function(require) {
 			});
 			this.barrierView.render();
 			this.$('.potential-views').append(this.barrierView.el);
+
+			for (var i = 0; i < this.waveSimulation.oscillators.length; i++) {
+				this.renderOscillatorView(this.waveSimulation.oscillators[i]);
+			}
 		},
 
 		initParticles: function() {
@@ -301,25 +324,58 @@ define(function(require) {
 			this.trigger('cross-section-slide-stop');
 		},
 
-		addSegmentPotentialView: function(segmentPotential) {
+		changeColor: function() {
+			this.$canvas.css('background-color', this.color);
+		},
+
+		renderSegmentPotentialView: function(segmentPotential) {
+			// Create a new view and render it
 			var segmentPotentialView = new SegmentPotentialView({
 				heatmapView: this,
 				segment: segmentPotential
 			});
 			segmentPotentialView.render();
 
+			// Append the rendered element
 			this.$('.potential-views').append(segmentPotentialView.el);
 
+			// Add it to our list for updating
 			this.segmentPotentialViews.push(segmentPotentialView);
+
+			// Remove it from the list if it gets removed
+			this.listenTo(segmentPotentialView, 'remove', function() {
+				this.segmentPotentialViews = _.filter(this.segmentPotentialViews, function(view) {
+					return view.segment !== segmentPotential;
+				});
+			});
 
 			// Make sure it renders the first time because it's set to render only when there are changes.
 			segmentPotentialView.updateOnNextFrame = true;
 		},
 
-		removeSegmentPotentialView: function(segmentPotential) {
-			this.segmentPotentialViews = _.filter(this.segmentPotentialViews, function(view) {
-				return view.segment !== segmentPotential;
+		renderOscillatorView: function(oscillator) {
+			// Create a new view and render it
+			var oscillatorView = new OscillatorView({
+				heatmapView: this,
+				oscillator: oscillator
 			});
+			oscillatorView.render();
+
+			// Append the rendered element
+			this.$('.oscillator-views').append(oscillatorView.el);
+
+			// Add it to our list for updating
+			this.oscillatorViews.push(oscillatorView);
+
+			// Remove it from the list if it gets removed
+			this.listenTo(oscillatorView, 'remove', function() {
+				this.oscillatorViews = _.filter(this.oscillatorViews, function(view) {
+					return view.oscillator !== oscillator;
+				});
+			});
+
+			// Make sure it renders the first time because it's set to render only when there are changes.
+			oscillatorView.updateOnNextFrame = true;
 		},
 
 		isVisiblePoint: function(x, y) {

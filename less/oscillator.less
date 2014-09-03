@@ -1,0 +1,47 @@
+.oscillator-view {
+	position: absolute;
+	left: -200px;
+	top: 0;
+	
+	> .oscillator-controls {
+		width: 170px;
+		background-color: @gray-lightest;
+		padding: 16px;
+
+		> .on-off-controls {
+			display: inline-block;
+			margin-bottom: -12px;
+		}
+
+		> .btn-oscillator-pulse {
+			float: right;
+			margin-top: 10px;
+			background-color: @brand-primary;
+			color: #fff;
+
+			&:disabled {
+				cursor: not-allowed;
+			}
+
+			&:disabled,
+			&:active {
+				background-color: #B8B8B8;
+				color: #fff;
+				.opacity(1);
+				.box-shadow(none);
+			}
+
+			.animated-button(btn-clicked, 1200ms, cubic-bezier(.35,.05,.99,.83));
+		}
+	}
+
+	> .oscillator-graphic {
+
+	}
+}
+
+#sim-water .oscillator-graphic {
+	width: 200px;
+	height: 114px;
+	background-image: url(img/phet/faucet.png);
+}

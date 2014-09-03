@@ -5,9 +5,9 @@ define([
 
 	'text!templates/app.html',
 
-	'views/sim-water',
-	'views/sim-sound',
-	'views/sim-light'
+	'views/sim/water',
+	'views/sim/sound',
+	'views/sim/light'
 ], function ($, _, Backbone, template, WaterSimView, SoundSimView, LightSimView) {
 	'use strict';
 
@@ -43,7 +43,7 @@ define([
 			};
 
 			_.each(this.sims, function(sim, key) {
-				data.sims[key] = sim.get('title');
+				data.sims[key] = sim.title;
 			});
 
 			// Render basic page structure

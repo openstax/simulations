@@ -1,0 +1,12 @@
+<fieldset class="panel-fieldset">
+	<!-- <legend>Faucets</legend> -->
+
+	<input type="radio" name="faucets" value="1" id="oscillators-1-<%= unique %>" class="oscillator-count" checked>
+	<label for="oscillators-1-<%= unique %>">One <%= oscillatorName ? oscillatorName : 'Oscillator' %></label><br>
+
+	<input type="radio" name="faucets" value="2" id="oscillators-2-<%= unique %>" class="oscillator-count">
+	<label for="oscillators-2-<%= unique %>">Two <%= oscillatorNamePlural ? oscillatorNamePlural : 'Oscillators' %></label><br>
+
+	<label for="oscillator-spacing" class="slider-label" disabled>Spacing</label>
+	<div class="slider oscillator-spacing" id="oscillator-spacing" disabled></div>
+</fieldset>

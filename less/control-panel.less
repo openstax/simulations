@@ -52,61 +52,11 @@
 			.box-shadow(none);
 		}
 
-		&.clicked {
-			box-shadow: none;
-			.animation-name(btn-clicked);
-			.animation-duration(400ms);
-			.animation-timing-function(cubic-bezier(.16,.72,.37,.88));
-			opacity: 1;
-		}
+		.animated-button(@brand-primary, #fff, panel-btn-clicked);
 
 		&:focus {
 			outline: none;
 		}
-	}
-}
-
-@keyframes btn-clicked {
-	from {
-		color: #fff;
-		background-color: @brand-primary;
-	}
-	to {
-		color: @brand-primary;
-		background-color: @gray-lightest;
-	}
-}
-
-@-webkit-keyframes btn-clicked {
-	from {
-		color: #fff;
-		background-color: @brand-primary;
-	}
-	to {
-		color: @brand-primary;
-		background-color: @gray-lightest;
-	}
-}
-
-@-moz-keyframes btn-clicked {
-	from {
-		color: #fff;
-		background-color: @brand-primary;
-	}
-	to {
-		color: @brand-primary;
-		background-color: @gray-lightest;
-	}
-}
-
-@-o-keyframes btn-clicked {
-	from {
-		color: #fff;
-		background-color: @brand-primary;
-	}
-	to {
-		color: @brand-primary;
-		background-color: @gray-lightest;
 	}
 }
 
@@ -118,7 +68,7 @@
 	padding: 16px;
 }
 
-body:not(.better) #faucet-controls {
+body:not(.better) .wave-properties {
 	width: auto;
 	min-width: 200px;
 	position: absolute;
