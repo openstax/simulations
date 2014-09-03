@@ -54,12 +54,17 @@ define(function(require) {
 
 		/**
 		 * Called every tick to set the oscillating cells to their new value
-		 *   based on time ellapsed since the beginning of the simulation.
+		 *   based on time ellapsed since the beginning of the simulation in
+		 *   milliseconds.
 		 */
 		update: function(time) {
+			// But the oscillator wants time in seconds, not milliseconds
+			time /= 1000;
+
+			this.time = time;
+
 			if (this.enabled) {
-				// Oscillator wants time in seconds, not milliseconds
-				oscillatingValue = this.oscillatingValue(time / 1000);
+				oscillatingValue = this.oscillatingValue(time);
 
 				waveSim = this.waveSimulation;
 				radius  = this.radius;
@@ -83,10 +88,10 @@ define(function(require) {
 				}
 			}
 
-			if (this.pulseEnabled && this.cosArg() + this.pulsePhase > twoPI) {
+			if (this.pulseEnabled && this.cosArg(time) + this.pulsePhase >= twoPI) {
 				this.pulseEnabled = false;
 				this.pulsePhase = 0;
-				this.enabled = true;
+				this.enabled = false;
 			}
 		},
 
@@ -104,6 +109,29 @@ define(function(require) {
 		cosArg: function(time) {
 			return twoPI * this.frequency * time;
 		},
+
+		/**
+		 * Fire a pulse that just goes through one oscillation.
+		 *
+		 * Returns an estimate in milliseconds of when the pulse will end 
+		 *   or false if it is currently pulsing.
+		 */
+		firePulse: function() {
+			if (!this.pulseEnabled) {
+				this.enabled = true;
+				this.pulsePhase = -this.cosArg(this.time) + Math.PI / 2; // start wave at value = 0
+				this.pulseEnabled = true;
+
+				/**
+				 * Working backwards from this.cosArg(time_1) + this.pulsePhase = 2*PI
+				 *   given the pulsePhase equation, I simplified it down to this:
+				 *      estimated time = 3 / (4 * frequency)
+				 *   and then I optimize it an multiply by 1000 to get it in ms.
+				 */
+				return (0.75 / this.frequency) * 1000;
+			}
+			return false;
+		}
 	});
 
 	return Oscillator;

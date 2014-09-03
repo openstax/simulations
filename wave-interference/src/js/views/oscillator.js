@@ -72,14 +72,20 @@ define(function (require) {
 		pulseClicked: function(event) {
 			event.preventDefault();
 
+			var estimatedTime = this.oscillator.firePulse();
+
 			$(event.target)
+				.css({
+					'animation-duration': estimatedTime + 'ms',
+					'-webkit-animation-duration': estimatedTime + 'ms'
+				})
 				.addClass('clicked')
 				.prop('disabled', true);
 			setTimeout(function(){
 				$(event.target)
 					.removeClass('clicked')
 					.prop('disabled', false);
-			}, 1200);
+			}, estimatedTime);
 		},
 
 		changeState: function(event) {

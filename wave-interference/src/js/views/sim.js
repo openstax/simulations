@@ -220,7 +220,7 @@ define(function (require) {
 				start: 0.5,
 				connect: 'lower',
 				range: {
-					min: 0,
+					min: 0.01,
 					max: 3
 				}
 			});
