@@ -27,7 +27,7 @@ define(function (require) {
 	    middleBox,
 	    bottomBox;
 
-	var SegmentPotentialView = HeatmapDraggable.extend({
+	var BarrierView = HeatmapDraggable.extend({
 
 		template: _.template(html),
 
@@ -200,6 +200,6 @@ define(function (require) {
 
 	});
 
-	return SegmentPotentialView;
+	return BarrierView;
 });
 

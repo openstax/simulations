@@ -139,7 +139,7 @@ define(function (require) {
 			this.update = _.bind(this.update, this);
 
 			this.updater = new Updater();
-			this.updater.addFrameListener(this.update);
+			this.updater.addEventListener('update', this.update);
 
 			this.interpolationFactor = 0;
 

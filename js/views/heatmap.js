@@ -199,6 +199,9 @@ define(function(require) {
 				}
 				this.particles.push(row);
 			}
+
+			// Just try it...it actually works on FireFox
+			this.positionParticles();
 		},
 
 		positionParticles: function() {
@@ -207,6 +210,8 @@ define(function(require) {
 
 			var xSpacing = this.$canvas.width()  / (width - 1);
 			var ySpacing = this.$canvas.height() / (height - 1);
+
+			particles = this.particles;
 
 			var texture = this.generateParticleTexture(Math.max(xSpacing, ySpacing) * 2);
 			var particle;
@@ -287,10 +292,9 @@ define(function(require) {
 				this.height = height;
 				this.renderer.resize(width, height);
 				this.positionParticles();
-				this.barrierView.update();
-				this.resizeOnNextUpdate = false;
-				this.trigger('resize');
+				this.trigger('resized');
 			}
+			this.resizeOnNextUpdate = false;
 		},
 
 		update: function(time, delta) {
@@ -379,7 +383,7 @@ define(function(require) {
 		},
 
 		isVisiblePoint: function(x, y) {
-			return (x < this.waveSimulation.lattice.width - 1 && x >= 0 && y < this.waveSimulation.lattice.height - 1 && y >= 0)
+			return (x < this.waveSimulation.lattice.width - 1 && x >= 0 && y < this.waveSimulation.lattice.height - 1 && y >= 0);
 		}
 
 	});
