@@ -44,6 +44,8 @@ define(function (require) {
 				for (i = 0; i < listeners.update.length; i++)
 					listeners.update[i](this.total, delta);	
 			}
+			else if (delta < DORMANCY_THRESHOLD)
+				awaken();
 			
 			animationFrame = window.requestAnimFrame(frame);
 		}.bind(this);
@@ -54,33 +56,37 @@ define(function (require) {
 		 *  asleep and calls listeners of the 'sleep' event.
 		 */
 		var dormancyCheck = function() {
+			delta = Date.now() - last;
 			if (!dormant) {
-				now   = Date.now();
-				delta = now - last;
-
-				if (delta > DORMANCY_THRESHOLD) {
-					dormant = true;
-
-					for (i = 0; i < listeners.sleep.length; i++)
-						listeners.sleep[i]();
-				}
+				if (delta > DORMANCY_THRESHOLD)
+					sleep();
 			}
 			else {
-				now   = Date.now();
-				delta = now - last;
-
-				if (delta < DORMANCY_THRESHOLD) {
-					dormant = false;
-
-					// Reset the last time so we don't build up time
-					last = now - delta;
-
-					// Call listeners
-					for (i = 0; i < listeners.awaken.length; i++)
-						listeners.awaken[i]();
-				}
+				if (delta < DORMANCY_THRESHOLD)
+					awaken();
 			}
 		}.bind(this);
+
+		var sleep = function() {
+			dormant = true;
+
+			// Call listeners
+			for (i = 0; i < listeners.sleep.length; i++)
+				listeners.sleep[i]();
+		};
+
+		var awaken = function() {
+			dormant = false;
+
+			// Reset the last time so we don't build up time
+			now   = Date.now();
+			delta = now - last;
+			last = now - delta;
+
+			// Call listeners
+			for (i = 0; i < listeners.awaken.length; i++)
+				listeners.awaken[i]();
+		};
 
 		this.play = function() {
 			if (!playing) {
