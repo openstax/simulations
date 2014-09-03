@@ -81,17 +81,27 @@ define(function (require) {
 				})
 				.addClass('clicked')
 				.prop('disabled', true);
+
+			var $on = this.$('#oscillator-on-' + this.cid);
 			setTimeout(function(){
-				$(event.target)
-					.removeClass('clicked')
-					.prop('disabled', false);
+				if ($on.is(':checked')) {
+					$(event.target)
+						.removeClass('clicked');
+				}
+				else {
+					$(event.target)
+						.removeClass('clicked')
+						.prop('disabled', false);	
+				}
 			}, estimatedTime);
 		},
 
 		changeState: function(event) {
 			var enabled = parseInt($(event.target).val());
 
-			this.$('.btn-oscillator-pulse').prop('disabled', enabled);
+			this.$('.btn-oscillator-pulse')
+				.prop('disabled', enabled)
+				.removeClass('clicked');
 
 			this.oscillator.enabled = enabled;
 		}
