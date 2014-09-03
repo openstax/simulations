@@ -232,8 +232,8 @@ define(function(require) {
 		generateParticleTexture: function(radius) {
 			// Draw on a canvas and then use it as a texture for our particles
 			var canvas = document.createElement('canvas');
-			canvas.width  = radius * 2;
-			canvas.height = radius * 2;
+			canvas.width  = radius * 2 || 1;
+			canvas.height = radius * 2 || 1;
 
 			var ctx = canvas.getContext('2d');
 
