@@ -1,11 +1,29 @@
 
-.grid-view(@prefix, @container-width, @container-height, @container-padding) {
+.grid-view(@prefix, @container-width, @container-height, @container-padding, @height-ratio: 100%) {
 	max-width: 100%;
-	width: @container-width;
-	height: @container-height;
+	width: 100%;
 	background-color: @gray-lightest;
 
+	&:before {
+		content: "";
+		display: block;
+		padding-top: @height-ratio;
+	}
+
+	@media (min-width: @max-viewport-width) {
+		width: @container-width;
+		height: @container-height;
+
+		&:before {
+			display: none;
+		}
+	}
+
 	.@{prefix}-title {
+		position: absolute;
+		top: 0;
+		left: 0;
+		right: 0;
 		line-height: (@container-padding + 2);
 		font-size: 20px;
 		font-weight: 400;
