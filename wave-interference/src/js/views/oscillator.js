@@ -125,9 +125,9 @@ define(function (require) {
 				var pos = _.indexOf(this.waveSimulation.oscillators, this.oscillator);
 
 				if (pos === 0)
-					this.$el.addClass('top-oscillator');
-				else
 					this.$el.addClass('bottom-oscillator');
+				else
+					this.$el.addClass('top-oscillator');
 			}
 			else {
 				this.$el
