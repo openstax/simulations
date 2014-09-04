@@ -293,7 +293,7 @@ define(function (require) {
 		 */
 		renderHeatmapView: function() {
 			this.heatmapView.render();
-			this.$('.heatmap-column').append(this.heatmapView.el);
+			this.$('#heatmap-view-placeholder').replaceWith(this.heatmapView.el);
 		},
 
 		/**
@@ -301,7 +301,7 @@ define(function (require) {
 		 */
 		renderGraphView: function() {
 			this.graphView.render();
-			this.$('.heatmap-column').append(this.graphView.el);
+			this.$('#graph-view-placeholder').replaceWith(this.graphView.el);
 		},
 
 		

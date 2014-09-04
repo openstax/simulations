@@ -55,7 +55,7 @@ define(function (require) {
 		initialize: function(options) {
 
 			// Event listeners
-			this.on('change:oscillatorCount',   this.initOscillators);
+			this.on('change:oscillatorCount',   this.calculateOscillatorSpacing);
 			this.on('change:oscillatorSpacing', this.calculateOscillatorSpacing);
 
 			this.on('change:frequency',       this.changeFrequency);
@@ -125,7 +125,7 @@ define(function (require) {
 		initOscillators: function() {
 			this.oscillators = [];	
 
-			for (i = 0; i < this.get('oscillatorCount'); i++) {
+			for (i = 0; i < 2; i++) {
 				this.oscillators.push(new Oscillator({
 					frequency: this.get('frequency'),
 					amplitude: this.get('amplitude'),
@@ -167,6 +167,8 @@ define(function (require) {
 				else
 					this.oscillators[i].y = parseInt(midpoint - (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
 			}
+
+			this.trigger('oscillators-changed');
 		},
 
 		/**
@@ -188,7 +190,7 @@ define(function (require) {
 
 				this.propagator.propagate();
 
-				for (i = 0; i < this.oscillators.length; i++)
+				for (i = 0; i < this.get('oscillatorCount'); i++)
 					this.oscillators[i].update(this.time);
 				
 				this.accumulator -= this.timestep;

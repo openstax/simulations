@@ -2,13 +2,14 @@
 @import "mixins/graph-view.less";
 
 .graph-container {
-	position: absolute;
-	top: (20 + @heatmap-container-width + 20);
-	left: 0;
+	position: relative;
+	margin-top: 20px;
+	// top: (20 + @heatmap-container-width + 20);
+	// left: 0;
 	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding);
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
-		left: @heatmap-container-left-margin;
+		//left: @heatmap-container-left-margin;
 
 		.better & {
 			//left: 100px; // Width of oscillator object graphics?
