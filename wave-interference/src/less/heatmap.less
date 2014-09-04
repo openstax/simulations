@@ -6,6 +6,7 @@
 	top: 20px;
 	left: 0;
 	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
+	.user-select(none);
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		left: @heatmap-container-left-margin;
