@@ -99,6 +99,7 @@ define(function(require) {
 
 			// Listeners
 			this.listenTo(this.waveSimulation, 'segment-potential-added', this.renderSegmentPotentialView);
+			this.listenTo(this.waveSimulation, 'change:oscillatorCount', this.changeOscillatorCount);
 
 			this.on('change:color', this.changeColor);
 		},
@@ -175,6 +176,7 @@ define(function(require) {
 			for (var i = 0; i < this.waveSimulation.oscillators.length; i++) {
 				this.renderOscillatorView(this.waveSimulation.oscillators[i]);
 			}
+			this.changeOscillatorCount();
 		},
 
 		initParticles: function() {
@@ -310,6 +312,9 @@ define(function(require) {
 			for (i = 0; i < this.segmentPotentialViews.length; i++)
 				this.segmentPotentialViews[i].update(time, delta);
 
+			for (i = 0; i < this.oscillatorViews.length; i++)
+				this.oscillatorViews[i].update(time, delta);
+
 			// Render everything
 			this.renderer.render(this.stage);
 		},
@@ -380,6 +385,16 @@ define(function(require) {
 
 			// Make sure it renders the first time because it's set to render only when there are changes.
 			oscillatorView.updateOnNextFrame = true;
+		},
+
+		changeOscillatorCount: function() {
+			var count = this.waveSimulation.get('oscillatorCount');
+
+			for (i = 0; i < this.oscillatorViews.length; i++)
+				this.oscillatorViews[i].hide();
+
+			for (i = 0; i < count; i++)
+				this.oscillatorViews[i].show();
 		},
 
 		isVisiblePoint: function(x, y) {

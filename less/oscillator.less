@@ -1,12 +1,18 @@
 .oscillator-view {
 	position: absolute;
-	left: -200px;
+	left: 0;
 	top: 0;
+	bottom: 0;
+	.user-select(none);
 	
 	> .oscillator-controls {
 		width: 170px;
 		background-color: @gray-lightest;
 		padding: 16px;
+		position: absolute;
+		right: 40px;
+		top: 50%;
+		z-index: 25;
 
 		> .on-off-controls {
 			display: inline-block;
@@ -35,6 +41,15 @@
 		}
 	}
 
+	&.top-oscillator > .oscillator-controls {
+		top: 0;
+	}
+
+	&.bottom-oscillator > .oscillator-controls {
+		top: auto;
+		bottom: 0;
+	}
+
 	> .oscillator-graphic {
 
 	}
@@ -44,4 +59,7 @@
 	width: 200px;
 	height: 114px;
 	background-image: url(img/phet/faucet.png);
+	position: absolute;
+	margin-top: -60px;
+	right: -90px;
 }

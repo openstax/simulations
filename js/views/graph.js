@@ -29,6 +29,9 @@ define(function(require) {
 
 		template: _.template(html),
 
+		className: 'graph-container',
+		tagName: 'figure',
+
 		initialize: function(options) {
 
 			// Default values

@@ -8,8 +8,6 @@ define(function (require) {
 
 	var html  = require('text!templates/oscillator.html');
 
-	var oscillator;
-
 	var OscillatorView = Backbone.View.extend({
 
 		template: _.template(html),
@@ -36,6 +34,10 @@ define(function (require) {
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
 			this.listenTo(this.heatmapView, 'resized', this.resize);
+			this.listenTo(this.waveSimulation, 'oscillators-changed', function(){
+				this.updateOnNextFrame = true;
+			});
+			this.listenTo(this.waveSimulation, 'change:oscillatorCount', this.determinePosition);
 		},
 
 		resize: function(){
@@ -46,20 +48,21 @@ define(function (require) {
 
 		render: function() {
 			this.$el.html(this.template({ unique: this.cid }));
+			this.$graphic = this.$('.oscillator-graphic');
 
 			this.resize();
 			this.update(0, 0);
 		},
 
 		update: function(time, delta) {
-			oscillator = this.oscillator;
-
-			if (!oscillator.enabled || !this.updateOnNextFrame)
+			if (!this.updateOnNextFrame)
 				return;
 
 			this.updateOnNextFrame = false;
 
-			
+			if (!this.hidden) {
+				this.$graphic.css('top', this.heatmapView.height - this.oscillator.y * this.heatmapView.ySpacing);
+			}
 		},
 
 		toLatticeXScale: function(x) {
@@ -105,6 +108,32 @@ define(function (require) {
 				.removeClass('clicked');
 
 			this.oscillator.enabled = enabled;
+		},
+
+		hide: function() {
+			this.hidden = true;
+			this.$el.hide();
+		},
+
+		show: function() {
+			this.hidden = false;
+			this.$el.show();
+		},
+
+		determinePosition: function() {
+			if (this.waveSimulation.get('oscillatorCount') > 1) {
+				var pos = _.indexOf(this.waveSimulation.oscillators, this.oscillator);
+
+				if (pos === 0)
+					this.$el.addClass('top-oscillator');
+				else
+					this.$el.addClass('bottom-oscillator');
+			}
+			else {
+				this.$el
+					.removeClass('top-oscillator')
+					.removeClass('bottom-oscillator');
+			}
 		}
 
 	});

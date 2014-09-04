@@ -2,13 +2,12 @@
 @import "mixins/graph-view.less";
 
 .heatmap-container {
-	position: absolute;
-	top: 20px;
-	left: 0;
+	position: relative;
 	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
+	.user-select(none);
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
-		left: @heatmap-container-left-margin;
+		//left: @heatmap-container-left-margin;
 
 		.better & {
 			//left: 100px; // Width of oscillator object graphics?
@@ -141,4 +140,12 @@
 	&.dragging-barrier > .barrier-box {
 		.potential-view-active();
 	}
+}
+
+.oscillator-views {
+	position: absolute;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	z-index: 20;
 }
