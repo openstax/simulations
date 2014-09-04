@@ -129,7 +129,7 @@ define(function(require) {
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
-
+			this.resize();
 		},
 
 		/**

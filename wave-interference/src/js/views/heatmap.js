@@ -143,6 +143,7 @@ define(function(require) {
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
+			this.padding = parseInt(this.$canvas.css('top'));
 			this.resize(true);
 			this.barrierView.resize();
 			for (i = 0; i < this.segmentPotentialViews.length; i++)
@@ -303,8 +304,11 @@ define(function(require) {
 		},
 
 		resize: function(override) {
-			var width  = this.$canvas.width();
-			var height = this.$canvas.height();
+			var containerWidth = this.$el.width();
+			var width  = containerWidth - (this.padding * 2);
+			var height = containerWidth - (this.padding * 2);
+			this.$canvas.width(width);
+			this.$canvas.height(height);
 			this.width  = width;
 			this.height = height;
 			if (override || width != this.renderer.width || height != this.renderer.height) {
