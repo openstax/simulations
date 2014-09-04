@@ -139,6 +139,19 @@ define(function(require) {
 		},
 
 		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {
+			this.resize(true);
+			this.barrierView.resize();
+			for (i = 0; i < this.segmentPotentialViews.length; i++)
+				this.segmentPotentialViews[i].resize();
+			for (i = 0; i < this.oscillatorViews.length; i++)
+				this.oscillatorViews[i].resize();
+		},
+
+		/**
 		 * Initializes a renderer using the .heatmap-canvas canvas element
 		 */
 		initRenderer: function() {
@@ -173,8 +186,8 @@ define(function(require) {
 				heatmapView: this,
 				barrier: this.waveSimulation.barrier
 			});
-			this.barrierView.render();
 			this.$('.potential-views').append(this.barrierView.el);
+			this.barrierView.render();
 
 			for (var i = 0; i < this.waveSimulation.oscillators.length; i++) {
 				this.renderOscillatorView(this.waveSimulation.oscillators[i]);
@@ -289,12 +302,12 @@ define(function(require) {
 			this.resizeOnNextUpdate = true;
 		},
 
-		resize: function(event) {
+		resize: function(override) {
 			var width  = this.$canvas.width();
 			var height = this.$canvas.height();
 			this.width  = width;
 			this.height = height;
-			if (width != this.renderer.width || height != this.renderer.height) {
+			if (override || width != this.renderer.width || height != this.renderer.height) {
 				this.renderer.resize(width, height);
 				this.positionParticles();
 				this.trigger('resized');

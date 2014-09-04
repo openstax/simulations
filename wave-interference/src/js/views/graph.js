@@ -125,6 +125,14 @@ define(function(require) {
 		},
 
 		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {
+
+		},
+
+		/**
 		 * Initializes a renderer using the .heatmap-canvas canvas element
 		 */
 		initCanvas: function() {

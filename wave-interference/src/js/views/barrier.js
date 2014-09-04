@@ -77,6 +77,8 @@ define(function (require) {
 			else
 				this.draggingBottomHandle = true;
 
+			this.fixTouchEvents(event);
+
 			this.dragY = event.pageY;
 
 			this.$el.addClass('dragging-handles');
@@ -85,9 +87,14 @@ define(function (require) {
 		barrierDown: function(event) {
 			if ($(event.target).hasClass('barrier-box')) {
 				event.preventDefault();
-				this.$el.addClass('dragging-barrier');
+				
 				this.draggingBarrier = true;
+
+				this.fixTouchEvents(event);
+
 				this.dragX = event.pageX;
+
+				this.$el.addClass('dragging-barrier');
 			}
 		},
 
@@ -110,8 +117,8 @@ define(function (require) {
 						this.waveSimulation.set('barrierSlitWidth', y);
 					}
 				}
-				else
-					this.dragEnd();
+				// else
+				// 	this.dragEnd();
 
 				this.dragY = event.pageY;
 
@@ -135,8 +142,8 @@ define(function (require) {
 						this.waveSimulation.set('barrierX', x / this.waveSimulation.widthRatio);
 					}
 				}
-				else
-					this.dragEnd();
+				// else
+				// 	this.dragEnd();
 
 				this.dragX = event.pageX;
 

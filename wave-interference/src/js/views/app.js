@@ -14,7 +14,7 @@ define([
 	var AppView = Backbone.View.extend({
 		template: _.template(template),
 		tagName: 'div',
-		className: 'app-view',
+		className: 'app-view loading',
 
 		events: {
 			'click .tab' : 'tabClicked',
@@ -60,6 +60,17 @@ define([
 		renderSim: function(sim, key) {
 			sim.render();
 			this.$('#sim-' + key).append(sim.el);
+		},
+
+		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {
+			_.each(this.sims, function(sim) {
+				sim.postRender();
+			});
+			this.$el.removeClass('loading');
 		},
 
 		tabClicked: function(event) {
