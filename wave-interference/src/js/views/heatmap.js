@@ -151,6 +151,9 @@ define(function(require) {
 				true,                  // Transparent background
 				true                   // Antialiasing
 			);
+
+			this.width  = this.$canvas.width();
+			this.height = this.$canvas.height();
 		},
 
 		initGraphics: function() {
@@ -289,9 +292,9 @@ define(function(require) {
 		resize: function(event) {
 			var width  = this.$canvas.width();
 			var height = this.$canvas.height();
+			this.width  = width;
+			this.height = height;
 			if (width != this.renderer.width || height != this.renderer.height) {
-				this.width  = width;
-				this.height = height;
 				this.renderer.resize(width, height);
 				this.positionParticles();
 				this.trigger('resized');
