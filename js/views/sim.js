@@ -281,11 +281,11 @@ define(function (require) {
 
 			// Do special things on 'better' mode
 			$(window)
-				.off('better', $.proxy(this.reattachFaucetControls, this))
-				.on( 'better', $.proxy(this.reattachFaucetControls, this))
-				.off('worse',  $.proxy(this.detachFaucetControls, this))
-				.on( 'worse',  $.proxy(this.detachFaucetControls, this));
-			this.detachFaucetControls();
+				.off('better', $.proxy(_.bind(this.reattachOscillatorControls, this), this))
+				.on( 'better', $.proxy(_.bind(this.reattachOscillatorControls, this), this))
+				.off('worse',  $.proxy(_.bind(this.detachOscillatorControls, this), this))
+				.on( 'worse',  $.proxy(_.bind(this.detachOscillatorControls, this), this));
+			this.detachOscillatorControls();
 		},
 
 		/**
@@ -557,10 +557,10 @@ define(function (require) {
 		/**
 		 * Temporary functions used for toggling the 'better' view
 		 */
-		detachFaucetControls: function() {
+		detachOscillatorControls: function() {
 			this.$('.wave-properties').appendTo(this.$el);
 		},
-		reattachFaucetControls: function() {
+		reattachOscillatorControls: function() {
 			this.$('.wave-properties').prependTo(this.$('.properties-panel'));
 		},
 	});
