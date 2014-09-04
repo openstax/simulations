@@ -304,13 +304,20 @@ define(function (require) {
 			this.$('#graph-view-placeholder').replaceWith(this.graphView.el);
 		},
 
-		
-
 		/**
 		 * Renders the playback controls
 		 */
 		renderPlaybackControls: function() {
 			this.$('#playback-controls-placeholder').replaceWith(playbackControlsHtml);
+		},
+
+		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {
+			this.heatmapView.postRender();
+			this.graphView.postRender();
 		},
 
 		/**

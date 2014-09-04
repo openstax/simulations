@@ -19,3 +19,17 @@
          @-o-keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
             @keyframes ~'@{name}' { 0% { @fromRules(); } 100% { @toRules(); } }
 }
+
+.keyframes-3 (@name, @start, @half, @end) {
+    @-webkit-keyframes ~'@{name}' { 0% { @start(); } 50% { @half(); } 100% { @end(); } }
+       @-moz-keyframes ~'@{name}' { 0% { @start(); } 50% { @half(); } 100% { @end(); } }
+         @-o-keyframes ~'@{name}' { 0% { @start(); } 50% { @half(); } 100% { @end(); } }
+            @keyframes ~'@{name}' { 0% { @start(); } 50% { @half(); } 100% { @end(); } }
+}
+
+.keyframes-5 (@name, @start, @quarter1, @half, @quarter3, @end) {
+    @-webkit-keyframes ~'@{name}' { 0% { @start(); } 25% { @quarter1(); } 50% { @half(); } 75% { @quarter3(); } 100% { @end(); } }
+       @-moz-keyframes ~'@{name}' { 0% { @start(); } 25% { @quarter1(); } 50% { @half(); } 75% { @quarter3(); } 100% { @end(); } }
+         @-o-keyframes ~'@{name}' { 0% { @start(); } 25% { @quarter1(); } 50% { @half(); } 75% { @quarter3(); } 100% { @end(); } }
+            @keyframes ~'@{name}' { 0% { @start(); } 25% { @quarter1(); } 50% { @half(); } 75% { @quarter3(); } 100% { @end(); } }
+}

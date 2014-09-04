@@ -8,11 +8,11 @@
 			$(function(){
 				var appView = new AppView();
 
-				// Render main app view
-				appView.render();
-
 				// Append to body
 				$('body').append(appView.el);
+
+				// Render main app view
+				appView.render();
 
 				// For demoing
 				var better = false;
@@ -32,7 +32,9 @@
 				});	
 
 				// Trigger window resize to update canvases
-				$(window).trigger('resize');
+				//$(window).trigger('resize');
+
+				appView.postRender();
 			});
 	
 		});
