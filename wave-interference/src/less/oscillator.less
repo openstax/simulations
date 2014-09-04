@@ -6,22 +6,19 @@
 	.user-select(none);
 	
 	> .oscillator-controls {
-		width: 170px;
 		background-color: @gray-lightest;
 		padding: 16px;
 		position: absolute;
-		right: 40px;
+		right: 100px;
 		top: 50%;
+		margin-top: -63px;
 		z-index: 25;
 
 		> .on-off-controls {
-			display: inline-block;
-			margin-bottom: -12px;
+
 		}
 
 		> .btn-oscillator-pulse {
-			float: right;
-			margin-top: 10px;
 			background-color: @brand-primary;
 			color: #fff;
 
@@ -43,22 +40,28 @@
 
 	&.top-oscillator > .oscillator-controls {
 		top: 0;
+		margin-top: 0;
 	}
 
 	&.bottom-oscillator > .oscillator-controls {
 		top: auto;
 		bottom: 0;
+		margin-top: 0;
 	}
 
 	> .oscillator-graphic {
 
+	}
+
+	&.bottom-oscillator > .oscillator-graphic {
+		z-index: 24;
 	}
 }
 
 #sim-water .oscillator-graphic {
 	width: 200px;
 	height: 114px;
-	background-image: url(img/phet/faucet.png);
+	background-image: url(../img/phet/faucet.png);
 	position: absolute;
 	margin-top: -60px;
 	right: -90px;

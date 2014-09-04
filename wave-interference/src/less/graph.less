@@ -4,15 +4,83 @@
 .graph-container {
 	position: relative;
 	margin-top: 20px;
-	// top: (20 + @heatmap-container-width + 20);
-	// left: 0;
 	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding);
+	.transition(~"height 400ms");
+	overflow: hidden;
+
+	&.landscape {
+		height: @heatmap-container-padding;
+	}
+
+	&.open {
+		height: @cross-section-graph-height;
+	}
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		//left: @heatmap-container-left-margin;
 
 		.better & {
 			//left: 100px; // Width of oscillator object graphics?
+		}
+	}
+
+	& > .graph-show-button {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: @heatmap-container-padding;
+		line-height: (@heatmap-container-padding + 2);
+		//font-size: 16px;
+		font-weight: bold;
+		padding: 0;
+		background-color: @gray-lightest;
+		color: @link-color;
+		border-radius: 0;
+		z-index: 50;
+
+		&:hover {
+			color: fadeout(@link-color, 15%);
+			background-color: lighten(@gray-lightest, 0.5%);
+		}
+
+		&:active {
+			color: #fff;
+			background-color: @brand-primary;
+			.box-shadow(none);
+		}
+
+		&.reenabled {
+			.animation-name(graph-show-btn);
+			.animation-duration(400ms);
+			.animation-timing-function(ease);
+			.animation-fill-mode(forwards);
+		}
+
+		.animated-button(graph-show-btn-clicked, 400ms);
+
+		> .fa {
+			margin-right: 10px;
+		}
+	}
+
+	& > .graph-hide-button {
+		position: absolute;
+		top: 5px;
+		right: 3px;
+		background: transparent;
+		color: #888;
+		display: none;
+		z-index: 50;
+
+		&:hover {
+			color: #555;
+		}
+
+		&:active {
+			color: #444;
+			.box-shadow(none);
+			text-shadow: 0 0 6px #ccc;
 		}
 	}
 

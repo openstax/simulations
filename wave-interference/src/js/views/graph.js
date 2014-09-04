@@ -32,11 +32,17 @@ define(function(require) {
 		className: 'graph-container',
 		tagName: 'figure',
 
+		events: {
+			'click .graph-show-button' : 'show',
+			'click .graph-hide-button' : 'hide'
+		},
+
 		initialize: function(options) {
 
 			// Default values
 			options = _.extend({
 				title: 'Value',
+				showButtonText: 'Show Graph',
 				x: {
 					start: 0,
 					end: 100,
@@ -53,7 +59,8 @@ define(function(require) {
 				},
 				lineThickness: 5,
 				lineColor: '#000',
-				gridColor: '#ddd'
+				gridColor: '#ddd',
+				portrait: false
 			}, options);
 
 			// Save options
@@ -65,9 +72,12 @@ define(function(require) {
 			// Save graph information for rendering
 			this.graphInfo = {
 				title: options.title,
+				showButtonText: options.showButtonText,
 				x: options.x,
 				y: options.y
 			};
+
+			this.portrait = options.portrait;
 
 			this.lineThickness = options.lineThickness;
 			this.lineColor = options.lineColor;
@@ -81,6 +91,9 @@ define(function(require) {
 			this.xSpacing = 1;
 
 			this.points = [];
+
+			// Don't start drawing the curve until the graph is showing
+			this.graphVisible = false;
 		},
 
 		/**
@@ -88,10 +101,15 @@ define(function(require) {
 		 */
 		render: function() {
 			this.$el.empty();
+			this.$el.removeClass('open');
+
+			if (this.portrait)
+				this.$el.addClass('portrait');
+			else
+				this.$el.addClass('landscape');
 
 			this.renderContainer();
-			this.initRenderer();
-			this.initGraphics();
+			this.initCanvas();
 
 			return this;
 		},
@@ -101,33 +119,18 @@ define(function(require) {
 		 */
 		renderContainer: function() {
 			this.$el.html(this.template(this.graphInfo));
+
+			this.$showButton = this.$('.graph-show-button');
+			this.$hideButton = this.$('.graph-hide-button');
 		},
 
 		/**
 		 * Initializes a renderer using the .heatmap-canvas canvas element
 		 */
-		initRenderer: function() {
+		initCanvas: function() {
 			this.$canvas = this.$('.graph-canvas');
 
 			this.context = this.$canvas[0].getContext('2d');
-
-			// this.renderer = PIXI.autoDetectRenderer(
-			// 	this.$canvas.width(),  // Width
-			// 	this.$canvas.height(), // Height
-			// 	this.$canvas[0],       // Canvas element
-			// 	true,                  // Transparent background
-			// 	true                   // Antialiasing
-			// );
-		},
-
-		initGraphics: function() {
-			// Create a stage to hold everything
-			// this.stage = new PIXI.Stage(0xFFFFFF);
-
-			// this.curve = new PIXI.Graphics();
-			// this.curve.position.x = 0;
-
-			// this.stage.addChild(this.curve);
 		},
 
 		/**
@@ -140,30 +143,25 @@ define(function(require) {
 		resize: function(event) {
 			var width  = this.$canvas.width();
 			var height = this.$canvas.height();
-			//if (width != this.renderer.width || height != this.renderer.height) {
-				this.width  = width;
-				this.height = height;
-				this.$canvas[0].width = this.$canvas.width();
-				this.$canvas[0].height = this.$canvas.height();
-				//this.curve.position.y = height / 2;
-				this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
-				this.resizeOnNextUpdate = false;
-			//}
+			this.width  = width;
+			this.height = height;
+			this.$canvas[0].width = this.$canvas.width();
+			this.$canvas[0].height = this.$canvas.height();
+			this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
+			this.resizeOnNextUpdate = false;
 		},
 
 		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			this.drawCurve();
+			if (!this.graphVisible)
+				return;
 
-			// Render everything
-			//this.renderer.render(this.stage);
+			this.drawCurve();
 		},
 
 		drawCurve: function() {
-			//this.curve.clear();
-
 			lat       = this.waveSimulation.lattice.data;
 			latWidth  = this.waveSimulation.lattice.width;
 			latHeight = this.waveSimulation.lattice.height;
@@ -217,8 +215,6 @@ define(function(require) {
 				points[i] = ((lat[i][j] - 2) / -4) * height;
 			}
 
-			//this.curve.lineStyle(2, 0x0D6A7C, 1);
-			//this.curve.moveTo(0, ((lat[0][j] - 2) / -4) * height);
 			context.beginPath();
 			context.moveTo(-1, points[0]);
 
@@ -250,6 +246,41 @@ define(function(require) {
 				this.changing = false;
 				this.$canvas.removeClass('changing');
 			}
+		},
+
+		show: function(event) {
+			this.graphVisible = true;
+
+			this.$el.addClass('open');
+			var $button = this.$showButton;
+
+			this.$hideButton.show();
+			$button.addClass('clicked');
+
+			this.duration = $button.css('animation-duration');
+			if (this.duration.indexOf('ms') !== -1)
+				this.duration = parseInt(this.duration);
+			else
+				this.duration = parseFloat(this.duration) * 1000;
+			
+			setTimeout(function(){
+				$button.hide();
+				$button.removeClass('clicked');
+			}, this.duration);
+		},
+
+		hide: function(event) {
+			var self = this;
+
+			this.$el.removeClass('open');
+			this.$showButton.show();
+			this.$showButton.addClass('reenabled');
+			this.$hideButton.hide();
+
+			setTimeout(function(){
+				self.graphVisible = false;
+				self.$showButton.removeClass('reenabled');
+			}, this.duration);
 		}
 	});
 
