@@ -11,7 +11,11 @@
 		top: 0;
 		left: 0;
 		border-top: 2px dotted #000;
+
 		.transform-origin(left center);
+
+		.animation-name(measuring-tape-create);
+		.animation-duration(2s);
 
 		> .measuring-tape-handle {
 			height: 20px;
@@ -63,15 +67,44 @@
 		> .measuring-tape-handle-end {
 			right: -10px;
 		}
+
+		&:before,
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			height: 8px;
+			left: 0;
+			right: 0;
+		}
+
+		&:before {
+			bottom: 1px;
+		}
+
+		&:after {
+			top: 1px;
+		}
 	}
 
 	> .measuring-tape-label {
 		position: absolute;
-		top: 20px;
+		top: 12px;
 		left: 0;
+		padding: 4px 8px;
+		background-color: fadeout(darken(@gray-lightest, 3%), 30%);
+		white-space: nowrap;
+		z-index: 201;
 	}
 
-	&.dragging {
+	&.dragging > .measuring-tape {
+		border-color: @link-color;
 
+		> .measuring-tape-handle {
+			&:before,
+			&:after {
+				border-color: @link-color;
+			}
+		}
 	}
 }
