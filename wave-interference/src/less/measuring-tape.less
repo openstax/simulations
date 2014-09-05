@@ -1,0 +1,77 @@
+
+.measuring-tape-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 200;
+	.transform-origin(left center);
+
+	> .measuring-tape {
+		position: absolute;
+		top: 0;
+		left: 0;
+		border-top: 2px dotted #000;
+		.transform-origin(left center);
+
+		> .measuring-tape-handle {
+			height: 20px;
+			width: 20px;
+			position: absolute;
+			top: 0;
+			margin-top: -11px;
+			border-radius: 50%;
+			//background-color: fadeout(#000, 85%);
+			cursor: crosshair;
+
+			&.dragging {
+				//background-color: fadeout(@link-color, 50%);
+				background-color: fadeout(#000, 85%);
+
+				&:before,
+				&:after {
+					border-color: @link-color;
+				}
+			}
+
+			&:before {
+				content: '';
+				display: block;
+				position: absolute;
+				left: 3px;
+				right: 3px;
+				top: 50%;
+				margin-top: -1px;
+				border-top: 2px solid #000;
+			}
+
+			&:after {
+				content: '';
+				display: block;
+				position: absolute;
+				top: 3px;
+				bottom: 3px;
+				left: 50%;
+				margin-left: -1px;
+				border-left: 2px solid #000;
+			}
+		}
+
+		> .measuring-tape-handle-start {
+			left: -10px;
+		}
+
+		> .measuring-tape-handle-end {
+			right: -10px;
+		}
+	}
+
+	> .measuring-tape-label {
+		position: absolute;
+		top: 20px;
+		left: 0;
+	}
+
+	&.dragging {
+
+	}
+}

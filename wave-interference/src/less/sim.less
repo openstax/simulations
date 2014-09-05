@@ -1,0 +1,65 @@
+.sim-view {
+	height: 100%;
+	width: 100%;
+}
+
+.playback-controls-wrapper {
+	position: absolute;
+	top: -36px;
+	right: 10px;
+	
+	// @media (min-width: @screen-sm-min) {
+	// 	position: absolute;
+	// 	bottom: 10px;
+	// 	left: 10px;
+	// 	z-index: @above-canvas;
+	// }
+
+	> .playback-btn {
+		background: @gray-lightest;
+		color: @link-color;
+		outline: none;
+		border: none;
+		border-radius: 50%;
+		width: 28px;
+		height: 28px;
+		text-align: center;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:active {
+			//border: 1px solid #fff;
+			background: @link-color;
+			color: #fff;
+		}
+
+		.sim-view.playing &.play-btn {
+			display: none;
+		}
+		.sim-view:not(.playing) &.pause-btn {
+			display: none;
+		}
+	}
+}
+
+.heatmap-column {
+	position: relative;
+	padding: 20px;
+
+	@media (min-width: @max-viewport-width) {
+		max-width: 520px;
+		height: 680px;
+		margin: 0 auto;
+	}
+
+	@media (min-width: @screen-sm-min) {
+		margin-left: 200px;
+		margin-right: @control-panel-width;
+	}
+
+	// @media (min-width: @screen-sm-min) {
+	// 	width: 100%;
+	// }
+}
