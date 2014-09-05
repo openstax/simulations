@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
 	var WaterSimulation  = require('models/wave-sim/water');
 	var SimView          = require('views/sim');
 	var WaterHeatmapView = require('views/heatmap/water');
