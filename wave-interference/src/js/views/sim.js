@@ -10,6 +10,8 @@ define(function (require) {
 	var HeatmapView      = require('views/heatmap');
 	var GraphView        = require('views/graph');
 
+	require('nouislider');
+
 	// Templates
 	var simHtml                = require('text!templates/sim.html');
 	var controlPanelHtml       = require('text!templates/control-panel.html');
@@ -94,46 +96,17 @@ define(function (require) {
 				name: 'sim'
 			}, options);
 
+			this.heatmapBrightness = options.heatmapBrightness;
 			this.title = options.title;
 			this.name  = options.name;
 
 			this.waveSimulation = options.waveSimulation || new WaveSimulation();
 
-			this.heatmapView = new HeatmapView({
-				x: {
-					start: 0,
-					end: this.waveSimulation.get('dimensions').width,
-					step: this.waveSimulation.get('dimensions').width / 10,
-					label: 'x (' + this.waveSimulation.get('units').distance + ')'
-				},
-				y: {
-					start: 0,
-					end: this.waveSimulation.get('dimensions').height,
-					step: this.waveSimulation.get('dimensions').height / 10,
-					label: 'y (' + this.waveSimulation.get('units').distance + ')'
-				},
-				waveSimulation: this.waveSimulation,
-				brightness: options.heatmapBrightness
-			});
+			// Initialize the HeatmapView
+			this.initHeatmapView();
 
-			this.graphView = new GraphView({
-				title: 'Cross-Section Side View',
-				x: {
-					start: 0,
-					end: this.waveSimulation.get('dimensions').width,
-					step: this.waveSimulation.get('dimensions').width / 10,
-					label: 'x (' + this.waveSimulation.get('units').distance + ')',
-					showNumbers: true
-				},
-				y: {
-					start: -1,
-					end: 1,
-					step: 0.5,
-					label: 'Water Level',
-					showNumbers: false
-				},
-				waveSimulation: this.waveSimulation
-			});
+			// Initialize the GraphView
+			this.initGraphView();
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
@@ -154,10 +127,78 @@ define(function (require) {
 			this.$el.addClass('playing');
 		},
 
+		/**
+		 * Called when the view is being removed. Unbinds bound events
+		 *   and stops the updater.
+		 */
 		remove: function() {
 			Backbone.View.prototype.remove.apply(this);
 			this.unbind();
 			this.updater.pause();
+		},
+
+		/**
+		 * Initializes the HeatmapView.
+		 */
+		initHeatmapView: function() {
+			this.heatmapView = new HeatmapView(this.getHeatmapViewOptions());
+		},
+
+		/**
+		 * Uses the sim view's WaveSimulation instance to determine
+		 *   appropriate options for initializing the HeatmapView
+		 *   and returns them as an object.
+		 */
+		getHeatmapViewOptions: function() {
+			return {
+				x: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
+					label: 'x (' + this.waveSimulation.get('units').distance + ')'
+				},
+				y: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').height,
+					step: this.waveSimulation.get('dimensions').height / 10,
+					label: 'y (' + this.waveSimulation.get('units').distance + ')'
+				},
+				waveSimulation: this.waveSimulation,
+				brightness: this.heatmapBrightness
+			};
+		},
+
+		/**
+		 * Initializes the GraphView.
+		 */
+		initGraphView: function() {
+			this.graphView = new GraphView(this.getGraphViewOptions());
+		},
+
+		/**
+		 * Uses the sim view's WaveSimulation instance to determine
+		 *   appropriate options for initializing the GraphView and
+		 *   returns them as an object.
+		 */
+		getGraphViewOptions: function() {
+			return {
+				title: 'Cross-Section Side View',
+				x: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
+					label: 'x (' + this.waveSimulation.get('units').distance + ')',
+					showNumbers: true
+				},
+				y: {
+					start: -1,
+					end: 1,
+					step: 0.5,
+					label: 'Water Level',
+					showNumbers: false
+				},
+				waveSimulation: this.waveSimulation
+			};
 		},
 
 		/**
