@@ -59,7 +59,8 @@ define(function (require) {
 				$stream.append($drip);
 				this.$stagedDrops.push($drip);
 			}
-			this.dripTimer = 0;
+			this.animationDuration = 1;
+			this.animationOffset = -0.3;
 
 			this.resize();
 			this.update(0, 0);
@@ -83,20 +84,19 @@ define(function (require) {
 
 		updateDrops: function(time, delta) {
 			// Check first to see if we can recycle any drops so we can use them later
-			for (var i = this.$activeDrops.length - 1; i > 0; i--) {
-				if (time > this.$activeDrops[i].data('birth') + this.$activeDrops[i].data('birth')) {
+			for (var i = this.$activeDrops.length - 1; i >= 0; i--) {
+				if (time > this.$activeDrops[i].data('birth') + this.$activeDrops[i].data('period')) {
 					this.recycleDrop(this.$activeDrops[i]);
 					this.$activeDrops.splice(i, 1);
 				}
 			}
 
 			// See if it's time to drip another drop
-			this.dripTimer += delta;
-			var period = 1000 / this.oscillator.frequency;
-			if (this.dripTimer >= period) {
-				this.drip(time, period);
-				this.dripTimer -= period;
+			if (this.oscillator.enabled) {
+				if (this.justBeforeReleaseTime(this.lastOscillatorTime) && this.justAfterReleaseTime(this.oscillator.time))
+					this.drip(time);
 			}
+			this.lastOscillatorTime = this.oscillator.time;
 		},
 
 		recycleDrop: function($drop) {
@@ -104,19 +104,37 @@ define(function (require) {
 			$drop.hide();
 		},
 
-		drip: function(time, period) {
+		drip: function(time) {
 			var $drip = this.$stagedDrops.pop();
 			if ($drip) {
 				$drip.show();
 				$drip.data('birth', time);
-				$drip.data('period', time);
+				$drip.data('period', this.animationDuration * 1000);
 				this.$activeDrops.push($drip);
 			}
 			else
 				console.log('There aren\'t enough drops in the pool!');
 		},
 
-		
+		justBeforeReleaseTime: function(time) {
+			var releaseTime = this.getNearestReleaseTime(time);
+			if (time < releaseTime/* && Math.abs(releaseTime - time) < this.oscillator.period() / 4*/)
+				return true;
+			return false;
+		},
+
+		justAfterReleaseTime: function(time) {
+			var releaseTime = this.getNearestReleaseTime(time);
+			if (time >= releaseTime/* && Math.abs(releaseTime - time) < this.oscillator.period() / 4*/)
+				return true;
+			return false;
+		},
+
+		getNearestReleaseTime: function(time) {
+			var period = this.oscillator.period();
+			var n = Math.round((time / period) - 0.25 + ((this.animationDuration + this.animationOffset) / period));
+			return (period / 4) - (this.animationDuration + this.animationOffset) + (n * period);
+		},
 
 		toLatticeXScale: function(x) {
 			return x / this.heatmapView.xSpacing;
