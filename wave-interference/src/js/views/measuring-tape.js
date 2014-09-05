@@ -32,7 +32,9 @@ define(function (require) {
 			'mousedown  .measuring-tape-handle' : 'handleDown',
 			'touchstart .measuring-tape-handle' : 'handleDown',
 			'mousedown  .measuring-tape' : 'tapeDown',
-			'touchstart .measuring-tape': 'tapeDown'
+			'touchstart .measuring-tape': 'tapeDown',
+
+			'click .measuring-tape-label': 'labelClicked'
 		},
 
 		initialize: function(options) {
@@ -154,6 +156,10 @@ define(function (require) {
 				this.draggingTape = false;
 				this.$el.removeClass('dragging');
 			}
+		},
+
+		labelClicked: function(event) {
+			Utils.selectText(event.target);
 		},
 
 		update: function(time, delta) {
