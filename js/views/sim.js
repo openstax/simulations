@@ -558,7 +558,7 @@ define(function (require) {
 		 * Temporary functions used for toggling the 'better' view
 		 */
 		detachOscillatorControls: function() {
-			this.$('.wave-properties').appendTo(this.$el);
+			this.$('.wave-properties').insertAfter(this.$('.heatmap-column'));
 		},
 		reattachOscillatorControls: function() {
 			this.$('.wave-properties').prependTo(this.$('.properties-panel'));

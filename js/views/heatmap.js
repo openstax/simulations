@@ -304,11 +304,12 @@ define(function(require) {
 		},
 
 		resize: function(override) {
-			var containerWidth = this.$el.width();
-			var width  = containerWidth - (this.padding * 2);
-			var height = containerWidth - (this.padding * 2);
+			var width  = this.$canvas.parent().innerWidth();
+			var height = width;
 			this.$canvas.width(width);
-			this.$canvas.height(height);
+			this.$canvas.height(width);
+			// var width  = this.$canvas.width();
+			// var height = this.$canvas.height();
 			this.width  = width;
 			this.height = height;
 			if (override || width != this.renderer.width || height != this.renderer.height) {

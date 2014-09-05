@@ -4,7 +4,7 @@
 .graph-container {
 	position: relative;
 	margin-top: 20px;
-	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding);
+	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding, 50%);
 	.transition(~"height 400ms");
 	overflow: hidden;
 
@@ -13,7 +13,10 @@
 	}
 
 	&.open {
-		height: @cross-section-graph-height;
+		@media (min-width: @max-viewport-width) {
+			height: @cross-section-graph-height;
+		}
+		height: auto;
 	}
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
