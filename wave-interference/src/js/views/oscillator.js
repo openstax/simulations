@@ -50,11 +50,26 @@ define(function (require) {
 			this.$el.html(this.template({ unique: this.cid }));
 			this.$graphic = this.$('.oscillator-graphic');
 
+			this.$stagedDrops = [];
+			this.$activeDrops = [];
+			var $stream = this.$graphic.find('.part-1');
+			var $drip;
+			for (var i = 0; i < 6; i++) {
+				$drip = $('<div class="drip">');
+				$stream.append($drip);
+				this.$stagedDrops.push($drip);
+			}
+			this.dripTimer = 0;
+
 			this.resize();
 			this.update(0, 0);
 		},
 
 		update: function(time, delta) {
+			if (!this.hidden) {
+				this.updateDrops(time, delta);
+			}
+
 			if (!this.updateOnNextFrame)
 				return;
 
@@ -64,6 +79,44 @@ define(function (require) {
 				this.$graphic.css('top', this.heatmapView.height - this.oscillator.y * this.heatmapView.ySpacing);
 			}
 		},
+
+
+		updateDrops: function(time, delta) {
+			// Check first to see if we can recycle any drops so we can use them later
+			for (var i = this.$activeDrops.length - 1; i > 0; i--) {
+				if (time > this.$activeDrops[i].data('birth') + this.$activeDrops[i].data('birth')) {
+					this.recycleDrop(this.$activeDrops[i]);
+					this.$activeDrops.splice(i, 1);
+				}
+			}
+
+			// See if it's time to drip another drop
+			this.dripTimer += delta;
+			var period = 1000 / this.oscillator.frequency;
+			if (this.dripTimer >= period) {
+				this.drip(time, period);
+				this.dripTimer -= period;
+			}
+		},
+
+		recycleDrop: function($drop) {
+			this.$stagedDrops.push($drop);
+			$drop.hide();
+		},
+
+		drip: function(time, period) {
+			var $drip = this.$stagedDrops.pop();
+			if ($drip) {
+				$drip.show();
+				$drip.data('birth', time);
+				$drip.data('period', time);
+				this.$activeDrops.push($drip);
+			}
+			else
+				console.log('There aren\'t enough drops in the pool!');
+		},
+
+		
 
 		toLatticeXScale: function(x) {
 			return x / this.heatmapView.xSpacing;
