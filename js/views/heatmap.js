@@ -366,6 +366,10 @@ define(function(require) {
 			});
 			segmentPotentialView.render();
 
+			this.addSegmentPotentialView(segmentPotentialView);
+		},
+
+		addSegmentPotentialView: function(segmentPotentialView) {
 			// Append the rendered element
 			this.$('.potential-views').append(segmentPotentialView.el);
 
@@ -391,6 +395,10 @@ define(function(require) {
 			});
 			oscillatorView.render();
 
+			this.addOscillatorView(oscillatorView);
+		},
+
+		addOscillatorView: function(oscillatorView) {
 			// Append the rendered element
 			this.$('.oscillator-views').append(oscillatorView.el);
 

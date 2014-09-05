@@ -52,8 +52,6 @@ define([
 			// Then render views for each sim
 			_.each(this.sims, this.renderSim, this);
 
-			this.$('.sim-tab').first().click();
-
 			return this;
 		},
 
@@ -67,9 +65,17 @@ define([
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
+			// Make them all visible for the post-render calculations
+			this.$('.sim-content').addClass('active');
+
 			_.each(this.sims, function(sim) {
 				sim.postRender();
 			});
+
+			// Only hide the other tabs after they've all been rendered visibly
+			this.$('.sim-tab').first().click();
+
+			// Remove the stage curtains
 			this.$el.removeClass('loading');
 		},
 

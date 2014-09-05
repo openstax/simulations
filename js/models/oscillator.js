@@ -131,6 +131,13 @@ define(function(require) {
 				return (0.75 / this.frequency) * 1000;
 			}
 			return false;
+		},
+
+		/**
+		 * Returns the period in seconds
+		 */
+		period: function() {
+			return 1 / this.frequency;
 		}
 	});
 

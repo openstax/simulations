@@ -61,8 +61,55 @@
 #sim-water .oscillator-graphic {
 	width: 200px;
 	height: 114px;
-	background-image: url(../img/phet/faucet.png);
 	position: absolute;
-	margin-top: -60px;
-	right: -90px;
+	margin-top: -97px;
+	right: -89px;
+
+	> .part-1 {
+		position: absolute;
+		top: 82px;
+		right: 8px;
+		width: 30px;
+		height: 60px;
+		overflow: hidden;
+
+		> .stream {
+			width: 100%;
+			height: 100%;
+			position: relative;
+			margin: 0 auto;
+
+			> .drop {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-image: url(../img/phet/raindrop1.png);
+				background-size: 100% auto;
+				background-repeat: no-repeat;
+				display: none;
+
+				.animation-name(faucet-drip);
+				.animation-iteration-count(infinite);
+				.animation-timing-function(linear);
+				.animation-duration(1s);
+			}
+		}
+	}
+
+	> .part-2 {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-image: url(../img/phet/faucet.png);
+	}
 }
+
+.keyframes(faucet-drip, {
+	.translate(0, -60px);
+},{
+	.translate(0, 60px);
+});

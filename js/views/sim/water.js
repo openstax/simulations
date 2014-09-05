@@ -1,14 +1,10 @@
-define([
-	'jquery', 
-	'underscore', 
-	'backbone',
-	'nouislider',
-
-	'views/sim',
-	'models/wave-sim/water',
-], function ($, _, Backbone, noui, SimView, WaterSimulation) {
+define(function(require) {
 
 	'use strict';
+
+	var WaterSimulation  = require('models/wave-sim/water');
+	var SimView          = require('views/sim');
+	var WaterHeatmapView = require('views/heatmap/water');
 
 	var WaterSimView = SimView.extend({
 
@@ -28,6 +24,13 @@ define([
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
+		},
+
+		/**
+		 * Initializes the HeatmapView.
+		 */
+		initHeatmapView: function() {
+			this.heatmapView = new WaterHeatmapView(this.getHeatmapViewOptions());
 		},
 	});
 
