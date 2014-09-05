@@ -21,19 +21,22 @@ define(function(require) {
 
 		initialize: function(options) {
 			OscillatorView.prototype.initialize.apply(this, [options]);
+
+			this.listenTo(this.waveSimulation, 'change:amplitude', this.resize);
 		},
 
 		render: function() {
 			this.$el.html(this.template({ unique: this.cid }));
 			this.$graphic = this.$('.oscillator-graphic');
 
+			
+			this.$stream = $('<div class="stream">').appendTo(this.$graphic.find('.part-1'));
+
 			this.$stagedDrops = [];
 			this.$activeDrops = [];
-			var $stream = this.$graphic.find('.part-1');
-			var $drop;
 			for (i = 0; i < 6; i++) {
 				$drop = $('<div class="drop">');
-				$stream.append($drop);
+				this.$stream.append($drop);
 				this.$stagedDrops.push($drop);
 			}
 			this.animationDuration = 1;
@@ -46,6 +49,11 @@ define(function(require) {
 		update: function(time, delta) {
 			if (!this.hidden) {
 				this.updateDrops(time, delta);
+			}
+
+			if (this.updateOnNextFrame) {
+				// Resize the drops
+				this.$stream.width(((this.oscillator.amplitude / 2) * 100) + '%');
 			}
 
 			OscillatorView.prototype.update.apply(this, [time, delta]);
@@ -75,12 +83,12 @@ define(function(require) {
 		},
 
 		drip: function(time) {
-			$drip = this.$stagedDrops.pop();
-			if ($drip) {
-				$drip.show();
-				$drip.data('birth', time);
-				$drip.data('period', this.animationDuration * 1000);
-				this.$activeDrops.push($drip);
+			$drop = this.$stagedDrops.pop();
+			if ($drop) {
+				$drop.show();
+				$drop.data('birth', time);
+				$drop.data('period', this.animationDuration * 1000);
+				this.$activeDrops.push($drop);
 			}
 			else
 				console.log('There aren\'t enough drops in the pool!');

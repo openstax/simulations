@@ -34,16 +34,12 @@ define(function(require) {
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
 			this.listenTo(this.heatmapView, 'resized', this.resize);
-			this.listenTo(this.waveSimulation, 'oscillators-changed', function(){
-				this.updateOnNextFrame = true;
-			});
+			this.listenTo(this.waveSimulation, 'oscillators-changed', this.resize);
 			this.listenTo(this.waveSimulation, 'change:oscillatorCount', this.determinePosition);
 		},
 
 		resize: function(){
 			this.updateOnNextFrame = true;
-
-			
 		},
 
 		render: function() {

@@ -68,26 +68,33 @@
 	> .part-1 {
 		position: absolute;
 		top: 82px;
-		right: 10px;
-		width: 26px;
+		right: 8px;
+		width: 30px;
 		height: 60px;
 		overflow: hidden;
 
-		> .drop {
-			position: absolute;
-			top: 0;
-			left: 0;
+		> .stream {
 			width: 100%;
 			height: 100%;
-			background-image: url(../img/phet/raindrop1.png);
-			background-size: 100% auto;
-			background-repeat: no-repeat;
-			display: none;
+			position: relative;
+			margin: 0 auto;
 
-			.animation-name(faucet-drip);
-			.animation-iteration-count(infinite);
-			.animation-timing-function(linear);
-			.animation-duration(1s);
+			> .drop {
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background-image: url(../img/phet/raindrop1.png);
+				background-size: 100% auto;
+				background-repeat: no-repeat;
+				display: none;
+
+				.animation-name(faucet-drip);
+				.animation-iteration-count(infinite);
+				.animation-timing-function(linear);
+				.animation-duration(1s);
+			}
 		}
 	}
 
