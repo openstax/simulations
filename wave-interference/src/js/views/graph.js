@@ -129,6 +129,7 @@ define(function(require) {
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
+			this.padding = parseInt(this.$canvas.css('top'));
 			this.resize();
 		},
 
@@ -149,12 +150,14 @@ define(function(require) {
 		},
 
 		resize: function(event) {
-			var width  = this.$canvas.width();
-			var height = this.$canvas.height();
+			var width  = this.$canvas.parent().innerWidth();
+			var height = this.$canvas.parent().innerHeight() || 200;
 			this.width  = width;
 			this.height = height;
-			this.$canvas[0].width = this.$canvas.width();
-			this.$canvas[0].height = this.$canvas.height();
+			this.$canvas.width(width);
+			this.$canvas.height(height);
+			this.$canvas[0].width = width;
+			this.$canvas[0].height = height;
 			this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
 			this.resizeOnNextUpdate = false;
 		},
@@ -260,31 +263,31 @@ define(function(require) {
 			this.graphVisible = true;
 
 			this.$el.addClass('open');
-			var $button = this.$showButton;
 
 			this.$hideButton.show();
-			$button.addClass('clicked');
+			this.$showButton.addClass('clicked');
 
-			this.duration = $button.css('animation-duration');
+			this.duration = this.$showButton.css('animation-duration');
 			if (this.duration.indexOf('ms') !== -1)
 				this.duration = parseInt(this.duration);
 			else
 				this.duration = parseFloat(this.duration) * 1000;
 			
+			var self = this;
 			setTimeout(function(){
-				$button.hide();
-				$button.removeClass('clicked');
+				self.$showButton.hide();
+				self.$showButton.removeClass('clicked');
+				self.resize();
 			}, this.duration);
 		},
 
 		hide: function(event) {
-			var self = this;
-
 			this.$el.removeClass('open');
 			this.$showButton.show();
 			this.$showButton.addClass('reenabled');
 			this.$hideButton.hide();
 
+			var self = this;
 			setTimeout(function(){
 				self.graphVisible = false;
 				self.$showButton.removeClass('reenabled');

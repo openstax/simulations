@@ -76,17 +76,20 @@ body {
 }
 
 .playback-controls-wrapper {
+	position: absolute;
+	top: -36px;
+	right: 10px;
 	
-	@media (min-width: @screen-sm-min) {
-		position: absolute;
-		bottom: 10px;
-		left: 10px;
-		z-index: @above-canvas;
-	}
+	// @media (min-width: @screen-sm-min) {
+	// 	position: absolute;
+	// 	bottom: 10px;
+	// 	left: 10px;
+	// 	z-index: @above-canvas;
+	// }
 
 	> .playback-btn {
-		background: @link-color;
-		color: #fff;
+		background: @gray-lightest;
+		color: @link-color;
 		outline: none;
 		border: none;
 		border-radius: 50%;
@@ -99,7 +102,9 @@ body {
 		}
 
 		&:active {
-			border: 1px solid #fff;
+			//border: 1px solid #fff;
+			background: @link-color;
+			color: #fff;
 		}
 
 		.sim-view.playing &.play-btn {
