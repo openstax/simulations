@@ -10,6 +10,7 @@ define(function (require) {
 	var HeatmapView       = require('views/heatmap');
 	var GraphView         = require('views/graph');
 	var MeasuringTapeView = require('views/measuring-tape');
+	var StopwatchView     = require('views/stopwatch');
 
 	require('nouislider');
 
@@ -55,8 +56,9 @@ define(function (require) {
 			'click .panel-btn': 'panelButtonClicked',
 
 			// Tools
-			'click .add-detector' : 'addDetector',
-			'change .measuring-tape-check': 'toggleMeasuringTape',
+			'click  .add-detector'         : 'addDetector',
+			'change .measuring-tape-check' : 'toggleMeasuringTape',
+			'change .stopwatch-check'      : 'toggleStopwatch',
 
 			// Simulation properties
 			'change .oscillator-count':   'changeOscillatorCount',
@@ -368,8 +370,14 @@ define(function (require) {
 				dragFrame: this.el
 			});
 			this.measuringTapeView.render();
-			this.measuringTapeView.hide();
 			this.$el.append(this.measuringTapeView.el);
+
+			this.stopwatchView = new StopwatchView({
+				heatmapView: this.heatmapView,
+				dragFrame: this.el
+			});
+			this.stopwatchView.render();
+			this.$el.append(this.stopwatchView.el);
 		},
 
 		/**
@@ -379,6 +387,9 @@ define(function (require) {
 		postRender: function() {
 			this.heatmapView.postRender();
 			this.graphView.postRender();
+			
+			this.measuringTapeView.hide();
+			this.stopwatchView.hide();
 		},
 
 		/**
@@ -453,6 +464,7 @@ define(function (require) {
 			this.heatmapView.update(time, delta);
 			this.graphView.update(time, delta);
 			this.measuringTapeView.update(time, delta);
+			this.stopwatchView.update(time, delta);
 		},
 
 		/**
@@ -592,6 +604,13 @@ define(function (require) {
 				this.measuringTapeView.show();
 			else
 				this.measuringTapeView.hide();
+		},
+
+		toggleStopwatch: function(event) {
+			if ($(event.target).is(':checked'))
+				this.stopwatchView.show();
+			else
+				this.stopwatchView.hide();
 		},
 
 		/**
