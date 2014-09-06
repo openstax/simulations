@@ -64,6 +64,14 @@ define(function (require) {
 		outOfBounds: function(x, y) {
 			return (x > this.dragBounds.width  || x < 0 ||
 				    y > this.dragBounds.height || y < 0);
+		},
+
+		show: function() {
+			this.$el.show();
+		},
+
+		hide: function() {
+			this.$el.hide();
 		}
 
 	});

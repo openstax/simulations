@@ -56,6 +56,7 @@ define(function (require) {
 
 			// Tools
 			'click .add-detector' : 'addDetector',
+			'change .measuring-tape-check': 'toggleMeasuringTape',
 
 			// Simulation properties
 			'change .oscillator-count':   'changeOscillatorCount',
@@ -248,9 +249,13 @@ define(function (require) {
 				unique: this.cid
 			});
 
+			var tools = _.template(toolsHtml)({
+				unique: this.cid
+			});
+
 			// Fill the tools section of the control panel
 			$controlPanel.find('.tools-panel')
-				.append(toolsHtml);
+				.append(tools);
 
 			// Fill the properties section of the control panel
 			$controlPanel.find('.properties-panel')
@@ -363,6 +368,7 @@ define(function (require) {
 				dragFrame: this.el
 			});
 			this.measuringTapeView.render();
+			this.measuringTapeView.hide();
 			this.$el.append(this.measuringTapeView.el);
 		},
 
@@ -579,6 +585,13 @@ define(function (require) {
 
 		addDetector: function(event) {
 			
+		},
+
+		toggleMeasuringTape: function(event) {
+			if ($(event.target).is(':checked'))
+				this.measuringTapeView.show();
+			else
+				this.measuringTapeView.hide();
 		},
 
 		/**

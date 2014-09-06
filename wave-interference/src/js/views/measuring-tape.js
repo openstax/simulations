@@ -40,12 +40,12 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				start: {
-					x: 0,
-					y: 5
+					x: 30,
+					y: 30
 				},
 				end: {
-					x: 40,
-					y: 5
+					x: 120,
+					y: 30
 				}
 			}, options);
 

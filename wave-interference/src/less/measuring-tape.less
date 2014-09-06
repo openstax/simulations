@@ -14,9 +14,6 @@
 
 		.transform-origin(left center);
 
-		.animation-name(measuring-tape-create);
-		.animation-duration(2s);
-
 		> .measuring-tape-handle {
 			height: 20px;
 			width: 20px;
@@ -24,12 +21,11 @@
 			top: 0;
 			margin-top: -11px;
 			border-radius: 50%;
-			//background-color: fadeout(#000, 85%);
 			cursor: crosshair;
 
 			&.dragging {
 				//background-color: fadeout(@link-color, 50%);
-				background-color: fadeout(#000, 85%);
+				background-color: fadeout(darken(@gray-lightest, 3%), 30%);
 
 				&:before,
 				&:after {
@@ -95,6 +91,10 @@
 		background-color: fadeout(darken(@gray-lightest, 3%), 30%);
 		white-space: nowrap;
 		z-index: 201;
+
+		.animation-name(measuring-tape-create);
+		.animation-duration(800ms);
+		.animation-timing-function(cubic-bezier(.44,.02,.81,.26));
 	}
 
 	&.dragging > .measuring-tape {
@@ -108,3 +108,13 @@
 		}
 	}
 }
+
+.keyframes(measuring-tape-create, {
+	background: @link-color;
+	color: #fff;
+	//.transform(rotate(-180deg) scale(0, 0));
+},{
+	background: fadeout(darken(@gray-lightest, 3%), 30%);
+	color: #000;
+	//.transform(rotate(0) scale(1, 1));
+});
