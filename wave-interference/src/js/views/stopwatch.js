@@ -44,18 +44,22 @@ define(function (require) {
 			this.position = options.position;
 
 			this.units = this.waveSimulation.get('units').distance;
+
+			this.timing = false;
 		},
 
 		render: function() {
 			this.renderStopwatch();
 			this.bindDragEvents();
 			this.resize();
+			this.reset();
 			this.update(0, 0);
 		},
 
 		renderStopwatch: function() {
 			this.$el.html(this.template());
 			this.$labelValue = this.$('.stopwatch-label-value');
+			this.$toggleButtonText = this.$('.stopwatch-toggle-btn .btn-text');
 		},
 
 		panelDown: function(event) {
@@ -102,14 +106,33 @@ define(function (require) {
 		},
 
 		toggleClicked: function(event) {
-			
+			this.timing = !this.timing;
+			if (this.timing)
+				this.$toggleButtonText.text('Stop');
+			else
+				this.$toggleButtonText.text('Start');
+		},
+
+		resetClicked: function(event) {
+			this.reset();
 		},
 
 		labelClicked: function(event) {
 			Utils.selectText(this.$labelValue[0]);
 		},
 
+		reset: function() {
+			this.time = 0;
+			this.$labelValue.text(this.time.toFixed(2));
+		},
+
 		update: function(time, delta) {
+
+			if (this.timing) {
+				this.time += (delta / 1000);
+				this.$labelValue.text(this.time.toFixed(2));
+			}
+
 			// If there aren't any changes, don't do anything.
 			if (!this.updateOnNextFrame)
 				return;
@@ -124,8 +147,6 @@ define(function (require) {
 				'-o-transform': translate,
 				'transform': translate,
 			});
-
-			this.$labelValue.html('2.00');
 		}
 	});
 
