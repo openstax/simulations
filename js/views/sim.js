@@ -2,13 +2,14 @@ define(function (require) {
 
 	'use strict';
 
-	var $                = require('jquery');
-	var _                = require('underscore');
-	var Backbone         = require('backbone');
-	var WaveSimulation   = require('models/wave-sim');
-	var Updater          = require('utils/updater');
-	var HeatmapView      = require('views/heatmap');
-	var GraphView        = require('views/graph');
+	var $                 = require('jquery');
+	var _                 = require('underscore');
+	var Backbone          = require('backbone');
+	var WaveSimulation    = require('models/wave-sim');
+	var Updater           = require('utils/updater');
+	var HeatmapView       = require('views/heatmap');
+	var GraphView         = require('views/graph');
+	var MeasuringTapeView = require('views/measuring-tape');
 
 	require('nouislider');
 
@@ -55,6 +56,7 @@ define(function (require) {
 
 			// Tools
 			'click .add-detector' : 'addDetector',
+			'change .measuring-tape-check': 'toggleMeasuringTape',
 
 			// Simulation properties
 			'change .oscillator-count':   'changeOscillatorCount',
@@ -212,6 +214,7 @@ define(function (require) {
 			this.renderHeatmapView();
 			this.renderGraphView();
 			this.renderPlaybackControls();
+			this.renderTools();
 
 			// Name and cache barrier sliders for quick and easy access
 			this.$slitWidth      = this.$('.properties-panel .slit-width').prev().addBack();
@@ -246,9 +249,13 @@ define(function (require) {
 				unique: this.cid
 			});
 
+			var tools = _.template(toolsHtml)({
+				unique: this.cid
+			});
+
 			// Fill the tools section of the control panel
 			$controlPanel.find('.tools-panel')
-				.append(toolsHtml);
+				.append(tools);
 
 			// Fill the properties section of the control panel
 			$controlPanel.find('.properties-panel')
@@ -353,6 +360,19 @@ define(function (require) {
 		},
 
 		/**
+		 * Renders the measuring tape and stopwatch views
+		 */
+		renderTools: function() {
+			this.measuringTapeView = new MeasuringTapeView({
+				heatmapView: this.heatmapView,
+				dragFrame: this.el
+			});
+			this.measuringTapeView.render();
+			this.measuringTapeView.hide();
+			this.$el.append(this.measuringTapeView.el);
+		},
+
+		/**
 		 * Called after every component on the page has rendered to make sure
 		 *   things like widths and heights and offsets are correct.
 		 */
@@ -429,10 +449,10 @@ define(function (require) {
 			// Update the model
 			this.waveSimulation.update(time, delta);
 
-			// Update the heatmap
+			// Update the views
 			this.heatmapView.update(time, delta);
-
 			this.graphView.update(time, delta);
+			this.measuringTapeView.update(time, delta);
 		},
 
 		/**
@@ -565,6 +585,13 @@ define(function (require) {
 
 		addDetector: function(event) {
 			
+		},
+
+		toggleMeasuringTape: function(event) {
+			if ($(event.target).is(':checked'))
+				this.measuringTapeView.show();
+			else
+				this.measuringTapeView.hide();
 		},
 
 		/**

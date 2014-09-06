@@ -379,7 +379,7 @@ define(function(require) {
 			// Remove it from the list if it gets removed
 			this.listenTo(segmentPotentialView, 'remove', function() {
 				this.segmentPotentialViews = _.filter(this.segmentPotentialViews, function(view) {
-					return view.segment !== segmentPotential;
+					return view.segment !== segmentPotentialView.potential;
 				});
 			});
 
@@ -408,7 +408,7 @@ define(function(require) {
 			// Remove it from the list if it gets removed
 			this.listenTo(oscillatorView, 'remove', function() {
 				this.oscillatorViews = _.filter(this.oscillatorViews, function(view) {
-					return view.oscillator !== oscillator;
+					return view.oscillator !== oscillatorView.oscillator;
 				});
 			});
 

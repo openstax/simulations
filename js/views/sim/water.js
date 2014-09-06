@@ -2,15 +2,13 @@ define(function(require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
 	var WaterSimulation  = require('models/wave-sim/water');
 	var SimView          = require('views/sim');
 	var WaterHeatmapView = require('views/heatmap/water');
 
 	var WaterSimView = SimView.extend({
-
-		//template: _.template(template),
-		// tagName: 'section',
-		// className: 'sim-view',
 
 		events: _.extend(SimView.prototype.events, {
 			

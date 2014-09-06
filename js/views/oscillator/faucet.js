@@ -2,9 +2,7 @@ define(function(require) {
 
 	'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+	var $ = require('jquery');
 
 	var OscillatorView = require('views/oscillator');
 
@@ -90,8 +88,6 @@ define(function(require) {
 				$drop.data('period', this.animationDuration * 1000);
 				this.$activeDrops.push($drop);
 			}
-			else
-				console.log('There aren\'t enough drops in the pool!');
 		},
 
 		justBeforeReleaseTime: function(time) {
