@@ -40,6 +40,9 @@ define(function (require) {
 				width:  this.$dragFrame.width(),
 				height: this.$dragFrame.height()
 			};
+
+			this.width  = this.$el.width();
+			this.height = this.$el.height();
 		},
 
 		drag: function(event) {},
@@ -64,6 +67,11 @@ define(function (require) {
 		outOfBounds: function(x, y) {
 			return (x > this.dragBounds.width  || x < 0 ||
 				    y > this.dragBounds.height || y < 0);
+		},
+
+		boxOutOfBounds: function(x, y) {
+			return (x + this.width  > this.dragBounds.width  || x < 0 ||
+				    y + this.height > this.dragBounds.height || y < 0);
 		},
 
 		show: function() {

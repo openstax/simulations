@@ -1,0 +1,47 @@
+
+.stopwatch-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 200;
+	padding: 20px;
+	background: @gray-lightest;
+	color: #000;
+	cursor: -webkit-grab;
+	cursor: grab;
+
+	.animation-name(stopwatch-create);
+	.animation-duration(800ms);
+	.animation-timing-function(cubic-bezier(.44,.02,.81,.26));
+
+	&.dragging {
+		cursor: -webkit-grabbing;
+		cursor: grabbing;
+	}
+
+	> .stopwatch-label {
+		min-width: 100px;
+		margin: 0;
+		line-height: 34px;
+		text-align: right;
+		cursor: text;
+
+		> .stopwatch-label-value {
+			font-weight: normal;
+			margin-right: 4px;
+		}
+	}
+
+	> .stopwatch-toggle-btn {
+		min-width: 72px;
+	}
+}
+
+
+.keyframes(stopwatch-create, {
+	background: @link-color;
+	color: #fff;
+},{
+	background: @gray-lightest;
+	color: #000;
+});
