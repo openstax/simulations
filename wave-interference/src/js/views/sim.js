@@ -2,15 +2,15 @@ define(function (require) {
 
 	'use strict';
 
-	var $                 = require('jquery');
-	var _                 = require('underscore');
-	var Backbone          = require('backbone');
-	var WaveSimulation    = require('models/wave-sim');
-	var Updater           = require('utils/updater');
-	var HeatmapView       = require('views/heatmap');
-	var GraphView         = require('views/graph');
-	var MeasuringTapeView = require('views/measuring-tape');
-	var StopwatchView     = require('views/stopwatch');
+	var $                     = require('jquery');
+	var _                     = require('underscore');
+	var Backbone              = require('backbone');
+	var WaveSimulation        = require('models/wave-sim');
+	var Updater               = require('utils/updater');
+	var HeatmapView           = require('views/heatmap');
+	var CrossSectionGraphView = require('views/graph/cross-section');
+	var MeasuringTapeView     = require('views/measuring-tape');
+	var StopwatchView         = require('views/stopwatch');
 
 	require('nouislider');
 
@@ -111,7 +111,7 @@ define(function (require) {
 			this.initHeatmapView();
 
 			// Initialize the GraphView
-			this.initGraphView();
+			this.initCrossSectionGraphView();
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
@@ -183,8 +183,8 @@ define(function (require) {
 		/**
 		 * Initializes the GraphView.
 		 */
-		initGraphView: function() {
-			this.graphView = new GraphView(this.getGraphViewOptions());
+		initCrossSectionGraphView: function() {
+			this.crossSectionGraphView = new CrossSectionGraphView(this.getGraphViewOptions());
 		},
 
 		/**
@@ -358,8 +358,8 @@ define(function (require) {
 		 * Renders the graph view
 		 */
 		renderGraphView: function() {
-			this.graphView.render();
-			this.$('#graph-view-placeholder').replaceWith(this.graphView.el);
+			this.crossSectionGraphView.render();
+			this.$('#graph-view-placeholder').replaceWith(this.crossSectionGraphView.el);
 		},
 
 		/**
@@ -394,7 +394,7 @@ define(function (require) {
 		 */
 		postRender: function() {
 			this.heatmapView.postRender();
-			this.graphView.postRender();
+			this.crossSectionGraphView.postRender();
 			
 			this.measuringTapeView.hide();
 			this.stopwatchView.hide();
@@ -441,7 +441,7 @@ define(function (require) {
 			this.waveSimulation.reset();
 			this.initWaveSimulation();
 			this.initHeatmapView();
-			this.initGraphView();
+			this.initCrossSectionGraphView();
 			this.render();
 			this.postRender();
 
@@ -483,7 +483,7 @@ define(function (require) {
 
 			// Update the views
 			this.heatmapView.update(time, delta);
-			this.graphView.update(time, delta);
+			this.crossSectionGraphView.update(time, delta);
 			this.measuringTapeView.update(time, delta);
 			this.stopwatchView.update(time, delta);
 		},
@@ -650,7 +650,7 @@ define(function (require) {
 		 * Tell the graph view that we're making changes to the cross section location.
 		 */
 		crossSectionSlideStart: function() {
-			this.graphView.startChanging();
+			this.crossSectionGraphView.startChanging();
 		},
 
 		/**
@@ -658,7 +658,7 @@ define(function (require) {
 		 *   location.
 		 */
 		crossSectionSlideStop: function(){
-			this.graphView.stopChanging();
+			this.crossSectionGraphView.stopChanging();
 		},
 
 
