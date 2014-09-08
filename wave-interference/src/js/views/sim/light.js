@@ -9,11 +9,10 @@ define([
 
 	'use strict';
 
-	var LightModuleView = SimView.extend({
+	var LightSimView = SimView.extend({
 
 		initialize: function(options) {
 			options = _.extend({
-				waveSimulation: new LightSimulation(),
 				heatmapBrightness: 0.5,
 				title: 'Light'
 			}, options);
@@ -21,7 +20,14 @@ define([
 			SimView.prototype.initialize.apply(this, [ options ]);
 		},
 
+		/**
+		 * Initializes the WaveSimulation.
+		 */
+		initWaveSimulation: function() {
+			this.waveSimulation = new LightSimulation();
+		}
+
 	});
 
-	return LightModuleView;
+	return LightSimView;
 });
