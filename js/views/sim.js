@@ -104,7 +104,8 @@ define(function (require) {
 			this.title = options.title;
 			this.name  = options.name;
 
-			this.waveSimulation = options.waveSimulation || new WaveSimulation();
+			// Initialize the WaveSimulation
+			this.initWaveSimulation();
 
 			// Initialize the HeatmapView
 			this.initHeatmapView();
@@ -139,6 +140,13 @@ define(function (require) {
 			Backbone.View.prototype.remove.apply(this);
 			this.unbind();
 			this.updater.pause();
+		},
+
+		/**
+		 * Initializes the WaveSimulation.
+		 */
+		initWaveSimulation: function() {
+			this.waveSimulation = new WaveSimulation();
 		},
 
 		/**
@@ -426,10 +434,24 @@ define(function (require) {
 		 * Click event handler that resets the simulation back to time zero.
 		 */
 		reset: function(event) {
+			// Set pause/play button to paused and reset everything
 			this.pause();
+			this.updater.pause();
 			this.updater.reset();
 			this.waveSimulation.reset();
+			this.initWaveSimulation();
+			this.initHeatmapView();
+			this.initGraphView();
+			this.render();
+			this.postRender();
+
+			// Paint the first frame
+			this.waveSimulation.paused = false;
 			this.update(0, 0);
+			this.waveSimulation.paused = true;
+
+			// Resume normal function
+			this.updater.play();
 		},
 
 		/**
@@ -588,7 +610,7 @@ define(function (require) {
 		},
 
 		/**
-		 * Tells the wave simulation to add a segment potential
+		 * Tells the wave simulation to add a new segment potential
 		 */
 		addSegmentPotential: function(event) {
 			this.waveSimulation.addSegmentPotential();

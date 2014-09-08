@@ -16,12 +16,18 @@ define(function(require) {
 
 		initialize: function(options) {
 			options = _.extend({
-				waveSimulation: new WaterSimulation(),
 				heatmapBrightness: 0.5,
 				title: 'Water'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
+		},
+
+		/**
+		 * Initializes the WaveSimulation.
+		 */
+		initWaveSimulation: function() {
+			this.waveSimulation = new WaterSimulation();
 		},
 
 		/**

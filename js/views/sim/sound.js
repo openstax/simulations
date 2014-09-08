@@ -10,11 +10,10 @@ define([
 
 	'use strict';
 
-	var SoundModuleView = SimView.extend({
+	var SoundSimView = SimView.extend({
 
 		initialize: function(options) {
 			options = _.extend({
-				waveSimulation: new SoundSimulation(),
 				heatmapBrightness: 0.5,
 				title: 'Sound'
 			}, options);
@@ -22,10 +21,17 @@ define([
 			SimView.prototype.initialize.apply(this, [ options ]);
 		},
 
+		/**
+		 * Initializes the WaveSimulation.
+		 */
+		initWaveSimulation: function() {
+			this.waveSimulation = new SoundSimulation();
+		},
+
 		update: function(time, delta) {
 			SimView.prototype.update.apply(this, [time, delta]);
 		}
 	});
 
-	return SoundModuleView;
+	return SoundSimView;
 });
