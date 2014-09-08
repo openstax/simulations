@@ -260,6 +260,11 @@ define(function(require) {
 		},
 
 		show: function(event) {
+			if (this.toggling)
+				return;
+
+			this.toggling = true;
+
 			this.graphVisible = true;
 
 			this.$el.addClass('open');
@@ -278,10 +283,16 @@ define(function(require) {
 				self.$showButton.hide();
 				self.$showButton.removeClass('clicked');
 				self.resize();
+				self.toggling = false;
 			}, this.duration);
 		},
 
 		hide: function(event) {
+			if (this.toggling)
+				return;
+			
+			this.toggling = true;
+
 			this.$el.removeClass('open');
 			this.$showButton.show();
 			this.$showButton.addClass('reenabled');
@@ -291,6 +302,7 @@ define(function(require) {
 			setTimeout(function(){
 				self.graphVisible = false;
 				self.$showButton.removeClass('reenabled');
+				self.toggling = false;
 			}, this.duration);
 		}
 	});

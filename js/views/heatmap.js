@@ -324,9 +324,11 @@ define(function(require) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			// Update particles to match new lattice
-			if (this.particles)
-				this.updateParticles();
+			if (!this.waveSimulation.paused) {
+				// Update particles to match new lattice
+				if (this.particles)
+					this.updateParticles();
+			}
 
 			this.barrierView.update(time, delta);
 
