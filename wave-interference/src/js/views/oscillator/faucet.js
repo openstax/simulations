@@ -23,6 +23,8 @@ define(function(require) {
 			this.time = 0;
 
 			this.listenTo(this.waveSimulation, 'change:amplitude', this.resize);
+			this.listenTo(this.waveSimulation, 'play',             this.play);
+			this.listenTo(this.waveSimulation, 'pause',            this.pause);
 		},
 
 		render: function() {
@@ -44,6 +46,18 @@ define(function(require) {
 
 			this.resize();
 			this.update(0, 0);
+		},
+
+		play: function() {
+			_.each(this.$activeDrops, function($drop) {
+				$drop.removeClass('paused');
+			});
+		},
+
+		pause: function() {
+			_.each(this.$activeDrops, function($drop) {
+				$drop.addClass('paused');
+			});
 		},
 
 		update: function(time, delta) {

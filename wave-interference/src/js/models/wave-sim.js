@@ -200,6 +200,16 @@ define(function (require) {
 			
 		},
 
+		play: function() {
+			this.paused = false;
+			this.trigger('play');
+		},
+
+		pause: function() {
+			this.paused = true;
+			this.trigger('pause');
+		},
+
 		reset: function() {
 			this.initComponents();
 		},
