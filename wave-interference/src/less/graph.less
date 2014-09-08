@@ -27,7 +27,7 @@
 		}
 	}
 
-	& > .graph-show-button {
+	> .graph-show-button {
 		position: absolute;
 		top: 0;
 		left: 0;
@@ -66,7 +66,7 @@
 		}
 	}
 
-	& > .graph-hide-button {
+	> .graph-hide-button {
 		position: absolute;
 		top: 5px;
 		right: 3px;
@@ -86,16 +86,18 @@
 		}
 	}
 
-	& .graph-canvas {
-		background-color: #fff;
-
+	> .graph-canvas-wrapper {
 		&.changing {
 			border: 2px solid @link-color;
 			width:  (@heatmap-container-width    - (@heatmap-container-padding * 2) + 2);
 			height: (@cross-section-graph-height - (@heatmap-container-padding * 2) + 2);
 			.transform(translateX(-1px) translateY(-1px));
 		}
-	}
+
+		> .graph-canvas {
+			background-color: #fff;
+		}
+	}	
 
 	> .graph-y > .graph-axis-label {
 		margin-left: 20px;

@@ -138,6 +138,7 @@ define(function(require) {
 		 */
 		initCanvas: function() {
 			this.$canvas = this.$('.graph-canvas');
+			this.$canvasWrapper = this.$canvas.parent();
 
 			this.context = this.$canvas[0].getContext('2d');
 		},
@@ -248,14 +249,14 @@ define(function(require) {
 		startChanging: function() {
 			if (this.$canvas) {
 				this.changing = true;
-				this.$canvas.addClass('changing');
+				this.$canvasWrapper.addClass('changing');
 			}
 		},
 
 		stopChanging: function() {
 			if (this.$canvas) {
 				this.changing = false;
-				this.$canvas.removeClass('changing');
+				this.$canvasWrapper.removeClass('changing');
 			}
 		},
 
