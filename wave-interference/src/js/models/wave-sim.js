@@ -183,18 +183,21 @@ define(function (require) {
 		 */
 		update: function(time, delta) {
 
-			this.accumulator += delta;
+			if (!this.paused) {
+				this.accumulator += delta;
 
-			while (this.accumulator >= this.timestep) {
-				this.time += this.timestep;
+				while (this.accumulator >= this.timestep) {
+					this.time += this.timestep;
 
-				this.propagator.propagate();
+					this.propagator.propagate();
 
-				for (i = 0; i < this.get('oscillatorCount'); i++)
-					this.oscillators[i].update(this.time);
-				
-				this.accumulator -= this.timestep;
+					for (i = 0; i < this.get('oscillatorCount'); i++)
+						this.oscillators[i].update(this.time);
+					
+					this.accumulator -= this.timestep;
+				}	
 			}
+			
 		},
 
 		reset: function() {

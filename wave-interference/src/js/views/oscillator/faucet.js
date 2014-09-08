@@ -20,6 +20,8 @@ define(function(require) {
 		initialize: function(options) {
 			OscillatorView.prototype.initialize.apply(this, [options]);
 
+			this.time = 0;
+
 			this.listenTo(this.waveSimulation, 'change:amplitude', this.resize);
 		},
 
@@ -45,8 +47,13 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.hidden) {
-				this.updateDrops(time, delta);
+			if (!this.hidden && !this.waveSimulation.paused) {
+				/**
+				 * Keep track of our own time so we can actually pause 
+				 *   the animation if the simulation is paused.
+				 */
+				this.time += delta;
+				this.updateDrops(this.time, delta);
 			}
 
 			if (this.updateOnNextFrame) {

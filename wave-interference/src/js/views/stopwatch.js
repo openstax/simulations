@@ -128,7 +128,7 @@ define(function (require) {
 
 		update: function(time, delta) {
 
-			if (this.timing) {
+			if (this.timing && !this.waveSimulation.paused) {
 				this.time += (delta / 1000);
 				this.$labelValue.text(this.time.toFixed(2));
 			}

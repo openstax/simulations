@@ -396,7 +396,7 @@ define(function (require) {
 		 * Click event handler that plays the simulation
 		 */
 		play: function(event) {
-			this.updater.play();
+			this.waveSimulation.paused = false;
 			this.$el.addClass('playing');
 		},
 
@@ -404,7 +404,7 @@ define(function (require) {
 		 * Click event handler that pauses the simulation
 		 */
 		pause: function(event) {
-			this.updater.pause();
+			this.waveSimulation.paused = true;
 			this.$el.removeClass('playing');
 		},
 
