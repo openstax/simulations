@@ -34,7 +34,9 @@ define(function (require) {
 			'mousedown  .detector-sampler' : 'samplerDown',
 			'touchstart .detector-sampler' : 'samplerDown',
 			'mousedown  .detector-visualizer' : 'visualizerDown',
-			'touchstart .detector-visualizer' : 'visualizerDown'
+			'touchstart .detector-visualizer' : 'visualizerDown',
+
+			'click .detector-close' : 'close'
 		},
 
 		initialize: function(options) {
@@ -178,8 +180,9 @@ define(function (require) {
 			}
 		},
 
-		labelClicked: function(event) {
-			Utils.selectText(event.target);
+		close: function(event) {
+			this.trigger('remove');
+			this.remove();
 		},
 
 		calculateLatticePoint: function() {

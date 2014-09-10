@@ -641,6 +641,11 @@ define(function (require) {
 			this.$el.append(detectorView.el);
 			detectorView.postRender();
 
+			this.listenTo(detectorView, 'remove', function(){
+				this.detectorViews = _.without(this.detectorViews, detectorView);
+				console.log(this.detectorViews.length);
+			});
+
 			this.detectorViews.push(detectorView);
 		},
 

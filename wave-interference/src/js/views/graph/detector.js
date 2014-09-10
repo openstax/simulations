@@ -147,7 +147,7 @@ define(function(require) {
 			this.points = [];
 			this.points.push({ 
 				x: 0, 
-				y: 0 
+				y: this.valueToY(0)
 			});
 		},
 
@@ -235,7 +235,11 @@ define(function(require) {
 		 * Converts the current lattice point value into a usable y-location to paint.
 		 */
 		getCurrentY: function() {
-			return ((this.getCurrentValue() - 2) / -4) * this.height;
+			return this.valueToY(this.getCurrentValue());
+		},
+
+		valueToY: function(value) {
+			return ((value - 2) / -4) * this.height;
 		},
 
 		/**

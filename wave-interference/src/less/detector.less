@@ -91,6 +91,26 @@
 			.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
 		}
 
+		> .detector-close {
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			padding: 6px 10px;
+			background: transparent;
+			color: #888;
+			z-index: 222;
+
+			&:hover {
+				color: #555;
+			}
+
+			&:active {
+				color: #444;
+				.box-shadow(none);
+				text-shadow: 0 0 6px #ccc;
+			}
+		}
+
 		&:before {
 			content: '';
 			display: block;
