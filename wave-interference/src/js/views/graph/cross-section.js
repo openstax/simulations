@@ -91,10 +91,8 @@ define(function(require) {
 			
 			length = this.portrait ? latHeight : latWidth;
 			for (i = 0; i < length; i++) {
-				points[i] = { 
-					x: i * xSpacing, 
-					y: ((lat[i][j] - 2) / -4) * height 
-				};
+				points[i].x = i * xSpacing;
+				points[i].y = ((lat[i][j] - 2) / -4) * height;
 			}
 
 			// Hide the beginning

@@ -2,9 +2,9 @@ define(function(require) {
 
 	'use strict';
 
-	var html     = require('text!templates/graph.html');
-
 	var GraphView = require('views/graph');
+
+	var html = require('text!templates/graph.html');
 
 
 	/**

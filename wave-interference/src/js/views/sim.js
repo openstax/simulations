@@ -11,6 +11,8 @@ define(function (require) {
 	var CrossSectionGraphView = require('views/graph/cross-section');
 	var MeasuringTapeView     = require('views/measuring-tape');
 	var StopwatchView         = require('views/stopwatch');
+	//temp
+	var DetectorGraphView     = require('views/graph/detector');
 
 	require('nouislider');
 
@@ -22,6 +24,13 @@ define(function (require) {
 	var oscillatorControlsHtml = require('text!templates/control-panel-components/oscillators.html');
 	var barrierControlsHtml    = require('text!templates/control-panel-components/barriers.html');
 	var playbackControlsHtml   = require('text!templates/playback-controls.html');
+
+
+	/*
+	 * "Local" variables for functions to share and recycle
+	 */
+	var i;
+	
 
 	/**
 	 * SimView represents a tab in the simulation.  SimView is extended to create
@@ -112,6 +121,9 @@ define(function (require) {
 
 			// Initialize the GraphView
 			this.initCrossSectionGraphView();
+
+			// Detector views to update
+			this.detectorViews = [];
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
@@ -486,6 +498,9 @@ define(function (require) {
 			this.crossSectionGraphView.update(time, delta);
 			this.measuringTapeView.update(time, delta);
 			this.stopwatchView.update(time, delta);
+
+			for (i = 0; i < this.detectorViews.length; i++)
+				this.detectorViews[i].update(time, delta);
 		},
 
 		/**
@@ -617,7 +632,13 @@ define(function (require) {
 		},
 
 		addDetector: function(event) {
-			
+			var detectorView = new DetectorGraphView({
+				waveSimulation: this.waveSimulation
+			});
+			detectorView.render();
+			this.$el.append(detectorView.el);
+			detectorView.postRender();
+			this.detectorViews.push(detectorView);
 		},
 
 		toggleMeasuringTape: function(event) {

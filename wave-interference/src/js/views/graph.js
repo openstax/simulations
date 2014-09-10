@@ -79,6 +79,8 @@ define(function(require) {
 			this.lineColor = options.lineColor;
 			this.gridColor = options.gridColor;
 
+			this.graphVisible = true;
+
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
 
@@ -113,12 +115,11 @@ define(function(require) {
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
-			this.padding = parseInt(this.$canvas.css('top'));
 			this.resize();
 		},
 
 		/**
-		 * Initializes a renderer using the .heatmap-canvas canvas element
+		 * Saves references to the canvas element and its context
 		 */
 		initCanvas: function() {
 			this.$canvas = this.$('canvas');
@@ -159,7 +160,7 @@ define(function(require) {
 		/**
 		 * Calculates point data before drawing.
 		 */
-		calculatePoints: function() {},
+		calculatePoints: function(time, delta) {},
 
 		/**
 		 * Draws a blank graph with lines.
@@ -222,9 +223,9 @@ define(function(require) {
 				this.resize();
 
 			if (this.graphVisible) {
-				this.calculatePoints();
-				this.drawGraph();
-				this.drawCurve();
+				this.calculatePoints(time, delta);
+				this.drawGraph(time, delta);
+				this.drawCurve(time, delta);
 			}
 		}
 	});

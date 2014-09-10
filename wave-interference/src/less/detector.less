@@ -1,0 +1,23 @@
+
+@detector-width:  240px;
+@detector-height: 140px;
+
+.detector-graph-view {
+	position: absolute;
+	.grid-view(detector-graph, @detector-width, @detector-height, 32px, 50%);
+
+	> .detector-graph-title {
+		line-height: 35px;
+		font-size: 18px;
+		color: #686868;
+	}
+
+	> .detector-graph-y > .detector-graph-axis-label {
+		margin-left: 16px;
+	}
+
+	> .detector-graph-x {
+		// left:  16px;
+		// right: 16px;
+	}
+}
