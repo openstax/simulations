@@ -5,37 +5,28 @@ define(function(require) {
 	var $        = require('jquery');
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	//var PIXI     = require('pixi');
-	var html     = require('text!templates/graph.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
 	var context,
-	    lat,
-		latWidth,
-		latHeight,
-		height,
 		xSpacing,
 		gridCellWidth,
 		gridCellHeight,
 		points,
 	    i,
 	    j;
-	    // cx,
-	    // cy;
 
+	/**
+	 * GraphView is not intended to be directly instantiated but extended
+	 *   for specific purposes.  Functions that must be filled by child
+	 *   prototypes before the GraphView is useful:
+	 *
+	 *     + renderContainer
+	 *     + initPoints
+	 *     + calculatePoints
+	 */
 	var GraphView = Backbone.View.extend({
-
-		template: _.template(html),
-
-		className: 'graph-container',
-		tagName: 'figure',
-
-		events: {
-			'click .graph-show-button' : 'show',
-			'click .graph-hide-button' : 'hide'
-		},
 
 		initialize: function(options) {
 
@@ -60,7 +51,9 @@ define(function(require) {
 				lineThickness: 5,
 				lineColor: '#000',
 				gridColor: '#ddd',
-				portrait: false
+				portrait: false,
+				latitudinalGridLines: 3,
+				longitudinalGridLines: 9
 			}, options);
 
 			// Save options
@@ -77,23 +70,21 @@ define(function(require) {
 				y: options.y
 			};
 
+			this.latitudinalGridLines  = options.latitudinalGridLines;
+			this.longitudinalGridLines = options.longitudinalGridLines;
+
 			this.portrait = options.portrait;
 
 			this.lineThickness = options.lineThickness;
 			this.lineColor = options.lineColor;
 			this.gridColor = options.gridColor;
 
+			this.graphVisible = true;
+
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
-			//this.listenTo(this.waveSimulation, 'change:crossSectionY', ) don't need to listen because it renders every frame anyway
 
-			// Ratio between pixels and cell width
-			this.xSpacing = 1;
-
-			this.points = [];
-
-			// Don't start drawing the curve until the graph is showing
-			this.graphVisible = false;
+			this.initPoints();
 		},
 
 		/**
@@ -101,7 +92,6 @@ define(function(require) {
 		 */
 		render: function() {
 			this.$el.empty();
-			this.$el.removeClass('open');
 
 			if (this.portrait)
 				this.$el.addClass('portrait');
@@ -110,6 +100,7 @@ define(function(require) {
 
 			this.renderContainer();
 			this.initCanvas();
+			this.initPoints();
 
 			return this;
 		},
@@ -117,27 +108,21 @@ define(function(require) {
 		/**
 		 * Renders html container
 		 */
-		renderContainer: function() {
-			this.$el.html(this.template(this.graphInfo));
-
-			this.$showButton = this.$('.graph-show-button');
-			this.$hideButton = this.$('.graph-hide-button');
-		},
+		renderContainer: function() {},
 
 		/**
 		 * Called after every component on the page has rendered to make sure
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
-			this.padding = parseInt(this.$canvas.css('top'));
 			this.resize();
 		},
 
 		/**
-		 * Initializes a renderer using the .heatmap-canvas canvas element
+		 * Saves references to the canvas element and its context
 		 */
 		initCanvas: function() {
-			this.$canvas = this.$('.graph-canvas');
+			this.$canvas = this.$('canvas');
 			this.$canvasWrapper = this.$canvas.parent();
 
 			this.context = this.$canvas[0].getContext('2d');
@@ -150,6 +135,9 @@ define(function(require) {
 			this.resizeOnNextUpdate = true;
 		},
 
+		/**
+		 * Does the actual resizing of the canvas
+		 */
 		resize: function(event) {
 			var width  = this.$canvas.parent().innerWidth();
 			var height = this.$canvas.parent().innerHeight() || 200;
@@ -159,28 +147,25 @@ define(function(require) {
 			this.$canvas.height(height);
 			this.$canvas[0].width = width;
 			this.$canvas[0].height = height;
-			this.xSpacing = width  / (this.waveSimulation.lattice.width - 1);
 			this.resizeOnNextUpdate = false;
 		},
 
-		update: function(time, delta) {
-			if (this.resizeOnNextUpdate)
-				this.resize();
-
-			if (!this.graphVisible)
-				return;
-
-			this.drawCurve();
+		/**
+		 * Initializes points array and sets default points.
+		 */
+		initPoints: function() {
+			this.points = [];
 		},
 
-		drawCurve: function() {
-			lat       = this.waveSimulation.lattice.data;
-			latWidth  = this.waveSimulation.lattice.width;
-			latHeight = this.waveSimulation.lattice.height;
-	
-			height   = this.height;
-			xSpacing = this.xSpacing;
+		/**
+		 * Calculates point data before drawing.
+		 */
+		calculatePoints: function(time, delta) {},
 
+		/**
+		 * Draws a blank graph with lines.
+		 */
+		drawGraph: function() {
 			context = this.context;
 
 			// Draw background
@@ -190,17 +175,17 @@ define(function(require) {
 			// Draw Grid
 			context.beginPath();
 
-			gridCellHeight = Math.round((this.height + 2) / 4);
-			gridCellWidth  = Math.round((this.width  + 2) / 10);
+			gridCellHeight = Math.round((this.height + 2) / (this.latitudinalGridLines + 1));
+			gridCellWidth  = Math.round((this.width  + 2) / (this.longitudinalGridLines + 1));
 
 			// Draw latitudinal grid lines
-			for (j = 1; j <= 3; j++) {
+			for (j = 1; j <= this.latitudinalGridLines; j++) {
 				context.moveTo(0, gridCellHeight * j - 0.5);
 				context.lineTo(this.width, gridCellHeight * j - 0.5);
 			}
 
 			// Draw longitudinal grid lines
-			for (i = 1; i <= 9; i++) {
+			for (i = 1; i <= this.longitudinalGridLines; i++) {
 				context.moveTo(gridCellWidth * i - 0.5, 0);
 				context.lineTo(gridCellWidth * i - 0.5, this.height);
 			}
@@ -208,37 +193,21 @@ define(function(require) {
 			context.lineWidth   = 1;
 			context.strokeStyle = this.gridColor;
 			context.stroke();
+		},
 
-			// Set row to where the cross section line is closest to
-			j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
-			if (j > latHeight - 1)
-				j = latHeight - 1;
-			
-			/* TODO: when I feel like it, use bezier curves to smooth it out
-			 *
-			 * Maybe port this Catmull-Rom curve to bezier conversion:
-			 *   http://schepers.cc/svg/path/catmullrom2bezier.js
-			 * Article:
-			 *   http://schepers.cc/getting-to-the-point
-			 */
-			points = this.points;
-
-			for (i = 0; i < latWidth; i++) {
-				points[i] = ((lat[i][j] - 2) / -4) * height;
-			}
+		/**
+		 * Draws the points as a curve on the graph.
+		 */
+		drawCurve: function() {
+			context = this.context;
+			points  = this.points;
 
 			context.beginPath();
-			context.moveTo(-1, points[0]);
+			context.moveTo(points[0].x, points[0].y);
 
-			for (i = 1; i < latWidth; i++) {
-				//this.curve.lineTo(i * xSpacing, ((lat[i][j] - 2) / -4) * height);
-				context.lineTo(i * xSpacing, points[i]);
-				// cx = ((i + i + 1) * xSpacing) >> 1;
-				// cy = (points[i] + points[i + 1]) >> 1;
-				// context.quadraticCurveTo(cx, cy, i * xSpacing, points[i]);
+			for (i = 1; i < this.points.length; i++) {
+				context.lineTo(points[i].x, points[i].y);
 			}
-
-			//context.quadraticCurveTo((latWidth - 1) * xSpacing, points[latWidth - 1], latWidth - 1 * xSpacing, points[latWidth - 1]);
 
 			context.lineWidth = 3;
 			context.lineJoin = 'round';
@@ -246,65 +215,18 @@ define(function(require) {
 			context.stroke();
 		},
 
-		startChanging: function() {
-			if (this.$canvas) {
-				this.changing = true;
-				this.$canvasWrapper.addClass('changing');
+		/**
+		 * Responds to resize events and draws everything.
+		 */
+		update: function(time, delta) {
+			if (this.resizeOnNextUpdate)
+				this.resize();
+
+			if (this.graphVisible) {
+				this.calculatePoints(time, delta);
+				this.drawGraph(time, delta);
+				this.drawCurve(time, delta);
 			}
-		},
-
-		stopChanging: function() {
-			if (this.$canvas) {
-				this.changing = false;
-				this.$canvasWrapper.removeClass('changing');
-			}
-		},
-
-		show: function(event) {
-			if (this.toggling)
-				return;
-
-			this.toggling = true;
-
-			this.graphVisible = true;
-
-			this.$el.addClass('open');
-
-			this.$hideButton.show();
-			this.$showButton.addClass('clicked');
-
-			this.duration = this.$showButton.css('animation-duration');
-			if (this.duration.indexOf('ms') !== -1)
-				this.duration = parseInt(this.duration);
-			else
-				this.duration = parseFloat(this.duration) * 1000;
-			
-			var self = this;
-			setTimeout(function(){
-				self.$showButton.hide();
-				self.$showButton.removeClass('clicked');
-				self.resize();
-				self.toggling = false;
-			}, this.duration);
-		},
-
-		hide: function(event) {
-			if (this.toggling)
-				return;
-			
-			this.toggling = true;
-
-			this.$el.removeClass('open');
-			this.$showButton.show();
-			this.$showButton.addClass('reenabled');
-			this.$hideButton.hide();
-
-			var self = this;
-			setTimeout(function(){
-				self.graphVisible = false;
-				self.$showButton.removeClass('reenabled');
-				self.toggling = false;
-			}, this.duration);
 		}
 	});
 

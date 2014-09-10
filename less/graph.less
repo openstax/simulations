@@ -1,7 +1,5 @@
-@import "cross-section-slider.less";
-@import "mixins/graph-view.less";
 
-.graph-container {
+.static-graph-view {
 	position: relative;
 	margin-top: 20px;
 	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding, 50%);
@@ -17,6 +15,14 @@
 			height: @cross-section-graph-height;
 		}
 		height: auto;
+	}
+
+	&.closed {
+		.transition(~"height 200ms");
+	}
+
+	&.initial {
+		.transition(~"height 0s");
 	}
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
@@ -54,7 +60,7 @@
 
 		&.reenabled {
 			.animation-name(graph-show-btn);
-			.animation-duration(400ms);
+			.animation-duration(200ms);
 			.animation-timing-function(ease);
 			.animation-fill-mode(forwards);
 		}

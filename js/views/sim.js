@@ -2,15 +2,17 @@ define(function (require) {
 
 	'use strict';
 
-	var $                 = require('jquery');
-	var _                 = require('underscore');
-	var Backbone          = require('backbone');
-	var WaveSimulation    = require('models/wave-sim');
-	var Updater           = require('utils/updater');
-	var HeatmapView       = require('views/heatmap');
-	var GraphView         = require('views/graph');
-	var MeasuringTapeView = require('views/measuring-tape');
-	var StopwatchView     = require('views/stopwatch');
+	var $                     = require('jquery');
+	var _                     = require('underscore');
+	var Backbone              = require('backbone');
+	var WaveSimulation        = require('models/wave-sim');
+	var Updater               = require('utils/updater');
+	var HeatmapView           = require('views/heatmap');
+	var CrossSectionGraphView = require('views/graph/cross-section');
+	var MeasuringTapeView     = require('views/measuring-tape');
+	var StopwatchView         = require('views/stopwatch');
+	//temp
+	var DetectorGraphView     = require('views/graph/detector');
 
 	require('nouislider');
 
@@ -22,6 +24,13 @@ define(function (require) {
 	var oscillatorControlsHtml = require('text!templates/control-panel-components/oscillators.html');
 	var barrierControlsHtml    = require('text!templates/control-panel-components/barriers.html');
 	var playbackControlsHtml   = require('text!templates/playback-controls.html');
+
+
+	/*
+	 * "Local" variables for functions to share and recycle
+	 */
+	var i;
+	
 
 	/**
 	 * SimView represents a tab in the simulation.  SimView is extended to create
@@ -111,7 +120,10 @@ define(function (require) {
 			this.initHeatmapView();
 
 			// Initialize the GraphView
-			this.initGraphView();
+			this.initCrossSectionGraphView();
+
+			// Detector views to update
+			this.detectorViews = [];
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
@@ -183,8 +195,8 @@ define(function (require) {
 		/**
 		 * Initializes the GraphView.
 		 */
-		initGraphView: function() {
-			this.graphView = new GraphView(this.getGraphViewOptions());
+		initCrossSectionGraphView: function() {
+			this.crossSectionGraphView = new CrossSectionGraphView(this.getGraphViewOptions());
 		},
 
 		/**
@@ -358,8 +370,8 @@ define(function (require) {
 		 * Renders the graph view
 		 */
 		renderGraphView: function() {
-			this.graphView.render();
-			this.$('#graph-view-placeholder').replaceWith(this.graphView.el);
+			this.crossSectionGraphView.render();
+			this.$('#graph-view-placeholder').replaceWith(this.crossSectionGraphView.el);
 		},
 
 		/**
@@ -394,7 +406,7 @@ define(function (require) {
 		 */
 		postRender: function() {
 			this.heatmapView.postRender();
-			this.graphView.postRender();
+			this.crossSectionGraphView.postRender();
 			
 			this.measuringTapeView.hide();
 			this.stopwatchView.hide();
@@ -441,7 +453,7 @@ define(function (require) {
 			this.waveSimulation.reset();
 			this.initWaveSimulation();
 			this.initHeatmapView();
-			this.initGraphView();
+			this.initCrossSectionGraphView();
 			this.render();
 			this.postRender();
 
@@ -483,9 +495,12 @@ define(function (require) {
 
 			// Update the views
 			this.heatmapView.update(time, delta);
-			this.graphView.update(time, delta);
+			this.crossSectionGraphView.update(time, delta);
 			this.measuringTapeView.update(time, delta);
 			this.stopwatchView.update(time, delta);
+
+			for (i = 0; i < this.detectorViews.length; i++)
+				this.detectorViews[i].update(time, delta);
 		},
 
 		/**
@@ -617,7 +632,13 @@ define(function (require) {
 		},
 
 		addDetector: function(event) {
-			
+			var detectorView = new DetectorGraphView({
+				waveSimulation: this.waveSimulation
+			});
+			detectorView.render();
+			this.$el.append(detectorView.el);
+			detectorView.postRender();
+			this.detectorViews.push(detectorView);
 		},
 
 		toggleMeasuringTape: function(event) {
@@ -650,7 +671,7 @@ define(function (require) {
 		 * Tell the graph view that we're making changes to the cross section location.
 		 */
 		crossSectionSlideStart: function() {
-			this.graphView.startChanging();
+			this.crossSectionGraphView.startChanging();
 		},
 
 		/**
@@ -658,7 +679,7 @@ define(function (require) {
 		 *   location.
 		 */
 		crossSectionSlideStop: function(){
-			this.graphView.stopChanging();
+			this.crossSectionGraphView.stopChanging();
 		},
 
 
