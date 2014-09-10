@@ -242,7 +242,10 @@ define(function(require) {
 		 * Gets the current value of the lattice point
 		 */
 		getCurrentValue: function() {
-			return this.waveSimulation.lattice.data[this.latticePoint.x][this.latticePoint.y];
+			if (this.latticePoint)
+				return this.waveSimulation.lattice.data[this.latticePoint.x][this.latticePoint.y];
+			else
+				return 0;
 		},
 
 

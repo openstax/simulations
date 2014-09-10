@@ -40,12 +40,12 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				sampler: {
-					x: 30,
-					y: 30
+					x: 410,
+					y: 370
 				},
 				visualizer: {
-					x: 120,
-					y: 30
+					x: 0,
+					y: 300
 				}
 			}, options);
 
@@ -72,6 +72,10 @@ define(function (require) {
 			};
 
 			this.samplerRadius = this.$('.detector-sampler').outerWidth() / 2;
+
+			this.offset = this.$el.offset();
+
+			this.calculateLatticePoint();
 		},
 
 		render: function() {
@@ -135,6 +139,8 @@ define(function (require) {
 				if (this.draggingSampler && !this.outOfBounds(this.sampler.x + dx, this.sampler.y + dy)) {
 					this.sampler.x += dx;
 					this.sampler.y += dy;
+
+					this.calculateLatticePoint();
 				}
 
 				this.dragX = event.pageX;
@@ -176,6 +182,15 @@ define(function (require) {
 			Utils.selectText(event.target);
 		},
 
+		calculateLatticePoint: function() {
+			var point = this.heatmapView.offsetToPoint(
+				this.sampler.y + this.offset.top, 
+				this.sampler.x + this.offset.left
+			);
+
+			this.graphView.latticePoint = point;
+		},
+
 		positionComponents: function() {
 			angle = -Utils.angleFromLine(
 				this.sampler.x, 
@@ -209,7 +224,6 @@ define(function (require) {
 
 			// Move the sampler so it's centered on the sample point
 			translate = 'translateX(' + this.sampler.x + 'px) translateY(' + this.sampler.y + 'px)';
-			console.log(this.sampler.x, this.sampler.y);
 			
 			this.$sampler.css({
 				'-webkit-transform': translate,
