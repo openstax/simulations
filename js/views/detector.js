@@ -20,71 +20,94 @@ define(function (require) {
 	    dx,
 	    dy,
 	    translate,
-	    rotate;
+	    rotate,
+	    transform;
 
 	var DetectorView = SimDraggable.extend({
 
 		template: _.template(html),
 
 		tagName: 'div',
-		className: 'measuring-tape-view',
+		className: 'detector-view',
 
 		events: {
-			'mousedown  .measuring-tape-handle' : 'handleDown',
-			'touchstart .measuring-tape-handle' : 'handleDown',
-			'mousedown  .measuring-tape' : 'tapeDown',
-			'touchstart .measuring-tape': 'tapeDown',
+			'mousedown  .detector-sampler' : 'samplerDown',
+			'touchstart .detector-sampler' : 'samplerDown',
+			'mousedown  .detector-visualizer' : 'visualizerDown',
+			'touchstart .detector-visualizer' : 'visualizerDown',
 
-			'click .measuring-tape-label': 'labelClicked'
+			'click .detector-close' : 'close'
 		},
 
 		initialize: function(options) {
 			options = _.extend({
-				start: {
-					x: 30,
-					y: 30
+				sampler: {
+					x: 410,
+					y: 370
 				},
-				end: {
-					x: 120,
-					y: 30
+				visualizer: {
+					x: 0,
+					y: 300
 				}
 			}, options);
 
 			SimDraggable.prototype.initialize.apply(this, [options]);
 
-			this.start = options.start;
-			this.end   = options.end;
+			if (options.heatmapView)
+				this.heatmapView = options.heatmapView;
+			else
+				throw 'DetectorView requires a HeatmapView to render.';
 
-			this.units = this.waveSimulation.get('units').distance;
+			this.sampler    = options.sampler;
+			this.visualizer = options.visualizer;
+		},
+
+		resize: function(){
+			SimDraggable.prototype.resize.apply(this);
+
+			var $connectorAnchor = this.$('.detector-connector-anchor');
+			var position = $connectorAnchor.position();
+
+			this.relativeConnectorAnchorPosition = {
+				x: position.left + ($connectorAnchor.width() / 2),
+				y: position.top
+			};
+
+			this.samplerRadius = this.$('.detector-sampler').outerWidth() / 2;
+
+			this.offset = this.$el.offset();
+
+			this.calculateLatticePoint();
 		},
 
 		render: function() {
-			this.renderMeasuringTape();
+			this.renderContent();
 			this.bindDragEvents();
-			this.resize();
-			this.update(0, 0);
 		},
 
-		renderMeasuringTape: function() {
+		renderContent: function() {
 			this.$el.html(this.template());
-			this.$tape = this.$('.measuring-tape');
-			this.$label = this.$('.measuring-tape-label');
+
+			this.$sampler    = this.$('.detector-sampler');
+			this.$connector  = this.$('.detector-connector');
+			this.$visualizer = this.$('.detector-visualizer');
 
 			this.graphView = new DetectorGraphView({
-				waveSimulation: this.waveSimulation
+				waveSimulation: this.waveSimulation,
 			});
 			this.graphView.render();
 			this.$('#detector-graph-placeholder').replaceWith(this.graphView.el);
+		},
+
+		postRender: function() {
+			this.resize();
 			this.graphView.postRender();
 		},
 
-		handleDown: function(event) {
+		samplerDown: function(event) {
 			event.preventDefault();
 
-			if ($(event.target).index() === 0)
-				this.draggingStart = true;
-			else
-				this.draggingEnd = true;
+			this.draggingSampler = true;
 
 			this.fixTouchEvents(event);
 
@@ -94,36 +117,32 @@ define(function (require) {
 			$(event.target).addClass('dragging');
 		},
 
-		tapeDown: function(event) {
-			if (event.target === this.$tape[0]) {
-				event.preventDefault();
+		visualizerDown: function(event) {
+			event.preventDefault();
 
-				this.$el.addClass('dragging');
+			this.$visualizer.addClass('dragging');
 
-				this.draggingTape = true;
+			this.draggingVisualizer = true;
 
-				this.fixTouchEvents(event);
+			this.fixTouchEvents(event);
 
-				this.dragX = event.pageX;
-				this.dragY = event.pageY;
-			}
+			this.dragX = event.pageX;
+			this.dragY = event.pageY;
 		},
 
 		drag: function(event) {
-			if (this.draggingStart || this.draggingEnd) {
+			if (this.draggingSampler) {
 
 				this.fixTouchEvents(event);
 
 				dx = event.pageX - this.dragX;
 				dy = event.pageY - this.dragY;
 
-				if (this.draggingStart && !this.outOfBounds(this.start.x + dx, this.start.y + dy)) {
-					this.start.x += dx;
-					this.start.y += dy;
-				}
-				if (this.draggingEnd && !this.outOfBounds(this.end.x + dx, this.end.y + dy)) {
-					this.end.x += dx;
-					this.end.y += dy;
+				if (this.draggingSampler && !this.outOfBounds(this.sampler.x + dx, this.sampler.y + dy)) {
+					this.sampler.x += dx;
+					this.sampler.y += dy;
+
+					this.calculateLatticePoint();
 				}
 
 				this.dragX = event.pageX;
@@ -131,20 +150,16 @@ define(function (require) {
 
 				this.updateOnNextFrame = true;
 			}
-			else if (this.draggingTape) {
+			else if (this.draggingVisualizer) {
 
 				this.fixTouchEvents(event);
 
 				dx = event.pageX - this.dragX;
 				dy = event.pageY - this.dragY;
 
-				if (!this.outOfBounds(this.start.x + dx, this.start.y + dy) &&
-					!this.outOfBounds(this.end.x   + dx, this.end.y   + dy)) {
-
-					this.start.x += dx;
-					this.start.y += dy;
-					this.end.x += dx;
-					this.end.y += dy;
+				if (!this.outOfBounds(this.visualizer.x + dx, this.visualizer.y + dy)) {
+					this.visualizer.x += dx;
+					this.visualizer.y += dy;
 				}
 
 				this.dragX = event.pageX;
@@ -155,67 +170,86 @@ define(function (require) {
 		},
 
 		dragEnd: function(event) {
-			if (this.draggingStart || this.draggingEnd) {
-				this.draggingStart = false;
-				this.draggingEnd   = false;
-				this.$('.measuring-tape-handle').removeClass('dragging');
+			if (this.draggingSampler) {
+				this.draggingSampler = false;
+				this.$sampler.removeClass('dragging');
 			}
-			else if (this.draggingTape) {
-				this.draggingTape = false;
-				this.$el.removeClass('dragging');
+			else if (this.draggingVisualizer) {
+				this.draggingVisualizer = false;
+				this.$visualizer.removeClass('dragging');
 			}
 		},
 
-		labelClicked: function(event) {
-			Utils.selectText(event.target);
+		close: function(event) {
+			this.trigger('remove');
+			this.remove();
 		},
 
-		update: function(time, delta) {
-			// If there aren't any changes, don't do anything.
-			if (!this.updateOnNextFrame)
-				return;
+		calculateLatticePoint: function() {
+			var point = this.heatmapView.offsetToPoint(
+				this.sampler.y + this.offset.top, 
+				this.sampler.x + this.offset.left
+			);
 
-			this.updateOnNextFrame = false;
+			this.graphView.latticePoint = point;
+		},
 
-			padding = this.$tape.height() / 2;
-
+		positionComponents: function() {
 			angle = -Utils.angleFromLine(
-				this.start.x, 
-				this.start.y, 
-				this.end.x, 
-				this.end.y
+				this.sampler.x, 
+				this.sampler.y, 
+				this.visualizer.x + this.relativeConnectorAnchorPosition.x, 
+				this.visualizer.y + this.relativeConnectorAnchorPosition.y
 			);
 
 			lineLength = Utils.lineLength(
-				this.start.x, 
-				this.start.y, 
-				this.end.x, 
-				this.end.y
+				this.sampler.x, 
+				this.sampler.y, 
+				this.visualizer.x + this.relativeConnectorAnchorPosition.x, 
+				this.visualizer.y + this.relativeConnectorAnchorPosition.y
 			);
 
-			startX = this.start.x;
-			startY = this.start.y - padding;
+			lineLength -= this.samplerRadius;
 
-			translate = 'translateX(' + startX + 'px) translateY(' + startY + 'px)';
-			rotate = 'rotateZ(' + (-angle) + 'deg)';
+			// Move to center of sampler and rotate to point at anchor
+			translate = 'translateX(' + this.sampler.x + 'px) translateY(' + this.sampler.y + 'px)';
+			rotate    = 'rotateZ(' + (-angle) + 'deg)';
+			transform = translate + ' ' + rotate + ' translateX(' + this.samplerRadius + 'px)';
 
-			this.$el.css({
-				'-webkit-transform': translate,
-				'-ms-transform': translate,
-				'-o-transform': translate,
-				'transform': translate,
-			});
-
-			this.$tape.css({
+			this.$connector.css({
 				width: lineLength,
 
-				'-webkit-transform': rotate,
-				'-ms-transform': rotate,
-				'-o-transform': rotate,
-				'transform': rotate,
+				'-webkit-transform': transform,
+				'-ms-transform':     transform,
+				'-o-transform':      transform,
+				'transform':         transform
 			});
 
-			this.$label.html(this.toSimXScale(lineLength).toFixed(2) + ' ' + this.units);
+			// Move the sampler so it's centered on the sample point
+			translate = 'translateX(' + this.sampler.x + 'px) translateY(' + this.sampler.y + 'px)';
+			
+			this.$sampler.css({
+				'-webkit-transform': translate,
+				'-ms-transform':     translate,
+				'-o-transform':      translate,
+				'transform':         translate
+			});
+
+			this.$visualizer.css({
+				left: this.visualizer.x + 'px',
+				top:  this.visualizer.y + 'px'
+			});
+		},
+
+		update: function(time, delta) {
+			
+			if (this.updateOnNextFrame) {
+				this.updateOnNextFrame = false;
+
+				this.positionComponents();
+			}
+
+			this.graphView.update(time, delta);
 		}
 	});
 

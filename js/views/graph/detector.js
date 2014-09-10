@@ -84,8 +84,8 @@ define(function(require) {
 		 */
 		resize: function() {
 			GraphView.prototype.resize.apply(this);
-			var width  = this.$xCanvas.parent().innerWidth();
-			var height = this.$xCanvas.parent().innerHeight();
+			var width  = this.$xCanvas.parent().innerWidth()  || 1;
+			var height = this.$xCanvas.parent().innerHeight() || 1;
 			this.xWidth  = width;
 			this.xHeight = height;
 			this.$xCanvas.width(width);
@@ -147,7 +147,7 @@ define(function(require) {
 			this.points = [];
 			this.points.push({ 
 				x: 0, 
-				y: 0 
+				y: this.valueToY(0)
 			});
 		},
 
@@ -235,14 +235,21 @@ define(function(require) {
 		 * Converts the current lattice point value into a usable y-location to paint.
 		 */
 		getCurrentY: function() {
-			return ((this.getCurrentValue() - 2) / -4) * this.height;
+			return this.valueToY(this.getCurrentValue());
+		},
+
+		valueToY: function(value) {
+			return ((value - 2) / -4) * this.height;
 		},
 
 		/**
 		 * Gets the current value of the lattice point
 		 */
 		getCurrentValue: function() {
-			return this.waveSimulation.lattice.data[this.latticePoint.x][this.latticePoint.y];
+			if (this.latticePoint)
+				return this.waveSimulation.lattice.data[this.latticePoint.x][this.latticePoint.y];
+			else
+				return 0;
 		},
 
 

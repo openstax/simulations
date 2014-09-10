@@ -318,6 +318,8 @@ define(function(require) {
 				this.trigger('resized');
 			}
 			this.resizeOnNextUpdate = false;
+
+			this.offset = this.$canvas.offset();
 		},
 
 		update: function(time, delta) {
@@ -430,6 +432,43 @@ define(function(require) {
 
 		isVisiblePoint: function(x, y) {
 			return (x < this.waveSimulation.lattice.width - 1 && x >= 0 && y < this.waveSimulation.lattice.height - 1 && y >= 0);
+		},
+
+		/**
+		 * Takes a top and left offset of a point relative to the 
+		 *   HTML document and returns an object containing x and
+		 *   y in lattice coordinates. Returns the closest integer
+		 *   x and y, making sure rounding doesn't take it out of
+		 *   bounds.
+		 */
+		offsetToPoint: function(top, left) {
+			var x = this.heatmapToLatticeXCoordinates(left - this.offset.left);
+			var y = this.heatmapToLatticeYCoordinates(top  - this.offset.top);
+			
+			if (this.isVisiblePoint(x, y)) {
+				x = Math.round(x);
+				y = Math.round(y);
+
+				if (x > this.waveSimulation.lattice.width - 1)
+					x--;
+				if (y > this.waveSimulation.lattice.height - 1)
+					y--;
+
+				return {
+					x: x,
+					y: y
+				};
+			}
+			else
+				return null;
+		},
+
+		heatmapToLatticeXCoordinates: function(x) {
+			return x / this.xSpacing;
+		},
+
+		heatmapToLatticeYCoordinates: function(y) {
+			return this.waveSimulation.lattice.height - (y / this.ySpacing);
 		}
 
 	});
