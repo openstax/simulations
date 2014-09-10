@@ -68,10 +68,10 @@ define(function (require) {
 
 			this.relativeConnectorAnchorPosition = {
 				x: position.left + ($connectorAnchor.width() / 2),
-				y: position.top  + ($connectorAnchor.height() / 2)
+				y: position.top
 			};
 
-			this.samplerRadius = this.$('.detector-sampler').width() / 2;
+			this.samplerRadius = this.$('.detector-sampler').outerWidth() / 2;
 		},
 
 		render: function() {
@@ -112,18 +112,16 @@ define(function (require) {
 		},
 
 		visualizerDown: function(event) {
-			if (event.target === this.$visualizer[0]) {
-				event.preventDefault();
+			event.preventDefault();
 
-				this.$visualizer.addClass('dragging');
+			this.$visualizer.addClass('dragging');
 
-				this.draggingVisualizer = true;
+			this.draggingVisualizer = true;
 
-				this.fixTouchEvents(event);
+			this.fixTouchEvents(event);
 
-				this.dragX = event.pageX;
-				this.dragY = event.pageY;
-			}
+			this.dragX = event.pageX;
+			this.dragY = event.pageY;
 		},
 
 		drag: function(event) {
@@ -198,7 +196,7 @@ define(function (require) {
 			// Move to center of sampler and rotate to point at anchor
 			translate = 'translateX(' + this.sampler.x + 'px) translateY(' + this.sampler.y + 'px)';
 			rotate    = 'rotateZ(' + (-angle) + 'deg)';
-			transform = translate + ' ' + rotate;
+			transform = translate + ' ' + rotate + ' translateX(' + this.samplerRadius + 'px)';
 
 			this.$connector.css({
 				width: lineLength,
@@ -206,19 +204,23 @@ define(function (require) {
 				'-webkit-transform': transform,
 				'-ms-transform':     transform,
 				'-o-transform':      transform,
-				'transform':         transform,
+				'transform':         transform
 			});
 
 			// Move the sampler so it's centered on the sample point
-			translate = 'translateX(' + (this.sampler.x - this.samplerRadius) + 'px) translateY(' + (this.sampler.y - this.samplerRadius) + 'px)';
+			translate = 'translateX(' + this.sampler.x + 'px) translateY(' + this.sampler.y + 'px)';
+			console.log(this.sampler.x, this.sampler.y);
 			
 			this.$sampler.css({
-				left: (this.sampler.x - this.samplerRadius) + 'px',
-				top: (this.sampler.y - this.samplerRadius) + 'px'
-				// '-webkit-transform': translate,
-				// '-ms-transform':     translate,
-				// '-o-transform':      translate,
-				// 'transform':         translate,
+				'-webkit-transform': translate,
+				'-ms-transform':     translate,
+				'-o-transform':      translate,
+				'transform':         translate
+			});
+
+			this.$visualizer.css({
+				left: this.visualizer.x + 'px',
+				top:  this.visualizer.y + 'px'
 			});
 		},
 
