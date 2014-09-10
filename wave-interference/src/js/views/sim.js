@@ -12,7 +12,7 @@ define(function (require) {
 	var MeasuringTapeView     = require('views/measuring-tape');
 	var StopwatchView         = require('views/stopwatch');
 	//temp
-	var DetectorGraphView     = require('views/graph/detector');
+	var DetectorView     = require('views/detector');
 
 	require('nouislider');
 
@@ -632,12 +632,15 @@ define(function (require) {
 		},
 
 		addDetector: function(event) {
-			var detectorView = new DetectorGraphView({
-				waveSimulation: this.waveSimulation
+			var detectorView = new DetectorView({
+				waveSimulation: this.waveSimulation,
+				heatmapView: this.heatmapView,
+				dragFrame: this.el
 			});
 			detectorView.render();
 			this.$el.append(detectorView.el);
 			detectorView.postRender();
+
 			this.detectorViews.push(detectorView);
 		},
 

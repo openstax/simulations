@@ -84,8 +84,8 @@ define(function(require) {
 		 */
 		resize: function() {
 			GraphView.prototype.resize.apply(this);
-			var width  = this.$xCanvas.parent().innerWidth();
-			var height = this.$xCanvas.parent().innerHeight();
+			var width  = this.$xCanvas.parent().innerWidth()  || 1;
+			var height = this.$xCanvas.parent().innerHeight() || 1;
 			this.xWidth  = width;
 			this.xHeight = height;
 			this.$xCanvas.width(width);

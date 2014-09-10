@@ -2,13 +2,131 @@
 @detector-width:  240px;
 @detector-height: 140px;
 
-.detector-graph-view {
+.detector-view {
 	position: absolute;
+	top: 0;
+	left: 0;
+	.user-select(none);
+
+	> .detector-sampler {
+		height: 20px;
+		width: 20px;
+		position: absolute;
+		top: 0;
+		margin-top: -11px;
+		border-radius: 50%;
+		border: 5px solid @gray-lightest;
+		cursor: crosshair;
+		overflow: hidden;
+		//.box-sizing(content-box);
+
+		&.dragging {
+			background-color: fadeout(darken(@gray-lightest, 3%), 30%);
+
+			&:before,
+			&:after {
+				border-color: @link-color;
+			}
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 3px;
+			right: 3px;
+			top: 50%;
+			margin-top: -1px;
+			border-top: 2px solid #000;
+		}
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 3px;
+			bottom: 3px;
+			left: 50%;
+			margin-left: -1px;
+			border-left: 2px solid #000;
+		}
+	}
+
+	> .detector-connector {
+		height: 4px;
+		background-color: #000;
+		.transform-origin(-8px center);
+	}
+
+	> .detector-visualizer {
+		width: @detector-width;
+		height: @detector-height;
+		position: absolute;
+		top: 0;
+		left: 0;
+		cursor: -webkit-grab;
+		cursor: grab;
+
+		&.dragging {
+			cursor: -webkit-grabbing;
+			cursor: grabbing;
+		}
+
+		> .detector-connector-anchor {
+			position: absolute;
+			top: 50%;
+			right: -20px;
+			width: 40px;
+			height: 40px;
+			margin-top: -20px;
+			border-radius: 50%;
+			z-index: 219;
+			.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 50%;
+			right: -20px;
+			width: 40px;
+			height: 40px;
+			margin-top: -20px;
+			border-radius: 50%;
+			background: @gray-lightest;
+			z-index: 221;
+		}
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 50%;
+			right: -3px;
+			width: 6px;
+			height: 6px;
+			margin-top: -3px;
+			border-radius: 50%;
+			background: #000;
+			z-index: 222;
+		}
+	}
+
+}
+
+
+.detector-graph-view {
 	.grid-view(detector-graph, @detector-width, @detector-height, 32px, 50%);
+
+	max-width: none;
+	position: absolute;
+	z-index: 220;
+	.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
 
 	> .detector-graph-title {
 		line-height: 35px;
-		font-size: 18px;
+		font-size: 16px;
 		color: #686868;
 	}
 
