@@ -631,6 +631,9 @@ define(function (require) {
 			this.waveSimulation.addSegmentPotential();
 		},
 
+		/**
+		 * Adds a DetectorView and renders it puts it in an array for updating
+		 */
 		addDetector: function(event) {
 			var detectorView = new DetectorView({
 				waveSimulation: this.waveSimulation,
@@ -649,6 +652,9 @@ define(function (require) {
 			this.detectorViews.push(detectorView);
 		},
 
+		/**
+		 * Toggles the measuring tape's visibility
+		 */
 		toggleMeasuringTape: function(event) {
 			if ($(event.target).is(':checked'))
 				this.measuringTapeView.show();
@@ -656,6 +662,9 @@ define(function (require) {
 				this.measuringTapeView.hide();
 		},
 
+		/**
+		 * Toggles the stopwatch's visibility
+		 */
 		toggleStopwatch: function(event) {
 			if ($(event.target).is(':checked'))
 				this.stopwatchView.show();
