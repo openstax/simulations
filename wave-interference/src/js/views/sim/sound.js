@@ -49,8 +49,29 @@ define(function (require) {
 			this.$('.oscillator-controls').before($audioControls);
 		},
 
+		/**
+		 * Updates simulation and visual components in the render loop
+		 */
 		update: function(time, delta) {
 			SimView.prototype.update.apply(this, [time, delta]);
+		},
+
+		/**
+		 * Handles volume slider slide events
+		 */
+		changeVolume: function(event) {
+			var volume = parseInt($(event.target).val());
+
+			if (volume === 0) {
+				this.nullVolume = true;
+				this.$('.sound-volume-slider-wrapper .fa-volume-off').show();
+				this.$('.sound-volume-slider-wrapper .fa-volume-down').hide();
+			}
+			else if (this.nullVolume) {
+				this.nullVolume = false;
+				this.$('.sound-volume-slider-wrapper .fa-volume-down').show();
+				this.$('.sound-volume-slider-wrapper .fa-volume-off').hide();
+			}
 		}
 	});
 
