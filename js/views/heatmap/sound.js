@@ -13,16 +13,16 @@ define(function(require) {
 
 
 	/**
-	 * WaterHeatmapView is the water simulation version of the HeatmapView 
+	 * SoundHeatmapView is the sound simulation version of the HeatmapView 
 	 *   that uses different sub-views where necessary.
 	 */
-	var WaterHeatmapView = HeatmapView.extend({
+	var SoundHeatmapView = HeatmapView.extend({
 
 		initialize: function(options) {
 			// Default values
 			options = _.extend({
-				title: 'Water &ndash; Top View',
-				color: '#0D6A7C'
+				title: 'Pressure Map &ndash; XY Plane',
+				color: '#000'
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);
@@ -45,5 +45,5 @@ define(function(require) {
 
 	});
 
-	return WaterHeatmapView;
+	return SoundHeatmapView;
 });
