@@ -5,6 +5,7 @@ define(function (require) {
 	require('timbre');
 
 	var SoundSimulation  = require('models/wave-sim/sound');
+	var SoundHeatmapView = require('views/heatmap/sound');
 	var SimView          = require('views/sim');
 
 	var audioControlsHtml = require('text!templates/control-panel-components/audio.html');
@@ -41,6 +42,13 @@ define(function (require) {
 		 */
 		initWaveSimulation: function() {
 			this.waveSimulation = new SoundSimulation();
+		},
+
+		/**
+		 * Initializes the HeatmapView.
+		 */
+		initHeatmapView: function() {
+			this.heatmapView = new SoundHeatmapView(this.getHeatmapViewOptions());
 		},
 
 		/**
