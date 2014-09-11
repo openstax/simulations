@@ -78,6 +78,11 @@ define(function (require) {
 			this.offset = this.$el.offset();
 
 			this.calculateLatticePoint();
+
+			this.visualizer.width  = this.$visualizer.width();
+			this.visualizer.height = this.$visualizer.height();
+			this.sampler.width  = this.$sampler.width();
+			this.sampler.height = this.$sampler.height();
 		},
 
 		render: function() {
@@ -138,7 +143,7 @@ define(function (require) {
 				dx = event.pageX - this.dragX;
 				dy = event.pageY - this.dragY;
 
-				if (this.draggingSampler && !this.outOfBounds(this.sampler.x + dx, this.sampler.y + dy)) {
+				if (this.draggingSampler && !this.outOfBounds(this.sampler.x + dx, this.sampler.y + dy, this.sampler)) {
 					this.sampler.x += dx;
 					this.sampler.y += dy;
 
@@ -157,7 +162,7 @@ define(function (require) {
 				dx = event.pageX - this.dragX;
 				dy = event.pageY - this.dragY;
 
-				if (!this.outOfBounds(this.visualizer.x + dx, this.visualizer.y + dy)) {
+				if (!this.outOfBounds(this.visualizer.x + dx, this.visualizer.y + dy, this.visualizer)) {
 					this.visualizer.x += dx;
 					this.visualizer.y += dy;
 				}

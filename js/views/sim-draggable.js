@@ -64,14 +64,19 @@ define(function (require) {
 			return (y / this.heatmapView.ySpacing) / this.waveSimulation.heightRatio;
 		},
 
-		outOfBounds: function(x, y) {
-			return (x > this.dragBounds.width  || x < 0 ||
-				    y > this.dragBounds.height || y < 0);
+		outOfBounds: function(x, y, dimensions) {
+			if (dimensions) {
+				return (x + dimensions.width  > this.dragBounds.width  || x < 0 ||
+					    y + dimensions.height > this.dragBounds.height || y < 0);
+			}
+			else {
+				return (x > this.dragBounds.width  || x < 0 ||
+					    y > this.dragBounds.height || y < 0);	
+			}
 		},
 
 		boxOutOfBounds: function(x, y) {
-			return (x + this.width  > this.dragBounds.width  || x < 0 ||
-				    y + this.height > this.dragBounds.height || y < 0);
+			return this.outOfBounds(x, y, this);
 		},
 
 		show: function() {
