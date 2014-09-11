@@ -9,6 +9,10 @@ define(function (require) {
 
 	var SoundSimView = SimView.extend({
 
+		events: _.extend({
+			'slide .sound-volume'  : 'changeVolume',
+		}, SimView.prototype.events),
+
 		initialize: function(options) {
 			options = _.extend({
 				heatmapBrightness: 0.5,

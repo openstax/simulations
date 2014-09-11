@@ -28,6 +28,11 @@ define(function(require) {
 		initialize: function(options) {
 			StaticGraphView.prototype.initialize.apply(this, [options]);
 
+			if (options.heatmapView)
+				this.heatmapView = options.heatmapView;
+			else
+				throw 'CrossSectionGraphView requires a HeatmapView instance to render.';
+
 			// Ratio between pixels and cell width
 			this.xSpacing = 1;
 		},
@@ -120,6 +125,18 @@ define(function(require) {
 				this.changing = false;
 				this.$canvasWrapper.removeClass('changing');
 			}
+		},
+
+		show: function(event) {
+			StaticGraphView.prototype.show.apply(this, [event]);
+
+			this.heatmapView.showCrossSectionSlider();
+		},
+
+		hide: function() {
+			StaticGraphView.prototype.hide.apply(this);
+
+			this.heatmapView.hideCrossSectionSlider();
 		}
 
 	});

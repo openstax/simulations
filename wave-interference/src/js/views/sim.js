@@ -221,7 +221,8 @@ define(function (require) {
 					label: 'Water Level',
 					showNumbers: false
 				},
-				waveSimulation: this.waveSimulation
+				waveSimulation: this.waveSimulation,
+				heatmapView: this.heatmapView
 			};
 		},
 

@@ -358,6 +358,14 @@ define(function(require) {
 			this.trigger('cross-section-slide-stop');
 		},
 
+		showCrossSectionSlider: function() {
+			this.$('.cross-section-slider').show();
+		},
+
+		hideCrossSectionSlider: function() {
+			this.$('.cross-section-slider').hide();
+		},
+
 		changeColor: function() {
 			this.$canvas.css('background-color', this.color);
 		},

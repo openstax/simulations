@@ -28,12 +28,6 @@ define(function(require) {
 		},
 
 		initialize: function(options) {
-
-			// Default values
-			options = _.extend({
-
-			}, options);
-
 			GraphView.prototype.initialize.apply(this, [options]);
 
 			// Don't start drawing the curve until the graph is showing
@@ -72,11 +66,15 @@ define(function(require) {
 			
 			var self = this;
 			setTimeout(function(){
-				self.$showButton.hide();
-				self.$showButton.removeClass('clicked');
-				self.resize();
-				self.toggling = false;
+				self._afterShow();
 			}, this.duration);
+		},
+
+		_afterShow: function() {
+			this.$showButton.hide();
+			this.$showButton.removeClass('clicked');
+			this.resize();
+			this.toggling = false;
 		},
 
 		hide: function(event) {
@@ -93,10 +91,14 @@ define(function(require) {
 
 			var self = this;
 			setTimeout(function(){
-				self.graphVisible = false;
-				self.$showButton.removeClass('reenabled');
-				self.toggling = false;
+				self._afterHide();
 			}, this.duration);
+		},
+
+		_afterHide: function() {
+			this.graphVisible = false;
+			this.$showButton.removeClass('reenabled');
+			this.toggling = false;
 		}
 	});
 
