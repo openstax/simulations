@@ -8,7 +8,7 @@
 			backbone:   '../../bower_components/backbone/backbone',
 			text:       '../../bower_components/requirejs-text/text',
 			pixi:       '../../bower_components/pixi/bin/pixi',
-			nouislider: '../../bower_components/nouislider/jquery.nouislider.full.min',
+			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 
 			templates:  '../templates/'
 		},
