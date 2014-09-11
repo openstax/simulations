@@ -2,6 +2,8 @@ define(function (require) {
 
 	'use strict';
 
+	require('timbre');
+
 	var SoundSimulation  = require('models/wave-sim/sound');
 	var SimView          = require('views/sim');
 
@@ -10,7 +12,8 @@ define(function (require) {
 	var SoundSimView = SimView.extend({
 
 		events: _.extend({
-			'slide .sound-volume'  : 'changeVolume',
+			'slide  .sound-volume' : 'changeVolume',
+			'change .sound-check'  : 'toggleSound',
 		}, SimView.prototype.events),
 
 		initialize: function(options) {
@@ -20,6 +23,17 @@ define(function (require) {
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
+
+			this.volume = 50;
+			this.frequencyScale = 440 / 0.5; // from PhET's SoundModuleAudio class
+
+			this.sound = T('sin');
+			this.sound.set({ 
+				freq: parseFloat(this.waveSimulation.get('frequency')) * this.frequencyScale, 
+				mul: this.volume / 100 
+			});
+
+			this.listenTo(this.waveSimulation, 'change:frequency', this.frequencyChanged);
 		},
 
 		/**
@@ -38,7 +52,7 @@ define(function (require) {
 			var $audioControls = $(audioControlsHtml);
 
 			$audioControls.find('.sound-volume').noUiSlider({
-				start: 50,
+				start: this.volume,
 				connect: 'lower',
 				range: {
 					min: 0,
@@ -72,6 +86,23 @@ define(function (require) {
 				this.$('.sound-volume-slider-wrapper .fa-volume-down').show();
 				this.$('.sound-volume-slider-wrapper .fa-volume-off').hide();
 			}
+
+			this.volume = volume;
+			this.sound.set({ mul: this.volume / 100 });
+		},
+
+		/**
+		 * Changes the frequency of the sound based on the frequency in the wave simulation
+		 */
+		frequencyChanged: function() {
+			this.sound.set({ freq: parseFloat(this.waveSimulation.get('frequency')) * this.frequencyScale });
+		},
+
+		toggleSound: function() {
+			if ($(event.target).is(':checked'))
+				this.sound.play();
+			else
+				this.sound.pause();
 		}
 	});
 

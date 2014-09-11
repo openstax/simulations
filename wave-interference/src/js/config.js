@@ -9,6 +9,7 @@
 			text:       '../../bower_components/requirejs-text/text',
 			pixi:       '../../bower_components/pixi/bin/pixi',
 			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+			timbre:     '../../bower_components/timbre/timbre.dev',
 
 			templates:  '../templates/'
 		},
