@@ -52,6 +52,33 @@ define(function (require) {
 		},
 
 		/**
+		 * Uses the sim view's WaveSimulation instance to determine
+		 *   appropriate options for initializing the GraphView and
+		 *   returns them as an object.
+		 */
+		getGraphViewOptions: function() {
+			return {
+				title: 'Pressure Across X-Axis',
+				x: {
+					start: 0,
+					end: this.waveSimulation.get('dimensions').width,
+					step: this.waveSimulation.get('dimensions').width / 10,
+					label: 'x (' + this.waveSimulation.get('units').distance + ')',
+					showNumbers: true
+				},
+				y: {
+					start: -1,
+					end: 1,
+					step: 0.5,
+					label: 'Pressure',
+					showNumbers: false
+				},
+				waveSimulation: this.waveSimulation,
+				heatmapView: this.heatmapView
+			};
+		},
+
+		/**
 		 * Renders the control panel and all its controls.
 		 */
 		renderControlPanel: function() {

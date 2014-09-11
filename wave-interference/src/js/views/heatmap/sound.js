@@ -21,7 +21,7 @@ define(function(require) {
 		initialize: function(options) {
 			// Default values
 			options = _.extend({
-				title: 'XY Plane',
+				title: 'Pressure Map &ndash; XY Plane',
 				color: '#000'
 			}, options);
 

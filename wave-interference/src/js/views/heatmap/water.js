@@ -21,7 +21,7 @@ define(function(require) {
 		initialize: function(options) {
 			// Default values
 			options = _.extend({
-				title: 'Top View',
+				title: 'Water &ndash; Top View',
 				color: '#0D6A7C'
 			}, options);
 
