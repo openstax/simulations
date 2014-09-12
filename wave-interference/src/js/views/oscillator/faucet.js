@@ -17,6 +17,8 @@ define(function(require) {
 
 	var FaucetOscillatorView = OscillatorView.extend({
 
+		className: OscillatorView.prototype.className + ' faucet-oscillator-view',
+
 		initialize: function(options) {
 			OscillatorView.prototype.initialize.apply(this, [options]);
 

@@ -58,7 +58,7 @@
 	}
 }
 
-#sim-water .oscillator-graphic {
+.faucet-oscillator-view > .oscillator-graphic {
 	width: 200px;
 	height: 114px;
 	position: absolute;
@@ -119,3 +119,44 @@
 	.translate(0, 60px);
 	opacity: 0.4;
 });
+
+
+.speaker-oscillator-view > .oscillator-graphic {
+	width: 80px;
+	height: 160px;
+	position: absolute;
+	margin-top: -39px;
+	right: -40px;
+
+	> .part-1 {
+		width: 80px;
+		height: 160px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: url(../img/phet/speaker-back.png);
+		background-size: 100%;
+	}
+
+	> .part-2 {
+		position: absolute;
+		top: 0;
+		right: 0;
+		width: 80px;
+		height: 160px;
+		position: absolute;
+		right: 0;
+		background-image: url(../img/phet/speaker-cone.png);
+		background-size: 100%;
+	}
+
+	> .part-3 {
+		width: 80px;
+		height: 160px;
+		position: absolute;
+		top: 0;
+		left: 0;
+		background-image: url(../img/phet/speaker-front.png);
+		background-size: 100%;
+	}
+}

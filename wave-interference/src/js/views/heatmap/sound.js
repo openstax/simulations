@@ -4,8 +4,8 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var HeatmapView          = require('views/heatmap');
-	var FaucetOscillatorView = require('views/oscillator/faucet');
+	var HeatmapView           = require('views/heatmap');
+	var SpeakerOscillatorView = require('views/oscillator/speaker');
 
 	/*
 	 * "Local" variables for functions to share and recycle
@@ -30,11 +30,11 @@ define(function(require) {
 
 		/**
 		 * Overrides HeatmapView.renderOscillatorView so it can use the
-		 *   FaucetOscillatorView instead of the plain OscillatorView.
+		 *   SpeakerOscillatorView instead of the plain OscillatorView.
 		 */
 		renderOscillatorView: function(oscillator) {
 			// Create a new view and render it
-			var oscillatorView = new FaucetOscillatorView({
+			var oscillatorView = new SpeakerOscillatorView({
 				heatmapView: this,
 				oscillator: oscillator
 			});
