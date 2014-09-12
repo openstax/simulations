@@ -9,11 +9,9 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-	var period,
-	    releaseTime,
-	    n, // What PhET called it--I'm not sure what it represents
-	    $drop,
-	    i;
+	var movementPercentage,
+	    direction,
+	    transform;
 
 	var SpeakerOscillatorView = OscillatorView.extend({
 
@@ -48,81 +46,66 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.hidden && !this.waveSimulation.paused) {
-				/**
-				 * Keep track of our own time so we can actually pause 
-				 *   the animation if the simulation is paused.
-				 */
-				this.time += delta;
-				this.updateSpeaker(this.time, delta);
+			if (!this.hidden && !this.waveSimulation.paused && this.oscillator.enabled) {
+				this.time += delta / 1000;
+				this.updateSpeaker();
 			}
 
 			if (this.updateOnNextFrame) {
 				// Change the distance the cone moves in a cycle
-				
+				this.movementDistance = 4 * this.waveSimulation.get('amplitude');
+				this.halfPeriod = this.oscillator.period() / 2;
 			}
 
 			OscillatorView.prototype.update.apply(this, [time, delta]);
 		},
 
 
-		updateSpeaker: function(time, delta) {
+		updateSpeaker: function() {
 
-			var period = this.oscillator.period() + 's';
+			// First starting (captures undefined, 0, NaN)
+			if (!this.nextPeakTime) {
+				this.nextPeakTime   = this.oscillator.getNextPeakTime();
+				this.nextTroughTime = this.oscillator.getNextTroughTime();
+			}
 
-			// this.$speakerCone.css({
-			// 	'-webkit-animation-duration': period,
-			// 	        'animation-duration': period
-			// });
-			this.$speakerCone[0].style.webkitAnimationDuration = period;
+			// We've hit a peak
+			if (this.time > this.nextPeakTime) {
+				this.nextPeakTime = this.oscillator.getNextPeakTime();
+			}
 
+			// We've hit a trough
+			if (this.time > this.nextTroughTime) {
+				this.nextTroughTime = this.oscillator.getNextTroughTime();
+			}
 
-			transform = 'translateX(' + startX + 'px)';
+			// Figure out which way we're going and our progress in that direction
+			if (this.nextPeakTime > this.nextTroughTime) {
+				// We're on our way to a trough
+				movementPercentage = 1 - ((this.nextTroughTime - this.time) / this.halfPeriod);
+			}
+			else {
+				// We're on our way to a peak
+				movementPercentage = (this.nextPeakTime - this.time) / this.halfPeriod;
+			}
+
+			// While the slider is being moved, make sure it stays within reasonable bounds
+			movementPercentage = Math.min(movementPercentage, 1);
+			movementPercentage = Math.max(movementPercentage, 0);
+
+			console.log(this.time.toFixed(4), (-this.movementDistance * movementPercentage).toFixed(4));
+
+			// The rotation is a fix for webkit and firefox that triggers sub-pixel rendering
+			transform = 'translateX(' + (-this.movementDistance * movementPercentage) + 'px) rotate(.0001deg)';
 
 			// Set the width so it spans the two points
-			this.$speaker.css({
+			this.$speakerCone.css({
 				'-webkit-transform': transform,
-				'-ms-transform': transform,
-				'-o-transform': transform,
-				'transform': transform,
+				'-ms-transform':     transform,
+				'-o-transform':      transform,
+				'transform':         transform,
 			});
-
-			// // See if it's time to drip another drop
-			// if (this.oscillator.enabled) {
-			// 	if (this.justBeforeReleaseTime(this.lastOscillatorTime) && this.justAfterReleaseTime(this.oscillator.time))
-			// 		this.drip(time);
-			// }
-			// this.lastOscillatorTime = this.oscillator.time;
-		},
-
-		// recycleDrop: function($drop) {
-		// 	this.$stagedDrops.push($drop);
-		// 	$drop.hide();
-		// },
-
-		// drip: function(time) {
-		// 	$drop = this.$stagedDrops.pop();
-		// 	if ($drop) {
-		// 		$drop.show();
-		// 		$drop.data('birth', time);
-		// 		$drop.data('period', this.animationDuration * 1000);
-		// 		this.$activeDrops.push($drop);
-		// 	}
-		// },
-
-		// justBeforeReleaseTime: function(time) {
-		// 	releaseTime = this.getNearestReleaseTime(time);
-		// 	if (time < releaseTime/* && Math.abs(releaseTime - time) < this.oscillator.period() / 4*/)
-		// 		return true;
-		// 	return false;
-		// },
-
-		// justAfterReleaseTime: function(time) {
-		// 	releaseTime = this.getNearestReleaseTime(time);
-		// 	if (time >= releaseTime/* && Math.abs(releaseTime - time) < this.oscillator.period() / 4*/)
-		// 		return true;
-		// 	return false;
-		// },
+		}
 
 	});
 
