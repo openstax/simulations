@@ -38,7 +38,9 @@ define(function(require) {
 		this.pulseEnabled = false;
 	};
 
-
+	/**
+	 * These "local" variables assume no concurrent use of this class.
+	 */
 	var waveSim,
 	    oscillatingValue,
 	    i,
@@ -48,7 +50,10 @@ define(function(require) {
 	    xMax,
 	    yMax,
 	    radius,
-	    twoPI = Math.PI * 2;
+	    twoPI = Math.PI * 2,
+	    peakTime,
+	    halfPeriod,
+	    remainderTime;
 
 	_.extend(Oscillator.prototype, {
 
@@ -138,6 +143,41 @@ define(function(require) {
 		 */
 		period: function() {
 			return 1 / this.frequency;
+		},
+
+		/**
+		 * Based on the oscillator's internal time, this function calculates
+		 *   when the next peak will be (when cos(cosArg) = 1, which happens
+		 *   whenever cosArg is a multiple of twoPI).
+		 */
+		getNextPeakTime: function() {
+			/*
+			 * let f = frequency, t = time
+			 *   (ft % 1) is the remainder portion of ft keeping it from 
+			 *   being an integer. Therefore ((ft % 1) / f) is the time
+			 *   portion that is keeping ft from being an integer, since
+			 *   frequency is a constant in this context.
+			 */
+			remainderTime = ((this.time * this.frequency) % 1) / this.frequency;
+
+			/* (this.time - remainderTime) gets us the previous peak, so we
+			 *   add a period to get the next one.
+			 */ 
+			return this.time - remainderTime + this.period();
+		},
+
+		/**
+		 * Just shifts the next peak time by half a period to get the trough
+		 *   time.
+		 */
+		getNextTroughTime: function() {
+			peakTime = this.getNextPeakTime();
+			halfPeriod = this.period() / 2;
+
+			if (peakTime - halfPeriod >= this.time)
+				return peakTime - halfPeriod;
+			else
+				return peakTime + halfPeriod;
 		}
 	});
 
