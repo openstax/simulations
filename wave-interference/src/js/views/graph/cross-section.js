@@ -8,7 +8,7 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-	var context,
+	var length,
 	    lat,
 		latWidth,
 		latHeight,

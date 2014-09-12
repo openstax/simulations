@@ -99,7 +99,6 @@ module.exports = function(grunt){
 				latedef: true,
 				laxbreak: true,
 				laxcomma: true,
-				newcap: true,
 				noarg: true,
 				noempty: true,
 				nonbsp: true,
@@ -116,6 +115,7 @@ module.exports = function(grunt){
 				camelcase: false,
 				curly: false,
 				eqeqeq: false,
+				newcap: false,
 				plusplus: false,
 				asi: false,
 				boss: false,
@@ -143,6 +143,7 @@ module.exports = function(grunt){
 			},
 			source: [
 				'src/**/*.js',
+				'!src/js/lib/**/*.js',
 				'!test/**/*.js'
 			],
 			test: [

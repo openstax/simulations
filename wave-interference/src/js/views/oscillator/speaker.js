@@ -2,15 +2,12 @@ define(function(require) {
 
 	'use strict';
 
-	var $ = require('jquery');
-
 	var OscillatorView = require('views/oscillator');
 
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
 	var movementPercentage,
-	    direction,
 	    transform;
 
 	var SpeakerOscillatorView = OscillatorView.extend({
@@ -92,8 +89,6 @@ define(function(require) {
 			// While the slider is being moved, make sure it stays within reasonable bounds
 			movementPercentage = Math.min(movementPercentage, 1);
 			movementPercentage = Math.max(movementPercentage, 0);
-
-			console.log(this.time.toFixed(4), (-this.movementDistance * movementPercentage).toFixed(4));
 
 			// The rotation is a fix for webkit and firefox that triggers sub-pixel rendering
 			transform = 'translateX(' + (-this.movementDistance * movementPercentage) + 'px) rotate(.0001deg)';

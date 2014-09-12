@@ -11,12 +11,8 @@ define(function (require) {
 	var Utils = require('utils/utils');
 	var html  = require('text!templates/detector.html');
 
-	var padding,
-	    height,
-	    angle,
+	var angle,
 	    lineLength,
-	    startX,
-	    startY,
 	    dx,
 	    dy,
 	    translate,

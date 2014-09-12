@@ -43,6 +43,21 @@ define(function(require) {
 			this.addOscillatorView(oscillatorView);
 		},
 
+		/**
+		 * 
+		 */
+		initPressureParticles: function() {
+
+		},
+
+		positionPressureParticles: function() {
+
+		},
+
+		updatePressureParticles: function() {
+			
+		}
+
 	});
 
 	return SoundHeatmapView;

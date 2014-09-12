@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
 	var GraphView = require('views/graph');
 
 	var html = require('text!templates/graph.html');

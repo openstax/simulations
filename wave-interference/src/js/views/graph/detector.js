@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
 	var GraphView = require('views/graph');
 
 	var html = require('text!templates/detector-graph.html');
@@ -9,7 +11,8 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-	var context,
+	var length,
+	    context,
 		height,
 		xSpacing,
 		xOffset,
