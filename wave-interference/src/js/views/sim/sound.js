@@ -3,7 +3,7 @@ define(function (require) {
 	'use strict';
 
 	// This bower module doesn't satisfy AMD, so I'm just trying to satisfy the linter
-	require('timbre'); var T; 
+	require('timbre'); var T = window.T;
 
 	var _ = require('underscore');
 	var $ = require('jquery');
