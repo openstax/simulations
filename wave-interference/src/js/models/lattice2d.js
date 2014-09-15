@@ -143,6 +143,9 @@ define(function(require) {
 			}
 		},
 
+		getValue: function(x, y) {
+			return this.data[x][y];
+		}
 
 	});
 

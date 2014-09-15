@@ -2,15 +2,33 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _    = require('underscore');
+	var PIXI = require('pixi');
 
+	var Particle              = require('models/particle');
 	var HeatmapView           = require('views/heatmap');
 	var SpeakerOscillatorView = require('views/oscillator/speaker');
+
+	/**
+	 * Constants
+	 */
+	var PARTICLE_CELL_RATIO = 3;
 
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-
+	var sprite,
+	    particle,
+	    particles,
+	    sprites,
+	    texture,
+	    xSpacing,
+	    ySpacing,
+	    width,
+	    height,
+	    i,
+	    j,
+	    scale;
 
 	/**
 	 * SoundHeatmapView is the sound simulation version of the HeatmapView 
@@ -26,6 +44,8 @@ define(function(require) {
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);
+
+			this.accumulator = 0;
 		},
 
 		/**
@@ -44,18 +64,127 @@ define(function(require) {
 		},
 
 		/**
-		 * 
+		 * A helper function to iterate through all the pressure particles
+		 *   because they aren't a 1:1 ratio with the lattice cells.
+		 */
+		eachPressureParticle: function(callback) {
+			width  = this.waveSimulation.lattice.width;
+			height = this.waveSimulation.lattice.height;
+
+			for (i = 0; i < width; i++) {
+				for (j = 0; j < height; j++) {
+					if (i % PARTICLE_CELL_RATIO === 0 && j % PARTICLE_CELL_RATIO === 0) {
+						callback.apply(this, [ i, j ]);
+					}
+				}
+			}
+		},
+
+		/**
+		 * Need to have xSpacing and ySpacing defined before this will work
 		 */
 		initPressureParticles: function() {
+			this.pressureParticles = [];
+			this.pressureParticleSprites = [];
 
+			this.pressureParticleSpriteBatch = new PIXI.SpriteBatch();
+			this.stage.addChild(this.pressureParticleSpriteBatch);
+
+			this.spriteBatch.visible = false;
+			//this.pressureParticleSpriteBatch.visible = true;
+
+			texture = PIXI.Texture.fromImage('../img/phet/particle-blue.gif');
+
+			this.eachPressureParticle(function(i, j) {
+				if (!this.pressureParticles[i]) {
+					this.pressureParticles[i]       = [];
+					this.pressureParticleSprites[i] = [];	
+				}
+
+				sprite = new PIXI.Sprite(texture);
+				sprite.anchor.x = sprite.anchor.y = 0.5;
+
+				particle = new Particle({
+					i: i,
+					j: j,
+					spacingBetweenCells: 1,
+					lattice: this.waveSimulation.lattice
+				});
+
+				this.pressureParticles[i][j] = particle;
+				this.pressureParticleSprites[i][j] = sprite;
+
+				this.pressureParticleSpriteBatch.addChild(sprite);	
+			});
+
+			this.resizePressureParticles();
 		},
 
-		positionPressureParticles: function() {
+		/**
+		 * 
+		 */
+		resizePressureParticles: function() {
+			height = this.waveSimulation.lattice.height;
 
+			xSpacing = this.xSpacing;
+
+			particles = this.pressureParticles;
+			sprites   = this.pressureParticleSprites;
+
+			scale = (2 * xSpacing) / 36;
+
+			this.eachPressureParticle(function(i, j) {
+				particles[i][j].resize(xSpacing);
+
+				sprite = sprites[i][j];
+				// sprite.scale.x = scale;
+				// sprite.scale.y = scale;
+				// TODO: change the scale?
+			});	
 		},
 
+		/**
+		 * Updates all the pressure particles.
+		 */
 		updatePressureParticles: function() {
-			
+			this.eachPressureParticle(this._updatePressureParticlesCallback);
+		},
+
+		/**
+		 * This needs to be saved and reused instead of just
+		 *   being an anonymous function because it gets run
+		 *   every frame.
+		 */
+		_updatePressureParticlesCallback: function(i, j) {
+			this.pressureParticles[i][j].update();
+
+			this.pressureParticleSprites[i][j].position.x = this.xSpacing * i;
+			this.pressureParticleSprites[i][j].position.y = this.ySpacing * (this.waveSimulation.lattice.height - j - 1);
+		},
+
+		resizeGraphics: function() {
+			if (this.pressureParticles)
+				this.resizePressureParticles();
+
+			HeatmapView.prototype.resizeGraphics.apply(this);
+		},
+
+		update: function(time, delta) {
+			if (!this.waveSimulation.paused) {
+				if (!this.pressureParticles) {
+					this.initPressureParticles();
+				}
+
+				this.accumulator += delta;
+
+				while (this.accumulator >= this.waveSimulation.timestep) {
+					this.updatePressureParticles();
+					
+					this.accumulator -= this.waveSimulation.timestep;
+				}
+			}
+
+			HeatmapView.prototype.update.apply(this, [time, delta]);
 		}
 
 	});

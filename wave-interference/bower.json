@@ -25,6 +25,7 @@
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
-    "timbre": "*"
+    "timbre": "*",
+    "gl-matrix": "~2.2.1"
   }
 }
