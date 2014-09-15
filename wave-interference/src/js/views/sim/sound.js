@@ -12,13 +12,16 @@ define(function (require) {
 	var SoundHeatmapView = require('views/heatmap/sound');
 	var SimView          = require('views/sim');
 
-	var audioControlsHtml = require('text!templates/control-panel-components/audio.html');
+	var audioControlsHtml    = require('text!templates/control-panel-components/audio.html');
+	var particleControlsHtml = require('text!templates/control-panel-components/particles.html');
 
 	var SoundSimView = SimView.extend({
 
 		events: _.extend({
 			'slide  .sound-volume' : 'changeVolume',
 			'change .sound-check'  : 'toggleSound',
+
+			'change .heatmap-mode'   : 'changeHeatmapMode',
 		}, SimView.prototype.events),
 
 		initialize: function(options) {
@@ -88,8 +91,10 @@ define(function (require) {
 		renderControlPanel: function() {
 			SimView.prototype.renderControlPanel.apply(this);
 
-			var $audioControls = $(audioControlsHtml);
+			var audioControls    = _.template(audioControlsHtml)(   { unique: this.cid });
+			var particleControls = _.template(particleControlsHtml)({ unique: this.cid });
 
+			var $audioControls = $(audioControls);
 			$audioControls.find('.sound-volume').noUiSlider({
 				start: this.volume,
 				connect: 'lower',
@@ -98,8 +103,9 @@ define(function (require) {
 					max: 100
 				}
 			});
-
 			this.$('.oscillator-controls').before($audioControls);
+
+			$(particleControls).insertBefore($audioControls);
 		},
 
 		/**
@@ -142,6 +148,15 @@ define(function (require) {
 				this.sound.play();
 			else
 				this.sound.pause();
+		},
+
+		changeHeatmapMode: function() {
+			var mode = $(event.target).val();
+
+			if (mode == "heatmap")
+				this.heatmapView.disablePressureParticles();
+			else
+				this.heatmapView.enablePressureParticles();
 		}
 	});
 

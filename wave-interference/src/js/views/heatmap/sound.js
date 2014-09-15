@@ -40,7 +40,7 @@ define(function(require) {
 		initialize: function(options) {
 			// Default values
 			options = _.extend({
-				title: 'Pressure Map &ndash; XY Plane',
+				title: 'Pressure (Heatmap) &ndash; XY Plane',
 				color: '#000'
 			}, options);
 
@@ -91,8 +91,7 @@ define(function(require) {
 			this.pressureParticleSpriteBatch = new PIXI.SpriteBatch();
 			this.stage.addChild(this.pressureParticleSpriteBatch);
 
-			this.spriteBatch.visible = false;
-			//this.pressureParticleSpriteBatch.visible = true;
+			this.disablePressureParticles();
 
 			texture  = PIXI.Texture.fromImage('../img/phet/particle-blue.gif');
 			texture2 = PIXI.Texture.fromImage('../img/phet/particle-blue-marked.png');
@@ -146,6 +145,26 @@ define(function(require) {
 				sprite.scale.y = scale;
 				// TODO: change the scale?
 			});	
+		},
+
+		/**
+		 * 
+		 */
+		enablePressureParticles: function() {
+			this.pressureParticleSpriteBatch.visible = true;
+			this.spriteBatch.visible = false;
+
+			this.$('.heatmap-title').html('Pressure (Particles) &ndash; XY Plane');
+		},
+
+		/**
+		 * 
+		 */
+		disablePressureParticles: function() {
+			this.spriteBatch.visible = true;
+			this.pressureParticleSpriteBatch.visible = false;
+
+			this.$('.heatmap-title').html(this.graphInfo.title);
 		},
 
 		/**
