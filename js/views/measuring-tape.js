@@ -11,7 +11,6 @@ define(function (require) {
 	var html  = require('text!templates/measuring-tape.html');
 
 	var padding,
-	    height,
 	    angle,
 	    lineLength,
 	    startX,

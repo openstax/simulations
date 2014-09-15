@@ -313,13 +313,17 @@ define(function(require) {
 			this.width  = width;
 			this.height = height;
 			if (override || width != this.renderer.width || height != this.renderer.height) {
-				this.renderer.resize(width, height);
-				this.positionParticles();
+				this.resizeGraphics();
 				this.trigger('resized');
 			}
 			this.resizeOnNextUpdate = false;
 
 			this.offset = this.$canvas.offset();
+		},
+
+		resizeGraphics: function() {
+			this.renderer.resize(this.width, this.height);
+			this.positionParticles();
 		},
 
 		update: function(time, delta) {

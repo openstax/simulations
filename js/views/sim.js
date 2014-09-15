@@ -647,7 +647,6 @@ define(function (require) {
 
 			this.listenTo(detectorView, 'remove', function(){
 				this.detectorViews = _.without(this.detectorViews, detectorView);
-				console.log(this.detectorViews.length);
 			});
 
 			this.detectorViews.push(detectorView);

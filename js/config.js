@@ -10,6 +10,7 @@
 			pixi:       '../bower_components/pixi/bin/pixi',
 			nouislider: '../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 			timbre:     '../bower_components/timbre/timbre.dev',
+			glmatrix:   '../bower_components/gl-matrix/dist/gl-matrix',
 
 			templates:  '../templates/'
 		},
@@ -22,7 +23,7 @@
 			name: 'less',
 			location: '../bower_components/require-less',
 			main: 'less'
-		}],
+		}]
 	};
 
 	require.config(config);

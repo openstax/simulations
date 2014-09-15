@@ -2,7 +2,11 @@ define(function (require) {
 
 	'use strict';
 
-	require('timbre');
+	// This bower module doesn't satisfy AMD, so I'm just trying to satisfy the linter
+	require('timbre'); var T = window.T;
+
+	var _ = require('underscore');
+	var $ = require('jquery');
 
 	var SoundSimulation  = require('models/wave-sim/sound');
 	var SoundHeatmapView = require('views/heatmap/sound');
