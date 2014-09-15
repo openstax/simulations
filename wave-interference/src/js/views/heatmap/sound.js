@@ -22,6 +22,7 @@ define(function(require) {
 	    particles,
 	    sprites,
 	    texture,
+	    texture2,
 	    xSpacing,
 	    ySpacing,
 	    width,
@@ -93,7 +94,8 @@ define(function(require) {
 			this.spriteBatch.visible = false;
 			//this.pressureParticleSpriteBatch.visible = true;
 
-			texture = PIXI.Texture.fromImage('../img/phet/particle-blue.gif');
+			texture  = PIXI.Texture.fromImage('../img/phet/particle-blue.gif');
+			texture2 = PIXI.Texture.fromImage('../img/phet/particle-blue-marked.png');
 
 			this.eachPressureParticle(function(i, j) {
 				if (!this.pressureParticles[i]) {
@@ -101,7 +103,10 @@ define(function(require) {
 					this.pressureParticleSprites[i] = [];	
 				}
 
-				sprite = new PIXI.Sprite(texture);
+				if (Math.random() < 0.05)
+					sprite = new PIXI.Sprite(texture2);
+				else
+					sprite = new PIXI.Sprite(texture);
 				sprite.anchor.x = sprite.anchor.y = 0.5;
 
 				particle = new Particle({

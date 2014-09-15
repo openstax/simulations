@@ -159,7 +159,7 @@ define(function(require) {
 
 			for (i = -HALF_WINDOW_SIZE; i <= HALF_WINDOW_SIZE; i++) {
 				for (j = -HALF_WINDOW_SIZE; j <= HALF_WINDOW_SIZE; j++) {
-					if (this.inBounds(homeX + i, homeY + i)) {
+					if (this.inBounds(homeX + i, homeY + j)) {
 						if (bestPoint == null || (
 								this.lattice.getValue( homeX + i, homeY + j ) < bestValue &&
 								Utils.lineLength(homeX, homeY, homeX + i, homeY + j) <= HALF_WINDOW_SIZE 
