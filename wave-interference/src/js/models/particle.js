@@ -129,10 +129,16 @@ define(function(require) {
 		 *   everything that uses spacingBetweenCells.
 		 */
 		resize: function(spacingBetweenCells) {
+			// scalar with which to scale the coordinates
+			var scale = spacingBetweenCells / this.spacingBetweenCells;
+
 			this.spacingBetweenCells = spacingBetweenCells;
 
-			this.destinationX = this.homeX * spacingBetweenCells;
-			this.destinationY = this.homeY * spacingBetweenCells;
+			this.destinationX *= scale;
+			this.destinationY *= scale;
+
+			this.x *= scale;
+			this.y *= scale;
 		},
 
 		/**

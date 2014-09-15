@@ -131,14 +131,14 @@ define(function(require) {
 			particles = this.pressureParticles;
 			sprites   = this.pressureParticleSprites;
 
-			scale = (2 * xSpacing) / 36;
+			scale = (2.5 * xSpacing) / 36;
 
 			this.eachPressureParticle(function(i, j) {
 				particles[i][j].resize(xSpacing);
 
 				sprite = sprites[i][j];
-				// sprite.scale.x = scale;
-				// sprite.scale.y = scale;
+				sprite.scale.x = scale;
+				sprite.scale.y = scale;
 				// TODO: change the scale?
 			});	
 		},
@@ -158,8 +158,8 @@ define(function(require) {
 		_updatePressureParticlesCallback: function(i, j) {
 			this.pressureParticles[i][j].update();
 
-			this.pressureParticleSprites[i][j].position.x = this.xSpacing * i;
-			this.pressureParticleSprites[i][j].position.y = this.ySpacing * (this.waveSimulation.lattice.height - j - 1);
+			this.pressureParticleSprites[i][j].position.x = this.pressureParticles[i][j].x;
+			this.pressureParticleSprites[i][j].position.y = this.height - this.pressureParticles[i][j].y;
 		},
 
 		resizeGraphics: function() {
