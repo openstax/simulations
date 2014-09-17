@@ -79,7 +79,7 @@ define(function(require) {
 				 *   in those cells with the current calculated oscillating value.
 				 */
 				for (i = x - radius; i <= x + radius; i++) {
-					for (j = y - radius; j <= x + radius; j++) {
+					for (j = y - radius; j <= y + radius; j++) {
 						if (radius === 0 || Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < radius) {
 							// Make sure we don't go out of bounds if we're on an edge
 							if (waveSim.isValidPoint(i, j))
