@@ -47,8 +47,6 @@ define(function(require) {
 	    j,
 	    x,
 	    y,
-	    xMax,
-	    yMax,
 	    radius,
 	    twoPI = Math.PI * 2,
 	    peakTime,
@@ -75,16 +73,14 @@ define(function(require) {
 				radius  = this.radius;
 				x       = this.x;
 				y       = this.y;
-				xMax    = x + radius;
-				yMax    = y + radius;
 
 				/*
 				 * Within the circle of radius [radius] centered around [x, y], fill
 				 *   in those cells with the current calculated oscillating value.
 				 */
-				for (i = x - radius; i < xMax; i++) {
-					for (j = y - radius; j < yMax; j++) {
-						if (Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < radius) {
+				for (i = x - radius; i <= x + radius; i++) {
+					for (j = y - radius; j <= x + radius; j++) {
+						if (radius === 0 || Math.sqrt(Math.pow(i - x, 2) + Math.pow(j - y, 2)) < radius) {
 							// Make sure we don't go out of bounds if we're on an edge
 							if (waveSim.isValidPoint(i, j))
 								waveSim.setSourceValue(i, j, oscillatingValue);

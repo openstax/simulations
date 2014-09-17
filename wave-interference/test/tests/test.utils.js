@@ -40,6 +40,29 @@ describe('Utils', function(){
 		chai.expect(three).to.be.above(2.99);
 	});
 
+	it('should determine the angle of a line in degrees from (1, 0) counter-clockwise', function(){
+		var start = {
+			x: 0,
+			y: 0
+		};
+		var end90 = {
+			x: 0,
+			y: 1
+		};
+		var endNeg90 = {
+			x: 0,
+			y: -1
+		};
+
+		var result90 = Utils.angleFromLine(start.x, start.y, end90.x, end90.y);
+		chai.expect(result90).to.be.below(90.01);
+		chai.expect(result90).to.be.above(89.99);
+
+		var resultNeg90 = Utils.angleFromLine(start.x, start.y, endNeg90.x, endNeg90.y);
+		chai.expect(resultNeg90).to.be.below(-89.99);
+		chai.expect(resultNeg90).to.be.above(-90.01);
+	});
+
 	it('should calculate a unitized normal vector to a line', function(){
 		var start = {
 			x: 0,
