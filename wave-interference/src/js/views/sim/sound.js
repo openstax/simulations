@@ -153,7 +153,7 @@ define(function (require) {
 		changeHeatmapMode: function() {
 			var mode = $(event.target).val();
 
-			if (mode == "heatmap")
+			if (mode == 'heatmap')
 				this.heatmapView.disablePressureParticles();
 			else
 				this.heatmapView.enablePressureParticles();
