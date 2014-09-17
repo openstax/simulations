@@ -93,8 +93,8 @@ define(function(require) {
 
 			this.disablePressureParticles();
 
-			texture  = PIXI.Texture.fromImage('../img/phet/particle-blue.gif');
-			texture2 = PIXI.Texture.fromImage('../img/phet/particle-blue-marked.png');
+			texture  = PIXI.Texture.fromImage('img/phet/particle-blue.gif');
+			texture2 = PIXI.Texture.fromImage('img/phet/particle-blue-marked.png');
 
 			this.eachPressureParticle(function(i, j) {
 				if (!this.pressureParticles[i]) {
