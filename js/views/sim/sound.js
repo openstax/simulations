@@ -143,17 +143,17 @@ define(function (require) {
 			this.sound.set({ freq: parseFloat(this.waveSimulation.get('frequency')) * this.frequencyScale });
 		},
 
-		toggleSound: function() {
+		toggleSound: function(event) {
 			if ($(event.target).is(':checked'))
 				this.sound.play();
 			else
 				this.sound.pause();
 		},
 
-		changeHeatmapMode: function() {
+		changeHeatmapMode: function(event) {
 			var mode = $(event.target).val();
 
-			if (mode == "heatmap")
+			if (mode == 'heatmap')
 				this.heatmapView.disablePressureParticles();
 			else
 				this.heatmapView.enablePressureParticles();

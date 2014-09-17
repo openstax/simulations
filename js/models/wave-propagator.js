@@ -261,6 +261,13 @@ define(function(require) {
 		setSourceValue: function(x, y, val) {
 			this.prevLat1.data[x + this.dampX][y + this.dampY] = val;
 			this.prevLat2.data[x + this.dampX][y + this.dampY] = val;
+		},
+
+		/**
+		 * Really only for testing purposes
+		 */
+		getSourceValue: function(x, y) {
+			return this.prevLat1.data[x + this.dampX][y + this.dampY];
 		}
 	});
 

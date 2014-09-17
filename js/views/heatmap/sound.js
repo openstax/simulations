@@ -24,7 +24,6 @@ define(function(require) {
 	    texture,
 	    texture2,
 	    xSpacing,
-	    ySpacing,
 	    width,
 	    height,
 	    i,
