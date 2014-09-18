@@ -1,10 +1,14 @@
-define([
-	'underscore', 
-	'models/wave-sim'
-], function (_, WaveSimulation) {
+define(function (require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
+	var WaveSimulation = require('models/wave-sim');
+
+	/**
+	 *
+	 */
 	var WaterSimulation = WaveSimulation.extend({
 
 		defaults: _.extend({}, WaveSimulation.prototype.defaults, {

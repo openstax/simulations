@@ -102,24 +102,37 @@ define(function (require) {
 			this.potential = new CompositePotential();
 
 			// Lattice
+			this.initLattice();
+
+			// Wave propagator
+			this.initPropagator();
+
+			// Barrier
+			this.initBarrier();
+
+			// Oscillators
+			this.initOscillators();
+		},
+
+		initLattice: function() {
 			this.lattice = new Lattice2D({
 				width:  this.get('latticeSize').width,
 				height: this.get('latticeSize').height,
 				initialValue: 0
 			});
+		},
 
-			// Wave propagator
+		initPropagator: function() {
 			this.propagator = new WavePropagator({
 				lattice: this.lattice,
 				potential: this.potential
 			});
+		},
 
+		initBarrier: function() {
 			this.barrier = new Barrier({
 				waveSimulation: this
 			});
-
-			// Oscillators
-			this.initOscillators();
 		},
 
 		initOscillators: function() {

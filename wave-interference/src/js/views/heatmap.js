@@ -6,11 +6,13 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
-	var html     = require('text!templates/heatmap.html');
-
+	
+	var Utils                = require('utils/utils');
 	var OscillatorView       = require('views/oscillator');
 	var BarrierView          = require('views/barrier');
 	var SegmentPotentialView = require('views/segment-potential');
+
+	var html     = require('text!templates/heatmap.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle
@@ -61,7 +63,7 @@ define(function(require) {
 					label: 'y (cm)'
 				},
 				brightness: 0.5,
-				color: '#0D6A7C'
+				color: '#fff'
 			}, options);
 
 			// Save options
@@ -80,7 +82,7 @@ define(function(require) {
 			// The alpha modifer for particles
 			this.brightness = options.brightness;
 
-			// Background color for canvas
+			// Color of the particles in their heighest value state
 			this.color = options.color;
 
 			// To keep track of history so we can interpolate values
@@ -100,8 +102,6 @@ define(function(require) {
 			// Listeners
 			this.listenTo(this.waveSimulation, 'segment-potential-added', this.renderSegmentPotentialView);
 			this.listenTo(this.waveSimulation, 'change:oscillatorCount', this.changeOscillatorCount);
-
-			this.on('change:color', this.changeColor);
 		},
 
 		/**
@@ -113,7 +113,6 @@ define(function(require) {
 			this.renderContainer();
 			this.initRenderer();
 			this.initGraphics();
-			this.changeColor();
 
 			return this;
 		},
@@ -254,11 +253,13 @@ define(function(require) {
 			canvas.width  = radius * 2 || 1;
 			canvas.height = radius * 2 || 1;
 
+			var rgba = Utils.toRgba(this.color, true);
+
 			var ctx = canvas.getContext('2d');
 
 			var gradient = ctx.createRadialGradient(radius, radius, 0, radius, radius, radius);
-			gradient.addColorStop(0, 'rgba(255,255,255,1)');
-			gradient.addColorStop(1, 'rgba(255,255,255,0)');
+			gradient.addColorStop(0, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',1)');
+			gradient.addColorStop(1, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',0)');
 
 			ctx.fillStyle = gradient;
 			ctx.fillRect(0, 0, radius * 2, radius * 2);
@@ -271,20 +272,15 @@ define(function(require) {
 			width  = this.waveSimulation.lattice.width;
 			height = this.waveSimulation.lattice.height;
 
-			//prevLat = this.previousLattice.data;
-
 			brightness = this.brightness;
 
 			particles = this.particles;
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					//interpolatedValue = prevLat[i][j] * (1 - interpolationFactor) + lat[i][j] * interpolationFactor;
-					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]/*interpolationFactor*/) * brightness;
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * brightness;
 				}
 			}
-
-			//this.previousLattice.copy(this.waveSimulation.lattice);
 		},
 
 		alphaFromCellValue: function(value) {
@@ -368,10 +364,6 @@ define(function(require) {
 
 		hideCrossSectionSlider: function() {
 			this.$('.cross-section-slider').hide();
-		},
-
-		changeColor: function() {
-			this.$canvas.css('background-color', this.color);
 		},
 
 		renderSegmentPotentialView: function(segmentPotential) {

@@ -40,7 +40,7 @@ define(function(require) {
 			// Default values
 			options = _.extend({
 				title: 'Pressure (Heatmap) &ndash; XY Plane',
-				color: '#000'
+				color: '#fff'
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);

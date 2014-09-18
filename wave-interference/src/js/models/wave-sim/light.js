@@ -1,10 +1,15 @@
-define([
-	'underscore', 
-	'models/wave-sim'
-], function (_, WaveSimulation) {
+define(function (require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
+	var WaveSimulation = require('models/wave-sim');
+	var Lattice2D      = require('models/lattice2d');
+
+	/**
+	 *
+	 */
 	var LightSimulation = WaveSimulation.extend({
 
 		defaults: _.extend({}, WaveSimulation.prototype.defaults, {
@@ -27,7 +32,16 @@ define([
 
 			oscillatorName: 'Light',
 			oscillatorNamePlural: 'Lights',
-		})
+		}),
+
+		/**
+		 * Need to have the dark propagator executing after the normal one
+		 */
+		initPropagator: function() {
+			WaveSimulation.prototype.initPropagator.apply(this);
+
+
+		}
 
 	});
 

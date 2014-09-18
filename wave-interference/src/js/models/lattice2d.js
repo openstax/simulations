@@ -145,6 +145,10 @@ define(function(require) {
 
 		getValue: function(x, y) {
 			return this.data[x][y];
+		},
+
+		contains: function(x, y) {
+			return (x >= 0 && x < this.width && y >= 0 && y < this.height);
 		}
 
 	});

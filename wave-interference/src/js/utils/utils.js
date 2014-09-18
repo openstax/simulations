@@ -160,20 +160,25 @@ define(function (require) {
 
 		/**
 		 * Takes either hex or rgba format and converts it into an rgba string with alpha.
+		 * If alpha isn't specified, defaults to 1.  If alpha is a boolean, it takes the
+		 *   place of return Object.
 		 */
-		toRgba: function(sourceColor, alpha) {
+		toRgba: function(sourceColor, alpha, returnObject) {
 			var rgb = this.hexToRgb(sourceColor);
 
 			if (!rgb)
 				rgb = this.parseRgba(sourceColor);
 
 			if (rgb) {
-				if (alpha !== undefined)
+				if (alpha !== undefined && alpha !== false && alpha !== true)
 					rgb.a = alpha;
 				if (rgb.a === undefined)
 					rgb.a = 1;
 
-				return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + rgb.a + ')';
+				if (returnObject || alpha === true)
+					return rgb;
+				else
+					return 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ',' + rgb.a + ')';
 			} 
 			else
 				return null;	
