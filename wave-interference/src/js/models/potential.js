@@ -9,7 +9,7 @@ define(function(require) {
 
 	_.extend(Potential.prototype, {
 
-		getPotential: function(x, y, time) {},
+		getPotential: function(x, y, time) { return 0; },
 
 	});
 
