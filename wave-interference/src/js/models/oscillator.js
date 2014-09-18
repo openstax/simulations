@@ -170,7 +170,7 @@ define(function(require) {
 			peakTime = this.getNextPeakTime();
 			halfPeriod = this.period() / 2;
 
-			if (peakTime - halfPeriod >= this.time)
+			if (peakTime - halfPeriod > this.time)
 				return peakTime - halfPeriod;
 			else
 				return peakTime + halfPeriod;
