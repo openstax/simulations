@@ -202,15 +202,22 @@ define(function (require) {
 				while (this.accumulator >= this.timestep) {
 					this.time += this.timestep;
 
-					this.propagator.propagate();
-
-					for (i = 0; i < this.get('oscillatorCount'); i++)
-						this.oscillators[i].update(this.time);
+					this._update();
 					
 					this.accumulator -= this.timestep;
 				}	
 			}
 			
+		},
+
+		/**
+		 * Inside the fixed-interval loop
+		 */
+		_update: function() {
+			this.propagator.propagate();
+
+			for (i = 0; i < this.get('oscillatorCount'); i++)
+				this.oscillators[i].update(this.time);
 		},
 
 		play: function() {
@@ -233,7 +240,7 @@ define(function (require) {
 		},
 
 		isValidPoint: function(x, y) {
-			return (x < this.lattice.width && x >= 0 && y < this.lattice.height && y >= 0);
+			return this.lattice.contains(x, y);
 		},
 
 		setSourceValue: function(x, y, val) {

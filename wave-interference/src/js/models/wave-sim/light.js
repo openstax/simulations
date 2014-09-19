@@ -5,7 +5,7 @@ define(function (require) {
 	var _ = require('underscore');
 
 	var WaveSimulation = require('models/wave-sim');
-	var Lattice2D      = require('models/lattice2d');
+	var DarkPropagator = require('models/dark-propagator');
 
 	/**
 	 *
@@ -34,15 +34,31 @@ define(function (require) {
 			oscillatorNamePlural: 'Lights',
 		}),
 
-		/**
-		 * Need to have the dark propagator executing after the normal one
+		/*
+		 *
 		 */
-		initPropagator: function() {
-			WaveSimulation.prototype.initPropagator.apply(this);
+		initialize: function(options) {
+			WaveSimulation.prototype.initialize.apply(this, [options]);
 
+			this.initDarkWaveSimulation();
+		},
 
-		}
+		initDarkWaveSimulation: function() {
+			this.darkWaveSimulation = new WaveSimulation(this.toJSON());
+			this.darkWaveSimulation.propagator = new DarkPropagator({
+				lattice: this.lattice,
+				potential: this.potential
+			});
+		},
 
+		/**
+		 * Inside the fixed-interval loop
+		 */
+		_update: function() {
+			WaveSimulation.prototype._update.apply(this);
+
+			this.darkWaveSimulation._update();
+		},
 	});
 
 	return LightSimulation;

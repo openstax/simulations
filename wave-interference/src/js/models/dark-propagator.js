@@ -3,9 +3,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _          = require('underscore');
-	var Lattice2D  = require('models/lattice2d');
-	var WavePropagator = require('models/propagator');
+	var _ = require('underscore');
+
+	var WavePropagator = require('models/wave-propagator');
 
 	/**
 	 * Used in the light module, the DarkPropagator comes from a subclass of PhET's
@@ -17,10 +17,10 @@ define(function(require) {
 		
 		// We want to perform the propagation on a throwaway lattice
 		this.realLattice = options.lattice;
-		this.lattice = options.lattice.clone();
+		options.lattice = options.lattice.clone();
 		
 		// Call the WavePropagator's constructor
-		WavePropagator.prototype.apply(this, [options]);
+		WavePropagator.apply(this, [options]);
 
 		this.numSteps = 0;
 	};
@@ -28,13 +28,7 @@ define(function(require) {
 	/*
 	 * "Local" vars
 	 */
-	var i,
-	    j,
-	    i2,
-	    j2,
-	    width,
-	    height,
-	    paddedWidth,
+	var paddedWidth,
 	    paddedHeight,
 	    dampX,
 	    dampY,
@@ -45,7 +39,7 @@ define(function(require) {
 	    area,
 	    fraction;
 
-	_.extend(DarkPropagator.prototype, {
+	_.extend(DarkPropagator.prototype, WavePropagator.prototype, {
 
 		/**
 		 * Adds a check to see where the wave front is
@@ -61,27 +55,33 @@ define(function(require) {
 			dampX = this.dampX;
 			dampY = this.dampY;
 
-			width  = this.realLattice.width;
-			height = this.realLattice.height;
-
 			paddedWidth  = this.paddedLat.width;
 			paddedHeight = this.paddedLat.height;
 
+			var i, j, i2, j2;
+
 			for (i = 0; i < paddedWidth; i++) {
 				for (j = 0; j < paddedHeight; j++) {
-					if (this.isWavefront(i, j)) {
-						this.setSourceValue(i, j, 0);
+					if (!this.hasBeenModified(this.paddedLat, i, j)) {
+						//this.setSourceValue(i, j, 0);
 
 						i2 = i - dampX;
 						j2 = j - dampY;
 
-						if (i2 >= 0 && i2 < width && j2 >= 0 && j2 < height) {
+						if (realLattice.contains(i2, j2)) {
 							// Set it to false so it displays as nothing
-							realLattice[i2][j2] = false;
+							realLattice.data[i2][j2] = false;
 						}
 					}
 				}
 			}
+		},
+
+		/**
+		 *
+		 */
+		hasBeenModified: function(lattice, x, y) {
+			return (Math.abs(lattice.getValue(x, y)) > 1E-6);
 		},
 
 		/**
@@ -94,8 +94,10 @@ define(function(require) {
 
 			lattice = this.lattice;
 
-			for (i = -a; i <= a; i++) {
-				for (j = -a; j <= a; j++) {
+			var i, j;
+
+			for (i = -area; i <= area; i++) {
+				for (j = -area; j <= area; j++) {
 					if (lattice.contains(x + i, y + j)) {
 						checked++;
 						if (Math.abs(lattice.getValue(x + i, y + j)) > 1E-6)
