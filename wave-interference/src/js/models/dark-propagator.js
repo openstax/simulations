@@ -12,6 +12,7 @@ define(function(require) {
 	 *   DarkWave.java.  It keeps track of the wave's propagation separately and
 	 *   determines the wave's front so we can make every particle that the light
 	 *   hasn't touched yet dark.
+	 * It makes darkness where there is no light.
 	 */
 	var DarkPropagator = function(options) {
 		
@@ -62,8 +63,9 @@ define(function(require) {
 
 			for (i = 0; i < paddedWidth; i++) {
 				for (j = 0; j < paddedHeight; j++) {
-					if (!this.hasBeenModified(this.paddedLat, i, j)) {
-						//this.setSourceValue(i, j, 0);
+					if (this.isWavefront(this.paddedLat, i, j)) {
+						//console.log(this.numSteps, i, j);
+						this.setSourceValue(i, j, 0);
 
 						i2 = i - dampX;
 						j2 = j - dampY;
@@ -87,12 +89,10 @@ define(function(require) {
 		/**
 		 * This is almost a straight copy of PhET's isWavefront.
 		 */
-		isWavefront: function(x, y) {
+		isWavefront: function(lattice, x, y) {
 			passed  = 0;
 			checked = 0;
 			area = 1;
-
-			lattice = this.lattice;
 
 			var i, j;
 
