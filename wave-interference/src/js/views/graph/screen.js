@@ -64,6 +64,9 @@ define(function(require) {
 
 			this.$showButton = this.$('.screen-graph-show-button');
 			this.$hideButton = this.$('.screen-graph-hide-button');
+
+			this.$showChartButton = this.$('.screen-graph-show-chart-button');
+			//this.$hideButton = this.$('.screen-graph-hide-button');
 		},
 
 		/**
@@ -127,12 +130,14 @@ define(function(require) {
 			StaticGraphView.prototype.show.apply(this, [event]);
 
 			this.heatmapView.enableScreenMode();
+			this.$showChartButton.addClass('visible');
 		},
 
 		hide: function() {
 			StaticGraphView.prototype.hide.apply(this, [event]);
 
 			this.heatmapView.disableScreenMode();
+			this.$showChartButton.removeClass('visible');
 		}
 	});
 

@@ -49,8 +49,17 @@
 	}
 
 	> .screen-graph-show-chart-button {
+		left: 60px;
+		width: @heatmap-container-width;
 		.horizontal-panel-button();
-		display: none;
+		visibility: hidden;
+		opacity: 0;
+		.transition(opacity 400ms);
+
+		&.visible {
+			opacity: 1;
+			visibility: visible;
+		}
 	}
 }
 
