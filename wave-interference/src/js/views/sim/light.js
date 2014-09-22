@@ -6,6 +6,7 @@ define(function (require) {
 
 	var LightSimulation  = require('models/wave-sim/light');
 	var LightHeatmapView = require('views/heatmap/light');
+	var ScreenGraphView  = require('views/graph/screen');
 	var SimView          = require('views/sim');
 
 	var LightSimView = SimView.extend({
@@ -13,10 +14,13 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
-				title: 'Light'
+				title: 'Light',
+				segmentPotentialName: 'Mirror'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
+
+			this.initScreenGraphView();
 		},
 
 		/**
@@ -58,6 +62,33 @@ define(function (require) {
 				waveSimulation: this.waveSimulation,
 				heatmapView: this.heatmapView
 			};
+		},
+
+		/**
+		 * Initializes the ScreenGraphView.
+		 */
+		initScreenGraphView: function() {
+			this.screenGraphView = new ScreenGraphView({
+				waveSimulation: this.waveSimulation,
+				heatmapView: this.heatmapView
+			});
+		},
+
+		/**
+		 *
+		 */
+		render: function() {
+			SimView.prototype.render.apply(this);
+
+			this.renderScreenGraphView();
+		},
+
+		/**
+		 * Renders the graph view
+		 */
+		renderScreenGraphView: function() {
+			this.screenGraphView.render();
+			this.heatmapView.$el.before(this.screenGraphView.el);
 		},
 
 	});

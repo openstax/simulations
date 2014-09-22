@@ -6,6 +6,7 @@
 	<canvas class="graph-canvas"></canvas>
 </div>
 
+<% if (y) { %>
 <div class="graph-y">
 	<label class="graph-axis-label"><%= y.label %></label>
 	<div class="graph-y-numbers">
@@ -15,7 +16,9 @@
 	<% } %>
 	</div>
 </div>
+<% } %>
 
+<% if (x) { %>
 <div class="graph-x">
 	<label class="graph-axis-label"><%= x.label %></label>
 	<div class="graph-x-numbers">
@@ -25,3 +28,4 @@
 	<% } %>
 	</div>
 </div>
+<% } %>

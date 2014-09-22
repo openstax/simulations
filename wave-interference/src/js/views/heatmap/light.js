@@ -37,6 +37,20 @@ define(function(require) {
 			return HeatmapView.prototype.alphaFromCellValue.apply(this, [value]);
 		},
 
+		/**
+		 *
+		 */
+		enableScreenMode: function() {
+			this.$el.addClass('rotated');
+		},
+
+		/**
+		 *
+		 */
+		disableScreenMode: function() {
+			this.$el.removeClass('rotated');
+		},
+
 	});
 
 	return LightHeatmapView;
