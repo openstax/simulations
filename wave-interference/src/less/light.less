@@ -1,18 +1,16 @@
 .heatmap-container.rotated {
 	.transform-origin(100% 50%);
-	.transform(translateX(-71px) perspective(500px) rotateY(-10deg));
-	.transition(~"transform 400ms, -webkit-transform: 400ms");
+	.transform(translateX(-68px) perspective(500px) rotateY(-10deg));
+	.transition(~"transform 400ms, -webkit-transform 400ms");
 }
 
 .screen-graph-view {
 	position: absolute;
-	top: 20px;
-	right: 0;
+	top: 0;
+	left: 100%;
 
 	> .screen-graph-show-button {
-		position: absolute;
-		top: 0;
-		left: 0;
+		left: 60px;
 		width: @heatmap-container-width;
 
 		.horizontal-panel-button();
@@ -29,8 +27,8 @@
 
 	> .screen-graph-hide-button {
 		position: absolute;
-		top: 3px;
-		left: 73px;
+		top: 0px;
+		left: -18px;
 		background: transparent;
 		color: #888;
 		display: none;
@@ -55,23 +53,29 @@
 
 .screen-graph-container {
 	.grid-view(screen-graph, @screen-graph-width, @heatmap-container-width, @heatmap-container-padding);
-	.transition(~"width 400ms, transform 400ms, -webkit-transform: 400ms");
+	.transition(~"width 400ms, transform 400ms, -webkit-transform 400ms");
 	.transform-origin(0% 50%);
-	.transform(translateX(42px) perspective(500px) rotateY(62deg));
+	.transform(translateX(-64px) perspective(500px) rotateY(90deg));
 	max-width: none;
 	overflow: hidden;
-	display: none;
 
-	&.open {
-		display: block;
+	.screen-graph-view.open & {
+		.transform(translateX(-64px) perspective(500px) rotateY(55deg));
 	}
 
 	> .screen-graph-canvas-wrapper > .screen-graph-canvas {
-		background-color: #fff;
+		background-color: #000;
+	}
+
+	> .screen-graph-title {
+		letter-spacing: .08em;
 	}
 }
 
 .horizontal-panel-button() {
+	position: absolute;
+	top: 0;
+	bottom: 0;
 	height: @heatmap-container-padding;
 	line-height: (@heatmap-container-padding + 2);
 	font-weight: bold;
@@ -79,8 +83,10 @@
 	background-color: @gray-lightest;
 	color: @link-color;
 	border-radius: 0;
+	margin-top: auto;
+	margin-bottom: auto;
 	z-index: 50;
-	.transform(~"rotate(-90deg) translateY(-175px)");
+	.transform(~"rotate(-90deg) translateY(-239px)");
 	.transform-origin(center center);
 
 	&:hover {

@@ -3,6 +3,7 @@ define(function(require) {
 	'use strict';
 
 	var GraphView       = require('views/graph');
+	var StaticGraphView = require('views/graph/static');
 
 	var html = require('text!templates/screen-graph.html');
 
@@ -24,7 +25,7 @@ define(function(require) {
 	 * ScreenGraphView shows the values of a certain row of the
 	 *   lattice in real time in the form of a curve.
 	 */
-	var ScreenGraphView = GraphView.extend({
+	var ScreenGraphView = StaticGraphView.extend({
 
 		template: _.template(html),
 		className: 'screen-graph-view',
@@ -44,7 +45,7 @@ define(function(require) {
 				longitudinalGridLines: 0
 			}, options);
 
-			GraphView.prototype.initialize.apply(this, [options]);
+			StaticGraphView.prototype.initialize.apply(this, [options]);
 
 			if (options.heatmapView)
 				this.heatmapView = options.heatmapView;
@@ -123,19 +124,16 @@ define(function(require) {
 		},
 
 		show: function(event) {
-			this.$('.screen-graph-container').addClass('open');
-			this.$showButton.hide();
-			this.$hideButton.show();
+			StaticGraphView.prototype.show.apply(this, [event]);
+
 			this.heatmapView.enableScreenMode();
 		},
 
 		hide: function() {
-			this.$('.screen-graph-container').removeClass('open');
-			this.$hideButton.hide();
-			this.$showButton.show();
+			StaticGraphView.prototype.hide.apply(this, [event]);
+
 			this.heatmapView.disableScreenMode();
 		}
-
 	});
 
 	return ScreenGraphView;
