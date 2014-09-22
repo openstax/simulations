@@ -61,18 +61,32 @@ define(function(require) {
 
 			var i, j, i2, j2;
 
-			for (i = 0; i < paddedWidth; i++) {
-				for (j = 0; j < paddedHeight; j++) {
-					if (this.isWavefront(this.paddedLat, i, j)) {
+			// for (i = 0; i < paddedWidth; i++) {
+			// 	for (j = 0; j < paddedHeight; j++) {
+			// 		if (this.isWavefront(this.paddedLat, i, j)) {
+			// 			//console.log(this.numSteps, i, j);
+			// 			this.setSourceValue(i, j, 0);
+
+			// 			i2 = i - dampX;
+			// 			j2 = j - dampY;
+
+			// 			if (realLattice.contains(i2, j2)) {
+			// 				// Set it to false so it displays as nothing
+			// 				realLattice.data[i2][j2] = false;
+			// 			}
+			// 		}
+			// 	}
+			// }
+
+			for (i = 0; i < this.lattice.width; i++) {
+				for (j = 0; j < this.lattice.height; j++) {
+					if (!this.hasBeenModified(this.lattice, i, j)) {
 						//console.log(this.numSteps, i, j);
 						this.setSourceValue(i, j, 0);
 
-						i2 = i - dampX;
-						j2 = j - dampY;
-
-						if (realLattice.contains(i2, j2)) {
+						if (realLattice.contains(i, j)) {
 							// Set it to false so it displays as nothing
-							realLattice.data[i2][j2] = false;
+							realLattice.data[i][j] = false;
 						}
 					}
 				}

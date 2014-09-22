@@ -49,6 +49,7 @@ define(function (require) {
 				lattice: this.lattice,
 				potential: this.potential
 			});
+			
 		},
 
 		/**
