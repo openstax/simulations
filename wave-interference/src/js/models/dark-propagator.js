@@ -18,7 +18,7 @@ define(function(require) {
 		if (options.realLattice)
 			this.realLattice = options.realLattice;
 		else
-			throw 'DarkPropagator constructor a realLattice.';
+			throw 'DarkPropagator constructor requires a realLattice.';
 
 		WavePropagator.apply(this, [options]);
 
@@ -60,36 +60,35 @@ define(function(require) {
 
 			var i, j, i2, j2;
 
-			// for (i = 0; i < paddedWidth; i++) {
-			// 	for (j = 0; j < paddedHeight; j++) {
-			// 		if (this.isWavefront(this.paddedLat, i, j)) {
-			// 			//console.log(this.numSteps, i, j);
-			// 			this.setSourceValue(i, j, 0);
+			for (i = 0; i < paddedWidth; i++) {
+				for (j = 0; j < paddedHeight; j++) {
+					if (this.isWavefront(this.paddedLat, i, j)) {
+						this.clearOffscreenLatticeValue(i, i);
 
-			// 			i2 = i - dampX;
-			// 			j2 = j - dampY;
+						i2 = i - dampX;
+						j2 = j - dampY;
 
-			// 			if (realLattice.contains(i2, j2)) {
-			// 				// Set it to false so it displays as nothing
-			// 				realLattice.data[i2][j2] = false;
-			// 			}
-			// 		}
-			// 	}
-			// }
-
-			for (i = 0; i < this.lattice.width; i++) {
-				for (j = 0; j < this.lattice.height; j++) {
-					if (!this.hasBeenModified(this.lattice, i, j)) {
-						//console.log(this.numSteps, i, j);
-						this.setSourceValue(i, j, 0);
-
-						if (realLattice.contains(i, j)) {
+						if (realLattice.contains(i2, j2)) {
 							// Set it to false so it displays as nothing
-							realLattice.data[i][j] = false;
+							realLattice.data[i2][j2] = false;
 						}
 					}
 				}
 			}
+
+			// for (i = 0; i < this.lattice.width; i++) {
+			// 	for (j = 0; j < this.lattice.height; j++) {
+			// 		if (!this.hasBeenModified(this.lattice, i, j)) {
+			// 			//console.log(this.numSteps, i, j);
+			// 			this.setSourceValue(i, j, 0);
+
+			// 			if (realLattice.contains(i, j)) {
+			// 				// Set it to false so it displays as nothing
+			// 				realLattice.data[i][j] = false;
+			// 			}
+			// 		}
+			// 	}
+			// }
 		},
 
 		/**
@@ -134,6 +133,15 @@ define(function(require) {
 			 *   over. 
 			 */
 			return (fraction > 0 && fraction < 1);
+		},
+
+		/**
+		 * 
+		 */
+		clearOffscreenLatticeValue: function(x, y) {
+			this.prevLat1.data[x][y] = 0;
+			this.prevLat2.data[x][y] = 0;
+			this.paddedLat.data[x][y] = 0;
 		}
 	});
 
