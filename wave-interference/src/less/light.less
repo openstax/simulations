@@ -1,10 +1,11 @@
 #sim-light .heatmap-container.rotated {
 	.transform-origin(100% 50%);
-	.transform(perspective(500px) translateX(-68px) rotateY(-10deg));
+	.transform(perspective(500px) translateX(-82px) rotateY(-10deg));
 }
 
 #sim-light .heatmap-container {
 	.transform(perspective(500px) translateX(0) rotateY(0));
+	.transition(~"transform 2400ms, -webkit-transform 2400ms, -moz-transform 2400ms, -ms-transform 2400ms");
 }
 
 .screen-graph-view {
@@ -25,7 +26,7 @@
 			.animation-fill-mode(forwards);
 		}
 
-		.animated-button(graph-show-btn-clicked, 400ms);
+		.animated-button(graph-show-btn-clicked, 2400ms);
 	}
 
 	> .screen-graph-hide-button {
@@ -54,7 +55,7 @@
 		.horizontal-panel-button();
 		visibility: hidden;
 		opacity: 0;
-		.transition(opacity 400ms);
+		.transition(opacity 2400ms);
 
 		&.visible {
 			opacity: 1;
@@ -65,14 +66,14 @@
 
 .screen-graph-container {
 	.grid-view(screen-graph, @screen-graph-width, @heatmap-container-width, @heatmap-container-padding);
-	.transition(~"width 400ms, transform 400ms, -webkit-transform 400ms");
+	.transition(~"transform 2400ms, -webkit-transform 2400ms, -moz-transform 2400ms, -ms-transform 2400ms");
 	.transform-origin(0% 50%);
 	.transform(perspective(500px) translateX(0px) rotateY(90deg));
 	max-width: none;
 	overflow: hidden;
 
 	.screen-graph-view.open & {
-		.transform(perspective(500px) translateX(-64px) rotateY(55deg));
+		.transform(perspective(500px) translateX(-78px) rotateY(55deg));
 	}
 
 	> .screen-graph-canvas-wrapper > .screen-graph-canvas {

@@ -13,12 +13,12 @@
  * @return Object keys: red, green, blue
  * 
  * <code>
- * > 	
+ * >    
  * > Math.nmToRGB(484);
  * > {
- * > 	red: 0,
- * > 	green: 224,
- * > 	blue: 255
+ * >    red: 0,
+ * >    green: 224,
+ * >    blue: 255
  * > }
  * > 
  * </code>

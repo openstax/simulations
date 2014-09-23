@@ -6,6 +6,8 @@ define(function(require) {
 
 	var HeatmapView = require('views/heatmap');
 
+	require('utils/jquery-plugins');
+
 	/*
 	 * Constants
 	 */
