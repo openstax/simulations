@@ -278,7 +278,7 @@ define(function(require) {
 
 			for (i = 0; i < width; i++) {
 				for (j = 0; j < height; j++) {
-					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j]) * brightness;
+					particles[i][j].alpha = this.alphaFromCellValue(lat[i][j], i, j) * brightness;
 				}
 			}
 		},

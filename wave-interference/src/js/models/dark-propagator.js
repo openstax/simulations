@@ -15,10 +15,10 @@ define(function(require) {
 	 * It makes darkness where there is no light.
 	 */
 	var DarkPropagator = function(options) {
-		if (options.realLattice)
-			this.realLattice = options.realLattice;
+		if (options.waveSimulation)
+			this.waveSimulation = options.waveSimulation;
 		else
-			throw 'DarkPropagator constructor requires a realLattice.';
+			throw 'DarkPropagator constructor requires a WaveSimulation instance.';
 
 		WavePropagator.apply(this, [options]);
 
@@ -33,7 +33,6 @@ define(function(require) {
 	    dampX,
 	    dampY,
 	    lattice,
-	    realLattice,
 	    passed,
 	    checked,
 	    area,
@@ -50,7 +49,7 @@ define(function(require) {
 
 			this.numSteps++;
 
-			realLattice = this.realLattice;
+			lattice = this.lattice;
 
 			dampX = this.dampX;
 			dampY = this.dampY;
@@ -63,15 +62,13 @@ define(function(require) {
 			for (i = 0; i < paddedWidth; i++) {
 				for (j = 0; j < paddedHeight; j++) {
 					if (this.isWavefront(this.paddedLat, i, j)) {
-						this.clearOffscreenLatticeValue(i, i);
+						this.clearOffscreenLatticeValue(i, j);
 
 						i2 = i - dampX;
 						j2 = j - dampY;
 
-						if (realLattice.contains(i2, j2)) {
-							// Set it to false so it displays as nothing
-							realLattice.data[i2][j2] = false;
-						}
+						if (lattice.contains(i2, j2))
+							this.waveSimulation.trigger('set-dark', i2, j2);
 					}
 				}
 			}

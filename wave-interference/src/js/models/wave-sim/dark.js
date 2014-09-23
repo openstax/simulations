@@ -27,7 +27,7 @@ define(function (require) {
 		initPropagator: function() {
 			this.propagator = new DarkPropagator({
 				lattice: this.lattice,
-				realLattice: this.realWaveSimulation.lattice,
+				waveSimulation: this,
 				potential: this.realWaveSimulation.potential
 			});
 		},
