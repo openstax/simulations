@@ -5,7 +5,7 @@ define(function (require) {
 	var _ = require('underscore');
 
 	var WaveSimulation = require('models/wave-sim');
-	var DarkPropagator = require('models/dark-propagator');
+	var DarkWaveSimulation = require('models/wave-sim/dark');
 
 	/**
 	 *
@@ -44,12 +44,13 @@ define(function (require) {
 		},
 
 		initDarkWaveSimulation: function() {
-			this.darkWaveSimulation = new WaveSimulation(this.toJSON());
-			this.darkWaveSimulation.propagator = new DarkPropagator({
-				lattice: this.lattice,
-				potential: this.potential
+			var options = this.toJSON();
+			options.realWaveSimulation = this;
+			this.darkWaveSimulation = new DarkWaveSimulation(options);
+
+			this.on('change', function(model){
+				this.darkWaveSimulation.set(model.changed);
 			});
-			
 		},
 
 		/**
@@ -58,6 +59,7 @@ define(function (require) {
 		_update: function() {
 			WaveSimulation.prototype._update.apply(this);
 
+			this.darkWaveSimulation.time = this.time;
 			this.darkWaveSimulation._update();
 		},
 	});

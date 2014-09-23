@@ -454,10 +454,7 @@ define(function (require) {
 			this.pause();
 			this.updater.pause();
 			this.updater.reset();
-			this.waveSimulation.reset();
-			this.initWaveSimulation();
-			this.initHeatmapView();
-			this.initCrossSectionGraphView();
+			this.resetComponents();
 			this.render();
 			this.postRender();
 
@@ -468,6 +465,16 @@ define(function (require) {
 
 			// Resume normal function
 			this.updater.play();
+		},
+
+		/**
+		 *
+		 */
+		resetComponents: function() {
+			this.waveSimulation.reset();
+			this.initWaveSimulation();
+			this.initHeatmapView();
+			this.initCrossSectionGraphView();
 		},
 
 		/**

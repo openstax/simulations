@@ -43,7 +43,7 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.hidden && !this.waveSimulation.paused && this.oscillator.enabled) {
+			if (!this.hidden && !this.waveSimulation.paused && this.oscillator.get('enabled')) {
 				this.time += delta / 1000;
 				this.updateSpeaker();
 			}

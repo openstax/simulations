@@ -45,10 +45,7 @@ define(function(require) {
 	 *                                                               -- Patrick
 	 */
 
-	var i,
-	    j,
-	    k,
-	    width,
+	var width,
 	    height,
 	    dampX,
 	    dampY,
@@ -124,6 +121,7 @@ define(function(require) {
 			 */
 			width  = this.paddedLat.width - 1;
 			height = this.paddedLat.height - 1;
+			var i, j;
 			for (i = 1; i < width; i++) {
 				for (j = 1; j < height; j++) {
 					if (potential.getPotential(i - dampX, j - dampY, 0) !== 0) {
@@ -157,7 +155,7 @@ define(function(require) {
 		 *   lattice's actual edge, dy could take it out of bounds!
 		 */
 		dampHorizontalEdge: function(y, dy) {
-			for (i = 0; i < this.paddedLat.width; i++)
+			for (var i = 0; i < this.paddedLat.width; i++)
 				this.paddedLat.data[i][y] = this.prevLat2.data[i][y + dy];
 		},
 
@@ -167,7 +165,7 @@ define(function(require) {
 		 *   lattice's actual edge, dx could take it out of bounds!
 		 */
 		dampVerticalEdge: function(x, dx) {
-			for (j = 0; j < this.paddedLat.height; j++)
+			for (var j = 0; j < this.paddedLat.height; j++)
 				this.paddedLat.data[x][j] = this.prevLat2.data[x + dx][j];
 		},
 
@@ -195,6 +193,7 @@ define(function(require) {
 
 			height = this.paddedLat.height;
 
+			var i, j, k;
 			for (j = 0; j < height; j++) {
 				for (k = 0; k < xDistance; k++) {
 					// xDistance - k is distance from the final x location
@@ -217,6 +216,7 @@ define(function(require) {
 
 			width  = this.paddedLat.width;
 
+			var i, j, k;
 			for (i = 0; i < width; i++) {
 				for (k = 0; k < yDistance; k++) {
 					// xDistance - k is distance from the final y location

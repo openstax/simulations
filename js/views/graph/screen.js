@@ -133,7 +133,7 @@ define(function(require) {
 			this.$showChartButton.addClass('visible');
 		},
 
-		hide: function() {
+		hide: function(event) {
 			StaticGraphView.prototype.hide.apply(this, [event]);
 
 			this.heatmapView.disableScreenMode();

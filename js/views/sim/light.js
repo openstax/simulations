@@ -91,6 +91,15 @@ define(function (require) {
 			this.heatmapView.$el.before(this.screenGraphView.el);
 		},
 
+		/**
+		 *
+		 */
+		resetComponents: function() {
+			SimView.prototype.resetComponents.apply(this);
+
+			this.initScreenGraphView();
+		},
+
 	});
 
 	return LightSimView;
