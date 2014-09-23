@@ -51,7 +51,7 @@ define(function(require) {
 			else {
 				this.cellChecked[x][y] = true;
 				return HeatmapView.prototype.alphaFromCellValue.apply(this, [value, x, y]);
-			}
+			}			
 		},
 
 		/**

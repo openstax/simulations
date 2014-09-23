@@ -127,6 +127,9 @@ define(function(require) {
 		},
 
 		show: function(event) {
+			if (this.toggling)
+				return;
+
 			StaticGraphView.prototype.show.apply(this, [event]);
 
 			this.heatmapView.enableScreenMode();
@@ -134,10 +137,17 @@ define(function(require) {
 		},
 
 		hide: function(event) {
+			if (this.toggling)
+				return;
+			
 			StaticGraphView.prototype.hide.apply(this, [event]);
 
 			this.heatmapView.disableScreenMode();
 			this.$showChartButton.removeClass('visible');
+		},
+
+		animationDuration: function() {
+			return 400;
 		}
 	});
 

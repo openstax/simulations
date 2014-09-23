@@ -1,10 +1,10 @@
 #sim-light .heatmap-container.rotated {
 	.transform-origin(100% 50%);
-	.transform(translateX(-68px) perspective(500px) rotateY(-10deg));
+	.transform(perspective(500px) translateX(-68px) rotateY(-10deg));
 }
 
 #sim-light .heatmap-container {
-	.transform(translateX(0) perspective(500px) rotateY(0));
+	.transform(perspective(500px) translateX(0) rotateY(0));
 }
 
 .screen-graph-view {
@@ -67,12 +67,12 @@
 	.grid-view(screen-graph, @screen-graph-width, @heatmap-container-width, @heatmap-container-padding);
 	.transition(~"width 400ms, transform 400ms, -webkit-transform 400ms");
 	.transform-origin(0% 50%);
-	.transform(translateX(0px) perspective(500px) rotateY(90deg));
+	.transform(perspective(500px) translateX(0px) rotateY(90deg));
 	max-width: none;
 	overflow: hidden;
 
 	.screen-graph-view.open & {
-		.transform(translateX(-64px) perspective(500px) rotateY(55deg));
+		.transform(perspective(500px) translateX(-64px) rotateY(55deg));
 	}
 
 	> .screen-graph-canvas-wrapper > .screen-graph-canvas {
