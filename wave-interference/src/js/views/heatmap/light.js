@@ -65,6 +65,17 @@ define(function(require) {
 		/**
 		 *
 		 */
+		resetDarkness: function() {
+			for (var i = 0; i < this.waveSimulation.lattice.width; i++) {
+				for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+					this.setDark(i, j);
+				}
+			}
+		},
+
+		/**
+		 *
+		 */
 		enableScreenMode: function() {
 			this.$el.addClass('rotated');
 		},

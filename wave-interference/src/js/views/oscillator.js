@@ -57,7 +57,7 @@ define(function(require) {
 			this.updateOnNextFrame = false;
 
 			if (!this.hidden) {
-				this.$graphic.css('top', this.heatmapView.height - this.oscillator.y * this.heatmapView.ySpacing);
+				this.$graphic.css('top', this.heatmapView.height - this.oscillator.get('y') * this.heatmapView.ySpacing);
 			}
 		},
 
@@ -103,7 +103,7 @@ define(function(require) {
 				.prop('disabled', enabled)
 				.removeClass('clicked');
 
-			this.oscillator.enabled = enabled;
+			this.oscillator.set('enabled', enabled);
 		},
 
 		hide: function() {

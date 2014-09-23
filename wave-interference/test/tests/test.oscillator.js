@@ -16,10 +16,10 @@ describe('Oscillator', function(){
 		var waveSimulation = new WaveSimulation();
 		var oscillator = waveSimulation.oscillators[0];
 
-		chai.expect(oscillator.oscillatingValue(0)).to.equal(oscillator.amplitude);
+		chai.expect(oscillator.oscillatingValue(0)).to.equal(oscillator.get('amplitude'));
 
-		oscillator.frequency = 1;
-		oscillator.amplitude = 1;
+		oscillator.set('frequency', 1);
+		oscillator.set('amplitude', 1);
 		oscillator.pulsePhase = 0;
 		chai.expect(oscillator.oscillatingValue(1)).to.equal(1);
 	});
@@ -42,7 +42,7 @@ describe('Oscillator', function(){
 		var waveSimulation = new WaveSimulation();
 		var oscillator = waveSimulation.oscillators[0];
 
-		oscillator.frequency = 1;
+		oscillator.set('frequency', 1);
 
 		oscillator.time = 0;
 		chai.expect(oscillator.getNextPeakTime()).to.equal(1);
@@ -56,7 +56,7 @@ describe('Oscillator', function(){
 		var waveSimulation = new WaveSimulation();
 		var oscillator = waveSimulation.oscillators[0];
 
-		oscillator.frequency = 0.5;
+		oscillator.set('frequency', 0.5);
 		
 		oscillator.time = 0;
 		chai.expect(oscillator.getNextTroughTime()).to.equal(1);

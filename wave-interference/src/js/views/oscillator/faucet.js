@@ -75,7 +75,7 @@ define(function(require) {
 
 			if (this.updateOnNextFrame) {
 				// Resize the drops
-				this.$stream.width(((this.oscillator.amplitude / 2) * 100) + '%');
+				this.$stream.width(((this.oscillator.get('amplitude') / 2) * 100) + '%');
 			}
 
 			OscillatorView.prototype.update.apply(this, [time, delta]);
@@ -92,7 +92,7 @@ define(function(require) {
 			}
 
 			// See if it's time to drip another drop
-			if (this.oscillator.enabled) {
+			if (this.oscillator.get('enabled')) {
 				if (this.justBeforeReleaseTime(this.lastOscillatorTime) && this.justAfterReleaseTime(this.oscillator.time))
 					this.drip(time);
 			}

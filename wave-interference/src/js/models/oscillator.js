@@ -3,40 +3,8 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
-
-	var Oscillator = function(options) {
-
-		// Default values
-		options = _.extend({
-			frequency: 0.5,
-			amplitude: 1.0,
-			radius:    2,
-			enabled: true
-		}, options);
-		
-		this.frequency = options.frequency;
-		this.amplitude = options.amplitude;
-		this.radius    = options.radius;
-
-		this.enabled = options.enabled;
-
-		if (options.waveSimulation)
-			this.waveSimulation = options.waveSimulation;
-		else
-			throw 'Oscillator requires a wave simulation to run.';
-
-		if (_.isNumber(options.x) && _.isNumber(options.y)) {
-			this.x = options.x;
-			this.y = options.y;
-		}
-		else
-			throw 'Oscillator\'s constructor requires a numeric "x" and "y" value.';
-
-		// Used to modify the time-based cosine argument when we're pulsing
-		this.pulsePhase = 0.0;
-		this.pulseEnabled = false;
-	};
+	var _        = require('underscore');
+	var Backbone = require('backbone');
 
 	/**
 	 * These "local" variables assume no concurrent use of this class.
@@ -53,7 +21,27 @@ define(function(require) {
 	    halfPeriod,
 	    remainderTime;
 
-	_.extend(Oscillator.prototype, {
+	var Oscillator = Backbone.Model.extend({
+
+		defaults: {
+			x: 0,
+			y: 0,
+			frequency: 0.5,
+			amplitude: 1.0,
+			radius:    2,
+			enabled: true
+		},
+
+		initialize: function(attrs, options) {
+			if (options.waveSimulation)
+				this.waveSimulation = options.waveSimulation;
+			else
+				throw 'Oscillator requires a wave simulation to run.';
+
+			// Used to modify the time-based cosine argument when we're pulsing
+			this.pulsePhase = 0.0;
+			this.pulseEnabled = false;
+		},
 
 		/**
 		 * Called every tick to set the oscillating cells to their new value
@@ -66,13 +54,13 @@ define(function(require) {
 
 			this.time = time;
 
-			if (this.enabled) {
+			if (this.get('enabled')) {
 				oscillatingValue = this.oscillatingValue(time);
 
 				waveSim = this.waveSimulation;
-				radius  = this.radius;
-				x       = this.x;
-				y       = this.y;
+				radius  = this.get('radius');
+				x       = this.get('x');
+				y       = this.get('y');
 
 				/*
 				 * Within the circle of radius [radius] centered around [x, y], fill
@@ -101,14 +89,14 @@ define(function(require) {
 		 * This function corresponds with PhET's Oscillator.getValue()
 		 */
 		oscillatingValue: function(time) {
-			return this.amplitude * Math.cos(this.cosArg(time) + this.pulsePhase);
+			return this.get('amplitude') * Math.cos(this.cosArg(time) + this.pulsePhase);
 		},
 
 		/**
 		 * Returns the cosine argument based on frequency and time.
 		 */
 		cosArg: function(time) {
-			return twoPI * this.frequency * time;
+			return twoPI * this.get('frequency') * time;
 		},
 
 		/**
@@ -119,7 +107,7 @@ define(function(require) {
 		 */
 		firePulse: function() {
 			if (!this.pulseEnabled) {
-				this.enabled = true;
+				this.set('enabled', true);
 				this.pulsePhase = -this.cosArg(this.time) + Math.PI / 2; // start wave at value = 0
 				this.pulseEnabled = true;
 
@@ -129,7 +117,7 @@ define(function(require) {
 				 *      estimated time = 3 / (4 * frequency)
 				 *   and then I optimize it an multiply by 1000 to get it in ms.
 				 */
-				return (0.75 / this.frequency) * 1000;
+				return (0.75 / this.get('frequency')) * 1000;
 			}
 			return false;
 		},
@@ -138,7 +126,7 @@ define(function(require) {
 		 * Returns the period in seconds
 		 */
 		period: function() {
-			return 1 / this.frequency;
+			return 1 / this.get('frequency');
 		},
 
 		/**
@@ -154,7 +142,7 @@ define(function(require) {
 			 *   portion that is keeping ft from being an integer, since
 			 *   frequency is a constant in this context.
 			 */
-			remainderTime = ((this.time * this.frequency) % 1) / this.frequency;
+			remainderTime = ((this.time * this.get('frequency')) % 1) / this.get('frequency');
 
 			/* (this.time - remainderTime) gets us the previous peak, so we
 			 *   add a period to get the next one.

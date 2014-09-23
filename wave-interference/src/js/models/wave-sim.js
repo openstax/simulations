@@ -144,8 +144,8 @@ define(function (require) {
 					amplitude: this.get('amplitude'),
 					x: 4,
 					y: 0,
-					radius: 2,
-
+					radius: 2
+				}, {
 					waveSimulation: this,
 				}));
 			}
@@ -176,9 +176,9 @@ define(function (require) {
 				distanceFromMiddleIndex = Math.ceil(Math.abs(i - middleIndex));
 
 				if (i - middleIndex > 0)
-					this.oscillators[i].y = parseInt(midpoint + (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
+					this.oscillators[i].set('y', parseInt(midpoint + (maxDistance * percentMaxDistance * distanceFromMiddleIndex)));
 				else
-					this.oscillators[i].y = parseInt(midpoint - (maxDistance * percentMaxDistance * distanceFromMiddleIndex));
+					this.oscillators[i].set('y', parseInt(midpoint - (maxDistance * percentMaxDistance * distanceFromMiddleIndex)));
 			}
 
 			this.trigger('oscillators-changed');
@@ -265,13 +265,13 @@ define(function (require) {
 
 		changeFrequency: function(model, value) {
 			_.each(this.oscillators, function(oscillator) {
-				oscillator.frequency = value;
+				oscillator.set('frequency', value);
 			}, this);
 		},
 
 		changeAmplitude: function(model, value) {
 			_.each(this.oscillators, function(oscillator) {
-				oscillator.amplitude = value;
+				oscillator.set('amplitude', value);
 			}, this);
 		},
 

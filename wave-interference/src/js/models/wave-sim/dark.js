@@ -19,6 +19,13 @@ define(function (require) {
 			this.realWaveSimulation = options.realWaveSimulation;
 
 			WaveSimulation.prototype.initialize.apply(this, [options]);
+
+			_.each(this.realWaveSimulation.oscillator, function(oscillator, index) {
+				this.listenTo(oscillator, 'change', function(oscillator) {
+					this.oscillators[index].set('enabled', oscillator.get('enabled'));
+				});
+			}, this);
+			
 		},
 
 		/*

@@ -268,9 +268,16 @@ define(function(require) {
 		},
 
 		updateParticles: function(interpolationFactor) {
-			lat    = this.waveSimulation.lattice.data;
-			width  = this.waveSimulation.lattice.width;
-			height = this.waveSimulation.lattice.height;	
+			if (this.waveSimulation.darkWaveSimulation) {
+				lat    = this.waveSimulation.darkWaveSimulation.lattice.data;
+				width  = this.waveSimulation.darkWaveSimulation.lattice.width;
+				height = this.waveSimulation.darkWaveSimulation.lattice.height;
+			} else {
+				lat    = this.waveSimulation.lattice.data;
+				width  = this.waveSimulation.lattice.width;
+				height = this.waveSimulation.lattice.height;
+			}
+				
 
 			brightness = this.brightness;
 
