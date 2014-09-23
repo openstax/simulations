@@ -270,7 +270,7 @@ define(function(require) {
 		updateParticles: function(interpolationFactor) {
 			lat    = this.waveSimulation.lattice.data;
 			width  = this.waveSimulation.lattice.width;
-			height = this.waveSimulation.lattice.height;
+			height = this.waveSimulation.lattice.height;	
 
 			brightness = this.brightness;
 

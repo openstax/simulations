@@ -15,12 +15,11 @@ define(function(require) {
 	 * It makes darkness where there is no light.
 	 */
 	var DarkPropagator = function(options) {
-		
-		// We want to perform the propagation on a throwaway lattice
-		this.realLattice = options.lattice;
-		options.lattice = options.lattice.clone();
-		
-		// Call the WavePropagator's constructor
+		if (options.realLattice)
+			this.realLattice = options.realLattice;
+		else
+			throw 'DarkPropagator constructor a realLattice.';
+
 		WavePropagator.apply(this, [options]);
 
 		this.numSteps = 0;
