@@ -19,6 +19,9 @@ define(function(require) {
 		this.width  = options.width || (options.data && options.data.length ? options.data[0].length : 60);
 		this.height = options.height || (options.data ? options.data.length : 60);
 
+		// For resetting
+		this.initialValue = options.initialValue;
+
 		// Set initial value of lattice points
 		if (!options.data) {
 			var row, x, y;
@@ -143,8 +146,40 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * Resets all values to a specific one.  If an initial 
+		 *   value was originally specified, it uses that as a
+		 *   fallback.
+		 */
+		reset: function(initialValue) {
+			if (initialValue === undefined) {
+				if (this.initialValue === undefined)
+					initialValue = 0;
+				else
+					initialValue = this.initialValue;
+			}
+				
+			width  = this.width;
+			height = this.height;
+			for (i = 0; i < width; i++) {
+				for (j = 0; j < height; j++) {
+					this.data[i][j] = initialValue;
+				}
+			}
+		},
+
+		/**
+		 * Gets the value of a specific lattice point
+		 */
 		getValue: function(x, y) {
 			return this.data[x][y];
+		},
+
+		/**
+		 * Determines if a specific xy coordinate is within bounds
+		 */
+		contains: function(x, y) {
+			return (x >= 0 && x < this.width && y >= 0 && y < this.height);
 		}
 
 	});

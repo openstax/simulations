@@ -5,6 +5,7 @@
 	position: relative;
 	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
 	.user-select(none);
+	.transition(~"transform 400ms, -webkit-transform 400ms");
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		//left: @heatmap-container-left-margin;

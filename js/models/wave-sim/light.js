@@ -1,10 +1,15 @@
-define([
-	'underscore', 
-	'models/wave-sim'
-], function (_, WaveSimulation) {
+define(function (require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
+	var WaveSimulation = require('models/wave-sim');
+	var DarkPropagator = require('models/dark-propagator');
+
+	/**
+	 *
+	 */
 	var LightSimulation = WaveSimulation.extend({
 
 		defaults: _.extend({}, WaveSimulation.prototype.defaults, {
@@ -27,8 +32,34 @@ define([
 
 			oscillatorName: 'Light',
 			oscillatorNamePlural: 'Lights',
-		})
+		}),
 
+		/*
+		 *
+		 */
+		initialize: function(options) {
+			WaveSimulation.prototype.initialize.apply(this, [options]);
+
+			this.initDarkWaveSimulation();
+		},
+
+		initDarkWaveSimulation: function() {
+			this.darkWaveSimulation = new WaveSimulation(this.toJSON());
+			this.darkWaveSimulation.propagator = new DarkPropagator({
+				lattice: this.lattice,
+				potential: this.potential
+			});
+			
+		},
+
+		/**
+		 * Inside the fixed-interval loop
+		 */
+		_update: function() {
+			WaveSimulation.prototype._update.apply(this);
+
+			this.darkWaveSimulation._update();
+		},
 	});
 
 	return LightSimulation;

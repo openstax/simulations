@@ -102,24 +102,37 @@ define(function (require) {
 			this.potential = new CompositePotential();
 
 			// Lattice
+			this.initLattice();
+
+			// Wave propagator
+			this.initPropagator();
+
+			// Barrier
+			this.initBarrier();
+
+			// Oscillators
+			this.initOscillators();
+		},
+
+		initLattice: function() {
 			this.lattice = new Lattice2D({
 				width:  this.get('latticeSize').width,
 				height: this.get('latticeSize').height,
 				initialValue: 0
 			});
+		},
 
-			// Wave propagator
+		initPropagator: function() {
 			this.propagator = new WavePropagator({
 				lattice: this.lattice,
 				potential: this.potential
 			});
+		},
 
+		initBarrier: function() {
 			this.barrier = new Barrier({
 				waveSimulation: this
 			});
-
-			// Oscillators
-			this.initOscillators();
 		},
 
 		initOscillators: function() {
@@ -189,15 +202,22 @@ define(function (require) {
 				while (this.accumulator >= this.timestep) {
 					this.time += this.timestep;
 
-					this.propagator.propagate();
-
-					for (i = 0; i < this.get('oscillatorCount'); i++)
-						this.oscillators[i].update(this.time);
+					this._update();
 					
 					this.accumulator -= this.timestep;
 				}	
 			}
 			
+		},
+
+		/**
+		 * Inside the fixed-interval loop
+		 */
+		_update: function() {
+			this.propagator.propagate();
+
+			for (i = 0; i < this.get('oscillatorCount'); i++)
+				this.oscillators[i].update(this.time);
 		},
 
 		play: function() {
@@ -220,7 +240,7 @@ define(function (require) {
 		},
 
 		isValidPoint: function(x, y) {
-			return (x < this.lattice.width && x >= 0 && y < this.lattice.height && y >= 0);
+			return this.lattice.contains(x, y);
 		},
 
 		setSourceValue: function(x, y, val) {

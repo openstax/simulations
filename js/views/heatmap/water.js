@@ -22,7 +22,7 @@ define(function(require) {
 			// Default values
 			options = _.extend({
 				title: 'Water &ndash; Top View',
-				color: '#0D6A7C'
+				color: '#fff'
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);

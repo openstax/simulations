@@ -1,0 +1,130 @@
+#sim-light .heatmap-container.rotated {
+	.transform-origin(100% 50%);
+	.transform(translateX(-68px) perspective(500px) rotateY(-10deg));
+}
+
+#sim-light .heatmap-container {
+	.transform(translateX(0) perspective(500px) rotateY(0));
+}
+
+.screen-graph-view {
+	position: absolute;
+	top: 0;
+	left: 100%;
+
+	> .screen-graph-show-button {
+		left: 60px;
+		width: @heatmap-container-width;
+
+		.horizontal-panel-button();
+		
+		&.reenabled {
+			.animation-name(graph-show-btn);
+			.animation-duration(200ms);
+			.animation-timing-function(ease);
+			.animation-fill-mode(forwards);
+		}
+
+		.animated-button(graph-show-btn-clicked, 400ms);
+	}
+
+	> .screen-graph-hide-button {
+		position: absolute;
+		top: 0px;
+		left: -18px;
+		background: transparent;
+		color: #888;
+		display: none;
+		z-index: 50;
+
+		&:hover {
+			color: #555;
+		}
+
+		&:active {
+			color: #444;
+			.box-shadow(none);
+			text-shadow: 0 0 6px #ccc;
+		}
+	}
+
+	> .screen-graph-show-chart-button {
+		left: 60px;
+		width: @heatmap-container-width;
+		.horizontal-panel-button();
+		visibility: hidden;
+		opacity: 0;
+		.transition(opacity 400ms);
+
+		&.visible {
+			opacity: 1;
+			visibility: visible;
+		}
+	}
+}
+
+.screen-graph-container {
+	.grid-view(screen-graph, @screen-graph-width, @heatmap-container-width, @heatmap-container-padding);
+	.transition(~"width 400ms, transform 400ms, -webkit-transform 400ms");
+	.transform-origin(0% 50%);
+	.transform(translateX(0px) perspective(500px) rotateY(90deg));
+	max-width: none;
+	overflow: hidden;
+
+	.screen-graph-view.open & {
+		.transform(translateX(-64px) perspective(500px) rotateY(55deg));
+	}
+
+	> .screen-graph-canvas-wrapper > .screen-graph-canvas {
+		background-color: #000;
+	}
+
+	> .screen-graph-title {
+		letter-spacing: .08em;
+	}
+}
+
+.horizontal-panel-button() {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	height: @heatmap-container-padding;
+	line-height: (@heatmap-container-padding + 2);
+	font-weight: bold;
+	padding: 0;
+	background-color: @gray-lightest;
+	color: @link-color;
+	border-radius: 0;
+	margin-top: auto;
+	margin-bottom: auto;
+	z-index: 50;
+	.transform(~"rotate(-90deg) translateY(-239px)");
+	.transform-origin(center center);
+
+	&:hover {
+		color: fadeout(@link-color, 15%);
+		background-color: lighten(@gray-lightest, 0.5%);
+	}
+
+	&:active {
+		color: #fff;
+		background-color: @brand-primary;
+		.box-shadow(none);
+	}
+
+	> .fa {
+		margin-right: 10px;
+	}
+}
+
+#sim-light .segment-view {
+	background-color: #ccc;
+
+	&.active {
+		background: lighten(@link-color, 40%);
+	}
+}
+
+#sim-light .barrier-view > .barrier-box {
+	background-color: #CCC;
+}

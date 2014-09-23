@@ -106,12 +106,14 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Simulation',
-				name: 'sim'
+				name: 'sim',
+				segmentPotentialName: 'Wall'
 			}, options);
 
 			this.heatmapBrightness = options.heatmapBrightness;
 			this.title = options.title;
 			this.name  = options.name;
+			this.segmentPotentialName = options.segmentPotentialName;
 
 			// Initialize the WaveSimulation
 			this.initWaveSimulation();
@@ -269,7 +271,8 @@ define(function (require) {
 			});
 
 			var barrierControls = _.template(barrierControlsHtml)({
-				unique: this.cid
+				unique: this.cid,
+				segmentPotentialName: this.segmentPotentialName
 			});
 
 			var tools = _.template(toolsHtml)({
