@@ -132,15 +132,16 @@ define(function (require) {
 		postRender: function() {
 			SimView.prototype.postRender.apply(this);
 
+			// Resize the wavelength slider canvas and paint the colors
 			var $slider = this.$wavelengthSliderCanvas.parent();
-			var height = 18;
+			var height = 16;
 			var width  = $slider.width() + height;
 			this.$wavelengthSliderCanvas[0].width  = width;
 			this.$wavelengthSliderCanvas[0].height = height;
 			this.$wavelengthSliderCanvas.width(width);
 			this.$wavelengthSliderCanvas.paintVisibleLightSpectrum();
 
-			
+			// Set the starting color
 			$slider.trigger('slide');
 		},
 
@@ -163,6 +164,11 @@ define(function (require) {
 			var hex = Utils.rgbToHex(rgb.red, rgb.green, rgb.blue);
 
 			this.$wavelengthSliderHandle.css('background-color', hex);
+
+			this.heatmapView.color = hex;
+
+			this.waveSimulation.set('wavelength', wavelength);
+			this.waveSimulation.resetWave();
 		},
 
 	});

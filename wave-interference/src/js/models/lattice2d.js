@@ -159,10 +159,8 @@ define(function(require) {
 					initialValue = this.initialValue;
 			}
 				
-			width  = this.width;
-			height = this.height;
-			for (i = 0; i < width; i++) {
-				for (j = 0; j < height; j++) {
+			for (i = 0; i < this.width; i++) {
+				for (j = 0; j < this.height; j++) {
 					this.data[i][j] = initialValue;
 				}
 			}

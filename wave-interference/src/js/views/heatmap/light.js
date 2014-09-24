@@ -40,6 +40,8 @@ define(function(require) {
 			}
 
 			this.listenTo(this.waveSimulation.darkWaveSimulation, 'set-dark', this.setDark);
+			this.listenTo(this.waveSimulation, 'reset', this.resetDarkness);
+			this.listenTo(this.waveSimulation, 'reset', this.changeColor);
 		},
 
 		/**
@@ -87,6 +89,28 @@ define(function(require) {
 		 */
 		disableScreenMode: function() {
 			this.$el.removeClass('rotated');
+		},
+
+		/**
+		 * Changes the color of the particles
+		 */
+		changeColor: function() {
+			var width  = this.waveSimulation.lattice.width;
+			var height = this.waveSimulation.lattice.height;
+
+			var xSpacing = this.xSpacing;
+			var ySpacing = this.ySpacing;
+
+			var particles = this.particles;
+
+			var texture = this.generateParticleTexture(Math.max(xSpacing, ySpacing) * 2);
+			var i, j;
+
+			for (i = 0; i < width; i++) {
+				for (j = 0; j < height; j++) {
+					particles[i][j].setTexture(texture);
+				}
+			}
 		},
 
 	});

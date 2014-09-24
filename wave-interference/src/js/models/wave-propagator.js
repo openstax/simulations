@@ -27,12 +27,7 @@ define(function(require) {
 		if (_.isUndefined(this.lattice))
 			throw 'WavePropagator requires an initial lattice to function!';
 
-		// Lattice that is padded on every side by the damping scale
-		this.paddedLat = this.createPaddedLattice(this.lattice);
-
-		// Lattices from previous steps
-		this.prevLat1 = this.paddedLat.clone();
-		this.prevLat2 = this.paddedLat.clone();
+		this.initLattices();
 	};
 
 	/*
@@ -268,6 +263,27 @@ define(function(require) {
 		 */
 		getSourceValue: function(x, y) {
 			return this.prevLat1.data[x + this.dampX][y + this.dampY];
+		},
+
+		/**
+		 * Copies current lattice values to the padded lattice and historical
+		 *   lattices, effectively clearing it as long as the current lattice 
+		 *   is what is desired.
+		 */
+		initLattices: function(){
+			// Lattice that is padded on every side by the damping scale
+			this.paddedLat = this.createPaddedLattice(this.lattice);
+
+			// Lattices from previous steps
+			this.prevLat1 = this.paddedLat.clone();
+			this.prevLat2 = this.paddedLat.clone();
+		},
+
+		/**
+		 * Resets stuff
+		 */
+		reset: function() {
+			this.initLattices();
 		}
 	});
 
