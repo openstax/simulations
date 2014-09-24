@@ -11,6 +11,14 @@ define(function (require) {
 	var ScreenGraphView  = require('views/graph/screen');
 	var SimView          = require('views/sim');
 
+	/*
+	 * Constants
+	 */
+	var SPEED_OF_LIGHT = 1000;
+
+	/**
+	 *
+	 */
 	var LightSimView = SimView.extend({
 
 		events: _.extend({
@@ -168,6 +176,7 @@ define(function (require) {
 			this.heatmapView.color = hex;
 
 			this.waveSimulation.set('wavelength', wavelength);
+			this.waveSimulation.set('frequency', SPEED_OF_LIGHT / wavelength);
 			this.waveSimulation.resetWave();
 		},
 
