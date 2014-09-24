@@ -36,7 +36,7 @@ define(function(require) {
 
 				// Convert wavelength to rgb and apply to fill style
 				rgb = Math.nmToRGB(wavelength);
-				ctx.fillStyle = 'rgba(' + rgb.r + ',' + rgb.g + ',' + rgb.b + ', 1)';
+				ctx.fillStyle = 'rgba(' + rgb.red + ',' + rgb.green + ',' + rgb.blue + ', 1)';
 				ctx.fillRect(i, 0, 1, height);
 			}
 
