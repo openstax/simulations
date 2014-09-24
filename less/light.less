@@ -5,7 +5,7 @@
 
 #sim-light .heatmap-container {
 	.transform(perspective(500px) translateX(0) rotateY(0));
-	.transition(~"transform 2400ms, -webkit-transform 2400ms, -moz-transform 2400ms, -ms-transform 2400ms");
+	.transition(~"transform 400ms, -webkit-transform 400ms, -moz-transform 400ms, -ms-transform 400ms");
 }
 
 .screen-graph-view {
@@ -26,7 +26,7 @@
 			.animation-fill-mode(forwards);
 		}
 
-		.animated-button(graph-show-btn-clicked, 2400ms);
+		.animated-button(graph-show-btn-clicked, 400ms);
 	}
 
 	> .screen-graph-hide-button {
@@ -55,7 +55,7 @@
 		.horizontal-panel-button();
 		visibility: hidden;
 		opacity: 0;
-		.transition(opacity 2400ms);
+		.transition(opacity 400ms);
 
 		&.visible {
 			opacity: 1;
@@ -66,7 +66,7 @@
 
 .screen-graph-container {
 	.grid-view(screen-graph, @screen-graph-width, @heatmap-container-width, @heatmap-container-padding);
-	.transition(~"transform 2400ms, -webkit-transform 2400ms, -moz-transform 2400ms, -ms-transform 2400ms");
+	.transition(~"transform 400ms, -webkit-transform 400ms, -moz-transform 400ms, -ms-transform 400ms");
 	.transform-origin(0% 50%);
 	.transform(perspective(500px) translateX(0px) rotateY(90deg));
 	max-width: none;
@@ -131,15 +131,15 @@
 }
 
 .wavelength {
-	margin-left: 9px;
-	margin-right: 9px;
+	margin-left: 8px;
+	margin-right: 8px;
 
 	> .wavelength-slider-canvas {
 		position: absolute;
-		top: -8px;
-		left: -8px;
-		height: 18px;
-		border-radius: 9px;
+		top: -7px;
+		left: -7px;
+		height: 16px;
+		border-radius: 8px;
 	}	
 
 	& .noUi-handle:after {
@@ -156,7 +156,7 @@
 		left: 50%;
 		margin-top: -6px;
 		margin-left: -6px;
-		border: 1px solid rgba(255, 255, 255, 1);
+		border: 1px solid #fff;
 		border-radius: 50%;
 		.transition(~"width 0.2s ease, height 0.2s ease, margin-top 0.2s ease, margin-left 0.2s ease, background 450ms ease");
 	}

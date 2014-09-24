@@ -48,9 +48,25 @@ define(function (require) {
 			options.realWaveSimulation = this;
 			this.darkWaveSimulation = new DarkWaveSimulation(options);
 
-			this.on('change', function(model){
-				this.darkWaveSimulation.set(model.changed);
-			});
+			this.off('change', this.setDarkWaveProperties);
+			this.on( 'change', this.setDarkWaveProperties);
+		},
+
+		setDarkWaveProperties: function(model) {
+			this.darkWaveSimulation.set(model.changed);
+		},
+
+		/**
+		 * For when we change the color
+		 */
+		resetWave: function() {
+			this.time = 0;
+
+			this.lattice.reset(0);
+			this.propagator.reset();
+			this.darkWaveSimulation.lattice.reset(0);
+
+			this.trigger('reset');
 		},
 
 		/**
