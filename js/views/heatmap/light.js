@@ -4,7 +4,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var HeatmapView = require('views/heatmap');
+	var HeatmapView         = require('views/heatmap');
 
 	require('utils/jquery-plugins');
 
