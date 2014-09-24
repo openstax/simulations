@@ -18,9 +18,6 @@ define(function(require) {
 			if (!$(this).is('canvas'))
 				return;
 
-			var MIN_WAVELENGTH = 380;
-			var MAX_WAVELENGTH = 780;
-
 			var ctx = this.getContext('2d');
 
 			var width  = $(this).width();
@@ -32,7 +29,7 @@ define(function(require) {
 			for (var i = 0; i < width; i++) {
 				// Perform linear interpolation
 				percentage = i / width;
-				wavelength = MIN_WAVELENGTH * (1 - percentage) + MAX_WAVELENGTH * percentage;
+				wavelength = Math.MIN_WAVELENGTH * (1 - percentage) + Math.MAX_WAVELENGTH * percentage;
 
 				// Convert wavelength to rgb and apply to fill style
 				rgb = Math.nmToRGB(wavelength);

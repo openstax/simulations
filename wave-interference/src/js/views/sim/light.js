@@ -4,12 +4,18 @@ define(function (require) {
 
 	var _ = require('underscore');
 
+	var Utils = require('utils/utils');
+
 	var LightSimulation  = require('models/wave-sim/light');
 	var LightHeatmapView = require('views/heatmap/light');
 	var ScreenGraphView  = require('views/graph/screen');
 	var SimView          = require('views/sim');
 
 	var LightSimView = SimView.extend({
+
+		events: _.extend({
+			'slide  .wavelength' : 'changeWavelength'
+		}, SimView.prototype.events),
 
 		initialize: function(options) {
 			options = _.extend({
@@ -92,12 +98,71 @@ define(function (require) {
 		},
 
 		/**
+		 * Renders the control panel and all its controls.
+		 */
+		renderControlPanel: function() {
+			SimView.prototype.renderControlPanel.apply(this);
+
+			// Create a wavelength slider
+			var $wavelengthSlider = $('<div class="slider wavelength" id="wavelength">');
+			$wavelengthSlider.noUiSlider({
+				start: 700,
+				range: {
+					min: Math.MIN_WAVELENGTH,
+					max: Math.MAX_WAVELENGTH
+				}
+			})
+
+			// Create a canvas background for the wavelength slider
+			this.$wavelengthSliderCanvas = $('<canvas class="wavelength-slider-canvas">').prependTo($wavelengthSlider);
+
+			// Need to add an element to the handle because it's difficult to modify the css for a pseudo-element.
+			this.$wavelengthSliderHandle = $('<div class="handle-content">').appendTo($wavelengthSlider.find('.noUi-handle'));
+
+			// Replace the frequency slider and change the label
+			var $frequencySlider = this.$('.frequency');
+			$frequencySlider.prev('label').attr('for', $wavelengthSlider.attr('id')).html('Wavelength');
+			$frequencySlider.replaceWith($wavelengthSlider);
+		},
+
+		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {
+			SimView.prototype.postRender.apply(this);
+
+			var $slider = this.$wavelengthSliderCanvas.parent();
+			var height = 18;
+			var width  = $slider.width() + height;
+			this.$wavelengthSliderCanvas[0].width  = width;
+			this.$wavelengthSliderCanvas[0].height = height;
+			this.$wavelengthSliderCanvas.width(width);
+			this.$wavelengthSliderCanvas.paintVisibleLightSpectrum();
+
+			
+			$slider.trigger('slide');
+		},
+
+		/**
 		 *
 		 */
 		resetComponents: function() {
 			SimView.prototype.resetComponents.apply(this);
 
 			this.initScreenGraphView();
+		},
+
+
+		/**
+		 * Handles wavelength slider slide events
+		 */
+		changeWavelength: function(event) {
+			var wavelength = parseInt($(event.target).val());
+			var rgb = Math.nmToRGB(wavelength);
+			var hex = Utils.rgbToHex(rgb.red, rgb.green, rgb.blue);
+
+			this.$wavelengthSliderHandle.css('background-color', hex);
 		},
 
 	});

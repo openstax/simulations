@@ -25,6 +25,10 @@
  * 
  */
 (function (namespace, methodName) {
+    // I added these constants - Patrick
+    window[namespace]['MIN_WAVELENGTH'] = 380;
+    window[namespace]['MAX_WAVELENGTH'] = 780;
+
     window[namespace][methodName] = function (wavelength) {
         var w = parseInt(wavelength, 10),
             SSS,

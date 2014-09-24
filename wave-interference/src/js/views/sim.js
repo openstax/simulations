@@ -279,32 +279,36 @@ define(function (require) {
 				unique: this.cid
 			});
 
+			var waveControls = _.template(waveControlsHtml)({
+				unique: this.cid
+			});
+
 			// Fill the tools section of the control panel
 			$controlPanel.find('.tools-panel')
 				.append(tools);
 
 			// Fill the properties section of the control panel
 			$controlPanel.find('.properties-panel')
-				.append(waveControlsHtml)
+				.append(waveControls)
 				.append(oscillatorControls)
 				.append(barrierControls);
 
 			// Initialize all of the sliders
 			$controlPanel.find('.frequency').noUiSlider({
-				start: 0.5,
+				start: this.waveSimulation.get('frequency'),
 				connect: 'lower',
 				range: {
-					min: 0.01,
-					max: 3
+					min: this.waveSimulation.get('minFrequency'),
+					max: this.waveSimulation.get('maxFrequency')
 				}
 			});
 
 			$controlPanel.find('.amplitude').noUiSlider({
-				start: 1.0,
+				start: this.waveSimulation.get('amplitude'),
 				connect: 'lower',
 				range: {
-					min: 0,
-					max: 2
+					min: this.waveSimulation.get('minAmplitude'),
+					max: this.waveSimulation.get('maxAmplitude')
 				}
 			});
 
