@@ -4,7 +4,8 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var HeatmapView         = require('views/heatmap');
+	var HeatmapView = require('views/heatmap');
+	var Utils       = require('utils/utils');
 
 	require('utils/jquery-plugins');
 
@@ -16,6 +17,7 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
+	var column;
 
 	/**
 	 * 
@@ -76,6 +78,18 @@ define(function(require) {
 				}
 			}
 		},
+
+		/**
+		 * Gets all the colors on the right edge by taking the particle
+		 *   color and multiplying it by each particle's alpha value.
+		 *   Stores it in the [out] array given.
+		 */
+		getEdgeColors: function(out) {
+			column = this.particles[this.particles.length - 1];
+			for (var j = 0; j < column.length; j++) {
+				out[j] = Utils.toRgba(this.color, column[j].alpha, true);
+			}
+		}
 
 		/**
 		 *

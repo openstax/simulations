@@ -54,6 +54,30 @@ define(function(require) {
 
 			// Ratio between pixels and cell width
 			this.xSpacing = 1;
+
+			// History of colors along the edge of the heatmap
+			this.colorHistory = [];
+			this.colorHistoryIndex = 0;
+			this.colorHistoryLength = 120;
+
+			// Initialize each record in the color history as an array of points
+			for (var h = 0; h < this.colorHistoryLength; h++) {
+				this.colorHistory[h] = [];
+				for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+					this.colorHistory[h].push({
+						r: 0,
+						g: 0,
+						b: 0
+					});
+				}
+			}
+
+			// 
+			this.intensityScale = 7;
+
+			// A place to store the colors
+			this.colors = [];
+				
 		},
 
 		/**
@@ -79,52 +103,57 @@ define(function(require) {
 		},
 
 		/**
-		 * Initializes points array and sets default points.  The number
-		 *   of points is based on either the lattice width or height,
-		 *   depending on whether the graph is in portrait or landscape.
-		 *   This function should be overriden by child classes that
-		 *   use the graph to show different data.
+		 * 
 		 */
-		initPoints: function() {
-			this.points = [];
+		initPoints: function() {},
 
-			length = this.portrait ? this.waveSimulation.lattice.height : this.waveSimulation.lattice.width;
-			points = this.points;
-			for (i = 0; i < length; i++) {
-				points[i] = { 
-					x: 0, 
-					y: 0 
-				};
+		/**
+		 * 
+		 */
+		drawColors: function() {
+
+		},
+
+		/**
+		 * 
+		 */
+		updateColorHistory: function() {
+			this.heatmapView.getEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
+
+			if (this.colorHistoryIndex == this.colorHistoryLength)
+				this.colorHistoryIndex = 0;
+
+			var height = this.waveSimulation.lattice.height;
+			var r, 
+			    g, 
+			    b;
+
+			for (var j = 0; j < height; j++) {
+				r = 0; 
+				g = 0; 
+				b = 0;
+				for (var h = 0; h < this.colorHistoryLength; h++) {
+					r += this.colorHistory[h].r;
+					g += this.colorHistory[h].g;
+					b += this.colorHistory[h].b;
+				}
+				this.colors[j] = Utils.rgbToHex(r, g, b);
 			}
 		},
 
 		/**
-		 * Calculates point data before drawing.
+		 * Responds to resize events and draws everything.
 		 */
-		calculatePoints: function() {
-			points   = this.points;
-			height   = this.height;
-			xSpacing = this.xSpacing;
+		update: function(time, delta) {
+			if (this.resizeOnNextUpdate)
+				this.resize();
 
-			lat = this.waveSimulation.lattice.data;
-
-			latWidth  = this.waveSimulation.lattice.width;
-			latHeight = this.waveSimulation.lattice.height;
-
-			// Set row to where the cross section line is closest to
-			j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
-			if (j > latHeight - 1)
-				j = latHeight - 1;
-			
-			length = this.portrait ? latHeight : latWidth;
-			for (i = 0; i < length; i++) {
-				points[i].x = i * xSpacing;
-				points[i].y = ((lat[i][j] - 2) / -4) * height;
+			if (this.graphVisible) {
+				this.updateColorHistory();
+				this.drawColors();
 			}
+		}
 
-			// Hide the beginning
-			points[0].x = -1;
-		},
 
 		show: function(event) {
 			if (this.toggling)
