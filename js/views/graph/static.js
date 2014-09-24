@@ -8,7 +8,6 @@ define(function(require) {
 
 	var html = require('text!templates/graph.html');
 
-
 	/**
 	 * StaticGraphView defines a template and certain behaviors of the UI,
 	 *   but it doesn't define how the data points are calculated.  Before
@@ -60,11 +59,7 @@ define(function(require) {
 			this.$hideButton.show();
 			this.$showButton.addClass('clicked');
 
-			this.duration = this.$showButton.css('animation-duration');
-			if (this.duration.indexOf('ms') !== -1)
-				this.duration = parseInt(this.duration);
-			else
-				this.duration = parseFloat(this.duration) * 1000;
+			this.duration = this.animationDuration();
 			
 			var self = this;
 			setTimeout(function(){
@@ -101,7 +96,15 @@ define(function(require) {
 			this.graphVisible = false;
 			this.$showButton.removeClass('reenabled');
 			this.toggling = false;
-		}
+		},
+
+		animationDuration: function() {
+			var duration = this.$showButton.css('animation-duration');
+			if (duration.indexOf('ms') !== -1)
+				return parseInt(duration);
+			else
+				return parseFloat(duration) * 1000;
+		},
 	});
 
 	return StaticGraphView;

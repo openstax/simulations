@@ -136,8 +136,8 @@ define(function(require) {
 		 * 
 		 */
 		clearOffscreenLatticeValue: function(x, y) {
-			this.prevLat1.data[x][y] = 0;
-			this.prevLat2.data[x][y] = 0;
+			this.prevLat1.data[x][y]  = 0;
+			this.prevLat2.data[x][y]  = 0;
 			this.paddedLat.data[x][y] = 0;
 		}
 	});

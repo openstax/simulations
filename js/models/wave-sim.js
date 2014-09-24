@@ -43,6 +43,10 @@ define(function (require) {
 			oscillatorSpacing: 0.5,
 			frequency: 0.5,
 			amplitude: 1.0,
+			minFrequency: 0.01,
+			maxFrequency: 3,
+			minAmplitude: 0,
+			maxAmplitude: 2,
 
 			barrierX: null,
 			barrierSlitWidth: null,

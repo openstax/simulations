@@ -13,18 +13,22 @@
  * @return Object keys: red, green, blue
  * 
  * <code>
- * > 	
+ * >    
  * > Math.nmToRGB(484);
  * > {
- * > 	red: 0,
- * > 	green: 224,
- * > 	blue: 255
+ * >    red: 0,
+ * >    green: 224,
+ * >    blue: 255
  * > }
  * > 
  * </code>
  * 
  */
 (function (namespace, methodName) {
+    // I added these constants - Patrick
+    window[namespace]['MIN_WAVELENGTH'] = 380;
+    window[namespace]['MAX_WAVELENGTH'] = 780;
+
     window[namespace][methodName] = function (wavelength) {
         var w = parseInt(wavelength, 10),
             SSS,

@@ -6,6 +6,8 @@ define(function(require) {
 
 	var HeatmapView = require('views/heatmap');
 
+	require('utils/jquery-plugins');
+
 	/*
 	 * Constants
 	 */
@@ -51,7 +53,7 @@ define(function(require) {
 			else {
 				this.cellChecked[x][y] = true;
 				return HeatmapView.prototype.alphaFromCellValue.apply(this, [value, x, y]);
-			}
+			}			
 		},
 
 		/**
