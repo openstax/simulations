@@ -154,9 +154,9 @@ define(function(require) {
 				 *   find the linearly interpolated color between them.
 				 */
 				context.fillStyle = Utils.rgbToHex(
-					Utils.lerp(colors[a].r, colors[b].r, progress),
-					Utils.lerp(colors[a].g, colors[b].g, progress),
-					Utils.lerp(colors[a].b, colors[b].b, progress)
+					parseInt(Utils.lerp(colors[a].r, colors[b].r, progress)),
+					parseInt(Utils.lerp(colors[a].g, colors[b].g, progress)),
+					parseInt(Utils.lerp(colors[a].b, colors[b].b, progress))
 				);
 				context.fillRect(0, y, width, 1);
 			}
@@ -196,9 +196,9 @@ define(function(require) {
 				color.r *= scalar;
 				color.g *= scalar;
 				color.b *= scalar;
-				color.r = Math.min(color.r, 255);
-				color.g = Math.min(color.g, 255);
-				color.b = Math.min(color.b, 255);
+				// color.r = Math.min(color.r, 255);
+				// color.g = Math.min(color.g, 255);
+				// color.b = Math.min(color.b, 255);
 			}
 			
 		},
@@ -210,10 +210,8 @@ define(function(require) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			if (this.graphVisible) {
-				this.updateColorHistory();
-				this.drawColors();
-			}
+			this.updateColorHistory();
+			this.drawColors();
 		},
 
 		show: function(event) {
