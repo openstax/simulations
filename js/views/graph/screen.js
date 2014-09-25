@@ -69,7 +69,8 @@ define(function(require) {
 					this.colorHistory[h].push({
 						r: 0,
 						g: 0,
-						b: 0
+						b: 0,
+						a: 0
 					});
 				}
 			}
@@ -86,6 +87,11 @@ define(function(require) {
 					b: 0
 				};
 			}
+
+			// For syncronizing with the simulation
+			this.accumulator = 0;
+			this.time = 0;
+			this.timestep = this.waveSimulation.timestep;
 		},
 
 		/**
@@ -166,7 +172,7 @@ define(function(require) {
 		 * 
 		 */
 		updateColorHistory: function() {
-			this.heatmapView.getEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
+			this.heatmapView.getAvgEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
 
 			if (this.colorHistoryIndex == this.colorHistoryLength) {
 				this.colorHistoryIndex = 0;
@@ -196,9 +202,10 @@ define(function(require) {
 				color.r *= scalar;
 				color.g *= scalar;
 				color.b *= scalar;
-				// color.r = Math.min(color.r, 255);
-				// color.g = Math.min(color.g, 255);
-				// color.b = Math.min(color.b, 255);
+				color.r = Math.min(color.r, 255);
+				color.g = Math.min(color.g, 255);
+				color.b = Math.min(color.b, 255);
+				// console.log(color);
 			}
 			
 		},
@@ -210,6 +217,20 @@ define(function(require) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
+			if (!this.paused) {
+				this.accumulator += delta;
+
+				while (this.accumulator >= this.timestep) {
+					this.time += this.timestep;
+
+					this._update();
+					
+					this.accumulator -= this.timestep;
+				}	
+			}
+		},
+
+		_update: function() {
 			this.updateColorHistory();
 			this.drawColors();
 		},

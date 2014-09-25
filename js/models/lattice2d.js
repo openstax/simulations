@@ -61,14 +61,15 @@ define(function(require) {
 		 *   radius in that it's half [- 1] of the square's side length.
 		 */
 		avg: function(x, y, sampleSize) {
-			sum = 0.0;
-
-			// In the PhET version, they generated the count by incrementing.
-			count = Math.pow(2, (sampleSize * 2 + 1));
+			sum = 0;
+			count = 0;
 
 			for (i = x - sampleSize; i <= x + sampleSize; i++) {
 				for (j = y - sampleSize; j <= y + sampleSize; j++) {
-					sum += this.data[i][j];
+					if (this.contains(i, j)) {
+						sum += this.data[i][j];
+						count++;
+					}
 				}
 			}
 			return sum / count;

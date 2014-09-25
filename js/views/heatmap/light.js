@@ -17,7 +17,8 @@ define(function(require) {
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
-	var column;
+	var lattice,
+	    intensityAlpha;
 
 	/**
 	 * 
@@ -28,7 +29,8 @@ define(function(require) {
 			// Default values
 			options = _.extend({
 				title: 'Electric Field &ndash; XZ-Plane',
-				color: '#f00'
+				color: '#f00',
+				brightness: 0.45
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);
@@ -80,14 +82,20 @@ define(function(require) {
 		},
 
 		/**
-		 * Gets all the colors on the right edge by taking the particle
-		 *   color and multiplying it by each particle's alpha value.
+		 * Gets all the average colors on the right edge by taking the 
+		 *   particle color and multiplying it by the alpha derrived 
+		 *   from the average of each lattice value along the edge.  
 		 *   Stores it in the [out] array given.
 		 */
-		getEdgeColors: function(out) {
-			column = this.particles[this.particles.length - 1];
-			for (var j = 0; j < column.length; j++) {
-				out[j] = Utils.toRgba(this.color, column[j].alpha, true);
+		getAvgEdgeColors: function(out) {
+			lattice = this.waveSimulation.lattice;
+			var i = lattice.width - 1;
+			for (var j = 0; j < lattice.height; j++) {
+				intensityAlpha = Math.abs(lattice.avg(i, lattice.height - j, 2));
+				if (intensityAlpha > 1)
+					intensityAlpha = 1;
+				out[j] = Utils.toRgba(this.color, intensityAlpha, true);
+				//console.log(out[j]);
 			}
 		},
 
