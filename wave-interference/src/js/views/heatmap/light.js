@@ -28,7 +28,8 @@ define(function(require) {
 			// Default values
 			options = _.extend({
 				title: 'Electric Field &ndash; XZ-Plane',
-				color: '#f00'
+				color: '#f00',
+				brightness: 0.45
 			}, options);
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);
@@ -87,7 +88,7 @@ define(function(require) {
 		getEdgeColors: function(out) {
 			column = this.particles[this.particles.length - 1];
 			for (var j = 0; j < column.length; j++) {
-				out[j] = Utils.toRgba(this.color, column[j].alpha, true);
+				out[j] = Utils.toRgba(this.color, column[j].alpha * this.brightness, true);
 			}
 		},
 
