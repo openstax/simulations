@@ -130,9 +130,9 @@ define(function(require) {
 		 *
 		 */
 		postRender: function() {
-			StaticGraphView.prototype.postRender.apply(this);
-
 			this.intensityGraphView.postRender();
+
+			StaticGraphView.prototype.postRender.apply(this);
 		},
 
 
@@ -246,17 +246,18 @@ define(function(require) {
 				while (this.accumulator >= this.timestep) {
 					this.time += this.timestep;
 
-					this._update();
+					this._update(time, delta);
 					
 					this.accumulator -= this.timestep;
 				}	
 			}
 		},
 
-		_update: function() {
+		_update: function(time, delta) {
 			this.updateColorHistory();
 			this.calculateColors();
 			this.drawColors();
+			this.intensityGraphView.update(time, delta);
 		},
 
 		show: function(event) {

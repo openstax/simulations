@@ -82,7 +82,7 @@ define(function(require) {
 		 *  our cached xSpacing whenever the canvas size changes.
 		 */
 		resize: function() {
-			GraphView.prototype.resize.apply(this);
+			StaticGraphView.prototype.resize.apply(this);
 			this.ySpacing = this.height / (this.waveSimulation.lattice.height - 1);
 		},
 

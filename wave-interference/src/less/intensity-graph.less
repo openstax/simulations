@@ -8,7 +8,7 @@
 	left: 20px;
 	.grid-view(graph, @heatmap-container-padding, auto, @heatmap-container-padding, 50%,
 		@left-padding: 50px, @right-padding: 16px, @top-padding: 30px, @bottom-padding: 30px);
-	.transition(~"height 400ms, opacity 400ms");
+	.transition(~"width 400ms, opacity 400ms");
 	overflow: hidden;
 	visibility: hidden;
 	opacity: 0;
@@ -26,12 +26,12 @@
 	}
 
 	&.closed {
-		.transition(~"width 200ms");
+		.transition(~"width 200ms, opacity 400ms");
 		width: @heatmap-container-padding;
 	}
 
 	&.initial {
-		.transition(~"width 0s");
+		.transition(~"width 0ms, opacity 400ms");
 	}
 
 	> .graph-show-button {
@@ -73,6 +73,8 @@
 	> .graph-title {
 		font-size: 16px;
 		line-height: 30px;
+		text-align: left;
+		padding-left: 12px;
 	}
 
 	.graph-y,
