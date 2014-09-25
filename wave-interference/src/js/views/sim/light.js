@@ -151,6 +151,8 @@ define(function (require) {
 
 			// Set the starting color
 			$slider.trigger('slide');
+
+			this.screenGraphView.postRender();
 		},
 
 		/**

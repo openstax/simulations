@@ -1,5 +1,8 @@
 
-.grid-view(@prefix, @container-width, @container-height, @container-padding, @height-ratio: 100%) {
+.grid-view(@prefix, @container-width, @container-height, @container-padding, @height-ratio: 100%, 
+	@left-padding: @container-padding, @right-padding: @container-padding, 
+	@top-padding: @container-padding, @bottom-padding: @container-padding) {
+
 	max-width: 100%;
 	width: 100%;
 	background-color: @gray-lightest;
@@ -22,8 +25,9 @@
 	.@{prefix}-title {
 		position: absolute;
 		top: 0;
-		left: 0;
-		right: 0;
+		left: @left-padding;
+		right: @right-padding;
+		height: @top-padding;
 		line-height: (@container-padding + 2);
 		font-size: 20px;
 		font-weight: 400;
@@ -33,10 +37,10 @@
 
 	.@{prefix}-canvas-wrapper {
 		position: absolute;
-		top: @container-padding;
-		left: @container-padding;
-		bottom: @container-padding;
-		right: @container-padding;
+		top: @top-padding;
+		left: @left-padding;
+		bottom: @bottom-padding;
+		right: @right-padding;
 		border: 1px solid #bbb;
 		z-index: 1;
 
@@ -49,10 +53,10 @@
 
 	.@{prefix}-x {
 		position: absolute;
-		height: @container-padding;
+		height: @bottom-padding;
 		bottom: 0;
-		left: @container-padding;
-		right: @container-padding;
+		left: @left-padding;
+		right: @right-padding;
 
 		.@{prefix}-x-numbers {
 			position: absolute;
@@ -108,17 +112,17 @@
 		.@{prefix}-axis-label {
 			width: 100%;
 			text-align: center;
-			line-height: (@container-padding * 0.5);
-			padding-top: (@container-padding * 0.5);
+			line-height: (@bottom-padding * 0.5);
+			padding-top: (@bottom-padding * 0.5);
 		}
 	}
 
 	.@{prefix}-y {
 		position: absolute;
-		width: @container-padding;
+		width: @left-padding;
 		left: 0;
-		top: @container-padding;
-		bottom: @container-padding;
+		top: @top-padding;
+		bottom: @bottom-padding;
 		pointer-events: none;
 
 		.@{prefix}-y-numbers {

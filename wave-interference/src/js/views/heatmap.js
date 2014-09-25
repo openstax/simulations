@@ -290,6 +290,9 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * From PhET's WaveValueReader.Displacement class
+		 */
 		alphaFromCellValue: function(value) {
 			value = (value + 1.0) / 2.0;
 			if (value > 1)

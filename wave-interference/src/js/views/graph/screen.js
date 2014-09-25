@@ -4,8 +4,9 @@ define(function(require) {
 
 	var Utils = require('utils/utils');
 
-	var GraphView       = require('views/graph');
-	var StaticGraphView = require('views/graph/static');
+	var GraphView          = require('views/graph');
+	var StaticGraphView    = require('views/graph/static');
+	var IntensityGraphView = require('views/graph/intensity');
 
 	var html = require('text!templates/screen-graph.html');
 
@@ -92,6 +93,12 @@ define(function(require) {
 			this.accumulator = 0;
 			this.time = 0;
 			this.timestep = this.waveSimulation.timestep;
+
+			this.intensityGraphView = new IntensityGraphView({
+				waveSimulation: this.waveSimulation,
+				heatmapView: this.heatmapView,
+				screenGraphView: this
+			});
 		},
 
 		/**
@@ -105,6 +112,9 @@ define(function(require) {
 
 			this.$showChartButton = this.$('.screen-graph-show-chart-button');
 			//this.$hideButton = this.$('.screen-graph-hide-button');
+
+			this.intensityGraphView.render();
+			this.$('.intensity-graph-placeholder').replaceWith(this.intensityGraphView.el);
 		},
 
 		/**
@@ -115,6 +125,16 @@ define(function(require) {
 			GraphView.prototype.resize.apply(this);
 			this.xSpacing = this.width / (this.waveSimulation.lattice.width - 1);
 		},
+
+		/**
+		 *
+		 */
+		postRender: function() {
+			StaticGraphView.prototype.postRender.apply(this);
+
+			this.intensityGraphView.postRender();
+		},
+
 
 		/**
 		 * 
@@ -178,7 +198,12 @@ define(function(require) {
 				this.colorHistoryIndex = 0;
 				this.colorHistoryFilled = true;
 			}
+		},
 
+		/**
+		 *
+		 */
+		calculateColors: function() {
 			var scalar;
 			if (!this.colorHistoryFilled)
 				scalar = this.intensityScale / (this.colorHistoryIndex + 1);
@@ -205,9 +230,7 @@ define(function(require) {
 				color.r = Math.min(color.r, 255);
 				color.g = Math.min(color.g, 255);
 				color.b = Math.min(color.b, 255);
-				// console.log(color);
 			}
-			
 		},
 
 		/**
@@ -232,6 +255,7 @@ define(function(require) {
 
 		_update: function() {
 			this.updateColorHistory();
+			this.calculateColors();
 			this.drawColors();
 		},
 
@@ -242,7 +266,7 @@ define(function(require) {
 			StaticGraphView.prototype.show.apply(this, [event]);
 
 			this.heatmapView.enableScreenMode();
-			this.$showChartButton.addClass('visible');
+			this.intensityGraphView.$el.addClass('visible');
 		},
 
 		hide: function(event) {
@@ -252,7 +276,7 @@ define(function(require) {
 			StaticGraphView.prototype.hide.apply(this, [event]);
 
 			this.heatmapView.disableScreenMode();
-			this.$showChartButton.removeClass('visible');
+			this.intensityGraphView.$el.removeClass('visible');
 		},
 
 		animationDuration: function() {
