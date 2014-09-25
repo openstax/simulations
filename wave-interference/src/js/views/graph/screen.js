@@ -202,9 +202,9 @@ define(function(require) {
 				color.r *= scalar;
 				color.g *= scalar;
 				color.b *= scalar;
-				// color.r = Math.min(color.r, 255);
-				// color.g = Math.min(color.g, 255);
-				// color.b = Math.min(color.b, 255);
+				color.r = Math.min(color.r, 255);
+				color.g = Math.min(color.g, 255);
+				color.b = Math.min(color.b, 255);
 				// console.log(color);
 			}
 			

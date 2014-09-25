@@ -95,6 +95,7 @@ define(function(require) {
 				if (intensityAlpha > 1)
 					intensityAlpha = 1;
 				out[j] = Utils.toRgba(this.color, intensityAlpha, true);
+				//console.log(out[j]);
 			}
 		},
 
