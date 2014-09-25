@@ -270,6 +270,12 @@ define(function(require) {
 			this.intensityGraphView.$el.addClass('visible');
 		},
 
+		_afterShow: function() {
+			StaticGraphView.prototype._afterShow.apply(this, [event]);
+
+			this.intensityGraphView.resize();
+		},
+
 		hide: function(event) {
 			if (this.toggling)
 				return;
