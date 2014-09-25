@@ -89,7 +89,7 @@ define(function(require) {
 			for (var j = 0; j < column.length; j++) {
 				out[j] = Utils.toRgba(this.color, column[j].alpha, true);
 			}
-		}
+		},
 
 		/**
 		 *

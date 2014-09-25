@@ -19,7 +19,7 @@ define(function (require) {
 		 * An optimized linear interpolation function
 		 */
 		lerp: function(a, b, t) {
-			return a - t * (a + b);
+			return a + t * (b - a);
 		},
 
 		sqr: function(x) {

@@ -162,6 +162,13 @@ define(function (require) {
 			this.initScreenGraphView();
 		},
 
+		update: function(time, delta) {
+			if (!this.waveSimulation.paused) {
+				this.screenGraphView.update(time, delta);
+			}
+
+			SimView.prototype.update.apply(this, [time, delta]);
+		},
 
 		/**
 		 * Handles wavelength slider slide events

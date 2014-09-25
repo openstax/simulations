@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var Utils = require('utils/utils');
+
 	var GraphView       = require('views/graph');
 	var StaticGraphView = require('views/graph/static');
 
@@ -75,9 +77,15 @@ define(function(require) {
 			// 
 			this.intensityScale = 7;
 
-			// A place to store the colors
+			// Initialize values for our colors array
 			this.colors = [];
-				
+			for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+				this.colors[j] = {
+					r: 0, 
+					g: 0, 
+					b: 0
+				};
+			}
 		},
 
 		/**
@@ -108,10 +116,50 @@ define(function(require) {
 		initPoints: function() {},
 
 		/**
-		 * 
+		 * Draws the colors in this.colors all the way down the canvas,
+		 *   interpolating between colors.
 		 */
 		drawColors: function() {
+			/*
+			 * Get the ratio of lattice cells to pixels so we can figure
+			 *   out which colors (directly correlating to lattice cell)
+			 *   we're between at any given pixel (y).
+			 */
+			var ratio = this.height / this.waveSimulation.lattice.height;
+			var width = this.width;
 
+			var maxColorIndex = this.colors.length - 1;
+
+			var a, // The starting color's index
+			    b, // The ending color's index
+			    progress, // Progress from the starting to ending color
+			    colors  = this.colors,
+			    context = this.context;
+
+			for (var y = 0; y < this.height; y++) {
+				a = Math.floor(y / ratio);
+				b = a + 1;
+
+				// Catch rounding errors with floats
+				if (b > maxColorIndex) {
+					b--;
+					a--;
+				}
+
+				// The unrounded index minus the start index
+				progress = (y / ratio) - a;
+
+				/*
+				 * Using our two colors and our progress between colors,
+				 *   find the linearly interpolated color between them.
+				 */
+				context.fillStyle = Utils.rgbToHex(
+					Utils.lerp(colors[a].r, colors[b].r, progress),
+					Utils.lerp(colors[a].g, colors[b].g, progress),
+					Utils.lerp(colors[a].b, colors[b].b, progress)
+				);
+				context.fillRect(0, y, width, 1);
+			}
 		},
 
 		/**
@@ -120,25 +168,39 @@ define(function(require) {
 		updateColorHistory: function() {
 			this.heatmapView.getEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
 
-			if (this.colorHistoryIndex == this.colorHistoryLength)
+			if (this.colorHistoryIndex == this.colorHistoryLength) {
 				this.colorHistoryIndex = 0;
+				this.colorHistoryFilled = true;
+			}
+
+			var scalar;
+			if (!this.colorHistoryFilled)
+				scalar = this.intensityScale / (this.colorHistoryIndex + 1);
+			else
+				scalar = this.intensityScale / this.colorHistoryLength;
+
+			var colors = this.colors,
+			    color;
 
 			var height = this.waveSimulation.lattice.height;
-			var r, 
-			    g, 
-			    b;
-
 			for (var j = 0; j < height; j++) {
-				r = 0; 
-				g = 0; 
-				b = 0;
+				color = colors[j];
+				color.r = 0; 
+				color.g = 0; 
+				color.b = 0;
 				for (var h = 0; h < this.colorHistoryLength; h++) {
-					r += this.colorHistory[h].r;
-					g += this.colorHistory[h].g;
-					b += this.colorHistory[h].b;
+					color.r += this.colorHistory[h][j].r * this.colorHistory[h][j].a;
+					color.g += this.colorHistory[h][j].g * this.colorHistory[h][j].a;
+					color.b += this.colorHistory[h][j].b * this.colorHistory[h][j].a;
 				}
-				this.colors[j] = Utils.rgbToHex(r, g, b);
+				color.r *= scalar;
+				color.g *= scalar;
+				color.b *= scalar;
+				color.r = Math.min(color.r, 255);
+				color.g = Math.min(color.g, 255);
+				color.b = Math.min(color.b, 255);
 			}
+			
 		},
 
 		/**
@@ -152,8 +214,7 @@ define(function(require) {
 				this.updateColorHistory();
 				this.drawColors();
 			}
-		}
-
+		},
 
 		show: function(event) {
 			if (this.toggling)
