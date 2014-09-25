@@ -9,14 +9,14 @@ define(function(require) {
 	 * "Local" variables for functions to share and recycle
 	 */
 	var length,
-	    lat,
-		latWidth,
-		latHeight,
 		height,
-		xSpacing,
+		width,
+		ySpacing,
 		points,
-	    i,
-	    j;
+		intensity,
+		colors,
+	    j,
+	    h;
 
 
 	/**
@@ -51,8 +51,6 @@ define(function(require) {
 				latitudinalGridLines: 21
 			}, options);
 
-			StaticGraphView.prototype.initialize.apply(this, [options]);
-
 			if (options.heatmapView)
 				this.heatmapView = options.heatmapView;
 			else
@@ -62,6 +60,8 @@ define(function(require) {
 				this.screenGraphView = options.screenGraphView;
 			else
 				throw 'IntensityGraphView requires a ScreenGraphView instance to render.';
+
+			StaticGraphView.prototype.initialize.apply(this, [options]);
 
 			// Ratio between pixels and cell width
 			this.ySpacing = 1;
@@ -94,32 +94,52 @@ define(function(require) {
 		},
 
 		/**
+		 * Initializes points array and sets default points.  The number
+		 *   of points is based on the lattice height (colors length).
+		 */
+		initPoints: function() {
+			this.points = [];
+
+			length = this.screenGraphView.colors.length;
+			points = this.points;
+			for (j = 0; j < length; j++) {
+				points[j] = { 
+					x: 0, 
+					y: 0 
+				};
+			}
+		},
+
+		/**
 		 * Calculates point data before drawing.
 		 */
 		calculatePoints: function() {
-			// points   = this.points;
-			// height   = this.height;
-			// xSpacing = this.xSpacing;
+			points   = this.points;
+			width    = this.width;
+			ySpacing = this.ySpacing;
 
-			// lat = this.waveSimulation.lattice.data;
+			colors = this.screenGraphView.colors;
+			length = this.screenGraphView.colors.length;
 
-			// latWidth  = this.waveSimulation.lattice.width;
-			// latHeight = this.waveSimulation.lattice.height;
-
-			// // Set row to where the cross section line is closest to
-			// j = parseInt(this.waveSimulation.get('crossSectionY') * this.waveSimulation.heightRatio);
-			// if (j > latHeight - 1)
-			// 	j = latHeight - 1;
-			
-			// length = this.portrait ? latHeight : latWidth;
-			// for (i = 0; i < length; i++) {
-			// 	points[i].x = i * xSpacing;
-			// 	points[i].y = ((lat[i][j] - 2) / -4) * height;
-			// }
-
-			// // Hide the beginning
-			// points[0].x = -1;
+			for (j = 0; j < length; j++) {
+				intensity = this.colorToMagnitude(colors[j]) / 255;
+				points[j].x = intensity * width;
+				points[j].y = j * ySpacing;
+			}
+			// Hide the beginning
+			points[0].y = -1;
 		},
+
+		/**
+		 * I looked at PhET's ColorVector.getMagnitude and realized they
+		 *   made a mistake and returned the Math.abs of the sum of the
+		 *   parts squared instead of the sqrt.  I know it's a mistake
+		 *   because the sum of the squares is already guaranteed to be
+		 *   positive...
+		 */
+		colorToMagnitude: function(rgb) {
+			return Math.sqrt(rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
+		}
 
 	});
 

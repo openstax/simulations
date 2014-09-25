@@ -58,15 +58,12 @@ define(function(require) {
 
 		/**
 		 * Initializes points array and sets default points.  The number
-		 *   of points is based on either the lattice width or height,
-		 *   depending on whether the graph is in portrait or landscape.
-		 *   This function should be overriden by child classes that
-		 *   use the graph to show different data.
+		 *   of points is based on the lattice width.
 		 */
 		initPoints: function() {
 			this.points = [];
 
-			length = this.portrait ? this.waveSimulation.lattice.height : this.waveSimulation.lattice.width;
+			length = this.waveSimulation.lattice.width;
 			points = this.points;
 			for (i = 0; i < length; i++) {
 				points[i] = { 
