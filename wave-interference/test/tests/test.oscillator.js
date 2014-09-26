@@ -28,13 +28,17 @@ describe('Oscillator', function(){
 		var waveSimulation = new WaveSimulation();
 		var oscillator = waveSimulation.oscillators[0];
 		var propagator = waveSimulation.propagator;
-		var x = oscillator.x = 0;
-		var y = oscillator.y = 0;
-		var r = oscillator.radius = 0;
+		var x = 0;
+		var y = 0;
+		var r = 0;
+
+		oscillator.set('x', x);
+		oscillator.set('y', y);
+		oscillator.set('radius', r);
 
 		oscillator.update(0);
 
-		chai.expect(propagator.getSourceValue(x, y)).to.equal(oscillator.amplitude);
+		chai.expect(propagator.getSourceValue(x, y)).to.equal(oscillator.get('amplitude'));
 		chai.expect(propagator.getSourceValue(x, y + 1)).to.equal(0);
 	});
 

@@ -2,21 +2,20 @@ define(function(require) {
 
 	'use strict';
 
-	var GraphView       = require('views/graph');
+	var _ = require('underscore');
+
 	var StaticGraphView = require('views/graph/static');
 
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
 	var length,
-		height,
 		width,
 		ySpacing,
 		points,
 		intensity,
 		colors,
-	    j,
-	    h;
+	    j;
 
 
 	/**

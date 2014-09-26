@@ -2,6 +2,7 @@ define(function(require) {
 
 	'use strict';
 
+	var _     = require('underscore');
 	var Utils = require('utils/utils');
 
 	var GraphView          = require('views/graph');
@@ -9,20 +10,6 @@ define(function(require) {
 	var IntensityGraphView = require('views/graph/intensity');
 
 	var html = require('text!templates/screen-graph.html');
-
-	/*
-	 * "Local" variables for functions to share and recycle
-	 */
-	var length,
-	    lat,
-		latWidth,
-		latHeight,
-		height,
-		xSpacing,
-		points,
-	    i,
-	    j;
-
 
 	/**
 	 * ScreenGraphView shows the values of a certain row of the
@@ -63,10 +50,12 @@ define(function(require) {
 			this.colorHistoryIndex = 0;
 			this.colorHistoryLength = 120;
 
+			var j, h;
+
 			// Initialize each record in the color history as an array of points
-			for (var h = 0; h < this.colorHistoryLength; h++) {
+			for (h = 0; h < this.colorHistoryLength; h++) {
 				this.colorHistory[h] = [];
-				for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+				for (j = 0; j < this.waveSimulation.lattice.height; j++) {
 					this.colorHistory[h].push({
 						r: 0,
 						g: 0,
@@ -81,7 +70,7 @@ define(function(require) {
 
 			// Initialize values for our colors array
 			this.colors = [];
-			for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+			for (j = 0; j < this.waveSimulation.lattice.height; j++) {
 				this.colors[j] = {
 					r: 0, 
 					g: 0, 
