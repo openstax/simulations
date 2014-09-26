@@ -20,6 +20,19 @@ define(function(require) {
 	    halfPeriod,
 	    remainderTime;
 
+	/**
+	 * The oscillator works along with a lattice and propagator to generate the
+	 *   waves in the wave model.  Its calculations are based soley on time
+	 *   (instead of steps, like the propagator).  At any given time (inputted
+	 *   in the update function by the update loop), it will calculate what new
+	 *   oscillating value it should write to its origin in the lattice and
+	 *   then write those values to their corresponding location on the
+	 *   propagator's source lattices--the lattices that keep a history of the
+	 *   previous lattice values and which are used to generate the next values
+	 *   on the lattice according to the discrete wave-propagation function.
+	 *   The oscillating values come from a sinusoidal equation.  The core
+	 *   functions are modelled from PhET's Oscillator class.
+	 */
 	var Oscillator = Backbone.Model.extend({
 
 		defaults: {

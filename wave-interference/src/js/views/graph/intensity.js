@@ -17,10 +17,9 @@ define(function(require) {
 		colors,
 	    j;
 
-
 	/**
-	 * IntensityGraphView shows the values of a certain row of the
-	 *   lattice in real time in the form of a curve.
+	 * IntensityGraphView shows on a line graph intensity of colors 
+	 *   reaching the right edge of the heatmap. 
 	 */
 	var IntensityGraphView = StaticGraphView.extend({
 

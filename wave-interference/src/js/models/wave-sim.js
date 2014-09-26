@@ -15,6 +15,12 @@ define(function (require) {
 
 	var i;
 
+	/**
+	 * The WaveSimulation contains all necessary components to model a wave-interference
+	 *   simulation independent of a graphical representation.  It's implemented as a
+	 *   Backbone model and uses Backbone's built-in events system to respond to input
+	 *   from the views and give feedback.
+	 */
 	var WaveSimulation = Backbone.Model.extend({
 		defaults: {
 			latticeSize: {

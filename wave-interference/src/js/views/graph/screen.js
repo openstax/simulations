@@ -65,7 +65,7 @@ define(function(require) {
 				}
 			}
 
-			// 
+			// A magic number from PhET's IntensityColorMap
 			this.intensityScale = 7;
 
 			// Initialize values for our colors array
@@ -100,7 +100,6 @@ define(function(require) {
 			this.$hideButton = this.$('.screen-graph-hide-button');
 
 			this.$showChartButton = this.$('.screen-graph-show-chart-button');
-			//this.$hideButton = this.$('.screen-graph-hide-button');
 
 			this.intensityGraphView.render();
 			this.$('.intensity-graph-placeholder').replaceWith(this.intensityGraphView.el);
@@ -116,19 +115,14 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Gets called after everything has been added to the DOM so
+		 *   calculations can be made about element dimensions.
 		 */
 		postRender: function() {
 			this.intensityGraphView.postRender();
 
 			StaticGraphView.prototype.postRender.apply(this);
 		},
-
-
-		/**
-		 * 
-		 */
-		initPoints: function() {},
 
 		/**
 		 * Draws the colors in this.colors all the way down the canvas,
@@ -178,7 +172,8 @@ define(function(require) {
 		},
 
 		/**
-		 * 
+		 * Adds the latest colors from the edge of the heatmap to the
+		 *   history array.
 		 */
 		updateColorHistory: function() {
 			this.heatmapView.getAvgEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
@@ -190,7 +185,11 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Adds up the rgb values of the colors in the color history
+		 *   (mitigated by their alpha values) and scales down these 
+		 *   sums according to magic numbers from PhET and stores the 
+		 *   resulting colors in an array to be used for painting to 
+		 *   the screen graphic and manipulating the intensity graph.
 		 */
 		calculateColors: function() {
 			var scalar;
@@ -223,7 +222,8 @@ define(function(require) {
 		},
 
 		/**
-		 * Responds to resize events and draws everything.
+		 * Updates things.  Contains an inner _update loop that is
+		 *   synchronized with the simulation steps.
 		 */
 		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
@@ -242,6 +242,10 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * The inner loop of things that should run synchronized with
+		 *   the simulation steps.
+		 */
 		_update: function(time, delta) {
 			this.updateColorHistory();
 			this.calculateColors();

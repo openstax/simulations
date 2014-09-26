@@ -7,6 +7,15 @@ define(function(require) {
 	var Lattice2D = require('models/lattice2d');
 	var Potential = require('models/potential');
 
+	/**
+	 * The WavePropagator object is responsible for propagating values over a discrete 
+	 *   grid space (represeneted by a lattice) over time.  Unlike the oscillator, it
+	 *   doesn't use time (a continuous independent variable) in its algorithm because 
+	 *   it is discrete; the end result is determined by the number of steps the 
+	 *   propagator has taken.  It is a mixture of PhET's ClassicalWavePropagator and 
+	 *   DampedClassicalWavePropagator classes.  More details about how propagation
+	 *   works are given in the propagation functions' notes.
+	 */
 	var WavePropagator = function(options) {
 
 		// Default values

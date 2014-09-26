@@ -1,5 +1,4 @@
 
-// Maybe later I should make these little models node.js compatible too.
 
 define(function(require) {
 
@@ -7,6 +6,10 @@ define(function(require) {
 
 	var _ = require('underscore');
 
+	/**
+	 * Modelled after PhET's Lattice2D, these objects are used to store values of
+	 *   [pressures, water level, etc.] in a 2-D grid.
+	 */
 	var Lattice2D = function(options) {
 
 		// Default values

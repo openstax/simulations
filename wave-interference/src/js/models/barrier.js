@@ -7,6 +7,12 @@ define(function(require) {
 	var Backbone     = require('backbone');
 	var BoxPotential = require('models/potential/box');
 
+	/**
+	 * This is the model behind the static barriers in the simulation
+	 *   that are controlled by the buttons and sliders on the properties
+	 *   panel.  It contains three BoxPotentials that can vary in height
+	 *   and x-location and whose activity can be toggled.
+	 */
 	var Barrier = function(options) {
 
 		if (options.waveSimulation)
