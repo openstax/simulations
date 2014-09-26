@@ -1,0 +1,108 @@
+
+.intensity-graph-view {
+	position: absolute;
+	top: 42px;
+	bottom: 42px;
+	left: 20px;
+	.grid-view(graph, @heatmap-container-padding, auto, @heatmap-container-padding, 50%,
+		@left-padding: 50px, @right-padding: 16px, @top-padding: 30px, @bottom-padding: 30px);
+	.transition(~"width 400ms, opacity 400ms");
+	overflow: hidden;
+	visibility: hidden;
+	opacity: 0;
+
+	&.visible {
+		opacity: 1;
+		visibility: visible;
+	}
+
+	&.open {
+		@media (min-width: @max-viewport-width) {
+			width: @intensity-graph-width;
+		}
+		width: auto;
+	}
+
+	&.closed {
+		.transition(~"width 200ms, opacity 400ms");
+		width: @heatmap-container-padding;
+	}
+
+	&.initial {
+		.transition(~"width 0ms, opacity 400ms");
+	}
+
+	> .graph-show-button {
+		left: (@heatmap-container-padding - 1);
+		width: @heatmap-container-width;
+
+		.horizontal-panel-button();
+		
+		&.reenabled {
+			.animation-name(graph-show-btn);
+			.animation-duration(200ms);
+			.animation-timing-function(ease);
+			.animation-fill-mode(forwards);
+		}
+
+		.animated-button(graph-show-btn-clicked, 400ms);
+	}
+
+	> .graph-hide-button {
+		position: absolute;
+		top: 0px;
+		left: -3px;
+		background: transparent;
+		color: #888;
+		display: none;
+		z-index: 50;
+
+		&:hover {
+			color: #555;
+		}
+
+		&:active {
+			color: #444;
+			.box-shadow(none);
+			text-shadow: 0 0 6px #ccc;
+		}
+	}
+
+	> .graph-title {
+		font-size: 16px;
+		line-height: 30px;
+		text-align: left;
+		padding-left: 12px;
+	}
+
+	.graph-y,
+	.graph-x {
+		> .graph-axis-label {
+			font-size: 10px;
+		}
+	}
+
+	.graph-y > .graph-axis-label {
+		margin-left: 16px;
+	}
+
+	.graph-x > .graph-axis-label {
+		padding-top: 14px;
+	}
+
+	.graph-y-numbers,
+	.graph-x-numbers {
+		> .graph-number {
+			font-size: 8px;
+		}
+	}
+
+	.graph-y .graph-y-numbers > .graph-number > span {
+		margin-top: 3px;
+	}
+
+	> .graph-canvas-wrapper > .graph-canvas {
+		background-color: #FFF;
+	}
+	
+}

@@ -29,10 +29,10 @@
 		.animated-button(graph-show-btn-clicked, 400ms);
 	}
 
-	> .screen-graph-hide-button {
+	> .screen-graph-container > .screen-graph-hide-button {
 		position: absolute;
-		top: 0px;
-		left: -18px;
+		top: 5px;
+		left: 3px;
 		background: transparent;
 		color: #888;
 		display: none;
@@ -81,40 +81,7 @@
 	}
 
 	> .screen-graph-title {
-		letter-spacing: .08em;
-	}
-}
-
-.horizontal-panel-button() {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	height: @heatmap-container-padding;
-	line-height: (@heatmap-container-padding + 2);
-	font-weight: bold;
-	padding: 0;
-	background-color: @gray-lightest;
-	color: @link-color;
-	border-radius: 0;
-	margin-top: auto;
-	margin-bottom: auto;
-	z-index: 50;
-	.transform(~"rotate(-90deg) translateY(-239px)");
-	.transform-origin(center center);
-
-	&:hover {
-		color: fadeout(@link-color, 15%);
-		background-color: lighten(@gray-lightest, 0.5%);
-	}
-
-	&:active {
-		color: #fff;
-		background-color: @brand-primary;
-		.box-shadow(none);
-	}
-
-	> .fa {
-		margin-right: 10px;
+		letter-spacing: .05em;
 	}
 }
 

@@ -1,10 +1,21 @@
 @import "cross-section-slider.less";
 @import "mixins/graph-view.less";
 
+.heatmap-view {
+	width: @heatmap-container-width;
+	position: relative;
+	.transition(~"transform 400ms, -webkit-transform 400ms, -moz-transform 400ms, -ms-transform 400ms");
+
+	&.shifted {
+		.transform(translateX(-30px));
+	}
+}
+
 .heatmap-container {
 	position: relative;
 	.grid-view(heatmap, @heatmap-container-width, @heatmap-container-width, @heatmap-container-padding);
 	.user-select(none);
+	z-index: 50;
 
 	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
 		//left: @heatmap-container-left-margin;

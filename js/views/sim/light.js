@@ -8,7 +8,6 @@ define(function (require) {
 
 	var LightSimulation  = require('models/wave-sim/light');
 	var LightHeatmapView = require('views/heatmap/light');
-	var ScreenGraphView  = require('views/graph/screen');
 	var SimView          = require('views/sim');
 
 	/*
@@ -33,8 +32,6 @@ define(function (require) {
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
-
-			this.initScreenGraphView();
 		},
 
 		/**
@@ -76,33 +73,6 @@ define(function (require) {
 				waveSimulation: this.waveSimulation,
 				heatmapView: this.heatmapView
 			};
-		},
-
-		/**
-		 * Initializes the ScreenGraphView.
-		 */
-		initScreenGraphView: function() {
-			this.screenGraphView = new ScreenGraphView({
-				waveSimulation: this.waveSimulation,
-				heatmapView: this.heatmapView
-			});
-		},
-
-		/**
-		 *
-		 */
-		render: function() {
-			SimView.prototype.render.apply(this);
-
-			this.renderScreenGraphView();
-		},
-
-		/**
-		 * Renders the graph view
-		 */
-		renderScreenGraphView: function() {
-			this.screenGraphView.render();
-			this.heatmapView.$el.before(this.screenGraphView.el);
 		},
 
 		/**
@@ -160,14 +130,6 @@ define(function (require) {
 			SimView.prototype.resetComponents.apply(this);
 
 			this.initScreenGraphView();
-		},
-
-		update: function(time, delta) {
-			if (!this.waveSimulation.paused) {
-				this.screenGraphView.update(time, delta);
-			}
-
-			SimView.prototype.update.apply(this, [time, delta]);
 		},
 
 		/**

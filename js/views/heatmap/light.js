@@ -4,8 +4,10 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var HeatmapView = require('views/heatmap');
-	var Utils       = require('utils/utils');
+	var Utils            = require('utils/utils');
+	var HeatmapView      = require('views/heatmap');
+	var ScreenGraphView  = require('views/graph/screen');
+	
 
 	require('utils/jquery-plugins');
 
@@ -35,6 +37,8 @@ define(function(require) {
 
 			HeatmapView.prototype.initialize.apply(this, [ options ]);
 
+			this.initScreenGraphView();
+
 			this.cellChecked = [];
 			for (var i = 0; i < this.waveSimulation.lattice.width; i++) {
 				this.cellChecked[i] = [];
@@ -46,6 +50,42 @@ define(function(require) {
 			this.listenTo(this.waveSimulation.darkWaveSimulation, 'set-dark', this.setDark);
 			this.listenTo(this.waveSimulation, 'reset', this.resetDarkness);
 			this.listenTo(this.waveSimulation, 'reset', this.changeColor);
+		},
+
+		/**
+		 * Initializes the ScreenGraphView.
+		 */
+		initScreenGraphView: function() {
+			this.screenGraphView = new ScreenGraphView({
+				waveSimulation: this.waveSimulation,
+				heatmapView: this
+			});
+		},
+
+		/**
+		 *
+		 */
+		render: function() {
+			HeatmapView.prototype.render.apply(this);
+
+			this.renderScreenGraphView();
+		},
+
+		/**
+		 * Renders the graph view
+		 */
+		renderScreenGraphView: function() {
+			this.screenGraphView.render();
+			this.$el.prepend(this.screenGraphView.el);
+		},
+
+		/**
+		 *
+		 */
+		postRender: function() {
+			HeatmapView.prototype.postRender.apply(this);
+
+			this.screenGraphView.postRender();
 		},
 
 		/**
@@ -95,22 +135,54 @@ define(function(require) {
 				if (intensityAlpha > 1)
 					intensityAlpha = 1;
 				out[j] = Utils.toRgba(this.color, intensityAlpha, true);
-				//console.log(out[j]);
 			}
 		},
 
 		/**
 		 *
 		 */
+		update: function(time, delta) {
+			if (!this.waveSimulation.paused) {
+				this.screenGraphView.update(time, delta);
+			}
+
+			HeatmapView.prototype.update.apply(this, [time, delta]);
+		},
+
+		/**
+		 *
+		 */
 		enableScreenMode: function() {
-			this.$el.addClass('rotated');
+			this.$container.addClass('rotated');
+
+			if (this.shifted)
+				this.$el.addClass('shifted');
 		},
 
 		/**
 		 *
 		 */
 		disableScreenMode: function() {
-			this.$el.removeClass('rotated');
+			this.$container.removeClass('rotated');
+
+			if (this.shifted)
+				this.$el.removeClass('shifted');
+		},
+
+		/**
+		 *
+		 */
+		shift: function() {
+			this.$el.addClass('shifted');
+			this.shifted = true;
+		},
+
+		/**
+		 *
+		 */
+		unshift: function() {
+			this.$el.removeClass('shifted');
+			this.shifted = false;
 		},
 
 		/**
