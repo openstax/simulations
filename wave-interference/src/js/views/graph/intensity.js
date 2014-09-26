@@ -139,7 +139,26 @@ define(function(require) {
 		 */
 		colorToMagnitude: function(rgb) {
 			return Math.sqrt(rgb.r * rgb.r + rgb.g * rgb.g + rgb.b * rgb.b);
-		}
+		},
+
+
+		show: function(event) {
+			if (this.toggling)
+				return;
+
+			StaticGraphView.prototype.show.apply(this, [event]);
+
+			this.heatmapView.shift();
+		},
+
+		hide: function(event) {
+			if (this.toggling)
+				return;
+			
+			StaticGraphView.prototype.hide.apply(this, [event]);
+
+			this.heatmapView.unshift();
+		},
 
 	});
 

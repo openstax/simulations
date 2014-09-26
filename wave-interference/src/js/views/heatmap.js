@@ -37,8 +37,8 @@ define(function(require) {
 
 		template: _.template(html),
 
-		tagName: 'figure',
-		className: 'heatmap-container',
+		tagName: 'div',
+		className: 'heatmap-view',
 
 		events: {
 			'slide .cross-section-slider' : 'moveCrossSection',
@@ -121,7 +121,8 @@ define(function(require) {
 		 * Renders html container
 		 */
 		renderContainer: function() {
-			this.$el.html(this.template(this.graphInfo));
+			this.$container = $('<div class="heatmap-container">' + this.template(this.graphInfo) + '</div>');
+			this.$el.append(this.$container);
 
 			this.$('.cross-section-slider').noUiSlider({
 				start: (this.graphInfo.y.end - this.graphInfo.y.start) / 2,
