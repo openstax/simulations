@@ -2,6 +2,7 @@ define(function (require) {
 
 	'use strict';
 
+	var $ = require('jquery');
 	var _ = require('underscore');
 
 	var Utils = require('utils/utils');
@@ -89,7 +90,7 @@ define(function (require) {
 					min: Math.MIN_WAVELENGTH,
 					max: Math.MAX_WAVELENGTH
 				}
-			})
+			});
 
 			// Create a canvas background for the wavelength slider
 			this.$wavelengthSliderCanvas = $('<canvas class="wavelength-slider-canvas">').prependTo($wavelengthSlider);

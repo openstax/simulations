@@ -2,6 +2,7 @@ define(function(require) {
 
 	'use strict';
 
+	var _     = require('underscore');
 	var Utils = require('utils/utils');
 
 	var GraphView          = require('views/graph');
@@ -9,20 +10,6 @@ define(function(require) {
 	var IntensityGraphView = require('views/graph/intensity');
 
 	var html = require('text!templates/screen-graph.html');
-
-	/*
-	 * "Local" variables for functions to share and recycle
-	 */
-	var length,
-	    lat,
-		latWidth,
-		latHeight,
-		height,
-		xSpacing,
-		points,
-	    i,
-	    j;
-
 
 	/**
 	 * ScreenGraphView shows the values of a certain row of the
@@ -63,10 +50,12 @@ define(function(require) {
 			this.colorHistoryIndex = 0;
 			this.colorHistoryLength = 120;
 
+			var j, h;
+
 			// Initialize each record in the color history as an array of points
-			for (var h = 0; h < this.colorHistoryLength; h++) {
+			for (h = 0; h < this.colorHistoryLength; h++) {
 				this.colorHistory[h] = [];
-				for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+				for (j = 0; j < this.waveSimulation.lattice.height; j++) {
 					this.colorHistory[h].push({
 						r: 0,
 						g: 0,
@@ -76,12 +65,12 @@ define(function(require) {
 				}
 			}
 
-			// 
+			// A magic number from PhET's IntensityColorMap
 			this.intensityScale = 7;
 
 			// Initialize values for our colors array
 			this.colors = [];
-			for (var j = 0; j < this.waveSimulation.lattice.height; j++) {
+			for (j = 0; j < this.waveSimulation.lattice.height; j++) {
 				this.colors[j] = {
 					r: 0, 
 					g: 0, 
@@ -111,7 +100,6 @@ define(function(require) {
 			this.$hideButton = this.$('.screen-graph-hide-button');
 
 			this.$showChartButton = this.$('.screen-graph-show-chart-button');
-			//this.$hideButton = this.$('.screen-graph-hide-button');
 
 			this.intensityGraphView.render();
 			this.$('.intensity-graph-placeholder').replaceWith(this.intensityGraphView.el);
@@ -127,19 +115,14 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Gets called after everything has been added to the DOM so
+		 *   calculations can be made about element dimensions.
 		 */
 		postRender: function() {
 			this.intensityGraphView.postRender();
 
 			StaticGraphView.prototype.postRender.apply(this);
 		},
-
-
-		/**
-		 * 
-		 */
-		initPoints: function() {},
 
 		/**
 		 * Draws the colors in this.colors all the way down the canvas,
@@ -189,7 +172,8 @@ define(function(require) {
 		},
 
 		/**
-		 * 
+		 * Adds the latest colors from the edge of the heatmap to the
+		 *   history array.
 		 */
 		updateColorHistory: function() {
 			this.heatmapView.getAvgEdgeColors(this.colorHistory[this.colorHistoryIndex++]);
@@ -201,7 +185,11 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * Adds up the rgb values of the colors in the color history
+		 *   (mitigated by their alpha values) and scales down these 
+		 *   sums according to magic numbers from PhET and stores the 
+		 *   resulting colors in an array to be used for painting to 
+		 *   the screen graphic and manipulating the intensity graph.
 		 */
 		calculateColors: function() {
 			var scalar;
@@ -234,7 +222,8 @@ define(function(require) {
 		},
 
 		/**
-		 * Responds to resize events and draws everything.
+		 * Updates things.  Contains an inner _update loop that is
+		 *   synchronized with the simulation steps.
 		 */
 		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
@@ -253,6 +242,10 @@ define(function(require) {
 			}
 		},
 
+		/**
+		 * The inner loop of things that should run synchronized with
+		 *   the simulation steps.
+		 */
 		_update: function(time, delta) {
 			this.updateColorHistory();
 			this.calculateColors();

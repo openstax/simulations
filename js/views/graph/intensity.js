@@ -2,26 +2,24 @@ define(function(require) {
 
 	'use strict';
 
-	var GraphView       = require('views/graph');
+	var _ = require('underscore');
+
 	var StaticGraphView = require('views/graph/static');
 
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */
 	var length,
-		height,
 		width,
 		ySpacing,
 		points,
 		intensity,
 		colors,
-	    j,
-	    h;
-
+	    j;
 
 	/**
-	 * IntensityGraphView shows the values of a certain row of the
-	 *   lattice in real time in the form of a curve.
+	 * IntensityGraphView shows on a line graph intensity of colors 
+	 *   reaching the right edge of the heatmap. 
 	 */
 	var IntensityGraphView = StaticGraphView.extend({
 

@@ -8,7 +8,6 @@ define(function(require) {
 	var HeatmapView      = require('views/heatmap');
 	var ScreenGraphView  = require('views/graph/screen');
 	
-
 	require('utils/jquery-plugins');
 
 	/*
@@ -23,7 +22,7 @@ define(function(require) {
 	    intensityAlpha;
 
 	/**
-	 * 
+	 * Contains all customizations of the heatmap necessary for the light module.
 	 */
 	var LightHeatmapView = HeatmapView.extend({
 
