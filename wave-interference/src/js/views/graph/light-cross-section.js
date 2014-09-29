@@ -22,13 +22,15 @@ define(function(require) {
 		className: 'light-cross-section-graph-view open initial',
 
 		events: _.extend({}, CrossSectionGraphView.prototype.events, {
-			
+			'click .curve-check'   : 'curveCheckClicked',
+			'click .vectors-check' : 'vectorsCheckClicked',
 		}),
 
 		initialize: function(options) {
 			CrossSectionGraphView.prototype.initialize.apply(this, [options]);
 
-			
+			this.showCurves  = true;
+			this.showVectors = false;
 		},
 
 		/**
@@ -39,6 +41,20 @@ define(function(require) {
 
 			this.$showButton = this.$('.graph-show-button');
 			this.$hideButton = this.$('.graph-hide-button');
+		},
+
+		/**
+		 *
+		 */
+		curveCheckClicked: function(event) {
+			this.showCurves = $(event.target).is(':checked');
+		},
+
+		/**
+		 *
+		 */
+		vectorsCheckClicked: function(event) {
+			this.showVectors = $(event.target).is(':checked');
 		},
 
 	});
