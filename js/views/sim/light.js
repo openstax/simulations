@@ -10,6 +10,7 @@ define(function (require) {
 	var LightSimulation  = require('models/wave-sim/light');
 	var LightHeatmapView = require('views/heatmap/light');
 	var SimView          = require('views/sim');
+	var LightCrossSectionGraphView = require('views/graph/light-cross-section');
 
 	/*
 	 * Constants
@@ -77,6 +78,13 @@ define(function (require) {
 		},
 
 		/**
+		 * Initializes the CrossSectionGraphView.
+		 */
+		initCrossSectionGraphView: function() {
+			this.crossSectionGraphView = new LightCrossSectionGraphView(this.getGraphViewOptions());
+		},
+
+		/**
 		 * Renders the control panel and all its controls.
 		 */
 		renderControlPanel: function() {
@@ -125,15 +133,6 @@ define(function (require) {
 		},
 
 		/**
-		 *
-		 */
-		resetComponents: function() {
-			SimView.prototype.resetComponents.apply(this);
-
-			this.initScreenGraphView();
-		},
-
-		/**
 		 * Handles wavelength slider slide events
 		 */
 		changeWavelength: function(event) {
@@ -144,6 +143,7 @@ define(function (require) {
 			this.$wavelengthSliderHandle.css('background-color', hex);
 
 			this.heatmapView.color = hex;
+			this.crossSectionGraphView.lineColor = hex;
 
 			this.waveSimulation.set('wavelength', wavelength);
 			this.waveSimulation.set('frequency', SPEED_OF_LIGHT / wavelength);

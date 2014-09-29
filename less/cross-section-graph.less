@@ -1,8 +1,26 @@
 
-.static-graph-view {
+.cross-section-graph-view {
+	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding);
+	.cross-section-graph();
+}
+
+.light-cross-section-graph-view {
+	.grid-view(graph, (@heatmap-container-width + @panel-margin + @heatmap-container-padding), @cross-section-graph-height, @heatmap-container-padding,
+	           @right-padding: (@heatmap-container-padding + @panel-margin + @heatmap-container-padding));
+	.cross-section-graph();
+
+	> .light-cross-section-graph-controls {
+		position: absolute;
+		left: 100%;
+		margin-left: -(@heatmap-container-padding + @panel-margin + @heatmap-container-padding);
+		top: 70px;
+		padding: 9px;
+	}
+}
+
+.cross-section-graph() {
 	position: relative;
-	margin-top: 20px;
-	.grid-view(graph, @heatmap-container-width, @cross-section-graph-height, @heatmap-container-padding, 50%);
+	margin-top: @panel-margin;
 	.transition(~"height 400ms");
 	overflow: hidden;
 
@@ -23,14 +41,6 @@
 
 	&.initial {
 		.transition(~"height 0s");
-	}
-
-	@media (min-width: (@heatmap-container-width + @control-panel-width + @heatmap-container-left-margin)) {
-		//left: @heatmap-container-left-margin;
-
-		.better & {
-			//left: 100px; // Width of oscillator object graphics?
-		}
 	}
 
 	> .graph-show-button {

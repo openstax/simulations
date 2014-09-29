@@ -195,7 +195,7 @@ define(function (require) {
 		},
 
 		/**
-		 * Initializes the GraphView.
+		 * Initializes the CrossSectionGraphView.
 		 */
 		initCrossSectionGraphView: function() {
 			this.crossSectionGraphView = new CrossSectionGraphView(this.getGraphViewOptions());
@@ -454,8 +454,13 @@ define(function (require) {
 		 * Click event handler that resets the simulation back to time zero.
 		 */
 		reset: function(event) {
-			// Set pause/play button to paused and reset everything
-			this.pause();
+			if (!confirm('Are you sure you want to reset everything?'))
+				return;
+			
+			// Save whether or not it was paused when we reset
+			var wasPaused = this.waveSimulation.paused;
+
+			// Set pause the updater and reset everything
 			this.updater.pause();
 			this.updater.reset();
 			this.resetComponents();
@@ -469,6 +474,8 @@ define(function (require) {
 
 			// Resume normal function
 			this.updater.play();
+			if (!wasPaused)
+				this.waveSimulation.play();
 		},
 
 		/**
