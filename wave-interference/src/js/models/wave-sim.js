@@ -260,12 +260,12 @@ define(function (require) {
 		addSegmentPotential: function() {
 			var segment = new SegmentPotential({
 				start: {
-					x: 20,
-					y: 40
+					x: 11,
+					y: 49
 				},
 				end: {
-					x: 40,
-					y: 20
+					x: 49,
+					y: 11
 				},
 				thickness: 3
 			});

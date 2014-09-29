@@ -21,7 +21,7 @@ define(function (require) {
 			},
 			units: {
 				distance: 'cm',
-				time: 's'
+				time: 'sec'
 			},
 
 			oscillatorName: 'Faucet',

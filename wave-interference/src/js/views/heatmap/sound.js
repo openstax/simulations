@@ -39,7 +39,7 @@ define(function(require) {
 		initialize: function(options) {
 			// Default values
 			options = _.extend({
-				title: 'Pressure (Heatmap) &ndash; XY Plane',
+				title: 'Pressure (Grayscale) &ndash; XY Plane',
 				color: '#fff'
 			}, options);
 

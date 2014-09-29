@@ -20,7 +20,6 @@ define(function(require) {
 
 		template: _.template(html),
 
-		className: 'static-graph-view open initial',
 		tagName: 'figure',
 
 		events: {

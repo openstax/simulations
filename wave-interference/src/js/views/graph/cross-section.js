@@ -25,6 +25,8 @@ define(function(require) {
 	 */
 	var CrossSectionGraphView = StaticGraphView.extend({
 
+		className: 'cross-section-graph-view open initial',
+
 		initialize: function(options) {
 			StaticGraphView.prototype.initialize.apply(this, [options]);
 

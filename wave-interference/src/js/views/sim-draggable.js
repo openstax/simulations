@@ -22,6 +22,8 @@ define(function (require) {
 
 			this.waveSimulation = this.heatmapView.waveSimulation;
 
+			this.visible = false;
+
 			this.listenTo(this.heatmapView, 'resized', this.resize);
 		},
 
@@ -81,10 +83,12 @@ define(function (require) {
 
 		show: function() {
 			this.$el.show();
+			this.visible = true;
 		},
 
 		hide: function() {
 			this.$el.hide();
+			this.visible = false;
 		}
 
 	});

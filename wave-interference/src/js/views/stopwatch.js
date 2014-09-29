@@ -42,7 +42,8 @@ define(function (require) {
 
 			this.position = options.position;
 
-			this.units = this.waveSimulation.get('units').distance;
+			this.units = this.waveSimulation.get('units').time;
+			this.timeScale = this.waveSimulation.get('timeScale');
 
 			this.timing = false;
 		},
@@ -59,6 +60,7 @@ define(function (require) {
 			this.$el.html(this.template());
 			this.$labelValue = this.$('.stopwatch-label-value');
 			this.$toggleButtonText = this.$('.stopwatch-toggle-btn .btn-text');
+			this.$('.stopwatch-label-units').text(this.units);
 		},
 
 		panelDown: function(event) {
@@ -129,7 +131,8 @@ define(function (require) {
 
 			if (this.timing && !this.waveSimulation.paused) {
 				this.time += (delta / 1000);
-				this.$labelValue.text(this.time.toFixed(2));
+				var scaledTime = this.time * this.timeScale;
+				this.$labelValue.text(scaledTime.toFixed(2));
 			}
 
 			// If there aren't any changes, don't do anything.
