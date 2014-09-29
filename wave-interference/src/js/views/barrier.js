@@ -8,7 +8,7 @@ define(function (require) {
 
 	var HeatmapDraggable = require('views/heatmap-draggable');
 
-	var html = require('text!templates/barrier.html');
+	var html = require('templates/barrier.html');
 
 	var xSpacing,
 	    ySpacing,

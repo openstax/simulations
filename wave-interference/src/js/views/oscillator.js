@@ -6,7 +6,7 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
-	var html  = require('text!templates/oscillator.html');
+	var html  = require('templates/oscillator.html');
 
 	var OscillatorView = Backbone.View.extend({
 

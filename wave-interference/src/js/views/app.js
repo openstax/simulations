@@ -3,7 +3,7 @@ define([
 	'underscore', 
 	'backbone',
 
-	'text!templates/app.html',
+	'templates/app.html',
 
 	'views/sim/water',
 	'views/sim/sound',

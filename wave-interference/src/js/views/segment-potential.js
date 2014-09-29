@@ -8,7 +8,7 @@ define(function (require) {
 	var HeatmapDraggable = require('views/heatmap-draggable');
 
 	var Utils = require('utils/utils');
-	var html  = require('text!templates/segment.html');
+	var html  = require('templates/segment.html');
 
 	var segment,
 	    xSpacing,

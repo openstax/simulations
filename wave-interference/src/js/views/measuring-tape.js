@@ -8,7 +8,7 @@ define(function (require) {
 	var SimDraggable = require('views/sim-draggable');
 
 	var Utils = require('utils/utils');
-	var html  = require('text!templates/measuring-tape.html');
+	var html  = require('templates/measuring-tape.html');
 
 	var padding,
 	    angle,

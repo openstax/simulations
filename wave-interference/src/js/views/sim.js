@@ -17,13 +17,13 @@ define(function (require) {
 	require('nouislider');
 
 	// Templates
-	var simHtml                = require('text!templates/sim.html');
-	var controlPanelHtml       = require('text!templates/control-panel.html');
-	var toolsHtml              = require('text!templates/control-panel-components/tools.html');
-	var waveControlsHtml       = require('text!templates/control-panel-components/wave.html');
-	var oscillatorControlsHtml = require('text!templates/control-panel-components/oscillators.html');
-	var barrierControlsHtml    = require('text!templates/control-panel-components/barriers.html');
-	var playbackControlsHtml   = require('text!templates/playback-controls.html');
+	var simHtml                = require('templates/sim.html');
+	var controlPanelHtml       = require('templates/control-panel.html');
+	var toolsHtml              = require('templates/control-panel-components/tools.html');
+	var waveControlsHtml       = require('templates/control-panel-components/wave.html');
+	var oscillatorControlsHtml = require('templates/control-panel-components/oscillators.html');
+	var barrierControlsHtml    = require('templates/control-panel-components/barriers.html');
+	var playbackControlsHtml   = require('templates/playback-controls.html');
 
 
 	/*

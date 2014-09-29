@@ -1,43 +1,38 @@
-(function () {
-	'use strict';
 
-	// Load the config
-	require(['config'], function () {
-		require(['jquery', 'views/app'], function($, AppView) {
+'use strict';
 
-			$(function(){
-				var appView = new AppView();
+var $ = require('jquery');
 
-				// Append to body
-				$('body').append(appView.el);
+var AppView = require('./views/app');
 
-				// Render main app view
-				appView.render();
+$(function(){
+	var appView = new AppView();
 
-				// For demoing
-				var better = false;
-				$(document).bind('keydown', function(event) {
-					if (event.which === 66) {
-						if (better) {
-							$('body').removeClass('better');
-							$(window).trigger('worse');
-							better = false;
-						}
-						else {
-							$('body').addClass('better');
-							$(window).trigger('better');
-							better = true;
-						}
-					}
-				});	
+	// Append to body
+	$('body').append(appView.el);
 
-				// Trigger window resize to update canvases
-				//$(window).trigger('resize');
+	// Render main app view
+	appView.render();
 
-				appView.postRender();
-			});
-	
-		});
-	});
+	// For demoing
+	var better = false;
+	$(document).bind('keydown', function(event) {
+		if (event.which === 66) {
+			if (better) {
+				$('body').removeClass('better');
+				$(window).trigger('worse');
+				better = false;
+			}
+			else {
+				$('body').addClass('better');
+				$(window).trigger('better');
+				better = true;
+			}
+		}
+	});	
 
-})();
+	// Trigger window resize to update canvases
+	//$(window).trigger('resize');
+
+	appView.postRender();
+});

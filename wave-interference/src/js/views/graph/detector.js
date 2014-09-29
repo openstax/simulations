@@ -6,7 +6,7 @@ define(function(require) {
 
 	var GraphView = require('views/graph');
 
-	var html = require('text!templates/detector-graph.html');
+	var html = require('templates/detector-graph.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

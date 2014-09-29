@@ -12,7 +12,7 @@ define(function(require) {
 	var BarrierView          = require('views/barrier');
 	var SegmentPotentialView = require('views/segment-potential');
 
-	var html     = require('text!templates/heatmap.html');
+	var html     = require('templates/heatmap.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

@@ -6,7 +6,7 @@ define(function(require) {
 
 	var GraphView = require('views/graph');
 
-	var html = require('text!templates/graph.html');
+	var html = require('templates/graph.html');
 
 	/**
 	 * StaticGraphView defines a template and certain behaviors of the UI,

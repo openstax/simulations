@@ -12,8 +12,8 @@ define(function (require) {
 	var SoundHeatmapView = require('views/heatmap/sound');
 	var SimView          = require('views/sim');
 
-	var audioControlsHtml    = require('text!templates/control-panel-components/audio.html');
-	var particleControlsHtml = require('text!templates/control-panel-components/particles.html');
+	var audioControlsHtml    = require('templates/control-panel-components/audio.html');
+	var particleControlsHtml = require('templates/control-panel-components/particles.html');
 
 	var SoundSimView = SimView.extend({
 

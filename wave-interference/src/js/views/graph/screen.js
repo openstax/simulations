@@ -9,7 +9,7 @@ define(function(require) {
 	var StaticGraphView    = require('views/graph/static');
 	var IntensityGraphView = require('views/graph/intensity');
 
-	var html = require('text!templates/screen-graph.html');
+	var html = require('templates/screen-graph.html');
 
 	/**
 	 * ScreenGraphView shows the values of a certain row of the

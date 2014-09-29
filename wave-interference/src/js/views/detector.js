@@ -9,7 +9,7 @@ define(function (require) {
 	var DetectorGraphView = require('views/graph/detector');
 
 	var Utils = require('utils/utils');
-	var html  = require('text!templates/detector.html');
+	var html  = require('templates/detector.html');
 
 	var angle,
 	    lineLength,
