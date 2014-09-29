@@ -133,15 +133,6 @@ define(function (require) {
 		},
 
 		/**
-		 *
-		 */
-		resetComponents: function() {
-			SimView.prototype.resetComponents.apply(this);
-
-			this.initScreenGraphView();
-		},
-
-		/**
 		 * Handles wavelength slider slide events
 		 */
 		changeWavelength: function(event) {
