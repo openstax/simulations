@@ -143,6 +143,7 @@ define(function (require) {
 			this.$wavelengthSliderHandle.css('background-color', hex);
 
 			this.heatmapView.color = hex;
+			this.crossSectionGraphView.lineColor = hex;
 
 			this.waveSimulation.set('wavelength', wavelength);
 			this.waveSimulation.set('frequency', SPEED_OF_LIGHT / wavelength);

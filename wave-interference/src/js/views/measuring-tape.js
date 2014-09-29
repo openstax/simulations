@@ -80,7 +80,6 @@ define(function (require) {
 				this.start.y = offset.top + width / 2 - this.dragOffset.top;
 				this.end.x = offset.left + width * 0.67 - this.dragOffset.left;
 				this.end.y = offset.top + width / 2 - this.dragOffset.top;
-				console.log(offset.left, offset.top, width, height);
 			}
 		},
 
