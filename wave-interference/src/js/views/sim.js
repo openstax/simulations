@@ -195,7 +195,7 @@ define(function (require) {
 		},
 
 		/**
-		 * Initializes the GraphView.
+		 * Initializes the CrossSectionGraphView.
 		 */
 		initCrossSectionGraphView: function() {
 			this.crossSectionGraphView = new CrossSectionGraphView(this.getGraphViewOptions());

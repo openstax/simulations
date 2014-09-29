@@ -10,6 +10,7 @@ define(function (require) {
 	var LightSimulation  = require('models/wave-sim/light');
 	var LightHeatmapView = require('views/heatmap/light');
 	var SimView          = require('views/sim');
+	var LightCrossSectionGraphView = require('views/graph/light-cross-section');
 
 	/*
 	 * Constants
@@ -74,6 +75,13 @@ define(function (require) {
 				waveSimulation: this.waveSimulation,
 				heatmapView: this.heatmapView
 			};
+		},
+
+		/**
+		 * Initializes the CrossSectionGraphView.
+		 */
+		initCrossSectionGraphView: function() {
+			this.crossSectionGraphView = new LightCrossSectionGraphView(this.getGraphViewOptions());
 		},
 
 		/**

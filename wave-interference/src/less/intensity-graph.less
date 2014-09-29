@@ -3,9 +3,9 @@
 	position: absolute;
 	top: 42px;
 	bottom: 42px;
-	left: 20px;
-	.grid-view(graph, @heatmap-container-padding, auto, @heatmap-container-padding, 50%,
-		@left-padding: 50px, @right-padding: 16px, @top-padding: 30px, @bottom-padding: 30px);
+	left: @panel-margin;
+	.grid-view(graph, @heatmap-container-padding, auto, @heatmap-container-padding,
+	           @left-padding: 50px, @right-padding: 16px, @top-padding: 30px, @bottom-padding: 30px);
 	.transition(~"width 400ms, opacity 400ms");
 	overflow: hidden;
 	visibility: hidden;
