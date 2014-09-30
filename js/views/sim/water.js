@@ -17,7 +17,8 @@ define(function(require) {
 		initialize: function(options) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
-				title: 'Water'
+				title: 'Water',
+				detectorYLabel: 'Water Level'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);

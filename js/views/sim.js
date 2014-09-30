@@ -107,13 +107,15 @@ define(function (require) {
 				heatmapBrightness: 0.5,
 				title: 'Simulation',
 				name: 'sim',
-				segmentPotentialName: 'Wall'
+				segmentPotentialName: 'Wall',
+				detectorYLabel: 'Water Level'
 			}, options);
 
 			this.heatmapBrightness = options.heatmapBrightness;
 			this.title = options.title;
 			this.name  = options.name;
 			this.segmentPotentialName = options.segmentPotentialName;
+			this.detectorYLabel = options.detectorYLabel;
 
 			// Initialize the WaveSimulation
 			this.initWaveSimulation();
@@ -660,7 +662,8 @@ define(function (require) {
 			var detectorView = new DetectorView({
 				waveSimulation: this.waveSimulation,
 				heatmapView: this.heatmapView,
-				dragFrame: this.el
+				dragFrame: this.el,
+				yLabel: this.detectorYLabel
 			});
 			detectorView.render();
 			this.$el.append(detectorView.el);
