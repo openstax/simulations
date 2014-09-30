@@ -3,7 +3,7 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('lodash');
+	var _ = require('underscore');
 
 	/**
 	 * Potentials are the name the original PhET sim's authors used to describe the 

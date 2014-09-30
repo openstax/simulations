@@ -3,8 +3,8 @@ define(function(require) {
 
 	'use strict';
 
-	var _         = require('lodash');
-	var Utils     = require('utils/utils');
+	var _         = require('underscore');
+	var Utils     = require('../../utils/utils');
 	var Potential = require('../potential.js');
 
 	/**

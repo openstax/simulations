@@ -2,7 +2,7 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('lodash');
+	var _ = require('underscore');
 
 	var HeatmapView          = require('../heatmap.js');
 	var FaucetOscillatorView = require('../oscillator/faucet.js');

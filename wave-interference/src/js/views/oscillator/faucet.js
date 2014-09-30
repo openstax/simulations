@@ -3,7 +3,7 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('lodash');
+	var _ = require('underscore');
 
 	var OscillatorView = require('../oscillator.js');
 

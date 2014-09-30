@@ -3,9 +3,9 @@ define(function (require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('lodash');
+	var _ = require('underscore');
 
-	var Utils = require('utils/utils');
+	var Utils = require('../../utils/utils');
 
 	var LightSimulation  = require('../../models/wave-sim/light.js');
 	var LightHeatmapView = require('../heatmap/light.js');

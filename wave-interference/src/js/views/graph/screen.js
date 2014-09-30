@@ -2,12 +2,12 @@ define(function(require) {
 
 	'use strict';
 
-	var _     = require('lodash');
+	var _     = require('underscore');
 	var Utils = require('../../utils/utils');
 
-	var GraphView          = require('../views/graph.js');
-	var StaticGraphView    = require('../views/graph/static.js');
-	var IntensityGraphView = require('../views/graph/intensity.js');
+	var GraphView          = require('../graph.js');
+	var StaticGraphView    = require('./static.js');
+	var IntensityGraphView = require('./intensity.js');
 
 	var html = require('../../../templates/screen-graph.html');
 

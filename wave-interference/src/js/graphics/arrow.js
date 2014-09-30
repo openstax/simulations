@@ -3,7 +3,7 @@ define(function(require) {
 
 	'use strict';
 
-	var _        = require('lodash');
+	var _        = require('underscore');
 	var glMatrix = require('glmatrix');
 
 	/**

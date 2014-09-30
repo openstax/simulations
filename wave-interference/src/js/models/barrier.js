@@ -3,7 +3,7 @@ define(function(require) {
 
 	'use strict';
 
-	var _            = require('lodash');
+	var _            = require('underscore');
 	var Backbone     = require('backbone');
 	var BoxPotential = require('./potential/box.js');
 
