@@ -27,7 +27,8 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
-				title: 'Sound'
+				title: 'Sound',
+				detectorYLabel: 'Pressure'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
@@ -70,7 +71,7 @@ define(function (require) {
 					start: 0,
 					end: this.waveSimulation.get('dimensions').width,
 					step: this.waveSimulation.get('dimensions').width / 10,
-					label: 'x (' + this.waveSimulation.get('units').distance + ')',
+					label: 'x-Position (' + this.waveSimulation.get('units').distance + ')',
 					showNumbers: true
 				},
 				y: {

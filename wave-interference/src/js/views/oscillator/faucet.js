@@ -64,12 +64,15 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.hidden && !this.waveSimulation.paused) {
+			if (!this.waveSimulation.paused) {
 				/**
 				 * Keep track of our own time so we can actually pause 
 				 *   the animation if the simulation is paused.
 				 */
 				this.time += delta;
+			}
+
+			if (!this.hidden && !this.waveSimulation.paused) {
 				this.updateDrops(this.time, delta);
 			}
 
