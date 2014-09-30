@@ -8,11 +8,21 @@ module.exports = function(grunt){
 		clean: {
 			// Clean up stuff later when I figure out what I need to clean up
 		},
+		browserify: {
+			dist: {
+				files: {
+					'dist/js/bundle.js': ['src/js/main.js']
+				},
+				options: {
+					/* Making sure not to put anything here that would override 
+					 *   the options that are in the package.json, because that
+					 *   messes things up.
+					 */
+				}	
+			}
+			
+		},
 		copy: {
-			require: {
-				src: 'bower_components/requirejs/require.js',
-				dest: 'dist/js/require.js'
-			},
 			fonts: {
 				expand: true,
 				filter: 'isFile',
@@ -20,25 +30,6 @@ module.exports = function(grunt){
 				src: ['bower_components/font-awesome/fonts/**'],
 				dest: 'dist/fonts/'
 			},
-			bower_components: {
-				src: 'bower_components/**',
-				dest: 'dist/'
-			}
-		},
-		requirejs: {
-			compile: {
-				options: {
-					appDir: 'src',
-					baseUrl: 'js',
-					mainConfigFile: 'src/js/config.js',
-					dir: 'dist',
-					findNestedDependencies: true,
-					removeCombined: false,
-					keepBuildDir: false,
-					skipDirOptimize: true,
-					optimize: 'uglify2'	
-				}
-			}
 		},
 		uglify: {
 			options: {
