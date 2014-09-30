@@ -48,6 +48,7 @@ define(function(require) {
 					label: 'Water Level',
 					showNumbers: false
 				},
+				yLabel: 'Water Level',
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 3,
 				latticePoint: {
@@ -60,6 +61,9 @@ define(function(require) {
 				numberFont: 'normal 10px Helvetica Neue, Helvetica, Arial, sans-serif',
 				numberY: 16
 			}, options);
+
+			if (options.yLabel)
+				options.y.label = options.yLabel;
 
 			GraphView.prototype.initialize.apply(this, [options]);
 			

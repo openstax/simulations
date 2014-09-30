@@ -30,7 +30,8 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Light',
-				segmentPotentialName: 'Mirror'
+				segmentPotentialName: 'Mirror',
+				detectorYLabel: 'E-Field'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);

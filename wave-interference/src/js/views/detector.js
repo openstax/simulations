@@ -44,7 +44,8 @@ define(function (require) {
 				visualizer: {
 					x: 0,
 					y: 300
-				}
+				},
+				yLabel: 'Water Level'
 			}, options);
 
 			SimDraggable.prototype.initialize.apply(this, [options]);
@@ -56,6 +57,7 @@ define(function (require) {
 
 			this.sampler    = options.sampler;
 			this.visualizer = options.visualizer;
+			this.yLabel     = options.yLabel;
 		},
 
 		resize: function(){
@@ -95,6 +97,7 @@ define(function (require) {
 
 			this.graphView = new DetectorGraphView({
 				waveSimulation: this.waveSimulation,
+				yLabel: this.yLabel
 			});
 			this.graphView.render();
 			this.$('#detector-graph-placeholder').replaceWith(this.graphView.el);

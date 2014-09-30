@@ -27,7 +27,8 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
-				title: 'Sound'
+				title: 'Sound',
+				detectorYLabel: 'Pressure'
 			}, options);
 			
 			SimView.prototype.initialize.apply(this, [ options ]);
