@@ -3,13 +3,14 @@ define(function (require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var SimDraggable      = require('views/sim-draggable');
-	var DetectorGraphView = require('views/graph/detector');
+	var SimDraggable      = require('./sim-draggable.js');
+	var DetectorGraphView = require('./graph/detector.js');
 
-	var Utils = require('utils/utils');
-	var html  = require('templates/detector.html');
+	var Utils = require('../utils/utils.js');
+	
+	var html  = require('../../templates/detector.html');
 
 	var angle,
 	    lineLength,

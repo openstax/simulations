@@ -10,9 +10,9 @@
   },
   "browserify": {
     "transform": [
-      "node-lessify",
-      "debowerify",
-      "deamdify"
+      "html2js-browserify",
+      "deamdify",
+      "node-lessify"
     ]
   },
   "browser": {

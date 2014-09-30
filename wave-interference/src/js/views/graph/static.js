@@ -2,11 +2,11 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var GraphView = require('views/graph');
+	var GraphView = require('../graph.js');
 
-	var html = require('templates/graph.html');
+	var html = require('../../../templates/graph.html');
 
 	/**
 	 * StaticGraphView defines a template and certain behaviors of the UI,

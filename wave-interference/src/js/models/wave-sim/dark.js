@@ -1,11 +1,11 @@
-define(function (require) {
+..define(function (require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var WaveSimulation = require('models/wave-sim');
-	var DarkPropagator = require('models/dark-propagator');
+	var WaveSimulation = require('../wave-sim.js');
+	var DarkPropagator = require('../dark-propagator.js');
 
 	/**
 	 *

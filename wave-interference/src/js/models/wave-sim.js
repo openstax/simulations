@@ -2,16 +2,16 @@ define(function (require) {
 
 	'use strict';
 
-	var _              = require('underscore');
+	var _              = require('lodash');
 	var Backbone       = require('backbone');
 
-	var Lattice2D      = require('models/lattice2d');
-	var Oscillator     = require('models/oscillator');
-	var WavePropagator = require('models/wave-propagator');
-	var Barrier        = require('models/barrier');
+	var Lattice2D      = require('./lattice2d.js');
+	var Oscillator     = require('./oscillator.js');
+	var WavePropagator = require('./wave-propagator.js');
+	var Barrier        = require('./barrier.js');
 
-	var CompositePotential = require('models/potential/composite');
-	var SegmentPotential   = require('models/potential/segment');
+	var CompositePotential = require('./potential/composite.js');
+	var SegmentPotential   = require('./potential/segment.js');
 
 	var i;
 

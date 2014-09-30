@@ -3,14 +3,14 @@ define(function (require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('underscore');
+	var _ = require('lodash');
 
 	var Utils = require('utils/utils');
 
-	var LightSimulation  = require('models/wave-sim/light');
-	var LightHeatmapView = require('views/heatmap/light');
-	var SimView          = require('views/sim');
-	var LightCrossSectionGraphView = require('views/graph/light-cross-section');
+	var LightSimulation  = require('../../models/wave-sim/light.js');
+	var LightHeatmapView = require('../heatmap/light.js');
+	var SimView          = require('../sim.js');
+	var LightCrossSectionGraphView = require('../graph/light-cross-section.js');
 
 	/*
 	 * Constants

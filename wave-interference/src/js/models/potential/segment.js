@@ -3,9 +3,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _         = require('underscore');
+	var _         = require('lodash');
 	var Utils     = require('utils/utils');
-	var Potential = require('models/potential');
+	var Potential = require('../potential.js');
 
 	/**
 	 * Based off of PhET's WallPotential

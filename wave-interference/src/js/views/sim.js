@@ -3,27 +3,28 @@ define(function (require) {
 	'use strict';
 
 	var $                     = require('jquery');
-	var _                     = require('underscore');
+	var _                     = require('lodash');
 	var Backbone              = require('backbone');
-	var WaveSimulation        = require('models/wave-sim');
-	var Updater               = require('utils/updater');
-	var HeatmapView           = require('views/heatmap');
-	var CrossSectionGraphView = require('views/graph/cross-section');
-	var MeasuringTapeView     = require('views/measuring-tape');
-	var StopwatchView         = require('views/stopwatch');
-	//temp
-	var DetectorView     = require('views/detector');
+
+	var WaveSimulation        = require('../models/wave-sim.js');
+	var Updater               = require('../utils/updater.js');
+
+	var HeatmapView           = require('./heatmap.js');
+	var CrossSectionGraphView = require('./graph/cross-section.js');
+	var MeasuringTapeView     = require('./measuring-tape.js');
+	var StopwatchView         = require('./stopwatch.js');
+	var DetectorView          = require('./detector.js');
 
 	require('nouislider');
 
 	// Templates
-	var simHtml                = require('templates/sim.html');
-	var controlPanelHtml       = require('templates/control-panel.html');
-	var toolsHtml              = require('templates/control-panel-components/tools.html');
-	var waveControlsHtml       = require('templates/control-panel-components/wave.html');
-	var oscillatorControlsHtml = require('templates/control-panel-components/oscillators.html');
-	var barrierControlsHtml    = require('templates/control-panel-components/barriers.html');
-	var playbackControlsHtml   = require('templates/playback-controls.html');
+	var simHtml                = require('../../templates/sim.html');
+	var controlPanelHtml       = require('../../templates/control-panel.html');
+	var toolsHtml              = require('../../templates/control-panel-components/tools.html');
+	var waveControlsHtml       = require('../../templates/control-panel-components/wave.html');
+	var oscillatorControlsHtml = require('../../templates/control-panel-components/oscillators.html');
+	var barrierControlsHtml    = require('../../templates/control-panel-components/barriers.html');
+	var playbackControlsHtml   = require('../../templates/playback-controls.html');
 
 
 	/*

@@ -3,9 +3,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _         = require('underscore');
-	var Lattice2D = require('models/lattice2d');
-	var Potential = require('models/potential');
+	var _         = require('lodash');
+	var Lattice2D = require('./lattice2d.js');
+	var Potential = require('./potential.js');
 
 	/**
 	 * The WavePropagator object is responsible for propagating values over a discrete 

@@ -4,7 +4,7 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
 	/**
 	 * Modelled after PhET's Lattice2D, these objects are used to store values of

@@ -2,12 +2,12 @@ define(function(require) {
 
 	'use strict';
 
-	var _    = require('underscore');
+	var _    = require('lodash');
 	var PIXI = require('pixi');
 
-	var Particle              = require('models/particle');
-	var HeatmapView           = require('views/heatmap');
-	var SpeakerOscillatorView = require('views/oscillator/speaker');
+	var Particle              = require('../../models/particle.js');
+	var HeatmapView           = require('../heatmap.js');
+	var SpeakerOscillatorView = require('../oscillator/speaker.js');
 
 	/**
 	 * Constants

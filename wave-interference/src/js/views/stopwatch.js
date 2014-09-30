@@ -2,12 +2,12 @@ define(function (require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var SimDraggable = require('views/sim-draggable');
+	var SimDraggable = require('./sim-draggable.js');
 
-	var Utils = require('utils/utils');
-	var html  = require('templates/stopwatch.html');
+	var Utils = require('../utils/utils.js');
+	var html  = require('../../templates/stopwatch.html');
 
 	var dx,
 	    dy,

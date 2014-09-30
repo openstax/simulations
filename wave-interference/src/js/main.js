@@ -3,7 +3,7 @@
 
 var $ = require('jquery');
 
-var AppView = require('./views/app');
+var AppView = require('./views/app.js');
 
 $(function(){
 	var appView = new AppView();
@@ -30,9 +30,6 @@ $(function(){
 			}
 		}
 	});	
-
-	// Trigger window resize to update canvases
-	//$(window).trigger('resize');
 
 	appView.postRender();
 });

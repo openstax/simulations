@@ -2,11 +2,11 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var Utils            = require('utils/utils');
-	var HeatmapView      = require('views/heatmap');
-	var ScreenGraphView  = require('views/graph/screen');
+	var Utils            = require('../../utils/utils.js');
+	var HeatmapView      = require('../heatmap.js');
+	var ScreenGraphView  = require('../graph/screen.js');
 	
 	require('utils/jquery-plugins');
 

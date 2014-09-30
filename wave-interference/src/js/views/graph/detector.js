@@ -2,11 +2,11 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var GraphView = require('views/graph');
+	var GraphView = require('../graph.js');
 
-	var html = require('templates/detector-graph.html');
+	var html = require('../../../templates/detector-graph.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

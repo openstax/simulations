@@ -5,15 +5,15 @@ define(function (require) {
 	// This bower module doesn't satisfy AMD, so I'm just trying to satisfy the linter
 	require('timbre'); var T = window.T;
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 	var $ = require('jquery');
 
-	var SoundSimulation  = require('models/wave-sim/sound');
-	var SoundHeatmapView = require('views/heatmap/sound');
-	var SimView          = require('views/sim');
+	var SoundSimulation  = require('../../models/wave-sim/sound.js');
+	var SoundHeatmapView = require('../heatmap/sound.js');
+	var SimView          = require('../sim.js');
 
-	var audioControlsHtml    = require('templates/control-panel-components/audio.html');
-	var particleControlsHtml = require('templates/control-panel-components/particles.html');
+	var audioControlsHtml    = require('../../../templates/control-panel-components/audio.html');
+	var particleControlsHtml = require('../../../templates/control-panel-components/particles.html');
 
 	var SoundSimView = SimView.extend({
 

@@ -2,10 +2,10 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var HeatmapView          = require('views/heatmap');
-	var FaucetOscillatorView = require('views/oscillator/faucet');
+	var HeatmapView          = require('../heatmap.js');
+	var FaucetOscillatorView = require('../oscillator/faucet.js');
 
 	/*
 	 * "Local" variables for functions to share and recycle

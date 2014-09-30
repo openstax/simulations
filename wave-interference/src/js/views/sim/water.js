@@ -2,11 +2,11 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var WaterSimulation  = require('models/wave-sim/water');
-	var SimView          = require('views/sim');
-	var WaterHeatmapView = require('views/heatmap/water');
+	var WaterSimulation  = require('../../models/wave-sim/water.js');
+	var SimView          = require('../sim.js');
+	var WaterHeatmapView = require('../heatmap/water.js');
 
 	var WaterSimView = SimView.extend({
 

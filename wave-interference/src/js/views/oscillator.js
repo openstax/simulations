@@ -3,10 +3,10 @@ define(function(require) {
 	'use strict';
 
 	var $        = require('jquery');
-	var _        = require('underscore');
+	var _        = require('lodash');
 	var Backbone = require('backbone');
 
-	var html  = require('templates/oscillator.html');
+	var html  = require('../../templates/oscillator.html');
 
 	var OscillatorView = Backbone.View.extend({
 

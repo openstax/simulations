@@ -3,9 +3,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _            = require('underscore');
+	var _            = require('lodash');
 	var Backbone     = require('backbone');
-	var BoxPotential = require('models/potential/box');
+	var BoxPotential = require('./potential/box.js');
 
 	/**
 	 * This is the model behind the static barriers in the simulation

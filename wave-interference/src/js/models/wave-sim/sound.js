@@ -2,9 +2,9 @@ define(function (require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var WaveSimulation = require('models/wave-sim');
+	var WaveSimulation = require('../wave-sim.js');
 
 	/**
 	 *

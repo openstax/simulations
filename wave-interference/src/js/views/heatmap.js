@@ -3,16 +3,16 @@ define(function(require) {
 	'use strict';
 
 	var $        = require('jquery');
-	var _        = require('underscore');
+	var _        = require('lodash');
 	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
 	
-	var Utils                = require('utils/utils');
-	var OscillatorView       = require('views/oscillator');
-	var BarrierView          = require('views/barrier');
-	var SegmentPotentialView = require('views/segment-potential');
+	var Utils                = require('../utils/utils.js');
+	var OscillatorView       = require('./oscillator.js');
+	var BarrierView          = require('./barrier.js');
+	var SegmentPotentialView = require('./segment-potential.js');
 
-	var html     = require('templates/heatmap.html');
+	var html     = require('../../templates/heatmap.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

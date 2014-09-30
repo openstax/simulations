@@ -2,7 +2,7 @@ define(function(require) {
 
 	'use strict';
 
-	var OscillatorView = require('views/oscillator');
+	var OscillatorView = require('../oscillator.js');
 
 	/*
 	 * "Local" variables for functions to share and recycle

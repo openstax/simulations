@@ -3,10 +3,10 @@ define(function(require) {
 
 	'use strict';
 	
-	var _        = require('underscore');
+	var _        = require('lodash');
 	var glMatrix = require('glmatrix');
 
-	var Utils = require('utils/utils');
+	var Utils = require('../utils/utils.js');
 
 	/**
 	 * The Particle model represents a particle of air for the sound wave simulation.

@@ -2,9 +2,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var StaticGraphView = require('views/graph/static');
+	var StaticGraphView = require('./static.js');
 
 	/*
 	 * "Local" variables for functions to share and recycle

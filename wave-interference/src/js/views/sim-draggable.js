@@ -3,7 +3,7 @@ define(function (require) {
 	'use strict';
 
 	var $        = require('jquery');
-	var _        = require('underscore');
+	var _        = require('lodash');
 	var Backbone = require('backbone');
 
 	var SimDraggable = Backbone.View.extend({

@@ -2,14 +2,14 @@ define(function(require) {
 
 	'use strict';
 
-	var _     = require('underscore');
-	var Utils = require('utils/utils');
+	var _     = require('lodash');
+	var Utils = require('../../utils/utils');
 
-	var GraphView          = require('views/graph');
-	var StaticGraphView    = require('views/graph/static');
-	var IntensityGraphView = require('views/graph/intensity');
+	var GraphView          = require('../views/graph.js');
+	var StaticGraphView    = require('../views/graph/static.js');
+	var IntensityGraphView = require('../views/graph/intensity.js');
 
-	var html = require('templates/screen-graph.html');
+	var html = require('../../../templates/screen-graph.html');
 
 	/**
 	 * ScreenGraphView shows the values of a certain row of the

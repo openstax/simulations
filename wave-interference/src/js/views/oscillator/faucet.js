@@ -3,9 +3,9 @@ define(function(require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var OscillatorView = require('views/oscillator');
+	var OscillatorView = require('../oscillator.js');
 
 	/*
 	 * "Local" variables for functions to share and recycle

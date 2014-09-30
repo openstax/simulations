@@ -3,9 +3,9 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var WavePropagator = require('models/wave-propagator');
+	var WavePropagator = require('./wave-propagator.js');
 
 	/**
 	 * Used in the light module, the DarkPropagator comes from a subclass of PhET's

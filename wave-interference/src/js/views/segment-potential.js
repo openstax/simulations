@@ -3,12 +3,12 @@ define(function (require) {
 	'use strict';
 
 	var $ = require('jquery');
-	var _ = require('underscore');
+	var _ = require('lodash');
 
-	var HeatmapDraggable = require('views/heatmap-draggable');
+	var HeatmapDraggable = require('./heatmap-draggable.js');
 
-	var Utils = require('utils/utils');
-	var html  = require('templates/segment.html');
+	var Utils = require('../utils/utils.js');
+	var html  = require('../../templates/segment.html');
 
 	var segment,
 	    xSpacing,

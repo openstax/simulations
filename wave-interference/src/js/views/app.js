@@ -1,15 +1,16 @@
-define([
-	'jquery', 
-	'underscore', 
-	'backbone',
+define(function (require) {
 
-	'templates/app.html',
-
-	'views/sim/water',
-	'views/sim/sound',
-	'views/sim/light'
-], function ($, _, Backbone, template, WaterSimView, SoundSimView, LightSimView) {
 	'use strict';
+
+	var $        = require('jquery');
+	var _        = require('lodash');
+	var Backbone = require('backbone');
+
+	var WaterSimView = require('./sim/water.js');
+	var SoundSimView = require('./sim/sound.js');
+	var LightSimView = require('./sim/light.js');
+
+	var template = require('../../templates/app.html');
 
 	var AppView = Backbone.View.extend({
 		template: _.template(template),
