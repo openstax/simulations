@@ -2,8 +2,9 @@ define(function (require) {
 
 	'use strict';
 
+	var $              = require('jquery');
 	var _              = require('underscore');
-	var Backbone       = require('backbone');
+	var Backbone       = require('backbone'); Backbone.$ = $;
 
 	var Lattice2D      = require('./lattice2d.js');
 	var Oscillator     = require('./oscillator.js');

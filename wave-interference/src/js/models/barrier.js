@@ -3,8 +3,9 @@ define(function(require) {
 
 	'use strict';
 
+	var $            = require('jquery');
 	var _            = require('underscore');
-	var Backbone     = require('backbone');
+	var Backbone     = require('backbone'); Backbone.$ = $;
 	var BoxPotential = require('./potential/box.js');
 
 	/**

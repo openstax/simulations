@@ -3,7 +3,7 @@ define(function(require) {
 	'use strict';
 
 	var _    = require('underscore');
-	var PIXI = require('pixi');
+	var PIXI = require('pixi.js');
 
 	var Particle              = require('../../models/particle.js');
 	var HeatmapView           = require('../heatmap.js');

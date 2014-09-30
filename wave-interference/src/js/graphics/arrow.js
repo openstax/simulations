@@ -4,7 +4,7 @@ define(function(require) {
 	'use strict';
 
 	var _        = require('underscore');
-	var glMatrix = require('glmatrix');
+	var glMatrix = require('gl-matrix');
 
 	/**
 	 * From PhET's edu.colorado.phet.common.phetcommon.view.graphics.Arrow

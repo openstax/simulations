@@ -5,7 +5,7 @@ define(function(require) {
 
 	var $ = require('jquery');
 
-	require('lib/wavelength');
+	require('../lib/wavelength.js');
 
 	/**
 	 * Draws the visible light spectrum to a canvas.  Interpolates

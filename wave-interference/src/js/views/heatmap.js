@@ -4,8 +4,8 @@ define(function(require) {
 
 	var $        = require('jquery');
 	var _        = require('underscore');
-	var Backbone = require('backbone');
-	var PIXI     = require('pixi');
+	var Backbone = require('backbone'); Backbone.$ = $;
+	var PIXI     = require('pixi.js');
 	
 	var Utils                = require('../utils/utils.js');
 	var OscillatorView       = require('./oscillator.js');

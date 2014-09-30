@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var _ = require('underscore');
+
 	var CrossSectionGraphView = require('./cross-section.js');
 
 	var ArrowGraphic = require('../../graphics/arrow.js');

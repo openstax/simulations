@@ -4,7 +4,7 @@ define(function(require) {
 	'use strict';
 	
 	var _        = require('underscore');
-	var glMatrix = require('glmatrix');
+	var glMatrix = require('gl-matrix');
 
 	var Utils = require('../utils/utils.js');
 

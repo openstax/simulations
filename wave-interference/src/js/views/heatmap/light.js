@@ -5,10 +5,11 @@ define(function(require) {
 	var _ = require('underscore');
 
 	var Utils            = require('../../utils/utils.js');
+	                       require('../../utils/jquery-plugins.js');
 	var HeatmapView      = require('../heatmap.js');
 	var ScreenGraphView  = require('../graph/screen.js');
 	
-	require('utils/jquery-plugins');
+	
 
 	/*
 	 * Constants

@@ -3,7 +3,8 @@ define(function(require) {
 
 	'use strict';
 
-	var Backbone = require('backbone');
+	var $        = require('jquery');
+	var Backbone = require('backbone'); Backbone.$ = $;
 
 	/**
 	 * These "local" variables assume no concurrent use of this class.

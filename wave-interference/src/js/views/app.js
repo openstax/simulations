@@ -4,7 +4,7 @@ define(function (require) {
 
 	var $        = require('jquery');
 	var _        = require('underscore');
-	var Backbone = require('backbone');
+	var Backbone = require('backbone'); Backbone.$ = $;
 
 	var WaterSimView = require('./sim/water.js');
 	var SoundSimView = require('./sim/sound.js');
