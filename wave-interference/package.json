@@ -63,6 +63,7 @@
     "grunt-gh-pages": "^0.9.1",
     "grunt-mocha": "^0.4.11",
     "grunt-targethtml": "^0.2.6",
+    "grunt-watchify": "^0.1.0",
     "html2js-browserify": "0.0.2",
     "jquery": "^2.1.1",
     "jquery-browserify": "^1.8.1",

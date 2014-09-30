@@ -20,7 +20,15 @@ module.exports = function(grunt){
 					 */
 				}	
 			}
-			
+			// The watch feature doesn't cache, so dropping it in favor of
+		},
+		watchify: {
+			files: {
+				'dist/js/bundle.js': [
+					'./src/js/**/*.js',
+					'./src/templates/**/*.html'
+				]
+			}
 		},
 		copy: {
 			fonts: {
