@@ -4,12 +4,6 @@ define(function(require) {
 
 	var OscillatorView = require('views/oscillator');
 
-	/*
-	 * "Local" variables for functions to share and recycle
-	 */
-	var movementPercentage,
-	    transform;
-
 	var SpeakerOscillatorView = OscillatorView.extend({
 
 		className: OscillatorView.prototype.className + ' speaker-oscillator-view',
@@ -43,8 +37,11 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			if (!this.hidden && !this.waveSimulation.paused && this.oscillator.get('enabled')) {
+			if (!this.waveSimulation.paused) {
 				this.time += delta / 1000;
+			}
+
+			if (!this.hidden && !this.waveSimulation.paused && this.oscillator.get('enabled')) {
 				this.updateSpeaker();
 			}
 
@@ -77,6 +74,7 @@ define(function(require) {
 			}
 
 			// Figure out which way we're going and our progress in that direction
+			var movementPercentage;
 			if (this.nextPeakTime > this.nextTroughTime) {
 				// We're on our way to a trough
 				movementPercentage = 1 - ((this.nextTroughTime - this.time) / this.halfPeriod);
@@ -91,7 +89,7 @@ define(function(require) {
 			movementPercentage = Math.max(movementPercentage, 0);
 
 			// The rotation is a fix for webkit and firefox that triggers sub-pixel rendering
-			transform = 'translateX(' + (-this.movementDistance * movementPercentage) + 'px) rotate(.0001deg)';
+			var transform = 'translateX(' + (-this.movementDistance * movementPercentage) + 'px) rotate(.0001deg)';
 
 			// Set the width so it spans the two points
 			this.$speakerCone.css({
