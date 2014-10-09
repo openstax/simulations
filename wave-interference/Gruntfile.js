@@ -23,11 +23,33 @@ module.exports = function(grunt){
 			// The watch feature doesn't cache, so dropping it in favor of
 		},
 		watchify: {
-			files: {
-				'dist/js/bundle.js': [
-					'./src/js/**/*.js',
-					'./src/templates/**/*.html'
-				]
+			options: {
+				// defaults options used in b.bundle(opts)
+				detectGlobals: true,
+				insertGlobals: false,
+				ignoreMissing: true,
+				debug: false,
+				standalone: false,
+
+				keepalive: false,
+				callback: function(b) {
+					// configure the browserify instance here
+					b.transform('aliasify');
+					b.transform('html2js-browserify');
+					b.transform('browserify-shim');
+					b.transform('deamdify');
+
+					// return it
+					return b;
+				}
+			},
+			all: {
+				src: './src/js/main.js',
+				// [
+				// 	'./src/js/**/*.js',
+				// 	'./src/templates/**/*.html'
+				// ],
+				dest: 'dist/js/bundle.js'
 			}
 		},
 		copy: {

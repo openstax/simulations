@@ -53,6 +53,8 @@ define(function (require) {
 			// Then render views for each sim
 			_.each(this.sims, this.renderSim, this);
 
+			
+
 			return this;
 		},
 
