@@ -60,9 +60,11 @@
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-contrib-less": "^0.11.4",
     "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-uglify": "^0.6.0",
     "grunt-contrib-watch": "^0.6.1",
     "grunt-gh-pages": "^0.9.1",
     "grunt-mocha": "^0.4.11",
+    "grunt-static-inline": "^0.1.4",
     "grunt-targethtml": "^0.2.6",
     "grunt-watchify": "^0.1.0",
     "html2js-browserify": "0.0.2",
@@ -77,6 +79,7 @@
     "remove-try-require": "0.0.0",
     "sinon": "^1.10.3",
     "timbre": "^14.6.23",
+    "uglifyify": "^2.5.0",
     "watchify": "^1.0.6"
   }
 }

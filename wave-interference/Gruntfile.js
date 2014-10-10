@@ -7,20 +7,13 @@ module.exports = function(grunt){
 		pkg: grunt.file.readJSON('package.json'),
 		clean: {
 			// Clean up stuff later when I figure out what I need to clean up
-		},
-		browserify: {
-			dist: {
-				files: {
-					'dist/js/bundle.js': ['src/js/main.js']
-				},
-				options: {
-					/* Making sure not to put anything here that would override 
-					 *   the options that are in the package.json, because that
-					 *   messes things up.
-					 */
-				}	
-			}
-			// The watch feature doesn't cache, so dropping it in favor of
+			dev: [
+				'src/js/bundle.js'
+			],
+			dist: [
+				'src/css/main.css',
+				'src/js/bundle.min.js'
+			]
 		},
 		watchify: {
 			options: {
@@ -38,6 +31,7 @@ module.exports = function(grunt){
 					b.transform('html2js-browserify');
 					b.transform('browserify-shim');
 					b.transform('deamdify');
+					b.transform('uglifyify')
 
 					// return it
 					return b;
@@ -45,11 +39,7 @@ module.exports = function(grunt){
 			},
 			all: {
 				src: './src/js/main.js',
-				// [
-				// 	'./src/js/**/*.js',
-				// 	'./src/templates/**/*.html'
-				// ],
-				dest: 'dist/js/bundle.js'
+				dest: 'src/js/bundle.js'
 			}
 		},
 		copy: {
@@ -59,22 +49,24 @@ module.exports = function(grunt){
 				flatten: true,
 				src: ['bower_components/font-awesome/fonts/**'],
 				dest: 'dist/fonts/'
-			},
+			}
 		},
 		uglify: {
 			options: {
-				banner: BANNER_TEMPLATE_STRING
+				banner: BANNER_TEMPLATE_STRING,
+				sourceMap: true,
+				sourceMapName: 'src/js/bundle.min.js.map'
 			},
 			dist: {
 				files: {
-					'dist/scripts/require.js': ['dist/scripts/require.js']
+					'src/js/bundle.min.js': ['src/js/bundle.js']
 				}
 			}
 		},
 		targethtml: {
 			dist: {
 				files: {
-					'dist/index.html': 'dist/index.html'
+					'src/index.html': 'src/index.template.html'
 				}
 			}		
 		},		
@@ -94,7 +86,7 @@ module.exports = function(grunt){
 					optimization: 2
 				},
 				files: {
-					'dist/css/main.css': 'src/less/main.less'
+					'src/css/main.css': 'src/less/main.less'
 				}
 			}
 		},
@@ -188,6 +180,21 @@ module.exports = function(grunt){
 				files: 'test/**/*.js'
 			}
 		},
+		inline_sources: {
+			options: {
+				template: 'src/index.html',
+				output:   'src/index.html',
+				js:  'src/js/bundle.min.js',
+				css: 'src/css/main.css'
+			}
+		},
+		staticinline: {
+			main: {
+				files: {
+					'dist/index.html': 'src/index.html',
+				}
+			}
+		},
 		'gh-pages': {
 			options: {
 				base: 'dist'
@@ -214,6 +221,22 @@ module.exports = function(grunt){
 		grunt.file.write(options.runner, template);
 	});
 
+	grunt.registerTask('inline_sources', function(){
+		var options = this.options();
+
+		// Read template file
+		var temp = grunt.file.read(options.template)
+		
+		// Get the js and css
+		var js  = grunt.file.read(options.js);
+		var css = grunt.file.read(options.css);
+
+		var html = temp.replace('{{ js }}', js).replace('{{ css }}', css);
+
+		// Write template to tests directory and run tests
+		grunt.file.write(options.output, html);
+	});
+
 	grunt.registerTask('replace_bower_components', function() {
 		var config = grunt.file.read('dist/js/config.js').replace(/\.\.\/\.\.\/bower_components\//g, '../bower_components/');
 		grunt.file.write('dist/js/config.js', config);
@@ -224,13 +247,13 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('dist', [
-		'requirejs:compile',
 		'copy',
-		'replace_bower_components',
+		'watchify:all',
+		'uglify:dist',
 		'less:dist',
-		'targethtml'
-		//'clean',
-		//'uglify:dist'
+		'targethtml:dist',
+		'staticinline'
+		//'clean:dist'
 	]);
 
 	grunt.registerTask('test', [
