@@ -31,7 +31,7 @@ module.exports = function(grunt){
 					b.transform('html2js-browserify');
 					b.transform('browserify-shim');
 					b.transform('deamdify');
-					b.transform('uglifyify')
+					b.transform('uglifyify');
 
 					// return it
 					return b;

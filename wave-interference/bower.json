@@ -11,6 +11,6 @@
     "tests"
   ],
   "dependencies": {
-    "nouislider": "~7.0.3 >=7.0.3",
+    "nouislider": "~7.0.3 >=7.0.3"
   }
 }
