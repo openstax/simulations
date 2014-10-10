@@ -1,0 +1,46 @@
+https://github.com/heldr/datauri
+
+browserify -t debowerify -t deamdify public/scripts/amdapp.js -o public/scripts/build/bundle.js
+browserify --ignore-missing src/js/main.js -o dist/js/bundle.js
+
+"browserify": {
+    "transform": ["node-lessify"],
+    "transform-options": {
+        "node-lessify": "textMode"
+    }
+}
+
+https://github.com/featurist/html2js-browserify
+https://github.com/davidguttman/cssify
+https://www.npmjs.org/package/node-lessify
+https://github.com/jaredhanson/deamdify
+https://github.com/eugeneware/debowerify
+https://github.com/eugeneware/bower-resolve
+
+
+Organizational methods:
+	1. Use relative paths everywhere
+	2. Put each of the sub-folders in their own node_module packages:
+	    + views
+	      + sims
+	        - water
+	        - sound
+	        - light
+	      + sim
+	      ... etc
+	3. Build self-contained node_module modules around each component:
+	    + wave-simulation-model
+	      - wave-sim
+	      - wave-propagator
+	      - oscillator
+	      - lattice2d
+	    ~~~~~~~~~~~~~~
+	    + wave-simulation-app
+	      + app-view
+	        - app.less
+	        - index.js
+	      + sim-view
+	        - sims.less
+	        - index.js
+	      + oscillator-view
+	        - ... etc
