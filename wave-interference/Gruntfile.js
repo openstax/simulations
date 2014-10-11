@@ -47,8 +47,8 @@ module.exports = function(grunt){
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['bower_components/font-awesome/fonts/**'],
-				dest: 'dist/fonts/'
+				src: ['node_modules/font-awesome/fonts/**'],
+				dest: 'src/fonts/'
 			}
 		},
 		uglify: {
@@ -76,7 +76,7 @@ module.exports = function(grunt){
 			}		
 		},		
 		less: {
-			development: {
+			dev: {
 				options: {
 					paths: ['src/less']
 				},
@@ -98,7 +98,7 @@ module.exports = function(grunt){
 		watch: {
 			styles: {
 				files: ['src/less/**/*.less'], // files to watch
-				tasks: ['less:development'],
+				tasks: ['less:dev'],
 				options: {
 					nospawn: true
 				}
@@ -185,21 +185,6 @@ module.exports = function(grunt){
 				files: 'test/**/*.js'
 			}
 		},
-		inline_sources: {
-			options: {
-				template: 'src/index.html',
-				output:   'src/index.html',
-				js:  'src/js/bundle.min.js',
-				css: 'src/css/main.css'
-			}
-		},
-		staticinline: {
-			main: {
-				files: {
-					'dist/index.html': 'src/index.html',
-				}
-			}
-		},
 		'gh-pages': {
 			options: {
 				base: 'dist'
@@ -226,27 +211,6 @@ module.exports = function(grunt){
 		grunt.file.write(options.runner, template);
 	});
 
-	grunt.registerTask('inline_sources', function(){
-		var options = this.options();
-
-		// Read template file
-		var temp = grunt.file.read(options.template)
-		
-		// Get the js and css
-		var js  = grunt.file.read(options.js);
-		var css = grunt.file.read(options.css);
-
-		var html = temp.replace('{{ js }}', js).replace('{{ css }}', css);
-
-		// Write template to tests directory and run tests
-		grunt.file.write(options.output, html);
-	});
-
-	grunt.registerTask('replace_bower_components', function() {
-		var config = grunt.file.read('dist/js/config.js').replace(/\.\.\/\.\.\/bower_components\//g, '../bower_components/');
-		grunt.file.write('dist/js/config.js', config);
-	});
-
 	grunt.registerTask('default', [
 		'watch'
 	]);
@@ -270,8 +234,9 @@ module.exports = function(grunt){
 	});
 
 	grunt.registerTask('dev', [
+		'copy:fonts',
 		'watchify:all',
-		'less:development',
+		'less:dev',
 		'targethtml:dev'
 	]);
 

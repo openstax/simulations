@@ -2,11 +2,9 @@
   "name": "wave-interference",
   "version": "0.0.0",
   "description": "A wave interference simulation",
-  "main": "main.js",
+  "main": "src/index.html",
   "scripts": {
-    "prepublish": "bower install",
-    "test": "./node_modules/.bin/browserify src/js/main.js -o bundle.js",
-    "start": "./node_modules/.bin/beefy src/js/main.js:bundle.js  8084 --live -- "
+    "prepublish": "./node_modules/.bin/bower install"
   },
   "browserify": {
     "transform": [
@@ -69,6 +67,7 @@
     "grunt-targethtml": "^0.2.6",
     "grunt-watchify": "^0.1.0",
     "html2js-browserify": "0.0.2",
+    "http-server": "^0.7.2",
     "inliner": "^0.1.16",
     "jquery": "^2.1.1",
     "jquery-browserify": "^1.8.1",
