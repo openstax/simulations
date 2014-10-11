@@ -3,6 +3,7 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
+	var $ = require('jquery');
 
 	var CrossSectionGraphView = require('./cross-section.js');
 

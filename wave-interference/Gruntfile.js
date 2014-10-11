@@ -158,10 +158,11 @@ module.exports = function(grunt){
 				
 				// Environments
 				browser: true,
-				devel: false
+				devel: true
 			},
 			source: [
 				'src/**/*.js',
+				'!src/js/bundle.js',
 				'!src/js/lib/**/*.js',
 				'!test/**/*.js'
 			],
@@ -213,7 +214,7 @@ module.exports = function(grunt){
 	});
 
 	grunt.registerTask('default', [
-		'watch'
+		'dev'
 	]);
 
 	grunt.registerTask('dist', [
@@ -234,8 +235,8 @@ module.exports = function(grunt){
 	]);
 
 	grunt.registerTask('test', [
-		'build_tests',
 		'jshint:source',
+		'build_tests',
 		'mocha'
 	]);
 

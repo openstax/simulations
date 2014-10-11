@@ -75,7 +75,6 @@ define(function (require) {
 			if (!this.visible) {
 				var offset = this.heatmapView.$el.offset();
 				var width  = this.heatmapView.$el.width();
-				var height = this.heatmapView.$el.height();
 				this.start.x = offset.left + width * 0.33 - this.dragOffset.left;
 				this.start.y = offset.top + width / 2 - this.dragOffset.top;
 				this.end.x = offset.left + width * 0.67 - this.dragOffset.left;

@@ -7,85 +7,31 @@ Original simulation Copyright 2002-2011, University of Colorado.
 
 ## Development and Building
 
-
-
-### Installing & Hosting
-
-#### Installing
+### Installing
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
-2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
+2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli) globally--it's nice to have grunt installed globally to make it easier to run grunt tasks from the command line.
 3. From the root `wave-interference` directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
-##### Testing
+### Testing
 
 To run command-line tests, run `grunt test` from the root `wave-interference` directory.
 
-To view tests in a browser, you first need to
+### Building
 
-1. set up a server (check out the Hosting section below)
-2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`) 
-3. then go to [http://localhost:8000/test/](http://localhost:8000/test/). 
+From the root `wave-interference` directory, run `grunt dist`.  This will create a directory called `dist` containing the single index.html file that contains everything necessary to run the simulation on- or offline.  (Behind the scenes it creates a temporary localhost server on port 8090 and uses a command-line tool to crawl the hosted application and convert it all into inline CSS, JavaScript, image data, and font data, so if the build is failing, it could be a conflict with another localhost server.)
 
-##### Building
-
-From the root `wave-interference` directory, run `grunt dist`.
-
-The `dist` directory containing the built site will be added to the root `wave-interference` directory.
-
-##### Updating
+### Updating
 
 From the root `wave-interference` directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`
 
-#### Hosting
+### Development
 
-##### For Development
-
-1. Install [nginx](http://nginx.org/)
-2. Set up a virtual host pointing to your `wave-interference/src` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, do something like this (replacing `path-to-simulations` appropriately):
-
-        server {
-          listen 8000;
-          server_name $hostname;
-          root /path-to-simulations/simulations/wave-interference/dist/;
-          index index.html;
-          try_files $uri $uri/ /index.html;
-
-          location ~ ^.*/bower_components/(.*)$ {
-            alias /path-to-simulations/simulations/wave-interference/bower_components/$1;
-          }
-
-          location ~ ^.*/test/(.*)$ {
-            alias /path-to-simulations/simulations/wave-interference/test/$1;
-          }
-
-          location ~ ^.*/(data|js|css|img|templates)/(.*) {
-            try_files $uri $uri/ /$1/$2 /test/$1/$2;
-          }
-
-          location ~ ^.*/test/(.*)/(.*) {
-            try_files $uri $uri/ /test/$1 /test/$2 /test/index.html;
-          }
-
-          location ~ ^.*/test/(.*) {
-            try_files $uri $uri/ /test/$1 /test/index.html;
-          }
-        }
-
-3. Run `sudo nginx` to start the server.
-4. In the root of `simulations/wave-interference/`, run `grunt less:development`. Alternatively, if you are going to make changes to the LESS source, just run `grunt watch` to start a watcher that watches for changes in LESS files and recompiles automatically.
-5. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
-
-##### Easy Button
-1. Install the Apache-based webserver [AMPPS](http://www.ampps.com/downloads).
-2. Locate the `www` root directory.
-3. Clone the project into that directory so it looks like `www/simulations/`
-4. Run the LESS build script from the _other_ Step 4.
-5. Go to [http://localhost/simulations/wave-interference/src/](http://localhost/simulations/wave-interference/src/) in your browser to view the simulation.
+Running `grunt dev` or just `grunt` on the root of `wave-interference` will create a localhost server at [http://localhost:8080](http://localhost:8080).  It will also listen for changes to the JavaScript and LESS files and automatically rebuild.
 
 
 License
