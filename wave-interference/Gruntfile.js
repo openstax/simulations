@@ -47,7 +47,10 @@ module.exports = function(grunt){
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['node_modules/font-awesome/fonts/**'],
+				src: [
+					'node_modules/font-awesome/fonts/**',
+					'node_modules/bootstrap/fonts/**'
+				],
 				dest: 'src/fonts/'
 			}
 		},
@@ -227,9 +230,10 @@ module.exports = function(grunt){
 	grunt.registerTask('dist', function() {
 		var Inliner = require('inliner');
 
-		new Inliner('http://localhost:8001', function (html) {
+		new Inliner('http://localhost:8080', function (html) {
 			grunt.file.write('dist/index.html', html);
 			console.log(html);
+			console.log('mmmmm');
 		});
 	});
 
