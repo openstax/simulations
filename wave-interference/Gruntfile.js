@@ -31,7 +31,7 @@ module.exports = function(grunt){
 					b.transform('html2js-browserify');
 					b.transform('browserify-shim');
 					b.transform('deamdify');
-					b.transform('uglifyify');
+					//b.transform('uglifyify');
 
 					// return it
 					return b;
@@ -64,9 +64,14 @@ module.exports = function(grunt){
 			}
 		},
 		targethtml: {
-			dist: {
+			dev: {
 				files: {
 					'src/index.html': 'src/index.template.html'
+				}
+			},
+			dist: {
+				files: {
+					'dist/index.html': 'src/index.template.html'
 				}
 			}		
 		},		
@@ -246,14 +251,28 @@ module.exports = function(grunt){
 		'watch'
 	]);
 
-	grunt.registerTask('dist', [
-		'copy',
+	// grunt.registerTask('dist', [
+	// 	'copy',
+	// 	'watchify:all',
+	// 	'uglify:dist',
+	// 	'less:dist',
+	// 	'targethtml:dist',
+	// 	'staticinline'
+	// 	//'clean:dist'
+	// ]);
+	grunt.registerTask('dist', function() {
+		var Inliner = require('inliner');
+
+		new Inliner('http://localhost:8001', function (html) {
+			grunt.file.write('dist/index.html', html);
+			console.log(html);
+		});
+	});
+
+	grunt.registerTask('dev', [
 		'watchify:all',
-		'uglify:dist',
-		'less:dist',
-		'targethtml:dist',
-		'staticinline'
-		//'clean:dist'
+		'less:development',
+		'targethtml:dev'
 	]);
 
 	grunt.registerTask('test', [
