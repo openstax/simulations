@@ -5,6 +5,8 @@ module.exports = function(grunt){
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		devPort:   8080,
+		buildPort: 8090,
 		clean: {
 			// Clean up stuff later when I figure out what I need to clean up
 			dev: [
@@ -53,6 +55,26 @@ module.exports = function(grunt){
 				],
 				dest: 'src/fonts/'
 			}
+		},
+		shell: {
+			inline: {
+				command: 'node node_modules/.bin/inliner http://localhost:<%= buildPort %> > dist/index.html'
+			}
+		},
+		connect: {
+			dev: {
+				options: {
+					port: '<%= devPort %>',
+					base: 'src',
+					keepalive: true
+				}
+			},
+			build: {
+				options: {
+					port: '<%= buildPort %>',
+					base: 'src'
+				}
+			},
 		},
 		uglify: {
 			options: {
@@ -218,30 +240,21 @@ module.exports = function(grunt){
 		'watch'
 	]);
 
-	// grunt.registerTask('dist', [
-	// 	'copy',
-	// 	'watchify:all',
-	// 	'uglify:dist',
-	// 	'less:dist',
-	// 	'targethtml:dist',
-	// 	'staticinline'
-	// 	//'clean:dist'
-	// ]);
-	grunt.registerTask('dist', function() {
-		var Inliner = require('inliner');
-
-		new Inliner('http://localhost:8080', function (html) {
-			grunt.file.write('dist/index.html', html);
-			console.log(html);
-			console.log('mmmmm');
-		});
-	});
+	grunt.registerTask('dist', [
+		'copy',
+		'watchify:all',
+		'less:dist',
+		'targethtml:dist',
+		'connect:build',
+		'shell:inline'
+	]);
 
 	grunt.registerTask('dev', [
 		'copy:fonts',
 		'watchify:all',
 		'less:dev',
-		'targethtml:dev'
+		'targethtml:dev',
+		'connect:dev'
 	]);
 
 	grunt.registerTask('test', [
