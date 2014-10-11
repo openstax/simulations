@@ -7,6 +7,7 @@ module.exports = function(grunt){
 		pkg: grunt.file.readJSON('package.json'),
 		devPort:   8080,
 		buildPort: 8090,
+		testPort:  8081,
 		clean: {
 			// Clean up stuff later when I figure out what I need to clean up
 			dev: [
@@ -32,6 +33,10 @@ module.exports = function(grunt){
 				src: './src/js/main.js',
 				dest: 'src/js/bundle.js'
 			},
+			test: {
+				src: './src/js/**/*.js',
+				dest: 'test/bundle.js'
+			}
 		},
 		copy: {
 			fonts: {
@@ -63,6 +68,11 @@ module.exports = function(grunt){
 					base: 'src'
 				}
 			},
+			test: {
+				options: {
+					port: '<%= testPort %>'
+				}
+			}
 		},
 		targethtml: {
 			dev: {
@@ -172,12 +182,13 @@ module.exports = function(grunt){
 		},
 		mocha: {
 			// Test all files ending in .html anywhere inside the test directory.
-			browser: ['test/index.html'],
+			all: ['test/index.html'],
 			options: {
 				reporter: 'Spec',
 				run: false,
 				log: false,
-				timeout: 15000
+				timeout: 15000,
+				urls: [ 'http://localhost:8081/test/index.html' ]
 			}
 		},
 		build_tests: {
@@ -219,7 +230,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dist', [
 		'copy',
-		'watchify',
+		'watchify:all',
 		'less:dist',
 		'targethtml:dist',
 		'connect:build',
@@ -228,7 +239,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dev', [
 		'copy:fonts',
-		'watchify',
+		'watchify:all',
 		'targethtml:dev',
 		'connect:dev',
 		'watch'
@@ -236,6 +247,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('test', [
 		'jshint:source',
+		'watchify:test',
 		'build_tests',
 		'mocha'
 	]);
