@@ -31,5 +31,7 @@ $(function(){
 		}
 	});	
 
+	console.log('Franky!')
+
 	appView.postRender();
 });

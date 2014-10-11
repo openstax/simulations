@@ -11,8 +11,7 @@
       "aliasify",
       "html2js-browserify",
       "browserify-shim",
-      "deamdify",
-      "node-lessify"
+      "deamdify"
     ]
   },
   "browserify-shim": {},

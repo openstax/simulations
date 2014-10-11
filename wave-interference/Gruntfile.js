@@ -26,23 +26,12 @@ module.exports = function(grunt){
 				debug: false,
 				standalone: false,
 
-				keepalive: false,
-				callback: function(b) {
-					// configure the browserify instance here
-					b.transform('aliasify');
-					b.transform('html2js-browserify');
-					b.transform('browserify-shim');
-					b.transform('deamdify');
-					//b.transform('uglifyify');
-
-					// return it
-					return b;
-				}
+				keepalive: false
 			},
 			all: {
 				src: './src/js/main.js',
 				dest: 'src/js/bundle.js'
-			}
+			},
 		},
 		copy: {
 			fonts: {
@@ -65,8 +54,7 @@ module.exports = function(grunt){
 			dev: {
 				options: {
 					port: '<%= devPort %>',
-					base: 'src',
-					keepalive: true
+					base: 'src'
 				}
 			},
 			build: {
@@ -75,18 +63,6 @@ module.exports = function(grunt){
 					base: 'src'
 				}
 			},
-		},
-		uglify: {
-			options: {
-				banner: BANNER_TEMPLATE_STRING,
-				sourceMap: true,
-				sourceMapName: 'src/js/bundle.min.js.map'
-			},
-			dist: {
-				files: {
-					'src/js/bundle.min.js': ['src/js/bundle.js']
-				}
-			}
 		},
 		targethtml: {
 			dev: {
@@ -242,7 +218,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dist', [
 		'copy',
-		'watchify:all',
+		'watchify',
 		'less:dist',
 		'targethtml:dist',
 		'connect:build',
@@ -251,10 +227,10 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dev', [
 		'copy:fonts',
-		'watchify:all',
-		'less:dev',
+		'watchify',
 		'targethtml:dev',
-		'connect:dev'
+		'connect:dev',
+		'watch'
 	]);
 
 	grunt.registerTask('test', [
