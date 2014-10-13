@@ -175,9 +175,6 @@ module.exports = function(grunt){
 				'!src/js/bundle.js',
 				'!src/js/lib/**/*.js',
 				'!test/**/*.js'
-			],
-			test: [
-				'test/**/*.js'
 			]
 		},
 		mocha: {
@@ -247,7 +244,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('test', [
 		'jshint:source',
-		'watchify:test',
+		//'watchify:test',
 		'build_tests',
 		'mocha'
 	]);
