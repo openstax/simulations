@@ -22,9 +22,9 @@
 			mocha.setup('bdd');
 
 			require.config({
-				baseUrl: '../src/js',
+				//baseUrl: '../src/js',
 				callback: function () {
-					require(['config'], function() {
+					require(['../src/js/config'], function() {
 						require.config({
 							deps: {{ tests }},
 

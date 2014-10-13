@@ -4,7 +4,7 @@ describe('Lattice2D', function(){
 	var Lattice2D;
 
 	before(function(done) {
-		require(['models/lattice2d'], function(model) {
+		require(['../../src/js/models/lattice2d.js'], function(model) {
 			Lattice2D = model;
 			done();
 		});

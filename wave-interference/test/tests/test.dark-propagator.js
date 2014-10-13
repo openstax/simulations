@@ -5,7 +5,7 @@ describe('Dark Propagator', function(){
 	var Lattice2D;
 
 	before(function(done) {
-		require(['models/wave-propagator', 'models/lattice2d'], function(propagator, lattice2d) {
+		require(['../../src/js/models/wave-propagator.js', '../../src/js/models/lattice2d.js'], function(propagator, lattice2d) {
 			WavePropagator = propagator;
 			Lattice2D = lattice2d;
 			done();

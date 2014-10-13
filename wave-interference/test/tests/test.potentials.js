@@ -8,10 +8,10 @@ describe('Potentials', function(){
 
 	before(function(done) {
 		require([
-			'models/potential',
-			'models/potential/segment',
-			'models/potential/box',
-			'models/potential/composite'
+			'../../src/js/models/potential.js',
+			'../../src/js/models/potential/segment.js',
+			'../../src/js/models/potential/box.js',
+			'../../src/js/models/potential/composite.js'
 		], function(potential, segment, box, composite) {
 			Potential          = potential;
 			SegmentPotential   = segment;

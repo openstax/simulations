@@ -3,7 +3,7 @@ define(function(require) {
 	describe('AppView', function() {
 
 		var $ = require('jquery');
-		var AppView = require('views/app');
+		var AppView = require('../../src/js/views/app.js');
 
 		var before = function() {
 			$('#app-stylesheet').removeAttr('disabled');

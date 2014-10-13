@@ -5,7 +5,7 @@ describe('Oscillator', function(){
 	var Oscillator;
 
 	before(function(done) {
-		require(['models/wave-sim', 'models/oscillator'], function(wavesim, oscillator) {
+		require(['../../src/js/models/wave-sim.js', '../../src/js/models/oscillator.js'], function(wavesim, oscillator) {
 			WaveSimulation = wavesim;
 			Oscillator = oscillator;
 			done();

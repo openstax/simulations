@@ -5,7 +5,7 @@ describe('Utils', function(){
 
 	before(function(done) {
 		require([
-			'utils/utils'
+			'../../src/js/utils/utils.js'
 		], function(utils) {
 			Utils = utils;
 
