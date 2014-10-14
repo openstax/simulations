@@ -1,14 +1,10 @@
+var sinon = require('sinon');
+var mocha = require('mocha');
+var chai  = require('chai');
+
+var Lattice2D = require('../../src/js/models/lattice2d.js');
 
 describe('Lattice2D', function(){
-
-	var Lattice2D;
-
-	before(function(done) {
-		require(['../../src/js/models/lattice2d.js'], function(model) {
-			Lattice2D = model;
-			done();
-		});
-	});
 
 	it('should create a new lattice with initial values', function(){
 		var height = 3;

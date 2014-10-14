@@ -1,26 +1,13 @@
+var sinon = require('sinon');
+var mocha = require('mocha');
+var chai  = require('chai');
+
+var Potential          = require('../../src/js/models/potential.js');
+var SegmentPotential   = require('../../src/js/models/potential/segment.js');
+var BoxPotential       = require('../../src/js/models/potential/box.js');
+var CompositePotential = require('../../src/js/models/potential/composite.js');
 
 describe('Potentials', function(){
-
-	var Potential;
-	var SegmentPotential;
-	var BoxPotential;
-	var CompositePotential;
-
-	before(function(done) {
-		require([
-			'../../src/js/models/potential.js',
-			'../../src/js/models/potential/segment.js',
-			'../../src/js/models/potential/box.js',
-			'../../src/js/models/potential/composite.js'
-		], function(potential, segment, box, composite) {
-			Potential          = potential;
-			SegmentPotential   = segment;
-			BoxPotential       = box;
-			CompositePotential = composite;
-
-			done();
-		});
-	});
 
 	it('should calculate correct bounds on a segment potential', function(){
 		var start = {

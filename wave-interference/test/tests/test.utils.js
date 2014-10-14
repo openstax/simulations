@@ -1,17 +1,10 @@
+var sinon = require('sinon');
+var mocha = require('mocha');
+var chai  = require('chai');
+
+var Utis = require('../../src/js/utils/utils.js');
 
 describe('Utils', function(){
-
-	var Utils;
-
-	before(function(done) {
-		require([
-			'../../src/js/utils/utils.js'
-		], function(utils) {
-			Utils = utils;
-
-			done();
-		});
-	});
 
 	it('should correctly calculate distance between point and line segment', function(){
 		var start = {

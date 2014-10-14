@@ -1,16 +1,11 @@
+var sinon = require('sinon');
+var mocha = require('mocha');
+var chai  = require('chai');
+
+var WavePropagator = require('../../src/js/models/wave-propagator.js');
+var Lattice2D      = require('../../src/js/models/lattice2d.js');
 
 describe('Propagator', function(){
-
-	var WavePropagator;
-	var Lattice2D;
-
-	before(function(done) {
-		require(['../../src/js/models/wave-propagator.js', '../../src/js/models/lattice2d.js'], function(propagator, lattice2d) {
-			WavePropagator = propagator;
-			Lattice2D = lattice2d;
-			done();
-		});
-	});
 
 	it('propagates as expected', function(){
 		var lattice = new Lattice2D({

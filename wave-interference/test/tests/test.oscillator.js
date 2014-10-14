@@ -1,16 +1,11 @@
+var sinon = require('sinon');
+var mocha = require('mocha');
+var chai  = require('chai');
+
+var WaveSimulation = require('../../src/js/models/wave-sim.js');
+var Oscillator     = require('../../src/js/models/oscillator.js');
 
 describe('Oscillator', function(){
-
-	var WaveSimulation;
-	var Oscillator;
-
-	before(function(done) {
-		require(['../../src/js/models/wave-sim.js', '../../src/js/models/oscillator.js'], function(wavesim, oscillator) {
-			WaveSimulation = wavesim;
-			Oscillator = oscillator;
-			done();
-		});
-	});
 
 	it('should give correct time-based output of oscillation values', function(){
 		var waveSimulation = new WaveSimulation();
