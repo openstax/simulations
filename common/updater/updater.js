@@ -7,7 +7,7 @@ define(function (require) {
 
 	'use strict';
 
-	require('node_modules/pixi.js/bin/pixi');
+	require('pixi');
 
 	var Updater = function() {
 

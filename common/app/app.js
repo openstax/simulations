@@ -6,22 +6,7 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
-	var template = '
-		<nav class="sim-tabs">
-			<ul>
-				<% _.each(simViews, function(simView){ %>
-				<li class="tab sim-tab" data-cid="<%= simView.cid %>" data-content-selector="#sim-<%= simView.name %>">
-					<span class="tab-title"><%= simView.title %></span>
-				</li>
-				<% }); %>
-			</ul>
-		</nav>
-
-		<div class="sims">
-			<% _.each(simViews, function(simView){ %>
-			<div class="sim-content" id="sim-<%= simView.name %>"></div>
-			<% }); %>
-		</div>';
+	var template = require('text!app.html');
 
 	var AppView = Backbone.View.extend({
 		template: _.template(template),
