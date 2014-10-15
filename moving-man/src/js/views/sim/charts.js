@@ -16,8 +16,8 @@ define(function(require) {
 
 		initialize: function(options) {
 			options = _.extend({
-				title: 'Introduction',
-				name:  'intro'
+				title: 'Charts',
+				name:  'charts'
 			}, options);
 			
 			MovingManSimView.prototype.initialize.apply(this, [ options ]);

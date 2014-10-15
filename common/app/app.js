@@ -6,7 +6,9 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
-	var template = require('text!app.html');
+	var template = require('text!./app.html');
+
+	require('less!./app');
 
 	var AppView = Backbone.View.extend({
 		template: _.template(template),
@@ -38,7 +40,7 @@ define(function(require) {
 						name:  simView.name,
 						title: simView.title
 					};
-				});
+				})
 			};
 
 			return data;

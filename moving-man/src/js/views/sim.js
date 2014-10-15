@@ -48,7 +48,7 @@ define(function (require) {
 		 * @params options
 		 */
 		initialize: function(options) {
-			SimView.prototype.initialize.apply(this);
+			SimView.prototype.initialize.apply(this, [options]);
 
 			// Initialize the HeatmapView
 			this.initSceneView();

@@ -51,6 +51,13 @@ define(function(require) {
 		postRender: function() {},
 
 		/**
+		 *
+		 */
+		resize: function() {
+
+		},
+
+		/**
 		 * Called on a window resize to resize the canvas
 		 */
 		windowResized: function(event) {

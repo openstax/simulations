@@ -6,6 +6,8 @@ define(function (require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
+	var Updater = require('../updater/updater');
+
 	/**
 	 * SimView represents a tab in the simulation.  SimView must be extended
 	 *   to create specific simulation views with specific simulation models.
