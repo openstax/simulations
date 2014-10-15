@@ -9,6 +9,7 @@ define(function(require) {
 	var template = require('text!./app.html');
 
 	require('less!./app');
+	require('less!./tabs');
 
 	var AppView = Backbone.View.extend({
 		template: _.template(template),

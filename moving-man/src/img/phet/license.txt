@@ -1,27 +1,11 @@
 ###################################
-# License info for wave-interference
-# Automatically generated on Fri Aug 08 00:08:03 MDT 2008
+# License info for moving-man
 ###################################
 
-detector-thumb.gif author=PhET 
-faucet1.gif source=microsoft notes=This image is not used in the sim "j0356883.wmf "
-faucet2.gif source=Wikimedia Commons="Faucet in a bathroom sink", 'http://commons.wikimedia.org/wiki/File:Faucet_in_a_bathroom_sink.jpg'
-particle-blue.gif author=PhET
-particle-pink.gif author=PhET 
-raindrop1.png author=PhET 
-ruler-thumb.png source= Open Clip Art notes="Ruller", 'http://www.openclipart.org/detail/13549'
-silverwire.png author=PhET 
-soundMax.png source=mac control panel author=PhET 
-soundMin.png source=mac control panel author=PhET 
-speaker-back.png notes=http://willem.engen.nl/art/blender/ license=same as speaker.gif
-speaker-cone.gif author=PhET 
-speaker-cone.png notes=http://willem.engen.nl/art/blender/ license=same as speaker.gif
-speaker-frame.gif author=PhET 
-speaker-front.png notes=http://willem.engen.nl/art/blender/ license=same as speaker.gif
-speaker.gif notes=http://willem.engen.nl/art/blender/ 
-spotlight.png author=PhET notes=ron 
-spotlight_3d.png author=PhET 
-stopwatch-thumb.png source=Open Clip Art Library notes="stop watch icon", http://www.openclipart.org/detail/120385
-wire.png author=PhET 
-wood.jpg 
-x-20.png author=PhET 
+cottage.gif source=clker.com
+magnify-minus.png source=PhET author=Sam Reid
+magnify-plus.png source=PhET author=Sam Reid
+man-left.gif source=PhET author=Sam Reid
+man-standing.gif source=PhET author=Sam Reid
+tree.png source=http://openclipart.org/detail/20697/tree-by-rg1024 license=public domain
+wall.png source=http://openclipart.org/detail/20861/brick-tile-by-rg1024 license=public domain 

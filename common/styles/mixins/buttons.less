@@ -1,3 +1,36 @@
+@import "../../node_modules/bootstrap/less/mixins.less"; // Bootstrap Mixins
+
+// Based on bootstrap's .button-variant() mixin
+.button-variant(@color; @background) {
+	padding: 5px 10px;
+	font-weight: 300;
+	vertical-align: baseline;
+	color: @color;
+	background-color: @background;
+	border: none;
+
+	&:hover,
+	&:focus,
+	&:active,
+	&.active {
+		color: @color;
+		background-color: darken(@background, 4%);
+		outline: 0;
+	}
+
+	&.disabled,
+	&[disabled],
+	fieldset[disabled] & {
+		&,
+		&:hover,
+		&:focus,
+		&:active,
+		&.active {
+			background-color: @background;
+		}
+	}
+}
+
 .btn:focus, .btn:active:focus, .btn.active:focus {
 	outline: none !important; // overriding bootstrap default behavior
 }
