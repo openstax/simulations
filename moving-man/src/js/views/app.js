@@ -14,7 +14,7 @@ define(function(require) {
 	var MovingManAppView = AppView.extend({
 
 		initialize: function() {
-			this.sims = [
+			this.simViews = [
 				new IntroSimView(),
 				new ChartsSimView()
 			];
@@ -24,5 +24,5 @@ define(function(require) {
 
 	});
 
-	return AppView;
+	return MovingManAppView;
 });

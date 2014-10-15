@@ -3,37 +3,16 @@
 
 	// Load the config
 	require(['config'], function () {
-		require(['jquery', 'views/app'], function($, AppView) {
+		require(['jquery', 'views/app'], function($, MovingManAppView) {
 
 			$(function(){
-				var appView = new AppView();
+				var appView = new MovingManAppView();
 
 				// Append to body
 				$('body').append(appView.el);
 
 				// Render main app view
 				appView.render();
-
-				// For demoing
-				var better = false;
-				$(document).bind('keydown', function(event) {
-					if (event.which === 66) {
-						if (better) {
-							$('body').removeClass('better');
-							$(window).trigger('worse');
-							better = false;
-						}
-						else {
-							$('body').addClass('better');
-							$(window).trigger('better');
-							better = true;
-						}
-					}
-				});	
-
-				// Trigger window resize to update canvases
-				//$(window).trigger('resize');
-
 				appView.postRender();
 			});
 	

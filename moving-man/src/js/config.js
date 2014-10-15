@@ -12,8 +12,8 @@
 			timbre:     '../../bower_components/timbre/timbre.dev',
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 
-			templates:  '../templates/',
-			common:     '../../../common/'
+			templates:  '../templates',
+			common:     '../../../common'
 		},
 
 		packages: [{
@@ -24,7 +24,15 @@
 			name: 'less',
 			location: '../../bower_components/require-less',
 			main: 'less'
-		}]
+		}],
+
+		less: {
+			logLevel: 1,
+
+			globalVars: {
+				dependencyDir: '"/bower_components"'
+			}
+		},
 	};
 
 	require.config(config);

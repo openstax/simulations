@@ -7,7 +7,7 @@ define(function (require) {
 	var Backbone            = require('backbone');
 
 	var SimView             = require('common/app/sim');
-	var MovingManSimulation = require('models/wave-sim');
+	var MovingManSimulation = require('models/moving-man-simulation');
 	var SceneView           = require('views/scene');
 
 	require('nouislider');
@@ -48,13 +48,7 @@ define(function (require) {
 		 * @params options
 		 */
 		initialize: function(options) {
-			options = _.extend({
-				title: 'Simulation',
-				name:  'sim'
-			}, options);
-
-			this.title = options.title;
-			this.name  = options.name;
+			SimView.prototype.initialize.apply(this);
 
 			// Initialize the HeatmapView
 			this.initSceneView();
@@ -82,21 +76,26 @@ define(function (require) {
 		render: function() {
 			this.$el.empty();
 
+			this.renderScaffolding();
 			this.renderSceneView();
-			this.renderPlaybackControls();
 
 			return this;
 		},
 
 		/**
-		 * Renders the scene view
+		 * Renders page content. Should be overriden by child classes
 		 */
-		renderSceneView: function() {},
+		renderScaffolding: function() {
+			this.$el.html(this.template());
+		},
 
 		/**
-		 * Renders the playback controls
+		 * Renders the scene view
 		 */
-		renderPlaybackControls: function() {},
+		renderSceneView: function() {
+			this.sceneView.render();
+			this.$('#scene-view-placeholder').replaceWith(this.sceneView.el);
+		},
 
 		/**
 		 * Called after every component on the page has rendered to make sure
