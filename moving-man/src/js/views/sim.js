@@ -2,13 +2,13 @@ define(function (require) {
 
 	'use strict';
 
-	var $                     = require('jquery');
-	var _                     = require('underscore');
-	var Backbone              = require('backbone');
+	var $                   = require('jquery');
+	var _                   = require('underscore');
+	var Backbone            = require('backbone');
 
-	var SimView               = require('common/app/sim');
-	var MovingManSimulation   = require('models/wave-sim');
-	var SceneView             = require('views/scene');
+	var SimView             = require('common/app/sim');
+	var MovingManSimulation = require('models/wave-sim');
+	var SceneView           = require('views/scene');
 
 	require('nouislider');
 
@@ -23,7 +23,7 @@ define(function (require) {
 		/**
 		 * Root element properties
 		 */
-		tagName: 'section',
+		tagName:   'section',
 		className: 'sim-view',
 
 		/**
@@ -50,7 +50,7 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				title: 'Simulation',
-				name: 'sim'
+				name:  'sim'
 			}, options);
 
 			this.title = options.title;
