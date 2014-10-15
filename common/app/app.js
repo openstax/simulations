@@ -19,10 +19,8 @@ define(function(require) {
 		},
 
 		initialize: function(options) {
-			if (!options.simViews)
+			if (!this.simViews)
 				throw "App requires a list of SimViews to render.";
-			else
-				this.simViews = options.simViews;
 		},
 
 		remove: function() {

@@ -12,7 +12,8 @@
 			timbre:     '../../bower_components/timbre/timbre.dev',
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 
-			templates:  '../templates/'
+			templates:  '../templates/',
+			common:     '../../../common/'
 		},
 
 		packages: [{

@@ -58,6 +58,12 @@ define(function (require) {
 		},
 
 		/**
+		 * Called after every component on the page has rendered to make sure
+		 *   things like widths and heights and offsets are correct.
+		 */
+		postRender: function() {},
+
+		/**
 		 * Click event handler that plays the simulation
 		 */
 		play: function(event) {
@@ -116,13 +122,10 @@ define(function (require) {
 		},
 
 		/**
-		 *
+		 * Resets the components when the reset button is pressed
 		 */
 		resetComponents: function() {
 			this.simulation.reset();
-			this.initWaveSimulation();
-			this.initHeatmapView();
-			this.initCrossSectionGraphView();
 		},
 
 		/**
