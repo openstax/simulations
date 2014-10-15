@@ -1,7 +1,7 @@
 {
-  "name": "wave-interference",
+  "name": "moving-man",
   "version": "0.0.0",
-  "description": "A wave interference simulation",
+  "description": "A simulation of movement--the relationship between position, velocity, acceleration, and time",
   "main": "main.js",
   "scripts": {
     "prepublish": "node_modules/.bin/bower install",

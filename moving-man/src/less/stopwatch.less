@@ -1,0 +1,38 @@
+
+.stopwatch-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 200;
+	padding: 20px;
+	background: @gray-lightest;
+	color: #000;
+	cursor: -webkit-grab;
+	cursor: grab;
+
+	.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
+
+	&.dragging {
+		cursor: -webkit-grabbing;
+		cursor: grabbing;
+	}
+
+	> .stopwatch-label {
+		min-width: 100px;
+		margin: 0;
+		line-height: 34px;
+		text-align: right;
+		cursor: text;
+
+		> .stopwatch-label-value {
+			font-weight: normal;
+			margin-right: 4px;
+			display: inline-block;
+			min-width: 50px;
+		}
+	}
+
+	> .stopwatch-toggle-btn {
+		min-width: 72px;
+	}
+}

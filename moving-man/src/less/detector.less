@@ -1,0 +1,168 @@
+
+@detector-width:  240px;
+@detector-height: 140px;
+
+.detector-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 210;
+	.user-select(none);
+
+	> .detector-sampler {
+		height: 26px;
+		width: 26px;
+		position: absolute;
+		top: -13px;
+		left: -13px;
+		border-radius: 50%;
+		border: 5px solid @gray-lightest;
+		cursor: crosshair;
+		overflow: hidden;
+		z-index: 211;
+		.box-shadow(~"0px 3px 6px rgba(0, 0, 0, 0.3), inset 0px 3px 6px rgba(0, 0, 0, 0.3)");
+
+		&.dragging {
+			background-color: fadeout(darken(@gray-lightest, 3%), 30%);
+			border-color: @link-color;
+
+			&:before,
+			&:after {
+				border-color: @link-color;
+			}
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			left: 0;
+			right: 0;
+			top: 50%;
+			margin-top: -1px;
+			border-top: 2px solid #000;
+		}
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 0;
+			bottom: 0;
+			left: 50%;
+			margin-left: -1px;
+			border-left: 2px solid #000;
+		}
+	}
+
+	> .detector-connector {
+		position: absolute;
+		left: 0;
+		top: -2px;
+		height: 4px;
+		background-color: #000;
+		.transform-origin(left center);
+		z-index: 210;
+	}
+
+	> .detector-visualizer {
+		width: @detector-width;
+		height: @detector-height;
+		position: absolute;
+		top: 0;
+		left: 0;
+		cursor: -webkit-grab;
+		cursor: grab;
+
+		&.dragging {
+			cursor: -webkit-grabbing;
+			cursor: grabbing;
+		}
+
+		> .detector-connector-anchor {
+			position: absolute;
+			top: 50%;
+			right: -20px;
+			width: 40px;
+			height: 40px;
+			margin-top: -20px;
+			border-radius: 50%;
+			z-index: 219;
+			.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
+		}
+
+		> .detector-close {
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			padding: 6px 10px;
+			background: transparent;
+			color: #888;
+			z-index: 222;
+
+			&:hover {
+				color: #555;
+			}
+
+			&:active {
+				color: #444;
+				.box-shadow(none);
+				text-shadow: 0 0 6px #ccc;
+			}
+		}
+
+		&:before {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 50%;
+			right: -20px;
+			width: 40px;
+			height: 40px;
+			margin-top: -20px;
+			border-radius: 50%;
+			background: @gray-lightest;
+			z-index: 221;
+		}
+
+		&:after {
+			content: '';
+			display: block;
+			position: absolute;
+			top: 50%;
+			right: -3px;
+			width: 6px;
+			height: 6px;
+			margin-top: -3px;
+			border-radius: 50%;
+			background: #000;
+			z-index: 222;
+		}
+	}
+
+}
+
+
+.detector-graph-view {
+	.grid-view(detector-graph, @detector-width, @detector-height, 32px);
+
+	max-width: none;
+	position: absolute;
+	z-index: 220;
+	.box-shadow(0px 3px 6px rgba(0, 0, 0, 0.3));
+
+	> .detector-graph-title {
+		line-height: 35px;
+		font-size: 16px;
+		color: #686868;
+	}
+
+	> .detector-graph-y > .detector-graph-axis-label {
+		margin-left: 16px;
+	}
+
+	> .detector-graph-x {
+		// left:  16px;
+		// right: 16px;
+	}
+}

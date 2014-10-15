@@ -1,0 +1,204 @@
+
+.grid-view(@prefix, @container-width, @container-height, @container-padding,
+           @left-padding: @container-padding, @right-padding: @container-padding, 
+           @top-padding: @container-padding, @bottom-padding: @container-padding) {
+
+	max-width: 100%;
+	width: 100%;
+	background-color: @gray-lightest;
+
+
+
+	@media (min-width: @max-viewport-width) {
+		width: @container-width;
+		height: @container-height;
+
+		&:before {
+			display: none;
+		}
+	}
+
+	.@{prefix}-title {
+		position: absolute;
+		top: 0;
+		left: @left-padding;
+		right: @right-padding;
+		height: @top-padding;
+		line-height: (@container-padding + 2);
+		font-size: 20px;
+		font-weight: 400;
+		text-align: center;
+		color: #333;
+	}
+
+	.@{prefix}-canvas-wrapper {
+		position: absolute;
+		top: @top-padding;
+		left: @left-padding;
+		bottom: @bottom-padding;
+		right: @right-padding;
+		border: 1px solid #bbb;
+		z-index: 1;
+
+		> .@{prefix}-canvas {
+			width: 100%;
+			height: 100%;
+			background-color: #000;
+		}
+	}
+
+	.@{prefix}-x {
+		position: absolute;
+		height: @bottom-padding;
+		bottom: 0;
+		left: @left-padding;
+		right: @right-padding;
+
+		.@{prefix}-x-numbers {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+
+		 	.@{prefix}-number {
+				float: left;
+				height: 100%;
+				position: relative;
+				
+				> span {
+					position: absolute;
+					display: block;
+					width: 100%;
+					height: 100%;
+					left: -50%;
+					text-align: center;
+					padding-top: 6px;
+				}
+
+				&:after {
+					content: '';
+					position: absolute;
+					left: 0;
+					top: 0;
+					height: 4px;
+					width: 4px;
+					border: 0px solid #bbb;
+					border-left-width: 1px;
+				}
+
+				&:last-child {
+					position: absolute;
+					right: 0;
+
+					& > span {
+						left: 48%;	
+					}
+
+					&:after {
+						border-left-width: 0;
+						border-right-width: 1px;
+						left: auto;
+						right: 0;
+					}
+				}
+			}
+		}
+
+		.@{prefix}-axis-label {
+			width: 100%;
+			text-align: center;
+			line-height: (@bottom-padding * 0.5);
+			padding-top: (@bottom-padding * 0.5);
+		}
+	}
+
+	.@{prefix}-y {
+		position: absolute;
+		width: @left-padding;
+		left: 0;
+		top: @top-padding;
+		bottom: @bottom-padding;
+		pointer-events: none;
+
+		.@{prefix}-y-numbers {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+
+		 	.@{prefix}-number {
+				width: 100%;
+				position: relative;
+				
+				> span {
+					position: absolute;
+					display: block;
+					width: 100%;
+					height: 20px;
+					top: -50%;
+					margin-top: 10px;
+					text-align: right;
+					padding-right: 6px;
+				}
+
+				&:after {
+					content: '';
+					position: absolute;
+					right: 0;
+					top: 0;
+					height: 4px;
+					width: 4px;
+					border: 0px solid #bbb;
+					border-top-width: 1px;
+				}
+
+				&:last-child {
+					position: absolute;
+					bottom: 0;
+
+					& > span {
+						top: 48%;	
+					}
+
+					&:after {
+						border-top-width: 0;
+						border-bottom-width: 1px;
+						top: auto;
+						bottom: 0;
+					}
+				}
+			}
+		}
+
+		.@{prefix}-axis-label {
+			position: absolute;
+			display: block;
+			left: 0px;
+			top: 0;
+			right: 0px;
+			bottom: 0;
+			max-width: none;
+			width: 350px;
+			height: 20px;
+			margin-top: auto;
+			margin-bottom: auto;
+			margin-left: 14px;
+
+			.transform(~"rotate(-90deg) translateY(-175px)");
+			.transform-origin(center center);
+			text-align: center;
+		}
+	}
+
+	.@{prefix}-number {
+		font-size: 10px;
+		color: #888;
+	}
+
+	.@{prefix}-axis-label {
+		font-size: 12px;
+		color: #888;
+	}
+}
