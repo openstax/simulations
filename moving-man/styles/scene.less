@@ -1,0 +1,203 @@
+@import "../bower_components/bootstrap/less/mixins/gradients.less";
+@import "../bower_components/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../common/styles/mixins/vendor-prefixes.less";
+@import "../common/styles/variables.less";
+
+/*
+ * Clouds CSS from http://thecodeplayer.com/walkthrough/pure-css3-animated-clouds-background,
+ *   modified and adapted for LESS
+ */ 
+
+.scene-view {
+	width: 100%;
+	height: 334px;
+	position: relative;
+}
+
+/* Clouds
+ * -----------------------------------------------------------------
+ */
+.clouds {
+	position: relative;
+	width: 100%;
+	height: 300px;
+	overflow: hidden;
+	background: #c9dbe9;
+	#gradient.vertical(#81C8FF; #fff; 0%; 100%);
+}
+
+.cloud {
+	left: 0;
+	width: 200px; height: 60px;
+	background: #fff;
+	
+	border-radius: 200px;
+	-moz-border-radius: 200px;
+	-webkit-border-radius: 200px;
+	
+	position: absolute; 
+
+	&:before, 
+	&:after {
+		content: '';
+		position: absolute; 
+		background: #fff;
+		width: 100px; height: 80px;
+		position: absolute; top: -15px; left: 10px;
+		
+		border-radius: 100px;
+		-moz-border-radius: 100px;
+		-webkit-border-radius: 100px;
+		
+		.transform(rotate(30deg));
+	}
+
+	&:after {
+		width: 120px; height: 120px;
+		top: -55px; left: auto; right: 15px;
+	}
+
+	&.cloud-1 {
+		top: 50px;
+
+		.transform(scale(0.5));
+
+		.animation(moveclouds 60s linear infinite);
+	}
+
+	&.cloud-2 {
+		top: 40px;
+		
+		.transform(scale(0.3));
+		opacity: 0.7; /*opacity proportional to the size*/
+		
+		/*Speed will also be proportional to the size and opacity*/
+		/*More the speed. Less the time in 's' = seconds*/
+		.animation(moveclouds 100s linear infinite);
+		.animation-delay(-40s);
+	}
+
+	&.cloud-3 {
+		top: 30px;
+		
+		.transform(scale(-0.4, 0.4));
+		opacity: 0.9; /*opacity proportional to the size*/
+		
+		.animation(moveclouds 80s linear infinite);
+		.animation-delay(-30s);
+	}
+
+	&.cloud-4 {
+		top: 20px;
+		
+		.transform(scale(-0.35, 0.35));
+		opacity: 0.85; /*opacity proportional to the size*/
+		
+		.animation(moveclouds 72s linear infinite);
+		.animation-delay(-50s);
+	}
+
+	&.cloud-5 {
+		top: -20px;
+		
+		.transform(scale(0.4));
+		opacity: 0.9; /*opacity proportional to the size*/
+		
+		.animation(moveclouds 80s linear infinite);
+		.animation-delay(-10s);
+	}
+}
+
+.keyframes(moveclouds, {
+	margin-left: 130%;
+},{
+	margin-left: -30%;
+});
+
+/* Ruler (ground)
+ * -----------------------------------------------------------------
+ */
+.ruler {
+	position: absolute;
+	z-index: 60;
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	height: 34px;
+	background: @gray-lightest;
+	border-top: 4px solid #595959;
+	text-align: center;
+
+ 	.ruler-number {
+ 		display: inline-block;
+		width: 40px;
+		height: 100%;
+		padding-top: 6px;
+		position: relative;
+		color: #777;
+
+		&:after {
+			content: '';
+			position: absolute;
+			left: 50%;
+			top: 0;
+			margin-left: -1px;
+			height: 4px;
+			width: 4px;
+			border: 0px solid #777;
+			border-left-width: 2px;
+		}
+	}
+}
+
+/* Scene
+ * -----------------------------------------------------------------
+ */
+.scene {
+	position: absolute;
+	width: @max-viewport-width;
+	height: 300px;
+	top: 0;
+	left: 50%;
+	margin-left: -(@max-viewport-width / 2);
+	overflow: hidden;
+}
+
+.tree {
+	position: absolute;
+	z-index: 30;
+	bottom: 0;
+	left: 75px;
+	width: 109px;
+	height: 100px;
+	background-image: url(../img/phet/tree.png);
+}
+
+.house {
+	position: absolute;
+	z-index: 30;
+	bottom: -8px;
+	right: 80px;
+	width: 100px;
+	height: 88px;
+	background-image: url(../img/phet/cottage.gif);
+}
+
+.wall {
+	position: absolute;
+	z-index: 30;
+	bottom: -2px;
+	width: 32px;
+	height: 142px;
+	border-radius: 2px;
+	background-image: url(../img/brick.jpg);
+	border: 2px solid #88463D;
+
+	&.wall-left  { left:  -2px; }
+	&.wall-right { right: -2px; }
+}
+
+.man {
+	position: absolute;
+	z-index: 50;
+}
