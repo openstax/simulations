@@ -59,7 +59,7 @@ define(function(require) {
 
 		renderSimView: function(simView) {
 			simView.render();
-			this.$('#sim-' + simView.cid).append(simView.el);
+			this.$('#sim-' + simView.name).html(simView.el);
 		},
 
 		/**

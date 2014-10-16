@@ -6,8 +6,15 @@ define(function(require) {
 
 	var MovingManSimView = require('views/sim');
 
+	// HTML
 	var playbackControlsHtml = require('text!templates/playback-controls.html');
 
+	// CSS
+	require('less!styles/playback-controls');
+
+	/**
+	 *
+	 */
 	var ChartsSimView = MovingManSimView.extend({
 
 		events: _.extend(MovingManSimView.prototype.events, {

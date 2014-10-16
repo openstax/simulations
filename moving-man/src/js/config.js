@@ -13,7 +13,8 @@
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 
 			templates:  '../templates',
-			common:     '../../../common'
+			styles:     '../styles',
+			common:     '../common'
 		},
 
 		packages: [{
@@ -26,13 +27,13 @@
 			main: 'less'
 		}],
 
-		less: {
-			logLevel: 1,
+		// less: {
+		// 	logLevel: 1,
 
-			globalVars: {
-				dependencyDir: '"/bower_components"'
-			}
-		},
+		// 	globalVars: {
+		// 		dependencyDir: '"/bower_components"'
+		// 	}
+		// },
 	};
 
 	require.config(config);

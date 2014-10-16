@@ -6,10 +6,20 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
+	// CSS
+	require('less!styles/scene');
+
+	// HTML
+	var template = require('text!templates/scene.html');
+
 	/**
 	 * 
 	 */
 	var SceneView = Backbone.View.extend({
+
+		template: _.template(template),
+		tagName: 'div',
+		className: 'scene-view',
 
 		initialize: function(options) {
 
@@ -32,9 +42,7 @@ define(function(require) {
 		 * Renders content and canvas for heatmap
 		 */
 		render: function() {
-			this.$el.empty();
-
-			
+			this.$el.html(this.template());
 
 			return this;
 		},

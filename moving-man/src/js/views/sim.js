@@ -12,7 +12,10 @@ define(function (require) {
 
 	require('nouislider');
 
-	// Templates
+	// CSS
+	require('less!styles/sim');
+
+	// HTML
 	var simHtml = require('text!templates/sim.html');
 
 	/**

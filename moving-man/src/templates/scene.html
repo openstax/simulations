@@ -1,0 +1,16 @@
+<div class="clouds">
+	<div class="cloud cloud-1"></div>
+	<!-- Time for multiple clouds to dance around -->
+	<div class="cloud cloud-2"></div>
+	<div class="cloud cloud-3"></div>
+	<div class="cloud cloud-4"></div>
+	<div class="cloud cloud-5"></div>
+</div>
+<div class="scene">
+
+</div>
+<div class="ruler">
+	<% for (var i = -10; i <= 10; i++) { %>
+	<div class="ruler-number"><%= i % 2 ? '&nbsp;' : i %></div>
+	<% } %>
+</div>
