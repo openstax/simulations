@@ -71,7 +71,8 @@ module.exports = function(grunt){
 		var dist = './dist/';
 
 		var files = fs.readdirSync('./dist/');
-		var simDir, tempDir, simCount;
+		var simDir, tempDir;
+		var simCount = 0;
 		for (var i = 0; i < files.length; i++) {
 			simDir = dist + files[i];
 			tempDir = simDir + '.temp';
