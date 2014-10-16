@@ -166,12 +166,6 @@ module.exports = function(grunt){
 				runner: 'test/index.html',
 				files: 'test/**/*.js'
 			}
-		},
-		'gh-pages': {
-			options: {
-				base: 'dist'
-			},
-			src: ['**']
 		}
 	});
 
