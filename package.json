@@ -1,0 +1,26 @@
+{
+  "name": "os-simulations",
+  "version": "0.0.0",
+  "description": "A collection of web-based simulations from OpenStax",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Connexions/simulations.git"
+  },
+  "keywords": [
+    "simulation",
+    "sim",
+    "openstax"
+  ],
+  "bugs": {
+    "url": "https://github.com/Connexions/simulations/issues"
+  },
+  "homepage": "https://github.com/Connexions/simulations",
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-gh-pages": "^0.9.1",
+    "matchdep": "^0.3.0"
+  }
+}
