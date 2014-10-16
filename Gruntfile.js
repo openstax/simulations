@@ -1,3 +1,5 @@
+var fs = require("fs");
+
 module.exports = function(grunt){
 
 	grunt.initConfig({
@@ -8,13 +10,7 @@ module.exports = function(grunt){
 		copy: {
 			dist: {
 				src: '*/dist/**/*',
-				dest: 'dist/',
-				options: {
-					rename: function(dest, matchedSrcPath, options) {
-						grunt.log.write(dest + ' | ' + matchedSrcPath);
-						return path.join(dest, matchedSrcPath);
-					}
-				}
+				dest: 'dist/'
 			}
 		},
 		'gh-pages': {
@@ -26,5 +22,28 @@ module.exports = function(grunt){
 	});
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
+
+	grunt.registerTask('move_dists', function(){
+		var dist = './dist/';
+
+		var files = fs.readdirSync('./dist/');
+		var simDir, tempDir;
+		for (var i = 0; i < files.length; i++) {
+			simDir = dist + files[i];
+			tempDir = simDir + '.temp';
+			if (fs.lstatSync(simDir).isDirectory() && fs.existsSync(simDir + '/dist')) {
+				grunt.log.write(simDir + '/dist');
+				fs.renameSync(simDir + '/dist', tempDir);
+				fs.rmdirSync(simDir);
+				fs.renameSync(tempDir, simDir);
+			}
+		}
+	});
+
+	grunt.registerTask('dist', [
+		'clean:dist',
+		'copy:dist',
+		'move_dists'
+	]);
 
 };
