@@ -119,6 +119,7 @@
  */
 .ruler {
 	position: absolute;
+	z-index: 60;
 	bottom: 0;
 	left: 0;
 	width: 100%;
@@ -159,4 +160,44 @@
 	top: 0;
 	left: 50%;
 	margin-left: -(@max-viewport-width / 2);
+	overflow: hidden;
+}
+
+.tree {
+	position: absolute;
+	z-index: 30;
+	bottom: 0;
+	left: 75px;
+	width: 109px;
+	height: 100px;
+	background-image: url(../img/phet/tree.png);
+}
+
+.house {
+	position: absolute;
+	z-index: 30;
+	bottom: -8px;
+	right: 80px;
+	width: 100px;
+	height: 88px;
+	background-image: url(../img/phet/cottage.gif);
+}
+
+.wall {
+	position: absolute;
+	z-index: 30;
+	bottom: -2px;
+	width: 32px;
+	height: 142px;
+	border-radius: 2px;
+	background-image: url(../img/brick.jpg);
+	border: 2px solid #88463D;
+
+	&.wall-left  { left:  -2px; }
+	&.wall-right { right: -2px; }
+}
+
+.man {
+	position: absolute;
+	z-index: 50;
 }
