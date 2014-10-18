@@ -4,9 +4,9 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var GraphView = require('views/graph');
+	var GraphView = require('../graph');
 
-	var html = require('text!templates/detector-graph.html');
+	var html = require('text!../../../templates/detector-graph.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

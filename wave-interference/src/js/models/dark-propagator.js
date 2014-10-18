@@ -5,7 +5,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var WavePropagator = require('models/wave-propagator');
+	var WavePropagator = require('./wave-propagator');
 
 	/**
 	 * Used in the light module, the DarkPropagator comes from a subclass of PhET's

@@ -4,9 +4,9 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var WaterSimulation  = require('models/wave-sim/water');
-	var SimView          = require('views/sim');
-	var WaterHeatmapView = require('views/heatmap/water');
+	var WaterSimulation  = require('../../models/wave-sim/water');
+	var SimView          = require('../sim');
+	var WaterHeatmapView = require('../heatmap/water');
 
 	var WaterSimView = SimView.extend({
 

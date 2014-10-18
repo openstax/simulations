@@ -8,12 +8,12 @@ define(function (require) {
 	var _ = require('underscore');
 	var $ = require('jquery');
 
-	var SoundSimulation  = require('models/wave-sim/sound');
-	var SoundHeatmapView = require('views/heatmap/sound');
-	var SimView          = require('views/sim');
+	var SoundSimulation  = require('../../models/wave-sim/sound');
+	var SoundHeatmapView = require('../heatmap/sound');
+	var SimView          = require('../sim');
 
-	var audioControlsHtml    = require('text!templates/control-panel-components/audio.html');
-	var particleControlsHtml = require('text!templates/control-panel-components/particles.html');
+	var audioControlsHtml    = require('text!../../../templates/control-panel-components/audio.html');
+	var particleControlsHtml = require('text!../../../templates/control-panel-components/particles.html');
 
 	var SoundSimView = SimView.extend({
 

@@ -4,7 +4,7 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var StaticGraphView = require('views/graph/static');
+	var StaticGraphView = require('./static');
 
 	/*
 	 * "Local" variables for functions to share and recycle

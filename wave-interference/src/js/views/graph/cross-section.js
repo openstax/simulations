@@ -2,8 +2,8 @@ define(function(require) {
 
 	'use strict';
 
-	var GraphView       = require('views/graph');
-	var StaticGraphView = require('views/graph/static');
+	var GraphView       = require('../graph');
+	var StaticGraphView = require('./static');
 
 	/*
 	 * "Local" variables for functions to share and recycle

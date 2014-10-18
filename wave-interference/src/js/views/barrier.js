@@ -6,9 +6,9 @@ define(function (require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var HeatmapDraggable = require('views/heatmap-draggable');
+	var HeatmapDraggable = require('./heatmap-draggable');
 
-	var html = require('text!templates/barrier.html');
+	var html = require('text!../../templates/barrier.html');
 
 	var xSpacing,
 	    ySpacing,

@@ -4,7 +4,7 @@ define(function(require) {
 	'use strict';
 
 	var _         = require('underscore');
-	var Potential = require('models/potential');
+	var Potential = require('../potential');
 
 	/**
 	 * From PhET's CompositePotential

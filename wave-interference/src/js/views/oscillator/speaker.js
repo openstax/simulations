@@ -2,7 +2,7 @@ define(function(require) {
 
 	'use strict';
 
-	var OscillatorView = require('views/oscillator');
+	var OscillatorView = require('../oscillator');
 
 	var SpeakerOscillatorView = OscillatorView.extend({
 

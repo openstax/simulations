@@ -1,16 +1,16 @@
-define(function(require) {
-	
+define(function (require) {
+
 	'use strict';
 
 	var $        = require('jquery');
 	var _        = require('underscore');
-	var Backbone = require('backbone');
+	var Backbone = require('backbone'); Backbone.$ = $;
 
-	var WaterSimView = require('views/sim/water.js');
-	var SoundSimView = require('views/sim/sound.js');
-	var LightSimView = require('views/sim/light.js');
+	var WaterSimView = require('./sim/water');
+	var SoundSimView = require('./sim/sound');
+	var LightSimView = require('./sim/light');
 
-	var template = require('text!templates/app.html');
+	var template = require('text!../../templates/app.html');
 
 	var AppView = Backbone.View.extend({
 		template: _.template(template),
@@ -52,6 +52,8 @@ define(function(require) {
 
 			// Then render views for each sim
 			_.each(this.sims, this.renderSim, this);
+
+			
 
 			return this;
 		},

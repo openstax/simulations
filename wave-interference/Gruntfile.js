@@ -25,18 +25,33 @@ module.exports = function(grunt){
 				dest: 'dist/'
 			}
 		},
+		connect: {
+			dist: {
+				options: {
+					port: '8090',
+					base: 'dist'
+				}
+			}
+		},
 		requirejs: {
 			compile: {
 				options: {
-					appDir: 'src',
-					baseUrl: 'js',
+					baseUrl: 'src/js',
 					mainConfigFile: 'src/js/config.js',
-					dir: 'dist',
 					findNestedDependencies: true,
-					removeCombined: false,
-					keepBuildDir: false,
-					skipDirOptimize: true,
-					optimize: 'uglify2'	
+					optimize: 'uglify2',
+					paths: {
+						jquery:     '../../bower_components/jquery/dist/jquery',
+						underscore: '../../bower_components/lodash/dist/lodash',
+						backbone:   '../../bower_components/backbone/backbone',
+						text:       '../../bower_components/requirejs-text/text',
+						pixi:       '../../bower_components/pixi/bin/pixi',
+						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+						timbre:     '../../bower_components/timbre/timbre.dev',
+						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix'
+					},
+					name: 'main',
+					out: 'dist/js/optimized.js'
 				}
 			}
 		},

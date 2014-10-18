@@ -5,12 +5,12 @@ define(function (require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var Utils = require('utils/utils');
+	var Utils = require('../../utils/utils');
 
-	var LightSimulation  = require('models/wave-sim/light');
-	var LightHeatmapView = require('views/heatmap/light');
-	var SimView          = require('views/sim');
-	var LightCrossSectionGraphView = require('views/graph/light-cross-section');
+	var LightSimulation  = require('../../models/wave-sim/light');
+	var LightHeatmapView = require('../heatmap/light');
+	var SimView          = require('../sim');
+	var LightCrossSectionGraphView = require('../graph/light-cross-section');
 
 	/*
 	 * Constants

@@ -2,16 +2,17 @@ define(function (require) {
 
 	'use strict';
 
+	var $              = require('jquery');
 	var _              = require('underscore');
-	var Backbone       = require('backbone');
+	var Backbone       = require('backbone'); Backbone.$ = $;
 
-	var Lattice2D      = require('models/lattice2d');
-	var Oscillator     = require('models/oscillator');
-	var WavePropagator = require('models/wave-propagator');
-	var Barrier        = require('models/barrier');
+	var Lattice2D      = require('./lattice2d');
+	var Oscillator     = require('./oscillator');
+	var WavePropagator = require('./wave-propagator');
+	var Barrier        = require('./barrier');
 
-	var CompositePotential = require('models/potential/composite');
-	var SegmentPotential   = require('models/potential/segment');
+	var CompositePotential = require('./potential/composite');
+	var SegmentPotential   = require('./potential/segment');
 
 	var i;
 

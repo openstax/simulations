@@ -4,10 +4,10 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var SimDraggable = require('views/sim-draggable');
+	var SimDraggable = require('./sim-draggable');
 
-	var Utils = require('utils/utils');
-	var html  = require('text!templates/stopwatch.html');
+	var Utils = require('../utils/utils');
+	var html  = require('text!../../templates/stopwatch.html');
 
 	var dx,
 	    dy,

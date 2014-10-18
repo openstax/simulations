@@ -4,11 +4,12 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var Utils            = require('utils/utils');
-	var HeatmapView      = require('views/heatmap');
-	var ScreenGraphView  = require('views/graph/screen');
+	var Utils            = require('../../utils/utils');
+	                       require('../../utils/jquery-plugins');
+	var HeatmapView      = require('../heatmap');
+	var ScreenGraphView  = require('../graph/screen');
 	
-	require('utils/jquery-plugins');
+	
 
 	/*
 	 * Constants

@@ -4,7 +4,7 @@ define(function(require) {
 	'use strict';
 
 	var _         = require('underscore');
-	var Potential = require('models/potential');
+	var Potential = require('../potential');
 
 	/**
 	 * Named after PhET's BarrierPotential with the flexibility of WallPotential

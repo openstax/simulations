@@ -5,7 +5,7 @@ define(function(require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var OscillatorView = require('views/oscillator');
+	var OscillatorView = require('../oscillator');
 
 	/*
 	 * "Local" variables for functions to share and recycle

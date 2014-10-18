@@ -4,8 +4,8 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var HeatmapView          = require('views/heatmap');
-	var FaucetOscillatorView = require('views/oscillator/faucet');
+	var HeatmapView          = require('../heatmap');
+	var FaucetOscillatorView = require('../oscillator/faucet');
 
 	/*
 	 * "Local" variables for functions to share and recycle

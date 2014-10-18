@@ -2,12 +2,15 @@ define(function(require) {
 
 	'use strict';
 
-	var CrossSectionGraphView = require('views/graph/cross-section');
+	var _ = require('underscore');
+	var $ = require('jquery');
 
-	var ArrowGraphic = require('graphics/arrow');
+	var CrossSectionGraphView = require('./cross-section');
 
-	var graphHtml    = require('text!templates/graph.html');
-	var controlsHtml = require('text!templates/light-cross-section-graph-controls.html');
+	var ArrowGraphic = require('../../graphics/arrow');
+
+	var graphHtml    = require('text!../../../templates/graph.html');
+	var controlsHtml = require('text!../../../templates/light-cross-section-graph-controls.html');
 
 	/*
 	 * "Local" variables for functions to share and recycle

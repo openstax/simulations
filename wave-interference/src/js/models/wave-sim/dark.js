@@ -4,8 +4,8 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var WaveSimulation = require('models/wave-sim');
-	var DarkPropagator = require('models/dark-propagator');
+	var WaveSimulation = require('../wave-sim');
+	var DarkPropagator = require('../dark-propagator');
 
 	/**
 	 *

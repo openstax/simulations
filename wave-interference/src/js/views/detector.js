@@ -5,11 +5,12 @@ define(function (require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var SimDraggable      = require('views/sim-draggable');
-	var DetectorGraphView = require('views/graph/detector');
+	var SimDraggable      = require('./sim-draggable');
+	var DetectorGraphView = require('./graph/detector');
 
-	var Utils = require('utils/utils');
-	var html  = require('text!templates/detector.html');
+	var Utils = require('../utils/utils');
+	
+	var html  = require('text!../../templates/detector.html');
 
 	var angle,
 	    lineLength,

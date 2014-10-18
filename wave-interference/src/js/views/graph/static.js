@@ -4,9 +4,9 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var GraphView = require('views/graph');
+	var GraphView = require('../graph');
 
-	var html = require('text!templates/graph.html');
+	var html = require('text!../../../templates/graph.html');
 
 	/**
 	 * StaticGraphView defines a template and certain behaviors of the UI,

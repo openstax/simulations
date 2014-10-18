@@ -5,9 +5,9 @@ define(function(require) {
 	var _    = require('underscore');
 	var PIXI = require('pixi');
 
-	var Particle              = require('models/particle');
-	var HeatmapView           = require('views/heatmap');
-	var SpeakerOscillatorView = require('views/oscillator/speaker');
+	var Particle              = require('../../models/particle');
+	var HeatmapView           = require('../heatmap');
+	var SpeakerOscillatorView = require('../oscillator/speaker');
 
 	/**
 	 * Constants
