@@ -7,7 +7,7 @@ This repository holds all simulations that will be embedded into OpenStax textbo
 
 ### Pre-Build Setup:
   * First install node dependencies by running `npm install`.
-  * Install grunt-cli globally by running `npm install -g grunt-cli`.
+  * Install grunt-cli globally by running `npm install -g grunt-cli` to make things simpler.
 
 ### Building:
   * To build all the simulations and place their `dist` folders into a single top-level `dist` folder for serving, run `grunt dist` from the repository root.

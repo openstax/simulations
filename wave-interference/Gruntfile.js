@@ -29,6 +29,13 @@ module.exports = function(grunt){
 			bower_components: {
 				src: 'bower_components/**',
 				dest: 'dist/'
+			},
+			common: {
+				src: [
+					'../common/**',
+					'!../common/**/*.js'
+				],
+				dest: 'dist/common/'
 			}
 		},
 		connect: {

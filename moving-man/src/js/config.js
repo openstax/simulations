@@ -12,6 +12,11 @@
 			timbre:     '../../bower_components/timbre/timbre.dev',
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 
+			views:      '../js/views',
+			graphics:   '../js/graphics',
+			models:     '../js/models',
+			lib:        '../js/lib',
+			utils:      '../js/utils',
 			templates:  '../templates',
 			styles:     '../styles',
 			common:     '../common'
@@ -27,13 +32,13 @@
 			main: 'less'
 		}],
 
-		// less: {
-		// 	logLevel: 1,
+		less: {
+			logLevel: 1,
 
-		// 	globalVars: {
-		// 		dependencyDir: '"/bower_components"'
-		// 	}
-		// },
+			globalVars: {
+				dependencyDir: '"/bower_components"'
+			}
+		},
 	};
 
 	require.config(config);

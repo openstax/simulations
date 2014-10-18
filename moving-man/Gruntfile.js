@@ -6,7 +6,7 @@ module.exports = function(grunt){
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		clean: {
-			// Clean up stuff later when I figure out what I need to clean up
+			dist: ['dist']
 		},
 		copy: {
 			require: {
@@ -20,23 +20,75 @@ module.exports = function(grunt){
 				src: ['bower_components/font-awesome/fonts/**'],
 				dest: 'dist/fonts/'
 			},
+			images: {
+				expand: true, // required when using cwd
+				cwd: 'src/img/',
+				src: '**',
+				dest: 'dist/img/'
+			},
 			bower_components: {
 				src: 'bower_components/**',
 				dest: 'dist/'
+			},
+			common: {
+				src: [
+					'../common/**',
+					'!../common/**/*.js'
+				],
+				dest: 'dist/common/'
+			}
+		},
+		rename: {
+			optimized: {
+				src: 'src/optimized.js',
+				dest: 'dist/js/optimized.js'
+			}
+		},
+		connect: {
+			dist: {
+				options: {
+					port: '8090',
+					base: 'dist'
+				}
 			}
 		},
 		requirejs: {
 			compile: {
 				options: {
-					appDir: 'src',
-					baseUrl: 'js',
+					baseUrl: 'src/js',
 					mainConfigFile: 'src/js/config.js',
-					dir: 'dist',
 					findNestedDependencies: true,
-					removeCombined: false,
-					keepBuildDir: false,
-					skipDirOptimize: true,
-					optimize: 'uglify2'	
+					optimize: 'uglify2',
+					paths: {
+						jquery:     '../../bower_components/jquery/dist/jquery',
+						underscore: '../../bower_components/lodash/dist/lodash',
+						backbone:   '../../bower_components/backbone/backbone',
+						text:       '../../bower_components/requirejs-text/text',
+						pixi:       '../../bower_components/pixi/bin/pixi',
+						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+						timbre:     '../../bower_components/timbre/timbre.dev',
+						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
+
+						views:      '../js/views',
+						graphics:   '../js/graphics',
+						models:     '../js/models',
+						lib:        '../js/lib',
+						utils:      '../js/utils',
+						templates:  '../templates',
+						styles:     '../styles',
+						common:     '../../../common'
+					},
+					packages: [{
+						name: 'css',
+						location: '../../bower_components/require-css',
+						main: 'css'
+					}, {
+						name: 'less',
+						location: '../../bower_components/require-less',
+						main: 'less'
+					}],
+					name: 'main',
+					out: 'src/optimized.js'
 				}
 			}
 		},
@@ -53,30 +105,10 @@ module.exports = function(grunt){
 		targethtml: {
 			dist: {
 				files: {
-					'dist/index.html': 'dist/index.html'
+					'dist/index.html': 'src/index.html'
 				}
 			}		
 		},		
-		less: {
-			development: {
-				options: {
-					paths: ['src/less']
-				},
-				files: {
-					'src/css/main.css': 'src/less/main.less'
-				}
-			},
-			dist: {
-				options: {
-					paths: ['src/less'],
-					compress: true,
-					optimization: 2
-				},
-				files: {
-					'dist/css/main.css': 'src/less/main.less'
-				}
-			}
-		},
 		watch: {
 			styles: {
 				files: ['src/less/**/*.less'], // files to watch
@@ -187,23 +219,16 @@ module.exports = function(grunt){
 		grunt.file.write(options.runner, template);
 	});
 
-	grunt.registerTask('replace_bower_components', function() {
-		var config = grunt.file.read('dist/js/config.js').replace(/\.\.\/\.\.\/bower_components\//g, '../bower_components/');
-		grunt.file.write('dist/js/config.js', config);
-	});
-
 	grunt.registerTask('default', [
 		'watch'
 	]);
 
 	grunt.registerTask('dist', [
+		'clean:dist',
 		'requirejs:compile',
 		'copy',
-		'replace_bower_components',
-		'less:dist',
+		'rename:optimized',
 		'targethtml'
-		//'clean',
-		//'uglify:dist'
 	]);
 
 	grunt.registerTask('test', [
