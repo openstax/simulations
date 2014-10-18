@@ -6,7 +6,7 @@ module.exports = function(grunt){
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
 		clean: {
-			// Clean up stuff later when I figure out what I need to clean up
+			dist: ['dist']
 		},
 		copy: {
 			require: {
@@ -19,6 +19,12 @@ module.exports = function(grunt){
 				flatten: true,
 				src: ['bower_components/font-awesome/fonts/**'],
 				dest: 'dist/fonts/'
+			},
+			images: {
+				expand: true, // required when using cwd
+				cwd: 'src/img/',
+				src: '**',
+				dest: 'dist/img/'
 			},
 			bower_components: {
 				src: 'bower_components/**',
@@ -68,7 +74,7 @@ module.exports = function(grunt){
 		targethtml: {
 			dist: {
 				files: {
-					'dist/index.html': 'dist/index.html'
+					'dist/index.html': 'src/index.html'
 				}
 			}		
 		},		
@@ -208,23 +214,16 @@ module.exports = function(grunt){
 		grunt.file.write(options.runner, template);
 	});
 
-	grunt.registerTask('replace_bower_components', function() {
-		var config = grunt.file.read('dist/js/config.js').replace(/\.\.\/\.\.\/bower_components\//g, '../bower_components/');
-		grunt.file.write('dist/js/config.js', config);
-	});
-
 	grunt.registerTask('default', [
 		'watch'
 	]);
 
 	grunt.registerTask('dist', [
+		'clean:dist',
 		'requirejs:compile',
 		'copy',
-		'replace_bower_components',
 		'less:dist',
 		'targethtml'
-		//'clean',
-		//'uglify:dist'
 	]);
 
 	grunt.registerTask('test', [
