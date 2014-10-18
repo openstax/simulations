@@ -23,7 +23,8 @@ module.exports = function(grunt){
 		},
 		'gh-pages': {
 			options: {
-				base: 'dist'
+				base: 'dist',
+				dotfiles: true
 			},
 			src: ['**']
 		}
@@ -90,6 +91,10 @@ module.exports = function(grunt){
 			grunt.log.writeln('>> ' + simCount + ' simulations dist directory fixed');
 	});
 
+	grunt.registerTask('create-no-jekyll', function(){
+		grunt.file.write('./dist/.nojekyll', '');
+	});
+
 	grunt.registerTask('copy-dists', [
 		'clean:dist',
 		'copy:dist',
@@ -103,6 +108,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('deploy', [
 		'dist',
+		'create-no-jekyll',
 		'gh-pages'
 	]);
 

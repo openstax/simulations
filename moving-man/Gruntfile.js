@@ -32,8 +32,7 @@ module.exports = function(grunt){
 			},
 			common: {
 				src: [
-					'../common/**',
-					'!../common/**/*.js'
+					'../common/**'
 				],
 				dest: 'dist/common/'
 			}
