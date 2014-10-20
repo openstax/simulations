@@ -26,16 +26,17 @@ The simulations can be hosted for development with any web host, but two options
 
 Both methods will create a server whose web root is this repository root; therefore, to access a specific simulation in dev mode, simply point your browser to
 
-    `http://localhost:PORT/simulations/SIM-NAME/src` where PORT and SIM-NAME are replaced by appropriate values
+    http://localhost:PORT/simulations/SIM-NAME/src
 
-Example:
+where PORT and SIM-NAME are replaced by appropriate values.  Example:
 
-    `http://localhost:8080/simulations/wave-interference/src`
+    http://localhost:8080/simulations/wave-interference/src
 
 #### <a name="node-hosting"></a>Node.js Hosting
 
 1. Follow the [Pre-Build Setup](#pre-build-setup) under [Building and Deploying](#deploying-and-building)
 2. Run `grunt dev` from the repository root.
+3. Open up [http://localhost:8080](http://localhost:8080) in your browser to view a list of simulations.
 
 #### <a name="nginx-hosting"></a>Nginx Hosting
 
