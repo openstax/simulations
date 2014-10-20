@@ -15,16 +15,7 @@ define(function (require) {
 			else
 				throw 'SimDraggable requires an element to be used as a drag frame.';
 
-			if (options.heatmapView)
-				this.heatmapView = options.heatmapView;
-			else
-				throw 'SimDraggable requires a HeatmapView to render.';
-
-			this.waveSimulation = this.heatmapView.waveSimulation;
-
 			this.visible = false;
-
-			this.listenTo(this.heatmapView, 'resized', this.resize);
 		},
 
 		bindDragEvents: function() {
@@ -56,14 +47,6 @@ define(function (require) {
 				event.pageX = event.originalEvent.touches[0].pageX;
 				event.pageY = event.originalEvent.touches[0].pageY;
 			}
-		},
-
-		toSimXScale: function(x) {
-			return (x / this.heatmapView.xSpacing) / this.waveSimulation.widthRatio;
-		},
-
-		toSimYScale: function(y) {
-			return (y / this.heatmapView.ySpacing) / this.waveSimulation.heightRatio;
 		},
 
 		outOfBounds: function(x, y, dimensions) {

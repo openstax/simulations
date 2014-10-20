@@ -5,6 +5,7 @@ define(function (require) {
 	var _ = require('underscore');
 
 	var Simulation = require('common/simulation/simulation');
+	var MovingMan  = require('models/moving-man');
 
 	/**
 	 * Wraps the update function in 
@@ -27,7 +28,16 @@ define(function (require) {
 		 *
 		 */
 		initComponents: function() {
-			
+			this.initMovingMan();
+		},
+
+		/**
+		 *
+		 */
+		initMovingMan: function() {
+			this.movingMan = new MovingMan({
+				simulation: this
+			});
 		},
 
 		/**

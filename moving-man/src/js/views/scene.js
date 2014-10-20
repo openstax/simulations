@@ -6,6 +6,8 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
+	var MovingManView = require('views/moving-man');
+
 	// CSS
 	require('less!styles/scene');
 
@@ -44,13 +46,23 @@ define(function(require) {
 		render: function() {
 			this.$el.html(this.template());
 
+			this.renderMovingView();
+
 			return this;
 		},
 
 		/**
 		 * Renders html container
 		 */
-		renderContainer: function() {},
+		renderMovingView: function() {
+			var $manContainer = this.$('.man-container');
+			this.movingManView = new MovingManView({
+				simulation: this.simulation,
+				dragFrame: $manContainer[0]
+			});
+			this.movingManView.render();
+			$manContainer.html(this.movingManView.el);
+		},
 
 		/**
 		 * Called after every component on the page has rendered to make sure
