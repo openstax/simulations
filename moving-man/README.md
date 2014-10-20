@@ -5,18 +5,22 @@ This simulation is based off PhET's Wave Interference Simulation, which can be [
 
 Original simulation Copyright 2002-2011, University of Colorado.
 
-## Development and Building
-
-### Installing & Hosting
-
-#### Installing
+## Installing
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
 2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
 3. From the root `moving-man` directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
-##### Testing
+## Building & Testing
+
+### Building
+
+From the root `moving-man` directory, run `grunt dist`.
+
+The `dist` directory containing the built site will be added to the root `moving-man` directory.
+
+### Testing
 
 To run command-line tests, run `grunt test` from the root `moving-man` directory.
 
@@ -26,61 +30,18 @@ To view tests in a browser, you first need to
 2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`) 
 3. then go to [http://localhost:8000/test/](http://localhost:8000/test/). 
 
-##### Building
+## Development
 
-From the root `moving-man` directory, run `grunt dist`.
+### Hosting
 
-The `dist` directory containing the built site will be added to the root `moving-man` directory.
+To host a development server for this project, follow the instructions found in the repository root's README.
 
-##### Updating
+### Updating
 
 From the root `moving-man` directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`
-
-#### Hosting
-
-##### For Development
-
-1. Install [nginx](http://nginx.org/)
-2. Set up a virtual host pointing to your `moving-man/src` directory. You can follow a tutorial like [this one](http://gerardmcgarry.com/2010/setting-up-a-virtual-host-in-nginx/), but when you get to the part where you're defining a server config, do something like this (replacing `path-to-simulations` appropriately):
-
-        server {
-          listen 8000;
-          server_name $hostname;
-          root /path-to-simulations/simulations/moving-man/dist/;
-          index index.html;
-          try_files $uri $uri/ /index.html;
-
-          location ~ ^.*/bower_components/(.*)$ {
-            alias /path-to-simulations/simulations/moving-man/bower_components/$1;
-          }
-
-          location ~ ^.*/(data|js|css|img|templates)/(.*) {
-            try_files $uri $uri/ /$1/$2 /test/$1/$2;
-          }
-
-          location ~ ^.*/test/(.*)$ {
-            alias /path-to-simulations/simulations/moving-man/test/$1;
-          }
-
-          location ~ ^.*/common/(.*)$ {
-            alias /path-to-simulations/simulations/common/$1;
-          }
-        }
-
-3. Run `sudo nginx` to start the server.
-4. In the root of `simulations/moving-man/`, run `grunt less:development`. Alternatively, if you are going to make changes to the LESS source, just run `grunt watch` to start a watcher that watches for changes in LESS files and recompiles automatically.
-5. Open up [http://localhost:8000](http://localhost:8000) in your browser to view the simulation.
-
-##### Easy Button
-1. Install the Apache-based webserver [AMPPS](http://www.ampps.com/downloads).
-2. Locate the `www` root directory.
-3. Clone the project into that directory so it looks like `www/simulations/`
-4. Run the LESS build script from the _other_ Step 4.
-5. Go to [http://localhost/simulations/moving-man/src/](http://localhost/simulations/moving-man/src/) in your browser to view the simulation.
-
 
 License
 -------

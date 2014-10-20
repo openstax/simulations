@@ -4,6 +4,14 @@ module.exports = function(grunt){
 
 	grunt.initConfig({
 		pkg: grunt.file.readJSON('package.json'),
+		connect: {
+			dev: {
+				options: {
+					port: '8080',
+					keepalive: true
+				}
+			}
+		},
 		clean: {
 			dist: ['dist']
 		},
@@ -112,5 +120,7 @@ module.exports = function(grunt){
 		'gh-pages'
 	]);
 
-
+	grunt.registerTask('dev', [
+		'connect:dev'
+	]);
 };

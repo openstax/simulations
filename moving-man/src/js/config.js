@@ -19,7 +19,7 @@
 			utils:      '../js/utils',
 			templates:  '../templates',
 			styles:     '../styles',
-			common:     '../common'
+			common:     '../../../common'
 		},
 
 		packages: [{
