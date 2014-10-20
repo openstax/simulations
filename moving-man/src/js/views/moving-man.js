@@ -2,7 +2,7 @@ define(function (require) {
 
 	'use strict';
 
-	var $ = require('jquery');
+	// var $ = require('jquery');
 	var _ = require('underscore');
 
 	var SimDraggable = require('views/sim-draggable');
@@ -56,13 +56,13 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = event.pageX - this.dragX;
+				// dx = event.pageX - this.dragX;
 
-				if (!this.outOfBounds(this.start.x + dx, this.start.y + dy) &&
-					!this.outOfBounds(this.end.x   + dx, this.end.y   + dy)) {
+				// if (!this.outOfBounds(this.start.x + dx, this.start.y + dy) &&
+				// 	!this.outOfBounds(this.end.x   + dx, this.end.y   + dy)) {
 
-					// this.movingMan.x += dx;
-				}
+				// 	this.movingMan.x += dx;
+				// }
 
 				this.dragX = event.pageX;
 

@@ -2,9 +2,8 @@ define(function(require) {
 	
 	'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+	//var $        = require('jquery');
+	//var _        = require('underscore');
 
 	var AppView = require('common/app/app');
 

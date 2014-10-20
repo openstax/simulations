@@ -75,7 +75,10 @@ define(function(require) {
 		},
 
 		/**
-		 *
+		 * In the series [0, 1, 2, 3, 4], this would return 2 as expected,
+		 *   but in the series [0, 1, 2, 3], this would return 2 as well,
+		 *   so I guess it just always takes the right-of-center value in
+		 *   the case of an even length.  This is from PhET.
 		 */
 		getMidPoint: function() {
 			if (this.data.length)
@@ -103,7 +106,7 @@ define(function(require) {
 	 *   a certain value so that we're only storing what we need and don't
 	 *   just keep expanding until the app crashes.
 	 */
-	DataSeries.LimitedTime = _.extend(DataSeries.prototype, {
+	DataSeries.LimitedTime = _.extend({}, DataSeries.prototype, {
 
 		/**
 		 *
@@ -128,7 +131,7 @@ define(function(require) {
 	/**
 	 * Version of the DataSeries that acts like a fixed-length queue.
 	 */
-	DataSeries.LimitedSize = _.extend(DataSeries.prototype, {
+	DataSeries.LimitedSize = _.extend({}, DataSeries.prototype, {
 
 		/**
 		 *

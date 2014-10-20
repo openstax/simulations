@@ -2,7 +2,7 @@ define(function (require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	//var _ = require('underscore');
 
 	var Simulation = require('common/simulation/simulation');
 	var MovingMan  = require('models/moving-man');
