@@ -13,9 +13,11 @@ define(function (require) {
 
 	// CSS
 	require('less!styles/sim');
+	require('less!common/styles/slider');
 
 	// HTML
-	var simHtml = require('text!templates/sim.html');
+	var simHtml             = require('text!templates/sim.html');
+	var variableControlHtml = require('text!templates/variable-control.html');
 
 	/**
 	 * 
@@ -32,6 +34,7 @@ define(function (require) {
 		 * Template for rendering the basic scaffolding
 		 */
 		template: _.template(simHtml),
+		variableControlTemplate: _.template(variableControlHtml),
 
 		/**
 		 * Dom event listeners
@@ -80,6 +83,7 @@ define(function (require) {
 
 			this.renderScaffolding();
 			this.renderSceneView();
+			this.renderVariableControls();
 
 			return this;
 		},
@@ -96,7 +100,57 @@ define(function (require) {
 		 */
 		renderSceneView: function() {
 			this.sceneView.render();
-			this.$('#scene-view-placeholder').replaceWith(this.sceneView.el);
+			this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+		},
+
+		/**
+		 *
+		 */
+		renderVariableControls: function() {
+			var $position = $(this.variableControlTemplate({
+				className: 'position',
+				name:  'Position',
+				units: 'm'
+			}));
+
+			var $velocity = $(this.variableControlTemplate({
+				className: 'velocity',
+				name:  'Velocity',
+				units: 'm/s'
+			}));
+
+			var $acceleration = $(this.variableControlTemplate({
+				className: 'acceleration',
+				name:  'Acceleration',
+				units: 'm/s<sup>2</sup>'
+			}));
+
+			$()
+				.add($position)
+				.add($velocity)
+				.add($acceleration)
+				.each(function(){
+					var $slider = $(this).find('.variable-slider');
+
+					$slider.noUiSlider({
+						start: 0,
+						range: {
+							min: -10,
+							max:  10
+						}
+					});
+					// $slider.noUiSlider_pips({
+					// 	mode: 'positions',
+					// 	density: 5,
+					// 	values: [0, 50, 100]
+					// });
+					$slider.Link('lower').to($(this).find('.variable-text'));	
+				});
+
+			this.$('.sim-controls')
+				.append($position)
+				.append($velocity)
+				.append($acceleration);
 		},
 
 		/**

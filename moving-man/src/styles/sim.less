@@ -1,1 +1,104 @@
+@import "../../../common/styles/variables.less";
 
+@position-color: #2575BA;
+@velocity-color: #CD2520;
+@acceleration-color: #349E34;
+
+.sim-controls {
+	background: @gray-lightest;
+	padding-bottom: 20px;
+}
+
+.variable-controls {
+	width: 300px;
+	margin: 0 auto;
+	padding: 12px 0 4px;
+
+	&.position {
+		color: @position-color;
+
+		& .slider {
+			background: @position-color;
+
+			&:before {
+				background: @position-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @position-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @position-color;
+		}
+	}
+
+	&.velocity {
+		color: @velocity-color;
+
+		& .slider {
+			background: @velocity-color;
+
+			&:before {
+				background: @velocity-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @velocity-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @velocity-color;
+		}
+	}
+
+	&.acceleration {
+		color: @acceleration-color;
+
+		& .slider {
+			background: @acceleration-color;
+
+			&:before {
+				background: @acceleration-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @acceleration-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @acceleration-color;
+		}
+	}
+
+	& label {
+		font-size: 16px;
+		padding-top: 6px;
+	}
+
+	& .input-group-addon {
+		color: inherit;
+	}
+
+	& .value-group {
+		width: 120px;
+		float: right;
+	}
+
+	& .slider:before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		margin-left: 0;
+		width: 2px;
+		height: 18px;
+		top: -8px;
+		background: #fff;
+	}
+}
