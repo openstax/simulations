@@ -1,20 +1,20 @@
 <div class="variable-controls <%= className %>">
-	<div class="row">
-		<div class="col-md-6">
+	<div class="label-row">
+		<div class="label-wrapper">
 			<label class="name"><%= name %></label>
 		</div>
-		<div class="col-md-6">
+		<div class="value-wrapper">
 			<div class="input-group value-group">
 				<input type="text" class="form-control variable-text" value="0.00" />
 				<span class="input-group-addon"><%= units %></span>
 			</div>
 		</div>
 	</div>
-	<div class="variable-slider slider"></div>
 	<% if (vectors) { %>
 	<div class="vector-check-wrapper">
 		<input type="checkbox" id="vector-check-<%= unique %>" class="vector-check">
-		<label for="vector-check-<%= unique %>"><%= name %></label>
+		<label for="vector-check-<%= unique %>">Show Vector</label>
 	</div>
 	<% } %>
+	<div class="variable-slider slider"></div>
 <div>

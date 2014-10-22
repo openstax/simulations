@@ -102,6 +102,69 @@
 		}
 	}
 
+	&.compact {
+		width: 140px;
+		height: 130px;
+		position: relative;
+		margin: 0 20px 0 30px;
+		padding: 0;
+
+		& .title {
+			padding-top: 20px;
+		}
+
+		& .slider {
+			height: 110px;
+			position: absolute;
+			right: 0;
+			top: 0;
+
+			&:before {
+				left: auto;
+				margin-left: auto;
+				width: 12px;
+				height: 2px;
+				left: -5px;
+				top: 50%;
+				margin-top: 0;
+			}
+		}
+
+		& .value-group {
+			float: none;
+			width: 108px;
+		}
+
+		& .label-row {
+			> .label-wrapper,
+			> .value-wrapper {
+				width: auto;
+				float: none;
+			}
+		}
+
+		& .vector-check-wrapper {
+			position: relative;
+			left: auto;
+			top: auto;
+			margin-top: 12px;
+		}
+	}
+
+	& .label-row {
+		> .label-wrapper,
+		> .value-wrapper {
+			width: 50%;
+			float: left;
+		}
+
+		&:after {
+			content: ' ';
+			display: table;
+			clear: both;
+		}
+	}
+
 	& .name {
 		font-size: 16px;
 		padding-top: 6px;

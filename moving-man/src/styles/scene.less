@@ -12,6 +12,20 @@
 	width: 100%;
 	height: 334px;
 	position: relative;
+	overflow: hidden;
+
+	&.compact {
+		height: 174px;
+
+		& .scene {
+			height: 140px;
+		}
+
+		& .clouds {
+			position: absolute;
+			bottom: 0;
+		}
+	}
 }
 
 /* Clouds

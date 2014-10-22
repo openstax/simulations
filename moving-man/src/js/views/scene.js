@@ -27,8 +27,10 @@ define(function(require) {
 
 			// Default values
 			options = _.extend({
-
+				compact: false
 			}, options);
+
+			this.compact = options.compact;
 
 			// Save options
 			if (options.simulation)
@@ -45,6 +47,9 @@ define(function(require) {
 		 */
 		render: function() {
 			this.$el.html(this.template());
+
+			if (this.compact)
+				this.$el.addClass('compact');
 
 			this.renderMovingView();
 

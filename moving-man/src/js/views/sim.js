@@ -132,6 +132,8 @@ define(function (require) {
 				vectors: true
 			}));
 
+			var sliderOptions = this.getSliderOptions();
+
 			$()
 				.add($position)
 				.add($velocity)
@@ -139,13 +141,7 @@ define(function (require) {
 				.each(function(){
 					var $slider = $(this).find('.variable-slider');
 
-					$slider.noUiSlider({
-						start: 0,
-						range: {
-							min: -10,
-							max:  10
-						}
-					});
+					$slider.noUiSlider(sliderOptions);
 					// $slider.noUiSlider_pips({
 					// 	mode: 'positions',
 					// 	density: 5,
@@ -158,6 +154,20 @@ define(function (require) {
 				.append($position)
 				.append($velocity)
 				.append($acceleration);
+		},
+
+		/**
+		 * Default intro view needs horizontal sliders, while the charts
+		 *   view has more compact variable controls with a vertical slider.
+		 */
+		getSliderOptions: function() {
+			return {
+				start: 0,
+				range: {
+					min: -10,
+					max:  10
+				}
+			};
 		},
 
 		/**
