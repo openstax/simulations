@@ -1,7 +1,7 @@
 <div class="variable-controls <%= className %>">
 	<div class="row">
 		<div class="col-md-6">
-			<label><%= name %></label>
+			<label class="name"><%= name %></label>
 		</div>
 		<div class="col-md-6">
 			<div class="input-group value-group">
@@ -11,4 +11,10 @@
 		</div>
 	</div>
 	<div class="variable-slider slider"></div>
+	<% if (vectors) { %>
+	<div class="vector-check-wrapper">
+		<input type="checkbox" id="vector-check-<%= unique %>" class="vector-check">
+		<label for="vector-check-<%= unique %>"><%= name %></label>
+	</div>
+	<% } %>
 <div>

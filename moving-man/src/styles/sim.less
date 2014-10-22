@@ -13,6 +13,7 @@
 	width: 300px;
 	margin: 0 auto;
 	padding: 12px 0 4px;
+	position: relative;
 
 	&.position {
 		color: @position-color;
@@ -31,6 +32,14 @@
 		}
 
 		&.active .slider .noUi-handle:after {
+			background: @position-color;
+		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @position-color;
+		}
+
+		& input[type="checkbox"] + label:after {
 			background: @position-color;
 		}
 	}
@@ -54,6 +63,14 @@
 		&.active .slider .noUi-handle:after {
 			background: @velocity-color;
 		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @velocity-color;
+		}
+
+		& input[type="checkbox"] + label:after {
+			background: @velocity-color;
+		}
 	}
 
 	&.acceleration {
@@ -75,9 +92,17 @@
 		&.active .slider .noUi-handle:after {
 			background: @acceleration-color;
 		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @acceleration-color;
+		}
+
+		& input[type="checkbox"] + label:after {
+			background: @acceleration-color;
+		}
 	}
 
-	& label {
+	& .name {
 		font-size: 16px;
 		padding-top: 6px;
 	}
@@ -100,5 +125,11 @@
 		height: 12px;
 		top: -5px;
 		background: #fff;
+	}
+
+	& .vector-check-wrapper {
+		position: absolute;
+		left: 320px;
+		top: 18px;
 	}
 }

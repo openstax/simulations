@@ -14,6 +14,7 @@ define(function (require) {
 	// CSS
 	require('less!styles/sim');
 	require('less!common/styles/slider');
+	require('less!common/styles/radio');
 
 	// HTML
 	var simHtml             = require('text!templates/sim.html');
@@ -110,19 +111,25 @@ define(function (require) {
 			var $position = $(this.variableControlTemplate({
 				className: 'position',
 				name:  'Position',
-				units: 'm'
+				units: 'm',
+				unique: this.name + '-position',
+				vectors: false
 			}));
 
 			var $velocity = $(this.variableControlTemplate({
 				className: 'velocity',
 				name:  'Velocity',
-				units: 'm/s'
+				units: 'm/s',
+				unique: this.name + '-velocity',
+				vectors: true
 			}));
 
 			var $acceleration = $(this.variableControlTemplate({
 				className: 'acceleration',
 				name:  'Acceleration',
-				units: 'm/s<sup>2</sup>'
+				units: 'm/s<sup>2</sup>',
+				unique: this.name + '-acceleration',
+				vectors: true
 			}));
 
 			$()
