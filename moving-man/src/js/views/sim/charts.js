@@ -74,7 +74,8 @@ define(function(require) {
 					min: -10,
 					max:  10
 				},
-				orientation: 'vertical'
+				orientation: 'vertical',
+				direction: 'rtl'
 			};
 		},
 
