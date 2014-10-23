@@ -220,6 +220,19 @@
 		display: none;
 	}
 
+	.slider[disabled] {
+		background: #aaa;
+
+		&:before {
+			background: #aaa;
+		}
+
+		& .noUi-handle:after {
+			background: #ccc;
+			border-color: #aaa;
+		}
+	}
+
 	& .slider:before {
 		content: '';
 		position: absolute;

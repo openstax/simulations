@@ -214,6 +214,8 @@ define(function (require) {
 			this.$('.position .expression-text').show();
 			this.$('.position .expression-help').show();
 
+			this.$('.position .slider').attr('disabled', 'disabled');
+
 			// Update simulation
 		},
 
@@ -226,6 +228,8 @@ define(function (require) {
 			this.$('.position .expression-text').hide();
 			this.$('.position .expression-help').hide();
 			this.$('.position .value-group').show();
+
+			this.$('.position .slider').removeAttr('disabled');
 			
 			// Update simulation
 		}
