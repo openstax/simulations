@@ -9,6 +9,11 @@ define(function (require) {
 
 	var html = require('text!templates/moving-man.html');
 
+	require('less!styles/moving-man');
+
+	/**
+	 *
+	 */
 	var MovingManView = SimDraggable.extend({
 
 		template: _.template(html),
