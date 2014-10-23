@@ -9,7 +9,10 @@
 				<span class="input-group-addon"><%= units %></span>
 			</div>
 			<% if (expression) { %>
-				<input type="text" class="form-control expression-text" value="7 * sin(t) + 2" />
+				<div class="input-group expression-group">
+					<input type="text" class="form-control expression-text" value="7 * sin(t) + 2" />
+					<span class="input-group-addon"><%= units %></span>
+				</div>
 				<button class="btn expression-help" title="Help with Expressions"><span class="fa fa-question-circle"></span></button>
 			<% } %>
 		</div>

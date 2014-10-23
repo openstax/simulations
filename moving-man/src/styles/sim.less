@@ -125,7 +125,7 @@
 	}
 
 	&.compact {
-		width: 140px;
+		width: 150px;
 		height: 130px;
 		position: relative;
 		margin: 0 20px 0 30px;
@@ -152,10 +152,14 @@
 			}
 		}
 
-		& .value-group,
-		& .expression-text {
+		& .value-group {
 			float: none;
-			width: 112px;
+			width: 120px;
+		}
+
+		& .expression-group {
+			float: none;
+			width: 150px;
 		}
 
 		& .label-row {
@@ -181,7 +185,8 @@
 		}
 
 		& .expression-help {
-			right: 27px;
+			right: auto;
+			left: 123px;
 			top: 5px;
 		}
 	}
@@ -214,8 +219,8 @@
 		float: right;
 	}
 
-	& .expression-text {
-		width: 120px;
+	& .expression-group {
+		width: 150px;
 		float: right;
 		display: none;
 	}
@@ -280,9 +285,21 @@
 	& .expression-help {
 		position: absolute;
 		top: 17px;
-		right: 128px;
+		right: 158px;
 		font-size: 16px;
 		display: none;
 		.text-button();
+	}
+
+	&.expression {
+		& .drop-expression { display: block; }
+		& .from-expression { display: none;  }
+		& .expression-group { display: table; }
+		& .value-group { display: none;  }
+		& .expression-help { display: block; }
+
+		&.compact {
+			.slider { display: none; }
+		}
 	}
 }
