@@ -113,7 +113,8 @@ define(function (require) {
 				name:  'Position',
 				units: 'm',
 				unique: this.name + '-position',
-				vectors: false
+				vectors: false,
+				expression: true
 			}));
 
 			var $velocity = $(this.variableControlTemplate({
@@ -121,7 +122,8 @@ define(function (require) {
 				name:  'Velocity',
 				units: 'm/s',
 				unique: this.name + '-velocity',
-				vectors: true
+				vectors: true,
+				expression: false
 			}));
 
 			var $acceleration = $(this.variableControlTemplate({
@@ -129,7 +131,8 @@ define(function (require) {
 				name:  'Acceleration',
 				units: 'm/s<sup>2</sup>',
 				unique: this.name + '-acceleration',
-				vectors: true
+				vectors: true,
+				expression: false
 			}));
 
 			var sliderOptions = this.getSliderOptions();

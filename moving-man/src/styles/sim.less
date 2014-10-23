@@ -1,3 +1,4 @@
+@import "../../bower_components/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
 
 @position-color: #2575BA;
@@ -149,6 +150,13 @@
 			top: auto;
 			margin-top: 12px;
 		}
+
+		& .from-expression {
+			position: relative;
+			left: auto;
+			top: auto;
+			margin-top: 5px;
+		}
 	}
 
 	& .label-row {
@@ -190,10 +198,42 @@
 		background: #fff;
 	}
 
-	& .vector-check-wrapper {
+	& .vector-check-wrapper,
+	& .from-expression {
 		position: absolute;
 		left: 320px;
+	}
+
+	& .vector-check-wrapper {
 		top: 18px;
 		width: 120px;
+	}
+
+	& .from-expression {
+		top: 11px;
+		padding: 0;
+		background: transparent;
+		font-weight: bold;
+
+		> .function-icon {
+			margin-right: 4px;
+			margin-left: 4px;
+			font-size: 20px;
+		}
+
+		&:focus {
+			outline: none;
+			color: inherit;
+		}
+
+		&:hover {
+			color: inherit;
+			opacity: 0.8;
+		}
+
+		&:active {
+			color: inherit;
+			.box-shadow(none);
+		}
 	}
 }
