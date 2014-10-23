@@ -162,6 +162,14 @@
 			border-left-width: 2px;
 		}
 	}
+
+	.ruler-label {
+		position: absolute;
+		left: 50%;
+		margin-left: 12px;
+		top: 6px;
+		color: #777;
+	}
 }
 
 /* Scene
@@ -200,15 +208,61 @@
 .wall {
 	position: absolute;
 	z-index: 30;
-	bottom: -2px;
-	width: 32px;
-	height: 142px;
-	border-radius: 2px;
+	bottom: 0;
+	width: 30px;
+	height: 140px;
 	background-image: url(../img/brick.jpg);
 	border: 2px solid #88463D;
+	border-bottom: none;
+	.transition(~'bottom 1s');
 
-	&.wall-left  { left:  -2px; }
-	&.wall-right { right: -2px; }
+	&.wall-left  { left: 0;  border-left: none;  border-top-right-radius: 2px; }
+	&.wall-right { right: 0; border-right: none; border-top-left-radius:  2px; }
+
+	& .wall-hide,
+	& .wall-show {
+		position: absolute;
+		left: 4px;
+		padding: 0;
+		font-size: 20px;
+		background: transparent;
+
+		&:focus {
+			outline: none;
+		}
+	}
+
+	& .wall-hide {
+		bottom: 0;
+		color: #ececec;
+		text-shadow: 0 0 5px #000;
+
+		&:hover {
+			color: #FFD700;
+		}
+	}
+
+	& .wall-show {
+		top: -30px;
+		color: #595959;
+		display: none;
+
+		&:hover {
+			opacity: 0.8;
+		}
+	}
+
+	&.disabled {
+		bottom: -140px;
+
+		& .wall-show {
+			display: inline;
+		}
+
+		& .wall-hide {
+			display: none;
+		}
+	}
 }
 
 .man {
