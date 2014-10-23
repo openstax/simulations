@@ -8,6 +8,10 @@
 				<input type="text" class="form-control variable-text" value="0.00" />
 				<span class="input-group-addon"><%= units %></span>
 			</div>
+			<% if (expression) { %>
+				<input type="text" class="form-control expression-text" value="7 * sin(t) + 2" />
+				<button class="btn expression-help" title="Help with Expressions"><span class="fa fa-question-circle"></span></button>
+			<% } %>
 		</div>
 	</div>
 	<% if (vectors) { %>
@@ -17,7 +21,8 @@
 	</div>
 	<% } %>
 	<% if (expression) { %>
-	<button class="btn from-expression"><span class="function-icon">&fnof;</span> Use Function</button>
+	<button class="btn btn-expression from-expression"><span class="function-icon">&fnof;</span> Use Function</button>
+	<button class="btn btn-expression drop-expression"><span class="fa fa-close"></span> Drop Function</button>
 	<% } %>
 	<div class="variable-slider slider"></div>
 <div>

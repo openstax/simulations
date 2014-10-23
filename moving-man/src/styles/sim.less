@@ -5,6 +5,27 @@
 @velocity-color: #CD2520;
 @acceleration-color: #349E34;
 
+.text-button() {
+	background: transparent;
+	padding: 0;
+	font-weight: bold;
+
+	&:focus {
+		outline: none;
+		color: inherit;
+	}
+
+	&:hover {
+		color: inherit;
+		opacity: 0.8;
+	}
+
+	&:active {
+		color: inherit;
+		.box-shadow(none);
+	}
+}
+
 .sim-controls {
 	background: @gray-lightest;
 	padding-bottom: 20px;
@@ -131,9 +152,10 @@
 			}
 		}
 
-		& .value-group {
+		& .value-group,
+		& .expression-text {
 			float: none;
-			width: 108px;
+			width: 112px;
 		}
 
 		& .label-row {
@@ -151,11 +173,16 @@
 			margin-top: 12px;
 		}
 
-		& .from-expression {
+		& .btn-expression {
 			position: relative;
 			left: auto;
 			top: auto;
 			margin-top: 5px;
+		}
+
+		& .expression-help {
+			right: 27px;
+			top: 5px;
 		}
 	}
 
@@ -187,6 +214,12 @@
 		float: right;
 	}
 
+	& .expression-text {
+		width: 120px;
+		float: right;
+		display: none;
+	}
+
 	& .slider:before {
 		content: '';
 		position: absolute;
@@ -199,7 +232,7 @@
 	}
 
 	& .vector-check-wrapper,
-	& .from-expression {
+	& .btn-expression {
 		position: absolute;
 		left: 320px;
 	}
@@ -209,11 +242,9 @@
 		width: 120px;
 	}
 
-	& .from-expression {
+	& .btn-expression {
 		top: 11px;
-		padding: 0;
-		background: transparent;
-		font-weight: bold;
+		.text-button();
 
 		> .function-icon {
 			margin-right: 4px;
@@ -221,19 +252,24 @@
 			font-size: 20px;
 		}
 
-		&:focus {
-			outline: none;
-			color: inherit;
+		> .fa {
+			display: inline-block;
+			padding-top: 10px;
+			margin-right: 2px;
+			margin-left: 2px;
 		}
+	}
 
-		&:hover {
-			color: inherit;
-			opacity: 0.8;
-		}
+	& .drop-expression {
+		display: none;
+	}
 
-		&:active {
-			color: inherit;
-			.box-shadow(none);
-		}
+	& .expression-help {
+		position: absolute;
+		top: 17px;
+		right: 128px;
+		font-size: 16px;
+		display: none;
+		.text-button();
 	}
 }

@@ -45,7 +45,10 @@ define(function (require) {
 			'click .play-btn' : 'play',
 			'click .pause-btn': 'pause',
 			'click .step-btn' : 'step',
-			'click .reset-btn': 'reset'
+			'click .reset-btn': 'reset',
+
+			'click .from-expression' : 'useExpression',
+			'click .drop-expression' : 'dropExpression'
 		},
 
 		/**
@@ -199,6 +202,32 @@ define(function (require) {
 
 			// Update the scene
 			this.sceneView.update(time, delta);
+		},
+
+		/**
+		 * Switches positon to expression mode and updates simulation.
+		 */
+		useExpression: function() {
+			this.$('.position .from-expression').hide();
+			this.$('.position .drop-expression').show();
+			this.$('.position .value-group').hide();
+			this.$('.position .expression-text').show();
+			this.$('.position .expression-help').show();
+
+			// Update simulation
+		},
+
+		/**
+		 * Switches position away from expression mode and updates sim.
+		 */
+		dropExpression: function() {
+			this.$('.position .drop-expression').hide();
+			this.$('.position .from-expression').show();
+			this.$('.position .expression-text').hide();
+			this.$('.position .expression-help').hide();
+			this.$('.position .value-group').show();
+			
+			// Update simulation
 		}
 
 	});
