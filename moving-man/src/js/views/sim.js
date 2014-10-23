@@ -214,6 +214,11 @@ define(function (require) {
 			this.$('.position .expression-text').show();
 			this.$('.position .expression-help').show();
 
+			/*
+			 * PhET didn't do this, but I'm disabling the position
+			 *   while using an expression because it can cause
+			 *   unexpected behavior and is otherwise useless.
+			 */
 			this.$('.position .slider').attr('disabled', 'disabled');
 
 			// Update simulation
