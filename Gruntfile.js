@@ -34,7 +34,9 @@ module.exports = function(grunt){
 				base: 'dist',
 				dotfiles: true
 			},
-			src: ['**']
+			deploy: {
+				src: ['**']
+			}
 		}
 	});
 
@@ -117,7 +119,7 @@ module.exports = function(grunt){
 	grunt.registerTask('deploy', [
 		'dist',
 		'create-no-jekyll',
-		'gh-pages'
+		'gh-pages:deploy'
 	]);
 
 	grunt.registerTask('dev', [
