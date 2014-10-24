@@ -11,7 +11,6 @@ define(function(require) {
 	 *    Backbone events functionality.
 	 */
 	var DataSeries = function(options) {
-		this.data = [];
 		this.initialize(options);
 	};
 
@@ -20,7 +19,9 @@ define(function(require) {
 		/**
 		 *
 		 */
-		initialize: function() {},
+		initialize: function() {
+			this.data = [];
+		},
 
 		/**
 		 *
@@ -106,7 +107,11 @@ define(function(require) {
 	 *   a certain value so that we're only storing what we need and don't
 	 *   just keep expanding until the app crashes.
 	 */
-	DataSeries.LimitedTime = _.extend({}, DataSeries.prototype, {
+	DataSeries.LimitedTime = function(options) {
+		this.initialize(options);
+	};
+
+	_.extend(DataSeries.LimitedTime.prototype, DataSeries.prototype, {
 
 		/**
 		 *
@@ -131,7 +136,11 @@ define(function(require) {
 	/**
 	 * Version of the DataSeries that acts like a fixed-length queue.
 	 */
-	DataSeries.LimitedSize = _.extend({}, DataSeries.prototype, {
+	DataSeries.LimitedSize = function(options) {
+		this.initialize(options);
+	};
+
+	_.extend(DataSeries.LimitedSize.prototype, DataSeries.prototype, {
 
 		/**
 		 *
