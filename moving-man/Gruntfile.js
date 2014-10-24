@@ -17,8 +17,8 @@ module.exports = function(grunt){
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['bower_components/font-awesome/fonts/**'],
-				dest: 'dist/fonts/'
+				src: ['node_modules/font-awesome/fonts/**'],
+				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			images: {
 				expand: true, // required when using cwd
@@ -87,6 +87,11 @@ module.exports = function(grunt){
 						location: '../../bower_components/require-less',
 						main: 'less'
 					}],
+					less: {
+						modifyVars: {
+							'fa-font-path': '"../node_modules/font-awesome/fonts/"'
+						}
+					},
 					name: 'main',
 					out: 'src/optimized.js'
 				}
