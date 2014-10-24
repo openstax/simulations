@@ -20,6 +20,7 @@ define(function (require) {
 	// HTML
 	var simHtml             = require('text!templates/sim.html');
 	var variableControlHtml = require('text!templates/variable-control.html');
+	var functionHelpHtml    = require('text!templates/function-help-modal.html');
 
 	/**
 	 * 
@@ -161,6 +162,8 @@ define(function (require) {
 				.append($position)
 				.append($velocity)
 				.append($acceleration);
+
+			this.$el.append(functionHelpHtml);
 		},
 
 		/**
