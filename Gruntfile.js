@@ -19,10 +19,6 @@ module.exports = function(grunt){
 			dist: {
 				src: '*/dist/**/*',
 				dest: 'dist/'
-			},
-			common: {
-				src: 'common/**/*',
-				dest: 'dist/common/'
 			}
 		},
 		'run-dists': {
@@ -117,8 +113,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dist', [
 		'run-dists',
-		'copy-dists',
-		'copy:common'
+		'copy-dists'
 	]);
 
 	grunt.registerTask('deploy', [
