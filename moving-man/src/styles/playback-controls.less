@@ -1,34 +1,97 @@
-// @import "../common/styles/variables.less"
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/buttons.less";
+@import "../../../common/styles/variables.less";
 
-// .playback-controls-wrapper {
-// 	position: absolute;
-// 	top: -36px;
-// 	right: 10px;
+@btn-bg: #ccc;
 
-// 	> .playback-btn {
-// 		background: @gray-lightest;
-// 		color: @link-color;
-// 		outline: none;
-// 		border: none;
-// 		border-radius: 50%;
-// 		width: 28px;
-// 		height: 28px;
-// 		text-align: center;
+.playback-controls-wrapper {
+	position: relative;
+	margin-top: 10px;
+	padding: 10px;
+	background: @gray-lightest;
+	text-align: center;
 
-// 		&:hover {
-// 			opacity: 0.9;
-// 		}
+	> .playback-btn {
+		display: inline-block;
+		background: @btn-bg;
+		color: @link-color;
+		outline: none;
+		border: none;
+		border-radius: 50%;
+		width: 28px;
+		height: 28px;
+		text-align: center;
 
-// 		&:active {
-// 			background: @link-color;
-// 			color: #fff;
-// 		}
+		&:hover {
+			opacity: 0.9;
+		}
 
-// 		.sim-view.playing &.play-btn {
-// 			display: none;
-// 		}
-// 		.sim-view:not(.playing) &.pause-btn {
-// 			display: none;
-// 		}
-// 	}
-// }
+		&:active {
+			background: @link-color;
+			color: #fff;
+		}
+
+		&.play-btn,
+		&.record-btn,
+		&.pause-btn {
+			display: none;
+		}
+
+		.sim-view:not(.record-mode):not(.playing) &.play-btn {
+			display: inline-block;
+		}
+		.sim-view.record-mode:not(.playing) &.record-btn  {
+			display: inline-block;
+		}
+		.sim-view.playing &.pause-btn {
+			display: inline-block;
+		}
+
+		&.play-btn,
+		&.pause-btn,
+		&.record-btn {
+			width: 42px;
+			height: 42px;
+			font-size: 16px;
+		}
+
+		&.play-btn {
+			padding-left: 10px;
+		}
+	}
+
+	.btn-normal {
+		.button-variant(@link-color, @btn-bg, #fff, @link-color);
+		margin: 5px 5px 0;
+	}
+
+	.clear-btn {
+		float: left;
+	}
+
+	.reset-btn {
+		float: right;
+	}
+
+	.playback-speed-wrapper {
+		position: absolute;
+		right: 143px;
+		height: 100%;
+		top: 0;
+		padding-top: 18px;
+
+		.playback-speed {
+			width: 140px;
+			display: inline-block;
+			vertical-align: middle;
+			background: #aaa;
+		}
+
+		label {
+			vertical-align: middle;
+			margin: 0 8px;
+			color: #777;
+			font-weight: normal;
+		}
+	}
+}

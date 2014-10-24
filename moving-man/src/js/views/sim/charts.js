@@ -6,6 +6,8 @@ define(function(require) {
 
 	var MovingManSimView = require('views/sim');
 	var SceneView        = require('views/scene');
+	
+	require('nouislider');
 
 	// HTML
 	var playbackControlsHtml = require('text!templates/playback-controls.html');
@@ -58,9 +60,16 @@ define(function(require) {
 		 * Renders the playback controls
 		 */
 		renderPlaybackControls: function() {
-			this.$('#playback-controls-placeholder').replaceWith(playbackControlsHtml);
+			this.$('.playback-controls-placeholder').replaceWith(playbackControlsHtml);
 
 			// Intialize controls
+			this.$('.playback-speed').noUiSlider({
+				start: 5,
+				range: {
+					min: 0,
+					max: 10
+				}
+			});
 		},
 
 		/**
