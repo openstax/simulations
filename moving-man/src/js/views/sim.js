@@ -14,6 +14,7 @@ define(function (require) {
 
 	// CSS
 	require('less!styles/sim');
+	require('less!styles/variable-controls');
 	require('less!common/styles/slider');
 	require('less!common/styles/radio');
 
