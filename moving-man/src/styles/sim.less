@@ -1,1 +1,305 @@
+@import "../../bower_components/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
 
+@position-color: #2575BA;
+@velocity-color: #CD2520;
+@acceleration-color: #349E34;
+
+.text-button() {
+	background: transparent;
+	padding: 0;
+	font-weight: bold;
+
+	&:focus {
+		outline: none;
+		color: inherit;
+	}
+
+	&:hover {
+		color: inherit;
+		opacity: 0.8;
+	}
+
+	&:active {
+		color: inherit;
+		.box-shadow(none);
+	}
+}
+
+.sim-controls {
+	background: @gray-lightest;
+	padding-bottom: 20px;
+}
+
+.variable-controls {
+	width: 300px;
+	margin: 0 auto;
+	padding: 12px 0 4px;
+	position: relative;
+
+	&.position {
+		color: @position-color;
+
+		& .slider {
+			background: @position-color;
+
+			&:before {
+				background: @position-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @position-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @position-color;
+		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @position-color;
+		}
+
+		& input[type="checkbox"] + label:after {
+			background: @position-color;
+		}
+	}
+
+	&.velocity {
+		color: @velocity-color;
+
+		& .slider {
+			background: @velocity-color;
+
+			&:before {
+				background: @velocity-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @velocity-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @velocity-color;
+		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @velocity-color;
+		}
+
+		& input[type="checkbox"] + label:after {
+			background: @velocity-color;
+		}
+	}
+
+	&.acceleration {
+		color: @acceleration-color;
+
+		& .slider {
+			background: @acceleration-color;
+
+			&:before {
+				background: @acceleration-color;
+			}
+		}
+
+		& .slider .noUi-handle:after {
+			background: #fff;
+			border: 2px solid @acceleration-color;
+		}
+
+		&.active .slider .noUi-handle:after {
+			background: @acceleration-color;
+		}
+
+		& input[type="checkbox"] + label:before {
+			border-color: @acceleration-color;
+		}
+
+		& input[type="checkbox"] + label:after {
+			background: @acceleration-color;
+		}
+	}
+
+	&.compact {
+		width: 150px;
+		height: 130px;
+		position: relative;
+		margin: 0 20px 0 30px;
+		padding: 0;
+
+		& .title {
+			padding-top: 20px;
+		}
+
+		& .slider {
+			height: 110px;
+			position: absolute;
+			right: 0;
+			top: 0;
+
+			&:before {
+				left: auto;
+				margin-left: auto;
+				width: 12px;
+				height: 2px;
+				left: -5px;
+				top: 50%;
+				margin-top: 0;
+			}
+		}
+
+		& .value-group {
+			float: none;
+			width: 120px;
+		}
+
+		& .expression-group {
+			float: none;
+			width: 150px;
+		}
+
+		& .label-row {
+			> .label-wrapper,
+			> .value-wrapper {
+				width: auto;
+				float: none;
+			}
+		}
+
+		& .vector-check-wrapper {
+			position: relative;
+			left: auto;
+			top: auto;
+			margin-top: 12px;
+		}
+
+		& .btn-expression {
+			position: relative;
+			left: auto;
+			top: auto;
+			margin-top: 5px;
+		}
+
+		& .expression-help {
+			right: auto;
+			left: 123px;
+			top: 5px;
+		}
+	}
+
+	& .label-row {
+		> .label-wrapper,
+		> .value-wrapper {
+			width: 50%;
+			float: left;
+		}
+
+		&:after {
+			content: ' ';
+			display: table;
+			clear: both;
+		}
+	}
+
+	& .name {
+		font-size: 16px;
+		padding-top: 6px;
+	}
+
+	& .input-group-addon {
+		color: inherit;
+	}
+
+	& .value-group {
+		width: 120px;
+		float: right;
+	}
+
+	& .expression-group {
+		width: 150px;
+		float: right;
+		display: none;
+	}
+
+	.slider[disabled] {
+		background: #aaa;
+
+		&:before {
+			background: #aaa;
+		}
+
+		& .noUi-handle:after {
+			background: #dfdfdf;
+			border-color: #aaa;
+		}
+	}
+
+	& .slider:before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		margin-left: 0;
+		width: 2px;
+		height: 12px;
+		top: -5px;
+		background: #fff;
+	}
+
+	& .vector-check-wrapper,
+	& .btn-expression {
+		position: absolute;
+		left: 320px;
+	}
+
+	& .vector-check-wrapper {
+		top: 18px;
+		width: 120px;
+	}
+
+	& .btn-expression {
+		top: 11px;
+		.text-button();
+
+		> .function-icon {
+			margin-right: 4px;
+			margin-left: 4px;
+			font-size: 20px;
+		}
+
+		> .fa {
+			display: inline-block;
+			padding-top: 10px;
+			margin-right: 2px;
+			margin-left: 2px;
+		}
+	}
+
+	& .drop-expression {
+		display: none;
+	}
+
+	& .expression-help {
+		position: absolute;
+		top: 17px;
+		right: 158px;
+		font-size: 16px;
+		display: none;
+		.text-button();
+	}
+
+	&.expression {
+		& .drop-expression { display: block; }
+		& .from-expression { display: none;  }
+		& .expression-group { display: table; }
+		& .value-group { display: none;  }
+		& .expression-help { display: block; }
+
+		&.compact {
+			.slider { display: none; }
+		}
+	}
+}

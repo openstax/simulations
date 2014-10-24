@@ -23,12 +23,19 @@ define(function(require) {
 		tagName: 'div',
 		className: 'scene-view',
 
+		events: {
+			'click .wall-hide' : 'hideWalls',
+			'click .wall-show' : 'showWalls'
+		},
+
 		initialize: function(options) {
 
 			// Default values
 			options = _.extend({
-
+				compact: false
 			}, options);
+
+			this.compact = options.compact;
 
 			// Save options
 			if (options.simulation)
@@ -45,6 +52,9 @@ define(function(require) {
 		 */
 		render: function() {
 			this.$el.html(this.template());
+
+			if (this.compact)
+				this.$el.addClass('compact');
 
 			this.renderMovingView();
 
@@ -90,6 +100,22 @@ define(function(require) {
 		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
+		},
+
+		/**
+		 * Hides the walls and updates the sim
+		 */
+		hideWalls: function() {
+			this.$('.wall').addClass('disabled');
+			//this.simulation.disableWalls();
+		},
+
+		/**
+		 * Hides the walls and updates the sim
+		 */
+		showWalls: function() {
+			this.$('.wall').removeClass('disabled');
+			//this.simulation.enableWalls();
 		}
 	});
 

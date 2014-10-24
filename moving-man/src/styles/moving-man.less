@@ -1,0 +1,29 @@
+@import "../../bower_components/bootstrap/less/mixins/vendor-prefixes.less";
+
+.moving-man-view {
+	position: absolute;
+	bottom: 0;
+	left: 50%;
+	margin-left: -25px;
+	z-index: 50;
+	width: 50px;
+	height: 113px;
+	cursor: move;
+	cursor: ew-resize;
+
+	> .image {
+		width: 100%;
+		height: 100%;
+		background-image: url(../img/phet/man-standing.gif);
+		background-size: 100% 100%;
+	}
+	
+	&.left  > .image,
+	&.right > .image {
+		background-image: url(../img/phet/man-left.gif);
+	}
+
+	&.right > .image {
+		.scaleX(-1);
+	}
+}

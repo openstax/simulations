@@ -1,3 +1,6 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+
 .slider {
 
 	position: relative;
@@ -79,6 +82,21 @@
 		top: 2px;
 	}
 
+	&.noUi-vertical .noUi-base:before,
+	&.noUi-vertical .noUi-base:after {
+		content: '';
+		position: absolute;
+		width: 14px;
+		top: 0;
+		height: 100%;
+	}
+	&.noUi-vertical .noUi-base:before {
+		right: 2px;
+	}
+	&.noUi-vertical .noUi-base:after {
+		left: 2px;
+	}
+
 	&.noUi-horizontal .noUi-handle {
 		width: 26px;
 		height: 26px;
@@ -92,13 +110,13 @@
 		right: -15px;
 	}
 	&.noUi-vertical {
-		width: 18px;
+		width: 2px;
 	}
 	&.noUi-vertical .noUi-handle {
-		width: 28px;
-		height: 34px;
-		left: -6px;
-		top: -17px;
+		width: 26px;
+		height: 26px;
+		left: -12px;
+		top: -12px;
 	}
 	&.noUi-vertical.noUi-extended {
 		padding: 15px 0;
@@ -110,7 +128,7 @@
 
 	/* Styling;
 	 */
-	& .noUi-background {
+	&.noUi-background {
 		background: #FAFAFA;
 	}
 	&.noUi-connect {
