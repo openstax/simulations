@@ -16,7 +16,16 @@
 			<div class="modal-body">
 				<p>You can specify an expression where <em>position</em> is a function of <em>time</em> (<code>t</code>).</p>
 
-				Here are some examples of valid expressions: x = 3 * t + 2 x = 2*sin(t) x = pow(t,2)  Note that multiplication must be specified explicitly as in 3 * t, instead of implicitly as in 3t
+				<p>
+					Here are some examples of valid expressions: 
+					<ul>
+						<li><span class="implicit-expression">&fnof;(t) = </span><code>3 * t + 2</code></li>
+						<li><span class="implicit-expression">&fnof;(t) = </span><code>2*sin(t)</code></li>
+						<li><span class="implicit-expression">&fnof;(t) = </span><code>pow(t,2)</code></li>
+						<li><span class="implicit-expression">&fnof;(t) = </span><code>2*pow(t+3, 2) + 1</code></li>
+						<li><span class="implicit-expression">&fnof;(t) = </span><code>sqrt(t * 4)</code></li>
+					</ul>
+					Note that you only input the right side of the equation and also that multiplication must be specified explicitly as in <code>3 * t</code>, instead of implicitly as in <code>3t</code>.
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
