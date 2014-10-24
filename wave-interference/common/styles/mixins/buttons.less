@@ -1,20 +1,27 @@
 @import "../../node_modules/bootstrap/less/mixins.less"; // Bootstrap Mixins
 
 // Based on bootstrap's .button-variant() mixin
-.button-variant(@color; @background) {
-	padding: 5px 10px;
-	font-weight: 300;
-	vertical-align: baseline;
+.button-variant(@color; @background; @active-color; @active-background) {
+	//padding: 5px 10px;
+	font-weight: 500;
+	//vertical-align: baseline;
 	color: @color;
 	background-color: @background;
 	border: none;
 
-	&:hover,
-	&:focus,
-	&:active,
-	&.active {
+	&:hover {
 		color: @color;
-		background-color: darken(@background, 4%);
+		opacity: 0.9;
+	}
+
+	&:active {
+		color: @active-color;
+		background: @active-background;
+		outline: 0;
+		.box-shadow(none);
+	}
+
+	&:focus {
 		outline: 0;
 	}
 
