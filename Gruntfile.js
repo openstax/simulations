@@ -21,6 +21,13 @@ module.exports = function(grunt){
 				dest: 'dist/'
 			}
 		},
+		targethtml: {
+			dist: {
+				files: {
+					'dist/index.html': 'index.html'
+				}
+			}		
+		},	
 		'run-dists': {
 			options: {
 				gruntfiles: [
@@ -113,7 +120,8 @@ module.exports = function(grunt){
 
 	grunt.registerTask('dist', [
 		'run-dists',
-		'copy-dists'
+		'copy-dists',
+		'targethtml:dist'
 	]);
 
 	grunt.registerTask('deploy', [
