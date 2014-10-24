@@ -39,6 +39,7 @@ define(function (require) {
 		 */
 		template: _.template(simHtml),
 		variableControlTemplate: _.template(variableControlHtml),
+		functionHelpTemplate: _.template(functionHelpHtml),
 
 		/**
 		 * Dom event listeners
@@ -114,13 +115,16 @@ define(function (require) {
 		 *
 		 */
 		renderVariableControls: function() {
+			var help_modal_id = this.name + '-function-help-modal';
+
 			var $position = $(this.variableControlTemplate({
 				className: 'position',
 				name:  'Position',
 				units: 'm',
 				unique: this.name + '-position',
 				vectors: false,
-				expression: true
+				expression: true,
+				help_modal_id: help_modal_id
 			}));
 
 			var $velocity = $(this.variableControlTemplate({
@@ -164,7 +168,9 @@ define(function (require) {
 				.append($velocity)
 				.append($acceleration);
 
-			this.$el.append(functionHelpHtml);
+			this.$el.append(this.functionHelpTemplate({
+				help_modal_id: help_modal_id
+			}));
 		},
 
 		/**
