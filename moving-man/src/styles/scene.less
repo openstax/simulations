@@ -73,22 +73,17 @@
 
 	&.cloud-1 {
 		top: 50px;
+		left: 700px;
 
 		.transform(scale(0.5));
-
-		.animation(moveclouds 60s linear infinite);
 	}
 
 	&.cloud-2 {
 		top: 40px;
+		left: 80px;
 		
 		.transform(scale(0.3));
 		opacity: 0.7; /*opacity proportional to the size*/
-		
-		/*Speed will also be proportional to the size and opacity*/
-		/*More the speed. Less the time in 's' = seconds*/
-		.animation(moveclouds 100s linear infinite);
-		.animation-delay(-40s);
 	}
 
 	&.cloud-3 {
@@ -103,30 +98,20 @@
 
 	&.cloud-4 {
 		top: 20px;
+		left: 500px;
 		
 		.transform(scale(-0.35, 0.35));
 		opacity: 0.85; /*opacity proportional to the size*/
-		
-		.animation(moveclouds 72s linear infinite);
-		.animation-delay(-50s);
 	}
 
 	&.cloud-5 {
 		top: -20px;
+		left: 800px;
 		
 		.transform(scale(0.4));
 		opacity: 0.9; /*opacity proportional to the size*/
-		
-		.animation(moveclouds 80s linear infinite);
-		.animation-delay(-10s);
 	}
 }
-
-.keyframes(moveclouds, {
-	margin-left: 130%;
-},{
-	margin-left: -30%;
-});
 
 /* Ruler (ground)
  * -----------------------------------------------------------------
