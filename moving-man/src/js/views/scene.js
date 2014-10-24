@@ -25,7 +25,10 @@ define(function(require) {
 
 		events: {
 			'click .wall-hide' : 'hideWalls',
-			'click .wall-show' : 'showWalls'
+			'click .wall-show' : 'showWalls',
+
+			// Just an Easter Egg
+			'click .cloud' : 'cloudClicked'
 		},
 
 		initialize: function(options) {
@@ -116,6 +119,20 @@ define(function(require) {
 		showWalls: function() {
 			this.$('.wall').removeClass('disabled');
 			//this.simulation.enableWalls();
+		},
+
+		/**
+		 * Just a little Easter Egg to start the cloud animation.
+		 *   The user has to click each cloud to activate it.
+		 */
+		cloudClicked: function(event) {
+			if (!this.cloudsClicked)
+				this.cloudsClicked = {};
+
+			this.cloudsClicked[$(event.target).attr('class')] = true;
+
+			if (_.size(this.cloudsClicked) >= 5)
+				this.$('.clouds').addClass('moving');
 		}
 	});
 

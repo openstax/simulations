@@ -38,7 +38,35 @@
 	overflow: hidden;
 	background: #c9dbe9;
 	#gradient.vertical(#81C8FF; #fff; 0%; 100%);
+
+	&.moving {
+		> .cloud-1 {
+			.animation(moveclouds 60s linear infinite);
+		}
+		> .cloud-2 {
+			.animation(moveclouds 100s linear infinite);
+			.animation-delay(-40s);
+		}
+		> .cloud-3 {
+			.animation(moveclouds 80s linear infinite);
+			.animation-delay(-30s);
+		}
+		> .cloud-4 {
+			.animation(moveclouds 72s linear infinite);
+			.animation-delay(-50s);
+		}
+		> .cloud-5 {
+			.animation(moveclouds 80s linear infinite);
+			.animation-delay(-10s);
+		}
+	}
 }
+
+.keyframes(moveclouds, {
+	margin-left: 130%;
+},{
+	margin-left: -30%;
+});
 
 .cloud {
 	left: 0;
