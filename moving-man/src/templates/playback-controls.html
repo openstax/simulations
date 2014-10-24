@@ -1,6 +1,14 @@
 <div class="playback-controls-wrapper">
 	<button class="btn btn-normal clear-btn" title="Clear Recorded"><span class="fa fa-history"></span> Clear</button>
 
+	<fieldset class="playback-mode-wrapper">
+		<input type="radio" name="playback-mode" value="record" id="playback-mode-record" checked>
+		<label for="playback-mode-record">Record</label>
+
+		<input type="radio" name="playback-mode" value="playback" id="playback-mode-play">
+		<label for="playback-mode-play">Playback</label>
+	</fieldset>
+
 	<button class="playback-btn rewind-btn" title="Rewind"><span class="fa fa-fast-backward"></span></button>
 	<button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
 	<button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
