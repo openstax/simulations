@@ -10,6 +10,7 @@ define(function (require) {
 	var SceneView           = require('views/scene');
 
 	require('nouislider');
+	require('bootstrap');
 
 	// CSS
 	require('less!styles/sim');
