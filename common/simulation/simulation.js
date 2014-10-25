@@ -33,7 +33,7 @@ define(function (require) {
 		},
 
 		/**
-		 * Inside the fixed-interval loop
+		 * Only runs if the simulation isn't currently paused.
 		 */
 		_update: function(time, delta) {},
 
