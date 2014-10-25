@@ -49,7 +49,9 @@ define(function (require) {
 
 		reset: function() {
 			this.initComponents();
-		}
+		},
+
+		postRender: function() {}
 
 	});
 

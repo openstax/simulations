@@ -81,7 +81,9 @@ define(function(require) {
 		 * Called after every component on the page has rendered to make sure
 		 *   things like widths and heights and offsets are correct.
 		 */
-		postRender: function() {},
+		postRender: function() {
+			this.movingManView.postRender();
+		},
 
 		/**
 		 *

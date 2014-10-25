@@ -93,6 +93,8 @@ define(function (require) {
 				this.$el.removeClass('dragging');
 
 				this.movementState = MOVEMENT_STATE_IDLE;
+
+				this.updateOnNextFrame = true;
 			}
 		},
 

@@ -19,7 +19,7 @@ define(function (require) {
 	 */
 	var MovingMan = Backbone.Model.extend({
 		defaults: {
-
+			position: 0
 		},
 		
 		/**

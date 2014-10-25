@@ -10,6 +10,15 @@ define(function (require) {
 
 		initialize: function(options) {
 
+			// Default values
+			options = _.extend({
+				mouseLeaveCancels: false,
+				captureOnBody: true
+			}, options);
+
+			this.mouseLeaveCancels = options.mouseLeaveCancels;
+			this.captureOnBody = options.captureOnBody;
+
 			if (options.dragFrame)
 				this.$dragFrame = $(options.dragFrame);
 			else
@@ -19,10 +28,23 @@ define(function (require) {
 		},
 
 		bindDragEvents: function() {
-			this.$dragFrame
-				.bind('mousemove touchmove', _.bind(this.drag,    this))
-				.bind('mouseup touchend',    _.bind(this.dragEnd, this))
-				.bind('mouseleave',          _.bind(this.dragEnd, this));
+			if (this.captureOnBody) {
+				$('body')
+					.bind('mousemove touchmove', _.bind(this.drag,    this))
+					.bind('mouseup touchend',    _.bind(this.dragEnd, this));
+			}
+			else {
+				this.$dragFrame
+					.bind('mousemove touchmove', _.bind(this.drag,    this))
+					.bind('mouseup touchend',    _.bind(this.dragEnd, this));
+
+				if (this.mouseLeaveCancels)
+					this.$dragFrame.bind('mouseleave', _.bind(this.dragEnd, this));
+			}
+		},
+
+		postRender: function() {
+			this.resize();
 		},
 
 		resize: function(){
