@@ -117,6 +117,8 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			DataSeries.prototype.initialize.apply(this, [options]);
+
 			if (options && options.maxTime)
 				this.maxTime = options.maxTime;
 		},
@@ -146,6 +148,8 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			DataSeries.prototype.initialize.apply(this, [options]);
+			
 			if (options && options.maxSize)
 				this.maxSize = options.maxSize;
 		},

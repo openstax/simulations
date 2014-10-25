@@ -12,6 +12,13 @@ define(function (require) {
 	require('less!styles/moving-man');
 
 	/**
+	 * Constants
+	 */
+	var MOVEMENT_STATE_IDLE  = 0;
+	var MOVEMENT_STATE_LEFT  = 1;
+	var MOVEMENT_STATE_RIGHT = 2;
+
+	/**
 	 *
 	 */
 	var MovingManView = SimDraggable.extend({
@@ -22,15 +29,18 @@ define(function (require) {
 		className: 'moving-man-view',
 
 		events: {
-			'mousedown  .moving-man-view' : 'down',
-			'touchstart .moving-man-view' : 'down'
+			'mousedown'  : 'down',
+			'touchstart' : 'down'
 		},
 
 		initialize: function(options) {
 			SimDraggable.prototype.initialize.apply(this, [options]);
 
 			this.simulation = options.simulation;
-			this.movingMan = this.simulation.movingMan;
+			this.movingMan  = this.simulation.movingMan;
+
+			this.containerWidth     = this.simulation.get('containerWidth');
+			this.halfContainerWidth = this.containerWidth / 2;
 		},
 
 		render: function() {
@@ -47,9 +57,8 @@ define(function (require) {
 		down: function(event) {
 			event.preventDefault();
 
-			this.$el.addClass('dragging');
-
 			this.dragging = true;
+			this.$el.addClass('dragging');
 
 			this.fixTouchEvents(event);
 
@@ -61,14 +70,17 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				// dx = event.pageX - this.dragX;
+				// Get position
+				this._xPercent = (event.pageX - this.dragOffset.left) / this.dragBounds.width;
+				this._xPosition = (this._xPercent * this.containerWidth) - this.halfContainerWidth;
 
-				// if (!this.outOfBounds(this.start.x + dx, this.start.y + dy) &&
-				// 	!this.outOfBounds(this.end.x   + dx, this.end.y   + dy)) {
+				this.movingMan.addMouseData(this._xPosition);
 
-				// 	this.movingMan.x += dx;
-				// }
-
+				// Get direction
+				if ((event.pageX - this.dragX) > 0)
+					this.movementState = MOVEMENT_STATE_RIGHT;
+				else
+					this.movementState = MOVEMENT_STATE_LEFT;
 				this.dragX = event.pageX;
 
 				this.updateOnNextFrame = true;
@@ -79,6 +91,8 @@ define(function (require) {
 			if (this.dragging) {
 				this.dragging = false;
 				this.$el.removeClass('dragging');
+
+				this.movementState = MOVEMENT_STATE_IDLE;
 			}
 		},
 
@@ -89,14 +103,40 @@ define(function (require) {
 
 			this.updateOnNextFrame = false;
 
-			// this._translate = 'translateX(' + startX + 'px) translateY(' + startY + 'px)';
+			// Update position
+			this._xPercent  = (this.movingMan.get('position') + this.halfContainerWidth) / this.containerWidth;
+			this._xPixels   = this._xPercent * this.dragBounds.width;
+			this._translate = 'translateX(' + this._xPixels + 'px)';
 
-			// this.$el.css({
-			// 	'-webkit-transform': this._translate,
-			// 	'-ms-transform':     this._translate,
-			// 	'-o-transform':      this._translate,
-			// 	'transform':         this._translate,
-			// });
+			this.$el.css({
+				'-webkit-transform': this._translate,
+				'-ms-transform':     this._translate,
+				'-o-transform':      this._translate,
+				'transform':         this._translate,
+			});
+
+			// Update direction
+			if (this.visibleMovementState !== this.movementState) {
+				this.visibleMovementState = this.movementState;
+
+				switch (this.movementState) {
+					case MOVEMENT_STATE_IDLE:
+						this.$el
+							.removeClass('left')
+							.removeClass('right');
+						break;
+					case MOVEMENT_STATE_RIGHT:
+						this.$el
+							.removeClass('left')
+							.addClass('right');
+						break;
+					case MOVEMENT_STATE_LEFT:
+						this.$el
+							.removeClass('right')
+							.addClass('left');
+						break;
+				}
+			}
 		}
 	});
 

@@ -12,7 +12,7 @@ define(function (require) {
 	 */
 	var MovingManSimulation = Simulation.extend({
 		defaults: {
-
+			containerWidth: 20
 		},
 		
 		/**
@@ -41,10 +41,10 @@ define(function (require) {
 		},
 
 		/**
-		 * 
+		 * Only runs if simulation isn't currently paused.
 		 */
-		_update: function() {
-
+		_update: function(time, delta) {
+			this.movingMan.update(time, delta);
 		}
 
 	});

@@ -59,7 +59,7 @@ define(function(require) {
 			if (this.compact)
 				this.$el.addClass('compact');
 
-			this.renderMovingView();
+			this.renderMovingManView();
 
 			return this;
 		},
@@ -67,7 +67,7 @@ define(function(require) {
 		/**
 		 * Renders html container
 		 */
-		renderMovingView: function() {
+		renderMovingManView: function() {
 			var $manContainer = this.$('.man-container');
 			this.movingManView = new MovingManView({
 				simulation: this.simulation,
@@ -103,6 +103,8 @@ define(function(require) {
 		update: function(time, delta) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
+
+			this.movingManView.update(time, delta);
 		},
 
 		/**

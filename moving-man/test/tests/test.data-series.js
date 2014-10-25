@@ -75,24 +75,24 @@ describe('DataSeries', function(){
 	});
 
 	it('should limit time correctly', function(){
-		var series = new DataSeries.LimitedSize({
+		var series = new DataSeries.LimitedTime({
 			maxTime: 4
 		});
 
-		series.add(5, 0);
+		series.add(5,  0);
 		series.add(10, 1);
 		series.add(15, 2);
 		chai.expect(series.size()).to.equal(3);
 
-		series.add(5, 0);
+		series.add(5,  0);
 		series.add(10, 1);
 		series.add(15, 2);
-		chai.expect(series.size()).to.equal(3);
+		chai.expect(series.size()).to.equal(6);
 
 		series.add(25, 4);
 		series.add(64, 5);
 		series.add(11, 6);
-		chai.expect(series.size()).to.equal(5);
+		chai.expect(series.size()).to.equal(7);
 	});
 
 });
