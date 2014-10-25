@@ -8,6 +8,10 @@ define(function (require) {
 	 * Wraps the update function in 
 	 */
 	var Simulation = Backbone.Model.extend({
+
+		defaults: {
+			wallsEnabled: true
+		},
 		
 		/**
 		 *

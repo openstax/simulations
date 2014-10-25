@@ -12,7 +12,8 @@ define(function (require) {
 	 */
 	var MovingManSimulation = Simulation.extend({
 		defaults: {
-			containerWidth: 20
+			containerWidth: 20,
+			halfContainerWidth: 10
 		},
 		
 		/**
@@ -22,6 +23,10 @@ define(function (require) {
 			Simulation.prototype.initialize.apply(this, [options]);
 
 			this.initComponents();
+
+			this.on('change:containerWidth', function() {
+				this.set('halfContainerWidth', this.get('containerWidth') / 2);
+			});
 		},
 
 		/**
@@ -45,6 +50,13 @@ define(function (require) {
 		 */
 		_update: function(time, delta) {
 			this.movingMan.update(time, delta);
+		},
+
+		/**
+		 *
+		 */
+		positionWithinBounds: function(x) {
+			return (x >= -this.get('halfContainerWidth') && x <= this.get('halfContainerWidth'));
 		}
 
 	});

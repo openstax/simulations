@@ -98,6 +98,13 @@ define(function(require) {
 					points.push(this.data[i]);
 			}
 			this.data = points;
+		},
+
+		/**
+		 *
+		 */
+		setData: function(data) {
+			this.data = data;
 		}
 
 	});

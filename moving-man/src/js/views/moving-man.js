@@ -38,9 +38,6 @@ define(function (require) {
 
 			this.simulation = options.simulation;
 			this.movingMan  = this.simulation.movingMan;
-
-			this.containerWidth     = this.simulation.get('containerWidth');
-			this.halfContainerWidth = this.containerWidth / 2;
 		},
 
 		render: function() {
@@ -72,7 +69,7 @@ define(function (require) {
 
 				// Get position
 				this._xPercent = (event.pageX - this.dragOffset.left) / this.dragBounds.width;
-				this._xPosition = (this._xPercent * this.containerWidth) - this.halfContainerWidth;
+				this._xPosition = (this._xPercent * this.simulation.get('containerWidth')) - this.simulation.get('halfContainerWidth');
 
 				this.movingMan.addMouseData(this._xPosition);
 
@@ -106,7 +103,7 @@ define(function (require) {
 			this.updateOnNextFrame = false;
 
 			// Update position
-			this._xPercent  = (this.movingMan.get('position') + this.halfContainerWidth) / this.containerWidth;
+			this._xPercent  = (this.movingMan.get('position') + this.simulation.get('halfContainerWidth')) / this.simulation.get('containerWidth');
 			this._xPixels   = this._xPercent * this.dragBounds.width;
 			this._translate = 'translateX(' + this._xPixels + 'px)';
 
