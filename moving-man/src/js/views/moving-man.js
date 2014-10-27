@@ -76,7 +76,7 @@ define(function (require) {
 				// Get direction
 				if ((event.pageX - this.dragX) > 0)
 					this.movementState = MOVEMENT_STATE_RIGHT;
-				else
+				else if ((event.pageX - this.dragX) < 0)
 					this.movementState = MOVEMENT_STATE_LEFT;
 				this.dragX = event.pageX;
 
