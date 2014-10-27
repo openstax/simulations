@@ -62,6 +62,24 @@ define(function (require) {
 		/**
 		 *
 		 */
+		clear: function() {
+			this.time = 0;
+			this.times.length = 0;
+			this.setMousePosition(this.get('position'));
+
+			this.mouseDataSeries.clear();
+			this.positionModelSeries.clear();
+			this.velocityModelSeries.clear();
+			this.accelerationModelSeries.clear();
+
+			this.positionGraphSeries.clear();
+			this.velocityGraphSeries.clear();
+			this.accelerationGraphSeries.clear();
+		},
+
+		/**
+		 *
+		 */
 		update: function(time, delta) {
 			this.time = time;
 

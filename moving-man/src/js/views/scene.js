@@ -114,7 +114,7 @@ define(function(require) {
 		 */
 		hideWalls: function() {
 			this.$('.wall').addClass('disabled');
-			//this.simulation.disableWalls();
+			this.simulation.set('wallsEnabled', false);
 		},
 
 		/**
@@ -122,7 +122,7 @@ define(function(require) {
 		 */
 		showWalls: function() {
 			this.$('.wall').removeClass('disabled');
-			//this.simulation.enableWalls();
+			this.simulation.set('wallsEnabled', true);
 		},
 
 		/**
