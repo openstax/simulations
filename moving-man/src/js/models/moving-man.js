@@ -53,6 +53,8 @@ define(function (require) {
 
 			this.times = [];
 
+			this.mousePosition = 0;
+
 			this._wallResult = {
 				position: 0,
 				collided: false
@@ -93,6 +95,8 @@ define(function (require) {
 				var x;
 
 				if (!this.simulation.get('customExpression')) {
+					this.mouseDataSeries.add(this.clampIfWalled(this.mousePosition).position, time);
+
 					// Average of latest position samples from user input
 					var positions = this.mouseDataSeries.getPointsInRange(this.mouseDataSeries.size() - NUMBER_MOUSE_POINTS_TO_AVERAGE, this.mouseDataSeries.size());
 					

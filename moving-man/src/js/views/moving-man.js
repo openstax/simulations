@@ -71,7 +71,8 @@ define(function (require) {
 				this._xPercent = (event.pageX - this.dragOffset.left) / this.dragBounds.width;
 				this._xPosition = (this._xPercent * this.simulation.get('containerWidth')) - this.simulation.get('halfContainerWidth');
 
-				this.movingMan.addMouseData(this._xPosition);
+				this.movingMan.setMousePosition(this._xPosition);
+				this.movingMan.positionDriven(true);
 
 				// Get direction
 				if ((event.pageX - this.dragX) > 0)

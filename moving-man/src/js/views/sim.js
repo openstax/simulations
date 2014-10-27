@@ -301,9 +301,11 @@ define(function (require) {
 		 *
 		 */
 		positionChanged: function(model, value) {
-			this.updateLock(function(){
-				this.$positionInputs.val(value.toFixed(2));
-			});
+			if (!(this.simulation.movingMan.positionDriven() && !this.sceneView.movingManView.dragging)) {
+				this.updateLock(function(){
+					this.$positionInputs.val(value.toFixed(2));
+				});	
+			}
 		},
 
 		/**
