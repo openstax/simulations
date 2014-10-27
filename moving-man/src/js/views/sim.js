@@ -52,7 +52,15 @@ define(function (require) {
 			'click .reset-btn': 'reset',
 
 			'click .from-expression' : 'useExpression',
-			'click .drop-expression' : 'dropExpression'
+			'click .drop-expression' : 'dropExpression',
+
+			'slide .position .slider'     : 'changePosition',
+			'slide .velocity .slider'     : 'changeVelocity',
+			'slide .acceleration .slider' : 'changeAcceleration',
+
+			'keyup .position .variable-text'     : 'changePosition',
+			'keyup .velocity .variable-text'     : 'changeVelocity',
+			'keyup .acceleration .variable-text' : 'changeAcceleration',
 		},
 
 		/**
@@ -65,6 +73,10 @@ define(function (require) {
 
 			// Initialize the HeatmapView
 			this.initSceneView();
+
+			this.listenTo(this.simulation.movingMan, 'change:position',     this.positionChanged);
+			this.listenTo(this.simulation.movingMan, 'change:velocity',     this.velocityChanged);
+			this.listenTo(this.simulation.movingMan, 'change:acceleration', this.accelerationChanged);
 		},
 
 		/**
@@ -240,6 +252,63 @@ define(function (require) {
 			this.$('.position .slider').removeAttr('disabled');
 			
 			// Update simulation
+		},
+
+		/**
+		 *
+		 */
+		changePosition: function(event) {
+			var position = parseFloat($(event.target).val());
+			if (isNaN(position))
+				return;
+			this.simulation.movingMan.positionDriven(true);
+			this.simulation.movingMan.setMousePosition(position);
+		},
+
+		/**
+		 *
+		 */
+		changeVelocity: function(event) {
+			var velocity = parseFloat($(event.target).val());
+			if (isNaN(velocity))
+				return;
+			this.simulation.movingMan.velocityDriven(true);
+			this.simulation.movingMan.set('velocity', velocity);
+		},
+
+		/**
+		 *
+		 */
+		changeAcceleration: function(event) {
+			var acceleration = parseFloat($(event.target).val());
+			if (isNaN(acceleration))
+				return;
+			this.simulation.movingMan.accelerationDriven(true);
+			this.simulation.movingMan.set('acceleration', acceleration);
+		},
+
+		/**
+		 *
+		 */
+		positionChanged: function(model, value) {
+			this.$('.position .variable-text').val(value.toFixed(2));
+			//this.$('.position .slider').val(value.toFixed(2));
+		},
+
+		/**
+		 *
+		 */
+		velocityChanged: function(model, value) {
+			this.$('.velocity .variable-text').val(value.toFixed(2));
+			//this.$('.velocity .slider').val(value.toFixed(2));
+		},
+
+		/**
+		 *
+		 */
+		accelerationChanged: function(model, value) {
+			this.$('.acceleration .variable-text').val(value.toFixed(2));
+			//this.$('.acceleration .slider').val(value.toFixed(2));
 		}
 
 	});

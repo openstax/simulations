@@ -79,8 +79,6 @@ define(function (require) {
 				else if ((event.pageX - this.dragX) < 0)
 					this.movementState = MOVEMENT_STATE_LEFT;
 				this.dragX = event.pageX;
-
-				this.updateOnNextFrame = true;
 			}
 		},
 
@@ -90,20 +88,17 @@ define(function (require) {
 				this.$el.removeClass('dragging');
 
 				this.movementState = MOVEMENT_STATE_IDLE;
-
-				this.updateOnNextFrame = true;
 			}
 		},
 
 		update: function(time, delta) {
-			// If there aren't any changes, don't do anything.
-			if (!this.updateOnNextFrame)
+			this._lastPosition = this._position;
+			this._position = this.movingMan.get('position');
+			if (this._position === this._lastPosition)
 				return;
 
-			this.updateOnNextFrame = false;
-
 			// Update position
-			this._xPercent  = (this.movingMan.get('position') + this.simulation.get('halfContainerWidth')) / this.simulation.get('containerWidth');
+			this._xPercent  = (this._position + this.simulation.get('halfContainerWidth')) / this.simulation.get('containerWidth');
 			this._xPixels   = this._xPercent * this.dragBounds.width;
 			this._translate = 'translateX(' + this._xPixels + 'px)';
 
@@ -113,6 +108,13 @@ define(function (require) {
 				'-o-transform':      this._translate,
 				'transform':         this._translate,
 			});
+
+			if (this.movingMan.get('velocity') > 0.1)
+				this.movementState = MOVEMENT_STATE_RIGHT;
+			else if (this.movingMan.get('velocity') < -0.1)
+				this.movementState = MOVEMENT_STATE_LEFT;
+			else
+				this.movementState = MOVEMENT_STATE_IDLE;
 
 			// Update direction
 			if (this.visibleMovementState !== this.movementState) {

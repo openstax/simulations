@@ -154,8 +154,8 @@ define(function (require) {
 				this.mouseDataSeries.clear();
 
 				// Record set point
-				this.velocityModelSeries.addPoint(this.get('velocity'), time);
-				this.velocityGraphSeries.addPoint(this.get('velocity'), time);
+				this.velocityModelSeries.add(this.get('velocity'), time);
+				this.velocityGraphSeries.add(this.get('velocity'), time);
 
 				// Update derivatives
 				this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
@@ -171,7 +171,7 @@ define(function (require) {
 				this.setMousePosition(wallResult.position);
 				this.set('position', wallResult.position);
 
-				var instantAcceleration = accelerationGraphSeries.getLastPoint().value;
+				var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
 				if (Math.abs(instantAcceleration) < 1E-6)
 					instantAcceleration = 0; // PhET: "workaround to prevent high frequency wiggling around +/- 1E-12"
 
@@ -196,7 +196,7 @@ define(function (require) {
 				 *   show that crashing into a wall entails a suddent deceleration."
 				 */
 				if (wallResult.collided) {
-					this.motionStragegy = MOTION_STRATEGY_VELOCITY;
+					this.velocityDriven(true);
 					this.set('velocity', newVelocity);
 					this.update(time - delta, delta);
 					return;
@@ -279,16 +279,25 @@ define(function (require) {
 			}
 		},
 
-		positionDriven: function() {
-			return this.motionStrategy === MOTION_STRATEGY_POSITION;
+		positionDriven: function(value) {
+			if (value === undefined)
+				return this.motionStrategy === MOTION_STRATEGY_POSITION;
+			else if (value === true)
+				this.motionStrategy = MOTION_STRATEGY_POSITION;
 		},
 
-		velocityDriven: function() {
-			return this.motionStrategy === MOTION_STRATEGY_VELOCITY;
+		velocityDriven: function(value) {
+			if (value === undefined)
+				return this.motionStrategy === MOTION_STRATEGY_VELOCITY;
+			else if (value === true)
+				this.motionStrategy = MOTION_STRATEGY_VELOCITY;
 		},
 
-		accelerationDriven: function() {
-			return this.motionStrategy === MOTION_STRATEGY_ACCELERATION;
+		accelerationDriven: function(value) {
+			if (value === undefined)
+				return this.motionStrategy === MOTION_STRATEGY_ACCELERATION;
+			else if (value === true)
+				this.motionStrategy = MOTION_STRATEGY_ACCELERATION;
 		},
 
 		/**

@@ -92,7 +92,7 @@ define(function(require) {
 		 *
 		 */
 		clear: function() {
-			this.data.length = 0;
+			this.data = [];
 		},
 
 		/**

@@ -31,7 +31,7 @@ define(function (require) {
 		update: function(time, delta) {
 
 			if (!this.paused) {
-				this._update(time, delta);
+				this._update(time / 1000, delta / 1000);
 			}
 			
 		},
