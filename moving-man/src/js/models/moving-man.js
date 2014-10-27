@@ -91,7 +91,7 @@ define(function (require) {
 
 			if (this.positionDriven()) {
 				var previousPosition = this.get('position');
-				var averagePosition;
+				var position;
 				var x;
 
 				if (!this.simulation.get('customExpression')) {
@@ -105,13 +105,13 @@ define(function (require) {
 						sum += positions[i].value;
 
 					x = positions.length ? (sum / positions.length) : 0;
-					averagePosition = this.clampIfWalled(x).position;
-					this.positionModelSeries.add(averagePosition, time);
+					position = this.clampIfWalled(x).position;
+					this.positionModelSeries.add(position, time);
 				}
 				else {
 					// Position by user-specified function
 					x = this.simulation.evaluateExpression(time);
-					var position = this.clampIfWalled(x).position;
+					position = this.clampIfWalled(x).position;
 					this.setMousePosition(position);
 					this.mouseDataSeries.add(position, time);
 					this.positionModelSeries.add(position, time);
@@ -129,12 +129,12 @@ define(function (require) {
 				var time1StepsAgo = this.getTimeNTimeStepsAgo(1);
 				var time2StepsAgo = this.getTimeNTimeStepsAgo(2);
 
-				this.positionGraphSeries.add(averagePosition, time);
+				this.positionGraphSeries.add(position, time);
 				this.velocityGraphSeries.add(this.getPointAtTime(this.velocityModelSeries, time1StepsAgo, time));
 				this.accelerationGraphSeries.add(this.getPointAtTime(this.accelerationModelSeries, time2StepsAgo, time));
 
 				// Set instantaneous values
-				this.set('position', averagePosition);
+				this.set('position', position);
 
 				var instantVelocity = this.velocityGraphSeries.getLastPoint().value;
 				if (Math.abs(instantVelocity) < 1E-6)
