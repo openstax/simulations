@@ -91,6 +91,13 @@ define(function(require) {
 		/**
 		 *
 		 */
+		clear: function() {
+			this.data.length = 0;
+		},
+
+		/**
+		 *
+		 */
 		clearPointsAfter: function(time) {
 			var points = [];
 			for (var i = 0; i < this.data.length; i++) {
@@ -136,6 +143,11 @@ define(function(require) {
 		 *   I'm just going to call it once until I further notice.
 		 */
 		add: function(value, time) {
+			if (_.isObject(value)) {
+				var obj = value;
+				value = obj.value;
+				time  = obj.time;
+			}
 			if (time <= this.maxTime)
 				DataSeries.prototype.add.apply(this, [value, time]);
 		}

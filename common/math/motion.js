@@ -2,7 +2,7 @@ define(function (require) {
 
 	'use strict';
 
-	var leastSquares = require('../node_modules/least-squares/lib/least-squares');
+	require('../node_modules/least-squares/lib/least-squares'); var leastSquares = window.lsq;
 
 	/**
 	 * Source ported from phet.common.motion.MotionMath.

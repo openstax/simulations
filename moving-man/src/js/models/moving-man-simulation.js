@@ -13,7 +13,8 @@ define(function (require) {
 	var MovingManSimulation = Simulation.extend({
 		defaults: {
 			containerWidth: 20,
-			halfContainerWidth: 10
+			halfContainerWidth: 10,
+			customExpression: null
 		},
 		
 		/**
@@ -57,7 +58,15 @@ define(function (require) {
 		 */
 		positionWithinBounds: function(x) {
 			return (x >= -this.get('halfContainerWidth') && x <= this.get('halfContainerWidth'));
+		},
+
+		/**
+		 * Evaluates the custom user-specified expression
+		 */
+		evaluateExpression: function() {
+			return 0;
 		}
+
 
 	});
 

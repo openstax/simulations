@@ -26,7 +26,9 @@ define(function (require) {
 	 */
 	var MovingMan = Backbone.Model.extend({
 		defaults: {
-			position: 0
+			position: 0,
+			velocity: 0,
+			acceleration: 0
 		},
 		
 		/**
@@ -43,11 +45,13 @@ define(function (require) {
 			this.velocityModelSeries     = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
 			this.accelerationModelSeries = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
 
-			this.positionGraphSeries     = new DataSeries.LimitedTime({ maxSize: SERIES_TIME_LIMIT });
-			this.velocityGraphSeries     = new DataSeries.LimitedTime({ maxSize: SERIES_TIME_LIMIT });
-			this.accelerationGraphSeries = new DataSeries.LimitedTime({ maxSize: SERIES_TIME_LIMIT });
+			this.positionGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+			this.velocityGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+			this.accelerationGraphSeries = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
 
 			this.motionStrategy = MOTION_STRATEGY_POSITION;
+
+			this.times = [];
 
 			this._wallResult = {
 				position: 0,
@@ -66,7 +70,11 @@ define(function (require) {
 				this.times.shift();
 
 			if (this.positionDriven()) {
-				if (!this.simulation.customExpression) {
+				var previousPosition = this.get('position');
+				var averagePosition;
+				var x;
+
+				if (!this.simulation.get('customExpression')) {
 					// Average of latest position samples from user input
 					var positions = this.mouseDataSeries.getPointsInRange(this.mouseDataSeries.size() - NUMBER_MOUSE_POINTS_TO_AVERAGE, this.mouseDataSeries.size());
 					
@@ -74,12 +82,13 @@ define(function (require) {
 					for (var i = 0; i < positions.length; i++)
 						sum += positions[i].value;
 
-					var averagePosition = this.clampIfWalled(sum / positions.length).position;
+					x = positions.length ? (sum / positions.length) : 0;
+					averagePosition = this.clampIfWalled(x).position;
 					this.positionModelSeries.add(averagePosition, time);
 				}
 				else {
 					// Position by user-specified function
-					var x = this.simulation.evaluateExpression(time);
+					x = this.simulation.evaluateExpression(time);
 					var position = this.clampIfWalled(x).position;
 					this.setMousePosition(position);
 					this.mouseDataSeries.add(position, time);
@@ -103,7 +112,24 @@ define(function (require) {
 				this.accelerationGraphSeries.add(this.getPointAtTime(this.accelerationModelSeries, time2StepsAgo, time));
 
 				// Set instantaneous values
-				
+				this.set('position', averagePosition);
+
+				var instantVelocity = this.velocityGraphSeries.getLastPoint().value;
+				if (Math.abs(instantVelocity) < 1E-6)
+					instantVelocity = 0; // PhET: "added a prevent high frequency wiggling around +/- 1E-12"
+
+				// PhET: "TODO: subtract off derivative radius so that the last value showed on chart is the same as the value on the man"
+				this.set('velocity', instantVelocity);
+
+				var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
+				if (Math.abs(instantAcceleration) < 1E-6)
+					instantAcceleration = 0; // PhET: "added a prevent high frequency wiggling around +/- 1E-12"
+
+				this.set('acceleration', instantAcceleration); //- DERIVATIVE_RADIUS * 2
+
+				// Make sure we notify the interface if we've collided so it can play annoying sounds if it wants
+				if (!this.hitsWall(previousPosition) && this.hitsWall(this.get('position')))
+					this.trigger('collide');
 			}
 		},
 
@@ -112,11 +138,14 @@ define(function (require) {
 		 */
 		addMouseData: function(value, time) {
 			this.mouseDataSeries.add(value, time);
-			this.set('position', value);
+			//this.set('position', value);
 		},
 
 		/**
-		 *
+		 * Returns an object {
+		 *    position: the clamped value of x (bounded by walls if walls enabled)
+		 *    collided: boolean representing whether the specified x was colliding
+		 * }
 		 */
 		clampIfWalled: function(x) {
 			this._wallResult.position = x;
@@ -135,6 +164,13 @@ define(function (require) {
 			}
 
 			return this._wallResult;
+		},
+
+		/**
+		 * Returns true if the x specified would be hitting the wall.
+		 */
+		hitsWall: function(x) {
+			return -this.simulation.get('halfContainerWidth') == x || this.simulation.get('halfContainerWidth') == x;
 		},
 
 		/**
@@ -195,7 +231,7 @@ define(function (require) {
 			var range, derivative;
 			for (var i = 0; i < series.size(); i++) {
 				range = series.getPointsInRange(i - radius, i + radius);
-				derivative = MotionMath.estimateDerivatives(range);
+				derivative = MotionMath.estimateDerivative(range);
 				points.push({
 					value: derivative,
 					time:  series.getPoint(i).time
@@ -210,7 +246,7 @@ define(function (require) {
 		getTimeNTimeStepsAgo: function(n) {
 			var index = this.times.length - 1 - n;
 			if (index < 0) 
-				index = times.length - 1;
+				index = this.times.length - 1;
 
 			var t = this.times[index];
 			if (t > this.time) 
