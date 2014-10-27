@@ -55,6 +55,9 @@ define(function (require) {
 			this.initComponents();
 		},
 
+		/**
+		 * 
+		 */
 		postRender: function() {}
 
 	});

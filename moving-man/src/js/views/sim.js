@@ -180,6 +180,10 @@ define(function (require) {
 				.append($velocity)
 				.append($acceleration);
 
+			this.$positionInputs     = this.$('.position     .variable-text, .position     .slider');
+			this.$velocityInputs     = this.$('.velocity     .variable-text, .velocity     .slider');
+			this.$accelerationInputs = this.$('.acceleration .variable-text, .acceleration .slider');
+
 			this.$el.append(this.functionHelpTemplate({
 				help_modal_id: help_modal_id
 			}));
@@ -259,10 +263,12 @@ define(function (require) {
 		 */
 		changePosition: function(event) {
 			var position = parseFloat($(event.target).val());
-			if (isNaN(position))
-				return;
-			this.simulation.movingMan.positionDriven(true);
-			this.simulation.movingMan.setMousePosition(position);
+			if (!isNaN(position)) {
+				this.inputLock(function(){
+					this.simulation.movingMan.positionDriven(true);
+					this.simulation.movingMan.setMousePosition(position);
+				});
+			}
 		},
 
 		/**
@@ -270,10 +276,12 @@ define(function (require) {
 		 */
 		changeVelocity: function(event) {
 			var velocity = parseFloat($(event.target).val());
-			if (isNaN(velocity))
-				return;
-			this.simulation.movingMan.velocityDriven(true);
-			this.simulation.movingMan.set('velocity', velocity);
+			if (!isNaN(velocity)) {
+				this.inputLock(function(){
+					this.simulation.movingMan.velocityDriven(true);
+					this.simulation.movingMan.set('velocity', velocity);
+				});
+			}
 		},
 
 		/**
@@ -281,34 +289,39 @@ define(function (require) {
 		 */
 		changeAcceleration: function(event) {
 			var acceleration = parseFloat($(event.target).val());
-			if (isNaN(acceleration))
-				return;
-			this.simulation.movingMan.accelerationDriven(true);
-			this.simulation.movingMan.set('acceleration', acceleration);
+			if (!isNaN(acceleration)) {
+				this.inputLock(function(){
+					this.simulation.movingMan.accelerationDriven(true);
+					this.simulation.movingMan.set('acceleration', acceleration);
+				});	
+			}
 		},
 
 		/**
 		 *
 		 */
 		positionChanged: function(model, value) {
-			this.$('.position .variable-text').val(value.toFixed(2));
-			//this.$('.position .slider').val(value.toFixed(2));
+			this.updateLock(function(){
+				this.$positionInputs.val(value.toFixed(2));
+			});
 		},
 
 		/**
 		 *
 		 */
 		velocityChanged: function(model, value) {
-			this.$('.velocity .variable-text').val(value.toFixed(2));
-			//this.$('.velocity .slider').val(value.toFixed(2));
+			this.updateLock(function(){
+				this.$velocityInputs.val(value.toFixed(2));
+			});
 		},
 
 		/**
 		 *
 		 */
 		accelerationChanged: function(model, value) {
-			this.$('.acceleration .variable-text').val(value.toFixed(2));
-			//this.$('.acceleration .slider').val(value.toFixed(2));
+			this.updateLock(function(){
+				this.$accelerationInputs.val(value.toFixed(2));
+			});
 		}
 
 	});
