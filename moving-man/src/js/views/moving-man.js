@@ -94,8 +94,11 @@ define(function (require) {
 		update: function(time, delta) {
 			this._lastPosition = this._position;
 			this._position = this.movingMan.get('position');
-			if (this._position === this._lastPosition)
+			if (this._position === this._lastPosition && !this.updateOnNextFrame)
 				return;
+
+			if (this.updateOnNextFrame)
+				this.updateOnNextFrame = false;
 
 			// Update position
 			this._xPercent  = (this._position + this.simulation.get('halfContainerWidth')) / this.simulation.get('containerWidth');
