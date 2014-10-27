@@ -123,13 +123,88 @@ define(function (require) {
 
 				var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
 				if (Math.abs(instantAcceleration) < 1E-6)
-					instantAcceleration = 0; // PhET: "added a prevent high frequency wiggling around +/- 1E-12"
+					instantAcceleration = 0; // PhET: "prevent high frequency wiggling around +/- 1E-12"
 
 				this.set('acceleration', instantAcceleration); //- DERIVATIVE_RADIUS * 2
 
 				// Make sure we notify the interface if we've collided so it can play annoying sounds if it wants
 				if (!this.hitsWall(previousPosition) && this.hitsWall(this.get('position')))
 					this.trigger('collide');
+			}
+			else if (this.velocityDriven()) {
+				// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
+				this.mouseDataSeries.clear();
+
+				// Record set point
+				this.velocityModelSeries.addPoint(this.get('velocity'), time);
+				this.velocityGraphSeries.addPoint(this.get('velocity'), time);
+
+				// Update derivatives
+				this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
+				this.accelerationGraphSeries.add(this.accelerationModelSeries.getMidPoint());
+
+				// Update integrals
+				var targetPosition = this.get('position') + this.get('velocity') * delta;
+				var wallResult = this.clampIfWalled(targetPosition);
+				this.positionModelSeries.add(wallResult.position, time);
+				this.positionGraphSeries.add(wallResult.position, time);
+
+				// Set instantaneous values
+				this.setMousePosition(wallResult.position);
+				this.set('position', wallResult.position);
+
+				var instantAcceleration = accelerationGraphSeries.getLastPoint().value;
+				if (Math.abs(instantAcceleration) < 1E-6)
+					instantAcceleration = 0; // PhET: "workaround to prevent high frequency wiggling around +/- 1E-12"
+
+				this.set('acceleration', instantAcceleration);
+
+				if (wallResult.collided) {
+					this.set('velocity', 0);
+					this.trigger('collide');
+				}
+			}
+			else if (this.accelerationDriven()) {
+				// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
+				this.mouseDataSeries.clear();
+
+				var newVelocity = this.get('velocity') + this.get('acceleration') * delta;
+				var estVelocity = (this.get('velocity') + newVelocity) / 2; // PhET: "todo: just use newVelocity?"
+				var wallResult = this.clampIfWalled(this.get('position') + estVelocity * delta);
+
+				/* Notes from PhET: "
+				 *   This ensures that there is a deceleration spike when crashing into a wall.  Without this code,
+				 *   the acceleration remains at the user specified value or falls to 0.0, but it is essential to
+				 *   show that crashing into a wall entails a suddent deceleration."
+				 */
+				if (wallResult.collided) {
+					this.motionStragegy = MOTION_STRATEGY_VELOCITY;
+					this.set('velocity', newVelocity);
+					this.update(time - delta, delta);
+					return;
+				}
+
+				// Record set point
+				this.accelerationModelSeries.add(this.get('acceleration'), time);
+				this.accelerationGraphSeries.add(this.get('acceleration'), time);
+
+				// No derivatives
+
+				// Update integrals
+				this.velocityGraphSeries.add(newVelocity, time);
+				this.velocityModelSeries.add(newVelocity, time);
+
+				this.positionGraphSeries.add(wallResult.position, time);
+				this.positionModelSeries.add(wallResult.position, time);
+
+				// Set instantaneous values
+				this.setMousePosition(wallResult.position); // PhET: "so that if the user switches to mouse-driven, it will have the right location"
+				this.set('position', wallResult.position);
+				this.set('velocity', newVelocity);
+				if (wallResult.collided) {
+					this.set('velocity', 0);
+					this.set('acceleration', 0); // PhET: "todo: should have brief burst of acceleration against the wall in a collision."
+				}
 			}
 		},
 
@@ -138,7 +213,6 @@ define(function (require) {
 		 */
 		addMouseData: function(value, time) {
 			this.mouseDataSeries.add(value, time);
-			//this.set('position', value);
 		},
 
 		/**
