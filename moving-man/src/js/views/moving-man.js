@@ -95,7 +95,11 @@ define(function (require) {
 		update: function(time, delta) {
 			this._lastPosition = this._position;
 			this._position = this.movingMan.get('position');
-			if (this._position === this._lastPosition && !this.updateOnNextFrame)
+
+			this._lastVelocity = this._velocity;
+			this._velocity = this.movingMan.get('velocity');
+
+			if (!this.updateOnNextFrame && this._position === this._lastPosition && this._velocity === this._lastVelocity)
 				return;
 
 			if (this.updateOnNextFrame)
