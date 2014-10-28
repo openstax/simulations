@@ -37,6 +37,7 @@
     "grunt-rename": "^0.1.4",
     "grunt-targethtml": "^0.2.6",
     "less": "^1.7.4",
-    "matchdep": "^0.3.0"
+    "matchdep": "^0.3.0",
+    "play-audio": "^0.1.0"
   }
 }

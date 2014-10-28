@@ -26,6 +26,7 @@
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
     "timbre": "*",
-    "gl-matrix": "~2.2.1"
+    "gl-matrix": "~2.2.1",
+    "play-audio": "*"
   }
 }

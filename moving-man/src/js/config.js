@@ -12,6 +12,7 @@
 			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 			timbre:     '../../bower_components/timbre/timbre.dev',
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
+			'play-audio':'../../bower_components/play-audio/dist/play-audio',
 
 			views:      '../js/views',
 			graphics:   '../js/graphics',
