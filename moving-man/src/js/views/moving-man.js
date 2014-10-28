@@ -18,6 +18,12 @@ define(function (require) {
 	var MOVEMENT_STATE_LEFT  = 1;
 	var MOVEMENT_STATE_RIGHT = 2;
 
+	// These are from PhET and seem fairly arbitrary...
+	var VELOCITY_SCALE     = 0.2;
+	var ACCELERATION_SCALE = 0.8;
+
+	var ARROW_HEAD_WIDTH = 15;
+
 	/**
 	 *
 	 */
@@ -38,6 +44,12 @@ define(function (require) {
 
 			this.simulation = options.simulation;
 			this.movingMan  = this.simulation.movingMan;
+
+			this.velocityArrowEnabled = false;
+			this.velocityArrowVisible = false;
+
+			this.accelerationArrowEnabled = false;
+			this.accelerationArrowVisible = false;	
 		},
 
 		render: function() {
@@ -146,7 +158,70 @@ define(function (require) {
 						break;
 				}
 			}
-		}
+
+			// Update arrow visiblity
+			if (this.velocityArrowEnabled !== this.velocityArrowVisible) {
+				if (this.velocityArrowEnabled) {
+					this.$('.arrow.velocity').show();
+					this.velocityArrowVisible = true;
+				}
+				else {
+					this.$('.arrow.velocity').hide();
+					this.velocityArrowVisible = false;
+				}
+			}
+
+			if (this.accelerationArrowEnabled !== this.accelerationArrowVisible) {
+				if (this.accelerationArrowEnabled) {
+					this.$('.arrow.acceleration').show();
+					this.accelerationArrowVisible = true;
+				}
+				else {
+					this.$('.arrow.acceleration').hide();
+					this.accelerationArrowVisible = false;
+				}
+			}
+
+			// Update arrow lengths
+			var targetWidth;
+
+			/*
+			 * If it's less than the width of the arrow head, scale the arrow head.
+			 * Else, determine what's left of the length after subtracting the width 
+			 *   of the arrow head and make the arrow stem that length.
+			 */
+			if (this.velocityArrowVisible) {
+				targetWidth = this._velocity * VELOCITY_SCALE;
+				
+				//if ()
+			}
+
+			if (this.accelerationArrowVisible) {
+				targetWidth = this.movingMan.get('acceleration') * ACCELERATION_SCALE;
+
+			}
+		},
+
+		showVelocityArrow: function() {
+			this.velocityArrowEnabled = true;
+			this.updateOnNextFrame = true;
+		},
+
+		hideVelocityArrow: function() {
+			this.velocityArrowEnabled = false;
+			this.updateOnNextFrame = true;
+		},
+
+		showAccelerationArrow: function() {
+			this.accelerationArrowEnabled = true;
+			this.updateOnNextFrame = true;
+		},
+
+		hideAccelerationArrow: function() {
+			this.accelerationArrowEnabled = false;
+			this.updateOnNextFrame = true;
+		},
+
 	});
 
 	return MovingManView;
