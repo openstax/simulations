@@ -45,11 +45,11 @@ define(function (require) {
 			this.simulation = options.simulation;
 			this.movingMan  = this.simulation.movingMan;
 
-			this.velocityArrowEnabled = false;
-			this.velocityArrowVisible = false;
+			this.velocityVectorEnabled = false;
+			this.velocityVectorVisible = false;
 
-			this.accelerationArrowEnabled = false;
-			this.accelerationArrowVisible = false;	
+			this.accelerationVectorEnabled = false;
+			this.accelerationVectorVisible = false;	
 		},
 
 		render: function() {
@@ -61,6 +61,15 @@ define(function (require) {
 
 		renderMovingMan: function() {
 			this.$el.html(this.template());
+
+			this.$velocityVector     = this.$('.arrow.velocity');
+			this.$accelerationVector = this.$('.arrow.acceleration');
+		},
+
+		resize: function() {
+			SimDraggable.prototype.resize.apply(this);
+
+			this.pixelRatio = this.dragBounds.width / this.simulation.get('containerWidth');
 		},
 
 		down: function(event) {
@@ -160,65 +169,82 @@ define(function (require) {
 			}
 
 			// Update arrow visiblity
-			if (this.velocityArrowEnabled !== this.velocityArrowVisible) {
-				if (this.velocityArrowEnabled) {
-					this.$('.arrow.velocity').show();
-					this.velocityArrowVisible = true;
+			if (this.velocityVectorEnabled !== this.velocityVectorVisible) {
+				if (this.velocityVectorEnabled) {
+					this.$velocityVector.show();
+					this.velocityVectorVisible = true;
 				}
 				else {
-					this.$('.arrow.velocity').hide();
-					this.velocityArrowVisible = false;
+					this.$velocityVector.hide();
+					this.velocityVectorVisible = false;
 				}
 			}
 
-			if (this.accelerationArrowEnabled !== this.accelerationArrowVisible) {
-				if (this.accelerationArrowEnabled) {
-					this.$('.arrow.acceleration').show();
-					this.accelerationArrowVisible = true;
+			if (this.accelerationVectorEnabled !== this.accelerationVectorVisible) {
+				if (this.accelerationVectorEnabled) {
+					this.$accelerationVector.show();
+					this.accelerationVectorVisible = true;
 				}
 				else {
-					this.$('.arrow.acceleration').hide();
-					this.accelerationArrowVisible = false;
+					this.$accelerationVector.hide();
+					this.accelerationVectorVisible = false;
 				}
 			}
 
-			// Update arrow lengths
-			var targetWidth;
+			// Update arrow lengths and directions
+			var vectorWidth;
 
-			/*
-			 * If it's less than the width of the arrow head, scale the arrow head.
-			 * Else, determine what's left of the length after subtracting the width 
-			 *   of the arrow head and make the arrow stem that length.
-			 */
-			if (this.velocityArrowVisible) {
-				targetWidth = this._velocity * VELOCITY_SCALE;
-				
-				//if ()
+			if (this.velocityVectorVisible) {
+				vectorWidth = Math.abs(this._velocity * VELOCITY_SCALE) * this.pixelRatio;
+				this.$velocityVector.width(vectorWidth);
+
+				if (this._velocity > 0) {
+					this.$velocityVector
+						.removeClass('left')
+						.addClass('right');
+				}
+				else {
+					this.$velocityVector
+						.removeClass('right')
+						.addClass('left');
+				}
 			}
 
-			if (this.accelerationArrowVisible) {
-				targetWidth = this.movingMan.get('acceleration') * ACCELERATION_SCALE;
+			if (this.accelerationVectorVisible) {
+				this._acceleration = this.movingMan.get('acceleration');
+				vectorWidth = Math.abs(this._acceleration * ACCELERATION_SCALE) * this.pixelRatio;
+				this.$accelerationVector.width(vectorWidth);
 
+				if (this._acceleration > 0) {
+					this.$accelerationVector
+						.removeClass('left')
+						.addClass('right');
+				}
+				else {
+					this.$accelerationVector
+						.removeClass('right')
+						.addClass('left');
+				}
 			}
 		},
 
-		showVelocityArrow: function() {
-			this.velocityArrowEnabled = true;
+		showVelocityVector: function() {
+			this.velocityVectorEnabled = true;
 			this.updateOnNextFrame = true;
 		},
 
-		hideVelocityArrow: function() {
-			this.velocityArrowEnabled = false;
+		hideVelocityVector: function() {
+			this.velocityVectorEnabled = false;
 			this.updateOnNextFrame = true;
 		},
 
-		showAccelerationArrow: function() {
-			this.accelerationArrowEnabled = true;
+		showAccelerationVector: function() {
+			this.accelerationVectorEnabled = true;
 			this.updateOnNextFrame = true;
 		},
 
-		hideAccelerationArrow: function() {
-			this.accelerationArrowEnabled = false;
+		hideAccelerationVector: function() {
+			this.accelerationVectorEnabled = false;
 			this.updateOnNextFrame = true;
 		},
 

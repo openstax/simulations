@@ -61,6 +61,9 @@ define(function (require) {
 			'keyup .position .variable-text'     : 'changePosition',
 			'keyup .velocity .variable-text'     : 'changeVelocity',
 			'keyup .acceleration .variable-text' : 'changeAcceleration',
+
+			'change .velocity     .vector-check' : 'changeVelocityVectorVisibility',
+			'change .acceleration .vector-check' : 'changeAccelerationVectorVisibility'
 		},
 
 		/**
@@ -324,7 +327,27 @@ define(function (require) {
 			this.updateLock(function(){
 				this.$accelerationInputs.val(value.toFixed(2));
 			});
-		}
+		},
+
+		/**
+		 *
+		 */
+		changeVelocityVectorVisibility: function(event) {
+			if ($(event.target).is(':checked'))
+				this.sceneView.movingManView.showVelocityVector();
+			else
+				this.sceneView.movingManView.hideVelocityVector();
+		},
+
+		/**
+		 *
+		 */
+		changeAccelerationVectorVisibility: function(event) {
+			if ($(event.target).is(':checked'))
+				this.sceneView.movingManView.showAccelerationVector();
+			else
+				this.sceneView.movingManView.hideAccelerationVector();
+		},
 
 	});
 
