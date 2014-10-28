@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
 	// var $ = require('jquery');
 	var _    = require('underscore');
-	var play = require('play-audio');
+	//var play = require('play-audio');
 
 	var SimDraggable = require('views/sim-draggable');
 
@@ -59,7 +59,7 @@ define(function (require, exports, module) {
 			this.resize();
 			this.update(0, 0);
 
-			play(['../../audio/phet/crash.mp3']).autoplay();
+			//play(['../../audio/phet/crash.mp3']).autoplay();
 		},
 
 		renderMovingMan: function() {
