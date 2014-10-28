@@ -70,8 +70,8 @@ define(function(require) {
 			// Make them all visible for the post-render calculations
 			this.$('.sim-content').addClass('active');
 
-			_.each(this.sims, function(sim) {
-				sim.postRender();
+			_.each(this.simViews, function(simView) {
+				simView.postRender();
 			});
 
 			// Only hide the other tabs after they've all been rendered visibly

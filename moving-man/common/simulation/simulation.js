@@ -8,6 +8,10 @@ define(function (require) {
 	 * Wraps the update function in 
 	 */
 	var Simulation = Backbone.Model.extend({
+
+		defaults: {
+			wallsEnabled: true
+		},
 		
 		/**
 		 *
@@ -27,13 +31,13 @@ define(function (require) {
 		update: function(time, delta) {
 
 			if (!this.paused) {
-				this._update(time, delta);
+				this._update(time / 1000, delta / 1000);
 			}
 			
 		},
 
 		/**
-		 * Inside the fixed-interval loop
+		 * Only runs if the simulation isn't currently paused.
 		 */
 		_update: function(time, delta) {},
 
@@ -49,7 +53,12 @@ define(function (require) {
 
 		reset: function() {
 			this.initComponents();
-		}
+		},
+
+		/**
+		 * 
+		 */
+		postRender: function() {}
 
 	});
 

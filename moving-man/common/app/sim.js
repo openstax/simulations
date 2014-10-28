@@ -160,30 +160,30 @@ define(function (require) {
 		},
 
 		/**
-		 * Helper function for setting properties on the simulation without causing a
+		 * Helper function for setting properties on the waveSimulation without causing a
 		 *   loop of updates between the wave simulation model and the view
 		 */
-		setFromInput: function(property, value) {
+		inputLock: function(callback) {
 			if (this.updatingProperty)
 				return;
 
 			this.inputtingProperty = true;
-			this.simulation.set(property, value);
+			callback.apply(this);
 			this.inputtingProperty = false;
 		},
 
 		/**
-		 * Helper function for updating inputs from the simulation without causing a
+		 * Helper function for updating inputs from the wave simulation without causing a
 		 *   loop of updates between the wave simulation model and the view
 		 */
-		updateInput: function($input, value) {
+		updateLock: function(callback) {
 			if (this.inputtingProperty)
 				return;
 
 			this.updatingProperty = true;
-			$input.val(value);
+			callback.apply(this);
 			this.updatingProperty = false;
-		}
+		},
 
 	});
 
