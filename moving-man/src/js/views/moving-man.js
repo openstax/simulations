@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
 	// var $ = require('jquery');
 	var _    = require('underscore');
-	//var play = require('play-audio');
+	var buzz = require('buzz');
 
 	var SimDraggable = require('views/sim-draggable');
 
@@ -51,6 +51,14 @@ define(function (require, exports, module) {
 
 			this.accelerationVectorEnabled = false;
 			this.accelerationVectorVisible = false;	
+
+			this.crashSound = new buzz.sound('audio/phet/crash', {
+				formats: ['ogg', 'mp3', 'wav']
+			});
+
+			this.listenTo(this.movingMan, 'collide', function(){
+				this.crashSound.play();
+			});
 		},
 
 		render: function() {
@@ -58,8 +66,6 @@ define(function (require, exports, module) {
 			this.bindDragEvents();
 			this.resize();
 			this.update(0, 0);
-
-			//play(['../../audio/phet/crash.mp3']).autoplay();
 		},
 
 		renderMovingMan: function() {
@@ -250,6 +256,18 @@ define(function (require, exports, module) {
 			this.accelerationVectorEnabled = false;
 			this.updateOnNextFrame = true;
 		},
+
+		muteVolume: function() {
+			this.crashSound.setVolume(0);
+		},
+
+		lowVolume: function() {
+			this.crashSound.setVolume(20);
+		},
+
+		highVolume: function() {
+			this.crashSound.setVolume(80);
+		}
 
 	});
 

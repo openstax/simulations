@@ -12,7 +12,7 @@
 			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 			timbre:     '../../bower_components/timbre/timbre.dev',
 			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
-			'play-audio':'../../bower_components/play-audio/dist/play-audio',
+			buzz:       '../../bower_components/buzz/dist/buzz.min',
 
 			views:      '../js/views',
 			graphics:   '../js/graphics',
@@ -40,7 +40,7 @@
 			globalVars: {
 				dependencyDir: '"/bower_components"'
 			}
-		},
+		}
 	};
 
 	require.config(config);

@@ -27,6 +27,6 @@
     "nouislider": "~7.0.3 >=7.0.3",
     "timbre": "*",
     "gl-matrix": "~2.2.1",
-    "play-audio": "*"
+    "buzz": "~1.1.7"
   }
 }
