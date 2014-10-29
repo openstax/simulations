@@ -34,6 +34,8 @@ define(function (require) {
 		initialize: function(options) {
 			Simulation.prototype.initialize.apply(this, [options]);
 
+			this.noRecording = options ? options.noRecording : false;
+
 			this.initComponents();
 
 			this.on('change:containerWidth', function() {
@@ -53,7 +55,8 @@ define(function (require) {
 		 */
 		initMovingMan: function() {
 			this.movingMan = new MovingMan({
-				simulation: this
+				simulation: this,
+				noRecording: this.noRecording
 			});
 		},
 

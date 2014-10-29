@@ -4,7 +4,8 @@ define(function(require) {
 
 	var _ = require('underscore');
 
-	var MovingManSimView = require('views/sim');
+	var MovingManSimulation = require('models/moving-man-simulation');
+	var MovingManSimView    = require('views/sim');
 
 	var IntroSimView = MovingManSimView.extend({
 
@@ -19,7 +20,16 @@ define(function(require) {
 			}, options);
 			
 			MovingManSimView.prototype.initialize.apply(this, [ options ]);
-		}
+		},
+
+		/**
+		 * Initializes the Simulation.
+		 */
+		initSimulation: function() {
+			this.simulation = new MovingManSimulation({
+				noRecording: true
+			});
+		},
 
 	});
 
