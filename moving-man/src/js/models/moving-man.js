@@ -45,9 +45,16 @@ define(function (require) {
 			this.velocityModelSeries     = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
 			this.accelerationModelSeries = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
 
-			this.positionGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
-			this.velocityGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
-			this.accelerationGraphSeries = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+			if (options.noRecording) {
+				this.positionGraphSeries     = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
+				this.velocityGraphSeries     = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
+				this.accelerationGraphSeries = new DataSeries.LimitedSize({ maxSize: SERIES_SIZE_LIMIT });
+			}
+			else {
+				this.positionGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+				this.velocityGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+				this.accelerationGraphSeries = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
+			}
 
 			this.motionStrategy = MOTION_STRATEGY_POSITION;
 
@@ -80,6 +87,21 @@ define(function (require) {
 		},
 
 		/**
+		 * Used when the user seeks to a certain spot in the playback sequence
+		 *   and starts recording over what's there at that position.
+		 */
+		clearHistoryAfter: function(time) {
+			this.mouseDataSeries.clearPointsAfter(time);
+			this.positionModelSeries.clearPointsAfter(time);
+			this.velocityModelSeries.clearPointsAfter(time);
+			this.accelerationModelSeries.clearPointsAfter(time);
+
+			this.positionGraphSeries.clearPointsAfter(time);
+			this.velocityGraphSeries.clearPointsAfter(time);
+			this.accelerationGraphSeries.clearPointsAfter(time);
+		},
+
+		/**
 		 *
 		 */
 		update: function(time, delta) {
@@ -89,144 +111,162 @@ define(function (require) {
 			if (this.times.length > NUM_TIME_POINTS_TO_RECORD)
 				this.times.shift();
 
-			if (this.positionDriven()) {
-				var previousPosition = this.get('position');
-				var position;
-				var x;
+			if (this.positionDriven())
+				this._updateFromPosition(time, delta);
+			else if (this.velocityDriven())
+				this._updateFromVelocity(time, delta);
+			else if (this.accelerationDriven())
+				this._updateFromAcceleration(time, delta);
+		},
 
-				if (!this.simulation.get('customExpression')) {
-					this.mouseDataSeries.add(this.clampIfWalled(this.mousePosition).position, time);
+		/**
+		 *
+		 */
+		_updateFromPosition: function(time, delta) {
+			var previousPosition = this.get('position');
+			var position;
+			var x;
 
-					// Average of latest position samples from user input
-					var positions = this.mouseDataSeries.getPointsInRange(this.mouseDataSeries.size() - NUMBER_MOUSE_POINTS_TO_AVERAGE, this.mouseDataSeries.size());
-					
-					var sum = 0;
-					for (var i = 0; i < positions.length; i++)
-						sum += positions[i].value;
+			if (!this.simulation.get('customExpression')) {
+				this.mouseDataSeries.add(this.clampIfWalled(this.mousePosition).position, time);
 
-					x = positions.length ? (sum / positions.length) : 0;
-					position = this.clampIfWalled(x).position;
-					this.positionModelSeries.add(position, time);
-				}
-				else {
-					// Position by user-specified function
-					x = this.simulation.evaluateExpression(time);
-					position = this.clampIfWalled(x).position;
-					this.setMousePosition(position);
-					this.mouseDataSeries.add(position, time);
-					this.positionModelSeries.add(position, time);
-				}
+				// Average of latest position samples from user input
+				var positions = this.mouseDataSeries.getPointsInRange(this.mouseDataSeries.size() - NUMBER_MOUSE_POINTS_TO_AVERAGE, this.mouseDataSeries.size());
+				
+				var sum = 0;
+				for (var i = 0; i < positions.length; i++)
+					sum += positions[i].value;
 
-				// Update model derivatives
-				this.velocityModelSeries.setData(    this.estimatedCenteredDerivatives(this.positionModelSeries));
-				this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
-
-				/* Notes from PhET: "
-				 *   We have to read midpoints from the sampling regions to obtain centered derivatives.
-				 *   Note that this makes readouts be off by up to dt*2 = 80 milliseconds
-				 *   TODO: Rewrite the model to avoid the need for this workaround."
-				 */
-				var time1StepsAgo = this.getTimeNTimeStepsAgo(1);
-				var time2StepsAgo = this.getTimeNTimeStepsAgo(2);
-
-				this.positionGraphSeries.add(position, time);
-				this.velocityGraphSeries.add(this.getPointAtTime(this.velocityModelSeries, time1StepsAgo, time));
-				this.accelerationGraphSeries.add(this.getPointAtTime(this.accelerationModelSeries, time2StepsAgo, time));
-
-				// Set instantaneous values
-				this.set('position', position);
-
-				var instantVelocity = this.velocityGraphSeries.getLastPoint().value;
-				if (Math.abs(instantVelocity) < 1E-6)
-					instantVelocity = 0; // PhET: "added a prevent high frequency wiggling around +/- 1E-12"
-
-				// PhET: "TODO: subtract off derivative radius so that the last value showed on chart is the same as the value on the man"
-				this.set('velocity', instantVelocity);
-
-				var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
-				if (Math.abs(instantAcceleration) < 1E-6)
-					instantAcceleration = 0; // PhET: "prevent high frequency wiggling around +/- 1E-12"
-
-				this.set('acceleration', instantAcceleration); //- DERIVATIVE_RADIUS * 2
-
-				// Make sure we notify the interface if we've collided so it can play annoying sounds if it wants
-				if (!this.hitsWall(previousPosition) && this.hitsWall(this.get('position')))
-					this.trigger('collide');
+				x = positions.length ? (sum / positions.length) : 0;
+				position = this.clampIfWalled(x).position;
+				this.positionModelSeries.add(position, time);
 			}
-			else if (this.velocityDriven()) {
-				// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
-				this.mouseDataSeries.clear();
-
-				// Record set point
-				this.velocityModelSeries.add(this.get('velocity'), time);
-				this.velocityGraphSeries.add(this.get('velocity'), time);
-
-				// Update derivatives
-				this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
-				this.accelerationGraphSeries.add(this.accelerationModelSeries.getMidPoint());
-
-				// Update integrals
-				var targetPosition = this.get('position') + this.get('velocity') * delta;
-				var wallResult = this.clampIfWalled(targetPosition);
-				this.positionModelSeries.add(wallResult.position, time);
-				this.positionGraphSeries.add(wallResult.position, time);
-
-				// Set instantaneous values
-				this.setMousePosition(wallResult.position);
-				this.set('position', wallResult.position);
-
-				var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
-				if (Math.abs(instantAcceleration) < 1E-6)
-					instantAcceleration = 0; // PhET: "workaround to prevent high frequency wiggling around +/- 1E-12"
-
-				this.set('acceleration', instantAcceleration);
-
-				if (wallResult.collided) {
-					this.set('velocity', 0);
-					this.trigger('collide');
-				}
+			else {
+				// Position by user-specified function
+				x = this.simulation.evaluateExpression(time);
+				position = this.clampIfWalled(x).position;
+				this.setMousePosition(position);
+				this.mouseDataSeries.add(position, time);
+				this.positionModelSeries.add(position, time);
 			}
-			else if (this.accelerationDriven()) {
-				// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
-				this.mouseDataSeries.clear();
 
-				var newVelocity = this.get('velocity') + this.get('acceleration') * delta;
-				var estVelocity = (this.get('velocity') + newVelocity) / 2; // PhET: "todo: just use newVelocity?"
-				var wallResult = this.clampIfWalled(this.get('position') + estVelocity * delta);
+			// Update model derivatives
+			this.velocityModelSeries.setData(    this.estimatedCenteredDerivatives(this.positionModelSeries));
+			this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
 
-				/* Notes from PhET: "
-				 *   This ensures that there is a deceleration spike when crashing into a wall.  Without this code,
-				 *   the acceleration remains at the user specified value or falls to 0.0, but it is essential to
-				 *   show that crashing into a wall entails a suddent deceleration."
-				 */
-				if (wallResult.collided) {
-					this.velocityDriven(true);
-					this.set('velocity', newVelocity);
-					this.update(time - delta, delta);
-					return;
-				}
+			/* Notes from PhET: "
+			 *   We have to read midpoints from the sampling regions to obtain centered derivatives.
+			 *   Note that this makes readouts be off by up to dt*2 = 80 milliseconds
+			 *   TODO: Rewrite the model to avoid the need for this workaround."
+			 */
+			var time1StepsAgo = this.getTimeNTimeStepsAgo(1);
+			var time2StepsAgo = this.getTimeNTimeStepsAgo(2);
 
-				// Record set point
-				this.accelerationModelSeries.add(this.get('acceleration'), time);
-				this.accelerationGraphSeries.add(this.get('acceleration'), time);
+			this.positionGraphSeries.add(position, time);
+			this.velocityGraphSeries.add(this.getPointAtTime(this.velocityModelSeries, time1StepsAgo, time));
+			this.accelerationGraphSeries.add(this.getPointAtTime(this.accelerationModelSeries, time2StepsAgo, time));
 
-				// No derivatives
+			// Set instantaneous values
+			this.set('position', position);
 
-				// Update integrals
-				this.velocityGraphSeries.add(newVelocity, time);
-				this.velocityModelSeries.add(newVelocity, time);
+			var instantVelocity = this.velocityGraphSeries.getLastPoint().value;
+			if (Math.abs(instantVelocity) < 1E-6) 
+				instantVelocity = 0; // PhET: "added a prevent high frequency wiggling around +/- 1E-12"
 
-				this.positionGraphSeries.add(wallResult.position, time);
-				this.positionModelSeries.add(wallResult.position, time);
+			// PhET: "TODO: subtract off derivative radius so that the last value showed on chart is the same as the value on the man"
+			this.set('velocity', instantVelocity);
 
-				// Set instantaneous values
-				this.setMousePosition(wallResult.position); // PhET: "so that if the user switches to mouse-driven, it will have the right location"
-				this.set('position', wallResult.position);
+			var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
+			if (Math.abs(instantAcceleration) < 1E-6)
+				instantAcceleration = 0; // PhET: "prevent high frequency wiggling around +/- 1E-12"
+
+			this.set('acceleration', instantAcceleration); //- DERIVATIVE_RADIUS * 2
+
+			// Make sure we notify the interface if we've collided so it can play annoying sounds if it wants
+			if (!this.hitsWall(previousPosition) && this.hitsWall(this.get('position')))
+				this.trigger('collide');
+		},
+
+		/**
+		 *
+		 */
+		_updateFromVelocity: function(time, delta) {
+			// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
+			this.mouseDataSeries.clear();
+
+			// Record set point
+			this.velocityModelSeries.add(this.get('velocity'), time);
+			this.velocityGraphSeries.add(this.get('velocity'), time);
+
+			// Update derivatives
+			this.accelerationModelSeries.setData(this.estimatedCenteredDerivatives(this.velocityModelSeries));
+			this.accelerationGraphSeries.add(this.accelerationModelSeries.getMidPoint());
+
+			// Update integrals
+			var targetPosition = this.get('position') + this.get('velocity') * delta;
+			var wallResult = this.clampIfWalled(targetPosition);
+			this.positionModelSeries.add(wallResult.position, time);
+			this.positionGraphSeries.add(wallResult.position, time);
+
+			// Set instantaneous values
+			this.setMousePosition(wallResult.position);
+			this.set('position', wallResult.position);
+
+			var instantAcceleration = this.accelerationGraphSeries.getLastPoint().value;
+			if (Math.abs(instantAcceleration) < 1E-6)
+				instantAcceleration = 0; // PhET: "workaround to prevent high frequency wiggling around +/- 1E-12"
+
+			this.set('acceleration', instantAcceleration);
+
+			if (wallResult.collided) {
+				this.set('velocity', 0);
+				this.trigger('collide');
+			}
+		},
+
+		/**
+		 *
+		 */
+		_updateFromAcceleration: function(time, delta) {
+			// PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
+			this.mouseDataSeries.clear();
+
+			var newVelocity = this.get('velocity') + this.get('acceleration') * delta;
+			var estVelocity = (this.get('velocity') + newVelocity) / 2; // PhET: "todo: just use newVelocity?"
+			var wallResult = this.clampIfWalled(this.get('position') + estVelocity * delta);
+
+			/* Notes from PhET: "
+			 *   This ensures that there is a deceleration spike when crashing into a wall.  Without this code,
+			 *   the acceleration remains at the user specified value or falls to 0.0, but it is essential to
+			 *   show that crashing into a wall entails a suddent deceleration."
+			 */
+			if (wallResult.collided) {
+				this.velocityDriven(true);
 				this.set('velocity', newVelocity);
-				if (wallResult.collided) {
-					this.set('velocity', 0);
-					this.set('acceleration', 0); // PhET: "todo: should have brief burst of acceleration against the wall in a collision."
-				}
+				this.update(time - delta, delta);
+				return;
+			}
+
+			// Record set point
+			this.accelerationModelSeries.add(this.get('acceleration'), time);
+			this.accelerationGraphSeries.add(this.get('acceleration'), time);
+
+			// No derivatives
+
+			// Update integrals
+			this.velocityGraphSeries.add(newVelocity, time);
+			this.velocityModelSeries.add(newVelocity, time);
+
+			this.positionGraphSeries.add(wallResult.position, time);
+			this.positionModelSeries.add(wallResult.position, time);
+
+			// Set instantaneous values
+			this.setMousePosition(wallResult.position); // PhET: "so that if the user switches to mouse-driven, it will have the right location"
+			this.set('position', wallResult.position);
+			this.set('velocity', newVelocity);
+			if (wallResult.collided) {
+				this.set('velocity', 0);
+				this.set('acceleration', 0); // PhET: "todo: should have brief burst of acceleration against the wall in a collision."
 			}
 		},
 

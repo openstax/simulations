@@ -26,6 +26,12 @@ module.exports = function(grunt){
 				src: '**',
 				dest: 'dist/img/'
 			},
+			audio: {
+				expand: true, // required when using cwd
+				cwd: 'src/audio/',
+				src: '**',
+				dest: 'dist/audio/'
+			},
 			bower_components: {
 				src: 'bower_components/**',
 				dest: 'dist/'
