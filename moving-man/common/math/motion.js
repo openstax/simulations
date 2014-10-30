@@ -41,7 +41,8 @@ define(function (require) {
 				X[i] = timeSeries[i].time;
 				Y[i] = timeSeries[i].value;
 			}
-			return leastSquares(X, Y, false, this._linearRegressionResults);
+			leastSquares(X, Y, false, this._linearRegressionResults);
+			return this._linearRegressionResults;
 		},
 
 		/**
