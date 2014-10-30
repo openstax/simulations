@@ -39,7 +39,6 @@ define(function (require) {
 
 			// We want it to start playing when they first open the tab
 			this.resumePaused = false;
-			this.$el.addClass('playing');
 		},
 
 		/**
@@ -70,7 +69,6 @@ define(function (require) {
 		 */
 		play: function(event) {
 			this.simulation.play();
-			this.$el.addClass('playing');
 		},
 
 		/**
@@ -78,7 +76,6 @@ define(function (require) {
 		 */
 		pause: function(event) {
 			this.simulation.pause();
-			this.$el.removeClass('playing');
 		},
 
 		/**

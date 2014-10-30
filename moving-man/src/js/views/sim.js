@@ -46,10 +46,11 @@ define(function (require) {
 		 */
 		events: {
 			// Playback controls
-			'click .play-btn' : 'play',
-			'click .pause-btn': 'pause',
-			'click .step-btn' : 'step',
-			'click .reset-btn': 'reset',
+			'click .play-btn'   : 'play',
+			'click .record-btn' : 'play',
+			'click .pause-btn'  : 'pause',
+			'click .step-btn'   : 'step',
+			'click .reset-btn'  : 'reset',
 
 			'click .from-expression' : 'useExpression',
 			'click .drop-expression' : 'dropExpression',
@@ -64,6 +65,8 @@ define(function (require) {
 
 			'change .velocity     .vector-check' : 'changeVelocityVectorVisibility',
 			'change .acceleration .vector-check' : 'changeAccelerationVectorVisibility',
+
+			'change .playback-mode' : 'changePlaybackMode',
 
 			'click .sound-btn' : 'changeVolume',
 
@@ -84,6 +87,11 @@ define(function (require) {
 			this.listenTo(this.simulation.movingMan, 'change:position',     this.positionChanged);
 			this.listenTo(this.simulation.movingMan, 'change:velocity',     this.velocityChanged);
 			this.listenTo(this.simulation.movingMan, 'change:acceleration', this.accelerationChanged);
+
+			this.listenTo(this.simulation, 'change:paused',  this.pausedChanged);
+			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
+			this.simulation.trigger('change:paused');
+			this.simulation.trigger('change:recording');
 		},
 
 		/**
@@ -391,6 +399,37 @@ define(function (require) {
 				this.$('.sound-btn-mute').show();
 				this.sceneView.movingManView.muteVolume();
 			}
+		},
+
+		/**
+		 *
+		 */
+		changePlaybackMode: function(event) {
+			var mode = $(event.target).val();
+			if (mode === 'record')
+				this.simulation.record();
+			else
+				this.simulation.stopRecording();
+		},
+
+		/**
+		 * The simulation changed its recording state.
+		 */
+		recordingChanged: function() {
+			if (this.simulation.get('recording'))
+				this.$el.addClass('record-mode');
+			else
+				this.$el.removeClass('record-mode');
+		},
+
+		/**
+		 * The simulation changed its paused state.
+		 */
+		pausedChanged: function() {
+			if (this.simulation.get('paused'))
+				this.$el.removeClass('playing');
+			else
+				this.$el.addClass('playing');
 		}
 
 	});

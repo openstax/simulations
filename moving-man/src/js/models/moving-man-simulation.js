@@ -21,13 +21,14 @@ define(function (require, exports, module) {
 			containerWidth: 20,
 			halfContainerWidth: 10,
 			wallsEnabled: true,
-			maxTime: 0
+			furthestRecordedTime: 0,
+			maxTime: 20,
+			recording: true
 		},
 
 		/**
 		 * Object fields
 		 */
-		recording: true,
 		history: [],
 		playbackTime: 0,
 		positionFormula: null,
@@ -40,7 +41,7 @@ define(function (require, exports, module) {
 
 			this.noRecording = options ? options.noRecording : false;
 			if (this.noRecording)
-				this.recording = false;
+				this.set('recording', false);
 
 			this.initComponents();
 
@@ -71,11 +72,11 @@ define(function (require, exports, module) {
 		 * If we're recording, it saves state
 		 */
 		_update: function(time, delta) {
-			if (this.recording) {
+			if (this.get('recording')) {
 				// Run update and then save state
 				this.movingMan.update(time, delta);
 				this.recordState();
-				this.set('maxTime', time);
+				this.set('furthestRecordedTime', time);
 			}
 			else {
 				// Either we're playing back or we just don't ever record
@@ -84,7 +85,7 @@ define(function (require, exports, module) {
 					this.applyPlaybackState();
 
 					// And if we've reached the end of what we've recorded, stop
-					if (time >= this.get('maxTime'))
+					if (time >= this.get('furthestRecordedTime'))
 						this.pause();
 				}
 				// Else, just run it and don't worry about states.
@@ -153,7 +154,7 @@ define(function (require, exports, module) {
 		 *   frames on every frame.
 		 */
 		play: function() {
-			if (!this.recording) {
+			if (!this.get('recording')) {
 				// Sort the historical states by time ascending
 				_.sortBy(this.history, function(state) {
 					return state.time;
@@ -172,14 +173,14 @@ define(function (require, exports, module) {
 		 * Sets playback mode to record
 		 */
 		record: function() {
-			this.recording = true;
+			this.set('recording', true);
 		},
 
 		/**
 		 * Sets playback mode to playback
 		 */
 		stopRecording: function() {
-			this.recording = false;
+			this.set('recording', false);
 		},
 
 		/**
@@ -190,7 +191,7 @@ define(function (require, exports, module) {
 			this.history.push({
 				time: this.time,
 				wallsEnabled: this.wallsEnabled,
-				movingMan: this.getState()
+				movingMan: this.movingMan.getState()
 			});
 		},
 

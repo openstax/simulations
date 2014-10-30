@@ -10,7 +10,7 @@ define(function (require) {
 	var Simulation = Backbone.Model.extend({
 
 		defaults: {
-			wallsEnabled: true
+			paused: false
 		},
 		
 		/**
@@ -43,11 +43,13 @@ define(function (require) {
 
 		play: function() {
 			this.paused = false;
+			this.set('paused', false);
 			this.trigger('play');
 		},
 
 		pause: function() {
 			this.paused = true;
+			this.set('paused', true);
 			this.trigger('pause');
 		},
 
