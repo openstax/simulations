@@ -127,7 +127,7 @@ define(function (require) {
 			var position;
 			var x;
 
-			if (!this.simulation.get('customExpression')) {
+			if (!this.simulation.usingCustomPositionFunction()) {
 				this.mouseDataSeries.add(this.clampIfWalled(this.mousePosition).position, time);
 
 				// Average of latest position samples from user input
@@ -143,7 +143,7 @@ define(function (require) {
 			}
 			else {
 				// Position by user-specified function
-				x = this.simulation.evaluateExpression(time);
+				x = this.simulation.evaluatePositionFunction(time);
 				position = this.clampIfWalled(x).position;
 				this.setMousePosition(position);
 				this.mouseDataSeries.add(position, time);

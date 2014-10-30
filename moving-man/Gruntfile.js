@@ -72,9 +72,9 @@ module.exports = function(grunt){
 						text:       '../../bower_components/requirejs-text/text',
 						pixi:       '../../bower_components/pixi/bin/pixi',
 						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-						timbre:     '../../bower_components/timbre/timbre.dev',
 						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 						buzz:       '../../bower_components/buzz/dist/buzz.min',
+						fparser:    '../../bower_components/fparser/fparser',
 
 						views:      '../js/views',
 						graphics:   '../js/graphics',

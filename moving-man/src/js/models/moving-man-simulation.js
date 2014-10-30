@@ -1,8 +1,9 @@
-define(function (require) {
+define(function (require, exports, module) {
 
 	'use strict';
 
 	//var _ = require('underscore');
+	var Formula = require('fparser');
 
 	var Simulation = require('common/simulation/simulation');
 	var MovingMan  = require('models/moving-man');
@@ -18,7 +19,6 @@ define(function (require) {
 		defaults: {
 			containerWidth: 20,
 			halfContainerWidth: 10,
-			customExpression: null,
 			wallsEnabled: true
 		},
 
@@ -27,6 +27,7 @@ define(function (require) {
 		 */
 		recording: true,
 		history: [],
+		positionFormula: null,
 		
 		/**
 		 *
@@ -80,8 +81,44 @@ define(function (require) {
 		/**
 		 * Evaluates the custom user-specified expression
 		 */
-		evaluateExpression: function() {
-			return 0;
+		evaluatePositionFunction: function(time) {
+			if (this.positionFormula)
+				return this.positionFormula.evaluate({ t: time });
+			else
+				return 0;
+		},
+
+		/**
+		 * Tries to set the custom expression and throws error if the
+		 *   expression is bad.
+		 */
+		useCustomPositionFunction: function(expression) {
+			// Showing the try-catch block even though we pass the error up
+			try {
+				// If this next line throws an error, we know it's bad.
+				Formula.calc(expression, { t: 0 });
+
+				// So if we made it this far, we've got a winner.
+				this.positionFormula = new Formula(expression);
+			}
+			catch (e) {
+				this.positionFormula = null;
+				throw e;
+			}
+		},
+
+		/**
+		 *
+		 */
+		dropCustomPositionFunction: function() {
+			this.positionFormula = null;
+		},
+
+		/**
+		 *
+		 */
+		usingCustomPositionFunction: function() {
+			return this.positionFormula !== null;
 		},
 
 		/**

@@ -65,7 +65,9 @@ define(function (require) {
 			'change .velocity     .vector-check' : 'changeVelocityVectorVisibility',
 			'change .acceleration .vector-check' : 'changeAccelerationVectorVisibility',
 
-			'click .sound-btn' : 'changeVolume'
+			'click .sound-btn' : 'changeVolume',
+
+			'keyup .position .expression-text' : 'changeExpression'
 		},
 
 		/**
@@ -189,6 +191,9 @@ define(function (require) {
 			this.$velocityInputs     = this.$('.velocity     .variable-text, .velocity     .slider');
 			this.$accelerationInputs = this.$('.acceleration .variable-text, .acceleration .slider');
 
+			this.$expression      = this.$('.position .expression-text');
+			this.$expressionGroup = this.$('.position .expression-group');
+
 			this.$el.append(this.functionHelpTemplate({
 				help_modal_id: help_modal_id
 			}));
@@ -249,7 +254,7 @@ define(function (require) {
 			 */
 			this.$('.position .slider').attr('disabled', 'disabled');
 
-			// Update simulation
+			this.changeExpression();			
 		},
 
 		/**
@@ -261,6 +266,21 @@ define(function (require) {
 			this.$('.position .slider').removeAttr('disabled');
 			
 			// Update simulation
+			this.simulation.dropCustomPositionFunction();
+		},
+
+		/**
+		 * Tries to set the custom position function on the simulation and
+		 *   shows error feedback to the user if it fails.
+		 */
+		changeExpression: function(event) {
+			try {
+				this.simulation.useCustomPositionFunction(this.$expression.val());
+				this.$expressionGroup.removeClass('error');
+			}
+			catch (e) {
+				this.$expressionGroup.addClass('error');
+			}
 		},
 
 		/**
