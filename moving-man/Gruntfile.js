@@ -99,6 +99,11 @@ module.exports = function(grunt){
 							'fa-font-path': '"../node_modules/font-awesome/fonts/"'
 						}
 					},
+					shim: {
+						fparser: {
+							exports: 'Formula'
+						}
+					},
 					name: 'main',
 					out: 'src/optimized.js'
 				}
