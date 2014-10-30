@@ -129,7 +129,13 @@ define(function (require, exports, module) {
 			this._lastVelocity = this._velocity;
 			this._velocity = this.movingMan.get('velocity');
 
-			if (!this.updateOnNextFrame && this._position === this._lastPosition && this._velocity === this._lastVelocity)
+			this._lastAcceleration = this._acceleration;
+			this._acceleration = this.movingMan.get('acceleration');
+
+			if (!this.updateOnNextFrame && 
+				this._position === this._lastPosition && 
+				this._velocity === this._lastVelocity &&
+				this._acceleration === this._lastAcceleration)
 				return;
 
 			if (this.updateOnNextFrame)
@@ -220,7 +226,6 @@ define(function (require, exports, module) {
 			}
 
 			if (this.accelerationVectorVisible) {
-				this._acceleration = this.movingMan.get('acceleration');
 				vectorWidth = Math.abs(this._acceleration * ACCELERATION_SCALE) * this.pixelRatio;
 				this.$accelerationVector.width(vectorWidth);
 

@@ -100,6 +100,7 @@ define(function (require, exports, module) {
 
 				// So if we made it this far, we've got a winner.
 				this.positionFormula = new Formula(expression);
+				this.movingMan.positionDriven(true);
 			}
 			catch (e) {
 				this.positionFormula = null;
