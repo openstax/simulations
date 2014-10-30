@@ -28,7 +28,8 @@ define(function (require) {
 		defaults: {
 			position: 0,
 			velocity: 0,
-			acceleration: 0
+			acceleration: 0,
+			motionStrategy: MOTION_STRATEGY_POSITION
 		},
 		
 		/**
@@ -55,8 +56,6 @@ define(function (require) {
 				this.velocityGraphSeries     = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
 				this.accelerationGraphSeries = new DataSeries.LimitedTime({ maxTime: SERIES_TIME_LIMIT });
 			}
-
-			this.motionStrategy = MOTION_STRATEGY_POSITION;
 
 			this.times = [];
 
@@ -99,6 +98,23 @@ define(function (require) {
 			this.positionGraphSeries.clearPointsAfter(time);
 			this.velocityGraphSeries.clearPointsAfter(time);
 			this.accelerationGraphSeries.clearPointsAfter(time);
+		},
+
+		/**
+		 *
+		 */
+		getState: function() {
+			return this.toJSON();
+		},
+
+		/**
+		 *
+		 */
+		applyState: function(time, state) {
+			this.time = time;
+			this.times.clear();
+			this.set(state);
+			this.setMousePosition(this.get('position'));
 		},
 
 		/**
@@ -325,23 +341,23 @@ define(function (require) {
 
 		positionDriven: function(value) {
 			if (value === undefined)
-				return this.motionStrategy === MOTION_STRATEGY_POSITION;
+				return this.get('motionStrategy') === MOTION_STRATEGY_POSITION;
 			else if (value === true)
-				this.motionStrategy = MOTION_STRATEGY_POSITION;
+				this.set('motionStrategy', MOTION_STRATEGY_POSITION);
 		},
 
 		velocityDriven: function(value) {
 			if (value === undefined)
-				return this.motionStrategy === MOTION_STRATEGY_VELOCITY;
+				return this.get('motionStrategy') === MOTION_STRATEGY_VELOCITY;
 			else if (value === true)
-				this.motionStrategy = MOTION_STRATEGY_VELOCITY;
+				this.set('motionStrategy', MOTION_STRATEGY_VELOCITY);
 		},
 
 		accelerationDriven: function(value) {
 			if (value === undefined)
-				return this.motionStrategy === MOTION_STRATEGY_ACCELERATION;
+				return this.get('motionStrategy') === MOTION_STRATEGY_ACCELERATION;
 			else if (value === true)
-				this.motionStrategy = MOTION_STRATEGY_ACCELERATION;
+				this.set('motionStrategy', MOTION_STRATEGY_ACCELERATION);
 		},
 
 		/**
