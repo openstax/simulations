@@ -46,8 +46,11 @@ define(function(require) {
 			else
 				throw 'SceneView requires a simulation model to render.';
 
-			// Bind events
+			// Bind DOM events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
+
+			// Listen to simulation events
+			this.listenTo(this.simulation, 'change:wallsEnabled', this.wallsEnabledChanged);
 		},
 
 		/**
@@ -58,6 +61,8 @@ define(function(require) {
 
 			if (this.compact)
 				this.$el.addClass('compact');
+
+			this.$walls = this.$('.wall');
 
 			this.renderMovingManView();
 
@@ -113,7 +118,6 @@ define(function(require) {
 		 * Hides the walls and updates the sim
 		 */
 		hideWalls: function() {
-			this.$('.wall').addClass('disabled');
 			this.simulation.set('wallsEnabled', false);
 		},
 
@@ -121,8 +125,17 @@ define(function(require) {
 		 * Hides the walls and updates the sim
 		 */
 		showWalls: function() {
-			this.$('.wall').removeClass('disabled');
 			this.simulation.set('wallsEnabled', true);
+		},
+
+		/**
+		 *
+		 */
+		wallsEnabledChanged: function(model, wallsEnabled, options) {
+			if (wallsEnabled)
+				this.$walls.removeClass('disabled');
+			else
+				this.$walls.addClass('disabled');
 		},
 
 		/**
