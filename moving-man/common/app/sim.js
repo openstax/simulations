@@ -23,12 +23,14 @@ define(function (require) {
 			options = _.extend({
 				title: 'Simulation',
 				name: 'sim',
-				stepDurtion: 50 // milliseconds
+				stepDurtion: 50, // milliseconds
+				runUpdateOnReset: false
 			}, options);
 
 			this.title = options.title;
 			this.name  = options.name;
 			this.stepDuration = options.stepDuration;
+			this.runUpdateOnReset = options.runUpdateOnReset;
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
@@ -117,9 +119,11 @@ define(function (require) {
 			this.postRender();
 
 			// Paint the first frame
-			this.simulation.play();
-			this.update(0, 0);
-			this.simulation.pause();
+			if (this.runUpdateOnReset) {
+				this.simulation.play();
+				this.update(0, 0);
+				this.simulation.pause();
+			}
 
 			// Resume normal function
 			this.updater.play();
