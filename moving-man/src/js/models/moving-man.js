@@ -35,7 +35,7 @@ define(function (require) {
 		/**
 		 *
 		 */
-		initialize: function(options) {
+		initialize: function(attributes, options) {
 			if (options.simulation)
 				this.simulation = options.simulation;
 			else
@@ -112,7 +112,7 @@ define(function (require) {
 		 */
 		applyState: function(time, state) {
 			this.time = time;
-			this.times.clear();
+			this.times = [];
 			this.set(state);
 			this.setMousePosition(this.get('position'));
 		},

@@ -17,6 +17,7 @@ define(function (require) {
 		 *
 		 */
 		initialize: function(options) {
+			this.time = 0;
 			this.initComponents();
 		},
 
@@ -26,12 +27,15 @@ define(function (require) {
 		initComponents: function() {},
 
 		/**
-		 * 
+		 * Calls the internal _update function with an internally kept
+		 *   time counter which is in seconds instead of milliseconds.
 		 */
 		update: function(time, delta) {
 
 			if (!this.paused) {
-				this._update(time / 1000, delta / 1000);
+				delta /= 1000;
+				this.time += delta;
+				this._update(this.time, delta);
 			}
 			
 		},

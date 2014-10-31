@@ -50,6 +50,7 @@ define(function (require) {
 			'click .record-btn' : 'play',
 			'click .pause-btn'  : 'pause',
 			'click .step-btn'   : 'step',
+			'click .rewind-btn' : 'rewind',
 			'click .reset-btn'  : 'reset',
 
 			'click .from-expression' : 'useExpression',
@@ -88,7 +89,7 @@ define(function (require) {
 			this.listenTo(this.simulation.movingMan, 'change:velocity',     this.velocityChanged);
 			this.listenTo(this.simulation.movingMan, 'change:acceleration', this.accelerationChanged);
 
-			this.listenTo(this.simulation, 'change:paused',  this.pausedChanged);
+			this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
 			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
 			this.simulation.trigger('change:paused');
 			this.simulation.trigger('change:recording');
@@ -250,6 +251,14 @@ define(function (require) {
 		},
 
 		/**
+		 *
+		 */
+		rewind: function(event) {
+			this.pause();
+			this.simulation.rewind();
+		},
+
+		/**
 		 * Switches positon to expression mode and updates simulation.
 		 */
 		useExpression: function() {
@@ -291,9 +300,6 @@ define(function (require) {
 					 *  control over the time, so this isn't needed.
 					 */
 					this.simulation.resetTimeAndHistory();
-					this.updater
-						.reset()
-						.play();
 				}
 				this.$expressionGroup.removeClass('error');
 			}

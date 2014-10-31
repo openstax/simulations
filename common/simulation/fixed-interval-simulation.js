@@ -17,7 +17,6 @@ define(function (require) {
 
 			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
 			this.accumulator = 0;
-			this.time = 0;
 		},
 
 		/**

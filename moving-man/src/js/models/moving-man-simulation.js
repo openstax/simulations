@@ -30,7 +30,7 @@ define(function (require, exports, module) {
 		 * Object fields
 		 */
 		history: [],
-		playbackTime: 0,
+		time: 0,
 		positionFormula: null,
 		
 		/**
@@ -61,7 +61,7 @@ define(function (require, exports, module) {
 		 *
 		 */
 		initMovingMan: function() {
-			this.movingMan = new MovingMan({
+			this.movingMan = new MovingMan(null, {
 				simulation: this,
 				noRecording: this.noRecording
 			});
@@ -79,7 +79,7 @@ define(function (require, exports, module) {
 				history.pop();
 			}
 
-			this.playbackTime = 0;
+			this.time = 0;
 		},
 
 		/**
@@ -96,15 +96,15 @@ define(function (require, exports, module) {
 			else {
 				// Either we're playing back or we just don't ever record
 				if (!this.noRecording) {
-					// We're playing back, so apply state for this step first
+					// We're playing back, so apply a saved state instead of updating
 					this.applyPlaybackState();
 
 					// And if we've reached the end of what we've recorded, stop
 					if (time >= this.get('furthestRecordedTime'))
 						this.pause();
 				}
-				// Else, just run it and don't worry about states.
-				this.movingMan.update(time, delta);
+				else
+					this.movingMan.update(time, delta);
 			}
 		},
 
@@ -187,6 +187,13 @@ define(function (require, exports, module) {
 		/**
 		 *
 		 */
+		rewind: function() {
+			this.time = 0;
+		},	
+
+		/**
+		 *
+		 */
 		resetTimeAndHistory: function() {
 			// This is the fastest way to clear an array by benchmarks
 			var history = this.history;
@@ -194,7 +201,7 @@ define(function (require, exports, module) {
 				history.pop();
 			}
 
-			this.playbackTime = 0;
+			this.time = 0;
 
 			this.movingMan.clear();
 		},
@@ -220,7 +227,7 @@ define(function (require, exports, module) {
 		recordState: function() {
 			this.history.push({
 				time: this.time,
-				wallsEnabled: this.wallsEnabled,
+				wallsEnabled: this.get('wallsEnabled'),
 				movingMan: this.movingMan.getState()
 			});
 		},
@@ -232,7 +239,8 @@ define(function (require, exports, module) {
 		applyPlaybackState: function() {
 			var state = this.findStateWithClosestTime(this.time);
 			this.set('wallsEnabled', state.wallsEnabled);
-			this.movingMan.applyState(state.movingMan);
+			this.movingMan.applyState(this.time, state.movingMan);
+			//console.log(state.movingMan.position, state.movingMan.velocity, state.movingMan.acceleration);
 		},
 
 		/**
