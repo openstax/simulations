@@ -52,6 +52,7 @@ define(function (require) {
 			'click .step-btn'   : 'step',
 			'click .rewind-btn' : 'rewind',
 			'click .reset-btn'  : 'reset',
+			'click .clear-btn'  : 'clear',
 
 			'click .from-expression' : 'useExpression',
 			'click .drop-expression' : 'dropExpression',
@@ -264,6 +265,14 @@ define(function (require) {
 		rewind: function(event) {
 			this.pause();
 			this.simulation.rewind();
+		},
+
+		/**
+		 *
+		 */
+		clear: function(event) {
+			this.pause();
+			this.simulation.resetTimeAndHistory();
 		},
 
 		/**

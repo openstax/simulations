@@ -238,9 +238,10 @@ define(function (require, exports, module) {
 		 */
 		applyPlaybackState: function() {
 			var state = this.findStateWithClosestTime(this.time);
-			this.set('wallsEnabled', state.wallsEnabled);
-			this.movingMan.applyState(this.time, state.movingMan);
-			//console.log(state.movingMan.position, state.movingMan.velocity, state.movingMan.acceleration);
+			if (state) {
+				this.set('wallsEnabled', state.wallsEnabled);
+				this.movingMan.applyState(this.time, state.movingMan);
+			}
 		},
 
 		/**
