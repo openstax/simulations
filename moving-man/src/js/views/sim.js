@@ -91,8 +91,8 @@ define(function (require) {
 
 			this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
 			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
-			this.simulation.trigger('change:paused');
-			this.simulation.trigger('change:recording');
+
+			this.listenTo(this.simulation.movingMan, 'change:motionStrategy', this.motionStrategyChanged);
 		},
 
 		/**
@@ -120,6 +120,10 @@ define(function (require) {
 			this.renderScaffolding();
 			this.renderSceneView();
 			this.renderVariableControls();
+
+			this.simulation.trigger('change:paused');
+			this.simulation.trigger('change:recording');
+			this.simulation.movingMan.trigger('change:motionStrategy', this.simulation.movingMan);
 
 			return this;
 		},
@@ -196,9 +200,13 @@ define(function (require) {
 				.append($velocity)
 				.append($acceleration);
 
-			this.$positionInputs     = this.$('.position     .variable-text, .position     .slider');
-			this.$velocityInputs     = this.$('.velocity     .variable-text, .velocity     .slider');
-			this.$accelerationInputs = this.$('.acceleration .variable-text, .acceleration .slider');
+			this.$position     = $position;
+			this.$velocity     = $velocity;
+			this.$acceleration = $acceleration;
+
+			this.$positionInputs     = this.$position.find(    '.variable-text, .slider');
+			this.$velocityInputs     = this.$velocity.find(    '.variable-text, .slider');
+			this.$accelerationInputs = this.$acceleration.find('.variable-text, .slider');
 
 			this.$expression      = this.$('.position .expression-text');
 			this.$expressionGroup = this.$('.position .expression-group');
@@ -447,6 +455,25 @@ define(function (require) {
 				this.$el.removeClass('playing');
 			else
 				this.$el.addClass('playing');
+		},
+
+		/**
+		 * The simulation's moving man changed its motion strategy.
+		 */
+		motionStrategyChanged: function(model, value, options) {
+			var $variable;
+
+			if (model.positionDriven())
+				$variable = this.$position;
+			else if (model.velocityDriven())
+				$variable = this.$velocity; 
+			else if (model.accelerationDriven())
+				$variable = this.$acceleration;
+
+			$variable
+				.addClass('driving')
+				.siblings()
+					.removeClass('driving');
 		}
 
 	});
