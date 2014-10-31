@@ -17,14 +17,16 @@ define(function (require, exports, module) {
 	 * Wraps the update function in 
 	 */
 	var MovingManSimulation = Simulation.extend({
-		defaults: {
+
+		defaults: _.extend(Simulation.prototype.defaults, {
 			containerWidth: 20,
 			halfContainerWidth: 10,
 			wallsEnabled: true,
 			furthestRecordedTime: 0,
 			maxTime: 20,
-			recording: true
-		},
+			recording: true,
+			playbackSpeed: 1
+		}),
 
 		/**
 		 * Object fields
@@ -47,6 +49,15 @@ define(function (require, exports, module) {
 
 			this.on('change:containerWidth', function() {
 				this.set('halfContainerWidth', this.get('containerWidth') / 2);
+			});
+
+			/* We're keeping track of the playback speed separate from the sim's
+			 *   timeScale because timeScale changes with modes, and we have to
+			 *   persistently store the playback speed across modes.
+			 */
+			this.on('change:playbackSpeed', function(model, speed, options) {
+				if (!this.get('recording'))
+					this.set('timeScale', speed);
 			});
 		},
 
@@ -211,6 +222,7 @@ define(function (require, exports, module) {
 		 */
 		record: function() {
 			this.set('recording', true);
+			this.set('timeScale', this.get('playbackSpeed'));
 		},
 
 		/**
@@ -218,6 +230,7 @@ define(function (require, exports, module) {
 		 */
 		stopRecording: function() {
 			this.set('recording', false);
+			this.set('timeScale', 1);
 		},
 
 		/**

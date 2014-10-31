@@ -22,7 +22,18 @@ define(function(require) {
 	var ChartsSimView = MovingManSimView.extend({
 
 		events: _.extend(MovingManSimView.prototype.events, {
-			
+			// Playback controls
+			'click .play-btn'   : 'play',
+			'click .record-btn' : 'play',
+			'click .pause-btn'  : 'pause',
+			'click .step-btn'   : 'step',
+			'click .rewind-btn' : 'rewind',
+			'click .reset-btn'  : 'reset',
+			'click .clear-btn'  : 'clear',
+
+			'slide .playback-speed' : 'changePlaybackSpeed',
+
+			'change .playback-mode' : 'changePlaybackMode'
 		}),
 
 		initialize: function(options) {
@@ -32,6 +43,9 @@ define(function(require) {
 			}, options);
 			
 			MovingManSimView.prototype.initialize.apply(this, [ options ]);
+
+			this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
 		},
 
 		/**
@@ -61,6 +75,9 @@ define(function(require) {
 
 			this.renderPlaybackControls();
 
+			this.simulation.trigger('change:paused');
+			this.simulation.trigger('change:recording');
+
 			this.$el.find('.variable-controls').addClass('compact');
 
 			return this;
@@ -74,10 +91,11 @@ define(function(require) {
 
 			// Intialize controls
 			this.$('.playback-speed').noUiSlider({
-				start: 5,
+				start: 1,
 				range: {
-					min: 0,
-					max: 10
+					'min': [ 0.2 ],
+					'50%': [ 1 ],
+					'max': [ 4 ]
 				}
 			});
 		},
@@ -96,6 +114,66 @@ define(function(require) {
 				orientation: 'vertical',
 				direction: 'rtl'
 			};
+		},
+
+		/**
+		 *
+		 */
+		rewind: function(event) {
+			this.pause();
+			this.simulation.rewind();
+		},
+
+		/**
+		 *
+		 */
+		clear: function(event) {
+			this.pause();
+			this.simulation.resetTimeAndHistory();
+		},
+
+		/**
+		 *
+		 */
+		changePlaybackSpeed: function(event) {
+			var speed = parseFloat($(event.target).val());
+			if (!isNaN(speed)) {
+				console.log(speed);
+				this.inputLock(function(){
+					this.simulation.set('playbackSpeed', speed);
+				});
+			}
+		},
+
+		/**
+		 *
+		 */
+		changePlaybackMode: function(event) {
+			var mode = $(event.target).val();
+			if (mode === 'record')
+				this.simulation.record();
+			else
+				this.simulation.stopRecording();
+		},
+
+		/**
+		 * The simulation changed its recording state.
+		 */
+		recordingChanged: function() {
+			if (this.simulation.get('recording'))
+				this.$el.addClass('record-mode');
+			else
+				this.$el.removeClass('record-mode');
+		},
+
+		/**
+		 * The simulation changed its paused state.
+		 */
+		pausedChanged: function() {
+			if (this.simulation.get('paused'))
+				this.$el.removeClass('playing');
+			else
+				this.$el.addClass('playing');
 		},
 
 	});

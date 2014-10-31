@@ -10,7 +10,8 @@ define(function (require) {
 	var Simulation = Backbone.Model.extend({
 
 		defaults: {
-			paused: false
+			paused: false,
+			timeScale: 1
 		},
 		
 		/**
@@ -33,7 +34,7 @@ define(function (require) {
 		update: function(time, delta) {
 
 			if (!this.get('paused')) {
-				delta /= 1000;
+				delta = (delta / 1000) * this.get('timeScale');
 				this.time += delta;
 				this._update(this.time, delta);
 			}
