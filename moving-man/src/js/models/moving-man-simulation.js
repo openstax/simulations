@@ -94,6 +94,8 @@ define(function (require, exports, module) {
 			while (history.length > 0) {
 				history.pop();
 			}
+
+			this.positionFormula = null;
 		},
 
 		/**
