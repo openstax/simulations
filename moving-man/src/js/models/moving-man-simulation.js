@@ -68,6 +68,21 @@ define(function (require, exports, module) {
 		},
 
 		/**
+		 *
+		 */
+		reset: function() {
+			Simulation.prototype.reset.apply(this);
+
+			// This is the fastest way to clear an array by benchmarks
+			var history = this.history;
+			while (history.length > 0) {
+				history.pop();
+			}
+
+			this.playbackTime = 0;
+		},
+
+		/**
 		 * Only runs if simulation isn't currently paused.
 		 * If we're recording, it saves state
 		 */
@@ -167,6 +182,21 @@ define(function (require, exports, module) {
 			}
 
 			Simulation.prototype.play.apply(this);
+		},
+
+		/**
+		 *
+		 */
+		resetTimeAndHistory: function() {
+			// This is the fastest way to clear an array by benchmarks
+			var history = this.history;
+			while (history.length > 0) {
+				history.pop();
+			}
+
+			this.playbackTime = 0;
+
+			this.movingMan.clear();
 		},
 
 		/**

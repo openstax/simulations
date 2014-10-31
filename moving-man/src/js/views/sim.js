@@ -284,6 +284,17 @@ define(function (require) {
 		changeExpression: function(event) {
 			try {
 				this.simulation.useCustomPositionFunction(this.$expression.val());
+				if (this.simulation.noRecording) {
+					/* Start back at time zero so the user can see what
+					 *  his or her function does. If it's a simulation
+					 *  that records (i.e., Charts), the user will have
+					 *  control over the time, so this isn't needed.
+					 */
+					this.simulation.resetTimeAndHistory();
+					this.updater
+						.reset()
+						.play();
+				}
 				this.$expressionGroup.removeClass('error');
 			}
 			catch (e) {

@@ -100,11 +100,13 @@ define(function (require) {
 				dormancyCheckInterval = setInterval(dormancyCheck, DORMANCY_CHECK_INTERVAL);
 				frame();
 			}
+			return this;
 		};
 
 		this.pause = function() {
 			window.cancelAnimationFrame(animationFrame);
 			playing = false;
+			return this;
 		};
 
 		this.paused = function() {
@@ -114,10 +116,12 @@ define(function (require) {
 		this.reset = function() {
 			this.pause();
 			this.total = 0;
+			return this;
 		};
 
 		this.addEventListener = function(event, listener) {
 			listeners[event].push(listener);
+			return this;
 		};
 	};
 
