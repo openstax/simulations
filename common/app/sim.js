@@ -22,17 +22,22 @@ define(function (require) {
 		initialize: function(options) {
 			options = _.extend({
 				title: 'Simulation',
-				name: 'sim'
+				name: 'sim',
+				stepDurtion: 50 // milliseconds
 			}, options);
 
 			this.title = options.title;
 			this.name  = options.name;
+			this.stepDuration = options.stepDuration;
 
 			// Updater stuff
 			this.update = _.bind(this.update, this);
 
 			this.updater = new Updater();
 			this.updater.addEventListener('update', this.update);
+
+			// Stepping
+			this._stepFinished = _.bind(this._stepFinished, this);
 
 			// Initialize simulation model
 			this.initSimulation();
@@ -82,14 +87,16 @@ define(function (require) {
 		 * Click event handler that plays the simulation for a specified duration
 		 */
 		step: function(event) {
-			var milliseconds = 50;
-
-			// Set the UI to pause mode
-			this.pause();
-
 			// Play until a certain number of milliseconds has elapsed.
-			this.updater.play();
-			setTimeout(_.bind(this.updater.pause, this.updater), milliseconds);
+			this.play();
+			setTimeout(this._stepFinished, this.stepDuration);
+		},
+
+		/**
+		 * Called after a step through is finished
+		 */
+		_stepFinished: function() {
+			this.pause();
 		},
 
 		/**
