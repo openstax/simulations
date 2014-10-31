@@ -19,8 +19,18 @@ define(function (require) {
 		 */
 		initialize: function(attributes, options) {
 			this.time = 0;
+
+			this.applyOptions(options);
+			this.startingOptions = options;
+			this.startingAttributes = this.toJSON();
+
 			this.initComponents();
 		},
+
+		/**
+		 *
+		 */
+		applyOptions: function(options) {},
 
 		/**
 		 *
@@ -59,6 +69,9 @@ define(function (require) {
 		},
 
 		reset: function() {
+			this.time = 0;
+			this.set(this.startingAttributes);
+			this.applyOptions(this.startingOptions);
 			this.initComponents();
 		},
 

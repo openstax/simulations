@@ -41,12 +41,6 @@ define(function (require, exports, module) {
 		initialize: function(attributes, options) {
 			Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-			this.noRecording = options ? options.noRecording : false;
-			if (this.noRecording)
-				this.set('recording', false);
-
-			this.initComponents();
-
 			this.on('change:containerWidth', function() {
 				this.set('halfContainerWidth', this.get('containerWidth') / 2);
 			});
@@ -59,6 +53,17 @@ define(function (require, exports, module) {
 				if (!this.get('recording'))
 					this.set('timeScale', speed);
 			});
+		},
+
+		/**
+		 *
+		 */
+		applyOptions: function(options) {
+			Simulation.prototype.applyOptions.apply(this, [options]);
+
+			this.noRecording = options ? options.noRecording : false;
+			if (this.noRecording)
+				this.set('recording', false);
 		},
 
 		/**
@@ -89,8 +94,6 @@ define(function (require, exports, module) {
 			while (history.length > 0) {
 				history.pop();
 			}
-
-			this.time = 0;
 		},
 
 		/**

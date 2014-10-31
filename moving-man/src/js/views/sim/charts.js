@@ -138,7 +138,6 @@ define(function(require) {
 		changePlaybackSpeed: function(event) {
 			var speed = parseFloat($(event.target).val());
 			if (!isNaN(speed)) {
-				console.log(speed);
 				this.inputLock(function(){
 					this.simulation.set('playbackSpeed', speed);
 				});
