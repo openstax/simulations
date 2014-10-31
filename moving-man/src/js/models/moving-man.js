@@ -334,7 +334,7 @@ define(function (require) {
 				this.mousePosition = this.clampIfWalled(x).position;
 
 				// Once I figure out why we're doing this, I'll write a note here
-				if (this.simulation.paused)
+				if (this.simulation.get('paused'))
 					this.set('position', this.mousePosition);
 			}
 		},

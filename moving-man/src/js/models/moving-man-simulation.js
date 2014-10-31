@@ -36,8 +36,8 @@ define(function (require, exports, module) {
 		/**
 		 *
 		 */
-		initialize: function(options) {
-			Simulation.prototype.initialize.apply(this, [options]);
+		initialize: function(attributes, options) {
+			Simulation.prototype.initialize.apply(this, [attributes, options]);
 
 			this.noRecording = options ? options.noRecording : false;
 			if (this.noRecording)

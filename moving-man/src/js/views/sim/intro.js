@@ -26,7 +26,7 @@ define(function(require) {
 		 * Initializes the Simulation.
 		 */
 		initSimulation: function() {
-			this.simulation = new MovingManSimulation({
+			this.simulation = new MovingManSimulation(null, {
 				noRecording: true
 			});
 		},

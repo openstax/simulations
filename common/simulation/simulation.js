@@ -16,7 +16,7 @@ define(function (require) {
 		/**
 		 *
 		 */
-		initialize: function(options) {
+		initialize: function(attributes, options) {
 			this.time = 0;
 			this.initComponents();
 		},
@@ -32,7 +32,7 @@ define(function (require) {
 		 */
 		update: function(time, delta) {
 
-			if (!this.paused) {
+			if (!this.get('paused')) {
 				delta /= 1000;
 				this.time += delta;
 				this._update(this.time, delta);
