@@ -10,13 +10,14 @@ define(function (require) {
 	var Simulation = Backbone.Model.extend({
 
 		defaults: {
-			wallsEnabled: true
+			paused: false
 		},
 		
 		/**
 		 *
 		 */
-		initialize: function(options) {
+		initialize: function(attributes, options) {
+			this.time = 0;
 			this.initComponents();
 		},
 
@@ -26,12 +27,15 @@ define(function (require) {
 		initComponents: function() {},
 
 		/**
-		 * 
+		 * Calls the internal _update function with an internally kept
+		 *   time counter which is in seconds instead of milliseconds.
 		 */
 		update: function(time, delta) {
 
-			if (!this.paused) {
-				this._update(time / 1000, delta / 1000);
+			if (!this.get('paused')) {
+				delta /= 1000;
+				this.time += delta;
+				this._update(this.time, delta);
 			}
 			
 		},
@@ -43,11 +47,13 @@ define(function (require) {
 
 		play: function() {
 			this.paused = false;
+			this.set('paused', false);
 			this.trigger('play');
 		},
 
 		pause: function() {
 			this.paused = true;
+			this.set('paused', true);
 			this.trigger('pause');
 		},
 

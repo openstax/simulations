@@ -12,12 +12,11 @@ define(function (require) {
 		/**
 		 *
 		 */
-		initialize: function(options) {
-			Simulation.prototype.initialize.apply(this, [options]);
+		initialize: function(attributes, options) {
+			Simulation.prototype.initialize.apply(this, [attributes, options]);
 
 			this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
 			this.accumulator = 0;
-			this.time = 0;
 		},
 
 		/**
