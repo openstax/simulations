@@ -180,10 +180,9 @@ define(function (require) {
 					$slider.Link('lower').to($(this).find('.variable-text'));	
 				});
 
-			this.$('.sim-controls')
-				.append($position)
-				.append($velocity)
-				.append($acceleration);
+			this.$('.position-row').append($position);
+			this.$('.velocity-row').append($velocity);
+			this.$('.acceleration-row').append($acceleration);
 
 			this.$position     = $position;
 			this.$velocity     = $velocity;

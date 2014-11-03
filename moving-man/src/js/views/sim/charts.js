@@ -7,6 +7,7 @@ define(function(require) {
 	var MovingManSimulation = require('models/moving-man-simulation');
 	var MovingManSimView    = require('views/sim');
 	var SceneView           = require('views/scene');
+	var MovingManGraphView  = require('views/graph/moving-man');
 	
 	require('nouislider');
 
@@ -15,6 +16,7 @@ define(function(require) {
 
 	// CSS
 	require('less!styles/playback-controls');
+	require('less!styles/graph');
 
 	/**
 	 *
@@ -74,6 +76,7 @@ define(function(require) {
 			MovingManSimView.prototype.render.apply(this);
 
 			this.renderPlaybackControls();
+			this.renderGraphs();
 
 			this.simulation.trigger('change:paused');
 			this.simulation.trigger('change:recording');
@@ -101,6 +104,74 @@ define(function(require) {
 		},
 
 		/**
+		 * Renders the graphs
+		 */
+		renderGraphs: function() {
+			this.positionGraphView = new MovingManGraphView({
+				title: '',
+				x: null,
+				y: {
+					start: -10,
+					end:    10,
+					step:    5,
+					label:  '',
+					showNumbers: true
+				},
+				latitudinalGridLines: 3,
+				longitudinalGridLines: 9,
+				graphSeries: this.simulation.movingMan.positionGraphSeries
+			});
+
+			this.velocityGraphView = new MovingManGraphView({
+				title: '',
+				x: null,
+				y: {
+					start: -16,
+					end:    16,
+					step:    6,
+					label:  '',
+					showNumbers: true
+				},
+				latitudinalGridLines: 3,
+				longitudinalGridLines: 9,
+				graphSeries: this.simulation.movingMan.velocityGraphSeries
+			});
+
+			this.accelerationGraphView = new MovingManGraphView({
+				title: '',
+				x: {
+					start: 0,
+					end:  20,
+					step:  2,
+					label: 'time (sec)',
+					showNumbers: true
+				},
+				y: {
+					start: -60,
+					end:    60,
+					step:   30,
+					label:  '',
+					showNumbers: true
+				},
+				latitudinalGridLines: 3,
+				longitudinalGridLines: 9,
+				graphSeries: this.simulation.movingMan.accelerationGraphSeries
+			});
+
+			this.positionGraphView.render();
+			this.velocityGraphView.render();
+			this.accelerationGraphView.render();
+
+			this.$('.position-row').append(this.positionGraphView.el);
+			this.$('.velocity-row').append(this.velocityGraphView.el);
+			this.$('.acceleration-row').append(this.accelerationGraphView.el);
+
+			this.positionGraphView.postRender();
+			this.velocityGraphView.postRender();
+			this.accelerationGraphView.postRender();
+		},
+
+		/**
 		 * Default intro view needs horizontal sliders, while the charts
 		 *   view has more compact variable controls with a vertical slider.
 		 */
@@ -114,6 +185,28 @@ define(function(require) {
 				orientation: 'vertical',
 				direction: 'rtl'
 			};
+		},
+
+		/**
+		 *
+		 */
+		postRender: function() {
+			MovingManSimView.prototype.postRender.apply(this);
+
+			this.positionGraphView.postRender();
+			this.velocityGraphView.postRender();
+			this.accelerationGraphView.postRender();
+		},
+
+		/**
+		 *
+		 */
+		update: function(time, delta) {
+			MovingManSimView.prototype.update.apply(this, [time, delta]);
+
+			this.positionGraphView.update(time, delta);
+			this.velocityGraphView.update(time, delta);
+			this.accelerationGraphView.update(time, delta);
 		},
 
 		/**

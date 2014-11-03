@@ -6,15 +6,9 @@ define(function(require) {
 	var _        = require('underscore');
 	var Backbone = require('backbone');
 
-	/*
-	 * "Local" variables for functions to share and recycle
-	 */
-	var context,
-		gridCellWidth,
-		gridCellHeight,
-		points,
-	    i,
-	    j;
+	var html = require('text!./graph.html');
+
+	require('less!./graph');
 
 	/**
 	 * GraphView is not intended to be directly instantiated but extended
@@ -27,52 +21,46 @@ define(function(require) {
 	 */
 	var GraphView = Backbone.View.extend({
 
+		template: _.template(html),
+
+		tagName: 'figure',
+		className: 'graph-view',
+
 		initialize: function(options) {
 
 			// Default values
 			options = _.extend({
 				title: 'Value',
-				showButtonText: 'Show Graph',
 				x: {
 					start: 0,
 					end: 100,
 					step: 10,
-					label: 'x (cm)',
+					label: 'x',
 					showNumbers: true
 				},
 				y: {
 					start: 0,
 					end: 100,
 					step: 10,
-					label: 'y (cm)',
-					showNumbers: false
+					label: 'y',
+					showNumbers: true
 				},
 				lineThickness: 5,
 				lineColor: '#000',
 				gridColor: '#ddd',
-				portrait: false,
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9
 			}, options);
 
-			// Save options
-			if (options.waveSimulation)
-				this.waveSimulation = options.waveSimulation;
-			else
-				throw 'GraphView requires a WaveSimulation model to render.';
-
 			// Save graph information for rendering
 			this.graphInfo = {
 				title: options.title,
-				showButtonText: options.showButtonText,
 				x: options.x,
 				y: options.y
 			};
 
 			this.latitudinalGridLines  = options.latitudinalGridLines;
 			this.longitudinalGridLines = options.longitudinalGridLines;
-
-			this.portrait = options.portrait;
 
 			this.lineThickness = options.lineThickness;
 			this.lineColor = options.lineColor;
@@ -91,11 +79,6 @@ define(function(require) {
 		 */
 		render: function() {
 			this.$el.empty();
-
-			if (this.portrait)
-				this.$el.addClass('portrait');
-			else
-				this.$el.addClass('landscape');
 
 			this.renderContainer();
 			this.initCanvas();
@@ -165,7 +148,7 @@ define(function(require) {
 		 * Draws a blank graph with lines.
 		 */
 		drawGraph: function() {
-			context = this.context;
+			var context = this.context;
 
 			// Draw background
 			context.fillStyle = '#fff';
@@ -174,17 +157,17 @@ define(function(require) {
 			// Draw Grid
 			context.beginPath();
 
-			gridCellHeight = Math.round((this.height + 2) / (this.latitudinalGridLines + 1));
-			gridCellWidth  = Math.round((this.width  + 2) / (this.longitudinalGridLines + 1));
+			var gridCellHeight = Math.round((this.height + 2) / (this.latitudinalGridLines + 1));
+			var gridCellWidth  = Math.round((this.width  + 2) / (this.longitudinalGridLines + 1));
 
 			// Draw latitudinal grid lines
-			for (j = 1; j <= this.latitudinalGridLines; j++) {
+			for (var j = 1; j <= this.latitudinalGridLines; j++) {
 				context.moveTo(0, gridCellHeight * j - 0.5);
 				context.lineTo(this.width, gridCellHeight * j - 0.5);
 			}
 
 			// Draw longitudinal grid lines
-			for (i = 1; i <= this.longitudinalGridLines; i++) {
+			for (var i = 1; i <= this.longitudinalGridLines; i++) {
 				context.moveTo(gridCellWidth * i - 0.5, 0);
 				context.lineTo(gridCellWidth * i - 0.5, this.height);
 			}
@@ -198,13 +181,16 @@ define(function(require) {
 		 * Draws the points as a curve on the graph.
 		 */
 		drawCurve: function() {
-			context = this.context;
-			points  = this.points;
+			if (this.points.length === 0)
+				return;
+			
+			var context = this.context;
+			var points  = this.points;
 
 			context.beginPath();
 			context.moveTo(points[0].x, points[0].y);
 
-			for (i = 1; i < this.points.length; i++) {
+			for (var i = 1; i < points.length; i++) {
 				context.lineTo(points[i].x, points[i].y);
 			}
 
