@@ -27,6 +27,9 @@ define(function(require) {
 			else
 				throw 'MovingManGraphView requires a graph series object to render.';
 
+			this.timeSpan  = options.timeSpan || 20;
+			this.valueSpan = Math.abs(options.y.end - options.y.start);
+
 			GraphView.prototype.initialize.apply(this, [options]);
 		},
 
@@ -46,8 +49,8 @@ define(function(require) {
 		 */
 		resize: function() {
 			GraphView.prototype.resize.apply(this);
-			this.pixelRatioX = 1;
-			this.pixelRatioY = 1;
+			this.pixelRatioX = this.width / this.timeSpan;
+			this.pixelRatioY = this.height / this.valueSpan;
 		},
 
 		/**
@@ -56,15 +59,6 @@ define(function(require) {
 		 */
 		initPoints: function() {
 			this.points = [];
-
-			var length = this.graphSeries.size();
-			var points = this.points;
-			for (var i = 0; i < length; i++) {
-				points[i] = { 
-					x: 0, 
-					y: 0 
-				};
-			}
 		},
 
 		/**
@@ -79,14 +73,27 @@ define(function(require) {
 			var length      = graphSeries.size();
 			
 			for (i = 0; i < length; i++) {
-				points[i].x = graphSeries.get(i).time  * pixelRatioX;
-				points[i].y = graphSeries.get(i).value * pixelRatioY;
+				if (i >= points.length)
+					this.addPoint();
+
+				points[i].x = graphSeries.getPoint(i).time  * pixelRatioX;
+				points[i].y = this.height / 2 - graphSeries.getPoint(i).value * pixelRatioY;
 			}
 
 			// Hide the beginning
 			if (length)
 				points[0].x = -1;
-		}
+		},
+
+		/**
+		 *
+		 */
+		addPoint: function() {
+			this.points.push({ 
+				x: 0, 
+				y: 0 
+			});
+		},
 
 	});
 

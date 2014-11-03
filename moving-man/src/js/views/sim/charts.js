@@ -119,7 +119,8 @@ define(function(require) {
 				},
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
-				graphSeries: this.simulation.movingMan.positionGraphSeries
+				graphSeries: this.simulation.movingMan.positionGraphSeries,
+				timeSpan: this.simulation.get('maxTime')
 			});
 
 			this.velocityGraphView = new MovingManGraphView({
@@ -134,7 +135,8 @@ define(function(require) {
 				},
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
-				graphSeries: this.simulation.movingMan.velocityGraphSeries
+				graphSeries: this.simulation.movingMan.velocityGraphSeries,
+				timeSpan: this.simulation.get('maxTime')
 			});
 
 			this.accelerationGraphView = new MovingManGraphView({
@@ -155,7 +157,8 @@ define(function(require) {
 				},
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
-				graphSeries: this.simulation.movingMan.accelerationGraphSeries
+				graphSeries: this.simulation.movingMan.accelerationGraphSeries,
+				timeSpan: this.simulation.get('maxTime')
 			});
 
 			this.positionGraphView.render();
