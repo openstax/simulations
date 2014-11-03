@@ -132,53 +132,14 @@ define(function (require) {
 		 *
 		 */
 		renderVariableControls: function() {
-			var help_modal_id = this.name + '-function-help-modal';
-
-			var $position = $(this.variableControlTemplate({
-				className: 'position',
-				name:  'Position',
-				units: 'm',
-				unique: this.name + '-position',
-				vectors: false,
-				expression: true,
-				help_modal_id: help_modal_id
-			}));
-
-			var $velocity = $(this.variableControlTemplate({
-				className: 'velocity',
-				name:  'Velocity',
-				units: 'm/s',
-				unique: this.name + '-velocity',
-				vectors: true,
-				expression: false
-			}));
-
-			var $acceleration = $(this.variableControlTemplate({
-				className: 'acceleration',
-				name:  'Acceleration',
-				units: 'm/s<sup>2</sup>',
-				unique: this.name + '-acceleration',
-				vectors: true,
-				expression: false
-			}));
-
-			var sliderOptions = this.getSliderOptions();
+			var $position = $(this.variableControlTemplate(this.getPositionTemplateData()));
+			var $velocity = $(this.variableControlTemplate(this.getVelocityTemplateData()));
+			var $acceleration = $(this.variableControlTemplate(this.getAccelerationTemplateData()));
 
 			this.$variables = $()
 				.add($position)
 				.add($velocity)
-				.add($acceleration)
-				.each(function(){
-					var $slider = $(this).find('.variable-slider');
-
-					$slider.noUiSlider(sliderOptions);
-					// $slider.noUiSlider_pips({
-					// 	mode: 'positions',
-					// 	density: 5,
-					// 	values: [0, 50, 100]
-					// });
-					$slider.Link('lower').to($(this).find('.variable-text'));	
-				});
+				.add($acceleration);
 
 			this.$('.position-row').append($position);
 			this.$('.velocity-row').append($velocity);
@@ -188,6 +149,8 @@ define(function (require) {
 			this.$velocity     = $velocity;
 			this.$acceleration = $acceleration;
 
+			this.initVariableSliders();
+
 			this.$positionInputs     = this.$position.find(    '.variable-text, .slider');
 			this.$velocityInputs     = this.$velocity.find(    '.variable-text, .slider');
 			this.$accelerationInputs = this.$acceleration.find('.variable-text, .slider');
@@ -196,8 +159,21 @@ define(function (require) {
 			this.$expressionGroup = this.$('.position .expression-group');
 
 			this.$el.append(this.functionHelpTemplate({
-				help_modal_id: help_modal_id
+				help_modal_id: this.getHelpModalId()
 			}));
+		},
+
+		/**
+		 *
+		 */
+		initVariableSliders: function() {
+			var sliderOptions = this.getSliderOptions();
+
+			this.$variables.each(function(){
+				var $slider = $(this).find('.variable-slider');
+				$slider.noUiSlider(sliderOptions);
+				$slider.Link('lower').to($(this).find('.variable-text'));	
+			});
 		},
 
 		/**
@@ -211,6 +187,56 @@ define(function (require) {
 					min: -10,
 					max:  10
 				}
+			};
+		},
+
+		/**
+		 *
+		 */
+		getHelpModalId: function() {
+			return this.name + '-function-help-modal';
+		},
+
+		/**
+		 *
+		 */
+		getPositionTemplateData: function() {
+			return {
+				className: 'position',
+				name:  'Position',
+				units: 'm',
+				unique: this.name + '-position',
+				vectors: false,
+				expression: true,
+				help_modal_id: this.getHelpModalId()
+			};
+		},
+
+		/**
+		 *
+		 */
+		getVelocityTemplateData: function() {
+			return {
+				className: 'velocity',
+				name:  'Velocity',
+				units: 'm/s',
+				unique: this.name + '-velocity',
+				vectors: true,
+				expression: false
+			};
+		},
+
+		/**
+		 *
+		 */
+		getAccelerationTemplateData: function() {
+			return {
+				className: 'acceleration',
+				name:  'Acceleration',
+				units: 'm/s<sup>2</sup>',
+				unique: this.name + '-acceleration',
+				vectors: true,
+				expression: false
 			};
 		},
 

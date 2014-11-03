@@ -117,6 +117,7 @@ define(function(require) {
 					label:  '',
 					showNumbers: true
 				},
+				lineColor: '#2575BA',
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
 				graphSeries: this.simulation.movingMan.positionGraphSeries,
@@ -127,12 +128,13 @@ define(function(require) {
 				title: '',
 				x: null,
 				y: {
-					start: -16,
-					end:    16,
+					start: -12,
+					end:    12,
 					step:    6,
 					label:  '',
 					showNumbers: true
 				},
+				lineColor: '#CD2520',
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
 				graphSeries: this.simulation.movingMan.velocityGraphSeries,
@@ -155,6 +157,7 @@ define(function(require) {
 					label:  '',
 					showNumbers: true
 				},
+				lineColor: '#349E34',
 				latitudinalGridLines: 3,
 				longitudinalGridLines: 9,
 				graphSeries: this.simulation.movingMan.accelerationGraphSeries,
@@ -172,6 +175,34 @@ define(function(require) {
 			this.positionGraphView.postRender();
 			this.velocityGraphView.postRender();
 			this.accelerationGraphView.postRender();
+		},
+
+		/**
+		 * In the Charts tab, the velocity and acceleration sliders are 
+		 *   actually supposed to have different ranges.
+		 */
+		initVariableSliders: function() {
+			var initSlider = function($variable, options) {
+				var $slider = $variable.find('.variable-slider');
+				$slider.noUiSlider(options);
+				$slider.Link('lower').to($variable.find('.variable-text'));
+			};
+
+			initSlider(this.$position, this.getSliderOptions());
+
+			initSlider(this.$velocity, _.extend(this.getSliderOptions(), {
+				range: {
+					min: -16,
+					max:  16
+				}
+			}));
+			
+			initSlider(this.$acceleration, _.extend(this.getSliderOptions(), {
+				range: {
+					min: -60,
+					max:  60
+				}
+			}));
 		},
 
 		/**
