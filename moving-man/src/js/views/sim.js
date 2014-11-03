@@ -164,7 +164,7 @@ define(function (require) {
 
 			var sliderOptions = this.getSliderOptions();
 
-			$()
+			this.$variables = $()
 				.add($position)
 				.add($velocity)
 				.add($acceleration)
@@ -415,10 +415,9 @@ define(function (require) {
 			else if (model.accelerationDriven())
 				$variable = this.$acceleration;
 
-			$variable
-				.addClass('driving')
-				.siblings()
-					.removeClass('driving');
+			this.$variables.removeClass('driving');
+
+			$variable.addClass('driving');		
 		}
 
 	});
