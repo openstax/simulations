@@ -100,14 +100,16 @@ define(function(require) {
 		 *   many times a second, so that needs to be avoided.
 		 */
 		updateSliderOptions: function() {
+			var max = Math.min(this.simulation.get('furthestRecordedTime'), this.timeSpan);
+
 			this.$slider.noUiSlider({
 				range: {
 					min: 0,
-					max: Math.max(this.simulation.get('furthestRecordedTime'), this.timeSpan)
+					max: max
 				}
 			}, true); // true to rebuild
 
-			this.$slider.width(this.pixelRatioX * this.simulation.get('furthestRecordedTime'));
+			this.$slider.width(this.pixelRatioX * max);
 		},
 
 		/**
