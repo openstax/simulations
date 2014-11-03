@@ -22,6 +22,7 @@ define(function (require, exports, module) {
 			containerWidth: 20,
 			halfContainerWidth: 10,
 			wallsEnabled: true,
+			time: 0,
 			furthestRecordedTime: 0,
 			maxTime: 20,
 			recording: true,
@@ -115,6 +116,9 @@ define(function (require, exports, module) {
 					// We're playing back, so apply a saved state instead of updating
 					this.applyPlaybackState();
 
+					// For the time slider and anything else relying on time
+					this.set('time', time);
+
 					// And if we've reached the end of what we've recorded, stop
 					if (time >= this.get('furthestRecordedTime'))
 						this.pause();
@@ -205,6 +209,7 @@ define(function (require, exports, module) {
 		 */
 		rewind: function() {
 			this.time = 0;
+			this.set('time', 0);
 
 			if (this.get('recording'))
 				this.resetTimeAndHistory();
