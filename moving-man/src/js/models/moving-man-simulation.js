@@ -205,6 +205,9 @@ define(function (require, exports, module) {
 		 */
 		rewind: function() {
 			this.time = 0;
+
+			if (this.get('recording'))
+				this.resetTimeAndHistory();
 		},	
 
 		/**
@@ -223,11 +226,30 @@ define(function (require, exports, module) {
 		},
 
 		/**
+		 *
+		 */
+		clearHistoryAfter: function(time) {
+			var points = [];
+			for (var i = 0; i < this.history.length; i++) {
+				if (this.history[i].time < time)
+					points.push(this.history[i]);
+			}
+			this.history = points;
+			this.movingMan.clearHistoryAfter(time);
+		},
+
+		/**
 		 * Sets playback mode to record
 		 */
 		record: function() {
 			this.set('recording', true);
 			this.set('timeScale', this.get('playbackSpeed'));
+
+			/* If we switch to recording from playback, we need to clear whatever
+			 *   history is after the current time (where the cursor was) because
+			 *   we want to record over and not just add to the data.
+			 */
+			this.clearHistoryAfter(this.time);
 		},
 
 		/**

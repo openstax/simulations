@@ -83,6 +83,8 @@ define(function (require) {
 			this.positionGraphSeries.clear();
 			this.velocityGraphSeries.clear();
 			this.accelerationGraphSeries.clear();
+
+			this.trigger('history-cleared');
 		},
 
 		/**
@@ -98,6 +100,8 @@ define(function (require) {
 			this.positionGraphSeries.clearPointsAfter(time);
 			this.velocityGraphSeries.clearPointsAfter(time);
 			this.accelerationGraphSeries.clearPointsAfter(time);
+
+			this.trigger('history-cleared');
 		},
 
 		/**

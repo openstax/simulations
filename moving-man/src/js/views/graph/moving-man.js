@@ -27,10 +27,19 @@ define(function(require) {
 			else
 				throw 'MovingManGraphView requires a graph series object to render.';
 
-			this.timeSpan  = options.timeSpan || 20;
+			if (options.simulation)
+				this.simulation = options.simulation;
+			else
+				throw 'MovingManGraphView requires a simulation model to render.';
+
+			this.timeSpan  = this.simulation.get('maxTime') || 20;
 			this.valueSpan = Math.abs(options.y.end - options.y.start);
 
 			GraphView.prototype.initialize.apply(this, [options]);
+
+			this.listenTo(this.simulation.movingMan, 'history-cleared', function() {
+				this.initPoints();
+			});
 		},
 
 		/**
