@@ -361,7 +361,7 @@ define(function (require) {
 		 *
 		 */
 		positionChanged: function(model, value) {
-			if (!(this.simulation.movingMan.positionDriven() && !this.sceneView.movingManView.dragging)) {
+			if (!this.simulation.movingMan.positionDriven() || this.sceneView.movingManView.dragging || this.simulation.playingBack()) {
 				this.updateLock(function(){
 					this.$positionInputs.val(value.toFixed(2));
 				});	

@@ -271,6 +271,23 @@ define(function (require, exports, module) {
 		},
 
 		/**
+		 * Returns true if we're currently recording (in recording 
+		 *   mode and simulation playing).
+		 */
+		recording: function() {
+			return (this.get('recording') && !this.get('paused'));
+		},
+
+		/**
+		 * Returns true if we're currently playing back (not in
+		 *   recording mode on a simulation that records and
+		 *   simulation playing).
+		 */
+		playingBack: function() {
+			return (!this.get('recording') && !this.noRecording && !this.get('paused'));
+		},
+
+		/**
 		 * Stores the current state of everything as a json object
 		 *   in the history array for playback later.
 		 */
