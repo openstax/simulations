@@ -94,7 +94,6 @@ define(function (require, exports, module) {
 				if (this.simulation.get('paused'))
 					this.simulation.play();
 			}
-				
 
 			this.fixTouchEvents(event);
 

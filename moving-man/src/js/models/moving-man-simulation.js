@@ -226,6 +226,8 @@ define(function (require, exports, module) {
 			}
 
 			this.time = 0;
+			this.set('time', 0);
+			this.set('furthestRecordedTime', 0);
 
 			this.movingMan.clear();
 		},
