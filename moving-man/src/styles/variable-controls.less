@@ -98,9 +98,9 @@
 
 	&.compact {
 		width: 150px;
-		height: 140px;
 		position: absolute;
 		top: 10px;
+		bottom: 40px;
 		left: 0;
 		margin: 0;
 		padding: 0;
@@ -109,11 +109,18 @@
 			padding-top: 12px;
 		}
 
+		& .left-wrapper {
+			position: absolute;
+			height: 108px;
+			top: 50%;
+			margin-top: -54px;
+		}
+
 		& .slider {
-			height: 120px;
 			position: absolute;
 			right: 0;
 			top: 0;
+			bottom: 0;
 			z-index: 100; // So it shows above the scene where it overlaps
 
 			&:before {
