@@ -141,9 +141,9 @@ define(function (require) {
 				.add($velocity)
 				.add($acceleration);
 
-			this.$('.position-row').append($position);
-			this.$('.velocity-row').append($velocity);
-			this.$('.acceleration-row').append($acceleration);
+			this.$('.position-row .row-content').append($position);
+			this.$('.velocity-row .row-content').append($velocity);
+			this.$('.acceleration-row .row-content').append($acceleration);
 
 			this.$position     = $position;
 			this.$velocity     = $velocity;

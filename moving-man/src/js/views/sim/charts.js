@@ -35,7 +35,10 @@ define(function(require) {
 
 			'slide .playback-speed' : 'changePlaybackSpeed',
 
-			'change .playback-mode' : 'changePlaybackMode'
+			'change .playback-mode' : 'changePlaybackMode',
+
+			'click .row-hide': 'hideRow',
+			'click .row-show': 'showRow'
 		}),
 
 		initialize: function(options) {
@@ -168,9 +171,9 @@ define(function(require) {
 			this.velocityGraphView.render();
 			this.accelerationGraphView.render();
 
-			this.$('.position-row').append(this.positionGraphView.el);
-			this.$('.velocity-row').append(this.velocityGraphView.el);
-			this.$('.acceleration-row').append(this.accelerationGraphView.el);
+			this.$('.position-row .row-content').append(this.positionGraphView.el);
+			this.$('.velocity-row .row-content').append(this.velocityGraphView.el);
+			this.$('.acceleration-row .row-content').append(this.accelerationGraphView.el);
 
 			this.positionGraphView.postRender();
 			this.velocityGraphView.postRender();
@@ -301,6 +304,46 @@ define(function(require) {
 			else
 				this.$el.addClass('playing');
 		},
+
+		/**
+		 *
+		 */
+		hideRow: function(event) {
+			$(event.target).parents('.variable-row').addClass('collapsed');
+			
+			this._layoutRows();
+		},
+
+		/**
+		 *
+		 */
+		showRow: function(event) {
+			$(event.target).parents('.variable-row').removeClass('collapsed');
+			
+			this._layoutRows();
+		},
+
+		/**
+		 *
+		 */
+		_layoutRows: function() {
+			// Clear height override classes
+			this.$('.variable-row')
+				.removeClass('one-row')
+				.removeClass('two-rows');
+
+			// Check how many rows are visible and apply appropriate classes
+			var $visibleRows = this.$('.variable-row').not('.collapsed');
+			if ($visibleRows.length === 1)
+				$visibleRows.addClass('one-row');
+			else if ($visibleRows.length === 2)
+				$visibleRows.addClass('two-rows');
+
+			// Resize the graphs
+			this.positionGraphView.resize();
+			this.velocityGraphView.resize();
+			this.accelerationGraphView.resize();
+		}
 
 	});
 

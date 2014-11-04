@@ -6,6 +6,9 @@ define(function(require) {
 
 	require('nouislider');
 
+	var xAxisButtonsHtml = require('text!templates/graph-x-axis-buttons.html');
+	var yAxisButtonsHtml = require('text!templates/graph-y-axis-buttons.html');
+
 	/**
 	 * MovingManGraphView shows the value of a given moving-man variable
 	 *   over time (e.g., position, velocity, or acceleration over time).
@@ -80,6 +83,11 @@ define(function(require) {
 				.append('<div class="handle-bottom">');
 
 			this.$('.graph-view-graph-wrapper').append(this.$slider);
+
+			if (this.graphInfo.x)
+				this.$('.graph-view-graph-wrapper').append(xAxisButtonsHtml);
+			if (this.graphInfo.y)
+				this.$('.graph-view-graph-wrapper').append(yAxisButtonsHtml);
 		},
 
 		/**

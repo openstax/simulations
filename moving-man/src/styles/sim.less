@@ -1,20 +1,74 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "mixins.less";
 
 .sim-controls {
 	background: @gray-lightest;
 	padding-bottom: 20px;
 
-	.position-row,
-	.velocity-row,
-	.acceleration-row {
+	.variable-row {
 		position: relative;
-		margin: 0 30px;
+	}
+}
+
+#sim-intro .row-hide,
+#sim-intro .row-show {
+	display: none;
+}
+
+#sim-charts .variable-row {
+	height: 180px;
+	margin: -10px 0 -40px 0;
+	padding: 10px 30px 0;
+
+	& .row-content {
+		height: 100%;
+		position: relative;
+		overflow: hidden;
+	}
+
+	&.collapsed {
+		height: 60px;
+
+		& .row-content {
+			height: 0;
+		}
+
+		& .row-show {
+			display: block;
+		}
+
+		& .row-hide {
+			display: none;
+		}
+	}
+
+	&.two-rows {
+		height: 240px;
+	}
+
+	&.one-row {
+		height: 420px;
+	}
+
+	.row-show,
+	.row-hide {
+		position: absolute;
+		top: 8px;
+		left: 100%;
+		margin-left: -26px;
+		font-size: 16px;
+		color: #888;
+		.text-button();
+	}
+
+	.row-show {
+		display: none;
 	}
 }
 
 #sim-charts .sim-controls .acceleration-row {
-	margin-bottom: 6px;
+	margin-bottom: -14px;
 }
 
 .sound-btn-wrapper {

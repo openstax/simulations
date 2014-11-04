@@ -1,27 +1,7 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
 @import "variables.less";
-
-.text-button() {
-	background: transparent;
-	padding: 0;
-	font-weight: bold;
-
-	&:focus {
-		outline: none;
-		color: inherit;
-	}
-
-	&:hover {
-		color: inherit;
-		opacity: 0.8;
-	}
-
-	&:active {
-		color: inherit;
-		.box-shadow(none);
-	}
-}
+@import "mixins.less";
 
 .variable-controls {
 	width: 300px;
@@ -119,7 +99,9 @@
 	&.compact {
 		width: 150px;
 		height: 140px;
-		position: relative;
+		position: absolute;
+		top: 10px;
+		left: 0;
 		margin: 0;
 		padding: 0;
 

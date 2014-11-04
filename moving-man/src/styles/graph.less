@@ -1,21 +1,55 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "mixins.less";
 
 .graph-view.moving-man-graph-view {
 	position: absolute;
-	top: 0;
+	top: 10px;
 	left: 150px;
 	right: 0;
-	height: 140px;
+	bottom: 10px;
 
 	> .graph-view-graph-wrapper {
 		position: absolute;
 		top: 0;
+		bottom: 30px;
 		left: 40px;
 		right: 0;
-		height: 120px;
 		min-width: initial;
 		min-height: initial;
+
+		> button {
+			position: absolute;
+			color: #888;
+		}
+
+		> .graph-view-zoom-in-x, 
+		> .graph-view-zoom-out-x {
+			top: 100%;
+			margin-top: 19px;
+		}
+
+		> .graph-view-zoom-in-x {
+			right: 72px;
+		}
+		> .graph-view-zoom-out-x  {
+			right: 48px;
+		}
+
+		> .graph-view-zoom-in-y,
+		> .graph-view-zoom-out-y {
+			left: 100%;
+			margin-left: 4px;
+		}
+
+		> .graph-view-zoom-in-y {
+			top: 50%;
+			margin-top: -22px;
+		}
+		> .graph-view-zoom-out-y {
+			top: 50%;
+			margin-top: 5px;
+		}
 	}
 }
 
