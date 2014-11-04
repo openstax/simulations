@@ -261,6 +261,9 @@ define(function (require, exports, module) {
 		 * Sets playback mode to playback
 		 */
 		stopRecording: function() {
+			this.set('time', 0);
+			this.time = 0;
+
 			this.set('recording', false);
 			this.set('timeScale', 1);
 		},
