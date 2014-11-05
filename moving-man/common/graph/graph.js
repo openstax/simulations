@@ -36,6 +36,7 @@ define(function(require) {
 					end: 100,
 					step: 10,
 					label: 'x',
+					decimalPlaces: 0,
 					showNumbers: true
 				},
 				y: {
@@ -43,6 +44,7 @@ define(function(require) {
 					end: 100,
 					step: 10,
 					label: 'y',
+					decimalPlaces: 0,
 					showNumbers: true
 				},
 				lineThickness: 5,
@@ -183,7 +185,7 @@ define(function(require) {
 		drawCurve: function() {
 			if (this.points.length === 0)
 				return;
-			
+
 			var context = this.context;
 			var points  = this.points;
 
