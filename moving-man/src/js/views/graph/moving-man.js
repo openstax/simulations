@@ -58,15 +58,7 @@ define(function(require) {
 			this.listenTo(this.simulation.movingMan, 'history-cleared', function() {
 				this.initPoints();
 			});
-			this.listenTo(this.simulation, 'change:recording', function() {
-				if (this.simulation.get('recording'))
-					this.$slider.hide();
-				else {
-					this.updateSliderOptions();
-					this.$slider.val(this.simulation.time);
-					this.$slider.show();
-				}
-			});
+			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
 			this.listenTo(this.simulation, 'change:time', this.timeChanged);
 
 			this.on('zoom-y', this.zoomY);
@@ -92,6 +84,9 @@ define(function(require) {
 			this.$slider.find('.noUi-handle')
 				.append('<div class="handle-top">')
 				.append('<div class="handle-bottom">');
+
+			if (!this.simulation.get('recording'))
+				this.$slider.show();
 
 			this.$('.graph-view-graph-wrapper').append(this.$slider);
 
@@ -122,6 +117,7 @@ define(function(require) {
 			var max = Math.min(this.simulation.get('furthestRecordedTime'), this.timeSpan);
 
 			this.$slider.noUiSlider({
+				start: this.simulation.time,
 				range: {
 					min: 0,
 					max: max
@@ -193,6 +189,19 @@ define(function(require) {
 		timeChanged: function(model, time) {
 			if (!this.simulation.get('recording') && !this.changingTime)
 				this.$slider.val(time);
+		},
+
+		/**
+		 * Called when the sim's recording state changes and stuff
+		 */
+		recordingChanged: function() {
+			if (this.simulation.get('recording'))
+				this.$slider.hide();
+			else {
+				this.updateSliderOptions();
+				this.$slider.val(this.simulation.time);
+				this.$slider.show();
+			}
 		},
 
 		/**
