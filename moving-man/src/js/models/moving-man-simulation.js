@@ -260,20 +260,24 @@ define(function (require, exports, module) {
 		 * Sets playback mode to record
 		 */
 		record: function() {
-			this.set('recording', true);
-			this.set('timeScale', this.get('playbackSpeed'));
+			this.pause();
 
 			/* If we switch to recording from playback, we need to clear whatever
 			 *   history is after the current time (where the cursor was) because
 			 *   we want to record over and not just add to the data.
 			 */
 			this.clearHistoryAfter(this.time);
+
+			this.set('timeScale', this.get('playbackSpeed'));	
+			this.set('recording', true);
 		},
 
 		/**
 		 * Sets playback mode to playback
 		 */
 		stopRecording: function() {
+			this.pause();
+			
 			this.set('time', 0);
 			this.time = 0;
 
@@ -282,20 +286,11 @@ define(function (require, exports, module) {
 		},
 
 		/**
-		 * Returns true if we're currently recording (in recording 
-		 *   mode and simulation playing).
-		 */
-		recording: function() {
-			return (this.get('recording') && !this.get('paused'));
-		},
-
-		/**
 		 * Returns true if we're currently playing back (not in
-		 *   recording mode on a simulation that records and
-		 *   simulation playing).
+		 *   recording mode on a simulation that records).
 		 */
 		playingBack: function() {
-			return (!this.get('recording') && !this.noRecording && !this.get('paused'));
+			return (!this.get('recording') && !this.noRecording);
 		},
 
 		/**

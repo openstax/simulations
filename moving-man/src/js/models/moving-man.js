@@ -92,6 +92,8 @@ define(function (require) {
 		 *   and starts recording over what's there at that position.
 		 */
 		clearHistoryAfter: function(time) {
+			this.times.length = 0;
+			
 			this.mouseDataSeries.clearPointsAfter(time);
 			this.positionModelSeries.clearPointsAfter(time);
 			this.velocityModelSeries.clearPointsAfter(time);

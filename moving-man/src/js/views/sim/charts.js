@@ -310,10 +310,14 @@ define(function(require) {
 		 * The simulation changed its recording state.
 		 */
 		recordingChanged: function() {
-			if (this.simulation.get('recording'))
+			if (this.simulation.get('recording')) {
 				this.$el.addClass('record-mode');
-			else
+				this.$('#playback-mode-record').prop('checked', true);
+			}
+			else {
 				this.$el.removeClass('record-mode');
+				this.$('#playback-mode-play').prop('checked', true);
+			}
 		},
 
 		/**
