@@ -2,7 +2,8 @@ define(function(require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _        = require('underscore');
+	var Backbone = require('backbone');
 
 	var MovingManSimulation = require('models/moving-man-simulation');
 	var MovingManSimView    = require('views/sim');
@@ -117,6 +118,7 @@ define(function(require) {
 					start: -10,
 					end:    10,
 					step:    5,
+					decimalPlaces: 1,
 					label:  '',
 					showNumbers: true
 				},
@@ -134,6 +136,7 @@ define(function(require) {
 					start: -12,
 					end:    12,
 					step:    6,
+					decimalPlaces: 1,
 					label:  '',
 					showNumbers: true
 				},
@@ -150,6 +153,7 @@ define(function(require) {
 					start: 0,
 					end:  20,
 					step:  2,
+					decimalPlaces: 1,
 					label: 'time (sec)',
 					showNumbers: true
 				},
@@ -157,6 +161,7 @@ define(function(require) {
 					start: -60,
 					end:    60,
 					step:   30,
+					decimalPlaces: 1,
 					label:  '',
 					showNumbers: true
 				},
@@ -178,6 +183,20 @@ define(function(require) {
 			this.positionGraphView.postRender();
 			this.velocityGraphView.postRender();
 			this.accelerationGraphView.postRender();
+
+			this.graphViews = [
+				this.positionGraphView,
+				this.velocityGraphView,
+				this.accelerationGraphView
+			];
+
+			_.each(this.graphViews, function(graphView) {
+				this.listenTo(graphView, 'zoom-x', function(timeSpan) {
+					_.each(this.graphViews, function(view) {
+						view.zoomX(timeSpan);
+					});
+				});
+			}, this);
 		},
 
 		/**

@@ -18,7 +18,12 @@ define(function(require) {
 		className: GraphView.prototype.className + ' moving-man-graph-view',
 
 		events: {
-			'slide .playback-time-slider' : 'changePlaybackTime'
+			'slide .playback-time-slider' : 'changePlaybackTime',
+
+			'click .zoom-in-x'  : 'zoomInX',
+			'click .zoom-out-x' : 'zoomOutX',
+			'click .zoom-in-y'  : 'zoomInY',
+			'click .zoom-out-y' : 'zoomOutY'
 		},
 
 		/**
@@ -31,6 +36,7 @@ define(function(require) {
 		 * Object initialization
 		 */
 		initialize: function(options) {
+
 			if (options.graphSeries)
 				this.graphSeries = options.graphSeries;
 			else
@@ -41,8 +47,11 @@ define(function(require) {
 			else
 				throw 'MovingManGraphView requires a simulation model to render.';
 
-			this.timeSpan  = this.simulation.get('maxTime') || 20;
-			this.valueSpan = Math.abs(options.y.end - options.y.start);
+			this.maxTimeSpan  = this.simulation.get('maxTime') || 20;
+			this.maxValueSpan = Math.abs(options.y.end - options.y.start);
+
+			this.timeSpan  = this.maxTimeSpan;
+			this.valueSpan = this.maxValueSpan;
 
 			GraphView.prototype.initialize.apply(this, [options]);
 
@@ -181,6 +190,62 @@ define(function(require) {
 		timeChanged: function(model, time) {
 			if (!this.simulation.get('recording') && !this.changingTime)
 				this.$slider.val(time);
+		},
+
+		/**
+		 *
+		 */
+		recalculateXInfo: function() {
+			if (this.graphInfo.x) {
+				this.graphInfo.x.end = this.timeSpan;
+				this.graphInfo.x.step = this.timeSpan / (this.longitudinalGridLines + 1);
+			}
+		},
+
+		/**
+		 *
+		 */
+		zoomX: function(timeSpan) {
+			this.timeSpan = timeSpan;
+			this.recalculateXInfo();
+			this.render();
+			this.postRender();
+		},
+
+		/**
+		 *
+		 */
+		zoomInX: function(event) {
+			this.timeSpan -= 2;
+			if (this.timeSpan < 2)
+				this.timeSpan = 2;
+			
+			this.trigger('zoom-x', this.timeSpan);
+		},
+
+		/**
+		 *
+		 */
+		zoomOutX: function(event) {
+			this.timeSpan += 2;
+			if (this.timeSpan > this.maxTimeSpan)
+				this.timeSpan = this.maxTimeSpan;
+			
+			this.trigger('zoom-x', this.timeSpan);
+		},
+
+		/**
+		 *
+		 */
+		zoomInY: function(event) {
+			
+		},
+
+		/**
+		 *
+		 */
+		zoomOutY: function(event) {
+			
 		}
 
 	});
