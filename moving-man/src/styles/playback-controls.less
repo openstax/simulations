@@ -105,4 +105,29 @@
 			margin-right: 16px;
 		}
 	}
+
+	&.intro-controls-wrapper {
+		.reset-btn {
+			position: absolute;
+			right: 10px;
+		}
+
+		.play-btn {
+			.animation-name(beacon);
+			.animation-duration(2s);
+			.animation-iteration-count(infinite);
+			//.animation-timing-function(cubic-bezier(1,.27,.02,.71));
+		}
+	}
 }
+
+.keyframes-3(beacon, {
+	opacity: 1;
+	color: @link-color;
+},{
+	opacity: 0.5;
+	color: lighten(@link-color, 40%);
+},{
+	opacity: 1;
+	color: @link-color;
+});

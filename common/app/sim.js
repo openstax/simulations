@@ -128,7 +128,7 @@ define(function (require) {
 			// Resume normal function
 			this.updater.play();
 			if (!wasPaused)
-				this.waveSimulation.play();
+				this.simulation.play();
 		},
 
 		/**

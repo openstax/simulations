@@ -321,16 +321,6 @@ define(function(require) {
 		},
 
 		/**
-		 * The simulation changed its paused state.
-		 */
-		pausedChanged: function() {
-			if (this.simulation.get('paused'))
-				this.$el.removeClass('playing');
-			else
-				this.$el.addClass('playing');
-		},
-
-		/**
 		 *
 		 */
 		hideRow: function(event) {

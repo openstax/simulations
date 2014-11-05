@@ -45,6 +45,11 @@ define(function (require) {
 		 * Dom event listeners
 		 */
 		events: {
+			// Playback controls
+			'click .play-btn'   : 'play',
+			'click .pause-btn'  : 'pause',
+			'click .reset-btn'  : 'reset',
+
 			'click .from-expression' : 'useExpression',
 			'click .drop-expression' : 'dropExpression',
 
@@ -444,7 +449,17 @@ define(function (require) {
 			this.$variables.removeClass('driving');
 
 			$variable.addClass('driving');		
-		}
+		},
+
+		/**
+		 * The simulation changed its paused state.
+		 */
+		pausedChanged: function() {
+			if (this.simulation.get('paused'))
+				this.$el.removeClass('playing');
+			else
+				this.$el.addClass('playing');
+		},
 
 	});
 
