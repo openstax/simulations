@@ -190,6 +190,8 @@ define(function(require) {
 				this.accelerationGraphView
 			];
 
+
+			// Link zooming on the x-axis for all the graphs together
 			_.each(this.graphViews, function(graphView) {
 				this.listenTo(graphView, 'zoom-x', function(timeSpan) {
 					_.each(this.graphViews, function(view) {

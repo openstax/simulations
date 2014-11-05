@@ -68,6 +68,8 @@ define(function(require) {
 				}
 			});
 			this.listenTo(this.simulation, 'change:time', this.timeChanged);
+
+			this.on('zoom-y', this.zoomY);
 		},
 
 		/**
@@ -205,9 +207,30 @@ define(function(require) {
 		/**
 		 *
 		 */
+		recalculateYInfo: function() {
+			if (this.graphInfo.y) {
+				this.graphInfo.y.start = -this.valueSpan / 2;
+				this.graphInfo.y.end   =  this.valueSpan / 2;
+				this.graphInfo.y.step = this.valueSpan / (this.latitudinalGridLines + 1);
+			}
+		},
+
+		/**
+		 *
+		 */
 		zoomX: function(timeSpan) {
 			this.timeSpan = timeSpan;
 			this.recalculateXInfo();
+			this.render();
+			this.postRender();
+		},
+
+		/**
+		 *
+		 */
+		zoomY: function(valueSpan) {
+			this.valueSpan = valueSpan;
+			this.recalculateYInfo();
 			this.render();
 			this.postRender();
 		},
@@ -238,14 +261,22 @@ define(function(require) {
 		 *
 		 */
 		zoomInY: function(event) {
-			
+			var tempValueSpan = this.valueSpan - this.maxValueSpan / 8;
+			if (tempValueSpan > 1) {
+				this.valueSpan = tempValueSpan;
+				this.trigger('zoom-y', this.valueSpan);
+			}
 		},
 
 		/**
 		 *
 		 */
 		zoomOutY: function(event) {
+			this.valueSpan += this.maxValueSpan / 8;;
+			if (this.valueSpan > this.maxValueSpan)
+				this.valueSpan = this.maxValueSpan;
 			
+			this.trigger('zoom-y', this.valueSpan);
 		}
 
 	});
