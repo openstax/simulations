@@ -180,8 +180,9 @@ define(function(require) {
 			var time = parseFloat($(event.target).val());
 			if (!isNaN(time)) {
 				this.changingTime = true;
-				this.simulation.time = time;
-				this.simulation.set('time', time);
+				// this.simulation.time = time;
+				// this.simulation.set('time', time);
+				this.simulation.setPlaybackTime(time);
 				this.changingTime = false;
 			}
 		},

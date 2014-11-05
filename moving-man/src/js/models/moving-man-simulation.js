@@ -189,17 +189,8 @@ define(function (require, exports, module) {
 		 *   frames on every frame.
 		 */
 		play: function() {
-			if (!this.get('recording')) {
-				// Sort the historical states by time ascending
-				_.sortBy(this.history, function(state) {
-					return state.time;
-				});
-
-				/* Store just the times in a parallel array so we
-				 *   can do a binary search.
-				 */
-				this._historyTimes = _.pluck(this.history, 'time');
-			}
+			if (!this.get('recording'))
+				this.prepareForPlayback();
 
 			Simulation.prototype.play.apply(this);
 		},
@@ -213,7 +204,22 @@ define(function (require, exports, module) {
 
 			if (this.get('recording'))
 				this.resetTimeAndHistory();
-		},	
+		},
+
+		/**
+		 *
+		 */
+		prepareForPlayback: function() {
+			// Sort the historical states by time ascending
+			_.sortBy(this.history, function(state) {
+				return state.time;
+			});
+
+			/* Store just the times in a parallel array so we
+			 *   can do a binary search.
+			 */
+			this._historyTimes = _.pluck(this.history, 'time');
+		},
 
 		/**
 		 *
@@ -224,6 +230,8 @@ define(function (require, exports, module) {
 			while (history.length > 0) {
 				history.pop();
 			}
+
+			this._historyTimes = null;
 
 			this.time = 0;
 			this.set('time', 0);
@@ -242,6 +250,9 @@ define(function (require, exports, module) {
 					points.push(this.history[i]);
 			}
 			this.history = points;
+
+			this._historyTimes = null;
+
 			this.movingMan.clearHistoryAfter(time);
 		},
 
@@ -319,6 +330,18 @@ define(function (require, exports, module) {
 			var stateIndex = bs.closest(this._historyTimes, time);
 			return this.history[stateIndex];
 		},
+
+		/**
+		 * Used to set the time for playback and update the simulation
+		 *   model with the saved state for this moment in time.
+		 */
+		setPlaybackTime: function(time) {
+			this.time = time;
+			this.set('time', time);
+			if (!this._historyTimes)
+				this.prepareForPlayback();
+			this.applyPlaybackState();
+		}
 
 	});
 
