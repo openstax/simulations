@@ -73,14 +73,10 @@ module.exports = function(grunt){
 						pixi:       '../../bower_components/pixi/bin/pixi',
 						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
-						buzz:       '../../bower_components/buzz/dist/buzz.min',
-						fparser:    '../../bower_components/fparser/fparser',
 
 						views:      '../js/views',
 						graphics:   '../js/graphics',
 						models:     '../js/models',
-						lib:        '../js/lib',
-						utils:      '../js/utils',
 						templates:  '../templates',
 						styles:     '../styles',
 						common:     '../../../common'

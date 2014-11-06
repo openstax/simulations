@@ -77,10 +77,7 @@ module.exports = function(grunt){
 						fparser:    '../../bower_components/fparser/fparser',
 
 						views:      '../js/views',
-						graphics:   '../js/graphics',
 						models:     '../js/models',
-						lib:        '../js/lib',
-						utils:      '../js/utils',
 						templates:  '../templates',
 						styles:     '../styles',
 						common:     '../../../common'
