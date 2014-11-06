@@ -1,6 +1,6 @@
 {
   "name": "moving-man",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "A simulation of movement--the relationship between position, velocity, acceleration, and time",
   "main": "main.js",
   "scripts": {

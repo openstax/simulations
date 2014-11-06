@@ -1,6 +1,6 @@
 {
-  "name": "wave-interference",
-  "version": "1.0.0",
+  "name": "gravity-and-orbits",
+  "version": "0.0.0",
   "homepage": "https://github.com/Connexions/simulations",
   "private": true,
   "ignore": [
@@ -25,7 +25,7 @@
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
-    "timbre": "*",
-    "gl-matrix": "~2.2.1"
+    "gl-matrix": "~2.2.1",
+    "fparser": "~1.2.1"
   }
 }

@@ -1,7 +1,7 @@
-The Moving Man
+Water Interference
 ===========
 
-This simulation is based off PhET's The Moving Man simulation, which can be [found here](http://phet.colorado.edu/en/simulation/moving-man).
+This simulation is based off PhET's Gravity and Orbits simulation, which can be [found here](http://phet.colorado.edu/en/simulation/gravity-and-orbits).
 
 Original simulation Copyright 2002-2011, University of Colorado.
 
@@ -9,20 +9,20 @@ Original simulation Copyright 2002-2011, University of Colorado.
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
 2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
-3. From the root `moving-man` directory, run `npm install` in the command line to install test and build dependencies.
+3. From the root `gravity-and-orbits` directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
 ## Building & Testing
 
 ### Building
 
-From the root `moving-man` directory, run `grunt dist`.
+From the root `gravity-and-orbits` directory, run `grunt dist`.
 
-The `dist` directory containing the built site will be added to the root `moving-man` directory.
+The `dist` directory containing the built site will be added to the root `gravity-and-orbits` directory.
 
 ### Testing
 
-To run command-line tests, run `grunt test` from the root `moving-man` directory.
+To run command-line tests, run `grunt test` from the root `gravity-and-orbits` directory.
 
 To view tests in a browser, you first need to
 
@@ -38,7 +38,7 @@ To host a development server for this project, follow the instructions found in 
 
 ### Updating
 
-From the root `moving-man` directory, run `npm run-script upgrade`, which executes the following commands:
+From the root `gravity-and-orbits` directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`
