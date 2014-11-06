@@ -104,6 +104,9 @@ define(function (require, exports, module) {
 		 * If we're recording, it saves state
 		 */
 		_update: function(time, delta) {
+			// For the time slider and anything else relying on time
+			this.set('time', time);
+
 			if (this.get('recording')) {
 				// Run update and then save state
 				this.movingMan.update(time, delta);
@@ -115,9 +118,6 @@ define(function (require, exports, module) {
 				if (!this.noRecording) {
 					// We're playing back, so apply a saved state instead of updating
 					this.applyPlaybackState();
-
-					// For the time slider and anything else relying on time
-					this.set('time', time);
 
 					// And if we've reached the end of what we've recorded, stop
 					if (time >= this.get('furthestRecordedTime'))

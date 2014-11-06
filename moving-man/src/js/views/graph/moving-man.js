@@ -59,7 +59,7 @@ define(function(require) {
 				this.initPoints();
 			});
 			this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
-			this.listenTo(this.simulation, 'change:time', this.timeChanged);
+			this.listenTo(this.simulation, 'change:time',      this.timeChanged);
 
 			this.on('zoom-y', this.zoomY);
 		},

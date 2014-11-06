@@ -51,6 +51,7 @@ define(function(require) {
 
 			// Listen to simulation events
 			this.listenTo(this.simulation, 'change:wallsEnabled', this.wallsEnabledChanged);
+			this.listenTo(this.simulation, 'change:time',         this.timeChanged);
 		},
 
 		/**
@@ -63,6 +64,7 @@ define(function(require) {
 				this.$el.addClass('compact');
 
 			this.$walls = this.$('.wall');
+			this.$time  = this.$('.clock > .time');
 
 			this.renderMovingManView();
 
@@ -136,6 +138,13 @@ define(function(require) {
 				this.$walls.removeClass('disabled');
 			else
 				this.$walls.addClass('disabled');
+		},
+
+		/**
+		 *
+		 */
+		timeChanged: function(model, time, options) {
+			this.$time.text(time.toFixed(1));
 		},
 
 		/**

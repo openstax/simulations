@@ -25,6 +25,10 @@
 			position: absolute;
 			bottom: 0;
 		}
+
+		& .clock {
+			display: block;
+		}
 	}
 }
 
@@ -193,6 +197,22 @@
 	top: 0;
 	left: 50%;
 	margin-left: -(@max-viewport-width / 2);
+}
+
+.clock {
+	position: absolute;
+	z-index: 40;
+	left: 80px;
+	top: 7px;
+	font-size: 18px;
+	color: #004B79;
+	display: none;
+
+	> .time {
+		display: inline-block;
+		min-width: 35px;
+		text-align: right;
+	}
 }
 
 .tree {
