@@ -161,7 +161,7 @@ define(function (require) {
 			this.simulation.update(time, delta);
 
 			// Update the scene
-			
+			this.sceneView.update(time, delta);
 		},
 
 		/**

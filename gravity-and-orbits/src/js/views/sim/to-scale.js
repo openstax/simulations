@@ -19,7 +19,7 @@ define(function(require) {
 
 		initialize: function(options) {
 			options = _.extend({
-				title: 'Accurate Scale',
+				title: 'Actual Scale',
 				name:  'to-scale'
 			}, options);
 			
