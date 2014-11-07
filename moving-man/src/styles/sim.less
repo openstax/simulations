@@ -16,8 +16,11 @@
 	display: none;
 }
 
+@normal-height:   160px;
+@collapsed-height: 60px;
+
 #sim-charts .variable-row {
-	height: 180px;
+	height: @normal-height;
 	margin: -10px 0 -40px 0;
 	padding: 10px 0 0;
 
@@ -28,7 +31,7 @@
 	}
 
 	&.collapsed {
-		height: 60px;
+		height: @collapsed-height;
 
 		& .row-content {
 			height: 0;
@@ -44,11 +47,11 @@
 	}
 
 	&.two-rows {
-		height: 240px;
+		height: @normal-height + ((@normal-height - @collapsed-height) / 2);
 	}
 
 	&.one-row {
-		height: 420px;
+		height: @normal-height + ((@normal-height - @collapsed-height) * 2);
 	}
 
 	.row-show,
