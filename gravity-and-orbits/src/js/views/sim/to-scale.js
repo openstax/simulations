@@ -7,14 +7,6 @@ define(function(require) {
 
 	var GOSimulation = require('models/simulation');
 	var GOSimView    = require('views/sim');
-	
-	require('nouislider');
-
-	// HTML
-	var playbackControlsHtml = require('text!templates/playback-controls.html');
-
-	// CSS
-	require('less!styles/playback-controls');
 
 	/**
 	 *
@@ -27,8 +19,8 @@ define(function(require) {
 
 		initialize: function(options) {
 			options = _.extend({
-				title: 'Friendly Scale',
-				name:  'friendly'
+				title: 'Accurate Scale',
+				name:  'to-scale'
 			}, options);
 			
 			GOSimView.prototype.initialize.apply(this, [ options ]);

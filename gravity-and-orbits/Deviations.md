@@ -1,10 +1,2 @@
 # Deviations from the original PhET simulation **_and the reasons for them_**
 
-Note that I do not list nominal changes like cosmetic differences (e.g., the addition of clouds and sky gradient).
-
-1. **Relocation of "expression evaluator" from the top menu (Special Features > Expression Evaluator) to its new location near the position slider and renaming to "use function":**
-
-    The first reason I moved it was because the function controls the *position* over time, just like the position value text box and position value slider; it only makes sense that they'd be grouped.  The second is that, logically, the use of a custom position function (what I renamed the expression evaluator to) negates the use of the position slider and text box&mdash;it takes over control of position from manual user input to a time-based mathematical function&mdash;and giving the user the impression that he or she can continue to use the slider and text box only causes frustration and confusion.  And because it is actually a proper, determinant mathematical function, I chose to use this terminology instead since the time-based math function is more universally understood than the computer-sciencey "expression."
-2. **Disabling of playback and recording controls on the "Intro" tab:**
-
-    The most prominant reason was simply that these controls proved a barrier to entry for the user.  Because the purpose of the first tab is to simply be an introduction to what the simulation is trying to portray and how to use it, we decided to simplify the controls and get the user started right away.  It is also very difficult to see what is happening when the user hits the "play" button in the original, which actually starts it *recording*, since the intro tab does not show the recorded data in the form of graphs.  It makes much more sense to limit the recording functionality to the "Charts" tab where the user gets more visual feedback about the recording and playing back.  (I also addressed the iconographical confusion of having a "play" button that actually records by using a different icon in the record button than the one for the play button.)

@@ -22,5 +22,5 @@ define(function(require) {
 
 	});
 
-	return GravityAndOrbitsAppView;
+	return GOAppView;
 });

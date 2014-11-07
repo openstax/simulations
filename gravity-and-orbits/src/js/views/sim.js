@@ -6,18 +6,21 @@ define(function (require) {
 	var _ = require('underscore');
 
 	var SimView      = require('common/app/sim');
-	var GOSimulation = require('simulation');
+	var GOSimulation = require('models/simulation');
 
 	require('nouislider');
 	require('bootstrap');
 
 	// CSS
 	require('less!styles/sim');
+	require('less!styles/playback-controls');
 	require('less!common/styles/slider');
 	require('less!common/styles/radio');
 
 	// HTML
-	var simHtml   = require('text!templates/sim.html');
+	var simHtml        = require('text!templates/sim.html');
+	var controlsHtml   = require('text!templates/playback-controls.html');
+	var propertiesHtml = require('text!templates/properties-panel.html');
 
 	/**
 	 * 
@@ -33,7 +36,8 @@ define(function (require) {
 		/**
 		 * Template for rendering the basic scaffolding
 		 */
-		template: _.template(simHtml),
+		template:                _.template(simHtml),
+		propertiesPanelTemplate: _.template(propertiesHtml),
 
 		/**
 		 * Dom event listeners
@@ -70,6 +74,8 @@ define(function (require) {
 			this.$el.empty();
 
 			this.renderScaffolding();
+			this.renderPlaybackControls();
+			this.renderPropertiesPanel();
 
 			return this;
 		},
@@ -79,6 +85,35 @@ define(function (require) {
 		 */
 		renderScaffolding: function() {
 			this.$el.html(this.template());
+		},
+
+		/**
+		 * Renders the playback controls at the bottom of the screen
+		 */
+		renderPlaybackControls: function() {
+			this.$controls = $(controlsHtml);
+
+			// Initialize speed slider
+			this.$controls.find('.playback-speed').noUiSlider({
+				start: 1,
+				range: {
+					'min': [ 0.2 ],
+					'50%': [ 1 ],
+					'max': [ 4 ]
+				}
+			});
+
+			this.$('.playback-controls-placeholder').replaceWith(this.$controls);
+		},
+
+		/**
+		 * Renders the playback controls at the bottom of the screen
+		 */
+		renderPropertiesPanel: function() {
+			this.$propertiesPanel = $(this.propertiesPanelTemplate({
+				unique: this.cid
+			}));
+			this.$('.properties-panel-placeholder').replaceWith(this.$propertiesPanel);
 		},
 
 		/**

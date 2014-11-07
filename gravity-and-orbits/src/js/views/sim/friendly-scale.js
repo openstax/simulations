@@ -7,14 +7,6 @@ define(function(require) {
 
 	var GOSimulation = require('models/simulation');
 	var GOSimView    = require('views/sim');
-	
-	require('nouislider');
-
-	// HTML
-	var playbackControlsHtml = require('text!templates/playback-controls.html');
-
-	// CSS
-	require('less!styles/playback-controls');
 
 	/**
 	 *

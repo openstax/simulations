@@ -1,0 +1,135 @@
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/buttons.less";
+@import "../../../common/styles/variables.less";
+
+@btn-bg: #959595;
+@btn-fg: #000;//@link-color;
+@panel-bg: #777;
+
+.playback-controls-wrapper {
+	position: relative;
+	margin-top: 10px;
+	padding: 10px;
+	background: @panel-bg;
+	text-align: center;
+	.user-select(none);
+
+	// Temporary, just for getting the style looking good
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+
+	// Giving it a kind of glow effect like we're in the cockpit of a spaceship
+	box-shadow: 0 0 32px 8px #444;
+	clip: rect(-50px auto auto 0);
+
+	> .playback-btn {
+		display: inline-block;
+		background: @btn-bg;
+		color: @btn-fg;
+		outline: none;
+		border: none;
+		border-radius: 50%;
+		width: 28px;
+		height: 28px;
+		text-align: center;
+
+		&:hover {
+			opacity: 0.9;
+		}
+
+		&:active {
+			background: @btn-fg;
+			color: #fff;
+		}
+
+		&.play-btn,
+		&.record-btn,
+		&.pause-btn {
+			display: none;
+		}
+
+		.sim-view:not(.record-mode):not(.playing) &.play-btn {
+			display: inline-block;
+		}
+		.sim-view.record-mode:not(.playing) &.record-btn  {
+			display: inline-block;
+		}
+		.sim-view.playing &.pause-btn {
+			display: inline-block;
+		}
+
+		&.play-btn,
+		&.pause-btn,
+		&.record-btn {
+			width: 42px;
+			height: 42px;
+			font-size: 16px;
+		}
+
+		&.play-btn {
+			padding-left: 10px;
+		}
+	}
+
+	.btn-normal {
+		.button-variant(@btn-fg, @btn-bg, #fff, @btn-fg);
+		margin: 5px 5px 0;
+	}
+
+	.clear-btn {
+		float: left;
+	}
+
+	.reset-btn {
+		float: right;
+	}
+
+	.playback-speed-wrapper {
+		position: absolute;
+		right: 143px;
+		height: 100%;
+		top: 0;
+		padding-top: 18px;
+
+		.playback-speed {
+			width: 140px;
+			display: inline-block;
+			vertical-align: middle;
+			background: #aaa;
+
+			&.slider .noUi-handle:after {
+				background: #000;
+			}
+		}
+
+		label {
+			vertical-align: middle;
+			margin: 0 8px;
+			color: #aaa;
+			font-weight: normal;
+		}
+	}
+
+	.days-counter {
+		position: absolute;
+		top: 0;
+		height: 100%;
+		left: 110px;
+		padding: 10px 0;
+		line-height: 42px;
+		font-size: 16px;
+		font-weight: bold;
+
+		.days-value {
+			display: inline-block;
+			min-width: 36px;
+			text-align: right;
+		}
+	}
+}
+
+.clear-btn:hover ~ .days-counter {
+	color: #000;
+	//text-decoration: line-through;
+}
