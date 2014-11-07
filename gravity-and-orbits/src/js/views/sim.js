@@ -6,6 +6,7 @@ define(function (require) {
 	var _ = require('underscore');
 
 	var SimView      = require('common/app/sim');
+	var SceneView    = require('views/scene');
 	var GOSimulation = require('models/simulation');
 
 	require('nouislider');
@@ -57,7 +58,8 @@ define(function (require) {
 		initialize: function(options) {
 			SimView.prototype.initialize.apply(this, [options]);
 
-			// Initialize the 
+			// Initialize the scene view
+			this.initSceneView();
 		},
 
 		/**
@@ -68,16 +70,34 @@ define(function (require) {
 		},
 
 		/**
+		 * Initializes the Simulation.
+		 */
+		initSceneView: function() {
+			this.sceneView = new SceneView({
+				simulation: this.simulation
+			});
+		},
+
+		/**
 		 * Renders everything
 		 */
 		render: function() {
 			this.$el.empty();
 
 			this.renderScaffolding();
+			this.renderSceneView();
 			this.renderPlaybackControls();
 			this.renderPropertiesPanel();
 
 			return this;
+		},
+
+		/**
+		 *
+		 */
+		renderSceneView: function() {
+			this.sceneView.render();
+			this.$('.scene-view-placeholder').replaceWith(this.sceneView.$el);
 		},
 
 		/**
@@ -121,7 +141,7 @@ define(function (require) {
 		 *   things like widths and heights and offsets are correct.
 		 */
 		postRender: function() {
-			
+			this.sceneView.postRender();
 		},
 
 		/**

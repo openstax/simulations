@@ -7,17 +7,13 @@
 @panel-bg: #777;
 
 .playback-controls-wrapper {
-	position: relative;
-	margin-top: 10px;
+	position: absolute;
+	top: 100%;
+	width: 100%;
 	padding: 10px;
 	background: @panel-bg;
 	text-align: center;
 	.user-select(none);
-
-	// Temporary, just for getting the style looking good
-	position: absolute;
-	bottom: 0;
-	width: 100%;
 
 	// Giving it a kind of glow effect like we're in the cockpit of a spaceship
 	box-shadow: 0 0 32px 8px #444;

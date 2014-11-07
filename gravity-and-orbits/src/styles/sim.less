@@ -5,7 +5,8 @@
 
 
 .sim-content {
-	background: #000;
+
+	min-height: initial;
 
 	&:before {
 		content: '';
@@ -16,5 +17,12 @@
 		height: 0;
 		box-shadow: 0px 0px 24px 17px #21366b;
 		clip: rect(0, auto, 70px, 0);
+	}
+
+	.scene-view {
+		height: 580px;
+		width: 100%;
+		display: block;
+		background: #000;
 	}
 }

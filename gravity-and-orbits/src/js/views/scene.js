@@ -13,7 +13,7 @@ define(function(require) {
 	 */
 	var SceneView = Backbone.View.extend({
 
-		tagName: 'div',
+		tagName: 'canvas',
 		className: 'scene-view',
 
 		events: {
@@ -41,8 +41,6 @@ define(function(require) {
 		 * Renders content and canvas for heatmap
 		 */
 		render: function() {
-			this.$el.empty();
-
 			this.renderContent();
 			this.initRenderer();
 			this.initGraphics();
@@ -66,21 +64,19 @@ define(function(require) {
 		},
 
 		/**
-		 * Initializes a renderer using the .heatmap-canvas canvas element
+		 * Initializes a renderer
 		 */
 		initRenderer: function() {
-			this.$canvas = this.$('.scene-canvas');
-
 			this.renderer = PIXI.autoDetectRenderer(
-				this.$canvas.width(),  // Width
-				this.$canvas.height(), // Height
-				this.$canvas[0],       // Canvas element
-				true,                  // Transparent background
-				true                   // Antialiasing
+				this.$el.width(),  // Width
+				this.$el.height(), // Height
+				this.el,           // Canvas element
+				true,              // Transparent background
+				true               // Antialiasing
 			);
 
-			this.width  = this.$canvas.width();
-			this.height = this.$canvas.height();
+			this.width  = this.$el.width();
+			this.height = this.$el.height();
 		},
 
 		initGraphics: function() {
@@ -106,10 +102,8 @@ define(function(require) {
 		},
 
 		resize: function(override) {
-			var width  = this.$canvas.parent().innerWidth();
-			var height = width;
-			this.$canvas.width(width);
-			this.$canvas.height(width);
+			var width  = this.$el.width();
+			var height = this.$el.height();
 			this.width  = width;
 			this.height = height;
 			if (override || width != this.renderer.width || height != this.renderer.height) {
@@ -118,12 +112,12 @@ define(function(require) {
 			}
 			this.resizeOnNextUpdate = false;
 
-			this.offset = this.$canvas.offset();
+			this.offset = this.$el.offset();
 		},
 
 		resizeGraphics: function() {
 			this.renderer.resize(this.width, this.height);
-			this.positionParticles();
+			
 		},
 
 		update: function(time, delta) {
