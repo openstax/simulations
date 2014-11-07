@@ -88,12 +88,10 @@ define(function (require, exports, module) {
 			this.$el.addClass('dragging');
 
 			// Start recording on drag if the simulation records and isn't currently
-			if (!this.simulation.noRecording) {
-				if (!this.simulation.get('recording'))
-					this.simulation.record();
-				if (this.simulation.get('paused'))
-					this.simulation.play();
-			}
+			if (!this.simulation.noRecording && !this.simulation.get('recording'))
+				this.simulation.record();
+			if (this.simulation.get('paused'))
+				this.simulation.play();
 
 			this.fixTouchEvents(event);
 
