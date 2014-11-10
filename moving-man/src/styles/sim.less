@@ -3,104 +3,104 @@
 @import "mixins.less";
 
 .sim-controls {
-	background: @gray-lightest;
-	padding-bottom: 20px;
+    background: @gray-lightest;
+    padding-bottom: 20px;
 
-	.variable-row {
-		position: relative;
-	}
+    .variable-row {
+        position: relative;
+    }
 }
 
 #sim-intro .row-hide,
 #sim-intro .row-show {
-	display: none;
+    display: none;
 }
 
 @normal-height:   160px;
 @collapsed-height: 60px;
 
 #sim-charts .variable-row {
-	height: @normal-height;
-	margin: -10px 0 -40px 0;
-	padding: 10px 0 0;
+    height: @normal-height;
+    margin: -10px 0 -40px 0;
+    padding: 10px 0 0;
 
-	& .row-content {
-		height: 100%;
-		position: relative;
-		overflow: hidden;
-	}
+    & .row-content {
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
 
-	&.collapsed {
-		height: @collapsed-height;
+    &.collapsed {
+        height: @collapsed-height;
 
-		& .row-content {
-			height: 0;
-		}
+        & .row-content {
+            height: 0;
+        }
 
-		& .row-show {
-			display: block;
-		}
+        & .row-show {
+            display: block;
+        }
 
-		& .row-hide {
-			display: none;
-		}
-	}
+        & .row-hide {
+            display: none;
+        }
+    }
 
-	&.two-rows {
-		height: @normal-height + ((@normal-height - @collapsed-height) / 2);
-	}
+    &.two-rows {
+        height: @normal-height + ((@normal-height - @collapsed-height) / 2);
+    }
 
-	&.one-row {
-		height: @normal-height + ((@normal-height - @collapsed-height) * 2);
-	}
+    &.one-row {
+        height: @normal-height + ((@normal-height - @collapsed-height) * 2);
+    }
 
-	.row-show,
-	.row-hide {
-		position: absolute;
-		top: 8px;
-		left: 100%;
-		margin-left: -26px;
-		font-size: 16px;
-		color: #888;
-		.text-button();
-	}
+    .row-show,
+    .row-hide {
+        position: absolute;
+        top: 8px;
+        left: 100%;
+        margin-left: -26px;
+        font-size: 16px;
+        color: #888;
+        .text-button();
+    }
 
-	.row-show {
-		display: none;
-	}
+    .row-show {
+        display: none;
+    }
 }
 
 #sim-charts .sim-controls .acceleration-row {
-	margin-bottom: -14px;
+    margin-bottom: -14px;
 }
 
 .sound-btn-wrapper {
-	position: absolute;
-	top: -36px;
-	right: 30px;
+    position: absolute;
+    top: -36px;
+    right: 30px;
 
-	> .sound-btn {
-		background: @gray-lightest;
-		color: @link-color;
-		outline: none;
-		border: none;
-		border-radius: 50%;
-		width: 28px;
-		height: 28px;
-		text-align: center;
+    > .sound-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
 
-		&:hover {
-			opacity: 0.9;
-		}
+        &:hover {
+            opacity: 0.9;
+        }
 
-		&:active {
-			background: @link-color;
-			color: #fff;
-		}
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
 
-		&.sound-btn-mute,
-		&.sound-btn-high {
-			display: none;
-		}
-	}
+        &.sound-btn-mute,
+        &.sound-btn-high {
+            display: none;
+        }
+    }
 }

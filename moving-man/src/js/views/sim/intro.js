@@ -1,70 +1,70 @@
 define(function(require) {
 
-	'use strict';
+    'use strict';
 
-	var _ = require('underscore');
+    var _ = require('underscore');
 
-	var MovingManSimulation = require('models/moving-man-simulation');
-	var MovingManSimView    = require('views/sim');
+    var MovingManSimulation = require('models/moving-man-simulation');
+    var MovingManSimView    = require('views/sim');
 
-	// HTML
-	var playbackControlsHtml = require('text!templates/intro-controls.html');
+    // HTML
+    var playbackControlsHtml = require('text!templates/intro-controls.html');
 
-	// CSS
-	require('less!styles/playback-controls');
+    // CSS
+    require('less!styles/playback-controls');
 
-	/**
-	 *
-	 */
-	var IntroSimView = MovingManSimView.extend({
+    /**
+     *
+     */
+    var IntroSimView = MovingManSimView.extend({
 
-		events: _.extend(MovingManSimView.prototype.events, {
-			
-		}),
+        events: _.extend(MovingManSimView.prototype.events, {
+            
+        }),
 
-		initialize: function(options) {
-			options = _.extend({
-				title: 'Introduction',
-				name:  'intro'
-			}, options);
-			
-			MovingManSimView.prototype.initialize.apply(this, [ options ]);
+        initialize: function(options) {
+            options = _.extend({
+                title: 'Introduction',
+                name:  'intro'
+            }, options);
+            
+            MovingManSimView.prototype.initialize.apply(this, [ options ]);
 
-			this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
-		},
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+        },
 
-		/**
-		 * Initializes the Simulation.
-		 */
-		initSimulation: function() {
-			this.simulation = new MovingManSimulation({
-				paused: true
-			}, {
-				noRecording: true
-			});
-		},
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new MovingManSimulation({
+                paused: true
+            }, {
+                noRecording: true
+            });
+        },
 
-		/**
-		 * Renders everything
-		 */
-		render: function() {
-			MovingManSimView.prototype.render.apply(this);
+        /**
+         * Renders everything
+         */
+        render: function() {
+            MovingManSimView.prototype.render.apply(this);
 
-			this.renderPlaybackControls();
+            this.renderPlaybackControls();
 
-			this.simulation.trigger('change:paused');
+            this.simulation.trigger('change:paused');
 
-			return this;
-		},
+            return this;
+        },
 
-		/**
-		 * Renders the playback controls
-		 */
-		renderPlaybackControls: function() {
-			this.$('.playback-controls-placeholder').replaceWith(playbackControlsHtml);
-		}
+        /**
+         * Renders the playback controls
+         */
+        renderPlaybackControls: function() {
+            this.$('.playback-controls-placeholder').replaceWith(playbackControlsHtml);
+        }
 
-	});
+    });
 
-	return IntroSimView;
+    return IntroSimView;
 });
