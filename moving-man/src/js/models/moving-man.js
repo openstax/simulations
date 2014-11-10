@@ -414,9 +414,7 @@ define(function (require) {
          *   of the corresponding original point in a series using
          *   the points around it to create a least-squares
          *   regression line to find a linear function from which
-         *   it can take a derivative.  At least that's what I think
-         *   is happening.  It's modeled after the PhET sim function
-         *   with the same name.
+         *   it can take a derivative.
          */
         estimatedCenteredDerivatives: function(series) {
             var radius = DERIVATIVE_RADIUS;

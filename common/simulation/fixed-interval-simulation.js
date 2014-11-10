@@ -10,7 +10,8 @@ define(function (require) {
     var FixedIntervalSimulation = Simulation.extend({
 
         /**
-         *
+         * Initialization code for new FixedIntervalSimulation objects.
+         *   Sets the timestep and initializes the accumulator to zero.
          */
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);

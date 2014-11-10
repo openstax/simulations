@@ -15,7 +15,9 @@ define(function (require) {
         _linearRegressionResults: {},
 
         /**
-         *
+         * Estimates a derivative using a series of points to 
+         *   create a least-squares regression line to find a
+         *   linear function from which it can take a derivative.
          */
         estimateDerivative: function(timeSeries) {
             var out = this.getLinearRegressionCoefficients(timeSeries);
@@ -46,7 +48,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns the average time value in a data series.
          */
         averageTime: function(timeSeries) {
             var a = 0;
@@ -57,7 +59,8 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns a point with an estimated derivative as its value
+         *   and an average time as its time.
          */
         getDerivative: function(recentPositionTimeSeries) {
             if (recentPositionTimeSeries.length === 0) {
@@ -77,8 +80,11 @@ define(function (require) {
         /**
          * PhET docs:
          *
-         * "Gets the second derivative of the given time series data using the central difference formula
+         * "Gets the second derivative of the given time series data using the
+         *  central difference formula
          *  See: http://mathews.ecs.fullerton.edu/n2003/NumericalDiffMod.html"
+         *
+         * Takes a data series called "x"
          */
         getSecondDerivative: function(x) {
             if (x.length === 0) {
@@ -108,7 +114,9 @@ define(function (require) {
         },
 
         /**
-         *
+         * getSecondDerivative was an overloaded function in PhET's MotionMath
+         *   class, so I've separated the heart of the algorithm into its own
+         *   function.
          */
         _getSecondDerivative: function(a, b, c) {
             var num = a.value - 2*b.value + c.value;

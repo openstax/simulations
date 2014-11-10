@@ -34,7 +34,7 @@ define(function(require) {
         model: null,
 
         /**
-         *
+         * Initialization code for new PixiView objects
          */
         initialize: function(options) {
 

@@ -15,7 +15,7 @@ define(function (require) {
         },
         
         /**
-         *
+         * Initialization code for new Simulation model objects.
          */
         initialize: function(attributes, options) {
             this.time = 0;
@@ -28,12 +28,14 @@ define(function (require) {
         },
 
         /**
-         *
+         * Initialization options are processed here in a separate function
+         *   so that we can reset the object and its starting values without
+         *   re-initializing it.
          */
         applyOptions: function(options) {},
 
         /**
-         *
+         * Initializes all the components for the simulation like models.
          */
         initComponents: function() {},
 
@@ -73,12 +75,7 @@ define(function (require) {
             this.set(this.startingAttributes);
             this.applyOptions(this.startingOptions);
             this.initComponents();
-        },
-
-        /**
-         * 
-         */
-        postRender: function() {}
+        }
 
     });
 
