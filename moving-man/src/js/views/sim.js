@@ -24,7 +24,9 @@ define(function (require) {
     var functionHelpHtml    = require('text!templates/function-help-modal.html');
 
     /**
-     * 
+     * This is the umbrella view for everything in a simulation tab.
+     *   It will be extended by both the Intro module and the Charts
+     *   and contains all the common functionality between the two.
      */
     var MovingManSimView = SimView.extend({
 
@@ -134,7 +136,8 @@ define(function (require) {
         },
 
         /**
-         *
+         * Renders all the variable controls and initializes the
+         *   special inputs like the sliders.
          */
         renderVariableControls: function() {
             var $position = $(this.variableControlTemplate(this.getPositionTemplateData()));
@@ -169,7 +172,8 @@ define(function (require) {
         },
 
         /**
-         *
+         * Intializes all the variable sliders and links their values to
+         *   the corresponding text boxes.
          */
         initVariableSliders: function() {
             var sliderOptions = this.getSliderOptions();
@@ -196,14 +200,14 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns the id of the help modal element.
          */
         getHelpModalId: function() {
             return this.name + '-function-help-modal';
         },
 
         /**
-         *
+         * Returns the template data for the position section.
          */
         getPositionTemplateData: function() {
             return {
@@ -218,7 +222,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns the template data for the velocity section.
          */
         getVelocityTemplateData: function() {
             return {
@@ -232,7 +236,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns the template data for the acceleration section.
          */
         getAccelerationTemplateData: function() {
             return {
@@ -254,7 +258,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Resets all the components of the view.
          */
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
@@ -324,7 +328,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the position in the simulation according to input.
          */
         changePosition: function(event) {
             var position = parseFloat($(event.target).val());
@@ -337,7 +341,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the velocity in the simulation according to input.
          */
         changeVelocity: function(event) {
             var velocity = parseFloat($(event.target).val());
@@ -350,7 +354,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the acceleration in the simulation according to input.
          */
         changeAcceleration: function(event) {
             var acceleration = parseFloat($(event.target).val());
@@ -363,7 +367,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the position inputs according to the simulation value.
          */
         positionChanged: function(model, value) {
             if (!this.simulation.movingMan.positionDriven() || this.sceneView.movingManView.dragging || this.simulation.playingBack()) {
@@ -374,7 +378,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the velocity inputs according to the simulation value.
          */
         velocityChanged: function(model, value) {
             this.updateLock(function(){
@@ -383,7 +387,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the acceleration inputs according to the simulation value.
          */
         accelerationChanged: function(model, value) {
             this.updateLock(function(){
@@ -392,7 +396,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the visibility of the velocity vector on the moving man.
          */
         changeVelocityVectorVisibility: function(event) {
             if ($(event.target).is(':checked'))
@@ -402,7 +406,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Changes the visibility of the acceleration vector on the moving man.
          */
         changeAccelerationVectorVisibility: function(event) {
             if ($(event.target).is(':checked'))
@@ -412,7 +416,8 @@ define(function (require) {
         },
 
         /**
-         *
+         * Steps between the different discrete volume values and updates
+         *   the button's icon.
          */
         changeVolume: function(event) {
             var $btn = $(event.target).closest('.sound-btn');

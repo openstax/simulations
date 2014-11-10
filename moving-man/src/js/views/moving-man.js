@@ -26,7 +26,10 @@ define(function (require, exports, module) {
     var ARROW_HEAD_WIDTH = 15;
 
     /**
-     *
+     * The moving man view is the focus of the application.  He
+     *   represents the state of the moving man model and animates
+     *   with changes to the model.  The user can also drag him, 
+     *   changing his position and derivative variables in turn.
      */
     var MovingManView = SimDraggable.extend({
 

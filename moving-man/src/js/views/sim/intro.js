@@ -14,7 +14,9 @@ define(function(require) {
     require('less!styles/playback-controls');
 
     /**
-     *
+     * Extends the functionality of the MovingManSimView to create
+     *   the Intro tab. This one is a very simple view, so not much
+     *   additional functionality is needed.
      */
     var IntroSimView = MovingManSimView.extend({
 

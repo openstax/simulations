@@ -6,9 +6,9 @@ define(function(require) {
     var _ = require('underscore');
 
     /**
-     *  I don't really know how important the listeners are yet.  If I do
-     *    indeed need to have listeners on this object, I'll give it the
-     *    Backbone events functionality.
+     * I don't really know how important the listeners are yet.  If I do
+     *   indeed need to have listeners on this object, I'll give it the
+     *   Backbone events functionality.
      */
     var DataSeries = function(options) {
         this.initialize(options);
@@ -17,14 +17,14 @@ define(function(require) {
     _.extend(DataSeries.prototype, {
 
         /**
-         *
+         * Initialization code for new DataSeries objects
          */
         initialize: function() {
             this.data = [];
         },
 
         /**
-         *
+         * Add a data point to the series, which consists of a value and time
          */
         add: function(value, time) {
             if (_.isObject(value)) {
@@ -39,21 +39,21 @@ define(function(require) {
         },
 
         /**
-         *
+         * Returns the number of data points in the series.
          */
         size: function() {
             return this.data.length;
         },
 
         /**
-         *
+         * Gets the data point at the specified index.
          */
         getPoint: function(i) {
             return this.data[i];
         },
 
         /**
-         *
+         * Get all data points between two indices.
          */
         getPointsInRange: function(start, end) {
             var points = [];
@@ -66,7 +66,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Gets the last data point in the series. (Last added)
          */
         getLastPoint: function() {
             if (this.data.length)
@@ -89,14 +89,15 @@ define(function(require) {
         },
 
         /**
-         *
+         * Clears all data from the series.
          */
         clear: function() {
             this.data = [];
         },
 
         /**
-         *
+         * Clear all data points that have time values after the 
+         *   specified time.
          */
         clearPointsAfter: function(time) {
             var points = [];
@@ -108,7 +109,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Replaces all the data from an array of point objects.
          */
         setData: function(data) {
             this.data = data;
@@ -128,7 +129,7 @@ define(function(require) {
     _.extend(DataSeries.LimitedTime.prototype, DataSeries.prototype, {
 
         /**
-         *
+         * Additional initialization code for new time-limited data series
          */
         initialize: function(options) {
             DataSeries.prototype.initialize.apply(this, [options]);
@@ -164,7 +165,7 @@ define(function(require) {
     _.extend(DataSeries.LimitedSize.prototype, DataSeries.prototype, {
 
         /**
-         *
+         * Additional initialization code for size-limited data series
          */
         initialize: function(options) {
             DataSeries.prototype.initialize.apply(this, [options]);
@@ -174,7 +175,9 @@ define(function(require) {
         },
 
         /**
-         *
+         * Adds a data point to the series but shifts the first one
+         *   off the front of the array if we're over our limit,
+         *   making it essentially FIFO queue.
          */
         add: function(value, time) {
             DataSeries.prototype.add.apply(this, [value, time]);

@@ -22,7 +22,14 @@ define(function (require) {
     var MOTION_STRATEGY_ACCELERATION = 2;
 
     /**
-     * 
+     * The moving man model represents the man on the screen who
+     *   moves.  He keeps track of his position, velocity, and
+     *   acceleration and updates them according to past states 
+     *   and new user input.  This version of the moving-man model 
+     *   takes over some of the functionality that the simulation 
+     *   model had in the original simulation.  In the original
+     *   PhET simulation, this class was only used to keep track
+     *   of the man's state.
      */
     var MovingMan = Backbone.Model.extend({
         defaults: {
@@ -33,7 +40,7 @@ define(function (require) {
         },
         
         /**
-         *
+         * Initialization code for creating new moving man model objects
          */
         initialize: function(attributes, options) {
             if (options.simulation)
@@ -68,7 +75,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Clear the time, stored user input, and historical data.
          */
         clear: function() {
             this.time = 0;
@@ -107,14 +114,14 @@ define(function (require) {
         },
 
         /**
-         *
+         * Returns the current state (the model attributes) as a JSON object.
          */
         getState: function() {
             return this.toJSON();
         },
 
         /**
-         *
+         * Applies the specified time and state to the model.
          */
         applyState: function(time, state) {
             this.time = time;
@@ -124,7 +131,9 @@ define(function (require) {
         },
 
         /**
-         *
+         * Updates the time, adds the time to its history array
+         *   of frame times, and calls the right update method
+         *   depending on the current driving variable.
          */
         update: function(time, delta) {
             this.time = time;
@@ -142,7 +151,9 @@ define(function (require) {
         },
 
         /**
-         *
+         * Calculates the new state based on previous state
+         *   info and user input or optionally from a user-
+         *   specified time-based position function.
          */
         _updateFromPosition: function(time, delta) {
             var previousPosition = this.get('position');
@@ -210,7 +221,9 @@ define(function (require) {
         },
 
         /**
-         *
+         * Calculates the new state based on previous state data.
+         *   This method is used if a user-specified velocity is
+         *   what's currently driving the simulation.
          */
         _updateFromVelocity: function(time, delta) {
             // PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
@@ -247,7 +260,9 @@ define(function (require) {
         },
 
         /**
-         *
+         * Calculates the new state based on previous state data.
+         *   This method is used if a user-specified acceleration 
+         *   is what's currently driving the simulation.
          */
         _updateFromAcceleration: function(time, delta) {
             // PhET: "so that if the user switches to mouse-driven, it won't remember the wrong location."
@@ -293,7 +308,12 @@ define(function (require) {
         },
 
         /**
-         *
+         * Adds a data point to the mouse data series so user
+         *   input can be used to determine the next position.
+         *   Note that it's called "mouse data" because that
+         *   is what it was called in the original sim, but it
+         *   isn't necessarily limited to mouse-based pointer
+         *   input. 
          */
         addMouseData: function(value, time) {
             this.mouseDataSeries.add(value, time);
@@ -390,7 +410,13 @@ define(function (require) {
         },
 
         /**
-         *
+         * Creates an array of points that represent the derivative
+         *   of the corresponding original point in a series using
+         *   the points around it to create a least-squares
+         *   regression line to find a linear function from which
+         *   it can take a derivative.  At least that's what I think
+         *   is happening.  It's modeled after the PhET sim function
+         *   with the same name.
          */
         estimatedCenteredDerivatives: function(series) {
             var radius = DERIVATIVE_RADIUS;
@@ -408,7 +434,8 @@ define(function (require) {
         },
 
         /**
-         *
+         * Looks through its stored step times and termines what
+         *   time it was N steps ago.
          */
         getTimeNTimeStepsAgo: function(n) {
             var index = this.times.length - 1 - n;

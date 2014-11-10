@@ -160,7 +160,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Adds a blank point object to the end of the points array.
          */
         _addPoint: function() {
             this.points.push({ 
@@ -170,7 +170,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Gets the time from the playback time slider and tells the
+         *   simulation to seek to that time.
          */
         changePlaybackTime: function(event) {
             var time = parseFloat($(event.target).val());
@@ -184,7 +185,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Updates the playback time slider according to the current
+         *   time on the simulation.
          */
         timeChanged: function(model, time) {
             if (!this.simulation.get('recording') && !this.changingTime)
@@ -205,7 +207,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Recalculates the x-axis graph info from the changed timeSpan
+         *   so we can rerender.
          */
         recalculateXInfo: function() {
             if (this.graphInfo.x) {
@@ -215,7 +218,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Recalculates the y-axis graph info from the changed timeSpan
+         *   so we can rerender.
          */
         recalculateYInfo: function() {
             if (this.graphInfo.y) {
@@ -226,7 +230,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Sets the timeSpan, updates the graph info, and rerenders
+         *   the view.
          */
         zoomX: function(timeSpan) {
             this.timeSpan = timeSpan;
@@ -236,7 +241,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Sets the valueSpan, updates the graph info, and rerenders
+         *   the view.
          */
         zoomY: function(valueSpan) {
             this.valueSpan = valueSpan;
@@ -246,7 +252,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Decreases the timeSpan and triggers a zoom-x event.
          */
         zoomInX: function(event) {
             this.timeSpan -= 2;
@@ -257,7 +263,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Increases the timeSpan and triggers a zoom-x event.
          */
         zoomOutX: function(event) {
             this.timeSpan += 2;
@@ -268,7 +274,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Decreases the valueSpan and triggers a zoom-y event.
          */
         zoomInY: function(event) {
             var tempValueSpan = this.valueSpan - this.maxValueSpan / 8;
@@ -279,7 +285,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Increases the valueSpan and triggers a zoom-y event.
          */
         zoomOutY: function(event) {
             this.valueSpan += this.maxValueSpan / 8;;

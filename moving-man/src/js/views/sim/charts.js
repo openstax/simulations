@@ -20,7 +20,9 @@ define(function(require) {
     require('less!styles/graph');
 
     /**
-     *
+     * Extends the functionality of the MovingManSimView to create
+     *   the Charts tab.  Major differences are recording/playback
+     *   and showing charts of the variables' values over time.
      */
     var ChartsSimView = MovingManSimView.extend({
 
@@ -246,7 +248,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Makes sure things like canvases are sized correctly.
          */
         postRender: function() {
             MovingManSimView.prototype.postRender.apply(this);
@@ -257,7 +259,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Updates everything MovingManSimView updated as well as all the graphs.
          */
         update: function(time, delta) {
             MovingManSimView.prototype.update.apply(this, [time, delta]);
@@ -268,7 +270,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Pauses the simulation and rewinds it to the beginning.
          */
         rewind: function(event) {
             this.pause();
@@ -276,7 +278,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Pauses the simulation and resets all the time and history.
          */
         clear: function(event) {
             this.pause();
@@ -284,7 +286,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Changes the playback speed on the simulation according to
+         *   user input via the playback-speed slider.
          */
         changePlaybackSpeed: function(event) {
             var speed = parseFloat($(event.target).val());
@@ -296,7 +299,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Changes whether we're in playback or record mode according
+         *   to user input.
          */
         changePlaybackMode: function(event) {
             var mode = $(event.target).val();
@@ -321,7 +325,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Hides whichever variable row the user wanted to hide.
          */
         hideRow: function(event) {
             $(event.target).parents('.variable-row').addClass('collapsed');
@@ -330,7 +334,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Shows whichever variable row the user wanted to show.
          */
         showRow: function(event) {
             $(event.target).parents('.variable-row').removeClass('collapsed');
@@ -339,7 +343,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Applies special classes to rows after one was hidden/shown.
          */
         _layoutRows: function() {
             // Clear height override classes

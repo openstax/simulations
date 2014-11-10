@@ -37,7 +37,7 @@ define(function (require, exports, module) {
         positionFormula: null,
         
         /**
-         *
+         * Initialization code for moving man simulation models
          */
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
@@ -57,7 +57,9 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Initialization options are processed here in a separate function
+         *   so that we can reset the object and its starting values without
+         *   re-initializing it.
          */
         applyOptions: function(options) {
             Simulation.prototype.applyOptions.apply(this, [options]);
@@ -68,14 +70,14 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Initializes the models used in the simulation
          */
         initComponents: function() {
             this.initMovingMan();
         },
 
         /**
-         *
+         * Instantiates the moving man model
          */
         initMovingMan: function() {
             this.movingMan = new MovingMan(null, {
@@ -85,7 +87,7 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Resets the simulation
          */
         reset: function() {
             Simulation.prototype.reset.apply(this);
@@ -129,7 +131,8 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Returns whether the specified x position is within the bounds of
+         *   container (the area bounded by the walls).
          */
         positionWithinBounds: function(x) {
             return (x >= -this.get('halfContainerWidth') && x <= this.get('halfContainerWidth'));
@@ -166,14 +169,15 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Tells the simulation to stop using the custom position function.
          */
         dropCustomPositionFunction: function() {
             this.positionFormula = null;
         },
 
         /**
-         *
+         * Returns whether the simulation is currently using a custom
+         *   position function.
          */
         usingCustomPositionFunction: function() {
             return this.positionFormula !== null;
@@ -196,7 +200,8 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Rewinds the simulation to its starting time of zero and
+         *   clears all history if we're in record mode.
          */
         rewind: function() {
             this.time = 0;
@@ -207,7 +212,11 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Called before switching to playback (non-recording) mode
+         *   to get ready to read stored states in order. It sorts
+         *   the array of historical states by time and then plucks
+         *   just the times out into a separate array for faster 
+         *   random access.
          */
         prepareForPlayback: function() {
             // Sort the historical states by time ascending
@@ -222,7 +231,7 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Resets all time fields to zero and clears history.
          */
         resetTimeAndHistory: function() {
             // This is the fastest way to clear an array by benchmarks
@@ -241,7 +250,7 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Clears all history after a specified time.
          */
         clearHistoryAfter: function(time) {
             var points = [];

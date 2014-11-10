@@ -15,7 +15,8 @@ define(function(require) {
     var template = require('text!templates/scene.html');
 
     /**
-     * 
+     * The SceneView renders all the scene objects, including
+     *   the MovingManView.
      */
     var SceneView = Backbone.View.extend({
 
@@ -93,11 +94,9 @@ define(function(require) {
         },
 
         /**
-         *
+         * Responds to resize events.
          */
-        resize: function() {
-
-        },
+        resize: function() {},
 
         /**
          * Called on a window resize to resize the canvas
@@ -131,7 +130,8 @@ define(function(require) {
         },
 
         /**
-         *
+         * Updates the visual state of the walls when the simulation
+         *   changes.
          */
         wallsEnabledChanged: function(model, wallsEnabled, options) {
             if (wallsEnabled)
@@ -141,7 +141,7 @@ define(function(require) {
         },
 
         /**
-         *
+         * Updates the time counter when it changes in the sim.
          */
         timeChanged: function(model, time, options) {
             this.$time.text(time.toFixed(1));
