@@ -69,6 +69,19 @@ define(function (require) {
 		 */
 		update: function(time, delta) {
 
+			
+		},
+
+		/**
+		 * This function gets called after all the bodies in a simulation have
+		 *   been updated by the physics engine. We have no way of knowing all
+		 *   the ways in which a body will be affected by other bodies during
+		 *   their updates, so we put code here that needs to run after all
+		 *   changes have been finalized for this step.
+		 */
+		postUpdate: function() {
+			if (!this.get('userControlled'))
+				this.addPathPoint();
 		},
 
 		/**
@@ -78,7 +91,16 @@ define(function (require) {
 			this.get('position')[0] += dx;
 			this.get('position')[1] += dy;
 			this.set('position', this.get('position')); // Trigger a change
-		}
+		},
+
+		/**
+		 *
+		 */
+		collidesWith: function(body) {
+			var distance = glMatrix.distance(this.get('position'), body.get('position'));
+			var radiiSum = this.get('diameter') / 2 + body.get('diameter') / 2;
+			return distance < radiiSum;
+		},
 
 		/**
 		 *
@@ -92,6 +114,38 @@ define(function (require) {
 		 */
 		getRadius: function() {
 			return this.get('diameter') / 2;
+		},
+
+		/**
+		 *
+		 */
+		setRewindPoint: function() {
+
+		},
+
+		/**
+		 *
+		 */
+		rewind: function() {
+
+		},
+
+		/**
+		 *
+		 */
+		addPathPoint: function() {
+			var path = this.get('path');
+
+			path.push([
+				this.get('position')[0],
+				this.get('position')[1]
+			]);
+
+			if (path.length > this.get('maxPathLength'))
+				path.shift();
+
+			// Trigger a change
+			this.set('path', path);
 		}
 
 	});

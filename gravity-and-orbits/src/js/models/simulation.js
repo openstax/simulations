@@ -10,8 +10,15 @@ define(function (require, exports, module) {
 	 * Constants
 	 */
 
+	 /* PhET explanation: "
+	  *    Subdivide DT intervals by this factor to improve smoothing, 
+	  *    otherwise some orbits look too non-smooth (you can see 
+	  *    their corners). "
+	  */
+	var SMOOTHING_STEPS = 5;
+
 	/**
-	 * Wraps the update function in 
+	 * 
 	 */
 	var GOSimulation = Simulation.extend({
 
@@ -76,7 +83,17 @@ define(function (require, exports, module) {
 			// For the time slider and anything else relying on time
 			this.set('time', time);
 
+			// Split up the delta time into steps to smooth out the orbit
+			delta /= SMOOTHING_STEPS;
+			for (var i = 0; i < SMOOTHING_STEPS; i++)
+				this.performSubstep(delta);
+		},
 
+		/**
+		 *
+		 */
+		performSubstep: function(delta) {
+			
 		}
 
 	});
