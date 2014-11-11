@@ -54,7 +54,7 @@ define(function (require) {
 			this.get('position')[1] += dy;
 			this.set('position', this.get('position')); // Trigger a change
 		}
-		
+
 	});
 
 	return Body;
