@@ -14,197 +14,197 @@
  */
 
 .graph-view {
-	position: relative;
-	padding: @default-padding;
+    position: relative;
+    padding: @default-padding;
 
-	.graph-view-graph-wrapper {
-		min-width: 400px;
-		min-height: 200px;
-	}
+    .graph-view-graph-wrapper {
+        min-width: 400px;
+        min-height: 200px;
+    }
 }
 
 .graph-view-graph-wrapper {
-	position: relative;
+    position: relative;
 
-	.graph-title {
-		position: absolute;
-		bottom: 100%;
-		height: @default-padding;
-		line-height: (@default-padding + 2);
-		font-size: 20px;
-		font-weight: 400;
-		text-align: center;
-		color: #333;
-	}
+    .graph-title {
+        position: absolute;
+        bottom: 100%;
+        height: @default-padding;
+        line-height: (@default-padding + 2);
+        font-size: 20px;
+        font-weight: 400;
+        text-align: center;
+        color: #333;
+    }
 
-	.graph-canvas-wrapper {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: 100%;
-		border: 1px solid #bbb;
-		z-index: 1;
+    .graph-canvas-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border: 1px solid #bbb;
+        z-index: 1;
 
-		> .graph-canvas {
-			width: 100%;
-			height: 100%;
-			background-color: #000;
-		}
-	}
+        > .graph-canvas {
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+        }
+    }
 
-	.graph-x {
-		position: absolute;
-		height: @default-padding;
-		top: 100%;
-		left: 0;
-		right: 0;
+    .graph-x {
+        position: absolute;
+        height: @default-padding;
+        top: 100%;
+        left: 0;
+        right: 0;
 
-		.graph-x-numbers {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
+        .graph-x-numbers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
 
-		 	.graph-number {
-				float: left;
-				height: 100%;
-				position: relative;
-				
-				> span {
-					position: absolute;
-					display: block;
-					width: 100%;
-					height: 100%;
-					left: -50%;
-					text-align: center;
-					padding-top: 6px;
-				}
+             .graph-number {
+                float: left;
+                height: 100%;
+                position: relative;
+                
+                > span {
+                    position: absolute;
+                    display: block;
+                    width: 100%;
+                    height: 100%;
+                    left: -50%;
+                    text-align: center;
+                    padding-top: 6px;
+                }
 
-				&:after {
-					content: '';
-					position: absolute;
-					left: 0;
-					top: 0;
-					height: 4px;
-					width: 4px;
-					border: 0px solid #bbb;
-					border-left-width: 1px;
-				}
+                &:after {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    height: 4px;
+                    width: 4px;
+                    border: 0px solid #bbb;
+                    border-left-width: 1px;
+                }
 
-				&:last-child {
-					position: absolute;
-					right: 0;
+                &:last-child {
+                    position: absolute;
+                    right: 0;
 
-					& > span {
-						left: 48%;	
-					}
+                    & > span {
+                        left: 48%;    
+                    }
 
-					&:after {
-						border-left-width: 0;
-						border-right-width: 1px;
-						left: auto;
-						right: 0;
-					}
-				}
-			}
-		}
+                    &:after {
+                        border-left-width: 0;
+                        border-right-width: 1px;
+                        left: auto;
+                        right: 0;
+                    }
+                }
+            }
+        }
 
-		.graph-axis-label {
-			width: 100%;
-			text-align: center;
-			line-height: (@default-padding * 0.5);
-			padding-top: (@default-padding * 0.5);
-		}
-	}
+        .graph-axis-label {
+            width: 100%;
+            text-align: center;
+            line-height: (@default-padding * 0.5);
+            padding-top: (@default-padding * 0.5);
+        }
+    }
 
-	.graph-y {
-		position: absolute;
-		width: @default-padding;
-		right: 100%;
-		top: 0;
-		bottom: 0;
-		pointer-events: none;
+    .graph-y {
+        position: absolute;
+        width: @default-padding;
+        right: 100%;
+        top: 0;
+        bottom: 0;
+        pointer-events: none;
 
-		.graph-y-numbers {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
+        .graph-y-numbers {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
 
-		 	.graph-number {
-				width: 100%;
-				position: relative;
-				
-				> span {
-					position: absolute;
-					display: block;
-					width: 100%;
-					height: 20px;
-					top: 0;
-					margin-top: -7px;
-					text-align: right;
-					padding-right: 6px;
-				}
+             .graph-number {
+                width: 100%;
+                position: relative;
+                
+                > span {
+                    position: absolute;
+                    display: block;
+                    width: 100%;
+                    height: 20px;
+                    top: 0;
+                    margin-top: -7px;
+                    text-align: right;
+                    padding-right: 6px;
+                }
 
-				&:after {
-					content: '';
-					position: absolute;
-					right: 0;
-					top: 0;
-					height: 4px;
-					width: 4px;
-					border: 0px solid #bbb;
-					border-top-width: 1px;
-				}
+                &:after {
+                    content: '';
+                    position: absolute;
+                    right: 0;
+                    top: 0;
+                    height: 4px;
+                    width: 4px;
+                    border: 0px solid #bbb;
+                    border-top-width: 1px;
+                }
 
-				&:last-child {
-					position: absolute;
-					bottom: 0;
+                &:last-child {
+                    position: absolute;
+                    bottom: 0;
 
-					& > span {
-						top: 100%;	
-					}
+                    & > span {
+                        top: 100%;    
+                    }
 
-					&:after {
-						border-top-width: 0;
-						border-bottom-width: 1px;
-						top: auto;
-						bottom: 0;
-					}
-				}
-			}
-		}
+                    &:after {
+                        border-top-width: 0;
+                        border-bottom-width: 1px;
+                        top: auto;
+                        bottom: 0;
+                    }
+                }
+            }
+        }
 
-		.graph-axis-label {
-			position: absolute;
-			display: block;
-			left: 0px;
-			top: 0;
-			right: 0px;
-			bottom: 0;
-			max-width: none;
-			width: 350px;
-			height: 20px;
-			margin-top: auto;
-			margin-bottom: auto;
-			margin-left: 14px;
+        .graph-axis-label {
+            position: absolute;
+            display: block;
+            left: 0px;
+            top: 0;
+            right: 0px;
+            bottom: 0;
+            max-width: none;
+            width: 350px;
+            height: 20px;
+            margin-top: auto;
+            margin-bottom: auto;
+            margin-left: 14px;
 
-			.transform(~"rotate(-90deg) translateY(-175px)");
-			.transform-origin(center center);
-			text-align: center;
-		}
-	}
+            .transform(~"rotate(-90deg) translateY(-175px)");
+            .transform-origin(center center);
+            text-align: center;
+        }
+    }
 
-	.graph-number {
-		font-size: 10px;
-		color: #888;
-	}
+    .graph-number {
+        font-size: 10px;
+        color: #888;
+    }
 
-	.graph-axis-label {
-		font-size: 12px;
-		color: #888;
-	}
+    .graph-axis-label {
+        font-size: 12px;
+        color: #888;
+    }
 }

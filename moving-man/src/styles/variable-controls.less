@@ -4,307 +4,307 @@
 @import "mixins.less";
 
 .variable-controls {
-	width: 300px;
-	margin: 0 auto;
-	padding: 12px 0 4px;
-	position: relative;
+    width: 300px;
+    margin: 0 auto;
+    padding: 12px 0 4px;
+    position: relative;
 
-	&.position {
-		color: @position-color;
+    &.position {
+        color: @position-color;
 
-		& .slider {
-			background: @position-color;
+        & .slider {
+            background: @position-color;
 
-			&:before {
-				background: @position-color;
-			}
-		}
+            &:before {
+                background: @position-color;
+            }
+        }
 
-		& .slider .noUi-handle:after {
-			background: #fff;
-			border: 2px solid @position-color;
-		}
+        & .slider .noUi-handle:after {
+            background: #fff;
+            border: 2px solid @position-color;
+        }
 
-		&.active .slider .noUi-handle:after {
-			background: @position-color;
-		}
+        &.active .slider .noUi-handle:after {
+            background: @position-color;
+        }
 
-		& input[type="checkbox"] + label:before {
-			border-color: @position-color;
-		}
+        & input[type="checkbox"] + label:before {
+            border-color: @position-color;
+        }
 
-		& input[type="checkbox"] + label:after {
-			background: @position-color;
-		}
-	}
+        & input[type="checkbox"] + label:after {
+            background: @position-color;
+        }
+    }
 
-	&.velocity {
-		color: @velocity-color;
+    &.velocity {
+        color: @velocity-color;
 
-		& .slider {
-			background: @velocity-color;
+        & .slider {
+            background: @velocity-color;
 
-			&:before {
-				background: @velocity-color;
-			}
-		}
+            &:before {
+                background: @velocity-color;
+            }
+        }
 
-		& .slider .noUi-handle:after {
-			background: #fff;
-			border: 2px solid @velocity-color;
-		}
+        & .slider .noUi-handle:after {
+            background: #fff;
+            border: 2px solid @velocity-color;
+        }
 
-		&.active .slider .noUi-handle:after {
-			background: @velocity-color;
-		}
+        &.active .slider .noUi-handle:after {
+            background: @velocity-color;
+        }
 
-		& input[type="checkbox"] + label:before {
-			border-color: @velocity-color;
-		}
+        & input[type="checkbox"] + label:before {
+            border-color: @velocity-color;
+        }
 
-		& input[type="checkbox"] + label:after {
-			background: @velocity-color;
-		}
-	}
+        & input[type="checkbox"] + label:after {
+            background: @velocity-color;
+        }
+    }
 
-	&.acceleration {
-		color: @acceleration-color;
+    &.acceleration {
+        color: @acceleration-color;
 
-		& .slider {
-			background: @acceleration-color;
+        & .slider {
+            background: @acceleration-color;
 
-			&:before {
-				background: @acceleration-color;
-			}
-		}
+            &:before {
+                background: @acceleration-color;
+            }
+        }
 
-		& .slider .noUi-handle:after {
-			background: #fff;
-			border: 2px solid @acceleration-color;
-		}
+        & .slider .noUi-handle:after {
+            background: #fff;
+            border: 2px solid @acceleration-color;
+        }
 
-		&.active .slider .noUi-handle:after {
-			background: @acceleration-color;
-		}
+        &.active .slider .noUi-handle:after {
+            background: @acceleration-color;
+        }
 
-		& input[type="checkbox"] + label:before {
-			border-color: @acceleration-color;
-		}
+        & input[type="checkbox"] + label:before {
+            border-color: @acceleration-color;
+        }
 
-		& input[type="checkbox"] + label:after {
-			background: @acceleration-color;
-		}
-	}
+        & input[type="checkbox"] + label:after {
+            background: @acceleration-color;
+        }
+    }
 
-	&.compact {
-		width: 150px;
-		position: absolute;
-		top: 10px;
-		bottom: 40px;
-		left: 30px;
-		margin: 0;
-		padding: 0;
+    &.compact {
+        width: 150px;
+        position: absolute;
+        top: 10px;
+        bottom: 40px;
+        left: 30px;
+        margin: 0;
+        padding: 0;
 
-		& .name {
-			padding-top: 12px;
-		}
+        & .name {
+            padding-top: 12px;
+        }
 
-		& .left-wrapper {
-			position: absolute;
-			height: 108px;
-			top: 50%;
-			margin-top: -54px;
-		}
+        & .left-wrapper {
+            position: absolute;
+            height: 108px;
+            top: 50%;
+            margin-top: -54px;
+        }
 
-		& .slider {
-			position: absolute;
-			right: 0;
-			top: 0;
-			bottom: 0;
-			z-index: 100; // So it shows above the scene where it overlaps
+        & .slider {
+            position: absolute;
+            right: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100; // So it shows above the scene where it overlaps
 
-			&:before {
-				left: auto;
-				margin-left: auto;
-				width: 12px;
-				height: 2px;
-				left: -5px;
-				top: 50%;
-				margin-top: 0;
-			}
-		}
+            &:before {
+                left: auto;
+                margin-left: auto;
+                width: 12px;
+                height: 2px;
+                left: -5px;
+                top: 50%;
+                margin-top: 0;
+            }
+        }
 
-		& .value-group {
-			float: none;
-			width: 120px;
-		}
+        & .value-group {
+            float: none;
+            width: 120px;
+        }
 
-		& .expression-group {
-			float: none;
-			width: 150px;
-		}
+        & .expression-group {
+            float: none;
+            width: 150px;
+        }
 
-		& .label-row {
-			> .label-wrapper,
-			> .value-wrapper {
-				width: auto;
-				float: none;
-			}
-		}
+        & .label-row {
+            > .label-wrapper,
+            > .value-wrapper {
+                width: auto;
+                float: none;
+            }
+        }
 
-		& .vector-check-wrapper {
-			position: relative;
-			left: auto;
-			top: auto;
-			margin-top: 8px;
-		}
+        & .vector-check-wrapper {
+            position: relative;
+            left: auto;
+            top: auto;
+            margin-top: 8px;
+        }
 
-		& .btn-expression {
-			position: relative;
-			left: auto;
-			top: auto;
-			margin-top: 1px;
-		}
+        & .btn-expression {
+            position: relative;
+            left: auto;
+            top: auto;
+            margin-top: 1px;
+        }
 
-		& .expression-help {
-			right: auto;
-			left: 123px;
-			top: 5px;
-		}
-	}
+        & .expression-help {
+            right: auto;
+            left: 123px;
+            top: 5px;
+        }
+    }
 
-	& .label-row {
-		> .label-wrapper,
-		> .value-wrapper {
-			width: 50%;
-			float: left;
-		}
+    & .label-row {
+        > .label-wrapper,
+        > .value-wrapper {
+            width: 50%;
+            float: left;
+        }
 
-		&:after {
-			content: ' ';
-			display: table;
-			clear: both;
-		}
-	}
+        &:after {
+            content: ' ';
+            display: table;
+            clear: both;
+        }
+    }
 
-	& .name {
-		font-size: 16px;
-		padding-top: 6px;
+    & .name {
+        font-size: 16px;
+        padding-top: 6px;
 
-		> .driving-icon {
-			display: none;
-		}
-	}
+        > .driving-icon {
+            display: none;
+        }
+    }
 
-	&.driving .name > .driving-icon {
-		display: inline-block;
-	}
+    &.driving .name > .driving-icon {
+        display: inline-block;
+    }
 
-	& .input-group-addon {
-		color: inherit;
-	}
+    & .input-group-addon {
+        color: inherit;
+    }
 
-	& .value-group {
-		width: 120px;
-		float: right;
-	}
+    & .value-group {
+        width: 120px;
+        float: right;
+    }
 
-	& .expression-group {
-		width: 150px;
-		float: right;
-		display: none;
+    & .expression-group {
+        width: 150px;
+        float: right;
+        display: none;
 
-		&.error > .expression-text {
-			color: #CD2520;
-		}
-	}
+        &.error > .expression-text {
+            color: #CD2520;
+        }
+    }
 
-	.slider[disabled] {
-		background: #aaa;
+    .slider[disabled] {
+        background: #aaa;
 
-		&:before {
-			background: #aaa;
-		}
+        &:before {
+            background: #aaa;
+        }
 
-		& .noUi-handle:after {
-			background: #dfdfdf;
-			border-color: #aaa;
-		}
-	}
+        & .noUi-handle:after {
+            background: #dfdfdf;
+            border-color: #aaa;
+        }
+    }
 
-	& .slider:before {
-		content: '';
-		position: absolute;
-		left: 50%;
-		margin-left: 0;
-		width: 2px;
-		height: 12px;
-		top: -5px;
-		background: #fff;
-	}
+    & .slider:before {
+        content: '';
+        position: absolute;
+        left: 50%;
+        margin-left: 0;
+        width: 2px;
+        height: 12px;
+        top: -5px;
+        background: #fff;
+    }
 
-	& .vector-check-wrapper,
-	& .btn-expression {
-		position: absolute;
-		left: 320px;
-	}
+    & .vector-check-wrapper,
+    & .btn-expression {
+        position: absolute;
+        left: 320px;
+    }
 
-	& .vector-check-wrapper {
-		top: 18px;
-		width: 120px;
-	}
+    & .vector-check-wrapper {
+        top: 18px;
+        width: 120px;
+    }
 
-	& .btn-expression {
-		top: 11px;
-		.text-button();
+    & .btn-expression {
+        top: 11px;
+        .text-button();
 
-		> .function-icon {
-			margin-right: 4px;
-			margin-left: 4px;
-			font-size: 20px;
-		}
+        > .function-icon {
+            margin-right: 4px;
+            margin-left: 4px;
+            font-size: 20px;
+        }
 
-		> .fa {
-			display: inline-block;
-			padding-top: 10px;
-			margin-right: 2px;
-			margin-left: 2px;
-		}
-	}
+        > .fa {
+            display: inline-block;
+            padding-top: 10px;
+            margin-right: 2px;
+            margin-left: 2px;
+        }
+    }
 
-	& .drop-expression {
-		display: none;
-	}
+    & .drop-expression {
+        display: none;
+    }
 
-	& .expression-help {
-		position: absolute;
-		top: 17px;
-		right: 158px;
-		font-size: 16px;
-		display: none;
-		.text-button();
-	}
+    & .expression-help {
+        position: absolute;
+        top: 17px;
+        right: 158px;
+        font-size: 16px;
+        display: none;
+        .text-button();
+    }
 
-	&.expression {
-		& .drop-expression { display: block; }
-		& .from-expression { display: none;  }
-		& .expression-group { display: table; }
-		& .value-group { display: none;  }
-		& .expression-help { display: block; }
+    &.expression {
+        & .drop-expression { display: block; }
+        & .from-expression { display: none;  }
+        & .expression-group { display: table; }
+        & .value-group { display: none;  }
+        & .expression-help { display: block; }
 
-		&.compact {
-			.slider { display: none; }
-		}
-	}
+        &.compact {
+            .slider { display: none; }
+        }
+    }
 }
 
 .implicit-expression {
-	font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	color: #aaa;
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    color: #aaa;
 }
 
 .functions-table {
-	td:first-child {
-		font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
-	}
+    td:first-child {
+        font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+    }
 }

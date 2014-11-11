@@ -1,33 +1,33 @@
 <div class="variable-controls <%= className %>">
-	<div class="left-wrapper">
-		<div class="label-row">
-			<div class="label-wrapper">
-				<label class="name"><%= name %> <span class="driving-icon fa fa-compass"></span></label>
-			</div>
-			<div class="value-wrapper">
-				<div class="input-group value-group">
-					<input type="text" class="form-control variable-text" value="0.00" />
-					<span class="input-group-addon"><%= units %></span>
-				</div>
-				<% if (expression) { %>
-					<div class="input-group expression-group">
-						<input type="text" class="form-control expression-text" value="7 * sin(t) + 2" />
-						<span class="input-group-addon"><%= units %></span>
-					</div>
-					<button class="btn expression-help" title="Help with Expressions" data-toggle="modal" data-target="#<%= help_modal_id %>"><span class="fa fa-question-circle"></span></button>
-				<% } %>
-			</div>
-		</div>
-		<% if (vectors) { %>
-		<div class="vector-check-wrapper">
-			<input type="checkbox" id="vector-check-<%= unique %>" class="vector-check">
-			<label for="vector-check-<%= unique %>">Show Vector</label>
-		</div>
-		<% } %>
-		<% if (expression) { %>
-		<button class="btn btn-expression from-expression"><span class="function-icon">&fnof;</span> Use Function</button>
-		<button class="btn btn-expression drop-expression"><span class="fa fa-close"></span> Drop Function</button>
-		<% } %>
-	</div>
-	<div class="variable-slider slider"></div>
+    <div class="left-wrapper">
+        <div class="label-row">
+            <div class="label-wrapper">
+                <label class="name"><%= name %> <span class="driving-icon fa fa-compass"></span></label>
+            </div>
+            <div class="value-wrapper">
+                <div class="input-group value-group">
+                    <input type="text" class="form-control variable-text" value="0.00" />
+                    <span class="input-group-addon"><%= units %></span>
+                </div>
+                <% if (expression) { %>
+                    <div class="input-group expression-group">
+                        <input type="text" class="form-control expression-text" value="7 * sin(t) + 2" />
+                        <span class="input-group-addon"><%= units %></span>
+                    </div>
+                    <button class="btn expression-help" title="Help with Expressions" data-toggle="modal" data-target="#<%= help_modal_id %>"><span class="fa fa-question-circle"></span></button>
+                <% } %>
+            </div>
+        </div>
+        <% if (vectors) { %>
+        <div class="vector-check-wrapper">
+            <input type="checkbox" id="vector-check-<%= unique %>" class="vector-check">
+            <label for="vector-check-<%= unique %>">Show Vector</label>
+        </div>
+        <% } %>
+        <% if (expression) { %>
+        <button class="btn btn-expression from-expression"><span class="function-icon">&fnof;</span> Use Function</button>
+        <button class="btn btn-expression drop-expression"><span class="fa fa-close"></span> Drop Function</button>
+        <% } %>
+    </div>
+    <div class="variable-slider slider"></div>
 <div>

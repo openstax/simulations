@@ -1,166 +1,166 @@
 define(function(require) {
 
-	'use strict';
+    'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+    var $        = require('jquery');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
-	var MovingManView = require('views/moving-man');
+    var MovingManView = require('views/moving-man');
 
-	// CSS
-	require('less!styles/scene');
+    // CSS
+    require('less!styles/scene');
 
-	// HTML
-	var template = require('text!templates/scene.html');
+    // HTML
+    var template = require('text!templates/scene.html');
 
-	/**
-	 * 
-	 */
-	var SceneView = Backbone.View.extend({
+    /**
+     * The SceneView renders all the scene objects, including
+     *   the MovingManView.
+     */
+    var SceneView = Backbone.View.extend({
 
-		template: _.template(template),
-		tagName: 'div',
-		className: 'scene-view',
+        template: _.template(template),
+        tagName: 'div',
+        className: 'scene-view',
 
-		events: {
-			'click .wall-hide' : 'hideWalls',
-			'click .wall-show' : 'showWalls',
+        events: {
+            'click .wall-hide' : 'hideWalls',
+            'click .wall-show' : 'showWalls',
 
-			// Just an Easter Egg
-			'click .cloud' : 'cloudClicked'
-		},
+            // Just an Easter Egg
+            'click .cloud' : 'cloudClicked'
+        },
 
-		initialize: function(options) {
+        initialize: function(options) {
 
-			// Default values
-			options = _.extend({
-				compact: false
-			}, options);
+            // Default values
+            options = _.extend({
+                compact: false
+            }, options);
 
-			this.compact = options.compact;
+            this.compact = options.compact;
 
-			// Save options
-			if (options.simulation)
-				this.simulation = options.simulation;
-			else
-				throw 'SceneView requires a simulation model to render.';
+            // Save options
+            if (options.simulation)
+                this.simulation = options.simulation;
+            else
+                throw 'SceneView requires a simulation model to render.';
 
-			// Bind DOM events
-			$(window).bind('resize', $.proxy(this.windowResized, this));
+            // Bind DOM events
+            $(window).bind('resize', $.proxy(this.windowResized, this));
 
-			// Listen to simulation events
-			this.listenTo(this.simulation, 'change:wallsEnabled', this.wallsEnabledChanged);
-			this.listenTo(this.simulation, 'change:time',         this.timeChanged);
-		},
+            // Listen to simulation events
+            this.listenTo(this.simulation, 'change:wallsEnabled', this.wallsEnabledChanged);
+            this.listenTo(this.simulation, 'change:time',         this.timeChanged);
+        },
 
-		/**
-		 * Renders content and canvas for heatmap
-		 */
-		render: function() {
-			this.$el.html(this.template());
+        /**
+         * Renders content and canvas for heatmap
+         */
+        render: function() {
+            this.$el.html(this.template());
 
-			if (this.compact)
-				this.$el.addClass('compact');
+            if (this.compact)
+                this.$el.addClass('compact');
 
-			this.$walls = this.$('.wall');
-			this.$time  = this.$('.clock > .time');
+            this.$walls = this.$('.wall');
+            this.$time  = this.$('.clock > .time');
 
-			this.renderMovingManView();
+            this.renderMovingManView();
 
-			return this;
-		},
+            return this;
+        },
 
-		/**
-		 * Renders html container
-		 */
-		renderMovingManView: function() {
-			var $manContainer = this.$('.man-container');
-			this.movingManView = new MovingManView({
-				simulation: this.simulation,
-				dragFrame: $manContainer[0]
-			});
-			this.movingManView.render();
-			$manContainer.html(this.movingManView.el);
-		},
+        /**
+         * Renders html container
+         */
+        renderMovingManView: function() {
+            var $manContainer = this.$('.man-container');
+            this.movingManView = new MovingManView({
+                simulation: this.simulation,
+                dragFrame: $manContainer[0]
+            });
+            this.movingManView.render();
+            $manContainer.html(this.movingManView.el);
+        },
 
-		/**
-		 * Called after every component on the page has rendered to make sure
-		 *   things like widths and heights and offsets are correct.
-		 */
-		postRender: function() {
-			this.movingManView.postRender();
-		},
+        /**
+         * Called after every component on the page has rendered to make sure
+         *   things like widths and heights and offsets are correct.
+         */
+        postRender: function() {
+            this.movingManView.postRender();
+        },
 
-		/**
-		 *
-		 */
-		resize: function() {
+        /**
+         * Responds to resize events.
+         */
+        resize: function() {},
 
-		},
+        /**
+         * Called on a window resize to resize the canvas
+         */
+        windowResized: function(event) {
+            this.resizeOnNextUpdate = true;
+        },
 
-		/**
-		 * Called on a window resize to resize the canvas
-		 */
-		windowResized: function(event) {
-			this.resizeOnNextUpdate = true;
-		},
+        /**
+         * Responds to resize events and draws everything.
+         */
+        update: function(time, delta) {
+            if (this.resizeOnNextUpdate)
+                this.resize();
 
-		/**
-		 * Responds to resize events and draws everything.
-		 */
-		update: function(time, delta) {
-			if (this.resizeOnNextUpdate)
-				this.resize();
+            this.movingManView.update(time, delta);
+        },
 
-			this.movingManView.update(time, delta);
-		},
+        /**
+         * Hides the walls and updates the sim
+         */
+        hideWalls: function() {
+            this.simulation.set('wallsEnabled', false);
+        },
 
-		/**
-		 * Hides the walls and updates the sim
-		 */
-		hideWalls: function() {
-			this.simulation.set('wallsEnabled', false);
-		},
+        /**
+         * Hides the walls and updates the sim
+         */
+        showWalls: function() {
+            this.simulation.set('wallsEnabled', true);
+        },
 
-		/**
-		 * Hides the walls and updates the sim
-		 */
-		showWalls: function() {
-			this.simulation.set('wallsEnabled', true);
-		},
+        /**
+         * Updates the visual state of the walls when the simulation
+         *   changes.
+         */
+        wallsEnabledChanged: function(model, wallsEnabled, options) {
+            if (wallsEnabled)
+                this.$walls.removeClass('disabled');
+            else
+                this.$walls.addClass('disabled');
+        },
 
-		/**
-		 *
-		 */
-		wallsEnabledChanged: function(model, wallsEnabled, options) {
-			if (wallsEnabled)
-				this.$walls.removeClass('disabled');
-			else
-				this.$walls.addClass('disabled');
-		},
+        /**
+         * Updates the time counter when it changes in the sim.
+         */
+        timeChanged: function(model, time, options) {
+            this.$time.text(time.toFixed(1));
+        },
 
-		/**
-		 *
-		 */
-		timeChanged: function(model, time, options) {
-			this.$time.text(time.toFixed(1));
-		},
+        /**
+         * Just a little Easter Egg to start the cloud animation.
+         *   The user has to click each cloud to activate it.
+         */
+        cloudClicked: function(event) {
+            if (!this.cloudsClicked)
+                this.cloudsClicked = {};
 
-		/**
-		 * Just a little Easter Egg to start the cloud animation.
-		 *   The user has to click each cloud to activate it.
-		 */
-		cloudClicked: function(event) {
-			if (!this.cloudsClicked)
-				this.cloudsClicked = {};
+            this.cloudsClicked[$(event.target).attr('class')] = true;
 
-			this.cloudsClicked[$(event.target).attr('class')] = true;
+            if (_.size(this.cloudsClicked) >= 5)
+                this.$('.clouds').addClass('moving');
+        }
+    });
 
-			if (_.size(this.cloudsClicked) >= 5)
-				this.$('.clouds').addClass('moving');
-		}
-	});
-
-	return SceneView;
+    return SceneView;
 });
