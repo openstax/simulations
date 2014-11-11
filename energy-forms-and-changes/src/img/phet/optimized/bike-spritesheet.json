@@ -1,0 +1,48 @@
+{"frames": {
+
+"bicycle_frame_3.png":
+{
+	"frame": {"x":2,"y":2,"w":240,"h":182},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":240,"h":182},
+	"sourceSize": {"w":240,"h":182},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bicycle_rider.png":
+{
+	"frame": {"x":244,"y":2,"w":126,"h":142},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":126,"h":142},
+	"sourceSize": {"w":126,"h":142},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bicycle_rider_tired.png":
+{
+	"frame": {"x":372,"y":2,"w":131,"h":118},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":131,"h":118},
+	"sourceSize": {"w":131,"h":118},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"bicycle_spokes.png":
+{
+	"frame": {"x":372,"y":122,"w":62,"h":64},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":62,"h":64},
+	"sourceSize": {"w":62,"h":64},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "bike-spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":505,"h":188},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:33d2f62be6b45e48e10b422d6723a827:950ab8d109bf08be752ed2fb64100bde:50b4aa5c4ef23968988ca15bcab94621$"
+}
+}

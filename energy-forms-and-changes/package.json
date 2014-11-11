@@ -1,0 +1,42 @@
+{
+  "name": "energy-forms-and-changes",
+  "version": "0.0.0",
+  "description": "A simulation showing the various forms energy can take, how they change from one form to another, and how energy moves in a system",
+  "main": "main.js",
+  "scripts": {
+    "prepublish": "node_modules/.bin/bower install",
+    "test": "node_modules/.bin/grunt test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Connexions/simulations.git"
+  },
+  "keywords": [
+    "simulation",
+    "sim"
+  ],
+  "bugs": {
+    "url": "https://github.com/Connexions/simulations/issues"
+  },
+  "homepage": "https://github.com/Connexions/simulations",
+  "dependencies": {},
+  "devDependencies": {
+    "bootstrap": "^3.2.0",
+    "bower": "^1.3.9",
+    "csso": "^1.3.11",
+    "font-awesome": "^4.2.0",
+    "grunt": "^0.4.5",
+    "grunt-contrib-clean": "^0.6.0",
+    "grunt-contrib-connect": "^0.8.0",
+    "grunt-contrib-copy": "^0.5.0",
+    "grunt-contrib-jshint": "^0.10.0",
+    "grunt-contrib-less": "^0.11.4",
+    "grunt-contrib-requirejs": "^0.4.4",
+    "grunt-contrib-watch": "^0.6.1",
+    "grunt-mocha": "^0.4.11",
+    "grunt-rename": "^0.1.4",
+    "grunt-targethtml": "^0.2.6",
+    "less": "^1.7.4",
+    "matchdep": "^0.3.0"
+  }
+}
