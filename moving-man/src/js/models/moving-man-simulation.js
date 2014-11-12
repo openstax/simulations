@@ -262,6 +262,8 @@ define(function (require, exports, module) {
 
             this._historyTimes = null;
 
+            this.set('furthestRecordedTime', time);
+
             this.movingMan.clearHistoryAfter(time);
         },
 
