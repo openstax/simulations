@@ -93,7 +93,7 @@ define(function(require) {
 			if (this.pulseEnabled && this.cosArg(time) + this.pulsePhase >= twoPI) {
 				this.pulseEnabled = false;
 				this.pulsePhase = 0;
-				this.enabled = false;
+				this.set('enabled', false);
 			}
 		},
 
