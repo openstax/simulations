@@ -457,7 +457,7 @@ define(function (require) {
 		 * Click event handler that resets the simulation back to time zero.
 		 */
 		reset: function(event) {
-			if (!confirm('Are you sure you want to reset everything?'))
+			if (!window.confirm('Are you sure you want to reset everything?'))
 				return;
 			
 			// Save whether or not it was paused when we reset

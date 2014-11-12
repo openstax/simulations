@@ -250,8 +250,13 @@ define(function (require) {
 			this.heightRatio = this.get('latticeSize').height / this.get('dimensions').height;
 		},
 
-		isValidPoint: function(x, y) {
-			return this.lattice.contains(x, y);
+		isValidPoint: function(x, y, padding) {
+			if (padding === undefined)
+				return this.lattice.contains(x, y);
+			else {
+				return this.lattice.contains(x - padding, y - padding) && 
+				       this.lattice.contains(x + padding, y + padding);
+			}
 		},
 
 		setSourceValue: function(x, y, val) {
