@@ -25,7 +25,7 @@ define(function (require) {
 	/**
 	 * 
 	 */
-	var GOSimView = SimView.extend({
+	var EFCSimView = SimView.extend({
 
 		/**
 		 * Root element properties
@@ -166,5 +166,5 @@ define(function (require) {
 
 	});
 
-	return GOSimView;
+	return EFCSimView;
 });

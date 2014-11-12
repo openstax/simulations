@@ -10,7 +10,7 @@
 			text:       '../../bower_components/requirejs-text/text',
 			pixi:       '../../bower_components/pixi/bin/pixi',
 			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
+			vector2:    '../../node_modules/vecmath/lib/Vector2',
 
 			views:      '../js/views',
 			models:     '../js/models',
@@ -34,6 +34,12 @@
 
 			globalVars: {
 				dependencyDir: '"/bower_components"'
+			}
+		},
+
+		shim: {
+			vector2: {
+			    exports: 'Vector2'
 			}
 		}
 	};

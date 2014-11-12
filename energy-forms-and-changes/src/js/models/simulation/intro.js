@@ -59,10 +59,10 @@ define(function (require, exports, module) {
             this.brick     = null;
             this.ironBlock = null;
             this.beaker    = null;
-            this.moveableThermalEnergyContainers = [];
-            this.moveableThermalEnergyContainers.push(this.brick);
-            this.moveableThermalEnergyContainers.push(this.ironBlock);
-            this.moveableThermalEnergyContainers.push(this.beaker);
+            this.movableThermalEnergyContainers = [];
+            this.movableThermalEnergyContainers.push(this.brick);
+            this.movableThermalEnergyContainers.push(this.ironBlock);
+            this.movableThermalEnergyContainers.push(this.beaker);
 
             // Thermometers
             this.thermometers = [];
@@ -169,7 +169,7 @@ define(function (require, exports, module) {
          *      supporting surface."
          */
         _findSupportingSurfaces: function(time, delta) {
-            _.each(this.moveableElements, function(element) {
+            _.each(this.movableElements, function(element) {
                 if (!element.get('userControlled') && !element.getSupportingSurface() && element.get('position').y !== 0) {
                     var minYPos = 0;
                     
@@ -220,17 +220,17 @@ define(function (require, exports, module) {
 
             // Loop through all the movable thermal energy containers and have them
             //   exchange energy with one another.
-            for (var i = 0; i < this.moveableElements.length - 1; i++) {
-                for (var j = i + 1; j < this.moveablmoveableElementseThermalEnergyContainers.length; j++) {
-                    this.moveableElements[i].exchangeEnergyWith(this.moveableElements[j], delta);
+            for (var i = 0; i < this.movableElements.length - 1; i++) {
+                for (var j = i + 1; j < this.moveablmovableElementseThermalEnergyContainers.length; j++) {
+                    this.movableElements[i].exchangeEnergyWith(this.movableElements[j], delta);
                 }
             }
 
             // Exchange thermal energy between the burners and the other thermal
             //   model elements, including air.
             _.each(this.burners, function(burner) {
-                if (burner.areAnyOnTop(this.moveableElements)) {
-                    _.each(this.moveableElements, function(element) {
+                if (burner.areAnyOnTop(this.movableElements)) {
+                    _.each(this.movableElements, function(element) {
                         burner.tradeEnergyWithObject(element, delta);
                     });
                 }
