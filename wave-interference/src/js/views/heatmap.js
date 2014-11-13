@@ -175,8 +175,10 @@ define(function(require) {
 			this.stage = new PIXI.Stage(0x000000);
 
 			// Create a specialized container for rendering lots of particles
+			this.spriteBatchContainer = new PIXI.DisplayObjectContainer();
 			this.spriteBatch = new PIXI.SpriteBatch();
-			this.stage.addChild(this.spriteBatch);
+			this.spriteBatchContainer.addChild(this.spriteBatch);
+			this.stage.addChild(this.spriteBatchContainer);
 
 			this.initParticles();
 			this.initComponents();
