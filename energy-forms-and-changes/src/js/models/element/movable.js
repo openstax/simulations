@@ -3,7 +3,6 @@ define(function (require) {
 	'use strict';
 
 	var _        = require('underscore');
-	var Backbone = require('backbone');
 	var Vector2  = require('vector2');
 
 	var Element = require('models/element');
@@ -14,7 +13,7 @@ define(function (require) {
 	var MovableElement = Element.extend({
 
 		defaults: {
-			// Dynamic physical properties
+			// Physical properties
 			position: null,
 			verticalVelocity: 0,
 			
@@ -30,6 +29,14 @@ define(function (require) {
 		reset: function() {
 			this.set('userControlled', true);
 			this.set('position', this.get('position').set(0, 0));
+			this.set('verticalVelocity', 0);
+
+			Element.prototype.reset.apply(this);
+		},
+
+		setX: function(x) {
+			this.get('position').x = x;
+			this.set('position', this.get('position'));
 		}
 
 	});

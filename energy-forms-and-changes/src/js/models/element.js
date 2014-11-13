@@ -18,6 +18,8 @@ define(function (require) {
 
 		},
 
+		update: function(time, delta) {},
+
 		/**
 		 * Get the top surface of this model element.  Only model elements that can
 		 * support other elements on top of them have top surfaces.
