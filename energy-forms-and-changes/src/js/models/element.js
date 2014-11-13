@@ -91,5 +91,5 @@ define(function (require) {
 
 	});
 
-	return Body;
+	return Element;
 });
