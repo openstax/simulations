@@ -3,63 +3,63 @@
 
 // Should be identical to tabs found in ".media-footer" in webview
 .sim-tabs {
-	> ul {
-		margin: 0;
-		padding: 0 0 0 30px;
-		font-size: 0;
-		list-style-type: none;
-		color: @link-color;
-		border-bottom: 2px solid @link-color;
+    > ul {
+        margin: 0;
+        padding: 0 0 0 30px;
+        font-size: 0;
+        list-style-type: none;
+        color: @link-color;
+        border-bottom: 2px solid @link-color;
 
-		> li {
-			display: inline-block;
-			padding: 7px 10px;
-			margin-right: 3px;
-			font-size: 1.4rem;
-			background-color: @gray-lightest;
-			cursor: pointer;
-			.user-select(none);
+        > li {
+            display: inline-block;
+            padding: 7px 10px;
+            margin-right: 3px;
+            font-size: 1.4rem;
+            background-color: @gray-lightest;
+            cursor: pointer;
+            .user-select(none);
 
-			> .tab-title {
-				margin-left: 2px;
-				vertical-align: middle;
+            > .tab-title {
+                margin-left: 2px;
+                vertical-align: middle;
 
-				&::after {
-					font-weight: bold;
-					margin-left: 5px;
-					vertical-align: top;
-					content: "+";
-				}
-			}
+                &::after {
+                    font-weight: bold;
+                    margin-left: 5px;
+                    vertical-align: top;
+                    content: "+";
+                }
+            }
 
-			&.active {
-				color: @gray-lightest;
-				background-color: @link-color;
+            &.active {
+                color: @gray-lightest;
+                background-color: @link-color;
 
-				> .tab-title::after {
-					content: "\2212"; // &minus; (−)
-				}
-			}
+                > .tab-title::after {
+                    content: "\2212"; // &minus; (−)
+                }
+            }
 
-			&.disabled {
-				cursor: not-allowed;
-				pointer-events: none;
-				opacity: 0.65;
-			}
-		}
-	}
+            &.disabled {
+                cursor: not-allowed;
+                pointer-events: none;
+                opacity: 0.65;
+            }
+        }
+    }
 }
 
 .sim-content {
-	display: none;
-	width: 100%;
-	min-height: 600px;
-	position: absolute;
-	top: 0;
-	left: 0;
+    display: none;
+    width: 100%;
+    min-height: 600px;
+    position: absolute;
+    top: 0;
+    left: 0;
 
-	&.active {
-		display: block;
-	}
+    &.active {
+        display: block;
+    }
 }
 

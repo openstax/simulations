@@ -2,114 +2,114 @@
 
 // Based on bootstrap's .button-variant() mixin
 .button-variant(@color; @background; @active-color; @active-background) {
-	//padding: 5px 10px;
-	font-weight: 500;
-	//vertical-align: baseline;
-	color: @color;
-	background-color: @background;
-	border: none;
+    //padding: 5px 10px;
+    font-weight: 500;
+    //vertical-align: baseline;
+    color: @color;
+    background-color: @background;
+    border: none;
 
-	&:hover {
-		color: @color;
-		opacity: 0.9;
-	}
+    &:hover {
+        color: @color;
+        opacity: 0.9;
+    }
 
-	&:active {
-		color: @active-color;
-		background: @active-background;
-		outline: 0;
-		.box-shadow(none);
-	}
+    &:active {
+        color: @active-color;
+        background: @active-background;
+        outline: 0;
+        .box-shadow(none);
+    }
 
-	&:focus {
-		outline: 0;
-	}
+    &:focus {
+        outline: 0;
+    }
 
-	&.disabled,
-	&[disabled],
-	fieldset[disabled] & {
-		&,
-		&:hover,
-		&:focus,
-		&:active,
-		&.active {
-			background-color: @background;
-		}
-	}
+    &.disabled,
+    &[disabled],
+    fieldset[disabled] & {
+        &,
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            background-color: @background;
+        }
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn.active:focus {
-	outline: none !important; // overriding bootstrap default behavior
+    outline: none !important; // overriding bootstrap default behavior
 }
 
 .animated-button(@animationName: panel-btn-clicked, @duration: 400ms, @timing-function: cubic-bezier(.16,.72,.37,.88)) {
-	&.clicked {
-		box-shadow: none;
-		.animation-name(@animationName);
-		.animation-duration(@duration);
-		.animation-timing-function(@timing-function);
-		.animation-fill-mode(forwards);
-		opacity: 1;
-	}
+    &.clicked {
+        box-shadow: none;
+        .animation-name(@animationName);
+        .animation-duration(@duration);
+        .animation-timing-function(@timing-function);
+        .animation-fill-mode(forwards);
+        opacity: 1;
+    }
 }
 
 .keyframes(btn-clicked, {
-	background-color: #B8B8B8;
+    background-color: #B8B8B8;
 },{
-	background-color: @brand-primary;
+    background-color: @brand-primary;
 });
 
 .keyframes(panel-btn-clicked, {
-	color: #fff;
-	background-color: @brand-primary;
+    color: #fff;
+    background-color: @brand-primary;
 },{
-	color: @brand-primary;
-	background-color: @gray-lightest;
+    color: @brand-primary;
+    background-color: @gray-lightest;
 });
 
 .keyframes(graph-show-btn-clicked, {
-	color: #fff;
-	background-color: @brand-primary;
+    color: #fff;
+    background-color: @brand-primary;
 },{
-	opacity: 0;
+    opacity: 0;
 });
 
 .keyframes(graph-show-btn, {
-	opacity: 0;
+    opacity: 0;
 },{
-	opacity: 1;
+    opacity: 1;
 });
 
 
 .horizontal-panel-button() {
-	position: absolute;
-	top: 0;
-	bottom: 0;
-	height: @heatmap-container-padding;
-	line-height: (@heatmap-container-padding + 2);
-	font-weight: bold;
-	padding: 0;
-	background-color: @gray-lightest;
-	color: @link-color;
-	border-radius: 0;
-	margin-top: auto;
-	margin-bottom: auto;
-	z-index: 50;
-	.transform(~"rotate(-90deg) translateY(-239px)");
-	.transform-origin(center center);
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    height: @heatmap-container-padding;
+    line-height: (@heatmap-container-padding + 2);
+    font-weight: bold;
+    padding: 0;
+    background-color: @gray-lightest;
+    color: @link-color;
+    border-radius: 0;
+    margin-top: auto;
+    margin-bottom: auto;
+    z-index: 50;
+    .transform(~"rotate(-90deg) translateY(-239px)");
+    .transform-origin(center center);
 
-	&:hover {
-		color: fadeout(@link-color, 15%);
-		background-color: lighten(@gray-lightest, 0.5%);
-	}
+    &:hover {
+        color: fadeout(@link-color, 15%);
+        background-color: lighten(@gray-lightest, 0.5%);
+    }
 
-	&:active {
-		color: #fff;
-		background-color: @brand-primary;
-		.box-shadow(none);
-	}
+    &:active {
+        color: #fff;
+        background-color: @brand-primary;
+        .box-shadow(none);
+    }
 
-	> .fa {
-		margin-right: 10px;
-	}
+    > .fa {
+        margin-right: 10px;
+    }
 }
