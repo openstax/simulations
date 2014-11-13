@@ -54,8 +54,19 @@ module.exports = function(grunt){
 		// Get the function to call when all gruntfiles have been run
 		var done = this.async();
 
-		// Get a list of all the gruntfiles from each directory
-		var gruntfiles = grunt.file.expand(this.options().gruntfiles);
+		// Get the list of gruntfiles
+		var gruntfiles;
+		if (grunt.option('sim')) {
+			// We just want to do one sim
+			gruntfiles = './' + grunt.option('sim') + '/Gruntfile.js';
+			if (!grunt.file.exists(gruntfiles[0])) {
+				grunt.fail.fatal('No gruntfile found at ' + gruntfiles[0]);
+			}
+		}
+		else {
+			// Get a list of all the gruntfiles from each directory
+			gruntfiles = grunt.file.expand(this.options().gruntfiles);
+		}
 		
 		// Create a callback for when a dist finishes running
 		var gruntsRunning = gruntfiles.length;
@@ -124,11 +135,18 @@ module.exports = function(grunt){
 		'targethtml:dist'
 	]);
 
-	grunt.registerTask('deploy', [
-		'dist',
-		'create-no-jekyll',
-		'gh-pages:deploy'
-	]);
+	grunt.registerTask('deploy', function() {
+		if (grunt.option('sim')) {
+
+		}
+		else {
+			grunt.task.run([
+				'dist',
+				'create-no-jekyll',
+				'gh-pages:deploy'
+			]);
+		}
+	});
 
 	grunt.registerTask('dev', [
 		'connect:dev'

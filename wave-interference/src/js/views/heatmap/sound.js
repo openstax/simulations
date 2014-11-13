@@ -88,7 +88,9 @@ define(function(require) {
 			this.pressureParticleSprites = [];
 
 			this.pressureParticleSpriteBatch = new PIXI.SpriteBatch();
-			this.stage.addChild(this.pressureParticleSpriteBatch);
+			this.pressureParticleSpriteBatchContainer = new PIXI.DisplayObjectContainer();
+			this.pressureParticleSpriteBatchContainer.addChild(this.pressureParticleSpriteBatch);
+			this.stage.addChild(this.pressureParticleSpriteBatchContainer);
 
 			this.disablePressureParticles();
 
@@ -150,8 +152,8 @@ define(function(require) {
 		 * 
 		 */
 		enablePressureParticles: function() {
-			this.pressureParticleSpriteBatch.visible = true;
-			this.spriteBatch.visible = false;
+			this.pressureParticleSpriteBatchContainer.visible = true;
+			this.spriteBatchContainer.visible = false;
 
 			this.$('.heatmap-title').html('Pressure (Particles) &ndash; XY Plane');
 		},
@@ -160,8 +162,8 @@ define(function(require) {
 		 * 
 		 */
 		disablePressureParticles: function() {
-			this.spriteBatch.visible = true;
-			this.pressureParticleSpriteBatch.visible = false;
+			this.spriteBatchContainer.visible = true;
+			this.pressureParticleSpriteBatchContainer.visible = false;
 
 			this.$('.heatmap-title').html(this.graphInfo.title);
 		},
