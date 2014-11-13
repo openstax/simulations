@@ -13,13 +13,6 @@ module.exports = function(grunt){
 				src: 'bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
-			fonts: {
-				expand: true,
-				filter: 'isFile',
-				flatten: true,
-				src: ['node_modules/font-awesome/fonts/**'],
-				dest: 'dist/node_modules/font-awesome/fonts/'
-			},
 			images: {
 				expand: true, // required when using cwd
 				cwd: 'src/img/',
@@ -32,13 +25,16 @@ module.exports = function(grunt){
 				src: '**',
 				dest: 'dist/audio/'
 			},
-			bower_components: {
-				src: 'bower_components/**',
-				dest: 'dist/'
+			fonts: {
+				expand: true,
+				filter: 'isFile',
+				flatten: true,
+				src: ['bower_components/font-awesome/fonts/**'],
+				dest: 'dist/bower_components/font-awesome/fonts/'
 			},
 			common: {
 				src: [
-					'../common/**'
+					'../common/**/*.{eot,svg,ttf,woff,otf}'
 				],
 				dest: 'dist/common/'
 			}

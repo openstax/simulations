@@ -13,27 +13,22 @@ module.exports = function(grunt){
 				src: 'bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
-			fonts: {
-				expand: true,
-				filter: 'isFile',
-				flatten: true,
-				src: ['bower_components/font-awesome/fonts/**'],
-				dest: 'dist/fonts/'
-			},
 			images: {
 				expand: true, // required when using cwd
 				cwd: 'src/img/',
 				src: '**',
 				dest: 'dist/img/'
 			},
-			bower_components: {
-				src: 'bower_components/**',
-				dest: 'dist/'
+			fonts: {
+				expand: true,
+				filter: 'isFile',
+				flatten: true,
+				src: ['bower_components/font-awesome/fonts/**'],
+				dest: 'dist/bower_components/font-awesome/fonts/'
 			},
 			common: {
 				src: [
-					'../common/**',
-					'!../common/**/*.js'
+					'../common/**/*.{eot,svg,ttf,woff,otf}'
 				],
 				dest: 'dist/common/'
 			}
