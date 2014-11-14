@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var Functions = require('common/functions');
     var Vector2 = require('vector2-node');
 
     var Constants = {};
@@ -20,7 +21,7 @@ define(function (require) {
     Constants.Z_TO_X_OFFSET_MULTIPLIER = -0.25;
     Constants.Z_TO_Y_OFFSET_MULTIPLIER = -0.25;
     Constants.MAP_Z_TO_XY_OFFSET = function(zValue) {
-        return glMatrix.fromValues(zValue * Constants.Z_TO_X_OFFSET_MULTIPLIER, zValue * Constants.Z_TO_Y_OFFSET_MULTIPLIER);
+        return new Vector2(zValue * Constants.Z_TO_X_OFFSET_MULTIPLIER, zValue * Constants.Z_TO_Y_OFFSET_MULTIPLIER);
     };
 
     // For comparing temperatures.
@@ -33,17 +34,17 @@ define(function (require) {
     Constants.HIGH_ENERGY_FOR_MAP_FUNCTION = Brick.ENERGY_AT_ROOM_TEMPERATURE;
     Constants.NUM_ENERGY_CHUNKS_IN_BRICK_AT_FREEZING = 1.25;
     Constants.NUM_ENERGY_CHUNKS_IN_BRICK_AT_ROOM_TEMP = 2.4; // Close to rounding to 3 so that little energy needed to transfer a chunk.
-    Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE = new Function.LinearFunction( LOW_ENERGY_FOR_MAP_FUNCTION,
-                                                                             HIGH_ENERGY_FOR_MAP_FUNCTION,
-                                                                             NUM_ENERGY_CHUNKS_IN_BRICK_AT_FREEZING,
-                                                                             NUM_ENERGY_CHUNKS_IN_BRICK_AT_ROOM_TEMP );
+    Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE = Functions.createLinearFunction(LOW_ENERGY_FOR_MAP_FUNCTION,
+                                                                               HIGH_ENERGY_FOR_MAP_FUNCTION,
+                                                                               NUM_ENERGY_CHUNKS_IN_BRICK_AT_FREEZING,
+                                                                               NUM_ENERGY_CHUNKS_IN_BRICK_AT_ROOM_TEMP);
     Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE = MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE.createInverse();
 
     Constants.ENERGY_TO_NUM_CHUNKS_MAPPER = function(energy) {
-        return Math.max(Math.round(MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE.evaluate(energy)), 0);
+        return Math.max(Math.round(MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( energy )), 0);
     };
 
-    Constants.ENERGY_PER_CHUNK = Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE.evaluate( 2 ) - Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE.evaluate( 1 );
+    Constants.ENERGY_PER_CHUNK = Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 2 ) - Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 1 );
 
     // Threshold for deciding when two temperatures can be considered equal.
     Constants.TEMPERATURES_EQUAL_THRESHOLD = 1E-6; // In Kelvin.

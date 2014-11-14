@@ -16,7 +16,10 @@ define(function (require) {
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.timestep = 1000 / 30; // milliseconds, from PhET's WaveInterferenceClock
+            (options || options = {});
+            var fps = options.framesPerSecond || 30;
+
+            this.timestep = 1000 / fps; // milliseconds, from PhET's WaveInterferenceClock
             this.accumulator = 0;
         },
 

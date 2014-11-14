@@ -30,7 +30,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			
 			// Calculate starting energy
-			this.energy = this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE;
+			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
 
 			// Slices: 2D "slices" of the container, used for 3D layering of energy chunks.
 			this.slices = [];
@@ -50,7 +50,7 @@ define(function (require) {
 		reset: function() {
 			MovableElement.prototype.reset.apply(this);
 
-			this.energy = this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE;
+			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
 			THIS.addInitialEnergyChunks();
 		},
 
@@ -65,11 +65,11 @@ define(function (require) {
 		getRect: function() {},
 
 		changeEnergy: function(deltaEnergy) {
-			this.energy += deltaEnergy;
+			this.set('energy', this.get('energy') + deltaEnergy);
 		},
 
 		getTemperature: function() {
-			return this.energy / (this.mass * this.specificHeat);
+			return this.get('energy') / (this.get('mass') * this.get('specificHeat'));
 		},
 
 		animateUncontainedEnergyChunks: function(delta) {
@@ -100,7 +100,7 @@ define(function (require) {
 				//   towards it.
 				chunk.zPosition = 0;
 				this.approachingEnergyChunks.push(chunk);
-				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.position));
+				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
 			}
 		},
 
@@ -250,8 +250,70 @@ define(function (require) {
 				if (chunkToExtract)
 					return chunkToExtract;
 			}
+
+			// Fail safe - If nothing found, get the first chunk.
+			if (!chunkToExtract) {
+				console.error(Object.prototype.toString.call(this) + ' - Warning: No energy chunk found by extraction algorithm, trying first available.');
+				for (var i = 0; i < this.slices.length; i++) {
+					if (this.slices[i].energyChunkList.length) {
+						chunkToExtract = this.slices[i].energyChunkList[0];
+						break;
+					}
+				}
+				if (!chunkToExtract)
+					console.error(Object.prototype.toString.call(this) + ' - Warning: No chunks available for extraction.');
+			}
+
+			this.removeEnergyChunk(chunkToExtract);
+			return chunkToExtract;
 		},
 
+		/**
+		 * Initialization method that add the "slices" where the energy chunks
+		 * reside.  Should be called only once at initialization.
+		 */
+		addEnergyChunkSlices: function() {
+			// Make sure this method isn't being misused.
+			if (this.slices.length)
+				return;
+
+			// Defaults to a single slice matching the outline rectangle, override
+			//   for more sophisticated behavior.
+			this.slices.push(new EnergyChunkContainerSlice(this.getRect(), 0, this.get('position')));
+		},
+
+		addInitialEnergyChunks: function() {
+			_.each(this.slices, function(slice) {
+				slice.energyChunkList = [];
+			});
+			var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+			var energyChunkBounds = this.getThermalContactArea().bounds;
+			var numChunks = this.getNumEnergyChunks();
+			while (numChunks < targetNumChunks) {
+				// Add a chunk at a random location in the block.
+				this.addEnergyChunk(new EnergyChunk(
+					EnergyChunk.THERMAL, 
+					EnergyChunkDistributor.generateRandomLocation(energyChunkBounds), 
+					this.get('energyChunksVisible')
+				));
+				numChunks++;
+			}
+
+			// Distribute the energy chunks within the container.
+			for (var i = 0; i < 1000; i++) {
+				if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL))
+					break;
+			}
+		},
+
+		getNumEnergyChunks: function() {
+			var numChunks = 0;
+			for (var i = 0; i < this.slices.length; i++)
+				numChunks += this.slices[i].getNumEnergyChunks();
+			return numChunks + approachingEnergyChunks.size();
+		},
+
+		
 
 		getThermalContactArea: function() {}
 

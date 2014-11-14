@@ -61,12 +61,12 @@ define(function (require) {
 			this.initSceneView();
 		},
 
-		/**
-		 * Initializes the Simulation.
-		 */
-		initSimulation: function() {
-			this.simulation = new GOSimulation();
-		},
+		// /**
+		//  * Initializes the Simulation.
+		//  */
+		// initSimulation: function() {
+		// 	this.simulation = new GOSimulation();
+		// },
 
 		/**
 		 * Initializes the Simulation.

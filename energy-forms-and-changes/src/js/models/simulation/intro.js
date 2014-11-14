@@ -49,6 +49,10 @@ define(function (require, exports, module) {
          *
          */
         initialize: function(attributes, options) {
+
+            (options || options = {});
+            options.framesPerSecond = Constants.FRAMES_PER_SECOND;
+
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             // Burners
