@@ -283,6 +283,10 @@ define(function (require) {
 			// Defaults to a single slice matching the outline rectangle, override
 			//   for more sophisticated behavior.
 			this.slices.push(new EnergyChunkContainerSlice(this.getRect(), 0, this.get('position')));
+
+			this.on('change:position', function(model, position){
+				
+			});
 		},
 
 		addInitialEnergyChunks: function() {
