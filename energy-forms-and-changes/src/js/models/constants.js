@@ -2,8 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var Functions = require('common/functions');
-    var Vector2 = require('vector2-node');
+    var Functions               = require('common/functions');
+    var Vector2                 = require('vector2-node');
+    var EnergyContainerCategory = require('models/energy-container-category');
 
     var Constants = {};
 
@@ -70,6 +71,56 @@ define(function (require) {
     // Constants that control the speed of the energy chunks
     Constants.ENERGY_CHUNK_VELOCITY = 0.04; // In meters/sec.
     
+    /**
+     * Class containing the constants that control the rate of heat transfer
+     * between the various model elements that can contain heat, as well as methods
+     * for obtaining the heat transfer value for any two model elements that are
+     * capable of exchanging heat.
+     *
+     * @author John Blanco
+     */
+    var HeatTransfer = {
+        // Heat transfer values.  NOTE: Originally, these were constants, but the
+        // design team requested that they be changeable via a developer control,
+        // which is why they are now properties.
+        BRICK_IRON_HEAT_TRANSFER_FACTOR:             1000,
+        BRICK_WATER_HEAT_TRANSFER_FACTOR:            1000,
+        BRICK_AIR_HEAT_TRANSFER_FACTOR:              50,
+        IRON_WATER_HEAT_TRANSFER_FACTOR:             1000,
+        IRON_AIR_HEAT_TRANSFER_FACTOR:               50,
+        WATER_AIR_HEAT_TRANSFER_FACTOR:              50,
+        AIR_TO_SURROUNDING_AIR_HEAT_TRANSFER_FACTOR: 10000,
+    }
+
+    // Maps for obtaining transfer constants for a given thermal element.
+    HeatTransfer.CONTAINER_CATEGORY_MAP = {
+        HEAT_TRANSFER_FACTORS_FOR_BRICK: {
+            EnergyContainerCategory.IRON:  HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.WATER: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.AIR:   HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR
+        },
+        HEAT_TRANSFER_FACTORS_FOR_IRON: {
+            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.WATER: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.AIR:   HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR
+        },
+        HEAT_TRANSFER_FACTORS_FOR_WATER: {
+            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.IRON:  HeatTransfer.IRON_WATER_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.AIR:   HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR
+        },
+        HEAT_TRANSFER_FACTORS_FOR_AIR: {
+            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.IRON:  HeatTransfer.IRON_AIR_HEAT_TRANSFER_FACTOR,
+            EnergyContainerCategory.WATER: HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR
+        }
+    };
+
+    HeatTransfer.getHeatTransferFactor = function(container1, container2) {
+        return this.CONTAINER_CATEGORY_MAP[container1][container2];
+    };
+
+    Constants.HeatTransfer = HeatTransfer;
 
     return Constants;
 });

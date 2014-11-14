@@ -22,6 +22,8 @@ define(function (require) {
 			mass:         0, // in kg
 			width:        0,
 			height:       0,
+
+			energyContainerCategory: null,
 			
 			// State properties
 			energyChunksVisible: false
@@ -45,6 +47,7 @@ define(function (require) {
 			this.addInitialEnergyChunks();
 
 			this._sliceBounds = new Rectangle(0, 0, 0, 0);
+			this._centerPoint = new Vector2(0, 0);
 		},
 
 		reset: function() {
@@ -313,7 +316,44 @@ define(function (require) {
 			return numChunks + approachingEnergyChunks.size();
 		},
 
-		
+		/**
+		 * Exchanges energy with another energy container.
+		 */
+		exchangeEnergyWith: function(other, delta) {
+			var thermalContactLength = this.getThermalContactArea().getThermalContactLength(other.getThermalContactArea());
+			if (thermalContactLength > 0) {
+				if (Math.abs(other.getTemperature() - this.getTemperature()) > Constants.TEMPERATURES_EQUAL_THRESHOLD) {
+					// Exchange energy between this and the other energy container.
+					var heatTransferConstant = Constants.HeatTransfer.getHeatTransferFactor(this.get('energyContainerCategory'), other.get('energyContainerCategory'));
+					var numFullTimeStepExchanges = Math.floor(delta / Constants.MAX_HEAT_EXCHANGE_TIME_STEP);
+					var leftoverTime = delta - (numFullTimeStepExchanges * Constants.MAX_HEAT_EXCHANGE_TIME_STEP);
+					var timeStep;
+					var thermalEnergyGained;
+					for (var i = 0; i < numFullTimeStepExchanges + 1; i++) {
+						timeStep = i < numFullTimeStepExchanges ? Constants.MAX_HEAT_EXCHANGE_TIME_STEP : leftoverTime;
+						thermalEnergyGained = (other.getTemperature() - this.getTemperature()) * thermalContactLength * heatTransferConstant * timeStep;
+	                    other.changeEnergy(-thermalEnergyGained);
+	                    this.changeEnergy(thermalEnergyGained);
+					}
+				}
+			}
+		},
+
+		getCenterPoint: function() {
+			return this._centerPoint.set(this.get('position').x, this.get('position').y + this.get('height') / 2);
+		},
+
+		/**
+		 * Get a number indicating the balance between the energy level and the
+		 * number of energy chunks owned by this model element.
+		 *
+		 * @return 0 if the number of energy chunks matches the energy level, a
+		 *         negative value if there is a deficit, and a positive value if there is
+		 *         a surplus.
+		 */
+		getEnergyChunkBalance: function() {
+			this.getNumEnergyChunks() - Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+		},
 
 		getThermalContactArea: function() {}
 
