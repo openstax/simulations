@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var glMatrix = require('glmatrix');
+    var Vector2 = require('vector2-node');
 
     var Constants = {};
 

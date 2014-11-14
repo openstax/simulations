@@ -13,13 +13,6 @@ module.exports = function(grunt){
                 src: 'bower_components/requirejs/require.js',
                 dest: 'dist/js/require.js'
             },
-            fonts: {
-                expand: true,
-                filter: 'isFile',
-                flatten: true,
-                src: ['node_modules/font-awesome/fonts/**'],
-                dest: 'dist/node_modules/font-awesome/fonts/'
-            },
             images: {
                 expand: true, // required when using cwd
                 cwd: 'src/img/',
@@ -32,13 +25,16 @@ module.exports = function(grunt){
                 src: '**',
                 dest: 'dist/audio/'
             },
-            bower_components: {
-                src: 'bower_components/**',
-                dest: 'dist/'
+            fonts: {
+                expand: true,
+                filter: 'isFile',
+                flatten: true,
+                src: ['node_modules/font-awesome/fonts/**'],
+                dest: 'dist/node_modules/font-awesome/fonts/'
             },
             common: {
                 src: [
-                    '../common/**'
+                    '../common/**/*.{eot,svg,ttf,woff,otf}'
                 ],
                 dest: 'dist/common/'
             }
@@ -65,14 +61,15 @@ module.exports = function(grunt){
                     findNestedDependencies: true,
                     optimize: 'uglify2',
                     paths: {
-                        jquery:     '../../bower_components/jquery/dist/jquery',
-                        underscore: '../../bower_components/lodash/dist/lodash',
-                        backbone:   '../../bower_components/backbone/backbone',
-                        bootstrap:  '../../bower_components/bootstrap/dist/js/bootstrap.min',
-                        text:       '../../bower_components/requirejs-text/text',
-                        pixi:       '../../bower_components/pixi/bin/pixi',
-                        nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-                        vector2:    '../../node_modules/vecmath/lib/Vector2',
+                        jquery:           '../../bower_components/jquery/dist/jquery',
+                        underscore:       '../../bower_components/lodash/dist/lodash',
+                        backbone:         '../../bower_components/backbone/backbone',
+                        bootstrap:        '../../bower_components/bootstrap/dist/js/bootstrap.min',
+                        text:             '../../bower_components/requirejs-text/text',
+                        pixi:             '../../bower_components/pixi/bin/pixi',
+                        nouislider:       '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+                        'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
+                        'rectangle-node': '../../node_modules/rectangle-node-shimmed/index',
 
                         views:      '../js/views',
                         graphics:   '../js/graphics',
@@ -96,8 +93,12 @@ module.exports = function(grunt){
                         }
                     },
                     shim: {
-                        vector2: {
+                        'vector2-node': {
                             exports: 'Vector2'
+                        },
+                        'rectangle-node': {
+                            deps: ['vector2-node'],
+                            exports: 'Rectangle'
                         }
                     }
                     name: 'main',
