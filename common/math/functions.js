@@ -21,6 +21,14 @@ define(function (require) {
             this.t2 = this.minOutput;
         };
 
+        func.set = function(minInput, maxInput, minOutput, maxOutput) {
+            this.minInput = minInput;
+            this.maxInput = maxInput;
+            this.minOutput = minOutput;
+            this.maxOutput = maxOutput;
+            this.update();
+        };
+
         func.minInput = minInput;
         func.maxInput = maxInput;
         func.minOutput = minOutput;

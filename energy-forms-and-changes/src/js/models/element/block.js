@@ -7,6 +7,7 @@ define(function (require) {
 
 	var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
 	var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
+	var HorizontalSurface                = require('models/horizontal-surface');
 
 	/**
 	 * Constants
@@ -27,7 +28,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			RectangularThermalMovableElement.prototype.initialize.apply(this, [attributes, options]);
 
-			this._rect = new Rectangle2(
+			this._rect = new Rectangle(
 		    	this.get('position').x - SURFACE_WIDTH / 2,
 		        this.get('position').y,
 		        Block.SURFACE_WIDTH,
