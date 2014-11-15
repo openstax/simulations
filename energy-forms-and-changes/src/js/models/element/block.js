@@ -7,18 +7,17 @@ define(function (require) {
 
 	var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
 	var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
-	var Constants = require('models/constants');
 
 	/**
 	 * Constants
 	 */
+	var Constants = require('models/constants');
+	var Static = {};
 	// Height and width of all block surfaces, since it is a cube.
-	var SURFACE_WIDTH = 0.045; // In meters
-
+	Static.SURFACE_WIDTH = 0.045; // In meters
 	// Number of slices where energy chunks may be placed.
-	var NUM_ENERGY_CHUNK_SLICES = 4;
-
-	var MAX_TEMPERATURE = 450; // Degrees Kelvin, value is pretty much arbitrary. Whatever works.
+	Static.NUM_ENERGY_CHUNK_SLICES = 4;
+	Static.MAX_TEMPERATURE = 450; // Degrees Kelvin, value is pretty much arbitrary. Whatever works.
 
 	/**
 	 * 
@@ -31,8 +30,8 @@ define(function (require) {
 			this._rect = new Rectangle2(
 		    	this.get('position').x - SURFACE_WIDTH / 2,
 		        this.get('position').y,
-		        SURFACE_WIDTH,
-		        SURFACE_WIDTH
+		        Block.SURFACE_WIDTH,
+		        Block.SURFACE_WIDTH
 		    );
 
 		    this._thermalContactArea = new ThermalContactArea(this._rect, false);
@@ -109,10 +108,10 @@ define(function (require) {
 			var projectionToFront = Constants.MAP_Z_TO_XY_OFFSET(SURFACE_WIDTH / 2);
 			var slice;
 
-			for (var i = 0; i < NUM_ENERGY_CHUNK_SLICES; i++) {
-				var projectionOffsetVector = Constants.MAP_Z_TO_XY_OFFSET(i * (-SURFACE_WIDTH / (NUM_ENERGY_CHUNK_SLICES - 1)));
+			for (var i = 0; i < Block.NUM_ENERGY_CHUNK_SLICES; i++) {
+				var projectionOffsetVector = Constants.MAP_Z_TO_XY_OFFSET(i * (-Block.SURFACE_WIDTH / (Block.NUM_ENERGY_CHUNK_SLICES - 1)));
 				
-				slice = new EnergyChunkContainerSlice(this.getBounds(), -i * (SURFACE_WIDTH / (NUM_ENERGY_CHUNK_SLICES - 1)));
+				slice = new EnergyChunkContainerSlice(this.getBounds(), -i * (Block.SURFACE_WIDTH / (Block.NUM_ENERGY_CHUNK_SLICES - 1)));
 				this.slices.push(slice);
 			}
 
@@ -134,10 +133,10 @@ define(function (require) {
 		},
 
 		getEnergyBeyondMaxTemperature: function() {
-			return Math.max(this.get('energy') - (MAX_TEMPERATURE * this.get('mass') * this.get('specificHeat')), 0);
+			return Math.max(this.get('energy') - (Block.MAX_TEMPERATURE * this.get('mass') * this.get('specificHeat')), 0);
 		}
 
-	});
+	}, Static);
 
 	return Block;
 });
