@@ -3,7 +3,7 @@ define(function (require) {
 	'use strict';
 
 	var _        = require('underscore');
-	var Vector2  = require('vector2');
+	var Vector2  = require('vector2-node');
 
 	var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
 	var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
@@ -39,8 +39,8 @@ define(function (require) {
 		    this._sliceBounds = new Rectangle();
 
 			// Surfaces used for stacking and thermal interaction.
-			this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top());
-			this.bottomSurface = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().bottom());
+			this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top(),    this);
+			this.bottomSurface = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().bottom(), this);
 
 			this.on('position:change', this.updateTopSurfaceProperty);
 			this.on('position:change', this.updateBottomSurfaceProperty);

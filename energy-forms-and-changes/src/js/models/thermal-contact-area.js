@@ -30,7 +30,7 @@ define(function (require) {
          * Returns a rectangle
          */
         getBounds: function() {
-            return bounds;
+            return this.bounds;
         },
 
         /**

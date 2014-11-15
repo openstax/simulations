@@ -235,11 +235,11 @@ define(function (require, exports, module) {
             _.each(this.burners, function(burner) {
                 if (burner.areAnyOnTop(this.movableElements)) {
                     _.each(this.movableElements, function(element) {
-                        burner.tradeEnergyWithObject(element, delta);
+                        burner.addOrRemoveEnergyToFromObject(element, delta);
                     });
                 }
                 else {
-                    burner.tradeEnergyWithAir(this.air, delta);
+                    burner.addOrRemoveEnergyToFromObject(this.air, delta);
                 }
             });
 

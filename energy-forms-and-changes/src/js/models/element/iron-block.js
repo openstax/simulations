@@ -21,7 +21,7 @@ define(function (require) {
 	var IronBlock = Block.extend({
 
 		defaults: _.extend({}, Block.prototype.defaults, {
-			energyContainerCategory: EnergyContainerCategory.IRON;
+			energyContainerCategory: EnergyContainerCategory.IRON
 		})
 
 	}, Static);

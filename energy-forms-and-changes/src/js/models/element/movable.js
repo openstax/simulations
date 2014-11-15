@@ -3,7 +3,7 @@ define(function (require) {
 	'use strict';
 
 	var _        = require('underscore');
-	var Vector2  = require('vector2');
+	var Vector2  = require('vector2-node');
 
 	var Element = require('models/element');
 
