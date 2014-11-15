@@ -26,8 +26,29 @@ define(function (require) {
      */
     _.extend(ThermalContactArea.prototype, {
 
+        /**
+         * Returns a rectangle
+         */
         getBounds: function() {
             return bounds;
+        },
+
+        /**
+         * Takes either a rectangle or x
+         */
+        setBounds: function(x, y, w, h) {
+            if (x instanceof Rectangle) {
+                this.x = x.x;
+                this.y = x.y;
+                this.w = x.w;
+                this.h = x.h;
+            }
+            else {
+                this.x = x;
+                this.y = y;
+                this.w = w;
+                this.h = h;
+            }
         },
 
         /**

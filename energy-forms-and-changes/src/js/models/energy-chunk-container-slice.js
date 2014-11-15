@@ -2,14 +2,15 @@ define(function (require) {
 
 	'use strict';
 
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+	var _         = require('underscore');
+	var Backbone  = require('backbone');
+	var Rectangle = require('rectangle-node');
 
 	/**
 	 * The original 
 	 */
 	var EnergyChunkContainerSlice = function(bounds, zPosition) {
-		this.bounds = bounds;
+		this.bounds = new Rectangle(bounds);
 		this.zPosition = zPosition;
 		this.energyChunkList = [];
 	};
