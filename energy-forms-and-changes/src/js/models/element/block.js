@@ -13,12 +13,6 @@ define(function (require) {
 	 * Constants
 	 */
 	var Constants = require('models/constants');
-	var Static = {};
-	// Height and width of all block surfaces, since it is a cube.
-	Static.SURFACE_WIDTH = 0.045; // In meters
-	// Number of slices where energy chunks may be placed.
-	Static.NUM_ENERGY_CHUNK_SLICES = 4;
-	Static.MAX_TEMPERATURE = 450; // Degrees Kelvin, value is pretty much arbitrary. Whatever works.
 
 	/**
 	 * 
@@ -137,7 +131,7 @@ define(function (require) {
 			return Math.max(this.get('energy') - (Block.MAX_TEMPERATURE * this.get('mass') * this.get('specificHeat')), 0);
 		}
 
-	}, Static);
+	}, Constants.Block);
 
 	return Block;
 });
