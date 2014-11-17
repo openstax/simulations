@@ -7,8 +7,12 @@ define(function (require) {
 	var Rectangle = require('rectangle-node');
 
 	var MovableElement         = require('models/element/movable');
-	var Constants              = require('models/constants');
 	var EnergyChunkDistributor = require('models/energy-chunk-distributor');
+
+	/**
+	 * Constants
+	 */
+	var Constants = require('models/constants');
 
 	/**
 	 * 

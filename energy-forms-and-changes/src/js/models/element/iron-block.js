@@ -11,9 +11,6 @@ define(function (require) {
 	 * Constants
 	 */
 	var Constants = require('models/constants');
-	var Static = {};
-	Static.SPECIFIC_HEAT = 450; // In J/kg-K, source = design document.
-	Static.DENSITY = 7800; // In kg/m^3, source = design document
 
 	/**
 	 * 
@@ -24,7 +21,7 @@ define(function (require) {
 			energyContainerCategory: EnergyContainerCategory.IRON
 		})
 
-	}, Static);
+	}, Constants.Iron);
 
 	return IronBlock;
 });

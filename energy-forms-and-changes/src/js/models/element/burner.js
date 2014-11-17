@@ -13,22 +13,6 @@ define(function (require) {
      * Constants
      */
     var Constants = require('models/constants');
-    var Static = {};
-    Static.WIDTH = 0.075; // In meters.
-    Static.HEIGHT = WIDTH * 1;
-    Static.MAX_ENERGY_GENERATION_RATE = 5000; // joules/sec, empirically chosen.
-    Static.CONTACT_DISTANCE = 0.001; // In meters.
-    Static.ENERGY_CHUNK_CAPTURE_DISTANCE = 0.2; // In meters, empirically chosen.
-
-    //
-    Static.PERSPECTIVE_ANGLE = Math.PI / 4;
-
-    // Because of the way that energy chunks are exchanged between thermal
-    //   modeling elements within this simulation, things can end up looking a
-    //   bit odd if a burner is turned on with nothing on it.  To account for
-    //   this, a separate energy generation rate is used when a burner is
-    //   exchanging energy directly with the air.
-    Static.MAX_ENERGY_GENERATION_RATE_INTO_AIR = Static.MAX_ENERGY_GENERATION_RATE * 0.3; // joules/sec, multiplier empirically chosen.
 
     /**
      * 
@@ -296,7 +280,7 @@ define(function (require) {
             return this.get('heatCoolLevel') < 0;
         }
 
-    }, Static);
+    }, Constants.Burner);
 
     return Burner;
 });

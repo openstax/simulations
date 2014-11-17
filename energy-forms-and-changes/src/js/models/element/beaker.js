@@ -16,17 +16,6 @@ define(function (require) {
      * Constants
      */
     var Constants = require('models/constants');
-    var Static = {};
-    Static.MATERIAL_THICKNESS = 0.001; // In meters.
-    Static.NUM_SLICES = 6;
-    Static.RAND = new Random( 1 ); // This is seeded for consistent initial energy chunk distribution.
-    Static.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is emitted.
-
-    // Constants that control the nature of the fluid in the beaker.
-    Static.WATER_SPECIFIC_HEAT = 3000; // In J/kg-K.  The real value for water is 4186, but this was adjusted so that there
-                                       //   aren't too many chunks and so that a chunk is needed as soon as heating starts.
-    Static.WATER_DENSITY = 1000.0; // In kg/m^3, source = design document (and common knowledge).
-    Static.INITIAL_FLUID_LEVEL = 0.5;
 
     /**
      * 
@@ -216,7 +205,7 @@ define(function (require) {
             }
         },
 
-    }, Static);
+    }, Constants.Beaker);
 
     return Beaker;
 });
