@@ -27,7 +27,12 @@ define(function (require) {
         this._randomLocation  = new Vector2();
 
         this._forceVectorPool = Pool({
-
+            init: function() {
+                return new Vector2();
+            },
+            enable: function(vector) {
+                vector.set(0, 0);
+            }
         });
     };
 
@@ -48,19 +53,21 @@ define(function (require) {
          *   defined by the boundary of its containing slice.
          */
         updatePositions: function(slices, deltaTime) {
+            var i;
+            var j;
+            
             // Determine a rectangle that bounds all of the slices.
             var bounds = this.calculateBounds(slices);
 
             // Create a map that tracks the force applied to each energy chunk.
             var energyChunkForceVectors = [];
             var chunks = [];
-            var i;
-            var j;
+            var pool = this._forceVectorPool;
             var empty = true;
             for (i = 0; i < slices.length; i++) {
                 energyChunkForceVectors[i] = [];
                 for (j = 0; j < slices[i].energyChunkList.length; j++) {
-                    energyChunkForceVectors[i][j] = new Vector2();
+                    energyChunkForceVectors[i][j] = pool.create();
                     chunks.push(slices.energyChunkList[i][j]);
                     empty = false;
                 }

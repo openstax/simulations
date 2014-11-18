@@ -70,6 +70,7 @@ module.exports = function(grunt){
                         nouislider:       '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
                         'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
                         'rectangle-node': '../../node_modules/rectangle-node-shimmed/index',
+                        'object-pool':    '../../node_modules/object-pool-shimmed/index',
 
                         views:      '../js/views',
                         graphics:   '../js/graphics',
