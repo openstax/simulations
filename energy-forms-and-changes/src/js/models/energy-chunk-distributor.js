@@ -55,14 +55,14 @@ define(function (require) {
         updatePositions: function(slices, deltaTime) {
             var i;
             var j;
-            
+            var pool = this._forceVectorPool;
+
             // Determine a rectangle that bounds all of the slices.
             var bounds = this.calculateBounds(slices);
 
             // Create a map that tracks the force applied to each energy chunk.
             var energyChunkForceVectors = [];
             var chunks = [];
-            var pool = this._forceVectorPool;
             var empty = true;
             for (i = 0; i < slices.length; i++) {
                 energyChunkForceVectors[i] = [];
@@ -183,6 +183,9 @@ define(function (require) {
                             + forceVector.length() * Math.PI / 2;
                         if (totalParticleEnergy > maxEnergy)
                             maxEnergy = totalParticleEnergy;
+
+                        // Clean pool
+                        pool.remove(forceVector);
                     }
                 }
 
