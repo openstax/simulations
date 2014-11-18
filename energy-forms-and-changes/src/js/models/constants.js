@@ -226,7 +226,7 @@ define(function (require) {
         IRON_AIR_HEAT_TRANSFER_FACTOR:               50,
         WATER_AIR_HEAT_TRANSFER_FACTOR:              50,
         AIR_TO_SURROUNDING_AIR_HEAT_TRANSFER_FACTOR: 10000
-    }
+    };
 
     // Maps for obtaining transfer constants for a given thermal element.
     HeatTransfer.CONTAINER_CATEGORY_MAP = {
