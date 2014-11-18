@@ -29,7 +29,7 @@ define(function (require) {
 	};
 
 	/**
-	 * Constants
+	 * Energy types
 	 */
 	EnergyChunk.THERMAL    = 0;
    	EnergyChunk.ELECTRICAL = 1;

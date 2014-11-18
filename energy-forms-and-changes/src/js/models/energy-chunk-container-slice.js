@@ -36,6 +36,10 @@ define(function (require) {
 				return this.shape;
 			else
 				this.shape.getBounds();
+		},
+
+		getShape: function() {
+			return this.shape;
 		}
 
 	});

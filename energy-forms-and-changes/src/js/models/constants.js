@@ -127,7 +127,6 @@ define(function (require) {
 
     Beaker.MATERIAL_THICKNESS = 0.001; // In meters.
     Beaker.NUM_SLICES = 6;
-    Beaker.RAND = new Random( 1 ); // This is seeded for consistent initial energy chunk distribution.
     Beaker.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is emitted.
 
     // Constants that control the nature of the fluid in the beaker.
@@ -201,6 +200,32 @@ define(function (require) {
 
     Constants.ENERGY_PER_CHUNK = Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 2 ) - Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 1 );
     
+
+    /*************************************************************************
+     **                                                                     **
+     **                       ENERGY CHUNK DISTRIBUTOR                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var EnergyChunkDistributor = {};
+
+    EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE = 0.01; // In Newtons, empirically determined.
+    EnergyChunkDistributor.ZERO_VECTOR = new Vector2(0, 0);
+
+    // Parameters that can be adjusted to change they nature of the redistribution.
+    EnergyChunkDistributor.MAX_TIME_STEP = 5E-3;         // In seconds, for algorithm that moves the points.
+    EnergyChunkDistributor.ENERGY_CHUNK_MASS = 1E-3;     // In kilograms, chosen arbitrarily.
+    EnergyChunkDistributor.FLUID_DENSITY = 1000;         // In kg / m ^ 3, same as water, used for drag.
+    EnergyChunkDistributor.ENERGY_CHUNK_DIAMETER = 1E-3; // In meters, chosen empirically.
+    EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA = Math.PI * Math.pow(EnergyChunkDistributor.ENERGY_CHUNK_DIAMETER, 2); // Treat energy chunk as if it is shaped like a sphere.
+    EnergyChunkDistributor.DRAG_COEFFICIENT = 500;       // Unitless, empirically chosen.
+
+    // Thresholds for deciding whether or not to perform redistribution. These value
+    //   should be chosen such that particles spread out, then stop all movement.
+    EnergyChunkDistributor.REDISTRIBUTION_THRESHOLD_ENERGY = 1E-4; // In joules, I think.
+
+    Constants.EnergyChunkDistributor = EnergyChunkDistributor;
+
 
     /*************************************************************************
      **                                                                     **

@@ -206,6 +206,28 @@ define(function (require) {
             this.yPoints[this.index++] = this.yPoints[subpath];
         },
 
+        /**
+         * Determine whether a point is contained within the bounds of the
+         *   closed curve.
+         * Can take an object with x and y values or plain x and y values.
+         */
+        contains: function(x, y) {
+            if (_.isObject(x)) {
+                y = x.y;
+                x = x.x;
+            }
+
+            return this.getWindingNumber(x, y) !== 0;
+        },
+
+        getWindingNumber: function(x, y) {
+            /* Evaluate the crossings from x,y to infinity on the y axis (arbitrary 
+             *   choice). Note that we don't actually use Double.INFINITY, since that's 
+             *   slower, and may cause problems. 
+             */
+            return evaluateCrossings(x, y, true, true, PiecewiseCurve.BIG_VALUE);
+        },
+
         evaluateCrossings: function(x, y, neg, useYAxis, distance) {
             var cx = 0;
             var cy = 0;
