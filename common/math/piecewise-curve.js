@@ -6,6 +6,7 @@ define(function (require) {
     var solveQuadratic = require('solve-quadratic-equation');
     var solveCubic     = require('solve-cubic-equation');
     var lineIntersect  = require('line-intersect');
+    var Rectangle      = require('rectangle-node');
 
     /**
      * The purpose of this class is to store paths of points and wathis.yPoints in
@@ -33,6 +34,9 @@ define(function (require) {
             1, 0, 0,
             0, 1, 0
         ];
+
+        // Cached bounds rectangle
+        this._bounds = new Rectangle();
     };
 
     /**
@@ -95,6 +99,41 @@ define(function (require) {
             this._rotation[3] = sin;
             this._rotation[4] = cos;
             this.transform(this._rotation);
+        },
+
+        /**
+         * Returns a rectangle representing a minimal bounding box.
+         */
+        getBounds: function() {
+            var xPoints = this.xPoints;
+            var yPoints = this.yPoints;
+
+            var minX;
+            var minY;
+            var maxX;
+            var maxY;
+
+            if (this.index > 0) {
+                minX = maxX = xPoints[0];
+                minY = maxY = yPoints[0];
+            }
+            else {
+                minX = maxX = minY = maxY = 0;
+            }
+
+            for (var i = 0; i < this.index; i++) {
+                minX = Math.min(xPoints[i], minX);
+                minY = Math.min(yPoints[i], minY);
+                maxX = Math.max(xPoints[i], maxX);
+                maxY = Math.max(yPoints[i], maxY);
+            }
+
+            return this._bounds.set(
+                minX,
+                minY,
+                maxX - minX,
+                maxY - minY
+            );
         },
 
         /**

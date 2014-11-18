@@ -123,7 +123,7 @@ define(function (require) {
 				this._sliceBounds.set(this.getBounds());
 				this._sliceBounds.x += projectionToFront.x + projectionOffsetVector.x;
 				this._sliceBounds.y += projectionToFront.y + projectionOffsetVector.y;
-				this.slices[i].bounds.set(this._sliceBounds);
+				this.slices[i].getBounds().set(this._sliceBounds);
 			}
 		},
 

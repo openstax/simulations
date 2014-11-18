@@ -9,8 +9,8 @@ define(function (require) {
 	/**
 	 * The original 
 	 */
-	var EnergyChunkContainerSlice = function(bounds, zPosition) {
-		this.bounds = new Rectangle(bounds);
+	var EnergyChunkContainerSlice = function(shape, zPosition) {
+		this.shape;
 		this.zPosition = zPosition;
 		this.energyChunkList = [];
 	};
@@ -29,6 +29,13 @@ define(function (require) {
 
 		getNumEnergyChunk: function() {
 			return this.energyChunkList.length;
+		},
+
+		getBounds: function() {
+			if (this.shape instanceOf Rectangle)
+				return this.shape;
+			else
+				this.shape.getBounds();
 		}
 
 	});

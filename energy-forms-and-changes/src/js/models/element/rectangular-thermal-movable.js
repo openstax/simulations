@@ -128,7 +128,7 @@ define(function (require) {
 
 			var sliceBounds;
 			for (var i = 0; i < this.slices.length; i++) {
-				sliceBounds = this.slices[i].bounds;
+				sliceBounds = this.slices[i].getBounds();
 
 				if (sliceBounds.left() < minX)
 					minX = sliceBounds.left();
@@ -298,7 +298,7 @@ define(function (require) {
 				slice.energyChunkList = [];
 			});
 			var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
-			var energyChunkBounds = this.getThermalContactArea().bounds;
+			var energyChunkBounds = this.getThermalContactArea().getBounds();
 			var numChunks = this.getNumEnergyChunks();
 			while (numChunks < targetNumChunks) {
 				// Add a chunk at a random location in the block.
