@@ -4,7 +4,7 @@
   "description": "A simulation showing the various forms energy can take, how they change from one form to another, and how energy moves in a system",
   "main": "main.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed",
+    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed",
     "prepublish": "bower install",
     "test": "grunt test"
   },
@@ -39,6 +39,7 @@
     "grunt-targethtml": "^0.2.6",
     "less": "^1.7.4",
     "matchdep": "^0.3.0",
+    "object-pool": "^0.1.0",
     "rectangle-node": "0.0.1",
     "requirejs": "^2.1.15",
     "vector2-node": "0.0.3"

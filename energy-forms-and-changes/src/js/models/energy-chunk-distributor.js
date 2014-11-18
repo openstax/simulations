@@ -5,6 +5,7 @@ define(function (require) {
     var _         = require('underscore');
     var Backbone  = require('backbone');
     var Rectangle = require('rectangle-node');
+    var Pool      = require('object-pool');
 
     /**
      * Constants
@@ -24,6 +25,10 @@ define(function (require) {
         this._vectorToCenter  = new Vector2();
         this._dragForceVector = new Vector2();
         this._randomLocation  = new Vector2();
+
+        this._forceVectorPool = Pool({
+
+        });
     };
 
     /**
