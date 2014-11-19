@@ -4,6 +4,8 @@ define(function (require) {
 
     var Functions               = require('common/functions');
     var Vector2                 = require('vector2-node');
+    var Rectangle               = require('rectangle-node');
+    var ThermalContactArea      = require('models/thermal-contact-area');
     var EnergyContainerCategory = require('models/energy-container-category');
 
     var Constants = {};
@@ -163,7 +165,7 @@ define(function (require) {
     Air.VOLUME = WIDTH * HEIGHT * DEPTH;
     Air.MASS = VOLUME * DENSITY;
     Air.INITIAL_ENERGY = MASS * SPECIFIC_HEAT * EFACConstants.ROOM_TEMPERATURE;
-    Air.THERMAL_CONTACT_AREA = new ThermalContactArea( new Rectangle2D.Double( -WIDTH / 2, 0, WIDTH, HEIGHT ), true );
+    Air.THERMAL_CONTACT_AREA = new ThermalContactArea(new Rectangle(-WIDTH / 2, 0, WIDTH, HEIGHT), true);
 
     Constants.Air = Air;
 
@@ -225,6 +227,24 @@ define(function (require) {
     EnergyChunkDistributor.REDISTRIBUTION_THRESHOLD_ENERGY = 1E-4; // In joules, I think.
 
     Constants.EnergyChunkDistributor = EnergyChunkDistributor;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                    ENERGY CHUNK WANDER CONTROLLER                   **
+     **                                                                     **
+     *************************************************************************/
+
+    var EnergyChunkWanderController = {};
+
+    EnergyChunkWanderController.MIN_VELOCITY = 0.06; // In m/s.
+    EnergyChunkWanderController.MAX_VELOCITY = 0.10; // In m/s.
+    EnergyChunkWanderController.MIN_TIME_IN_ONE_DIRECTION = 0.4;
+    EnergyChunkWanderController.MAX_TIME_IN_ONE_DIRECTION = 0.8;
+    EnergyChunkWanderController.DISTANCE_AT_WHICH_TO_STOP_WANDERING = 0.05; // In meters, empirically chosen.
+    EnergyChunkWanderController.MAX_ANGLE_VARIATION = Math.PI * 0.2; // Max deviation from angle to destination, in radians, empirically chosen.
+
+    Constants.EnergyChunkWanderController = EnergyChunkWanderController;
 
 
     /*************************************************************************

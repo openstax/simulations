@@ -4,6 +4,7 @@ define(function (require) {
 
     var _         = require('underscore');
     var Backbone  = require('backbone');
+    var Vector2   = require('vector2-node');
     var Rectangle = require('rectangle-node');
     var Pool      = require('object-pool');
 
