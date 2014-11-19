@@ -35,6 +35,12 @@ define(function (require) {
             0, 1, 0
         ];
 
+        // Cached scale matrix array
+        this._scale = [
+            1, 0, 0,
+            0, 1, 0
+        ];
+
         // Cached bounds rectangle
         this._bounds = new Rectangle();
     };
@@ -100,6 +106,12 @@ define(function (require) {
             this._rotation[4] = cos;
             this.transform(this._rotation);
         },
+
+        scale: function(x, y) {
+            this._scale[0] = x;
+            this._scale[4] = y !== undefined ? y : x;
+            this.transform(this._scale);
+        }
 
         /**
          * Returns a rectangle representing a minimal bounding box.

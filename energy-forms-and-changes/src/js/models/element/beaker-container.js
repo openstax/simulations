@@ -2,7 +2,10 @@ define(function (require) {
 
 	'use strict';
 
-	var _ = require('underscore');
+	var _         = require('underscore');
+	var Rectangle = require('rectangle-node');
+
+	Rectangle.prototype.intersection = require('common/math/rectangle-intersection');
 
 	var Beaker = require('models/element/beaker');
 
@@ -33,8 +36,34 @@ define(function (require) {
 			    this.get('width'),
 			    this.get('height') * this.get('fluidLevel')
 			);
-			
-		}
+			var intersection;
+			var overlappingArea = 0;
+			_.each(this.potentiallyContainedElements, function(rectangle) {
+				if (rectangle.overlaps(fluidRectangle)) {
+					intersection = rectangle.intersection(fluidRectangle);
+					overlappingArea += intersection.w * intersection.h;
+				}
+			});
+
+			// Map the overlap to a new fluid height.  The scaling factor was
+			//   empirically determined to look good.
+			var newFluidLevel = Math.min(Beaker.INITIAL_FLUID_LEVEL + overlappingArea * 120, 1 );
+			var proportionateIncrease = newFluidLevel / this.get('fluidLevel');
+			this.set('fluidLevel', newFluidLevel);
+
+			// Update the shapes of the energy chunk slices.
+			_.each(this.slices, function(slice) {
+				var originalBounds = this.slice.getShape().getBounds();
+				slice.getShape()
+					.scale(1, proportionateIncrease)
+					.translate(
+						originalBounds.x - slice.getShape().getBounds().x,
+						originalBounds.y - slice.getShape().getBounds().y
+					);
+			});
+		},
+
+		
 
 	});
 
