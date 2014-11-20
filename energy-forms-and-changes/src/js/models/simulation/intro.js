@@ -53,7 +53,7 @@ define(function (require, exports, module) {
             (options || options = {});
             options.framesPerSecond = Constants.FRAMES_PER_SECOND;
 
-            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
+            FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
             // Burners
             this.leftBurner  = null;
@@ -366,7 +366,13 @@ define(function (require, exports, module) {
             return air;
         },
 
-        
+        getBlockList: function() {
+            return this.blocks;
+        },
+
+        getBeaker(): function() {
+            return this.beaker;
+        }
 
     });
 

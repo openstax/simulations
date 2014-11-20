@@ -23,6 +23,8 @@ define(function (require) {
 
 			if (!(this.elementLocator instanceof EFCIntroSimulation))
 				throw 'ElementFollowingThermometer: elementLocator must be an EFCIntroSimulation';
+			else
+				this.simulation = this.elementLocator;
 
 			this.followedElement = null;
 			this.followingOffset = new Vector2();
@@ -33,15 +35,24 @@ define(function (require) {
 					this.stopFollowing();
 				}
 				else {
-					var element = this.elementLocator.getElementAtLocation(this.get('position'));
-					if (element)
-						this.follow(element);
+					// The user has dropped this thermometer.  See if it was
+                    //   dropped over something that it should follow.
+                    _.each(this.simulation.getBlockList(), function(block) {
+                    	if (block.getProjectedShape().contains(this.get('position'))) {
+                    		// Stick to this block.
+                    		this.follow(block);
+                    	}
+                    }, this);
+					if (!this.followedElement && this.simulation.getBeaker().getThermalContactArea().getBounds().contains(this.get('position'))) {
+						// Stick to the beaker.
+						this.follow(this.simulation.getBeaker());
+					}
 				}
 			});
 		},
 
 		reset: function() {
-			this.elementFollower.stopFollowing();
+			this.stopFollowing();
 			this.__super__.reset.apply(this);
 		},
 
@@ -60,9 +71,7 @@ define(function (require) {
 		stopFollowing: function() {
 			if (this.followedElement)
 				this.stopListening(this.followedElement);
-		},
-
-
+		}
 
 	});
 
