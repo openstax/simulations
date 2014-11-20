@@ -7,7 +7,6 @@ define(function (require) {
 
 	var SimView      = require('common/app/sim');
 	var SceneView    = require('views/scene');
-	var GOSimulation = require('models/simulation');
 
 	require('nouislider');
 	require('bootstrap');
@@ -19,8 +18,7 @@ define(function (require) {
 	require('less!common/styles/radio');
 
 	// HTML
-	var simHtml        = require('text!templates/sim.html');
-	var controlsHtml   = require('text!templates/playback-controls.html');
+	var simHtml = require('text!templates/sim.html');
 
 	/**
 	 * 
@@ -36,8 +34,7 @@ define(function (require) {
 		/**
 		 * Template for rendering the basic scaffolding
 		 */
-		template:                _.template(simHtml),
-		propertiesPanelTemplate: _.template(propertiesHtml),
+		template: _.template(simHtml),
 
 		/**
 		 * Dom event listeners

@@ -8,8 +8,14 @@ define(function (require, exports, module) {
     var Rectangle = require('rectangle-node');
 
     // Project dependiencies
-    var FixedIntervalSimulation = require('common/simulation/simulation');
-    var Beaker                  = require('models/element/beaker');
+    var FixedIntervalSimulation     = require('common/simulation/simulation');
+    var Air                         = require('models/air');
+    var Beaker                      = require('models/element/beaker');
+    var BeakerContainer             = require('models/element/beaker-container');
+    var Burner                      = require('models/element/burner');
+    var Brick                       = require('models/element/brick');
+    var IronBlock                   = require('models/element/iron-block');
+    var ElementFollowingThermometer = require('models/element/element-following-thermometer');
 
     // Constants
     var Constants = require('models/constants');
@@ -43,9 +49,9 @@ define(function (require, exports, module) {
             this.brick     = new Brick(    { position: new Vector2(-0.1,   0), energyChunksVisible: this.get('energyChunksVisible') });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0), energyChunksVisible: this.get('energyChunksVisible') });
             
-            this.beaker  = new BeakerContainer({ 
+            this.beaker = new BeakerContainer({ 
                 position: new Vector2(0.18, 0), 
-                energyChunksVisible: this.get('energyChunksVisible')
+                energyChunksVisible: this.get('energyChunksVisible'),
                 potentiallyContainedObjects: [
                     this.brick,
                     this.ironBlock
@@ -55,7 +61,7 @@ define(function (require, exports, module) {
             // Thermometers
             this.thermometers = [];
             for (var i = 0; i < IntroSimulation.NUM_THERMOMETERS; i++) {
-                this.thermometers.push(new Thermometer({
+                this.thermometers.push(new ElementFollowingThermometer({
                     elementLocator: this,
                     position: IntroSimulation.INITIAL_THERMOMETER_LOCATION,
                     active: false
@@ -142,12 +148,12 @@ define(function (require, exports, module) {
         /**
          * 
          */
-        _update: function(time, delta) {
+        _update: function(time, deltaTime) {
             // For the time slider and anything else relying on time
             this.set('time', time);
 
             // Reposition elements with physics/snapping
-            this._findSupportingSurfaces(time, delta);
+            this._findSupportingSurfaces(time, deltaTime);
 
             // Update the fluid level in the beaker, which could be displaced by
             //   one or more of the blocks.
@@ -157,7 +163,7 @@ define(function (require, exports, module) {
             ]);
 
             // Exchange energy between objects
-            this._exchangeEnergyChunks(time, delta);
+            this._exchangeEnergyChunks(time, deltaTime);
         },
 
         /**
@@ -166,7 +172,7 @@ define(function (require, exports, module) {
          *      surface to fall (or, in some cases, jump up) towards the nearest
          *      supporting surface."
          */
-        _findSupportingSurfaces: function(time, delta) {
+        _findSupportingSurfaces: function(time, deltaTime) {
             _.each(this.movableElements, function(element) {
                 if (!element.get('userControlled') && !element.getSupportingSurface() && element.get('position').y !== 0) {
                     var minYPos = 0;
@@ -184,8 +190,8 @@ define(function (require, exports, module) {
                     
                     // Calculate a proposed Y position based on gravitational falling.
                     var acceleration = -9.8; // meters/s*s
-                    var velocity = element.verticalVelocity.get() + acceleration * delta;
-                    var proposedYPos = element.position.get().getY() + velocity * delta;
+                    var velocity = element.verticalVelocity.get() + acceleration * deltaTime;
+                    var proposedYPos = element.position.get().getY() + velocity * deltaTime;
                     if ( proposedYPos < minYPos ) {
                         // The element has landed on the ground or some other surface.
                         proposedYPos = minYPos;
@@ -206,7 +212,7 @@ define(function (require, exports, module) {
         /**
          * 
          */
-        _exchangeEnergyChunks: function(time, delta) {
+        _exchangeEnergyChunks: function(time, deltaTime) {
             var i;
             var j;
 
@@ -223,7 +229,7 @@ define(function (require, exports, module) {
             //   exchange energy with one another.
             for (i = 0; i < this.movableElements.length - 1; i++) {
                 for (j = i + 1; j < this.movableElements.length; j++) {
-                    this.movableElements[i].exchangeEnergyWith(this.movableElements[j], delta);
+                    this.movableElements[i].exchangeEnergyWith(this.movableElements[j], deltaTime);
                 }
             }
 
@@ -232,11 +238,11 @@ define(function (require, exports, module) {
             _.each(this.burners, function(burner) {
                 if (burner.areAnyOnTop(this.movableElements)) {
                     _.each(this.movableElements, function(element) {
-                        burner.addOrRemoveEnergyToFromObject(element, delta);
+                        burner.addOrRemoveEnergyToFromObject(element, deltaTime);
                     });
                 }
                 else {
-                    burner.addOrRemoveEnergyToFromObject(this.air, delta);
+                    burner.addOrRemoveEnergyToFromObject(this.air, deltaTime);
                 }
             }, this);
 
@@ -486,7 +492,7 @@ define(function (require, exports, module) {
 
             // Check each of the possible supporting elements in the model to see
             //   if this element can go on top of it.
-            _.each(this.supportingSurfaces, function(potentialSupportingSurface) {
+            _.each(this.supportingSurfaces, function(potentialSupportingElement) {
                 if ( potentialSupportingElement == element || potentialSupportingElement.isStackedUpon( element ) ) {
                     // The potential supporting element is either the same as the
                     //   test element or is sitting on top of the test element.  In
@@ -497,7 +503,7 @@ define(function (require, exports, module) {
                 if ( element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface() ) ) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.
-                    var surfaceOverlap = getHorizontalOverlap( potentialSupportingElement.getTopSurface(), element.getBottomSurface().get() );
+                    var surfaceOverlap = this.getHorizontalOverlap( potentialSupportingElement.getTopSurface(), element.getBottomSurface().get() );
                     
                     // The following nasty 'if' clause determines if the potential
                     //   supporting surface is a better one than we currently have
@@ -587,7 +593,7 @@ define(function (require, exports, module) {
             }
 
             // Point is in nothing else, so return the air.
-            return air;
+            return this.air;
         },
 
         getBlockList: function() {
