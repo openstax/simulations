@@ -14,9 +14,7 @@ define(function (require) {
 			supportingSurface: null
 		},
 		
-		initialize: function(attributes, options) {
-
-		},
+		initialize: function(attributes, options) {},
 
 		update: function(time, delta) {},
 

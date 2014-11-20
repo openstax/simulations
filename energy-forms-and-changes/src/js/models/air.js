@@ -130,6 +130,10 @@ define(function (require) {
 			return this.get('energy') / (Air.MASS * Air.SPECIFIC_HEAT);
 		},
 
+		getTemperatureAtLocation: function(location) {
+			return this.getTemperature();
+		},
+
 		getEnergyBeyondMaxTemperature: function() {
 			// Air temperature is unlimited.
 			return 0;

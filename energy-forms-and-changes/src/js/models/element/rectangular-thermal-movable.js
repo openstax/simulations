@@ -6,6 +6,7 @@ define(function (require) {
 	var Vector2   = require('vector2-node');
 	var Rectangle = require('rectangle-node');
 
+	var PiecewiseCurve         = require('common/math/piecewise-curve');
 	var MovableElement         = require('models/element/movable');
 	var EnergyChunkDistributor = require('models/energy-chunk-distributor');
 
@@ -34,6 +35,7 @@ define(function (require) {
 		}),
 		
 		initialize: function(attributes, options) {
+			this.__super__.initialize.apply(this, [attributes, options]);
 			
 			// Calculate starting energy
 			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
@@ -50,15 +52,28 @@ define(function (require) {
 			// Add the initial energy chunks
 			this.addInitialEnergyChunks();
 
-			this._sliceBounds = new Rectangle(0, 0, 0, 0);
-			this._centerPoint = new Vector2(0, 0);
+			this._sliceBounds = new Rectangle();
+			this._centerPoint = new Vector2();
+			this._translation = new Vector2();
+			this._vec2 = new Vector2();
+			this._forwardPerspectiveOffset  = Constants.MAP_Z_TO_XY_OFFSET( Constants.Block.SURFACE_WIDTH / 2);
+			this._backwardPerspectiveOffset = Constants.MAP_Z_TO_XY_OFFSET(-Constants.Block.SURFACE_WIDTH / 2);
+
+			this.on('change:position', function(model, position){
+				var translation = this._translation.set(position).sub(this._oldPosition);
+				_.each(this.slices, function(slice) {
+					_.each(slice.energyChunkList, function(chunk) {
+						chunk.translate(translation);
+					});
+				});
+			});
 		},
 
 		reset: function() {
 			MovableElement.prototype.reset.apply(this);
 
 			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
-			THIS.addInitialEnergyChunks();
+			this.addInitialEnergyChunks();
 		},
 
 		update: function(time, delta) {
@@ -79,9 +94,13 @@ define(function (require) {
 			return this.get('energy') / (this.get('mass') * this.get('specificHeat'));
 		},
 
-		animateUncontainedEnergyChunks: function(delta) {
+		getTemperatureAtLocation: function(location) {
+			return this.getTemperature();
+		},
+
+		animateUncontainedEnergyChunks: function(deltaTime) {
 			_.each(this.energyChunkWanderControllers, function(energyChunkWanderController) {
-				energyChunkWanderController.updatePosition(delta);
+				energyChunkWanderController.updatePosition(deltaTime);
 				if (this.getSliceBounds().contains(energyChunkWanderController.getEnergyChunk().get('position')))
 					this.moveEnergyChunkToSlices(energyChunkWanderController.getEnergyChunk());
 			}, this);
@@ -287,10 +306,6 @@ define(function (require) {
 			// Defaults to a single slice matching the outline rectangle, override
 			//   for more sophisticated behavior.
 			this.slices.push(new EnergyChunkContainerSlice(this.getRect(), 0, this.get('position')));
-
-			this.on('change:position', function(model, position){
-				
-			});
 		},
 
 		addInitialEnergyChunks: function() {
@@ -345,6 +360,27 @@ define(function (require) {
 					}
 				}
 			}
+		},
+
+		/*
+		 * Get the shape as is is projected into 3D in the view.  Ideally, this
+		 * wouldn't even be in the model, because it would be purely handled in the
+		 * view, but it proved necessary.
+		 */
+		getProjectedShape: function() {
+			var path = new PiecewiseCurve();
+			var rect = this.getRect();
+			var vec2 = this._vec2;
+
+			path.moveTo(vec2.set(rect.x,       rect.y    ).add(this._forwardPerspectiveOffset));
+			path.lineTo(vec2.set(rect.right(), rect.y    ).add(this._forwardPerspectiveOffset));
+			path.lineTo(vec2.set(rect.right(), rect.y    ).add(this._backwardPerspectiveOffset));
+			path.lineTo(vec2.set(rect.right(), rect.top()).add(this._backwardPerspectiveOffset));
+			path.lineTo(vec2.set(rect.left(),  rect.top()).add(this._backwardPerspectiveOffset));
+			path.lineTo(vec2.set(rect.left(),  rect.top()).add(this._forwardPerspectiveOffset));
+			path.closePath();
+
+			return path;
 		},
 
 		getCenterPoint: function() {

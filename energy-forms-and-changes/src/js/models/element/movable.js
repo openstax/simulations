@@ -24,6 +24,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			// Create vectors
 			this.set('position', new Vector2(0, 0));
+			this._oldPosition = new Vector();
 		},
 
 		reset: function() {
@@ -35,6 +36,7 @@ define(function (require) {
 		},
 
 		setX: function(x) {
+			this._oldPosition.set(this.get('position'));
 			this.get('position').x = x;
 			this.set('position', this.get('position'));
 		}

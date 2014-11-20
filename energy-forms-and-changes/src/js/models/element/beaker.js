@@ -36,8 +36,9 @@ define(function (require) {
             maxSteamHeight: 0
         }),
 
-        initialization: function(attributes, options) {
-            RectangularThermalMovableElement.prototype.initialization.apply(this, [attributes, options]);
+        initialize: function(attributes, options) {
+            this.__super__.initialize.apply(this, [attributes, options]);
+            
             this.set('maxSteamHeight', 2 * this.get('height'));
 
             this._rect = new Rectangle(

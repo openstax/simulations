@@ -94,6 +94,13 @@ define(function (require, exports, module) {
                 this.leftBurner,
                 this.rightBurner
             ];
+            this.blocks = [
+                this.brick,
+                this.ironBlock
+            ];
+
+            // Cached objects
+            this._location = Vector2();
         },
 
         /**
@@ -311,6 +318,55 @@ define(function (require, exports, module) {
         isDirectlyAbove: function(s1, s2) {
             return s2.xRange.contains( s1.getCenterX() ) && s1.yPos > s2.yPos;
         },
+
+        /**
+         * This replaces EFACIntroModel.getTemperatureAndColorAtLocation because
+         *   I believe it should be the job of the element model to internally
+         *   decide what it's temperature should be, and it should be up to the
+         *   element view to determine the color.  Therefore, the simulation
+         *   model will only return the element, and objects that use this will
+         *   be responsible for requesting the temperature and color at location
+         *   from the returned element.
+         */
+        getElementAtLocation: function(x, y) {
+            var location = this._location;
+            if (x instanceof Vector2)
+                location.set(x);
+            else
+                location.set(x, y);
+
+            // Test blocks first.  This is a little complicated since the z-order
+            //   must be taken into account.
+            this.blocks.sort(function(b1, b2) {
+                if (b1.get('position').equals(b2.get('position')))
+                    return 0;
+                if (b2.get('position').x > b1.get('position').x || b2.get('position').y > b1.get('position').y)
+                    return 1;
+                return -1;
+            });
+
+            for (var i = 0; i < this.blocks.length; i++) {
+                if (this.blocks[i].getProjectedShape().contains(location))
+                    return this.blocks[i];
+            }
+            
+            // Test if this point is in the water or steam associated with the beaker.
+            if (this.beaker.getThermalContactArea().getBounds().contains(location) ||
+                (this.beaker.getSteamArea().contains(location) && this.beaker.get('steamingProportion') > 0)) {
+                return this.beaker;
+            }
+            
+            // Test if the point is a burner.
+            for (var j = 0; j < this.burners.length; j++) {
+                if (this.burners[j].getFlameIceRect().contains(location))
+                    return this.burners[j];
+            }
+
+            // Point is in nothing else, so return the air.
+            return air;
+        },
+
+        
 
     });
 

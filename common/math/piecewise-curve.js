@@ -7,6 +7,7 @@ define(function (require) {
     var solveCubic     = require('solve-cubic-equation');
     var lineIntersect  = require('line-intersect');
     var Rectangle      = require('rectangle-node');
+    var Vector2        = require('vector2-node');
 
     /**
      * The purpose of this class is to store paths of points and wathis.yPoints in
@@ -154,7 +155,11 @@ define(function (require) {
          * @param x  the x-coordinate.
          * @param y  the y-coordinate.
          */
-        moveTo: function(float x, float y) {
+        moveTo: function(x, y) {
+            if (x instanceof Vector2) {
+                y = x.y;
+                x = x.x;
+            }
             subpath = this.index;
             this.types[this.index] = PiecewiseCurve.SEG_MOVETO;
             this.xPoints[this.index]   = x;
@@ -166,7 +171,11 @@ define(function (require) {
          * @param x x coordinate of the line endpoint.
          * @param y y coordinate of the line endpoint.
          */
-        lineTo: function(float x, float y) {
+        lineTo: function(x, y) {
+            if (x instanceof Vector2) {
+                y = x.y;
+                x = x.x;
+            }
             this.types[this.index] = PiecewiseCurve.SEG_LINETO;
             this.xPoints[this.index]   = x;
             this.yPoints[this.index++] = y;
@@ -179,7 +188,11 @@ define(function (require) {
          * @param x2 x coordinate of the curve endpoint.
          * @param y2 y coordinate of the curve endpoint.
          */
-        quadTo: function(float x1, float y1, float x2, float y2) {
+        quadTo: function(x1, y1, x2, y2) {
+            if (x instanceof Vector2) {
+                y = x.y;
+                x = x.x;
+            }
             this.types[this.index] = PiecewiseCurve.SEG_QUADTO;
             this.xPoints[this.index]   = x1;
             this.yPoints[this.index++] = y1;
@@ -196,7 +209,22 @@ define(function (require) {
          * @param x3 x coordinate of the curve endpoint.
          * @param y3 y coordinate of the curve endpoint.
          */
-        curveTo: function(float x1, float y1, float x2, float y2, float x3, float y3) {
+        curveTo: function(x1, y1, x2, y2, x3, y3) {
+            if (x1 instanceof Vector2) {
+                var cp1 = x1;
+                var cp2 = y1;
+                var end = x2;
+
+                if (!(cp2 instanceof Vector2 && end instanceof Vector2))
+                    return;
+
+                y1 = cp1.y;
+                x1 = cp1.x;
+                y2 = cp2.y;
+                x2 = cp2.x;
+                y3 = end.y;
+                x3 = end.x;
+            }
             this.types[this.index] = PiecewiseCurve.SEG_CUBICTO;
             this.xPoints[this.index]   = x1;
             this.yPoints[this.index++] = y1;

@@ -25,7 +25,7 @@ define(function (require) {
             energyChunksVisible: false
         }),
 
-        initialization: function(attributes, options) {
+        initialize: function(attributes, options) {
             // Internal object caches
             this._outlineRect  = new Rectangle();
             this._flameIceRect = new Rectangle();
