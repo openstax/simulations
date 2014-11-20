@@ -101,7 +101,7 @@ module.exports = function(grunt){
                             deps: ['vector2-node'],
                             exports: 'Rectangle'
                         }
-                    }
+                    },
                     name: 'main',
                     out: 'src/optimized.js'
                 }

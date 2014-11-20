@@ -12,32 +12,9 @@ define(function (require, exports, module) {
     var Constants = require('models/constants');
 
     /**
-     * Minimum distance allowed between two objects.  This basically prevents
-     *   floating point issues.
-     */
-    var MIN_INTER_ELEMENT_DISTANCE = 1E-9; // In meters
-
-    /** 
-     * Threshold of temperature difference between the bodies in a multi-body
-     *   system below which energy can be exchanged with air.
-     */
-    var MIN_TEMPERATURE_DIFF_FOR_MULTI_BODY_AIR_ENERGY_EXCHANGE = 2.0; // In degrees K, empirically determined
-
-    // Initial thermometer location, intended to be away from any model objects.
-    var INITIAL_THERMOMETER_LOCATION = new Vector2( 100, 100 );
-
-    var NUM_THERMOMETERS = 3;
-    
-    var BEAKER_WIDTH = 0.085; // In meters.
-    var BEAKER_HEIGHT = BEAKER_WIDTH * 1.1;
-
-    // Flag that can be turned on in order to print out some profiling info.
-    var ENABLE_INTERNAL_PROFILING = false;
-
-    /**
      * 
      */
-    var EFCIntroSimulation = FixedIntervalSimulation.extend({
+    var IntroSimulation = FixedIntervalSimulation.extend({
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
 
@@ -63,10 +40,6 @@ define(function (require, exports, module) {
             this.brick     = null;
             this.ironBlock = null;
             this.beaker    = null;
-            this.movableThermalEnergyContainers = [];
-            this.movableThermalEnergyContainers.push(this.brick);
-            this.movableThermalEnergyContainers.push(this.ironBlock);
-            this.movableThermalEnergyContainers.push(this.beaker);
 
             // Thermometers
             this.thermometers = [];
@@ -100,7 +73,15 @@ define(function (require, exports, module) {
             ];
 
             // Cached objects
-            this._location = Vector2();
+            this._location   = Vector2();
+            this._pointAbove = Vector2();
+            this._initialMotionConstraints = Vector2();
+            this._translation = Vector2();
+            this._burnerBlockingRect = new Rectangle();
+            this._beakerLeftSide = new Rectangle();
+            this._beakerRightSide = new Rectangle();
+            this._beakerBottom = new Rectangle();
+            this._testRect = new Rectangle();
         },
 
         /**
@@ -232,7 +213,7 @@ define(function (require, exports, module) {
             // Loop through all the movable thermal energy containers and have them
             //   exchange energy with one another.
             for (var i = 0; i < this.movableElements.length - 1; i++) {
-                for (var j = i + 1; j < this.moveablmovableElementseThermalEnergyContainers.length; j++) {
+                for (var j = i + 1; j < this.movableElements.length; j++) {
                     this.movableElements[i].exchangeEnergyWith(this.movableElements[j], delta);
                 }
             }
@@ -248,11 +229,245 @@ define(function (require, exports, module) {
                 else {
                     burner.addOrRemoveEnergyToFromObject(this.air, delta);
                 }
-            });
+            }, this);
 
             // Exchange energy chunks between burners and non-air energy containers.
-            
+            _.each(this.burners, function(burner) {
+                _.each(this.movableElements, function(element) {
+                    if (burner.inContactWith(element)) {
+                        if (burner.canSupplyEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() > 0 || element.getEnergyChunkBalance() < 0)) {
+                            // Push an energy chunk into the item on the burner.
+                            element.addEnergyChunk(burner.extractClosestEnergyChunk(element.getCenterPoint()));
+                        }
+                        else if (burner.canAcceptEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() < 0 || element.getEnergyChunkBalance() > 0)) {
+                            // Extract an energy chunk from the model element.
+                            var chunk = element.extractClosestEnergyChunk(burner.getFlameIceRect());
+                            if (chunk)
+                                burner.addEnergyChunk(chunk);
+                        }
+                    }
+                });
+            }, this);
+
+            // Exchange energy chunks between movable thermal energy containers.
+            var elem1;
+            var elem2;
+            for (var i = 0; i < this.movableElements.length - 1; i++) {
+                for (var j = i + 1; j < this.movableElements.length; j++) {
+                    elem1 = this.movableElements[i];
+                    elem2 = this.movableElements[j];
+                    if (elem1.getThermalContactArea().getThermalContactLength(elem2.getThermalContactArea()) > 0) {
+                        // Exchange chunks if appropriate
+                        if (elem1.getEnergyChunkBalance() > 0 && elem2.getEnergyChunkBalance() < 0)
+                            elem2.addEnergyChunk(elem1.extractClosestEnergyChunk(elem2.getThermalContactArea.getBounds()));
+                        else if (elem1.getEnergyChunkBalance() < 0 && elem2.getEnergyChunkBalance() > 0)
+                            elem1.addEnergyChunk(elem2.extractClosestEnergyChunk(elem1.getThermalContactArea.getBounds()));
+                    }
+                }
+            }
+
+            // Patrick's note: I have no idea why we're exchanging chunks between movable elements twice.
+
+            // Exchange energy and energy chunks between the movable thermal
+            //   energy containers and the air.
+            _.each(this.movableElements, function(element) {
+                // Set up some variables that are used to decide whether or not
+                //   energy should be exchanged with air.
+                var contactWithOtherMovableElement = false;
+                var immersedInBeaker = false;
+                var maxTemperatureDifference = 0;
+
+                // Figure out the max temperature difference between touching
+                //   energy containers.
+                _.each(this.movableElements, function(otherElement) {
+                    if (element === otherElement)
+                        return;
+
+                    if (element.getThermalContactArea().getThermalContactLength(otherElement.getThermalContactArea()) > 0) {
+                        contactWithOtherMovableElement = true;
+                        maxTemperatureDifference = Math.max(Math.abs(element.getTemperature() - otherElement.getTemperature()), maxTemperatureDifference);
+                    }
+                }, this);
+
+                if (this.beaker.getThermalContactArea().getBounds().contains(element.getRect())) {
+                    // This model element is immersed in the beaker.
+                    immersedInBeaker = true;
+                }
+
+                // Exchange energy and energy chunks with the air if appropriate
+                //   conditions met.
+                if (!contactWithOtherMovableElement || (
+                        !immersedInBeaker && (
+                            maxTemperatureDifference < IntroSimulation.MIN_TEMPERATURE_DIFF_FOR_MULTI_BODY_AIR_ENERGY_EXCHANGE ||
+                            element.getEnergyBeyondMaxTemperature() > 0
+                        )
+                    )
+                ) {
+                    this.air.exchangeEnergyWith(element, deltaTime);
+                    if (element.getEnergyChunkBalance() > 0) {
+                        var pointAbove = this._pointAbove.set(
+                            Math.random() * element.getRect().w + element.getRect.left(),
+                            element.getRect().top()
+                        );
+                        var chunk = element.extractClosestEnergyChunk(pointAbove);
+                        if (chunk) {
+                            var initialMotionConstraints = null;
+                            if (element instanceof Beaker) {
+                                // Constrain the energy chunk's motion so that it
+                                // doesn't go through the edges of the beaker.
+                                // There is a bit of a fudge factor in here to
+                                // make sure that the sides of the energy chunk,
+                                // and not just the center, stay in bounds.
+                                var energyChunkWidth = 0.01;
+                                initialMotionConstraints = this._initialMotionConstraints.set( 
+                                    element.getRect().x + energyChunkWidth / 2,
+                                    element.getRect().y,
+                                    element.getRect().w - energyChunkWidth,
+                                    element.getRect().h 
+                                );
+                            }
+                            this.air.addEnergyChunk(chunk, initialMotionConstraints);
+                        }
+                    }
+                    else if (element.getEnergyChunkBalance() < 0 && element.getTemperature() < this.air.getTemperature()) {
+                        element.addEnergyChunk(this.air.requestEnergyChunk(element.getCenterPoint()));
+                    }
+                }
+            }, this);
+
+            // Exchange energy chunks between the air and the burners.
+            _.each(this.burners, function(burner) {
+                var energyChunkCountForAir = burner.getEnergyChunkCountForAir();
+                if (energyChunkCountForAir > 0)
+                    this.air.addEnergyChunk(burner.extractClosestEnergyChunk(burner.getCenterPoint()), null);
+                else if (energyChunkCountForAir < 0)
+                    burner.addEnergyChunk(this.air.requestEnergyChunk(burner.getCenterPoint()));
+            });
         },
+
+        /**
+         * Validate the position being proposed for the given model element.  This
+         * evaluates whether the proposed position would cause the model element
+         * to move through another solid element, or the side of the beaker, or
+         * something that would look weird to the user and, if so, prevent the odd
+         * behavior from happening by returning a location that works better.
+         *
+         * @param element         Element whose position is being validated.
+         * @param proposedPosition Proposed new position for element
+         * @return The original proposed position if valid, or alternative position
+         *         if not.
+         */
+        validatePosition: function(element, proposedPosition) {
+            // Compensate for the element's center X position
+            var translation = this._translation
+                .set(proposedPosition)
+                .sub(element.get('position'));
+
+            // Figure out how far the block's right edge appears to protrude to
+            //   the side due to perspective.
+            var blockPerspectiveExtension = Constants.Block.SURFACE_WIDTH * Constants.BlockView.PERSPECTIVE_EDGE_PROPORTION * Math.cos(Constants.BlockView.PERSPECTIVE_ANGLE) / 2;
+
+            // Validate against burner boundaries.  Treat the burners as one big
+            //   blocking rectangle so that the user can't drag things between
+            //   them.  Also, compensate for perspective so that we can avoid
+            //   difficult z-order issues.
+            var standPerspectiveExtension = this.leftBurner.getOutlineRect().h * Constants.IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO * Math.cos(Constants.BurnerStandView.PERSPECTIVE_ANGLE) / 2;
+            var burnerRectX = this.leftBurner.getOutlineRect().x - standPerspectiveExtension - (element !== this.beaker ? blockPerspectiveExtension : 0);
+            var burnerBlockingRect = this._burnerBlockingRect.set( 
+                burnerRectX,
+                this.leftBurner.getOutlineRect().y,
+                this.rightBurner.getOutlineRect().right() - burnerRectX,
+                this.leftBurner.getOutlineRect().h
+            );
+            translation = this.determineAllowedTranslation(element.getRect(), burnerBlockingRect, translation, false);
+
+            // Validate against the sides of the beaker.
+            if (element !== this.beaker) {
+                // Create three rectangles to represent the two sides and the top
+                //   of the beaker.
+                var testRectThickness = 1E-3; // 1 mm thick walls.
+                var beakerRect = this.beaker.getRect();
+                var beakerLeftSide = this._beakerLeftSide.set(
+                    beakerRect.getMinX() - blockPerspectiveExtension,
+                    this.beaker.getRect().bottom(),
+                    testRectThickness + blockPerspectiveExtension * 2,
+                    this.beaker.getRect().h + blockPerspectiveExtension
+                );
+                var beakerRightSide = this._beakerRightSide.set(
+                    this.beaker.getRect().right() - testRectThickness - blockPerspectiveExtension,
+                    this.beaker.getRect().bottom(),
+                    testRectThickness + blockPerspectiveExtension * 2,
+                    this.beaker.getRect().h + blockPerspectiveExtension
+                );
+                var beakerBottom = this._beakerBottom.set(
+                    this.beaker.getRect().left(), 
+                    this.beaker.getRect().bottom(), 
+                    this.beaker.getRect().w, 
+                    testRectThickness
+                );
+
+                // Do not restrict the model element's motion in positive Y
+                //   direction if the beaker is sitting on top of the model 
+                //   element - the beaker will simply be lifted up.
+                var restrictPositiveY = !this.beaker.isStackedUpon(element);
+
+                // Clamp the translation based on the beaker position.
+                translation = this.determineAllowedTranslation(element.getRect(), beakerLeftSide,  translation, restrictPositiveY);
+                translation = this.determineAllowedTranslation(element.getRect(), beakerRightSide, translation, restrictPositiveY);
+                translation = this.determineAllowedTranslation(element.getRect(), beakerBottom,    translation, restrictPositiveY);
+            }
+
+            // Now check the model element's motion against each of the blocks.
+            _.each(this.blocks, function(block) {
+                if (element === block)
+                    return;
+
+                // Do not restrict the model element's motion in positive Y
+                //   direction if the tested block is sitting on top of the model
+                //   element - the block will simply be lifted up.
+                var restrictPositiveY = !block.isStackedUpon(element);
+
+                var testRect = this._testRect.set(element.getRect());
+                if (element === this.beaker) {
+                    // Special handling for the beaker - block it at the outer
+                    // edge of the block instead of the center in order to
+                    // simplify z-order handling.
+                    testRect.set( 
+                        testRect.x - blockPerspectiveExtension,
+                        testRect.y,
+                        testRect.w + blockPerspectiveExtension * 2,
+                        testRect.h
+                    );
+                }
+
+                // Clamp the translation based on the test block's position, but
+                //   handle the case where the block is immersed in the beaker.
+                if (element !== this.beaker || !this.beaker.getRect().contains(block.getRect())) {
+                    translation = this.determineAllowedTranslation(testRect, block.getRect(), translation, restrictPositiveY);
+                }
+            });
+
+            // Determine the new position based on the resultant translation and return it.
+            return translation.add(element.get('position'));
+        },
+
+        /*
+         * Determine the portion of a proposed translation that may occur given
+         * a moving rectangle and a stationary rectangle that can block the moving
+         * one.
+         *
+         * @param movingRect
+         * @param stationaryRect
+         * @param proposedTranslation
+         * @param restrictPosY        Boolean that controls whether the positive Y
+         *                            direction is restricted.  This is often set
+         *                            false if there is another model element on
+         *                            top of the one being tested.
+         * @return
+         */
+        determineAllowedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
+            // TODO
+        }
 
         /**
          * Finds the most appropriate supporting surface for the element.
@@ -374,7 +589,7 @@ define(function (require, exports, module) {
             return this.beaker;
         }
 
-    });
+    }, Constants.IntroSimulation);
 
-    return EFCIntroSimulation;
+    return IntroSimulation;
 });

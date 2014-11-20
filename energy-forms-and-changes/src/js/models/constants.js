@@ -42,6 +42,45 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                           INTRO SIMULATION                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var IntroSimulation = {};
+    /**
+     * Minimum distance allowed between two objects.  This basically prevents
+     *   floating point issues.
+     */
+    IntroSimulation.MIN_INTER_ELEMENT_DISTANCE = 1E-9; // In meters
+
+    /** 
+     * Threshold of temperature difference between the bodies in a multi-body
+     *   system below which energy can be exchanged with air.
+     */
+    IntroSimulation.MIN_TEMPERATURE_DIFF_FOR_MULTI_BODY_AIR_ENERGY_EXCHANGE = 2.0; // In degrees K, empirically determined
+
+    // Initial thermometer location, intended to be away from any model objects.
+    IntroSimulation.INITIAL_THERMOMETER_LOCATION = new Vector2( 100, 100 );
+
+    IntroSimulation.NUM_THERMOMETERS = 3;
+    
+    IntroSimulation.BEAKER_WIDTH = 0.085; // In meters.
+    IntroSimulation.BEAKER_HEIGHT = BEAKER_WIDTH * 1.1;
+
+    // Flag that can be turned on in order to print out some profiling info.
+    IntroSimulation.ENABLE_INTERNAL_PROFILING = false;
+
+    Contants.IntroSimulation = IntroSimulation;
+
+    var IntroSimulationView = {};
+
+    IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO = 0.2; // Multiplier empirically determined for best look.
+
+    Constants.IntroSimulationView = IntroSimulationView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                                BLOCK                                **
      **                                                                     **
      *************************************************************************/
@@ -55,6 +94,19 @@ define(function (require) {
     Block.MAX_TEMPERATURE = 450; // Degrees Kelvin, value is pretty much arbitrary. Whatever works.
 
     Constants.Block = Block;
+
+    var BlockView = {};
+
+    BlockView.PERSPECTIVE_ANGLE = Math.atan2(-Constants.Z_TO_Y_OFFSET_MULTIPLIER, -Constants.Z_TO_X_OFFSET_MULTIPLIER);
+    BlockView.PERSPECTIVE_EDGE_PROPORTION = Math.sqrt(
+        Math.pow(Constants.Z_TO_X_OFFSET_MULTIPLIER, 2) + Math.pow(Constants.Z_TO_Y_OFFSET_MULTIPLIER, 2) 
+    );
+
+    // BlockView.LABEL_FONT = new PhetFont( 32, false );
+    // BlockView.OUTLINE_STROKE = new BasicStroke( 3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL );
+    // BlockView.OUTLINE_STROKE_COLOR = Color.DARK_GRAY;
+
+    Constants.BlockView = BlockView;
 
 
     /*************************************************************************
@@ -138,6 +190,22 @@ define(function (require) {
     Beaker.INITIAL_FLUID_LEVEL = 0.5;
 
     Constants.Beaker = Beaker;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                                BURNER                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var BurnerStandView = {};
+    // Constants that control some aspect of appearance.  These can be made
+    // into constructor params if it is ever desirable to do so.
+    // BurnerStandView.BURNER_STAND_STROKE = new BasicStroke( 4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL );
+    // BurnerStandView.BURNER_STAND_STROKE_COLOR = Color.BLACK;
+    BurnerStandView.PERSPECTIVE_ANGLE = Math.PI / 4; // Positive is counterclockwise, a value of 0 produces a non-skewed rectangle.
+
+    Constants.BurnerStandView = BurnerStandView;
 
 
     /*************************************************************************
