@@ -10,7 +10,7 @@ define(function (require) {
 	 * The original 
 	 */
 	var EnergyChunkContainerSlice = function(shape, zPosition) {
-		this.shape;
+		this.shape = shape;
 		this.zPosition = zPosition;
 		this.energyChunkList = [];
 	};
@@ -32,10 +32,10 @@ define(function (require) {
 		},
 
 		getBounds: function() {
-			if (this.shape instanceOf Rectangle)
+			if (this.shape instanceof Rectangle)
 				return this.shape;
 			else
-				this.shape.getBounds();
+				return this.shape.getBounds();
 		},
 
 		getShape: function() {

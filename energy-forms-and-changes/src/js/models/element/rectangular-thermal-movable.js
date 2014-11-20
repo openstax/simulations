@@ -10,6 +10,8 @@ define(function (require) {
 	var MovableElement         = require('models/element/movable');
 	var EnergyChunk            = require('models/energy-chunk');
 	var EnergyChunkDistributor = require('models/energy-chunk-distributor');
+	var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
+	var EnergyChunkContainerSlice = require('models/energy-chunk-container-slice');
 
 	/**
 	 * Constants
@@ -279,7 +281,7 @@ define(function (require) {
 			else if (this.getThermalContactArea().getBounds().contains(rect)) {
 				// Our shape encloses the destination shape.  Choose a chunk that
 				//   is close but doesn't overlap with the destination shape.
-				var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
+				var closestDistanceToDestinationEdge = Number.POSITIVE_INFINITY;
 				var destinationBounds = rect.getBounds();
 				_.each(this.slices, function(slice) {
 				    _.each(slice.energyChunkList, function(chunk) {
@@ -358,7 +360,7 @@ define(function (require) {
 			var numChunks = 0;
 			for (var i = 0; i < this.slices.length; i++)
 				numChunks += this.slices[i].getNumEnergyChunks();
-			return numChunks + approachingEnergyChunks.size();
+			return numChunks + this.approachingEnergyChunks.length;
 		},
 
 		/**
@@ -418,7 +420,7 @@ define(function (require) {
 		 *         a surplus.
 		 */
 		getEnergyChunkBalance: function() {
-			this.getNumEnergyChunks() - Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+			return this.getNumEnergyChunks() - Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
 		},
 
 		getThermalContactArea: function() {}

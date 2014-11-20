@@ -2,8 +2,7 @@ define(function (require) {
 
 	'use strict';
 
-	var _        = require('underscore');
-	var Vector2  = require('vector2-node');
+	var _ = require('underscore');
 
 	var MovableElement = require('models/element');
 
@@ -34,7 +33,7 @@ define(function (require) {
 			options = options || {};
 
 			if (options.elementLocator)
-				this.elementLocator = options.elementLocator
+				this.elementLocator = options.elementLocator;
 			else
 				throw 'Thermometer model requires an element locator.';
 

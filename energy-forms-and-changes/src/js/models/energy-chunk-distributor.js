@@ -64,18 +64,16 @@ define(function (require) {
             // Create a map that tracks the force applied to each energy chunk.
             var energyChunkForceVectors = [];
             var chunks = [];
-            var empty = true;
             for (i = 0; i < slices.length; i++) {
                 energyChunkForceVectors[i] = [];
                 for (j = 0; j < slices[i].energyChunkList.length; j++) {
                     energyChunkForceVectors[i][j] = pool.create();
                     chunks.push(slices.energyChunkList[i][j]);
-                    empty = false;
                 }
             }
 
             // Make sure that there is actually something to distribute.
-            if (!empty)
+            if (!chunks.length)
                 return;
 
             // Determine the minimum distance that is allowed to be used in the
@@ -110,37 +108,17 @@ define(function (require) {
                     containerShape = slice.getShape();
 
                     // Determine the max possible distance to an edge.
-                    double maxDistanceToEdge = Math.sqrt( 
+                    var maxDistance = Math.sqrt( 
                         Math.pow(containerShape.getBounds().w, 2) +
                         Math.pow(containerShape.getBounds().h, 2) 
                     );
 
-                    // Determine the max possible distance to an edge.
+                    // Determine forces on each energy chunk.
                     for (j = 0; j < slice.energyChunkList.length; j++) {
                         chunk = slice.energyChunkList[j];
                         forceVector = energyChunkForceVectors[i][j];
 
-                        // Reset accumulated forces.
-                        forceVector.set(0, 0);
-
-                        if (containerShape.contains(chunk.position)) {
-                            this.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistanceToEdge, forceConstant);
-                            this.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
-                        }
-                        else {
-                            // Point is outside container, move it towards center of shape.
-                            var vectorToCenter = this._vectorToCenter
-                                .set(
-                                    bounds.center().x,
-                                    bounds.center().y
-                                )
-                                .sub(chunk.position);
-                            forceVector.set(
-                                vectorToCenter
-                                    .normalize()
-                                    .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
-                            );
-                        }
+                        this.calculateEnergyChunkForces(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant);
                     }
                 }
 
@@ -152,40 +130,12 @@ define(function (require) {
                         chunk = slice.energyChunkList[j];
                         forceVector = energyChunkForceVectors[i][j];
 
-                        // Calculate the energy chunk's velocity as a result of forces acting on it.
-                        chunk.velocity.add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
+                        var energy = this.updateChunk(chunk, timeStep, forceVector, dragForceVector);
 
-                        // Calculate drag force.  Uses standard drag equation.
-                        dragMagnitude = 0.5 
-                            * EnergyChunkDistributor.FLUID_DENSITY 
-                            * EnergyChunkDistributor.DRAG_COEFFICIENT 
-                            * EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA 
-                            * chunk.velocity.lengthSq();
+                        if (energy > maxEnergy)
+                            maxEnergy = energy;
 
-                        if (dragMagnitude > 0) {
-                            dragForceVector
-                                .set(chunk.velocity)
-                                .rotate(Math.PI)
-                                .normalize()
-                                .scale(dragMagnitude);
-                        }
-                        else
-                            dragForceVector.set(0, 0);
-
-                        // Update velocity based on drag force.
-                        chunk.velocity.add(
-                            dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS)
-                        );
-
-                        // Update max energy.
-                        var totalParticleEnergy = 0.5
-                            * EnergyChunkDistributor.ENERGY_CHUNK_MASS
-                            * chunk.velocity.lengthSq()
-                            + forceVector.length() * Math.PI / 2;
-                        if (totalParticleEnergy > maxEnergy)
-                            maxEnergy = totalParticleEnergy;
-
-                        // Clean pool
+                        // Clean the pool now that we're done with it.
                         pool.remove(forceVector);
                     }
                 }
@@ -195,13 +145,71 @@ define(function (require) {
 
                 if (particlesRedistributed) {
                     // Update position of each energy chunk
-                    _.each(chunks, function(chunk) {
+                    for (j = 0; j < chunks.length; j++) {
+                        chunk = chunks[j];
                         chunk.position.add(chunk.velocity.scale(timeStep));
-                    });
+                    }
                 }
             }
 
             return particlesRedistributed;
+        },
+
+        calculateEnergyChunkForces: function(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant) {
+            // Reset accumulated forces.
+            forceVector.set(0, 0);
+
+            if (containerShape.contains(chunk.position)) {
+                this.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
+                this.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
+            }
+            else {
+                // Point is outside container, move it towards center of shape.
+                var vectorToCenter = this._vectorToCenter
+                    .set(
+                        bounds.center().x,
+                        bounds.center().y
+                    )
+                    .sub(chunk.position);
+                forceVector.set(
+                    vectorToCenter
+                        .normalize()
+                        .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
+                );
+            }
+        },
+
+        updateChunk: function(chunk, timeStep, forceVector, dragForceVector) {
+            // Calculate the energy chunk's velocity as a result of forces acting on it.
+            chunk.velocity.add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
+
+            // Calculate drag force.  Uses standard drag equation.
+            dragMagnitude = 0.5 
+                * EnergyChunkDistributor.FLUID_DENSITY 
+                * EnergyChunkDistributor.DRAG_COEFFICIENT 
+                * EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA 
+                * chunk.velocity.lengthSq();
+
+            if (dragMagnitude > 0) {
+                dragForceVector
+                    .set(chunk.velocity)
+                    .rotate(Math.PI)
+                    .normalize()
+                    .scale(dragMagnitude);
+            }
+            else
+                dragForceVector.set(0, 0);
+
+            // Update velocity based on drag force.
+            chunk.velocity.add(
+                dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS)
+            );
+
+            // Return the new total energy
+            return 0.5
+                * EnergyChunkDistributor.ENERGY_CHUNK_MASS
+                * chunk.velocity.lengthSq()
+                + forceVector.length() * Math.PI / 2;
         },
 
         /**
@@ -235,7 +243,7 @@ define(function (require) {
          * Applies forces exerted by the container's edge to each energy
          *   chunk contained in the container's shape.
          */
-        addContainerEdgeForces: function(chunk, forceVector, containerShape, minDistance, maxDistanceToEdge, forceConstant) {
+        addContainerEdgeForces: function(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant) {
             var lengthBounds = this._lengthBounds;
             var vectorToEdge = this._vectorToEdge;
             var edgePosition = this._edgePosition;
@@ -247,7 +255,7 @@ define(function (require) {
                 var edgeDetectSteps = 8;
 
                 lengthBounds.x = 0;
-                lengthBounds.w = maxDistanceToEdge;
+                lengthBounds.w = maxDistance;
 
                 for (var step = 0; step < edgeDetectSteps; step++) {
                     vectorToEdge
