@@ -31,7 +31,7 @@ define(function (require) {
 		}),
 		
 		initialize: function(attributes, options) {
-			options || (options = {});
+			options = options || {};
 
 			if (options.elementLocator)
 				this.elementLocator = options.elementLocator

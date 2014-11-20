@@ -6,8 +6,11 @@ define(function (require) {
     var Vector2   = require('vector2-node');
     var Rectangle = require('rectangle-node');
 
-    var Element                 = require('models/block');
-    var EnergyContainerCategory = require('models/energy-container-category');
+    var Air                         = require('models/air');
+    var Element                     = require('models/block');
+    var EnergyChunk                 = require('models/energy-chunk');
+    var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
+    var HorizontalSurface           = require('models/horizontal-surface');
 
     /**
      * Constants
@@ -32,8 +35,8 @@ define(function (require) {
 
             // Create vectors
             this.set('position', new Vector2(0, 0));
-            this._energyChunkStartEndPoint = new Vector();
-            this._centerPoint = new Vector();
+            this._energyChunkStartEndPoint = new Vector2();
+            this._centerPoint = new Vector2();
 
             // Energy chunks
             this.energyChunkList = [];
@@ -78,7 +81,7 @@ define(function (require) {
         update: function(time, deltaTime) {
             // Animate energy chunks.
             var controller;
-            for (this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
+            for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
                 controller = this.energyChunkWanderControllers[i];
                 controller.updatePosition(deltaTime);
 
@@ -106,7 +109,7 @@ define(function (require) {
         },
 
         getTopSurfaceProperty: function() {
-            return topSurface;
+            return this.topSurface;
         },
 
         /**
@@ -171,7 +174,7 @@ define(function (require) {
                 for (i = 0; i < this.energyChunkList.length; i++) {
                     chunk = this.energyChunkList[i];
                     if (chunk.position.distance(this.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE && (
-                            closestChunk == null || 
+                            closestChunk === null || 
                             chunk.position.distance(point) < closestChunk.position.distance(point) 
                         )
                     ) {

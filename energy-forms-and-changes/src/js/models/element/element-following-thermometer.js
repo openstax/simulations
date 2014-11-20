@@ -6,12 +6,7 @@ define(function (require) {
 	var Vector2  = require('vector2-node');
 
 	var Thermometer = require('models/element/thermometer');
-	var EFCIntroSimulation = require('models/simulation/intro');
-
-	/**
-	 * Constants
-	 */
-	var Constants = require('models/constants');
+	var IntroSimulation = require('models/simulation/intro');
 
 	/**
 	 * 
@@ -21,8 +16,8 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			this.__super__.initialize.apply(this, arguments);
 
-			if (!(this.elementLocator instanceof EFCIntroSimulation))
-				throw 'ElementFollowingThermometer: elementLocator must be an EFCIntroSimulation';
+			if (!(this.elementLocator instanceof IntroSimulation))
+				throw 'ElementFollowingThermometer: elementLocator must be an IntroSimulation';
 			else
 				this.simulation = this.elementLocator;
 

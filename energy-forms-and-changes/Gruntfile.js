@@ -186,7 +186,7 @@ module.exports = function(grunt){
                 
                 // Environments
                 browser: true,
-                devel: false
+                devel: true
             },
             source: [
                 'src/**/*.js',

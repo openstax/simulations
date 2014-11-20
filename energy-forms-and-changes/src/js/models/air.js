@@ -6,7 +6,9 @@ define(function (require) {
 	var Backbone = require('backbone');
 	var Vector2  = require('vector-node');
 
-	var EnergyContainerCategory = require('models/energy-container-category');
+	var EnergyChunk                 = require('models/energy-chunk');
+	var EnergyContainerCategory     = require('models/energy-container-category');
+	var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
 
 	/**
 	 * Constants
@@ -62,7 +64,7 @@ define(function (require) {
 					this.changeEnergy(-thermalEnergyLost);
 				}
 			}
-		}
+		},
 
 		changeEnergy: function(deltaEnergy) {
 			this.set('energy', this.get('energy') + deltaEnergy);
@@ -103,7 +105,7 @@ define(function (require) {
 		addEnergyChunk: function(chunk, initialWanderConstraint) {
 			chunk.zPosition = 0;
 			this.energyChunkList.push(chunk);
-			this.energyChunkWanderControllers.push(new energyChunkWanderControllers(
+			this.energyChunkWanderControllers.push(new EnergyChunkWanderController(
 				chunk,
 				new Vector2(chunk.position.x, Air.HEIGHT),
 				initialWanderConstraint

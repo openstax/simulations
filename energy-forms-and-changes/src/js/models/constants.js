@@ -65,12 +65,12 @@ define(function (require) {
     IntroSimulation.NUM_THERMOMETERS = 3;
     
     IntroSimulation.BEAKER_WIDTH = 0.085; // In meters.
-    IntroSimulation.BEAKER_HEIGHT = BEAKER_WIDTH * 1.1;
+    IntroSimulation.BEAKER_HEIGHT = IntroSimulation.BEAKER_WIDTH * 1.1;
 
     // Flag that can be turned on in order to print out some profiling info.
     IntroSimulation.ENABLE_INTERNAL_PROFILING = false;
 
-    Contants.IntroSimulation = IntroSimulation;
+    Constants.IntroSimulation = IntroSimulation;
 
     var IntroSimulationView = {};
 
@@ -153,7 +153,7 @@ define(function (require) {
     var Burner = {};
 
     Burner.WIDTH = 0.075; // In meters.
-    Burner.HEIGHT = WIDTH * 1;
+    Burner.HEIGHT = Burner.WIDTH * 1;
     Burner.MAX_ENERGY_GENERATION_RATE = 5000; // joules/sec, empirically chosen.
     Burner.CONTACT_DISTANCE = 0.001; // In meters.
     Burner.ENERGY_CHUNK_CAPTURE_DISTANCE = 0.2; // In meters, empirically chosen.
@@ -230,10 +230,10 @@ define(function (require) {
     Air.DENSITY = 10; // In kg/m^3, far denser than real air, done to make things cool faster.
 
     // Derived constants.
-    Air.VOLUME = WIDTH * HEIGHT * DEPTH;
-    Air.MASS = VOLUME * DENSITY;
-    Air.INITIAL_ENERGY = MASS * SPECIFIC_HEAT * EFACConstants.ROOM_TEMPERATURE;
-    Air.THERMAL_CONTACT_AREA = new ThermalContactArea(new Rectangle(-WIDTH / 2, 0, WIDTH, HEIGHT), true);
+    Air.VOLUME = Air.WIDTH * Air.HEIGHT * Air.DEPTH;
+    Air.MASS = Air.VOLUME * Air.DENSITY;
+    Air.INITIAL_ENERGY = Air.MASS * Air.SPECIFIC_HEAT * Constants.ROOM_TEMPERATURE;
+    Air.THERMAL_CONTACT_AREA = new ThermalContactArea(new Rectangle(-Air.WIDTH / 2, 0, Air.WIDTH, Air.HEIGHT), true);
 
     Constants.Air = Air;
 
@@ -265,7 +265,7 @@ define(function (require) {
     ).createInverse();
 
     Constants.ENERGY_TO_NUM_CHUNKS_MAPPER = function(energy) {
-        return Math.max(Math.round(MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( energy )), 0);
+        return Math.max(Math.round(Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( energy )), 0);
     };
 
     Constants.ENERGY_PER_CHUNK = Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 2 ) - Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 1 );
@@ -342,28 +342,33 @@ define(function (require) {
     };
 
     // Maps for obtaining transfer constants for a given thermal element.
-    HeatTransfer.CONTAINER_CATEGORY_MAP = {
-        HEAT_TRANSFER_FACTORS_FOR_BRICK: {
-            EnergyContainerCategory.IRON:  HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.WATER: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.AIR:   HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR
-        },
-        HEAT_TRANSFER_FACTORS_FOR_IRON: {
-            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.WATER: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.AIR:   HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR
-        },
-        HEAT_TRANSFER_FACTORS_FOR_WATER: {
-            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.IRON:  HeatTransfer.IRON_WATER_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.AIR:   HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR
-        },
-        HEAT_TRANSFER_FACTORS_FOR_AIR: {
-            EnergyContainerCategory.BRICK: HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.IRON:  HeatTransfer.IRON_AIR_HEAT_TRANSFER_FACTOR,
-            EnergyContainerCategory.WATER: HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR
-        }
-    };
+    var HEAT_TRANSFER_FACTORS_FOR_BRICK = {};
+    HEAT_TRANSFER_FACTORS_FOR_BRICK[EnergyContainerCategory.IRON]  = HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_BRICK[EnergyContainerCategory.WATER] = HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_BRICK[EnergyContainerCategory.AIR]   = HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR;
+
+    var HEAT_TRANSFER_FACTORS_FOR_IRON = {};
+    HEAT_TRANSFER_FACTORS_FOR_IRON[EnergyContainerCategory.BRICK] = HeatTransfer.BRICK_IRON_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_IRON[EnergyContainerCategory.WATER] = HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_IRON[EnergyContainerCategory.AIR]   = HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR;
+
+    var HEAT_TRANSFER_FACTORS_FOR_WATER = {};
+    HEAT_TRANSFER_FACTORS_FOR_WATER[EnergyContainerCategory.BRICK] = HeatTransfer.BRICK_WATER_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_WATER[EnergyContainerCategory.IRON]  = HeatTransfer.IRON_WATER_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_WATER[EnergyContainerCategory.AIR]   = HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR;
+
+    var HEAT_TRANSFER_FACTORS_FOR_AIR = {};
+    HEAT_TRANSFER_FACTORS_FOR_AIR[EnergyContainerCategory.BRICK] = HeatTransfer.BRICK_AIR_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_AIR[EnergyContainerCategory.IRON]  = HeatTransfer.IRON_AIR_HEAT_TRANSFER_FACTOR;
+    HEAT_TRANSFER_FACTORS_FOR_AIR[EnergyContainerCategory.WATER] = HeatTransfer.WATER_AIR_HEAT_TRANSFER_FACTOR;
+
+    var CONTAINER_CATEGORY_MAP = {};
+    CONTAINER_CATEGORY_MAP[EnergyContainerCategory.BRICK] = HEAT_TRANSFER_FACTORS_FOR_BRICK;
+    CONTAINER_CATEGORY_MAP[EnergyContainerCategory.IRON]  = HEAT_TRANSFER_FACTORS_FOR_IRON;
+    CONTAINER_CATEGORY_MAP[EnergyContainerCategory.WATER] = HEAT_TRANSFER_FACTORS_FOR_WATER;
+    CONTAINER_CATEGORY_MAP[EnergyContainerCategory.AIR]   = HEAT_TRANSFER_FACTORS_FOR_AIR;
+
+    HeatTransfer.CONTAINER_CATEGORY_MAP = CONTAINER_CATEGORY_MAP;
 
     HeatTransfer.getHeatTransferFactor = function(container1, container2) {
         return this.CONTAINER_CATEGORY_MAP[container1][container2];

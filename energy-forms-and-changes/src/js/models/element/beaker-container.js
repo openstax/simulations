@@ -8,7 +8,7 @@ define(function (require) {
 
 	Rectangle.prototype.intersection = require('common/math/rectangle-intersection');
 
-	var Beaker = require('models/element/beaker');
+	var Beaker                      = require('models/element/beaker');
 	var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
 
 	/**
@@ -17,7 +17,7 @@ define(function (require) {
 	var BeakerContainer = Beaker.extend({
 
 		initialize: function(attributes, options) {
-			options || (options = {});
+			options = options || {};
 
 			Beaker.prototype.initialize.apply(this, arguments);
 

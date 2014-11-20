@@ -8,6 +8,7 @@ define(function (require) {
 
 	var PiecewiseCurve         = require('common/math/piecewise-curve');
 	var MovableElement         = require('models/element/movable');
+	var EnergyChunk            = require('models/energy-chunk');
 	var EnergyChunkDistributor = require('models/energy-chunk-distributor');
 
 	/**
@@ -202,7 +203,7 @@ define(function (require) {
 
 		
 		extractClosestEnergyChunk: function(shape) {
-			if (shape instanceOf Vector2)
+			if (shape instanceof Vector2)
 				return this._extractClosestEnergyChunkToPoint(shape);
 			else
 				return this._extractClosestEnergyChunkToRectangle(shape);
@@ -264,10 +265,31 @@ define(function (require) {
 			if (rect.contains(this.getThermalContactArea().getBounds())) {
 				// Our shape is contained by the destination.  Pick a chunk near
 				//   our right or left edge.
+				var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
+				_.each(this.slices, function(slice) {
+				    _.each(slice.energyChunkList, function(chunk) {
+				        var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.position.x), Math.abs(myBounds.right() - chunk.position.x));
+				        if (distanceToVerticalEdge < closestDistanceToVerticalEdge) {
+				            chunkToExtract = chunk;
+				            closestDistanceToVerticalEdge = distanceToVerticalEdge;
+				        }
+				    }, this);
+				}, this);
 			}
 			else if (this.getThermalContactArea().getBounds().contains(rect)) {
 				// Our shape encloses the destination shape.  Choose a chunk that
 				//   is close but doesn't overlap with the destination shape.
+				var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
+				var destinationBounds = rect.getBounds();
+				_.each(this.slices, function(slice) {
+				    _.each(slice.energyChunkList, function(chunk) {
+				        var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.position.x), Math.abs(destinationBounds.right() - chunk.position.x));
+				        if (!rect.contains(chunk.position) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {
+				            chunkToExtract = chunk;
+				            closestDistanceToDestinationEdge = distanceToDestinationEdge;
+				        }
+				    }, this);
+				}, this);
 			}
 			else {
 				// There is no or limited overlap, so use center points.

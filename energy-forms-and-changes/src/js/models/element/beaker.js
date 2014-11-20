@@ -3,7 +3,6 @@ define(function (require) {
     'use strict';
 
     var _              = require('underscore');
-    var Vector2        = require('vector2-node');
     var Rectangle      = require('rectangle-node');
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -11,8 +10,11 @@ define(function (require) {
     var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
     var EnergyContainerCategory          = require('models/energy-container-category');
     var HorizontalSurface                = require('models/horizontal-surface');
+    var ThermalContactArea               = require('models/thermal-contact-area');
+    var EnergyChunk                      = require('models/energy-chunk');
     var EnergyChunkDistributor           = require('models/energy-chunk-distributor');
     var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
+    
 
     /**
      * Constants
@@ -42,10 +44,10 @@ define(function (require) {
             this.set('maxSteamHeight', 2 * this.get('height'));
 
             this._rect = new Rectangle(
-                this.get('position').x - SURFACE_WIDTH / 2,
+                this.get('position').x - this.get('width') / 2,
                 this.get('position').y,
-                Block.SURFACE_WIDTH,
-                Block.SURFACE_WIDTH
+                this.get('width'),
+                this.get('height')
             );
 
             this._outlineRect = new Rectangle(
@@ -121,7 +123,7 @@ define(function (require) {
                 this.addEnergyChunkToNextSlice(new EnergyChunk(
                     EnergyChunk.THERMAL, 
                     EnergyChunkDistributor.generateRandomLocation(initialChunkBounds), 
-                    energyChunksVisible 
+                    this.get('energyChunksVisible') 
                 ));
             }
 
@@ -133,10 +135,11 @@ define(function (require) {
         },
 
         addEnergyChunkToNextSlice: function(chunk) {
+            var i;
             var slice;
             var sliceBounds;
             var totalSliceArea = 0;
-            for (var i = 0; i < this.slices.length; i++) {
+            for (i = 0; i < this.slices.length; i++) {
                 slice = this.slices[i];
                 sliceBounds = slice.getBounds();
                 totalSliceArea += sliceBounds.w * sliceBounds.h;
@@ -144,7 +147,7 @@ define(function (require) {
             var sliceSelectionValue = Math.random();
             var chosenSlice = this.slices[0];
             var accumulatedArea = 0;
-            for (var i = 0; i < this.slices.length; i++) {
+            for (i = 0; i < this.slices.length; i++) {
                 slice = this.slices[i];
                 sliceBounds = slice.getBounds();
                 accumulatedArea += sliceBounds.w * sliceBounds.h;
@@ -175,7 +178,7 @@ define(function (require) {
          */
         getSteamArea: function() {
             // Height of steam rectangle is based on beaker height and steamingProportion.
-            var liquidWaterHeight = height * fluidLevel.get();
+            var liquidWaterHeight = this.get('height') * this.get('fluidLevel');
             return this._steamRect.set(
                 this.get('position').x - this.get('width') / 2,
                 this.get('position').y + liquidWaterHeight,
@@ -191,14 +194,14 @@ define(function (require) {
                 this.get('temperature'),
                 Constants.ROOM_TEMPERATURE
             );
-            return Math.max(this._steamTemperatureFunction(heightAboveWater), Constant.ROOM_TEMPERATURE);
+            return Math.max(this._steamTemperatureFunction(heightAboveWater), Constants.ROOM_TEMPERATURE);
         },
 
         addEnergyChunkSlices: function() {
             if (this.slices.length)
                 return;
 
-            this._fluidRect.set(
+            var fluidRect = this._fluidRect.set(
                 this.get('position').x - this.get('width') / 2,
                 this.get('position').y,
                 this.get('width'),
@@ -214,18 +217,18 @@ define(function (require) {
             var centerX;
             var controlPointYOffset;
 
-            for (var i = 0; i < NUM_SLICES; i++) {
-                proportion = (i + 1) * (1 / (NUM_SLICES + 1));
+            for (var i = 0; i < Beaker.NUM_SLICES; i++) {
+                proportion = (i + 1) * (1 / (Beaker.NUM_SLICES + 1));
                 slicePath  = new PiecewiseCurve();
 
                 // The slice width is calculated to fit into the 3D projection.
                 //   It uses an exponential function that is shifted in order to
                 //   yield width value proportional to position in Z-space.
-                sliceWidth = (-Math.pow((2 * proportion - 1), 2) + 1) * fluidRect.getWidth();
-                bottomY = fluidRect.getMinY() - (widthYProjection / 2) + (proportion * widthYProjection);
-                topY = bottomY + fluidRect.getHeight();
-                centerX = fluidRect.getCenterX();
-                controlPointYOffset = (bottomY - fluidRect.getMinY()) * 0.5;
+                sliceWidth = (-Math.pow((2 * proportion - 1), 2) + 1) * fluidRect.w;
+                bottomY = fluidRect.bottom() - (widthYProjection / 2) + (proportion * widthYProjection);
+                topY = bottomY + fluidRect.h;
+                centerX = fluidRect.center().x;
+                controlPointYOffset = (bottomY - fluidRect.bottom()) * 0.5;
 
                 slicePath.moveTo( centerX - sliceWidth / 2,    bottomY);
                 slicePath.curveTo(centerX - sliceWidth * 0.33, bottomY + controlPointYOffset, centerX + sliceWidth * 0.33, bottomY + controlPointYOffset, centerX + sliceWidth / 2, bottomY);
@@ -233,7 +236,7 @@ define(function (require) {
                 slicePath.curveTo(centerX + sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth / 2, topY);
                 slicePath.lineTo( centerX - sliceWidth / 2,    bottomY);
 
-                this.slices.push(new EnergyChunkContainerSlice(slicePath, -proportion * width, this.get('position')));
+                this.slices.push(new EnergyChunkContainerSlice(slicePath, -proportion * this.get('width'), this.get('position')));
             }
         },
 
@@ -256,9 +259,10 @@ define(function (require) {
          *   water surface.
          */
         extractClosestEnergyChunk: function(point) {
+            var i;
             var slice;
             var pointIsAboveWaterSurface = true;
-            for (var i = 0; i < this.slices.length; i++) {
+            for (i = 0; i < this.slices.length; i++) {
                 if (point.y < this.slices[i].getBounds().top()) {
                     pointIsAboveWaterSurface = false;
                     break;
@@ -273,7 +277,7 @@ define(function (require) {
             //   density, since this is where we will get the energy chunk.
             var maxSliceDensity = 0;
             var densestSlice = null;
-            for (var i = 0; i < this.slices.length; i++) {
+            for (i = 0; i < this.slices.length; i++) {
                 slice = this.slices[i];
                 var sliceDensity = slice.energyChunkList.length / (slice.getBounds().w * slice.getBounds().h);
                 if (sliceDensity > maxSliceDensity) {
@@ -289,7 +293,7 @@ define(function (require) {
 
             var chunk;
             var highestEnergyChunk = densestSlice.energyChunkList[0];
-            for (var i = 0; i < densestSlice.energyChunkList.length; i++) {
+            for (i = 0; i < densestSlice.energyChunkList.length; i++) {
                 chunk = densestSlice.energyChunkList[i];
                 if (chunk.get('position').y > highestEnergyChunk.get('position').y)
                     highestEnergyChunk = chunk;

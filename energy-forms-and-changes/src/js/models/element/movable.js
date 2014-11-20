@@ -2,8 +2,7 @@ define(function (require) {
 
 	'use strict';
 
-	var _        = require('underscore');
-	var Vector2  = require('vector2-node');
+	var Vector2 = require('vector2-node');
 
 	var Element = require('models/element');
 
@@ -24,7 +23,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			// Create vectors
 			this.set('position', new Vector2(0, 0));
-			this._oldPosition = new Vector();
+			this._oldPosition = new Vector2();
 		},
 
 		reset: function() {
