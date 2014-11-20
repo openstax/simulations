@@ -62,15 +62,10 @@ define(function (require) {
             var bounds = this.calculateBounds(slices);
 
             // Create a map that tracks the force applied to each energy chunk.
-            var energyChunkForceVectors = [];
-            var chunks = [];
-            for (i = 0; i < slices.length; i++) {
-                energyChunkForceVectors[i] = [];
-                for (j = 0; j < slices[i].energyChunkList.length; j++) {
-                    energyChunkForceVectors[i][j] = pool.create();
-                    chunks.push(slices.energyChunkList[i][j]);
-                }
-            }
+            var energyChunkForceVectors = this.initEnergyChunkForceVectors(slices);
+
+            // Get list of all the chunks so we can easily cycle through them.
+            var chunks = this.getChunksFromSlices(slices);
 
             // Make sure that there is actually something to distribute.
             if (!chunks.length)
@@ -85,14 +80,13 @@ define(function (require) {
             //   particles so that we don't end up with hugely repulsive forces that
             //   tend to push the particles out of the container.  This formula was
             //   made up, and can be adjusted if needed.
-            var forceConstant = EnergyChunkDistributor.ENERGY_CHUNK_MASS * bounds.w * bounds.h * 0.1 / energyChunkForceVectors.length;
+            var forceConstant = EnergyChunkDistributor.ENERGY_CHUNK_MASS * bounds.w * bounds.h * 0.1 / chunks.length;
 
             // Loop once for each max time step plus any remainder.
             var slice;
             var containerShape;
             var chunk;
             var forceVector;
-            var dragForceVector = this._dragForceVector;
 
             var particlesRedistributed = false;
             var numForceCalcSteps = deltaTime / EnergyChunkDistributor.MAX_TIME_STEP;
@@ -100,6 +94,9 @@ define(function (require) {
 
             for (var forceCalcStep = 0; forceCalcStep <= numForceCalcSteps; forceCalcStep++) {
                 var timeStep = forceCalcStep < numForceCalcSteps ? EnergyChunkDistributor.MAX_TIME_STEP : extraTime;
+
+                // The energy of the chunk with the highest energy
+                var maxEnergy = 0;
 
                 // Update the forces acting on the particle due to its bounding
                 //   container, other particles, and drag.
@@ -113,24 +110,15 @@ define(function (require) {
                         Math.pow(containerShape.getBounds().h, 2) 
                     );
 
-                    // Determine forces on each energy chunk.
                     for (j = 0; j < slice.energyChunkList.length; j++) {
                         chunk = slice.energyChunkList[j];
                         forceVector = energyChunkForceVectors[i][j];
 
+                        // Determine forces on each energy chunk.
                         this.calculateEnergyChunkForces(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant);
-                    }
-                }
 
-                // Update energy chunk velocities, drag force, and position.
-                var maxEnergy = 0;
-                var dragMagnitude;
-                for (i = 0; i < slices.length; i++) {
-                    for (j = 0; j < slice.energyChunkList.length; j++) {
-                        chunk = slice.energyChunkList[j];
-                        forceVector = energyChunkForceVectors[i][j];
-
-                        var energy = this.updateChunk(chunk, timeStep, forceVector, dragForceVector);
+                        // Update energy chunk velocities, drag force, and position.
+                        var energy = this.updateChunk(chunk, timeStep, forceVector);
 
                         if (energy > maxEnergy)
                             maxEnergy = energy;
@@ -153,6 +141,26 @@ define(function (require) {
             }
 
             return particlesRedistributed;
+        },
+
+        initEnergyChunkForceVectors: function(slices) {
+            var energyChunkForceVectors = [];
+            for (var i = 0; i < slices.length; i++) {
+                energyChunkForceVectors[i] = [];
+                for (var j = 0; j < slices[i].energyChunkList.length; j++)
+                    energyChunkForceVectors[i][j] = pool.create();
+            }
+            return energyChunkForceVectors;
+        },
+
+        getChunksFromSlices: function(slices) {
+            var chunks = [];
+            for (var i = 0; i < slices.length; i++) {
+                for (var j = 0; j < slices[i].energyChunkList.length; j++) {
+                    chunks.push(slices.energyChunkList[i][j]);
+                }
+            }
+            return chunks;
         },
 
         calculateEnergyChunkForces: function(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant) {
@@ -179,12 +187,14 @@ define(function (require) {
             }
         },
 
-        updateChunk: function(chunk, timeStep, forceVector, dragForceVector) {
+        updateChunk: function(chunk, timeStep, forceVector) {
+            var dragForceVector = this._dragForceVector;
+
             // Calculate the energy chunk's velocity as a result of forces acting on it.
             chunk.velocity.add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
 
             // Calculate drag force.  Uses standard drag equation.
-            dragMagnitude = 0.5 
+            var dragMagnitude = 0.5 
                 * EnergyChunkDistributor.FLUID_DENSITY 
                 * EnergyChunkDistributor.DRAG_COEFFICIENT 
                 * EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA 
