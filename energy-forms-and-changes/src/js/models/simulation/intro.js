@@ -3,10 +3,13 @@ define(function (require, exports, module) {
     'use strict';
 
     // Libraries
-    var _ = require('underscore');
+    var _         = require('underscore');
+    var Vector2   = require('vector2-node');
+    var Rectangle = require('rectangle-node');
 
     // Project dependiencies
     var FixedIntervalSimulation = require('common/simulation/simulation');
+    var Beaker                  = require('models/element/beaker');
 
     // Constants
     var Constants = require('models/constants');
@@ -27,28 +30,40 @@ define(function (require, exports, module) {
          */
         initialize: function(attributes, options) {
 
-            (options || options = {});
+            options = options || {};
             options.framesPerSecond = Constants.FRAMES_PER_SECOND;
 
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
             // Burners
-            this.leftBurner  = null;
-            this.rightBurner = null;
+            this.leftBurner  = new Burner({ position: new Vector2(0.18, 0), energyChunksVisible: this.get('energyChunksVisible') });
+            this.rightBurner = new Burner({ position: new Vector2(0.08, 0), energyChunksVisible: this.get('energyChunksVisible') });
 
             // Moveable thermal model objects
-            this.brick     = null;
-            this.ironBlock = null;
-            this.beaker    = null;
+            this.brick     = new Brick(    { position: new Vector2(-0.1,   0), energyChunksVisible: this.get('energyChunksVisible') });
+            this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0), energyChunksVisible: this.get('energyChunksVisible') });
+            
+            this.beaker  = new BeakerContainer({ 
+                position: new Vector2(0.18, 0), 
+                energyChunksVisible: this.get('energyChunksVisible')
+                potentiallyContainedObjects: [
+                    this.brick,
+                    this.ironBlock
+                ]
+            });
 
             // Thermometers
             this.thermometers = [];
-            for (var i = 0; i < NUM_THERMOMETERS; i++) {
-                //thermometers.push(new Thermometer)
+            for (var i = 0; i < IntroSimulation.NUM_THERMOMETERS; i++) {
+                this.thermometers.push(new Thermometer({
+                    elementLocator: this,
+                    position: IntroSimulation.INITIAL_THERMOMETER_LOCATION,
+                    active: false
+                }));
             }
 
             // Air
-            this.air = null;
+            this.air = new Air({ energyChunksVisible: this.get('energyChunksVisible') });
 
             // Element groups
             this.movableElements = [
@@ -87,15 +102,6 @@ define(function (require, exports, module) {
         /**
          *
          */
-        applyOptions: function(options) {
-            FixedIntervalSimulation.prototype.applyOptions.apply(this, [options]);
-
-            
-        },
-
-        /**
-         *
-         */
         initComponents: function() {
             
         },
@@ -109,9 +115,9 @@ define(function (require, exports, module) {
             this.air.reset();
             this.leftBurner.reset();
             this.rightBurner.reset();
-            ironBlock.reset();
-            brick.reset();
-            beaker.reset();
+            this.ironBlock.reset();
+            this.brick.reset();
+            this.beaker.reset();
             _.each(this.thermometers, function(thermometer){
                 thermometer.reset();
             });
@@ -184,7 +190,7 @@ define(function (require, exports, module) {
                         // The element has landed on the ground or some other surface.
                         proposedYPos = minYPos;
                         element.verticalVelocity.set( 0.0 );
-                        if ( potentialSupportingSurface != null ) {
+                        if (potentialSupportingSurface) {
                             element.setSupportingSurface( potentialSupportingSurface );
                             potentialSupportingSurface.get().addElementToSurface( element );
                         }
@@ -201,6 +207,9 @@ define(function (require, exports, module) {
          * 
          */
         _exchangeEnergyChunks: function(time, delta) {
+            var i;
+            var j;
+
             /**
              *  Note: The original intent was to design all the energy containers
              *   such that the order of the exchange didn't matter, nor who was
@@ -212,8 +221,8 @@ define(function (require, exports, module) {
 
             // Loop through all the movable thermal energy containers and have them
             //   exchange energy with one another.
-            for (var i = 0; i < this.movableElements.length - 1; i++) {
-                for (var j = i + 1; j < this.movableElements.length; j++) {
+            for (i = 0; i < this.movableElements.length - 1; i++) {
+                for (j = i + 1; j < this.movableElements.length; j++) {
                     this.movableElements[i].exchangeEnergyWith(this.movableElements[j], delta);
                 }
             }
@@ -252,8 +261,8 @@ define(function (require, exports, module) {
             // Exchange energy chunks between movable thermal energy containers.
             var elem1;
             var elem2;
-            for (var i = 0; i < this.movableElements.length - 1; i++) {
-                for (var j = i + 1; j < this.movableElements.length; j++) {
+            for (i = 0; i < this.movableElements.length - 1; i++) {
+                for (j = i + 1; j < this.movableElements.length; j++) {
                     elem1 = this.movableElements[i];
                     elem2 = this.movableElements[j];
                     if (elem1.getThermalContactArea().getThermalContactLength(elem2.getThermalContactArea()) > 0) {
@@ -467,7 +476,7 @@ define(function (require, exports, module) {
          */
         determineAllowedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
             // TODO
-        }
+        },
 
         /**
          * Finds the most appropriate supporting surface for the element.
@@ -483,25 +492,25 @@ define(function (require, exports, module) {
                     //   test element or is sitting on top of the test element.  In
                     //   either case, it can't be used to support the test element,
                     //   so skip it.
-                    continue;
+                    return;
                 }
-                if ( element.getBottomSurfaceProperty().get().overlapsWith( potentialSupportingElement.getTopSurfaceProperty().get() ) ) {
+                if ( element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface() ) ) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.
-                    var surfaceOverlap = getHorizontalOverlap( potentialSupportingElement.getTopSurfaceProperty().get(), element.getBottomSurfaceProperty().get() );
+                    var surfaceOverlap = getHorizontalOverlap( potentialSupportingElement.getTopSurface(), element.getBottomSurface().get() );
                     
                     // The following nasty 'if' clause determines if the potential
                     //   supporting surface is a better one than we currently have
                     //   based on whether we have one at all, or has more overlap
                     //   than the previous best choice, or is directly above the
                     //   current one.
-                    if (bestOverlappingSurface == null || (
-                            surfaceOverlap > this.getHorizontalOverlap(bestOverlappingSurface.get(), element.getBottomSurfaceProperty().get() ) && 
-                            !this.isDirectlyAbove(bestOverlappingSurface.get(), potentialSupportingElement.getTopSurfaceProperty().get())
+                    if (bestOverlappingSurface === null || (
+                            surfaceOverlap > this.getHorizontalOverlap(bestOverlappingSurface, element.getBottomSurface() ) && 
+                            !this.isDirectlyAbove(bestOverlappingSurface, potentialSupportingElement.getTopSurface())
                         ) || (
-                            this.isDirectlyAbove(potentialSupportingElement.getTopSurfaceProperty().get(), bestOverlappingSurface.get())
+                            this.isDirectlyAbove(potentialSupportingElement.getTopSurface(), bestOverlappingSurface)
                         )) {
-                        bestOverlappingSurface = potentialSupportingElement.getTopSurfaceProperty();
+                        bestOverlappingSurface = potentialSupportingElement.getTopSurface();
                     }
                 }
             }, this);
@@ -509,9 +518,9 @@ define(function (require, exports, module) {
             // Make sure that the best supporting surface isn't at the bottom of
             //   a stack, which can happen in cases where the model element being
             //   tested isn't directly above the best surface's center.
-            if ( bestOverlappingSurface != null ) {
-                while ( bestOverlappingSurface.get().getElementOnSurface() != null ) {
-                    bestOverlappingSurface = bestOverlappingSurface.get().getElementOnSurface().getTopSurfaceProperty();
+            if (bestOverlappingSurface) {
+                while (bestOverlappingSurface.getElementOnSurface() !== null ) {
+                    bestOverlappingSurface = bestOverlappingSurface.getElementOnSurface().getTopSurface();
                 }
             }
 
@@ -585,7 +594,7 @@ define(function (require, exports, module) {
             return this.blocks;
         },
 
-        getBeaker(): function() {
+        getBeaker: function() {
             return this.beaker;
         }
 

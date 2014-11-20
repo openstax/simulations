@@ -3,8 +3,8 @@ define(function (require) {
     'use strict';
 
     var _         = require('underscore');
-    var Backbone  = require('backbone');
     var Rectangle = require('rectangle-node');
+    var Vector2   = require('vector2-node');
 
     /**
      * Constants
@@ -43,7 +43,7 @@ define(function (require) {
             var distanceToDestination = this.energyChunk.position.distance(this.destination);
             if (distanceToDestination < this.velocity.length() * deltaTime && !this.energyChunk.position.equals(this.destination)) {
                  // Destination reached.
-                this.energyChunk.position.set(destination);
+                this.energyChunk.position.set(this.destination);
                 this.velocity.scale(0);
             }
             else if (this.energyChunk.position.distance(this.destination) < deltaTime * this.velocity.length()) {

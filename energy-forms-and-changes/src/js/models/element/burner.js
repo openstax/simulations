@@ -108,7 +108,7 @@ define(function (require) {
             );
         },
 
-        getTopSurfaceProperty: function() {
+        getTopSurface: function() {
             return this.topSurface;
         },
 

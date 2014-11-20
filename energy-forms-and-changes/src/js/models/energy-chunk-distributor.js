@@ -3,7 +3,6 @@ define(function (require) {
     'use strict';
 
     var _         = require('underscore');
-    var Backbone  = require('backbone');
     var Vector2   = require('vector2-node');
     var Rectangle = require('rectangle-node');
     var Pool      = require('object-pool');
@@ -56,7 +55,6 @@ define(function (require) {
         updatePositions: function(slices, deltaTime) {
             var i;
             var j;
-            var pool = this._forceVectorPool;
 
             // Determine a rectangle that bounds all of the slices.
             var bounds = this.calculateBounds(slices);
@@ -115,7 +113,7 @@ define(function (require) {
                         forceVector = energyChunkForceVectors[i][j];
 
                         // Determine forces on each energy chunk.
-                        this.calculateEnergyChunkForces(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant);
+                        this.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
 
                         // Update energy chunk velocities, drag force, and position.
                         var energy = this.updateChunk(chunk, timeStep, forceVector);
@@ -124,7 +122,7 @@ define(function (require) {
                             maxEnergy = energy;
 
                         // Clean the pool now that we're done with it.
-                        pool.remove(forceVector);
+                        this._forceVectorPool.remove(forceVector);
                     }
                 }
 
@@ -148,7 +146,7 @@ define(function (require) {
             for (var i = 0; i < slices.length; i++) {
                 energyChunkForceVectors[i] = [];
                 for (var j = 0; j < slices[i].energyChunkList.length; j++)
-                    energyChunkForceVectors[i][j] = pool.create();
+                    energyChunkForceVectors[i][j] = this._forceVectorPool.create();
             }
             return energyChunkForceVectors;
         },
@@ -163,7 +161,7 @@ define(function (require) {
             return chunks;
         },
 
-        calculateEnergyChunkForces: function(chunk, forceVector, chunks, containerShape, minDistance, maxDistance, forceConstant) {
+        calculateEnergyChunkForces: function(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant) {
             // Reset accumulated forces.
             forceVector.set(0, 0);
 
@@ -293,7 +291,9 @@ define(function (require) {
                 }
 
                 // Apply the force due to this edge.
-                edgeForce.set(forceConstant / Math.pow(lengthBounds.center().x, 2).rotate(angle + Math.PI);
+                edgeForce
+                    .set(forceConstant / Math.pow(lengthBounds.center().x, 2))
+                    .rotate(angle + Math.PI);
                 forceVector.plus(edgeForce);
             }
         },

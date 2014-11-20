@@ -2,9 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var Functions               = require('common/functions');
-    var Vector2                 = require('vector2-node');
-    var Rectangle               = require('rectangle-node');
+    var Vector2   = require('vector2-node');
+    var Rectangle = require('rectangle-node');
+    var Functions = require('common/functions');
+
     var ThermalContactArea      = require('models/thermal-contact-area');
     var EnergyContainerCategory = require('models/energy-container-category');
 

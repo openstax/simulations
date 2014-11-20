@@ -37,8 +37,8 @@ define(function (require) {
             this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top(),    this);
             this.bottomSurface = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().bottom(), this);
 
-            this.on('position:change', this.updateTopSurfaceProperty);
-            this.on('position:change', this.updateBottomSurfaceProperty);
+            this.on('position:change', this.updateTopSurface);
+            this.on('position:change', this.updateBottomSurface);
             this.on('position:change', this.positionEnergyChunkSlices);
         },
 
@@ -75,13 +75,13 @@ define(function (require) {
             return this._rect;
         },
 
-        updateTopSurfaceProperty: function() {
+        updateTopSurface: function() {
             this.topSurface.minX = this.getRect().left();
             this.topSurface.maxX = this.getRect().right();
             this.topSurface.posY = this.getRect().top();
         },
 
-        updateBottomSurfaceProperty: function() {
+        updateBottomSurface: function() {
             this.bottomSurface.minX = this.getRect().left();
             this.bottomSurface.maxX = this.getRect().right();
             this.bottomSurface.posY = this.getRect().bottom();
