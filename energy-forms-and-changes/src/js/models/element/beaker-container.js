@@ -19,7 +19,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			options || (options = {});
 
-			Beaker.prototype.initialize.apply(this, [attributes, options]);
+			Beaker.prototype.initialize.apply(this, arguments);
 
 			this.potentiallyContainedElements = options.potentiallyContainedElements || [];
 

@@ -17,7 +17,7 @@ define(function (require) {
 	 */
 	var Thermometer = MovableElement.extend({
 
-		defaults: _.extend({}, Block.prototype.defaults, {
+		defaults: _.extend({}, MovableElement.prototype.defaults, {
 			sensedTemperature: Constants.ROOM_TEMPERATURE,
 			sensedElement: null,
 
@@ -28,7 +28,7 @@ define(function (require) {
 			//   temperature, but if it's unattached, we make sure to request the
 			//   temperature at a specific location.
 			attached: false
-		})
+		}),
 		
 		initialize: function(attributes, options) {
 			options || (options = {});

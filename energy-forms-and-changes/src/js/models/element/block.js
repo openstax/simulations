@@ -20,7 +20,7 @@ define(function (require) {
 	var Block = RectangularThermalMovableElement.extend({
 
 		initialize: function(attributes, options) {
-			RectangularThermalMovableElement.prototype.initialize.apply(this, [attributes, options]);
+			RectangularThermalMovableElement.prototype.initialize.apply(this, arguments);
 
 			this._rect = new Rectangle(
 		    	this.get('position').x - SURFACE_WIDTH / 2,

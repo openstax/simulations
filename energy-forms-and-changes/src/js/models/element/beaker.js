@@ -37,7 +37,7 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            this.__super__.initialize.apply(this, [attributes, options]);
+            this.__super__.initialize.apply(this, arguments);
             
             this.set('maxSteamHeight', 2 * this.get('height'));
 

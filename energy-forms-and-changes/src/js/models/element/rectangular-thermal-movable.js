@@ -35,7 +35,7 @@ define(function (require) {
 		}),
 		
 		initialize: function(attributes, options) {
-			this.__super__.initialize.apply(this, [attributes, options]);
+			this.__super__.initialize.apply(this, arguments);
 			
 			// Calculate starting energy
 			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
