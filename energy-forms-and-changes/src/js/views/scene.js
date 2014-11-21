@@ -4,10 +4,8 @@ define(function(require) {
 
 	var $        = require('jquery');
 	var _        = require('underscore');
-	var Backbone = require('backbone'); Backbone.$ = $;
+	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
-
-	var BodyView = require('views/body');
 
 	/**
 	 * SceneView is the main focus of the app. 
@@ -85,14 +83,11 @@ define(function(require) {
 			// Create a stage to hold everything
 			this.stage = new PIXI.Stage(0x000000);
 
-			this.initBodies();
+			this.initElements();
 		},
 
-		initBodies: function() {
-			this.sun = new BodyView({
-
-			});
-			this.stage.addChild(this.sun.displayObject);
+		initElements: function() {
+			
 		},
 
 		/**
@@ -118,7 +113,6 @@ define(function(require) {
 
 		resizeGraphics: function() {
 			this.renderer.resize(this.width, this.height);
-			
 		},
 
 		update: function(time, delta) {
@@ -132,10 +126,6 @@ define(function(require) {
 
 			// Render everything
 			this.renderer.render(this.stage);
-		},
-
-		updateBodies: function(time, delta) {
-			this.sun.update(time, delta);
 		}
 
 	});

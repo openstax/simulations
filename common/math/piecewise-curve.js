@@ -1,14 +1,15 @@
 define(function (require) {
 
     'use strict';
-
+console.log('you');
     var _              = require('underscore');
-    var solveQuadratic = require('solve-quadratic-equation');
-    var solveCubic     = require('solve-cubic-equation');
-    var lineIntersect  = require('line-intersect');
+    var solveQuadratic = require('../node_modules/solve-quadratic-equation-shimmed/index');
+    var solveCubic     = require('./solve-cubic-equation');
+    var lineIntersect  = require('../node_modules/line-intersect-shimmed/index');
     var Rectangle      = require('rectangle-node');
     var Vector2        = require('vector2-node');
 
+    console.log('guys');
     /**
      * The purpose of this class is to store paths of points and wathis.yPoints in
      *   the case of curved connections.  This is not a piecewise linear curve
@@ -23,6 +24,9 @@ define(function (require) {
         this.types   = [];
         this.xPoints = [];
         this.yPoints = [];
+
+        this.index    = 0; // The index of the next point to be created
+        this.subcurve = 0; // The index of the last moveTo point
 
         // Cached translation matrix array
         this._translation = [
@@ -112,7 +116,7 @@ define(function (require) {
             this._scale[0] = x;
             this._scale[4] = y !== undefined ? y : x;
             this.transform(this._scale);
-        }
+        },
 
         /**
          * Returns a rectangle representing a minimal bounding box.
@@ -160,7 +164,7 @@ define(function (require) {
                 y = x.y;
                 x = x.x;
             }
-            subpath = this.index;
+            this.subcurve = this.index;
             this.types[this.index] = PiecewiseCurve.SEG_MOVETO;
             this.xPoints[this.index]   = x;
             this.yPoints[this.index++] = y;
@@ -235,15 +239,15 @@ define(function (require) {
         },
         
         /**
-         * Closes the current subpath by drawing a line
+         * Closes the current subcurve by drawing a line
          * back to the point of the last moveTo, unless the path is already closed.
          */
         close: function() {
             if (this.index >= 1 && this.types[this.index - 1] == PiecewiseCurve.SEG_CLOSE)
                 return;
             this.types[this.index] = PiecewiseCurve.SEG_CLOSE;
-            this.xPoints[this.index]   = this.xPoints[subpath];
-            this.yPoints[this.index++] = this.yPoints[subpath];
+            this.xPoints[this.index]   = this.xPoints[this.subcurve];
+            this.yPoints[this.index++] = this.yPoints[this.subcurve];
         },
 
         /**
@@ -270,7 +274,7 @@ define(function (require) {
                 return true;
 
             return false;
-        }
+        },
 
         /**
          * Determine whether a point is contained within the bounds of the
@@ -327,31 +331,31 @@ define(function (require) {
             var windingNumber = 0;
             var pathStarted = false;
 
-            var this.xPoints;
-            var this.yPoints;
-            var this.types = this.this.types;
+            var xPoints = this.xPoints;
+            var yPoints = this.yPoints;
+            var types = this.this.types;
 
             if (!this.points.length)
                 return 0;
 
             if (useYAxis) {
                 // Trade axes
-                this.xPoints = this.yPoints;
-                this.yPoints = this.xPoints;
+                xPoints = this.yPoints;
+                yPoints = this.xPoints;
                 var swap = y;
                 y = x;
                 x = swap;
             }
 
             /* Get a value which is hopefully small but not insignificant relative the path. */
-            epsilon = this.yPoints[0] * 1E-7;
+            epsilon = yPoints[0] * 1E-7;
             
             if (epsilon == 0) 
                 epsilon = 1E-7;
             
             pos = 0;
             while (pos < this.index) {
-                switch (this.types[pos]) {
+                switch (types[pos]) {
                     case PiecewiseCurve.SEG_MOVETO:
                         if (pathStarted) { // close old path
                             x0 = cx;
@@ -369,8 +373,8 @@ define(function (require) {
                             cx = firstx;
                             cy = firsty;
                         }
-                        cx = firstx = this.xPoints[pos] - (float) x;
-                        cy = firsty = this.yPoints[pos++] - (float) y;
+                        cx = firstx = xPoints[pos]   - x;
+                        cy = firsty = yPoints[pos++] - y;
                         pathStarted = true;
                         break;
                     case PiecewiseCurve.SEG_CLOSE:
@@ -394,8 +398,8 @@ define(function (require) {
                     case PiecewiseCurve.SEG_LINETO:
                         x0 = cx;
                         y0 = cy;
-                        x1 = this.xPoints[pos]   - x;
-                        y1 = this.yPoints[pos++] - y;
+                        x1 = xPoints[pos]   - x;
+                        y1 = yPoints[pos++] - y;
 
                         if (y0 == 0.0)
                             y0 -= epsilon;
@@ -404,16 +408,16 @@ define(function (require) {
                         if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0.0, distance, 0.0))
                             windingNumber += (y1 < y0) ? 1 : negative;
 
-                        cx = this.xPoints[pos - 1] - x;
-                        cy = this.yPoints[pos - 1] - y;
+                        cx = xPoints[pos - 1] - x;
+                        cy = yPoints[pos - 1] - y;
                         break;
                     case PiecewiseCurve.SEG_QUADTO:
                         x0 = cx;
                         y0 = cy;
-                        x1 = this.xPoints[pos]   - x;
-                        y1 = this.yPoints[pos++] - y;
-                        x2 = this.xPoints[pos]   - x;
-                        y2 = this.yPoints[pos++] - y;
+                        x1 = xPoints[pos]   - x;
+                        y1 = yPoints[pos++] - y;
+                        x2 = xPoints[pos]   - x;
+                        y2 = yPoints[pos++] - y;
 
                         /* check if curve may intersect X+ axis. */
                         if ((x0 > 0.0 || x1 > 0.0 || x2 > 0.0) && (y0 * y1 <= 0 || y1 * y2 <= 0)) {
@@ -429,7 +433,7 @@ define(function (require) {
                             /* degenerate roots (=tangent points) do not
                             contribute to the winding number. */
                             if ((nRoots = solveQuadratic(r)) == 2) {
-                                for (int i = 0; i < nRoots; i++) {
+                                for (vari = 0; i < nRoots; i++) {
                                     var t = r[i];
                                     if (t > 0 && t < 1) {
                                         var crossing = t * t * (x2 - 2 * x1 + x0) + 2 * t * (x1 - x0) + x0;
@@ -440,18 +444,18 @@ define(function (require) {
                             }
                         }
 
-                        cx = this.xPoints[pos - 1] - x;
-                        cy = this.yPoints[pos - 1] - y;
+                        cx = xPoints[pos - 1] - x;
+                        cy = yPoints[pos - 1] - y;
                         break;
                     case PiecewiseCurve.SEG_CUBICTO:
                         x0 = cx;
                         y0 = cy;
-                        x1 = this.xPoints[pos]   - x;
-                        y1 = this.yPoints[pos++] - y;
-                        x2 = this.xPoints[pos]   - x;
-                        y2 = this.yPoints[pos++] - y;
-                        x3 = this.xPoints[pos]   - x;
-                        y3 = this.yPoints[pos++] - y;
+                        x1 = xPoints[pos]   - x;
+                        y1 = yPoints[pos++] - y;
+                        x2 = xPoints[pos]   - x;
+                        y2 = yPoints[pos++] - y;
+                        x3 = xPoints[pos]   - x;
+                        y3 = yPoints[pos++] - y;
 
                         /* check if curve may intersect X+ axis. */
                         if ((x0 > 0.0 || x1 > 0.0 || x2 > 0.0 || x3 > 0.0) && (y0 * y1 <= 0 || y1 * y2 <= 0 || y2 * y3 <= 0)) {
@@ -466,7 +470,7 @@ define(function (require) {
                             r[3] = y3 - 3 * y2 + 3 * y1 - y0;
 
                             if ((nRoots = solveCubic(r)) != 0) {
-                                for (int i = 0; i < nRoots; i++) {
+                                for (vari = 0; i < nRoots; i++) {
                                     var t = r[i];
                                     if (t > 0.0 && t < 1.0) {
                                         var crossing = -(t * t * t) * (x0 - 3 * x1 + 3 * x2 - x3)
@@ -482,8 +486,8 @@ define(function (require) {
                             }
                         }
 
-                        cx = this.xPoints[pos - 1] - x;
-                        cy = this.yPoints[pos - 1] - y;
+                        cx = xPoints[pos - 1] - x;
+                        cy = yPoints[pos - 1] - y;
                         break;
                 }
             }

@@ -5,16 +5,16 @@ define(function (require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var SimView      = require('common/app/sim');
-	var SceneView    = require('views/scene');
+	var IntroSimulation = require('models/simulation/intro');
 
-	require('nouislider');
+	var SimView   = require('common/app/sim');
+	var SceneView = require('views/scene');
+
 	require('bootstrap');
 
 	// CSS
 	require('less!styles/sim');
 	require('less!styles/playback-controls');
-	require('less!common/styles/slider');
 	require('less!common/styles/radio');
 
 	// HTML
@@ -23,7 +23,7 @@ define(function (require) {
 	/**
 	 * 
 	 */
-	var EFCSimView = SimView.extend({
+	var IntroSimView = SimView.extend({
 
 		/**
 		 * Root element properties
@@ -43,6 +43,7 @@ define(function (require) {
 			// Playback controls
 			'click .play-btn'   : 'play',
 			'click .pause-btn'  : 'pause',
+			'click .step-btn'   : 'step',
 			'click .reset-btn'  : 'reset'
 		},
 
@@ -58,12 +59,12 @@ define(function (require) {
 			this.initSceneView();
 		},
 
-		// /**
-		//  * Initializes the Simulation.
-		//  */
-		// initSimulation: function() {
-		// 	this.simulation = new GOSimulation();
-		// },
+		/**
+		 * Initializes the Simulation.
+		 */
+		initSimulation: function() {
+			this.simulation = new IntroSimulation();
+		},
 
 		/**
 		 * Initializes the Simulation.
@@ -163,5 +164,5 @@ define(function (require) {
 
 	});
 
-	return EFCSimView;
+	return IntroSimView;
 });

@@ -4,17 +4,15 @@ define(function(require) {
 
 	var AppView = require('common/app/app');
 
-	var FriendlyScaleSimView = require('views/sim/friendly-scale');
-	var ToScaleSimView       = require('views/sim/to-scale');
+	var IntroSimView = require('views/sim/intro');
 
 	require('less!styles/font-awesome');
 
-	var GOAppView = AppView.extend({
+	var EFCAppView = AppView.extend({
 
 		initialize: function() {
 			this.simViews = [
-				new FriendlyScaleSimView(),
-				new ToScaleSimView()
+				new IntroSimView()
 			];
 
 			AppView.prototype.initialize.apply(this);
@@ -22,5 +20,5 @@ define(function(require) {
 
 	});
 
-	return GOAppView;
+	return EFCAppView;
 });

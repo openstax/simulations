@@ -9,9 +9,9 @@ define(function(require) {
 	//var Colors   = require('common/colors/colors');
 
 	/**
-	 * A view that represents a heavenly body.
+	 * A view that represents an element model
 	 */
-	var BodyView = PixiView.extend({
+	var ElementView = PixiView.extend({
 
 		/**
 		 *
@@ -26,5 +26,5 @@ define(function(require) {
 
 	});
 
-	return BodyView;
+	return ElementView;
 });
