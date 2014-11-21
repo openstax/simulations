@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var $ = require('jquery');
+
     var GraphView = require('common/graph/graph');
 
     require('nouislider');
@@ -146,12 +148,12 @@ define(function(require) {
             var graphSeries = this.graphSeries;
             var length      = graphSeries.size();
             
-            for (i = 0; i < length; i++) {
+            for (var i = 0; i < length; i++) {
                 if (i >= points.length)
                     this._addPoint();
 
                 points[i].x = graphSeries.getPoint(i).time  * pixelRatioX;
-                points[i].y = this.height / 2 - graphSeries.getPoint(i).value * pixelRatioY;
+                points[i].y = height / 2 - graphSeries.getPoint(i).value * pixelRatioY;
             }
 
             // Hide the beginning
@@ -288,7 +290,7 @@ define(function(require) {
          * Increases the valueSpan and triggers a zoom-y event.
          */
         zoomOutY: function(event) {
-            this.valueSpan += this.maxValueSpan / 8;;
+            this.valueSpan += this.maxValueSpan / 8;
             if (this.valueSpan > this.maxValueSpan)
                 this.valueSpan = this.maxValueSpan;
             

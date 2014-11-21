@@ -2,8 +2,8 @@ define(function(require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
+    var $ = require('jquery');
 
     var MovingManSimulation = require('models/moving-man-simulation');
     var MovingManSimView    = require('views/sim');

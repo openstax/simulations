@@ -2,7 +2,7 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    //var _ = require('underscore');
+    var _       = require('underscore');
     var Formula = require('fparser');
     var bs      = require('common/binarysearch/binarysearch');
 

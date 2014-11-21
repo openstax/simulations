@@ -23,8 +23,6 @@ define(function (require, exports, module) {
     var VELOCITY_SCALE     = 0.2;
     var ACCELERATION_SCALE = 0.8;
 
-    var ARROW_HEAD_WIDTH = 15;
-
     /**
      * The moving man view is the focus of the application.  He
      *   represents the state of the moving man model and animates
@@ -150,6 +148,14 @@ define(function (require, exports, module) {
             if (this.updateOnNextFrame)
                 this.updateOnNextFrame = false;
 
+            this._updatePosition();
+
+            this._updateDirection();
+
+            this._updateArrows();
+        },
+
+        _updatePosition: function() {
             // Update position
             this._xPercent  = (this._position + this.simulation.get('halfContainerWidth')) / this.simulation.get('containerWidth');
             this._xPixels   = this._xPercent * this.dragBounds.width;
@@ -161,7 +167,9 @@ define(function (require, exports, module) {
                 '-o-transform':      this._translate,
                 'transform':         this._translate,
             });
+        },
 
+        _updateDirection: function() {
             if (this.movingMan.get('velocity') > 0.1)
                 this.movementState = MOVEMENT_STATE_RIGHT;
             else if (this.movingMan.get('velocity') < -0.1)
@@ -191,7 +199,9 @@ define(function (require, exports, module) {
                         break;
                 }
             }
+        },
 
+        _updateArrows: function() {
             // Update arrow visiblity
             if (this.velocityVectorEnabled !== this.velocityVectorVisible) {
                 if (this.velocityVectorEnabled) {
