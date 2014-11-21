@@ -96,11 +96,11 @@ define(function (require, exports, module) {
             ];
 
             // Cached objects
-            this._location   = Vector2();
-            this._pointAbove = Vector2();
-            this._initialMotionConstraints = Vector2();
-            this._translation = Vector2();
-            this._allowedTranslation = Vector2();
+            this._location   = new Vector2();
+            this._pointAbove = new Vector2();
+            this._initialMotionConstraints = new Vector2();
+            this._translation = new Vector2();
+            this._allowedTranslation = new Vector2();
             this._burnerBlockingRect = new Rectangle();
             this._beakerLeftSide = new Rectangle();
             this._beakerRightSide = new Rectangle();

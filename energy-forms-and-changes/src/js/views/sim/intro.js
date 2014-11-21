@@ -19,6 +19,7 @@ define(function (require) {
 
 	// HTML
 	var simHtml = require('text!templates/sim.html');
+	var controlsHtml = require('text!templates/controls.html');
 
 	/**
 	 * 
@@ -35,6 +36,7 @@ define(function (require) {
 		 * Template for rendering the basic scaffolding
 		 */
 		template: _.template(simHtml),
+		controlsTemplate: _.template(controlsHtml),
 
 		/**
 		 * Dom event listeners
@@ -110,16 +112,6 @@ define(function (require) {
 			this.$controls = $(this.controlsTemplate({
 				unique: this.cid
 			}));
-
-			// Initialize speed slider
-			this.$controls.find('.playback-speed').noUiSlider({
-				start: 1,
-				range: {
-					'min': [ 0.2 ],
-					'50%': [ 1 ],
-					'max': [ 4 ]
-				}
-			});
 
 			this.$('.playback-controls-placeholder').replaceWith(this.$controls);
 		},

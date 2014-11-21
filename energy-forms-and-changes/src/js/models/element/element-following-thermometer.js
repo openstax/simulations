@@ -6,7 +6,6 @@ define(function (require) {
 	var Vector2  = require('vector2-node');
 
 	var Thermometer = require('models/element/thermometer');
-	var IntroSimulation = require('models/simulation/intro');
 
 	/**
 	 * 
@@ -16,7 +15,8 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			Thermometer.prototype.initialize.apply(this, arguments);
 
-			if (!(this.elementLocator instanceof IntroSimulation))
+			if (typeof this.elementLocator.getBeaker !== 'function' ||
+				typeof this.elementLocator.getBlockList !== 'function')
 				throw 'ElementFollowingThermometer: elementLocator must be an IntroSimulation';
 			else
 				this.simulation = this.elementLocator;

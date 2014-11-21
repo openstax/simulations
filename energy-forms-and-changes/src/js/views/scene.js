@@ -120,8 +120,7 @@ define(function(require) {
 				this.resize();
 
 			if (!this.simulation.get('paused')) {
-				// Update particles to match new lattice
-				this.updateBodies(time, delta);
+				
 			}
 
 			// Render everything

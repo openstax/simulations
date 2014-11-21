@@ -32,7 +32,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 			options = options || {};
 
-			if (options.elementLocator)
+			if (typeof options.elementLocator.getElementAtLocation === 'function')
 				this.elementLocator = options.elementLocator;
 			else
 				throw 'Thermometer model requires an element locator.';
