@@ -238,7 +238,7 @@ define(function (require) {
          * Closes the current subpath by drawing a line
          * back to the point of the last moveTo, unless the path is already closed.
          */
-        closePath: function() {
+        close: function() {
             if (this.index >= 1 && this.types[this.index - 1] == PiecewiseCurve.SEG_CLOSE)
                 return;
             this.types[this.index] = PiecewiseCurve.SEG_CLOSE;

@@ -9,6 +9,7 @@ define(function (require, exports, module) {
 
     // Project dependiencies
     var FixedIntervalSimulation     = require('common/simulation/simulation');
+    var PiecewiseCurve              = require('common/math/piecewise-curve');
     var Air                         = require('models/air');
     var Beaker                      = require('models/element/beaker');
     var BeakerContainer             = require('models/element/beaker-container');
@@ -482,6 +483,19 @@ define(function (require, exports, module) {
          * @return
          */
         determineAllowedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
+            var translation;
+
+            translation = this.checkOverlapOnProposedTranslation(movingRect, stationaryRect, proposedTranslation, restrictPosY);
+
+            if (translation)
+                return translation;
+
+            translation = this.checkCollisionsOnProposedTranslation(movingRect, stationaryRect, proposedTranslation, restrictPosY);
+
+            return translation;
+        },
+
+        checkOverlapOnProposedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
             var translation = this._allowedTranslation;
 
             // Test for case where rectangles already overlap.
@@ -523,6 +537,10 @@ define(function (require, exports, module) {
                     return translation.set(proposedTranslation.x, yOverlapCure);
                 }
             }
+        },
+
+        checkCollisionsOnProposedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
+            var translation = this._allowedTranslation;
 
             var xTranslation = proposedTranslation.x;
             var yTranslation = proposedTranslation.y;
@@ -571,7 +589,13 @@ define(function (require, exports, module) {
         },
 
         projectShapeFromLine: function(x1, y1, x2, y2, projection) {
-
+            var curve = new PiecewiseCurve();
+            curve.moveTo(x1, y1);
+            curve.lineTo(x1 + projection.x, y1 + projection.y);
+            curve.lineTo(x2 + projection.x, y2 + projection.y);
+            curve.lineTo(x2, y2);
+            curve.close();
+            return curve;
         },
 
         /**

@@ -402,7 +402,7 @@ define(function (require) {
 			path.lineTo(vec2.set(rect.right(), rect.top()).add(this._backwardPerspectiveOffset));
 			path.lineTo(vec2.set(rect.left(),  rect.top()).add(this._backwardPerspectiveOffset));
 			path.lineTo(vec2.set(rect.left(),  rect.top()).add(this._forwardPerspectiveOffset));
-			path.closePath();
+			path.close();
 
 			return path;
 		},
