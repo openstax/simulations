@@ -36,7 +36,7 @@ define(function (require) {
         func.update();
 
         func.createInverse = function() {
-            return func(minOutput, maxOutput, minInput, maxInput);
+            return Functions.createLinearFunction(minOutput, maxOutput, minInput, maxInput);
         };
         
         return func;

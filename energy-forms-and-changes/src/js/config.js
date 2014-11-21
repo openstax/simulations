@@ -13,8 +13,7 @@
             'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
             'rectangle-node': '../../node_modules/rectangle-node-shimmed/index',
             'object-pool':    '../../node_modules/object-pool-shimmed/index',
-            'solve-quadratic-equation': '../../../common/node_modules/solve-quadratic-equation-shimmed/index',
-            'line-intersect': '../../../common/node_modules/line-intersect-shimmed/index',
+            'circular-list':   '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
 
             views:      '../js/views',
             models:     '../js/models',

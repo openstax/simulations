@@ -269,7 +269,7 @@ define(function (require) {
         return Math.max(Math.round(Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( energy )), 0);
     };
 
-    Constants.ENERGY_PER_CHUNK = Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 2 ) - Constants.MAP_NUM_CHUNKS_TO_ENERGY_DOUBLE( 1 );
+    Constants.ENERGY_PER_CHUNK = Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 2 ) - Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 1 );
     
 
     /*************************************************************************

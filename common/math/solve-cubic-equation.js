@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var solveQuadratic = require('solve-quadratic-equation');
+    var solveQuadratic = require('../node_modules/solve-quadratic-equation-shimmed/index');
 
     /**
      * Modeled after the source for java.awt.geom.CubicCurve2D.solveCubic
