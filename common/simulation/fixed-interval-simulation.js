@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Simulation = require('simulation');
+    var Simulation = require('./simulation');
 
     /**
      * Wraps the update function in 
@@ -16,7 +16,7 @@ define(function (require) {
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-            (options || options = {});
+            options = options || {};
             var fps = options.framesPerSecond || 30;
 
             this.timestep = 1000 / fps; // milliseconds, from PhET's WaveInterferenceClock

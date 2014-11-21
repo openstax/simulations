@@ -8,7 +8,7 @@ define(function (require, exports, module) {
     var Rectangle = require('rectangle-node');
 
     // Project dependiencies
-    var FixedIntervalSimulation     = require('common/simulation/simulation');
+    var FixedIntervalSimulation     = require('common/simulation/fixed-interval-simulation');
     var PiecewiseCurve              = require('common/math/piecewise-curve');
     var Air                         = require('models/air');
     var Beaker                      = require('models/element/beaker');
@@ -63,9 +63,10 @@ define(function (require, exports, module) {
             this.thermometers = [];
             for (var i = 0; i < IntroSimulation.NUM_THERMOMETERS; i++) {
                 this.thermometers.push(new ElementFollowingThermometer({
-                    elementLocator: this,
                     position: IntroSimulation.INITIAL_THERMOMETER_LOCATION,
                     active: false
+                }, {
+                    elementLocator: this
                 }));
             }
 

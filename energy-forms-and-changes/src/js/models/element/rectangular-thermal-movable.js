@@ -38,6 +38,15 @@ define(function (require) {
 		}),
 		
 		initialize: function(attributes, options) {
+			// Cached objects
+			this._sliceBounds = new Rectangle();
+			this._centerPoint = new Vector2();
+			this._translation = new Vector2();
+			this._vec2 = new Vector2();
+			this._forwardPerspectiveOffset  = Constants.MAP_Z_TO_XY_OFFSET( Constants.Block.SURFACE_WIDTH / 2);
+			this._backwardPerspectiveOffset = Constants.MAP_Z_TO_XY_OFFSET(-Constants.Block.SURFACE_WIDTH / 2);
+			
+			// Calling the parent's initialize function
 			MovableElement.prototype.initialize.apply(this, arguments);
 			
 			// Calculate starting energy
@@ -54,13 +63,6 @@ define(function (require) {
 
 			// Add the initial energy chunks
 			this.addInitialEnergyChunks();
-
-			this._sliceBounds = new Rectangle();
-			this._centerPoint = new Vector2();
-			this._translation = new Vector2();
-			this._vec2 = new Vector2();
-			this._forwardPerspectiveOffset  = Constants.MAP_Z_TO_XY_OFFSET( Constants.Block.SURFACE_WIDTH / 2);
-			this._backwardPerspectiveOffset = Constants.MAP_Z_TO_XY_OFFSET(-Constants.Block.SURFACE_WIDTH / 2);
 
 			this.on('change:position', function(model, position){
 				var translation = this._translation.set(position).sub(this._oldPosition);

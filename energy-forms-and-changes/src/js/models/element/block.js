@@ -20,18 +20,13 @@ define(function (require) {
     var Block = RectangularThermalMovableElement.extend({
 
         initialize: function(attributes, options) {
-            RectangularThermalMovableElement.prototype.initialize.apply(this, arguments);
-
-            this._rect = new Rectangle(
-                this.get('position').x - Block.SURFACE_WIDTH / 2,
-                this.get('position').y,
-                Block.SURFACE_WIDTH,
-                Block.SURFACE_WIDTH
-            );
-
+            // Initialized cached objects
+            this._rect = new Rectangle(0, 0, Block.SURFACE_WIDTH, Block.SURFACE_WIDTH);
+            this._sliceBounds = new Rectangle();
             this._thermalContactArea = new ThermalContactArea(this._rect, false);
 
-            this._sliceBounds = new Rectangle();
+            // Call the parent's initialize method
+            RectangularThermalMovableElement.prototype.initialize.apply(this, arguments);
 
             // Surfaces used for stacking and thermal interaction.
             this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top(),    this);
@@ -120,7 +115,7 @@ define(function (require) {
             for (var i = 0; i < this.slices.length; i++) {
                 // I've simplified this process from using the Java AffineTransform class, so let's hope it works
                 var projectionOffsetVector = Constants.MAP_Z_TO_XY_OFFSET(i * (-Block.SURFACE_WIDTH / (Block.NUM_ENERGY_CHUNK_SLICES - 1)));
-                this._sliceBounds.set(this.getBounds());
+                this._sliceBounds.set(this.getRect());
                 this._sliceBounds.x += projectionToFront.x + projectionOffsetVector.x;
                 this._sliceBounds.y += projectionToFront.y + projectionOffsetVector.y;
                 this.slices[i].getBounds().set(this._sliceBounds);

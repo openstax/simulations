@@ -13,28 +13,28 @@ define(function (require) {
     var Constants = require('models/constants');
 
     /**
-     * 
+     * Static caching objects
      */
-    var EnergyChunkDistributor = function() {
-        this._boundingRect    = new Rectangle();
-        this._lengthBounds    = new Rectangle();
-        this._vectorToEdge    = new Vector2();
-        this._edgePosition    = new Vector2();
-        this._edgeForce       = new Vector2();
-        this._vectorToOther   = new Vector2();
-        this._vectorToCenter  = new Vector2();
-        this._dragForceVector = new Vector2();
-        this._randomLocation  = new Vector2();
+    var boundingRect    = new Rectangle();
+    var lengthBounds    = new Rectangle();
+    var vectorToEdge    = new Vector2();
+    var edgePosition    = new Vector2();
+    var edgeForce       = new Vector2();
+    var vectorToOther   = new Vector2();
+    var vectorToCenter  = new Vector2();
+    var dragForceVector = new Vector2();
+    var randomLocation  = new Vector2();
 
-        this._forceVectorPool = Pool({
-            init: function() {
-                return new Vector2();
-            },
-            enable: function(vector) {
-                vector.set(0, 0);
-            }
-        });
-    };
+    var forceVectorPool = Pool({
+        init: function() {
+            return new Vector2();
+        },
+        enable: function(vector) {
+            vector.set(0, 0);
+        }
+    });
+
+    var EnergyChunkDistributor = {};
 
     /**
      * Apply static constants
@@ -44,7 +44,7 @@ define(function (require) {
     /**
      * Functions
      */
-    _.extend(EnergyChunkDistributor.prototype, {
+    _.extend(EnergyChunkDistributor, {
 
         /**
          * Redistribute a set of energy chunks that are contained in energy chunk
@@ -57,13 +57,13 @@ define(function (require) {
             var j;
 
             // Determine a rectangle that bounds all of the slices.
-            var bounds = this.calculateBounds(slices);
+            var bounds = EnergyChunkDistributor.calculateBounds(slices);
 
             // Create a map that tracks the force applied to each energy chunk.
-            var energyChunkForceVectors = this.initEnergyChunkForceVectors(slices);
+            var energyChunkForceVectors = EnergyChunkDistributor.initEnergyChunkForceVectors(slices);
 
             // Get list of all the chunks so we can easily cycle through them.
-            var chunks = this.getChunksFromSlices(slices);
+            var chunks = EnergyChunkDistributor.getChunksFromSlices(slices);
 
             // Make sure that there is actually something to distribute.
             if (!chunks.length)
@@ -113,16 +113,16 @@ define(function (require) {
                         forceVector = energyChunkForceVectors[i][j];
 
                         // Determine forces on each energy chunk.
-                        this.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
+                        EnergyChunkDistributor.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
 
                         // Update energy chunk velocities, drag force, and position.
-                        var energy = this.updateChunk(chunk, timeStep, forceVector);
+                        var energy = EnergyChunkDistributor.updateChunk(chunk, timeStep, forceVector);
 
                         if (energy > maxEnergy)
                             maxEnergy = energy;
 
                         // Clean the pool now that we're done with it.
-                        this._forceVectorPool.remove(forceVector);
+                        forceVectorPool.remove(forceVector);
                     }
                 }
 
@@ -146,7 +146,7 @@ define(function (require) {
             for (var i = 0; i < slices.length; i++) {
                 energyChunkForceVectors[i] = [];
                 for (var j = 0; j < slices[i].energyChunkList.length; j++)
-                    energyChunkForceVectors[i][j] = this._forceVectorPool.create();
+                    energyChunkForceVectors[i][j] = forceVectorPool.create();
             }
             return energyChunkForceVectors;
         },
@@ -166,12 +166,12 @@ define(function (require) {
             forceVector.set(0, 0);
 
             if (containerShape.contains(chunk.position)) {
-                this.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
-                this.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
+                EnergyChunkDistributor.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
+                EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
             }
             else {
                 // Point is outside container, move it towards center of shape.
-                var vectorToCenter = this._vectorToCenter
+                vectorToCenter
                     .set(
                         bounds.center().x,
                         bounds.center().y
@@ -186,8 +186,6 @@ define(function (require) {
         },
 
         updateChunk: function(chunk, timeStep, forceVector) {
-            var dragForceVector = this._dragForceVector;
-
             // Calculate the energy chunk's velocity as a result of forces acting on it.
             chunk.velocity.add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
 
@@ -239,7 +237,7 @@ define(function (require) {
                 maxY  = Math.max(bounds.top(),    maxY);
             }
 
-            bounds = this._boundingRect.set(
+            return boundingRect.set(
                 minX,
                 minY,
                 maxX - minX,
@@ -252,11 +250,6 @@ define(function (require) {
          *   chunk contained in the container's shape.
          */
         addContainerEdgeForces: function(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant) {
-            var lengthBounds = this._lengthBounds;
-            var vectorToEdge = this._vectorToEdge;
-            var edgePosition = this._edgePosition;
-            var edgeForce    = this._edgeForce;
-
             // Loop on several angles, calculating the forces from the
             //   edges at the given angle.
             for (var angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
@@ -303,7 +296,6 @@ define(function (require) {
          *   has limits on the maximum force that can be applied.
          */
         addForcesFromOtherChunks: function(chunk, forceVector, chunks, minDistance, forceConstant) {
-            var vectorToOther = this._vectorToOther;
             // Now apply the force from each of the other
             //   particles, but set some limits on the max force
             //   that can be applied.
@@ -346,7 +338,7 @@ define(function (require) {
          * Returns a random location within the specified rectangle.
          */
         generateRandomLocation: function(rect) {
-            return this._randomLocation.set(
+            return randomLocation.set(
                 rect.left()   + (Math.random() * rect.w),
                 rect.bottom() + (Math.random() * rect.h)
             );

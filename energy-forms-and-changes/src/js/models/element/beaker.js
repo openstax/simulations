@@ -39,10 +39,7 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            Beaker.__super__.initialize.apply(this, arguments);
-            
-            this.set('maxSteamHeight', 2 * this.get('height'));
-
+            // Cached objects
             this._rect = new Rectangle(
                 this.get('position').x - this.get('width') / 2,
                 this.get('position').y,
@@ -69,6 +66,11 @@ define(function (require) {
                 this.get('temperature'),
                 Constants.ROOM_TEMPERATURE
             );
+
+            // Calling the parent's initialize function
+            Beaker.__super__.initialize.apply(this, arguments);
+            
+            this.set('maxSteamHeight', 2 * this.get('height'));
 
             // Surfaces used for stacking and thermal interaction.
             this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top(),    this);

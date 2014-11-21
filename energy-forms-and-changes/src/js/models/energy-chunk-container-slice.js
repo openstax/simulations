@@ -27,7 +27,7 @@ define(function (require) {
 			this.energyChunkList.push(chunk);
 		},
 
-		getNumEnergyChunk: function() {
+		getNumEnergyChunks: function() {
 			return this.energyChunkList.length;
 		},
 
