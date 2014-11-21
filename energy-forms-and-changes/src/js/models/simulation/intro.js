@@ -98,6 +98,7 @@ define(function (require, exports, module) {
             this._pointAbove = Vector2();
             this._initialMotionConstraints = Vector2();
             this._translation = Vector2();
+            this._allowedTranslation = Vector2();
             this._burnerBlockingRect = new Rectangle();
             this._beakerLeftSide = new Rectangle();
             this._beakerRightSide = new Rectangle();
@@ -403,7 +404,7 @@ define(function (require, exports, module) {
                 var testRectThickness = 1E-3; // 1 mm thick walls.
                 var beakerRect = this.beaker.getRect();
                 var beakerLeftSide = this._beakerLeftSide.set(
-                    beakerRect.getMinX() - blockPerspectiveExtension,
+                    beakerRect.left() - blockPerspectiveExtension,
                     this.beaker.getRect().bottom(),
                     testRectThickness + blockPerspectiveExtension * 2,
                     this.beaker.getRect().h + blockPerspectiveExtension
@@ -481,7 +482,96 @@ define(function (require, exports, module) {
          * @return
          */
         determineAllowedTranslation: function(movingRect, stationaryRect, proposedTranslation, restrictPosY) {
-            // TODO
+            var translation = this._allowedTranslation;
+
+            // Test for case where rectangles already overlap.
+            if (movingRect.overlaps(stationaryRect)) {
+                // The rectangles already overlap.  Are they right on top of one another?
+                if (movingRect.center().x === stationaryRect.center().x && movingRect.center().x === stationaryRect.center().x) {
+                    console.error('IntroSimulation - Warning: Rectangle centers in same location--returning zero vector.');
+                    return translation.set(0, 0);
+                }
+
+                // Determine the motion in the X & Y directions that will "cure"
+                //   the overlap.
+                var xOverlapCure = 0;
+                if (movingRect.right() > stationaryRect.left() && movingRect.left() < stationaryRect.left()) {
+                    xOverlapCure = stationaryRect.left() - movingRect.right();
+                }
+                else if (stationaryRect.right() > movingRect.left() && stationaryRect.left() < movingRect.left()) {
+                    xOverlapCure = stationaryRect.right() - movingRect.left();
+                }
+                var yOverlapCure = 0;
+                if (movingRect.top() > stationaryRect.bottom() && movingRect.bottom() < stationaryRect.bottom()) {
+                    yOverlapCure = stationaryRect.bottom() - movingRect.top();
+                }
+                else if ( stationaryRect.top() > movingRect.bottom() && stationaryRect.bottom() < movingRect.bottom()) {
+                    yOverlapCure = stationaryRect.top() - movingRect.bottom();
+                }
+
+                // Something is wrong with algorithm if both values are zero,
+                //   since overlap was detected by the "intersects" method.
+                if (xOverlapCure === 0 && yOverlapCure === 0)
+                    return;
+
+                // Return a vector with the smallest valid "cure" value, leaving
+                //   the other translation value unchanged.
+                if (xOverlapCure !== 0 && Math.abs(xOverlapCure) < Math.abs(yOverlapCure)) {
+                    return translation.set(xOverlapCure, proposedTranslation.y);
+                }
+                else {
+                    return translation.set(proposedTranslation.x, yOverlapCure);
+                }
+            }
+
+            var xTranslation = proposedTranslation.x;
+            var yTranslation = proposedTranslation.y;
+
+            // X direction.
+            if (proposedTranslation.x > 0) {
+                // Check for collisions moving right.
+                var rightEdgeSmear = this.projectShapeFromLine(movingRect.right(), movingRect.top(), movingRect.right(), movingRect.top(), proposedTranslation);
+
+                if (movingRect.right() <= stationaryRect.left() && rightEdgeSmear.intersects(stationaryRect)) {
+                    // Collision detected, limit motion.
+                    xTranslation = stationaryRect.left() - movingRect.right() - IntroSimulation.MIN_INTER_ELEMENT_DISTANCE;
+                }
+            }
+            else if (proposedTranslation.x < 0) {
+                // Check for collisions moving left.
+                var leftEdgeSmear = this.projectShapeFromLine(movingRect.left(), movingRect.bottom(), movingRect.left(), movingRect.top(), proposedTranslation);
+
+                if (movingRect.left() >= stationaryRect.right() && leftEdgeSmear.intersects(stationaryRect)) {
+                    // Collision detected, limit motion.
+                    xTranslation = stationaryRect.right() - movingRect.left() + IntroSimulation.MIN_INTER_ELEMENT_DISTANCE;
+                }
+            }
+
+            // Y direction.
+            if (proposedTranslation.y > 0 && restrictPosY) {
+                // Check for collisions moving up.
+                var topEdgeSmear = this.projectShapeFromLine(movingRect.left(), movingRect.top(), movingRect.right(), movingRect.top(), proposedTranslation);
+
+                if (movingRect.top() <= stationaryRect.bottom() && topEdgeSmear.intersects(stationaryRect)) {
+                    // Collision detected, limit motion.
+                    yTranslation = stationaryRect.bottom() - movingRect.top() - IntroSimulation.MIN_INTER_ELEMENT_DISTANCE;
+                }
+            }
+            if (proposedTranslation.y < 0) {
+                // Check for collisions moving down.
+                var bottomEdgeSmear = this.projectShapeFromLine(movingRect.left(), movingRect.bottom(), movingRect.right(), movingRect.bottom(), proposedTranslation);
+
+                if (movingRect.bottom() >= stationaryRect.top() && bottomEdgeSmear.intersects(stationaryRect)) {
+                    // Collision detected, limit motion.
+                    yTranslation = stationaryRect.top() - movingRect.bottom() + IntroSimulation.MIN_INTER_ELEMENT_DISTANCE;
+                }
+            }
+
+            return translation.set(xTranslation, yTranslation);
+        },
+
+        projectShapeFromLine: function(x1, y1, x2, y2, projection) {
+
         },
 
         /**

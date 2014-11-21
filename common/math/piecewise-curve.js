@@ -247,6 +247,32 @@ define(function (require) {
         },
 
         /**
+         * Evaluates if a rectangle intersects a path.
+         */
+        intersects: function(x, y, w, h) {
+            if (x instanceof Rectangle) {
+                h = x.h;
+                w = x.w;
+                y = x.y;
+                x = x.x;
+            }
+
+            // Does any edge intersect?
+            if (this.getAxisIntersections(x, y,     false, w) !== 0 ||
+                this.getAxisIntersections(x, y + h, false, w) !== 0 ||
+                this.getAxisIntersections(x + w, y, false, h) !== 0 ||
+                this.getAxisIntersections(x, y,     false, h) !== 0) {
+                return true;
+            }
+
+            // No intersections, is any point inside?
+            if (this.getWindingNumber(x, y) !== 0)
+                return true;
+
+            return false;
+        }
+
+        /**
          * Determine whether a point is contained within the bounds of the
          *   closed curve.
          * Can take an object with x and y values or plain x and y values.
@@ -260,12 +286,20 @@ define(function (require) {
             return this.getWindingNumber(x, y) !== 0;
         },
 
+        /**
+         * Helper method - Get the total number of intersections from (x,y) along 
+         * a given axis, within a given distance.
+         */
+        getAxisIntersections: function(x, y, useYAxis, distance) {
+            return this.evaluateCrossings(x, y, false, useYAxis, distance);
+        },
+
         getWindingNumber: function(x, y) {
             /* Evaluate the crossings from x,y to infinity on the y axis (arbitrary 
              *   choice). Note that we don't actually use Double.INFINITY, since that's 
              *   slower, and may cause problems. 
              */
-            return evaluateCrossings(x, y, true, true, PiecewiseCurve.BIG_VALUE);
+            return this.evaluateCrossings(x, y, true, true, PiecewiseCurve.BIG_VALUE);
         },
 
         evaluateCrossings: function(x, y, neg, useYAxis, distance) {
