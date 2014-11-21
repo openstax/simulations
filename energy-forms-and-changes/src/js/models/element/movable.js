@@ -22,7 +22,8 @@ define(function (require) {
 		
 		initialize: function(attributes, options) {
 			// Create vectors
-			this.set('position', new Vector2(0, 0));
+			if (!this.get('position'))
+				this.set('position', new Vector2());
 			this._oldPosition = new Vector2();
 		},
 

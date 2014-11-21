@@ -83,10 +83,10 @@ console.log('you');
             var xPoints = this.xPoints;
             var yPoints = this.yPoints;
             for (var i = 0; i < this.index; i++) {
-                newX = tm[0] * xPoints[i] + tm[1] * yPoints[i] + m[2];
-                newY = tm[3] * xPoints[i] + tm[4] * yPoints[i] + m[5];
-                xpoints[i] = newX;
-                ypoints[i] = newY;
+                newX = tm[0] * xPoints[i] + tm[1] * yPoints[i] + tm[2];
+                newY = tm[3] * xPoints[i] + tm[4] * yPoints[i] + tm[5];
+                xPoints[i] = newX;
+                yPoints[i] = newY;
             }
         },
 

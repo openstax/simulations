@@ -14,7 +14,7 @@ define(function (require) {
 	var ElementFollowingThermometer = Thermometer.extend({
 
 		initialize: function(attributes, options) {
-			this.__super__.initialize.apply(this, arguments);
+			Thermometer.prototype.initialize.apply(this, arguments);
 
 			if (!(this.elementLocator instanceof IntroSimulation))
 				throw 'ElementFollowingThermometer: elementLocator must be an IntroSimulation';
@@ -48,7 +48,7 @@ define(function (require) {
 
 		reset: function() {
 			this.stopFollowing();
-			this.__super__.reset.apply(this);
+			Thermometer.prototype.reset.apply(this);
 		},
 
 		follow: function(element) {

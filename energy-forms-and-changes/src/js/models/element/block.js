@@ -102,7 +102,7 @@ define(function (require) {
             var slice;
 
             for (var i = 0; i < Block.NUM_ENERGY_CHUNK_SLICES; i++) {
-                slice = new EnergyChunkContainerSlice(this.getBounds(), -i * (Block.SURFACE_WIDTH / (Block.NUM_ENERGY_CHUNK_SLICES - 1)));
+                slice = new EnergyChunkContainerSlice(this.getRect(), -i * (Block.SURFACE_WIDTH / (Block.NUM_ENERGY_CHUNK_SLICES - 1)));
                 this.slices.push(slice);
             }
 

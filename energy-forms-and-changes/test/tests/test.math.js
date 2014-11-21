@@ -13,7 +13,7 @@ describe('PiecewiseCurve', function(){
 	});
 
 	it('stores points through #moveTo, #lineTo, and #close', function(){
-		var curve = PiecewiseCurve();
+		var curve = new PiecewiseCurve();
 		curve.moveTo(0, 0);
 		curve.lineTo(5, 2);
 		curve.lineTo(9, 4);
@@ -27,7 +27,7 @@ describe('PiecewiseCurve', function(){
 	});
 
 	it('should #translate correctly', function(){
-		var curve = PiecewiseCurve();
+		var curve = new PiecewiseCurve();
 		curve.moveTo(2, 2);
 		curve.lineTo(4, 4);
 		curve.translate(1, -1);
@@ -37,7 +37,7 @@ describe('PiecewiseCurve', function(){
 	});
 
 	it('should #rotate correctly', function(){
-		var curve = PiecewiseCurve();
+		var curve = new PiecewiseCurve();
 		curve.moveTo(0, 0);
 		curve.lineTo(1, 0);
 		curve.lineTo(2, -1);

@@ -108,7 +108,7 @@ define(function (require) {
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
 			}
 			else {
-				this.__super__.addEnergyChunk.apply(this, [chunk]);
+				Beaker.prototype.addEnergyChunk.apply(this, [chunk]);
 			}
 		}
 
