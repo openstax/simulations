@@ -4,7 +4,7 @@ define(function (require) {
 
     var Vector2   = require('vector2-node');
     var Rectangle = require('rectangle-node');
-    var Functions = require('common/functions');
+    var Functions = require('common/math/functions');
 
     var ThermalContactArea      = require('models/thermal-contact-area');
     var EnergyContainerCategory = require('models/energy-container-category');

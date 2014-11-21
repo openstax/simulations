@@ -42,13 +42,20 @@
         },
 
         shim: {
-            'vector2-node': {
-                exports: 'Vector2'
-            },
-            'rectangle-node': {
-                deps: ['vector2-node'],
-                exports: 'Rectangle'
-            }
+            // 'vector2-node': {
+            //     exports: 'Vector2'
+            // },
+            // 'rectangle-node': {
+            //     deps: ['vector2-node'],
+            //     exports: 'Rectangle'
+            // },
+            // 'solve-quadratic-equation': {
+            //     exports: 'solveQuadraticEquation'
+            // },
+            // 'line-intersect': {
+            //     deps: [],
+            //     exports: 'checkIntersection'
+            // }
         }
     };
 

@@ -7,7 +7,7 @@ define(function (require) {
     var Rectangle = require('rectangle-node');
 
     var Air                         = require('models/air');
-    var Element                     = require('models/block');
+    var Element                     = require('models/element/block');
     var EnergyChunk                 = require('models/energy-chunk');
     var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
     var HorizontalSurface           = require('models/horizontal-surface');

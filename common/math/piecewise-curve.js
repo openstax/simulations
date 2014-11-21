@@ -1,7 +1,7 @@
 define(function (require) {
-
-    'use strict';
 console.log('you');
+    'use strict';
+
     var _              = require('underscore');
     var solveQuadratic = require('../node_modules/solve-quadratic-equation-shimmed/index');
     var solveCubic     = require('./solve-cubic-equation');

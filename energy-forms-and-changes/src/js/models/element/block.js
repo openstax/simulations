@@ -4,7 +4,7 @@ define(function (require) {
 
     var Rectangle = require('rectangle-node');
 
-    var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
+    var RectangularThermalMovableElement = require('models/element/rectangular-thermal-movable');
     var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
     var HorizontalSurface                = require('models/horizontal-surface');
     var ThermalContactArea               = require('models/thermal-contact-area');

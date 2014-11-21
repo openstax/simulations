@@ -9,24 +9,24 @@ define(function (require) {
 
     Functions.createLinearFunction = function(minInput, maxInput, minOutput, maxOutput) {
         var func = function(x) {
-            var output = this.t1 + x;
-            output *= this.scale;
-            output += t2;
+            var output = func.t1 + x;
+            output *= func.scale;
+            output += func.t2;
             return output;
         };
 
         func.update = function() {
-            this.t1 = ( -this.minInput );
-            this.scale = ( this.maxOutput - this.minOutput ) / ( this.maxInput - this.minInput );
-            this.t2 = this.minOutput;
+            func.t1 = ( -func.minInput );
+            func.scale = ( func.maxOutput - func.minOutput ) / ( func.maxInput - func.minInput );
+            func.t2 = func.minOutput;
         };
 
         func.set = function(minInput, maxInput, minOutput, maxOutput) {
-            this.minInput = minInput;
-            this.maxInput = maxInput;
-            this.minOutput = minOutput;
-            this.maxOutput = maxOutput;
-            this.update();
+            func.minInput = minInput;
+            func.maxInput = maxInput;
+            func.minOutput = minOutput;
+            func.maxOutput = maxOutput;
+            func.update();
         };
 
         func.minInput = minInput;
@@ -36,7 +36,7 @@ define(function (require) {
         func.update();
 
         func.createInverse = function() {
-            return this(minOutput, maxOutput, minInput, maxInput);
+            return func(minOutput, maxOutput, minInput, maxInput);
         };
         
         return func;

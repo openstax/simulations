@@ -7,7 +7,7 @@ define(function (require) {
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
-    var RectangularThermalMovableElement = require('models/rectangular-thermal-movable');
+    var RectangularThermalMovableElement = require('models/element/rectangular-thermal-movable');
     var EnergyContainerCategory          = require('models/energy-container-category');
     var HorizontalSurface                = require('models/horizontal-surface');
     var ThermalContactArea               = require('models/thermal-contact-area');

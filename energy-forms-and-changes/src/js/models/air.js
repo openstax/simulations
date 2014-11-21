@@ -4,7 +4,7 @@ define(function (require) {
 
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	var Vector2  = require('vector-node');
+	var Vector2  = require('vector2-node');
 
 	var EnergyChunk                 = require('models/energy-chunk');
 	var EnergyContainerCategory     = require('models/energy-container-category');

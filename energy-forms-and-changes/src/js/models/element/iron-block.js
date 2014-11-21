@@ -4,7 +4,7 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var Block                   = require('models/block');
+	var Block                   = require('models/element/block');
 	var EnergyContainerCategory = require('models/energy-container-category');
 
 	/**
