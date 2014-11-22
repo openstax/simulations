@@ -13,7 +13,7 @@
             'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
             'rectangle-node': '../../node_modules/rectangle-node-shimmed/index',
             'object-pool':    '../../node_modules/object-pool-shimmed/index',
-            'circular-list':   '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
+            'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
 
             views:      '../js/views',
             models:     '../js/models',
@@ -38,23 +38,6 @@
             globalVars: {
                 dependencyDir: '"/bower_components"'
             }
-        },
-
-        shim: {
-            // 'vector2-node': {
-            //     exports: 'Vector2'
-            // },
-            // 'rectangle-node': {
-            //     deps: ['vector2-node'],
-            //     exports: 'Rectangle'
-            // },
-            // 'solve-quadratic-equation': {
-            //     exports: 'solveQuadraticEquation'
-            // },
-            // 'line-intersect': {
-            //     deps: [],
-            //     exports: 'checkIntersection'
-            // }
         }
     };
 

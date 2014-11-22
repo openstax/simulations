@@ -71,6 +71,7 @@ module.exports = function(grunt){
                         'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
                         'rectangle-node': '../../node_modules/rectangle-node-shimmed/index',
                         'object-pool':    '../../node_modules/object-pool-shimmed/index',
+                        'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
 
                         views:      '../js/views',
                         graphics:   '../js/graphics',
@@ -91,15 +92,6 @@ module.exports = function(grunt){
                     less: {
                         modifyVars: {
                             'fa-font-path': '"../node_modules/font-awesome/fonts/"'
-                        }
-                    },
-                    shim: {
-                        'vector2-node': {
-                            exports: 'Vector2'
-                        },
-                        'rectangle-node': {
-                            deps: ['vector2-node'],
-                            exports: 'Rectangle'
                         }
                     },
                     name: 'main',

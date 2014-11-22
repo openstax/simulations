@@ -119,9 +119,9 @@ define(function(require) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			if (!this.simulation.get('paused')) {
+			// if (!this.simulation.get('paused')) {
 				
-			}
+			// }
 
 			// Render everything
 			this.renderer.render(this.stage);

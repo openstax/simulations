@@ -1,5 +1,5 @@
 define(function (require) {
-console.log('you');
+
     'use strict';
 
     var _              = require('underscore');
@@ -9,7 +9,6 @@ console.log('you');
     var Rectangle      = require('rectangle-node');
     var Vector2        = require('vector2-node');
 
-    console.log('guys');
     /**
      * The purpose of this class is to store paths of points and wathis.yPoints in
      *   the case of curved connections.  This is not a piecewise linear curve
