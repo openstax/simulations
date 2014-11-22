@@ -17,7 +17,7 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-
+			
 		},
 
 		update: function(time, deltaTime) {

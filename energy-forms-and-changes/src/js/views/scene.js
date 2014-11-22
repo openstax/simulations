@@ -20,6 +20,10 @@ define(function(require) {
 			
 		},
 
+		assets: [
+
+		],
+
 		initialize: function(options) {
 
 			// Default values
@@ -43,7 +47,8 @@ define(function(require) {
 		render: function() {
 			this.renderContent();
 			this.initRenderer();
-			this.initGraphics();
+
+			this.postRenderCalled = false;
 
 			return this;
 		},
@@ -61,6 +66,22 @@ define(function(require) {
 		 */
 		postRender: function() {
 			this.resize(true);
+
+			this.postRenderCalled = true;
+
+			if (this.assetsLoaded)
+				this.initGraphics();
+		},
+
+		loadAssets: function() {
+			this.assetsLoaded = false;
+			var assetLoader = new AssetLoader(this.assets);
+			assetLoader.onComplete = _.bind(function(){
+				this.assetsLoaded = true;
+				if (this.postRenderCalled)
+					this.initGraphics();
+			}, this);
+			assetLoader.load();
 		},
 
 		/**
@@ -82,6 +103,14 @@ define(function(require) {
 		initGraphics: function() {
 			// Create a stage to hold everything
 			this.stage = new PIXI.Stage(0x000000);
+
+			var tableTop = PIXI.Sprite.fromImage('img/phet/optimized/shelf_long.png');
+			// tableTop.anchor.x = 0.5;
+			tableTop.anchor.y = 1;
+			tableTop.x = -(tableTop.width - this.width) / 2;
+			tableTop.y = this.height;
+			this.stage.addChild(tableTop);
+			console.log(tableTop.width);
 
 			this.initElements();
 		},
