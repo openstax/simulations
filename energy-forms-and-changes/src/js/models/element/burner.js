@@ -141,9 +141,9 @@ define(function (require) {
         inContactWith: function(thermalEnergyContainer) {
             var containerThermalArea = thermalEnergyContainer.getThermalContactArea().getBounds();
             return (
-                containerThermalArea.getCenterX() > this.getOutlineRect().left()  &&
-                containerThermalArea.getCenterX() < this.getOutlineRect().right() &&
-                Math.abs(containerThermalArea.getMinY() - this.getOutlineRect().top()) < Burner.CONTACT_DISTANCE
+                containerThermalArea.center().x > this.getOutlineRect().left()  &&
+                containerThermalArea.center().x < this.getOutlineRect().right() &&
+                Math.abs(containerThermalArea.bottom() - this.getOutlineRect().top()) < Burner.CONTACT_DISTANCE
             );
         },
 

@@ -88,6 +88,7 @@ console.log('you');
                 xPoints[i] = newX;
                 yPoints[i] = newY;
             }
+            return this;
         },
 
         /**
@@ -97,6 +98,7 @@ console.log('you');
             this._translation[2] = dx;
             this._translation[5] = dy;
             this.transform(this._translation);
+            return this;
         },
 
         /**
@@ -110,12 +112,14 @@ console.log('you');
             this._rotation[3] = sin;
             this._rotation[4] = cos;
             this.transform(this._rotation);
+            return this;
         },
 
         scale: function(x, y) {
             this._scale[0] = x;
             this._scale[4] = y !== undefined ? y : x;
             this.transform(this._scale);
+            return this;
         },
 
         /**
@@ -168,6 +172,7 @@ console.log('you');
             this.types[this.index] = PiecewiseCurve.SEG_MOVETO;
             this.xPoints[this.index]   = x;
             this.yPoints[this.index++] = y;
+            return this;
         },
         
         /**
@@ -183,6 +188,7 @@ console.log('you');
             this.types[this.index] = PiecewiseCurve.SEG_LINETO;
             this.xPoints[this.index]   = x;
             this.yPoints[this.index++] = y;
+            return this;
         },
         
         /**
@@ -202,6 +208,7 @@ console.log('you');
             this.yPoints[this.index++] = y1;
             this.xPoints[this.index]   = x2;
             this.yPoints[this.index++] = y2;
+            return this;
         },
         
         /**
@@ -236,6 +243,7 @@ console.log('you');
             this.yPoints[this.index++] = y2;
             this.xPoints[this.index]   = x3;
             this.yPoints[this.index++] = y3;
+            return this;
         },
         
         /**
@@ -248,6 +256,7 @@ console.log('you');
             this.types[this.index] = PiecewiseCurve.SEG_CLOSE;
             this.xPoints[this.index]   = this.xPoints[this.subcurve];
             this.yPoints[this.index++] = this.yPoints[this.subcurve];
+            return this;
         },
 
         /**
