@@ -1,0 +1,30 @@
+{"frames": {
+
+"thermometer_medium_back.png":
+{
+	"frame": {"x":2,"y":166,"w":39,"h":160},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":160},
+	"sourceSize": {"w":39,"h":160},
+	"pivot": {"x":0.5,"y":0.5}
+},
+"thermometer_medium_front.png":
+{
+	"frame": {"x":2,"y":2,"w":41,"h":162},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":162},
+	"sourceSize": {"w":41,"h":162},
+	"pivot": {"x":0.5,"y":0.5}
+}},
+"meta": {
+	"app": "http://www.codeandweb.com/texturepacker",
+	"version": "1.0",
+	"image": "thermometer-spritesheet.png",
+	"format": "RGBA8888",
+	"size": {"w":45,"h":328},
+	"scale": "1",
+	"smartupdate": "$TexturePacker:SmartUpdate:6fae4ed05e0808eea192c4d1e438600e:f64df605cc79b721c63360babee282be:5556a88d13bbaa7614af491bd3a0f7e2$"
+}
+}
