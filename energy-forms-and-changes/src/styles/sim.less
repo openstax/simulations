@@ -5,20 +5,31 @@
 
 
 .sim-content {
-
 	min-height: initial;
+
+	&:before {
+		content: '';
+		position: absolute;
+		bottom: 100%;
+		left: 0;
+		width: 100%;
+		height: 0;
+		box-shadow: 0px 0px 16px 2px rgba(0, 0, 0, 0.66);
+		clip: rect(0, auto, 16px, 0);
+		pointer-events: none;
+	}
 
 	.scene-view {
 		height: 580px;
 		width: 100%;
 		display: block;
-		background: #fff;
+		background: url(../img/phet/optimized/darktiles.jpg);
 	}
 }
 
 .energy-symbols-checkbox-panel {
 	position: absolute;
-	right: 0;
+	right: 15px;
 	top: 15px;
 	padding: 15px;
 	background: @gray-lightest;

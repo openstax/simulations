@@ -100,7 +100,7 @@ define(function (require) {
         INCANDESCENT_2: 'incandescent_2.png',
         INCANDESCENT_ICON: 'incandescent_icon.png',
         INCANDESCENT_ON_3: 'incandescent_on_3.png',
-        SHELF_LONG: 'shelf_long.png',
+        SHELF_LONG: 'shelf_long2.png',
         SOLAR_PANEL: 'solar_panel.png',
         SOLAR_PANEL_GEN: 'solar_panel_gen.png',
         SOLAR_PANEL_ICON: 'solar_panel_icon.png',
