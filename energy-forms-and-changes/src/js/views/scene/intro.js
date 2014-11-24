@@ -39,12 +39,31 @@ define(function(require) {
 		},
 
 		initElements: function() {
-			var tableTop = new PIXI.Sprite(Assets.Texture(Assets.Images.SHELF_LONG));
-			// tableTop.anchor.x = 0.5;
-			tableTop.anchor.y = 1;
-			tableTop.x = -(tableTop.width - this.width) / 2;
-			tableTop.y = this.height;
-			this.stage.addChild(tableTop);
+			// Create layers
+			this.backLayer              = new PIXI.DisplayObjectContainer();
+			this.beakerBackLayer        = new PIXI.DisplayObjectContainer();
+			this.beakerGrabLayer        = new PIXI.DisplayObjectContainer();
+			this.blockLayer             = new PIXI.DisplayObjectContainer();
+			this.airLayer               = new PIXI.DisplayObjectContainer();
+			this.heaterCoolerFrontLayer = new PIXI.DisplayObjectContainer();
+			this.thermometerLayer       = new PIXI.DisplayObjectContainer();
+			this.beakerFrontLayer       = new PIXI.DisplayObjectContainer();
+
+			this.stage.addChild(this.backLayer);
+			this.stage.addChild(this.beakerBackLayer);
+			this.stage.addChild(this.beakerGrabLayer);
+			this.stage.addChild(this.blockLayer);
+			this.stage.addChild(this.airLayer);
+			this.stage.addChild(this.heaterCoolerFrontLayer);
+			this.stage.addChild(this.thermometerLayer);
+			this.stage.addChild(this.beakerFrontLayer);
+
+			// Lab bench surface
+			var labBenchSurface = new PIXI.Sprite(Assets.Texture(Assets.Images.SHELF_LONG));
+			labBenchSurface.anchor.y = 1;
+			labBenchSurface.x = -(labBenchSurface.width - this.width) / 2;
+			labBenchSurface.y = this.height;
+			this.backLayer.addChild(labBenchSurface);
 		},
 
 		_update: function(time, deltaTime) {
