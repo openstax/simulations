@@ -16,7 +16,7 @@ define(function (require) {
 	/**
 	 * Constants
 	 */
-	var Constants = require('models/constants');
+	var Constants = require('constants');
 
 	/**
 	 * 
@@ -343,7 +343,7 @@ define(function (require) {
 			var numChunks = this.getNumEnergyChunks();
 			while (numChunks < targetNumChunks) {
 				// Add a chunk at a random location in the block.
-				this.addEnergyChunk(new EnergyChunk(
+				this.addEnergyChunk(new EnergyChunk({
 					energyType: EnergyChunk.THERMAL, 
 					position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(energyChunkBounds)), 
 					visible:    this.get('energyChunksVisible')

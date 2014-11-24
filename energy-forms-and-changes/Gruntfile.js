@@ -75,6 +75,8 @@ module.exports = function(grunt){
 
                         views:      '../js/views',
                         graphics:   '../js/graphics',
+                        assets:     '../js/assets',
+                        constants:  '../js/constants',
                         models:     '../js/models',
                         templates:  '../templates',
                         styles:     '../styles',

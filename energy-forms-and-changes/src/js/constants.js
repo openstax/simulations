@@ -284,6 +284,13 @@ define(function (require) {
     };
 
     Constants.ENERGY_PER_CHUNK = Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 2 ) - Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 1 );
+
+    var EnergyChunkView = {};
+    
+    EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED = 0.1; // In meters.
+    EnergyChunkView.WIDTH = 24; // In screen coords, which is close to pixels.
+
+    Constants.EnergyChunkView = EnergyChunkView;
     
 
     /*************************************************************************

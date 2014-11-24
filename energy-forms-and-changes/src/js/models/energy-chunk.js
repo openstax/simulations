@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var _        = require('underscore');
-    var Backbone = require('backbone';)
+    var Backbone = require('backbone');
     var Vector2  = require('vector2-node');
 
     /**
@@ -45,7 +45,7 @@ define(function (require) {
 
             // For internal use to avoid creating and destroying objects
             this._vec2 = new Vector2(0, 0);
-        }
+        },
 
         translate: function(movement) {
             this.set('position', this.get('position').add(movement));

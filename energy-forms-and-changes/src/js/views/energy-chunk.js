@@ -3,9 +3,21 @@ define(function(require) {
 	'use strict';
 
 	//var _    = require('underscore');
-	//var PIXI = require('pixi');
+	var PIXI = require('pixi');
 
 	var PixiView = require('common/pixi/view');
+
+	var EnergyChunk = require('models/energy-chunk');
+	var Constants   = require('constants');
+	var Assets      = require('assets');
+
+	var Textures = {};
+	Textures[EnergyChunk.THERMAL]    = Assets.Texture(Assets.Images.E_THERM_BLANK_ORANGE);
+	Textures[EnergyChunk.ELECTRICAL] = Assets.Texture(Assets.Images.E_ELECTRIC_BLANK);
+	Textures[EnergyChunk.MECHANICAL] = Assets.Texture(Assets.Images.E_MECH_BLANK);
+	Textures[EnergyChunk.LIGHT]      = Assets.Texture(Assets.Images.E_LIGHT_BLANK);
+	Textures[EnergyChunk.CHEMICAL]   = Assets.Texture(Assets.Images.E_CHEM_BLANK_LIGHT);
+	Textures[EnergyChunk.HIDDEN]     = Assets.Texture(Assets.Images.E_DASHED_BLANK);
 
 	/**
 	 * A view that represents the air model
@@ -16,14 +28,47 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			this.listenTo(this.model, 'change:visible',    this.updateVisibility);
+			this.listenTo(this.model, 'change:zPosition',  this.updateTransparency);
+			this.listenTo(this.model, 'change:energyType', this.updateEnergyType);
+			this.listenTo(this.model, 'change:position',   this.updatePosition);
 
+			this.initGraphics();
 		},
 
-		update: function(time, deltaTime) {
-			//this.displayObject.rotation += deltaTime * 0.0001;
+		initGraphics: function() {
+			this.symbol = new PIXI.Sprite(Textures[this.model.get('energyType')]);
+			this.symbol.anchor.x = 0.5;
+			this.symbol.anchor.y = 0.5;
+			this.displayObject.addChild(this.symbol);
+
+			this.E = new PIXI.Text('E');
+			this.displayObject.addChild(this.E);
+		},
+
+		updateVisibility: function(model, visible) {
+			this.visible = visible;
+		},
+
+		updateTransparency: function(model, zPosition) {
+			var zFadeValue;
+			if (zPosition < 0)
+				zFadeValue = Math.max((EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED + zPosition) / EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED, 0);
+			else
+				zFadeValue = 1;
+			this.alpha = zFadeValue;
+		},
+
+		updateEnergyType: function(model, energyType) {
+			this.texture = Textures[energyType];
+		},
+
+		updatePosition: function(model, position) {
+			this.x = position.x;
+			this.y = position.y;
 		}
 
-	});
+	}, Constants.EnergyChunkView);
 
 	return EnergyChunkView;
 });

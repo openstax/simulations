@@ -18,7 +18,7 @@ define(function (require) {
     /**
      * Constants
      */
-    var Constants = require('models/constants');
+    var Constants = require('constants');
     var EnergyContainerCategory = Constants.EnergyContainerCategory;
 
     /**
@@ -122,7 +122,7 @@ define(function (require) {
             var initialChunkBounds = this.getSliceBounds();
             while (this.getNumEnergyChunks() < targetNumChunks) {
                 // Add a chunk at a random location in the beaker.
-                this.addEnergyChunkToNextSlice(new EnergyChunk(
+                this.addEnergyChunkToNextSlice(new EnergyChunk({
                     energyType: EnergyChunk.THERMAL, 
                     position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(initialChunkBounds)), 
                     visible:    this.get('energyChunksVisible') 

@@ -17,9 +17,10 @@
 
             views:      '../js/views',
             models:     '../js/models',
+            assets:     '../js/assets',
+            constants:  '../js/constants',
             templates:  '../templates',
             styles:     '../styles',
-            assets:     '../js/assets',
             common:     '../../../common'
         },
 

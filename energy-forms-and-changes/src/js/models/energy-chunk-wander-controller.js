@@ -9,7 +9,7 @@ define(function (require) {
     /**
      * Constants
      */
-    var Constants = require('models/constants');
+    var Constants = require('constants');
 
     /**
      * 

@@ -19,7 +19,7 @@ define(function (require, exports, module) {
     var ElementFollowingThermometer = require('models/element/element-following-thermometer');
 
     // Constants
-    var Constants = require('models/constants');
+    var Constants = require('constants');
 
     /**
      * 

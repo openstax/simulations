@@ -7,6 +7,7 @@ define(function(require) {
 	var PIXI     = require('pixi');
 
 	var SceneView = require('views/scene');
+	var AirView   = require('views/air');
 
 	var Assets = require('assets');
 
