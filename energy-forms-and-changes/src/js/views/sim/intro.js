@@ -7,8 +7,9 @@ define(function (require) {
 
 	var IntroSimulation = require('models/simulation/intro');
 
-	var SimView   = require('common/app/sim');
-	var SceneView = require('views/scene');
+	var SimView        = require('common/app/sim');
+	var IntroSceneView = require('views/scene/intro');
+	var Assets         = require('assets'); window.Assets = Assets;
 
 	require('bootstrap');
 
@@ -18,7 +19,7 @@ define(function (require) {
 	require('less!common/styles/radio');
 
 	// HTML
-	var simHtml = require('text!templates/sim.html');
+	var simHtml = require('text!templates/sim/intro.html');
 	var controlsHtml = require('text!templates/controls.html');
 
 	/**
@@ -55,6 +56,11 @@ define(function (require) {
 		 * @params options
 		 */
 		initialize: function(options) {
+			options = _.extend({
+			    title: 'Intro',
+			    name: 'intro',
+			}, options);
+
 			SimView.prototype.initialize.apply(this, [options]);
 
 			// Initialize the scene view
@@ -72,7 +78,7 @@ define(function (require) {
 		 * Initializes the Simulation.
 		 */
 		initSceneView: function() {
-			this.sceneView = new SceneView({
+			this.sceneView = new IntroSceneView({
 				simulation: this.simulation
 			});
 		},

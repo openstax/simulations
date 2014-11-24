@@ -69,7 +69,7 @@ define(function (require) {
         },
 
         reset: function() {
-            Burner.prototype.reset.apply(this);
+            Element.prototype.reset.apply(this);
 
             this.energyChunkList = [];
             this.energyChunkWanderControllers = [];

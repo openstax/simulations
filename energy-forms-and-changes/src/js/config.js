@@ -19,6 +19,7 @@
             models:     '../js/models',
             templates:  '../templates',
             styles:     '../styles',
+            assets:     '../js/assets',
             common:     '../../../common'
         },
 

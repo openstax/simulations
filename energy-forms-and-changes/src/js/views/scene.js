@@ -7,6 +7,8 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
 
+	var Assets = require('assets');
+
 	/**
 	 * SceneView is the main focus of the app. 
 	 *
@@ -20,9 +22,7 @@ define(function(require) {
 			
 		},
 
-		assets: [
-
-		],
+		assets: [],
 
 		initialize: function(options) {
 
@@ -37,6 +37,9 @@ define(function(require) {
 			else
 				throw 'SceneView requires a simulation model to render.';
 
+			// Load all the assets
+			this.loadAssets();
+
 			// Bind events
 			$(window).bind('resize', $.proxy(this.windowResized, this));
 		},
@@ -45,6 +48,8 @@ define(function(require) {
 		 * Renders content and canvas for heatmap
 		 */
 		render: function() {
+			this.$el.addClass('loading');
+
 			this.renderContent();
 			this.initRenderer();
 
@@ -75,7 +80,7 @@ define(function(require) {
 
 		loadAssets: function() {
 			this.assetsLoaded = false;
-			var assetLoader = new AssetLoader(this.assets);
+			var assetLoader = new PIXI.AssetLoader(this.assets);
 			assetLoader.onComplete = _.bind(function(){
 				this.assetsLoaded = true;
 				if (this.postRenderCalled)
@@ -98,25 +103,13 @@ define(function(require) {
 
 			this.width  = this.$el.width();
 			this.height = this.$el.height();
+
+			// Create a stage to hold everything
+			this.stage = new PIXI.Stage(0x000000);
 		},
 
 		initGraphics: function() {
-			// Create a stage to hold everything
-			this.stage = new PIXI.Stage(0x000000);
-
-			var tableTop = PIXI.Sprite.fromImage('img/phet/optimized/shelf_long.png');
-			// tableTop.anchor.x = 0.5;
-			tableTop.anchor.y = 1;
-			tableTop.x = -(tableTop.width - this.width) / 2;
-			tableTop.y = this.height;
-			this.stage.addChild(tableTop);
-			console.log(tableTop.width);
-
-			this.initElements();
-		},
-
-		initElements: function() {
-			
+			this.$el.removeClass('loading');
 		},
 
 		/**
@@ -144,17 +137,17 @@ define(function(require) {
 			this.renderer.resize(this.width, this.height);
 		},
 
-		update: function(time, delta) {
+		update: function(time, deltaTime) {
 			if (this.resizeOnNextUpdate)
 				this.resize();
 
-			// if (!this.simulation.get('paused')) {
-				
-			// }
+			this._update(time, deltaTime);
 
 			// Render everything
 			this.renderer.render(this.stage);
-		}
+		},
+
+		_update: function(time, deltaTime) {}
 
 	});
 

@@ -15,3 +15,37 @@
 		background: #fff;
 	}
 }
+
+.energy-symbols-checkbox-panel {
+	position: absolute;
+	right: 0;
+	top: 15px;
+	padding: 15px;
+	background: @gray-lightest;
+
+	.energy-symbol {
+		position: relative;
+		display: inline-block;
+		float: right;
+		text-align: center;
+		color: #000;
+		font-size: 16px;
+		margin-left: 6px;
+		margin-top: -3px;
+		margin-bottom: -1px;
+		background-repeat: no-repeat;
+
+		&:after {
+			content: 'E';
+			display: block;
+		}
+	}
+
+	.energy-symbols-checkbox + label {
+		opacity: 0.6;
+	}
+
+	.energy-symbols-checkbox:checked + label {
+		opacity: 1;
+	}
+}
