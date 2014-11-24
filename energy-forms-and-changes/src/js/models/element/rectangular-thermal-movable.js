@@ -234,7 +234,7 @@ define(function (require) {
 					// Compensate for the Z offset.  Otherwise front chunk will
 					//   almost always be chosen.
 					compensatedChunkPosition
-						.set(chunk.position)
+						.set(chunk.get('position'))
 						.minus(0, Constants.Z_TO_Y_OFFSET_MULTIPLIER * chunk.zPosition);
 					compensatedDistance = compensatedChunkPosition.distance(point);
 
@@ -272,7 +272,7 @@ define(function (require) {
 				var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
 				_.each(this.slices, function(slice) {
 				    _.each(slice.energyChunkList, function(chunk) {
-				        var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.position.x), Math.abs(myBounds.right() - chunk.position.x));
+				        var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.get('position').x), Math.abs(myBounds.right() - chunk.get('position').x));
 				        if (distanceToVerticalEdge < closestDistanceToVerticalEdge) {
 				            chunkToExtract = chunk;
 				            closestDistanceToVerticalEdge = distanceToVerticalEdge;
@@ -287,8 +287,8 @@ define(function (require) {
 				var destinationBounds = rect.getBounds();
 				_.each(this.slices, function(slice) {
 				    _.each(slice.energyChunkList, function(chunk) {
-				        var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.position.x), Math.abs(destinationBounds.right() - chunk.position.x));
-				        if (!rect.contains(chunk.position) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {
+				        var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.get('position').x), Math.abs(destinationBounds.right() - chunk.get('position').x));
+				        if (!rect.contains(chunk.get('position')) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {
 				            chunkToExtract = chunk;
 				            closestDistanceToDestinationEdge = distanceToDestinationEdge;
 				        }
@@ -344,10 +344,10 @@ define(function (require) {
 			while (numChunks < targetNumChunks) {
 				// Add a chunk at a random location in the block.
 				this.addEnergyChunk(new EnergyChunk(
-					EnergyChunk.THERMAL, 
-					EnergyChunkDistributor.generateRandomLocation(energyChunkBounds), 
-					this.get('energyChunksVisible')
-				));
+					energyType: EnergyChunk.THERMAL, 
+					position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(energyChunkBounds)), 
+					visible:    this.get('energyChunksVisible')
+				}));
 				numChunks++;
 			}
 

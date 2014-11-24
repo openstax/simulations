@@ -71,7 +71,7 @@ define(function (require) {
 			var element;
 			for (var i = 0; i < this.potentiallyContainedElements.length; i++) {
 				element = this.potentiallyContainedElements[i];
-				if (this.getThermalContactArea().getBounds().contains(element.getRect()) && element.getProjectedShape().contains(chunk.position))
+				if (this.getThermalContactArea().getBounds().contains(element.getRect()) && element.getProjectedShape().contains(chunk.get('position')))
 					return true;
 			}
 			return false;
@@ -83,7 +83,7 @@ define(function (require) {
 				if (this.isEnergyChunkObscured(chunk)) {
 					// This chunk is being transferred from a container in the
 					//   beaker to the fluid, so move it sideways.
-					var xVelocity = 0.05 * deltaTime * (this.getCenterPoint().x > chunk.position.x ? -1 : 1);
+					var xVelocity = 0.05 * deltaTime * (this.getCenterPoint().x > chunk.get('position').x ? -1 : 1);
 					var motionVector = this._motionVector.set(xVelocity, 0);
 					chunk.translate(motionVector);
 				}
@@ -91,7 +91,7 @@ define(function (require) {
 					controller.updatePosition(deltaTime);
 				}
 
-				if (!this.isEnergyChunkObscured(chunk) && this.getSliceBounds().contains(chunk.position)) {
+				if (!this.isEnergyChunkObscured(chunk) && this.getSliceBounds().contains(chunk.get('position'))) {
 					// Chunk is in a place where it can migrate to the slices and
 					//   stop moving.
 					this.moveEnergyChunkToSlices(controller.energyChunk);

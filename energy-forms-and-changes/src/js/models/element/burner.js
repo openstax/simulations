@@ -173,9 +173,9 @@ define(function (require) {
                 var chunk;
                 for (i = 0; i < this.energyChunkList.length; i++) {
                     chunk = this.energyChunkList[i];
-                    if (chunk.position.distance(this.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE && (
+                    if (chunk.get('position').distance(this.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE && (
                             closestChunk === null || 
-                            chunk.position.distance(point) < closestChunk.position.distance(point) 
+                            chunk.get('position').distance(point) < closestChunk.get('position').distance(point) 
                         )
                     ) {
                         // Found a closer chunk.
@@ -196,7 +196,11 @@ define(function (require) {
 
             if (closestChunk === null && this.get('heatCoolLevel') > 0) {
                 // Create an energy chunk.
-                closestChunk = new EnergyChunk(EnergyChunk.THERMAL, this.getEnergyChunkStartEndPoint(), this.get('energyChunksVisible'));
+                closestChunk = new EnergyChunk({
+                    energyType: EnergyChunk.THERMAL, 
+                    position:   new Vector2(this.getEnergyChunkStartEndPoint()), 
+                    visible:    this.get('energyChunksVisible')
+                });
             }
 
             if (closestChunk === null) {
@@ -232,7 +236,7 @@ define(function (require) {
             //   almost to the burner).
             if (this.energyChunkList.length && this.get('heatCoolLevel') >= 0) {
                 _.each(this.energyChunkList, function(chunk) {
-                    if (this.get('position').distance(chunk.position) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE)
+                    if (this.get('position').distance(chunk.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE)
                         count++;
                 });
             }

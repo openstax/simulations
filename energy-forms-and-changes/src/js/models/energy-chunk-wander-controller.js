@@ -40,27 +40,27 @@ define(function (require) {
     _.extend(EnergyChunkWanderController.prototype, {
 
         updatePosition: function(deltaTime) {
-            var distanceToDestination = this.energyChunk.position.distance(this.destination);
-            if (distanceToDestination < this.velocity.length() * deltaTime && !this.energyChunk.position.equals(this.destination)) {
+            var distanceToDestination = this.energyChunk.get('position').distance(this.destination);
+            if (distanceToDestination < this.velocity.length() * deltaTime && !this.energyChunk.get('position').equals(this.destination)) {
                  // Destination reached.
-                this.energyChunk.position.set(this.destination);
+                this.energyChunk.setPosition(this.destination);
                 this.velocity.scale(0);
             }
-            else if (this.energyChunk.position.distance(this.destination) < deltaTime * this.velocity.length()) {
+            else if (this.energyChunk.get('position').distance(this.destination) < deltaTime * this.velocity.length()) {
                 // Prevent overshoot.
-                this.velocity.scale(this.energyChunk.position.distance(this.destination) * deltaTime);
+                this.velocity.scale(this.energyChunk.get('position').distance(this.destination) * deltaTime);
             }
 
             // Stay within the horizontal confines of the initial bounds.
-            if (this.initialWanderConstraint && this.energyChunk.position.y < this.initialWanderConstraint.top()) {
-                var proposedPosition = this.energyChunk.position.add(this.velocity.scale(deltaTime));
+            if (this.initialWanderConstraint && this.energyChunk.get('position').y < this.initialWanderConstraint.top()) {
+                var proposedPosition = this.energyChunk.translate(this.velocity.scale(deltaTime));
                 if (proposedPosition.x < this.initialWanderConstraint.left() || proposedPosition.x > this.initialWanderConstraint.right()) {
                     // Bounce in the x direction to prevent going outside initial bounds.
                     this.velocity.set(-this.velocity.x, this.velocity.y);
                 }
             }
 
-            this.energyChunk.position.set(this.energyChunk.position.add(this.velocity.scale(deltaTime)));
+            this.energyChunk.translate(this.velocity.scale(deltaTime));
             this.countdownTimer -= deltaTime;
             if (this.countdownTimer <= 0) {
                 this.changeVelocityVector();
@@ -69,7 +69,7 @@ define(function (require) {
         },
 
         changeVelocityVector: function() {
-            var vectorToDestination = this.destination.sub(this.energyChunk.position);
+            var vectorToDestination = this.destination.sub(this.energyChunk.get('position'));
             var angle = vectorToDestination.angle();
             if (vectorToDestination.length() > C.DISTANCE_AT_WHICH_TO_STOP_WANDERING) {
                 // Add some randomness to the direction of travel.
@@ -86,7 +86,7 @@ define(function (require) {
         },
 
         desinationReached: function() {
-            return this.destination.distance(this.energyChunk.position) < 1E-7;
+            return this.destination.distance(this.energyChunk.get('position')) < 1E-7;
         }
 
     });

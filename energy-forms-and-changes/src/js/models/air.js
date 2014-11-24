@@ -39,7 +39,7 @@ define(function (require) {
 			for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
 				controller = this.energyChunkWanderControllers[i];
 				controller.updatePosition(deltaTime);
-				if (!this.getThermalContactArea().getBounds().contains(controller.energyChunk.position)) {
+				if (!this.getThermalContactArea().getBounds().contains(controller.energyChunk.get('position'))) {
 					this.removeEnergyChunk(controller.energyChunk);
 					this.energyChunkWanderControllers.splice(i, 1);
 				}
@@ -107,7 +107,7 @@ define(function (require) {
 			this.energyChunkList.push(chunk);
 			this.energyChunkWanderControllers.push(new EnergyChunkWanderController(
 				chunk,
-				new Vector2(chunk.position.x, Air.HEIGHT),
+				new Vector2(chunk.get('position').x, Air.HEIGHT),
 				initialWanderConstraint
 			));
 			this.trigger('add-chunk', this, chunk);
@@ -120,7 +120,11 @@ define(function (require) {
 
 		requestEnergyChunk: function(point) {
 			// Create a new chunk at the top of the air above the specified point.
-			return new EnergyChunk(EnergyChunk.THERMAL, point.x, Air.HEIGHT, this.get('energyChunksVisible'));
+			return new EnergyChunk({
+				energyType: EnergyChunk.THERMAL, 
+				position:   new Vector2(point.x, Air.HEIGHT), 
+				visible:    this.get('energyChunksVisible')
+			});
 		},
 
 		getCenterPoint: function() {

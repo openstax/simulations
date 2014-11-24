@@ -193,8 +193,8 @@ define(function (require, exports, module) {
                     
                     // Calculate a proposed Y position based on gravitational falling.
                     var acceleration = -9.8; // meters/s*s
-                    var velocity = element.verticalVelocity.get() + acceleration * deltaTime;
-                    var proposedYPos = element.position.get().getY() + velocity * deltaTime;
+                    var velocity = element.get('verticalVelocity') + acceleration * deltaTime;
+                    var proposedYPos = element.get('position').y + velocity * deltaTime;
                     if ( proposedYPos < minYPos ) {
                         // The element has landed on the ground or some other surface.
                         proposedYPos = minYPos;
@@ -205,9 +205,9 @@ define(function (require, exports, module) {
                         }
                     }
                     else {
-                        element.verticalVelocity.set( velocity );
+                        element.set('verticalVelocity', velocity);
                     }
-                    element.position.set( new Vector2( element.position.get().getX(), proposedYPos ) );
+                    element.setPosition(element.get('position').x, proposedYPos);
                 }
             }, this);
         },

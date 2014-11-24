@@ -123,10 +123,10 @@ define(function (require) {
             while (this.getNumEnergyChunks() < targetNumChunks) {
                 // Add a chunk at a random location in the beaker.
                 this.addEnergyChunkToNextSlice(new EnergyChunk(
-                    EnergyChunk.THERMAL, 
-                    EnergyChunkDistributor.generateRandomLocation(initialChunkBounds), 
-                    this.get('energyChunksVisible') 
-                ));
+                    energyType: EnergyChunk.THERMAL, 
+                    position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(initialChunkBounds)), 
+                    visible:    this.get('energyChunksVisible') 
+                }));
             }
 
             // Distribute the energy chunks within the container.

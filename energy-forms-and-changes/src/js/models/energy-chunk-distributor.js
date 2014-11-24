@@ -133,7 +133,7 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
-                        chunk.position.add(chunk.velocity.scale(timeStep));
+                        chunk.translate.add(chunk.velocity.scale(timeStep));
                     }
                 }
             }
@@ -165,7 +165,7 @@ define(function (require) {
             // Reset accumulated forces.
             forceVector.set(0, 0);
 
-            if (containerShape.contains(chunk.position)) {
+            if (containerShape.contains(chunk.get('position'))) {
                 EnergyChunkDistributor.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
                 EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
             }
@@ -176,7 +176,7 @@ define(function (require) {
                         bounds.center().x,
                         bounds.center().y
                     )
-                    .sub(chunk.position);
+                    .sub(chunk.get('position'));
                 forceVector.set(
                     vectorToCenter
                         .normalize()
@@ -264,7 +264,7 @@ define(function (require) {
                         .rotate(angle);
 
                     edgePosition
-                        .set(chunk.position)
+                        .set(chunk.get('position'))
                         .add(vectorToEdge);
 
                     if (containerShape.contains(edgePosition)) {
@@ -305,8 +305,8 @@ define(function (require) {
 
                 // Calculate force vector, but handle cases where too close.
                 vectorToOther
-                    .set(chunk.position)
-                    .sub(otherChunk.position);
+                    .set(chunk.get('position'))
+                    .sub(otherChunk.get('position'));
 
                 if (vectorToOther.length() < minDistance) {
                     if (vectorToOther.length() === 0) {
