@@ -19,7 +19,7 @@ define(function(require) {
 		className: 'scene-view',
 
 		events: {
-			'click .energy-symbols-checkbox': 'toggleEnergySymbols'
+			
 		},
 
 		assets: [],
@@ -147,14 +147,7 @@ define(function(require) {
 			this.renderer.render(this.stage);
 		},
 
-		_update: function(time, deltaTime) {},
-
-		toggleEnergySymbols: function(event) {
-			if ($(event.target).is(':checked'))
-				this.simulation.set('energyChunksVisible', true);
-			else
-				this.simulation.set('energyChunksVisible', false);
-		}
+		_update: function(time, deltaTime) {}
 
 	});
 

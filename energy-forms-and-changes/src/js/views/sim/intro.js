@@ -47,7 +47,9 @@ define(function (require) {
 			'click .play-btn'   : 'play',
 			'click .pause-btn'  : 'pause',
 			'click .step-btn'   : 'step',
-			'click .reset-btn'  : 'reset'
+			'click .reset-btn'  : 'reset',
+
+			'click .energy-symbols-checkbox': 'toggleEnergySymbols'
 		},
 
 		/**
@@ -159,6 +161,13 @@ define(function (require) {
 			else
 				this.$el.addClass('playing');
 		},
+
+		toggleEnergySymbols: function(event) {
+			if ($(event.target).is(':checked'))
+				this.simulation.set('energyChunksVisible', true);
+			else
+				this.simulation.set('energyChunksVisible', false);
+		}
 
 	});
 

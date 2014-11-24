@@ -106,8 +106,6 @@ define(function (require, exports, module) {
             this._beakerRightSide = new Rectangle();
             this._beakerBottom = new Rectangle();
             this._testRect = new Rectangle();
-
-            this.on('change:energyChunksVisible', function(model, value) {alert(value);});
         },
 
         /**
