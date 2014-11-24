@@ -7,13 +7,13 @@ define(function (require) {
 	var Vector2  = require('vector2-node');
 
 	var EnergyChunk                 = require('models/energy-chunk');
-	var EnergyContainerCategory     = require('models/energy-container-category');
 	var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
 
 	/**
 	 * Constants
 	 */
 	var Constants = require('models/constants');
+	var EnergyContainerCategory = Constants.EnergyContainerCategory;
 
 	/**
 	 * 

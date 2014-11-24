@@ -8,7 +8,6 @@ define(function (require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var RectangularThermalMovableElement = require('models/element/rectangular-thermal-movable');
-    var EnergyContainerCategory          = require('models/energy-container-category');
     var HorizontalSurface                = require('models/horizontal-surface');
     var ThermalContactArea               = require('models/thermal-contact-area');
     var EnergyChunk                      = require('models/energy-chunk');
@@ -20,6 +19,7 @@ define(function (require) {
      * Constants
      */
     var Constants = require('models/constants');
+    var EnergyContainerCategory = Constants.EnergyContainerCategory;
 
     /**
      * 

@@ -4,13 +4,13 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var Block                   = require('models/element/block');
-	var EnergyContainerCategory = require('models/energy-container-category');
+	var Block = require('models/element/block');
 
 	/**
 	 * Constants
 	 */
 	var Constants = require('models/constants');
+	var EnergyContainerCategory = Constants.EnergyContainerCategory;
 
 	/**
 	 * 

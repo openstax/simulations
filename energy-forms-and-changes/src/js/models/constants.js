@@ -6,8 +6,7 @@ define(function (require) {
     var Rectangle = require('rectangle-node');
     var Functions = require('common/math/functions');
 
-    var ThermalContactArea      = require('models/thermal-contact-area');
-    var EnergyContainerCategory = require('models/energy-container-category');
+    var ThermalContactArea = require('models/thermal-contact-area');
 
     var Constants = {};
 
@@ -39,6 +38,21 @@ define(function (require) {
 
     // Threshold for deciding when two temperatures can be considered equal.
     Constants.TEMPERATURES_EQUAL_THRESHOLD = 1E-6; // In Kelvin.
+
+    /*************************************************************************
+     **                                                                     **
+     **                      ENERGY CONTAINER CATEGORIES                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var EnergyContainerCategory =  {
+        IRON:  'iron',
+        BRICK: 'brick',
+        WATER: 'water',
+        AIR:   'air'
+    };
+
+    Constants.EnergyContainerCategory = EnergyContainerCategory;
 
 
     /*************************************************************************
