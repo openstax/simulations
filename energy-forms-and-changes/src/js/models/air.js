@@ -40,7 +40,7 @@ define(function (require) {
 				controller = this.energyChunkWanderControllers[i];
 				controller.updatePosition(deltaTime);
 				if (!this.getThermalContactArea().getBounds().contains(controller.energyChunk.position)) {
-					this.energyChunkList = _.without(this.energyChunkList, controller.energyChunk);
+					this.removeEnergyChunk(controller.energyChunk);
 					this.energyChunkWanderControllers.splice(i, 1);
 				}
 			}
@@ -110,6 +110,12 @@ define(function (require) {
 				new Vector2(chunk.position.x, Air.HEIGHT),
 				initialWanderConstraint
 			));
+			this.trigger('add-chunk', this, chunk);
+		},
+
+		removeEnergyChunk: function(chunk) {
+			this.energyChunkList = _.without(this.energyChunkList, controller.energyChunk);
+			this.trigger('remove-chunk', this, chunk);
 		},
 
 		requestEnergyChunk: function(point) {
