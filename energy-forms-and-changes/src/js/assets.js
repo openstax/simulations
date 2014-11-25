@@ -110,6 +110,8 @@ define(function (require) {
         TEAPOT_LARGE: 'teapot_large.png',
         THERMOMETER_MEDIUM_BACK: 'thermometer_medium_back.png',
         THERMOMETER_MEDIUM_FRONT: 'thermometer_medium_front.png',
+        THERMOMETER_CLIP_BACK: 'thermometer-clip-back.png',
+        THERMOMETER_CLIP_FRONT: 'thermometer-clip-front.png',
         WATER_ICON: 'water_icon.png',
         WIRE_BLACK_62: 'wire_black_62.png',
         WIRE_BLACK_LEFT: 'wire_black_left.png',
@@ -216,7 +218,9 @@ define(function (require) {
         ],
         'thermometer-spritesheet.json': [
             Assets.Images.THERMOMETER_MEDIUM_BACK,
-            Assets.Images.THERMOMETER_MEDIUM_FRONT
+            Assets.Images.THERMOMETER_MEDIUM_FRONT,
+            Assets.Images.THERMOMETER_CLIP_BACK,
+            Assets.Images.THERMOMETER_CLIP_FRONT
         ],
         'users-spritesheet.json': [
             Assets.Images.ELEMENT_BASE_BACK,
@@ -265,6 +269,10 @@ define(function (require) {
             return PIXI.Texture.fromFrame(filename);
         else
             return PIXI.Texture.fromImage(IMAGE_PATH + filename);
+    };
+
+    Assets.createSprite = function(textureFileName) {
+        return new PIXI.Sprite(Assets.Texture(textureFileName));
     };
 
     /*************************************************************************

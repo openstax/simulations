@@ -3,8 +3,18 @@ define(function (require) {
     'use strict';
 
     var Vector2 = require('vector2-node');
+    var Pool    = require('object-pool');
 
     var Element = require('models/element');
+
+    var vectorPool = Pool({
+        init: function() {
+            return new Vector2();
+        },
+        enable: function(vector) {
+            vector.set(0, 0);
+        }
+    });
 
     /**
      * 
@@ -22,9 +32,7 @@ define(function (require) {
         
         initialize: function(attributes, options) {
             // Create vectors
-            if (!this.get('position'))
-                this.set('position', new Vector2());
-            this._oldPosition = new Vector2();
+            this.set('position', vectorPool.create().set(this.get('position')));
         },
 
         reset: function() {
@@ -36,26 +44,36 @@ define(function (require) {
         },
 
         setX: function(x) {
-            this._oldPosition.set(this.get('position'));
-            this.get('position').x = x;
-            this.set('position', this.get('position'));
+            this.setPosition(x, this.get('position').y);
+        },
+
+        setY: function(y) {
+            this.setPosition(this.get('position').x, y);
         },
 
         translate: function(x, y) {
-            this._oldPosition.set(this.get('position'));
+            var oldPosition = this.get('position');
+            var newPosition = vectorPool.create().set(this.get('position'));
+
             if (x instanceof Vector2)
-                this.set('position', this.get('position').add(x));
+                this.set('position', newPosition.add(x));
             else
-                this.set('position', this.get('position').add(x, y));
+                this.set('position', newPosition.add(x, y));
             
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldPosition);
         },
 
         setPosition: function(x, y) {
-            this._oldPosition.set(this.get('position'));
+            var oldPosition = this.get('position');
+            
             if (x instanceof Vector2)
-                this.set('position', this.get('position').set(x));
+                this.set('position', vectorPool.create().set(x));
             else
-                this.set('position', this.get('position').set(x, y));
+                this.set('position', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldPosition);
         }
 
     });

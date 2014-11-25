@@ -6,10 +6,11 @@ define(function(require) {
 	var _        = require('underscore');
 	var PIXI     = require('pixi');
 
-	var SceneView = require('views/scene');
-	var AirView   = require('views/air');
-
-	var Assets = require('assets');
+	var SceneView            = require('views/scene');
+	var AirView              = require('views/air');
+	var ThermometerView      = require('views/thermometer');
+	var ThermometerClipsView = require('views/thermometer-clips');
+	var Assets               = require('assets');
 
 	/**
 	 *
@@ -85,8 +86,30 @@ define(function(require) {
 			// Movable objects
 
 			// Thermometers
+			var thermometerViews = [];
+			_.each(this.simulation.thermometers, function(thermometer) {
+				thermometerViews.push(new ThermometerView({
+					model: thermometer
+				}));
+			});
 
-			// Thermometer box
+			// Thermometer clips
+			var thermometerClips = new ThermometerClipsView({
+				x: 12,
+				y: 12,
+				width: 230,
+				height: 180,
+				numThermometerSpots: thermometerViews.length
+			});
+			this.backLayer.addChild(thermometerClips.displayObject);
+
+			// Add thermometers to the thermometer clips
+			_.each(thermometerViews, function(thermometerView) {
+				var point = thermometerClips.addThermometer(thermometerView);
+				thermometerView.model.setPosition(point.x, point.y);
+				console.log(point.x + ', ' + point.y);
+			});
+
 		},
 
 		_update: function(time, deltaTime) {

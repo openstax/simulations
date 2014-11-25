@@ -4,7 +4,7 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var MovableElement = require('models/element');
+	var MovableElement = require('models/element/movable');
 
 	/**
 	 * Constants
@@ -36,6 +36,8 @@ define(function (require) {
 				this.elementLocator = options.elementLocator;
 			else
 				throw 'Thermometer model requires an element locator.';
+
+			MovableElement.prototype.initialize.apply(this, arguments);
 
 			this.initiallyActive = this.get('active');
 		},

@@ -5,6 +5,16 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
     var Vector2  = require('vector2-node');
+    var Pool    = require('object-pool');
+
+    var vectorPool = Pool({
+        init: function() {
+            return new Vector2();
+        },
+        enable: function(vector) {
+            vector.set(0, 0);
+        }
+    });
 
     /**
      * Energy types
@@ -38,17 +48,24 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             // Create new vectors
-            if (!this.get('position'))
-                this.set('position', new Vector2(0, 0));
-            if (!this.get('velocity'))
-                this.set('velocity', new Vector2(0, 0)); 
+            this.set('position', vectorPool.create().set(this.get('position')));
+            this.set('velocity', vectorPool.create().set(this.get('velocity')));
 
             // For internal use to avoid creating and destroying objects
             this._vec2 = new Vector2(0, 0);
         },
 
-        translate: function(movement) {
-            this.set('position', this.get('position').add(movement));
+        translate: function(x, y) {
+            var oldPosition = this.get('position');
+            var newPosition = vectorPool.create().set(this.get('position'));
+
+            if (x instanceof Vector2)
+                this.set('position', newPosition.add(x));
+            else
+                this.set('position', newPosition.add(x, y));
+            
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldPosition);
         },
 
         translateBasedOnVelocity: function(time) {
@@ -60,16 +77,32 @@ define(function (require) {
          * Shortcut function that allows setting position to the values
          *   from an arbitrary vector but still triggering a change.
          */
-        setPosition: function(position) {
-            this.set('position', this.get('position').set(position));
+        setPosition: function(x, y) {
+            var oldPosition = this.get('position');
+            
+            if (x instanceof Vector2)
+                this.set('position', vectorPool.create().set(x));
+            else
+                this.set('position', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldPosition);
         },
 
         /**
          * Shortcut function that allows setting velocity to the values
          *   from an arbitrary vector but still triggering a change.
          */
-        setVelocity: function(velocity) {
-            this.set('velocity', this.get('velocity').set(velocity));
+        setVelocity: function(x, y) {
+            var oldVelocity = this.get('velocity');
+            
+            if (x instanceof Vector2)
+                this.set('velocity', vectorPool.create().set(x));
+            else
+                this.set('velocity', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldVelocity);
         }
 
     }, EnergyTypes);

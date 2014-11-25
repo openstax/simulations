@@ -47,7 +47,7 @@ define(function(require) {
 		},
 
 		updateVisibility: function(model, visible) {
-			this.visible = visible;
+			this.displayObject.visible = visible;
 		},
 
 		updateTransparency: function(model, zPosition) {
@@ -56,16 +56,16 @@ define(function(require) {
 				zFadeValue = Math.max((EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED + zPosition) / EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED, 0);
 			else
 				zFadeValue = 1;
-			this.alpha = zFadeValue;
+			this.displayObject.alpha = zFadeValue;
 		},
 
 		updateEnergyType: function(model, energyType) {
-			this.texture = Textures[energyType];
+			this.displayObject.texture = Textures[energyType];
 		},
 
 		updatePosition: function(model, position) {
-			this.x = position.x;
-			this.y = position.y;
+			this.displayObject.x = position.x;
+			this.displayObject.y = position.y;
 		}
 
 	}, Constants.EnergyChunkView);
