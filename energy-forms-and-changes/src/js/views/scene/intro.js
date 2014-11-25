@@ -6,6 +6,7 @@ define(function(require) {
 	var _        = require('underscore');
 	var PIXI     = require('pixi');
 
+	var ModelViewTransform   = require('common/math/model-view-transform');
 	var SceneView            = require('views/scene');
 	var AirView              = require('views/air');
 	var ThermometerView      = require('views/thermometer');
@@ -37,6 +38,12 @@ define(function(require) {
 
 		initGraphics: function() {
 			SceneView.prototype.initGraphics.apply(this, arguments);
+
+			this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+				new Vector2(0, 0),
+				new Vector2(Math.round(this.width * 0.5), Math.round(this.height * 0.85)),
+				2200 // Scale
+			);
 
 			this.initLayers();
 			this.initElements();
@@ -81,18 +88,19 @@ define(function(require) {
 			// this.burnerFrontLayer.addChild(leftBurner.frontDisplayObject);
 
 			// Air
-			var air = new AirView({ model: this.simulation.air });
+			var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
 			this.airLayer.addChild(air.displayObject);
 
 			// Movable objects
-			var brickView = new BlockView({ model: this.simulation.brick });
+			var brickView = new BlockView({ model: this.simulation.brick, mvt: this.mvt });
 			this.blockLayer.addChild(brickView.displayObject);
 
 			// Thermometers
 			var thermometerViews = [];
 			_.each(this.simulation.thermometers, function(thermometer) {
 				thermometerViews.push(new ThermometerView({
-					model: thermometer
+					model: thermometer,
+					mvt: this.mvt
 				}));
 			});
 

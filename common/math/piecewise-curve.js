@@ -66,6 +66,18 @@ define(function (require) {
      */
     _.extend(PiecewiseCurve.prototype, {
 
+        clone: function() {
+            var clone = _.clone(this);
+            clone.types = _.clone(this.types);
+            clone.yPoints = _.clone(this.yPoints);
+            clone.xPoints = _.clone(this.xPoints);
+            clone._translation = _.clone(this._translation);
+            clone._rotation = _.clone(this._rotation);
+            clone._scale = _.clone(this._scale);
+            clone._bounds = new Rectangle();
+            return clone;
+        },
+
         /**
          * This deviates from the GeneralPath code in that our
          *   transformMatrix goes down the rows instead of the

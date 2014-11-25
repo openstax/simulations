@@ -2,9 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var _              = require('underscore');
-    var Rectangle      = require('rectangle-node');
-    var Vector2        = require('vector2-node');
+    var _         = require('underscore');
+    var Rectangle = require('rectangle-node');
+    var Vector2   = require('vector2-node');
+    var PiecewiseCurve = require('./piecewise-curve');
 
     /**
      * | m00 m01 m02 |
@@ -96,6 +97,13 @@ define(function (require) {
         ];
 
         this.inverseMatrix = inverse(this.matrix);
+
+        this._point = new Vector2();
+        this._rect  = new Rectangle();
+        this._point1 = new Vector2();
+        this._point2 = new Vector2();
+        this._point3 = new Vector2();
+        this._point4 = new Vector2();
     };
 
     /**
@@ -104,30 +112,28 @@ define(function (require) {
     _.extend(ModelViewTransform, {
 
         /**
-         * Creates a ModelViewTransform that has the specified 
-         *   scale and offset such that
+         * Creates a ModelViewTransform that has the specified scale 
+         *   and offset such that
          *   view = model * scale + offset
          *
-         * Can take (Vector2, Vector2)
-         *       or (int, int, Vector2)
-         *       or (Vector2, int, int)
-         *       or (int, int, int, int)
+         * @param offset the offset in view coordinates
+         * @param xScale the scale to map model to view in the x-dimension
+         * @param yScale the scale to map model to view in the y-dimension
          */
-        createOffsetScaleMapping: function(xOff, yOff, xScale, yScale) {
-            var components = componentsFromArguments(arguments, 4, 1);
-            xOff   = components[0];
-            yOff   = components[1];
-            xScale = components[2];
-            yScale = components[3];
+        createOffsetScaleMapping: function(offset, xScale, yScale) {
+            if (yScale === undefined)
+                yScale = xScale;
 
             return new ModelViewTransform([
-                xScale, 0,      xOff,
-                0,      yScale, yOff
+                xScale, 0,      offset.x,
+                0,      yScale, offset.y
             ]);
         },
 
         /**
-         * Creates a shearless ModelViewTransform that maps the specified model point to the specified view point, with the given x and y scales.
+         * Creates a shearless ModelViewTransform that maps the 
+         *   specified model point to the specified view point, 
+         *   with the given x and y scales.
          *
          * @param modelPoint the reference point in the model which maps to the specified view point
          * @param viewPoint  the reference point in the view
@@ -135,15 +141,34 @@ define(function (require) {
          * @param yScale     the amount to scale in the y direction
          * @return the resultant ModelViewTransform
          */
-        createSinglePointScaleMapping: function(modelX, modelY, viewX, viewY, xScale, yScale) {
-            var components = componentsFromArguments(arguments, 6, 1);
-            modelX = components[0];
-            modelY = components[1];
-            viewX  = components[2];
-            viewY  = components[3];
-            xScale = components[4];
-            yScale = components[5];
+        createSinglePointScaleMapping: function(modelPoint, viewPoint, xScale, yScale) {
+            if (yScale === undefined)
+                yScale = xScale;
+
+            var xOffset = viewPoint.x - modelPoint.x * xScale;
+            var yOffset = viewPoint.y - modelPoint.y * yScale;
+
+            return ModelViewTransform.createOffsetScaleMapping(new Vector2(xOffset, yOffset), xScale, yScale);
+        },
+
+        /**
+         * Creates a shearless ModelViewTransform that maps the 
+         *   specified model point to the specified view point, 
+         *   with the given scale factor for both x and y 
+         *   dimensions, but inverting the y axis so that +y in 
+         *   the model corresponds to -y in the view. Inverting 
+         *   the y axis is commonly necessary since +y is usually 
+         *   up in textbooks and -y is down in pixel coordinates.
+         *
+         * @param modelPoint the reference point in the model which maps to the specified view point
+         * @param viewPoint  the reference point in the view
+         * @param scale      the amount to scale in the x and y directions
+         * @return the resultant ModelViewTransform
+         */
+        createSinglePointScaleInvertedYMapping: function(modelPoint, viewPoint, scale) {
+            return ModelViewTransform.createSinglePointScaleMapping(modelPoint, viewPoint, scale, -scale);
         }
+
     });
 
     /**
@@ -151,77 +176,46 @@ define(function (require) {
      */
     _.extend(ModelViewTransform.prototype, {
 
-        transformPoint: function(transformMatrix) {
-            var newX;
-            var newY;
-            var tm = transformMatrix;
-            var xPoints = this.xPoints;
-            var yPoints = this.yPoints;
-            for (var i = 0; i < this.index; i++) {
-                newX = tm[0] * xPoints[i] + tm[1] * yPoints[i] + tm[2];
-                newY = tm[3] * xPoints[i] + tm[4] * yPoints[i] + tm[5];
-                xPoints[i] = newX;
-                yPoints[i] = newY;
-            }
-            return this;
+        modelToView: function(coordinates) {
+            if (coordinates instanceof Rectangle)
+                return this.transformRectangle(coordinates);
+            else if (coordinates instanceof Vector2 || ('x' in coordinates && 'y' in coordinates))
+                return this.transformPoint(coordinates);
+            else if (coordinates instanceof PiecewiseCurve)
+                return this.transformPiecewiseCurve(coordinates);
         },
 
-        /**
-         * Creates a 2D translation matrix and calls transform.
-         */
-        translate: function(dx, dy) {
-            this._translation[2] = dx;
-            this._translation[5] = dy;
-            this.transform(this._translation);
-            return this;
+        transformPoint: function(point) {
+            var tm = this.matrix;
+            this._point.x = tm[0] * point.x + tm[1] * point.y + tm[2];
+            this._point.y = tm[3] * point.x + tm[4] * point.y + tm[5];
+            return this._point;
         },
 
-        /**
-         * Creates a 2D rotation matrix and calls transform.
-         */
-        rotate: function(theta) {
-            var cos = Math.cos(theta);
-            var sin = Math.sin(theta);
-            this._rotation[0] = cos;
-            this._rotation[1] = -sin;
-            this._rotation[3] = sin;
-            this._rotation[4] = cos;
-            this.transform(this._rotation);
-            return this;
+        transformRectangle: function(rectangle) {
+            // Create points for the rectangle's points and transform them
+            var corner1 = this._point1;
+            var corner2 = this._point2;
+
+            corner1.set(rectangle.x, rectangle.y);
+            corner2.set(rectangle.x + rectangle.w, rectangle.y + rectangle.h);
+
+            corner1 = this.transformPoint(corner1);
+            corner2 = this.transformPoint(corner2);
+
+            return this._rect.set(
+                corner1.x,
+                corner1.y,
+                corner2.x - corner1.x,
+                corner2.y - corner1.y
+            );
         },
 
-        scale: function(x, y) {
-            this._scale[0] = x;
-            this._scale[4] = y !== undefined ? y : x;
-            this.transform(this._scale);
-            return this;
-        },
-
-        /**
-         * Evaluates if a rectangle intersects a path.
-         */
-        intersects: function(x, y, w, h) {
-            if (x instanceof Rectangle) {
-                h = x.h;
-                w = x.w;
-                y = x.y;
-                x = x.x;
-            }
-
-            // Does any edge intersect?
-            if (this.getAxisIntersections(x, y,     false, w) !== 0 ||
-                this.getAxisIntersections(x, y + h, false, w) !== 0 ||
-                this.getAxisIntersections(x + w, y, false, h) !== 0 ||
-                this.getAxisIntersections(x, y,     false, h) !== 0) {
-                return true;
-            }
-
-            // No intersections, is any point inside?
-            if (this.getWindingNumber(x, y) !== 0)
-                return true;
-
-            return false;
-        },
+        transformPiecewiseCurve: function(curve) {
+            var clone = curve.clone();
+            clone.transform(this.matrix);
+            return clone;
+        }
 
     });
 

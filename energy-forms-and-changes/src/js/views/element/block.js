@@ -19,6 +19,8 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			this.mvt = options.mvt;
+
 			this.listenTo(this.model, 'change:position', this.updatePosition);
 
 			this.initGraphics();
@@ -32,7 +34,7 @@ define(function(require) {
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.outlineFront);
 			
-			var rect = this.model.getRect();
+			var rect = this.mvt.modelToView(this.model.getRect());
 			var perspectiveEdgeSize = rect.w * Constants.PERSPECTIVE_EDGE_PROPORTION;
 
 			var blockFaceOffset  = (new Vector2(-perspectiveEdgeSize / 2, 0)).rotate(-Constants.PERSPECTIVE_ANGLE);
