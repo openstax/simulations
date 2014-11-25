@@ -2,25 +2,25 @@
 
 "thermometer-clip-back.png":
 {
-	"frame": {"x":2,"y":2,"w":71,"h":76},
+	"frame": {"x":2,"y":2,"w":61,"h":51},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":0,"y":0,"w":71,"h":76},
+	"spriteSourceSize": {"x":15,"y":0,"w":61,"h":51},
 	"sourceSize": {"w":76,"h":76},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "thermometer-clip-front.png":
 {
-	"frame": {"x":2,"y":80,"w":70,"h":76},
+	"frame": {"x":43,"y":166,"w":47,"h":38},
 	"rotated": false,
 	"trimmed": true,
-	"spriteSourceSize": {"x":6,"y":0,"w":70,"h":76},
+	"spriteSourceSize": {"x":0,"y":38,"w":47,"h":38},
 	"sourceSize": {"w":76,"h":76},
 	"pivot": {"x":0.5,"y":0.5}
 },
 "thermometer_medium_back.png":
 {
-	"frame": {"x":2,"y":322,"w":39,"h":160},
+	"frame": {"x":2,"y":55,"w":39,"h":160},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":39,"h":160},
@@ -29,7 +29,7 @@
 },
 "thermometer_medium_front.png":
 {
-	"frame": {"x":2,"y":158,"w":41,"h":162},
+	"frame": {"x":65,"y":2,"w":41,"h":162},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":41,"h":162},
@@ -41,8 +41,8 @@
 	"version": "1.0",
 	"image": "thermometer-spritesheet.png",
 	"format": "RGBA8888",
-	"size": {"w":75,"h":484},
+	"size": {"w":108,"h":217},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:af7e3cecf266d6f0f0ae83d4c0d06046:b1db87f950ba630078a2dd8de56e56e2:5556a88d13bbaa7614af491bd3a0f7e2$"
+	"smartupdate": "$TexturePacker:SmartUpdate:d78a207e0f3948d87d5c28faa85e0d9c:cd4d559500730abb1c8c05d5b52a430a:5556a88d13bbaa7614af491bd3a0f7e2$"
 }
 }

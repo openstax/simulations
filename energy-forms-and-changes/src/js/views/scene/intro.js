@@ -95,9 +95,9 @@ define(function(require) {
 
 			// Thermometer clips
 			var thermometerClips = new ThermometerClipsView({
-				x: 12,
-				y: 12,
-				width: 230,
+				x: 15,
+				y: 15,
+				width: 210,
 				height: 180,
 				numThermometerSpots: thermometerViews.length
 			});
