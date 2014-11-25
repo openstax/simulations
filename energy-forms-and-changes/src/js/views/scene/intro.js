@@ -10,6 +10,7 @@ define(function(require) {
 	var AirView              = require('views/air');
 	var ThermometerView      = require('views/thermometer');
 	var ThermometerClipsView = require('views/thermometer-clips');
+	var BlockView            = require('views/element/block');
 	var Assets               = require('assets');
 
 	/**
@@ -84,6 +85,8 @@ define(function(require) {
 			this.airLayer.addChild(air.displayObject);
 
 			// Movable objects
+			var brickView = new BlockView({ model: this.simulation.brick });
+			this.blockLayer.addChild(brickView.displayObject);
 
 			// Thermometers
 			var thermometerViews = [];

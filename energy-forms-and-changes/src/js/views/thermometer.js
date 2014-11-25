@@ -32,6 +32,8 @@ define(function(require) {
 
 			this.displayObject.addChild(back);
 			this.displayObject.addChild(front);
+
+			// TODO: add tick marks and the column of red liquid
 		},
 
 		updatePosition: function(model, position) {

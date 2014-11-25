@@ -32,6 +32,11 @@ define(function (require) {
     Constants.MAP_Z_TO_XY_OFFSET = function(zValue) {
         return new Vector2(zValue * Constants.Z_TO_X_OFFSET_MULTIPLIER, zValue * Constants.Z_TO_Y_OFFSET_MULTIPLIER);
     };
+    Constants.PERSPECTIVE_ANGLE = Math.atan2(-Constants.Z_TO_Y_OFFSET_MULTIPLIER, -Constants.Z_TO_X_OFFSET_MULTIPLIER);
+    Constants.PERSPECTIVE_EDGE_PROPORTION = Math.sqrt(
+        Math.pow(Constants.Z_TO_X_OFFSET_MULTIPLIER, 2) +
+        Math.pow(Constants.Z_TO_Y_OFFSET_MULTIPLIER, 2) 
+    );
 
     // For comparing temperatures.
     Constants.SIGNIFICANT_TEMPERATURE_DIFFERENCE = 1E-3; // In degrees K.

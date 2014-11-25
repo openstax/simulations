@@ -96,9 +96,11 @@ define(function(require) {
 			this.renderer = PIXI.autoDetectRenderer(
 				this.$el.width(),  // Width
 				this.$el.height(), // Height
-				this.el,           // Canvas element
-				true,              // Transparent background
-				true               // Antialiasing
+				{
+					view:        this.el, // Canvas element
+					transparent: true,    // Transparent background
+					antialias:   true     // Antialiasing
+				}
 			);
 
 			this.width  = this.$el.width();
