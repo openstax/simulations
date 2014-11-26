@@ -37,7 +37,7 @@ define(function(require) {
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.outlineFront);
 
-			this.outlineFront.lineStyle(2, '#000', 1);
+			this.outlineFront.lineStyle(4, '#444', 1);
 			
 			var rect = this.mvt.modelToViewScale(Block.getRawShape());
 			var perspectiveEdgeSize = this.mvt.modelToViewDeltaX(this.model.getRect().w * Constants.PERSPECTIVE_EDGE_PROPORTION);
@@ -51,12 +51,19 @@ define(function(require) {
 			var upperRightFrontCorner = (new Vector2(rect.right(), rect.top())).add(blockFaceOffset);
 			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.top())).add(blockFaceOffset);
 
-			var frontFaceShape = new PIXI.Rectangle(
-				lowerLeftFrontCorner.x,
-				upperLeftFrontCorner.x,
-				rect.w,
-				rect.h
-			);
+			// var frontFaceShape = new PIXI.Rectangle(
+			// 	lowerLeftFrontCorner.x,
+			// 	upperLeftFrontCorner.x,
+			// 	rect.w,
+			// 	rect.h
+			// );
+			var frontFaceShape = this._createPolygon([
+				lowerLeftFrontCorner,
+				lowerRightFrontCorner,
+				upperRightFrontCorner,
+				upperLeftFrontCorner,
+				lowerLeftFrontCorner
+			]);
 
 			// Top face
 			var upperLeftBackCorner  = upperLeftFrontCorner.clone().add(backCornerOffset);
@@ -85,6 +92,9 @@ define(function(require) {
 			this.outlineFront.drawShape(frontFaceShape);
 			this.outlineFront.drawShape(topFaceShape);
 			this.outlineFront.drawShape(sideFaceShape);
+
+			// Draw the center for testing purposes
+			this.outlineFront.drawCircle(0, 0, 5);
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
