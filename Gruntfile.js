@@ -44,6 +44,13 @@ module.exports = function(grunt){
 			deploy: {
 				src: ['**']
 			}
+		},
+		'npm-install': {
+			options: {
+				packageFiles: [
+					'./*/package.json',
+				]
+			}
 		}
 	});
 
@@ -151,4 +158,45 @@ module.exports = function(grunt){
 	grunt.registerTask('dev', [
 		'connect:dev'
 	]);
+
+	grunt.registerTask('npm-install', function() {
+		grunt.log.writeln('Running `npm install` for each simulation...');
+		var spawn = require('child_process').spawn;
+
+		// Function to call when all the local node_modules have been installed
+		var done = this.async();
+
+		// Get a list of all the package files from each directory
+		packageFiles = grunt.file.expand(this.options().packageFiles);
+		
+		// Create a callback for when a local npm install has finished running
+		var installsRunning = packageFiles.length;
+		var checkFinished = function() {
+			installsRunning--;
+			if (installsRunning === 0) {
+				if (packageFiles.length === 1)
+					grunt.log.writeln('>> 1 npm package file installed');
+				else
+					grunt.log.writeln('>> ' + packageFiles.length + ' package files installed');
+				done();
+			}
+		};
+
+		var packageDir;
+		var childProcess;
+		for (var i = 0; i < packageFiles.length; i++) {
+			packageDir = packageFiles[i].substring(0, packageFiles[i].indexOf('package.json'));
+
+			// Spawn a child process that will run the install
+			childProcess = spawn('npm', ['install'], { 
+				cwd: packageDir, // Where the package file lives
+				stdio: 'inherit' // Makes it so output gets automatically routed to our current output stream
+			});
+
+			// Bind an event for when it's finished
+			childProcess.on('close', function(code) {
+				checkFinished();
+			});
+		}
+	});
 };
