@@ -91,13 +91,25 @@ define(function (require) {
      */
     var ModelViewTransform = function(transformationMatrix) {
 
-        this.matrix = transformationMatrix || [
+        this.transformMatrix = transformationMatrix || [
             1, 0, 0,
             0, 1, 0
         ];
 
-        this.inverseMatrix = inverse(this.matrix);
+        // Delta transform just takes out the translation
+        this.deltaTransformMatrix = _.clone(this.transformMatrix);
+        this.deltaTransformMatrix[2] = 0;
+        this.deltaTransformMatrix[5] = 0;
 
+        // Get the inverse of the transform matrix and store it
+        this.inverseTransformMatrix = inverse(this.transformMatrix);
+
+        // Delta transform just takes out the translation
+        this.deltaInverseTransformMatrix = _.clone(this.inverseTransformMatrix);
+        this.deltaInverseTransformMatrix[2] = 0;
+        this.deltaInverseTransformMatrix[5] = 0;
+
+        // Cached objects for recycling
         this._point = new Vector2();
         this._rect  = new Rectangle();
         this._point1 = new Vector2();
@@ -176,23 +188,75 @@ define(function (require) {
      */
     _.extend(ModelViewTransform.prototype, {
 
+        /*************************************************************************
+         **                                                                     **
+         **                            Model to View                            **
+         **                                                                     **
+         *************************************************************************/
+
         modelToView: function(coordinates) {
-            if (coordinates instanceof Rectangle)
-                return this.transformRectangle(coordinates);
-            else if (coordinates instanceof Vector2 || ('x' in coordinates && 'y' in coordinates))
-                return this.transformPoint(coordinates);
-            else if (coordinates instanceof PiecewiseCurve)
-                return this.transformPiecewiseCurve(coordinates);
+            return this.transform(this.transformMatrix, coordinates);
         },
 
-        transformPoint: function(point) {
-            var tm = this.matrix;
+        /**
+         * Delta transform just doesn't include any translation
+         */
+        modelToViewDelta: function(coordinates) {
+            return this.transform(this.deltaTransformMatrix, coordinates);
+        },
+
+        modelToViewX: function(x) {
+            return this.transformPoint(this.transformMatrix, this._point1.set(x, 0));
+        },
+
+        modelToViewY: function(y) {
+            return this.transformPoint(this.transformMatrix, this._point1.set(0, y));
+        },
+
+        /*************************************************************************
+         **                                                                     **
+         **                            View to Model                            **
+         **                                                                     **
+         *************************************************************************/
+
+        viewToModel: function(coordinates) {
+            return this.transform(this.inverseTransformMatrix, coordinates);
+        },
+
+        viewToModelDelta: function(coordinates) {
+            return this.transform(this.deltaInverseTransformMatrix, coordinates);
+        },
+
+        viewToModelX: function(x) {
+            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(x, 0));
+        },
+
+        viewToModelY: function(y) {
+            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(0, y));
+        },
+
+        /*************************************************************************
+         **                                                                     **
+         **                           Transformations                           **
+         **                                                                     **
+         *************************************************************************/
+
+        transform: function(tm, coordinates) {
+            if (coordinates instanceof Rectangle)
+                return this.transformRectangle(tm, coordinates);
+            else if (coordinates instanceof Vector2 || ('x' in coordinates && 'y' in coordinates))
+                return this.transformPoint(tm, coordinates);
+            else if (coordinates instanceof PiecewiseCurve)
+                return this.transformPiecewiseCurve(tm, coordinates);
+        },
+
+        transformPoint: function(tm, point) {
             this._point.x = tm[0] * point.x + tm[1] * point.y + tm[2];
             this._point.y = tm[3] * point.x + tm[4] * point.y + tm[5];
             return this._point;
         },
 
-        transformRectangle: function(rectangle) {
+        transformRectangle: function(tm, rectangle) {
             // Create points for the rectangle's points and transform them
             var corner1 = this._point1;
             var corner2 = this._point2;
@@ -211,11 +275,11 @@ define(function (require) {
             );
         },
 
-        transformPiecewiseCurve: function(curve) {
+        transformPiecewiseCurve: function(tm, curve) {
             var clone = curve.clone();
-            clone.transform(this.matrix);
+            clone.transform(tm);
             return clone;
-        }
+        },
 
     });
 
