@@ -128,5 +128,13 @@ define(function (require) {
 
     }, Constants.Block);
 
+    /**
+     * Static Functions
+     */
+    var _rawShape = new Rectangle(-Block.SURFACE_WIDTH / 2, 0, Block.SURFACE_WIDTH, Block.SURFACE_WIDTH);
+    Block.getRawShape = function() {
+        return _rawShape;
+    };
+
     return Block;
 });

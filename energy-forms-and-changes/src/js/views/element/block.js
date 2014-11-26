@@ -7,6 +7,7 @@ define(function(require) {
 	var Vector2 = require('vector2-node');
 
 	var PixiView = require('common/pixi/view');
+	var Block    = require('models/element/block');
 
 	var Constants = require('constants');
 
@@ -24,6 +25,8 @@ define(function(require) {
 			this.listenTo(this.model, 'change:position', this.updatePosition);
 
 			this.initGraphics();
+
+			this.updatePosition(this.model, this.model.get('position'));
 		},
 
 		initGraphics: function() {
@@ -33,18 +36,20 @@ define(function(require) {
 
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.outlineFront);
+
+			this.outlineFront.lineStyle(2, '#000', 1);
 			
-			var rect = this.mvt.modelToView(this.model.getRect());
-			var perspectiveEdgeSize = rect.w * Constants.PERSPECTIVE_EDGE_PROPORTION;
+			var rect = this.mvt.modelToViewScale(Block.getRawShape());
+			var perspectiveEdgeSize = this.mvt.modelToViewDeltaX(this.model.getRect().w * Constants.PERSPECTIVE_EDGE_PROPORTION);
 
 			var blockFaceOffset  = (new Vector2(-perspectiveEdgeSize / 2, 0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 			var backCornerOffset = (new Vector2(perspectiveEdgeSize,      0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 
 			// Front face
-			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.top()   )).add(blockFaceOffset);
-			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.top()   )).add(blockFaceOffset);
-			var upperRightFrontCorner = (new Vector2(rect.right(), rect.bottom())).add(blockFaceOffset);
-			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom())).add(blockFaceOffset);
+			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom()   )).add(blockFaceOffset);
+			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.bottom()   )).add(blockFaceOffset);
+			var upperRightFrontCorner = (new Vector2(rect.right(), rect.top())).add(blockFaceOffset);
+			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.top())).add(blockFaceOffset);
 
 			var frontFaceShape = new PIXI.Rectangle(
 				lowerLeftFrontCorner.x,
@@ -58,8 +63,8 @@ define(function(require) {
 			var upperRightBackCorner = upperRightFrontCorner.clone().add(backCornerOffset);
 
 			var topFaceShape = this._createPolygon([
+				upperLeftFrontCorner,
 				upperRightFrontCorner,
-				lowerRightFrontCorner,
 				upperRightBackCorner,
 				upperLeftBackCorner,
 				upperLeftFrontCorner
@@ -108,8 +113,9 @@ define(function(require) {
 		},
 
 		updatePosition: function(model, position) {
-			this.displayObject.x = position.x;
-			this.displayObject.y = position.y;
+			var viewPoint = this.mvt.modelToView(position);
+			this.displayObject.x = viewPoint.x;
+			this.displayObject.y = viewPoint.y;
 		}
 
 	});

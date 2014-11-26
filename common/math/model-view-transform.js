@@ -205,12 +205,29 @@ define(function (require) {
             return this.transform(this.deltaTransformMatrix, coordinates);
         },
 
+        /**
+         * For things like bounds that we want to only transform
+         *   by the scale. Works the same as modelToViewDelta but
+         *   has a different name so its function is clearer.
+         */
+        modelToViewScale: function(coordinates) {
+            return this.modelToViewDelta(coordinates);
+        },
+
         modelToViewX: function(x) {
-            return this.transformPoint(this.transformMatrix, this._point1.set(x, 0));
+            return this.transformPoint(this.transformMatrix, this._point1.set(x, 0)).x;
         },
 
         modelToViewY: function(y) {
-            return this.transformPoint(this.transformMatrix, this._point1.set(0, y));
+            return this.transformPoint(this.transformMatrix, this._point1.set(0, y)).y;
+        },
+
+        modelToViewDeltaX: function(x) {
+            return this.transformPoint(this.deltaTransformMatrix, this._point1.set(x, 0)).x;
+        },
+
+        modelToViewDeltaY: function(y) {
+            return this.transformPoint(this.deltaTransformMatrix, this._point1.set(0, y)).y;
         },
 
         /*************************************************************************
@@ -225,6 +242,10 @@ define(function (require) {
 
         viewToModelDelta: function(coordinates) {
             return this.transform(this.deltaInverseTransformMatrix, coordinates);
+        },
+
+        viewToModelScale: function(coordinates) {
+            return this.viewToModelDelta(this.coordinates);
         },
 
         viewToModelX: function(x) {
@@ -270,8 +291,8 @@ define(function (require) {
             return this._rect.set(
                 corner1.x,
                 corner1.y,
-                corner2.x - corner1.x,
-                corner2.y - corner1.y
+                Math.abs(corner2.x - corner1.x),
+                Math.abs(corner2.y - corner1.y)
             );
         },
 

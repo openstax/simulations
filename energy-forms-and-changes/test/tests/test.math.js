@@ -109,6 +109,8 @@ describe('ModelViewTransform', function(){
 
 		chai.expect(rectA.x).to.almost.equal(rectB.x);
 		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
 	});
 
 	it('should transform a rectangle with offset', function(){
@@ -119,12 +121,14 @@ describe('ModelViewTransform', function(){
 		var w = 10;
 		var h = 12;
 		var rectA = new Rectangle(1, 1, w, h);
-		var rectB = new Rectangle(s + offsetX, s + offsetY, w * s + offsetX, h * s + offsetY);
+		var rectB = new Rectangle(s + offsetX, s + offsetY, w * s, h * s);
 
 		rectA = mvt.modelToView(rectA);
 
 		chai.expect(rectA.x).to.almost.equal(rectB.x);
 		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
 	});
 
 	it('should transform a curve', function() {
@@ -142,6 +146,42 @@ describe('ModelViewTransform', function(){
 
 		chai.expect(curve2.xPoints).to.almost.eql([ox, s + ox, 2 * s + ox]);
 		chai.expect(curve2.yPoints).to.almost.eql([oy, oy, -s + oy]);
+	});
+
+	it('#createSinglePointScaleInvertedYMapping should create the right transform matrix', function(){
+		var scale = 1;
+		var pointA = new Vector2(0, 0);
+		var pointB = new Vector2(100, 100);
+
+		var mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+			pointA.clone(), 
+			pointB.clone(), 
+			scale
+		);
+		
+		pointA = mvt.modelToView(pointA);
+
+		chai.expect(pointA.x).to.almost.equal(pointB.x);
+		chai.expect(pointA.y).to.almost.equal(pointB.y);
+
+		pointA.set(0, 0);
+		pointB.set(100, 100);
+
+		mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+			pointA,
+			pointB,
+			200
+		);
+
+		var rectA = new Rectangle(0, 1, 2, 2);
+		var rectB = new Rectangle(100, -100, 400, 400);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
 	});
 
 });
