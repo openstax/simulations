@@ -19,7 +19,7 @@ define(function (require) {
      *   almost verbatim code.  Java.awt.geom.GeneralPath is distributed under the
      *   GNU General Public License.
      */
-    var PiecewiseCurve = function(energyType, position, velocity, visible) {
+    var PiecewiseCurve = function() {
         this.types   = [];
         this.xPoints = [];
         this.yPoints = [];
@@ -67,7 +67,9 @@ define(function (require) {
     _.extend(PiecewiseCurve.prototype, {
 
         clone: function() {
-            var clone = _.clone(this);
+            var clone = new PiecewiseCurve();
+            clone.index = this.index;
+            clone.subcurve = this.subcurve;
             clone.types = _.clone(this.types);
             clone.yPoints = _.clone(this.yPoints);
             clone.xPoints = _.clone(this.xPoints);

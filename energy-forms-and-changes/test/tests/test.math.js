@@ -53,12 +53,19 @@ describe('ModelViewTransform', function(){
 	var ModelViewTransform;
 	var Vector2;
 	var Rectangle;
+	var PiecewiseCurve;
 
 	before(function(done) {
-		require(['common/math/model-view-transform', 'vector2-node', 'rectangle-node'], function(modelViewTransform, vector2, rectangle) {
+		require([
+			'common/math/model-view-transform', 
+			'vector2-node', 
+			'rectangle-node',
+			'common/math/piecewise-curve'
+		], function(modelViewTransform, vector2, rectangle, piecewiseCurve) {
 			ModelViewTransform = modelViewTransform;
 			Vector2 = vector2;
 			Rectangle = rectangle;
+			PiecewiseCurve = piecewiseCurve;
 
 			done();
 		});
@@ -118,6 +125,23 @@ describe('ModelViewTransform', function(){
 
 		chai.expect(rectA.x).to.almost.equal(rectB.x);
 		chai.expect(rectA.y).to.almost.equal(rectB.y);
+	});
+
+	it('should transform a curve', function() {
+		var s = 5;   // scale
+		var ox = 10; // x offset
+		var oy = 10; // y offset
+		var mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(ox, oy), s, s);
+
+		var curve = new PiecewiseCurve();
+		curve.moveTo(0, 0);
+		curve.lineTo(1, 0);
+		curve.lineTo(2, -1);
+
+		var curve2 = mvt.modelToView(curve);
+
+		chai.expect(curve2.xPoints).to.almost.eql([ox, s + ox, 2 * s + ox]);
+		chai.expect(curve2.yPoints).to.almost.eql([oy, oy, -s + oy]);
 	});
 
 });
