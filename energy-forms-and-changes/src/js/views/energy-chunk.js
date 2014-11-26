@@ -11,13 +11,18 @@ define(function(require) {
 	var Constants   = require('constants');
 	var Assets      = require('assets');
 
-	var Textures = {};
-	Textures[EnergyChunk.THERMAL]    = Assets.Texture(Assets.Images.E_THERM_BLANK_ORANGE);
-	Textures[EnergyChunk.ELECTRICAL] = Assets.Texture(Assets.Images.E_ELECTRIC_BLANK);
-	Textures[EnergyChunk.MECHANICAL] = Assets.Texture(Assets.Images.E_MECH_BLANK);
-	Textures[EnergyChunk.LIGHT]      = Assets.Texture(Assets.Images.E_LIGHT_BLANK);
-	Textures[EnergyChunk.CHEMICAL]   = Assets.Texture(Assets.Images.E_CHEM_BLANK_LIGHT);
-	Textures[EnergyChunk.HIDDEN]     = Assets.Texture(Assets.Images.E_DASHED_BLANK);
+	var Textures;
+	var initTextures = function() {
+		if (!Textures) {
+			Textures = {};
+			Textures[EnergyChunk.THERMAL]    = Assets.Texture(Assets.Images.E_THERM_BLANK_ORANGE);
+			Textures[EnergyChunk.ELECTRICAL] = Assets.Texture(Assets.Images.E_ELECTRIC_BLANK);
+			Textures[EnergyChunk.MECHANICAL] = Assets.Texture(Assets.Images.E_MECH_BLANK);
+			Textures[EnergyChunk.LIGHT]      = Assets.Texture(Assets.Images.E_LIGHT_BLANK);
+			Textures[EnergyChunk.CHEMICAL]   = Assets.Texture(Assets.Images.E_CHEM_BLANK_LIGHT);
+			Textures[EnergyChunk.HIDDEN]     = Assets.Texture(Assets.Images.E_DASHED_BLANK);
+		}	
+	};
 
 	/**
 	 * A view that represents the air model
@@ -37,6 +42,8 @@ define(function(require) {
 		},
 
 		initGraphics: function() {
+			initTextures();
+			
 			this.symbol = new PIXI.Sprite(Textures[this.model.get('energyType')]);
 			this.symbol.anchor.x = 0.5;
 			this.symbol.anchor.y = 0.5;
