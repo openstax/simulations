@@ -5,6 +5,8 @@ define(function(require) {
 	var $        = require('jquery');
 	var _        = require('underscore');
 	var PIXI     = require('pixi');
+	var Vector2  = require('vector2-node');
+	//var Rectangle = require('rectangle-node');
 
 	var ModelViewTransform   = require('common/math/model-view-transform');
 	var SceneView            = require('views/scene');
@@ -102,7 +104,7 @@ define(function(require) {
 					model: thermometer,
 					mvt: this.mvt
 				}));
-			});
+			}, this);
 
 			// Thermometer clips
 			var thermometerClips = new ThermometerClipsView({
@@ -119,7 +121,7 @@ define(function(require) {
 				var point = thermometerClips.addThermometer(thermometerView);
 				thermometerView.model.setPosition(point.x, point.y);
 				console.log(point.x + ', ' + point.y);
-			});
+			}, this);
 
 		},
 

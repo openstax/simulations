@@ -49,25 +49,25 @@ define(function (require) {
      *    the arguments can be any mix of integers and objects
      *    that have properties for x and y.
      */
-    var componentsFromArguments = function(arguments, numRequired, defaultValue) {
+    var componentsFromArguments = function(args, numRequired, defaultValue) {
         var i;
         var componenets = [];
-        for (i = 0; i < arguments.length; i++) {
-            if (i === arguments.length) {
-                throw 'Invalid arguments given: ' + arguments;
+        for (i = 0; i < args.length; i++) {
+            if (i === args.length) {
+                throw 'Invalid arguments given: ' + args;
             }
-            else if (_.isObject(arguments[i])) {
-                if ('x' in arguments[i] && 'y' in arguments[i]) {
-                    components.push(arguments[i].x);
-                    components.push(arguments[i].y);
+            else if (_.isObject(args[i])) {
+                if ('x' in args[i] && 'y' in args[i]) {
+                    components.push(args[i].x);
+                    components.push(args[i].y);
                     i++;
                 }
                 else {
-                    throw 'Invalid arguments given: ' + arguments;
+                    throw 'Invalid arguments given: ' + args;
                 }
             }
             else {
-                components.push(arguments[i]);
+                components.push(args[i]);
             }
         }
         
