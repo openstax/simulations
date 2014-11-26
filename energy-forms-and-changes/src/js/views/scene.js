@@ -7,7 +7,7 @@ define(function(require) {
 	var Backbone = require('backbone');
 	var PIXI     = require('pixi');
 
-	var Assets = require('assets');
+	//var Assets = require('assets');
 
 	/**
 	 * SceneView is the main focus of the app. 

@@ -2,12 +2,11 @@ define(function(require) {
 
 	'use strict';
 
-	var _    = require('underscore');
-	var PIXI = require('pixi');
+	// var _    = require('underscore');
+	// var PIXI = require('pixi');
 
 	var PixiView = require('common/pixi/view');
-
-	var Constants = require('constants');
+	var Assets   = require('assets');
 
 	/**
 	 * A view that represents the air model

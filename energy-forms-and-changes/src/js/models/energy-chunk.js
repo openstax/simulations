@@ -2,7 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
     var Backbone = require('backbone');
     var Vector2  = require('vector2-node');
     var Pool    = require('object-pool');

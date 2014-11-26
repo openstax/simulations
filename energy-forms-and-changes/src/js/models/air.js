@@ -114,7 +114,7 @@ define(function (require) {
 		},
 
 		removeEnergyChunk: function(chunk) {
-			this.energyChunkList = _.without(this.energyChunkList, controller.energyChunk);
+			this.energyChunkList = _.without(this.energyChunkList, chunk);
 			this.trigger('remove-chunk', this, chunk);
 		},
 

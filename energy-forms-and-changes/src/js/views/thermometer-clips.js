@@ -7,8 +7,7 @@ define(function(require) {
 	var Vector2 = require('vector2-node');
 
 	var PixiView = require('common/pixi/view');
-
-	var Constants = require('constants');
+	var Assets   = require('assets');
 
 	/**
 	 * A view that represents the air model
@@ -19,7 +18,7 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-			options || (options = {});
+			options = options || {};
 
 			this.x = options.x || 0;
 			this.y = options.y || 0;

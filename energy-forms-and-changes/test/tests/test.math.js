@@ -5,7 +5,6 @@ describe('PiecewiseCurve', function(){
 	var PiecewiseCurve;
 
 	before(function(done) {
-		console.log('hey');
 		require(['common/math/piecewise-curve'], function(piecewiseCurve) {
 			PiecewiseCurve = piecewiseCurve;
 			done();
@@ -45,6 +44,36 @@ describe('PiecewiseCurve', function(){
 
 		chai.expect(curve.xPoints).to.almost.eql([0, 0, 1]);
 		chai.expect(curve.yPoints).to.almost.eql([0, 1, 2]);
+	});
+
+});
+
+describe('ModelViewTransform', function(){
+
+	var ModelViewTransform;
+	var Vector2;
+	var Rectangle;
+
+	before(function(done) {
+		require(['common/math/model-view-transform', 'vector2-node', 'rectangle-node'], function(modelViewTransform, vector2, rectangle) {
+			ModelViewTransform = modelViewTransform;
+			Vector2 = vector2;
+			Rectangle = rectangle;
+
+			done();
+		});
+	});
+
+	it('should transform a point with no offset', function(){
+		var s = 5; // scale
+		var mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(0, 0), s, s);
+		var pointA = new Vector2(1, 1);
+		var pointB = new Vector2(s, s);
+
+		pointA = mvt.modelToView(pointA);
+
+		chai.expect(pointA.x).to.almost.equal(pointB.x);
+		chai.expect(pointA.y).to.almost.equal(pointB.y);
 	});
 
 });
