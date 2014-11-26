@@ -31,13 +31,11 @@ define(function(require) {
 
 		initGraphics: function() {
 
-			this.outlineFront = new PIXI.Graphics();
-			this.outlineBack  = new PIXI.Graphics();
+			this.outlineFront = new PIXI.DisplayObjectContainer();
+			this.outlineBack  = new PIXI.DisplayObjectContainer();
 
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.outlineFront);
-
-			this.outlineFront.lineStyle(4, '#444', 1);
 			
 			var rect = this.mvt.modelToViewScale(Block.getRawShape());
 			var perspectiveEdgeSize = this.mvt.modelToViewDeltaX(this.model.getRect().w * Constants.PERSPECTIVE_EDGE_PROPORTION);
@@ -46,10 +44,10 @@ define(function(require) {
 			var backCornerOffset = (new Vector2(perspectiveEdgeSize,      0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 
 			// Front face
-			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom()   )).add(blockFaceOffset);
-			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.bottom()   )).add(blockFaceOffset);
-			var upperRightFrontCorner = (new Vector2(rect.right(), rect.top())).add(blockFaceOffset);
-			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.top())).add(blockFaceOffset);
+			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom())).add(blockFaceOffset);
+			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.bottom())).add(blockFaceOffset);
+			var upperRightFrontCorner = (new Vector2(rect.right(), rect.top()   )).add(blockFaceOffset);
+			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.top()   )).add(blockFaceOffset);
 
 			// var frontFaceShape = new PIXI.Rectangle(
 			// 	lowerLeftFrontCorner.x,
@@ -57,60 +55,99 @@ define(function(require) {
 			// 	rect.w,
 			// 	rect.h
 			// );
-			var frontFaceShape = this._createPolygon([
+			var frontFacePoints = [
 				lowerLeftFrontCorner,
 				lowerRightFrontCorner,
 				upperRightFrontCorner,
 				upperLeftFrontCorner,
 				lowerLeftFrontCorner
-			]);
+			];
+			var frontFaceShape = this._createPolygon(frontFacePoints);
 
 			// Top face
 			var upperLeftBackCorner  = upperLeftFrontCorner.clone().add(backCornerOffset);
 			var upperRightBackCorner = upperRightFrontCorner.clone().add(backCornerOffset);
 
-			var topFaceShape = this._createPolygon([
+			var topFacePoints = [
 				upperLeftFrontCorner,
 				upperRightFrontCorner,
 				upperRightBackCorner,
 				upperLeftBackCorner,
 				upperLeftFrontCorner
-			]);
+			];
+			var topFaceShape = this._createPolygon(topFacePoints);
 
 			// Side face
 			var lowerRightBackCorner = lowerRightFrontCorner.clone().add(backCornerOffset);
 
-			var sideFaceShape = this._createPolygon([
+			var sideFacePoints = [
 				upperRightFrontCorner,
 				lowerRightFrontCorner,
 				lowerRightBackCorner,
 				upperRightBackCorner,
 				upperRightFrontCorner
-			]);
+			];
+			var sideFaceShape = this._createPolygon(sideFacePoints);
 
 			// Front outline
-			this.outlineFront.drawShape(frontFaceShape);
-			this.outlineFront.drawShape(topFaceShape);
-			this.outlineFront.drawShape(sideFaceShape);
-
-			// Draw the center for testing purposes
-			this.outlineFront.drawCircle(0, 0, 5);
+			var lineStyle = {
+				lineWidth: 4,
+				strokeStyle: '#444',
+				lineJoin: 'round'
+			};
+			var lines = [frontFacePoints, topFacePoints, sideFacePoints];
+			this.outlineFront.addChild(new PIXI.Sprite(this.renderLinesAsTexture(lines, 200, 200, lineStyle)));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
 
-			this.outlineBack.drawShape(this._createPolygon([
-				lowerLeftBackCorner,
-				lowerRightBackCorner
-			]));
-			this.outlineBack.drawShape(this._createPolygon([
-				lowerLeftBackCorner,
-				lowerLeftFrontCorner
-			]));
-			this.outlineBack.drawShape(this._createPolygon([
-				lowerLeftBackCorner,
-				upperLeftBackCorner
-			]));
+			// this.outlineBack.drawShape(this._createPolygon([
+			// 	lowerLeftBackCorner,
+			// 	lowerRightBackCorner
+			// ]));
+			// this.outlineBack.drawShape(this._createPolygon([
+			// 	lowerLeftBackCorner,
+			// 	lowerLeftFrontCorner
+			// ]));
+			// this.outlineBack.drawShape(this._createPolygon([
+			// 	lowerLeftBackCorner,
+			// 	upperLeftBackCorner
+			// ]));
+		},
+
+		renderLinesAsTexture: function(lines, canvasWidth, canvasHeight, style) {
+			var canvas = document.createElement('canvas');
+			canvas.width  = canvasWidth;
+			canvas.height = canvasHeight;
+
+			style = style || {};
+
+			var ctx = canvas.getContext('2d');
+
+			ctx.lineWidth   = style.lineWidth || 1;
+			ctx.strokeStyle = style.strokeStyle || '#000';
+			ctx.lineJoin    = style.lineJoin || 'miter';
+
+			if (lines.length > 0) {
+				if (!_.isArray(lines[0]))
+					lines = [ lines ];
+
+				_.each(lines, function(line) {
+					ctx.beginPath();
+					
+					ctx.moveTo(line[0].x, line[0].y);
+
+					for (var i = 1; i < line.length; i++) {
+						ctx.lineTo(line[i].x, line[i].y);
+					}
+
+					ctx.closePath();
+
+					ctx.stroke();
+				});
+			}
+
+			return new PIXI.Texture.fromCanvas(canvas);
 		},
 
 		_createPolygon: function(points) {
