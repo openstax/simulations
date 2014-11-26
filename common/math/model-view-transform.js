@@ -264,8 +264,8 @@ define(function (require) {
             corner1.set(rectangle.x, rectangle.y);
             corner2.set(rectangle.x + rectangle.w, rectangle.y + rectangle.h);
 
-            corner1 = this.transformPoint(tm, corner1);
-            corner2 = this.transformPoint(tm, corner2);
+            corner1.set(this.transformPoint(tm, corner1));
+            corner2.set(this.transformPoint(tm, corner2));
 
             return this._rect.set(
                 corner1.x,

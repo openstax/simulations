@@ -76,4 +76,48 @@ describe('ModelViewTransform', function(){
 		chai.expect(pointA.y).to.almost.equal(pointB.y);
 	});
 
+	it('should transform a point with offset', function(){
+		var scale = 5; // scale
+		var offsetX = 10;
+		var offsetY = 10;
+		var mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(offsetX, offsetY), scale, scale);
+		var pointA = new Vector2(1, 1);
+		var pointB = new Vector2(scale + offsetX, scale + offsetY);
+
+		pointA = mvt.modelToView(pointA);
+
+		chai.expect(pointA.x).to.almost.equal(pointB.x);
+		chai.expect(pointA.y).to.almost.equal(pointB.y);
+	});
+
+	it('should transform a rectangle with no offset', function(){
+		var s = 5; // scale
+		var mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(0, 0), s, s);
+		var w = 10;
+		var h = 12;
+		var rectA = new Rectangle(1, 1, w, h);
+		var rectB = new Rectangle(s, s, w * s, h * s);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+	});
+
+	it('should transform a rectangle with offset', function(){
+		var s = 5; // scale
+		var offsetX = 10;
+		var offsetY = 10;
+		var mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(offsetX, offsetY), s, s);
+		var w = 10;
+		var h = 12;
+		var rectA = new Rectangle(1, 1, w, h);
+		var rectB = new Rectangle(s + offsetX, s + offsetY, w * s + offsetX, h * s + offsetY);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+	});
+
 });
