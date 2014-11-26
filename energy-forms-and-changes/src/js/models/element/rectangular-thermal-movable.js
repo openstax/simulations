@@ -157,13 +157,13 @@ define(function (require) {
 				if (sliceBounds.left() < minX)
 					minX = sliceBounds.left();
 
-				if (sliceBounds.right() < maxX)
+				if (sliceBounds.right() > maxX)
 					maxX = sliceBounds.right();
 
 				if (sliceBounds.bottom() < minY)
 					minY = sliceBounds.bottom();
 
-				if (sliceBounds.top() < maxY)
+				if (sliceBounds.top() > maxY)
 					maxY = sliceBounds.top();
 			}
 

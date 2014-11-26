@@ -96,7 +96,7 @@ define(function(require) {
 				lineJoin: 'round'
 			};
 			var lines = [frontFacePoints, topFacePoints, sideFacePoints];
-			this.outlineFront.addChild(new PIXI.Sprite(this.renderLinesAsTexture(lines, 200, 200, lineStyle)));
+			this.outlineFront.addChild(this.renderLinesAsSprite(lines, lineStyle));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
@@ -113,41 +113,97 @@ define(function(require) {
 			// 	lowerLeftBackCorner,
 			// 	upperLeftBackCorner
 			// ]));
+
+			var origin = new PIXI.Graphics();
+			origin.beginFill(0xFF0000, 1);
+			origin.drawCircle(0, 0, 3);
+			origin.endFill();
+			this.displayObject.addChild(origin);
 		},
 
-		renderLinesAsTexture: function(lines, canvasWidth, canvasHeight, style) {
-			var canvas = document.createElement('canvas');
-			canvas.width  = canvasWidth;
-			canvas.height = canvasHeight;
+		renderLinesAsSprite: function(lines, style) {
+			if (lines.length === 0)
+				return new PIXI.Sprite();
 
-			style = style || {};
+			if (!_.isArray(lines[0]))
+				lines = [ lines ];
+
+			_.extend({
+				lineWidth: 1,
+				strokeStyle: '#000',
+				lineJoin: 'miter'
+			}, style || {});
+
+			// Determine the bounds for all the points
+			var minX = Number.POSITIVE_INFINITY;
+			var minY = Number.POSITIVE_INFINITY;
+			var maxX = Number.NEGATIVE_INFINITY;
+			var maxY = Number.NEGATIVE_INFINITY;
+
+			for (var i = 0; i < lines.length; i++) {
+				for (var j = 0; j < lines[i].length; j++) {
+					if (lines[i][j].x < minX)
+						minX = lines[i][j].x;
+
+					if (lines[i][j].x > maxX)
+						maxX = lines[i][j].x;
+
+					if (lines[i][j].y < minY)
+						minY = lines[i][j].y;
+
+					if (lines[i][j].y > maxY)
+						maxY = lines[i][j].y;
+				}
+			}
+
+			var width  = maxX - minX;
+			var height = maxY - minY;
+
+			// Determine if we need to shift the points to fit within the bounds
+			var xShift = 0;
+			var yShift = 0;
+
+			if (minX < 0)
+				xShift = 0 - minX;
+			else if (maxX > width)
+				xShift = width - maxX;
+
+			if (minY < 0)
+				yShift = 0 - minY;
+			else if (maxY > height)
+				yShift = height - maxY;
+
+			xShift += style.lineWidth;
+			yShift += style.lineWidth;
+
+			// Draw the lines
+			var canvas = document.createElement('canvas');
+			canvas.width  = width + (2 * style.lineWidth);
+			canvas.height = height + (2 * style.lineWidth);
 
 			var ctx = canvas.getContext('2d');
 
-			ctx.lineWidth   = style.lineWidth || 1;
-			ctx.strokeStyle = style.strokeStyle || '#000';
-			ctx.lineJoin    = style.lineJoin || 'miter';
+			ctx.lineWidth   = style.lineWidth;
+			ctx.strokeStyle = style.strokeStyle;
+			ctx.lineJoin    = style.lineJoin;
+			
+			_.each(lines, function(line) {
+				ctx.beginPath();
 
-			if (lines.length > 0) {
-				if (!_.isArray(lines[0]))
-					lines = [ lines ];
+				ctx.moveTo(line[0].x + xShift, line[0].y + yShift);
+				for (var i = 1; i < line.length; i++)
+					ctx.lineTo(line[i].x + xShift, line[i].y + yShift);
 
-				_.each(lines, function(line) {
-					ctx.beginPath();
-					
-					ctx.moveTo(line[0].x, line[0].y);
+				ctx.closePath();
+				ctx.stroke();
+			});
 
-					for (var i = 1; i < line.length; i++) {
-						ctx.lineTo(line[i].x, line[i].y);
-					}
+			// Create the sprite and shift the anchor proportionally to the shift
+			var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+			sprite.anchor.x = xShift / sprite.width;
+			sprite.anchor.y = yShift / sprite.height;
 
-					ctx.closePath();
-
-					ctx.stroke();
-				});
-			}
-
-			return new PIXI.Texture.fromCanvas(canvas);
+			return sprite;
 		},
 
 		_createPolygon: function(points) {
