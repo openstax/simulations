@@ -44,7 +44,7 @@ define(function(require) {
 			var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
 
 			var viewOriginX = Math.round(this.width / 2);
-			var viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
+			var viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
 			this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
 				new Vector2(0, 0),
 				new Vector2(viewOriginX, viewOriginY),
