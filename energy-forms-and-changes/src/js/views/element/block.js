@@ -52,12 +52,6 @@ define(function(require) {
 			var upperRightFrontCorner = (new Vector2(rect.right(), -rect.top()   )).add(blockFaceOffset);
 			var upperLeftFrontCorner  = (new Vector2(rect.left(),  -rect.top()   )).add(blockFaceOffset);
 
-			// var frontFaceShape = new PIXI.Rectangle(
-			// 	lowerLeftFrontCorner.x,
-			// 	upperLeftFrontCorner.x,
-			// 	rect.w,
-			// 	rect.h
-			// );
 			var frontFacePoints = [
 				lowerLeftFrontCorner,
 				lowerRightFrontCorner,

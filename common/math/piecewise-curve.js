@@ -62,7 +62,27 @@ define(function (require) {
     PiecewiseCurve.BIG_VALUE = Number.MAX_VALUE / 10;
 
     /**
-     * Functions
+     * Static Functions
+     */
+    _.extend(PiecewiseCurve, {
+
+        fromPoints: function(points) {
+            var curve = new PiecewiseCurve();
+            curve.addPoints(points);
+            return curve;
+        },
+
+        fromPointArrays: function(pointArrays) {
+            var curve = new PiecewiseCurve();
+            for (var i = 0; i < pointArrays.length; i++)
+                curve.addPoints(pointArrays[i]);
+            return curve;
+        }
+
+    });
+
+    /**
+     * Instance Functions
      */
     _.extend(PiecewiseCurve.prototype, {
 
@@ -78,6 +98,18 @@ define(function (require) {
             clone._scale = _.clone(this._scale);
             clone._bounds = new Rectangle();
             return clone;
+        },
+
+        addPoints: function(points, closeLineWhenFinished) {
+            if (points.length === 0)
+                return;
+
+            this.moveTo(points[0].x, points[0].y);
+            for (var i = 0; i < points.length; i++)
+                this.lineTo(points[i].x, points[i].y);
+
+            if (closeLineWhenFinished || closeLineWhenFinished === undefined)
+                this.close();
         },
 
         /**

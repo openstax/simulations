@@ -122,7 +122,7 @@ define(function(require) {
 			}
 
 			var sprite = new PIXI.Sprite(texture);
-			sprite.mask = mask;
+			//sprite.mask = mask;
 			return sprite;
 		}
 
