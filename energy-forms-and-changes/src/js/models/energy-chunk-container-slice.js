@@ -4,7 +4,7 @@ define(function (require) {
 
 	var _         = require('underscore');
 	var Backbone  = require('backbone');
-	var Rectangle = require('rectangle-node');
+	var Rectangle = require('common/math/rectangle');
 
 	/**
 	 * The original 

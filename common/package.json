@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed"
+    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed"
   },
   "repository": {
     "type": "git",
@@ -28,6 +28,7 @@
     "font-awesome": "^4.2.0",
     "line-intersect": "^1.0.0",
     "requirejs": "^2.1.15",
+    "rectangle-node": "0.0.1",
     "solve-quadratic-equation": "^0.1.0"
   }
 }

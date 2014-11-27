@@ -3,9 +3,7 @@ define(function (require) {
     'use strict';
 
     var _         = require('underscore');
-    var Rectangle = require('rectangle-node');
-
-    Rectangle.prototype.intersection = require('common/math/rectangle-intersection');
+    var Rectangle = require('common/math/rectangle');
 
     /**
      * Constants
@@ -38,16 +36,13 @@ define(function (require) {
          */
         setBounds: function(x, y, w, h) {
             if (x instanceof Rectangle) {
-                this.x = x.x;
-                this.y = x.y;
-                this.w = x.w;
-                this.h = x.h;
+                this.bounds.set(x);
             }
             else {
-                this.x = x;
-                this.y = y;
-                this.w = w;
-                this.h = h;
+                this.bounds.x = x;
+                this.bounds.y = y;
+                this.bounds.w = w;
+                this.bounds.h = h;
             }
         },
 

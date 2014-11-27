@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     // Libraries
     var _         = require('underscore');
     var Vector2   = require('vector2-node');
-    var Rectangle = require('rectangle-node');
+    var Rectangle = require('common/math/rectangle');
 
     // Project dependiencies
     var FixedIntervalSimulation     = require('common/simulation/fixed-interval-simulation');
@@ -47,7 +47,7 @@ define(function (require, exports, module) {
             this.rightBurner = new Burner({ position: new Vector2(0.08, 0), energyChunksVisible: this.get('energyChunksVisible') });
 
             // Moveable thermal model objects
-            this.brick     = new Brick(    { position: new Vector2(-0.1,   0.5), energyChunksVisible: this.get('energyChunksVisible') });
+            this.brick     = new Brick(    { position: new Vector2(-0.1,   0), energyChunksVisible: this.get('energyChunksVisible') });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0), energyChunksVisible: this.get('energyChunksVisible') });
             
             this.beaker = new BeakerContainer({ 

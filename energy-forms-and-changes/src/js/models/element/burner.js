@@ -4,7 +4,7 @@ define(function (require) {
 
     var _         = require('underscore');
     var Vector2   = require('vector2-node');
-    var Rectangle = require('rectangle-node');
+    var Rectangle = require('common/math/rectangle');
 
     var Air                         = require('models/air');
     var Element                     = require('models/element/block');

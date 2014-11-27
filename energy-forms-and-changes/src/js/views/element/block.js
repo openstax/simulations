@@ -44,10 +44,10 @@ define(function(require) {
 			var backCornerOffset = (new Vector2(perspectiveEdgeSize,      0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 
 			// Front face
-			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom())).add(blockFaceOffset);
-			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.bottom())).add(blockFaceOffset);
-			var upperRightFrontCorner = (new Vector2(rect.right(), rect.top()   )).add(blockFaceOffset);
-			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.top()   )).add(blockFaceOffset);
+			var lowerLeftFrontCorner  = (new Vector2(rect.left(),  rect.top()   )).add(blockFaceOffset);
+			var lowerRightFrontCorner = (new Vector2(rect.right(), rect.top()   )).add(blockFaceOffset);
+			var upperRightFrontCorner = (new Vector2(rect.right(), rect.bottom())).add(blockFaceOffset);
+			var upperLeftFrontCorner  = (new Vector2(rect.left(),  rect.bottom())).add(blockFaceOffset);
 
 			// var frontFaceShape = new PIXI.Rectangle(
 			// 	lowerLeftFrontCorner.x,

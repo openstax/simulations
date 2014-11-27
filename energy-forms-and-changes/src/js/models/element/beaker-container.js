@@ -3,10 +3,8 @@ define(function (require) {
 	'use strict';
 
 	var _         = require('underscore');
-	var Rectangle = require('rectangle-node');
+	var Rectangle = require('common/math/rectangle');
 	var Vector2   = require('vector2-node');
-
-	Rectangle.prototype.intersection = require('common/math/rectangle-intersection');
 
 	var Beaker                      = require('models/element/beaker');
 	var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');

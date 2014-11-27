@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var Vector2   = require('vector2-node');
-    var Rectangle = require('rectangle-node');
+    var Rectangle = require('common/math/rectangle');
     var Functions = require('common/math/functions');
 
     var ThermalContactArea = require('models/thermal-contact-area');

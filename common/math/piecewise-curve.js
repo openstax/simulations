@@ -6,7 +6,7 @@ define(function (require) {
     var solveQuadratic = require('../node_modules/solve-quadratic-equation-shimmed/index');
     var solveCubic     = require('./solve-cubic-equation');
     var lineIntersect  = require('../node_modules/line-intersect-shimmed/index');
-    var Rectangle      = require('rectangle-node');
+    var Rectangle      = require('./rectangle');
     var Vector2        = require('vector2-node');
 
     /**

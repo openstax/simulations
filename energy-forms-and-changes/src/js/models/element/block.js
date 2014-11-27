@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Rectangle = require('rectangle-node');
+    var Rectangle = require('common/math/rectangle');
 
     var RectangularThermalMovableElement = require('models/element/rectangular-thermal-movable');
     var EnergyChunkContainerSlice        = require('models/energy-chunk-container-slice');
