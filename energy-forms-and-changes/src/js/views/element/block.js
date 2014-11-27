@@ -113,14 +113,14 @@ define(function(require) {
 			this.outlineBack.visible = false;
 
 			// Label
-			var label = new PIXI.Text(this.labelText, {
+			this.label = new PIXI.Text(this.labelText, {
 				font: this.textFont,
 				fill: this.textColor
 			});
-			label.anchor.x = label.anchor.y = 0.5;
-			label.x = blockFaceOffset.x;
-			label.y = -(rect.h / 2) + blockFaceOffset.y;
-			this.displayObject.addChild(label);
+			this.label.anchor.x = this.label.anchor.y = 0.5;
+			this.label.x = blockFaceOffset.x;
+			this.label.y = -(rect.h / 2) + blockFaceOffset.y;
+			this.displayObject.addChild(this.label);
 
 			// Just for debugging
 			this.renderTopCenterPoint();
@@ -170,11 +170,13 @@ define(function(require) {
 		showEnergyChunks: function() {
 			this.outlineBack.visible = true;
 			this.faces.alpha = 0.5;
+			this.label.alpha = 0.5;
 		},
 
 		hideEnergyChunks: function() {
 			this.outlineBack.visible = false;
 			this.faces.alpha = 1;
+			this.label.alpha = 1;
 		},
 
 	});
