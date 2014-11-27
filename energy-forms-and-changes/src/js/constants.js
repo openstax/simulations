@@ -101,6 +101,18 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                               ELEMENT                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElementView = {};
+
+    ElementView.TEXT_FONT = '32px Arial';
+
+    Constants.ElementView = ElementView;
+
+    /*************************************************************************
+     **                                                                     **
      **                                BLOCK                                **
      **                                                                     **
      *************************************************************************/
@@ -149,6 +161,12 @@ define(function (require) {
 
     Constants.Brick = Brick;
 
+    var BrickView = {};
+
+    BrickView.TEXT_COLOR = 0x000000;
+
+    Constants.BrickView = BrickView;
+
 
     /*************************************************************************
      **                                                                     **
@@ -163,10 +181,17 @@ define(function (require) {
 
     Constants.Iron = Iron;
 
+    var IronBlockView = {};
+
+    IronBlockView.FILL_COLOR = 0x888888;
+    IronBlockView.TEXT_COLOR = '#000000';
+
+    Constants.IronBlockView = IronBlockView;
+
 
     /*************************************************************************
      **                                                                     **
-     **                                 IRON                                **
+     **                                BURNER                               **
      **                                                                     **
      *************************************************************************/
 

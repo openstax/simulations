@@ -7,6 +7,7 @@ define(function(require) {
 
 	var PixiView       = require('common/pixi/view');
 	var PiecewiseCurve = require('common/math/piecewise-curve');
+	var Constants      = require('constants');
 
 	/**
 	 * A view that represents an element model
@@ -17,7 +18,12 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-			
+			this.mvt = options.mvt;
+			this.fillColor = options.fillColor || 0x000000;
+			this.fillAlpha = options.fillAlpha || 1;
+			this.textColor = options.textColor || '#000000';
+			this.textFont  = options.textFont || ElementView.TEXT_FONT;
+			this.labelText = options.labelText || '';
 		},
 
 		update: function(time, deltaTime) {},
@@ -26,12 +32,12 @@ define(function(require) {
 
 		hideEnergyChunks: function() {},
 
-		createSpriteFromLines: function(lines, style) {
-			if (lines.length === 0)
+		createOutlineFromPointArrays: function(pointArrays, style) {
+			if (pointArrays.length === 0)
 				return new PIXI.Sprite();
 
-			if (!_.isArray(lines[0]))
-				lines = [ lines ];
+			if (!_.isArray(pointArrays[0]))
+				pointArrays = [ pointArrays ];
 
 			_.extend({
 				lineWidth: 1,
@@ -40,7 +46,7 @@ define(function(require) {
 			}, style || {});
 
 			// Determine the bounds for all the points
-			var curve = PiecewiseCurve.fromPointArrays(lines);
+			var curve = PiecewiseCurve.fromPointArrays(pointArrays);
 			var bounds = curve.getBounds();
 
 			// Determine if we need to shift the points to fit within the bounds
@@ -61,12 +67,12 @@ define(function(require) {
 			ctx.strokeStyle = style.strokeStyle;
 			ctx.lineJoin    = style.lineJoin;
 			
-			_.each(lines, function(line) {
+			_.each(pointArrays, function(points) {
 				ctx.beginPath();
 
-				ctx.moveTo(line[0].x + xShift, line[0].y + yShift);
-				for (var i = 1; i < line.length; i++)
-					ctx.lineTo(line[i].x + xShift, line[i].y + yShift);
+				ctx.moveTo(points[0].x + xShift, points[0].y + yShift);
+				for (var i = 1; i < points.length; i++)
+					ctx.lineTo(points[i].x + xShift, points[i].y + yShift);
 
 				ctx.closePath();
 				ctx.stroke();
@@ -80,7 +86,7 @@ define(function(require) {
 			return sprite;
 		},
 
-		createMaskedSprite: function(maskingPoints, texture) {
+		createTexturedPolygonFromPoints: function(maskingPoints, texture) {
 			/*
 			 * The masking points are not necessarily within the bounds of 
 			 *   the texture, so we need to calculate the bounding box for
@@ -123,9 +129,21 @@ define(function(require) {
 			sprite.y = bounds.y;
 
 			return sprite;
+		},
+
+		createColoredPolygonFromPoints: function(points, color, alpha) {
+			var graphics = new PIXI.Graphics();
+			graphics.lineStyle(0);
+			graphics.beginFill(color, (alpha === undefined) ? 1 : alpha);
+
+			graphics.moveTo(points[0].x, points[0].y);
+			for (var i = 1; i < points.length; i++)
+				graphics.lineTo(points[i].x, points[i].y);
+			
+			return graphics;
 		}
 
-	});
+	}, Constants.ElementView);
 
 	return ElementView;
 });

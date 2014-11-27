@@ -21,7 +21,7 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-			this.mvt = options.mvt;
+			ElementView.prototype.initialize.apply(this, arguments);
 
 			this.listenTo(this.model, 'change:position', this.updatePosition);
 
@@ -32,9 +32,9 @@ define(function(require) {
 
 		initGraphics: function() {
 
-			this.outlineFront = new PIXI.DisplayObjectContainer();
-			this.faces        = new PIXI.DisplayObjectContainer();
 			this.outlineBack  = new PIXI.DisplayObjectContainer();
+			this.faces        = new PIXI.DisplayObjectContainer();
+			this.outlineFront = new PIXI.DisplayObjectContainer();
 
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.faces);
@@ -59,7 +59,7 @@ define(function(require) {
 				upperLeftFrontCorner,
 				lowerLeftFrontCorner
 			];
-			this.faces.addChild(this.createMaskedSprite(frontFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_FRONT)));
+			this.faces.addChild(this.createFrontFace(frontFacePoints));
 
 			// Top face
 			var upperLeftBackCorner  = upperLeftFrontCorner.clone().add(backCornerOffset);
@@ -72,19 +72,19 @@ define(function(require) {
 				upperLeftBackCorner,
 				upperLeftFrontCorner
 			];
-			this.faces.addChild(this.createMaskedSprite(topFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_TOP)));
+			this.faces.addChild(this.createTopFace(topFacePoints));
 
 			// Side face
 			var lowerRightBackCorner = lowerRightFrontCorner.clone().add(backCornerOffset);
 
-			var sideFacePoints = [
+			var rightFacePoints = [
 				upperRightFrontCorner,
 				lowerRightFrontCorner,
 				lowerRightBackCorner,
 				upperRightBackCorner,
 				upperRightFrontCorner
 			];
-			this.faces.addChild(this.createMaskedSprite(sideFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT)));
+			this.faces.addChild(this.createRightFace(rightFacePoints));
 
 			// Front outline
 			var lineStyle = {
@@ -92,13 +92,13 @@ define(function(require) {
 				strokeStyle: '#444',
 				lineJoin: 'round'
 			};
-			var lines = [frontFacePoints, topFacePoints, sideFacePoints];
-			this.outlineFront.addChild(this.createSpriteFromLines(lines, lineStyle));
+			var pointArrays = [frontFacePoints, topFacePoints, rightFacePoints];
+			this.outlineFront.addChild(this.createOutlineFromPointArrays(pointArrays, lineStyle));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
 
-			lines = [[
+			pointArrays = [[
 				lowerLeftBackCorner,
 				lowerRightBackCorner
 			],[
@@ -108,29 +108,57 @@ define(function(require) {
 				lowerLeftBackCorner,
 				upperLeftBackCorner
 			]];
-			this.outlineBack.addChild(this.createSpriteFromLines(lines, lineStyle));
+			this.outlineBack.addChild(this.createOutlineFromPointArrays(pointArrays, lineStyle));
 
 			this.outlineBack.visible = false;
 
-			var origin = new PIXI.Graphics();
-			origin.beginFill(0xFF0000, 1);
-			origin.drawCircle(0, 0, 3);
-			origin.endFill();
-			this.displayObject.addChild(origin);
+			// Label
+			var label = new PIXI.Text(this.labelText, {
+				font: this.textFont,
+				fill: this.textColor
+			});
+			label.anchor.x = label.anchor.y = 0.5;
+			label.x = blockFaceOffset.x;
+			label.y = -(rect.h / 2) + blockFaceOffset.y;
+			this.displayObject.addChild(label);
 
+			// Just for debugging
+			this.renderTopCenterPoint();
+			//this.renderBottomCenterPoint();
+		},
+
+		createFrontFace: function(points) {
+			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+		},
+
+		createTopFace: function(points) {
+			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+		},
+
+		createRightFace: function(points) {
+			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+		},
+
+		/**
+		 * For debugging purposes
+		 */
+		renderTopCenterPoint: function() {
 			var top = new PIXI.Graphics();
 			top.beginFill(0x0000FF, 1);
 			top.drawCircle(0, this.mvt.modelToViewDeltaY(this.model.topSurface.yPos - this.model.get('position').y), 3);
 			top.endFill();
 			this.displayObject.addChild(top);
+		},
 
-			// _.each(frontFacePoints, function(point) {
-			// 	var dot = new PIXI.Graphics();
-			// 	dot.beginFill(0x00FF00, 1);
-			// 	dot.drawCircle(point.x, point.y, 3);
-			// 	dot.endFill();
-			// 	this.displayObject.addChild(dot);
-			// }, this);
+		/**
+		 * For debugging purposes
+		 */
+		renderBottomCenterPoint: function() {
+			var origin = new PIXI.Graphics();
+			origin.beginFill(0xFF0000, 1);
+			origin.drawCircle(0, 0, 3);
+			origin.endFill();
+			this.displayObject.addChild(origin);
 		},
 
 		updatePosition: function(model, position) {

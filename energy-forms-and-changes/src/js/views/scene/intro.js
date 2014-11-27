@@ -14,7 +14,11 @@ define(function(require) {
 	var ThermometerView      = require('views/thermometer');
 	var ThermometerClipsView = require('views/thermometer-clips');
 	var BlockView            = require('views/element/block');
+	var BrickView            = require('views/element/brick');
 	var Assets               = require('assets');
+
+	// Constants
+	var Constants = require('constants');
 
 	/**
 	 *
@@ -101,8 +105,19 @@ define(function(require) {
 			this.airLayer.addChild(air.displayObject);
 
 			// Movable objects
-			var brickView     = new BlockView({ model: this.simulation.brick,     mvt: this.mvt });
-			var ironBlockView = new BlockView({ model: this.simulation.ironBlock, mvt: this.mvt });
+			var brickView = new BrickView({ 
+				model: this.simulation.brick,
+				mvt: this.mvt,
+				textColor: Constants.BrickView.TEXT_COLOR,
+				labelText: 'Brick'
+			});
+			var ironBlockView = new BlockView({ 
+				model: this.simulation.ironBlock, 
+				mvt: this.mvt, 
+				fillColor: Constants.IronBlockView.FILL_COLOR,
+				textColor: Constants.IronBlockView.TEXT_COLOR,
+				labelText: 'Iron'
+			});
 			this.blockLayer.addChild(brickView.displayObject);
 			this.blockLayer.addChild(ironBlockView.displayObject);
 
