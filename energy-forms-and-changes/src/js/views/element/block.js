@@ -141,10 +141,12 @@ define(function(require) {
 
 		showEnergyChunks: function() {
 			this.outlineBack.visible = true;
+			this.faces.alpha = 0.5;
 		},
 
 		hideEnergyChunks: function() {
 			this.outlineBack.visible = false;
+			this.faces.alpha = 1;
 		},
 
 	});

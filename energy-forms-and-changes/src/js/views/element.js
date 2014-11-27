@@ -85,10 +85,10 @@ define(function(require) {
 			 * The masking points are not necessarily within the bounds of 
 			 *   the texture, so we need to calculate the bounding box for
 			 *   the masking points, scale the texture to fit those bounds,
-			 *   shift all the points down to where the texture is so it
-			 *   can be masked correctly, and then shift the sprite that
-			 *   holds the texture to the origin of the bounding box of the
-			 *   masking points to place it in its rightful location.
+			 *   create a masking shape with the points, and then shift 
+			 *   the sprite that holds the texture to the origin of the 
+			 *   bounding box of the masking points to place it in its 
+			 *   rightful location.
 			 */
 
 			// Calculate the bounding box for the masking points
@@ -99,19 +99,16 @@ define(function(require) {
 			var xScale = bounds.w / texture.width;
 			var yScale = bounds.h / texture.height;
 
-			// Calculate the offset for taking the mask to the texture
-			var xShift = 0 - bounds.x;
-			var yShift = 0 - bounds.y;
-
 			// Create the mask shape
 			var mask = new PIXI.Graphics();
 			mask.lineStyle(0);
-			mask.beginFill(0x8bc5ff, 0.4);
+			mask.beginFill(0x000000, 1);
+			this.displayObject.addChild(mask);
 
 			// Draw the masking points shifted
-			mask.moveTo(maskingPoints[0].x + xShift, maskingPoints[0].y + yShift);
-			for (var i = 0; i < maskingPoints.length; i++)
-				mask.lineTo(maskingPoints[i].x + xShift, maskingPoints[i].y + yShift);
+			mask.moveTo(maskingPoints[0].x, maskingPoints[0].y);
+			for (var i = 1; i < maskingPoints.length; i++)
+				mask.lineTo(maskingPoints[i].x, maskingPoints[i].y);
 
 			// Create a sprite with the texture, scaled to the size of the bounds
 			var sprite = new PIXI.Sprite(texture);
