@@ -22,7 +22,6 @@ define(function (require) {
 
 		defaults: {
 			energy: Constants.Air.INITIAL_ENERGY,
-			energyChunksVisible: false,
 			energyContainerCategory: EnergyContainerCategory.AIR
 		},
 		
@@ -122,8 +121,7 @@ define(function (require) {
 			// Create a new chunk at the top of the air above the specified point.
 			return new EnergyChunk({
 				energyType: EnergyChunk.THERMAL, 
-				position:   new Vector2(point.x, Air.HEIGHT), 
-				visible:    this.get('energyChunksVisible')
+				position:   new Vector2(point.x, Air.HEIGHT)
 			});
 		},
 

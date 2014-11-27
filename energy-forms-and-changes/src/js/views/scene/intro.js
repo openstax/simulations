@@ -101,8 +101,10 @@ define(function(require) {
 			this.airLayer.addChild(air.displayObject);
 
 			// Movable objects
-			var brickView = new BlockView({ model: this.simulation.brick, mvt: this.mvt });
+			var brickView     = new BlockView({ model: this.simulation.brick,     mvt: this.mvt });
+			var ironBlockView = new BlockView({ model: this.simulation.ironBlock, mvt: this.mvt });
 			this.blockLayer.addChild(brickView.displayObject);
+			this.blockLayer.addChild(ironBlockView.displayObject);
 
 			// Thermometers
 			var thermometerViews = [];
@@ -130,10 +132,27 @@ define(function(require) {
 				console.log(point.x + ', ' + point.y);
 			}, this);
 
+
+			// Listen to energy chunk show and hide events
+			_.each([
+				brickView,
+				ironBlockView
+			], function(elementView) {
+				elementView.listenTo(this, 'show-energy-chunks', elementView.showEnergyChunks);
+				elementView.listenTo(this, 'hide-energy-chunks', elementView.hideEnergyChunks);
+			}, this);
 		},
 
 		_update: function(time, deltaTime) {
 			//if (!this.simulation.get('paused'))
+		},
+
+		showEnergyChunks: function() {
+			this.trigger('show-energy-chunks');
+		},
+
+		hideEnergyChunks: function() {
+			this.trigger('hide-energy-chunks');
 		}
 
 	});

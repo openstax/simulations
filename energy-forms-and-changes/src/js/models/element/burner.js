@@ -24,8 +24,7 @@ define(function (require) {
 
         defaults: _.extend({}, Element.prototype.defaults, {
             position: null,
-            heatCoolLevel: 0,
-            energyChunksVisible: false
+            heatCoolLevel: 0
         }),
 
         initialize: function(attributes, options) {
@@ -198,8 +197,7 @@ define(function (require) {
                 // Create an energy chunk.
                 closestChunk = new EnergyChunk({
                     energyType: EnergyChunk.THERMAL, 
-                    position:   new Vector2(this.getEnergyChunkStartEndPoint()), 
-                    visible:    this.get('energyChunksVisible')
+                    position:   new Vector2(this.getEnergyChunkStartEndPoint())
                 });
             }
 

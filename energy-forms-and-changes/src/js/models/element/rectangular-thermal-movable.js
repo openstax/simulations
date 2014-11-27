@@ -31,10 +31,7 @@ define(function (require) {
 			width:        0,
 			height:       0,
 
-			energyContainerCategory: null,
-			
-			// State properties
-			energyChunksVisible: false
+			energyContainerCategory: null
 		}),
 		
 		initialize: function(attributes, options) {
@@ -345,8 +342,7 @@ define(function (require) {
 				// Add a chunk at a random location in the block.
 				this.addEnergyChunk(new EnergyChunk({
 					energyType: EnergyChunk.THERMAL, 
-					position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(energyChunkBounds)), 
-					visible:    this.get('energyChunksVisible')
+					position:   new Vector2(EnergyChunkDistributor.generateRandomLocation(energyChunkBounds))
 				}));
 				numChunks++;
 			}

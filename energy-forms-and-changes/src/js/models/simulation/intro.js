@@ -26,11 +26,7 @@ define(function (require, exports, module) {
      */
     var IntroSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
-
-            energyChunksVisible: false
-
-        }),
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {}),
         
         /**
          *
@@ -43,16 +39,15 @@ define(function (require, exports, module) {
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
             // Burners
-            this.leftBurner  = new Burner({ position: new Vector2(0.18, 0), energyChunksVisible: this.get('energyChunksVisible') });
-            this.rightBurner = new Burner({ position: new Vector2(0.08, 0), energyChunksVisible: this.get('energyChunksVisible') });
+            this.leftBurner  = new Burner({ position: new Vector2(0.18, 0) });
+            this.rightBurner = new Burner({ position: new Vector2(0.08, 0) });
 
             // Moveable thermal model objects
-            this.brick     = new Brick(    { position: new Vector2(-0.1,   0), energyChunksVisible: this.get('energyChunksVisible') });
-            this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0), energyChunksVisible: this.get('energyChunksVisible') });
+            this.brick     = new Brick(    { position: new Vector2(-0.1,   0) });
+            this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0) });
             
             this.beaker = new BeakerContainer({ 
                 position: new Vector2(0.18, 0), 
-                energyChunksVisible: this.get('energyChunksVisible'),
                 potentiallyContainedObjects: [
                     this.brick,
                     this.ironBlock
@@ -71,7 +66,7 @@ define(function (require, exports, module) {
             }
 
             // Air
-            this.air = new Air({ energyChunksVisible: this.get('energyChunksVisible') });
+            this.air = new Air();
 
             // Element groups
             this.movableElements = [

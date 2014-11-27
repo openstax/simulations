@@ -164,9 +164,9 @@ define(function (require) {
 
 		toggleEnergySymbols: function(event) {
 			if ($(event.target).is(':checked'))
-				this.simulation.set('energyChunksVisible', true);
+				this.sceneView.showEnergyChunks();
 			else
-				this.simulation.set('energyChunksVisible', false);
+				this.sceneView.hideEnergyChunks();
 		}
 
 	});

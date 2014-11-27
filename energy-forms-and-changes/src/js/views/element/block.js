@@ -6,15 +6,16 @@ define(function(require) {
 	var PIXI    = require('pixi');
 	var Vector2 = require('vector2-node');
 
-	var PixiView = require('common/pixi/view');
-	var Block    = require('models/element/block');
+	var ElementView = require('views/element');
+	var Block       = require('models/element/block');
+	var Assets      = require('assets');
 
 	var Constants = require('constants');
 
 	/**
 	 * A view that represents a block model
 	 */
-	var BlockView = PixiView.extend({
+	var BlockView = ElementView.extend({
 
 		/**
 		 *
@@ -32,9 +33,11 @@ define(function(require) {
 		initGraphics: function() {
 
 			this.outlineFront = new PIXI.DisplayObjectContainer();
+			this.faces        = new PIXI.DisplayObjectContainer();
 			this.outlineBack  = new PIXI.DisplayObjectContainer();
 
 			this.displayObject.addChild(this.outlineBack);
+			this.displayObject.addChild(this.faces);
 			this.displayObject.addChild(this.outlineFront);
 			
 			var rect = this.mvt.modelToViewScale(Block.getRawShape());
@@ -62,7 +65,7 @@ define(function(require) {
 				upperLeftFrontCorner,
 				lowerLeftFrontCorner
 			];
-			var frontFaceShape = this._createPolygon(frontFacePoints);
+			this.faces.addChild(this.createMaskedSprite(frontFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_FRONT)));
 
 			// Top face
 			var upperLeftBackCorner  = upperLeftFrontCorner.clone().add(backCornerOffset);
@@ -75,7 +78,7 @@ define(function(require) {
 				upperLeftBackCorner,
 				upperLeftFrontCorner
 			];
-			var topFaceShape = this._createPolygon(topFacePoints);
+			this.faces.addChild(this.createMaskedSprite(topFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_TOP)));
 
 			// Side face
 			var lowerRightBackCorner = lowerRightFrontCorner.clone().add(backCornerOffset);
@@ -87,16 +90,16 @@ define(function(require) {
 				upperRightBackCorner,
 				upperRightFrontCorner
 			];
-			var sideFaceShape = this._createPolygon(sideFacePoints);
+			this.faces.addChild(this.createMaskedSprite(sideFacePoints, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT)));
 
 			// Front outline
 			var lineStyle = {
-				lineWidth: 4,
+				lineWidth: 3,
 				strokeStyle: '#444',
 				lineJoin: 'round'
 			};
 			var lines = [frontFacePoints, topFacePoints, sideFacePoints];
-			this.outlineFront.addChild(this.renderLinesAsSprite(lines, lineStyle));
+			this.outlineFront.addChild(this.createSpriteFromLines(lines, lineStyle));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
@@ -111,7 +114,9 @@ define(function(require) {
 				lowerLeftBackCorner,
 				upperLeftBackCorner
 			]];
-			this.outlineBack.addChild(this.renderLinesAsSprite(lines, lineStyle));
+			this.outlineBack.addChild(this.createSpriteFromLines(lines, lineStyle));
+
+			this.outlineBack.visible = false;
 
 			var origin = new PIXI.Graphics();
 			origin.beginFill(0xFF0000, 1);
@@ -134,105 +139,19 @@ define(function(require) {
 			// }, this);
 		},
 
-		renderLinesAsSprite: function(lines, style) {
-			if (lines.length === 0)
-				return new PIXI.Sprite();
-
-			if (!_.isArray(lines[0]))
-				lines = [ lines ];
-
-			_.extend({
-				lineWidth: 1,
-				strokeStyle: '#000',
-				lineJoin: 'miter'
-			}, style || {});
-
-			// Determine the bounds for all the points
-			var minX = Number.POSITIVE_INFINITY;
-			var minY = Number.POSITIVE_INFINITY;
-			var maxX = Number.NEGATIVE_INFINITY;
-			var maxY = Number.NEGATIVE_INFINITY;
-
-			for (var i = 0; i < lines.length; i++) {
-				for (var j = 0; j < lines[i].length; j++) {
-					if (lines[i][j].x < minX)
-						minX = lines[i][j].x;
-
-					if (lines[i][j].x > maxX)
-						maxX = lines[i][j].x;
-
-					if (lines[i][j].y < minY)
-						minY = lines[i][j].y;
-
-					if (lines[i][j].y > maxY)
-						maxY = lines[i][j].y;
-				}
-			}
-
-			var width  = maxX - minX;
-			var height = maxY - minY;
-
-			// Determine if we need to shift the points to fit within the bounds
-			var xShift = 0;
-			var yShift = 0;
-
-			if (minX < 0)
-				xShift = 0 - minX;
-			else if (maxX > width)
-				xShift = width - maxX;
-
-			if (minY < 0)
-				yShift = 0 - minY;
-			else if (maxY > height)
-				yShift = height - maxY;
-
-			xShift += style.lineWidth;
-			yShift += style.lineWidth;
-
-			// Draw the lines
-			var canvas = document.createElement('canvas');
-			canvas.width  = width + (2 * style.lineWidth);
-			canvas.height = height + (2 * style.lineWidth);
-
-			var ctx = canvas.getContext('2d');
-
-			ctx.lineWidth   = style.lineWidth;
-			ctx.strokeStyle = style.strokeStyle;
-			ctx.lineJoin    = style.lineJoin;
-			
-			_.each(lines, function(line) {
-				ctx.beginPath();
-
-				ctx.moveTo(line[0].x + xShift, line[0].y + yShift);
-				for (var i = 1; i < line.length; i++)
-					ctx.lineTo(line[i].x + xShift, line[i].y + yShift);
-
-				ctx.closePath();
-				ctx.stroke();
-			});
-
-			// Create the sprite and shift the anchor proportionally to the shift
-			var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-			sprite.anchor.x = xShift / sprite.width;
-			sprite.anchor.y = yShift / sprite.height;
-
-			return sprite;
-		},
-
-		_createPolygon: function(points) {
-			var flattened = [];
-			_.each(points, function(point) {
-				flattened.push(point.x);
-				flattened.push(point.y);
-			});
-			return new PIXI.Polygon(flattened);
-		},
-
 		updatePosition: function(model, position) {
 			var viewPoint = this.mvt.modelToView(position);
 			this.displayObject.x = viewPoint.x;
 			this.displayObject.y = viewPoint.y;
-		}
+		},
+
+		showEnergyChunks: function() {
+			this.outlineBack.visible = true;
+		},
+
+		hideEnergyChunks: function() {
+			this.outlineBack.visible = false;
+		},
 
 	});
 
