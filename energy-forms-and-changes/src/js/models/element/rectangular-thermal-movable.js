@@ -65,7 +65,7 @@ define(function (require) {
 			this.addInitialEnergyChunks();
 
 			this.on('change:position', function(model, position){
-				var translation = this._translation.set(position).sub(this._oldPosition);
+				var translation = this._translation.set(position).sub(this.previous('position'));
 				_.each(this.slices, function(slice) {
 					_.each(slice.energyChunkList, function(chunk) {
 						chunk.translate(translation);

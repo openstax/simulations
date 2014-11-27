@@ -28,6 +28,10 @@ define(function (require) {
 			return (this.xMax + this.xMin) / 2;
 		},
 
+		containsX: function(x) {
+			return x <= this.xMax && x >= this.xMin;
+		},
+
 		// getOwner: function() {
 		// 	return this.owner;
 		// },
@@ -35,6 +39,11 @@ define(function (require) {
 		// getElementOnSurface: function() {
 
 		// }
+
+		addElementToSurface: function(element) {
+			if (!this.elementOnSurface)
+				this.elementOnSurface = element;
+		},
 
 		clearSurface: function() {
 			this.elementOnSurface = null;

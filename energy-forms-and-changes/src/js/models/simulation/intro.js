@@ -47,7 +47,7 @@ define(function (require, exports, module) {
             this.rightBurner = new Burner({ position: new Vector2(0.08, 0), energyChunksVisible: this.get('energyChunksVisible') });
 
             // Moveable thermal model objects
-            this.brick     = new Brick(    { position: new Vector2(-0.1,   0), energyChunksVisible: this.get('energyChunksVisible') });
+            this.brick     = new Brick(    { position: new Vector2(-0.1,   0.5), energyChunksVisible: this.get('energyChunksVisible') });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0), energyChunksVisible: this.get('energyChunksVisible') });
             
             this.beaker = new BeakerContainer({ 
@@ -184,10 +184,10 @@ define(function (require, exports, module) {
                     //   it can land upon.
                     var potentialSupportingSurface = this.findBestSupportSurface(element);
                     if (potentialSupportingSurface) {
-                        minYPos = potentialSupportingSurface.get().yPos;
+                        minYPos = potentialSupportingSurface.yPos;
 
                         // Center the element above its new parent
-                        var targetX = potentialSupportingSurface.get().getCenterX();
+                        var targetX = potentialSupportingSurface.getCenterX();
                         element.setX( targetX );
                     }
                     
@@ -200,8 +200,8 @@ define(function (require, exports, module) {
                         proposedYPos = minYPos;
                         element.verticalVelocity.set( 0.0 );
                         if (potentialSupportingSurface) {
-                            element.setSupportingSurface( potentialSupportingSurface );
-                            potentialSupportingSurface.get().addElementToSurface( element );
+                            element.setSupportingSurface(potentialSupportingSurface);
+                            potentialSupportingSurface.addElementToSurface(element);
                         }
                     }
                     else {
@@ -618,7 +618,7 @@ define(function (require, exports, module) {
                 if ( element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface() ) ) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.
-                    var surfaceOverlap = this.getHorizontalOverlap( potentialSupportingElement.getTopSurface(), element.getBottomSurface().get() );
+                    var surfaceOverlap = this.getHorizontalOverlap(potentialSupportingElement.getTopSurface(), element.getBottomSurface());
                     
                     // The following nasty 'if' clause determines if the potential
                     //   supporting surface is a better one than we currently have
@@ -626,7 +626,7 @@ define(function (require, exports, module) {
                     //   than the previous best choice, or is directly above the
                     //   current one.
                     if (bestOverlappingSurface === null || (
-                            surfaceOverlap > this.getHorizontalOverlap(bestOverlappingSurface, element.getBottomSurface() ) && 
+                            surfaceOverlap > this.getHorizontalOverlap(bestOverlappingSurface, element.getBottomSurface()) && 
                             !this.isDirectlyAbove(bestOverlappingSurface, potentialSupportingElement.getTopSurface())
                         ) || (
                             this.isDirectlyAbove(potentialSupportingElement.getTopSurface(), bestOverlappingSurface)
@@ -640,8 +640,8 @@ define(function (require, exports, module) {
             //   a stack, which can happen in cases where the model element being
             //   tested isn't directly above the best surface's center.
             if (bestOverlappingSurface) {
-                while (bestOverlappingSurface.getElementOnSurface() !== null ) {
-                    bestOverlappingSurface = bestOverlappingSurface.getElementOnSurface().getTopSurface();
+                while (bestOverlappingSurface.elementOnSurface !== null ) {
+                    bestOverlappingSurface = bestOverlappingSurface.elementOnSurface.getTopSurface();
                 }
             }
 
@@ -652,16 +652,16 @@ define(function (require, exports, module) {
          * Get the amount of overlap in the x direction between two horizontal surfaces.
          */
         getHorizontalOverlap: function(s1, s2) {
-            var lowestMax  = Math.min( s1.xRange.getMax(), s2.xRange.getMax() );
-            var highestMin = Math.max( s1.xRange.getMin(), s2.xRange.getMin() );
-            return Math.max( lowestMax - highestMin, 0 );
+            var lowestMax  = Math.min(s1.xMax, s2.xMax);
+            var highestMin = Math.max(s1.xMin, s2.xMin);
+            return Math.max(lowestMax - highestMin, 0);
         },
         
         /**
          * Returns true if surface s1's center is above surface s2.
          */
         isDirectlyAbove: function(s1, s2) {
-            return s2.xRange.contains( s1.getCenterX() ) && s1.yPos > s2.yPos;
+            return s2.xRange.containsX(s1.getCenterX()) && s1.yPos > s2.yPos;
         },
 
         /**
