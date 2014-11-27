@@ -5,7 +5,8 @@ define(function(require) {
 	var _    = require('underscore');
 	var PIXI = require('pixi');
 
-	var PixiView = require('common/pixi/view');
+	var PixiView       = require('common/pixi/view');
+	var PiecewiseCurve = require('common/math/piecewise-curve');
 
 	/**
 	 * A view that represents an element model
@@ -39,51 +40,20 @@ define(function(require) {
 			}, style || {});
 
 			// Determine the bounds for all the points
-			var minX = Number.POSITIVE_INFINITY;
-			var minY = Number.POSITIVE_INFINITY;
-			var maxX = Number.NEGATIVE_INFINITY;
-			var maxY = Number.NEGATIVE_INFINITY;
-
-			for (var i = 0; i < lines.length; i++) {
-				for (var j = 0; j < lines[i].length; j++) {
-					if (lines[i][j].x < minX)
-						minX = lines[i][j].x;
-
-					if (lines[i][j].x > maxX)
-						maxX = lines[i][j].x;
-
-					if (lines[i][j].y < minY)
-						minY = lines[i][j].y;
-
-					if (lines[i][j].y > maxY)
-						maxY = lines[i][j].y;
-				}
-			}
-
-			var width  = maxX - minX;
-			var height = maxY - minY;
+			var curve = PiecewiseCurve.fromPointArrays(lines);
+			var bounds = curve.getBounds();
 
 			// Determine if we need to shift the points to fit within the bounds
-			var xShift = 0;
-			var yShift = 0;
-
-			if (minX < 0)
-				xShift = 0 - minX;
-			else if (maxX > width)
-				xShift = width - maxX;
-
-			if (minY < 0)
-				yShift = 0 - minY;
-			else if (maxY > height)
-				yShift = height - maxY;
+			var xShift = 0 - bounds.x;
+			var yShift = 0 - bounds.y;
 
 			xShift += style.lineWidth;
 			yShift += style.lineWidth;
 
 			// Draw the lines
 			var canvas = document.createElement('canvas');
-			canvas.width  = width + (2 * style.lineWidth);
-			canvas.height = height + (2 * style.lineWidth);
+			canvas.width  = bounds.w + (2 * style.lineWidth);
+			canvas.height = bounds.h + (2 * style.lineWidth);
 
 			var ctx = canvas.getContext('2d');
 
@@ -111,18 +81,50 @@ define(function(require) {
 		},
 
 		createMaskedSprite: function(maskingPoints, texture) {
+			/*
+			 * The masking points are not necessarily within the bounds of 
+			 *   the texture, so we need to calculate the bounding box for
+			 *   the masking points, scale the texture to fit those bounds,
+			 *   shift all the points down to where the texture is so it
+			 *   can be masked correctly, and then shift the sprite that
+			 *   holds the texture to the origin of the bounding box of the
+			 *   masking points to place it in its rightful location.
+			 */
+
+			// Calculate the bounding box for the masking points
+			var curve = PiecewiseCurve.fromPoints(maskingPoints);
+			var bounds = curve.getBounds();
+
+			// Ratio for scaling the texture to the size of the bounds
+			var xScale = bounds.w / texture.width;
+			var yScale = bounds.h / texture.height;
+
+			// Calculate the offset for taking the mask to the texture
+			var xShift = 0 - bounds.x;
+			var yShift = 0 - bounds.y;
+
+			// Create the mask shape
 			var mask = new PIXI.Graphics();
 			mask.lineStyle(0);
 			mask.beginFill(0x8bc5ff, 0.4);
 
-			mask.moveTo(maskingPoints[0].x, maskingPoints[0].y);
+			// Draw the masking points shifted
+			mask.moveTo(maskingPoints[0].x + xShift, maskingPoints[0].y + yShift);
+			for (var i = 0; i < maskingPoints.length; i++)
+				mask.lineTo(maskingPoints[i].x + xShift, maskingPoints[i].y + yShift);
 
-			for (var i = 0; i < maskingPoints.length; i++) {
-				mask.lineTo(maskingPoints[i].x, maskingPoints[i].y);
-			}
-
+			// Create a sprite with the texture, scaled to the size of the bounds
 			var sprite = new PIXI.Sprite(texture);
-			//sprite.mask = mask;
+			sprite.scale.x = xScale;
+			sprite.scale.y = yScale;
+
+			// Apply the mask
+			sprite.mask = mask;
+
+			// Shift the sprite back to where the masking points are supposed to be
+			sprite.x = bounds.x;
+			sprite.y = bounds.y;
+
 			return sprite;
 		}
 

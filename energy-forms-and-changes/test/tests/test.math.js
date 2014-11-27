@@ -25,7 +25,7 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.subcurve).to.equal(0);
 	});
 
-	it('should #translate correctly', function(){
+	it('#translate should translate points', function(){
 		var curve = new PiecewiseCurve();
 		curve.moveTo(2, 2);
 		curve.lineTo(4, 4);
@@ -35,7 +35,7 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.yPoints).to.deep.equal([1, 3]);
 	});
 
-	it('should #rotate correctly', function(){
+	it('#rotate should rotate points', function(){
 		var curve = new PiecewiseCurve();
 		curve.moveTo(0, 0);
 		curve.lineTo(1, 0);
@@ -44,6 +44,22 @@ describe('PiecewiseCurve', function(){
 
 		chai.expect(curve.xPoints).to.almost.eql([0, 0, 1]);
 		chai.expect(curve.yPoints).to.almost.eql([0, 1, 2]);
+	});
+
+	it('#getBounds should calculate bounds', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(4, 4);
+		curve.lineTo(5, 4);
+		curve.lineTo(5, 5);
+		curve.lineTo(4, 5);
+		curve.lineTo(4, 4);
+
+		var bounds = curve.getBounds();
+
+		chai.expect(bounds.x).to.almost.equal(4);
+		chai.expect(bounds.y).to.almost.equal(4);
+		chai.expect(bounds.w).to.almost.equal(1);
+		chai.expect(bounds.h).to.almost.equal(1);
 	});
 
 });
@@ -59,7 +75,7 @@ describe('ModelViewTransform', function(){
 		require([
 			'common/math/model-view-transform', 
 			'vector2-node', 
-			'rectangle-node',
+			'common/math/rectangle',
 			'common/math/piecewise-curve'
 		], function(modelViewTransform, vector2, rectangle, piecewiseCurve) {
 			ModelViewTransform = modelViewTransform;
