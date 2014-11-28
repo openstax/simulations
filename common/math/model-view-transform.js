@@ -256,6 +256,14 @@ define(function (require) {
             return this.transformPoint(this.inverseTransformMatrix, this._point1.set(0, y));
         },
 
+        viewToModelDeltaX: function(x) {
+            return this.transformPoint(this.deltaInverseTransformMatrix, this._point1.set(x, 0)).x;
+        },
+
+        viewToModelDeltaY: function(y) {
+            return this.transformPoint(this.deltaInverseTransformMatrix, this._point1.set(0, y)).y;
+        },
+
         /*************************************************************************
          **                                                                     **
          **                           Transformations                           **

@@ -47,21 +47,24 @@ define(function(require) {
 				this.fillColor = 0x000000;
 			else if (_.isString(this.fillColor))
 				this.fillColor =  Colors.parseHex(options.fillColor);
+
+			// To give some feedback on the cursor
+			this.displayObject.buttonMode = true;
 		},
 
 		dragStart: function(data) {
 			this.dragX = data.global.x;
 			this.dragY = data.global.y;
 			this.dragging = true;
-			data.target.alpha = 0.5;
+			this.model.set('userControlled', true);
 		},
 
 		drag: function(data) {
 			if (this.dragging) {
-				var dx = data.global.x - this.dragX;
-				var dy = data.global.y - this.dragY;
-				data.target.position.x += dx;
-				data.target.position.y += dy;
+				var dx = this.mvt.viewToModelDeltaX(data.global.x - this.dragX);
+				var dy = this.mvt.viewToModelDeltaY(data.global.y - this.dragY);
+
+				this.model.translate(dx, dy);
 
 				this.dragX = data.global.x;
 				this.dragY = data.global.y;
@@ -71,6 +74,7 @@ define(function(require) {
 		dragEnd: function(data) {
 			this.dragging = false;
 			this.dragData = null;
+			this.model.set('userControlled', false);
 		},
 
 		update: function(time, deltaTime) {
