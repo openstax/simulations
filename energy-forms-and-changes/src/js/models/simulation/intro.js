@@ -48,6 +48,11 @@ define(function (require, exports, module) {
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0) });
             this.cheeseBlock = new Block({   position: new Vector2(0.1, 0), energyContainerCategory: Constants.EnergyContainerCategory.IRON });
             
+            // Just for debugging
+            this.brick.cid = 'brick';
+            this.ironBlock.cid = 'ironBlock';
+            this.cheeseBlock.cid = 'cheeseBlock';
+
             this.beaker = new BeakerContainer({ 
                 position: new Vector2(0.18, 0), 
                 potentiallyContainedObjects: [
@@ -177,6 +182,7 @@ define(function (require, exports, module) {
          */
         _findSupportingSurfaces: function(time, deltaTime) {
             _.each(this.movableElements, function(element) {
+                // If the user is moving it, do nothing; if it's already at rest, do nothing.
                 if (!element.get('userControlled') && !element.getSupportingSurface() && element.get('position').y !== 0) {
                     var minYPos = 0;
                     
@@ -198,7 +204,7 @@ define(function (require, exports, module) {
                     if ( proposedYPos < minYPos ) {
                         // The element has landed on the ground or some other surface.
                         proposedYPos = minYPos;
-                        element.verticalVelocity.set( 0.0 );
+                        element.set('verticalVelocity', 0);
                         if (potentialSupportingSurface) {
                             element.setSupportingSurface(potentialSupportingSurface);
                             potentialSupportingSurface.addElementToSurface(element);
@@ -207,6 +213,7 @@ define(function (require, exports, module) {
                     else {
                         element.set('verticalVelocity', velocity);
                     }
+                    console.log(element.cid + ': ' + element.get('position').x + ', ' + proposedYPos);
                     element.setPosition(element.get('position').x, proposedYPos);
                 }
             }, this);

@@ -41,7 +41,7 @@ define(function (require) {
                 while (this.accumulator >= this.timestep) {
                     this.time += this.timestep;
 
-                    this._update();
+                    this._update(this.time, this.timestep);
                     
                     this.accumulator -= this.timestep;
                 }    

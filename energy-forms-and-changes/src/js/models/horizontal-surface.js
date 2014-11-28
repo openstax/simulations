@@ -3,6 +3,7 @@ define(function (require) {
 	'use strict';
 
 	var _ = require('underscore');
+	var Backbone = require('backbone');
 
 	/**
 	 * 
@@ -18,14 +19,14 @@ define(function (require) {
     /**
      * Functions
      */
-	_.extend(HorizontalSurface.prototype, {
+	_.extend(HorizontalSurface.prototype, Backbone.Events, {
 
 		overlapsWith: function(surface) {
 			return this.xMax >= surface.xMin && this.xMax >= surface.xMin;
 		},
 
 		getCenterX: function() {
-			return (this.xMax + this.xMin) / 2;
+			return (this.xMax - this.xMin) / 2 + this.xMin;
 		},
 
 		containsX: function(x) {

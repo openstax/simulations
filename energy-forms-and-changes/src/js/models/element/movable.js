@@ -33,11 +33,19 @@ define(function (require) {
         initialize: function(attributes, options) {
             // Create vectors
             this.set('position', vectorPool.create().set(this.get('position')));
+
+            this.on('change:userControlled', function(model, userControlled) {
+                if (userControlled && this.getSupportingSurface()) {
+                    this.stopListening(this.getSupportingSurface());
+                    this.getSupportingSurface().clearSurface();
+                    this.setSupportingSurface(null);
+                }
+            });
         },
 
         reset: function() {
             this.set('userControlled', true);
-            this.set('position', this.get('position').set(0, 0));
+            this.setPosition(0, 0);
             this.set('verticalVelocity', 0);
 
             Element.prototype.reset.apply(this);
@@ -74,6 +82,16 @@ define(function (require) {
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);
+        },
+
+        setSupportingSurface: function(supportingSurface) {
+            this.set('supportingSurface', supportingSurface);
+            if (supportingSurface) {
+                this.listenTo(supportingSurface, 'change', function() {
+                    //console.log(supportingSurface.getCenterX() + ', ' + supportingSurface.yPos);
+                    this.setPosition(supportingSurface.getCenterX(), supportingSurface.yPos);
+                });    
+            }
         }
 
     });

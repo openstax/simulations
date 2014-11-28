@@ -69,8 +69,8 @@ define(function (require) {
 		 */
 		isStackedUpon: function(element) {
 		    return this.get('supportingSurface') && (
-		    	this.get('supportingSurface').getOwner() === element || 
-		    	this.get('supportingSurface').getOwner().isStackedUpon(element)
+		    	this.get('supportingSurface').owner === element || 
+		    	this.get('supportingSurface').owner.isStackedUpon(element)
 		    );
 		},
 
