@@ -64,6 +64,7 @@ define(function(require) {
 				this.displayObject.buttonMode = true;
 
 			this._dragBounds = new Rectangle();
+			this._dragOffset = new PIXI.Point();
 		},
 
 		calculateDragBounds: function(dx, dy) {
@@ -77,21 +78,18 @@ define(function(require) {
 		},
 
 		dragStart: function(data) {
-			this.dragXOffset = data.getLocalPosition(this.displayObject).x;
-			this.dragYOffset = data.getLocalPosition(this.displayObject).y;
+			this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
 			this.dragging = true;
 			this.model.set('userControlled', true);
 		},
 
 		drag: function(data) {
 			if (this.dragging) {
-				var dx = data.global.x - this.displayObject.x - this.dragXOffset;
-				var dy = data.global.y - this.displayObject.y - this.dragYOffset;
+				var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+				var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
 				
 				var newBounds = this.calculateDragBounds(dx, dy);
 				var constraintBounds = this.movementConstraintBounds;
-
-				console.log(dx + ', ' + dy);
 
 				if (!constraintBounds.contains(newBounds)) {
 					var overflowLeft   = constraintBounds.left() - newBounds.left();
