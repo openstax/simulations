@@ -179,6 +179,8 @@ define(function(require) {
 			this.label.alpha = 1;
 		},
 
+		update: function(time, deltaTime) {}
+
 	});
 
 	return BlockView;

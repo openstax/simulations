@@ -33,6 +33,8 @@ define(function(require) {
 
 		initialize: function(options) {
 			SceneView.prototype.initialize.apply(this, arguments);
+
+			this.views = [];
 		},
 
 		/**
@@ -103,6 +105,7 @@ define(function(require) {
 			// Air
 			var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
 			this.airLayer.addChild(air.displayObject);
+			this.views.push(air);
 
 			// Movable Elements
 			this.initBlocks();
@@ -117,7 +120,7 @@ define(function(require) {
 			var blockMovementConstraints = new Rectangle(
 				0, 
 				0, 
-				this.width , 
+				this.width, 
 				Number.POSITIVE_INFINITY
 			);
 
@@ -143,6 +146,9 @@ define(function(require) {
 			this.blockLayer.addChild(brickView.displayObject);
 			this.blockLayer.addChild(ironBlockView.displayObject);
 
+			this.views.push(brickView);
+			this.views.push(ironBlockView);
+
 			// Listen to energy chunk show and hide events
 			_.each([
 				brickView,
@@ -160,10 +166,12 @@ define(function(require) {
 		initThermometers: function() {
 			var thermometerViews = [];
 			_.each(this.simulation.thermometers, function(thermometer) {
-				thermometerViews.push(new ThermometerView({
+				var view = new ThermometerView({
 					model: thermometer,
 					mvt: this.mvt
-				}));
+				});
+				thermometerViews.push(view);
+				this.views.push(view);
 			}, this);
 
 			// Thermometer clips
@@ -185,6 +193,8 @@ define(function(require) {
 
 		_update: function(time, deltaTime) {
 			//if (!this.simulation.get('paused'))
+			for (var i = 0; i < this.views.length; i++)
+				this.views[i].update(time, deltaTime);
 		},
 
 		showEnergyChunks: function() {
