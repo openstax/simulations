@@ -7,7 +7,7 @@ define(function (require) {
     var solveCubic     = require('./solve-cubic-equation');
     var lineIntersect  = require('../node_modules/line-intersect-shimmed/index');
     var Rectangle      = require('./rectangle');
-    var Vector2        = require('vector2-node');
+    var Vector2        = require('./vector2');
 
     /**
      * The purpose of this class is to store paths of points and wathis.yPoints in

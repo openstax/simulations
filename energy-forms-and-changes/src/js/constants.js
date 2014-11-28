@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2   = require('vector2-node');
+    var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
     var Functions = require('common/math/functions');
 
@@ -133,6 +133,7 @@ define(function (require) {
     BlockView.PERSPECTIVE_EDGE_PROPORTION = Math.sqrt(
         Math.pow(Constants.Z_TO_X_OFFSET_MULTIPLIER, 2) + Math.pow(Constants.Z_TO_Y_OFFSET_MULTIPLIER, 2) 
     );
+    BlockView.LINE_WIDTH = 3;
 
     // BlockView.LABEL_FONT = new PhetFont( 32, false );
     // BlockView.OUTLINE_STROKE = new BasicStroke( 3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL );

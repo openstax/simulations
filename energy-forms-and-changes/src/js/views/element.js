@@ -4,11 +4,21 @@ define(function(require) {
 
 	var _    = require('underscore');
 	var PIXI = require('pixi');
+	
 
 	var PixiView       = require('common/pixi/view');
 	var Colors         = require('common/colors/colors');
 	var PiecewiseCurve = require('common/math/piecewise-curve');
+	var Rectangle      = require('common/math/rectangle');
+
 	var Constants      = require('constants');
+
+	var defaultMovementConstraintBounds = new Rectangle(
+		Number.NEGATIVE_INFINITY,
+		Number.NEGATIVE_INFINITY,
+		Number.POSITIVE_INFINITY,
+		Number.POSITIVE_INFINITY
+	);
 
 	/**
 	 * A view that represents an element model
@@ -33,6 +43,7 @@ define(function(require) {
 			this.mvt = options.mvt;
 
 			this.movable = options.movable || false;
+			this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
 
 			this.fillColor = options.fillColor;
 			this.fillAlpha = options.fillAlpha !== undefined ? options.fillAlpha : 1;
@@ -49,20 +60,59 @@ define(function(require) {
 				this.fillColor =  Colors.parseHex(options.fillColor);
 
 			// To give some feedback on the cursor
-			this.displayObject.buttonMode = true;
+			if (this.movable)
+				this.displayObject.buttonMode = true;
+
+			this._dragBounds = new Rectangle();
+		},
+
+		calculateDragBounds: function(dx, dy) {
+			var bounds = this.displayObject.getBounds();
+			return this._dragBounds.set(
+				bounds.x + dx,
+				bounds.y + dy,
+				bounds.width,
+				bounds.height
+			);
 		},
 
 		dragStart: function(data) {
-			this.dragX = data.global.x;
-			this.dragY = data.global.y;
+			this.dragXOffset = data.getLocalPosition(this.displayObject).x;
+			this.dragYOffset = data.getLocalPosition(this.displayObject).y;
 			this.dragging = true;
 			this.model.set('userControlled', true);
 		},
 
 		drag: function(data) {
 			if (this.dragging) {
-				var dx = this.mvt.viewToModelDeltaX(data.global.x - this.dragX);
-				var dy = this.mvt.viewToModelDeltaY(data.global.y - this.dragY);
+				var dx = data.global.x - this.displayObject.x - this.dragXOffset;
+				var dy = data.global.y - this.displayObject.y - this.dragYOffset;
+				
+				var newBounds = this.calculateDragBounds(dx, dy);
+				var constraintBounds = this.movementConstraintBounds;
+
+				console.log(dx + ', ' + dy);
+
+				if (!constraintBounds.contains(newBounds)) {
+					var overflowLeft   = constraintBounds.left() - newBounds.left();
+					var overflowRight  = newBounds.right() - constraintBounds.right();
+					var overflowTop    = constraintBounds.bottom() - newBounds.bottom();
+					var overflowBottom = newBounds.top() - constraintBounds.top();
+
+					// Backtrack if we need to
+					if (overflowLeft > 0)
+						dx += overflowLeft;
+					else if (overflowRight > 0)
+						dx -= overflowRight;
+
+					if (overflowTop > 0)
+						dy += overflowTop;
+					else if (overflowBottom > 0)
+						dy -= overflowBottom;
+				}
+
+				dx = this.mvt.viewToModelDeltaX(dx);
+				dy = this.mvt.viewToModelDeltaY(dy);
 
 				this.model.translate(dx, dy);
 

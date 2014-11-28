@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     // Libraries
     var _         = require('underscore');
-    var Vector2   = require('vector2-node');
+    var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
     // Project dependiencies

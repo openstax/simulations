@@ -4,7 +4,7 @@ define(function (require) {
 
     var _         = require('underscore');
     var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('vector2-node');
+    var Vector2   = require('common/math/vector2');
 
     /**
      * Constants

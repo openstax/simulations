@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('vector2-node');
+    var Vector2 = require('common/math/vector2');
     var Pool    = require('object-pool');
 
     var Element = require('models/element');

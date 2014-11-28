@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var _              = require('underscore');
-    var Vector2        = require('vector2-node');
+    var Vector2        = require('common/math/vector2');
     var Rectangle      = require('common/math/rectangle');
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');

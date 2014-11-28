@@ -74,7 +74,7 @@ describe('ModelViewTransform', function(){
 	before(function(done) {
 		require([
 			'common/math/model-view-transform', 
-			'vector2-node', 
+			'common/math/vector2', 
 			'common/math/rectangle',
 			'common/math/piecewise-curve'
 		], function(modelViewTransform, vector2, rectangle, piecewiseCurve) {

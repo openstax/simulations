@@ -5,8 +5,8 @@ define(function(require) {
 	//var $        = require('jquery');
 	var _        = require('underscore');
 	var PIXI     = require('pixi');
-	var Vector2  = require('vector2-node');
-	//var Rectangle = require('common/math/rectangle');
+	var Vector2  = require('common/math/vector2');
+	var Rectangle = require('common/math/rectangle');
 
 	var ModelViewTransform   = require('common/math/model-view-transform');
 	var SceneView            = require('views/scene');
@@ -104,24 +104,60 @@ define(function(require) {
 			var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
 			this.airLayer.addChild(air.displayObject);
 
-			// Movable objects
+			// Movable Elements
+			this.initBlocks();
+			this.initBeaker();
+
+			// Thermometers
+			this.initThermometers();
+		},
+
+		initBlocks: function() {
+			var blockWidth = this.mvt.modelToViewDeltaX(Constants.Block.SURFACE_WIDTH) + Constants.BlockView.LINE_WIDTH;
+			var blockMovementConstraints = new Rectangle(
+				0, 
+				0, 
+				this.width , 
+				Number.POSITIVE_INFINITY
+			);
+
 			var brickView = new BrickView({ 
 				model: this.simulation.brick,
 				mvt: this.mvt,
+				movementConstraintBounds: blockMovementConstraints,
+				lineWidth: Constants.BlockView.LINE_WIDTH,
 				textColor: Constants.BrickView.TEXT_COLOR,
 				labelText: 'Brick'
 			});
+			
 			var ironBlockView = new BlockView({ 
 				model: this.simulation.ironBlock, 
 				mvt: this.mvt, 
+				movementConstraintBounds: blockMovementConstraints,
+				lineWidth: Constants.BlockView.LINE_WIDTH,
 				fillColor: Constants.IronBlockView.FILL_COLOR,
 				textColor: Constants.IronBlockView.TEXT_COLOR,
 				labelText: 'Iron'
 			});
+
 			this.blockLayer.addChild(brickView.displayObject);
 			this.blockLayer.addChild(ironBlockView.displayObject);
 
-			// Thermometers
+			// Listen to energy chunk show and hide events
+			_.each([
+				brickView,
+				ironBlockView
+			], function(elementView) {
+				elementView.listenTo(this, 'show-energy-chunks', elementView.showEnergyChunks);
+				elementView.listenTo(this, 'hide-energy-chunks', elementView.hideEnergyChunks);
+			}, this);
+		},
+
+		initBeaker: function() {
+
+		},
+
+		initThermometers: function() {
 			var thermometerViews = [];
 			_.each(this.simulation.thermometers, function(thermometer) {
 				thermometerViews.push(new ThermometerView({
@@ -144,17 +180,6 @@ define(function(require) {
 			_.each(thermometerViews, function(thermometerView) {
 				var point = thermometerClips.addThermometer(thermometerView);
 				thermometerView.model.setPosition(point.x, point.y);
-				console.log(point.x + ', ' + point.y);
-			}, this);
-
-
-			// Listen to energy chunk show and hide events
-			_.each([
-				brickView,
-				ironBlockView
-			], function(elementView) {
-				elementView.listenTo(this, 'show-energy-chunks', elementView.showEnergyChunks);
-				elementView.listenTo(this, 'hide-energy-chunks', elementView.hideEnergyChunks);
 			}, this);
 		},
 
