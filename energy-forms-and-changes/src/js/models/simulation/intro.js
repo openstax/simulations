@@ -14,6 +14,7 @@ define(function (require, exports, module) {
     var Beaker                      = require('models/element/beaker');
     var BeakerContainer             = require('models/element/beaker-container');
     var Burner                      = require('models/element/burner');
+    var Block                       = require('models/element/block');
     var Brick                       = require('models/element/brick');
     var IronBlock                   = require('models/element/iron-block');
     var ElementFollowingThermometer = require('models/element/element-following-thermometer');
@@ -45,6 +46,7 @@ define(function (require, exports, module) {
             // Moveable thermal model objects
             this.brick     = new Brick(    { position: new Vector2(-0.1,   0) });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0) });
+            this.cheeseBlock = new Block({   position: new Vector2(0.1, 0), energyContainerCategory: Constants.EnergyContainerCategory.IRON });
             
             this.beaker = new BeakerContainer({ 
                 position: new Vector2(0.18, 0), 
@@ -72,6 +74,7 @@ define(function (require, exports, module) {
             this.movableElements = [
                 this.ironBlock,
                 this.brick,
+                this.cheeseBlock,
                 this.beaker
             ];
             this.supportingSurfaces = [
@@ -79,6 +82,7 @@ define(function (require, exports, module) {
                 this.rightBurner,
                 this.brick,
                 this.ironBlock,
+                this.cheeseBlock,
                 this.beaker
             ];
             this.burners = [
@@ -87,7 +91,8 @@ define(function (require, exports, module) {
             ];
             this.blocks = [
                 this.brick,
-                this.ironBlock
+                this.ironBlock,
+                this.cheeseBlock
             ];
 
             // Cached objects
@@ -656,7 +661,7 @@ define(function (require, exports, module) {
          * Returns true if surface s1's center is above surface s2.
          */
         isDirectlyAbove: function(s1, s2) {
-            return s2.xRange.containsX(s1.getCenterX()) && s1.yPos > s2.yPos;
+            return s2.containsX(s1.getCenterX()) && s1.yPos > s2.yPos;
         },
 
         /**

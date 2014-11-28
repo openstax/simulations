@@ -89,8 +89,8 @@ define(function(require) {
 
 			// Front outline
 			var lineStyle = {
-				lineWidth: 3,
-				strokeStyle: '#444',
+				lineWidth: this.lineWidth,
+				strokeStyle: this.lineColor,
 				lineJoin: 'bevel'
 			};
 			var pointArrays = [frontFacePoints, topFacePoints, rightFacePoints];

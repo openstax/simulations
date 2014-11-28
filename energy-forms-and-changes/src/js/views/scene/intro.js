@@ -116,7 +116,6 @@ define(function(require) {
 		},
 
 		initBlocks: function() {
-			var blockWidth = this.mvt.modelToViewDeltaX(Constants.Block.SURFACE_WIDTH) + Constants.BlockView.LINE_WIDTH;
 			var blockMovementConstraints = new Rectangle(
 				0, 
 				0, 
@@ -143,11 +142,24 @@ define(function(require) {
 				labelText: 'Iron'
 			});
 
+			var cheeseBlockView = new BlockView({ 
+				model: this.simulation.cheeseBlock, 
+				mvt: this.mvt, 
+				movementConstraintBounds: blockMovementConstraints,
+				lineWidth: Constants.BlockView.LINE_WIDTH,
+				lineColor: '#FFC200',
+				fillColor: '#FFD757',
+				textColor: Constants.IronBlockView.TEXT_COLOR,
+				labelText: 'Cheese'
+			});
+
 			this.blockLayer.addChild(brickView.displayObject);
 			this.blockLayer.addChild(ironBlockView.displayObject);
+			this.blockLayer.addChild(cheeseBlockView.displayObject);
 
 			this.views.push(brickView);
 			this.views.push(ironBlockView);
+			this.views.push(cheeseBlockView);
 
 			// Listen to energy chunk show and hide events
 			_.each([
