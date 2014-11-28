@@ -65,7 +65,7 @@ define(function (require) {
          * @return rectangle that defines this item's 2D shape
          */
         getRect: function() {
-            this._rect.x = this.get('position').x;
+            this._rect.x = this.get('position').x - Block.SURFACE_WIDTH / 2;
             this._rect.y = this.get('position').y;
             return this._rect;
         },
