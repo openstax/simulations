@@ -4,6 +4,24 @@ define(function (require) {
 	'use strict';
 
 	var Colors = {
+
+		/**
+		 * Regex from http://stackoverflow.com/a/5624139
+		 */
+		parseHex: function(string) {
+			// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+			var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+			var fullHex = string.replace(shorthandRegex, function(m, r, g, b) {
+				return r + r + g + g + b + b;
+			});
+
+			// Remove the hash sign on the front
+			var numbers = fullHex.replace('#', '');
+
+			// Now we can parse it as hex
+			return parseInt(numbers, 16);
+		},
+
 		/**
 		 * http://stackoverflow.com/a/5624139
 		 */

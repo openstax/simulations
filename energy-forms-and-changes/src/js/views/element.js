@@ -6,6 +6,7 @@ define(function(require) {
 	var PIXI = require('pixi');
 
 	var PixiView       = require('common/pixi/view');
+	var Colors         = require('common/colors/colors');
 	var PiecewiseCurve = require('common/math/piecewise-curve');
 	var Constants      = require('constants');
 
@@ -19,11 +20,19 @@ define(function(require) {
 		 */
 		initialize: function(options) {
 			this.mvt = options.mvt;
-			this.fillColor = options.fillColor || 0x000000;
-			this.fillAlpha = options.fillAlpha || 1;
+			this.fillColor = options.fillColor;
+			this.fillAlpha = options.fillAlpha !== undefined ? options.fillAlpha : 1;
+			this.lineWidth = options.lineWidth !== undefined ? options.lineWidth : 3;
+			this.lineColor = options.lineColor || '#444444';
+			this.lineJoin  = options.lineJoin  || 'round';
 			this.textColor = options.textColor || '#000000';
-			this.textFont  = options.textFont || ElementView.TEXT_FONT;
+			this.textFont  = options.textFont  || ElementView.TEXT_FONT;
 			this.labelText = options.labelText || '';
+
+			if (this.fillColor === undefined)
+				this.fillColor = 0x000000;
+			else if (_.isString(this.fillColor))
+				this.fillColor =  Colors.parseHex(options.fillColor);
 		},
 
 		update: function(time, deltaTime) {},

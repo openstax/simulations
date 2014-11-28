@@ -183,7 +183,7 @@ define(function (require) {
 
     var IronBlockView = {};
 
-    IronBlockView.FILL_COLOR = 0x888888;
+    IronBlockView.FILL_COLOR = '#888888';
     IronBlockView.TEXT_COLOR = '#000000';
 
     Constants.IronBlockView = IronBlockView;
