@@ -46,6 +46,9 @@ define(function(require) {
 			var blockFaceOffset  = (new Vector2(-perspectiveEdgeSize / 2, 0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 			var backCornerOffset = (new Vector2(perspectiveEdgeSize,      0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 
+			// For calculating the dragging bounds
+			this.blockFaceYOffset = Math.ceil(blockFaceOffset.y);
+
 			// Front face
 			var lowerLeftFrontCorner  = (new Vector2(rect.left(),   rect.bottom())).add(blockFaceOffset);
 			var lowerRightFrontCorner = (new Vector2(rect.right(),  rect.bottom())).add(blockFaceOffset);
@@ -159,6 +162,12 @@ define(function(require) {
 			origin.drawCircle(0, 0, 3);
 			origin.endFill();
 			this.displayObject.addChild(origin);
+		},
+
+		calculateDragBounds: function(dx, dy) {
+			var bounds = ElementView.prototype.calculateDragBounds.apply(this, arguments);
+			bounds.h -= this.blockFaceYOffset + (this.lineWidth / 2);
+			return bounds;
 		},
 
 		updatePosition: function(model, position) {

@@ -49,11 +49,11 @@ define(function(require) {
 
 			var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
 
-			var viewOriginX = Math.round(this.width / 2);
-			var viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
+			this.viewOriginX = Math.round(this.width / 2);
+			this.viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
 			this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
 				new Vector2(0, 0),
-				new Vector2(viewOriginX, viewOriginY),
+				new Vector2(this.viewOriginX, this.viewOriginY),
 				2200 // Scale
 			);
 
@@ -121,7 +121,7 @@ define(function(require) {
 				0, 
 				0, 
 				this.width, 
-				Number.POSITIVE_INFINITY
+				this.viewOriginY
 			);
 
 			var brickView = new BrickView({ 
