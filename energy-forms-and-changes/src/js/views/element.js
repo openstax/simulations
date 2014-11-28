@@ -15,11 +15,25 @@ define(function(require) {
 	 */
 	var ElementView = PixiView.extend({
 
+		events: {
+			'touchstart      .displayObject': 'dragStart',
+			'mousedown       .displayObject': 'dragStart',
+			'touchmove       .displayObject': 'drag',
+			'mousemove       .displayObject': 'drag',
+			'touchend        .displayObject': 'dragEnd',
+			'mouseup         .displayObject': 'dragEnd',
+			'touchendoutside .displayObject': 'dragEnd',
+			'mouseupoutside  .displayObject': 'dragEnd',
+		},
+
 		/**
 		 *
 		 */
 		initialize: function(options) {
 			this.mvt = options.mvt;
+
+			this.movable = options.movable || false;
+
 			this.fillColor = options.fillColor;
 			this.fillAlpha = options.fillAlpha !== undefined ? options.fillAlpha : 1;
 			this.lineWidth = options.lineWidth !== undefined ? options.lineWidth : 3;
@@ -35,7 +49,33 @@ define(function(require) {
 				this.fillColor =  Colors.parseHex(options.fillColor);
 		},
 
-		update: function(time, deltaTime) {},
+		dragStart: function(data) {
+			this.dragX = data.global.x;
+			this.dragY = data.global.y;
+			this.dragging = true;
+			data.target.alpha = 0.5;
+		},
+
+		drag: function(data) {
+			if (this.dragging) {
+				var dx = data.global.x - this.dragX;
+				var dy = data.global.y - this.dragY;
+				data.target.position.x += dx;
+				data.target.position.y += dy;
+
+				this.dragX = data.global.x;
+				this.dragY = data.global.y;
+			}
+		},
+
+		dragEnd: function(data) {
+			this.dragging = false;
+			this.dragData = null;
+		},
+
+		update: function(time, deltaTime) {
+
+		},
 
 		showEnergyChunks: function() {},
 

@@ -8,6 +8,8 @@ define(function(require) {
 
     var viewOptions = ['model', 'id', 'displayObject', 'events'];
 
+    var delegateEventSplitter = /^(\S+)\s*\.(\S*)$/;
+
     /**
      * A View class that acts like the Backbone.View class, complete
      *   with Backbone Events, but it's for a Pixi.js DisplayObject
@@ -19,6 +21,7 @@ define(function(require) {
         _.extend(this, _.pick(options, viewOptions));
         this._ensureDisplayObject();
         this.initialize.apply(this, arguments);
+        this.delegateEvents();
     };
 
     /**
@@ -36,9 +39,7 @@ define(function(require) {
         /**
          * Initialization code for new PixiView objects
          */
-        initialize: function(options) {
-
-        },
+        initialize: function(options) {},
 
         /**
          * This function should contain all the necessary code for
@@ -64,6 +65,46 @@ define(function(require) {
                  */
                 this.displayObject = new PIXI.DisplayObjectContainer();
             }
+        },
+
+        /**
+         * Modeled after Backbone.View.prototype.delegateEvents, this
+         *   function takes a map of event bindings that looks like:
+         *
+         *     {
+         *       'touchstart .displayObject': 'dragStart'
+         *     }
+         *
+         *   and binds functions to them like this:
+         *
+         *     this.displayObject.touchstart = this.dragStart;
+         */
+        delegateEvents: function(events) {
+            if (!(events || (events = _.result(this, 'events')))) 
+                return this;
+
+            for (var key in events) {
+                var method = events[key];
+                if (!_.isFunction(method))
+                    method = this[events[key]];
+                if (!method)
+                    continue;
+
+                var match = key.match(delegateEventSplitter);
+                var eventName = match[1];
+                var displayObject = this[match[2]];
+
+                if (!(displayObject instanceof PIXI.DisplayObject))
+                    throw 'PixiView: this.' + match[2] + ' must be a DisplayObject to bind events on it.';
+
+                // if (displayObject.hasOwnProperty(eventName))
+                //     throw 'PixiView: ' + eventName + ' is not a valid event.';
+
+                displayObject[eventName] = _.bind(method, this);
+                displayObject.interactive = true;
+            }
+
+            return this;
         }
 
     });

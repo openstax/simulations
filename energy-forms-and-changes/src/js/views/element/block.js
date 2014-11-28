@@ -90,7 +90,7 @@ define(function(require) {
 			var lineStyle = {
 				lineWidth: 3,
 				strokeStyle: '#444',
-				lineJoin: 'round'
+				lineJoin: 'bevel'
 			};
 			var pointArrays = [frontFacePoints, topFacePoints, rightFacePoints];
 			this.outlineFront.addChild(this.createOutlineFromPointArrays(pointArrays, lineStyle));
