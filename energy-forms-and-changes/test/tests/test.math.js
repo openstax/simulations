@@ -91,6 +91,21 @@ describe('PiecewiseCurve', function(){
 		chai.expect(yIntersections % 2).to.equal(0);
 	});
 
+	it('#contains should determine whether a point is inside the curve', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(2, 2);
+		curve.lineTo(2, 4);
+		curve.lineTo(4, 4);
+		curve.lineTo(4, 2);
+		curve.lineTo(2, 2);
+
+		var pointInside  = new Vector2(3, 3);
+		var pointOutside = new Vector2(0, 3);
+
+		chai.expect(curve.contains(pointInside)).to.be.true;
+		chai.expect(curve.contains(pointOutside)).to.not.be.true;
+	});
+
 	it('#intersects should correctly calculate intersection', function(){
 		var curve = new PiecewiseCurve();
 		curve.moveTo(0, 0);

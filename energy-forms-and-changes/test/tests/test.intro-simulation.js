@@ -45,6 +45,22 @@ describe('Intro Simulation', function(){
 
 		chai.expect(allowedTranslation.x).to.almost.equal(4);
 		chai.expect(allowedTranslation.y).to.almost.equal(0);
+
+		// Make sure it works in the y direction too
+		var rectTop    = new Rectangle(0, 4, 4, 4);
+		var rectBottom = new Rectangle(0, 0, 4, 2);
+
+		proposedTranslation.set(2, 2);
+		allowedTranslation = sim.determineAllowedTranslation(rectBottom, rectTop, proposedTranslation, true);
+
+		chai.expect(allowedTranslation.x).to.almost.equal(2);
+		chai.expect(allowedTranslation.y).to.almost.equal(2);
+
+		proposedTranslation.set(0, 3);
+		allowedTranslation = sim.determineAllowedTranslation(rectBottom, rectTop, proposedTranslation, true);
+
+		chai.expect(allowedTranslation.x).to.almost.equal(0);
+		chai.expect(allowedTranslation.y).to.almost.equal(2);
 	});
 
 });
