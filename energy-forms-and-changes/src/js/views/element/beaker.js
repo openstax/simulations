@@ -61,8 +61,7 @@ define(function(require) {
                     left,  top - ellipseHeight / 2,
                     right, top - ellipseHeight / 2,
                     right, top
-                )
-                .close();
+                );
             // Top front curve
             frontCurves
                 .moveTo(left, top)
@@ -70,8 +69,7 @@ define(function(require) {
                     left,  top + ellipseHeight / 2,
                     right, top + ellipseHeight / 2,
                     right, top
-                )
-                .close();
+                );
             // Bottom back curve
             backCurves
                 .moveTo(left, bottom)
@@ -79,8 +77,7 @@ define(function(require) {
                     left,  bottom - ellipseHeight / 2,
                     right, bottom - ellipseHeight / 2,
                     right, bottom
-                )
-                .close();
+                );
             // Bottom front curve
             frontCurves
                 .moveTo(left, bottom)
@@ -88,8 +85,7 @@ define(function(require) {
                     left,  bottom + ellipseHeight / 2,
                     right, bottom + ellipseHeight / 2,
                     right, bottom
-                )
-                .close();
+                );
 
             // Outline style
             var lineStyle = {

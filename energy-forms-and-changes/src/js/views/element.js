@@ -204,7 +204,8 @@ define(function(require) {
                 switch (curve.types[pos]) {
                     case PiecewiseCurve.SEG_MOVETO:
                         if (pathStarted) { 
-                            // Close old path
+                            // Draw and close old path
+                            ctx.stroke();
                             ctx.closePath();
                         }
                         x = curve.xPoints[pos]   + xShift;
@@ -247,6 +248,12 @@ define(function(require) {
                         break;
                 }
             }
+
+            if (pathStarted) {
+                // It was opened but never closed, so draw it
+                ctx.stroke();
+            }
+                
 
             // Create the sprite and shift the anchor proportionally to the shift
             var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
