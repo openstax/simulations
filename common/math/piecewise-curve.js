@@ -365,6 +365,10 @@ define(function (require) {
         /**
          * Evaluates the number of intersections on an axis from 
          *   the point (x,y) to the point (x,y+distance) or (x+distance,y).
+         *
+         * Here is a gist explanation of this algorithm: 
+         *   https://gist.github.com/pwolfert/134d6dda882309bf2c5f
+         *
          * @param x x coordinate.
          * @param y y coordinate.
          * @param neg True if opposite-directed intersections should cancel, false to sum all intersections.
