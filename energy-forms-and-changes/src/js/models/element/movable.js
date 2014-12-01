@@ -39,7 +39,6 @@ define(function (require) {
                     this.stopListening(this.getSupportingSurface());
                     this.getSupportingSurface().clearSurface();
                     this.setSupportingSurface(null);
-                    this.set('verticalVelocity', 0);
                 }
             });
         },
