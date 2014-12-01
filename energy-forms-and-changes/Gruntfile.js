@@ -184,7 +184,8 @@ module.exports = function(grunt){
             source: [
                 'src/**/*.js',
                 '!src/js/lib/**/*.js',
-                '!test/**/*.js'
+                '!test/**/*.js',
+               // '../common/math/piecewise-curve.js'
             ],
             test: [
                 'test/**/*.js'

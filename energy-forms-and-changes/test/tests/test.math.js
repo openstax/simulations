@@ -4,11 +4,13 @@ describe('PiecewiseCurve', function(){
 
 	var PiecewiseCurve;
 	var Rectangle;
+	var Vector2;
 
 	before(function(done) {
-		require(['common/math/piecewise-curve', 'common/math/rectangle'], function(piecewiseCurve, rectangle) {
+		require(['common/math/piecewise-curve', 'common/math/rectangle', 'common/math/vector2'], function(piecewiseCurve, rectangle, vector2) {
 			PiecewiseCurve = piecewiseCurve;
 			Rectangle = rectangle;
+			Vector2 = vector2;
 			done();
 		});
 	});
@@ -64,34 +66,59 @@ describe('PiecewiseCurve', function(){
 		chai.expect(bounds.h).to.almost.equal(1);
 	});
 
-	// it('#intersects should correctly calculate intersection', function(){
-	// 	var curve = new PiecewiseCurve();
-	// 	curve.moveTo(0, 0);
-	// 	curve.lineTo(0, 4);
-	// 	curve.lineTo(4, 4);
-	// 	curve.lineTo(4, 0);
-	// 	curve.lineTo(0, 0);
+	it('#evaluateCrossings should calculate number of axis intersections', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(2, 2);
+		curve.lineTo(2, 4);
+		curve.lineTo(4, 4);
+		curve.lineTo(4, 2);
+		curve.lineTo(2, 2);
 
-	// 	var boxRight  = new Rectangle( 5,  0, 4, 4);
-	// 	var boxLeft   = new Rectangle(-5,  0, 4, 4);
-	// 	var boxTop    = new Rectangle( 0,  5, 4, 4);
-	// 	var boxBottom = new Rectangle( 0, -5, 4, 4);
+		var pointInside = new Vector2(3, 3);
 
-	// 	chai.expect(curve.intersects(boxRight )).to.not.be.true();
-	// 	chai.expect(curve.intersects(boxLeft  )).to.not.be.true();
-	// 	chai.expect(curve.intersects(boxTop   )).to.not.be.true();
-	// 	chai.expect(curve.intersects(boxBottom)).to.not.be.true();
+		var xIntersections = curve.evaluateCrossings(pointInside.x, pointInside.y, false, false, 99);
+		var yIntersections = curve.evaluateCrossings(pointInside.x, pointInside.y, false, true,  99);
 
-	// 	boxRight.translate(-2, 0);
-	// 	boxLeft.translate(2, 0);
-	// 	boxTop.translate(0, -2);
-	// 	boxBottom.translate(0, 2);
+		chai.expect(xIntersections % 2).to.equal(1);
+		chai.expect(yIntersections % 2).to.equal(1);
 
-	// 	chai.expect(curve.intersects(boxRight )).to.be.true();
-	// 	chai.expect(curve.intersects(boxLeft  )).to.be.true();
-	// 	chai.expect(curve.intersects(boxTop   )).to.be.true();
-	// 	chai.expect(curve.intersects(boxBottom)).to.be.true();
-	// });
+		var pointOutside = new Vector2(0, 3);
+
+		xIntersections = curve.evaluateCrossings(pointOutside.x, pointOutside.y, false, false, 99);
+		yIntersections = curve.evaluateCrossings(pointOutside.x, pointOutside.y, false, true,  99);
+
+		chai.expect(xIntersections % 2).to.equal(0);
+		chai.expect(yIntersections % 2).to.equal(0);
+	});
+
+	it('#intersects should correctly calculate intersection', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(0, 0);
+		curve.lineTo(0, 4);
+		curve.lineTo(4, 4);
+		curve.lineTo(4, 0);
+		curve.lineTo(0, 0);
+
+		var boxRight  = new Rectangle( 5,  0, 4, 4);
+		var boxLeft   = new Rectangle(-5,  0, 4, 4);
+		var boxTop    = new Rectangle( 0,  5, 4, 4);
+		var boxBottom = new Rectangle( 0, -5, 4, 4);
+
+		chai.expect(curve.intersects(boxRight )).to.not.be.true;
+		chai.expect(curve.intersects(boxLeft  )).to.not.be.true;
+		chai.expect(curve.intersects(boxTop   )).to.not.be.true;
+		chai.expect(curve.intersects(boxBottom)).to.not.be.true;
+
+		boxRight.translate(-2, 0);
+		boxLeft.translate(2, 0);
+		boxTop.translate(0, -2);
+		boxBottom.translate(0, 2);
+
+		chai.expect(curve.intersects(boxRight )).to.be.true;
+		chai.expect(curve.intersects(boxLeft  )).to.be.true;
+		chai.expect(curve.intersects(boxTop   )).to.be.true;
+		chai.expect(curve.intersects(boxBottom)).to.be.true;
+	});
 
 });
 

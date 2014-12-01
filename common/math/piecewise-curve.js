@@ -5,7 +5,7 @@ define(function (require) {
     var _              = require('underscore');
     var solveQuadratic = require('../node_modules/solve-quadratic-equation-shimmed/index');
     var solveCubic     = require('./solve-cubic-equation');
-    var lineIntersect  = require('../node_modules/line-intersect-shimmed/index');
+    var lineIntersect  = require('./line-intersection');
     var Rectangle      = require('./rectangle');
     var Vector2        = require('./vector2');
 
@@ -244,9 +244,11 @@ define(function (require) {
          * @param y2 y coordinate of the curve endpoint.
          */
         quadTo: function(x1, y1, x2, y2) {
-            if (x instanceof Vector2) {
-                y = x.y;
-                x = x.x;
+            if (x1 instanceof Vector2) {
+                y2 = y1.y;
+                x2 = y1.x;
+                y1 = x1.y;
+                x1 = x1.x;
             }
             this.types[this.index] = PiecewiseCurve.SEG_QUADTO;
             this.xPoints[this.index]   = x1;
@@ -389,6 +391,9 @@ define(function (require) {
 
             var r = [];
             var nRoots;
+            var t;
+            var i;
+            var crossing;
             var epsilon = 0.0;
             var pos = 0;
             var windingNumber = 0;
@@ -426,11 +431,11 @@ define(function (require) {
                             x1 = firstx;
                             y1 = firsty;
 
-                            if (y0 == 0.0)
+                            if (y0 === 0)
                                 y0 -= epsilon;
-                            if (y1 == 0.0)
+                            if (y1 === 0)
                                 y1 -= epsilon;
-                            if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
+                            if (lineIntersect.linesIntersect(x0, y0, x1, y1, epsilon, 0, distance, 0))
                                 windingNumber += (y1 < y0) ? 1 : negative;
 
                             cx = firstx;
@@ -450,7 +455,7 @@ define(function (require) {
                             y0 -= epsilon;
                         if (y1 === 0)
                             y1 -= epsilon;
-                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
+                        if (lineIntersect.linesIntersect(x0, y0, x1, y1, epsilon, 0, distance, 0))
                             windingNumber += (y1 < y0) ? 1 : negative;
 
                         cx = firstx;
@@ -468,7 +473,7 @@ define(function (require) {
                             y0 -= epsilon;
                         if (y1 === 0)
                             y1 -= epsilon;
-                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
+                        if (lineIntersect.linesIntersect(x0, y0, x1, y1, epsilon, 0, distance, 0))
                             windingNumber += (y1 < y0) ? 1 : negative;
 
                         cx = xPoints[pos - 1] - x;
@@ -496,10 +501,10 @@ define(function (require) {
                             /* degenerate roots (=tangent points) do not
                             contribute to the winding number. */
                             if ((nRoots = solveQuadratic(r)) === 2) {
-                                for (vari = 0; i < nRoots; i++) {
-                                    var t = r[i];
+                                for (i = 0; i < nRoots; i++) {
+                                    t = r[i];
                                     if (t > 0 && t < 1) {
-                                        var crossing = t * t * (x2 - 2 * x1 + x0) + 2 * t * (x1 - x0) + x0;
+                                        crossing = t * t * (x2 - 2 * x1 + x0) + 2 * t * (x1 - x0) + x0;
                                         if (crossing >= 0.0 && crossing <= distance)
                                             windingNumber += (2 * t * (y2 - 2 * y1 + y0) + 2 * (y1 - y0) < 0) ? 1 : negative;
                                     }
@@ -533,10 +538,10 @@ define(function (require) {
                             r[3] = y3 - 3 * y2 + 3 * y1 - y0;
 
                             if ((nRoots = solveCubic(r)) !== 0) {
-                                for (vari = 0; i < nRoots; i++) {
-                                    var t = r[i];
+                                for (i = 0; i < nRoots; i++) {
+                                    t = r[i];
                                     if (t > 0.0 && t < 1.0) {
-                                        var crossing = -(t * t * t) * (x0 - 3 * x1 + 3 * x2 - x3)
+                                        crossing = -(t * t * t) * (x0 - 3 * x1 + 3 * x2 - x3)
                                                      + 3 * t * t * (x0 - 2 * x1 + x2)
                                                      + 3 * t * (x1 - x0) + x0;
                                         if (crossing >= 0 && crossing <= distance) {
