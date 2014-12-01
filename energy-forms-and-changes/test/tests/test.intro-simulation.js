@@ -22,12 +22,12 @@ describe('Intro Simulation', function(){
 	it('should #determineAllowedTranslation', function(){
 		var sim = new IntroSimulation();
 
-		/* ####  ####
-		 * ####  ####
-		 * ####  ####
-		 * ####  ####
-		 * . . . . . 
-		 * 0 2 4 8 10
+		/* ####    ####
+		 * ####    ####
+		 * ####    ####
+		 * ####    ####
+		 * . . . . . . 
+		 * 0 2 4 6 8 10
 		 */
 		var rectA = new Rectangle(0, 0, 4, 4);
 		var rectB = new Rectangle(8, 0, 4, 4);
@@ -40,10 +40,10 @@ describe('Intro Simulation', function(){
 		chai.expect(allowedTranslation.y).to.almost.equal(proposedTranslation.y);
 
 		// This translation will need to have 0.1 shaved off of the x component
-		proposedTranslation.set(2.1, 0);
+		proposedTranslation.set(4.1, 0);
 		allowedTranslation = sim.determineAllowedTranslation(rectA, rectB, proposedTranslation, false);
 
-		chai.expect(allowedTranslation.x).to.almost.equal(2);
+		chai.expect(allowedTranslation.x).to.almost.equal(4);
 		chai.expect(allowedTranslation.y).to.almost.equal(0);
 	});
 
