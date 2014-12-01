@@ -19,7 +19,7 @@ define(function(require) {
 		},
 
 		createRightFace: function(points) {
-			return this.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT))
+			return this.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT));
 		}
 
 	});

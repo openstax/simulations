@@ -41,20 +41,30 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			options = _.extend({
+				fillAlpha: 1,
+				lineWidth: 3,
+				lineColor: '#444444',
+				lineJoin:  'round',
+				textColor: '#000000',
+				textFont:  ElementView.TEXT_FONT,
+				labelText: '',
+			}, options);
+
 			this.mvt = options.mvt;
 
 			this.movable = options.movable || false;
 			this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
-			this.movementConstraint = options.movementConstraint || function() { return true };
+			this.movementConstraint = options.movementConstraint || function() { return true; };
 
 			this.fillColor = options.fillColor;
-			this.fillAlpha = options.fillAlpha !== undefined ? options.fillAlpha : 1;
-			this.lineWidth = options.lineWidth !== undefined ? options.lineWidth : 3;
-			this.lineColor = options.lineColor || '#444444';
-			this.lineJoin  = options.lineJoin  || 'round';
-			this.textColor = options.textColor || '#000000';
-			this.textFont  = options.textFont  || ElementView.TEXT_FONT;
-			this.labelText = options.labelText || '';
+			this.fillAlpha = options.fillAlpha;
+			this.lineWidth = options.lineWidth;
+			this.lineColor = options.lineColor;
+			this.lineJoin  = options.lineJoin;
+			this.textColor = options.textColor;
+			this.textFont  = options.textFont;
+			this.labelText = options.labelText;
 
 			if (this.fillColor === undefined)
 				this.fillColor = 0x000000;
@@ -119,8 +129,8 @@ define(function(require) {
 					.set(this.model.get('position'))
 					.add(dx, dy);
 
-				if (this.movementConstraint(this.model, newPosition))
-					this.model.translate(dx, dy);
+				var validatedPosition = this.movementConstraint(this.model, newPosition);
+					this.model.setPosition(validatedPosition);
 
 				this.dragX = data.global.x;
 				this.dragY = data.global.y;
