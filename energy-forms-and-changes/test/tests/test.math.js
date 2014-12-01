@@ -3,10 +3,12 @@
 describe('PiecewiseCurve', function(){
 
 	var PiecewiseCurve;
+	var Rectangle;
 
 	before(function(done) {
-		require(['common/math/piecewise-curve'], function(piecewiseCurve) {
+		require(['common/math/piecewise-curve', 'common/math/rectangle'], function(piecewiseCurve, rectangle) {
 			PiecewiseCurve = piecewiseCurve;
+			Rectangle = rectangle;
 			done();
 		});
 	});
@@ -61,6 +63,35 @@ describe('PiecewiseCurve', function(){
 		chai.expect(bounds.w).to.almost.equal(1);
 		chai.expect(bounds.h).to.almost.equal(1);
 	});
+
+	// it('#intersects should correctly calculate intersection', function(){
+	// 	var curve = new PiecewiseCurve();
+	// 	curve.moveTo(0, 0);
+	// 	curve.lineTo(0, 4);
+	// 	curve.lineTo(4, 4);
+	// 	curve.lineTo(4, 0);
+	// 	curve.lineTo(0, 0);
+
+	// 	var boxRight  = new Rectangle( 5,  0, 4, 4);
+	// 	var boxLeft   = new Rectangle(-5,  0, 4, 4);
+	// 	var boxTop    = new Rectangle( 0,  5, 4, 4);
+	// 	var boxBottom = new Rectangle( 0, -5, 4, 4);
+
+	// 	chai.expect(curve.intersects(boxRight )).to.not.be.true();
+	// 	chai.expect(curve.intersects(boxLeft  )).to.not.be.true();
+	// 	chai.expect(curve.intersects(boxTop   )).to.not.be.true();
+	// 	chai.expect(curve.intersects(boxBottom)).to.not.be.true();
+
+	// 	boxRight.translate(-2, 0);
+	// 	boxLeft.translate(2, 0);
+	// 	boxTop.translate(0, -2);
+	// 	boxBottom.translate(0, 2);
+
+	// 	chai.expect(curve.intersects(boxRight )).to.be.true();
+	// 	chai.expect(curve.intersects(boxLeft  )).to.be.true();
+	// 	chai.expect(curve.intersects(boxTop   )).to.be.true();
+	// 	chai.expect(curve.intersects(boxBottom)).to.be.true();
+	// });
 
 });
 

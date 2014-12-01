@@ -316,10 +316,10 @@ define(function (require) {
             }
 
             // Does any edge intersect?
-            if (this.getAxisIntersections(x, y,     false, w) !== 0 ||
-                this.getAxisIntersections(x, y + h, false, w) !== 0 ||
-                this.getAxisIntersections(x + w, y, false, h) !== 0 ||
-                this.getAxisIntersections(x, y,     false, h) !== 0) {
+            if (this.getAxisIntersections(x, y,     false, w) !== 0 || 
+                this.getAxisIntersections(x, y + h, false, w) !== 0 || 
+                this.getAxisIntersections(x + w, y, true, h) !== 0 || 
+                this.getAxisIntersections(x, y,     true, h) !== 0) {
                 return true;
             }
 
@@ -360,6 +360,15 @@ define(function (require) {
             return this.evaluateCrossings(x, y, true, true, PiecewiseCurve.BIG_VALUE);
         },
 
+        /**
+         * Evaluates the number of intersections on an axis from 
+         *   the point (x,y) to the point (x,y+distance) or (x+distance,y).
+         * @param x x coordinate.
+         * @param y y coordinate.
+         * @param neg True if opposite-directed intersections should cancel, false to sum all intersections.
+         * @param useYaxis Use the Y axis, false uses the X axis.
+         * @param distance Interval from (x,y) on the selected axis to find intersections.
+         */
         evaluateCrossings: function(x, y, neg, useYAxis, distance) {
             var cx = 0;
             var cy = 0;
@@ -404,7 +413,7 @@ define(function (require) {
             /* Get a value which is hopefully small but not insignificant relative the path. */
             epsilon = yPoints[0] * 1E-7;
             
-            if (epsilon == 0) 
+            if (epsilon === 0) 
                 epsilon = 1E-7;
             
             pos = 0;
@@ -421,7 +430,7 @@ define(function (require) {
                                 y0 -= epsilon;
                             if (y1 == 0.0)
                                 y1 -= epsilon;
-                            if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0.0, distance, 0.0))
+                            if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
                                 windingNumber += (y1 < y0) ? 1 : negative;
 
                             cx = firstx;
@@ -437,11 +446,11 @@ define(function (require) {
                         x1 = firstx;
                         y1 = firsty;
 
-                        if (y0 == 0.0)
+                        if (y0 === 0)
                             y0 -= epsilon;
-                        if (y1 == 0.0)
+                        if (y1 === 0)
                             y1 -= epsilon;
-                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0.0, distance, 0.0))
+                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
                             windingNumber += (y1 < y0) ? 1 : negative;
 
                         cx = firstx;
@@ -455,11 +464,11 @@ define(function (require) {
                         x1 = xPoints[pos]   - x;
                         y1 = yPoints[pos++] - y;
 
-                        if (y0 == 0.0)
+                        if (y0 === 0)
                             y0 -= epsilon;
-                        if (y1 == 0.0)
+                        if (y1 === 0)
                             y1 -= epsilon;
-                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0.0, distance, 0.0))
+                        if (lineIntersect.checkIntersection(x0, y0, x1, y1, epsilon, 0, distance, 0))
                             windingNumber += (y1 < y0) ? 1 : negative;
 
                         cx = xPoints[pos - 1] - x;
@@ -474,10 +483,10 @@ define(function (require) {
                         y2 = yPoints[pos++] - y;
 
                         /* check if curve may intersect X+ axis. */
-                        if ((x0 > 0.0 || x1 > 0.0 || x2 > 0.0) && (y0 * y1 <= 0 || y1 * y2 <= 0)) {
-                            if (y0 == 0.0)
+                        if ((x0 > 0 || x1 > 0 || x2 > 0) && (y0 * y1 <= 0 || y1 * y2 <= 0)) {
+                            if (y0 === 0)
                                 y0 -= epsilon;
-                            if (y2 == 0.0)
+                            if (y2 === 0)
                                 y2 -= epsilon;
 
                             r[0] = y0;
@@ -486,7 +495,7 @@ define(function (require) {
 
                             /* degenerate roots (=tangent points) do not
                             contribute to the winding number. */
-                            if ((nRoots = solveQuadratic(r)) == 2) {
+                            if ((nRoots = solveQuadratic(r)) === 2) {
                                 for (vari = 0; i < nRoots; i++) {
                                     var t = r[i];
                                     if (t > 0 && t < 1) {
@@ -512,10 +521,10 @@ define(function (require) {
                         y3 = yPoints[pos++] - y;
 
                         /* check if curve may intersect X+ axis. */
-                        if ((x0 > 0.0 || x1 > 0.0 || x2 > 0.0 || x3 > 0.0) && (y0 * y1 <= 0 || y1 * y2 <= 0 || y2 * y3 <= 0)) {
-                            if (y0 == 0.0)
+                        if ((x0 > 0 || x1 > 0 || x2 > 0 || x3 > 0) && (y0 * y1 <= 0 || y1 * y2 <= 0 || y2 * y3 <= 0)) {
+                            if (y0 === 0)
                                 y0 -= epsilon;
-                            if (y3 == 0.0)
+                            if (y3 === 0)
                                 y3 -= epsilon;
 
                             r[0] = y0;
@@ -523,7 +532,7 @@ define(function (require) {
                             r[2] = 3 * (y2 + y0 - 2 * y1);
                             r[3] = y3 - 3 * y2 + 3 * y1 - y0;
 
-                            if ((nRoots = solveCubic(r)) != 0) {
+                            if ((nRoots = solveCubic(r)) !== 0) {
                                 for (vari = 0; i < nRoots; i++) {
                                     var t = r[i];
                                     if (t > 0.0 && t < 1.0) {
