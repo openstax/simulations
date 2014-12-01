@@ -147,25 +147,11 @@ define(function(require) {
                 labelText: 'Iron'
             });
 
-            this.cheeseBlockView = new BlockView({ 
-                model: this.simulation.cheeseBlock, 
-                mvt: this.mvt, 
-                movementConstraintBounds: blockMovementConstraints,
-                movementConstraint: movementConstraint,
-                lineWidth: Constants.BlockView.LINE_WIDTH,
-                lineColor: '#FFC200',
-                fillColor: '#FFD757',
-                textColor: Constants.IronBlockView.TEXT_COLOR,
-                labelText: 'Cheese'
-            });
-
             this.blockLayer.addChild(this.brickView.displayObject);
             this.blockLayer.addChild(this.ironBlockView.displayObject);
-            this.blockLayer.addChild(this.cheeseBlockView.displayObject);
 
             this.views.push(this.brickView);
             this.views.push(this.ironBlockView);
-            this.views.push(this.cheeseBlockView);
 
             this.listenTo(this.simulation.brick,     'change:position', this.blockPositionChanged);
             this.listenTo(this.simulation.ironBlock, 'change:position', this.blockPositionChanged);
