@@ -122,11 +122,15 @@ define(function(require) {
                 this.width, 
                 this.viewOriginY
             );
+            var movementConstraint = _.bind(function(model, newPosition) {
+                return this.simulation.validatePosition(model, newPosition);
+            }, this);
 
             this.brickView = new BrickView({ 
                 model: this.simulation.brick,
                 mvt: this.mvt,
                 movementConstraintBounds: blockMovementConstraints,
+                movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
                 textColor: Constants.BrickView.TEXT_COLOR,
                 labelText: 'Brick'
@@ -136,6 +140,7 @@ define(function(require) {
                 model: this.simulation.ironBlock, 
                 mvt: this.mvt, 
                 movementConstraintBounds: blockMovementConstraints,
+                movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
                 fillColor: Constants.IronBlockView.FILL_COLOR,
                 textColor: Constants.IronBlockView.TEXT_COLOR,
@@ -146,6 +151,7 @@ define(function(require) {
                 model: this.simulation.cheeseBlock, 
                 mvt: this.mvt, 
                 movementConstraintBounds: blockMovementConstraints,
+                movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
                 lineColor: '#FFC200',
                 fillColor: '#FFD757',

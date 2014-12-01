@@ -10,6 +10,7 @@ define(function(require) {
 	var Colors         = require('common/colors/colors');
 	var PiecewiseCurve = require('common/math/piecewise-curve');
 	var Rectangle      = require('common/math/rectangle');
+	var Vector2        = require('common/math/vector2');
 
 	var Constants      = require('constants');
 
@@ -44,6 +45,7 @@ define(function(require) {
 
 			this.movable = options.movable || false;
 			this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
+			this.movementConstraint = options.movementConstraint || function() { return true };
 
 			this.fillColor = options.fillColor;
 			this.fillAlpha = options.fillAlpha !== undefined ? options.fillAlpha : 1;
@@ -65,6 +67,7 @@ define(function(require) {
 
 			this._dragBounds = new Rectangle();
 			this._dragOffset = new PIXI.Point();
+			this._newPosition = new Vector2();
 		},
 
 		calculateDragBounds: function(dx, dy) {
@@ -112,7 +115,12 @@ define(function(require) {
 				dx = this.mvt.viewToModelDeltaX(dx);
 				dy = this.mvt.viewToModelDeltaY(dy);
 
-				this.model.translate(dx, dy);
+				var newPosition = this._newPosition
+					.set(this.model.get('position'))
+					.add(dx, dy);
+
+				if (this.movementConstraint(this.model, newPosition))
+					this.model.translate(dx, dy);
 
 				this.dragX = data.global.x;
 				this.dragY = data.global.y;

@@ -387,9 +387,9 @@ define(function (require) {
 
             var xPoints = this.xPoints;
             var yPoints = this.yPoints;
-            var types = this.this.types;
+            var types   = this.types;
 
-            if (!this.points.length)
+            if (this.index === 0)
                 return 0;
 
             if (useYAxis) {

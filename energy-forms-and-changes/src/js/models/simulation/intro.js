@@ -470,7 +470,7 @@ define(function (require, exports, module) {
                 if (element !== this.beaker || !this.beaker.getRect().contains(block.getRect())) {
                     translation = this.determineAllowedTranslation(testRect, block.getRect(), translation, restrictPositiveY);
                 }
-            });
+            }, this);
 
             // Determine the new position based on the resultant translation and return it.
             return translation.add(element.get('position'));
