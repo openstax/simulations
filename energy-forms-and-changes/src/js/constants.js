@@ -135,10 +135,6 @@ define(function (require) {
     );
     BlockView.LINE_WIDTH = 3;
 
-    // BlockView.LABEL_FONT = new PhetFont( 32, false );
-    // BlockView.OUTLINE_STROKE = new BasicStroke( 3, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL );
-    // BlockView.OUTLINE_STROKE_COLOR = Color.DARK_GRAY;
-
     Constants.BlockView = BlockView;
 
 
@@ -237,6 +233,33 @@ define(function (require) {
 
     Constants.Beaker = Beaker;
 
+    var BeakerView = {};
+
+    BeakerView.LINE_COLOR = '#cccccc';
+    BeakerView.LINE_WIDTH = 3;
+    BeakerView.PERSPECTIVE_PROPORTION = -Constants.Z_TO_Y_OFFSET_MULTIPLIER;
+    BeakerView.TEXT_FONT = '32px Arial';
+    BeakerView.SHOW_MODEL_RECT = false;
+    BeakerView.FILL_COLOR = '#cccccc';
+    BeakerView.FILL_ALPHA = 0.4;
+
+    Constants.BeakerView = BeakerView;
+
+    var WaterView = {};
+
+    WaterView.WATER_FILL_COLOR = '#afeeee';
+    WaterView.WATER_FILL_ALPHA = 0.75;
+    WaterView.WATER_LINE_COLOR = '#91c7c7';
+    WaterView.WATER_LINE_WIDTH = 2;
+    WaterView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
+    WaterView.STEAM_BUBBLE_SPEED_RANGE = { min: 100, max: 125 }; // In screen coords (basically pixels) per second.
+    WaterView.STEAM_BUBBLE_DIAMETER_RANGE = { min: 20, max: 50 }; // In screen coords (basically pixels).
+    WaterView.MAX_STEAM_BUBBLE_HEIGHT = 300;
+    WaterView.STEAM_BUBBLE_PRODUCTION_RATE_RANGE = { min: 20, max: 40 }; // Bubbles per second.
+    WaterView.STEAM_BUBBLE_GROWTH_RATE = 0.2; // Proportion per second.
+    WaterView.MAX_STEAM_BUBBLE_OPACITY = 0.7; // Proportion, 1 is max.
+
+    Constants.WaterView = WaterView;
 
     /*************************************************************************
      **                                                                     **

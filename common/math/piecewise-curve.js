@@ -100,6 +100,10 @@ define(function (require) {
             return clone;
         },
 
+        size: function() {
+            return this.index;
+        },
+
         addPoints: function(points, closeLineWhenFinished) {
             if (points.length === 0)
                 return;

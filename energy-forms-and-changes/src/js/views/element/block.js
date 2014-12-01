@@ -24,11 +24,7 @@ define(function(require) {
 		initialize: function(options) {
 			ElementView.prototype.initialize.apply(this, arguments);
 
-			this.listenTo(this.model, 'change:position', this.updatePosition);
-
 			this.initGraphics();
-
-			this.updatePosition(this.model, this.model.get('position'));
 		},
 
 		initGraphics: function() {
