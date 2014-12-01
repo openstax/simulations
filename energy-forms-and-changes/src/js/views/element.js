@@ -79,9 +79,13 @@ define(function(require) {
             this._dragOffset = new PIXI.Point();
             this._newPosition = new Vector2();
 
+            this.initGraphics();
+
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.updatePosition(this.model, this.model.get('position'));
         },
+
+        initGraphics: function() {},
 
         calculateDragBounds: function(dx, dy) {
             var bounds = this.displayObject.getBounds();
@@ -162,7 +166,7 @@ define(function(require) {
 
         createOutlineFromCurve: function(curve, style) {
             if (curve.size() === 0)
-                return new PIXI.Sprite();
+                return new PIXI.DisplayObject();
 
             _.extend({
                 lineWidth: 1,
@@ -254,7 +258,7 @@ define(function(require) {
 
         createOutlineFromPointArrays: function(pointArrays, style) {
             if (pointArrays.length === 0)
-                return new PIXI.Sprite();
+                return new PIXI.DisplayObject();
 
             if (!_.isArray(pointArrays[0]))
                 pointArrays = [ pointArrays ];

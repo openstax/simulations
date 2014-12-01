@@ -15,6 +15,7 @@ define(function(require) {
     var ThermometerClipsView = require('views/thermometer-clips');
     var BlockView            = require('views/element/block');
     var BrickView            = require('views/element/brick');
+    var BeakerView           = require('views/element/beaker');
     var Assets               = require('assets');
 
     // Constants
@@ -167,7 +168,14 @@ define(function(require) {
         },
 
         initBeaker: function() {
+            this.beakerView = new BeakerView({
+                model: this.simulation.beaker,
+                mvt: this.mvt
+            });
 
+            this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
+            this.beakerBackLayer.addChild(this.beakerView.backLayer);
+            this.beakerGrabLayer.addChild(this.beakerView.grabLayer);
         },
 
         initThermometers: function() {

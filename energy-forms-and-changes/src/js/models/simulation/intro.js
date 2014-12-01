@@ -46,19 +46,19 @@ define(function (require, exports, module) {
             // Moveable thermal model objects
             this.brick     = new Brick(    { position: new Vector2(-0.1,   0) });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0) });
-            this.cheeseBlock = new Block({   position: new Vector2(0.1, 0), energyContainerCategory: Constants.EnergyContainerCategory.IRON });
             
             // Just for debugging
             this.brick.cid = 'brick';
             this.ironBlock.cid = 'ironBlock';
-            this.cheeseBlock.cid = 'cheeseBlock';
 
             this.beaker = new BeakerContainer({ 
-                position: new Vector2(0.18, 0), 
+                position: new Vector2(-0.015, 0), 
                 potentiallyContainedObjects: [
                     this.brick,
                     this.ironBlock
-                ]
+                ],
+                width:  IntroSimulation.BEAKER_WIDTH,
+                height: IntroSimulation.BEAKER_HEIGHT
             });
 
             // Thermometers
@@ -79,7 +79,6 @@ define(function (require, exports, module) {
             this.movableElements = [
                 this.ironBlock,
                 this.brick,
-                this.cheeseBlock,
                 this.beaker
             ];
             this.supportingSurfaces = [
@@ -87,7 +86,6 @@ define(function (require, exports, module) {
                 this.rightBurner,
                 this.brick,
                 this.ironBlock,
-                this.cheeseBlock,
                 this.beaker
             ];
             this.burners = [
@@ -96,8 +94,7 @@ define(function (require, exports, module) {
             ];
             this.blocks = [
                 this.brick,
-                this.ironBlock,
-                this.cheeseBlock
+                this.ironBlock
             ];
 
             // Cached objects
