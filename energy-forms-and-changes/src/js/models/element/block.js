@@ -78,9 +78,9 @@ define(function (require) {
         },
 
         updateBottomSurface: function() {
-            this.bottomSurface.minX = this.getRect().left();
-            this.bottomSurface.maxX = this.getRect().right();
-            this.bottomSurface.posY = this.getRect().bottom();
+            this.bottomSurface.xMin = this.getRect().left();
+            this.bottomSurface.xMax = this.getRect().right();
+            this.bottomSurface.yPos = this.getRect().bottom();
             this.bottomSurface.trigger('change');
         },
 

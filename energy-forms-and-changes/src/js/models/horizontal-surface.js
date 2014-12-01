@@ -22,7 +22,7 @@ define(function (require) {
 	_.extend(HorizontalSurface.prototype, Backbone.Events, {
 
 		overlapsWith: function(surface) {
-			return this.xMax >= surface.xMin && this.xMax >= surface.xMin;
+			return this.xMax > surface.xMin && surface.xMax > this.xMin;
 		},
 
 		getCenterX: function() {
