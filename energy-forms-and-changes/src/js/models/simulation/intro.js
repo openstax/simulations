@@ -556,7 +556,7 @@ define(function (require, exports, module) {
             // X direction.
             if (proposedTranslation.x > 0) {
                 // Check for collisions moving right.
-                var rightEdgeSmear = this.projectShapeFromLine(movingRect.right(), movingRect.top(), movingRect.right(), movingRect.top(), proposedTranslation);
+                var rightEdgeSmear = this.projectShapeFromLine(movingRect.right(), movingRect.bottom(), movingRect.right(), movingRect.top(), proposedTranslation);
 
                 if (movingRect.right() <= stationaryRect.left() && rightEdgeSmear.intersects(stationaryRect)) {
                     // Collision detected, limit motion.

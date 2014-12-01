@@ -33,7 +33,7 @@ describe('Intro Simulation', function(){
 		var rectB = new Rectangle(8, 0, 4, 4);
 
 		// This translation should be allowed because there's no overlap
-		var proposedTranslation = new Vector(1, 0);
+		var proposedTranslation = new Vector2(1, 0);
 		var allowedTranslation = sim.determineAllowedTranslation(rectA, rectB, proposedTranslation, false);
 
 		chai.expect(allowedTranslation.x).to.almost.equal(proposedTranslation.x);
