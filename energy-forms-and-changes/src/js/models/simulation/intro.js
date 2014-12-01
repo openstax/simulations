@@ -201,7 +201,7 @@ define(function (require, exports, module) {
                     var acceleration = -9.8; // meters/s*s
                     var velocity = element.get('verticalVelocity') + acceleration * deltaTime;
                     var proposedYPos = element.get('position').y + velocity * deltaTime;
-                    if ( proposedYPos < minYPos ) {
+                    if (proposedYPos < minYPos) {
                         // The element has landed on the ground or some other surface.
                         proposedYPos = minYPos;
                         element.set('verticalVelocity', 0);
@@ -213,7 +213,7 @@ define(function (require, exports, module) {
                     else {
                         element.set('verticalVelocity', velocity);
                     }
-                    console.log(element.cid + ': ' + element.get('position').x + ', ' + proposedYPos);
+                    //console.log(element.cid + ': ' + element.get('position').x + ', ' + proposedYPos);
                     element.setPosition(element.get('position').x, proposedYPos);
                 }
             }, this);
@@ -396,51 +396,51 @@ define(function (require, exports, module) {
             //   blocking rectangle so that the user can't drag things between
             //   them.  Also, compensate for perspective so that we can avoid
             //   difficult z-order issues.
-            // var standPerspectiveExtension = this.leftBurner.getOutlineRect().h * Constants.IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO * Math.cos(Constants.BurnerStandView.PERSPECTIVE_ANGLE) / 2;
-            // var burnerRectX = this.leftBurner.getOutlineRect().x - standPerspectiveExtension - (element !== this.beaker ? blockPerspectiveExtension : 0);
-            // var burnerBlockingRect = this._burnerBlockingRect.set( 
-            //     burnerRectX,
-            //     this.leftBurner.getOutlineRect().y,
-            //     this.rightBurner.getOutlineRect().right() - burnerRectX,
-            //     this.leftBurner.getOutlineRect().h
-            // );
-            // translation = this.determineAllowedTranslation(element.getRect(), burnerBlockingRect, translation, false);
+            var standPerspectiveExtension = this.leftBurner.getOutlineRect().h * Constants.IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO * Math.cos(Constants.BurnerStandView.PERSPECTIVE_ANGLE) / 2;
+            var burnerRectX = this.leftBurner.getOutlineRect().x - standPerspectiveExtension - (element !== this.beaker ? blockPerspectiveExtension : 0);
+            var burnerBlockingRect = this._burnerBlockingRect.set( 
+                burnerRectX,
+                this.leftBurner.getOutlineRect().y,
+                this.rightBurner.getOutlineRect().right() - burnerRectX,
+                this.leftBurner.getOutlineRect().h
+            );
+            translation = this.determineAllowedTranslation(element.getRect(), burnerBlockingRect, translation, false);
 
             // Validate against the sides of the beaker.
-            // if (element !== this.beaker) {
-            //     // Create three rectangles to represent the two sides and the top
-            //     //   of the beaker.
-            //     var testRectThickness = 1E-3; // 1 mm thick walls.
-            //     var beakerRect = this.beaker.getRect();
-            //     var beakerLeftSide = this._beakerLeftSide.set(
-            //         beakerRect.left() - blockPerspectiveExtension,
-            //         this.beaker.getRect().bottom(),
-            //         testRectThickness + blockPerspectiveExtension * 2,
-            //         this.beaker.getRect().h + blockPerspectiveExtension
-            //     );
-            //     var beakerRightSide = this._beakerRightSide.set(
-            //         this.beaker.getRect().right() - testRectThickness - blockPerspectiveExtension,
-            //         this.beaker.getRect().bottom(),
-            //         testRectThickness + blockPerspectiveExtension * 2,
-            //         this.beaker.getRect().h + blockPerspectiveExtension
-            //     );
-            //     var beakerBottom = this._beakerBottom.set(
-            //         this.beaker.getRect().left(), 
-            //         this.beaker.getRect().bottom(), 
-            //         this.beaker.getRect().w, 
-            //         testRectThickness
-            //     );
+            if (element !== this.beaker) {
+                // Create three rectangles to represent the two sides and the top
+                //   of the beaker.
+                var testRectThickness = 1E-3; // 1 mm thick walls.
+                var beakerRect = this.beaker.getRect();
+                var beakerLeftSide = this._beakerLeftSide.set(
+                    beakerRect.left() - blockPerspectiveExtension,
+                    this.beaker.getRect().bottom(),
+                    testRectThickness + blockPerspectiveExtension * 2,
+                    this.beaker.getRect().h + blockPerspectiveExtension
+                );
+                var beakerRightSide = this._beakerRightSide.set(
+                    this.beaker.getRect().right() - testRectThickness - blockPerspectiveExtension,
+                    this.beaker.getRect().bottom(),
+                    testRectThickness + blockPerspectiveExtension * 2,
+                    this.beaker.getRect().h + blockPerspectiveExtension
+                );
+                var beakerBottom = this._beakerBottom.set(
+                    this.beaker.getRect().left(), 
+                    this.beaker.getRect().bottom(), 
+                    this.beaker.getRect().w, 
+                    testRectThickness
+                );
 
-            //     // Do not restrict the model element's motion in positive Y
-            //     //   direction if the beaker is sitting on top of the model 
-            //     //   element - the beaker will simply be lifted up.
-            //     var restrictPositiveY = !this.beaker.isStackedUpon(element);
+                // Do not restrict the model element's motion in positive Y
+                //   direction if the beaker is sitting on top of the model 
+                //   element - the beaker will simply be lifted up.
+                var restrictPositiveY = !this.beaker.isStackedUpon(element);
 
-            //     // Clamp the translation based on the beaker position.
-            //     translation = this.determineAllowedTranslation(element.getRect(), beakerLeftSide,  translation, restrictPositiveY);
-            //     translation = this.determineAllowedTranslation(element.getRect(), beakerRightSide, translation, restrictPositiveY);
-            //     translation = this.determineAllowedTranslation(element.getRect(), beakerBottom,    translation, restrictPositiveY);
-            // }
+                // Clamp the translation based on the beaker position.
+                translation = this.determineAllowedTranslation(element.getRect(), beakerLeftSide,  translation, restrictPositiveY);
+                translation = this.determineAllowedTranslation(element.getRect(), beakerRightSide, translation, restrictPositiveY);
+                translation = this.determineAllowedTranslation(element.getRect(), beakerBottom,    translation, restrictPositiveY);
+            }
 
             // Now check the model element's motion against each of the blocks.
             _.each(this.blocks, function(block) {

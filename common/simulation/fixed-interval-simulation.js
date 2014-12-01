@@ -19,7 +19,7 @@ define(function (require) {
             options = options || {};
             var fps = options.framesPerSecond || 30;
 
-            this.timestep = 1000 / fps; // milliseconds, from PhET's WaveInterferenceClock
+            this.timestep = 1 / fps; // milliseconds, from PhET's WaveInterferenceClock
             this.accumulator = 0;
         },
 
@@ -36,6 +36,7 @@ define(function (require) {
         update: function(time, delta) {
 
             if (!this.paused) {
+                delta = (delta / 1000) * this.get('timeScale');
                 this.accumulator += delta;
 
                 while (this.accumulator >= this.timestep) {
