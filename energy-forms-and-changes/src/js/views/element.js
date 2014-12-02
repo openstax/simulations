@@ -94,9 +94,11 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
-            this.dragging = true;
-            this.model.set('userControlled', true);
+            if (this.movable) {
+                this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+                this.dragging = true;
+                this.model.set('userControlled', true);    
+            }
         },
 
         drag: function(data) {

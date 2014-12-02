@@ -3,9 +3,9 @@ define(function(require) {
     'use strict';
 
     //var $        = require('jquery');
-    var _        = require('underscore');
-    var PIXI     = require('pixi');
-    var Vector2  = require('common/math/vector2');
+    var _         = require('underscore');
+    var PIXI      = require('pixi');
+    var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform   = require('common/math/model-view-transform');
@@ -16,10 +16,12 @@ define(function(require) {
     var BlockView            = require('views/element/block');
     var BrickView            = require('views/element/brick');
     var BeakerView           = require('views/element/beaker');
+    var BurnerStandView      = require('views/element/burner-stand');
     var Assets               = require('assets');
 
     // Constants
     var Constants = require('constants');
+    var IntroSimulationView = Constants.IntroSimulationView;
 
     /**
      *
@@ -114,6 +116,9 @@ define(function(require) {
 
             // Thermometers
             this.initThermometers();
+
+            // Burners
+            this.initBurners();
         },
 
         initBlocks: function() {
@@ -170,7 +175,8 @@ define(function(require) {
         initBeaker: function() {
             this.beakerView = new BeakerView({
                 model: this.simulation.beaker,
-                mvt: this.mvt
+                mvt: this.mvt,
+                movable: true
             });
 
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
@@ -204,6 +210,21 @@ define(function(require) {
                 var point = thermometerClips.addThermometer(thermometerView);
                 thermometerView.model.setPosition(point.x, point.y);
             }, this);
+        },
+
+        initBurners: function() {
+            var burnerWidth = this.mvt.modelToViewDeltaX(this.simulation.leftBurner.getOutlineRect().w);
+            var burnerProjectionAmount = burnerWidth * IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO;
+            burnerWidth *= IntroSimulationView.BURNER_WIDTH_SCALE;
+            var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
+            var burnerYPosTweak = -10; // Empirically determined for best look.
+
+            var leftBurnerStandView = new BurnerStandView({
+                model: this.simulation.leftBurner,
+                mvt: this.mvt,
+                projectedEdgeLength: burnerProjectionAmount
+            });
+            this.backLayer.addChild(leftBurnerStandView.displayObject);
         },
 
         _update: function(time, deltaTime) {

@@ -33,7 +33,6 @@ define(function (require) {
             this._flameIceRect = new Rectangle();
 
             // Create vectors
-            this.set('position', new Vector2(0, 0));
             this._energyChunkStartEndPoint = new Vector2();
             this._centerPoint = new Vector2();
 
@@ -102,6 +101,15 @@ define(function (require) {
             return this._outlineRect.set(
                 this.get('position').x - Burner.WIDTH / 2,
                 this.get('position').y,
+                Burner.WIDTH,
+                Burner.HEIGHT
+            );
+        },
+
+        getRawOutlineRect: function() {
+            return this._outlineRect.set(
+                0 - Burner.WIDTH / 2,
+                0,
                 Burner.WIDTH,
                 Burner.HEIGHT
             );

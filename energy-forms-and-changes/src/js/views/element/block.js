@@ -22,6 +22,10 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			options = _.extend({
+                movable: true
+            }, options);
+
 			ElementView.prototype.initialize.apply(this, [options]);
 
 			this.initGraphics();

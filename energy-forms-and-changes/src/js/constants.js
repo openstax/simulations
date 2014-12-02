@@ -94,6 +94,8 @@ define(function (require) {
 
     var IntroSimulationView = {};
 
+    IntroSimulationView.BURNER_WIDTH_SCALE = 0.7;
+    IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO = 0.8;
     IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO = 0.2; // Multiplier empirically determined for best look.
 
     Constants.IntroSimulationView = IntroSimulationView;
@@ -180,8 +182,8 @@ define(function (require) {
 
     var IronBlockView = {};
 
-    IronBlockView.FILL_COLOR = '#888888';
-    IronBlockView.TEXT_COLOR = '#000000';
+    IronBlockView.FILL_COLOR = '#888';
+    IronBlockView.TEXT_COLOR = '#000';
 
     Constants.IronBlockView = IronBlockView;
 
@@ -235,13 +237,13 @@ define(function (require) {
 
     var BeakerView = {};
 
-    BeakerView.LINE_COLOR = '#cccccc';
+    BeakerView.LINE_COLOR = '#ccc';
     BeakerView.LINE_WIDTH = 3;
     BeakerView.PERSPECTIVE_PROPORTION = -Constants.Z_TO_Y_OFFSET_MULTIPLIER;
     BeakerView.TEXT_FONT = '32px Arial';
     BeakerView.SHOW_MODEL_RECT = false;
     BeakerView.FILL_COLOR = '#fff';
-    BeakerView.FILL_ALPHA = 0.4;
+    BeakerView.FILL_ALPHA = 0.30;
 
     Constants.BeakerView = BeakerView;
 
@@ -270,8 +272,9 @@ define(function (require) {
     var BurnerStandView = {};
     // Constants that control some aspect of appearance.  These can be made
     // into constructor params if it is ever desirable to do so.
-    // BurnerStandView.BURNER_STAND_STROKE = new BasicStroke( 4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL );
-    // BurnerStandView.BURNER_STAND_STROKE_COLOR = Color.BLACK;
+    BurnerStandView.LINE_WIDTH = 4;
+    BurnerStandView.LINE_COLOR = '#000';
+    BurnerStandView.LINE_JOIN  = 'bevel';
     BurnerStandView.PERSPECTIVE_ANGLE = Math.PI / 4; // Positive is counterclockwise, a value of 0 produces a non-skewed rectangle.
 
     Constants.BurnerStandView = BurnerStandView;

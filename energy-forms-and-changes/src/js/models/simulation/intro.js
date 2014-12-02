@@ -46,10 +46,6 @@ define(function (require, exports, module) {
             // Moveable thermal model objects
             this.brick     = new Brick(    { position: new Vector2(-0.1,   0) });
             this.ironBlock = new IronBlock({ position: new Vector2(-0.175, 0) });
-            
-            // Just for debugging
-            this.brick.cid = 'brick';
-            this.ironBlock.cid = 'ironBlock';
 
             this.beaker = new BeakerContainer({ 
                 position: new Vector2(-0.015, 0), 
@@ -108,6 +104,13 @@ define(function (require, exports, module) {
             this._beakerRightSide = new Rectangle();
             this._beakerBottom = new Rectangle();
             this._testRect = new Rectangle();
+
+            // Just for debugging
+            this.leftBurner.cid = 'leftBurner';
+            this.rightBurner.cid = 'rightBurner';
+            this.brick.cid = 'brick';
+            this.ironBlock.cid = 'ironBlock';
+            this.beaker.cid = 'beaker';
         },
 
         /**
