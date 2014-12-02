@@ -240,7 +240,7 @@ define(function (require) {
     BeakerView.PERSPECTIVE_PROPORTION = -Constants.Z_TO_Y_OFFSET_MULTIPLIER;
     BeakerView.TEXT_FONT = '32px Arial';
     BeakerView.SHOW_MODEL_RECT = false;
-    BeakerView.FILL_COLOR = '#cccccc';
+    BeakerView.FILL_COLOR = '#fff';
     BeakerView.FILL_ALPHA = 0.4;
 
     Constants.BeakerView = BeakerView;

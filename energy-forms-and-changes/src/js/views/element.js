@@ -42,6 +42,7 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
+                fillColor: '#000000',
                 fillAlpha: 1,
                 lineWidth: 3,
                 lineColor: '#444444',
@@ -65,11 +66,6 @@ define(function(require) {
             this.textColor = options.textColor;
             this.textFont  = options.textFont;
             this.labelText = options.labelText;
-
-            if (this.fillColor === undefined)
-                this.fillColor = 0x000000;
-            else if (_.isString(this.fillColor))
-                this.fillColor =  Colors.parseHex(options.fillColor);
 
             // To give some feedback on the cursor
             if (this.movable)
@@ -334,6 +330,9 @@ define(function(require) {
         },
 
         createColoredPolygonFromPoints: function(points, color, alpha) {
+            if (_.isString(color))
+                color =  Colors.parseHex(color);
+
             var graphics = new PIXI.Graphics();
             graphics.lineStyle(0);
             graphics.beginFill(color, (alpha === undefined) ? 1 : alpha);

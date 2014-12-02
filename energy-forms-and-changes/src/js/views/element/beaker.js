@@ -49,6 +49,7 @@ define(function(require) {
             var ellipseHeight = beakerViewRect.w * BeakerView.PERSPECTIVE_PROPORTION;
             var backCurves  = new PiecewiseCurve();
             var frontCurves = new PiecewiseCurve();
+            var backFill  = new PiecewiseCurve();
             var frontFill = new PiecewiseCurve();
             var top    = beakerViewRect.bottom() - beakerViewRect.h;
             var bottom = beakerViewRect.bottom();
@@ -71,6 +72,20 @@ define(function(require) {
                 )
                 .lineTo(left, bottom)
                 .close();
+            // Back fill (the top little ellipse area)
+            backFill
+                .moveTo(left, top)
+                .curveTo(
+                    left,  top - ellipseHeight / 2,
+                    right, top - ellipseHeight / 2,
+                    right, top
+                )
+                .moveTo(left, top)
+                .curveTo(
+                    left,  top + ellipseHeight / 2,
+                    right, top + ellipseHeight / 2,
+                    right, top
+                );
 
             var fillStyle = {
                 lineWidth: 0,
@@ -79,6 +94,7 @@ define(function(require) {
             };
 
             this.frontLayer.addChild(this.createShapeFromCurve(frontFill, fillStyle));
+            this.backLayer.addChild(this.createShapeFromCurve(backFill, fillStyle));
 
             // Top back curve
             backCurves
