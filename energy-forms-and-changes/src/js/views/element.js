@@ -200,6 +200,15 @@ define(function(require) {
                 ctx.globalAlpha = style.fillAlpha;
                 fill = true;
             }
+            else if (style.fillGradient !== undefined) {
+                var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+                for (var i = 0; i < style.fillGradient; i++)
+                    gradient.addColorStop(parseFloat(style.fillGradient[i].stop), style.fillGradient.color);
+                
+                ctx.fillStyle = gradient;
+                ctx.globalAlpha = style.fillAlpha;
+                fill = true;
+            }
             
             this.drawCurve(ctx, curve, xShift, yShift, fill);
 
