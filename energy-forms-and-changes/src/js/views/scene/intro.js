@@ -57,7 +57,7 @@ define(function(require) {
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                2200 // Scale
+                2000 // Scale
             );
 
             this.initLayers();
@@ -214,7 +214,7 @@ define(function(require) {
 
         initBurners: function() {
             var burnerWidth = this.mvt.modelToViewDeltaX(this.simulation.leftBurner.getOutlineRect().w);
-            var burnerProjectionAmount = burnerWidth * IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO;
+            var burnerProjectionAmount = burnerWidth * Constants.Burner.EDGE_TO_HEIGHT_RATIO;
             burnerWidth *= IntroSimulationView.BURNER_WIDTH_SCALE;
             var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
             var burnerYPosTweak = -10; // Empirically determined for best look.

@@ -133,7 +133,7 @@ define(function(require) {
 			this.boundingBox.h += (this.lineWidth / 2) - blockFaceOffset.y;
 
 			// Just for debugging
-			this.renderTopCenterPoint();
+			//this.renderTopCenterPoint();
 			//this.renderBottomCenterPoint();
 		},
 

@@ -96,7 +96,6 @@ define(function (require) {
 
     IntroSimulationView.BURNER_WIDTH_SCALE = 0.7;
     IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO = 0.8;
-    IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO = 0.2; // Multiplier empirically determined for best look.
 
     Constants.IntroSimulationView = IntroSimulationView;
 
@@ -198,6 +197,7 @@ define(function (require) {
 
     Burner.WIDTH = 0.075; // In meters.
     Burner.HEIGHT = Burner.WIDTH * 1;
+    Burner.EDGE_TO_HEIGHT_RATIO = 0.2; // Multiplier empirically determined for best look.
     Burner.MAX_ENERGY_GENERATION_RATE = 5000; // joules/sec, empirically chosen.
     Burner.CONTACT_DISTANCE = 0.001; // In meters.
     Burner.ENERGY_CHUNK_CAPTURE_DISTANCE = 0.2; // In meters, empirically chosen.

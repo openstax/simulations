@@ -40,8 +40,8 @@ define(function (require, exports, module) {
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
             // Burners
-            this.leftBurner  = new Burner({ position: new Vector2(0.18, 0) });
-            this.rightBurner = new Burner({ position: new Vector2(0.08, 0) });
+            this.rightBurner = new Burner({ position: new Vector2(0.18, 0) });
+            this.leftBurner  = new Burner({ position: new Vector2(0.08, 0) });
 
             // Moveable thermal model objects
             this.brick     = new Brick(    { position: new Vector2(-0.1,   0) });
@@ -390,13 +390,13 @@ define(function (require, exports, module) {
 
             // Figure out how far the block's right edge appears to protrude to
             //   the side due to perspective.
-            var blockPerspectiveExtension = Constants.Block.SURFACE_WIDTH * Constants.BlockView.PERSPECTIVE_EDGE_PROPORTION * Math.cos(Constants.BlockView.PERSPECTIVE_ANGLE) / 2;
+            var blockPerspectiveExtension = Block.SURFACE_WIDTH * Constants.BlockView.PERSPECTIVE_EDGE_PROPORTION * Math.cos(Constants.BlockView.PERSPECTIVE_ANGLE) / 2;
 
             // Validate against burner boundaries.  Treat the burners as one big
             //   blocking rectangle so that the user can't drag things between
             //   them.  Also, compensate for perspective so that we can avoid
             //   difficult z-order issues.
-            var standPerspectiveExtension = this.leftBurner.getOutlineRect().h * Constants.IntroSimulationView.BURNER_EDGE_TO_HEIGHT_RATIO * Math.cos(Constants.BurnerStandView.PERSPECTIVE_ANGLE) / 2;
+            var standPerspectiveExtension = this.leftBurner.getOutlineRect().h * Burner.EDGE_TO_HEIGHT_RATIO * Math.cos(Constants.BurnerStandView.PERSPECTIVE_ANGLE) / 2;
             var burnerRectX = this.leftBurner.getOutlineRect().x - standPerspectiveExtension - (element !== this.beaker ? blockPerspectiveExtension : 0);
             var burnerBlockingRect = this._burnerBlockingRect.set( 
                 burnerRectX,
@@ -615,14 +615,14 @@ define(function (require, exports, module) {
             // Check each of the possible supporting elements in the model to see
             //   if this element can go on top of it.
             _.each(this.supportingSurfaces, function(potentialSupportingElement) {
-                if ( potentialSupportingElement == element || potentialSupportingElement.isStackedUpon( element ) ) {
+                if (potentialSupportingElement === element || potentialSupportingElement.isStackedUpon(element)) {
                     // The potential supporting element is either the same as the
                     //   test element or is sitting on top of the test element.  In
                     //   either case, it can't be used to support the test element,
                     //   so skip it.
                     return;
                 }
-                if ( element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface() ) ) {
+                if (element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface())) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.
                     var surfaceOverlap = this.getHorizontalOverlap(potentialSupportingElement.getTopSurface(), element.getBottomSurface());

@@ -43,7 +43,7 @@ define(function (require) {
             // Create and add the top surface.  Some compensation for perspective
             //   is necessary in order to avoid problems with edge overlap when
             //   dropping objects on top of burner.
-            var perspectiveCompensation = this.getOutlineRect().h * Constants.BURNER_EDGE_TO_HEIGHT_RATIO * Math.cos(Burner.PERSPECTIVE_ANGLE);
+            var perspectiveCompensation = this.getOutlineRect().h * Burner.EDGE_TO_HEIGHT_RATIO * Math.cos(Burner.PERSPECTIVE_ANGLE);
             this.topSurface = new HorizontalSurface(
                 this.getOutlineRect().left() - perspectiveCompensation, 
                 this.getOutlineRect().right() + perspectiveCompensation, 

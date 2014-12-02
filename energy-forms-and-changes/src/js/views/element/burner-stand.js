@@ -59,12 +59,6 @@ define(function(require) {
             this.displayObject.addChild(leftSprite);
             this.displayObject.addChild(rightSprite);
             this.displayObject.addChild(topSprite);
-
-            var origin = new PIXI.Graphics();
-            origin.beginFill(0xFF0000, 1);
-            origin.drawCircle(0, 0, 3);
-            origin.endFill();
-            this.displayObject.addChild(origin);
         },
 
         createSideCurve: function(leftCenter, height, edgeLength) {
