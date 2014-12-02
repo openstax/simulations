@@ -50,9 +50,21 @@ define(function(require) {
                 lineJoin:    this.lineJoin
             };
 
-            this.displayObject.addChild(this.createShapeFromCurve(leftCurve, lineStyle));
-            this.displayObject.addChild(this.createShapeFromCurve(rightCurve, lineStyle));
-            this.displayObject.addChild(this.createShapeFromCurve(topCurve, lineStyle));
+            var leftSprite  = this.createShapeFromCurve(leftCurve, lineStyle);
+            var rightSprite = this.createShapeFromCurve(rightCurve, lineStyle);
+            var topSprite   = this.createShapeFromCurve(topCurve, lineStyle)
+
+            leftSprite.y = rightSprite.y = topSprite.y = -rect.h;
+
+            this.displayObject.addChild(leftSprite);
+            this.displayObject.addChild(rightSprite);
+            this.displayObject.addChild(topSprite);
+
+            var origin = new PIXI.Graphics();
+            origin.beginFill(0xFF0000, 1);
+            origin.drawCircle(0, 0, 3);
+            origin.endFill();
+            this.displayObject.addChild(origin);
         },
 
         createSideCurve: function(leftCenter, height, edgeLength) {

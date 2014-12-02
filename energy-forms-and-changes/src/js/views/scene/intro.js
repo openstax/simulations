@@ -224,7 +224,15 @@ define(function(require) {
                 mvt: this.mvt,
                 projectedEdgeLength: burnerProjectionAmount
             });
+
+            var rightBurnerStandView = new BurnerStandView({
+                model: this.simulation.rightBurner,
+                mvt: this.mvt,
+                projectedEdgeLength: burnerProjectionAmount
+            });
+
             this.backLayer.addChild(leftBurnerStandView.displayObject);
+            this.backLayer.addChild(rightBurnerStandView.displayObject);
         },
 
         _update: function(time, deltaTime) {
