@@ -31,7 +31,7 @@ define(function(require) {
                 textFont:  BeakerView.TEXT_FONT
             }, options);
 
-            ElementView.prototype.initialize.apply(this, arguments);
+            ElementView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {
@@ -49,10 +49,36 @@ define(function(require) {
             var ellipseHeight = beakerViewRect.w * BeakerView.PERSPECTIVE_PROPORTION;
             var backCurves  = new PiecewiseCurve();
             var frontCurves = new PiecewiseCurve();
+            var frontFill = new PiecewiseCurve();
             var top    = beakerViewRect.bottom() - beakerViewRect.h;
             var bottom = beakerViewRect.bottom();
             var left   = beakerViewRect.left();
             var right  = beakerViewRect.right();
+
+            // Front fill
+            frontFill
+                .moveTo(left, bottom)
+                .curveTo(
+                    left,  bottom + ellipseHeight / 2,
+                    right, bottom + ellipseHeight / 2,
+                    right, bottom
+                )
+                .lineTo(right, top)
+                .curveTo(
+                    right, top + ellipseHeight / 2,
+                    left,  top + ellipseHeight / 2,
+                    left,  top
+                )
+                .lineTo(left, bottom)
+                .close();
+
+            var fillStyle = {
+                lineWidth: 0,
+                fillColor: this.fillColor,
+                fillAlpha: this.fillAlpha
+            };
+
+            this.frontLayer.addChild(this.createShapeFromCurve(frontFill, fillStyle));
 
             // Top back curve
             backCurves
@@ -86,6 +112,13 @@ define(function(require) {
                     right, bottom + ellipseHeight / 2,
                     right, bottom
                 );
+            // Vertical edges
+            frontCurves
+                .moveTo(left, bottom)
+                .lineTo(left, top)
+                .moveTo(right, bottom)
+                .lineTo(right, top);
+
 
             // Outline style
             var lineStyle = {
@@ -94,8 +127,10 @@ define(function(require) {
                 lineJoin:    this.lineJoin
             };
 
-            this.backLayer.addChild(this.createOutlineFromCurve(backCurves, lineStyle));
-            this.frontLayer.addChild(this.createOutlineFromCurve(frontCurves, lineStyle));
+            this.backLayer.addChild(this.createShapeFromCurve(backCurves, lineStyle));
+            this.frontLayer.addChild(this.createShapeFromCurve(frontCurves, lineStyle));
+
+            
 
             // Label
             this.label = new PIXI.Text(this.labelText, {

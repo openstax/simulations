@@ -164,14 +164,15 @@ define(function(require) {
 
         hideEnergyChunks: function() {},
 
-        createOutlineFromCurve: function(curve, style) {
+        createShapeFromCurve: function(curve, style) {
             if (curve.size() === 0)
                 return new PIXI.DisplayObject();
 
             _.extend({
                 lineWidth: 1,
                 strokeStyle: '#000',
-                lineJoin: 'miter'
+                lineJoin: 'miter',
+                fillAlpha: 1
             }, style || {});
 
             // Determine the bounds for all the points
@@ -194,6 +195,13 @@ define(function(require) {
             ctx.lineWidth   = style.lineWidth;
             ctx.strokeStyle = style.strokeStyle;
             ctx.lineJoin    = style.lineJoin;
+
+            var filling = false;
+            if (style.fillColor !== undefined) {
+                ctx.fillStyle   = style.fillColor;
+                ctx.globalAlpha = style.fillAlpha;
+                filling = true;
+            }
             
             var x, y;
             var cp1x, cp1y;
@@ -206,6 +214,8 @@ define(function(require) {
                         if (pathStarted) { 
                             // Draw and close old path
                             ctx.stroke();
+                            if (filling)
+                                ctx.fill();
                             ctx.closePath();
                         }
                         x = curve.xPoints[pos]   + xShift;
@@ -221,6 +231,8 @@ define(function(require) {
 
                         ctx.closePath();
                         ctx.stroke();
+                        if (filling)
+                            ctx.fill();
                         break;
                     case PiecewiseCurve.SEG_LINETO:
                         x = curve.xPoints[pos]   + xShift;
@@ -252,6 +264,8 @@ define(function(require) {
             if (pathStarted) {
                 // It was opened but never closed, so draw it
                 ctx.stroke();
+                if (filling)
+                    ctx.fill();
             }
                 
 
@@ -263,7 +277,7 @@ define(function(require) {
             return sprite;
         },
 
-        createOutlineFromPointArrays: function(pointArrays, style) {
+        createShapeFromPointArrays: function(pointArrays, style) {
             if (pointArrays.length === 0)
                 return new PIXI.DisplayObject();
 
@@ -271,7 +285,7 @@ define(function(require) {
                 pointArrays = [ pointArrays ];
 
             var curve = PiecewiseCurve.fromPointArrays(pointArrays);
-            return this.createOutlineFromCurve(curve, style);
+            return this.createShapeFromCurve(curve, style);
         },
 
         createTexturedPolygonFromPoints: function(maskingPoints, texture) {

@@ -22,7 +22,7 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-			ElementView.prototype.initialize.apply(this, arguments);
+			ElementView.prototype.initialize.apply(this, [options]);
 
 			this.initGraphics();
 		},
@@ -90,7 +90,7 @@ define(function(require) {
 				lineJoin: 'bevel'
 			};
 			var pointArrays = [frontFacePoints, topFacePoints, rightFacePoints];
-			this.outlineFront.addChild(this.createOutlineFromPointArrays(pointArrays, lineStyle));
+			this.outlineFront.addChild(this.createShapeFromPointArrays(pointArrays, lineStyle));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
@@ -105,7 +105,7 @@ define(function(require) {
 				lowerLeftBackCorner,
 				upperLeftBackCorner
 			]];
-			this.outlineBack.addChild(this.createOutlineFromPointArrays(pointArrays, lineStyle));
+			this.outlineBack.addChild(this.createShapeFromPointArrays(pointArrays, lineStyle));
 
 			this.outlineBack.visible = false;
 
