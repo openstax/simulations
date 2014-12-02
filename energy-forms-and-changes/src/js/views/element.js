@@ -195,17 +195,13 @@ define(function(require) {
             ctx.lineJoin    = style.lineJoin;
 
             var fill = false;
-            if (style.fillColor !== undefined) {
-                ctx.fillStyle   = style.fillColor;
+            if (typeof style.fillStyle == 'function') {
+                style.fillStyle(ctx, canvas.width, canvas.height);
                 ctx.globalAlpha = style.fillAlpha;
                 fill = true;
             }
-            else if (style.fillGradient !== undefined) {
-                var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-                for (var i = 0; i < style.fillGradient; i++)
-                    gradient.addColorStop(parseFloat(style.fillGradient[i].stop), style.fillGradient.color);
-                
-                ctx.fillStyle = gradient;
+            else if (style.fillStyle !== undefined) {
+                ctx.fillStyle   = style.fillStyle;
                 ctx.globalAlpha = style.fillAlpha;
                 fill = true;
             }

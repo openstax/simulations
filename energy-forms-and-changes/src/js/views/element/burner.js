@@ -56,11 +56,20 @@ define(function(require) {
                 )
                 .close();
 
+            var bucketInsideStyle = {
+                lineWidth: 0,
+                fillStyle: function(ctx, width, height) {
+                    var gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#cdd7e2');
+                    gradient.addColorStop(1, '#535e6a');
+                    ctx.fillStyle = gradient;
+                }
+            };
 
             // Bucket outside
             var bucketOutsideCurve = new PiecewiseCurve();
             bucketOutsideCurve
-                .moveTo(0, 0);                             // Start in upper left corner
+                .moveTo(0, 0)                              // Start in upper left corner
                 .curveTo(                                  // Curve to upper right corner
                     0,     openingHeight / 2,
                     width, openingHeight / 2,
@@ -75,7 +84,18 @@ define(function(require) {
                 .lineTo(0, 0)                              // Line back up to upper left corner
                 .close();
 
-            
+            var bucketOutsideStyle = {
+                lineWidth: 0,
+                fillStyle: function(ctx, width, height) {
+                    var gradient = ctx.createLinearGradient(0, 0, width, height);
+                    gradient.addColorStop(0, '#7a8b9b');
+                    gradient.addColorStop(1, '#ced9e5');
+                    ctx.fillStyle = gradient;
+                }
+            };
+
+            this.displayObject.addChild(this.createShapeFromCurve(bucketInsideCurve, bucketInsideStyle));
+            this.displayObject.addChild(this.createShapeFromCurve(bucketOutsideCurve, bucketOutsideStyle));
         },
 
         showEnergyChunks: function() {

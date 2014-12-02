@@ -89,7 +89,7 @@ define(function(require) {
 
             var fillStyle = {
                 lineWidth: 0,
-                fillColor: this.fillColor,
+                fillStyle: this.fillColor,
                 fillAlpha: this.fillAlpha
             };
 

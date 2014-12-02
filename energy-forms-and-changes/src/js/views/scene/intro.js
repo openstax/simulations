@@ -17,6 +17,7 @@ define(function(require) {
     var BrickView            = require('views/element/brick');
     var BeakerView           = require('views/element/beaker');
     var BurnerStandView      = require('views/element/burner-stand');
+    var BurnerView           = require('views/element/burner');
     var Assets               = require('assets');
 
     // Constants
@@ -216,8 +217,9 @@ define(function(require) {
             var burnerWidth = this.mvt.modelToViewDeltaX(this.simulation.leftBurner.getOutlineRect().w);
             var burnerProjectionAmount = burnerWidth * Constants.Burner.EDGE_TO_HEIGHT_RATIO;
             burnerWidth *= IntroSimulationView.BURNER_WIDTH_SCALE;
-            // var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
-            // var burnerYPosTweak = -10; // Empirically determined for best look.
+            var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
+            var burnerOpeningHeight = burnerHeight * 0.2;
+            var burnerYPosTweak = -10; // Empirically determined for best look.
 
             var leftBurnerStandView = new BurnerStandView({
                 model: this.simulation.leftBurner,
@@ -231,8 +233,19 @@ define(function(require) {
                 projectedEdgeLength: burnerProjectionAmount
             });
 
+            var leftBurnerView = new BurnerView({
+                model: this.simulation.leftBurner,
+                mvt: this.mvt,
+                width: burnerWidth,
+                height: burnerHeight,
+                openingHeight: burnerOpeningHeight
+            });
+
             this.backLayer.addChild(leftBurnerStandView.displayObject);
             this.backLayer.addChild(rightBurnerStandView.displayObject);
+
+            // TODO: this actually has to be separated into two layers--this is just to see what it looks like
+            this.backLayer.addChild(leftBurnerView.displayObject);
         },
 
         _update: function(time, deltaTime) {
