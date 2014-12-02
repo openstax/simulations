@@ -2,13 +2,12 @@ define(function(require) {
 
     'use strict';
 
-    //var _       = require('underscore');
-    var PIXI    = require('pixi');
+    var _       = require('underscore');
+   // var PIXI    = require('pixi');
     var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var ElementView = require('views/element');
-    var Beaker      = require('models/element/beaker');
     //var Assets      = require('assets');
 
     var Constants = require('constants');
@@ -52,7 +51,7 @@ define(function(require) {
 
             var leftSprite  = this.createShapeFromCurve(leftCurve, lineStyle);
             var rightSprite = this.createShapeFromCurve(rightCurve, lineStyle);
-            var topSprite   = this.createShapeFromCurve(topCurve, lineStyle)
+            var topSprite   = this.createShapeFromCurve(topCurve, lineStyle);
 
             leftSprite.y = rightSprite.y = topSprite.y = -rect.h;
 

@@ -61,6 +61,12 @@ describe('Intro Simulation', function(){
 
 		chai.expect(allowedTranslation.x).to.almost.equal(0);
 		chai.expect(allowedTranslation.y).to.almost.equal(2);
+
+		proposedTranslation.set(0, -3);
+		allowedTranslation = sim.determineAllowedTranslation(rectTop, rectBottom, proposedTranslation, true);
+
+		chai.expect(allowedTranslation.x).to.almost.equal(0);
+		chai.expect(allowedTranslation.y).to.almost.equal(-2);
 	});
 
 });

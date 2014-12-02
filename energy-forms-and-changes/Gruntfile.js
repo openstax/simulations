@@ -149,7 +149,7 @@ module.exports = function(grunt){
                 strict: true,
                 trailing: true,
                 //maxlen: 120,
-                maxcomplexity: 10,
+                maxcomplexity: 12,
 
                 // Relaxing Options
                 camelcase: false,

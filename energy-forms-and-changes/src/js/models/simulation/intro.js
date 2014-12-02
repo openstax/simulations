@@ -494,7 +494,7 @@ define(function (require, exports, module) {
             var translation;
 
             translation = this.checkOverlapOnProposedTranslation(movingRect, stationaryRect, proposedTranslation, restrictPosY);
-
+            
             if (translation)
                 return translation;
 

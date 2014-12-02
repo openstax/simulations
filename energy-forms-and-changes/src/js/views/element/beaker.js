@@ -2,13 +2,13 @@ define(function(require) {
 
     'use strict';
 
-    //var _       = require('underscore');
+    var _       = require('underscore');
     var PIXI    = require('pixi');
-    var Vector2 = require('common/math/vector2');
+    //var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var ElementView = require('views/element');
-    var Beaker      = require('models/element/beaker');
+    //var Beaker      = require('models/element/beaker');
     //var Assets      = require('assets');
 
     var Constants = require('constants');

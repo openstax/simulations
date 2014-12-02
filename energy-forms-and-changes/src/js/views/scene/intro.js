@@ -216,8 +216,8 @@ define(function(require) {
             var burnerWidth = this.mvt.modelToViewDeltaX(this.simulation.leftBurner.getOutlineRect().w);
             var burnerProjectionAmount = burnerWidth * Constants.Burner.EDGE_TO_HEIGHT_RATIO;
             burnerWidth *= IntroSimulationView.BURNER_WIDTH_SCALE;
-            var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
-            var burnerYPosTweak = -10; // Empirically determined for best look.
+            // var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
+            // var burnerYPosTweak = -10; // Empirically determined for best look.
 
             var leftBurnerStandView = new BurnerStandView({
                 model: this.simulation.leftBurner,

@@ -183,7 +183,7 @@ define(function(require) {
             xShift += style.lineWidth;
             yShift += style.lineWidth;
 
-            // Draw the lines
+            // Draw it on a canvas
             var canvas = document.createElement('canvas');
             canvas.width  = bounds.w + (2 * style.lineWidth);
             canvas.height = bounds.h + (2 * style.lineWidth);
@@ -194,13 +194,24 @@ define(function(require) {
             ctx.strokeStyle = style.strokeStyle;
             ctx.lineJoin    = style.lineJoin;
 
-            var filling = false;
+            var fill = false;
             if (style.fillColor !== undefined) {
                 ctx.fillStyle   = style.fillColor;
                 ctx.globalAlpha = style.fillAlpha;
-                filling = true;
+                fill = true;
             }
             
+            this.drawCurve(ctx, curve, xShift, yShift, fill);
+
+            // Create the sprite and shift the anchor proportionally to the shift
+            var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            sprite.anchor.x = xShift / sprite.width;
+            sprite.anchor.y = yShift / sprite.height;
+
+            return sprite;
+        },
+
+        drawCurve: function(ctx, curve, xShift, yShift, fill) {
             var x, y;
             var cp1x, cp1y;
             var cp2x, cp2y;
@@ -212,7 +223,7 @@ define(function(require) {
                         if (pathStarted) { 
                             // Draw and close old path
                             ctx.stroke();
-                            if (filling)
+                            if (fill)
                                 ctx.fill();
                             ctx.closePath();
                         }
@@ -229,7 +240,7 @@ define(function(require) {
 
                         ctx.closePath();
                         ctx.stroke();
-                        if (filling)
+                        if (fill)
                             ctx.fill();
                         break;
                     case PiecewiseCurve.SEG_LINETO:
@@ -244,7 +255,7 @@ define(function(require) {
                         x    = curve.xPoints[pos]   + xShift;
                         y    = curve.yPoints[pos++] + yShift;
 
-                        ctx.quadraticCurveTo(cpx, cpy, x, y);
+                        ctx.quadraticCurveTo(cp1x, cp1y, x, y);
                         break;
                     case PiecewiseCurve.SEG_CUBICTO:
                         cp1x = curve.xPoints[pos]   + xShift;
@@ -262,17 +273,9 @@ define(function(require) {
             if (pathStarted) {
                 // It was opened but never closed, so draw it
                 ctx.stroke();
-                if (filling)
+                if (fill)
                     ctx.fill();
             }
-                
-
-            // Create the sprite and shift the anchor proportionally to the shift
-            var sprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-            sprite.anchor.x = xShift / sprite.width;
-            sprite.anchor.y = yShift / sprite.height;
-
-            return sprite;
         },
 
         createShapeFromPointArrays: function(pointArrays, style) {
