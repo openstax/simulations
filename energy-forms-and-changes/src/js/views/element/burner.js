@@ -46,7 +46,7 @@ define(function(require) {
 
             // Graphical components
             this.initBucket();
-
+            this.initControls();
         },
 
         initBucket: function() {
@@ -109,15 +109,19 @@ define(function(require) {
                 }
             };
 
-            var bucketInside = this.createShapeFromCurve(bucketInsideCurve, bucketInsideStyle);
+            var bucketInside = PIXI.Sprite.fromPiecewiseCurve(bucketInsideCurve, bucketInsideStyle);
             bucketInside.x = -width / 2;
             bucketInside.y = -height;
             this.backLayer.addChild(bucketInside);
 
-            var bucketOutside = this.createShapeFromCurve(bucketOutsideCurve, bucketOutsideStyle);
+            var bucketOutside = PIXI.Sprite.fromPiecewiseCurve(bucketOutsideCurve, bucketOutsideStyle);
             bucketOutside.x = -width / 2;
             bucketOutside.y = -height;
             this.frontLayer.addChild(bucketOutside);
+        },
+
+        initControls: function() {
+            
         },
 
         updatePosition: function(model, position) {

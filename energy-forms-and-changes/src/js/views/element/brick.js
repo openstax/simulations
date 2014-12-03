@@ -2,6 +2,8 @@ define(function(require) {
 
 	'use strict';
 
+	var PIXI = require('pixi');
+
 	var BlockView = require('views/element/block');
 	var Assets    = require('assets');
 
@@ -11,15 +13,15 @@ define(function(require) {
 	var BrickView = BlockView.extend({
 
 		createFrontFace: function(points) {
-			return this.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_FRONT));
+			return PIXI.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_FRONT));
 		},
 
 		createTopFace: function(points) {
-			return this.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_TOP));
+			return PIXI.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_TOP));
 		},
 
 		createRightFace: function(points) {
-			return this.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT));
+			return PIXI.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT));
 		}
 
 	});

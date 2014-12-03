@@ -93,8 +93,8 @@ define(function(require) {
                 fillAlpha: this.fillAlpha
             };
 
-            this.frontLayer.addChild(this.createShapeFromCurve(frontFill, fillStyle));
-            this.backLayer.addChild(this.createShapeFromCurve(backFill, fillStyle));
+            this.frontLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(frontFill, fillStyle));
+            this.backLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(backFill, fillStyle));
 
             // Top back curve
             backCurves
@@ -143,8 +143,8 @@ define(function(require) {
                 lineJoin:    this.lineJoin
             };
 
-            this.backLayer.addChild(this.createShapeFromCurve(backCurves, lineStyle));
-            this.frontLayer.addChild(this.createShapeFromCurve(frontCurves, lineStyle));
+            this.backLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(backCurves, lineStyle));
+            this.frontLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(frontCurves, lineStyle));
 
             
 
