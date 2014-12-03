@@ -27,12 +27,16 @@ define(function(require) {
                 height: 10,
                 openingHeight: 2,
                 textFont: BurnerView.TEXT_FONT,
-                textColor: BurnerView.TEXT_COLOR
+                textColor: BurnerView.TEXT_COLOR,
+                heatingEnabled: true,
+                coolingEnabled: true
             }, options);
 
             this.width = options.width;
             this.height = options.height;
             this.openingHeight = options.openingHeight;
+            this.heatingEnabled = options.heatingEnabled;
+            this.coolingEnabled = options.coolingEnabled;
 
             ElementView.prototype.initialize.apply(this, [options]);
         },
@@ -154,7 +158,14 @@ define(function(require) {
 
             // Create the slider view
             this.sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: this.coolingEnabled ? -1 : 0,
+                    max: this.heatingEnabled ?  1 : 0
+                },
                 orientation: 'vertical',
+                direction: 'rtl',
+
                 background: sliderBackground,
                 handleColor: '#ced9e5',
                 handleLineColor: '#444',
@@ -179,18 +190,21 @@ define(function(require) {
                 dropShadowDistance: 1
             };
 
-            var heat = new PIXI.Text('Heat', textStyle);
-            heat.anchor.y = 0;
-            heat.x = textOffset;
-            heat.y = this.sliderView.displayObject.y;
-
-            var cool = new PIXI.Text('Cool', textStyle);
-            cool.anchor.y = 1;
-            cool.x = textOffset;
-            cool.y = this.sliderView.displayObject.y + bgHeight;
-
-            this.frontLayer.addChild(heat);
-            this.frontLayer.addChild(cool);
+            if (this.heatingEnabled) {
+                var heat = new PIXI.Text('Heat', textStyle);
+                heat.anchor.y = 0;
+                heat.x = textOffset;
+                heat.y = this.sliderView.displayObject.y;
+                this.frontLayer.addChild(heat);    
+            }
+            
+            if (this.coolingEnabled) {
+                var cool = new PIXI.Text('Cool', textStyle);
+                cool.anchor.y = 1;
+                cool.x = textOffset;
+                cool.y = this.sliderView.displayObject.y + bgHeight;
+                this.frontLayer.addChild(cool);
+            }
         },
 
         updatePosition: function(model, position) {

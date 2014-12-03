@@ -44,7 +44,7 @@ define(function(require) {
                     max: 10
                 },
                 orientation: 'horizontal',
-                direction: 'rtl',
+                direction: 'ltr',
 
                 // Settings for generating graphics if the actual DisplayObjects aren't given
                 width: 100,
@@ -117,8 +117,8 @@ define(function(require) {
             this.on('set',    options.onSet);
         },
 
-        rtl: function() {
-            return this.direction === 'rtl';
+        ltr: function() {
+            return this.direction === 'ltr';
         },
 
         vertical: function() {
@@ -127,7 +127,7 @@ define(function(require) {
 
         positionHandle: function() {
             var percentage = this.percentage();
-            if (!this.rtl())
+            if (!this.ltr())
                 percentage = 1 - percentage;
 
             if (this.vertical())
@@ -177,7 +177,7 @@ define(function(require) {
                     percentage = this.handle.x / this.width;
                 }
 
-                if (!this.rtl())
+                if (!this.ltr())
                     percentage = 1 - percentage;
 
                 this.previousValue = this.value;
@@ -205,7 +205,7 @@ define(function(require) {
             else
                 percentage = touchLocation.x / this.width;
 
-            if (!this.rtl())
+            if (!this.ltr())
                 percentage = 1 - percentage;
 
             this.previousValue = this.value;
