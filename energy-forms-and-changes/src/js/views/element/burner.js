@@ -122,7 +122,10 @@ define(function(require) {
         },
 
         initControls: function() {
-            this.sliderView = new SliderView();
+            this.sliderView = new SliderView({
+                orientation: 'vertical'
+            });
+            this.sliderView.displayObject.y = -(this.height - this.sliderView.height) / 2;
             this.frontLayer.addChild(this.sliderView.displayObject);
         },
 

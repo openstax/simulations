@@ -136,10 +136,7 @@ define(function(require) {
                     .add(dx, dy);
 
                 var validatedPosition = this.movementConstraint(this.model, newPosition);
-                    this.model.setPosition(validatedPosition);
-
-                this.dragX = data.global.x;
-                this.dragY = data.global.y;
+                this.model.setPosition(validatedPosition);
             }
         },
 

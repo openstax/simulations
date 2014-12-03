@@ -71,7 +71,7 @@ define(function(require) {
                 options.background = new PIXI.Graphics();
                 options.background.beginFill(options.backgroundColor, 1);
                 if (this.vertical())
-                    options.background.drawRect(-options.width / 2, 0, options.backgroundHeight, options.width / 2);
+                    options.background.drawRect(-options.backgroundHeight / 2, 0, options.backgroundHeight, options.width / 2);
                 else
                     options.background.drawRect(0, -options.backgroundHeight / 2, options.width / 2, options.backgroundHeight);
             }
@@ -106,46 +106,59 @@ define(function(require) {
         },
 
         positionHandle: function() {
-            this.handle.x = this.width * this.percentage();
+            var percentage = this.percentage();
+            if (!this.rtl())
+                percentage = 1 - percentage;
+            this.handle.x = this.width * percentage;
         },
 
         percentage: function() {
             return (this.value - this.range.min) / (this.range.max - this.range.min);
         },
 
-        calculateDragBounds: function(dx, dy) {
-            var bounds = this.displayObject.getBounds();
-            return this._dragBounds.set(
-                bounds.x + dx,
-                bounds.y + dy,
-                bounds.width,
-                bounds.height
-            );
-        },
-
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = data.getLocalPosition(this.handle, this._dragOffset);
             this.dragging = true;
             this.previousValue = this.value;
+            console.log(this.dragOffset);
         },
 
         drag: function(data) {
             if (this.dragging) {
                 var handlePosition = this.handle.toGlobal(this._globalPosition);
-                var dx = data.global.x - handlePosition.x - this.dragOffset.x;
+                var percentage;
                 
-                if (this.handle.x + dx > this.width)
-                    this.handle.x = this.width;
-                else if (this.handle.x + dx < 0)
-                    this.handle.x = 0;
-                else
-                    this.handle.x += dx;
+                if (this.vertical()) {
+                    var dy = data.global.y - handlePosition.y - this.dragOffset.y;
+
+                    if (this.handle.y + dy > this.height)
+                        this.handle.y = this.height;
+                    else if (this.handle.y + dy < 0)
+                        this.handle.y = 0;
+                    else
+                        this.handle.y += dy;
+
+                    percentage = this.handle.x / this.width;
+                }
+                else {
+                    var dx = data.global.x - handlePosition.x - this.dragOffset.x;
+                    
+                    if (this.handle.x + dx > this.width)
+                        this.handle.x = this.width;
+                    else if (this.handle.x + dx < 0)
+                        this.handle.x = 0;
+                    else
+                        this.handle.x += dx;
+
+                    percentage = this.handle.x / this.width;
+                }
+
+                if (!this.rtl())
+                    percentage = 1 - percentage;
 
                 var previousValue = this.value;
-                this.value = this.percentage() * (this.range.max - this.range.min) + this.range.min;
+                this.value = percentage * (this.range.max - this.range.min) + this.range.min;
                 this.trigger('slide', this.value, previousValue);
-
-                this.dragX = data.global.x;
             }
         },
 
