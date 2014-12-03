@@ -180,9 +180,9 @@ define(function(require) {
                 if (!this.rtl())
                     percentage = 1 - percentage;
 
-                var previousValue = this.value;
+                this.previousValue = this.value;
                 this.value = percentage * (this.range.max - this.range.min) + this.range.min;
-                this.trigger('slide', this.value, previousValue);
+                this.trigger('slide', this.value, this.previousValue);
             }
         },
 
@@ -208,8 +208,10 @@ define(function(require) {
             if (!this.rtl())
                 percentage = 1 - percentage;
 
+            this.previousValue = this.value;
             this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
             this.positionHandle();
+            this.trigger('slide', this.value, this.previousValue)
 
             var dragOffset = this._dragOffset;
             dragOffset.x = 0;
@@ -223,10 +225,10 @@ define(function(require) {
 
         val: function(val) {
             if (val !== undefined) {
-                var previousValue = this.value;
+                this.previousValue = this.value;
                 this.value = val;
                 this.positionHandle();
-                this.trigger('set', this.value, previousValue);
+                this.trigger('set', this.value, this.previousValue);
             }
             else
                 return this.value;
