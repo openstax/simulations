@@ -218,6 +218,8 @@ define(function (require) {
 
     BurnerView.HOT_COLOR  = '#ff4500';
     BurnerView.COLD_COLOR = '#0000f0';
+    BurnerView.TEXT_FONT  = 'bold 17px Arial';
+    BurnerView.TEXT_COLOR = '#000';
 
     Constants.BurnerView = BurnerView;
 

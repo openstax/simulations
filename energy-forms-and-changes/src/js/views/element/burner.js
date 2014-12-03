@@ -26,6 +26,8 @@ define(function(require) {
                 width:  10,
                 height: 10,
                 openingHeight: 2,
+                textFont: BurnerView.TEXT_FONT,
+                textColor: BurnerView.TEXT_COLOR
             }, options);
 
             this.width = options.width;
@@ -125,6 +127,8 @@ define(function(require) {
         },
 
         initControls: function() {
+            var sliderOffset = Math.round(-this.width * 0.18);
+            var textOffset   = Math.round(-this.width * 0.08);
             // Slider background (hot to cold)
             var bgHeight = this.height * 0.6;
             var bgWidth  = 6;
@@ -156,6 +160,7 @@ define(function(require) {
                 handleLineColor: '#444',
                 handleLineWidth: 2
             });
+            this.sliderView.displayObject.x = sliderOffset;
             this.sliderView.displayObject.y = -(this.sliderView.height + this.height) / 2 + this.openingHeight / 2;
             this.frontLayer.addChild(this.sliderView.displayObject);
 
@@ -163,6 +168,29 @@ define(function(require) {
             this.listenTo(this.sliderView, 'change', function(value, prev) {
                 console.log(value);
             });
+
+            // Labels
+            var textStyle = {
+                font: this.textFont,
+                fill: this.textColor,
+                dropShadowColor: '#ced9e5',
+                dropShadow: true,
+                dropShadowAngle: 2 * Math.PI,
+                dropShadowDistance: 1
+            };
+
+            var heat = new PIXI.Text('Heat', textStyle);
+            heat.anchor.y = 0;
+            heat.x = textOffset;
+            heat.y = this.sliderView.displayObject.y;
+
+            var cool = new PIXI.Text('Cool', textStyle);
+            cool.anchor.y = 1;
+            cool.x = textOffset;
+            cool.y = this.sliderView.displayObject.y + bgHeight;
+
+            this.frontLayer.addChild(heat);
+            this.frontLayer.addChild(cool);
         },
 
         updatePosition: function(model, position) {
