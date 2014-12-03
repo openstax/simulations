@@ -214,6 +214,12 @@ define(function (require) {
 
     Constants.Burner = Burner;
 
+    var BurnerView = {};
+
+    BurnerView.HOT_COLOR  = '#ff4500';
+    BurnerView.COLD_COLOR = '#0000f0';
+
+    Constants.BurnerView = BurnerView;
 
     /*************************************************************************
      **                                                                     **

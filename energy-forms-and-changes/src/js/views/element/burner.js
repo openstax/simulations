@@ -76,7 +76,7 @@ define(function(require) {
                 lineWidth: 1,
                 strokeStyle: '#000',
                 fillStyle: function(ctx, width, height) {
-                    var gradient = ctx.createLinearGradient(0, 0, width, height);
+                    var gradient = ctx.createLinearGradient(0, 0, width, 0);
                     gradient.addColorStop(0, '#535e6a');
                     gradient.addColorStop(1, '#cdd7e2');
                     ctx.fillStyle = gradient;
@@ -105,7 +105,7 @@ define(function(require) {
                 lineWidth: 2,
                 strokeStyle: '#444',
                 fillStyle: function(ctx, width, height) {
-                    var gradient = ctx.createLinearGradient(0, 0, width, height);
+                    var gradient = ctx.createLinearGradient(0, 0, width, 0);
                     gradient.addColorStop(0, '#ced9e5');
                     gradient.addColorStop(1, '#7a8b9b');
                     
@@ -125,8 +125,36 @@ define(function(require) {
         },
 
         initControls: function() {
+            // Slider background (hot to cold)
+            var bgHeight = this.height * 0.6;
+            var bgWidth  = 6;
+
+            var canvas = document.createElement('canvas');
+            canvas.width  = bgWidth;
+            canvas.height = bgHeight;
+
+            var ctx = canvas.getContext('2d');
+
+            var gradient = ctx.createLinearGradient(0, 0, 0, bgHeight);
+            gradient.addColorStop(0, BurnerView.HOT_COLOR);
+            gradient.addColorStop(1, BurnerView.COLD_COLOR);
+            
+            ctx.fillStyle = gradient;
+            ctx.lineWidth   = 1;
+            ctx.strokeStyle = '#000';
+
+            ctx.rect(0, 0, bgWidth, bgHeight);
+            ctx.fill();
+            ctx.stroke();
+
+            var sliderBackground = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            sliderBackground.anchor.x = 0.5;
+
+            // Slider handle
+
             this.sliderView = new SliderView({
-                orientation: 'vertical'
+                orientation: 'vertical',
+                background: sliderBackground
             });
             this.sliderView.displayObject.y = -(this.sliderView.height + this.height) / 2 + this.openingHeight / 2;
             this.frontLayer.addChild(this.sliderView.displayObject);

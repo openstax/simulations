@@ -78,9 +78,9 @@ define(function(require) {
                 options.background = new PIXI.Graphics();
                 options.background.beginFill(options.backgroundColor, 1);
                 if (this.vertical())
-                    options.background.drawRect(-options.backgroundHeight / 2, 0, options.backgroundHeight, options.width / 2);
+                    options.background.drawRect(-options.backgroundHeight / 2, 0, options.backgroundHeight, options.width);
                 else
-                    options.background.drawRect(0, -options.backgroundHeight / 2, options.width / 2, options.backgroundHeight);
+                    options.background.drawRect(0, -options.backgroundHeight / 2, options.width, options.backgroundHeight);
             }
 
             this.handle     = options.handle;
