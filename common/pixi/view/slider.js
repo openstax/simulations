@@ -41,9 +41,9 @@ define(function(require) {
 
                 // Settings for generating graphics if the actual DisplayObjects aren't given
                 width: 100,
-                backgroundHeight: 6,
+                backgroundHeight: 2,
                 backgroundColor: '#ededed',
-                handleSize: 20,
+                handleSize: 12,
                 handleColor: '#21366B',
 
                 // Optional event listeners
@@ -64,7 +64,14 @@ define(function(require) {
             if (options.handle === undefined) {
                 options.handle = new PIXI.Graphics();
                 options.handle.beginFill(options.handleColor, 1);
-                options.handle.drawCircle(0, 0, options.handleSize / 2);
+                options.handle.drawCircle(0, 0, options.handleSize * 0.75);
+                options.handle.scale.x = options.handle.scale.y = 0.75;
+                this.on('drag-start', function(){
+                    this.handle.scale.x = this.handle.scale.y = 1;
+                });
+                this.on('drag-end', function(){
+                    this.handle.scale.x = this.handle.scale.y = 0.75;
+                });
             }
 
             if (options.background === undefined) {
@@ -91,6 +98,7 @@ define(function(require) {
             this._globalPosition = new PIXI.Point();
 
             //this.positionHandle();
+            this.handle.buttonMode = true;
 
             this.on('slide',  options.onSlide);
             this.on('change', options.onChange);
@@ -120,7 +128,7 @@ define(function(require) {
             this.dragOffset = data.getLocalPosition(this.handle, this._dragOffset);
             this.dragging = true;
             this.previousValue = this.value;
-            console.log(this.dragOffset);
+            this.trigger('drag-start');
         },
 
         drag: function(data) {
@@ -167,6 +175,7 @@ define(function(require) {
             this.dragData = null;
             this.trigger('set',    this.value, this.previousValue);
             this.trigger('change', this.value, this.previousValue);
+            this.trigger('drag-end');
         },
 
         val: function(val) {

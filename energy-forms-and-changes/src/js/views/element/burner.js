@@ -73,11 +73,12 @@ define(function(require) {
                 .close();
 
             var bucketInsideStyle = {
-                lineWidth: 0,
+                lineWidth: 1,
+                strokeStyle: '#000',
                 fillStyle: function(ctx, width, height) {
                     var gradient = ctx.createLinearGradient(0, 0, width, height);
-                    gradient.addColorStop(0, '#cdd7e2');
-                    gradient.addColorStop(1, '#535e6a');
+                    gradient.addColorStop(0, '#535e6a');
+                    gradient.addColorStop(1, '#cdd7e2');
                     ctx.fillStyle = gradient;
                 }
             };
@@ -101,11 +102,13 @@ define(function(require) {
                 .close();
 
             var bucketOutsideStyle = {
-                lineWidth: 0,
+                lineWidth: 2,
+                strokeStyle: '#444',
                 fillStyle: function(ctx, width, height) {
                     var gradient = ctx.createLinearGradient(0, 0, width, height);
-                    gradient.addColorStop(0, '#7a8b9b');
-                    gradient.addColorStop(1, '#ced9e5');
+                    gradient.addColorStop(0, '#ced9e5');
+                    gradient.addColorStop(1, '#7a8b9b');
+                    
                     ctx.fillStyle = gradient;
                 }
             };
@@ -125,8 +128,11 @@ define(function(require) {
             this.sliderView = new SliderView({
                 orientation: 'vertical'
             });
-            this.sliderView.displayObject.y = -(this.height - this.sliderView.height) / 2;
+            this.sliderView.displayObject.y = -(this.sliderView.height + this.height) / 2 + this.openingHeight / 2;
             this.frontLayer.addChild(this.sliderView.displayObject);
+            this.listenTo(this.sliderView, 'slide', function(value, prev) {
+                console.log(value);
+            });
         },
 
         updatePosition: function(model, position) {
