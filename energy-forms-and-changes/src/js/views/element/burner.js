@@ -160,7 +160,7 @@ define(function(require) {
             this.frontLayer.addChild(this.sliderView.displayObject);
 
             // Bind events
-            this.listenTo(this.sliderView, 'slide', function(value, prev) {
+            this.listenTo(this.sliderView, 'change', function(value, prev) {
                 console.log(value);
             });
         },

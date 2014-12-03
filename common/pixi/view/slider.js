@@ -23,6 +23,13 @@ define(function(require) {
             'mouseup         .handle': 'dragEnd',
             'touchendoutside .handle': 'dragEnd',
             'mouseupoutside  .handle': 'dragEnd',
+
+            'mousedown  .background': 'backgroundTouchStart',
+            'touchstart .background': 'backgroundTouchStart',
+            'touchend        .background': 'backgroundTouchEnd',
+            'mouseup         .background': 'backgroundTouchEnd',
+            'touchendoutside .background': 'backgroundTouchEnd',
+            'mouseupoutside  .background': 'backgroundTouchEnd',
         },
 
         /**
@@ -54,7 +61,7 @@ define(function(require) {
                 onSet:    function() {}
             }, options);
 
-            this.start = options.start;
+            this.value = options.start;
             this.step  = options.step;
             this.range = options.range;
             this.orientation = options.orientation;
@@ -100,8 +107,9 @@ define(function(require) {
             this._dragBounds     = new Rectangle();
             this._dragOffset     = new PIXI.Point();
             this._globalPosition = new PIXI.Point();
+            this._touchLocation  = new PIXI.Point();
 
-            //this.positionHandle();
+            this.positionHandle();
             this.handle.buttonMode = true;
 
             this.on('slide',  options.onSlide);
@@ -121,15 +129,19 @@ define(function(require) {
             var percentage = this.percentage();
             if (!this.rtl())
                 percentage = 1 - percentage;
-            this.handle.x = this.width * percentage;
+
+            if (this.vertical())
+                this.handle.y = this.height * percentage;
+            else
+                this.handle.x = this.width * percentage;
         },
 
         percentage: function() {
             return (this.value - this.range.min) / (this.range.max - this.range.min);
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.handle, this._dragOffset);
+        dragStart: function(data, dragOffset) {
+            this.dragOffset = dragOffset === undefined ? data.getLocalPosition(this.handle, this._dragOffset) : dragOffset;
             this.dragging = true;
             this.previousValue = this.value;
             this.trigger('drag-start');
@@ -150,7 +162,7 @@ define(function(require) {
                     else
                         this.handle.y += dy;
 
-                    percentage = this.handle.x / this.width;
+                    percentage = this.handle.y / this.height;
                 }
                 else {
                     var dx = data.global.x - handlePosition.x - this.dragOffset.x;
@@ -175,17 +187,45 @@ define(function(require) {
         },
 
         dragEnd: function(data) {
-            this.dragging = false;
-            this.dragData = null;
-            this.trigger('set',    this.value, this.previousValue);
-            this.trigger('change', this.value, this.previousValue);
-            this.trigger('drag-end');
+            if (this.dragging) {
+                this.dragging = false;
+                this.dragData = null;
+                this.trigger('set',    this.value, this.previousValue);
+                this.trigger('change', this.value, this.previousValue);
+                this.trigger('drag-end');    
+            }
+        },
+
+        backgroundTouchStart: function(data) {
+            var touchLocation = data.getLocalPosition(this.background, this._touchLocation);
+
+            var percentage;
+            if (this.vertical())
+                percentage = touchLocation.y / this.height;
+            else
+                percentage = touchLocation.x / this.width;
+
+            if (!this.rtl())
+                percentage = 1 - percentage;
+
+            this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
+            this.positionHandle();
+
+            var dragOffset = this._dragOffset;
+            dragOffset.x = 0;
+            dragOffset.y = 0;
+            this.dragStart(data, dragOffset);
+        },
+
+        backgroundTouchEnd: function(data) {
+            this.dragEnd();
         },
 
         val: function(val) {
             if (val !== undefined) {
                 var previousValue = this.value;
                 this.value = val;
+                this.positionHandle();
                 this.trigger('set', this.value, previousValue);
             }
             else
