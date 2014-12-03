@@ -241,11 +241,13 @@ define(function(require) {
                 openingHeight: burnerOpeningHeight
             });
 
+            this.backLayer.addChild(leftBurnerView.backLayer);
+            this.burnerFrontLayer.addChild(leftBurnerView.frontLayer);
+
+            
+
             this.backLayer.addChild(leftBurnerStandView.displayObject);
             this.backLayer.addChild(rightBurnerStandView.displayObject);
-
-            // TODO: this actually has to be separated into two layers--this is just to see what it looks like
-            this.backLayer.addChild(leftBurnerView.displayObject);
         },
 
         _update: function(time, deltaTime) {

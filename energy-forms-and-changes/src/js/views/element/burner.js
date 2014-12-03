@@ -3,7 +3,7 @@ define(function(require) {
     'use strict';
 
     var _       = require('underscore');
-    //var PIXI    = require('pixi');
+    var PIXI    = require('pixi');
     //var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
@@ -35,6 +35,21 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            // Layers
+            this.backLayer        = new PIXI.DisplayObjectContainer();
+            this.frontLayer       = new PIXI.DisplayObjectContainer();
+            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
+
+            this.backLayer.addChild(this.energyChunkLayer);
+
+            this.energyChunkLayer.visible = false;
+
+            // Graphical components
+            this.initBucket();
+
+        },
+
+        initBucket: function() {
             var width = this.width;
             var height = this.height;
             var openingHeight = this.openingHeight;
@@ -94,16 +109,29 @@ define(function(require) {
                 }
             };
 
-            this.displayObject.addChild(this.createShapeFromCurve(bucketInsideCurve, bucketInsideStyle));
-            this.displayObject.addChild(this.createShapeFromCurve(bucketOutsideCurve, bucketOutsideStyle));
+            var bucketInside = this.createShapeFromCurve(bucketInsideCurve, bucketInsideStyle);
+            bucketInside.x = -width / 2;
+            bucketInside.y = -height;
+            this.backLayer.addChild(bucketInside);
+
+            var bucketOutside = this.createShapeFromCurve(bucketOutsideCurve, bucketOutsideStyle);
+            bucketOutside.x = -width / 2;
+            bucketOutside.y = -height;
+            this.frontLayer.addChild(bucketOutside);
+        },
+
+        updatePosition: function(model, position) {
+            var viewPoint = this.mvt.modelToView(position);
+            this.backLayer.x = this.frontLayer.x = viewPoint.x;
+            this.backLayer.y = this.frontLayer.y = viewPoint.y;
         },
 
         showEnergyChunks: function() {
-            
+            this.energyChunkLayer.visible = true;
         },
 
         hideEnergyChunks: function() {
-            
+            this.energyChunkLayer.visible = false;
         }
 
     }, Constants.BurnerView);
