@@ -132,7 +132,6 @@ define(function(require) {
             var canvas = document.createElement('canvas');
             canvas.width  = bgWidth;
             canvas.height = bgHeight;
-
             var ctx = canvas.getContext('2d');
 
             var gradient = ctx.createLinearGradient(0, 0, 0, bgHeight);
@@ -142,7 +141,6 @@ define(function(require) {
             ctx.fillStyle = gradient;
             ctx.lineWidth   = 1;
             ctx.strokeStyle = '#000';
-
             ctx.rect(0, 0, bgWidth, bgHeight);
             ctx.fill();
             ctx.stroke();
@@ -150,14 +148,18 @@ define(function(require) {
             var sliderBackground = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
             sliderBackground.anchor.x = 0.5;
 
-            // Slider handle
-
+            // Create the slider view
             this.sliderView = new SliderView({
                 orientation: 'vertical',
-                background: sliderBackground
+                background: sliderBackground,
+                handleColor: '#ced9e5',
+                handleLineColor: '#444',
+                handleLineWidth: 2
             });
             this.sliderView.displayObject.y = -(this.sliderView.height + this.height) / 2 + this.openingHeight / 2;
             this.frontLayer.addChild(this.sliderView.displayObject);
+
+            // Bind events
             this.listenTo(this.sliderView, 'slide', function(value, prev) {
                 console.log(value);
             });

@@ -43,8 +43,10 @@ define(function(require) {
                 width: 100,
                 backgroundHeight: 2,
                 backgroundColor: '#ededed',
-                handleSize: 12,
+                handleSize: 10,
                 handleColor: '#21366B',
+                handleLineColor: '#000',
+                handleLineWidth: 0,
 
                 // Optional event listeners
                 onSlide:  function() {},
@@ -60,17 +62,19 @@ define(function(require) {
 
             options.backgroundColor = Colors.parseHex(options.backgroundColor);
             options.handleColor     = Colors.parseHex(options.handleColor);
+            options.handleLineColor = Colors.parseHex(options.handleLineColor);
 
             if (options.handle === undefined) {
                 options.handle = new PIXI.Graphics();
                 options.handle.beginFill(options.handleColor, 1);
-                options.handle.drawCircle(0, 0, options.handleSize * 0.75);
-                options.handle.scale.x = options.handle.scale.y = 0.75;
+                options.handle.lineStyle(options.handleLineWidth, options.handleLineColor, 1);
+                options.handle.drawCircle(0, 0, options.handleSize * 0.8);
+                options.handle.scale.x = options.handle.scale.y = 0.8;
                 this.on('drag-start', function(){
                     this.handle.scale.x = this.handle.scale.y = 1;
                 });
                 this.on('drag-end', function(){
-                    this.handle.scale.x = this.handle.scale.y = 0.75;
+                    this.handle.scale.x = this.handle.scale.y = 0.8;
                 });
             }
 
