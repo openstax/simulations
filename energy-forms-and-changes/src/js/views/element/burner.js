@@ -8,6 +8,7 @@ define(function(require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var ElementView = require('views/element');
+    var SliderView  = require('common/pixi/view/slider');
     //var Assets      = require('assets');
 
     var Constants = require('constants');
@@ -121,7 +122,8 @@ define(function(require) {
         },
 
         initControls: function() {
-            
+            this.sliderView = new SliderView();
+            this.frontLayer.addChild(this.sliderView.displayObject);
         },
 
         updatePosition: function(model, position) {

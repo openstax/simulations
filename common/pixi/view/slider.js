@@ -3,11 +3,11 @@ define(function(require) {
     'use strict';
 
     var _    = require('underscore');
-    var PIXI = require('pixi');
-    require('common/pixi/extensions');
+    var PIXI = require('pixi'); require('common/pixi/extensions');
     
-    var PixiView       = require('common/pixi/view');
-    var Colors         = require('common/colors/colors');
+    var PixiView  = require('common/pixi/view');
+    var Colors    = require('common/colors/colors');
+    var Rectangle = require('common/math/rectangle');
 
     /**
      * A view that represents an element model
@@ -15,14 +15,14 @@ define(function(require) {
     var SliderView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd',
+            'touchstart      .handle': 'dragStart',
+            'mousedown       .handle': 'dragStart',
+            'touchmove       .handle': 'drag',
+            'mousemove       .handle': 'drag',
+            'touchend        .handle': 'dragEnd',
+            'mouseup         .handle': 'dragEnd',
+            'touchendoutside .handle': 'dragEnd',
+            'mouseupoutside  .handle': 'dragEnd',
         },
 
         /**
@@ -44,7 +44,12 @@ define(function(require) {
                 backgroundHeight: 6,
                 backgroundColor: '#ededed',
                 handleSize: 20,
-                handleColor: '#21366B'
+                handleColor: '#21366B',
+
+                // Optional event listeners
+                onSlide:  function() {},
+                onChange: function() {},
+                onSet:    function() {}
             }, options);
 
             this.start = options.start;
@@ -66,16 +71,30 @@ define(function(require) {
                 options.background = new PIXI.Graphics();
                 options.background.beginFill(options.backgroundColor, 1);
                 if (this.vertical())
-                    options.background.drawRect(0, 0, options.backgroundHeight, options.width / 2);
+                    options.background.drawRect(-options.width / 2, 0, options.backgroundHeight, options.width / 2);
                 else
-                    options.background.drawRect(0, 0, options.width / 2, options.backgroundHeight);
+                    options.background.drawRect(0, -options.backgroundHeight / 2, options.width / 2, options.backgroundHeight);
             }
 
             this.handle     = options.handle;
             this.background = options.background;
 
+            this.width  = this.background.width;
+            this.height = this.background.height;
+
             this.displayObject.addChild(this.background);
             this.displayObject.addChild(this.handle);
+
+            // Cached objects
+            this._dragBounds     = new Rectangle();
+            this._dragOffset     = new PIXI.Point();
+            this._globalPosition = new PIXI.Point();
+
+            //this.positionHandle();
+
+            this.on('slide',  options.onSlide);
+            this.on('change', options.onChange);
+            this.on('set',    options.onSet);
         },
 
         rtl: function() {
@@ -84,6 +103,14 @@ define(function(require) {
 
         vertical: function() {
             return this.orientation !== 'horizontal';
+        },
+
+        positionHandle: function() {
+            this.handle.x = this.width * this.percentage();
+        },
+
+        percentage: function() {
+            return (this.value - this.range.min) / (this.range.max - this.range.min);
         },
 
         calculateDragBounds: function(dx, dy) {
@@ -97,59 +124,47 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            if (this.movable) {
-                this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
-                this.dragging = true;
-                this.model.set('userControlled', true);    
-            }
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+            this.previousValue = this.value;
         },
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var handlePosition = this.handle.toGlobal(this._globalPosition);
+                var dx = data.global.x - handlePosition.x - this.dragOffset.x;
                 
-                var newBounds = this.calculateDragBounds(dx, dy);
-                var constraintBounds = this.movementConstraintBounds;
+                if (this.handle.x + dx > this.width)
+                    this.handle.x = this.width;
+                else if (this.handle.x + dx < 0)
+                    this.handle.x = 0;
+                else
+                    this.handle.x += dx;
 
-                if (!constraintBounds.contains(newBounds)) {
-                    var overflowLeft   = constraintBounds.left() - newBounds.left();
-                    var overflowRight  = newBounds.right() - constraintBounds.right();
-                    var overflowTop    = constraintBounds.bottom() - newBounds.bottom();
-                    var overflowBottom = newBounds.top() - constraintBounds.top();
-
-                    // Backtrack if we need to
-                    if (overflowLeft > 0)
-                        dx += overflowLeft;
-                    else if (overflowRight > 0)
-                        dx -= overflowRight;
-
-                    if (overflowTop > 0)
-                        dy += overflowTop;
-                    else if (overflowBottom > 0)
-                        dy -= overflowBottom;
-                }
-
-                dx = this.mvt.viewToModelDeltaX(dx);
-                dy = this.mvt.viewToModelDeltaY(dy);
-
-                var newPosition = this._newPosition
-                    .set(this.model.get('position'))
-                    .add(dx, dy);
-
-                var validatedPosition = this.movementConstraint(this.model, newPosition);
-                    this.model.setPosition(validatedPosition);
+                var previousValue = this.value;
+                this.value = this.percentage() * (this.range.max - this.range.min) + this.range.min;
+                this.trigger('slide', this.value, previousValue);
 
                 this.dragX = data.global.x;
-                this.dragY = data.global.y;
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
             this.dragData = null;
-            this.model.set('userControlled', false);
+            this.trigger('set',    this.value, this.previousValue);
+            this.trigger('change', this.value, this.previousValue);
         },
+
+        val: function(val) {
+            if (val !== undefined) {
+                var previousValue = this.value;
+                this.value = val;
+                this.trigger('set', this.value, previousValue);
+            }
+            else
+                return this.value;
+        }
 
     });
 
