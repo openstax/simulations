@@ -94,7 +94,7 @@ define(function(require) {
 				lineJoin: 'bevel'
 			};
 			var pointArrays = [frontFacePoints, topFacePoints, rightFacePoints];
-			this.outlineFront.addChild(this.createShapeFromPointArrays(pointArrays, lineStyle));
+			this.outlineFront.addChild(PIXI.Sprite.fromPointArrays(pointArrays, lineStyle));
 
 			// Back outline
 			var lowerLeftBackCorner = lowerLeftFrontCorner.clone().add(backCornerOffset);
@@ -109,7 +109,7 @@ define(function(require) {
 				lowerLeftBackCorner,
 				upperLeftBackCorner
 			]];
-			this.outlineBack.addChild(this.createShapeFromPointArrays(pointArrays, lineStyle));
+			this.outlineBack.addChild(PIXI.Sprite.fromPointArrays(pointArrays, lineStyle));
 
 			this.outlineBack.visible = false;
 
@@ -138,15 +138,15 @@ define(function(require) {
 		},
 
 		createFrontFace: function(points) {
-			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+			return PIXI.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
 		},
 
 		createTopFace: function(points) {
-			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+			return PIXI.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
 		},
 
 		createRightFace: function(points) {
-			return this.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+			return PIXI.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
 		},
 
 		/**

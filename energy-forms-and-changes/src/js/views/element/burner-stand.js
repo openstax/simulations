@@ -3,7 +3,7 @@ define(function(require) {
     'use strict';
 
     var _       = require('underscore');
-   // var PIXI    = require('pixi');
+    var PIXI    = require('pixi');
     var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
@@ -49,9 +49,9 @@ define(function(require) {
                 lineJoin:    this.lineJoin
             };
 
-            var leftSprite  = this.createShapeFromCurve(leftCurve, lineStyle);
-            var rightSprite = this.createShapeFromCurve(rightCurve, lineStyle);
-            var topSprite   = this.createShapeFromCurve(topCurve, lineStyle);
+            var leftSprite  = PIXI.Sprite.fromPiecewiseCurve(leftCurve, lineStyle);
+            var rightSprite = PIXI.Sprite.fromPiecewiseCurve(rightCurve, lineStyle);
+            var topSprite   = PIXI.Sprite.fromPiecewiseCurve(topCurve, lineStyle);
 
             leftSprite.y = rightSprite.y = topSprite.y = -rect.h;
 
