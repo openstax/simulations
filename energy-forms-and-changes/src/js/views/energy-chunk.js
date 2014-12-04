@@ -33,6 +33,8 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			this.mvt = options.mvt;
+
 			this.listenTo(this.model, 'change:visible',    this.updateVisibility);
 			this.listenTo(this.model, 'change:zPosition',  this.updateTransparency);
 			this.listenTo(this.model, 'change:energyType', this.updateEnergyType);
@@ -71,8 +73,9 @@ define(function(require) {
 		},
 
 		updatePosition: function(model, position) {
-			this.displayObject.x = position.x;
-			this.displayObject.y = position.y;
+			var viewPoint = this.mvt.modelToView(position);
+			this.displayObject.x = viewPoint.x;
+			this.displayObject.y = viewPoint.y;
 		}
 
 	}, Constants.EnergyChunkView);

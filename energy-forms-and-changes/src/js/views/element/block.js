@@ -9,7 +9,7 @@ define(function(require) {
 
 	var ElementView = require('views/element');
 	var Block       = require('models/element/block');
-	//var Assets      = require('assets');
+	var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
 	var Constants = require('constants');
 
@@ -31,6 +31,7 @@ define(function(require) {
 
 		initGraphics: function() {
 
+			this.energyChunks = new PIXI.DisplayObjectContainer();
 			this.outlineBack  = new PIXI.DisplayObjectContainer();
 			this.faces        = new PIXI.DisplayObjectContainer();
 			this.outlineFront = new PIXI.DisplayObjectContainer();
@@ -45,6 +46,26 @@ define(function(require) {
 			var blockFaceOffset  = (new Vector2(-perspectiveEdgeSize / 2, 0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 			var backCornerOffset = (new Vector2(perspectiveEdgeSize,      0)).rotate(-Constants.PERSPECTIVE_ANGLE);
 
+			this.initEnergyChunks();
+			this.initBlock(rect, perspectiveEdgeSize, blockFaceOffset, backCornerOffset);
+			this.initLabel(rect, blockFaceOffset);
+
+			// Just for debugging
+			//this.renderTopCenterPoint();
+			//this.renderBottomCenterPoint();
+		},
+
+		initEnergyChunks: function() {
+			_.each(this.model.slices, function(slice) {
+				var view = new EnergyChunkContainerSliceView({
+					slice: slice,
+					mvt: this.mvt
+				});
+				this.energyChunks.addChild(view.displayObject);
+			}, this);
+		},
+
+		initBlock: function(rect, perspectiveEdgeSize, blockFaceOffset, backCornerOffset) {
 			// Front face
 			var lowerLeftFrontCorner  = (new Vector2(rect.left(),   rect.bottom())).add(blockFaceOffset);
 			var lowerRightFrontCorner = (new Vector2(rect.right(),  rect.bottom())).add(blockFaceOffset);
@@ -111,17 +132,6 @@ define(function(require) {
 
 			this.outlineBack.visible = false;
 
-			// Label
-			this.label = new PIXI.Text(this.labelText, {
-				font: this.textFont,
-				fill: this.textColor
-			});
-			this.label.anchor.x = this.label.anchor.y = 0.5;
-			this.label.x = blockFaceOffset.x;
-			this.label.y = -(rect.h / 2) + blockFaceOffset.y;
-			this.displayObject.addChild(this.label);
-
-
 			// Calculate the bounding box for the dragging bounds
 			var outline = PiecewiseCurve.fromPointArrays(pointArrays);
 			this.boundingBox = outline.getBounds().clone();
@@ -129,10 +139,6 @@ define(function(require) {
 			this.boundingBox.y -= (this.lineWidth / 2);
 			this.boundingBox.w += this.lineWidth;
 			this.boundingBox.h += (this.lineWidth / 2) - blockFaceOffset.y;
-
-			// Just for debugging
-			//this.renderTopCenterPoint();
-			//this.renderBottomCenterPoint();
 		},
 
 		createFrontFace: function(points) {
@@ -145,6 +151,18 @@ define(function(require) {
 
 		createRightFace: function(points) {
 			return PIXI.createColoredPolygonFromPoints(points, this.fillColor, this.fillAlpha);
+		},
+
+		initLabel: function(rect, blockFaceOffset) {
+			// Label
+			this.label = new PIXI.Text(this.labelText, {
+				font: this.textFont,
+				fill: this.textColor
+			});
+			this.label.anchor.x = this.label.anchor.y = 0.5;
+			this.label.x = blockFaceOffset.x;
+			this.label.y = -(rect.h / 2) + blockFaceOffset.y;
+			this.displayObject.addChild(this.label);
 		},
 
 		/**

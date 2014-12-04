@@ -88,7 +88,6 @@ define(function (require) {
             this.set('supportingSurface', supportingSurface);
             if (supportingSurface) {
                 this.listenTo(supportingSurface, 'change', function() {
-                    //console.log(supportingSurface.getCenterX() + ', ' + supportingSurface.yPos);
                     this.setPosition(supportingSurface.getCenterX(), supportingSurface.yPos);
                 });    
             }

@@ -101,7 +101,7 @@ define(function (require) {
 				// Chunk obscured by a model element in the beaker, probably
 				//   because the chunk just came from the model element.
 				chunk.zPosition = 0;
-				this.approachingEnergyChunks.push(chunk);
+				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
 			}
 			else {

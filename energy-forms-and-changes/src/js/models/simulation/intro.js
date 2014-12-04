@@ -614,7 +614,7 @@ define(function (require, exports, module) {
 
             // Check each of the possible supporting elements in the model to see
             //   if this element can go on top of it.
-            _.each(this.supportingSurfaces, function(potentialSupportingElement) {console.log(element.getBottomSurface());
+            _.each(this.supportingSurfaces, function(potentialSupportingElement) {
                 if (potentialSupportingElement === element || potentialSupportingElement.isStackedUpon(element)) {
                     // The potential supporting element is either the same as the
                     //   test element or is sitting on top of the test element.  In
