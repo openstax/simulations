@@ -88,28 +88,10 @@ define(function(require) {
 
         initElements: function() {
             // Lab bench surface
-            var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
-            var labBenchSurface = new PIXI.Sprite(labBenchSurfaceTexture);
-            labBenchSurface.anchor.y = 1;
-            labBenchSurface.x = -(labBenchSurface.width - this.width) / 2;
-            labBenchSurface.y = this.height;
-            // labBenchSurface.x = this.mvt.modelToViewX(0) - labBenchSurfaceTexture.width / 2;
-            // labBenchSurface.y = this.mvt.modelToViewY(0) - labBenchSurfaceTexture.height / 2 + 10;
-            this.backLayer.addChild(labBenchSurface);
-
-            // Burners
-
-            // var leftBurnerView  = new BurnerView({ model: this.simulation.leftBurner  });
-            // var rightBurnerView = new BurnerView({ model: this.simulation.rightBurner });
-
-            // this.backLayer.addChild(leftBurner.holeDisplayObject);
-            // TODO: this.backLayer.addChild(new BurnerStandView)
-            // this.burnerFrontLayer.addChild(leftBurner.frontDisplayObject);
+            this.initLabBenchSurface();
 
             // Air
-            var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
-            this.airLayer.addChild(air.displayObject);
-            this.views.push(air);
+            this.initAir();
 
             // Movable Elements
             this.initBlocks();
@@ -122,8 +104,25 @@ define(function(require) {
             this.initBurners();
         },
 
+        initLabBenchSurface: function() {
+            var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
+            var labBenchSurface = new PIXI.Sprite(labBenchSurfaceTexture);
+            labBenchSurface.anchor.y = 1;
+            labBenchSurface.x = -(labBenchSurface.width - this.width) / 2;
+            labBenchSurface.y = this.height;
+            // labBenchSurface.x = this.mvt.modelToViewX(0) - labBenchSurfaceTexture.width / 2;
+            // labBenchSurface.y = this.mvt.modelToViewY(0) - labBenchSurfaceTexture.height / 2 + 10;
+            this.backLayer.addChild(labBenchSurface);
+        },
+
+        initAir: function() {
+            var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
+            this.airLayer.addChild(air.displayObject);
+            this.views.push(air);
+        },
+
         initBlocks: function() {
-            var blockMovementConstraints = new Rectangle(
+            var movementConstraintBounds = new Rectangle(
                 0, 
                 0, 
                 this.width, 
@@ -136,7 +135,7 @@ define(function(require) {
             this.brickView = new BrickView({ 
                 model: this.simulation.brick,
                 mvt: this.mvt,
-                movementConstraintBounds: blockMovementConstraints,
+                movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
                 textColor: Constants.BrickView.TEXT_COLOR,
@@ -146,7 +145,7 @@ define(function(require) {
             this.ironBlockView = new BlockView({ 
                 model: this.simulation.ironBlock, 
                 mvt: this.mvt, 
-                movementConstraintBounds: blockMovementConstraints,
+                movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
                 fillColor: Constants.IronBlockView.FILL_COLOR,
@@ -174,10 +173,22 @@ define(function(require) {
         },
 
         initBeaker: function() {
+            var movementConstraintBounds = new Rectangle(
+                0, 
+                0, 
+                this.width, 
+                this.viewOriginY
+            );
+            var movementConstraint = _.bind(function(model, newPosition) {
+                return this.simulation.validatePosition(model, newPosition);
+            }, this);
+
             this.beakerView = new BeakerView({
                 model: this.simulation.beaker,
                 mvt: this.mvt,
-                movable: true
+                movable: true,
+                movementConstraint: movementConstraint,
+                movementConstraintBounds: movementConstraintBounds
             });
 
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);

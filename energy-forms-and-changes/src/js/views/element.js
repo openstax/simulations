@@ -51,13 +51,14 @@ define(function(require) {
                 textColor: '#000000',
                 textFont:  ElementView.TEXT_FONT,
                 labelText: '',
+                dragLayer: 'displayObject'
             }, options);
 
             this.mvt = options.mvt;
 
             this.movable = options.movable || false;
             this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
-            this.movementConstraint = options.movementConstraint || function() { return true; };
+            this.movementConstraint = options.movementConstraint || function(model, position) { return position; };
 
             this.fillColor = options.fillColor;
             this.fillAlpha = options.fillAlpha;
@@ -67,16 +68,17 @@ define(function(require) {
             this.textColor = options.textColor;
             this.textFont  = options.textFont;
             this.labelText = options.labelText;
-
-            // To give some feedback on the cursor
-            if (this.movable)
-                this.displayObject.buttonMode = true;
+            this.dragLayer = options.dragLayer;
 
             this._dragBounds = new Rectangle();
             this._dragOffset = new PIXI.Point();
             this._newPosition = new Vector2();
 
             this.initGraphics();
+
+            // To give some feedback on the cursor
+            if (this.movable)
+                this[this.dragLayer].buttonMode = true;
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.updatePosition(this.model, this.model.get('position'));
@@ -96,7 +98,7 @@ define(function(require) {
 
         dragStart: function(data) {
             if (this.movable) {
-                this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+                this.dragOffset = data.getLocalPosition(this[this.dragLayer], this._dragOffset);
                 this.dragging = true;
                 this.model.set('userControlled', true);    
             }
@@ -104,8 +106,8 @@ define(function(require) {
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = data.global.x - this[this.dragLayer].x - this.dragOffset.x;
+                var dy = data.global.y - this[this.dragLayer].y - this.dragOffset.y;
                 
                 var newBounds = this.calculateDragBounds(dx, dy);
                 var constraintBounds = this.movementConstraintBounds;

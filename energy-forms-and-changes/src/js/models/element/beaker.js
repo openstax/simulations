@@ -86,13 +86,13 @@ define(function (require) {
         },
 
         updateSurfaces: function() {
-            this.topSurface.minX = this.getRect().left();
-            this.topSurface.maxX = this.getRect().right();
-            this.topSurface.posY = this.getRect().bottom() + Beaker.MATERIAL_THICKNESS;
+            this.topSurface.xMin = this.getRect().left();
+            this.topSurface.xMax = this.getRect().right();
+            this.topSurface.yPos = this.getRect().bottom() + Beaker.MATERIAL_THICKNESS;
 
-            this.bottomSurface.minX = this.getRect().left();
-            this.bottomSurface.maxX = this.getRect().right();
-            this.bottomSurface.posY = this.getRect().bottom();
+            this.bottomSurface.xMin = this.getRect().left();
+            this.bottomSurface.xMax = this.getRect().right();
+            this.bottomSurface.yPos = this.getRect().bottom();
         },
 
         /**

@@ -614,7 +614,7 @@ define(function (require, exports, module) {
 
             // Check each of the possible supporting elements in the model to see
             //   if this element can go on top of it.
-            _.each(this.supportingSurfaces, function(potentialSupportingElement) {
+            _.each(this.supportingSurfaces, function(potentialSupportingElement) {console.log(element.getBottomSurface());
                 if (potentialSupportingElement === element || potentialSupportingElement.isStackedUpon(element)) {
                     // The potential supporting element is either the same as the
                     //   test element or is sitting on top of the test element.  In
@@ -622,7 +622,7 @@ define(function (require, exports, module) {
                     //   so skip it.
                     return;
                 }
-                
+
                 if (element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface())) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.

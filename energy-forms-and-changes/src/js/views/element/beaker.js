@@ -19,6 +19,17 @@ define(function(require) {
      */
     var BeakerView = ElementView.extend({
 
+        events: {
+            'touchstart      .backLayer': 'dragStart',
+            'mousedown       .backLayer': 'dragStart',
+            'touchmove       .backLayer': 'drag',
+            'mousemove       .backLayer': 'drag',
+            'touchend        .backLayer': 'dragEnd',
+            'mouseup         .backLayer': 'dragEnd',
+            'touchendoutside .backLayer': 'dragEnd',
+            'mouseupoutside  .backLayer': 'dragEnd',
+        },
+
         /**
          *
          */
@@ -34,7 +45,9 @@ define(function(require) {
                 fluidFillColor: BeakerView.WATER_FILL_COLOR,
                 fluidFillAlpha: BeakerView.WATER_FILL_ALPHA,
                 fluidLineColor: BeakerView.WATER_LINE_COLOR,
-                fluidLineWidth: BeakerView.WATER_LINE_WIDTH
+                fluidLineWidth: BeakerView.WATER_LINE_WIDTH,
+
+                dragLayer: 'backLayer'
             }, options);
 
             this.fluidFillColor = options.fluidFillColor;
@@ -219,6 +232,16 @@ define(function(require) {
             this.label.x = 0;
             this.label.y = -(this.beakerViewRect.h / 2);
             this.frontLayer.addChild(this.label);
+        },
+
+        calculateDragBounds: function(dx, dy) {
+            var bounds = this.backLayer.getBounds();
+            return this._dragBounds.set(
+                bounds.x + dx,
+                bounds.y + dy,
+                bounds.width,
+                bounds.height - this.lineWidth
+            );
         },
 
         showEnergyChunks: function() {
