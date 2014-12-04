@@ -183,6 +183,9 @@ define(function(require) {
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
             this.beakerBackLayer.addChild(this.beakerView.backLayer);
             this.beakerGrabLayer.addChild(this.beakerView.grabLayer);
+
+            this.beakerView.listenTo(this, 'show-energy-chunks', this.beakerView.showEnergyChunks);
+            this.beakerView.listenTo(this, 'hide-energy-chunks', this.beakerView.hideEnergyChunks);
         },
 
         initThermometers: function() {

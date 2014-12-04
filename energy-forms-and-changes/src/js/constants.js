@@ -254,8 +254,8 @@ define(function (require) {
     BeakerView.FILL_ALPHA = 0.30;
 
     BeakerView.WATER_FILL_COLOR = '#afeeee';
-    BeakerView.WATER_FILL_ALPHA = 0.75;
-    BeakerView.WATER_LINE_COLOR = '#91c7c7';
+    BeakerView.WATER_FILL_ALPHA = 0.5;
+    BeakerView.WATER_LINE_COLOR = '#82A09E';
     BeakerView.WATER_LINE_WIDTH = 2;
     BeakerView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
     BeakerView.STEAM_BUBBLE_SPEED_RANGE = { min: 100, max: 125 }; // In screen coords (basically pixels) per second.

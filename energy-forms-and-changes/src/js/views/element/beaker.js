@@ -222,11 +222,11 @@ define(function(require) {
         },
 
         showEnergyChunks: function() {
-            
+            this.fluidTop.alpha = this.fluidFront.alpha = 0.8;
         },
 
         hideEnergyChunks: function() {
-            
+            this.fluidTop.alpha = this.fluidFront.alpha = 1;
         },
 
         updateFluidLevel: function(model, fluidLevel) {

@@ -27,8 +27,6 @@ define(function(require) {
             }, options);
 
 			ElementView.prototype.initialize.apply(this, [options]);
-
-			this.initGraphics();
 		},
 
 		initGraphics: function() {
@@ -185,8 +183,8 @@ define(function(require) {
 
 		showEnergyChunks: function() {
 			this.outlineBack.visible = true;
-			this.faces.alpha = 0.5;
-			this.label.alpha = 0.5;
+			this.faces.alpha = 0.7;
+			this.label.alpha = 0.7;
 		},
 
 		hideEnergyChunks: function() {
