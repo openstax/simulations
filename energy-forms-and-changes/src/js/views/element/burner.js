@@ -9,7 +9,7 @@ define(function(require) {
 
     var ElementView = require('views/element');
     var SliderView  = require('common/pixi/view/slider');
-    //var Assets      = require('assets');
+    var Assets      = require('assets');
 
     var Constants = require('constants');
 
@@ -53,7 +53,9 @@ define(function(require) {
 
             // Graphical components
             this.initBucket();
-            this.initControls();
+            this.initSlider();
+            this.initFire();
+            this.initIce();
         },
 
         initBucket: function() {
@@ -130,7 +132,7 @@ define(function(require) {
             this.frontLayer.addChild(bucketOutside);
         },
 
-        initControls: function() {
+        initSlider: function() {
             var sliderOffset = Math.round(-this.width * 0.18);
             var textOffset   = Math.round(-this.width * 0.08);
             // Slider background (hot to cold)
@@ -177,7 +179,15 @@ define(function(require) {
 
             // Bind events
             this.listenTo(this.sliderView, 'slide', function(value, prev) {
-                console.log(value);
+                var percent = Math.abs(value);
+                if (value > 0) {
+                    this.ice.anchor.y = 0;
+                    this.fire.anchor.y = percent;
+                }
+                else {
+                    this.fire.anchor.y = 0;
+                    this.ice.anchor.y = percent;
+                }
             });
 
             // Labels
@@ -205,6 +215,26 @@ define(function(require) {
                 cool.y = this.sliderView.displayObject.y + bgHeight;
                 this.frontLayer.addChild(cool);
             }
+        },
+
+        initFire: function() {
+            this.fire = Assets.createSprite(Assets.Images.FLAME);
+            var scale = (this.width * 0.8) / this.fire.texture.width;
+            this.fire.scale.x = scale;
+            this.fire.scale.y = scale;
+            this.fire.anchor.x = 0.5;
+            this.fire.y = -this.height + this.openingHeight / 2;
+            this.backLayer.addChild(this.fire);
+        },
+
+        initIce: function() {
+            this.ice = Assets.createSprite(Assets.Images.ICE_CUBE_STACK);
+            var scale = (this.width * 0.8) / this.ice.texture.width;
+            this.ice.scale.x = scale;
+            this.ice.scale.y = scale;
+            this.ice.anchor.x = 0.5;
+            this.ice.y = -this.height + this.openingHeight / 2;
+            this.backLayer.addChild(this.ice);
         },
 
         updatePosition: function(model, position) {
