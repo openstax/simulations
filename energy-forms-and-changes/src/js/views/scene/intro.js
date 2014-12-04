@@ -241,10 +241,18 @@ define(function(require) {
                 openingHeight: burnerOpeningHeight
             });
 
+            var rightBurnerView = new BurnerView({
+                model: this.simulation.rightBurner,
+                mvt: this.mvt,
+                width: burnerWidth,
+                height: burnerHeight,
+                openingHeight: burnerOpeningHeight
+            });
+
             this.backLayer.addChild(leftBurnerView.backLayer);
             this.burnerFrontLayer.addChild(leftBurnerView.frontLayer);
-
-            
+            this.backLayer.addChild(rightBurnerView.backLayer);
+            this.burnerFrontLayer.addChild(rightBurnerView.frontLayer);
 
             this.backLayer.addChild(leftBurnerStandView.displayObject);
             this.backLayer.addChild(rightBurnerStandView.displayObject);
