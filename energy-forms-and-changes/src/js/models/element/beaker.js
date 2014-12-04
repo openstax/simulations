@@ -120,7 +120,7 @@ define(function (require) {
 
         addInitialEnergyChunks: function() {
             _.each(this.slices, function(slice) {
-                slice.energyChunkList = [];
+                slice.energyChunkList.reset();
             });
             var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
             var initialChunkBounds = this.getSliceBounds();
@@ -297,12 +297,11 @@ define(function (require) {
             }
 
             var chunk;
-            var highestEnergyChunk = densestSlice.energyChunkList[0];
-            for (i = 0; i < densestSlice.energyChunkList.length; i++) {
-                chunk = densestSlice.energyChunkList[i];
+            var highestEnergyChunk = densestSlice.energyChunkList.at(0);
+            densestSlice.energyChunkList.each(function(chunk) {
                 if (chunk.get('position').y > highestEnergyChunk.get('position').y)
                     highestEnergyChunk = chunk;
-            }
+            });
 
             this.removeEnergyChunk(highestEnergyChunk);
             return highestEnergyChunk;

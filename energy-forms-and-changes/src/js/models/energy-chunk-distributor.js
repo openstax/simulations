@@ -109,7 +109,7 @@ define(function (require) {
                     );
 
                     for (j = 0; j < slice.energyChunkList.length; j++) {
-                        chunk = slice.energyChunkList[j];
+                        chunk = slice.energyChunkList.models[j];
                         forceVector = energyChunkForceVectors[i][j];
 
                         // Determine forces on each energy chunk.
@@ -155,7 +155,7 @@ define(function (require) {
             var chunks = [];
             for (var i = 0; i < slices.length; i++) {
                 for (var j = 0; j < slices[i].energyChunkList.length; j++) {
-                    chunks.push(slices.energyChunkList[i][j]);
+                    chunks.push(slices[i].energyChunkList.models[j]);
                 }
             }
             return chunks;

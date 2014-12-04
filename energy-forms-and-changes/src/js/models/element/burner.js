@@ -37,7 +37,7 @@ define(function (require) {
             this._centerPoint = new Vector2();
 
             // Energy chunks
-            this.energyChunkList = [];
+            this.energyChunkList = new Backbone.Collection({ model: EnergyChunk });;
             this.energyChunkWanderControllers = [];
 
             // Create and add the top surface.  Some compensation for perspective
@@ -69,7 +69,7 @@ define(function (require) {
         reset: function() {
             Element.prototype.reset.apply(this);
 
-            this.energyChunkList = [];
+            this.energyChunkList.reset();
             this.energyChunkWanderControllers = [];
             this.energyExchangedWithAirSinceLastChunkTransfer = 0;
             this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
@@ -85,7 +85,7 @@ define(function (require) {
 
                 // Remove controllers that have finished their animation
                 if (controller.destinationReached()) {
-                    this.energyChunkList = _.without(this.energyChunkList, controller.energyChunk);
+                    this.energyChunkList.remove(controller.energyChunk);
                     this.energyChunkWanderControllers.splice(i, 1);
                 }
             }
@@ -156,7 +156,7 @@ define(function (require) {
 
         addEnergyChunk: function(chunk) {
             chunk.zPosition.set(0);
-            this.energyChunkList.push(chunk);
+            this.energyChunkList.add(chunk);
             this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.getEnergyChunkStartEndPoint()));
             this.energyExchangedWithAirSinceLastChunkTransfer = 0;
             this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
@@ -178,8 +178,7 @@ define(function (require) {
                 var i;
                 var removeIndex;
                 var chunk;
-                for (i = 0; i < this.energyChunkList.length; i++) {
-                    chunk = this.energyChunkList[i];
+                this.energyChunkList.each(function(chunk) {
                     if (chunk.get('position').distance(this.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE && (
                             closestChunk === null || 
                             chunk.get('position').distance(point) < closestChunk.get('position').distance(point) 
@@ -187,11 +186,10 @@ define(function (require) {
                     ) {
                         // Found a closer chunk.
                         closestChunk = chunk;
-                        removeIndex = i;
                     }
-                }
+                });
 
-                this.energyChunkList.splice(removeIndex, 1);
+                this.energyChunkList.remove(closestChunk);
 
                 for (i = 0; i < this.energyChunkWanderControllers.length; i++) {
                     if (this.energyChunkWanderControllers[i].energyChunk === closestChunk) {
@@ -241,10 +239,10 @@ define(function (require) {
             //   to heating, the chunks should go back to the air (if they're not
             //   almost to the burner).
             if (this.energyChunkList.length && this.get('heatCoolLevel') >= 0) {
-                _.each(this.energyChunkList, function(chunk) {
+                this.energyChunkList.each(function(chunk) {
                     if (this.get('position').distance(chunk.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE)
                         count++;
-                });
+                }, this);
             }
             if (count === 0) {
                 // See whether the energy exchanged with the air since the last

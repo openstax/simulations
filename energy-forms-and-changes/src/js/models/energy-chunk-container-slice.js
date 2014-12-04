@@ -6,13 +6,17 @@ define(function (require) {
 	var Backbone  = require('backbone');
 	var Rectangle = require('common/math/rectangle');
 
+	var EnergyChunk = require('models/energy-chunk');
+
 	/**
 	 * The original 
 	 */
 	var EnergyChunkContainerSlice = function(shape, zPosition) {
 		this.shape = shape;
 		this.zPosition = zPosition;
-		this.energyChunkList = [];
+		this.energyChunkList = new Backbone.Collection({
+			model: EnergyChunk
+		});
 	};
 
 	_.extend(EnergyChunkContainerSlice.prototype, Backbone.Events, {
@@ -24,7 +28,15 @@ define(function (require) {
 
 		addEnergyChunk: function(chunk) {
 			chunk.zPosition = this.zPosition;
-			this.energyChunkList.push(chunk);
+			this.energyChunkList.add(chunk);
+		},
+
+		removeEnergyChunk: function(chunk) {
+			return this.energyChunkList.remove(chunk);
+		},
+
+		containsEnergyChunk: function(chunk) {
+			return this.energyChunkList.get(chunk) ? true : false;
 		},
 
 		getNumEnergyChunks: function() {

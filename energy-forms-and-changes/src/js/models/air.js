@@ -26,7 +26,7 @@ define(function (require) {
 		},
 		
 		initialize: function(attributes, options) {
-			this.energyChunksList = [];
+			this.energyChunksList = new Backbone.Collection({ model: EnergyChunk });
 			this.energyChunkWanderControllers = [];
 
 			this._centerPoint = new Vector2();
@@ -71,7 +71,7 @@ define(function (require) {
 
 		reset: function() {
 			this.set('energy', Air.INITIAL_ENERGY);
-			this.energyChunkList = [];
+			this.energyChunkList.reset();
 			this.energyChunkWanderControllers = [];
 		},
 
@@ -103,7 +103,7 @@ define(function (require) {
 
 		addEnergyChunk: function(chunk, initialWanderConstraint) {
 			chunk.zPosition = 0;
-			this.energyChunkList.push(chunk);
+			this.energyChunkList.add(chunk);
 			this.energyChunkWanderControllers.push(new EnergyChunkWanderController(
 				chunk,
 				new Vector2(chunk.get('position').x, Air.HEIGHT),
@@ -113,7 +113,7 @@ define(function (require) {
 		},
 
 		removeEnergyChunk: function(chunk) {
-			this.energyChunkList = _.without(this.energyChunkList, chunk);
+			this.energyChunkList.remove(chunk);
 			this.trigger('remove-chunk', this, chunk);
 		},
 

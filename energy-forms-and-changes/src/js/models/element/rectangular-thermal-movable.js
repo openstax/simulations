@@ -3,6 +3,7 @@ define(function (require) {
 	'use strict';
 
 	var _         = require('underscore');
+	var Backbone  = require('backbone');
 	var Vector2   = require('common/math/vector2');
 	var Rectangle = require('common/math/rectangle');
 
@@ -55,7 +56,7 @@ define(function (require) {
 			this.nextSliceIndex = this.slices.length / 2;
 
 			// Energy chunks that are approaching this model element
-			this.approachingEnergyChunks = [];
+			this.approachingEnergyChunks = new Backbone.Collection({ model: EnergyChunk });
 			this.energyChunkWanderControllers = [];
 
 			// Add the initial energy chunks
@@ -64,7 +65,7 @@ define(function (require) {
 			this.on('change:position', function(model, position){
 				var translation = this._translation.set(position).sub(this.previous('position'));
 				_.each(this.slices, function(slice) {
-					_.each(slice.energyChunkList, function(chunk) {
+					_.each(slice.energyChunkList.models, function(chunk) {
 						chunk.translate(translation);
 					});
 				});
@@ -191,11 +192,9 @@ define(function (require) {
 		},
 
 		removeEnergyChunk: function(chunk) {
-			var index;
 			for (var i = 0; i < this.slices.length; i++) {
-				index = _.indexOf(this.slices[i].energyChunkList, chunk);
-				if (index !== -1) {
-					this.slices[i].energyChunkList.splice(index, 1);
+				if (this.slices[i].containsEnergyChunk(chunk)) {
+					this.slices[i].removeEnergyChunk(chunk)
 					return true;
 				}
 			}
@@ -227,7 +226,7 @@ define(function (require) {
 
 			// Indentify the closest energy chunk.
 			_.each(this.slices, function(slice) {
-				_.each(slice.energyChunkList, function(chunk) {
+				_.each(slice.energyChunkList.models, function(chunk) {
 					// Compensate for the Z offset.  Otherwise front chunk will
 					//   almost always be chosen.
 					compensatedChunkPosition
@@ -268,7 +267,7 @@ define(function (require) {
 				//   our right or left edge.
 				var closestDistanceToVerticalEdge = Number.POSITIVE_INFINITY;
 				_.each(this.slices, function(slice) {
-				    _.each(slice.energyChunkList, function(chunk) {
+				    _.each(slice.energyChunkList.models, function(chunk) {
 				        var distanceToVerticalEdge = Math.min(Math.abs(myBounds.left() - chunk.get('position').x), Math.abs(myBounds.right() - chunk.get('position').x));
 				        if (distanceToVerticalEdge < closestDistanceToVerticalEdge) {
 				            chunkToExtract = chunk;
@@ -283,7 +282,7 @@ define(function (require) {
 				var closestDistanceToDestinationEdge = Number.POSITIVE_INFINITY;
 				var destinationBounds = rect.getBounds();
 				_.each(this.slices, function(slice) {
-				    _.each(slice.energyChunkList, function(chunk) {
+				    _.each(slice.energyChunkList.models, function(chunk) {
 				        var distanceToDestinationEdge = Math.min(Math.abs(destinationBounds.left() - chunk.get('position').x), Math.abs(destinationBounds.right() - chunk.get('position').x));
 				        if (!rect.contains(chunk.get('position')) && distanceToDestinationEdge < closestDistanceToDestinationEdge) {
 				            chunkToExtract = chunk;
@@ -305,7 +304,7 @@ define(function (require) {
 				console.error(Object.prototype.toString.call(this) + ' - Warning: No energy chunk found by extraction algorithm, trying first available.');
 				for (var i = 0; i < this.slices.length; i++) {
 					if (this.slices[i].energyChunkList.length) {
-						chunkToExtract = this.slices[i].energyChunkList[0];
+						chunkToExtract = this.slices[i].energyChunkList.at(0);
 						break;
 					}
 				}
@@ -333,7 +332,7 @@ define(function (require) {
 
 		addInitialEnergyChunks: function() {
 			_.each(this.slices, function(slice) {
-				slice.energyChunkList = [];
+				slice.energyChunkList.reset();
 			});
 			var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
 			var energyChunkBounds = this.getThermalContactArea().getBounds();
