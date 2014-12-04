@@ -189,6 +189,12 @@ define(function(require) {
                     this.ice.anchor.y = percent;
                 }
             });
+            this.listenTo(this.sliderView, 'drag-end', function() {
+                this.sliderView.val(0);
+                this.fire.anchor.y = 0;
+                this.ice.anchor.y = 0;
+            });
+            
 
             // Labels
             var textStyle = {
