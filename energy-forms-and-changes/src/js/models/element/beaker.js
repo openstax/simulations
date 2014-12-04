@@ -89,10 +89,12 @@ define(function (require) {
             this.topSurface.xMin = this.getRect().left();
             this.topSurface.xMax = this.getRect().right();
             this.topSurface.yPos = this.getRect().bottom() + Beaker.MATERIAL_THICKNESS;
+            this.topSurface.trigger('change');
 
             this.bottomSurface.xMin = this.getRect().left();
             this.bottomSurface.xMax = this.getRect().right();
             this.bottomSurface.yPos = this.getRect().bottom();
+            this.bottomSurface.trigger('change');
         },
 
         /**
