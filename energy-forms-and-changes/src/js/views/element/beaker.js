@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI    = require('pixi');
     //var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Colors = require('common/colors/colors');
 
     var ElementView = require('views/element');
     //var Beaker      = require('models/element/beaker');
@@ -28,10 +29,26 @@ define(function(require) {
                 lineWidth: BeakerView.LINE_WIDTH,
                 lineColor: BeakerView.LINE_COLOR,
                 lineJoin:  'round',
-                textFont:  BeakerView.TEXT_FONT
+                textFont:  BeakerView.TEXT_FONT,
+
+                fluidFillColor: BeakerView.WATER_FILL_COLOR,
+                fluidFillAlpha: BeakerView.WATER_FILL_ALPHA,
+                fluidLineColor: BeakerView.WATER_LINE_COLOR,
+                fluidLineWidth: BeakerView.WATER_LINE_WIDTH
             }, options);
 
+            this.fluidFillColor = options.fluidFillColor;
+            this.fluidFillAlpha = options.fluidFillAlpha;
+            this.fluidLineColor = options.fluidLineColor;
+            this.fluidLineWidth = options.fluidLineWidth;
+
+            this.fluidFillColorHex = Colors.parseHex(this.fluidFillColor);
+            this.fluidLineColorHex = Colors.parseHex(this.fluidLineColor);
+
             ElementView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:fluidLevel', this.updateFluidLevel);
+            this.updateFluidLevel(this.model, this.model.get('fluidLevel'));
         },
 
         initGraphics: function() {
@@ -42,19 +59,30 @@ define(function(require) {
             
             // Get a version of the rectangle that defines the beaker size and
             //   location in the view.
-            var beakerViewRect = this.mvt.modelToViewScale(this.model.getRawOutlineRect());
+            this.beakerViewRect = this.mvt.modelToViewScale(this.model.getRawOutlineRect()).clone();
+            this.ellipseHeight = this.beakerViewRect.w * BeakerView.PERSPECTIVE_PROPORTION;
             
+            this.initBeaker();
+            this.initFluid();
+            this.initLabel();
+            
+            // Calculate the bounding box for the dragging bounds
+            this.boundingBox = this.beakerViewRect.clone();
+        },
+
+        initBeaker: function() {
             // Create the shapes for the top and bottom of the beaker.  These are
             //   ellipses in order to create a 3D-ish look.
-            var ellipseHeight = beakerViewRect.w * BeakerView.PERSPECTIVE_PROPORTION;
             var backCurves  = new PiecewiseCurve();
             var frontCurves = new PiecewiseCurve();
             var backFill  = new PiecewiseCurve();
             var frontFill = new PiecewiseCurve();
-            var top    = beakerViewRect.bottom() - beakerViewRect.h;
-            var bottom = beakerViewRect.bottom();
-            var left   = beakerViewRect.left();
-            var right  = beakerViewRect.right();
+
+            var top    = this.beakerViewRect.bottom() - this.beakerViewRect.h;
+            var bottom = this.beakerViewRect.bottom();
+            var left   = this.beakerViewRect.left();
+            var right  = this.beakerViewRect.right();
+            var ellipseHeight = this.ellipseHeight;
 
             // Front fill
             frontFill
@@ -145,9 +173,43 @@ define(function(require) {
 
             this.backLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(backCurves, lineStyle));
             this.frontLayer.addChild(PIXI.Sprite.fromPiecewiseCurve(frontCurves, lineStyle));
+        },
 
-            
+        initFluid: function() {
 
+            var left  = this.beakerViewRect.left();
+            var right = this.beakerViewRect.right();
+            var ellipseHeight = this.ellipseHeight;
+
+            var fluidTopCurve = new PiecewiseCurve();
+            fluidTopCurve
+                .moveTo(left, 0)
+                .curveTo(
+                    left,  -ellipseHeight / 2,
+                    right, -ellipseHeight / 2,
+                    right, 0
+                )
+                .curveTo(
+                    right, ellipseHeight / 2,
+                    left,  ellipseHeight / 2,
+                    left,  0
+                );
+
+            var fluidStyle = {
+                fillStyle:   this.fluidFillColor,
+                fillAlpha:   this.fluidFillAlpha,
+                strokeStyle: this.fluidLineColor,
+                lineWidth:   this.fluidLineWidth
+            };
+
+            this.fluidTop = PIXI.Sprite.fromPiecewiseCurve(fluidTopCurve, fluidStyle);
+            this.fluidFront = new PIXI.Graphics();
+
+            this.frontLayer.addChildAt(this.fluidTop, 0);
+            this.frontLayer.addChildAt(this.fluidFront, 0);
+        },
+
+        initLabel: function() {
             // Label
             this.label = new PIXI.Text(this.labelText, {
                 font: this.textFont,
@@ -155,11 +217,8 @@ define(function(require) {
             });
             this.label.anchor.x = this.label.anchor.y = 0.5;
             this.label.x = 0;
-            this.label.y = -(beakerViewRect.h / 2);
+            this.label.y = -(this.beakerViewRect.h / 2);
             this.displayObject.addChild(this.label);
-
-            // Calculate the bounding box for the dragging bounds
-            this.boundingBox = beakerViewRect.clone();
         },
 
         showEnergyChunks: function() {
@@ -168,6 +227,35 @@ define(function(require) {
 
         hideEnergyChunks: function() {
             
+        },
+
+        updateFluidLevel: function(model, fluidLevel) {
+            var top    = (this.beakerViewRect.bottom() - this.beakerViewRect.h) * fluidLevel;
+            var bottom = this.beakerViewRect.bottom();
+            var left   = this.beakerViewRect.left();
+            var right  = this.beakerViewRect.right();
+            var ellipseHeight = this.ellipseHeight;
+
+            this.fluidTop.y = top;
+
+            this.fluidFront
+                .clear()
+                .beginFill(this.fluidFillColorHex, this.fluidFillAlpha)
+                .lineStyle(this.fluidLineWidth, this.fluidLineColorHex, 1)
+                .moveTo(left, top)
+                .bezierCurveTo(
+                    left,  top + ellipseHeight / 2,
+                    right, top + ellipseHeight / 2,
+                    right, top
+                )
+                .lineTo(right, bottom)
+                .bezierCurveTo(
+                    right, bottom + ellipseHeight / 2,
+                    left,  bottom + ellipseHeight / 2,
+                    left,  bottom
+                )
+                .lineTo(left, top)
+                .endFill();
         },
 
         updatePosition: function(model, position) {

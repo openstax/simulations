@@ -253,23 +253,20 @@ define(function (require) {
     BeakerView.FILL_COLOR = '#fff';
     BeakerView.FILL_ALPHA = 0.30;
 
+    BeakerView.WATER_FILL_COLOR = '#afeeee';
+    BeakerView.WATER_FILL_ALPHA = 0.75;
+    BeakerView.WATER_LINE_COLOR = '#91c7c7';
+    BeakerView.WATER_LINE_WIDTH = 2;
+    BeakerView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
+    BeakerView.STEAM_BUBBLE_SPEED_RANGE = { min: 100, max: 125 }; // In screen coords (basically pixels) per second.
+    BeakerView.STEAM_BUBBLE_DIAMETER_RANGE = { min: 20, max: 50 }; // In screen coords (basically pixels).
+    BeakerView.MAX_STEAM_BUBBLE_HEIGHT = 300;
+    BeakerView.STEAM_BUBBLE_PRODUCTION_RATE_RANGE = { min: 20, max: 40 }; // Bubbles per second.
+    BeakerView.STEAM_BUBBLE_GROWTH_RATE = 0.2; // Proportion per second.
+    BeakerView.MAX_STEAM_BUBBLE_OPACITY = 0.7; // Proportion, 1 is max.
+
     Constants.BeakerView = BeakerView;
 
-    var WaterView = {};
-
-    WaterView.WATER_FILL_COLOR = '#afeeee';
-    WaterView.WATER_FILL_ALPHA = 0.75;
-    WaterView.WATER_LINE_COLOR = '#91c7c7';
-    WaterView.WATER_LINE_WIDTH = 2;
-    WaterView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
-    WaterView.STEAM_BUBBLE_SPEED_RANGE = { min: 100, max: 125 }; // In screen coords (basically pixels) per second.
-    WaterView.STEAM_BUBBLE_DIAMETER_RANGE = { min: 20, max: 50 }; // In screen coords (basically pixels).
-    WaterView.MAX_STEAM_BUBBLE_HEIGHT = 300;
-    WaterView.STEAM_BUBBLE_PRODUCTION_RATE_RANGE = { min: 20, max: 40 }; // Bubbles per second.
-    WaterView.STEAM_BUBBLE_GROWTH_RATE = 0.2; // Proportion per second.
-    WaterView.MAX_STEAM_BUBBLE_OPACITY = 0.7; // Proportion, 1 is max.
-
-    Constants.WaterView = WaterView;
 
     /*************************************************************************
      **                                                                     **
