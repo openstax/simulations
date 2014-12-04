@@ -29,7 +29,7 @@ define(function (require) {
 
         defaults: _.extend({}, RectangularThermalMovableElement.prototype.defaults, {
             // Property that is used to control and track the amount of fluid in the beaker.
-            fluidLevel: 0,
+            fluidLevel: Constants.Beaker.INITIAL_FLUID_LEVEL,
             // Property that allows temperature changes to be monitored.
             temperature: Constants.ROOM_TEMPERATURE,
             // Indicator of how much steam is being emitted.  Ranges from 0 to 1, where
@@ -74,10 +74,11 @@ define(function (require) {
             this.set('maxSteamHeight', 2 * this.get('height'));
 
             // Surfaces used for stacking and thermal interaction.
-            this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().top(),    this);
+            this.topSurface    = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().bottom() + Beaker.MATERIAL_THICKNESS, this);
             this.bottomSurface = new HorizontalSurface(this.getRect().left(), this.getRect().right(), this.getRect().bottom(), this);
 
             this.on('change:position', this.updateSurfaces);
+            this.updateSurfaces();
         },
 
         update: function(time, deltaTime) {

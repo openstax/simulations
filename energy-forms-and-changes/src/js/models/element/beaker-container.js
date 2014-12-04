@@ -32,14 +32,14 @@ define(function (require) {
 			// Calculate the amount of overlap between the rectangle that
 			//   represents the fluid and the displacing rectangles.
 			var fluidRectangle = this._fluidRect.set(
-			    this.get('position').x,
-			    this.get('position').y,
+			    this.getRect().x,
+			    this.getRect().y,
 			    this.get('width'),
 			    this.get('height') * this.get('fluidLevel')
 			);
 			var intersection;
 			var overlappingArea = 0;
-			_.each(this.potentiallyContainedElements, function(rectangle) {
+			_.each(potentiallyDisplacingRectangles, function(rectangle) {
 				if (rectangle.overlaps(fluidRectangle)) {
 					intersection = rectangle.intersection(fluidRectangle);
 					overlappingArea += intersection.w * intersection.h;
@@ -48,7 +48,7 @@ define(function (require) {
 
 			// Map the overlap to a new fluid height.  The scaling factor was
 			//   empirically determined to look good.
-			var newFluidLevel = Math.min(Beaker.INITIAL_FLUID_LEVEL + overlappingArea * 120, 1 );
+			var newFluidLevel = Math.min(Beaker.INITIAL_FLUID_LEVEL + overlappingArea * 120, 1);
 			var proportionateIncrease = newFluidLevel / this.get('fluidLevel');
 			this.set('fluidLevel', newFluidLevel);
 

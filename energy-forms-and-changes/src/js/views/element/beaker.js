@@ -218,7 +218,7 @@ define(function(require) {
             this.label.anchor.x = this.label.anchor.y = 0.5;
             this.label.x = 0;
             this.label.y = -(this.beakerViewRect.h / 2);
-            this.displayObject.addChild(this.label);
+            this.frontLayer.addChild(this.label);
         },
 
         showEnergyChunks: function() {

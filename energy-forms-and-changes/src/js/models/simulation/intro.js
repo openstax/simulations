@@ -622,6 +622,7 @@ define(function (require, exports, module) {
                     //   so skip it.
                     return;
                 }
+                
                 if (element.getBottomSurface().overlapsWith( potentialSupportingElement.getTopSurface())) {
                     // There is at least some overlap.  Determine if this surface
                     //   is the best one so far.
