@@ -22,6 +22,11 @@ define(function(require) {
 
 			this.slice = options.slice;
 
+			if (options.mvt === undefined)
+				throw 'EnergyChunkContainerSliceView requires a ModelViewTransform object specified in the options as "mvt".';
+			
+			this.mvt = options.mvt;
+
 			this.views = [];
 
 			this.initGraphics();

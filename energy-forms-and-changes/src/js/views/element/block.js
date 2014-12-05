@@ -36,6 +36,7 @@ define(function(require) {
 			this.faces        = new PIXI.DisplayObjectContainer();
 			this.outlineFront = new PIXI.DisplayObjectContainer();
 
+			this.displayObject.addChild(this.energyChunks);
 			this.displayObject.addChild(this.outlineBack);
 			this.displayObject.addChild(this.faces);
 			this.displayObject.addChild(this.outlineFront);
@@ -56,6 +57,8 @@ define(function(require) {
 		},
 
 		initEnergyChunks: function() {
+			this.energyChunks.visible = false;
+
 			_.each(this.model.slices, function(slice) {
 				var view = new EnergyChunkContainerSliceView({
 					slice: slice,
@@ -200,12 +203,14 @@ define(function(require) {
 		},
 
 		showEnergyChunks: function() {
+			this.energyChunks.visible = true;
 			this.outlineBack.visible = true;
 			this.faces.alpha = 0.7;
 			this.label.alpha = 0.7;
 		},
 
 		hideEnergyChunks: function() {
+			this.energyChunks.visible = false;
 			this.outlineBack.visible = false;
 			this.faces.alpha = 1;
 			this.label.alpha = 1;

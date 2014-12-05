@@ -33,6 +33,9 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			if (options.mvt === undefined)
+				throw 'EnergyChunkView requires a ModelViewTransform object specified in the options as "mvt".';
+			
 			this.mvt = options.mvt;
 
 			this.listenTo(this.model, 'change:visible',    this.updateVisibility);
