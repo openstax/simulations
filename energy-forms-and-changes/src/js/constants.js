@@ -351,8 +351,8 @@ define(function (require) {
 
     var EnergyChunkView = {};
     
-    EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED = 0.1; // In meters.
-    EnergyChunkView.WIDTH = 24; // In screen coords, which is close to pixels.
+    EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED = 0.1; // In meters
+    EnergyChunkView.WIDTH = 0.012; // In meters
 
     Constants.EnergyChunkView = EnergyChunkView;
     

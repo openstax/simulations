@@ -35,7 +35,7 @@ define(function(require) {
 		initialize: function(options) {
 			if (options.mvt === undefined)
 				throw 'EnergyChunkView requires a ModelViewTransform object specified in the options as "mvt".';
-			
+
 			this.mvt = options.mvt;
 
 			this.listenTo(this.model, 'change:visible',    this.updateVisibility);
@@ -44,6 +44,8 @@ define(function(require) {
 			this.listenTo(this.model, 'change:position',   this.updatePosition);
 
 			this.initGraphics();
+
+			this._point = new PIXI.Point();
 		},
 
 		initGraphics: function() {
@@ -54,8 +56,14 @@ define(function(require) {
 			this.symbol.anchor.y = 0.5;
 			this.displayObject.addChild(this.symbol);
 
-			this.E = new PIXI.Text('E');
+			this.E = new PIXI.Text('E', { font: 'bold 18px Arial' });
+			this.E.anchor.x = 0.5;
+			this.E.anchor.y = 0.4;
 			this.displayObject.addChild(this.E);
+
+			var scale = this.mvt.modelToViewDeltaX(EnergyChunkView.WIDTH) / this.symbol.width;
+
+			this.displayObject.scale.x = this.displayObject.scale.y = scale;
 		},
 
 		updateVisibility: function(model, visible) {
@@ -77,8 +85,11 @@ define(function(require) {
 
 		updatePosition: function(model, position) {
 			var viewPoint = this.mvt.modelToView(position);
-			this.displayObject.x = viewPoint.x;
-			this.displayObject.y = viewPoint.y;
+			this._point.x = viewPoint.x;
+			this._point.y = viewPoint.y;
+			var point = this.displayObject.parent.toLocal(this._point);
+			this.displayObject.x = point.x;
+			this.displayObject.y = point.y;
 		}
 
 	}, Constants.EnergyChunkView);

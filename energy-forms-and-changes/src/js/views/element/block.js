@@ -205,8 +205,8 @@ define(function(require) {
 		showEnergyChunks: function() {
 			this.energyChunks.visible = true;
 			this.outlineBack.visible = true;
-			this.faces.alpha = 0.7;
-			this.label.alpha = 0.7;
+			this.faces.alpha = 0.62;
+			this.label.alpha = 0.62;
 		},
 
 		hideEnergyChunks: function() {
