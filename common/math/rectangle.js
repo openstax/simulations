@@ -44,6 +44,15 @@ define(function (require) {
                 this.bottom() <= y && y <= this.top();
     };
 
+    /**
+     * Just to make it conform and have the same methods as 
+     *   PiecewiseCurve so they can be used somewhat inter-
+     *   changeably. 
+     */
+    Rectangle.prototype.getBounds = function() {
+        return this;
+    };
+
     return Rectangle;
 
     // A failed attempt to make a requirejs config path definition for 'vector2-node' unnecessary:

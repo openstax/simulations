@@ -18,7 +18,10 @@ define(function (require) {
 	var Brick = Block.extend({
 
 		defaults: _.extend({}, Block.prototype.defaults, {
-			energyContainerCategory: EnergyContainerCategory.BRICK
+			energyContainerCategory: EnergyContainerCategory.BRICK,
+
+			density:      Constants.Brick.DENSITY,
+			specificHeat: Constants.Brick.SPECIFIC_HEAT
 		})
 
 	}, Constants.Brick);

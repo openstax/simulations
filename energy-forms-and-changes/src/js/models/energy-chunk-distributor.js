@@ -23,6 +23,7 @@ define(function (require) {
     var vectorToOther   = new Vector2();
     var vectorToCenter  = new Vector2();
     var dragForceVector = new Vector2();
+    var velocity        = new Vector2();
     var randomLocation  = new Vector2();
 
     var forceVectorPool = Pool({
@@ -133,7 +134,8 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
-                        chunk.translate.add(chunk.velocity.scale(timeStep));
+                        velocity.set(chunk.get('velocity'));
+                        chunk.translate(velocity.scale(timeStep));
                     }
                 }
             }
@@ -187,18 +189,18 @@ define(function (require) {
 
         updateChunk: function(chunk, timeStep, forceVector) {
             // Calculate the energy chunk's velocity as a result of forces acting on it.
-            chunk.velocity.add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
+            chunk.addVelocity(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
 
             // Calculate drag force.  Uses standard drag equation.
             var dragMagnitude = 0.5 
                 * EnergyChunkDistributor.FLUID_DENSITY 
                 * EnergyChunkDistributor.DRAG_COEFFICIENT 
                 * EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA 
-                * chunk.velocity.lengthSq();
+                * chunk.get('velocity').lengthSq();
 
             if (dragMagnitude > 0) {
                 dragForceVector
-                    .set(chunk.velocity)
+                    .set(chunk.get('velocity'))
                     .rotate(Math.PI)
                     .normalize()
                     .scale(dragMagnitude);
@@ -207,14 +209,14 @@ define(function (require) {
                 dragForceVector.set(0, 0);
 
             // Update velocity based on drag force.
-            chunk.velocity.add(
+            chunk.addVelocity(
                 dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS)
             );
 
             // Return the new total energy
             return 0.5
                 * EnergyChunkDistributor.ENERGY_CHUNK_MASS
-                * chunk.velocity.lengthSq()
+                * chunk.get('velocity').lengthSq()
                 + forceVector.length() * Math.PI / 2;
         },
 
@@ -287,7 +289,7 @@ define(function (require) {
                 edgeForce
                     .set(forceConstant / Math.pow(lengthBounds.center().x, 2))
                     .rotate(angle + Math.PI);
-                forceVector.plus(edgeForce);
+                forceVector.add(edgeForce);
             }
         },
 

@@ -334,18 +334,20 @@ define(function (require) {
     // Constant function for energy chunk mapping. The basis for this function
     // is that the brick has 2 energy chunks at room temp, one at the freezing
     // point of water.
-    Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE = Functions.createLinearFunction(
+    var _energyToNumChunks = Functions.createLinearFunction(
         Brick.ENERGY_AT_WATER_FREEZING_TEMPERATURE,
         Brick.ENERGY_AT_ROOM_TEMPERATURE,
         Brick.NUM_ENERGY_CHUNKS_AT_FREEZING,
         Brick.NUM_ENERGY_CHUNKS_AT_ROOM_TEMP
-    ).createInverse();
+    );
 
-    Constants.ENERGY_TO_NUM_CHUNKS_MAPPER = function(energy) {
-        return Math.max(Math.round(Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( energy )), 0);
+    Constants.numChunksToEnergy = _energyToNumChunks.createInverse();
+
+    Constants.energyToNumChunks = function(energy) {
+        return Math.max(Math.round(_energyToNumChunks(energy)), 0);
     };
 
-    Constants.ENERGY_PER_CHUNK = Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 2 ) - Constants.MAP_ENERGY_TO_NUM_CHUNKS_DOUBLE( 1 );
+    Constants.ENERGY_PER_CHUNK = Constants.numChunksToEnergy(2) - Constants.numChunksToEnergy(1);
 
     var EnergyChunkView = {};
     

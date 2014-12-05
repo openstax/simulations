@@ -122,7 +122,7 @@ define(function (require) {
             _.each(this.slices, function(slice) {
                 slice.energyChunkList.reset();
             });
-            var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+            var targetNumChunks = Constants.energyToNumChunks(this.get('energy'));
             var initialChunkBounds = this.getSliceBounds();
             while (this.getNumEnergyChunks() < targetNumChunks) {
                 // Add a chunk at a random location in the beaker.

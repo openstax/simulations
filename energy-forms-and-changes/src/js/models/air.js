@@ -14,6 +14,7 @@ define(function (require) {
 	 */
 	var Constants = require('constants');
 	var EnergyContainerCategory = Constants.EnergyContainerCategory;
+	var HeatTransfer = Constants.HeatTransfer;
 
 	/**
 	 * 
@@ -81,7 +82,7 @@ define(function (require) {
 				var excessEnergy = energyContainer.getEnergyBeyondMaxTemperature();
 				if (excessEnergy === 0 ) {
 					// Container is below max temperature, exchange energy normally.
-					var heatTransferConstant = this.getHeatTransferFactor(this.get('energyContainerCategory'), energyContainer.get('energyContainerCategory'));
+					var heatTransferConstant = HeatTransfer.getHeatTransferFactor(this.get('energyContainerCategory'), energyContainer.get('energyContainerCategory'));
 
 					var numFullTimeStepExchanges = Math.floor(deltaTime / Constants.MAX_HEAT_EXCHANGE_TIME_STEP);
 					var leftoverTime = deltaTime - (numFullTimeStepExchanges * Constants.MAX_HEAT_EXCHANGE_TIME_STEP);

@@ -48,7 +48,7 @@ define(function (require) {
 			MovableElement.prototype.initialize.apply(this, arguments);
 			
 			// Calculate starting energy
-			this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
+			this.set('energy', this.get('mass') * this.get('specificHeat') * Constants.ROOM_TEMPERATURE);
 
 			// Slices: 2D "slices" of the container, used for 3D layering of energy chunks.
 			this.slices = [];
@@ -334,7 +334,7 @@ define(function (require) {
 			_.each(this.slices, function(slice) {
 				slice.energyChunkList.reset();
 			});
-			var targetNumChunks = Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+			var targetNumChunks = Constants.energyToNumChunks(this.get('energy'));
 			var energyChunkBounds = this.getThermalContactArea().getBounds();
 			var numChunks = this.getNumEnergyChunks();
 			while (numChunks < targetNumChunks) {
@@ -417,7 +417,7 @@ define(function (require) {
 		 *         a surplus.
 		 */
 		getEnergyChunkBalance: function() {
-			return this.getNumEnergyChunks() - Constants.ENERGY_TO_NUM_CHUNKS_MAPPER(this.get('energy'));
+			return this.getNumEnergyChunks() - Constants.energyToNumChunks(this.get('energy'));
 		},
 
 		getThermalContactArea: function() {}

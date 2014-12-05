@@ -6,7 +6,7 @@ define(function(require) {
 
 	var PixiView = require('common/pixi/view');
 
-	var EnergyChunk = require('models/energy-chunk');
+	var EnergyChunkView = require('views/energy-chunk');
 
 	/**
 	 * A view that represents the air model

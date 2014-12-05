@@ -102,6 +102,19 @@ define(function (require) {
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldVelocity);
+        },
+
+        addVelocity: function(x, y) {
+            var oldVelocity = this.get('velocity');
+            var newVelocity = vectorPool.create().set(this.get('velocity'));
+
+            if (x instanceof Vector2)
+                this.set('velocity', newVelocity.add(x));
+            else
+                this.set('velocity', newVelocity.add(x, y));
+            
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldVelocity);
         }
 
     }, EnergyTypes);

@@ -18,7 +18,10 @@ define(function (require) {
 	var IronBlock = Block.extend({
 
 		defaults: _.extend({}, Block.prototype.defaults, {
-			energyContainerCategory: EnergyContainerCategory.IRON
+			energyContainerCategory: EnergyContainerCategory.IRON,
+
+			density:      Constants.Iron.DENSITY,
+			specificHeat: Constants.Iron.SPECIFIC_HEAT
 		})
 
 	}, Constants.Iron);

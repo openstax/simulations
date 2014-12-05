@@ -19,11 +19,18 @@ define(function (require) {
      */
     var Block = RectangularThermalMovableElement.extend({
 
+        defaults: _.extend({}, RectangularThermalMovableElement.prototype.defaults, {
+            density: 1
+        }),
+
         initialize: function(attributes, options) {
             // Initialized cached objects
             this._rect = new Rectangle(0, 0, Block.SURFACE_WIDTH, Block.SURFACE_WIDTH);
             this._sliceBounds = new Rectangle();
             this._thermalContactArea = new ThermalContactArea(this._rect, false);
+
+            // Calculate mass based on density and volume of the block
+            this.set('mass', this.get('density') * Math.pow(Block.SURFACE_WIDTH, 3));
 
             // Call the parent's initialize method
             RectangularThermalMovableElement.prototype.initialize.apply(this, arguments);
