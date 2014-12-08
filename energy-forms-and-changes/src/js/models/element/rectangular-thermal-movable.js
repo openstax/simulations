@@ -63,12 +63,12 @@ define(function (require) {
 			this.addInitialEnergyChunks();
 
 			this.on('change:position', function(model, position){
-				var translation = this._translation.set(position).sub(this.previous('position'));
-				_.each(this.slices, function(slice) {
-					_.each(slice.energyChunkList.models, function(chunk) {
-						chunk.translate(translation);
-					});
-				});
+				// var translation = this._translation.set(position).sub(this.previous('position'));
+				// _.each(this.slices, function(slice) {
+				// 	_.each(slice.energyChunkList.models, function(chunk) {
+				// 		chunk.translate(translation);
+				// 	});
+				// });
 			});
 		},
 
@@ -167,8 +167,8 @@ define(function (require) {
 
 			this._sliceBounds.x = minX;
 			this._sliceBounds.y = minY;
-			this._sliceBounds.width  = maxX - minX;
-			this._sliceBounds.height = maxY - minY;
+			this._sliceBounds.w = maxX - minX;
+			this._sliceBounds.h = maxY - minY;
 
 			return this._sliceBounds;
 		},

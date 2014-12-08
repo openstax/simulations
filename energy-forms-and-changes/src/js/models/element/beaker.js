@@ -22,6 +22,12 @@ define(function (require) {
     var Constants = require('constants');
     var EnergyContainerCategory = Constants.EnergyContainerCategory;
 
+    var Static = {};
+
+    Static.calculateWaterMass = function(width, height) {
+        return Math.PI * Math.pow(width / 2, 2) * height * Beaker.WATER_DENSITY;
+    };
+
     /**
      * 
      */
@@ -36,10 +42,14 @@ define(function (require) {
             //   0 is no steam, and 1 is the max amount (full boil).
             steamingProportion: 0,
             // Max height above water where steam still affects the temperature.
-            maxSteamHeight: 0
+            maxSteamHeight: 0,
+
+            specificHeat: Constants.Beaker.WATER_SPECIFIC_HEAT
         }),
 
         initialize: function(attributes, options) {
+            this.set('mass', Beaker.calculateWaterMass(this.get('width'), this.get('height') * this.get('fluidLevel')));
+
             // Cached objects
             this._rect = new Rectangle(
                 this.get('position').x - this.get('width') / 2,
@@ -130,6 +140,7 @@ define(function (require) {
                     energyType: EnergyChunk.THERMAL, 
                     position:   EnergyChunkDistributor.generateRandomLocation(initialChunkBounds)
                 });
+                //console.log(EnergyChunkDistributor.generateRandomLocation(initialChunkBounds));
                 this.addEnergyChunkToNextSlice(chunk);
                 this.on('change:position', function(model, position) {
                     
@@ -166,10 +177,6 @@ define(function (require) {
                 }
             }
             chosenSlice.addEnergyChunk(chunk);
-        },
-
-        calculateWaterMass: function(width, height) {
-            return Math.PI * Math.pow(width / 2, 2) * height * Beaker.WATER_DENSITY;
         },
 
         getThermalContactArea: function() {
@@ -311,7 +318,7 @@ define(function (require) {
             return highestEnergyChunk;
         }
 
-    }, Constants.Beaker);
+    }, _.extend(Static, Constants.Beaker));
 
     return Beaker;
 });
