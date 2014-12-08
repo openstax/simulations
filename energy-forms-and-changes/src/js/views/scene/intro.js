@@ -190,6 +190,7 @@ define(function(require) {
                 movementConstraint: movementConstraint,
                 movementConstraintBounds: movementConstraintBounds
             });
+            this.views.push(this.beakerView);
 
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
             this.beakerBackLayer.addChild(this.beakerView.backLayer);
@@ -262,6 +263,11 @@ define(function(require) {
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight
             });
+
+            this.views.push(leftBurnerStandView);
+            this.views.push(rightBurnerStandView);
+            this.views.push(leftBurnerView);
+            this.views.push(rightBurnerView);
 
             this.backLayer.addChild(leftBurnerView.backLayer);
             this.burnerFrontLayer.addChild(leftBurnerView.frontLayer);

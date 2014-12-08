@@ -235,5 +235,17 @@ define(function(require) {
     };
 
 
+    /**
+     * Recursive function that should calculate the position of
+     *   the display object relative to the stage by applying all
+     *   transforms through the hierarchy.
+     */
+    PIXI.DisplayObject.prototype.getGlobalPosition = function() {
+        if (this.parent instanceof PIXI.Stage)
+            return this.position;
+        else
+            return this.toGlobal(this.parent.getGlobalPosition());
+    };
+
     return PIXI;
 });

@@ -106,8 +106,9 @@ define(function(require) {
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this[this.dragLayer].x - this.dragOffset.x;
-                var dy = data.global.y - this[this.dragLayer].y - this.dragOffset.y;
+                var global = this[this.dragLayer].getGlobalPosition();
+                var dx = data.global.x - global.x - this.dragOffset.x;
+                var dy = data.global.y - global.y - this.dragOffset.y;
                 
                 var newBounds = this.calculateDragBounds(dx, dy);
                 var constraintBounds = this.movementConstraintBounds;

@@ -84,12 +84,13 @@ define(function(require) {
 		},
 
 		updatePosition: function(model, position) {
-			var viewPoint = this.mvt.modelToView(position);
-			this._point.x = viewPoint.x;
-			this._point.y = viewPoint.y;
-			var point = this.displayObject.parent.toLocal(this._point);
-			this.displayObject.x = point.x;
-			this.displayObject.y = point.y;
+			//if (!this.positionUpdated) {
+				var globalPoint = this.mvt.modelToView(position);
+	            var localPoint = this.displayObject.parent.toLocal(globalPoint);
+	            this.displayObject.x = localPoint.x;
+	            this.displayObject.y = localPoint.y;
+	            this.positionUpdated = true;	
+			//}
 		}
 
 	}, Constants.EnergyChunkView);
