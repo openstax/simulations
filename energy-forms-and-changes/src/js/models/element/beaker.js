@@ -151,6 +151,7 @@ define(function (require) {
             for (var i = 0; i < 1000; i++) {
                 if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL))
                     break;
+                console.log('Beaker: distributing...');
             }
         },
 
@@ -252,7 +253,7 @@ define(function (require) {
                 slicePath.curveTo(centerX + sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth / 2, topY);
                 slicePath.lineTo( centerX - sliceWidth / 2,    bottomY);
 
-                this.slices.push(new EnergyChunkContainerSlice(slicePath, -proportion * this.get('width'), this.get('position')));
+                this.slices.push(new EnergyChunkContainerSlice(slicePath, -proportion * this.get('width')));
             }
         },
 

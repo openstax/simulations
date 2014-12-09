@@ -63,12 +63,13 @@ define(function (require) {
 			this.addInitialEnergyChunks();
 
 			this.on('change:position', function(model, position){
-				// var translation = this._translation.set(position).sub(this.previous('position'));
-				// _.each(this.slices, function(slice) {
-				// 	_.each(slice.energyChunkList.models, function(chunk) {
-				// 		chunk.translate(translation);
-				// 	});
-				// });
+				var translation = this._translation.set(position).sub(this.previous('position'));
+				_.each(this.slices, function(slice) {
+					slice.getShape().translate(translation);
+					_.each(slice.energyChunkList.models, function(chunk) {
+						chunk.translate(translation);
+					});
+				});
 			});
 		},
 
@@ -327,7 +328,7 @@ define(function (require) {
 
 			// Defaults to a single slice matching the outline rectangle, override
 			//   for more sophisticated behavior.
-			this.slices.push(new EnergyChunkContainerSlice(this.getRect(), 0, this.get('position')));
+			this.slices.push(new EnergyChunkContainerSlice(this.getRect(), 0));
 		},
 
 		addInitialEnergyChunks: function() {
@@ -350,6 +351,7 @@ define(function (require) {
 			for (var i = 0; i < 1000; i++) {
 				if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL))
 					break;
+				console.log('Thermal: distributing...');
 			}
 		},
 
