@@ -148,7 +148,7 @@ define(function (require) {
             }
 
             // Distribute the energy chunks within the container.
-            for (var i = 0; i < 1000; i++) {
+            for (var i = 0; i < 50; i++) {
                 if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL))
                     break;
                 console.log('Beaker: distributing...');

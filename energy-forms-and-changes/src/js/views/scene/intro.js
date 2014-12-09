@@ -69,7 +69,6 @@ define(function(require) {
             // Create layers
             this.backLayer        = new PIXI.DisplayObjectContainer();
             this.beakerBackLayer  = new PIXI.DisplayObjectContainer();
-            this.beakerGrabLayer  = new PIXI.DisplayObjectContainer();
             this.blockLayer       = new PIXI.DisplayObjectContainer();
             this.airLayer         = new PIXI.DisplayObjectContainer();
             this.burnerFrontLayer = new PIXI.DisplayObjectContainer();
@@ -78,7 +77,6 @@ define(function(require) {
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.beakerBackLayer);
-            this.stage.addChild(this.beakerGrabLayer);
             this.stage.addChild(this.blockLayer);
             this.stage.addChild(this.airLayer);
             this.stage.addChild(this.burnerFrontLayer);
@@ -194,7 +192,9 @@ define(function(require) {
 
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
             this.beakerBackLayer.addChild(this.beakerView.backLayer);
-            this.beakerGrabLayer.addChild(this.beakerView.grabLayer);
+            this.beakerBackLayer.addChild(this.beakerView.energyChunkLayer);
+
+            //this.beakerView.fluidMask.mask = this.ironBlockView.displayObject;
 
             this.beakerView.listenTo(this, 'show-energy-chunks', this.beakerView.showEnergyChunks);
             this.beakerView.listenTo(this, 'hide-energy-chunks', this.beakerView.hideEnergyChunks);

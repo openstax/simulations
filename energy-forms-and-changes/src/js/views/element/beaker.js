@@ -11,6 +11,7 @@ define(function(require) {
     var ElementView = require('views/element');
     //var Beaker      = require('models/element/beaker');
     //var Assets      = require('assets');
+    var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
     var Constants = require('constants');
 
@@ -65,10 +66,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
-
-            this.backLayer  = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
-            this.grabLayer  = new PIXI.DisplayObjectContainer();
+            this.backLayer        = new PIXI.DisplayObjectContainer();
+            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
+            this.frontLayer       = new PIXI.DisplayObjectContainer();
             
             // Get a version of the rectangle that defines the beaker size and
             //   location in the view.
@@ -78,6 +78,7 @@ define(function(require) {
             this.initBeaker();
             this.initFluid();
             this.initLabel();
+            this.initEnergyChunks();
             
             // Calculate the bounding box for the dragging bounds
             this.boundingBox = this.beakerViewRect.clone();
@@ -189,7 +190,6 @@ define(function(require) {
         },
 
         initFluid: function() {
-
             var left  = this.beakerViewRect.left();
             var right = this.beakerViewRect.right();
             var ellipseHeight = this.ellipseHeight;
@@ -220,6 +220,9 @@ define(function(require) {
 
             this.frontLayer.addChildAt(this.fluidTop, 0);
             this.frontLayer.addChildAt(this.fluidFront, 0);
+
+            this.fluidMask = new PIXI.Graphics();
+            this.energyChunkLayer.addChild(this.fluidMask);
         },
 
         initLabel: function() {
@@ -234,6 +237,19 @@ define(function(require) {
             this.frontLayer.addChild(this.label);
         },
 
+        initEnergyChunks: function() {
+            this.energyChunkLayer.visible = false;
+            this.energyChunkLayer.mask = this.fluidMask;
+
+            _.each(this.model.slices, function(slice) {
+                var view = new EnergyChunkContainerSliceView({
+                    slice: slice,
+                    mvt: this.mvt
+                });
+                this.energyChunkLayer.addChild(view.displayObject);
+            }, this);
+        },
+
         calculateDragBounds: function(dx, dy) {
             var bounds = this.backLayer.getBounds();
             return this._dragBounds.set(
@@ -246,10 +262,12 @@ define(function(require) {
 
         showEnergyChunks: function() {
             this.fluidTop.alpha = this.fluidFront.alpha = 0.8;
+            this.energyChunkLayer.visible = true;
         },
 
         hideEnergyChunks: function() {
             this.fluidTop.alpha = this.fluidFront.alpha = 1;
+            this.energyChunkLayer.visible = false;
         },
 
         updateFluidLevel: function(model, fluidLevel) {
@@ -279,13 +297,35 @@ define(function(require) {
                 )
                 .lineTo(left, top)
                 .endFill();
+
+            this.fluidMask
+                .clear()
+                .beginFill(0x000000, 1)
+                .moveTo(left, top)
+                .bezierCurveTo(
+                    left,  top -ellipseHeight / 2,
+                    right, top -ellipseHeight / 2,
+                    right, top
+                )
+                .lineTo(right, bottom)
+                .bezierCurveTo(
+                    right, bottom + ellipseHeight / 2,
+                    left,  bottom + ellipseHeight / 2,
+                    left,  bottom
+                )
+                .lineTo(left, top)
+                .moveTo(left + 20, bottom - 20)
+                .lineTo(left + 40, bottom - 40)
+                .lineTo(left + 60, bottom - 20)
+                .lineTo(left + 20, bottom - 20)
+                .endFill();
         },
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            this.backLayer.x = this.frontLayer.x = this.grabLayer.x = viewPoint.x;
-            this.backLayer.y = this.frontLayer.y = this.grabLayer.y = viewPoint.y;
-        },
+            this.backLayer.x = this.frontLayer.x = this.energyChunkLayer.x = viewPoint.x;
+            this.backLayer.y = this.frontLayer.y = this.energyChunkLayer.y = viewPoint.y;
+        }
 
     }, Constants.BeakerView);
 
