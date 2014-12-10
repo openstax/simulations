@@ -385,7 +385,7 @@ define(function(require) {
                 steamingProportion = 1 - ((Constants.BOILING_POINT_TEMPERATURE - this.model.getTemperature()) / BeakerView.STEAMING_RANGE);
                 steamingProportion = Math.min(1, Math.max(steamingProportion, 0));
             }
-            //steamingProportion = 0.7;
+            steamingProportion = 0.7;
             //console.log(this.model.getTemperature());
 
             // Add any new steam particles
