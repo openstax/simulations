@@ -306,7 +306,7 @@ define(function (require) {
             }
 
             if (!densestSlice || !densestSlice.energyChunkList.length) {
-                console.error('Beaker - Warning: No energy chunks in the beaker, can\'t extract any.');
+                //console.error('Beaker - Warning: No energy chunks in the beaker, can\'t extract any.');
                 return null;
             }
 

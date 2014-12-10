@@ -18,14 +18,19 @@ define(function (require) {
         this.energyChunk = energyChunk;
         this.destination = new Vector2(destination);
         this.velocity    = new Vector2(0, EnergyChunkWanderController.MAX_VELOCITY);
-        this.initialWanderConstraint = new Rectangle();
         this.countdownTimer = 0;
 
         if (initialWanderConstraint)
-            this.initialWanderConstraint.set(initialWanderConstraint);
+            this.initialWanderConstraint = new Rectangle(initialWanderConstraint);
+
+        this._proposedPosition = new Vector2();
+        this._vectorToDestination = new Vector2();
+        this._translation = new Vector2();
 
         this.resetCountdownTimer();
         this.changeVelocityVector();
+
+        this.totalMovement = new Vector2();
     };
     var C = EnergyChunkWanderController;
 
@@ -51,16 +56,28 @@ define(function (require) {
                 this.velocity.scale(this.energyChunk.get('position').distance(this.destination) * deltaTime);
             }
 
+            var translation = this._translation;
+
             // Stay within the horizontal confines of the initial bounds.
             if (this.initialWanderConstraint && this.energyChunk.get('position').y < this.initialWanderConstraint.top()) {
-                var proposedPosition = this.energyChunk.translate(this.velocity.scale(deltaTime));
+                translation
+                    .set(this.velocity)
+                    .scale(deltaTime);
+                var proposedPosition = this._proposedPosition
+                    .set(this.energyChunk.get('position'))
+                    .add(translation);
                 if (proposedPosition.x < this.initialWanderConstraint.left() || proposedPosition.x > this.initialWanderConstraint.right()) {
                     // Bounce in the x direction to prevent going outside initial bounds.
                     this.velocity.set(-this.velocity.x, this.velocity.y);
                 }
             }
 
-            this.energyChunk.translate(this.velocity.scale(deltaTime));
+            translation
+                .set(this.velocity)
+                .scale(deltaTime);
+            this.totalMovement.add(translation);
+            
+            this.energyChunk.translate(translation);
             this.countdownTimer -= deltaTime;
             if (this.countdownTimer <= 0) {
                 this.changeVelocityVector();
@@ -69,11 +86,13 @@ define(function (require) {
         },
 
         changeVelocityVector: function() {
-            var vectorToDestination = this.destination.sub(this.energyChunk.get('position'));
+            var vectorToDestination = this._vectorToDestination
+                .set(this.destination)
+                .sub(this.energyChunk.get('position'));
             var angle = vectorToDestination.angle();
             if (vectorToDestination.length() > C.DISTANCE_AT_WHICH_TO_STOP_WANDERING) {
                 // Add some randomness to the direction of travel.
-                angle = angle + (Math.random() - 0.5) * 2 * C.MAX_ANGLE_VARIATION;
+                angle += (Math.random() - 0.5) * 2 * C.MAX_ANGLE_VARIATION;
             }
             var scalarVelocity = C.MIN_VELOCITY 
                                + (C.MAX_VELOCITY - C.MIN_VELOCITY) 

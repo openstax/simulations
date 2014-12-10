@@ -212,7 +212,7 @@ define(function (require) {
                 this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
             }
             else {
-                console.error('Burner - Warning: Request for energy chunk from burner when not in heat mode and no chunks contained, returning null.');
+                //console.error('Burner - Warning: Request for energy chunk from burner when not in heat mode and no chunks contained, returning null.');
             }
 
             return closestChunk;

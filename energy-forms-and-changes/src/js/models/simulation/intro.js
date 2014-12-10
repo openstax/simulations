@@ -93,12 +93,20 @@ define(function (require, exports, module) {
                 this.ironBlock
             ];
 
+            // List of all objects that need updating
+            this.models = _.flatten([
+                this.air,
+                this.supportingSurfaces,
+                this.thermometers
+            ]);
+
+
             // Cached objects
             this._location   = new Vector2();
             this._pointAbove = new Vector2();
-            this._initialMotionConstraints = new Vector2();
             this._translation = new Vector2();
             this._allowedTranslation = new Vector2();
+            this._initialMotionConstraints = new Rectangle();
             this._burnerBlockingRect = new Rectangle();
             this._beakerLeftSide = new Rectangle();
             this._beakerRightSide = new Rectangle();
@@ -172,6 +180,9 @@ define(function (require, exports, module) {
 
             // Exchange energy between objects
             this._exchangeEnergy(time, deltaTime);
+
+            for (var i = 0; i < this.models.length; i++)
+                this.models[i].update(time, deltaTime);
         },
 
         /**
@@ -284,9 +295,9 @@ define(function (require, exports, module) {
                     if (elem1.getThermalContactArea().getThermalContactLength(elem2.getThermalContactArea()) > 0) {
                         // Exchange chunks if appropriate
                         if (elem1.getEnergyChunkBalance() > 0 && elem2.getEnergyChunkBalance() < 0)
-                            elem2.addEnergyChunk(elem1.extractClosestEnergyChunk(elem2.getThermalContactArea.getBounds()));
+                            elem2.addEnergyChunk(elem1.extractClosestEnergyChunk(elem2.getThermalContactArea().getBounds()));
                         else if (elem1.getEnergyChunkBalance() < 0 && elem2.getEnergyChunkBalance() > 0)
-                            elem1.addEnergyChunk(elem2.extractClosestEnergyChunk(elem1.getThermalContactArea.getBounds()));
+                            elem1.addEnergyChunk(elem2.extractClosestEnergyChunk(elem1.getThermalContactArea().getBounds()));
                     }
                 }
             }

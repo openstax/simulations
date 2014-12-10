@@ -23,6 +23,7 @@ define(function(require) {
 			this.mvt = options.mvt;
 
 			this.energyChunkViews = [];
+			this.displayObject.visible = false;
 
 			this.listenTo(this.model, 'add-chunk',    this.chunkAdded);
 			this.listenTo(this.model, 'remove-chunk', this.chunkRemoved);
