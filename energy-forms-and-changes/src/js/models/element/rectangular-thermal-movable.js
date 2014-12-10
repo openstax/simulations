@@ -56,7 +56,7 @@ define(function (require) {
 			this.nextSliceIndex = this.slices.length / 2;
 
 			// Energy chunks that are approaching this model element
-			this.approachingEnergyChunks = new Backbone.Collection({ model: EnergyChunk });
+			this.approachingEnergyChunks = new Backbone.Collection([], { model: EnergyChunk });
 			this.energyChunkWanderControllers = [];
 
 			// Add the initial energy chunks

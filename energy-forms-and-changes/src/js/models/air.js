@@ -27,7 +27,7 @@ define(function (require) {
 		},
 		
 		initialize: function(attributes, options) {
-			this.energyChunksList = new Backbone.Collection({ model: EnergyChunk });
+			this.energyChunkList = new Backbone.Collection([], { model: EnergyChunk });
 			this.energyChunkWanderControllers = [];
 
 			this._centerPoint = new Vector2();

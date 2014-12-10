@@ -37,7 +37,7 @@ define(function (require) {
             this._centerPoint = new Vector2();
 
             // Energy chunks
-            this.energyChunkList = new Backbone.Collection({ model: EnergyChunk });;
+            this.energyChunkList = new Backbone.Collection([], { model: EnergyChunk });
             this.energyChunkWanderControllers = [];
 
             // Create and add the top surface.  Some compensation for perspective
@@ -187,7 +187,7 @@ define(function (require) {
                         // Found a closer chunk.
                         closestChunk = chunk;
                     }
-                });
+                }, this);
 
                 this.energyChunkList.remove(closestChunk);
 
@@ -226,8 +226,8 @@ define(function (require) {
         },
 
         areAnyOnTop: function(thermalEnergyContainers) {
-            for (var i = 0; i < this.thermalEnergyContainers; i++) {
-                if (this.inContactWith(this.thermalEnergyContainers[i]))
+            for (var i = 0; i < thermalEnergyContainers.length; i++) {
+                if (this.inContactWith(thermalEnergyContainers[i]))
                     return true;
             }
             return false;

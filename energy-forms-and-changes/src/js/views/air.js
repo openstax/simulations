@@ -17,6 +17,11 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
+			if (options.mvt === undefined)
+				throw 'EnergyChunkView requires a ModelViewTransform object specified in the options as "mvt".';
+
+			this.mvt = options.mvt;
+
 			this.energyChunkViews = [];
 
 			this.listenTo(this.model, 'add-chunk',    this.chunkAdded);
@@ -29,16 +34,15 @@ define(function(require) {
 
 		chunkAdded: function(model, chunk) {
 			var energyChunkView = new EnergyChunkView({
-				model: chunk
+				model: chunk,
+				mvt: this.mvt
 			});
 			this.displayObject.addChild(energyChunkView.displayObject);
 			this.energyChunkViews.push(energyChunkView);
 		},
 
 		chunkRemoved: function(model, chunk) {
-			var energyChunkView = _.findWhere(this.energyChunkViews, {
-				model: chunk
-			});
+			var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
 			this.displayObject.removeChild(energyChunkView.displayObject);
 			this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
 		}

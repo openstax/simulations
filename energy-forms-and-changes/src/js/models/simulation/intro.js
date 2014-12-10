@@ -171,7 +171,7 @@ define(function (require, exports, module) {
             ]);
 
             // Exchange energy between objects
-            this._exchangeEnergyChunks(time, deltaTime);
+            this._exchangeEnergy(time, deltaTime);
         },
 
         /**
@@ -222,7 +222,7 @@ define(function (require, exports, module) {
         /**
          * 
          */
-        _exchangeEnergyChunks: function(time, deltaTime) {
+        _exchangeEnergy: function(time, deltaTime) {
             var i;
             var j;
 
@@ -331,7 +331,7 @@ define(function (require, exports, module) {
                     this.air.exchangeEnergyWith(element, deltaTime);
                     if (element.getEnergyChunkBalance() > 0) {
                         var pointAbove = this._pointAbove.set(
-                            Math.random() * element.getRect().w + element.getRect.left(),
+                            Math.random() * element.getRect().w + element.getRect().left(),
                             element.getRect().top()
                         );
                         var chunk = element.extractClosestEnergyChunk(pointAbove);
