@@ -45,6 +45,14 @@ define(function(require) {
 			var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
 			this.displayObject.removeChild(energyChunkView.displayObject);
 			this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
+		},
+
+		showEnergyChunks: function() {
+		    this.displayObject.visible = true;
+		},
+
+		hideEnergyChunks: function() {
+		    this.displayObject.visible = false;
 		}
 
 	});

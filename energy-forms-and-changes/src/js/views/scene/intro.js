@@ -117,6 +117,9 @@ define(function(require) {
             var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
             this.airLayer.addChild(air.displayObject);
             this.views.push(air);
+
+            air.listenTo(this, 'show-energy-chunks', air.showEnergyChunks);
+            air.listenTo(this, 'hide-energy-chunks', air.hideEnergyChunks);
         },
 
         initBlocks: function() {

@@ -194,6 +194,7 @@ define(function(require) {
                 this.sliderView.val(0);
                 this.fire.anchor.y = 0;
                 this.ice.anchor.y = 0;
+                this.model.set('heatCoolLevel', 0);
             });
             
 
