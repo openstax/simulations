@@ -188,6 +188,7 @@ define(function(require) {
                     this.fire.anchor.y = 0;
                     this.ice.anchor.y = percent;
                 }
+                this.model.set('heatCoolLevel', value);
             });
             this.listenTo(this.sliderView, 'drag-end', function() {
                 this.sliderView.val(0);

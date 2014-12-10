@@ -34,6 +34,8 @@ define(function (require) {
     var Beaker = RectangularThermalMovableElement.extend({
 
         defaults: _.extend({}, RectangularThermalMovableElement.prototype.defaults, {
+            energyContainerCategory: EnergyContainerCategory.WATER,
+
             // Property that is used to control and track the amount of fluid in the beaker.
             fluidLevel: Constants.Beaker.INITIAL_FLUID_LEVEL,
             // Property that allows temperature changes to be monitored.
