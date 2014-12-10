@@ -41,7 +41,7 @@ define(function (require) {
 
             this.on('change:position', this.updateTopSurface);
             this.on('change:position', this.updateBottomSurface);
-            //this.on('change:position', this.positionEnergyChunkSlices);
+            //this.on('change:position', this.positionEnergyChunkSlices); this is already addressed in RectangularThermalMovableElement
         },
 
         /**

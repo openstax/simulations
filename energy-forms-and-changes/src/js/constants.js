@@ -8,13 +8,32 @@ define(function (require) {
 
     var ThermalContactArea = require('models/thermal-contact-area');
 
-    var Constants = {};
+    /*************************************************************************
+     **                                                                     **
+     **                           HELPER FUNCTIONS                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var range = function(rangeObject) {
+        rangeObject.random = function() {
+            return (this.max - this.min) * Math.random() + this.min;
+        };;
+
+        rangeObject.lerp = function(percent) {
+            return (this.max - this.min) * percent + this.min;
+        };
+
+        return rangeObject;
+    };
+    
 
     /*************************************************************************
      **                                                                     **
      **                         UNIVERSAL CONSTANTS                         **
      **                                                                     **
      *************************************************************************/
+
+    var Constants = {}; 
 
     Constants.ROOM_TEMPERATURE           = 296;    // In Kelvin.
     Constants.FREEZING_POINT_TEMPERATURE = 273.15; // In Kelvin.
@@ -257,13 +276,16 @@ define(function (require) {
     BeakerView.WATER_FILL_ALPHA = 0.5;
     BeakerView.WATER_LINE_COLOR = '#82A09E';
     BeakerView.WATER_LINE_WIDTH = 2;
+
     BeakerView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
-    BeakerView.STEAM_BUBBLE_SPEED_RANGE = { min: 100, max: 125 }; // In screen coords (basically pixels) per second.
-    BeakerView.STEAM_BUBBLE_DIAMETER_RANGE = { min: 20, max: 50 }; // In screen coords (basically pixels).
-    BeakerView.MAX_STEAM_BUBBLE_HEIGHT = 300;
-    BeakerView.STEAM_BUBBLE_PRODUCTION_RATE_RANGE = { min: 20, max: 40 }; // Bubbles per second.
-    BeakerView.STEAM_BUBBLE_GROWTH_RATE = 0.2; // Proportion per second.
-    BeakerView.MAX_STEAM_BUBBLE_OPACITY = 0.7; // Proportion, 1 is max.
+    BeakerView.STEAM_PARTICLE_COLOR = '#fff';
+    BeakerView.STEAM_PARTICLE_SPEED_RANGE           = range({ min: 100, max: 125 }); // In screen coords (basically pixels) per second.
+    BeakerView.STEAM_PARTICLE_RADIUS_RANGE          = range({ min: 15,  max: 40  }); // In screen coords (basically pixels).
+    BeakerView.STEAM_PARTICLE_LIFE_RANGE            = range({ min: 2,   max: 4   }); // Seconds to live
+    BeakerView.STEAM_PARTICLE_PRODUCTION_RATE_RANGE = range({ min: 20,  max: 40  }); // Particles per second.
+    BeakerView.STEAM_PARTICLE_GROWTH_RATE = 0.2; // Proportion per second.
+    BeakerView.MAX_STEAM_PARTICLE_OPACITY = 0.7; // Proportion, 1 is max.
+    BeakerView.NUM_STEAM_PARTICLES = 200;
 
     Constants.BeakerView = BeakerView;
 

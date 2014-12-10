@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PiecewiseCurve = require('../math/piecewise-curve');
+    var Colors = require('../colors/colors');
 
     /**
      * Draws a piecewise curve onto a graphics context, filling if asked
@@ -245,6 +246,38 @@ define(function(require) {
             return this.position;
         else
             return this.toGlobal(this.parent.getGlobalPosition());
+    };
+
+    /**
+     * Creates a texture of a circle with a radial gradient.  The
+     *   first radius (r1) is the radius of the solid part of the
+     *   particle.  (If the desired effect is a particle whose 
+     *   color fades from the center linearly until it becomes
+     *   transparent at the outer edge, r1 should be 0.)  The
+     *   second radius (r2) is the outer extend of the gradient--
+     *   the point at which the color will be transparent.
+     */
+    PIXI.Texture.generateRoundParticleTexture = function(r1, r2, color) {
+        if (r2 <= 0)
+            throw 'Outer radius cannot be zero or a negative value.';
+
+        // Draw on a canvas and then use it as a texture for our particles
+        var canvas = document.createElement('canvas');
+        canvas.width  = r2 * 2;
+        canvas.height = r2 * 2;
+
+        var rgba = Colors.toRgba(color, true);
+
+        var ctx = canvas.getContext('2d');
+
+        var gradient = ctx.createRadialGradient(r2, r2, r1, r2, r2, r2);
+        gradient.addColorStop(0, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',1)');
+        gradient.addColorStop(1, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',0)');
+
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, r2 * 2, r2 * 2);
+
+        return new PIXI.Texture.fromCanvas(canvas);
     };
 
     return PIXI;

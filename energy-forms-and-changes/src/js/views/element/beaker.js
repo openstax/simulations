@@ -14,6 +14,10 @@ define(function(require) {
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
     var Constants = require('constants');
+    var BV = Constants.BeakerView;
+
+    // Generate a texture to use as the steam particle
+    var steamParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, BV.STEAM_PARTICLE_RADIUS_RANGE.max, BV.STEAM_PARTICLE_COLOR);
 
     /**
      * A view that represents a block model
@@ -79,6 +83,7 @@ define(function(require) {
             this.initFluid();
             this.initLabel();
             this.initEnergyChunks();
+            this.initSteam();
             
             // Calculate the bounding box for the dragging bounds
             this.boundingBox = this.beakerViewRect.clone();
@@ -218,8 +223,11 @@ define(function(require) {
             this.fluidTop = PIXI.Sprite.fromPiecewiseCurve(fluidTopCurve, fluidStyle);
             this.fluidFront = new PIXI.Graphics();
 
-            this.frontLayer.addChildAt(this.fluidTop, 0);
-            this.frontLayer.addChildAt(this.fluidFront, 0);
+            this.fluidLayer = new PIXI.DisplayObjectContainer();
+            this.fluidLayer.addChild(this.fluidFront);
+            this.fluidLayer.addChild(this.fluidTop);
+
+            this.frontLayer.addChildAt(this.fluidLayer, 0);
 
             this.fluidMask = new PIXI.Graphics();
             this.energyChunkLayer.addChild(this.fluidMask);
@@ -248,6 +256,47 @@ define(function(require) {
                 });
                 this.energyChunkLayer.addChild(view.displayObject);
             }, this);
+        },
+
+        initSteam: function() {
+            this.steamLayer = new PIXI.SpriteBatch();
+            this.fluidLayer.addChild(this.steamLayer);
+
+            this.activeSteamParticles = [];
+            this.dormantSteamParticles = [];
+            var particle;
+            for (var i = 0; i < BeakerView.NUM_STEAM_PARTICLES; i++) {
+                particle = new PIXI.Sprite(steamParticleTexture);
+                particle.visible = false;
+                this.steamLayer.addChild(particle);
+                this.dormantSteamParticles.push(particle);
+            }
+
+            this.particleProductionRemainder = 0;
+        },
+
+        activateSteamParticle: function(time, scale, x, y) {
+            if (!this.dormantSteamParticles.length)
+                return null;
+
+            var particle = this.dormantSteamParticles.pop();
+            particle.x = x;
+            particle.y = y;
+            particle.scale.x = particle.scale.y = scale;
+            particle.anchor.x = particle.anchor.y = 0.5;
+            particle.alpha = 0;
+            particle.visible = true;
+            particle.timeToLive = BeakerView.STEAM_PARTICLE_LIFE_RANGE.random()
+            particle.lifeEndsAt = time + particle.timeToLive;
+            this.activeSteamParticles.push(particle);
+
+            return particle;
+        },
+
+        reset: function() {
+            ElementView.prototype.reset.apply(this);
+
+            
         },
 
         calculateDragBounds: function(dx, dy) {
@@ -325,6 +374,76 @@ define(function(require) {
             var viewPoint = this.mvt.modelToView(position);
             this.backLayer.x = this.frontLayer.x = this.energyChunkLayer.x = viewPoint.x;
             this.backLayer.y = this.frontLayer.y = this.energyChunkLayer.y = viewPoint.y;
+        },
+
+        updateSteam: function(time, deltaTime) {
+            var fluidTop = (this.beakerViewRect.bottom() - this.beakerViewRect.h) * this.model.get('fluidLevel');
+
+            var steamingProportion = 0;
+            if (Constants.BOILING_POINT_TEMPERATURE - this.model.get('temperature') < BeakerView.STEAMING_RANGE) {
+                // Water is emitting some amount of steam.  Set the proportionate amount.
+                steamingProportion = 1 - ((Constants.BOILING_POINT_TEMPERATURE - this.model.get('temperature')) / BeakerView.STEAMING_RANGE);
+                steamingProportion = Math.min(1, Math.max(steamingProportion, 0));
+            }
+            steamingProportion = 0.7;
+
+            // Add any new steam particles
+            if (steamingProportion > 0) {
+                var particlesToProduce = BeakerView.STEAM_PARTICLE_PRODUCTION_RATE_RANGE.lerp(steamingProportion) * deltaTime;
+                
+                this.particleProductionRemainder += particlesToProduce % 1;
+                if (this.particleProductionRemainder >= 1) {
+                    particlesToProduce += Math.floor(this.particleProductionRemainder);
+                    this.particleProductionRemainder -= Math.floor(this.particleProductionRemainder);
+                }
+                particlesToProduce = Math.floor(particlesToProduce);
+
+                var scale;
+                var x;
+                var particle;
+                for (var i = 0; i < particlesToProduce; i++) {
+                    scale = BeakerView.STEAM_PARTICLE_RADIUS_RANGE.random() / BeakerView.STEAM_PARTICLE_RADIUS_RANGE.max;
+                    x = (Math.random() - 0.5) * (this.beakerViewRect.w - steamParticleTexture.width);
+                    this.activateSteamParticle(time, scale, x, fluidTop);
+                }
+            }
+
+            // Update existing steam particles
+            var speed = BeakerView.STEAM_PARTICLE_SPEED_RANGE.lerp(steamingProportion);
+            var unfilledBeakerHeight = this.beakerViewRect.h * (1 - this.model.get('fluidLevel'));
+            var fadeInDistance = unfilledBeakerHeight / 4;
+            var centerX = 0;
+
+            var particle;
+            for (var i = this.activeSteamParticles.length - 1; i >= 0; i--) {
+                particle = this.activeSteamParticles[i];
+                particle.y += deltaTime * -speed;
+
+                if (time >= particle.lifeEndsAt) {
+                    particle.visible = false;
+                    this.activeSteamParticles.splice(i, 1);
+                    this.dormantSteamParticles.push(particle);
+                }
+                else if (particle.y < -this.beakerViewRect.h) {
+                    var scale = particle.scale.x * (1 + BeakerView.STEAM_PARTICLE_GROWTH_RATE * deltaTime);
+                    particle.scale.x = particle.scale.y = scale;
+                    var distanceFromCenterX = particle.x - centerX;
+                    particle.x += distanceFromCenterX * 0.2 * deltaTime;
+
+                    // Fade the particle out as it reaches the end of its life
+                    particle.alpha = ((particle.lifeEndsAt - time) / particle.timeToLive) * BeakerView.MAX_STEAM_PARTICLE_OPACITY;
+                }
+                else {
+                    // Fade the particle in
+                    var distanceFromWater = fluidTop - particle.y;
+                    particle.alpha = Math.min(1, Math.max(0, (distanceFromWater / fadeInDistance))) * BeakerView.MAX_STEAM_PARTICLE_OPACITY;
+                }
+            }
+        },
+
+        update: function(time, deltaTime, simulationPaused) {
+            if (!simulationPaused)
+                this.updateSteam(time, deltaTime);
         }
 
     }, Constants.BeakerView);
