@@ -50,6 +50,7 @@ define(function(require) {
 		chunkRemoved: function(chunk) {
 			for (var i = 0; i < this.views.length; i++) {
 				if (this.views[i].model === chunk) {
+					this.views[i].stopListening();
 					this.displayObject.removeChild(this.views[i].displayObject);
 					this.views.slice(i, 1);
 					break;

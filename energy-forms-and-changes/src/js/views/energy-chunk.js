@@ -90,6 +90,9 @@ define(function(require) {
 	            this.displayObject.x = localPoint.x;
 	            this.displayObject.y = localPoint.y;	
 			}
+			else {
+				console.log('not ready to update position yet');
+			}
 		}
 
 	}, Constants.EnergyChunkView);

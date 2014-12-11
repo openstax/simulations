@@ -8,10 +8,7 @@ define(function(require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
     var Colors = require('common/colors/colors');
 
-    var ElementView = require('views/element');
-    //var Beaker      = require('models/element/beaker');
-    //var Assets      = require('assets');
-    var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
+    var ThermalElementView = require('views/element/thermal');
 
     var Constants = require('constants');
     var BV = Constants.BeakerView;
@@ -22,7 +19,7 @@ define(function(require) {
     /**
      * A view that represents a block model
      */
-    var BeakerView = ElementView.extend({
+    var BeakerView = ThermalElementView.extend({
 
         events: {
             'touchstart      .backLayer': 'dragStart',
@@ -63,7 +60,7 @@ define(function(require) {
             this.fluidFillColorHex = Colors.parseHex(this.fluidFillColor);
             this.fluidLineColorHex = Colors.parseHex(this.fluidLineColor);
 
-            ElementView.prototype.initialize.apply(this, [options]);
+            ThermalElementView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:fluidLevel', this.updateFluidLevel);
             this.updateFluidLevel(this.model, this.model.get('fluidLevel'));
@@ -82,7 +79,7 @@ define(function(require) {
             this.initBeaker();
             this.initFluid();
             this.initLabel();
-            this.initEnergyChunks();
+            this.initEnergyChunks(this.energyChunkLayer);
             this.initSteam();
             
             // Calculate the bounding box for the dragging bounds
@@ -245,17 +242,10 @@ define(function(require) {
             this.frontLayer.addChild(this.label);
         },
 
-        initEnergyChunks: function() {
-            this.energyChunkLayer.visible = false;
-            this.energyChunkLayer.mask = this.fluidMask;
+        initEnergyChunks: function(energyChunkLayer) {
+            ThermalElementView.prototype.initEnergyChunks.apply(this, [energyChunkLayer]);
 
-            _.each(this.model.slices, function(slice) {
-                var view = new EnergyChunkContainerSliceView({
-                    slice: slice,
-                    mvt: this.mvt
-                });
-                this.energyChunkLayer.addChild(view.displayObject);
-            }, this);
+            energyChunkLayer.mask = this.fluidMask;
         },
 
         initSteam: function() {
@@ -294,7 +284,7 @@ define(function(require) {
         },
 
         reset: function() {
-            ElementView.prototype.reset.apply(this);
+            ThermalElementView.prototype.reset.apply(this);
 
             
         },

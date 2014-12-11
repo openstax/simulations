@@ -81,10 +81,10 @@ define(function (require) {
 		},
 
 		update: function(time, delta) {
-			// Distribute the energy chunks contained within this element.
-			EnergyChunkDistributor.updatePositions(this.slices, delta);
+			// // Distribute the energy chunks contained within this element.
+			// EnergyChunkDistributor.updatePositions(this.slices, delta);
 
-			// Animate the energy chunks that are outside this element.
+			// // Animate the energy chunks that are outside this element.
 			this.animateUncontainedEnergyChunks(delta);
 		},
 
@@ -107,8 +107,8 @@ define(function (require) {
 				console.log(this.cid + ' controller count: ' + this.energyChunkWanderControllers.length);
 			_.each(this.energyChunkWanderControllers, function(energyChunkWanderController) {
 				energyChunkWanderController.updatePosition(deltaTime);
-				if (this.getSliceBounds().contains(energyChunkWanderController.getEnergyChunk().get('position')))
-					this.moveEnergyChunkToSlices(energyChunkWanderController.getEnergyChunk());
+				if (this.getSliceBounds().contains(energyChunkWanderController.energyChunk.get('position')))
+					this.moveEnergyChunkToSlices(energyChunkWanderController.energyChunk);
 			}, this);
 		},
 
