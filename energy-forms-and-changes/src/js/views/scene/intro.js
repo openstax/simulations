@@ -114,7 +114,10 @@ define(function(require) {
         },
 
         initAir: function() {
-            var air = new AirView({ model: this.simulation.air, mvt: this.mvt });
+            var air = new AirView({ 
+                model: this.simulation.air, 
+                mvt: this.mvt
+            });
             this.airLayer.addChild(air.displayObject);
             this.views.push(air);
 
@@ -136,6 +139,7 @@ define(function(require) {
             this.brickView = new BrickView({ 
                 model: this.simulation.brick,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
@@ -145,7 +149,8 @@ define(function(require) {
             
             this.ironBlockView = new BlockView({ 
                 model: this.simulation.ironBlock, 
-                mvt: this.mvt, 
+                mvt: this.mvt,
+                simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
                 lineWidth: Constants.BlockView.LINE_WIDTH,
@@ -187,6 +192,7 @@ define(function(require) {
             this.beakerView = new BeakerView({
                 model: this.simulation.beaker,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 movable: true,
                 movementConstraint: movementConstraint,
                 movementConstraintBounds: movementConstraintBounds
@@ -208,7 +214,8 @@ define(function(require) {
             _.each(this.simulation.thermometers, function(thermometer) {
                 var view = new ThermometerView({
                     model: thermometer,
-                    mvt: this.mvt
+                    mvt: this.mvt,
+                    simulation: this.simulation
                 });
                 thermometerViews.push(view);
                 this.views.push(view);
@@ -242,18 +249,21 @@ define(function(require) {
             var leftBurnerStandView = new BurnerStandView({
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 projectedEdgeLength: burnerProjectionAmount
             });
 
             var rightBurnerStandView = new BurnerStandView({
                 model: this.simulation.rightBurner,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 projectedEdgeLength: burnerProjectionAmount
             });
 
             var leftBurnerView = new BurnerView({
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight
@@ -262,6 +272,7 @@ define(function(require) {
             var rightBurnerView = new BurnerView({
                 model: this.simulation.rightBurner,
                 mvt: this.mvt,
+                simulation: this.simulation,
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight

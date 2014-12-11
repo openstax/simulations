@@ -54,35 +54,35 @@ define(function (require) {
             this._vec2 = new Vector2(0, 0);
         },
 
-        translate: function(x, y) {
+        translate: function(x, y, options) {
             var oldPosition = this.get('position');
             var newPosition = vectorPool.create().set(this.get('position'));
 
             if (x instanceof Vector2)
-                this.set('position', newPosition.add(x));
+                this.set('position', newPosition.add(x), y);
             else
-                this.set('position', newPosition.add(x, y));
+                this.set('position', newPosition.add(x, y), options);
             
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);
         },
 
-        translateBasedOnVelocity: function(time) {
+        translateBasedOnVelocity: function(time, options) {
             this._vec2.set(this.get('velocity'));
-            this.translate(this._vec2.scale(time));
+            this.translate(this._vec2.scale(time), options);
         },
 
         /**
          * Shortcut function that allows setting position to the values
          *   from an arbitrary vector but still triggering a change.
          */
-        setPosition: function(x, y) {
+        setPosition: function(x, y, options) {
             var oldPosition = this.get('position');
             
             if (x instanceof Vector2)
-                this.set('position', vectorPool.create().set(x));
+                this.set('position', vectorPool.create().set(x), y);
             else
-                this.set('position', vectorPool.create().set(x, y));
+                this.set('position', vectorPool.create().set(x, y), options);
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);
@@ -92,26 +92,26 @@ define(function (require) {
          * Shortcut function that allows setting velocity to the values
          *   from an arbitrary vector but still triggering a change.
          */
-        setVelocity: function(x, y) {
+        setVelocity: function(x, y, options) {
             var oldVelocity = this.get('velocity');
             
             if (x instanceof Vector2)
-                this.set('velocity', vectorPool.create().set(x));
+                this.set('velocity', vectorPool.create().set(x), y);
             else
-                this.set('velocity', vectorPool.create().set(x, y));
+                this.set('velocity', vectorPool.create().set(x, y), options);
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldVelocity);
         },
 
-        addVelocity: function(x, y) {
+        addVelocity: function(x, y, options) {
             var oldVelocity = this.get('velocity');
             var newVelocity = vectorPool.create().set(this.get('velocity'));
 
             if (x instanceof Vector2)
-                this.set('velocity', newVelocity.add(x));
+                this.set('velocity', newVelocity.add(x), y);
             else
-                this.set('velocity', newVelocity.add(x, y));
+                this.set('velocity', newVelocity.add(x, y), options);
             
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldVelocity);

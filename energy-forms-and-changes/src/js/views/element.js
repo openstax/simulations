@@ -55,6 +55,7 @@ define(function(require) {
             }, options);
 
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
             this.movable = options.movable || false;
             this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
@@ -97,7 +98,7 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            if (this.movable) {
+            if (this.movable && !this.simulation.get('paused')) {
                 this.dragOffset = data.getLocalPosition(this[this.dragLayer], this._dragOffset);
                 this.dragging = true;
                 this.model.set('userControlled', true);    

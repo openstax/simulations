@@ -29,8 +29,6 @@ define(function (require) {
 
         this.resetCountdownTimer();
         this.changeVelocityVector();
-
-        this.totalMovement = new Vector2();
     };
     var C = EnergyChunkWanderController;
 
@@ -75,7 +73,11 @@ define(function (require) {
             translation
                 .set(this.velocity)
                 .scale(deltaTime);
-            this.totalMovement.add(translation);
+
+            // if (!this._debugEnergyChunk)
+            //     this._debugEnergyChunk = this.energyChunk;
+            // if (this._debugEnergyChunk == this.energyChunk)
+            //     console.log('current: ' + this.energyChunk.get('position').x.toFixed(2) + ',' + this.energyChunk.get('position').y.toFixed(2) + ' target: ' + this.destination.x.toFixed(2) + ',' + this.destination.y.toFixed(2));
             
             this.energyChunk.translate(translation);
             this.countdownTimer -= deltaTime;

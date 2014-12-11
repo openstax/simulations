@@ -274,6 +274,7 @@ define(function (require, exports, module) {
                         if (burner.canSupplyEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() > 0 || element.getEnergyChunkBalance() < 0)) {
                             // Push an energy chunk into the item on the burner.
                             element.addEnergyChunk(burner.extractClosestEnergyChunk(element.getCenterPoint()));
+                            console.log('burner giving chunk to element (' + element.cid + ')');
                         }
                         else if (burner.canAcceptEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() < 0 || element.getEnergyChunkBalance() > 0)) {
                             // Extract an energy chunk from the model element.
@@ -347,6 +348,7 @@ define(function (require, exports, module) {
                         );
                         var chunk = element.extractClosestEnergyChunk(pointAbove);
                         if (chunk) {
+                            //console.log('(' + element.cid + ') giving chunk to air');
                             var initialMotionConstraints = null;
                             if (element instanceof Beaker) {
                                 // Constrain the energy chunk's motion so that it

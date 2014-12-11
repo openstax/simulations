@@ -103,6 +103,8 @@ define(function (require) {
 		},
 
 		animateUncontainedEnergyChunks: function(deltaTime) {
+			if (this.energyChunkWanderControllers.length)
+				console.log(this.cid + ' controller count: ' + this.energyChunkWanderControllers.length);
 			_.each(this.energyChunkWanderControllers, function(energyChunkWanderController) {
 				energyChunkWanderController.updatePosition(deltaTime);
 				if (this.getSliceBounds().contains(energyChunkWanderController.getEnergyChunk().get('position')))
@@ -129,8 +131,9 @@ define(function (require) {
 				// Chunk is out of the bounds of this element, so make it wander
 				//   towards it.
 				chunk.zPosition = 0;
-				this.approachingEnergyChunks.push(chunk);
+				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
+				console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
 			}
 		},
 

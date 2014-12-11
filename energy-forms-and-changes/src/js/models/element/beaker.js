@@ -93,10 +93,6 @@ define(function (require) {
             this.updateSurfaces();
         },
 
-        update: function(time, deltaTime) {
-
-        },
-
         updateSurfaces: function() {
             this.topSurface.xMin = this.getRect().left();
             this.topSurface.xMax = this.getRect().right();
