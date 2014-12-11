@@ -198,7 +198,7 @@ define(function (require) {
 		removeEnergyChunk: function(chunk) {
 			for (var i = 0; i < this.slices.length; i++) {
 				if (this.slices[i].containsEnergyChunk(chunk)) {
-					this.slices[i].removeEnergyChunk(chunk)
+					this.slices[i].removeEnergyChunk(chunk);
 					return true;
 				}
 			}

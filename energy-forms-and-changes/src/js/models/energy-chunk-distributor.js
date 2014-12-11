@@ -214,7 +214,7 @@ define(function (require) {
                 dragForceVector.set(0, 0);
 
             // Update velocity based on drag force.
-            newVelocity.add(dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS))
+            newVelocity.add(dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
             chunk.setVelocity(newVelocity, silent);
 
             // Return the new total energy

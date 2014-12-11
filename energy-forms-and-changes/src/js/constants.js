@@ -17,7 +17,7 @@ define(function (require) {
     var range = function(rangeObject) {
         rangeObject.random = function() {
             return (this.max - this.min) * Math.random() + this.min;
-        };;
+        };
 
         rangeObject.lerp = function(percent) {
             return (this.max - this.min) * percent + this.min;

@@ -8,8 +8,6 @@ define(function(require) {
     
 
     var PixiView       = require('common/pixi/view');
-    var Colors         = require('common/colors/colors');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
     var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
 

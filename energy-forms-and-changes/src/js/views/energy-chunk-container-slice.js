@@ -2,9 +2,6 @@ define(function(require) {
 
 	'use strict';
 
-	//var _    = require('underscore');
-	var PIXI = new require('pixi');
-
 	var PixiView = require('common/pixi/view');
 
 	var EnergyChunkView = require('views/energy-chunk');

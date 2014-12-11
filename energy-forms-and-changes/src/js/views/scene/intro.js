@@ -244,7 +244,6 @@ define(function(require) {
             burnerWidth *= IntroSimulationView.BURNER_WIDTH_SCALE;
             var burnerHeight = burnerWidth * IntroSimulationView.BURNER_HEIGHT_TO_WIDTH_RATIO;
             var burnerOpeningHeight = burnerHeight * 0.2;
-            var burnerYPosTweak = -10; // Empirically determined for best look.
 
             var leftBurnerStandView = new BurnerStandView({
                 model: this.simulation.leftBurner,

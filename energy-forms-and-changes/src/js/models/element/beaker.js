@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var _              = require('underscore');
-    var Vector2        = require('common/math/vector2');
+    //var Vector2        = require('common/math/vector2');
     var Rectangle      = require('common/math/rectangle');
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -140,9 +140,6 @@ define(function (require) {
                 });
                 //console.log(EnergyChunkDistributor.generateRandomLocation(initialChunkBounds));
                 this.addEnergyChunkToNextSlice(chunk);
-                this.on('change:position', function(model, position) {
-                    
-                });
             }
 
             // Distribute the energy chunks within the container.
@@ -306,7 +303,6 @@ define(function (require) {
                 return null;
             }
 
-            var chunk;
             var highestEnergyChunk = densestSlice.energyChunkList.at(0);
             densestSlice.energyChunkList.each(function(chunk) {
                 if (chunk.get('position').y > highestEnergyChunk.get('position').y)

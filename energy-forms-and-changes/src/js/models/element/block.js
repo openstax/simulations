@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var _         = require('underscore');
     var Rectangle = require('common/math/rectangle');
 
     var RectangularThermalMovableElement = require('models/element/rectangular-thermal-movable');

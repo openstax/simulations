@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var _         = require('underscore');
+    var Backbone  = require('backbone');
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
@@ -175,9 +176,6 @@ define(function (require) {
         extractClosestEnergyChunk: function(point) {
             var closestChunk = null;
             if (this.energyChunkList.length) {
-                var i;
-                var removeIndex;
-                var chunk;
                 this.energyChunkList.each(function(chunk) {
                     if (chunk.get('position').distance(this.get('position')) > Burner.ENERGY_CHUNK_CAPTURE_DISTANCE && (
                             closestChunk === null || 
@@ -191,7 +189,7 @@ define(function (require) {
 
                 this.energyChunkList.remove(closestChunk);
 
-                for (i = 0; i < this.energyChunkWanderControllers.length; i++) {
+                for (var i = 0; i < this.energyChunkWanderControllers.length; i++) {
                     if (this.energyChunkWanderControllers[i].energyChunk === closestChunk) {
                         this.energyChunkWanderControllers.splice(i, 1);
                         break;
@@ -212,7 +210,7 @@ define(function (require) {
                 this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
             }
             else {
-                //console.error('Burner - Warning: Request for energy chunk from burner when not in heat mode and no chunks contained, returning null.');
+                console.error('Burner - Warning: Request for energy chunk from burner when not in heat mode and no chunks contained, returning null.');
             }
 
             return closestChunk;

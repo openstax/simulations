@@ -286,7 +286,7 @@ define(function(require) {
             particle.anchor.x = particle.anchor.y = 0.5;
             particle.alpha = 0;
             particle.visible = true;
-            particle.timeToLive = BeakerView.STEAM_PARTICLE_LIFE_RANGE.random()
+            particle.timeToLive = BeakerView.STEAM_PARTICLE_LIFE_RANGE.random();
             particle.lifeEndsAt = time + particle.timeToLive;
             this.activeSteamParticles.push(particle);
 
@@ -399,13 +399,12 @@ define(function(require) {
                 }
                 particlesToProduce = Math.floor(particlesToProduce);
 
-                var scale;
+                var startingScale;
                 var x;
-                var particle;
-                for (var i = 0; i < particlesToProduce; i++) {
-                    scale = BeakerView.STEAM_PARTICLE_RADIUS_RANGE.random() / BeakerView.STEAM_PARTICLE_RADIUS_RANGE.max;
+                for (var k = 0; k < particlesToProduce; k++) {
+                    startingScale = BeakerView.STEAM_PARTICLE_RADIUS_RANGE.random() / BeakerView.STEAM_PARTICLE_RADIUS_RANGE.max;
                     x = (Math.random() - 0.5) * (this.beakerViewRect.w - steamParticleTexture.width);
-                    this.activateSteamParticle(time, scale, x, fluidTop);
+                    this.activateSteamParticle(time, startingScale, x, fluidTop);
                 }
             }
 
