@@ -103,13 +103,18 @@ define(function (require) {
 		},
 
 		animateUncontainedEnergyChunks: function(deltaTime) {
+			if (this.cid === 'beaker')
+				console.log(this.energyChunkWanderControllers.length);
 			if (this.energyChunkWanderControllers.length)
 				console.log(this.cid + ' controller count: ' + this.energyChunkWanderControllers.length);
-			_.each(this.energyChunkWanderControllers, function(energyChunkWanderController) {
-				energyChunkWanderController.updatePosition(deltaTime);
-				if (this.getSliceBounds().contains(energyChunkWanderController.energyChunk.get('position')))
-					this.moveEnergyChunkToSlices(energyChunkWanderController.energyChunk);
-			}, this);
+
+			var controller;
+			for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
+				controller = this.energyChunkWanderControllers[i];
+				controller.updatePosition(deltaTime);
+				if (this.getSliceBounds().contains(controller.energyChunk.get('position'))) { console.log('destination object reached');
+					this.moveEnergyChunkToSlices(controller.energyChunk);}
+			}
 		},
 
 		/**
@@ -121,7 +126,7 @@ define(function (require) {
 		 *
 		 * @param ec Energy chunk to add.
 		 */
-		addEnergyChunk: function(chunk) {
+		addEnergyChunk: function(chunk, fromBurnerDebug) {
 			if (this.getSliceBounds().contains(chunk.get('position'))) {
 				// Energy chunk is positioned within container bounds, so add it
 				//   directly to a slice.
@@ -133,7 +138,10 @@ define(function (require) {
 				chunk.zPosition = 0;
 				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
-				console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
+				if (fromBurnerDebug) {
+					this.energyChunkWanderControllers[this.energyChunkWanderControllers.length - 1].fromBurnerDebug = true;
+					console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
+				}
 			}
 		},
 
@@ -183,11 +191,11 @@ define(function (require) {
 		 */
 		moveEnergyChunkToSlices: function(chunk) {
 			// Remove the chunk from the approaching energy chunks
-			this.approachingEnergyChunks.splice(_.indexOf(this.approachingEnergyChunks, chunk), 1);
+			this.approachingEnergyChunks.remove(chunk);
 
 			// Remove the chunk's controller
 			for (var i = 0; i < this.energyChunkWanderControllers.length; i++) {
-				if (this.energyChunkWanderControllers[i].getEnergyChunk() === chunk)
+				if (this.energyChunkWanderControllers[i].energyChunk === chunk)
 					this.energyChunkWanderControllers.splice(i, 1);
 			}
 
@@ -235,7 +243,7 @@ define(function (require) {
 					//   almost always be chosen.
 					compensatedChunkPosition
 						.set(chunk.get('position'))
-						.minus(0, Constants.Z_TO_Y_OFFSET_MULTIPLIER * chunk.zPosition);
+						.sub(0, Constants.Z_TO_Y_OFFSET_MULTIPLIER * chunk.zPosition);
 					compensatedDistance = compensatedChunkPosition.distance(point);
 
 					if (compensatedDistance < closestCompensatedDistance) {

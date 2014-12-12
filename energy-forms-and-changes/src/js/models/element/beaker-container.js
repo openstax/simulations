@@ -75,8 +75,12 @@ define(function (require) {
 		},
 
 		animateUncontainedEnergyChunks: function(deltaTime) {
-			_.each(this.energyChunkWanderControllers, function(controller) {
-				var chunk = controller.energyChunk;
+			var controller;
+			var chunk;
+			for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
+				controller = this.energyChunkWanderControllers[i];
+				chunk = controller.energyChunk;
+
 				if (this.isEnergyChunkObscured(chunk)) {
 					// This chunk is being transferred from a container in the
 					//   beaker to the fluid, so move it sideways.
@@ -91,21 +95,26 @@ define(function (require) {
 				if (!this.isEnergyChunkObscured(chunk) && this.getSliceBounds().contains(chunk.get('position'))) {
 					// Chunk is in a place where it can migrate to the slices and
 					//   stop moving.
+					console.log('destination reached (beaker-container wanderer)');
 					this.moveEnergyChunkToSlices(controller.energyChunk);
 				}
-			}, this);
+			}
 		},
 
-		addEnergyChunk: function(chunk) {
+		addEnergyChunk: function(chunk, fromBurnerDebug) {
 			if (this.isEnergyChunkObscured(chunk)) {
 				// Chunk obscured by a model element in the beaker, probably
 				//   because the chunk just came from the model element.
 				chunk.zPosition = 0;
 				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
+				if (fromBurnerDebug) {
+					this.energyChunkWanderControllers[this.energyChunkWanderControllers.length - 1].fromBurnerDebug = true;
+					console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
+				}
 			}
 			else {
-				Beaker.prototype.addEnergyChunk.apply(this, [chunk]);
+				Beaker.prototype.addEnergyChunk.apply(this, [chunk, fromBurnerDebug]);
 			}
 		}
 

@@ -53,8 +53,8 @@ define(function(require) {
             for (var i = 0; i < this.approachingEnergyChunkViews.length; i++) {
                 if (this.approachingEnergyChunkViews[i].model === chunk) {
                     this.approachingEnergyChunkViews[i].stopListening();
-                    this.approachingEnergyChunkViews.splice(i, 1);
                     this.approachingEnergyChunkLayer.removeChild(this.approachingEnergyChunkViews[i].displayObject);
+                    this.approachingEnergyChunkViews.splice(i, 1);
                     return;
                 }
             }

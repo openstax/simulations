@@ -282,7 +282,7 @@ define(function (require) {
             }
 
             if (!pointIsAboveWaterSurface) {
-                return Beaker.__super__.extractClosestEnergyChunk(point);
+                return Beaker.__super__.extractClosestEnergyChunk.apply(this, [point]);
             }
 
             // Point is above water surface.  Identify the slice with the highest

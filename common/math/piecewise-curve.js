@@ -144,6 +144,10 @@ define(function (require) {
          * Creates a 2D translation matrix and calls transform.
          */
         translate: function(dx, dy) {
+            if (dx instanceof Vector2) {
+                dy = dx.y;
+                dx = dx.x;
+            }
             this._translation[2] = dx;
             this._translation[5] = dy;
             this.transform(this._translation);
