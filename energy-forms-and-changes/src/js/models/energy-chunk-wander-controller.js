@@ -77,12 +77,12 @@ define(function (require) {
                 .scale(deltaTime);
 
             
-            if (this.fromBurnerDebug) {
-                if (!_debugEnergyChunk)
-                    _debugEnergyChunk = this.energyChunk;
-                if (_debugEnergyChunk === this.energyChunk)
-                    console.log('current: ' + this.energyChunk.get('position').x.toFixed(2) + ',' + this.energyChunk.get('position').y.toFixed(2) + ' target: ' + this.destination.x.toFixed(2) + ',' + this.destination.y.toFixed(2));
-            }
+            // if (this.fromBurnerDebug) {
+            //     if (!_debugEnergyChunk)
+            //         _debugEnergyChunk = this.energyChunk;
+            //     if (_debugEnergyChunk === this.energyChunk)
+            //         console.log('current: ' + this.energyChunk.get('position').x.toFixed(2) + ',' + this.energyChunk.get('position').y.toFixed(2) + ' target: ' + this.destination.x.toFixed(2) + ',' + this.destination.y.toFixed(2));
+            // }
                 
             
             this.energyChunk.translate(translation);
@@ -113,7 +113,6 @@ define(function (require) {
         },
 
         desinationReached: function() {
-            console.log(this.destination.distance(this.energyChunk.get('position')));
             return this.destination.distance(this.energyChunk.get('position')) < 1E-7;
         }
 

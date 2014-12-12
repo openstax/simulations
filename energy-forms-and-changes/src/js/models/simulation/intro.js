@@ -273,8 +273,7 @@ define(function (require, exports, module) {
                     if (burner.inContactWith(element)) {
                         if (burner.canSupplyEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() > 0 || element.getEnergyChunkBalance() < 0)) {
                             // Push an energy chunk into the item on the burner.
-                            element.addEnergyChunk(burner.extractClosestEnergyChunk(element.getCenterPoint()), true);
-                            console.log('burner giving chunk to element (' + element.cid + ')');
+                            element.addEnergyChunk(burner.extractClosestEnergyChunk(element.getCenterPoint()));
                         }
                         else if (burner.canAcceptEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() < 0 || element.getEnergyChunkBalance() > 0)) {
                             // Extract an energy chunk from the model element.

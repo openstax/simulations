@@ -95,26 +95,21 @@ define(function (require) {
 				if (!this.isEnergyChunkObscured(chunk) && this.getSliceBounds().contains(chunk.get('position'))) {
 					// Chunk is in a place where it can migrate to the slices and
 					//   stop moving.
-					console.log('destination reached (beaker-container wanderer)');
 					this.moveEnergyChunkToSlices(controller.energyChunk);
 				}
 			}
 		},
 
-		addEnergyChunk: function(chunk, fromBurnerDebug) {
+		addEnergyChunk: function(chunk) {
 			if (this.isEnergyChunkObscured(chunk)) {
 				// Chunk obscured by a model element in the beaker, probably
 				//   because the chunk just came from the model element.
 				chunk.zPosition = 0;
 				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
-				if (fromBurnerDebug) {
-					this.energyChunkWanderControllers[this.energyChunkWanderControllers.length - 1].fromBurnerDebug = true;
-					console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
-				}
 			}
 			else {
-				Beaker.prototype.addEnergyChunk.apply(this, [chunk, fromBurnerDebug]);
+				Beaker.prototype.addEnergyChunk.apply(this, [chunk]);
 			}
 		}
 

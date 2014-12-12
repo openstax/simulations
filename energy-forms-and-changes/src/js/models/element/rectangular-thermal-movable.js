@@ -103,11 +103,6 @@ define(function (require) {
 		},
 
 		animateUncontainedEnergyChunks: function(deltaTime) {
-			if (this.cid === 'beaker')
-				console.log(this.energyChunkWanderControllers.length);
-			if (this.energyChunkWanderControllers.length)
-				console.log(this.cid + ' controller count: ' + this.energyChunkWanderControllers.length);
-
 			var controller;
 			for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
 				controller = this.energyChunkWanderControllers[i];
@@ -126,7 +121,7 @@ define(function (require) {
 		 *
 		 * @param ec Energy chunk to add.
 		 */
-		addEnergyChunk: function(chunk, fromBurnerDebug) {
+		addEnergyChunk: function(chunk) {
 			if (this.getSliceBounds().contains(chunk.get('position'))) {
 				// Energy chunk is positioned within container bounds, so add it
 				//   directly to a slice.
@@ -138,10 +133,6 @@ define(function (require) {
 				chunk.zPosition = 0;
 				this.approachingEnergyChunks.add(chunk);
 				this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
-				if (fromBurnerDebug) {
-					this.energyChunkWanderControllers[this.energyChunkWanderControllers.length - 1].fromBurnerDebug = true;
-					console.log('chunk starting pos: ' + chunk.get('position').x + ',' + chunk.get('position').y + ' target: ' + this.get('position').x + ',' + this.get('position').y);
-				}
 			}
 		},
 
