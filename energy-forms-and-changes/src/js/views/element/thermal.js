@@ -4,14 +4,10 @@ define(function(require) {
 
     var _       = require('underscore');
     var PIXI    = require('pixi');
-    var Vector2 = require('common/math/vector2');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var ElementView = require('views/element');
     var EnergyChunkView = require('views/energy-chunk');
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
-
-    var Constants = require('constants');
 
     /**
      * A view that represents a block model
