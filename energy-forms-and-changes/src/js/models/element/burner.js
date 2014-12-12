@@ -205,7 +205,7 @@ define(function (require) {
                 });
             }
 
-            if (closestChunk === null) {
+            if (closestChunk) {
                 this.energyExchangedWithAirSinceLastChunkTransfer = 0;
                 this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
             }
