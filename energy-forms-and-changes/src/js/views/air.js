@@ -25,15 +25,15 @@ define(function(require) {
 			this.energyChunkViews = [];
 			this.displayObject.visible = false;
 
-			this.listenTo(this.model, 'add-chunk',    this.chunkAdded);
-			this.listenTo(this.model, 'remove-chunk', this.chunkRemoved);
+			this.listenTo(this.model.energyChunkList, 'add',    this.chunkAdded);
+			this.listenTo(this.model.energyChunkList, 'remove', this.chunkRemoved);
 		},
 
 		update: function(time, deltaTime) {
 			//this.displayObject.rotation += deltaTime * 0.0001;
 		},
 
-		chunkAdded: function(model, chunk) {
+		chunkAdded: function(chunk) {
 			var energyChunkView = new EnergyChunkView({
 				model: chunk,
 				mvt: this.mvt
@@ -42,7 +42,7 @@ define(function(require) {
 			this.energyChunkViews.push(energyChunkView);
 		},
 
-		chunkRemoved: function(model, chunk) {
+		chunkRemoved: function(chunk) {
 			var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
 			this.displayObject.removeChild(energyChunkView.displayObject);
 			this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);

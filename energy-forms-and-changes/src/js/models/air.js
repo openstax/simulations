@@ -119,14 +119,12 @@ define(function (require) {
 				new Vector2(chunk.get('position').x, Air.HEIGHT + 0.05),
 				initialWanderConstraint
 			));
-			this.trigger('add-chunk', this, chunk);
 			airChunks++;
 			$airChunks.html(airChunks);
 		},
 
 		removeEnergyChunk: function(chunk) {
 			this.energyChunkList.remove(chunk);
-			this.trigger('remove-chunk', this, chunk);
 		},
 
 		requestEnergyChunk: function(point) {

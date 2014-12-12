@@ -107,8 +107,8 @@ define(function (require) {
 			for (var i = this.energyChunkWanderControllers.length - 1; i >= 0; i--) {
 				controller = this.energyChunkWanderControllers[i];
 				controller.updatePosition(deltaTime);
-				if (this.getSliceBounds().contains(controller.energyChunk.get('position'))) { console.log('destination object reached');
-					this.moveEnergyChunkToSlices(controller.energyChunk);}
+				if (this.getSliceBounds().contains(controller.energyChunk.get('position')))
+					this.moveEnergyChunkToSlices(controller.energyChunk);
 			}
 		},
 
@@ -186,8 +186,10 @@ define(function (require) {
 
 			// Remove the chunk's controller
 			for (var i = 0; i < this.energyChunkWanderControllers.length; i++) {
-				if (this.energyChunkWanderControllers[i].energyChunk === chunk)
+				if (this.energyChunkWanderControllers[i].energyChunk === chunk) {
 					this.energyChunkWanderControllers.splice(i, 1);
+					break;
+				}
 			}
 
 			// Welcome it to the family

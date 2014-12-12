@@ -60,7 +60,7 @@ define(function(require) {
                     this.approachingEnergyChunkViews[i].stopListening();
                     this.approachingEnergyChunkLayer.removeChild(this.approachingEnergyChunkViews[i].displayObject);
                     this.approachingEnergyChunkViews.splice(i, 1);
-                    return;
+                    break;
                 }
             }
             thermalWanderingChunks--;
