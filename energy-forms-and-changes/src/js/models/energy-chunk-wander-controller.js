@@ -112,7 +112,7 @@ define(function (require) {
             this.countdownTimer = C.MIN_TIME_IN_ONE_DIRECTION + (C.MAX_TIME_IN_ONE_DIRECTION - C.MIN_TIME_IN_ONE_DIRECTION) * Math.random();
         },
 
-        desinationReached: function() {
+        destinationReached: function() {
             return this.destination.distance(this.energyChunk.get('position')) < 1E-7;
         }
 
