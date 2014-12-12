@@ -16,6 +16,9 @@ define(function (require) {
 	var EnergyContainerCategory = Constants.EnergyContainerCategory;
 	var HeatTransfer = Constants.HeatTransfer;
 
+	var airChunks = 0;
+	var $airChunks = $('<div></div>').appendTo('body').wrap('<div> air chunks: </div>');
+
 	/**
 	 * 
 	 */
@@ -40,9 +43,15 @@ define(function (require) {
 				controller = this.energyChunkWanderControllers[i];
 				controller.updatePosition(deltaTime);
 				if (!this.getThermalContactArea().getBounds().contains(controller.energyChunk.get('position'))) {
+					airChunks--;
+					$airChunks.html(airChunks);
 					this.removeEnergyChunk(controller.energyChunk);
 					this.energyChunkWanderControllers.splice(i, 1);
 				}
+				// else
+				// 	console.log(controller.energyChunk.get('position'));
+					//console.log(this.getThermalContactArea().getBounds());
+					//console.log(controller.energyChunk.get('position').x.toFixed(2) + ',' + controller.energyChunk.get('position').y.toFixed(2));
 			}
 
 			this.equalizeWithSurroundingAir(deltaTime);
@@ -107,10 +116,12 @@ define(function (require) {
 			this.energyChunkList.add(chunk);
 			this.energyChunkWanderControllers.push(new EnergyChunkWanderController(
 				chunk,
-				new Vector2(chunk.get('position').x, Air.HEIGHT),
+				new Vector2(chunk.get('position').x, Air.HEIGHT + 0.05),
 				initialWanderConstraint
 			));
 			this.trigger('add-chunk', this, chunk);
+			airChunks++;
+			$airChunks.html(airChunks);
 		},
 
 		removeEnergyChunk: function(chunk) {

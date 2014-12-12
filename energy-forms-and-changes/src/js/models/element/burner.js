@@ -156,7 +156,7 @@ define(function (require) {
         },
 
         addEnergyChunk: function(chunk) {
-            chunk.zPosition.set(0);
+            chunk.set('zPosition', 0);
             this.energyChunkList.add(chunk);
             this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.getEnergyChunkStartEndPoint()));
             this.energyExchangedWithAirSinceLastChunkTransfer = 0;
