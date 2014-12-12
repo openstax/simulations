@@ -9,6 +9,9 @@ define(function(require) {
     var EnergyChunkView = require('views/energy-chunk');
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
+    var thermalWanderingChunks = 0;
+    var $thermalWanderingChunks = $('<div></div>').appendTo('body').wrap('<div> thermal wandering chunks: </div>');
+
     /**
      * A view that represents a block model
      */
@@ -47,6 +50,8 @@ define(function(require) {
             });
             this.approachingEnergyChunkLayer.addChild(view.displayObject);
             this.approachingEnergyChunkViews.push(view);
+            thermalWanderingChunks++;
+            $thermalWanderingChunks.html(thermalWanderingChunks);
         },
 
         approachingEnergyChunkRemoved: function(chunk) {
@@ -58,6 +63,8 @@ define(function(require) {
                     return;
                 }
             }
+            thermalWanderingChunks--;
+            $thermalWanderingChunks.html(thermalWanderingChunks);
         }
 
     });

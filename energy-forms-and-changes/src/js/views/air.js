@@ -8,6 +8,9 @@ define(function(require) {
 	var PixiView = require('common/pixi/view');
 	var EnergyChunkView = require('views/energy-chunk');
 
+	var airChunks = 0;
+	var $airChunks = $('<div></div>').appendTo('body').wrap('<div> air chunks: </div>');
+
 	/**
 	 * A view that represents the air model
 	 */
@@ -40,12 +43,16 @@ define(function(require) {
 			});
 			this.displayObject.addChild(energyChunkView.displayObject);
 			this.energyChunkViews.push(energyChunkView);
+			airChunks++;
+			$airChunks.html(airChunks);
 		},
 
 		chunkRemoved: function(model, chunk) {
 			var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
 			this.displayObject.removeChild(energyChunkView.displayObject);
 			this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
+			airChunks--;
+			$airChunks.html(airChunks);
 		},
 
 		showEnergyChunks: function() {
