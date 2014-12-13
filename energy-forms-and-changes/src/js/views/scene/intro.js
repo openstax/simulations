@@ -289,6 +289,14 @@ define(function(require) {
 
             this.backLayer.addChild(leftBurnerStandView.displayObject);
             this.backLayer.addChild(rightBurnerStandView.displayObject);
+
+            _.each([
+                leftBurnerView,
+                rightBurnerView
+            ], function(elementView) {
+                elementView.listenTo(this, 'show-energy-chunks', elementView.showEnergyChunks);
+                elementView.listenTo(this, 'hide-energy-chunks', elementView.hideEnergyChunks);
+            }, this);
         },
 
         _update: function(time, deltaTime) {

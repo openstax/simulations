@@ -31,7 +31,8 @@ define(function(require) {
             _.each(this.model.slices, function(slice) {
                 var view = new EnergyChunkContainerSliceView({
                     slice: slice,
-                    mvt: this.mvt
+                    mvt: this.mvt,
+                    parent: this.model
                 });
                 energyChunkLayer.addChild(view.displayObject);
                 this.sliceViews.push(view);
@@ -48,7 +49,8 @@ define(function(require) {
         approachingEnergyChunkAdded: function(chunk) {
             var view = new EnergyChunkView({
                 model: chunk,
-                mvt: this.mvt
+                mvt: this.mvt,
+                parent: this.model
             });
             this.approachingEnergyChunkLayer.addChild(view.displayObject);
             this.approachingEnergyChunkViews.push(view);

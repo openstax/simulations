@@ -53,8 +53,6 @@ define(function(require) {
             this.frontLayer       = new PIXI.DisplayObjectContainer();
             this.energyChunkLayer = new PIXI.DisplayObjectContainer();
 
-            this.backLayer.addChild(this.energyChunkLayer);
-
             // Graphical components
             this.initBucket();
             this.initSlider();
@@ -252,6 +250,7 @@ define(function(require) {
 
         initEnergyChunks: function() {
             this.energyChunkLayer.visible = false;
+            this.backLayer.addChild(this.energyChunkLayer);
         },
 
         updatePosition: function(model, position) {
@@ -271,15 +270,17 @@ define(function(require) {
         chunkAdded: function(chunk) {
             var energyChunkView = new EnergyChunkView({
                 model: chunk,
-                mvt: this.mvt
+                mvt: this.mvt,
+                parent: this.model
             });
-            this.displayObject.addChild(energyChunkView.displayObject);
+            this.energyChunkLayer.addChild(energyChunkView.displayObject);
             this.energyChunkViews.push(energyChunkView);
+            console.log('added!');
         },
 
         chunkRemoved: function(chunk) {
             var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
-            this.displayObject.removeChild(energyChunkView.displayObject);
+            this.energyChunkLayer.removeChild(energyChunkView.displayObject);
             this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
         },
 

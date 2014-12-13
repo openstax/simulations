@@ -25,6 +25,8 @@ define(function(require) {
             
             this.mvt = options.mvt;
 
+            this.parent = options.parent;
+
             this.views = [];
 
             this.initGraphics();
@@ -41,7 +43,8 @@ define(function(require) {
         chunkAdded: function(chunk) {
             var energyChunkView = new EnergyChunkView({
                 model: chunk,
-                mvt: this.mvt
+                mvt: this.mvt,
+                parent: this.model
             });
             this.displayObject.addChild(energyChunkView.displayObject);
             this.views.push(energyChunkView);

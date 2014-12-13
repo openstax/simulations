@@ -119,6 +119,7 @@ define(function (require, exports, module) {
             this.brick.cid = 'brick';
             this.ironBlock.cid = 'ironBlock';
             this.beaker.cid = 'beaker';
+            this.air.cid = 'air';
         },
 
         /**

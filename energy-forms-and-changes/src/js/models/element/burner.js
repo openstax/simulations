@@ -88,6 +88,7 @@ define(function (require) {
                 if (controller.destinationReached()) {
                     this.energyChunkList.remove(controller.energyChunk);
                     this.energyChunkWanderControllers.splice(i, 1);
+                    console.log('destinationReached');
                 }
             }
         },
@@ -158,6 +159,7 @@ define(function (require) {
         addEnergyChunk: function(chunk) {
             chunk.set('zPosition', 0);
             this.energyChunkList.add(chunk);
+            console.log('start: (' + chunk.get('position').x.toFixed(3) + ',' + chunk.get('position').y.toFixed(3) + ') end: (' + this.getEnergyChunkStartEndPoint().x.toFixed(3) + ',' + this.getEnergyChunkStartEndPoint().y.toFixed(3) + ')');
             this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.getEnergyChunkStartEndPoint()));
             this.energyExchangedWithAirSinceLastChunkTransfer = 0;
             this.energyExchangedWithObjectSinceLastChunkTransfer = 0;
