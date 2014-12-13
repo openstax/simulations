@@ -27,12 +27,14 @@ define(function(require) {
         initEnergyChunks: function(energyChunkLayer) {
             energyChunkLayer.visible = false;
 
+            this.sliceViews = [];
             _.each(this.model.slices, function(slice) {
                 var view = new EnergyChunkContainerSliceView({
                     slice: slice,
                     mvt: this.mvt
                 });
                 energyChunkLayer.addChild(view.displayObject);
+                this.sliceViews.push(view);
             }, this);
 
             this.approachingEnergyChunkViews = [];
@@ -65,7 +67,14 @@ define(function(require) {
             }
             thermalWanderingChunks--;
             $thermalWanderingChunks.html(thermalWanderingChunks);
-        }
+        },
+
+        update: function(time, deltaTime) {
+            for (var i = 0; i < this.sliceViews.length; i++)
+                this.sliceViews[i].update(time, deltaTime);
+            for (var j = 0; j < this.approachingEnergyChunkViews.length; j++)
+                this.approachingEnergyChunkViews[j].update(time, deltaTime);
+        },
 
     });
 

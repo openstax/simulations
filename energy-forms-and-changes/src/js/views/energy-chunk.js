@@ -41,7 +41,7 @@ define(function(require) {
 			this.listenTo(this.model, 'change:visible',    this.updateVisibility);
 			this.listenTo(this.model, 'change:zPosition',  this.updateTransparency);
 			this.listenTo(this.model, 'change:energyType', this.updateEnergyType);
-			this.listenTo(this.model, 'change:position',   this.updatePosition);
+			this.listenTo(this.model, 'change:position',   this.positionUpdated);
 
 			this.initGraphics();
 
@@ -89,9 +89,21 @@ define(function(require) {
 	            var localPoint = this.displayObject.parent.toLocal(globalPoint);
 	            this.displayObject.x = localPoint.x;
 	            this.displayObject.y = localPoint.y;	
+	            console.log(localPoint.x.toFixed(1) + ', ' + localPoint.y.toFixed(1));
 			}
 			else {
 				console.log('not ready to update position yet');
+			}
+		},
+
+		positionUpdated: function() {
+			this.updateOnNextFrame = true;
+		},
+
+		update: function(time, deltaTime) {
+			if (this.updateOnNextFrame) {
+				this.updateOnNextFrame = false;
+				this.updatePosition(this.model, this.model.get('position'));
 			}
 		}
 

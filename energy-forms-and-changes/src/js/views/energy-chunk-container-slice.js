@@ -43,8 +43,8 @@ define(function(require) {
 				model: chunk,
 				mvt: this.mvt
 			});
-			this.views.push(energyChunkView);
 			this.displayObject.addChild(energyChunkView.displayObject);
+			this.views.push(energyChunkView);
 		},
 
 		chunkRemoved: function(chunk) {
@@ -56,6 +56,11 @@ define(function(require) {
 					break;
 				}
 			}
+		},
+
+		update: function(time, deltaTime) {
+			for (var i = 0; i < this.views.length; i++)
+				this.views[i].update(time, deltaTime);
 		}
 
 	});

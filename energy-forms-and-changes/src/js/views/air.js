@@ -30,7 +30,8 @@ define(function(require) {
 		},
 
 		update: function(time, deltaTime) {
-			//this.displayObject.rotation += deltaTime * 0.0001;
+		    for (var i = 0; i < this.energyChunkViews.length; i++)
+		        this.energyChunkViews[i].update(time, deltaTime);
 		},
 
 		chunkAdded: function(chunk) {

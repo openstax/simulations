@@ -2,15 +2,16 @@ define(function(require) {
 
     'use strict';
 
-    var _       = require('underscore');
-    var PIXI    = require('pixi');
-    //var Vector2 = require('common/math/vector2');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var _    = require('underscore');
+    var PIXI = require('pixi');
 
-    var ElementView = require('views/element');
-    var SliderView  = require('common/pixi/view/slider');
-    var Assets      = require('assets');
+    var PiecewiseCurve  = require('common/math/piecewise-curve');
+    var SliderView      = require('common/pixi/view/slider');
+    var ElementView     = require('views/element');
+    var EnergyChunkView = require('views/energy-chunk');
+    
 
+    var Assets    = require('assets');
     var Constants = require('constants');
 
     /**
@@ -39,6 +40,11 @@ define(function(require) {
             this.coolingEnabled = options.coolingEnabled;
 
             ElementView.prototype.initialize.apply(this, [options]);
+
+            this.energyChunkViews = [];
+
+            this.listenTo(this.model.energyChunkList, 'add',    this.chunkAdded);
+            this.listenTo(this.model.energyChunkList, 'remove', this.chunkRemoved);
         },
 
         initGraphics: function() {
@@ -49,13 +55,12 @@ define(function(require) {
 
             this.backLayer.addChild(this.energyChunkLayer);
 
-            this.energyChunkLayer.visible = false;
-
             // Graphical components
             this.initBucket();
             this.initSlider();
             this.initFire();
             this.initIce();
+            this.initEnergyChunks();
         },
 
         initBucket: function() {
@@ -245,6 +250,10 @@ define(function(require) {
             this.backLayer.addChild(this.ice);
         },
 
+        initEnergyChunks: function() {
+            this.energyChunkLayer.visible = false;
+        },
+
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
             this.backLayer.x = this.frontLayer.x = viewPoint.x;
@@ -257,6 +266,26 @@ define(function(require) {
 
         hideEnergyChunks: function() {
             this.energyChunkLayer.visible = false;
+        },
+
+        chunkAdded: function(chunk) {
+            var energyChunkView = new EnergyChunkView({
+                model: chunk,
+                mvt: this.mvt
+            });
+            this.displayObject.addChild(energyChunkView.displayObject);
+            this.energyChunkViews.push(energyChunkView);
+        },
+
+        chunkRemoved: function(chunk) {
+            var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
+            this.displayObject.removeChild(energyChunkView.displayObject);
+            this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
+        },
+
+        update: function(time, deltaTime) {
+            for (var i = 0; i < this.energyChunkViews.length; i++)
+                this.energyChunkViews[i].update(time, deltaTime);
         }
 
     }, Constants.BurnerView);
