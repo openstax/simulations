@@ -1,157 +1,157 @@
 define(function(require) {
 
-	'use strict';
+    'use strict';
 
-	var $        = require('jquery');
-	var _        = require('underscore');
-	var Backbone = require('backbone');
-	var PIXI     = require('pixi');
+    var $        = require('jquery');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
+    var PIXI     = require('pixi');
 
-	//var Assets = require('assets');
+    //var Assets = require('assets');
 
-	/**
-	 * SceneView is the main focus of the app. 
-	 *
-	 */
-	var SceneView = Backbone.View.extend({
+    /**
+     * SceneView is the main focus of the app. 
+     *
+     */
+    var SceneView = Backbone.View.extend({
 
-		tagName: 'canvas',
-		className: 'scene-view',
+        tagName: 'canvas',
+        className: 'scene-view',
 
-		events: {
-			
-		},
+        events: {
+            
+        },
 
-		assets: [],
+        assets: [],
 
-		initialize: function(options) {
+        initialize: function(options) {
 
-			// Default values
-			options = _.extend({
+            // Default values
+            options = _.extend({
 
-			}, options);
+            }, options);
 
-			// Save options
-			if (options.simulation)
-				this.simulation = options.simulation;
-			else
-				throw 'SceneView requires a simulation model to render.';
+            // Save options
+            if (options.simulation)
+                this.simulation = options.simulation;
+            else
+                throw 'SceneView requires a simulation model to render.';
 
-			// Load all the assets
-			this.loadAssets();
+            // Load all the assets
+            this.loadAssets();
 
-			// Bind events
-			$(window).bind('resize', $.proxy(this.windowResized, this));
-		},
+            // Bind events
+            $(window).bind('resize', $.proxy(this.windowResized, this));
+        },
 
-		/**
-		 * Renders content and canvas for heatmap
-		 */
-		render: function() {
-			this.$el.addClass('loading');
+        /**
+         * Renders content and canvas for heatmap
+         */
+        render: function() {
+            this.$el.addClass('loading');
 
-			this.renderContent();
-			this.initRenderer();
+            this.renderContent();
+            this.initRenderer();
 
-			this.postRenderCalled = false;
+            this.postRenderCalled = false;
 
-			return this;
-		},
+            return this;
+        },
 
-		/**
-		 * Renders 
-		 */
-		renderContent: function() {
-			
-		},
+        /**
+         * Renders 
+         */
+        renderContent: function() {
+            
+        },
 
-		/**
-		 * Called after every component on the page has rendered to make sure
-		 *   things like widths and heights and offsets are correct.
-		 */
-		postRender: function() {
-			this.resize(true);
+        /**
+         * Called after every component on the page has rendered to make sure
+         *   things like widths and heights and offsets are correct.
+         */
+        postRender: function() {
+            this.resize(true);
 
-			this.postRenderCalled = true;
+            this.postRenderCalled = true;
 
-			if (this.assetsLoaded)
-				this.initGraphics();
-		},
+            if (this.assetsLoaded)
+                this.initGraphics();
+        },
 
-		loadAssets: function() {
-			this.assetsLoaded = false;
-			var assetLoader = new PIXI.AssetLoader(this.assets);
-			assetLoader.onComplete = _.bind(function(){
-				this.assetsLoaded = true;
-				if (this.postRenderCalled)
-					this.initGraphics();
-			}, this);
-			assetLoader.load();
-		},
+        loadAssets: function() {
+            this.assetsLoaded = false;
+            var assetLoader = new PIXI.AssetLoader(this.assets);
+            assetLoader.onComplete = _.bind(function(){
+                this.assetsLoaded = true;
+                if (this.postRenderCalled)
+                    this.initGraphics();
+            }, this);
+            assetLoader.load();
+        },
 
-		/**
-		 * Initializes a renderer
-		 */
-		initRenderer: function() {
-			this.renderer = PIXI.autoDetectRenderer(
-				this.$el.width(),  // Width
-				this.$el.height(), // Height
-				{
-					view:        this.el, // Canvas element
-					transparent: true,    // Transparent background
-					antialias:   true     // Antialiasing
-				}
-			);
+        /**
+         * Initializes a renderer
+         */
+        initRenderer: function() {
+            this.renderer = PIXI.autoDetectRenderer(
+                this.$el.width(),  // Width
+                this.$el.height(), // Height
+                {
+                    view:        this.el, // Canvas element
+                    transparent: true,    // Transparent background
+                    antialias:   true     // Antialiasing
+                }
+            );
 
-			this.width  = this.$el.width();
-			this.height = this.$el.height();
+            this.width  = this.$el.width();
+            this.height = this.$el.height();
 
-			// Create a stage to hold everything
-			this.stage = new PIXI.Stage(0x000000);
-		},
+            // Create a stage to hold everything
+            this.stage = new PIXI.Stage(0x000000);
+        },
 
-		initGraphics: function() {
-			this.$el.removeClass('loading');
-		},
+        initGraphics: function() {
+            this.$el.removeClass('loading');
+        },
 
-		/**
-		 * Called on a window resize to resize the canvas
-		 */
-		windowResized: function(event) {
-			this.resizeOnNextUpdate = true;
-		},
+        /**
+         * Called on a window resize to resize the canvas
+         */
+        windowResized: function(event) {
+            this.resizeOnNextUpdate = true;
+        },
 
-		resize: function(override) {
-			var width  = this.$el.width();
-			var height = this.$el.height();
-			this.width  = width;
-			this.height = height;
-			if (override || width != this.renderer.width || height != this.renderer.height) {
-				this.resizeGraphics();
-				this.trigger('resized');
-			}
-			this.resizeOnNextUpdate = false;
+        resize: function(override) {
+            var width  = this.$el.width();
+            var height = this.$el.height();
+            this.width  = width;
+            this.height = height;
+            if (override || width != this.renderer.width || height != this.renderer.height) {
+                this.resizeGraphics();
+                this.trigger('resized');
+            }
+            this.resizeOnNextUpdate = false;
 
-			this.offset = this.$el.offset();
-		},
+            this.offset = this.$el.offset();
+        },
 
-		resizeGraphics: function() {
-			this.renderer.resize(this.width, this.height);
-		},
+        resizeGraphics: function() {
+            this.renderer.resize(this.width, this.height);
+        },
 
-		update: function(time, deltaTime) {
-			if (this.resizeOnNextUpdate)
-				this.resize();
+        update: function(time, deltaTime) {
+            if (this.resizeOnNextUpdate)
+                this.resize();
 
-			this._update(time, deltaTime);
+            this._update(time, deltaTime);
 
-			// Render everything
-			this.renderer.render(this.stage);
-		},
+            // Render everything
+            this.renderer.render(this.stage);
+        },
 
-		_update: function(time, deltaTime) {}
+        _update: function(time, deltaTime) {}
 
-	});
+    });
 
-	return SceneView;
+    return SceneView;
 });
