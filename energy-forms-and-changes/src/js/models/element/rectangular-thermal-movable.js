@@ -82,7 +82,7 @@ define(function (require) {
 
         update: function(time, delta) {
             // // Distribute the energy chunks contained within this element.
-            // EnergyChunkDistributor.updatePositions(this.slices, delta);
+            EnergyChunkDistributor.updatePositions(this.slices, delta);
 
             // // Animate the energy chunks that are outside this element.
             this.animateUncontainedEnergyChunks(delta);

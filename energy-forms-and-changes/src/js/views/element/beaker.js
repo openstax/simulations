@@ -245,7 +245,7 @@ define(function(require) {
         initEnergyChunks: function(energyChunkLayer) {
             ThermalElementView.prototype.initEnergyChunks.apply(this, [energyChunkLayer]);
 
-            energyChunkLayer.mask = this.fluidMask;
+            //energyChunkLayer.mask = this.fluidMask;
         },
 
         initSteam: function() {

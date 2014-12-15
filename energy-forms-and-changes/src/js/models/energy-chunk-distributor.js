@@ -27,8 +27,6 @@ define(function (require) {
     var randomLocation  = new Vector2();
     var newVelocity     = new Vector2();
 
-    var silent = { silent: true };
-
     var forceVectorPool = Pool({
         init: function() {
             return new Vector2();
@@ -183,7 +181,6 @@ define(function (require) {
                 EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
             }
             else {
-                
                 // Point is outside container, move it towards center of shape.
                 vectorToCenter
                     .set(
@@ -225,7 +222,7 @@ define(function (require) {
 
             // Update velocity based on drag force.
             newVelocity.add(dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
-            chunk.setVelocity(newVelocity, silent);
+            chunk.get('velocity').set(newVelocity); // Too much overhead when the event system picks it up
 
             // Return the new total energy
             return 0.5
@@ -283,14 +280,18 @@ define(function (require) {
                         .set(chunk.get('position'))
                         .add(vectorToEdge);
 
+                    var min;
+                    var max;
                     if (containerShape.contains(edgePosition)) {
-                        lengthBounds.x = lengthBounds.center().x;
-                        lengthBounds.w = lengthBounds.right();
+                        min = lengthBounds.center().x;
+                        max = lengthBounds.right();
                     }
                     else {
-                        lengthBounds.x = lengthBounds.left();
-                        lengthBounds.w = lengthBounds.center().x;
+                        min = lengthBounds.left();
+                        max = lengthBounds.center().x;
                     }
+                    lengthBounds.x = min;
+                    lengthBounds.w = max;
                 }
 
                 // Handle case where point is too close to the container's edge.
@@ -315,7 +316,9 @@ define(function (require) {
             // Now apply the force from each of the other
             //   particles, but set some limits on the max force
             //   that can be applied.
-            _.each(chunks, function(otherChunk) {
+            var otherChunk;
+            for (var i = 0; i < chunks.length; i++) {
+                otherChunk = chunks[i];
                 if (chunk === otherChunk)
                     return;
 
@@ -347,7 +350,7 @@ define(function (require) {
                         .normalize()
                         .scale(forceConstant / vectorToOther.lengthSq())
                 );
-            });
+            }
         },
 
         /**
