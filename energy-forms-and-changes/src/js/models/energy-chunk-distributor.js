@@ -26,6 +26,7 @@ define(function (require) {
     var velocity        = new Vector2();
     var randomLocation  = new Vector2();
     var newVelocity     = new Vector2();
+    var scaledForceVector = new Vector2();
 
     var forceVectorPool = Pool({
         init: function() {
@@ -201,7 +202,11 @@ define(function (require) {
             // Calculate the energy chunk's velocity as a result of forces acting on it.
             newVelocity
                 .set(chunk.get('velocity'))
-                .add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
+                .add(
+                    scaledForceVector
+                        .set(forceVector)
+                        .scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS)
+                );
             
             // Calculate drag force.  Uses standard drag equation.
             var dragMagnitude = 0.5 
@@ -227,7 +232,7 @@ define(function (require) {
             // Return the new total energy
             return 0.5
                 * EnergyChunkDistributor.ENERGY_CHUNK_MASS
-                * chunk.get('velocity').lengthSq()
+                * newVelocity.lengthSq()
                 + forceVector.length() * Math.PI / 2;
         },
 

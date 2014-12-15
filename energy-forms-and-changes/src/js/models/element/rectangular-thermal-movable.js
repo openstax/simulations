@@ -209,9 +209,9 @@ define(function (require) {
         
         extractClosestEnergyChunk: function(shape) {
             if (shape instanceof Vector2)
-                return this._extractClosestEnergyChunkToPoint(shape);
+                return this.extractClosestEnergyChunkToPoint(shape);
             else
-                return this._extractClosestEnergyChunkToRectangle(shape);
+                return this.extractClosestEnergyChunkToRectangle(shape);
         },
 
         /*
@@ -222,7 +222,7 @@ define(function (require) {
          * @param point Comparison point.
          * @return Energy chunk, null if there are none available.
          */
-        _extractClosestEnergyChunkToPoint: function(point) {
+        extractClosestEnergyChunkToPoint: function(point) {
             var closestEnergyChunk = null;
             var closestCompensatedDistance = Number.POSITIVE_INFINITY;
 
@@ -263,7 +263,7 @@ define(function (require) {
          * @param rect
          * @return Energy chunk, null if none are available.
          */
-        _extractClosestEnergyChunkToRectangle: function(rect) {
+        extractClosestEnergyChunkToRectangle: function(rect) {
             var chunkToExtract = null;
             var myBounds = this.getSliceBounds();
 
@@ -299,7 +299,7 @@ define(function (require) {
             else {
                 // There is no or limited overlap, so use center points.
                 var center = rect.center();
-                chunkToExtract = this._extractClosestEnergyChunkToPoint(new Vector2(center.x, center.y));
+                chunkToExtract = this.extractClosestEnergyChunkToPoint(new Vector2(center.x, center.y));
                 if (chunkToExtract)
                     return chunkToExtract;
             }
