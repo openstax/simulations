@@ -32,7 +32,7 @@ define(function (require) {
     };
     var C = EnergyChunkWanderController;
 
-    var _debugEnergyChunk;
+    //var _debugEnergyChunk;
 
     /**
      * Apply static constants

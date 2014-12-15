@@ -144,7 +144,7 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
-                        velocity.set(chunk.get('velocity'));if (isNaN(velocity.x))console.log(velocity);
+                        velocity.set(chunk.get('velocity'));
                         chunk.translate(velocity.scale(timeStep));
                     }
                 }
@@ -216,8 +216,9 @@ define(function (require) {
                 * newVelocity.lengthSq();
 
             if (dragMagnitude > 0) {
+                // This will cause bugs if the chunk's velocity is a zero vector
                 dragForceVector
-                    .set(chunk.get('velocity'))
+                    .set(newVelocity)
                     .rotate(Math.PI)
                     .normalize()
                     .scale(dragMagnitude);

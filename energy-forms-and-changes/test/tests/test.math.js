@@ -50,6 +50,42 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.yPoints).to.almost.eql([0, 1, 2]);
 	});
 
+	it('#scale should scale points', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(0, 0);
+		curve.lineTo(1, 0);
+		curve.lineTo(3, 3);
+		curve.scale(100);
+
+		chai.expect(curve.xPoints).to.almost.eql([0, 100, 300]);
+		chai.expect(curve.yPoints).to.almost.eql([0,   0, 300]);
+	});
+
+	it('should be able to chain #translate, #rotate and #scale', function(){
+		var curve = new PiecewiseCurve();
+		curve.moveTo(0, 0);
+		curve.lineTo(1, 0);
+		curve.lineTo(3, 3);
+		curve
+			.scale(100)
+			.translate(-50, -50)
+			.rotate(Math.PI / 2);
+
+		chai.expect(curve.xPoints).to.almost.eql([ 50, 50, -250]);
+		chai.expect(curve.yPoints).to.almost.eql([-50, 50,  250]);
+
+		curve = new PiecewiseCurve();
+		curve.moveTo(0, 0);
+		curve.lineTo(1, 1);
+		curve
+			.translate(0, 2)
+			.scale(2, 1)
+			.rotate(Math.PI / 2);
+
+		chai.expect(curve.xPoints).to.almost.eql([-2, -3]);
+		chai.expect(curve.yPoints).to.almost.eql([ 0,  2]);
+	});
+
 	it('#getBounds should calculate bounds', function(){
 		var curve = new PiecewiseCurve();
 		curve.moveTo(4, 4);
