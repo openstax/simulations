@@ -27,7 +27,7 @@ define(function (require) {
         },
 
         addEnergyChunk: function(chunk) {
-            chunk.zPosition = this.zPosition;
+            chunk.set('zPosition', this.zPosition);
             this.energyChunkList.add(chunk);
         },
 

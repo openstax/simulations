@@ -432,6 +432,7 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, simulationPaused) {
+            ThermalElementView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
             if (!simulationPaused)
                 this.updateSteam(time, deltaTime);
         }

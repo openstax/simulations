@@ -91,7 +91,7 @@ define(function (require) {
             var forceVector;
 
             var particlesRedistributed = false;
-            var numForceCalcSteps = deltaTime / EnergyChunkDistributor.MAX_TIME_STEP;
+            var numForceCalcSteps = Math.floor(deltaTime / EnergyChunkDistributor.MAX_TIME_STEP);
             var extraTime = deltaTime - numForceCalcSteps * EnergyChunkDistributor.MAX_TIME_STEP;
 
             for (var forceCalcStep = 0; forceCalcStep <= numForceCalcSteps; forceCalcStep++) {
@@ -175,6 +175,7 @@ define(function (require) {
                 EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
             }
             else {
+                
                 // Point is outside container, move it towards center of shape.
                 vectorToCenter
                     .set(
@@ -187,6 +188,7 @@ define(function (require) {
                         .normalize()
                         .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
                 );
+                //console.log('vector outside shape--correction vector: ' + vectorToCenter.x + ',' + vectorToCenter.y);
             }
         },
 
