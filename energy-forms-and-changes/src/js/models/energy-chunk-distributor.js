@@ -118,10 +118,18 @@ define(function (require) {
 
                         // Determine forces on each energy chunk.
                         EnergyChunkDistributor.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
+                    }
+                }
 
-                        // Update energy chunk velocities, drag force, and position.
+                // Update energy chunk velocities, drag force, and position.
+                for (i = 0; i < slices.length; i++) {
+                    slice = slices[i];
+
+                    for (j = 0; j < slice.energyChunkList.length; j++) {
+                        chunk = slice.energyChunkList.models[j];
+                        forceVector = energyChunkForceVectors[i][j];
+                        
                         var energy = EnergyChunkDistributor.updateChunk(chunk, timeStep, forceVector);
-
                         if (energy > maxEnergy)
                             maxEnergy = energy;
 
@@ -137,7 +145,7 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
-                        velocity.set(chunk.get('velocity'));
+                        velocity.set(chunk.get('velocity'));if (isNaN(velocity.x))console.log(velocity);
                         chunk.translate(velocity.scale(timeStep));
                     }
                 }
@@ -197,13 +205,13 @@ define(function (require) {
             newVelocity
                 .set(chunk.get('velocity'))
                 .add(forceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
-
+            
             // Calculate drag force.  Uses standard drag equation.
             var dragMagnitude = 0.5 
                 * EnergyChunkDistributor.FLUID_DENSITY 
                 * EnergyChunkDistributor.DRAG_COEFFICIENT 
                 * EnergyChunkDistributor.ENERGY_CHUNK_CROSS_SECTIONAL_AREA 
-                * chunk.get('velocity').lengthSq();
+                * newVelocity.lengthSq();
 
             if (dragMagnitude > 0) {
                 dragForceVector

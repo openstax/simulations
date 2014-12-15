@@ -93,7 +93,7 @@ define(function(require) {
                 var localPoint = this.displayObject.parent.toLocal(globalPoint);
                 this.displayObject.x = localPoint.x;
                 this.displayObject.y = localPoint.y;    
-                console.log(localPoint.x.toFixed(1) + ', ' + localPoint.y.toFixed(1));
+                //console.log(localPoint.x.toFixed(1) + ', ' + localPoint.y.toFixed(1));
             }
             else {
                 console.log('not ready to update position yet');
