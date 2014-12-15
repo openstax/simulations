@@ -202,6 +202,7 @@ define(function(require) {
             this.beakerFrontLayer.addChild(this.beakerView.frontLayer);
             this.beakerBackLayer.addChild(this.beakerView.backLayer);
             this.beakerBackLayer.addChild(this.beakerView.energyChunkLayer);
+            this.beakerFrontLayer.addChild(this.beakerView.debugLayer);
 
             //this.beakerView.fluidMask.mask = this.ironBlockView.displayObject;
 

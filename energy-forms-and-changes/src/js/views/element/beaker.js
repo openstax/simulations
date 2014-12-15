@@ -81,9 +81,23 @@ define(function(require) {
             this.initLabel();
             this.initEnergyChunks(this.energyChunkLayer);
             this.initSteam();
+
+            this.initDebugSlices();
             
             // Calculate the bounding box for the dragging bounds
             this.boundingBox = this.beakerViewRect.clone();
+        },
+
+        initDebugSlices: function() {
+            this.debugLayer = new PIXI.DisplayObjectContainer();
+
+            this.debugSlicesGraphics = new PIXI.Graphics();
+            this.debugLayer.addChild(this.debugSlicesGraphics);
+
+            this.debugSliceColors = [];
+            for (var i = 0; i < this.model.slices.length; i++) {
+                this.debugSliceColors[i] = Math.random() * 0xAAAAAA;
+            }
         },
 
         initBeaker: function() {
@@ -246,6 +260,7 @@ define(function(require) {
             ThermalElementView.prototype.initEnergyChunks.apply(this, [energyChunkLayer]);
 
             //energyChunkLayer.mask = this.fluidMask;
+            this.energyChunkLayer.removeChild(this.fluidMask);
         },
 
         initSteam: function() {
@@ -433,8 +448,21 @@ define(function(require) {
 
         update: function(time, deltaTime, simulationPaused) {
             ThermalElementView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
-            if (!simulationPaused)
+            if (!simulationPaused) {
                 this.updateSteam(time, deltaTime);
+
+                this.debugSlicesGraphics.clear();
+                
+
+                for (var i = 0; i < this.model.slices.length; i++) {
+                    
+                    this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
+                    //this.debugSlicesGraphics.beginFill(0xFF6969, 0.2);
+                    this.debugSlicesGraphics.drawPiecewiseCurve(this.mvt.modelToView(this.model.slices[i].getShape()));
+                    //this.debugSlicesGraphics.endFill();
+                }
+                
+            }
         }
 
     }, Constants.BeakerView);

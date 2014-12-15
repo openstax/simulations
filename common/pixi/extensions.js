@@ -8,17 +8,37 @@ define(function(require) {
     var PiecewiseCurve = require('../math/piecewise-curve');
     var Colors = require('../colors/colors');
 
+
+    var doNothing = function() {};
+    var beginPath = function(graphics) {
+        graphics.beginPath();
+    };
+    var closePath = function(graphics) {
+        graphics.closePath();
+    };
+    var strokeAndFill = function(graphics, stroke, fill) {
+        if (fill)
+            graphics.fill();
+        if (stroke)
+            graphics.stroke();
+    };
+
     /**
-     * Draws a piecewise curve onto a graphics context, filling if asked
+     * Draws a piecewise curve onto a Context2D, filling and stroking if asked
      */
     PIXI.drawPiecewiseCurve = function(ctx, curve, xShift, yShift, fill, stroke) {
-        var strokeAndFill = function() {
-            if (fill)
-                ctx.fill();
-            if (stroke)
-                ctx.stroke();
-        };
+        drawPiecewiseCurve(ctx, curve, xShift, yShift, fill, stroke, beginPath, strokeAndFill, closePath);
+    };
 
+    PIXI.Graphics.prototype.drawPiecewiseCurve = function(curve, xShift, yShift) {
+        if (xShift === undefined)
+            xShift = 0;
+        if (yShift === undefined)
+            yShift = 0;
+        drawPiecewiseCurve(this, curve, xShift, yShift, false, false, doNothing, doNothing, doNothing);
+    };
+
+    var drawPiecewiseCurve = function(graphics, curve, xShift, yShift, fill, stroke, beginPath, strokeAndFill, closePath) {
         var x, y;
         var cp1x, cp1y;
         var cp2x, cp2y;
@@ -29,28 +49,28 @@ define(function(require) {
                 case PiecewiseCurve.SEG_MOVETO:
                     if (pathStarted) { 
                         // Draw and close old path
-                        strokeAndFill();
-                        ctx.closePath();
+                        strokeAndFill(graphics, stroke, fill);
+                        closePath(graphics);
                     }
                     x = curve.xPoints[pos]   + xShift;
                     y = curve.yPoints[pos++] + yShift;
                     pathStarted = true;
 
-                    ctx.beginPath();
-                    ctx.moveTo(x, y);
+                    beginPath(graphics);
+                    graphics.moveTo(x, y);
                     break;
                 case PiecewiseCurve.SEG_CLOSE:
                     pos++;
                     pathStarted = false;
 
-                    ctx.closePath();
-                    strokeAndFill();
+                    closePath(graphics);
+                    strokeAndFill(graphics, stroke, fill);
                     break;
                 case PiecewiseCurve.SEG_LINETO:
                     x = curve.xPoints[pos]   + xShift;
                     y = curve.yPoints[pos++] + yShift;
 
-                    ctx.lineTo(x, y);
+                    graphics.lineTo(x, y);
                     break;
                 case PiecewiseCurve.SEG_QUADTO:
                     cp1x = curve.xPoints[pos]   + xShift;
@@ -58,7 +78,7 @@ define(function(require) {
                     x    = curve.xPoints[pos]   + xShift;
                     y    = curve.yPoints[pos++] + yShift;
 
-                    ctx.quadraticCurveTo(cp1x, cp1y, x, y);
+                    graphics.quadraticCurveTo(cp1x, cp1y, x, y);
                     break;
                 case PiecewiseCurve.SEG_CUBICTO:
                     cp1x = curve.xPoints[pos]   + xShift;
@@ -68,14 +88,14 @@ define(function(require) {
                     x    = curve.xPoints[pos]   + xShift;
                     y    = curve.yPoints[pos++] + yShift;
 
-                    ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
+                    graphics.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y);
                     break;
             }
         }
 
         if (pathStarted) {
             // It was opened but never closed, so draw it
-            strokeAndFill();
+            strokeAndFill(graphics, stroke, fill);
         }
     };
 
