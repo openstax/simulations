@@ -115,11 +115,16 @@ define(function (require) {
                         chunk = slice.energyChunkList.models[j];
                         forceVector = energyChunkForceVectors[i][j];
 
+                        // Reset accumulated forces.
+                        forceVector.set(0, 0);
+
                         // Determine forces on each energy chunk.
                         EnergyChunkDistributor.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
+                        //console.log(forceVector); // the force vectors are different here
                     }
                 }
 
+                
                 // Update energy chunk velocities, drag force, and position.
                 for (i = 0; i < slices.length; i++) {
                     slice = slices[i];
@@ -127,13 +132,12 @@ define(function (require) {
                     for (j = 0; j < slice.energyChunkList.length; j++) {
                         chunk = slice.energyChunkList.models[j];
                         forceVector = energyChunkForceVectors[i][j];
-                        
+                        //console.log(forceVector); // but the force vectors are the same here
                         var energy = EnergyChunkDistributor.updateChunk(chunk, timeStep, forceVector);
                         if (energy > maxEnergy)
                             maxEnergy = energy;
 
-                        // Clean the pool now that we're done with it.
-                        forceVectorPool.remove(forceVector);
+                        
                     }
                 }
 
@@ -145,10 +149,14 @@ define(function (require) {
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
                         velocity.set(chunk.get('velocity'));
+                        //console.log(velocity);
                         chunk.translate(velocity.scale(timeStep));
                     }
                 }
             }
+
+            // Clean the pool now that we're done with it.
+            EnergyChunkDistributor.releaseEnergyChunkForceVectors(slices, energyChunkForceVectors);
 
             return particlesRedistributed;
         },
@@ -163,6 +171,13 @@ define(function (require) {
             return energyChunkForceVectors;
         },
 
+        releaseEnergyChunkForceVectors: function(slices, energyChunkForceVectors) {
+            for (var i = 0; i < slices.length; i++) {
+                for (var j = 0; j < slices[i].energyChunkList.length; j++)
+                    forceVectorPool.remove(energyChunkForceVectors[i][j]);
+            }
+        },
+
         getChunksFromSlices: function(slices) {
             var chunks = [];
             for (var i = 0; i < slices.length; i++) {
@@ -174,12 +189,10 @@ define(function (require) {
         },
 
         calculateEnergyChunkForces: function(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant) {
-            // Reset accumulated forces.
-            forceVector.set(0, 0);
-
             if (containerShape.contains(chunk.get('position'))) {
                 EnergyChunkDistributor.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
                 EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
+                //console.log('chunk inside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
             }
             else {
                 // Point is outside container, move it towards center of shape.
@@ -194,8 +207,11 @@ define(function (require) {
                         .normalize()
                         .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
                 );
-                //console.log('vector outside shape--correction vector: ' + vectorToCenter.x + ',' + vectorToCenter.y);
+                //console.log('chunk outside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
+                // console.log(containerShape.getBounds());
+                // console.log(chunk.get('position'));
             }
+            //console.log(forceVector);
         },
 
         updateChunk: function(chunk, timeStep, forceVector) {
@@ -229,6 +245,7 @@ define(function (require) {
             // Update velocity based on drag force.
             newVelocity.add(dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
             chunk.get('velocity').set(newVelocity); // Too much overhead when the event system picks it up
+            //console.log(newVelocity.y.toFixed(4) + ',' + newVelocity.y.toFixed(4));
 
             // Return the new total energy
             return 0.5
@@ -311,6 +328,7 @@ define(function (require) {
                     .set(forceConstant / Math.pow(lengthBounds.center().x, 2))
                     .rotate(angle + Math.PI);
                 forceVector.add(edgeForce);
+                //console.log('edge force magnitude: ' + edgeForce.length().toFixed(3));
             }
         },
 
