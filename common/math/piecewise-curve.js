@@ -282,7 +282,7 @@ define(function (require) {
                 var end = x2;
 
                 if (!(cp2 instanceof Vector2 && end instanceof Vector2))
-                    return;
+                    throw 'Cannot mix and match vectors and numbers.';
 
                 y1 = cp1.y;
                 x1 = cp1.x;
@@ -328,8 +328,8 @@ define(function (require) {
             // Does any edge intersect?
             if (this.getAxisIntersections(x, y,     false, w) !== 0 || 
                 this.getAxisIntersections(x, y + h, false, w) !== 0 || 
-                this.getAxisIntersections(x + w, y, true, h) !== 0 || 
-                this.getAxisIntersections(x, y,     true, h) !== 0) {
+                this.getAxisIntersections(x + w, y, true,  h) !== 0 || 
+                this.getAxisIntersections(x, y,     true,  h) !== 0) {
                 return true;
             }
 
@@ -401,8 +401,11 @@ define(function (require) {
             var y2;
             var y3;
 
-            var r = [];
-            var nRoots;
+            var equation = [];
+            var roots;
+            var a;
+            var b;
+            var c;
             var t;
             var i;
             var crossing;
@@ -506,15 +509,16 @@ define(function (require) {
                             if (y2 === 0)
                                 y2 -= epsilon;
 
-                            r[0] = y0;
-                            r[1] = 2 * (y1 - y0);
-                            r[2] = (y2 - 2 * y1 + y0);
+                            a = y0;
+                            b = 2 * (y1 - y0);
+                            c = (y2 - 2 * y1 + y0);
 
                             /* degenerate roots (=tangent points) do not
                             contribute to the winding number. */
-                            if ((nRoots = solveQuadratic(r)) === 2) {
-                                for (i = 0; i < nRoots; i++) {
-                                    t = r[i];
+                            roots = solveQuadratic(a, b, c);
+                            if (roots.length === 2) {
+                                for (i = 0; i < roots.length; i++) {
+                                    t = roots[i];
                                     if (t > 0 && t < 1) {
                                         crossing = t * t * (x2 - 2 * x1 + x0) + 2 * t * (x1 - x0) + x0;
                                         if (crossing >= 0.0 && crossing <= distance)
@@ -544,14 +548,15 @@ define(function (require) {
                             if (y3 === 0)
                                 y3 -= epsilon;
 
-                            r[0] = y0;
-                            r[1] = 3 * (y1 - y0);
-                            r[2] = 3 * (y2 + y0 - 2 * y1);
-                            r[3] = y3 - 3 * y2 + 3 * y1 - y0;
+                            equation[0] = y0;
+                            equation[1] = 3 * (y1 - y0);
+                            equation[2] = 3 * (y2 + y0 - 2 * y1);
+                            equation[3] = y3 - 3 * y2 + 3 * y1 - y0;
 
-                            if ((nRoots = solveCubic(r)) !== 0) {
-                                for (i = 0; i < nRoots; i++) {
-                                    t = r[i];
+                            roots = solveCubic(equation);
+                            if (roots.length !== 0) {
+                                for (i = 0; i < roots.length; i++) {
+                                    t = roots[i];
                                     if (t > 0.0 && t < 1.0) {
                                         crossing = -(t * t * t) * (x0 - 3 * x1 + 3 * x2 - x3)
                                                      + 3 * t * t * (x0 - 2 * x1 + x2)

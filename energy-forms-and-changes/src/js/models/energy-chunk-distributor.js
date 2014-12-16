@@ -207,6 +207,7 @@ define(function (require) {
                         .normalize()
                         .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
                 );
+                //console.log(containerShape.contains(chunk.get('position')) !== containerShape.getBounds().contains(chunk.get('position')));
                 //console.log('chunk outside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
                 // console.log(containerShape.getBounds());
                 // console.log(chunk.get('position'));

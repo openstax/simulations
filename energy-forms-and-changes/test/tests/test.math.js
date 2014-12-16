@@ -140,6 +140,20 @@ describe('PiecewiseCurve', function(){
 
 		chai.expect(curve.contains(pointInside)).to.be.true;
 		chai.expect(curve.contains(pointOutside)).to.not.be.true;
+
+		curve = new PiecewiseCurve();
+		curve
+			.moveTo(0, 0)
+			.curveTo(0, -2, 4, -2, 4, 0)
+			.lineTo(4, 4)
+			.curveTo(4, 6, 0, 6, 0, 4)
+			.close();
+
+		pointInside  = new Vector2(3, 3);
+		pointOutside = new Vector2(8, 8);
+
+		chai.expect(curve.contains(pointInside)).to.be.true;
+		chai.expect(curve.contains(pointOutside)).to.not.be.true;
 	});
 
 	it('#intersects should correctly calculate intersection', function(){

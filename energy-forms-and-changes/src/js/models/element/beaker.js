@@ -247,6 +247,7 @@ define(function (require) {
                 slicePath.lineTo( centerX + sliceWidth / 2,    topY);
                 slicePath.curveTo(centerX + sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth * 0.33, topY + controlPointYOffset, centerX - sliceWidth / 2, topY);
                 slicePath.lineTo( centerX - sliceWidth / 2,    bottomY);
+                slicePath.close();
 
                 this.slices.push(new EnergyChunkContainerSlice(slicePath, -proportion * this.get('width')));
             }
