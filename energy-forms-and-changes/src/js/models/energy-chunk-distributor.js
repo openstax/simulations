@@ -207,8 +207,8 @@ define(function (require) {
                         .normalize()
                         .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
                 );
-                //console.log(containerShape.contains(chunk.get('position')) !== containerShape.getBounds().contains(chunk.get('position')));
-                //console.log('chunk outside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
+                // console.log(containerShape.contains(chunk.get('position')) !== containerShape.getBounds().contains(chunk.get('position')));
+                // console.log('chunk outside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
                 // console.log(containerShape.getBounds());
                 // console.log(chunk.get('position'));
             }
@@ -329,6 +329,7 @@ define(function (require) {
                     .set(forceConstant / Math.pow(lengthBounds.center().x, 2))
                     .rotate(angle + Math.PI);
                 forceVector.add(edgeForce);
+                //console.log(edgeForce.length());
                 //console.log('edge force magnitude: ' + edgeForce.length().toFixed(3));
             }
         },
@@ -345,7 +346,7 @@ define(function (require) {
             for (var i = 0; i < chunks.length; i++) {
                 otherChunk = chunks[i];
                 if (chunk === otherChunk)
-                    return;
+                    continue;
 
                 // Calculate force vector, but handle cases where too close.
                 vectorToOther
@@ -375,7 +376,9 @@ define(function (require) {
                         .normalize()
                         .scale(forceConstant / vectorToOther.lengthSq())
                 );
+                //console.log(vectorToOther);
             }
+            //console.log(forceVector);
         },
 
         /**
