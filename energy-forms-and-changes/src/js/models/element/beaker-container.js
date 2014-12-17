@@ -56,10 +56,8 @@ define(function (require) {
 
                 // Update the shapes of the energy chunk slices.
                 _.each(this.slices, function(slice) {
-                    var originalBounds = slice.getShape().getBounds();
+                    var originalBounds = slice.getShape().getBounds().clone();
                     slice.getShape().scale(1, proportionateIncrease);
-                    console.log(originalBounds.toString(4) + ' | ' + slice.getShape().getBounds().toString(4));
-                    //console.log((originalBounds.x - slice.getShape().getBounds().x) + ',' + (originalBounds.y - slice.getShape().getBounds().y) + ' ' + (originalBounds.w - slice.getShape().getBounds().w) + 'x' + (originalBounds.h - slice.getShape().getBounds().h));
                     slice.getShape().translate(
                         originalBounds.x - slice.getShape().getBounds().x,
                         originalBounds.y - slice.getShape().getBounds().y
