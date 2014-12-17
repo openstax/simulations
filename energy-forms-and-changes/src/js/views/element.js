@@ -139,6 +139,7 @@ define(function(require) {
 
                 var validatedPosition = this.movementConstraint(this.model, newPosition);
                 this.model.setPosition(validatedPosition);
+                //console.log('setting from view');
             }
         },
 

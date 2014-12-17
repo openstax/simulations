@@ -146,6 +146,10 @@ define(function(require) {
                 textColor: Constants.BrickView.TEXT_COLOR,
                 labelText: 'Brick'
             });
+            this.brickLayer = new PIXI.DisplayObjectContainer();
+            this.brickLayer.addChild(this.brickView.energyChunkLayer);
+            this.brickLayer.addChild(this.brickView.displayObject);
+            this.blockLayer.addChild(this.brickLayer);
             
             this.ironBlockView = new BlockView({ 
                 model: this.simulation.ironBlock, 
@@ -158,9 +162,10 @@ define(function(require) {
                 textColor: Constants.IronBlockView.TEXT_COLOR,
                 labelText: 'Iron'
             });
-
-            this.blockLayer.addChild(this.brickView.displayObject);
-            this.blockLayer.addChild(this.ironBlockView.displayObject);
+            this.ironBlockLayer = new PIXI.DisplayObjectContainer();
+            this.ironBlockLayer.addChild(this.ironBlockView.energyChunkLayer);
+            this.ironBlockLayer.addChild(this.ironBlockView.displayObject);
+            this.blockLayer.addChild(this.ironBlockLayer);
 
             this.views.push(this.brickView);
             this.views.push(this.ironBlockView);
@@ -310,23 +315,23 @@ define(function(require) {
             var brick = this.simulation.brick;
             var iron  = this.simulation.ironBlock;
 
-            if (this.blockLayer.getChildIndex(this.brickView.displayObject) !== 0 && (
+            if (this.blockLayer.getChildIndex(this.brickLayer) !== 0 && (
                     iron.isStackedUpon(brick) || (
                         iron.getRect().left()   >= brick.getRect().right() ||
                         iron.getRect().bottom() >= brick.getRect().top()
                     )
                 )
             ) {
-                this.blockLayer.swapChildren(this.brickView.displayObject, this.ironBlockView.displayObject);
+                this.blockLayer.swapChildren(this.brickLayer, this.ironBlockLayer);
             }
-            else if (this.blockLayer.getChildIndex(this.ironBlockView.displayObject) !== 0 && (
+            else if (this.blockLayer.getChildIndex(this.ironBlockLayer) !== 0 && (
                     brick.isStackedUpon(iron) || (
                         brick.getRect().left()   >= iron.getRect().right() ||
                         brick.getRect().bottom() >= iron.getRect().top()
                     )
                 )
             ) {
-                this.blockLayer.swapChildren(this.brickView.displayObject, this.ironBlockView.displayObject);
+                this.blockLayer.swapChildren(this.brickLayer, this.ironBlockLayer);
             }
         },
 

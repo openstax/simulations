@@ -206,7 +206,9 @@ define(function (require, exports, module) {
 
                         // Center the element above its new parent
                         var targetX = potentialSupportingSurface.getCenterX();
-                        element.setX( targetX );
+                        //console.log('setting x');
+                        element.setX(targetX);
+                        //console.log('done setting x');
                     }
                     
                     // Calculate a proposed Y position based on gravitational falling.
@@ -226,7 +228,8 @@ define(function (require, exports, module) {
                         element.set('verticalVelocity', velocity);
                     }
                     //console.log(element.cid + ': ' + element.get('position').x + ', ' + proposedYPos);
-                    element.setPosition(element.get('position').x, proposedYPos);
+                    element.setY(proposedYPos);
+                    //console.log('setting from simulation');
                 }
             }, this);
         },

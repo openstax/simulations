@@ -90,13 +90,11 @@ define(function(require) {
         updatePosition: function(model, position) {
             if (this.displayObject.parent) {
                 var globalPoint = this.mvt.modelToView(position);
-                var localPoint = this.displayObject.parent.toLocal(globalPoint);
-                this.displayObject.x = localPoint.x;
-                this.displayObject.y = localPoint.y;    
-                //console.log(localPoint.x.toFixed(1) + ', ' + localPoint.y.toFixed(1));
+                this.displayObject.x = globalPoint.x;
+                this.displayObject.y = globalPoint.y;
             }
             else {
-                console.log('not ready to update position yet');
+                console.error('not ready to update position yet');
             }
         },
 

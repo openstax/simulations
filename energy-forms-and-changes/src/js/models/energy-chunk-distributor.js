@@ -354,6 +354,7 @@ define(function (require) {
                     .sub(otherChunk.get('position'));
 
                 if (vectorToOther.length() < minDistance) {
+                    //console.log(minDistance);
                     if (vectorToOther.length() === 0) {
                         // Create a random vector of min distance
                         var randomAngle = Math.random() * Math.PI * 2;

@@ -64,6 +64,7 @@ define(function (require) {
 
             this.on('change:position', function(model, position){
                 var translation = this._translation.set(position).sub(this.previous('position'));
+                // console.log(position.x.toFixed(4) + ',' + position.y.toFixed(4) +' | '+this.previous('position').x.toFixed(4) + ',' + this.previous('position').y.toFixed(4) +' | '+ translation.x.toFixed(4) + ',' + translation.y.toFixed(4));
                 _.each(this.slices, function(slice) {
                     slice.getShape().translate(translation);
                     _.each(slice.energyChunkList.models, function(chunk) {

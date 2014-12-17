@@ -35,7 +35,6 @@ define(function(require) {
             this.faces        = new PIXI.DisplayObjectContainer();
             this.outlineFront = new PIXI.DisplayObjectContainer();
 
-            this.displayObject.addChild(this.energyChunkLayer);
             this.displayObject.addChild(this.outlineBack);
             this.displayObject.addChild(this.faces);
             this.displayObject.addChild(this.outlineFront);

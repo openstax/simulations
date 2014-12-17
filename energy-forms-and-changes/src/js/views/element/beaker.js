@@ -377,8 +377,8 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            this.backLayer.x = this.frontLayer.x = this.energyChunkLayer.x = viewPoint.x;
-            this.backLayer.y = this.frontLayer.y = this.energyChunkLayer.y = viewPoint.y;
+            this.backLayer.x = this.frontLayer.x = viewPoint.x;
+            this.backLayer.y = this.frontLayer.y = viewPoint.y;
         },
 
         updateSteam: function(time, deltaTime) {
@@ -451,16 +451,13 @@ define(function(require) {
             if (!simulationPaused) {
                 this.updateSteam(time, deltaTime);
 
-                this.debugSlicesGraphics.clear();
+                // this.debugSlicesGraphics.clear();
                 
 
-                for (var i = 0; i < this.model.slices.length; i++) {
-                    
-                    this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
-                    //this.debugSlicesGraphics.beginFill(0xFF6969, 0.2);
-                    this.debugSlicesGraphics.drawPiecewiseCurve(this.mvt.modelToView(this.model.slices[i].getShape()));
-                    //this.debugSlicesGraphics.endFill();
-                }
+                // for (var i = 0; i < this.model.slices.length; i++) {
+                //     this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
+                //     this.debugSlicesGraphics.drawPiecewiseCurve(this.mvt.modelToView(this.model.slices[i].getShape()));
+                // }
                 
             }
         }
