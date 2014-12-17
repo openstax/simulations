@@ -53,6 +53,13 @@ define(function (require) {
         return this;
     };
 
+    Rectangle.prototype.toString = function(precision) {
+        if (precision === undefined)
+            precision = 4;
+        return '(' + this.x.toFixed(precision) + ', ' + this.y.toFixed(precision) + ') '
+                   + this.w.toFixed(precision) + 'x' + this.h.toFixed(precision);
+    }
+
     return Rectangle;
 
     // A failed attempt to make a requirejs config path definition for 'vector2-node' unnecessary:

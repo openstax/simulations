@@ -50,18 +50,23 @@ define(function (require) {
             //   empirically determined to look good.
             var newFluidLevel = Math.min(Beaker.INITIAL_FLUID_LEVEL + overlappingArea * 120, 1);
             var proportionateIncrease = newFluidLevel / this.get('fluidLevel');
-            this.set('fluidLevel', newFluidLevel);
 
-            // Update the shapes of the energy chunk slices.
-            _.each(this.slices, function(slice) {
-                var originalBounds = slice.getShape().getBounds();
-                slice.getShape()
-                    .scale(1, proportionateIncrease)
-                    .translate(
+            if (this.get('fluidLevel') != newFluidLevel) {
+                this.set('fluidLevel', newFluidLevel);
+
+                // Update the shapes of the energy chunk slices.
+                _.each(this.slices, function(slice) {
+                    var originalBounds = slice.getShape().getBounds();
+                    slice.getShape().scale(1, proportionateIncrease);
+                    console.log(originalBounds.toString(4) + ' | ' + slice.getShape().getBounds().toString(4));
+                    //console.log((originalBounds.x - slice.getShape().getBounds().x) + ',' + (originalBounds.y - slice.getShape().getBounds().y) + ' ' + (originalBounds.w - slice.getShape().getBounds().w) + 'x' + (originalBounds.h - slice.getShape().getBounds().h));
+                    slice.getShape().translate(
                         originalBounds.x - slice.getShape().getBounds().x,
                         originalBounds.y - slice.getShape().getBounds().y
                     );
-            });
+                });
+            }
+            
         },
 
         isEnergyChunkObscured: function(chunk) {

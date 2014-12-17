@@ -52,6 +52,19 @@ define(function(require) {
             // Just for debugging
             //this.renderTopCenterPoint();
             //this.renderBottomCenterPoint();
+            this.initDebugSlices();
+        },
+
+        initDebugSlices: function() {
+            this.debugLayer = new PIXI.DisplayObjectContainer();
+
+            this.debugSlicesGraphics = new PIXI.Graphics();
+            this.debugLayer.addChild(this.debugSlicesGraphics);
+
+            this.debugSliceColors = [];
+            for (var i = 0; i < this.model.slices.length; i++) {
+                this.debugSliceColors[i] = Math.random() * 0xAAAAAA;
+            }
         },
 
         initBlock: function(rect, perspectiveEdgeSize, blockFaceOffset, backCornerOffset) {
@@ -174,6 +187,17 @@ define(function(require) {
             origin.drawCircle(0, 0, 3);
             origin.endFill();
             this.displayObject.addChild(origin);
+        },
+
+        update: function(time, deltaTime) {
+            ThermalElementView.prototype.update.apply(this, [time, deltaTime]);
+
+            this.debugSlicesGraphics.clear();
+            for (var i = 0; i < this.model.slices.length; i++) {
+                this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
+                var rect = this.mvt.modelToView(this.model.slices[i].getShape());
+                this.debugSlicesGraphics.drawRect(rect.x, rect.y - rect.h, rect.w, rect.h);
+            }
         },
 
         calculateDragBounds: function(dx, dy) {

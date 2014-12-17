@@ -147,6 +147,7 @@ define(function(require) {
                 labelText: 'Brick'
             });
             this.brickLayer = new PIXI.DisplayObjectContainer();
+            this.brickLayer.addChild(this.brickView.debugLayer);
             this.brickLayer.addChild(this.brickView.energyChunkLayer);
             this.brickLayer.addChild(this.brickView.displayObject);
             this.blockLayer.addChild(this.brickLayer);
@@ -163,6 +164,7 @@ define(function(require) {
                 labelText: 'Iron'
             });
             this.ironBlockLayer = new PIXI.DisplayObjectContainer();
+            this.ironBlockLayer.addChild(this.ironBlockView.debugLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.energyChunkLayer);
             this.ironBlockLayer.addChild(this.ironBlockView.displayObject);
             this.blockLayer.addChild(this.ironBlockLayer);
@@ -291,7 +293,7 @@ define(function(require) {
             this.backLayer.addChild(leftBurnerView.backLayer);
             this.backLayer.addChild(leftBurnerView.energyChunkLayer);
             this.burnerFrontLayer.addChild(leftBurnerView.frontLayer);
-            
+
             this.backLayer.addChild(rightBurnerView.backLayer);
             this.backLayer.addChild(rightBurnerView.energyChunkLayer);
             this.burnerFrontLayer.addChild(rightBurnerView.frontLayer);
