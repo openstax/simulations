@@ -372,10 +372,11 @@ define(function (require) {
                 }
 
                 // Add the force to the accumulated forces on this energy chunk.
+                var sqrMagnitude = vectorToOther.lengthSq();
                 forceVector.add(
                     vectorToOther
                         .normalize()
-                        .scale(forceConstant / vectorToOther.lengthSq())
+                        .scale(forceConstant / sqrMagnitude)
                 );
                 //console.log(vectorToOther);
             }

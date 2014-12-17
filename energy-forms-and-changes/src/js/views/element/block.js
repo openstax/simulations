@@ -192,12 +192,12 @@ define(function(require) {
         update: function(time, deltaTime) {
             ThermalElementView.prototype.update.apply(this, [time, deltaTime]);
 
-            this.debugSlicesGraphics.clear();
-            for (var i = 0; i < this.model.slices.length; i++) {
-                this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
-                var rect = this.mvt.modelToView(this.model.slices[i].getShape());
-                this.debugSlicesGraphics.drawRect(rect.x, rect.y - rect.h, rect.w, rect.h);
-            }
+            // this.debugSlicesGraphics.clear();
+            // for (var i = 0; i < this.model.slices.length; i++) {
+            //     this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
+            //     var rect = this.mvt.modelToView(this.model.slices[i].getShape());
+            //     this.debugSlicesGraphics.drawRect(rect.x, rect.y - rect.h, rect.w, rect.h);
+            // }
         },
 
         calculateDragBounds: function(dx, dy) {
