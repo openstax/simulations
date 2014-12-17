@@ -289,8 +289,11 @@ define(function(require) {
             this.views.push(rightBurnerView);
 
             this.backLayer.addChild(leftBurnerView.backLayer);
+            this.backLayer.addChild(leftBurnerView.energyChunkLayer);
             this.burnerFrontLayer.addChild(leftBurnerView.frontLayer);
+            
             this.backLayer.addChild(rightBurnerView.backLayer);
+            this.backLayer.addChild(rightBurnerView.energyChunkLayer);
             this.burnerFrontLayer.addChild(rightBurnerView.frontLayer);
 
             this.backLayer.addChild(leftBurnerStandView.displayObject);

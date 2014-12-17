@@ -250,7 +250,6 @@ define(function(require) {
 
         initEnergyChunks: function() {
             this.energyChunkLayer.visible = false;
-            this.backLayer.addChild(this.energyChunkLayer);
         },
 
         updatePosition: function(model, position) {
