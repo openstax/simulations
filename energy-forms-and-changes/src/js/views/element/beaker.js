@@ -241,7 +241,7 @@ define(function(require) {
             this.frontLayer.addChildAt(this.fluidLayer, 0);
 
             this.fluidMask = new PIXI.Graphics();
-            this.energyChunkLayer.addChild(this.fluidMask);
+            this.frontLayer.addChild(this.fluidMask);
         },
 
         initLabel: function() {
@@ -259,8 +259,7 @@ define(function(require) {
         initEnergyChunks: function(energyChunkLayer) {
             ThermalElementView.prototype.initEnergyChunks.apply(this, [energyChunkLayer]);
 
-            //energyChunkLayer.mask = this.fluidMask;
-            this.energyChunkLayer.removeChild(this.fluidMask);
+            energyChunkLayer.mask = this.fluidMask;
         },
 
         initSteam: function() {
