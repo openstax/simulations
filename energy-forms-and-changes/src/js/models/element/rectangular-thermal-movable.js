@@ -354,7 +354,7 @@ define(function (require) {
 
             // Distribute the energy chunks within the container.
             for (var i = 0; i < 1000; i++) {
-                if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL))
+                if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL, true))
                     break;
                 console.log('Thermal: distributing...');
             }

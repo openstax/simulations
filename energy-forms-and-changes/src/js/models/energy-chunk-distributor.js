@@ -55,7 +55,7 @@ define(function (require) {
          *   a set of slices interact with each other, but the container for each is
          *   defined by the boundary of its containing slice.
          */
-        updatePositions: function(slices, deltaTime) {
+        updatePositions: function(slices, deltaTime, silent) {
             var i;
             var j;
 
@@ -136,8 +136,6 @@ define(function (require) {
                         var energy = EnergyChunkDistributor.updateChunk(chunk, timeStep, forceVector);
                         if (energy > maxEnergy)
                             maxEnergy = energy;
-
-                        
                     }
                 }
 
@@ -148,9 +146,14 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
-                        velocity.set(chunk.get('velocity'));
+                        velocity
+                            .set(chunk.get('velocity'))
+                            .scale(timeStep);
                         //console.log(velocity);
-                        chunk.translate(velocity.scale(timeStep));
+                        if (silent)
+                            chunk.get('position').set(chunk.get('position').x + velocity.x, chunk.get('position').y + velocity.y);
+                        else
+                            chunk.translate(velocity);
                     }
                 }
             }

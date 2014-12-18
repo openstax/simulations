@@ -11,7 +11,7 @@ define(function(require) {
     var ModelViewTransform   = require('common/math/model-view-transform');
     var SceneView            = require('views/scene');
     var AirView              = require('views/air');
-    var ThermometerView      = require('views/thermometer');
+    var ThermometerView      = require('views/element/thermometer');
     var ThermometerClipsView = require('views/thermometer-clips');
     var BlockView            = require('views/element/block');
     var BrickView            = require('views/element/brick');
@@ -242,7 +242,7 @@ define(function(require) {
             // Add thermometers to the thermometer clips
             _.each(thermometerViews, function(thermometerView) {
                 var point = thermometerClips.addThermometer(thermometerView);
-                thermometerView.model.setPosition(point.x, point.y);
+                thermometerView.setPosition(point.x, point.y);
             }, this);
         },
 
