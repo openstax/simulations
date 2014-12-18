@@ -240,8 +240,8 @@ define(function(require) {
 
             this.frontLayer.addChildAt(this.fluidLayer, 0);
 
-            this.fluidMask = new PIXI.Graphics();
-            this.frontLayer.addChild(this.fluidMask);
+            this.energyChunkMask = new PIXI.Graphics();
+            this.frontLayer.addChild(this.energyChunkMask);
         },
 
         initLabel: function() {
@@ -259,7 +259,7 @@ define(function(require) {
         initEnergyChunks: function(energyChunkLayer) {
             ThermalElementView.prototype.initEnergyChunks.apply(this, [energyChunkLayer]);
 
-            energyChunkLayer.mask = this.fluidMask;
+            energyChunkLayer.mask = this.energyChunkMask;
         },
 
         initSteam: function() {
@@ -351,27 +351,31 @@ define(function(require) {
                 .lineTo(left, top)
                 .endFill();
 
-            this.fluidMask
-                .clear()
-                .beginFill(0x000000, 1)
-                .moveTo(left, top)
-                .bezierCurveTo(
-                    left,  top -ellipseHeight / 2,
-                    right, top -ellipseHeight / 2,
-                    right, top
-                )
-                .lineTo(right, bottom)
-                .bezierCurveTo(
-                    right, bottom + ellipseHeight / 2,
-                    left,  bottom + ellipseHeight / 2,
-                    left,  bottom
-                )
-                .lineTo(left, top)
-                .moveTo(left + 20, bottom - 20)
-                .lineTo(left + 40, bottom - 40)
-                .lineTo(left + 60, bottom - 20)
-                .lineTo(left + 20, bottom - 20)
-                .endFill();
+            // this.fluidMask
+            //     .clear()
+            //     .beginFill(0x000000, 1)
+            //     .moveTo(left, top)
+            //     .bezierCurveTo(
+            //         left,  top -ellipseHeight / 2,
+            //         right, top -ellipseHeight / 2,
+            //         right, top
+            //     )
+            //     .lineTo(right, bottom)
+            //     .bezierCurveTo(
+            //         right, bottom + ellipseHeight / 2,
+            //         left,  bottom + ellipseHeight / 2,
+            //         left,  bottom
+            //     )
+            //     .lineTo(left, top)
+            //     .moveTo(left + 20, bottom - 20)
+            //     .lineTo(left + 40, bottom - 40)
+            //     .lineTo(left + 60, bottom - 20)
+            //     .lineTo(left + 20, bottom - 20)
+            //     .endFill();
+        },
+
+        updateMask: function(models) {
+
         },
 
         updatePosition: function(model, position) {
