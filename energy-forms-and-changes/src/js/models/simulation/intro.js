@@ -60,12 +60,30 @@ define(function (require, exports, module) {
             // Thermometers
             this.thermometers = [];
             for (var i = 0; i < IntroSimulation.NUM_THERMOMETERS; i++) {
-                this.thermometers.push(new ElementFollowingThermometer({
+                var thermometer = new ElementFollowingThermometer({
                     position: IntroSimulation.INITIAL_THERMOMETER_LOCATION,
                     active: false
                 }, {
                     elementLocator: this
-                }));
+                });
+
+                var blockWidthIncludingPerspective = this.ironBlock.getProjectedShape().getBounds().w;
+                this.listenTo(thermometer, 'change:sensedElement', function(model, element) {
+                    var beakerLeft  = this.beaker.getRect().center().x - blockWidthIncludingPerspective / 2;
+                    var beakerRight = this.beaker.getRect().center().x + blockWidthIncludingPerspective / 2;
+                    var thermometerX = thermometer.get('position').x;
+                    if (model.previous('sensedElement') === this.beaker && 
+                        !thermometer.get('userControlled') && 
+                        thermometerX >= beakerLeft && 
+                        thermometerX <= beakerRight
+                    ) {
+                        thermometer.set('userControlled', true);
+                        thermometer.setPosition(this.beaker.getRect().right() - 0.01, this.beaker.getRect().bottom() + this.beaker.getRect().h * 0.33);
+                        thermometer.set('userControlled', false);
+                    }
+                });
+
+                this.thermometers.push(thermometer);
             }
 
             // Air

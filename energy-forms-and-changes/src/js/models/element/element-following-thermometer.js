@@ -40,6 +40,7 @@ define(function (require) {
                     }, this);
                     if (!this.followedElement && this.simulation.getBeaker().getThermalContactArea().getBounds().contains(this.get('position'))) {
                         // Stick to the beaker.
+                        console.log('following beaker');
                         this.follow(this.simulation.getBeaker());
                     }
                 }
@@ -54,9 +55,7 @@ define(function (require) {
         follow: function(element) {
             this.followedElement = element;
             this.listenTo(this.followedElement, 'change:position', function(model, position) {
-                this.get('position')
-                    .set(position)
-                    .add(this.followingOffset);
+                this.setPosition(position.x + this.followingOffset.x, position.y + this.followingOffset.y);
             });
             this.followingOffset
                 .set(this.get('position'))
@@ -64,8 +63,10 @@ define(function (require) {
         },
 
         stopFollowing: function() {
-            if (this.followedElement)
+            if (this.followedElement) {
                 this.stopListening(this.followedElement);
+                this.followedElement = null;
+            }
         }
 
     });
