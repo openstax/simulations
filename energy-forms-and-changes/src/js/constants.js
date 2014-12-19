@@ -318,7 +318,6 @@ define(function (require) {
     ThermometerView.NUM_TICK_MARKS = 13;
     ThermometerView.TICK_MARK_THICKNESS = 2; // pixels
     ThermometerView.LIQUID_COLOR = '#ed1c24';
-    ThermometerView.LIQUID_HIGHLIGHT_COLOR = '#f68a8e';
 
     Constants.ThermometerView = ThermometerView;
 

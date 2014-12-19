@@ -71,7 +71,7 @@ define(function(require) {
             // origin.endFill();
             // this.displayObject.addChild(origin);
 
-            // TODO: add tick marks and the column of red liquid
+            this.updateTemperature(null, Constants.ROOM_TEMPERATURE);
         },
 
         initTickMarks: function(backWidth, bottomTickY, topTickY, tickSpacing) {
@@ -106,29 +106,32 @@ define(function(require) {
             // Create liquid column
             var width = backWidth * 0.45;
 
-            var canvas = document.createElement('canvas');
-            canvas.width  = width;
-            canvas.height = 1;
+            var liquidFill = new PIXI.Graphics();
+            liquidFill.beginFill(Colors.parseHex(ThermometerView.LIQUID_COLOR), 1);
+            liquidFill.drawRect(0, 0, width, 1);
 
-            var ctx = canvas.getContext('2d');
-
-            var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
-            gradient.addColorStop(0,   ThermometerView.LIQUID_COLOR);
-            gradient.addColorStop(0.4, ThermometerView.LIQUID_COLOR);
-            gradient.addColorStop(0.7, ThermometerView.LIQUID_HIGHLIGHT_COLOR);
-            gradient.addColorStop(1,   ThermometerView.LIQUID_COLOR);
-
-            ctx.fillStyle = gradient;
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            this.liquid = new PIXI.Sprite(new PIXI.Texture.fromCanvas(canvas));
+            this.liquid = new PIXI.Sprite(liquidFill.generateTexture());
             this.liquid.anchor.y = 1;
             this.liquid.y = centerOfBulb.y;
             this.liquid.x = centerOfBulb.x - width / 2 + this.width * 0.02;
             this.backLayer.addChild(this.liquid);
 
             // Mask so it's contained at the top
+            var left   = (backWidth - width) / 2;
+            var right  = left + width;
+            var top    = -backHeight + (width / 2);
+            var bottom = centerOfBulb.y;
 
+            var mask = new PIXI.Graphics();
+            mask.beginFill(0x000000, 1);
+            mask.moveTo(left, top);
+            mask.bezierCurveTo(left, top - width / 2, right, top - width / 2, right, top);
+            mask.lineTo(right, bottom);
+            mask.lineTo(left, bottom);
+            mask.lineTo(left, top);
+            mask.endFill();
+            this.backLayer.addChild(mask);
+            this.liquid.mask = mask;
         },
 
         initMarker: function(width, halfWidth) {
