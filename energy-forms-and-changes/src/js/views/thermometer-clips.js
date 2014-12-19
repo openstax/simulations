@@ -38,10 +38,12 @@ define(function(require) {
             this.displayObject.x = this.x;
             this.displayObject.y = this.y;
             
+            var base = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_BASE);
             this.backLayer        = new PIXI.DisplayObjectContainer();
             this.thermometerLayer = new PIXI.DisplayObjectContainer();
             this.frontLayer       = new PIXI.DisplayObjectContainer();
             
+            this.displayObject.addChild(base);
             this.displayObject.addChild(this.backLayer);
             this.displayObject.addChild(this.thermometerLayer);
             this.displayObject.addChild(this.frontLayer);
@@ -50,6 +52,9 @@ define(function(require) {
             var point;
             var backClip;
             var frontClip;
+
+            base.x = 9;
+            base.y = -6;
 
             for (var i = 0; i < this.numThermometerSpots; i++) {
                 point = new PIXI.Point(this.x + spacing / 2 + i * spacing, this.y + this.height / 2);
