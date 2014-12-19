@@ -250,7 +250,7 @@ define(function(require) {
             // Add thermometers to the thermometer clips
             _.each(thermometerViews, function(thermometerView) {
                 var point = thermometerClips.addThermometer(thermometerView);
-                thermometerView.setPosition(point.x, point.y);
+                thermometerView.setCenterPosition(point.x, point.y);
 
                 var rect = new Rectangle();
                 this.listenTo(thermometerView, 'drag-start', function() {
@@ -268,7 +268,7 @@ define(function(require) {
                     if (thermometerClips.overlaps(rect)) {
                         this.thermometerLayer.removeChild(thermometerView.displayObject);
                         var point = thermometerClips.addThermometerNear(thermometerView, thermometerView.displayObject.position);
-                        thermometerView.setPosition(point.x, point.y);
+                        thermometerView.setCenterPosition(point.x, point.y);
                     }
                 });
             }, this);

@@ -44,6 +44,8 @@ define(function(require) {
             // back.anchor.x = front.anchor.x = 0.5;
             back.anchor.y = front.anchor.y = 1;
             var halfWidth = back.width / 2;
+            this.width  = back.width;
+            this.height = back.height;
 
             var centerOfBulb = new Vector2(halfWidth, -halfWidth);
 
@@ -152,9 +154,11 @@ define(function(require) {
             this.displayObject.y = viewPoint.y;
         },
 
-        setPosition: function(x, y) {
-            var position = this.mvt.viewToModel(this._position.set(x, y));
-            this.model.setPosition(position);
+        setCenterPosition: function(x, y) {
+            var position = this._position.set(x, y);
+            position.sub(this.width / 2, -this.height / 2);
+            var modelPosition = this.mvt.viewToModel(position);
+            this.model.setPosition(modelPosition);
         }
 
     }, Constants.ThermometerView);

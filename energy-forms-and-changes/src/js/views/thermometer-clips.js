@@ -70,6 +70,12 @@ define(function(require) {
                     point: point,
                     view: null
                 });
+
+                // var origin = new PIXI.Graphics();
+                // origin.beginFill(0x0000FF, 1);
+                // origin.drawCircle(point.x, point.y, 3);
+                // origin.endFill();
+                // this.frontLayer.addChild(origin);
             }
         },
 
