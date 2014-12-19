@@ -123,6 +123,7 @@ define(function(require) {
 
             air.listenTo(this, 'show-energy-chunks', air.showEnergyChunks);
             air.listenTo(this, 'hide-energy-chunks', air.hideEnergyChunks);
+            this.airView = air;
         },
 
         initBlocks: function() {
@@ -218,12 +219,19 @@ define(function(require) {
         },
 
         initThermometers: function() {
+            var measurableElementViews = [
+                this.brickView,
+                this.ironBlockView,
+                this.beakerView
+            ];
+
             var thermometerViews = [];
             _.each(this.simulation.thermometers, function(thermometer) {
                 var view = new ThermometerView({
                     model: thermometer,
                     mvt: this.mvt,
-                    simulation: this.simulation
+                    simulation: this.simulation,
+                    measurableElementViews: measurableElementViews
                 });
                 thermometerViews.push(view);
                 this.views.push(view);
@@ -233,7 +241,7 @@ define(function(require) {
             var thermometerClips = new ThermometerClipsView({
                 x: 15,
                 y: 15,
-                width: 210,
+                width: 230,
                 height: 180,
                 numThermometerSpots: thermometerViews.length
             });
@@ -243,6 +251,26 @@ define(function(require) {
             _.each(thermometerViews, function(thermometerView) {
                 var point = thermometerClips.addThermometer(thermometerView);
                 thermometerView.setPosition(point.x, point.y);
+
+                var rect = new Rectangle();
+                this.listenTo(thermometerView, 'drag-start', function() {
+                    var removedView = thermometerClips.removeThermometer(thermometerView);
+                    if (removedView)
+                        this.thermometerLayer.addChild(removedView.displayObject);
+                });
+                this.listenTo(thermometerView, 'drag-end', function() {
+                    rect.set(
+                        thermometerView.displayObject.x, 
+                        thermometerView.displayObject.y - thermometerView.displayObject.height,
+                        thermometerView.displayObject.width, 
+                        thermometerView.displayObject.height
+                    );
+                    if (thermometerClips.overlaps(rect)) {
+                        this.thermometerLayer.removeChild(thermometerView.displayObject);
+                        var point = thermometerClips.addThermometerNear(thermometerView, thermometerView.displayObject.position);
+                        thermometerView.setPosition(point.x, point.y);
+                    }
+                });
             }, this);
         },
 

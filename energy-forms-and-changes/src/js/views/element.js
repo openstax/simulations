@@ -99,7 +99,8 @@ define(function(require) {
             if (this.movable && !this.simulation.get('paused')) {
                 this.dragOffset = data.getLocalPosition(this[this.dragLayer], this._dragOffset);
                 this.dragging = true;
-                this.model.set('userControlled', true);    
+                this.model.set('userControlled', true);
+                this.trigger('drag-start');  
             }
         },
 
@@ -147,6 +148,7 @@ define(function(require) {
             this.dragging = false;
             this.dragData = null;
             this.model.set('userControlled', false);
+            this.trigger('drag-end');
         },
 
         updatePosition: function(model, position) {
@@ -161,7 +163,11 @@ define(function(require) {
 
         showEnergyChunks: function() {},
 
-        hideEnergyChunks: function() {}
+        hideEnergyChunks: function() {},
+
+        getColor: function() {
+            return '#fff';
+        }
 
     }, Constants.ElementView);
 

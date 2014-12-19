@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     var Vector2 = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var PixiView = require('common/pixi/view');
     var Assets   = require('assets');
@@ -27,6 +28,8 @@ define(function(require) {
             this.numThermometerSpots = options.numThermometerSpots || 3;
 
             this.anchors = [];
+
+            this.rect = new Rectangle(this.x, this.y, this.width, this.height * 0.6);
 
             this.initGraphics();
         },
@@ -71,6 +74,15 @@ define(function(require) {
         },
 
         /**
+         * The Rectangle.overlaps function can actually take an x and y
+         *   value, a point, or another rectangle, so any of those will
+         *   work here fore parameters.
+         */
+        overlaps: function(x, y) {
+            return this.rect.overlaps(x, y);
+        },
+
+        /**
          * Places the thermometer at the next open anchor.  Returns
          *   false if it couldn't be placed and the coordinates of the
          *   anchor if it was placed.
@@ -91,7 +103,7 @@ define(function(require) {
          *   it in the next nearest position and so on.
          */
         addThermometerNear: function(thermometerView, point) {
-            var a = new Vector2(point);
+            var a = new Vector2(point.x, point.y);
             var b = new Vector2();
 
             // Get the distances between this point and each anchor

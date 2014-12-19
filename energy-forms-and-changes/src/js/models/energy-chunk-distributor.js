@@ -146,10 +146,11 @@ define(function (require) {
                     // Update position of each energy chunk
                     for (j = 0; j < chunks.length; j++) {
                         chunk = chunks[j];
+                        
                         velocity
                             .set(chunk.get('velocity'))
                             .scale(timeStep);
-                        //console.log(velocity);
+
                         if (silent)
                             chunk.get('position').set(chunk.get('position').x + velocity.x, chunk.get('position').y + velocity.y);
                         else

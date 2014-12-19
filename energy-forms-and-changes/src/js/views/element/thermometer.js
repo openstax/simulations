@@ -5,11 +5,14 @@ define(function(require) {
     // var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var Vector2 = require('common/math/vector2');
-    var Colors  = require('common/colors/colors');
+    var Vector2   = require('common/math/vector2');
+    var Functions = require('common/math/functions');
+    var Colors    = require('common/colors/colors');
 
     var ElementView = require('views/element');
     var Assets   = require('assets');
+
+    var Constants = require('constants');
 
     /**
      * A view that represents the air model
@@ -23,8 +26,13 @@ define(function(require) {
             options = _.extend({
                 movable: true
             }, options);
+
+            this.measurableElementViews = options.measurableElementViews;
             
             ElementView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:sensedElement', this.updateSensedElement);
+            this.listenTo(this.model, 'change:sensedTemperature', this.updateTemperature);
 
             this._position = new Vector2();
         },
@@ -37,20 +45,54 @@ define(function(require) {
             back.anchor.y = front.anchor.y = 1;
             var halfWidth = back.width / 2;
 
+            var centerOfBulb = new Vector2(halfWidth, -halfWidth);
+
+            var bottomTickY = centerOfBulb.y - back.height * 0.1;
+            var topTickY    = -back.height * 0.9;
+            var tickSpacing = (topTickY - bottomTickY) / ThermometerView.NUM_TICK_MARKS;
+
+            var freezingY = bottomTickY + tickSpacing; // second tick mark from bottom
+            var boilingY  = topTickY    - tickSpacing; // second tick mark from top
+
             this.displayObject.addChild(back);
+            this.initLiquid(back.width, back.height, freezingY, boilingY);
+            this.initMarker(back.width, halfWidth);
+            this.initTickMarks(back.width, bottomTickY, topTickY, tickSpacing);
             this.displayObject.addChild(front);
 
-            var centerOfBulb = new Vector2(halfWidth, back.height);
-
-            this.initMarker(back.width, halfWidth);
-
             // var origin = new PIXI.Graphics();
-            // origin.beginFill(0xFF0000, 1);
-            // origin.drawCircle(0, 0, 3);
+            // origin.beginFill(0x0000FF, 1);
+            // origin.drawCircle(centerOfBulb.x, centerOfBulb.y, 3);
             // origin.endFill();
             // this.displayObject.addChild(origin);
 
             // TODO: add tick marks and the column of red liquid
+        },
+
+        initTickMarks: function(backWidth, bottomTickY, topTickY, tickSpacing) {
+            var xOffset = Math.floor(backWidth * 0.26);
+
+            var shortTickWidth = backWidth * 0.12;
+            var longTickWidth  = shortTickWidth * 2;
+
+            var ticks = new PIXI.Graphics();
+            ticks.lineStyle(ThermometerView.TICK_MARK_THICKNESS, 0x000000, 1);
+            var y = 0;
+            for (var i = 0; i < ThermometerView.NUM_TICK_MARKS; i++) {
+                y = Math.floor(topTickY - i * tickSpacing);
+                ticks.moveTo(xOffset, y);
+                ticks.lineTo(xOffset + (( i - 1 ) % 5 == 0 ? longTickWidth : shortTickWidth), y);
+            }
+            this.displayObject.addChild(ticks);
+        },
+
+        initLiquid: function(backWidth, backHeight, freezingY, boilingY) {
+            // Liquid column
+            // var width = backWidth * 0.45;
+            // var boilingPointLiquidHeight = 
+
+            // Mask so it's contained at the top
+
         },
 
         initMarker: function(width, halfWidth) {
@@ -58,7 +100,7 @@ define(function(require) {
             var width  = halfWidth * 0.5;
             var height = halfWidth * 0.7;
 
-            var triangleTipOffset = new Vector2(-width - borderThickness * 2, -halfWidth);
+            var triangleTipOffset = new Vector2(-width, -halfWidth);
             this.triangleTipOffset = triangleTipOffset;
 
             var triangleBackground = new PIXI.Graphics();
@@ -67,11 +109,13 @@ define(function(require) {
             this.displayObject.addChild(triangleBackground);
             this.displayObject.addChild(triangleForeground);
 
+            var offsetX = triangleTipOffset.x - borderThickness * 2;
+
             var trianglePolygon = new PIXI.Polygon(
-                triangleTipOffset.x, triangleTipOffset.y,
-                triangleTipOffset.x + width, triangleTipOffset.y - height / 2,
-                triangleTipOffset.x + width, triangleTipOffset.y + height / 2,
-                triangleTipOffset.x, triangleTipOffset.y
+                offsetX, triangleTipOffset.y,
+                offsetX + width, triangleTipOffset.y - height / 2,
+                offsetX + width, triangleTipOffset.y + height / 2,
+                offsetX, triangleTipOffset.y
             );
             triangleBackground.lineStyle(borderThickness * 2, 0x000000, 1);
             triangleBackground.drawShape(trianglePolygon);
@@ -79,18 +123,31 @@ define(function(require) {
             this.triangleForeground = triangleForeground;
             this.trianglePolygon = trianglePolygon;
 
-            this.updateMarkerColor('#fff');
+            this.updateSensedElement();
         },
 
-        updateMarkerColor: function(color) {
+        updateSensedElement: function(model, element) {
+            var color = '#777';
+
+            for (var i = 0; i < this.measurableElementViews.length; i++) {
+                if (this.measurableElementViews[i].model === element) {
+                    color = this.measurableElementViews[i].getColor();
+                    break;
+                }
+            }
+
             this.triangleForeground.beginFill(Colors.parseHex(color), 1);
             this.triangleForeground.drawShape(this.trianglePolygon);
             this.triangleForeground.endFill();
         },
 
+        updateTemperature: function(model, temperature) {
+
+        },
+
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            viewPoint.sub(this.triangleTipOffset);
+            //viewPoint.sub(this.triangleTipOffset);
             this.displayObject.x = viewPoint.x;
             this.displayObject.y = viewPoint.y;
         },
@@ -100,7 +157,7 @@ define(function(require) {
             this.model.setPosition(position);
         }
 
-    });
+    }, Constants.ThermometerView);
 
     return ThermometerView;
 });

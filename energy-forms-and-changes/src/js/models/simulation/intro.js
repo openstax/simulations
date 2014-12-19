@@ -691,7 +691,7 @@ define(function (require, exports, module) {
         /**
          * This replaces EFACIntroModel.getTemperatureAndColorAtLocation because
          *   I believe it should be the job of the element model to internally
-         *   decide what it's temperature should be, and it should be up to the
+         *   decide what its temperature should be, and it should be up to the
          *   element view to determine the color.  Therefore, the simulation
          *   model will only return the element, and objects that use this will
          *   be responsible for requesting the temperature and color at location
