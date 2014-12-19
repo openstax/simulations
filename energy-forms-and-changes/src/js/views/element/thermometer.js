@@ -41,6 +41,9 @@ define(function(require) {
             var back  = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_BACK);
             var front = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_FRONT);
 
+            this.backLayer  = back;
+            this.frontLayer = front;
+
             // back.anchor.x = front.anchor.x = 0.5;
             back.anchor.y = front.anchor.y = 1;
             var halfWidth = back.width / 2;
@@ -57,7 +60,7 @@ define(function(require) {
             var boilingY  = topTickY    - tickSpacing; // second tick mark from top
 
             this.displayObject.addChild(back);
-            this.initLiquid(back.width, back.height, freezingY, boilingY);
+            this.initLiquid(back.width, back.height, freezingY, boilingY, centerOfBulb);
             this.initMarker(back.width, halfWidth);
             this.initTickMarks(back.width, bottomTickY, topTickY, tickSpacing);
             this.displayObject.addChild(front);
@@ -88,10 +91,41 @@ define(function(require) {
             this.displayObject.addChild(ticks);
         },
 
-        initLiquid: function(backWidth, backHeight, freezingY, boilingY) {
-            // Liquid column
-            // var width = backWidth * 0.45;
-            // var boilingPointLiquidHeight = 
+        initLiquid: function(backWidth, backHeight, freezingY, boilingY, centerOfBulb) {
+            // Function for determining liquid column height
+            var freezingHeight = centerOfBulb.y - freezingY;
+            var boilingHeight  = centerOfBulb.y - boilingY;
+
+            this.liquidHeightFunction = new Functions.createLinearFunction(
+                Constants.FREEZING_POINT_TEMPERATURE,
+                Constants.BOILING_POINT_TEMPERATURE,
+                freezingHeight,
+                boilingHeight
+            );
+
+            // Create liquid column
+            var width = backWidth * 0.45;
+
+            var canvas = document.createElement('canvas');
+            canvas.width  = width;
+            canvas.height = 1;
+
+            var ctx = canvas.getContext('2d');
+
+            var gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+            gradient.addColorStop(0,   ThermometerView.LIQUID_COLOR);
+            gradient.addColorStop(0.4, ThermometerView.LIQUID_COLOR);
+            gradient.addColorStop(0.7, ThermometerView.LIQUID_HIGHLIGHT_COLOR);
+            gradient.addColorStop(1,   ThermometerView.LIQUID_COLOR);
+
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            this.liquid = new PIXI.Sprite(new PIXI.Texture.fromCanvas(canvas));
+            this.liquid.anchor.y = 1;
+            this.liquid.y = centerOfBulb.y;
+            this.liquid.x = centerOfBulb.x - width / 2 + this.width * 0.02;
+            this.backLayer.addChild(this.liquid);
 
             // Mask so it's contained at the top
 
@@ -129,14 +163,6 @@ define(function(require) {
             this.updateSensedElement();
         },
 
-        // dragStart: function(data) {
-        //     ElementView.prototype.dragStart.apply(this, [data]);
-        //     if (this.movable && !this.simulation.get('paused')) {
-        //         this.dragOffset.x += this.triangleTipOffset.x;
-        //         this.dragOffset.y += this.triangleTipOffset.y;
-        //     }
-        // },
-
         updateSensedElement: function(model, element) {
             var color = '#777';
 
@@ -153,7 +179,7 @@ define(function(require) {
         },
 
         updateTemperature: function(model, temperature) {
-
+            this.liquid.scale.y = this.liquidHeightFunction(temperature);
         },
 
         updatePosition: function(model, position) {
