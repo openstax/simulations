@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    // var _    = require('underscore');
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var Vector2   = require('common/math/vector2');
@@ -61,7 +61,7 @@ define(function(require) {
 
             this.displayObject.addChild(back);
             this.initLiquid(back.width, back.height, freezingY, boilingY, centerOfBulb);
-            this.initMarker(back.width, halfWidth);
+            this.initMarker(halfWidth);
             this.initTickMarks(back.width, bottomTickY, topTickY, tickSpacing);
             this.displayObject.addChild(front);
 
@@ -86,7 +86,7 @@ define(function(require) {
             for (var i = 0; i < ThermometerView.NUM_TICK_MARKS; i++) {
                 y = Math.floor(topTickY - i * tickSpacing);
                 ticks.moveTo(xOffset, y);
-                ticks.lineTo(xOffset + (( i - 1 ) % 5 == 0 ? longTickWidth : shortTickWidth), y);
+                ticks.lineTo(xOffset + (( i - 1 ) % 5 === 0 ? longTickWidth : shortTickWidth), y);
             }
             this.displayObject.addChild(ticks);
         },
@@ -134,12 +134,12 @@ define(function(require) {
             this.liquid.mask = mask;
         },
 
-        initMarker: function(width, halfWidth) {
+        initMarker: function(halfBackWidth) {
             var borderThickness = 2;
-            var width  = halfWidth * 0.5;
-            var height = halfWidth * 0.7;
+            var width  = halfBackWidth * 0.5;
+            var height = halfBackWidth * 0.7;
 
-            var triangleTipOffset = new Vector2(-width, -halfWidth);
+            var triangleTipOffset = new Vector2(-width, -halfBackWidth);
             this.triangleTipOffset = triangleTipOffset;
             this.triangleBorderThickness = borderThickness;
 
