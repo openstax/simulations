@@ -180,7 +180,8 @@ define(function (require) {
 
     var BrickView = {};
 
-    BrickView.TEXT_COLOR = 0x000000;
+    BrickView.FILL_COLOR = '#d6492e'; 
+    BrickView.TEXT_COLOR = '#000';
 
     Constants.BrickView = BrickView;
 

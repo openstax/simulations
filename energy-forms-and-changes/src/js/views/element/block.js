@@ -226,6 +226,10 @@ define(function(require) {
             this.label.alpha = 1;
         },
 
+        getColor: function() {
+            return this.fillColor;
+        }
+
     });
 
     return BlockView;

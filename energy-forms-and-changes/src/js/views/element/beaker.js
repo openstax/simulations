@@ -460,6 +460,10 @@ define(function(require) {
                 //     this.debugSlicesGraphics.drawPiecewiseCurve(this.mvt.modelToView(this.model.slices[i].getShape()));
                 // }
             }
+        },
+
+        getColor: function() {
+            return this.fluidLineColor;
         }
 
     }, Constants.BeakerView);

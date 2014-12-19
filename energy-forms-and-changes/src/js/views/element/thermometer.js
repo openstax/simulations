@@ -167,7 +167,7 @@ define(function(require) {
         },
 
         updateSensedElement: function(model, element) {
-            var color = '#777';
+            var color = '#333';
 
             for (var i = 0; i < this.measurableElementViews.length; i++) {
                 if (this.measurableElementViews[i].model === element) {

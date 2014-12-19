@@ -6,6 +6,7 @@ define(function(require) {
 
     var BlockView = require('views/element/block');
     var Assets    = require('assets');
+    var Constants = require('constants');
 
     /**
      * A view that represents a brick model
@@ -22,9 +23,13 @@ define(function(require) {
 
         createRightFace: function(points) {
             return PIXI.createTexturedPolygonFromPoints(points, Assets.Texture(Assets.Images.BRICK_TEXTURE_RIGHT));
+        },
+
+        getColor: function() {
+            return BrickView.FILL_COLOR;
         }
 
-    });
+    }, Constants.BrickView);
 
     return BrickView;
 });
