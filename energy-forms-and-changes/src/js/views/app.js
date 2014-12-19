@@ -4,7 +4,8 @@ define(function(require) {
 
     var AppView = require('common/app/app');
 
-    var IntroSimView = require('views/sim/intro');
+    var IntroSimView         = require('views/sim/intro');
+    var EnergySystemsSimView = require('views/sim/energy-systems');
 
     require('less!styles/font-awesome');
 
@@ -12,7 +13,8 @@ define(function(require) {
 
         initialize: function() {
             this.simViews = [
-                new IntroSimView()
+                new IntroSimView(),
+                new EnergySystemsSimView()
             ];
 
             AppView.prototype.initialize.apply(this);

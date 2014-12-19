@@ -151,22 +151,6 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
-         */
-        play: function() {
-            // May need to save the current state here for the rewind button
-
-            FixedIntervalSimulation.prototype.play.apply(this);
-        },
-
-        /**
-         *
-         */
-        rewind: function() {
-            // Apply the saved state
-        },
-
-        /**
          * 
          */
         _update: function(time, deltaTime) {

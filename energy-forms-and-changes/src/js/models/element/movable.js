@@ -5,7 +5,7 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
     var Pool    = require('object-pool');
 
-    var Element = require('models/element');
+    var IntroElement = require('models/intro-element');
 
     var vectorPool = Pool({
         init: function() {
@@ -19,11 +19,10 @@ define(function (require) {
     /**
      * 
      */
-    var MovableElement = Element.extend({
+    var MovableElement = IntroElement.extend({
 
         defaults: {
             // Physical properties
-            position: null,
             verticalVelocity: 0,
             
             // State properties
@@ -31,8 +30,7 @@ define(function (require) {
         },
         
         initialize: function(attributes, options) {
-            // Create vectors
-            this.set('position', vectorPool.create().set(this.get('position')));
+            IntroElement.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:userControlled', function(model, userControlled) {
                 if (userControlled && this.getSupportingSurface()) {
@@ -48,40 +46,7 @@ define(function (require) {
             this.setPosition(0, 0);
             this.set('verticalVelocity', 0);
 
-            Element.prototype.reset.apply(this);
-        },
-
-        setX: function(x) {
-            this.setPosition(x, this.get('position').y);
-        },
-
-        setY: function(y) {
-            this.setPosition(this.get('position').x, y);
-        },
-
-        translate: function(x, y) {
-            var oldPosition = this.get('position');
-            var newPosition = vectorPool.create().set(this.get('position'));
-
-            if (x instanceof Vector2)
-                this.set('position', newPosition.add(x));
-            else
-                this.set('position', newPosition.add(x, y));
-            
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldPosition);
-        },
-
-        setPosition: function(x, y) {
-            var oldPosition = this.get('position');
-            
-            if (x instanceof Vector2)
-                this.set('position', vectorPool.create().set(x));
-            else
-                this.set('position', vectorPool.create().set(x, y));
-
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldPosition);
+            IntroElement.prototype.reset.apply(this);
         },
 
         setSupportingSurface: function(supportingSurface) {

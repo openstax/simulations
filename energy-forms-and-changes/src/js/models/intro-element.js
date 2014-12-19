@@ -2,18 +2,20 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
+    var Positionable = require('models/positionable');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var Element = Backbone.Model.extend({
+    var IntroElement = Positionable.extend({
 
-        defaults: {
+        defaults: _.extend({}, Positionable.prototype.defaults, {
             supportingSurface: null
-        },
+        }),
         
-        initialize: function(attributes, options) {},
+        initialize: function(attributes, options) {
+            Positionable.prototype.initialize.apply(this, [options]);
+        },
 
         update: function(time, delta) {},
 
@@ -88,5 +90,5 @@ define(function (require) {
 
     });
 
-    return Element;
+    return IntroElement;
 });

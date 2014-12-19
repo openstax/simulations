@@ -8,7 +8,7 @@ define(function (require) {
     var Rectangle = require('common/math/rectangle');
 
     var Air                         = require('models/air');
-    var Element                     = require('models/element/block');
+    var IntroElement                = require('models/intro-element');
     var EnergyChunk                 = require('models/energy-chunk');
     var EnergyChunkWanderController = require('models/energy-chunk-wander-controller');
     var HorizontalSurface           = require('models/horizontal-surface');
@@ -21,9 +21,9 @@ define(function (require) {
     /**
      * 
      */
-    var Burner = Element.extend({
+    var Burner = IntroElement.extend({
 
-        defaults: _.extend({}, Element.prototype.defaults, {
+        defaults: _.extend({}, IntroElement.prototype.defaults, {
             position: null,
             heatCoolLevel: 0
         }),
@@ -68,7 +68,7 @@ define(function (require) {
         },
 
         reset: function() {
-            Element.prototype.reset.apply(this);
+            IntroElement.prototype.reset.apply(this);
 
             this.energyChunkList.reset();
             this.energyChunkWanderControllers = [];
