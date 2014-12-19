@@ -104,6 +104,7 @@ define(function(require) {
 
             var triangleTipOffset = new Vector2(-width, -halfWidth);
             this.triangleTipOffset = triangleTipOffset;
+            this.triangleBorderThickness = borderThickness;
 
             var triangleBackground = new PIXI.Graphics();
             var triangleForeground = new PIXI.Graphics();
@@ -128,6 +129,14 @@ define(function(require) {
             this.updateSensedElement();
         },
 
+        // dragStart: function(data) {
+        //     ElementView.prototype.dragStart.apply(this, [data]);
+        //     if (this.movable && !this.simulation.get('paused')) {
+        //         this.dragOffset.x += this.triangleTipOffset.x;
+        //         this.dragOffset.y += this.triangleTipOffset.y;
+        //     }
+        // },
+
         updateSensedElement: function(model, element) {
             var color = '#777';
 
@@ -149,7 +158,8 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            //viewPoint.sub(this.triangleTipOffset);
+            viewPoint.sub(this.triangleTipOffset);
+            // viewPoint.add(this.triangleBorderThickness, -this.triangleBorderThickness / 2);
             this.displayObject.x = viewPoint.x;
             this.displayObject.y = viewPoint.y;
         },
@@ -157,6 +167,7 @@ define(function(require) {
         setCenterPosition: function(x, y) {
             var position = this._position.set(x, y);
             position.sub(this.width / 2, -this.height / 2);
+            position.add(this.triangleTipOffset);
             var modelPosition = this.mvt.viewToModel(position);
             this.model.setPosition(modelPosition);
         }

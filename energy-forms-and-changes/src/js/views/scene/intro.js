@@ -255,8 +255,11 @@ define(function(require) {
                 var rect = new Rectangle();
                 this.listenTo(thermometerView, 'drag-start', function() {
                     var removedView = thermometerClips.removeThermometer(thermometerView);
-                    if (removedView)
+                    if (removedView) {
                         this.thermometerLayer.addChild(removedView.displayObject);
+                        removedView.displayObject.x += thermometerClips.displayObject.x;
+                        removedView.displayObject.y += thermometerClips.displayObject.y;
+                    }
                 });
                 this.listenTo(thermometerView, 'drag-end', function() {
                     rect.set(
