@@ -68,6 +68,9 @@ define(function (require) {
 
             // Initialize the scene view
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**

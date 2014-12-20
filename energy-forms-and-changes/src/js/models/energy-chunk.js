@@ -33,6 +33,7 @@ define(function (require) {
      * 
      */
     var EnergyChunk = Positionable.extend({
+        
         defaults: _.extend({}, Positionable.prototype.defaults, {
             // Used for some simple 3D layering effects.
             zPosition: 0,
@@ -47,7 +48,7 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             Positionable.prototype.initialize.apply(this, [attributes, options]);
-            
+
             // Create new vectors
             this.set('velocity', vectorPool.create().set(this.get('velocity')));
 
