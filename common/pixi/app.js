@@ -16,7 +16,14 @@ define(function(require) {
 
         load: function() {
         	this.showLoading();
+        	
+        	this.on('sim-views-initialized assets-loaded', function() {
+        		if (this.simViewsInitialized && this.assetsLoaded)
+        			this.postLoad();
+        	});
+
         	this.loadAssets();
+        	this.initSimViews();
         },
 
     	loadAssets: function() {
@@ -24,9 +31,7 @@ define(function(require) {
             var assetLoader = new PIXI.AssetLoader(this.assets);
             assetLoader.onComplete = _.bind(function(){
                 this.assetsLoaded = true;
-                this.render();
-                this.postRender();
-                this.hideLoading();
+                this.trigger('assets-loaded');
             }, this);
             assetLoader.load();
         },

@@ -86,7 +86,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.$el.removeClass('loading');
+            
         },
 
         /**

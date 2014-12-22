@@ -14,7 +14,9 @@ define(function(require) {
     var AppView = Backbone.View.extend({
         template: _.template(template),
         tagName: 'div',
-        className: 'app-view loading',
+        className: 'app-view',
+
+        simViewConstructors: [],
 
         events: {
             'click .tab' : 'tabClicked',
@@ -22,30 +24,45 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            if (!this.simViews)
-                throw "App requires a list of SimViews to render.";
-        },
-
-        remove: function() {
-            Backbone.View.prototype.remove.apply(this);
-            _.each(this.simViews, function(sim, key) {
-                sim.remove();
-            });
+            
         },
 
         load: function() {
             this.showLoading();
+
+            this.on('sim-views-initialized', function(){
+                this.postLoad();
+            });
+
+            this.initSimViews();
+        },
+
+        postLoad: function() {
             this.render();
             this.postRender();
-            this.hideLoading();
+            //this.hideLoading();
         },
 
         showLoading: function() {
-            this.$el.addClass('loading');
+            this.$loadingScreen = $('<div class="loading-screen">').appendTo(this.el);
         },
 
         hideLoading: function() {
-            this.$el.removeClass('loading');
+            this.$loadingScreen.remove();
+        },
+
+        initSimViews: function() {
+            this.simViewsInitialized = false;
+            this.simViews = [];
+            _.each(this.simViewConstructors, function(constructor) {
+                setTimeout(_.bind(function(){
+                    this.simViews.push(new constructor());
+                    if (this.simViews.length === this.simViewConstructors.length) {
+                        this.simViewsInitialized = true;
+                        this.trigger('sim-views-initialized');
+                    }
+                }, this), 0);
+            }, this);
         },
 
         getRenderData: function() {
@@ -91,9 +108,13 @@ define(function(require) {
 
             // Only hide the other tabs after they've all been rendered visibly
             this.$('.sim-tab').first().click();
+        },
 
-            // Remove the stage curtains
-            this.$el.removeClass('loading');
+        remove: function() {
+            Backbone.View.prototype.remove.apply(this);
+            _.each(this.simViews, function(sim, key) {
+                sim.remove();
+            });
         },
 
         tabClicked: function(event) {

@@ -15,14 +15,10 @@ define(function(require) {
 
         assets: Assets.assetsList,
 
-        initialize: function() {
-            this.simViews = [
-                new IntroSimView(),
-                new EnergySystemsSimView()
-            ];
-
-            PixiAppView.prototype.initialize.apply(this);
-        }
+        simViewConstructors: [
+            IntroSimView,
+            EnergySystemsSimView
+        ]
 
     });
 
