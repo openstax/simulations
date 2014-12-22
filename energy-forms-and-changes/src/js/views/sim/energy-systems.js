@@ -17,11 +17,12 @@ define(function (require) {
     // CSS
     require('less!styles/sim');
     require('less!styles/playback-controls');
+    require('less!styles/energy-systems');
     require('less!common/styles/radio');
 
     // HTML
-    var simHtml = require('text!templates/sim/intro.html');
-    var controlsHtml = require('text!templates/controls.html');
+    var simHtml = require('text!templates/sim/energy-systems.html');
+    var controlsHtml = require('text!templates/energy-systems-controls.html');
 
     /**
      * 
@@ -114,7 +115,11 @@ define(function (require) {
          * Renders page content. Should be overriden by child classes
          */
         renderScaffolding: function() {
-            this.$el.html(this.template());
+            var elementGroups = this.simulation.elementGroups;
+
+            this.$el.html(this.template({
+                elementGroups: elementGroups;
+            }));
         },
 
         /**

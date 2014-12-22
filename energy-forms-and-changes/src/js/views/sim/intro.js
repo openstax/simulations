@@ -20,7 +20,7 @@ define(function (require) {
 
     // HTML
     var simHtml = require('text!templates/sim/intro.html');
-    var controlsHtml = require('text!templates/controls.html');
+    var controlsHtml = require('text!templates/intro-controls.html');
 
     /**
      * 

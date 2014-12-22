@@ -1,0 +1,22 @@
+<span class="scene-view-placeholder"></span>
+<span class="playback-controls-placeholder"></span>
+
+<div class="energy-symbols-checkbox-panel">
+    <input type="checkbox" id="intro-energy-symbols-checkbox" class="energy-symbols-checkbox">
+    <label for="intro-energy-symbols-checkbox">Energy Symbols 
+        <div class="energy-symbol" style="background-image: url(<%= Assets.Image(Assets.Images.E_THERM_BLANK_ORANGE) %>); width: 22px; height: 22px; line-height: 22px; background-size: 100%"></div>
+    </label>
+</div>
+
+<div class="energy-system-elements-row">
+<% _.each(elementGroups, function(elements) { %>
+    <div class="energy-system-elements-group">
+    <% _.each(elements, function(element) { %>
+        <% var frameData = Assets.getFrameData(element.src); %>
+        <div class="energy-system-element" style="width: <%= 100 / elements.length %>%" data-type="<%= element.type %>" data-cid="<%= element.cid %>">
+            <div style="background-image: url(<%= frameData.src %>); background-position: -<%= frameData.bounds.x %>px -<%= frameData.bounds.y %>px; width: <%= frameData.bounds.width %>px; height: <%= frameData.bounds.height %>px"></div>
+        </div>
+    <% }); %>
+    </div>
+<% }); %>
+</div>

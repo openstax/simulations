@@ -276,6 +276,17 @@ define(function (require) {
         return new PIXI.Sprite(Assets.Texture(textureFileName));
     };
 
+    Assets.getFrameData = function(filename) {
+        var texture = Assets.Texture(filename);
+        if (!texture)
+            throw 'Texture not found for ' + filename;
+
+        return {
+            src: texture.baseTexture.source.src,
+            bounds: texture.crop
+        };
+    }
+
     /*************************************************************************
      **                                                                     **
      **                                INTRO                                **
