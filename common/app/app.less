@@ -9,47 +9,15 @@ body {
     margin: 0;
 }
 
+@beaker-height: 120px;
+@beaker-liquid-height: 75px;
+
 .app-view {
 
     position: relative;
     margin: 10px auto 0 auto;
     max-width: @max-viewport-width;
     width: 100%;
-    
-    &.loading {
-        &:before {
-            content: '';
-            display: block;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            z-index: 9998;
-            background: #fff;
-        }
-
-        &:after {
-            content: '';
-            display: block;
-            width: 100px;
-            height: 100px;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            margin-top: -50px;
-            margin-left: -50px;
-            z-index: 9999;
-            background: #fff;
-            border: 6px solid #ddd;
-
-            .animation-name(loading-badge);
-            .animation-duration(1600ms);
-            .animation-iteration-count(infinite);
-            .animation-direction(alternate);
-            .animation-timing-function(cubic-bezier(1,.27,.02,.71));
-        }
-    }
 
     .loading-screen {
         position: absolute;
@@ -57,24 +25,24 @@ body {
         height: 100%;
         min-height: 600px;
         background-color: #fff;
-        @bgcolor: @gray-lightest;
-        @thickness: 0.4em;
-        @width: 4em;
-        @liquid-height: 3em;
-        @beaker-height: 4.8em;
 
+        @bgcolor: @gray-lightest;
+        @thickness: 10px;
+        @width: 100px;
+        @liquid-height: @beaker-liquid-height;
+         
         .beaker {
             /* Based off this CodePen icon: http://codepen.io/joshnh/pen/EsoDv */
-            font-size: 2em;
-            border-radius: .5em;
+            border-radius: 10px;
             border-top-right-radius: 0;
             border-top-left-radius: 0;
             display: inline-block;
             height: @liquid-height;
             left: 50%;
-            margin: -2.5em -2em;
+            margin-left: -(@width / 2);
             position: absolute;
             top: 50%;
+            margin-top: -(@beaker-height / 2);
             width: @width;
             background-color: @bgcolor;
             box-sizing: content-box;
@@ -108,22 +76,92 @@ body {
                 right: @thickness;
                 bottom: @liquid-height;
                 height: 1000px;
-                background-color: #fab;
+                //background-color: #fab;
+                overflow: hidden;
+
+                .bubble {
+                    position: absolute;
+                    bottom: 0;
+                    border-radius: 50%;
+                    background-color: #575c5f;
+                    width:  (0.1 * @width);
+                    height: (0.1 * @width);
+
+                    .animation-name(bubble);
+                    .animation-duration(1600ms);
+                    .animation-iteration-count(infinite);
+                    .animation-timing-function(linear);
+
+                    .transform(translateY(1.0em));
+                }
+
+                .bubble:nth-child(1) {
+                    left: 5%;
+                }
+
+                .bubble:nth-child(2) {
+                    background-color: #20356b;
+                    width:  (0.07 * @width);
+                    height: (0.07 * @width);
+                    left: 12%;
+                    bottom: -(@liquid-height * 0.6);
+                    .animation-delay(200ms);
+                }
+
+                .bubble:nth-child(3) {
+                    background-color: #f0cf31;
+                    width:  (0.16 * @width);
+                    height: (0.16 * @width);
+                    left: 26%;
+                    .animation-duration(2000ms);
+                }
+
+                .bubble:nth-child(4) {
+                    background-color: #71b653;
+                    width:  (0.09 * @width);
+                    height: (0.09 * @width);
+                    left: 46%;
+                    .animation-duration(1400ms);
+                    .animation-delay(400ms);
+                }
+
+                .bubble:nth-child(5) {
+                    background-color: #f47b4d;
+                    width:  (0.12 * @width);
+                    height: (0.12 * @width);
+                    left: 57%;
+                    bottom: -(@liquid-height * 0.3);
+                    .animation-delay(-100ms);
+                }
+
+                .bubble:nth-child(6) {
+                    background-color: #20356b;
+                    width:  (0.14 * @width);
+                    height: (0.14 * @width);
+                    left: 70%;
+                    .animation-duration(1400ms);
+                    .animation-delay(200ms);
+                }
+
+                .bubble:nth-child(7) {
+                    background-color: #f47b4d;
+                    width:  (0.06 * @width);
+                    height: (0.06 * @width);
+                    left: 13%;
+                    bottom: -(@liquid-height * 0.5);
+                    .animation-delay(800ms);
+                }
             }
         }
     }
 }
 
-.keyframes-3(loading-badge, {
-    border-radius: 0;
-    .transform(rotate(0) scale(1, 1));
-},{
-    border-radius: 25%;
-    .transform(rotate(0) scale(0.05, 0.05));
-},{
-    border-radius: 50%;
-    .transform(rotate(0) scale(1, 1));
-});
+@-webkit-keyframes bubble {
+      0% { .transform(translateY( (@beaker-liquid-height * 0.8)) scale(1, 1));   }
+     80% { .transform(translateY(-(@beaker-liquid-height * 0.8)) scale(1, 1));   }
+     97% { .transform(translateY(-(@beaker-liquid-height))       scale(1.4, 1.4)); }
+    100% { .transform(translateY(-(@beaker-liquid-height))       scale(0.1, 0.1)); }
+}
 
 .sims {
     position: relative;
