@@ -7,6 +7,7 @@ define(function(require) {
     var Backbone = require('backbone');
 
     var template = require('text!./app.html');
+    var loadingScreenHtml = require('text!./loading-screen.html');
 
     require('less!./app');
     require('less!./tabs');
@@ -38,13 +39,13 @@ define(function(require) {
         },
 
         postLoad: function() {
-            this.render();
-            this.postRender();
+            // this.render();
+            // this.postRender();
             //this.hideLoading();
         },
 
         showLoading: function() {
-            this.$loadingScreen = $('<div class="loading-screen">').appendTo(this.el);
+            this.$loadingScreen = $(loadingScreenHtml).appendTo(this.el);
         },
 
         hideLoading: function() {

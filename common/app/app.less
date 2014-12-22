@@ -11,6 +11,7 @@ body {
 
 .app-view {
 
+    position: relative;
     margin: 10px auto 0 auto;
     max-width: @max-viewport-width;
     width: 100%;
@@ -54,7 +55,62 @@ body {
         position: absolute;
         width: 100%;
         height: 100%;
-        background-color: black;
+        min-height: 600px;
+        background-color: #fff;
+        @bgcolor: @gray-lightest;
+        @thickness: 0.4em;
+        @width: 4em;
+        @liquid-height: 3em;
+        @beaker-height: 4.8em;
+
+        .beaker {
+            /* Based off this CodePen icon: http://codepen.io/joshnh/pen/EsoDv */
+            font-size: 2em;
+            border-radius: .5em;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            display: inline-block;
+            height: @liquid-height;
+            left: 50%;
+            margin: -2.5em -2em;
+            position: absolute;
+            top: 50%;
+            width: @width;
+            background-color: @bgcolor;
+            box-sizing: content-box;
+
+            &:before, &:after {
+                content: '';
+                box-sizing: content-box;
+                position: absolute;
+                top: -(@beaker-height - @liquid-height);
+            }
+
+            &:before {
+                border-left: @thickness solid @bgcolor;
+                border-radius: @thickness;
+                border-right: @thickness solid @bgcolor;
+                height: @thickness;
+                left: -@thickness;
+                width: @width;
+            }
+
+            &:after {
+                border-left: @thickness solid @bgcolor;
+                border-right: @thickness solid @bgcolor;
+                height: (@beaker-height - @liquid-height);
+                width: (@width - 2 * @thickness);
+            }
+
+            .bubbles {
+                position: absolute;
+                left: @thickness;
+                right: @thickness;
+                bottom: @liquid-height;
+                height: 1000px;
+                background-color: #fab;
+            }
+        }
     }
 }
 
