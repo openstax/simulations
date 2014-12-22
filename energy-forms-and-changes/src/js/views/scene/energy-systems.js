@@ -33,8 +33,6 @@ define(function(require) {
             
         },
 
-        assets: Assets.Intro,
-
         initialize: function(options) {
             SceneView.prototype.initialize.apply(this, arguments);
 

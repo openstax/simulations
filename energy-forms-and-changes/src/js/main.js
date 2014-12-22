@@ -3,17 +3,16 @@
 
     // Load the config
     require(['config'], function () {
-        require(['jquery', 'views/app'], function($, GOAppView) {
+        require(['jquery', 'views/app'], function($, EFCAppView) {
 
             $(function(){
-                var appView = new GOAppView();
+                var appView = new EFCAppView();
 
                 // Append to body
                 $('body').append(appView.el);
 
                 // Render main app view
-                appView.render();
-                appView.postRender();
+                appView.load();
             });
     
         });

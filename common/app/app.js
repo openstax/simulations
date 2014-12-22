@@ -33,6 +33,21 @@ define(function(require) {
             });
         },
 
+        load: function() {
+            this.showLoading();
+            this.render();
+            this.postRender();
+            this.hideLoading();
+        },
+
+        showLoading: function() {
+            this.$el.addClass('loading');
+        },
+
+        hideLoading: function() {
+            this.$el.removeClass('loading');
+        },
+
         getRenderData: function() {
             var data = {
                 simViews: _.map(this.simViews, function(simView) {

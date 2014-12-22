@@ -2,14 +2,18 @@ define(function(require) {
     
     'use strict';
 
-    var AppView = require('common/app/app');
+    var PixiAppView = require('common/pixi/app');
 
     var IntroSimView         = require('views/sim/intro');
     var EnergySystemsSimView = require('views/sim/energy-systems');
 
     require('less!styles/font-awesome');
 
-    var EFCAppView = AppView.extend({
+    var Assets = require('assets');
+
+    var EFCAppView = PixiAppView.extend({
+
+        assets: Assets.assetsList,
 
         initialize: function() {
             this.simViews = [
@@ -17,7 +21,7 @@ define(function(require) {
                 new EnergySystemsSimView()
             ];
 
-            AppView.prototype.initialize.apply(this);
+            PixiAppView.prototype.initialize.apply(this);
         }
 
     });

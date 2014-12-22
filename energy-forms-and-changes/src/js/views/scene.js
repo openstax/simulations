@@ -7,8 +7,6 @@ define(function(require) {
     var Backbone = require('backbone');
     var PIXI     = require('pixi');
 
-    //var Assets = require('assets');
-
     /**
      * SceneView is the main focus of the app. 
      *
@@ -21,8 +19,6 @@ define(function(require) {
         events: {
             
         },
-
-        assets: [],
 
         initialize: function(options) {
 
@@ -37,9 +33,6 @@ define(function(require) {
             else
                 throw 'SceneView requires a simulation model to render.';
 
-            // Load all the assets
-            this.loadAssets();
-
             // Bind events
             $(window).bind('resize', $.proxy(this.windowResized, this));
         },
@@ -48,12 +41,8 @@ define(function(require) {
          * Renders content and canvas for heatmap
          */
         render: function() {
-            this.$el.addClass('loading');
-
             this.renderContent();
             this.initRenderer();
-
-            this.postRenderCalled = false;
 
             return this;
         },
@@ -72,21 +61,7 @@ define(function(require) {
         postRender: function() {
             this.resize(true);
 
-            this.postRenderCalled = true;
-
-            if (this.assetsLoaded)
-                this.initGraphics();
-        },
-
-        loadAssets: function() {
-            this.assetsLoaded = false;
-            var assetLoader = new PIXI.AssetLoader(this.assets);
-            assetLoader.onComplete = _.bind(function(){
-                this.assetsLoaded = true;
-                if (this.postRenderCalled)
-                    this.initGraphics();
-            }, this);
-            assetLoader.load();
+            this.initGraphics();
         },
 
         /**

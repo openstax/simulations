@@ -289,33 +289,27 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                                INTRO                                **
+     **                        ASSETS LIST FOR LOADING                      **
      **                                                                     **
      *************************************************************************/
 
-    Assets.Intro = _.map([
-        'FLAME',
-        'ICE_CUBE_STACK',
-        'SHELF_LONG'
-    ], function(key) {
-        return IMAGE_PATH + Assets.Images[key];
+    Assets.assetsList = [];
+
+    // Add all the spritesheet files first
+    _.each(Assets.SpriteSheets, function(list, filename) {
+        Assets.assetsList.push(IMAGE_PATH + filename);
     });
 
-    Assets.Intro.push(IMAGE_PATH + 'brick-texture-spritesheet.json');
-    Assets.Intro.push(IMAGE_PATH + 'energy-symbols-spritesheet.json');
-    Assets.Intro.push(IMAGE_PATH + 'thermometer-spritesheet.json');
-
-
-    /*************************************************************************
-     **                                                                     **
-     **                            ENERGY SYSTEMS                           **
-     **                                                                     **
-     *************************************************************************/
-
-    Assets.EnergySystems = _.map([
-    ], function(key) {
-        return Assets.Images[key];
+    // Then add all the images that are on their own, not in a sprite sheet
+    var spriteSheetImages = _.flatten(_.values(Assets.SpriteSheets));
+    var leftoverImages = _.filter(Assets.Images, function(image) {
+        return !_.contains(spriteSheetImages, image);
     });
+    _.each(leftoverImages, function(filename) {
+        Assets.assetsList.push(IMAGE_PATH + filename);
+    });
+
+    
 
     return Assets;
 });

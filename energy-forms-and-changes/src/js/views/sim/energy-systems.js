@@ -115,10 +115,57 @@ define(function (require) {
          * Renders page content. Should be overriden by child classes
          */
         renderScaffolding: function() {
-            var elementGroups = this.simulation.elementGroups;
+
+            var elements = {
+                sources: [
+                    {
+                        cid: 1, // this.simulation.
+                        src: Assets.Images.FAUCET_ICON,
+                        type: 'source'
+                    },{
+                        cid: 2, // this.simulation.
+                        src: Assets.Images.SUN_ICON,
+                        type: 'source'
+                    },{
+                        cid: 3, // this.simulation.
+                        src: Assets.Images.TEAPOT_ICON,
+                        type: 'source'
+                    },{
+                        cid: 4, // this.simulation.
+                        src: Assets.Images.BICYCLE_ICON,
+                        type: 'source'
+                    }
+                ],
+                converters: [
+                    {
+                        cid: 1, // this.simulation.
+                        src: Assets.Images.GENERATOR_ICON,
+                        type: 'converter'
+                    },{
+                        cid: 2, // this.simulation.
+                        src: Assets.Images.SOLAR_PANEL_ICON,
+                        type: 'converter'
+                    }
+                ],
+                users: [
+                    {
+                        cid: 1, // this.simulation.
+                        src: Assets.Images.WATER_ICON,
+                        type: 'user'
+                    },{
+                        cid: 2, // this.simulation.
+                        src: Assets.Images.INCANDESCENT_ICON,
+                        type: 'user'
+                    },{
+                        cid: 3, // this.simulation.
+                        src: Assets.Images.FLUORESCENT_ICON,
+                        type: 'user'
+                    }
+                ]
+            };
 
             this.$el.html(this.template({
-                elementGroups: elementGroups;
+                elementGroups: elements
             }));
         },
 
