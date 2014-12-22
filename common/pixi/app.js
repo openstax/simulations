@@ -15,6 +15,7 @@ define(function(require) {
         },
 
         load: function() {
+        	this.$el.empty();
         	this.showLoading();
         	
         	this.on('sim-views-initialized assets-loaded', function() {

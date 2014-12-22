@@ -29,6 +29,7 @@ define(function(require) {
         },
 
         load: function() {
+            this.$el.empty();
             this.showLoading();
 
             this.on('sim-views-initialized', function(){
@@ -39,9 +40,9 @@ define(function(require) {
         },
 
         postLoad: function() {
-            // this.render();
-            // this.postRender();
-            //this.hideLoading();
+            this.render();
+            this.postRender();
+            this.hideLoading();
         },
 
         showLoading: function() {
@@ -49,7 +50,9 @@ define(function(require) {
         },
 
         hideLoading: function() {
-            this.$loadingScreen.remove();
+            this.$loadingScreen.fadeOut(300, function() {
+                this.remove();
+            });
         },
 
         initSimViews: function() {
@@ -82,7 +85,7 @@ define(function(require) {
 
         render: function() {
             // Render basic page structure
-            this.$el.html(this.template(this.getRenderData()));
+            this.$el.append(this.template(this.getRenderData()));
 
             // Then render views for each sim
             _.each(this.simViews, this.renderSimView, this);
