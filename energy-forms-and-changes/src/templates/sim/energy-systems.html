@@ -14,9 +14,9 @@
     <div class="energy-system-elements-panel-wrapper" style="width: <%= Math.floor((elements.length / numElements) * 100) %>%">
         <div class="energy-system-elements-panel">
         <% _.each(elements, function(element) { %>
-            <%= Assets.createIcon(element.src, 64) %>
+            <%= Assets.createIcon(element.src, { 'class': 'energy-system-element-icon' }, 64) %>
         <% }); %>
-    </div>
+        </div>
     </div>
 <% }); %>
 </div>
