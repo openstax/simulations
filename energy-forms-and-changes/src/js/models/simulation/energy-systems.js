@@ -66,8 +66,8 @@ define(function (require, exports, module) {
 
             
 
-            for (var i = 0; i < this.models.length; i++)
-                this.models[i].update(time, deltaTime);
+            // for (var i = 0; i < this.models.length; i++)
+            //     this.models[i].update(time, deltaTime);
         }
 
     }, Constants.EnergySystemsSimulation);

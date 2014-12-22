@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var $    = require('jquery');
     var _    = require('underscore');
     var PIXI = require('pixi');
 
@@ -276,6 +277,53 @@ define(function (require) {
         return new PIXI.Sprite(Assets.Texture(textureFileName));
     };
 
+    Assets.createIcon = function(filename, iconWidth, iconHeight) {
+        var texture = Assets.Texture(filename);
+        if (!texture)
+            throw 'Texture not found for ' + filename;
+
+        var width;
+        var height;
+        var x = texture.crop.x;
+        var y = texture.crop.y;
+
+        if (iconWidth !== undefined) {
+            if (iconHeight === undefined)
+                iconHeight = iconWidth;
+
+            var textureRatio = texture.width / texture.height;
+            var iconRatio    = iconWidth / iconHeight;
+            
+            if (textureRatio > iconRatio) {
+                width = texture.width * iconHeight / texture.height;
+                height = iconHeight;
+            }
+            else {
+                width = iconWidth;
+                height = texture.height * iconWidth / texture.width;
+            }
+
+            var scale = width / texture.width;
+            x *= scale;
+            y *= scale;
+        }
+        else { 
+            width  = texture.width;
+            height = texture.height;
+        }
+
+        var $icon = $('<div>');
+        $icon.css({
+            'background-image': 'url(' + texture.baseTexture.source.src + ')',
+            'background-position': '-' + x + 'px -' + y + 'px',
+            'background-size': '100% 100%',
+            'width': width + 'px',
+            'height': height + 'px'
+        });
+
+        return $icon;
+    };
+
     Assets.getFrameData = function(filename) {
         var texture = Assets.Texture(filename);
         if (!texture)
@@ -285,7 +333,7 @@ define(function (require) {
             src: texture.baseTexture.source.src,
             bounds: texture.crop
         };
-    }
+    };
 
     /*************************************************************************
      **                                                                     **
