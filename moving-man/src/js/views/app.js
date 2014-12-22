@@ -11,14 +11,10 @@ define(function(require) {
 
     var MovingManAppView = AppView.extend({
 
-        initialize: function() {
-            this.simViews = [
-                new IntroSimView(),
-                new ChartsSimView()
-            ];
-
-            AppView.prototype.initialize.apply(this);
-        }
+        simViewConstructors: [
+            IntroSimView,
+            ChartsSimView
+        ]
 
     });
 

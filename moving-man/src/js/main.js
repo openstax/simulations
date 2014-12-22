@@ -12,8 +12,7 @@
                 $('body').append(appView.el);
 
                 // Render main app view
-                appView.render();
-                appView.postRender();
+                appView.load();
             });
     
         });
