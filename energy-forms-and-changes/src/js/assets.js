@@ -287,8 +287,6 @@ define(function (require) {
         if (!texture)
             throw 'Texture not found for ' + filename;
 
-        var width;
-        var height;
         var x = texture.crop.x;
         var y = texture.crop.y;
         var scale = 1;
@@ -300,39 +298,37 @@ define(function (require) {
             var textureRatio = texture.width / texture.height;
             var iconRatio    = iconWidth / iconHeight;
             
-            if (iconRatio > textureRatio) {
-                width = texture.width * iconHeight / texture.height;
-                height = iconHeight;
-            }
-            else {
-                width = iconWidth;
-                height = texture.height * iconWidth / texture.width;
-            }
+            scale = (iconRatio > textureRatio) ? iconHeight / texture.height : iconWidth / texture.width;
+        }
 
-            scale = width / texture.width;
-            x *= scale;
-            y *= scale;
-        }
-        else { 
-            width  = texture.width;
-            height = texture.height;
-        }
+        var iconStyle = [
+            'position: absolute',
+            'left: 50%',
+            'top:  50%',
+            'margin-left: -' + (texture.width / 2)  + 'px',
+            'margin-top:  -' + (texture.height / 2) + 'px',
+            'background-image: url(' + texture.baseTexture.source.src + ')',
+            'background-position: -' + x + 'px -' + y + 'px',
+            'transform: scale(' + scale + ', ' + scale + ')',
+            'width: ' + texture.width  + 'px',
+            'height: '+ texture.height + 'px'
+        ].join(';');
+
+        var iconHtml = '<div style="' + iconStyle + '"></div>';
 
         var attrsHtml = _.map(attrs, function(value, name) {
             return name + '="' + value + '"';
         }).join(' ');
 
-        var stylesHtml = [
-            'background-image: url(' + texture.baseTexture.source.src + ')',
-            'background-position: -' + x + 'px -' + y + 'px',
-            'transform: scale(' + scale + ', ' + scale + ')',
-            'width: ' + width  + 'px',
-            'height: '+ height + 'px'
+        var wrapperStyle = [
+            'position: relative',
+            'width: ' + iconWidth  + 'px',
+            'height: '+ iconHeight + 'px'
         ].join(';');
 
-        var iconHtml = '<div ' + attrsHtml + ' style="' + stylesHtml + '"></div>';
+        var wrapperHtml = '<div ' + attrsHtml + ' style="' + wrapperStyle + '">' + iconHtml + '</div>';
 
-        return iconHtml;
+        return wrapperHtml;
     };
 
     Assets.getFrameData = function(filename) {
