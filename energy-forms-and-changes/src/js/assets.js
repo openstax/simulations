@@ -277,7 +277,12 @@ define(function (require) {
         return new PIXI.Sprite(Assets.Texture(textureFileName));
     };
 
-    Assets.createIcon = function(filename, iconWidth, iconHeight) {
+    Assets.createIcon = function(filename, attrs, iconWidth, iconHeight) {
+        if (!_.isObject(attrs)) {
+            iconWidth = attrs;
+            iconHeight = iconHeight;
+        }
+
         var texture = Assets.Texture(filename);
         if (!texture)
             throw 'Texture not found for ' + filename;
@@ -286,6 +291,7 @@ define(function (require) {
         var height;
         var x = texture.crop.x;
         var y = texture.crop.y;
+        var scale = 1;
 
         if (iconWidth !== undefined) {
             if (iconHeight === undefined)
@@ -294,7 +300,7 @@ define(function (require) {
             var textureRatio = texture.width / texture.height;
             var iconRatio    = iconWidth / iconHeight;
             
-            if (textureRatio > iconRatio) {
+            if (iconRatio > textureRatio) {
                 width = texture.width * iconHeight / texture.height;
                 height = iconHeight;
             }
@@ -303,7 +309,7 @@ define(function (require) {
                 height = texture.height * iconWidth / texture.width;
             }
 
-            var scale = width / texture.width;
+            scale = width / texture.width;
             x *= scale;
             y *= scale;
         }
@@ -312,16 +318,21 @@ define(function (require) {
             height = texture.height;
         }
 
-        var $icon = $('<div>');
-        $icon.css({
-            'background-image': 'url(' + texture.baseTexture.source.src + ')',
-            'background-position': '-' + x + 'px -' + y + 'px',
-            'background-size': '100% 100%',
-            'width': width + 'px',
-            'height': height + 'px'
-        });
+        var attrsHtml = _.map(attrs, function(value, name) {
+            return name + '="' + value + '"';
+        }).join(' ');
 
-        return $icon;
+        var stylesHtml = [
+            'background-image: url(' + texture.baseTexture.source.src + ')',
+            'background-position: -' + x + 'px -' + y + 'px',
+            'transform: scale(' + scale + ', ' + scale + ')',
+            'width: ' + width  + 'px',
+            'height: '+ height + 'px'
+        ].join(';');
+
+        var iconHtml = '<div ' + attrsHtml + ' style="' + stylesHtml + '"></div>';
+
+        return iconHtml;
     };
 
     Assets.getFrameData = function(filename) {

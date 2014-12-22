@@ -14,11 +14,7 @@
     <div class="energy-system-elements-panel-wrapper" style="width: <%= Math.floor((elements.length / numElements) * 100) %>%">
         <div class="energy-system-elements-panel">
         <% _.each(elements, function(element) { %>
-            <% var frameData = Assets.getFrameData(element.src); %>
-            <% var scale = frameData.bounds.width > 45 ? 'transform: scale(' + (45 / frameData.bounds.width) + ')' : ''; %>
-            <div class="energy-system-element" data-type="<%= element.type %>" data-cid="<%= element.cid %>">
-                <div style="background-image: url(<%= frameData.src %>); background-position: -<%= frameData.bounds.x %>px -<%= frameData.bounds.y %>px; width: <%= frameData.bounds.width %>px; height: <%= frameData.bounds.height %>px; <%= scale %>"></div>
-            </div>
+            <%= Assets.createIcon(element.src, 64) %>
         <% }); %>
     </div>
     </div>
