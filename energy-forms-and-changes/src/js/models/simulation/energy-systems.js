@@ -39,10 +39,6 @@ define(function (require, exports, module) {
 
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
-            this.on('change:source',    this.sourceChanged);
-            this.on('change:converter', this.converterChanged);
-            this.on('change:user',      this.userChanged);
-
             this.initComponents();
         },
 
@@ -84,6 +80,12 @@ define(function (require, exports, module) {
             _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){}; });
 
             this.set('source', this.faucetAndWater);
+            this.set('converter', this.converters[0]);
+            this.set('user', this.users[0]);
+
+            this.get('source').activate();
+
+            this.faucetAndWater.set('flowProportion', 0.4);
         },
 
         /**
@@ -110,31 +112,6 @@ define(function (require, exports, module) {
 
             for (var i = 0; i < this.models.length; i++)
                 this.models[i].update(time, deltaTime);
-        },
-
-        sourceChanged: function(simulation, source) {
-            this.activeElementChanged('source');
-        },
-
-        converterChanged: function(simulation, converter) {
-            this.activeElementChanged('converter');
-        },
-
-        userChanged: function(simulation, user) {
-            this.activeElementChanged('user');
-        },
-
-        /**
-         * Checks to make sure they existed first because the UI may have
-         *   reason (i.e., waiting for an animation to complete) to set
-         *   the active element to null temporarily in order to deactivate
-         *   the currently active one.
-         */
-        activeElementChanged: function(elementKey) {
-            if (this.previous(elementKey))
-                this.previous(elementKey).deactivate();
-            if (this.get(elementKey))
-                this.get(elementKey).activate();
         }
 
     }, Constants.EnergySystemsSimulation);

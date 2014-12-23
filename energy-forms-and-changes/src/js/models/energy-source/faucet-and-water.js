@@ -6,6 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
+    var EnergyChunk  = require('models/energy-chunk');
     var EnergySource = require('models/energy-source');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
     var WaterDrop = require('models/water-drop');
@@ -37,6 +38,7 @@ define(function (require) {
 
             this._initialChunkPosition = new Vector2();
             this._initialChunkVelocity = new Vector2();
+            this._initialWaterDropPosition = new Vector2();
             this._waterCenterPosition = new Vector2();
         },
 
@@ -111,41 +113,49 @@ define(function (require) {
                 }
 
                 // Update energy chunk positions.
-                this.energyChunks.each(function(chunk) {
-                    // Make the chunk fall.
-                    chunk.translateBasedOnVelocity(deltaTime);
-
-                    // See if chunk is in the location where it can be transferred
-                    //   to the next energy system.
-                    var waterCenter = this._waterCenterPosition.set(this.get('position')).add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN);
-                    var yOffset = waterCenter.y - chunk.get('position').y;
-                    if (this.get('waterPowerableElementInPlace') &&
-                        FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yPosition) &&
-                        !this.exemptFromTransferEnergyChunks.get(chunk.cid)
-                    ) {
-                        if (this.transferNextAvailableChunk) {
-                            // Send this chunk to the next energy system.
-                            this.outgoingEnergyChunks.add(chunk);
-
-                            // Alternate sending or keeping chunks.
-                            this.transferNextAvailableChunk = false;
-                        }
-                        else {
-                            // Don't transfer this chunk.
-                            this.exemptFromTransferEnergyChunks.add(chunk);
-
-                            // Set up to transfer the next one.
-                            this.transferNextAvailableChunk = true;
-                        }
-                    }
-
-                    // Remove it if it is out of visible range.
-                    if (waterCenter.distance(chunk.get('position')) > FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER) {
-                        this.energyChunks.remove(chunk);
-                        this.exemptFromTransferEnergyChunks.remove(chunk);
-                    }
-                });
+                this.updateEnergyChunks(time, deltaTime);
             }
+        },
+
+        updateEnergyChunks: function(time, deltaTime) {
+            //_.eachRight(this.energyChunks, function(chunk) {
+            var chunk;
+            for (var i = this.energyChunks.length - 1; i >= 0; i--) {
+                chunk = this.energyChunks.models[i];
+                // Make the chunk fall.
+                chunk.translateBasedOnVelocity(deltaTime);
+
+                // See if chunk is in the location where it can be transferred
+                //   to the next energy system.
+                var waterCenter = this._waterCenterPosition.set(this.get('position')).add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN);
+                var yOffset = waterCenter.y - chunk.get('position').y;
+                if (this.get('waterPowerableElementInPlace') &&
+                    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yPosition) &&
+                    !this.exemptFromTransferEnergyChunks.get(chunk.cid)
+                ) {
+                    if (this.transferNextAvailableChunk) {
+                        // Send this chunk to the next energy system.
+                        this.outgoingEnergyChunks.add(chunk);
+
+                        // Alternate sending or keeping chunks.
+                        this.transferNextAvailableChunk = false;
+                    }
+                    else {
+                        // Don't transfer this chunk.
+                        this.exemptFromTransferEnergyChunks.add(chunk);
+
+                        // Set up to transfer the next one.
+                        this.transferNextAvailableChunk = true;
+                    }
+                }
+
+                // Remove it if it is out of visible range.
+                if (waterCenter.distance(chunk.get('position')) > FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER) {
+                    this.energyChunks.remove(chunk);
+                    this.exemptFromTransferEnergyChunks.remove(chunk);
+                }
+            }
+            //}, this);
         },
 
         createNewChunk: function() {
