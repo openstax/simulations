@@ -51,7 +51,9 @@ define(function (require) {
             'click .step-btn'   : 'step',
             'click .reset-btn'  : 'reset',
 
-            'click .energy-symbols-checkbox': 'toggleEnergySymbols'
+            'click .energy-symbols-checkbox': 'toggleEnergySymbols',
+
+            'click .element-icon': 'elementIconClicked'
         },
 
         /**
@@ -72,6 +74,8 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+
+            this.listenTo(this.simulation, 'change:source change:converter change:user', this.elementSelected);
         },
 
         /**
@@ -119,45 +123,45 @@ define(function (require) {
             var elements = {
                 sources: [
                     {
-                        cid: 1, // this.simulation.
+                        cid: this.simulation.sources[0].cid, 
                         src: Assets.Images.FAUCET_ICON,
                         type: 'source'
                     },{
-                        cid: 2, // this.simulation.
+                        cid: this.simulation.sources[1].cid, 
                         src: Assets.Images.SUN_ICON,
                         type: 'source'
                     },{
-                        cid: 3, // this.simulation.
+                        cid: this.simulation.sources[2].cid, 
                         src: Assets.Images.TEAPOT_ICON,
                         type: 'source'
                     },{
-                        cid: 4, // this.simulation.
+                        cid: this.simulation.sources[3].cid, 
                         src: Assets.Images.BICYCLE_ICON,
                         type: 'source'
                     }
                 ],
                 converters: [
                     {
-                        cid: 1, // this.simulation.
+                        cid: this.simulation.converters[0].cid, 
                         src: Assets.Images.GENERATOR_ICON,
                         type: 'converter'
                     },{
-                        cid: 2, // this.simulation.
+                        cid: this.simulation.converters[1].cid, 
                         src: Assets.Images.SOLAR_PANEL_ICON,
                         type: 'converter'
                     }
                 ],
                 users: [
                     {
-                        cid: 1, // this.simulation.
+                        cid: this.simulation.users[0].cid, 
                         src: Assets.Images.WATER_ICON,
                         type: 'user'
                     },{
-                        cid: 2, // this.simulation.
+                        cid: this.simulation.users[1].cid, 
                         src: Assets.Images.INCANDESCENT_ICON,
                         type: 'user'
                     },{
-                        cid: 3, // this.simulation.
+                        cid: this.simulation.users[2].cid, 
                         src: Assets.Images.FLUORESCENT_ICON,
                         type: 'user'
                     }
@@ -206,6 +210,33 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'));
+        },
+
+        elementIconClicked: function(event) {
+            var $element = $(event.target).closest('.element-icon');
+            var element;
+            switch ($element.data('type')) {
+                case 'source':
+                    element = _.findWhere(this.simulation.sources, { cid: $element.data('cid') });
+                    this.simulation.set('source', element);
+                    break;
+                case 'converter':
+                    element = _.findWhere(this.simulation.converters, { cid: $element.data('cid') });
+                    this.simulation.set('converter', element);
+                    break;
+                case 'user':
+                    element = _.findWhere(this.simulation.users, { cid: $element.data('cid') });
+                    this.simulation.set('user', element);
+                    break;
+            }
+            
+        },
+
+        elementSelected: function(model, element) {
+            this.$('.element-icon[data-cid="' + element.cid + '"]')
+                .addClass('active')
+                .siblings()
+                    .removeClass('active');
         },
 
         /**

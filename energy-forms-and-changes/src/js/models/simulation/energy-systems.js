@@ -4,6 +4,7 @@ define(function (require, exports, module) {
 
     // Libraries
     var _ = require('underscore');
+    var Backbone = require('backbone');
 
     // Common dependencies
     var Vector2                 = require('common/math/vector2');
@@ -22,7 +23,11 @@ define(function (require, exports, module) {
      */
     var EnergySystemsSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {}),
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
+            source: null,
+            converter: null,
+            user: null
+        }),
         
         /**
          *
@@ -42,6 +47,24 @@ define(function (require, exports, module) {
         initComponents: function() {
             // Air
             this.air = new Air();
+
+            this.sources = [
+                new Backbone.Model(),
+                new Backbone.Model(),
+                new Backbone.Model(),
+                new Backbone.Model()
+            ];
+
+            this.converters = [
+                new Backbone.Model(),
+                new Backbone.Model()
+            ];
+
+            this.users = [
+                new Backbone.Model(),
+                new Backbone.Model(),
+                new Backbone.Model()
+            ];
         },
 
         /**

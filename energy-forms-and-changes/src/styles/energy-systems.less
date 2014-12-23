@@ -1,18 +1,42 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
 
 .energy-system-elements-row {
 	position: absolute;
 	width: 100%;
-	height: 60px;
-	bottom: 0;
+	bottom: 15px;
 
 	.energy-system-elements-panel-wrapper {
 		float: left;
+		text-align: center;
 
 		.energy-system-elements-panel {
+			display: inline-block;
+			background-color: @gray-lightest;
+			padding: 14px 8px 10px;
 
-			.energy-system-element-icon {
-				float: left;
-				
+			.element-icon {
+				display: inline-block;
+				.box-sizing(content-box);
+				margin: 0 6px;
+				padding: 8px;
+				background-color: #fff;
+				border: 4px solid #bebebe;
+				border-radius: 50%;
+				cursor: pointer;
+
+				&:hover {
+					border-color: #888;
+				}
+
+				&:active {
+					border-color: #777;
+					background-color: #f5f5f5;
+				}
+
+				&.active {
+					border-color: @link-color;
+				}
 			}
 		}
 
