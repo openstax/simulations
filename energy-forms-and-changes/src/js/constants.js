@@ -23,6 +23,10 @@ define(function (require) {
             return (this.max - this.min) * percent + this.min;
         };
 
+        rangeObject.contains = function(x) {
+            return x <= this.max && x >= this.min;
+        };
+
         return rangeObject;
     };
     
@@ -368,6 +372,22 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                             ENERGY TYPES                            **
+     **                                                                     **
+     *************************************************************************/
+    
+    Constants.EnergyTypes = {
+        THERMAL:    0,
+        ELECTRICAL: 1,
+        MECHANICAL: 2,
+        LIGHT:      3,
+        CHEMICAL:   4,
+        HIDDEN:     5
+    };
+
+
+    /*************************************************************************
+     **                                                                     **
      **                            ENERGY CHUNKS                            **
      **                                                                     **
      *************************************************************************/
@@ -512,6 +532,32 @@ define(function (require) {
     };
 
     Constants.HeatTransfer = HeatTransfer;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                           FAUCET AND WATER                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var FaucetAndWater = {};
+
+    FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN = new Vector2(0.065, 0.08);
+    FaucetAndWater.FALLING_ENERGY_CHUNK_VELOCITY = 0.09; // In meters/second.
+    FaucetAndWater.MAX_WATER_WIDTH = 0.015; // In meters.
+    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE = range({ min: 0.05, max: 0.06 });
+    FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = 0.5; // In meters.
+
+    Constants.FaucetAndWater = FaucetAndWater;
+
+    var WaterDrop = {};
+
+    WaterDrop.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER; // In meters.
+    WaterDrop.ACCELERATION_DUE_TO_GRAVITY = new Vector2(0, -0.15);
+
+    Constants.WaterDrop = WaterDrop;
+
+
 
     return Constants;
 });

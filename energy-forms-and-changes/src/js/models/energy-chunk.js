@@ -2,7 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
     var Vector2  = require('common/math/vector2');
     var Pool     = require('object-pool');
 
@@ -17,17 +16,7 @@ define(function (require) {
         }
     });
 
-    /**
-     * Energy types
-     */
-    var EnergyTypes = {
-        THERMAL:    0,
-        ELECTRICAL: 1,
-        MECHANICAL: 2,
-        LIGHT:      3,
-        CHEMICAL:   4,
-        HIDDEN:     5
-    };
+    var EnergyTypes = require('constants').EnergyTypes;
 
     /**
      * 
@@ -56,9 +45,9 @@ define(function (require) {
             this._vec2 = new Vector2(0, 0);
         },
 
-        translateBasedOnVelocity: function(time, options) {
+        translateBasedOnVelocity: function(deltaTime, options) {
             this._vec2.set(this.get('velocity'));
-            this.translate(this._vec2.scale(time), options);
+            this.translate(this._vec2.scale(deltaTime), options);
         },
 
         /**
