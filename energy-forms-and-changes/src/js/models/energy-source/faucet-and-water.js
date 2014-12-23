@@ -4,6 +4,8 @@ define(function (require) {
 
     var Backbone = require('backbone');
 
+    var Vector2 = require('common/math/vector2');
+
     var EnergySource = require('models/energy-source');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
     var WaterDrop = require('models/water-drop');
@@ -18,14 +20,17 @@ define(function (require) {
 
         defaults: _.extend({}, EnergySource.prototype.defaults, {
             flowProportion: 0,
-            waterPowerableElementInPlace: false
+            waterPowerableElementInPlace: false,
+            source: null,
+            converter: null,
+            user: null
         }),
         
         initialize: function(attributes, options) {
             EnergySource.prototype.initialize.apply(this, [attributes, options]);
 
             this.exemptFromTransferEnergyChunks = new EnergyChunkCollection();
-            this.waterDrops = new Backbone.Collection({ model: WaterDrop });
+            this.waterDrops = new Backbone.Collection([], { model: WaterDrop });
 
             this.transferNextAvailableChunk = true;
             this.energySinceLastChunk = 0;
@@ -144,6 +149,7 @@ define(function (require) {
         },
 
         createNewChunk: function() {
+            console.log('new chunk created');
             var initialPosition = this._initialChunkPosition
                 .set(this.get('position'))
                 .add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN)

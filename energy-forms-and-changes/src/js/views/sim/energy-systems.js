@@ -171,6 +171,10 @@ define(function (require) {
             this.$el.html(this.template({
                 elementGroups: elements
             }));
+
+            this.elementSelected(null, this.simulation.get('source'));
+            this.elementSelected(null, this.simulation.get('converter'));
+            this.elementSelected(null, this.simulation.get('user'));
         },
 
         /**

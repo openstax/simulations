@@ -62,8 +62,8 @@ body {
                 border-radius: @thickness;
                 border-right: @thickness solid @bgcolor;
                 height: @thickness;
-                left: -@thickness;
-                width: @width;
+                left: -(@thickness / 2);
+                width: (@width - @thickness);
             }
 
             &:after {

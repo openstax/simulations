@@ -42,7 +42,7 @@ define(function (require) {
 
         active: function() {
             return this.get('active');
-        }
+        },
 
         update: function(time, delta) {},
 
