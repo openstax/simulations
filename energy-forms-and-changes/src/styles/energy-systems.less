@@ -1,5 +1,6 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "mixins.less";
 
 .energy-system-elements-row {
 	position: absolute;
@@ -12,8 +13,8 @@
 
 		.energy-system-elements-panel {
 			display: inline-block;
-			background-color: @gray-lightest;
 			padding: 14px 8px 10px;
+			.gray-panel(0.12);
 
 			.element-icon {
 				display: inline-block;
@@ -36,7 +37,6 @@
 
 				&.active {
 					border-color: @link-color;
-					background-color: lighten(@link-color, 65%)
 				}
 			}
 		}
