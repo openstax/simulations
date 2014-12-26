@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
     var EnergyUser            = require('models/energy-user');
     var EnergyChunkPathMover  = require('models/energy-chunk-path-mover');
     var EnergyChunk           = require('models/energy-chunk');
@@ -65,12 +67,12 @@ define(function (require) {
         },
 
         moveFilamentEnergyChunks: function(deltaTime) {
-            for (var i = this.filamentEnergyChunkMover.length - 1; i >= 0; i--) {
-                this.filamentEnergyChunkMover[i].moveAlongPath(deltaTime);
-                if (this.filamentEnergyChunkMover[i].finished()) {
+            for (var i = this.filamentEnergyChunkMovers.length - 1; i >= 0; i--) {
+                this.filamentEnergyChunkMovers[i].moveAlongPath(deltaTime);
+                if (this.filamentEnergyChunkMovers[i].finished()) {
                     // Remove the chunk and its mover
-                    this.filamentEnergyChunkMover.splice(i, 1);
-                    this.radiateEnergyChunk(this.filamentEnergyChunkMover[i].energyChunk);
+                    this.filamentEnergyChunkMovers.splice(i, 1);
+                    this.radiateEnergyChunk(this.filamentEnergyChunkMovers[i].energyChunk);
                 }
             }
         },
@@ -162,7 +164,107 @@ define(function (require) {
         },
 
         preloadEnergyChunks: function(incomingEnergyRate) {
-            
+            this.clearEnergyChunks();
+            if (incomingEnergyRate.amount < Constants.MAX_ENERGY_PRODUCTION_RATE / 10 || incomingEnergyRate.type !== EnergyTypes.ELECTRICAL) {
+                // No energy chunk pre-loading needed.
+                return;
+            }
+
+            var deltaTime = 1 / Constants.FRAMES_PER_SECOND;
+            var energySinceLastChunk = Constants.ENERGY_PER_CHUNK * 0.99;
+
+            // Simulate energy chunks moving through the system
+            var preloadingComplete = false;
+            while (!preloadingComplete) {
+                energySinceLastChunk += incomingEnergyRate.amount * deltaTime;
+
+                // Determine if time to add a new chunk
+                if (energySinceLastChunk >= Constants.ENERGY_PER_CHUNK) {
+                    var initialPosition = this._initialChunkPosition
+                        .set(this.get('position'))
+                        .add(LightBulb.OFFSET_TO_LEFT_SIDE_OF_WIRE);
+
+                    var newChunk = new EnergyChunk({
+                        energyType: EnergyTypes.ELECTRICAL,
+                        position: initialPosition
+                    });
+
+                    // Add a 'mover' for this energy chunk
+                    this.electricalEnergyChunkMovers.push(new EnergyChunkPathMover(
+                        newChunk,
+                        this.createElectricalEnergyChunkPath(this.get('position')),
+                        Constants.ENERGY_CHUNK_VELOCITY
+                    ));
+
+                    // Update energy since last chunk
+                    energySinceLastChunk -= Constants.ENERGY_PER_CHUNK;
+                }
+
+                this.moveElectricalEnergyChunks(deltaTime);
+                this.moveFilamentEnergyChunks(deltaTime);
+
+                if (this.radiatedEnergyChunkMovers.length > 1) {
+                    // A couple of chunks are radiating, which completes the pre-load.
+                    preloadingComplete = true;
+                }
+            }
+        },
+
+        radiateEnergyChunk: function(chunk) {
+            if (Math.random() > this.get('proportionOfThermalChunksRadiated'))
+                chunk.set('energyType', EnergyTypes.LIGHT);
+            else
+                chunk.set('energyType', EnergyTypes.THERMAL);
+
+            var rotation = (Math.random() - 0.5) * (Math.PI / 2);
+            var lightPath = [
+                this.get('position')
+                    .clone()
+                    .add(LightBulb.OFFSET_TO_RADIATE_POINT)
+                    .add(
+                        new Vector2(0, LightBulb.RADIATED_ENERGY_CHUNK_MAX_DISTANCE).rotate(rotation)
+                    )
+            ];
+
+            this.radiatedEnergyChunkMovers.push(new EnergyChunkPathMover(
+                chunk,
+                lightPath,
+                Constants.ENERGY_CHUNK_VELOCITY
+            ));
+        },
+
+        createThermalEnergyChunkPath: function(startingPoint) {
+            this.goRightNextTime = !this.goRightNextTime;
+            var xTranslation = (0.5 + Math.random() / 2) * LightBulb.FILAMENT_WIDTH / 2 * (this.goRightNextTime ? 1 : -1);
+            return [
+                startingPoint.clone().add(xTranslation, 0)
+            ];
+        },
+
+        createElectricalEnergyChunkPath: function(centerPosition) {
+            return [
+                centerPosition.clone().add(LightBulb.OFFSET_TO_LEFT_SIDE_OF_WIRE_BEND),
+                centerPosition.clone().add(LightBulb.OFFSET_TO_FIRST_WIRE_CURVE_POINT),
+                centerPosition.clone().add(LightBulb.OFFSET_TO_SECOND_WIRE_CURVE_POINT),
+                centerPosition.clone().add(LightBulb.OFFSET_TO_THIRD_WIRE_CURVE_POINT),
+                centerPosition.clone().add(LightBulb.OFFSET_TO_BOTTOM_OF_CONNECTOR),
+                centerPosition.clone().add(LightBulb.OFFSET_TO_RADIATE_POINT)
+            ];
+        },
+
+        generateThermalChunkTimeOnFilament: function() {
+            return LightBulb.THERMAL_ENERGY_CHUNK_TIME_ON_FILAMENT.random();
+        },
+
+        getTotalPathLength: function(startingLocation, pathPoints) {
+            if (pathPoints.length === 0)
+                return 0;
+
+            pathLength = startingLocation.distance(pathPoints[0]);
+            for (var i = 0; i < pathPoints.length - 1; i++)
+                pathLength += pathPoints[i].distance(pathPoints[i + 1]);
+
+            return pathLength;
         },
 
         injectEnergyChunks: function(energyChunks) {

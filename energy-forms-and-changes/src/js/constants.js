@@ -20,11 +20,15 @@ define(function (require) {
         };
 
         rangeObject.lerp = function(percent) {
-            return (this.max - this.min) * percent + this.min;
+            return this.length() * percent + this.min;
         };
 
         rangeObject.contains = function(x) {
             return x <= this.max && x >= this.min;
+        };
+
+        rangeObject.length = function() {
+            return this.max - this.min;
         };
 
         return rangeObject;
@@ -593,6 +597,36 @@ define(function (require) {
     ElectricalGenerator.CENTER_OF_CONNECTOR_OFFSET = ElectricalGenerator.CONNECTOR_OFFSET;
 
     Constants.ElectricalGenerator = ElectricalGenerator;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                               LIGHT BULB                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightBulb = {};
+
+    // Offsets need for creating the path followed by the energy chunks.  These
+    // were empirically determined based on images, will need to change if the
+    // images are changed.
+    LightBulb.OFFSET_TO_LEFT_SIDE_OF_WIRE       = new Vector2(-0.04,   -0.04);
+    LightBulb.OFFSET_TO_LEFT_SIDE_OF_WIRE_BEND  = new Vector2(-0.02,   -0.04);
+    LightBulb.OFFSET_TO_FIRST_WIRE_CURVE_POINT  = new Vector2(-0.01,   -0.0375);
+    LightBulb.OFFSET_TO_SECOND_WIRE_CURVE_POINT = new Vector2(-0.001,  -0.025);
+    LightBulb.OFFSET_TO_THIRD_WIRE_CURVE_POINT  = new Vector2(-0.0005, -0.0175);
+    LightBulb.OFFSET_TO_BOTTOM_OF_CONNECTOR     = new Vector2( 0,      -0.01);
+    LightBulb.OFFSET_TO_RADIATE_POINT           = new Vector2( 0,       0.066);
+
+    // Miscellaneous other constants.
+    LightBulb.RADIATED_ENERGY_CHUNK_MAX_DISTANCE = 0.5;
+    LightBulb.THERMAL_ENERGY_CHUNK_TIME_ON_FILAMENT = range({ min: 2, max: 2.5 });
+    LightBulb.ENERGY_TO_FULLY_LIGHT = Constants.MAX_ENERGY_PRODUCTION_RATE;
+    LightBulb.LIGHT_CHUNK_LIT_BULB_RADIUS = 0.1; // In meters.
+    LightBulb.LIGHT_CHANGE_RATE = 0.5; // In proportion per second.
+    LightBulb.FILAMENT_WIDTH = 0.03;
+
+    Constants.LightBulb = LightBulb;
 
 
     return Constants;

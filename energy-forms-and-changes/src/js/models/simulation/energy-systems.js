@@ -16,6 +16,7 @@ define(function (require, exports, module) {
     var Air = require('models/air');
     var FaucetAndWater = require('models/energy-source/faucet-and-water');
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
+    var LightBulb = require('models/energy-user/light-bulb');
     
     // Constants
     var Constants = require('constants');
@@ -50,10 +51,16 @@ define(function (require, exports, module) {
             // Air
             this.air = new Air();
 
+            // Sources
             this.faucetAndWater = new FaucetAndWater();
 
+            // Converters
             this.electricalGenerator = new ElectricalGenerator();
 
+            // Users
+            this.incandescentLightBulb = new LightBulb();
+
+            // Group lists
             this.sources = [
                 this.faucetAndWater,
                 new Backbone.Model(),
@@ -67,11 +74,12 @@ define(function (require, exports, module) {
             ];
 
             this.users = [
-                new Backbone.Model(),
+                this.incandescentLightBulb,
                 new Backbone.Model(),
                 new Backbone.Model()
             ];
 
+            // List of all models
             this.models = _.flatten([
                 this.air,
                 this.sources,
@@ -84,11 +92,12 @@ define(function (require, exports, module) {
 
             this.set('source', this.faucetAndWater);
             this.set('converter', this.electricalGenerator);
-            this.set('user', this.users[0]);
+            this.set('user', this.incandescentLightBulb);
 
             this.faucetAndWater.set('waterPowerableElementInPlace', true);
             this.get('source').activate();
             this.get('converter').activate();
+            this.get('user').activate();
 
             this.faucetAndWater.set('flowProportion', 0.4);
         },
