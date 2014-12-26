@@ -67,12 +67,14 @@ define(function (require) {
         },
 
         moveFilamentEnergyChunks: function(deltaTime) {
+            var mover;
             for (var i = this.filamentEnergyChunkMovers.length - 1; i >= 0; i--) {
-                this.filamentEnergyChunkMovers[i].moveAlongPath(deltaTime);
-                if (this.filamentEnergyChunkMovers[i].finished()) {
-                    // Remove the chunk and its mover
+                mover = this.filamentEnergyChunkMovers[i];
+                mover.moveAlongPath(deltaTime);
+                if (mover.finished()) {
+                    // Cause this energy chunk to be radiated from the bulb.
                     this.filamentEnergyChunkMovers.splice(i, 1);
-                    this.radiateEnergyChunk(this.filamentEnergyChunkMovers[i].energyChunk);
+                    this.radiateEnergyChunk(mover.energyChunk);
                 }
             }
         },
@@ -89,7 +91,7 @@ define(function (require) {
                         // Turn this energy chunk into thermal energy on the filament.
                         mover.energyChunk.set('energyType', EnergyTypes.THERMAL);
                         var path = this.createThermalEnergyChunkPath(mover.energyChunk.get('position'));
-                        this.filamentEnergyChunkMovers.add(new EnergyChunkPathMover(
+                        this.filamentEnergyChunkMovers.push(new EnergyChunkPathMover(
                             mover.energyChunk,
                             path,
                             this.getTotalPathLength(mover.energyChunk.get('position'), path) / this.generateThermalChunkTimeOnFilament()
@@ -260,7 +262,7 @@ define(function (require) {
             if (pathPoints.length === 0)
                 return 0;
 
-            pathLength = startingLocation.distance(pathPoints[0]);
+            var pathLength = startingLocation.distance(pathPoints[0]);
             for (var i = 0; i < pathPoints.length - 1; i++)
                 pathLength += pathPoints[i].distance(pathPoints[i + 1]);
 

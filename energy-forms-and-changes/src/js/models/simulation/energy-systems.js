@@ -16,7 +16,7 @@ define(function (require, exports, module) {
     var Air = require('models/air');
     var FaucetAndWater = require('models/energy-source/faucet-and-water');
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
-    var LightBulb = require('models/energy-user/light-bulb');
+    var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
     
     // Constants
     var Constants = require('constants');
@@ -58,7 +58,7 @@ define(function (require, exports, module) {
             this.electricalGenerator = new ElectricalGenerator();
 
             // Users
-            this.incandescentLightBulb = new LightBulb();
+            this.incandescentLightBulb = new IncandescentLightBulb();
 
             // Group lists
             this.sources = [
