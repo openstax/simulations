@@ -451,6 +451,9 @@ define(function (require) {
     //   should be chosen such that particles spread out, then stop all movement.
     EnergyChunkDistributor.REDISTRIBUTION_THRESHOLD_ENERGY = 1E-4; // In joules, I think.
 
+    // Number of times to attempt an even distribution of energy chunks on first load
+    EnergyChunkDistributor.NUM_INITIAL_DISTRIBUTION_ATTEMPTS = 20; // 1000
+
     Constants.EnergyChunkDistributor = EnergyChunkDistributor;
 
 
@@ -557,6 +560,39 @@ define(function (require) {
 
     Constants.WaterDrop = WaterDrop;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                         ELECTRICAL GENERATOR                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElectricalGenerator = {};
+
+    // Attributes of the wheel and generator.
+    ElectricalGenerator.WHEEL_MOMENT_OF_INERTIA = 5; // In kg.
+    ElectricalGenerator.RESISTANCE_CONSTANT = 3; // Controls max speed and rate of slow down, empirically determined.
+    ElectricalGenerator.MAX_ROTATIONAL_VELOCITY = Math.PI / 2; // In radians/sec, empirically determined.
+
+    // Images used to represent this model element in the view.
+    // HOUSING_IMAGE = new ModelElementImage( GENERATOR, new Vector2D( 0, 0 ) );
+    ElectricalGenerator.WHEEL_CENTER_OFFSET = new Vector2(0, 0.03);
+    ElectricalGenerator.LEFT_SIDE_OF_WHEEL_OFFSET = new Vector2(-0.03, 0.03);
+    // WHEEL_PADDLES_IMAGE = new ModelElementImage( GENERATOR_WHEEL_PADDLES_SHORT, WHEEL_CENTER_OFFSET );
+    // WHEEL_HUB_IMAGE = new ModelElementImage( GENERATOR_WHEEL_HUB_2, WHEEL_CENTER_OFFSET );
+    // SHORT_SPOKES_IMAGE = new ModelElementImage( GENERATOR_WHEEL_SPOKES, WHEEL_CENTER_OFFSET );
+    ElectricalGenerator.CONNECTOR_OFFSET = new Vector2(0.057, -0.04);
+    // CONNECTOR_IMAGE = new ModelElementImage( CONNECTOR, CONNECTOR_OFFSET ); // Offset empirically determined for optimal look.
+    // WIRE_CURVED_IMAGE = new ModelElementImage( WIRE_BLACK_LEFT, new Vector2D( 0.0185, -0.015 ) ); // Offset empirically determined for optimal look.
+    ElectricalGenerator.WHEEL_RADIUS = 0.03; //WHEEL_HUB_IMAGE.getWidth() / 2;
+
+    // Offsets used to create the paths followed by the energy chunks.
+    ElectricalGenerator.START_OF_WIRE_CURVE_OFFSET = new Vector2(ElectricalGenerator.WHEEL_CENTER_OFFSET).add(0.01,  -0.05);
+    ElectricalGenerator.WIRE_CURVE_POINT_1_OFFSET  = new Vector2(ElectricalGenerator.WHEEL_CENTER_OFFSET).add(0.015, -0.06);
+    ElectricalGenerator.WIRE_CURVE_POINT_2_OFFSET  = new Vector2(ElectricalGenerator.WHEEL_CENTER_OFFSET).add(0.03,  -0.07);
+    ElectricalGenerator.CENTER_OF_CONNECTOR_OFFSET = ElectricalGenerator.CONNECTOR_OFFSET;
+
+    Constants.ElectricalGenerator = ElectricalGenerator;
 
 
     return Constants;

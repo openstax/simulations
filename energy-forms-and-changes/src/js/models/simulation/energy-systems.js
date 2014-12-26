@@ -15,6 +15,7 @@ define(function (require, exports, module) {
     // Project dependiencies
     var Air = require('models/air');
     var FaucetAndWater = require('models/energy-source/faucet-and-water');
+    var ElectricalGenerator = require('models/energy-converter/electrical-generator');
     
     // Constants
     var Constants = require('constants');
@@ -51,6 +52,8 @@ define(function (require, exports, module) {
 
             this.faucetAndWater = new FaucetAndWater();
 
+            this.electricalGenerator = new ElectricalGenerator();
+
             this.sources = [
                 this.faucetAndWater,
                 new Backbone.Model(),
@@ -59,7 +62,7 @@ define(function (require, exports, module) {
             ];
 
             this.converters = [
-                new Backbone.Model(),
+                this.electricalGenerator,
                 new Backbone.Model()
             ];
 
@@ -77,13 +80,14 @@ define(function (require, exports, module) {
             ]);
 
             // Temporary until all the models are filled in
-            _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){}; });
+            _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){}; if (model.injectEnergyChunks === undefined) model.injectEnergyChunks = function(){}; });
 
             this.set('source', this.faucetAndWater);
-            this.set('converter', this.converters[0]);
+            this.set('converter', this.electricalGenerator);
             this.set('user', this.users[0]);
 
             this.get('source').activate();
+            this.get('converter').activate();
 
             this.faucetAndWater.set('flowProportion', 0.4);
         },
@@ -108,10 +112,15 @@ define(function (require, exports, module) {
             // For the time slider and anything else relying on time
             this.set('time', time);
 
-            
+            // Update the active elements to produce, convert, and use energy.
+            var energyFromSource    = this.get('source').update(time, deltaTime);
+            var energyFromConverter = this.get('converter').update(time, deltaTime, energyFromSource);
+                                      this.get('user').update(time, deltaTime, energyFromConverter);
 
-            for (var i = 0; i < this.models.length; i++)
-                this.models[i].update(time, deltaTime);
+            // Transfer energy chunks between elements
+            this.get('converter').injectEnergyChunks(this.get('source').extractOutgoingEnergyChunks());
+            console.log('extracted: ' + this.get('converter').extractOutgoingEnergyChunks().length);
+            //this.get('user').injectEnergyChunks(this.get('converter').extractOutgoingEnergyChunks());
         }
 
     }, Constants.EnergySystemsSimulation);

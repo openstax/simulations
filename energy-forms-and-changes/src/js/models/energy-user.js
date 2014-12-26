@@ -18,6 +18,8 @@ define(function (require) {
             this.incomingEnergyChunks = new EnergyChunkCollection();
         },
 
+        update: function(time, deltaTime, incomingEnergy) {},
+
         preloadEnergyChunks: function(incomingEnergyRate) {},
 
         injectEnergyChunks: function(energyChunks) {

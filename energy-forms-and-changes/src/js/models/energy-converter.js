@@ -17,11 +17,13 @@ define(function (require) {
             this.outgoingEnergyChunks = new EnergyChunkCollection();
         },
 
+        update: function(time, deltaTime, incomingEnergy) {},
+
         preloadEnergyChunks: function(incomingEnergyRate) {},
 
         getEnergyOutputRate: function() {},
 
-        extractOutgingEnergyChunks: function() {
+        extractOutgoingEnergyChunks: function() {
             var models = this.outgoingEnergyChunks.slice(0, this.outgoingEnergyChunks.length);
             this.outgoingEnergyChunks.remove(energyChunks);
             this.energyChunks.remove(energyChunks);

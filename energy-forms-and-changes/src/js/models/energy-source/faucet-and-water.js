@@ -115,10 +115,15 @@ define(function (require) {
                 // Update energy chunk positions.
                 this.updateEnergyChunks(time, deltaTime);
             }
+
+            return {
+                type: EnergyTypes.MECHANICAL,
+                amount: Constants.MAX_ENERGY_PRODUCTION_RATE * this.get('flowProportion') * deltaTime,
+                direction: -Math.PI / 2
+            };
         },
 
         updateEnergyChunks: function(time, deltaTime) {
-            //_.eachRight(this.energyChunks, function(chunk) {
             var chunk;
             for (var i = this.energyChunks.length - 1; i >= 0; i--) {
                 chunk = this.energyChunks.models[i];
@@ -155,7 +160,6 @@ define(function (require) {
                     this.exemptFromTransferEnergyChunks.remove(chunk);
                 }
             }
-            //}, this);
         },
 
         createNewChunk: function() {
