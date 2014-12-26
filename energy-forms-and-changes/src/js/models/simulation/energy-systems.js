@@ -133,7 +133,7 @@ define(function (require, exports, module) {
             var converterOutput = this.get('converter').extractOutgoingEnergyChunks();
             this.get('user').injectEnergyChunks(converterOutput);
 
-            //console.log('source output: ' + sourceOutput.length + ', converter output: ' + converterOutput.length);
+            console.log('source output: ' + sourceOutput.length + ', converter output: ' + converterOutput.length +', bulb output: ' + this.get('user').radiatedEnergyChunkMovers.length);
         }
 
     }, Constants.EnergySystemsSimulation);

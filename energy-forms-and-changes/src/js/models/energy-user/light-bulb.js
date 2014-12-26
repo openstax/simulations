@@ -114,7 +114,7 @@ define(function (require) {
 
                     // And a "mover" that will move this energy chunk through
                     //   the wire to the bulb.
-                    this.energyChunkMovers.push(new EnergyChunkPathMover(
+                    this.electricalEnergyChunkMovers.push(new EnergyChunkPathMover(
                         chunk,
                         this.createElectricalEnergyChunkPath(this.get('position')),
                         Constants.ENERGY_CHUNK_VELOCITY
