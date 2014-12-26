@@ -7,6 +7,7 @@ define(function (require) {
     var EnergyConverter       = require('models/energy-converter');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
     var EnergyChunkPathMover  = require('models/energy-chunk-path-mover');
+    var EnergyChunk           = require('models/energy-chunk');
 
     var Constants = require('constants');
     var EnergyTypes = Constants.EnergyTypes;
@@ -130,7 +131,7 @@ define(function (require) {
                             this.energyChunkMovers.splice(i, 1);
                             this.outgoingEnergyChunks.add(chunk);
                             break;
-                        case HIDDEN:
+                        case EnergyTypes.HIDDEN:
                             // This hidden energy chunk has traveled to the end
                             //   of its path, so just remove it, because the
                             //   electrical energy chunk to which is corresponds

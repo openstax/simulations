@@ -135,7 +135,7 @@ define(function (require) {
                 var waterCenter = this._waterCenterPosition.set(this.get('position')).add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN);
                 var yOffset = waterCenter.y - chunk.get('position').y;
                 if (this.get('waterPowerableElementInPlace') &&
-                    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yPosition) &&
+                    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yOffset) &&
                     !this.exemptFromTransferEnergyChunks.get(chunk.cid)
                 ) {
                     if (this.transferNextAvailableChunk) {
@@ -163,7 +163,6 @@ define(function (require) {
         },
 
         createNewChunk: function() {
-            console.log('new chunk created');
             var initialPosition = this._initialChunkPosition
                 .set(this.get('position'))
                 .add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN)

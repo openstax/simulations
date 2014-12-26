@@ -34,12 +34,12 @@ define(function (require) {
     _.extend(EnergyChunkPathMover.prototype, {
 
         moveAlongPath: function(deltaTime) {
-            var distanceToTravel = time * this.velocity;
+            var distanceToTravel = deltaTime * this.velocity;
             while (distanceToTravel > 0 && !this.pathFullyTraversed) {
-                if (distanceToTravel < this.energyChunk.get('position').distance(this.path[this.nextPoint])) {
+                if (distanceToTravel < this.energyChunk.get('position').distance(this.path[this.nextIndex])) {
                     // Not arriving at destination next point yet, so just move towards it.
                     var angleToNext = this._nextVector
-                        .set(this.path[this.nextPoint])
+                        .set(this.path[this.nextIndex])
                         .sub(this.energyChunk.get('position'))
                         .angle();
                     var velocityVector = this._velocityVector
@@ -50,15 +50,15 @@ define(function (require) {
                 }
                 else {
                     // Arrived at next destination point.
-                    distanceToTravel -= this.energyChunk.get('position').distance(this.path[this.nextPoint]);
-                    this.energyChunk.setPosition(this.path[this.nextPoint]);
+                    distanceToTravel -= this.energyChunk.get('position').distance(this.path[this.nextIndex]);
+                    this.energyChunk.setPosition(this.path[this.nextIndex]);
                     if (this.nextIndex === (this.path.length - 1)) {
                         // At the end
                         this.pathFullyTraversed = true;
                     }
                     else {
                         // Set the next destination point
-                        this.nextPoint++;
+                        this.nextIndex++;
                     }
                 }
             }

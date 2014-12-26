@@ -86,6 +86,7 @@ define(function (require, exports, module) {
             this.set('converter', this.electricalGenerator);
             this.set('user', this.users[0]);
 
+            this.faucetAndWater.set('waterPowerableElementInPlace', true);
             this.get('source').activate();
             this.get('converter').activate();
 
@@ -118,9 +119,12 @@ define(function (require, exports, module) {
                                       this.get('user').update(time, deltaTime, energyFromConverter);
 
             // Transfer energy chunks between elements
-            this.get('converter').injectEnergyChunks(this.get('source').extractOutgoingEnergyChunks());
-            console.log('extracted: ' + this.get('converter').extractOutgoingEnergyChunks().length);
-            //this.get('user').injectEnergyChunks(this.get('converter').extractOutgoingEnergyChunks());
+            var sourceOutput = this.get('source').extractOutgoingEnergyChunks();
+            this.get('converter').injectEnergyChunks(sourceOutput); 
+            var converterOutput = this.get('converter').extractOutgoingEnergyChunks();
+            this.get('user').injectEnergyChunks(converterOutput);
+
+            console.log('source output: ' + sourceOutput.length + ', converter output: ' + converterOutput.length);
         }
 
     }, Constants.EnergySystemsSimulation);
