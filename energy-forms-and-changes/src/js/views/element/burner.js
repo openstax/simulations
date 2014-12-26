@@ -5,10 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PiecewiseCurve  = require('common/math/piecewise-curve');
-    var SliderView      = require('common/pixi/view/slider');
-    var ElementView     = require('views/element');
-    var EnergyChunkView = require('views/energy-chunk');
+    var PiecewiseCurve   = require('common/math/piecewise-curve');
+    var SliderView       = require('common/pixi/view/slider');
+    var IntroElementView = require('views/intro-element');
+    var EnergyChunkView  = require('views/energy-chunk');
     
 
     var Assets    = require('assets');
@@ -17,7 +17,7 @@ define(function(require) {
     /**
      * A view that represents a block model
      */
-    var BurnerView = ElementView.extend({
+    var BurnerView = IntroElementView.extend({
 
         /**
          *
@@ -39,7 +39,7 @@ define(function(require) {
             this.heatingEnabled = options.heatingEnabled;
             this.coolingEnabled = options.coolingEnabled;
 
-            ElementView.prototype.initialize.apply(this, [options]);
+            IntroElementView.prototype.initialize.apply(this, [options]);
 
             this.energyChunkViews = [];
 

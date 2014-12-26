@@ -2,16 +2,16 @@ define(function (require) {
 
     'use strict';
 
-    var EnergySystemElement   = require('models/energy-system-element');
+    var EnergySystemsElement   = require('models/energy-systems-element');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var EnergySource = EnergySystemElement.extend({
+    var EnergySource = EnergySystemsElement.extend({
         
         initialize: function(attributes, options) {
-            EnergySystemElement.prototype.initialize.apply(this, [attributes, options]);
+            EnergySystemsElement.prototype.initialize.apply(this, [attributes, options]);
 
             this.outgoingEnergyChunks = new EnergyChunkCollection();
         },
@@ -28,7 +28,7 @@ define(function (require) {
         },
 
         clearEnergyChunks: function() {
-            EnergySystemElement.prototype.clearEnergyChunks.apply(this);
+            EnergySystemsElement.prototype.clearEnergyChunks.apply(this);
 
             this.outgoingEnergyChunks.reset();
         }

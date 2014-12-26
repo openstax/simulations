@@ -9,15 +9,16 @@ define(function(require) {
     var Functions = require('common/math/functions');
     var Colors    = require('common/colors/colors');
 
-    var ElementView = require('views/element');
-    var Assets   = require('assets');
+    var IntroElementView = require('views/intro-element');
+    
+    var Assets = require('assets');
 
     var Constants = require('constants');
 
     /**
      * A view that represents the air model
      */
-    var ThermometerView = ElementView.extend({
+    var ThermometerView = IntroElementView.extend({
 
         /**
          *
@@ -29,7 +30,7 @@ define(function(require) {
 
             this.measurableElementViews = options.measurableElementViews;
             
-            ElementView.prototype.initialize.apply(this, [options]);
+            IntroElementView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:sensedElement', this.updateSensedElement);
             this.listenTo(this.model, 'change:sensedTemperature', this.updateTemperature);

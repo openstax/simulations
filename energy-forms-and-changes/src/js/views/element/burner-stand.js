@@ -7,7 +7,7 @@ define(function(require) {
     var Vector2 = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
-    var ElementView = require('views/element');
+    var IntroElementView = require('views/intro-element');
     //var Assets      = require('assets');
 
     var Constants = require('constants');
@@ -15,7 +15,7 @@ define(function(require) {
     /**
      * A view that represents a block model
      */
-    var BurnerStandView = ElementView.extend({
+    var BurnerStandView = IntroElementView.extend({
 
         /**
          *
@@ -32,7 +32,7 @@ define(function(require) {
             
             this.projectedEdgeLength = options.projectedEdgeLength;
 
-            ElementView.prototype.initialize.apply(this, [options]);
+            IntroElementView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {

@@ -7,11 +7,12 @@ define(function(require) {
     require('common/pixi/extensions');
     
 
-    var PixiView       = require('common/pixi/view');
-    var Rectangle      = require('common/math/rectangle');
-    var Vector2        = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
+    var Vector2   = require('common/math/vector2');
 
-    var Constants      = require('constants');
+    var PositionableView = require('views/positionable');
+
+    var Constants = require('constants');
 
     var defaultMovementConstraintBounds = new Rectangle(
         Number.NEGATIVE_INFINITY,
@@ -23,7 +24,7 @@ define(function(require) {
     /**
      * A view that represents an element model
      */
-    var ElementView = PixiView.extend({
+    var IntroElementView = PositionableView.extend({
 
         events: {
             'touchstart      .displayObject': 'dragStart',
@@ -47,13 +48,10 @@ define(function(require) {
                 lineColor: '#444444',
                 lineJoin:  'round',
                 textColor: '#000000',
-                textFont:  ElementView.TEXT_FONT,
+                textFont:  IntroElementView.TEXT_FONT,
                 labelText: '',
                 dragLayer: 'displayObject'
             }, options);
-
-            this.mvt = options.mvt;
-            this.simulation = options.simulation;
 
             this.movable = options.movable || false;
             this.movementConstraintBounds = options.movementConstraintBounds || defaultMovementConstraintBounds;
@@ -73,17 +71,14 @@ define(function(require) {
             this._dragOffset = new PIXI.Point();
             this._newPosition = new Vector2();
 
-            this.initGraphics();
+            PositionableView.prototype.initialize.apply(this, [options]);
 
             // To give some feedback on the cursor
             if (this.movable)
                 this[this.dragLayer].buttonMode = true;
-
-            this.listenTo(this.model, 'change:position', this.updatePosition);
-            this.updatePosition(this.model, this.model.get('position'));
+            else
+                this[this.dragLayer].interactive = false;
         },
-
-        initGraphics: function() {},
 
         calculateDragBounds: function(dx, dy) {
             var bounds = this.displayObject.getBounds();
@@ -151,16 +146,6 @@ define(function(require) {
             this.trigger('drag-end');
         },
 
-        updatePosition: function(model, position) {
-            var viewPoint = this.mvt.modelToView(position);
-            this.displayObject.x = viewPoint.x;
-            this.displayObject.y = viewPoint.y;
-        },
-
-        update: function(time, deltaTime) {
-
-        },
-
         showEnergyChunks: function() {},
 
         hideEnergyChunks: function() {},
@@ -169,7 +154,7 @@ define(function(require) {
             return '#fff';
         }
 
-    }, Constants.ElementView);
+    }, Constants.IntroElementView);
 
-    return ElementView;
+    return IntroElementView;
 });

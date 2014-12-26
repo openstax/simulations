@@ -5,8 +5,8 @@ define(function(require) {
     var _       = require('underscore');
     var PIXI    = require('pixi');
 
-    var ElementView = require('views/element');
-    var EnergyChunkView = require('views/energy-chunk');
+    var IntroElementView = require('views/intro-element');
+    var EnergyChunkView  = require('views/energy-chunk');
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
     // var thermalWanderingChunks = 0;
@@ -15,13 +15,13 @@ define(function(require) {
     /**
      * A view that represents a block model
      */
-    var ThermalElementView = ElementView.extend({
+    var ThermalElementView = IntroElementView.extend({
 
         /**
          *
          */
         initialize: function(options) {
-            ElementView.prototype.initialize.apply(this, [options]);
+            IntroElementView.prototype.initialize.apply(this, [options]);
         },
 
         initEnergyChunks: function(energyChunkLayer) {

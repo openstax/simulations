@@ -10,7 +10,7 @@ define(function (require) {
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var EnergySystemElement = Positionable.extend({
+    var EnergySystemsElement = Positionable.extend({
 
         defaults: {
             active: false
@@ -55,5 +55,5 @@ define(function (require) {
 
     });
 
-    return EnergySystemElement;
+    return EnergySystemsElement;
 });

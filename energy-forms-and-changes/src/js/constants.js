@@ -146,11 +146,11 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var ElementView = {};
+    var IntroElementView = {};
 
-    ElementView.TEXT_FONT = '32px Arial';
+    IntroElementView.TEXT_FONT = '32px Arial';
 
-    Constants.ElementView = ElementView;
+    Constants.IntroElementView = IntroElementView;
 
     /*************************************************************************
      **                                                                     **
