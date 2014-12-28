@@ -2,11 +2,11 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
+    var _ = require('underscore');
 
     var PositionableView = require('views/positionable');
 
-    var Constants      = require('constants');
+    var Constants = require('constants');
 
     /**
      * A view that represents an element model
