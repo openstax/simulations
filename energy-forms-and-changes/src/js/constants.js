@@ -549,11 +549,12 @@ define(function (require) {
 
     var EnergySystemsSimulation = {};
 
-    var OFFSET_BETWEEN_ELEMENTS = new Vector(-0.4, 0);
+    EnergySystemsSimulation.OFFSET_BETWEEN_ELEMENTS   = new Vector2(0,     -0.4);
+    EnergySystemsSimulation.ENERGY_SOURCE_POSITION    = new Vector2(-0.15,  0);
+    EnergySystemsSimulation.ENERGY_CONVERTER_POSITION = new Vector2(-0.025, 0);
+    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector2( 0.09,  0);
 
-    EnergySystemsSimulation.ENERGY_SOURCE_POSITION    = new Vector(-0.15,  0).add(OFFSET_BETWEEN_ELEMENTS);
-    EnergySystemsSimulation.ENERGY_CONVERTER_POSITION = new Vector(-0.025, 0).add(OFFSET_BETWEEN_ELEMENTS);
-    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector( 0.09,  0).add(OFFSET_BETWEEN_ELEMENTS);
+    EnergySystemsSimulation.TRANSITION_DURATION = 0.5;
 
     Constants.EnergySystemsSimulation = EnergySystemsSimulation;
 

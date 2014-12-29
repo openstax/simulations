@@ -17,6 +17,9 @@ define(function (require, exports, module) {
     var FaucetAndWater = require('models/energy-source/faucet-and-water');
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
     var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
+    var CarouselAnimator = require('models/carousel-animator');
+
+    var EnergySystemsElement = require('models/energy-systems-element');
     
     // Constants
     var Constants = require('constants');
@@ -67,20 +70,20 @@ define(function (require, exports, module) {
             // Group lists
             this.sources = [
                 this.faucetAndWater,
-                new Backbone.Model(),
-                new Backbone.Model(),
-                new Backbone.Model()
+                new EnergySystemsElement(),
+                new EnergySystemsElement(),
+                new EnergySystemsElement()
             ];
 
             this.converters = [
                 this.electricalGenerator,
-                new Backbone.Model()
+                new EnergySystemsElement()
             ];
 
             this.users = [
                 this.incandescentLightBulb,
-                new Backbone.Model(),
-                new Backbone.Model()
+                new EnergySystemsElement(),
+                new EnergySystemsElement()
             ];
 
             // List of all models
@@ -104,6 +107,23 @@ define(function (require, exports, module) {
             this.get('user').activate();
 
             this.faucetAndWater.set('flowProportion', 0.4);
+
+            // Animators
+            this.sourceAnimator = new CarouselAnimator({
+                elements: this.sources,
+                activeElement: this.get('source'),
+                activeElementPosition: EnergySystemsSimulation.ENERGY_SOURCE_POSITION
+            });
+            this.converterAnimator = new CarouselAnimator({
+                elements: this.converters,
+                activeElement: this.get('converter'),
+                activeElementPosition: EnergySystemsSimulation.ENERGY_CONVERTER_POSITION
+            });
+            this.userAnimator = new CarouselAnimator({
+                elements: this.users,
+                activeElement: this.get('user'),
+                activeElementPosition: EnergySystemsSimulation.ENERGY_USER_POSITION
+            });
         },
 
         /**
@@ -124,7 +144,19 @@ define(function (require, exports, module) {
          */
         _update: function(time, deltaTime) {
             // For the time slider and anything else relying on time
-            this.set('time', time);
+            // this.set('time', time);
+
+            // Updating animations that transition the active element of a type
+            // if (this.animatingSource)
+            //     this.animatingSource = this.animateActiveElement(this.sources, this.get('source'));
+            // if (this.animatingConverter)
+            //     this.animatingConverter = this.animateActiveElement(this.converters, this.get('converter'));
+            // if (this.animatingUser)
+            //     this.animatingUser = this.animateActiveElement(this.users, this.get('user'));
+
+            this.sourceAnimator.update(time, deltaTime);
+            this.converterAnimator.update(time, deltaTime);
+            this.userAnimator.update(time, deltaTime);
 
             // Update the active elements to produce, convert, and use energy.
             var energyFromSource    = this.get('source').update(time, deltaTime);
@@ -140,19 +172,21 @@ define(function (require, exports, module) {
             //console.log('source output: ' + sourceOutput.length + ', converter output: ' + converterOutput.length +', bulb output: ' + this.get('user').radiatedEnergyChunkMovers.length);
         },
 
-        userChanged: function(simulation, user) {
-
+        sourceChanged: function(simulation, source) {
+            this.sourceAnimator.set('activeElement', source);
         },
 
         converterChanged: function(simulation, converter) {
-
+            this.converterAnimator.set('activeElement', converter);
         },
 
         userChanged: function(simulation, user) {
-
+            this.userAnimator.set('activeElement', user);
         },
 
-        animateActiveElement: function(element) {
+        animateActiveElement: function(deltaTime, elements, activeElement) {
+            var index = _.indexOf(elements, activeElement);
+
             // The way the original sim works is that every element
             //   is positioned down a line, so it shifts all the
             //   elements up or down to show the active one when it
@@ -163,6 +197,8 @@ define(function (require, exports, module) {
             //   to this function to animate all the elements in such
             //   a way as to put the newly activated one in the spot
             //   specified by EnergySystemsSimulation.ENERGY_*_POSITION
+
+            return false;
         }
 
     }, Constants.EnergySystemsSimulation);
