@@ -71,6 +71,8 @@ define(function (require) {
     // Threshold for deciding when two temperatures can be considered equal.
     Constants.TEMPERATURES_EQUAL_THRESHOLD = 1E-6; // In Kelvin.
 
+    Constants.WATER_FILL_COLOR = '#afeeee';
+
     /*************************************************************************
      **                                                                     **
      **                      ENERGY CONTAINER CATEGORIES                    **
@@ -294,7 +296,7 @@ define(function (require) {
     BeakerView.FILL_COLOR = '#fff';
     BeakerView.FILL_ALPHA = 0.30;
 
-    BeakerView.WATER_FILL_COLOR = '#afeeee';
+    BeakerView.WATER_FILL_COLOR = Constants.WATER_FILL_COLOR;
     BeakerView.WATER_FILL_ALPHA = 0.5;
     BeakerView.WATER_LINE_COLOR = '#82A09E';
     BeakerView.WATER_LINE_WIDTH = 2;

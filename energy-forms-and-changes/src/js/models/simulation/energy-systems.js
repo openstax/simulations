@@ -187,14 +187,17 @@ define(function (require, exports, module) {
         },
 
         sourceChanged: function(simulation, source) {
+            this.previous('source').deactivate();
             this.sourceAnimator.set('activeElement', source);
         },
 
         converterChanged: function(simulation, converter) {
+            this.previous('converter').deactivate();
             this.converterAnimator.set('activeElement', converter);
         },
 
         userChanged: function(simulation, user) {
+            this.previous('user').deactivate();
             this.userAnimator.set('activeElement', user);
         }
 
