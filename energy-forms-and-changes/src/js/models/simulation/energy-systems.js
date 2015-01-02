@@ -132,6 +132,14 @@ define(function (require, exports, module) {
                 activeElement: this.get('user'),
                 activeElementPosition: EnergySystemsSimulation.ENERGY_USER_POSITION
             });
+
+            var activateElement = function(activeElement) { 
+                activeElement.activate(); 
+            };
+
+            this.listenTo(this.sourceAnimator,    'destination-reached', activateElement);
+            this.listenTo(this.converterAnimator, 'destination-reached', activateElement);
+            this.listenTo(this.userAnimator,      'destination-reached', activateElement);
         },
 
         /**
@@ -147,20 +155,18 @@ define(function (require, exports, module) {
             });
         },
 
+        preloadEnergyChunks: function() {
+            this.get('source').preloadEnergyChunks();
+            this.get('converter').preloadEnergyChunks();
+            this.get('user').preloadEnergyChunks();
+        },
+
         /**
          * 
          */
         _update: function(time, deltaTime) {
             // For the time slider and anything else relying on time
             // this.set('time', time);
-
-            // Updating animations that transition the active element of a type
-            // if (this.animatingSource)
-            //     this.animatingSource = this.animateActiveElement(this.sources, this.get('source'));
-            // if (this.animatingConverter)
-            //     this.animatingConverter = this.animateActiveElement(this.converters, this.get('converter'));
-            // if (this.animatingUser)
-            //     this.animatingUser = this.animateActiveElement(this.users, this.get('user'));
 
             this.sourceAnimator.update(time, deltaTime);
             this.converterAnimator.update(time, deltaTime);
@@ -190,23 +196,6 @@ define(function (require, exports, module) {
 
         userChanged: function(simulation, user) {
             this.userAnimator.set('activeElement', user);
-        },
-
-        animateActiveElement: function(deltaTime, elements, activeElement) {
-            var index = _.indexOf(elements, activeElement);
-
-            // The way the original sim works is that every element
-            //   is positioned down a line, so it shifts all the
-            //   elements up or down to show the active one when it
-            //   is selected.  I don't know if I'll do it that way
-            //   or not.  If I do do it that way, I determine the
-            //   element's position in its type array in the *Changed
-            //   function and then pass in the array and the position
-            //   to this function to animate all the elements in such
-            //   a way as to put the newly activated one in the spot
-            //   specified by EnergySystemsSimulation.ENERGY_*_POSITION
-
-            return false;
         }
 
     }, Constants.EnergySystemsSimulation);
