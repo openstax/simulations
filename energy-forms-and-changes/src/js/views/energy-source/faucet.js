@@ -41,8 +41,23 @@ define(function(require) {
             var faucet = new PIXI.DisplayObjectContainer();
             faucet.addChild(faucetFront);
             faucet.addChild(faucetPipe);
-            faucet.x = -(faucet.width  / 2) + this.mvt.modelToViewDeltaX(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.x);
-            faucet.y = -(faucet.height / 2) + this.mvt.modelToViewDeltaY(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.y);
+            /* 
+             * The original simulation uses an instance of FaucetNode
+             *   (from phet.common.piccolophet.nodes.faucet.FaucetNode)
+             *   in whose constructor they pass a mysterious integer
+             *   literal *40*, but the source for FaucetNode is not in
+             *   their SVN trunk for some reason, so I don't know what
+             *   that value represents.  However, they scale the faucet
+             *   node later by 0.9, and if I multiply 40 by 0.9, I get
+             *   36, which if I divide by two and use to offset the
+             *   image--as can be seen below--the faucet seems to be
+             *   lined up correctly with the water coming out.
+             */
+            var offsetX = -(faucetFront.width / 2) - 18;
+            var offsetY = -faucetFront.height + 18;
+            faucet.x = offsetX + this.mvt.modelToViewDeltaX(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.x);
+            faucet.y = offsetY + this.mvt.modelToViewDeltaY(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.y);
+            faucet.scale.x = faucet.scale.y = 0.9;
             this.displayObject.addChild(faucet);
 
             var handle = new PIXI.Graphics();
@@ -78,7 +93,7 @@ define(function(require) {
                 this.model.set('flowProportion', value);
             });
 
-            this.listenTo(this.model, 'change:active', function(active) {
+            this.listenTo(this.model, 'change:active', function(model, active) {
                 if (!active)
                     this.sliderView.val(0);
             })

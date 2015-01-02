@@ -47,10 +47,10 @@ define(function(require) {
             SceneView.prototype.initGraphics.apply(this, arguments);
 
             this.viewOriginX = Math.round(this.width / 2);
-            this.viewOriginY = Math.round(this.height * 0.475); // From PhET
+            this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
-                new Vector2(this.viewOriginX,this.viewOriginY),
+                new Vector2(this.viewOriginX, this.viewOriginY),
                 2000 // Scale
             );
 
