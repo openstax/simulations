@@ -11,13 +11,10 @@ define(function(require) {
     var ModelViewTransform   = require('common/math/model-view-transform');
     var SceneView            = require('views/scene');
     var AirView              = require('views/air');
-    var ThermometerView      = require('views/element/thermometer');
-    var ThermometerClipsView = require('views/thermometer-clips');
-    var BlockView            = require('views/element/block');
-    var BrickView            = require('views/element/brick');
-    var BeakerView           = require('views/element/beaker');
-    var BurnerStandView      = require('views/element/burner-stand');
-    var BurnerView           = require('views/element/burner');
+
+    var FaucetView = require('views/energy-source/faucet');
+    var SunView    = require('views/energy-source/sun');
+    
     var Assets               = require('assets');
 
     // Constants
@@ -49,11 +46,11 @@ define(function(require) {
         initGraphics: function() {
             SceneView.prototype.initGraphics.apply(this, arguments);
 
-            // this.viewOriginX = Math.round(this.width / 2);
-            // this.viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
+            this.viewOriginX = Math.round(this.width / 2);
+            this.viewOriginY = Math.round(this.height * 0.475); // From PhET
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
-                new Vector2(0,0),
+                new Vector2(this.viewOriginX,this.viewOriginY),
                 2000 // Scale
             );
 
@@ -63,26 +60,18 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer        = new PIXI.DisplayObjectContainer();
-            this.beakerBackLayer  = new PIXI.DisplayObjectContainer();
-            this.blockLayer       = new PIXI.DisplayObjectContainer();
-            this.airLayer         = new PIXI.DisplayObjectContainer();
-            this.burnerFrontLayer = new PIXI.DisplayObjectContainer();
-            this.thermometerLayer = new PIXI.DisplayObjectContainer();
-            this.beakerFrontLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer = new PIXI.DisplayObjectContainer();
+            this.airLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
-            this.stage.addChild(this.beakerBackLayer);
-            this.stage.addChild(this.blockLayer);
             this.stage.addChild(this.airLayer);
-            this.stage.addChild(this.burnerFrontLayer);
-            this.stage.addChild(this.thermometerLayer);
-            this.stage.addChild(this.beakerFrontLayer);
         },
 
         initElements: function() {
             // Air
             this.initAir();
+
+            this.initSources();
         },
 
         initAir: function() {
@@ -96,6 +85,20 @@ define(function(require) {
             air.listenTo(this, 'show-energy-chunks', air.showEnergyChunks);
             air.listenTo(this, 'hide-energy-chunks', air.hideEnergyChunks);
             this.airView = air;
+        },
+
+        initSources: function() {
+            this.faucet = new FaucetView({
+                model: this.simulation.faucet,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.faucet.displayObject);
+
+            this.sun = new SunView({
+                model: this.simulation.sun,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.sun.displayObject);
         },
 
         _update: function(time, deltaTime) {

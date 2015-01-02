@@ -565,19 +565,19 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var FaucetAndWater = {};
+    var Faucet = {};
 
-    FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN = new Vector2(0.065, 0.08);
-    FaucetAndWater.FALLING_ENERGY_CHUNK_VELOCITY = 0.09; // In meters/second.
-    FaucetAndWater.MAX_WATER_WIDTH = 0.015; // In meters.
-    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE = range({ min: 0.05, max: 0.06 });
-    FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = 0.5; // In meters.
+    Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN = new Vector2(0.065, 0.08);
+    Faucet.FALLING_ENERGY_CHUNK_VELOCITY = 0.09; // In meters/second.
+    Faucet.MAX_WATER_WIDTH = 0.015; // In meters.
+    Faucet.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE = range({ min: 0.05, max: 0.06 });
+    Faucet.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = 0.5; // In meters.
 
-    Constants.FaucetAndWater = FaucetAndWater;
+    Constants.Faucet = Faucet;
 
     var WaterDrop = {};
 
-    WaterDrop.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER; // In meters.
+    WaterDrop.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER = Faucet.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER; // In meters.
     WaterDrop.ACCELERATION_DUE_TO_GRAVITY = new Vector2(0, -0.15);
 
     Constants.WaterDrop = WaterDrop;

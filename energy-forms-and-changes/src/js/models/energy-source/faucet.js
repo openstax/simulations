@@ -17,14 +17,11 @@ define(function (require) {
     /**
      * Basic building block model for all the elements in the intro tab scene
      */
-    var FaucetAndWater = EnergySource.extend({
+    var Faucet = EnergySource.extend({
 
         defaults: _.extend({}, EnergySource.prototype.defaults, {
             flowProportion: 0,
-            waterPowerableElementInPlace: false,
-            source: null,
-            converter: null,
-            user: null
+            waterPowerableElementInPlace: false
         }),
         
         initialize: function(attributes, options) {
@@ -91,8 +88,8 @@ define(function (require) {
             if (this.active()) {
                 // Add water droplets as needed based on flow rate.
                 if (this.get('flowProportion') > 0) {
-                    var initialWidth = this.get('flowProportion') * FaucetAndWater.MAX_WATER_WIDTH * (1 + (Math.random() - 0.5) * 0.2);
-                    var initialPosition = this._initialWaterDropPosition.set(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN).add(0, 0.01);
+                    var initialWidth = this.get('flowProportion') * Faucet.MAX_WATER_WIDTH * (1 + (Math.random() - 0.5) * 0.2);
+                    var initialPosition = this._initialWaterDropPosition.set(Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN).add(0, 0.01);
                     
                     this.waterDrops.add(new WaterDrop({
                         position: initialPosition,
@@ -132,10 +129,10 @@ define(function (require) {
 
                 // See if chunk is in the location where it can be transferred
                 //   to the next energy system.
-                var waterCenter = this._waterCenterPosition.set(this.get('position')).add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN);
+                var waterCenter = this._waterCenterPosition.set(this.get('position')).add(Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN);
                 var yOffset = waterCenter.y - chunk.get('position').y;
                 if (this.get('waterPowerableElementInPlace') &&
-                    FaucetAndWater.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yOffset) &&
+                    Faucet.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE.contains(yOffset) &&
                     !this.exemptFromTransferEnergyChunks.get(chunk.cid)
                 ) {
                     if (this.transferNextAvailableChunk) {
@@ -155,7 +152,7 @@ define(function (require) {
                 }
 
                 // Remove it if it is out of visible range.
-                if (waterCenter.distance(chunk.get('position')) > FaucetAndWater.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER) {
+                if (waterCenter.distance(chunk.get('position')) > Faucet.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER) {
                     this.energyChunks.remove(chunk);
                     this.exemptFromTransferEnergyChunks.remove(chunk);
                 }
@@ -165,10 +162,10 @@ define(function (require) {
         createNewChunk: function() {
             var initialPosition = this._initialChunkPosition
                 .set(this.get('position'))
-                .add(FaucetAndWater.OFFSET_FROM_CENTER_TO_WATER_ORIGIN)
-                .add((Math.random() - 0.5) * this.get('flowProportion') * FaucetAndWater.MAX_WATER_WIDTH / 2, 0);
+                .add(Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN)
+                .add((Math.random() - 0.5) * this.get('flowProportion') * Faucet.MAX_WATER_WIDTH / 2, 0);
 
-            var initialVelocity = this._initialChunkVelocity.set(0, -FaucetAndWater.FALLING_ENERGY_CHUNK_VELOCITY);
+            var initialVelocity = this._initialChunkVelocity.set(0, -Faucet.FALLING_ENERGY_CHUNK_VELOCITY);
 
             return new EnergyChunk({
                 energyType: EnergyChunk.MECHANICAL, 
@@ -177,7 +174,7 @@ define(function (require) {
             });
         }
 
-    }, Constants.FaucetAndWater);
+    }, Constants.Faucet);
 
-    return FaucetAndWater;
+    return Faucet;
 });

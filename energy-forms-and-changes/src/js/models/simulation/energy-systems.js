@@ -14,7 +14,12 @@ define(function (require, exports, module) {
     
     // Project dependiencies
     var Air = require('models/air');
-    var FaucetAndWater = require('models/energy-source/faucet-and-water');
+
+    var Faucet = require('models/energy-source/faucet');
+    var Sun    = require('models/energy-source/sun');
+    var Teapot = require('models/energy-source/teapot');
+    var Biker  = require('models/energy-source/biker');
+
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
     var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
     var CarouselAnimator = require('models/carousel-animator');
@@ -59,7 +64,10 @@ define(function (require, exports, module) {
             this.air = new Air();
 
             // Sources
-            this.faucetAndWater = new FaucetAndWater();
+            this.faucet = new Faucet();
+            this.sun    = new Sun();
+            this.teapot = new Teapot();
+            this.biker  = new Biker();
 
             // Converters
             this.electricalGenerator = new ElectricalGenerator();
@@ -69,10 +77,10 @@ define(function (require, exports, module) {
 
             // Group lists
             this.sources = [
-                this.faucetAndWater,
-                new EnergySystemsElement(),
-                new EnergySystemsElement(),
-                new EnergySystemsElement()
+                this.faucet,
+                this.sun,
+                this.teapot,
+                this.biker
             ];
 
             this.converters = [
@@ -95,18 +103,18 @@ define(function (require, exports, module) {
             ]);
 
             // Temporary until all the models are filled in
-            _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){}; if (model.injectEnergyChunks === undefined) model.injectEnergyChunks = function(){}; });
+            _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){return{type: 2, amount: 133, direction: -1.5};}; if (model.injectEnergyChunks === undefined) model.injectEnergyChunks = function(){}; });
 
-            this.set('source',    this.faucetAndWater);
+            this.set('source',    this.faucet);
             this.set('converter', this.electricalGenerator);
             this.set('user',      this.incandescentLightBulb);
 
-            this.faucetAndWater.set('waterPowerableElementInPlace', true);
+            this.faucet.set('waterPowerableElementInPlace', true);
             this.get('source').activate();
             this.get('converter').activate();
             this.get('user').activate();
 
-            this.faucetAndWater.set('flowProportion', 0.4);
+            this.faucet.set('flowProportion', 0.4);
 
             // Animators
             this.sourceAnimator = new CarouselAnimator({

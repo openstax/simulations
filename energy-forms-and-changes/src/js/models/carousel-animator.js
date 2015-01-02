@@ -29,11 +29,15 @@ define(function (require) {
             elements: [],
             elementSpacing: Constants.EnergySystemsSimulation.OFFSET_BETWEEN_ELEMENTS,
             activeIndex: 0,
+            activeElement: null,
             activeElementPosition: null,
             transitionDuration: Constants.EnergySystemsSimulation.TRANSITION_DURATION
         },
         
         initialize: function(attributes, options) {
+            // Set the initial active index
+            this.activeElementChanged(this, this.get('activeElement'));
+
             // Position the elements
             _.each(this.get('elements'), function(element, index) {
                 // We can just scale by the difference in index to get the correct offset
@@ -42,11 +46,21 @@ define(function (require) {
                 element.setPosition(position);
             }, this);
 
-            this.on('change:activeIndex', this.startAnimation);
+            this.on('change:activeIndex',   this.startAnimation);
+            this.on('change:activeElement', this.activeElementChanged);
+        },
+
+        activeElementChanged: function(animator, activeElement) {
+            var index = _.indexOf(this.get('elements'), activeElement);
+            if (index >= 0)
+                this.set('activeIndex', index);
+            else
+                this.set('activeIndex', 0);
         },
 
         startAnimation: function(animator, activeIndex) {
             this.elapsedTransitionTime = 0;
+            this.easedPercent = 0;
             this.targetPositionTranslation = this.translationToTargetPosition();
             this.animating = true;
         },
@@ -62,8 +76,8 @@ define(function (require) {
 
             this.elapsedTransitionTime += deltaTime;
 
-            var percentElapsed = this.elapsedTimePercent(this.elapsedTransitionTime);
-            var easedPercent = this.easedPercent(percentElapsed);
+            var percentElapsed = this.calculateElapsedTimePercent(this.elapsedTransitionTime);
+            var easedPercent = this.calculateEasedPercent(percentElapsed);
             var deltaPercent = easedPercent - this.easedPercent;
             this.easedPercent = easedPercent;
             var translation = vectorPool.create()
@@ -76,14 +90,14 @@ define(function (require) {
                 this.stopAnimation();
         },
 
-        elapsedTimePercent: function(elapsedTime) {
+        calculateElapsedTimePercent: function(elapsedTime) {
             return Math.min(1, elapsedTime / this.get('transitionDuration'));
         },
 
         /**
          * From PhET's Carousel.computeSlowInSlowOut
          */
-        easedPercent: function(percent) {
+        calculateEasedPercent: function(percent) {
             if (percent < 0.5)
                 return 2 * percent * percent;
             else {
