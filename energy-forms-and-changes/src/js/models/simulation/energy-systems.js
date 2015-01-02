@@ -114,7 +114,7 @@ define(function (require, exports, module) {
             this.get('converter').activate();
             this.get('user').activate();
 
-            this.faucet.set('flowProportion', 0.4);
+            //this.faucet.set('flowProportion', 0.4);
 
             // Animators
             this.sourceAnimator = new CarouselAnimator({

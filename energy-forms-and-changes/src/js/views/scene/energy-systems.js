@@ -14,7 +14,7 @@ define(function(require) {
 
     var FaucetView = require('views/energy-source/faucet');
     var SunView    = require('views/energy-source/sun');
-    
+
     var Assets               = require('assets');
 
     // Constants
@@ -93,6 +93,7 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.backLayer.addChild(this.faucet.displayObject);
+            //this.backLayer.addChild(this.faucet.waterLayer);
 
             this.sun = new SunView({
                 model: this.simulation.sun,

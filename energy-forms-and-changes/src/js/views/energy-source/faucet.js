@@ -5,6 +5,8 @@ define(function(require) {
     var _ = require('underscore');
     var PIXI = require('pixi');
 
+    var Colors           = require('common/colors/colors');
+    var SliderView       = require('common/pixi/view/slider');
     var EnergySourceView = require('views/energy-source');
     var WaterDropView    = require('views/water-drop');
 
@@ -42,6 +44,46 @@ define(function(require) {
             faucet.x = -(faucet.width  / 2) + this.mvt.modelToViewDeltaX(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.x);
             faucet.y = -(faucet.height / 2) + this.mvt.modelToViewDeltaY(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.y);
             this.displayObject.addChild(faucet);
+
+            var handle = new PIXI.Graphics();
+            handle.beginFill(Colors.parseHex(Constants.WATER_FILL_COLOR), 1);
+            handle.lineStyle(1, 0x333333, 1);
+            handle.drawRect(-5, -10, 10, 20);
+            handle.endFill();
+
+            this.sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: 1
+                },
+                orientation: 'horizontal',
+                direction: 'ltr',
+
+                width: 82,
+                backgroundHeight: 7,
+                backgroundColor: '#fff',
+                backgroundAlpha: 0.2,
+                backgroundLineColor: '#000',
+                backgroundLineWidth: 1,
+                backgroundLineAlpha: 0.4,
+                
+                handle: handle
+            });
+            this.sliderView.displayObject.x = 5;
+            this.sliderView.displayObject.y = 8;
+            faucet.addChild(this.sliderView.displayObject);
+
+            this.listenTo(this.sliderView, 'slide', function(value, prev) {
+                this.model.set('flowProportion', value);
+            });
+
+            this.listenTo(this.model, 'change:active', function(active) {
+                if (!active)
+                    this.sliderView.val(0);
+            })
+
+            this.drawDebugOrigin();
         },
 
         initWater: function() {

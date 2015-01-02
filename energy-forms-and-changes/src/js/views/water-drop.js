@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    var Colors = require('common/colors/colors');
 
     var PositionableView = require('views/positionable');
 
@@ -24,11 +25,17 @@ define(function(require) {
             var width  = this.mvt.modelToViewDeltaX(this.model.get('width'));
             var height = -this.mvt.modelToViewDeltaY(this.model.get('height'));
             var graphics = new PIXI.Graphics();
-            graphics.beginFill(0x4466FF, 1); //Constants.WATER_FILL_COLOR
-            graphics.drawRect(-width / 2, -height / 2, width, height);
+            graphics.beginFill(Colors.parseHex(Constants.WATER_FILL_COLOR), 1); //Constants.WATER_FILL_COLOR
+            graphics.drawEllipse(0, 0, width / 2, height / 2);
             graphics.endFill();
             this.displayObject.addChild(graphics);
-        }
+        },
+
+        updatePosition: function(model, position) {
+            var globalPoint = this.mvt.modelToViewDelta(position);
+            this.displayObject.x = globalPoint.x;
+            this.displayObject.y = globalPoint.y;
+        },
 
     });
 

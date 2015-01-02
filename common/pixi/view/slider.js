@@ -50,6 +50,10 @@ define(function(require) {
                 width: 100,
                 backgroundHeight: 2,
                 backgroundColor: '#ededed',
+                backgroundAlpha: 1,
+                backgroundLineColor: '#000',
+                backgroundLineWidth: 0,
+                backgroundLineAlpha: 1,
                 handleSize: 10,
                 handleColor: '#21366B',
                 handleLineColor: '#000',
@@ -67,7 +71,8 @@ define(function(require) {
             this.orientation = options.orientation;
             this.direction = options.direction;
 
-            options.backgroundColor = Colors.parseHex(options.backgroundColor);
+            options.backgroundColor     = Colors.parseHex(options.backgroundColor);
+            options.backgroundLineColor = Colors.parseHex(options.backgroundLineColor);
             options.handleColor     = Colors.parseHex(options.handleColor);
             options.handleLineColor = Colors.parseHex(options.handleLineColor);
 
@@ -87,7 +92,8 @@ define(function(require) {
 
             if (options.background === undefined) {
                 options.background = new PIXI.Graphics();
-                options.background.beginFill(options.backgroundColor, 1);
+                options.background.beginFill(options.backgroundColor, options.backgroundAlpha);
+                options.background.lineStyle(options.backgroundLineWidth, options.backgroundLineColor, options.backgroundLineAlpha);
                 if (this.vertical())
                     options.background.drawRect(-options.backgroundHeight / 2, 0, options.backgroundHeight, options.width);
                 else

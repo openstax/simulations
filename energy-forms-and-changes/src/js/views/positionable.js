@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var _ = require('underscore');
+    var PIXI = require('pixi');
     
     var PixiView = require('common/pixi/view');
 
@@ -29,6 +30,14 @@ define(function(require) {
         },
 
         initGraphics: function() {},
+
+        drawDebugOrigin: function(color) {
+            var origin = new PIXI.Graphics();
+            origin.beginFill(color !== undefined ? color : 0x0000FF, 1);
+            origin.drawCircle(0, 0, 3);
+            origin.endFill();
+            this.displayObject.addChild(origin);
+        },
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
