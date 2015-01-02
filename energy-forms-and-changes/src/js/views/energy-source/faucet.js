@@ -5,12 +5,11 @@ define(function(require) {
     var _ = require('underscore');
     var PIXI = require('pixi');
 
-    var EnergySystemsElementView = require('views/energy-systems-element');
+    var EnergySourceView = require('views/energy-source');
 
     var Constants = require('constants');
 
-    // TODO: have it actually extend EnergySourceView
-    var FaucetView = EnergySystemsElementView.extend({
+    var FaucetView = EnergySourceView.extend({
 
         /**
          *
@@ -20,15 +19,19 @@ define(function(require) {
                 
             }, options);
 
-            EnergySystemsElementView.prototype.initialize.apply(this, [options]);
+            EnergySourceView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0x000000, 1);
-            graphics.drawRect(0, 0, 50, 50);
-            graphics.endFill();
-            this.displayObject.addChild(graphics);
+            this.waterLayer = new PIXI.DisplayObjectContainer();
+            this.displayObject.addChild(this.waterLayer);
+
+            var faucetFront = Assets.createSprite(Assets.Images.FAUCET_FRONT);
+            var faucetPipe  = Assets.createSprite(Assets.Images.FAUCET_PIPE);
+            var faucet = new PIXI.DisplayObjectContainer();
+            faucet.addChild(faucetFront);
+            faucet.addChild(faucetPipe);
+            this.displayObject.addChild(faucet);
         }
 
     });

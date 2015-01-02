@@ -59,6 +59,8 @@ define(function (require) {
         E_LIGHT_BLANK:                 'E_light_blank.png',
         E_MECH_BLANK:                  'E_mech_blank.png',
         E_THERM_BLANK_ORANGE:          'E_therm_blank_orange.png',
+        FAUCET_FRONT:                  'faucet_front.png',
+        FAUCET_PIPE:                   'faucet_pipe.png',
         FAUCET_ICON:                   'faucet_icon.png',
         FLAME:                         'flame.png',
         FLUORESCENT_BACK_2:            'fluorescent_back_2.png',
