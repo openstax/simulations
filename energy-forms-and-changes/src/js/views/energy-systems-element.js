@@ -29,6 +29,7 @@ define(function(require) {
 
             this.listenTo(this.model.energyChunks, 'add',    this.energyChunkAdded);
             this.listenTo(this.model.energyChunks, 'remove', this.energyChunkRemoved);
+            this.listenTo(this.model.energyChunks, 'reset',  this.energyChunksReset);
         },
 
         initGraphics: function() {
@@ -60,6 +61,13 @@ define(function(require) {
                     this.energyChunkViews.splice(i, 1);
                     break;
                 }
+            }
+        },
+
+        energyChunksReset: function() {
+            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
+                this.energyChunkViews[i].remove(this.energyChunkLayer);
+                this.energyChunkViews.splice(i, 1);
             }
         },
 

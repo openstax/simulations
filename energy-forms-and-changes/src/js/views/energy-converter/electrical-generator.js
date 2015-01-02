@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var EnergyConverterView = require('views/energy-converter');
+    var EnergyChunkView     = require('views/energy-chunk');
 
     var Assets = require('assets');
 
@@ -25,6 +26,12 @@ define(function(require) {
             EnergyConverterView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:wheelRotationalAngle', this.updateWheelRotation);
+
+            this.hiddenEnergyChunkViews = [];
+            
+            this.listenTo(this.model.hiddenEnergyChunks, 'add',    this.hiddenEnergyChunkAdded);
+            this.listenTo(this.model.hiddenEnergyChunks, 'remove', this.hiddenEnergyChunkRemoved);
+            this.listenTo(this.model.hiddenEnergyChunks, 'reset',  this.hiddenEnergyChunksReset);
         },
 
         initGraphics: function() {
@@ -88,6 +95,32 @@ define(function(require) {
         updateWheelRotation: function(model, rotation) {
             this.spokes.rotation  = -rotation;
             this.paddles.rotation = -rotation;
+        },
+
+        hiddenEnergyChunkAdded: function(chunk) {
+            var chunkView = new EnergyChunkView({
+                model: chunk,
+                mvt: this.mvt
+            });
+            this.hiddenEnergyChunkViews.push(chunkView);
+            this.hiddenEnergyChunkLayer.addChild(chunkView.displayObject);
+        },
+
+        hiddenEnergyChunkRemoved: function(chunk) {
+            for (var i = this.hiddenEnergyChunkViews.length - 1; i >= 0; i--) {
+                if (this.hiddenEnergyChunkViews[i].model === chunk) {
+                    this.hiddenEnergyChunkViews[i].remove(this.hiddenEnergyChunkLayer);
+                    this.hiddenEnergyChunkViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        hiddenEnergyChunksReset: function() {
+            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
+                this.energyChunkViews[i].remove(this.energyChunkLayer);
+                this.energyChunkViews.splice(i, 1);
+            }
         },
 
         showEnergyChunks: function() {
