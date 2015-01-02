@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var _ = require('underscore');
+    var PIXI = require('pixi');
 
     var PositionableView = require('views/positionable');
 
@@ -24,9 +25,18 @@ define(function(require) {
             PositionableView.prototype.initialize.apply(this, [options]);
         },
 
-        showEnergyChunks: function() {},
+        initGraphics: function() {
+            this.energyChunkLayer = new PIXI.DisplayObjectContainer();
+            this.energyChunkLayer.visible = false;
+        },
 
-        hideEnergyChunks: function() {}
+        showEnergyChunks: function() {
+            this.energyChunkLayer.visible = true;
+        },
+
+        hideEnergyChunks: function() {
+            this.energyChunkLayer.visible = false;
+        }
 
     });
 

@@ -15,7 +15,9 @@ define(function(require) {
     var FaucetView = require('views/energy-source/faucet');
     var SunView    = require('views/energy-source/sun');
 
-    var Assets               = require('assets');
+    var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
+
+    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');
@@ -68,10 +70,10 @@ define(function(require) {
         },
 
         initElements: function() {
-            // Air
             this.initAir();
 
             this.initSources();
+            this.initConverters();
         },
 
         initAir: function() {
@@ -100,6 +102,16 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.backLayer.addChild(this.sun.displayObject);
+        },
+
+        initConverters: function() {
+            this.electricalGenerator = new ElectricalGeneratorView({
+                model: this.simulation.electricalGenerator,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.electricalGenerator.backLayer);
+            this.backLayer.addChild(this.electricalGenerator.energyChunkLayer);
+            this.backLayer.addChild(this.electricalGenerator.frontLayer);
         },
 
         _update: function(time, deltaTime) {

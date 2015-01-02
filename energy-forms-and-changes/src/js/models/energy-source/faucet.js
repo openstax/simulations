@@ -91,7 +91,7 @@ define(function (require) {
                 if (this.get('flowProportion') > 0) {
                     var initialWidth = this.get('flowProportion') * Faucet.MAX_WATER_WIDTH * (1 + (Math.random() - 0.5) * 0.2);
                     var initialPosition = this._initialWaterDropPosition.set(Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN).add(0, 0.01);
-                    console.log(initialPosition);
+                    
                     this.waterDrops.add(new WaterDrop({
                         position: initialPosition,
                         width:    initialWidth,

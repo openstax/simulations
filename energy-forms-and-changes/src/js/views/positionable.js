@@ -31,12 +31,15 @@ define(function(require) {
 
         initGraphics: function() {},
 
-        drawDebugOrigin: function(color) {
+        drawDebugOrigin: function(parent, color) {
             var origin = new PIXI.Graphics();
             origin.beginFill(color !== undefined ? color : 0x0000FF, 1);
             origin.drawCircle(0, 0, 3);
             origin.endFill();
-            this.displayObject.addChild(origin);
+            if (parent === undefined)
+                this.displayObject.addChild(origin);
+            else
+                parent.addChild(origin);
         },
 
         updatePosition: function(model, position) {

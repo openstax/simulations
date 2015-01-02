@@ -609,6 +609,7 @@ define(function (require) {
     // CONNECTOR_IMAGE = new ModelElementImage( CONNECTOR, CONNECTOR_OFFSET ); // Offset empirically determined for optimal look.
     // WIRE_CURVED_IMAGE = new ModelElementImage( WIRE_BLACK_LEFT, new Vector2D( 0.0185, -0.015 ) ); // Offset empirically determined for optimal look.
     ElectricalGenerator.WHEEL_RADIUS = 0.03; //WHEEL_HUB_IMAGE.getWidth() / 2;
+    ElectricalGenerator.WIRE_OFFSET = new Vector2(0.0185, -0.015);
 
     // Offsets used to create the paths followed by the energy chunks.
     ElectricalGenerator.START_OF_WIRE_CURVE_OFFSET = new Vector2(ElectricalGenerator.WHEEL_CENTER_OFFSET).add(0.01,  -0.05);
