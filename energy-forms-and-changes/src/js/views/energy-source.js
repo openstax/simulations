@@ -22,11 +22,7 @@ define(function(require) {
             }, options);
 
             EnergySystemsElementView.prototype.initialize.apply(this, [options]);
-        },
-
-        showEnergyChunks: function() {},
-
-        hideEnergyChunks: function() {}
+        }
 
     });
 

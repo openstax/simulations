@@ -105,6 +105,17 @@ define(function(require) {
             }
 
             return this;
+        },
+
+        /** 
+         * Removes the displayObject from its parent and unbinds
+         *   event listeners for the model.
+         */
+        remove: function(parentDisplayObject) {
+            if (parentDisplayObject !== undefined)
+                parentDisplayObject.removeChild(this.displayObject);
+            if (this.model)
+                this.stopListening(this.model);
         }
 
     });

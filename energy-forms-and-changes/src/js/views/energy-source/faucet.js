@@ -26,13 +26,15 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            EnergySourceView.prototype.initGraphics.apply(this);
+
             this.initWater();
             this.initFaucet();
         },
 
         initFaucet: function() {
             EnergySourceView.prototype.initGraphics.apply(this);
-            
+
             var faucetFront = Assets.createSprite(Assets.Images.FAUCET_FRONT);
             var faucetPipe  = Assets.createSprite(Assets.Images.FAUCET_PIPE);
 

@@ -32,6 +32,7 @@ define(function(require) {
 
             this.backLayer = new PIXI.DisplayObjectContainer();
             this.frontLayer = new PIXI.DisplayObjectContainer();
+            this.hiddenEnergyChunkLayer = new PIXI.DisplayObjectContainer();
 
             var curvedWire = this.createSpriteWithOffset(Assets.Images.WIRE_BLACK_LEFT,         ElectricalGenerator.WIRE_OFFSET);
             var housing    = this.createSpriteWithOffset(Assets.Images.GENERATOR);
@@ -87,7 +88,17 @@ define(function(require) {
         updateWheelRotation: function(model, rotation) {
             this.spokes.rotation  = -rotation;
             this.paddles.rotation = -rotation;
-        }
+        },
+
+        showEnergyChunks: function() {
+            EnergyConverterView.prototype.showEnergyChunks.apply(this);
+            this.hiddenEnergyChunkLayer.visible = true;
+        },
+
+        hideEnergyChunks: function() {
+            EnergyConverterView.prototype.hideEnergyChunks.apply(this);
+            this.hiddenEnergyChunkLayer.visible = false;
+        },
 
     });
 

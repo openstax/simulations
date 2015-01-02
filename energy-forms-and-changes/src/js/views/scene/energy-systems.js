@@ -62,11 +62,13 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.airLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer  = new PIXI.DisplayObjectContainer();
+            this.airLayer   = new PIXI.DisplayObjectContainer();
+            this.frontLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.airLayer);
+            this.stage.addChild(this.frontLayer);
         },
 
         initElements: function() {
@@ -90,28 +92,40 @@ define(function(require) {
         },
 
         initSources: function() {
-            this.faucet = new FaucetView({
+            this.faucetView = new FaucetView({
                 model: this.simulation.faucet,
                 mvt: this.mvt
             });
-            this.backLayer.addChild(this.faucet.displayObject);
-            //this.backLayer.addChild(this.faucet.waterLayer);
+            this.backLayer.addChild(this.faucetView.displayObject);
+            this.frontLayer.addChild(this.faucetView.energyChunkLayer);
 
-            this.sun = new SunView({
+            this.sunView = new SunView({
                 model: this.simulation.sun,
                 mvt: this.mvt
             });
-            this.backLayer.addChild(this.sun.displayObject);
+            this.frontLayer.addChild(this.sunView.displayObject);
+            this.frontLayer.addChild(this.sunView.energyChunkLayer);
+
+            this.bindEnergyChunkVisibility(this.faucetView);
+            this.bindEnergyChunkVisibility(this.sunView);
+
+            this.views.push(this.faucetView);
+            this.views.push(this.sunView);
         },
 
         initConverters: function() {
-            this.electricalGenerator = new ElectricalGeneratorView({
+            this.electricalGeneratorView = new ElectricalGeneratorView({
                 model: this.simulation.electricalGenerator,
                 mvt: this.mvt
             });
-            this.backLayer.addChild(this.electricalGenerator.backLayer);
-            this.backLayer.addChild(this.electricalGenerator.energyChunkLayer);
-            this.backLayer.addChild(this.electricalGenerator.frontLayer);
+            this.backLayer.addChild(this.electricalGeneratorView.backLayer);
+            this.backLayer.addChild(this.electricalGeneratorView.hiddenEnergyChunkLayer);
+            this.backLayer.addChild(this.electricalGeneratorView.frontLayer);
+            this.backLayer.addChild(this.electricalGeneratorView.energyChunkLayer);
+
+            this.views.push(this.electricalGeneratorView);
+
+            this.bindEnergyChunkVisibility(this.electricalGeneratorView);
         },
 
         _update: function(time, deltaTime) {
@@ -126,6 +140,11 @@ define(function(require) {
 
         hideEnergyChunks: function() {
             this.trigger('hide-energy-chunks');
+        },
+
+        bindEnergyChunkVisibility: function(view) {
+            view.listenTo(this, 'show-energy-chunks', view.showEnergyChunks);
+            view.listenTo(this, 'hide-energy-chunks', view.hideEnergyChunks);
         }
 
     });

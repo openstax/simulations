@@ -5,12 +5,11 @@ define(function(require) {
     var _ = require('underscore');
     var PIXI = require('pixi');
 
-    var EnergySystemsElementView = require('views/energy-systems-element');
+    var EnergySourceView = require('views/energy-source');
 
     var Constants = require('constants');
 
-    // TODO: have it actually extend EnergySourceView
-    var SunView = EnergySystemsElementView.extend({
+    var SunView = EnergySourceView.extend({
 
         /**
          *
@@ -20,10 +19,12 @@ define(function(require) {
                 
             }, options);
 
-            EnergySystemsElementView.prototype.initialize.apply(this, [options]);
+            EnergySourceView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {
+            EnergySourceView.prototype.initGraphics.apply(this);
+            
             var graphics = new PIXI.Graphics();
             graphics.beginFill(0xFFFF00, 1);
             graphics.drawRect(0, 0, 50, 50);
