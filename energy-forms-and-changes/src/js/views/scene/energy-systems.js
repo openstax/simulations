@@ -119,9 +119,10 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.backLayer.addChild(this.electricalGeneratorView.backLayer);
-            this.backLayer.addChild(this.electricalGeneratorView.hiddenEnergyChunkLayer);
+            this.backLayer.addChild(this.electricalGeneratorView.electricalEnergyChunkLayer);
             this.backLayer.addChild(this.electricalGeneratorView.frontLayer);
             this.backLayer.addChild(this.electricalGeneratorView.energyChunkLayer);
+            this.frontLayer.addChild(this.electricalGeneratorView.hiddenEnergyChunkLayer);
 
             this.views.push(this.electricalGeneratorView);
 

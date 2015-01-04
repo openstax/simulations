@@ -19,62 +19,75 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            options = _.extend({
-                
-            }, options);
+            this.energyChunkLayers = [];
 
             PositionableView.prototype.initialize.apply(this, [options]);
-
-            this.energyChunkViews = [];
-
-            this.listenTo(this.model.energyChunks, 'add',    this.energyChunkAdded);
-            this.listenTo(this.model.energyChunks, 'remove', this.energyChunkRemoved);
-            this.listenTo(this.model.energyChunks, 'reset',  this.energyChunksReset);
         },
 
         initGraphics: function() {
             this.energyChunkLayer = new PIXI.DisplayObjectContainer();
             this.energyChunkLayer.visible = false;
+
+            this.createEnergyChunkLayer('energyChunkLayer', this.model.energyChunks);
+        },
+
+        createEnergyChunkLayer: function(layerName, energyChunkCollection) {
+            var energyChunkLayer = new PIXI.DisplayObjectContainer();
+            energyChunkLayer.visible = false;
+            energyChunkLayer.energyChunkViews = [];
+
+            var energyChunkViews = energyChunkLayer.energyChunkViews;
+
+            var energyChunkAdded = function(chunk) {
+                var chunkView = new EnergyChunkView({
+                    model: chunk,
+                    mvt: this.mvt
+                });
+                energyChunkViews.push(chunkView);
+                energyChunkLayer.addChild(chunkView.displayObject);
+            };
+
+            var energyChunkRemoved = function(chunk) {
+                for (var i = energyChunkViews.length - 1; i >= 0; i--) {
+                    if (energyChunkViews[i].model === chunk) {
+                        energyChunkViews[i].remove(energyChunkLayer);
+                        energyChunkViews.splice(i, 1);
+                        break;
+                    }
+                }
+            };
+
+            var energyChunksReset = function() {
+                for (var i = energyChunkViews.length - 1; i >= 0; i--) {
+                    energyChunkViews[i].remove(energyChunkLayer);
+                    energyChunkViews.splice(i, 1);
+                }
+            };
+
+            this.listenTo(energyChunkCollection, 'add',    energyChunkAdded);
+            this.listenTo(energyChunkCollection, 'remove', energyChunkRemoved);
+            this.listenTo(energyChunkCollection, 'reset',  energyChunksReset);
+
+            this.energyChunkLayers.push(energyChunkLayer);
+            this[layerName] = energyChunkLayer;
         },
 
         showEnergyChunks: function() {
-            this.energyChunkLayer.visible = true;
+            for (var i = 0; i < this.energyChunkLayers.length; i++)
+                this.energyChunkLayers[i].visible = true;
         },
 
         hideEnergyChunks: function() {
-            this.energyChunkLayer.visible = false;
-        },
-
-        energyChunkAdded: function(chunk) {
-            var chunkView = new EnergyChunkView({
-                model: chunk,
-                mvt: this.mvt
-            });
-            this.energyChunkViews.push(chunkView);
-            this.energyChunkLayer.addChild(chunkView.displayObject);
-        },
-
-        energyChunkRemoved: function(chunk) {
-            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
-                if (this.energyChunkViews[i].model === chunk) {
-                    this.energyChunkViews[i].remove(this.energyChunkLayer);
-                    this.energyChunkViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        energyChunksReset: function() {
-            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
-                this.energyChunkViews[i].remove(this.energyChunkLayer);
-                this.energyChunkViews.splice(i, 1);
-            }
+            for (var i = 0; i < this.energyChunkLayers.length; i++)
+                this.energyChunkLayers[i].visible = false;
         },
 
         update: function(time, deltaTime) {
-            for (var j = 0; j < this.energyChunkViews.length; j++)
-                this.energyChunkViews[j].update(time, deltaTime);
-        },
+            for (var i = 0; i < this.energyChunkLayers.length; i++) {
+                for (var j = 0; j < this.energyChunkLayers[i].energyChunkViews.length; j++)
+                    this.energyChunkLayers[i].energyChunkViews[j].update(time, deltaTime);
+            }
+        }
 
     });
 

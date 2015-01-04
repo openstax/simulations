@@ -17,10 +17,6 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            options = _.extend({
-                
-            }, options);
-
             EnergySystemsElementView.prototype.initialize.apply(this, [options]);
         }
 

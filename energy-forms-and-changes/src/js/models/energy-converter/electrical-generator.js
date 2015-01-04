@@ -115,7 +115,10 @@ define(function (require) {
                                 Constants.ENERGY_CHUNK_VELOCITY
                             ));
 
-                            var hiddenChunk = new EnergyChunk(EnergyTypes.HIDDEN, chunk.get('position'));
+                            var hiddenChunk = new EnergyChunk({
+                                energyType: EnergyTypes.HIDDEN,
+                                position: chunk.get('position')
+                            });
                             hiddenChunk.set('zPosition', -Constants.EnergyChunkView.Z_DISTANCE_WHERE_FULLY_FADED / 2);
                             this.hiddenEnergyChunks.add(hiddenChunk);
                             this.energyChunkMovers.push(new EnergyChunkPathMover(
