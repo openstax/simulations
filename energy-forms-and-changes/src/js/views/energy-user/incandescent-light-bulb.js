@@ -56,6 +56,7 @@ define(function(require) {
             this.litBulb = litBulb; // We need to remember this one
 
             // Fudging
+            straightWire.x += 4;
 
             this.backLayer.addChild(straightWire);
             this.backLayer.addChild(curvedWire);

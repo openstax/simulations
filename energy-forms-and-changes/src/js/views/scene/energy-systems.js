@@ -130,8 +130,8 @@ define(function(require) {
 
             this.backLayer.addChild(electricalGeneratorView.backLayer);
             this.backLayer.addChild(electricalGeneratorView.electricalEnergyChunkLayer);
-            this.backLayer.addChild(electricalGeneratorView.frontLayer);
-            this.backLayer.addChild(electricalGeneratorView.energyChunkLayer);
+            this.frontLayer.addChild(electricalGeneratorView.frontLayer);
+            this.frontLayer.addChild(electricalGeneratorView.energyChunkLayer);
             this.frontLayer.addChild(electricalGeneratorView.hiddenEnergyChunkLayer);
 
             // Bind visibility
