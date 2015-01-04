@@ -48,9 +48,9 @@ define(function (require) {
 
         positionChanged: function(model, position) {
             var translation = this._translation.set(position).sub(model.previous('position'));
-            this.energyChunks.each(function(energyChunk) {
-                energyChunk.translate(translation);
-            });
+            for (var i = this.energyChunks.length - 1; i >= 0; i--) {
+                this.energyChunks[i].translate(translation);
+            }
         }
 
     });

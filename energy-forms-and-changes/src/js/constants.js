@@ -569,7 +569,7 @@ define(function (require) {
 
     var Faucet = {};
 
-    Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN = new Vector2(0.065, 0.08);
+    Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN = new Vector2(0.060, 0.078); // was 0.065, 0.08
     Faucet.FALLING_ENERGY_CHUNK_VELOCITY = 0.09; // In meters/second.
     Faucet.MAX_WATER_WIDTH = 0.015; // In meters.
     Faucet.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE = range({ min: 0.05, max: 0.06 });

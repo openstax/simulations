@@ -44,6 +44,12 @@ define(function(require) {
             var paddles    = this.createSpriteWithOffset(Assets.Images.GENERATOR_WHEEL_PADDLES, ElectricalGenerator.WHEEL_CENTER_OFFSET, 0.5);
             var hub        = this.createSpriteWithOffset(Assets.Images.GENERATOR_WHEEL_HUB_2,   ElectricalGenerator.WHEEL_CENTER_OFFSET, 0.5);
 
+            // Need to fudge the position a little...
+            curvedWire.x += 5;
+            curvedWire.y -= 3;
+            connector.x += 12;
+            connector.y -= 3;
+
             this.backLayer.addChild(curvedWire);
             this.frontLayer.addChild(housing);
             this.frontLayer.addChild(connector);
