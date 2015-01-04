@@ -10,6 +10,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     /**
      * A view that represents an element model
      */
@@ -70,6 +72,31 @@ define(function(require) {
 
             this.energyChunkLayers.push(energyChunkLayer);
             this[layerName] = energyChunkLayer;
+        },
+
+        createSpriteWithOffset: function(image, offset, anchorX, anchorY) {
+            var sprite = Assets.createSprite(image);
+
+            if (anchorX === undefined)
+                anchorX = 0;
+            if (anchorY === undefined)
+                anchorY = anchorX;
+
+            sprite.anchor.x = anchorX;
+            sprite.anchor.y = anchorY;
+
+            var centerXOffset = (anchorX - 0.5) * sprite.width;
+            var centerYOffset = (anchorY - 0.5) * sprite.height;
+
+            if (offset) {
+                sprite.x = centerXOffset + this.mvt.modelToViewDeltaX(offset.x);
+                sprite.y = centerYOffset + this.mvt.modelToViewDeltaY(offset.y);    
+            }
+            else {
+                sprite.x = centerXOffset;
+                sprite.y = centerYOffset;
+            }
+            return sprite;
         },
 
         showEnergyChunks: function() {

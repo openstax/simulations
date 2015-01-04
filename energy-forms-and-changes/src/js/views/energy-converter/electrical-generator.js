@@ -45,10 +45,7 @@ define(function(require) {
             var hub        = this.createSpriteWithOffset(Assets.Images.GENERATOR_WHEEL_HUB_2,   ElectricalGenerator.WHEEL_CENTER_OFFSET, 0.5);
 
             // Need to fudge the position a little...
-            curvedWire.x += 5;
-            curvedWire.y -= 3;
-            connector.x += 12;
-            connector.y -= 3;
+            curvedWire.x += 2;
 
             this.backLayer.addChild(curvedWire);
             this.frontLayer.addChild(housing);
@@ -61,31 +58,6 @@ define(function(require) {
             this.paddles = paddles;
             
             this.drawDebugOrigin(this.frontLayer);
-        },
-
-        createSpriteWithOffset: function(image, offset, anchorX, anchorY) {
-            var sprite = Assets.createSprite(image);
-
-            if (anchorX === undefined)
-                anchorX = 0;
-            if (anchorY === undefined)
-                anchorY = anchorX;
-
-            sprite.anchor.x = anchorX;
-            sprite.anchor.y = anchorY;
-
-            var centerXOffset = (anchorX - 0.5) * sprite.width;
-            var centerYOffset = (anchorY - 0.5) * sprite.height;
-
-            if (offset) {
-                sprite.x = centerXOffset + this.mvt.modelToViewDeltaX(offset.x);
-                sprite.y = centerYOffset + this.mvt.modelToViewDeltaY(offset.y);    
-            }
-            else {
-                sprite.x = centerXOffset;
-                sprite.y = centerYOffset;
-            }
-            return sprite;
         },
 
         updatePosition: function(model, position) {

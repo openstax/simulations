@@ -17,6 +17,8 @@ define(function(require) {
 
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
 
+    var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
+
     var Assets = require('assets');
 
     // Constants
@@ -53,7 +55,7 @@ define(function(require) {
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                2000 // Scale
+                EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR
             );
 
             this.initLayers();
@@ -76,6 +78,7 @@ define(function(require) {
 
             this.initSources();
             this.initConverters();
+            this.initUsers();
         },
 
         initAir: function() {
@@ -92,6 +95,7 @@ define(function(require) {
         },
 
         initSources: function() {
+            // Faucet
             this.faucetView = new FaucetView({
                 model: this.simulation.faucet,
                 mvt: this.mvt
@@ -99,6 +103,7 @@ define(function(require) {
             this.backLayer.addChild(this.faucetView.displayObject);
             this.frontLayer.addChild(this.faucetView.energyChunkLayer);
 
+            // Sun
             this.sunView = new SunView({
                 model: this.simulation.sun,
                 mvt: this.mvt
@@ -106,27 +111,53 @@ define(function(require) {
             this.frontLayer.addChild(this.sunView.displayObject);
             this.frontLayer.addChild(this.sunView.energyChunkLayer);
 
+            // Bind visibility
             this.bindEnergyChunkVisibility(this.faucetView);
             this.bindEnergyChunkVisibility(this.sunView);
 
+            // Add to list for updating
             this.views.push(this.faucetView);
             this.views.push(this.sunView);
         },
 
         initConverters: function() {
-            this.electricalGeneratorView = new ElectricalGeneratorView({
+            // Electrical generator
+            var electricalGeneratorView = new ElectricalGeneratorView({
                 model: this.simulation.electricalGenerator,
                 mvt: this.mvt
             });
-            this.backLayer.addChild(this.electricalGeneratorView.backLayer);
-            this.backLayer.addChild(this.electricalGeneratorView.electricalEnergyChunkLayer);
-            this.backLayer.addChild(this.electricalGeneratorView.frontLayer);
-            this.backLayer.addChild(this.electricalGeneratorView.energyChunkLayer);
-            this.frontLayer.addChild(this.electricalGeneratorView.hiddenEnergyChunkLayer);
+            this.electricalGeneratorView = electricalGeneratorView;
 
-            this.views.push(this.electricalGeneratorView);
+            this.backLayer.addChild(electricalGeneratorView.backLayer);
+            this.backLayer.addChild(electricalGeneratorView.electricalEnergyChunkLayer);
+            this.backLayer.addChild(electricalGeneratorView.frontLayer);
+            this.backLayer.addChild(electricalGeneratorView.energyChunkLayer);
+            this.frontLayer.addChild(electricalGeneratorView.hiddenEnergyChunkLayer);
 
-            this.bindEnergyChunkVisibility(this.electricalGeneratorView);
+            // Bind visibility
+            this.views.push(electricalGeneratorView);
+
+            // Add to list for updating
+            this.bindEnergyChunkVisibility(electricalGeneratorView);
+        },
+
+        initUsers: function() {
+            // Incandescent bulb
+            var incandescentLightBulbView = new IncandescentLightBulbView({
+                model: this.simulation.incandescentLightBulb,
+                mvt: this.mvt
+            });
+            this.incandescentLightBulbView = incandescentLightBulbView;
+
+            this.backLayer.addChild(incandescentLightBulbView.backLayer);
+            this.backLayer.addChild(incandescentLightBulbView.energyChunkLayer);
+            this.backLayer.addChild(incandescentLightBulbView.frontLayer);
+
+            // Bind visibility
+            this.views.push(incandescentLightBulbView);
+
+            // Add to list for updating
+            this.bindEnergyChunkVisibility(incandescentLightBulbView);
         },
 
         _update: function(time, deltaTime) {
