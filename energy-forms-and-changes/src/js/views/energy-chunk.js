@@ -84,7 +84,7 @@ define(function(require) {
         },
 
         updateEnergyType: function(model, energyType) {
-            this.displayObject.texture = Textures[energyType];
+            this.symbol.texture = Textures[energyType];
         },
 
         updatePosition: function(model, position) {
