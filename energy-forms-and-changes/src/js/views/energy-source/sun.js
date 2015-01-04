@@ -7,7 +7,7 @@ define(function(require) {
 
     var EnergySourceView = require('views/energy-source');
 
-    var Constants = require('constants');
+    // var Constants = require('constants');
 
     var SunView = EnergySourceView.extend({
 

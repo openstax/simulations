@@ -6,7 +6,6 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var EnergyConverterView = require('views/energy-converter');
-    var EnergyChunkView     = require('views/energy-chunk');
 
     var Assets = require('assets');
 
@@ -57,7 +56,7 @@ define(function(require) {
             this.spokes = spokes;
             this.paddles = paddles;
             
-            this.drawDebugOrigin(this.frontLayer);
+            //this.drawDebugOrigin(this.frontLayer);
         },
 
         updatePosition: function(model, position) {

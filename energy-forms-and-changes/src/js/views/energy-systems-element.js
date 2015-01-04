@@ -2,13 +2,10 @@ define(function(require) {
 
     'use strict';
 
-    var _ = require('underscore');
     var PIXI = require('pixi');
 
     var PositionableView = require('views/positionable');
     var EnergyChunkView  = require('views/energy-chunk');
-
-    var Constants = require('constants');
 
     var Assets = require('assets');
 

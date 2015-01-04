@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
-
     var EnergySystemsElement   = require('models/energy-systems-element');
     var EnergyChunkCollection = require('models/energy-chunk-collection');
 

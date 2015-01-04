@@ -6,9 +6,15 @@ define(function(require) {
 
     var EnergyUserView = EnergySystemsElementView.extend({
 
-        initialize: function(options) {
-            EnergySystemsElementView.prototype.initialize.apply(this, [options]);
-        }
+        showEnergyChunks: function() {
+            EnergySystemsElementView.prototype.showEnergyChunks.apply(this);
+            this.model.set('energyChunksVisible', true);
+        },
+
+        hideEnergyChunks: function() {
+            EnergySystemsElementView.prototype.hideEnergyChunks.apply(this);
+            this.model.set('energyChunksVisible', false);
+        },
 
     });
 

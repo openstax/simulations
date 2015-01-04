@@ -2,49 +2,13 @@ define(function(require) {
 
     'use strict';
 
-    var _ = require('underscore');
-    var PIXI = require('pixi');
     var Vector2 = require('common/math/vector2');
 
-    var Colors         = require('common/colors/colors');
-    var EnergyUserView = require('views/energy-user');
+    var LightBulbView = require('views/energy-user/light-bulb');
 
-    var Constants = require('constants');
+    var Assets = require('assets');
 
-    var IncandescentLightBulbView = EnergyUserView.extend({
-
-        /**
-         *
-         */
-        initialize: function(options) {
-            EnergyUserView.prototype.initialize.apply(this, [options]);
-
-            this.listenTo(this.model, 'change:litProportion', this.updateLitProportion);
-        },
-
-        initGraphics: function() {
-            EnergyUserView.prototype.initGraphics.apply(this);
-
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.frontLayer = new PIXI.DisplayObjectContainer();
-
-            this.initLightRays();
-            this.initImages();
-
-            this.drawDebugOrigin();
-
-            // Make sure it's lit the right amount to start
-            this.updateLitProportion(this.model, this.model.get('litProportion'));
-        },
-
-        initLightRays: function() {
-            var rays = new PIXI.DisplayObjectContainer();
-            this.lightRays = rays;
-
-
-
-            this.backLayer.addChild(rays);
-        },
+    var IncandescentLightBulbView = LightBulbView.extend({
 
         initImages: function() {
             var straightWire = this.createSpriteWithOffset(Assets.Images.WIRE_BLACK_62,      new Vector2(-0.036, -0.04));
@@ -68,17 +32,6 @@ define(function(require) {
             this.frontLayer.addChild(unlitBulb);
             this.frontLayer.addChild(litBulb);
         },
-
-        updateLitProportion: function(model, litProportion) {
-            this.litBulb.alpha = litProportion;
-            this.lightRays.alpha = litProportion;
-        },
-
-        updatePosition: function(model, position) {
-            var viewPoint = this.mvt.modelToView(position);
-            this.backLayer.x = this.frontLayer.x = viewPoint.x;
-            this.backLayer.y = this.frontLayer.y = viewPoint.y;
-        }
 
     });
 

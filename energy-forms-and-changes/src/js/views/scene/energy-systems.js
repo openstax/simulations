@@ -2,11 +2,11 @@ define(function(require) {
 
     'use strict';
 
-    //var $        = require('jquery');
-    var _         = require('underscore');
+    // var $        = require('jquery');
+    // var _         = require('underscore');
     var PIXI      = require('pixi');
     var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
+    // var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform   = require('common/math/model-view-transform');
     var SceneView            = require('views/scene');
@@ -18,8 +18,6 @@ define(function(require) {
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
 
     var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
-
-    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');

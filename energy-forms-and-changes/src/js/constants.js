@@ -131,19 +131,6 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                       ENERGY SYSTEMS SIMULATION                     **
-     **                                                                     **
-     *************************************************************************/
-
-    var EnergySystemsSimulation = {};
-
-
-
-    Constants.EnergySystemsSimulation = EnergySystemsSimulation;
-
-
-    /*************************************************************************
-     **                                                                     **
      **                               ELEMENT                               **
      **                                                                     **
      *************************************************************************/
@@ -655,6 +642,21 @@ define(function (require) {
     LightBulb.FILAMENT_WIDTH = 0.03;
 
     Constants.LightBulb = LightBulb;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             LIGHT RAY VIEW                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightRayView = {};
+
+    LightRayView.STROKE_THICKNESS = 2;
+    LightRayView.SEARCH_ITERATIONS = 10;
+    LightRayView.FADE_COEFFICIENT_IN_AIR = 0.005;
+
+    Constants.LightRayView = LightRayView;
 
 
     return Constants;

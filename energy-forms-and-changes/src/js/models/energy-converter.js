@@ -25,8 +25,8 @@ define(function (require) {
 
         extractOutgoingEnergyChunks: function() {
             var models = this.outgoingEnergyChunks.slice(0, this.outgoingEnergyChunks.length);
-            this.outgoingEnergyChunks.remove(energyChunks);
-            this.energyChunks.remove(energyChunks);
+            this.outgoingEnergyChunks.remove(models);
+            this.energyChunks.remove(models);
             return models;
         },
 

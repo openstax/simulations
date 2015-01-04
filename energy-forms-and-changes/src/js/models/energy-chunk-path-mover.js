@@ -6,11 +6,6 @@ define(function (require) {
     var Vector2   = require('common/math/vector2');
 
     /**
-     * Constants
-     */
-    var Constants = require('constants');
-
-    /**
      * 
      */
     var EnergyChunkPathMover = function(energyChunk, path, velocity) {

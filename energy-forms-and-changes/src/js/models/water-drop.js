@@ -5,7 +5,6 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
 
     var Positionable = require('models/positionable');
-    var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     var Constants = require('constants');
 

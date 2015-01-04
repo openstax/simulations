@@ -185,6 +185,23 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.intersects(boxBottom)).to.be.true;
 	});
 
+	it('can be used to calculate lines intersecting with a rectangle', function(){
+		var line = new PiecewiseCurve();
+		line.moveTo(-2, -2);
+		line.lineTo( 6,  6);
+		line.close(); // Note: it must be closed in order for this to work
+
+		var rectA = new Rectangle( 0,  0, 4, 4);
+		var rectB = new Rectangle(-6,  0, 4, 4); // Should miss it
+		var rectC = new Rectangle( 0, -5, 4, 4); // Should miss it
+		var rectD = new Rectangle( 0, -2, 4, 4);
+
+		chai.expect(line.intersects(rectA)).to.be.true;
+		chai.expect(line.intersects(rectB)).to.not.be.true;
+		chai.expect(line.intersects(rectC)).to.not.be.true;
+		chai.expect(line.intersects(rectD)).to.be.true;
+	});
+
 });
 
 describe('ModelViewTransform', function(){

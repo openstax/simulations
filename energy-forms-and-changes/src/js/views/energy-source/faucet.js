@@ -12,6 +12,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     var FaucetView = EnergySourceView.extend({
 
         /**
@@ -98,9 +100,9 @@ define(function(require) {
             this.listenTo(this.model, 'change:active', function(model, active) {
                 if (!active)
                     this.sliderView.val(0);
-            })
+            });
 
-            this.drawDebugOrigin();
+            // this.drawDebugOrigin();
         },
 
         initWater: function() {

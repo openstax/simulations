@@ -2,13 +2,13 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
+    // var Vector2 = require('common/math/vector2');
 
-    var EnergyChunk  = require('models/energy-chunk');
+    // var EnergyChunk  = require('models/energy-chunk');
     var EnergySource = require('models/energy-source');
-    var EnergyChunkCollection = require('models/energy-chunk-collection');
+    // var EnergyChunkCollection = require('models/energy-chunk-collection');
 
     var Constants = require('constants');
     var EnergyTypes = Constants.EnergyTypes;

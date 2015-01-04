@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    
     var Vector2 = require('common/math/vector2');
 
     var EnergyUser            = require('models/energy-user');
@@ -157,7 +159,7 @@ define(function (require) {
             else {
                 if (this.active() && incomingEnergy.type === EnergyTypes.ELECTRICAL) {
                     var litProportion = incomingEnergy.amount / (LightBulb.ENERGY_TO_FULLY_LIGHT * deltaTime);
-                    this.set('litProportion', Math.min(1, Math.max(0, this.wheelRotationalVelocity)));
+                    this.set('litProportion', Math.min(1, Math.max(0, litProportion)));
                 }
                 else {
                     this.set('litProportion', 0);

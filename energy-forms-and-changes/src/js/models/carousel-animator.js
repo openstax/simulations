@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var _        = require('underscore');
     var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
@@ -113,7 +114,7 @@ define(function (require) {
         },
 
         translateAllElements: function(translation) {
-            var elements = this.get('elements')
+            var elements = this.get('elements');
             for (var i = 0; i < elements.length; i++)
                 elements[i].translate(translation);
         },

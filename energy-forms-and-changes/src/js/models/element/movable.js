@@ -2,19 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
-    var Pool    = require('object-pool');
-
     var IntroElement = require('models/intro-element');
-
-    var vectorPool = Pool({
-        init: function() {
-            return new Vector2();
-        },
-        enable: function(vector) {
-            vector.set(0, 0);
-        }
-    });
 
     /**
      * 

@@ -4,12 +4,8 @@ define(function (require, exports, module) {
 
     // Libraries
     var _ = require('underscore');
-    var Backbone = require('backbone');
 
     // Common dependencies
-    var Vector2                 = require('common/math/vector2');
-    var Rectangle               = require('common/math/rectangle');
-    var PiecewiseCurve          = require('common/math/piecewise-curve');
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
     
     // Project dependiencies

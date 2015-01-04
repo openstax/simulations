@@ -2,11 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var EnergySystemsElementView = require('views/energy-systems-element');
-
-    var Constants = require('constants');
 
     /**
      * A view that represents an element model

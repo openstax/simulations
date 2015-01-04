@@ -2,21 +2,12 @@ define(function(require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var EnergySystemsElementView = require('views/energy-systems-element');
 
     /**
      * A view that represents an element model
      */
     var EnergySourceView = EnergySystemsElementView.extend({
-
-        /**
-         *
-         */
-        initialize: function(options) {
-            EnergySystemsElementView.prototype.initialize.apply(this, [options]);
-        }
 
     });
 
