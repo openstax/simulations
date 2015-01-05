@@ -202,6 +202,32 @@ describe('PiecewiseCurve', function(){
 		chai.expect(line.intersects(rectD)).to.be.true;
 	});
 
+	it('can be used to calculate the bounding box of a line segment', function(){
+		var line = new PiecewiseCurve();
+		line.moveTo(0, 0);
+		line.lineTo(4, 4);
+		line.close(); // Note: it must be closed in order for this to work
+
+		var bounds = line.getBounds();
+
+		chai.expect(bounds.x).to.almost.equal(0);
+		chai.expect(bounds.y).to.almost.equal(0);
+		chai.expect(bounds.w).to.almost.equal(4);
+		chai.expect(bounds.h).to.almost.equal(4);
+
+		line = new PiecewiseCurve();
+		line.moveTo( 0,  0);
+		line.lineTo(-4, -4);
+		line.close(); // Note: it must be closed in order for this to work
+
+		bounds = line.getBounds();
+
+		chai.expect(bounds.x).to.almost.equal(-4);
+		chai.expect(bounds.y).to.almost.equal(-4);
+		chai.expect(bounds.w).to.almost.equal( 4);
+		chai.expect(bounds.h).to.almost.equal( 4);
+	});
+
 });
 
 describe('ModelViewTransform', function(){

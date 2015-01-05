@@ -652,7 +652,7 @@ define(function (require) {
 
     var LightRayView = {};
 
-    LightRayView.STROKE_THICKNESS = 2;
+    LightRayView.LINE_WIDTH = 2;
     LightRayView.SEARCH_ITERATIONS = 10;
     LightRayView.FADE_COEFFICIENT_IN_AIR = 0.005;
 
