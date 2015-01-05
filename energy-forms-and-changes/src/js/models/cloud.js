@@ -5,7 +5,8 @@ define(function (require) {
     var _ = require('underscore');
     var Backbone = require('backbone');
     
-    var Vector2  = require('common/math/vector2');
+    var Vector2        = require('common/math/vector2');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var Constants = require('constants');
 
@@ -17,8 +18,8 @@ define(function (require) {
         defaults: {
             existenceStrength: 1,
             relativePosition: null,
-            width:  Cloud.CLOUD_WIDTH,
-            height: Cloud.CLOUD_HEIGHT
+            width:  Constants.Cloud.CLOUD_WIDTH,
+            height: Constants.Cloud.CLOUD_HEIGHT
         },
 
         initialize: function(attributes, options) {

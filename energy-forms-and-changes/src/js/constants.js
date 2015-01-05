@@ -689,10 +689,18 @@ define(function (require) {
     //   used to make emission look random yet still have a fairly steady rate
     //   within each sector.  One sector is intended to point at the solar panel.
     Sun.NUM_EMISSION_SECTORS = 10;
-    Sun.EMISSION_SECTOR_SPAN = 2 * Math.PI / NUM_EMISSION_SECTORS;
+    Sun.EMISSION_SECTOR_SPAN = 2 * Math.PI / Sun.NUM_EMISSION_SECTORS;
     Sun.EMISSION_SECTOR_OFFSET = Sun.EMISSION_SECTOR_SPAN * 0.71; // Used to tweak sector positions to make sure solar panel gets consistent flow of E's.
 
     Constants.Sun = Sun;
+
+
+    var Cloud = {};
+
+    Cloud.CLOUD_WIDTH = 0.035; // In meters, though obviously not to scale.  Empirically determined.
+    Cloud.CLOUD_HEIGHT = 0.0191 // In meters, the height that, given the width above, will maintain the right aspect ratio for the image
+
+    Constants.Cloud = Cloud;
 
 
     return Constants;

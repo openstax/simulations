@@ -17,9 +17,11 @@ define(function (require, exports, module) {
     var Biker  = require('models/energy-source/biker');
 
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
+    var SolarPanel          = require('models/energy-converter/solar-panel');
+
     var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
     var FluorescentLightBulb  = require('models/energy-user/fluorescent-light-bulb');
-    var CarouselAnimator = require('models/carousel-animator');
+    var CarouselAnimator      = require('models/carousel-animator');
 
     var EnergySystemsElement = require('models/energy-systems-element');
     
@@ -68,6 +70,7 @@ define(function (require, exports, module) {
 
             // Converters
             this.electricalGenerator = new ElectricalGenerator();
+            this.solarPanel          = new SolarPanel();
 
             // Users
             this.incandescentLightBulb = new IncandescentLightBulb();
@@ -83,7 +86,7 @@ define(function (require, exports, module) {
 
             this.converters = [
                 this.electricalGenerator,
-                new EnergySystemsElement()
+                this.solarPanel
             ];
 
             this.users = [
@@ -99,6 +102,9 @@ define(function (require, exports, module) {
                 this.converters,
                 this.users
             ]);
+
+            // The sun needs a reference to the solar panel
+            this.sun.set('solarPanel', this.solarPanel);
 
             // Temporary until all the models are filled in
             _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){return{type: 2, amount: 133, direction: -1.5};}; if (model.injectEnergyChunks === undefined) model.injectEnergyChunks = function(){}; });

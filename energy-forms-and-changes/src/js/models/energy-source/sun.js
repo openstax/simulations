@@ -4,6 +4,7 @@ define(function (require) {
 
     var _        = require('underscore');
     var Backbone = require('backbone');
+    var Vector2  = require('common/math/vector2');
 
     var EnergyChunk  = require('models/energy-chunk');
     var EnergySource = require('models/energy-source');
@@ -51,11 +52,14 @@ define(function (require) {
             this._reflectionAngle = new Vector2();
             this._velocity = new Vector2();
             this._initialPosition = new Vector2();
+            this._initialVelocity = new Vector2();
             this._radialLine = new Vector2();
         },
 
         addClouds: function() {
-
+            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.020, 0.1050) }));
+            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.017, 0.0875) }));
+            this.clouds.add(new Cloud({ relativePosition: new Vector2(-0.010, 0.0800) }));
         },
 
         preloadEnergyChunks: function(incomingEnergyRate) {
@@ -154,7 +158,8 @@ define(function (require) {
                                 var angleTowardsSun = chunk.get('velocity').angle() + Math.PI;
                                 var reflectionAngle = this._reflectionAngle
                                     .set(chunk.get('position'))
-                                    .sub(cloud.center())
+                                    .sub(this.get('position')) // The same as subtracting (this.position + cloud.relativePosition)
+                                    .sub(cloud.get('relativePosition'))
                                     .angle();
 
                                 var angle;
@@ -194,7 +199,7 @@ define(function (require) {
                 .angle(directionAngle);
 
             var chunk = new EnergyChunk({
-                energyType: EnergyType.LIGHT,
+                energyType: EnergyTypes.LIGHT,
                 position: initialPosition,
                 velocity: initialVelocity
             });
