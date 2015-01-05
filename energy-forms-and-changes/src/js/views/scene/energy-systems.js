@@ -18,6 +18,7 @@ define(function(require) {
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
 
     var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
+    var FluorescentLightBulbView = require('views/energy-user/fluorescent-light-bulb');
 
     // Constants
     var Constants = require('constants');
@@ -151,11 +152,24 @@ define(function(require) {
             this.backLayer.addChild(incandescentLightBulbView.energyChunkLayer);
             this.backLayer.addChild(incandescentLightBulbView.frontLayer);
 
+            
+            var fluorescentLightBulbView = new FluorescentLightBulbView({
+                model: this.simulation.fluorescentLightBulb,
+                mvt: this.mvt
+            });
+            this.fluorescentLightBulbView = fluorescentLightBulbView;
+
+            this.backLayer.addChild(fluorescentLightBulbView.backLayer);
+            this.backLayer.addChild(fluorescentLightBulbView.energyChunkLayer);
+            this.backLayer.addChild(fluorescentLightBulbView.frontLayer);
+
             // Bind visibility
             this.views.push(incandescentLightBulbView);
+            this.views.push(fluorescentLightBulbView);
 
             // Add to list for updating
             this.bindEnergyChunkVisibility(incandescentLightBulbView);
+            this.bindEnergyChunkVisibility(fluorescentLightBulbView);
         },
 
         _update: function(time, deltaTime) {

@@ -18,6 +18,7 @@ define(function (require, exports, module) {
 
     var ElectricalGenerator = require('models/energy-converter/electrical-generator');
     var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
+    var FluorescentLightBulb  = require('models/energy-user/fluorescent-light-bulb');
     var CarouselAnimator = require('models/carousel-animator');
 
     var EnergySystemsElement = require('models/energy-systems-element');
@@ -70,6 +71,7 @@ define(function (require, exports, module) {
 
             // Users
             this.incandescentLightBulb = new IncandescentLightBulb();
+            this.fluorescentLightBulb  = new FluorescentLightBulb();
 
             // Group lists
             this.sources = [
@@ -85,9 +87,9 @@ define(function (require, exports, module) {
             ];
 
             this.users = [
-                this.incandescentLightBulb,
                 new EnergySystemsElement(),
-                new EnergySystemsElement()
+                this.incandescentLightBulb,
+                this.fluorescentLightBulb
             ];
 
             // List of all models

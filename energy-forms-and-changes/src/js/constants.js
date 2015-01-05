@@ -650,6 +650,12 @@ define(function (require) {
 
     Constants.IncandescentLightBulbView = IncandescentLightBulbView;
 
+    var FluorescentLightBulbView = {};
+
+    FluorescentLightBulbView.RAY_COLOR = '#FFFEB0';
+
+    Constants.FluorescentLightBulbView = FluorescentLightBulbView;
+
 
     /*************************************************************************
      **                                                                     **
