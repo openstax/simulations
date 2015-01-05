@@ -77,6 +77,14 @@ define(function (require) {
             for (var i = 0; i < pointArrays.length; i++)
                 curve.addPoints(pointArrays[i]);
             return curve;
+        },
+
+        createEllipse: function(x, y, w, h) {
+            return new PiecewiseCurve()
+                .moveTo(x, y + h / 2)
+                .curveTo(x, y + h, x + w, y + h, x + w, y + h / 2)
+                .curveTo(x + w, y, x, y, x, y + h / 2)
+                .close();
         }
 
     });

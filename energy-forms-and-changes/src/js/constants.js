@@ -672,5 +672,28 @@ define(function (require) {
     Constants.LightRayView = LightRayView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                  SUN                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var Sun = {};
+
+    Sun.RADIUS = 0.02; // In meters, apparent size, not (obviously) actual size.
+    Sun.OFFSET_TO_CENTER_OF_SUN = new Vector2(-0.05, 0.12);
+    Sun.ENERGY_CHUNK_EMISSION_PERIOD = 0.11; // In seconds.
+    Sun.MAX_DISTANCE_OF_E_CHUNKS_FROM_SUN = 0.5; // In meters.
+
+    // Constants that control the nature of the emission sectors.  These are
+    //   used to make emission look random yet still have a fairly steady rate
+    //   within each sector.  One sector is intended to point at the solar panel.
+    Sun.NUM_EMISSION_SECTORS = 10;
+    Sun.EMISSION_SECTOR_SPAN = 2 * Math.PI / NUM_EMISSION_SECTORS;
+    Sun.EMISSION_SECTOR_OFFSET = Sun.EMISSION_SECTOR_SPAN * 0.71; // Used to tweak sector positions to make sure solar panel gets consistent flow of E's.
+
+    Constants.Sun = Sun;
+
+
     return Constants;
 });
