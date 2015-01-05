@@ -13,8 +13,12 @@ define(function(require) {
     var IncandescentLightBulbView = LightBulbView.extend({
 
         initialize: function(options) {
+            var bulbTexture = Assets.Texture(Assets.Images.INCANDESCENT_ON_3);
+
             options = _.extend({
-                lightRayColor: IncandescentLightBulbView.RAY_COLOR
+                lightRayColor: IncandescentLightBulbView.RAY_COLOR,
+                lightRayCenter: new Vector2(0, -bulbTexture.height * 0.55),
+                lightRayInnerRadius: 66
             }, options);
 
             LightBulbView.prototype.initialize.apply(this, [options]);

@@ -8,6 +8,7 @@ define(function(require) {
     var PixiView       = require('common/pixi/view');
     var Vector2        = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Colors         = require('common/colors/colors');
 
     var Constants = require('constants');
 
@@ -30,6 +31,7 @@ define(function(require) {
             this.start = options.start;
             this.end = options.end;
             this.color = options.color;
+            this.rgba = Colors.toRgba(this.color, true);
             this.lineWidth = options.lineWidth;
             this.padding = this.lineWidth / 2;
 
@@ -67,10 +69,6 @@ define(function(require) {
             var ctx = canvas.getContext('2d');
 
             var canvasSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-            if (this.start.x > this.end.x)
-                canvasSprite.anchor.x = 1;
-            if (this.start.y > this.end.y)
-                canvasSprite.anchor.y = 1;
 
             this.displayObject.addChild(canvasSprite);
             this.graphicsContext = ctx;
@@ -265,9 +263,9 @@ define(function(require) {
             else {
                 gradient = this.graphicsContext.createLinearGradient(start.x, start.y, end.x, end.y);
             }
-            
-            gradient.addColorStop(startOpacity,      this.color);
-            gradient.addColorStop(opacityAtEndPoint, this.color);
+
+            gradient.addColorStop(0, this.colorWithAlpha(startOpacity));
+            gradient.addColorStop(1, this.colorWithAlpha(opacityAtEndPoint));
             
             // Draw the line
             this.graphicsContext.lineWidth = this.lineWidth;
@@ -279,6 +277,10 @@ define(function(require) {
             this.graphicsContext.stroke();
 
             return opacityAtEndPoint;
+        },
+
+        colorWithAlpha: function(alpha) {
+            return 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + alpha + ')';
         }
 
     }, Constants.LightRayView);

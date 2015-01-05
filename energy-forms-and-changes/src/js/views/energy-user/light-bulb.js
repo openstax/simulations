@@ -13,10 +13,14 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                lightRayColor: '#fff'
+                lightRayColor: '#fff',
+                lightRayCenter: new Vector2(),
+                lightRayInnerRadius: 30
             }, options);
 
             this.lightRayColor = options.lightRayColor;
+            this.lightRayCenter = options.lightRayCenter;
+            this.lightRayInnerRadius = options.lightRayInnerRadius;
 
             EnergyUserView.prototype.initialize.apply(this, [options]);
 
@@ -29,8 +33,8 @@ define(function(require) {
             this.backLayer = new PIXI.DisplayObjectContainer();
             this.frontLayer = new PIXI.DisplayObjectContainer();
 
-            this.initLightRays();
             this.initImages();
+            this.initLightRays();
 
             this.drawDebugOrigin();
 
@@ -40,12 +44,12 @@ define(function(require) {
 
         initLightRays: function() {
             var raySource = new LightRaySourceView({
-                center: new Vector2(),           // Origin of rays in pixels
-                innerRadius: 30,                 // Distance from center to start the rays
-                outerRadius: 400,                // Furthest reach of the rays (making them technically segments)
-                numRays: 20,                     // The number of rays if none were clipped
-                clippingWedgeAngle: Math.PI / 4, // Angle of area that won't emit rays
-                color: this.lightRayColor        // Ray color
+                center: this.lightRayCenter,           // Origin of rays in pixels
+                innerRadius: this.lightRayInnerRadius, // Distance from center to start the rays
+                outerRadius: 400,                      // Furthest reach of the rays (making them technically segments)
+                numRays: 20,                           // The number of rays if none were clipped
+                clippingWedgeAngle: Math.PI / 4,       // Angle of area that won't emit rays
+                color: this.lightRayColor              // Ray color
             });
             this.lightRays = raySource.displayObject;
 

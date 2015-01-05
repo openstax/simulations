@@ -46,11 +46,12 @@ define(function(require) {
                 throw 'Bad parameters for LightRaySourceView';
 
             for (var i = 0; i < this.numRays; i++) {
+                var vec = new Vector2();
                 var angle = i * (Math.PI * 2 / this.numRays);
                 if (angle <= Math.PI / 2 - this.clippingWedgeAngle / 2 || angle >= Math.PI / 2 + this.clippingWedgeAngle / 2) {
                     // Ray is not inside the clipping wedge, so create and add it.
-                    var rayStart = this.center.clone().add(this.innerRadius, 0).rotate(angle);
-                    var rayEnd   = this.center.clone().add(this.outerRadius, 0).rotate(angle);
+                    var rayStart = this.center.clone().add(vec.set(this.innerRadius, 0).rotate(angle));
+                    var rayEnd   = this.center.clone().add(vec.set(this.outerRadius, 0).rotate(angle));
 
                     var lightRayView = new LightRayView({
                         start: rayStart,
