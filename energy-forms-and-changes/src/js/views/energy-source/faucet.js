@@ -20,10 +20,6 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            options = _.extend({
-                
-            }, options);
-
             EnergySourceView.prototype.initialize.apply(this, [options]);
         },
 

@@ -4,14 +4,20 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    var Vector2 = require('common/math/vector2');
+
     var EnergyUserView = require('views/energy-user');
+    var LightRaySourceView = require('views/light-ray-source');
 
     var LightBulb = EnergyUserView.extend({
 
-        /**
-         *
-         */
         initialize: function(options) {
+            options = _.extend({
+                lightRayColor: '#fff'
+            }, options);
+
+            this.lightRayColor = options.lightRayColor;
+
             EnergyUserView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:litProportion', this.updateLitProportion);
@@ -33,12 +39,17 @@ define(function(require) {
         },
 
         initLightRays: function() {
-            var rays = new PIXI.DisplayObjectContainer();
-            this.lightRays = rays;
+            var raySource = new LightRaySourceView({
+                center: new Vector2(),           // Origin of rays in pixels
+                innerRadius: 30,                 // Distance from center to start the rays
+                outerRadius: 400,                // Furthest reach of the rays (making them technically segments)
+                numRays: 20,                     // The number of rays if none were clipped
+                clippingWedgeAngle: Math.PI / 4, // Angle of area that won't emit rays
+                color: this.lightRayColor        // Ray color
+            });
+            this.lightRays = raySource.displayObject;
 
-
-
-            this.backLayer.addChild(rays);
+            this.backLayer.addChild(this.lightRays);
         },
 
         /**

@@ -8,7 +8,17 @@ define(function(require) {
 
     var Assets = require('assets');
 
+    var Constants = require('constants');
+
     var IncandescentLightBulbView = LightBulbView.extend({
+
+        initialize: function(options) {
+            options = _.extend({
+                lightRayColor: IncandescentLightBulbView.RAY_COLOR
+            }, options);
+
+            LightBulbView.prototype.initialize.apply(this, [options]);
+        },
 
         initImages: function() {
             var straightWire = this.createSpriteWithOffset(Assets.Images.WIRE_BLACK_62,      new Vector2(-0.036, -0.04));
@@ -33,7 +43,7 @@ define(function(require) {
             this.frontLayer.addChild(litBulb);
         },
 
-    });
+    }, Constants.IncandescentLightBulbView);
 
     return IncandescentLightBulbView;
 });

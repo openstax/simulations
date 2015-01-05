@@ -644,6 +644,13 @@ define(function (require) {
     Constants.LightBulb = LightBulb;
 
 
+    var IncandescentLightBulbView = {};
+
+    IncandescentLightBulbView.RAY_COLOR = '#fff71c';
+
+    Constants.IncandescentLightBulbView = IncandescentLightBulbView;
+
+
     /*************************************************************************
      **                                                                     **
      **                             LIGHT RAY VIEW                          **
