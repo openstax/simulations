@@ -146,7 +146,7 @@ define(function(require) {
                 //   and rough bounds needed for this simulation.  Don't reuse if you
                 //   need good general edge finding.
                 // Patrick: and then I modified it to use scaled unit vectors instead of angles
-                var directionVector = this.end.clone().sub(this.start);
+                var directionVector = this.directionVector();
                 var testPoint = new Vector2();
                 var incrementalDistance = boundsEntryPoint.distance(searchEndPoint) / LightRayView.SEARCH_ITERATIONS;
                 for (var i = 0; i < LightRayView.SEARCH_ITERATIONS; i++) {
@@ -163,19 +163,75 @@ define(function(require) {
         },
 
         calculateShapeExitPoint: function(lightAbsorbingShape) {
-
+            var shapeRect = lightAbsorbingShape.getBounds();
+            var exitPoint = null;
+            if (lightAbsorbingShape.contains(this.end)) {
+                // Line ends inside shape, return null.
+                return null;
+            }
+            else if (this.ray.intersects(shapeRect)) {
+                // Phase I - Do a binary search to locate the edge of the
+                //   rectangle that encloses the shape.
+                // Patrick: again, using a unit vector instead of angles
+                var directionVector = this.directionVector();
+                var length = this.start.distance(this.end);
+                var lengthChange = length / 2;
+                var testPoint = new Vector2();
+                var testLine;
+                for (var i = 0; i < LightRayView.SEARCH_ITERATIONS; i++) {
+                    testPoint
+                        .set(this.origin)
+                        .add(directionVector.normalize().scale(length));
+                    testLine = new PiecewiseCurve()
+                        .moveTo(this.origin)
+                        .lineTo(testPoint);
+                    length += lengthChange * (testLine.intersects(shapeRect) ? 1 : -1);
+                    lengthChange /= 2;
+                }
+                exitPoint = this.start.clone().add(directionVector.normalize().scale(length));
+            }
+            return exitPoint;
         },
 
         calculateRectangleEntryPoint: function(rect) {
-            // var intersectingPoints
+            var intersectingPoints = rect.lineIntersectionPoints(this.start, this.end);
+
+            // Determine which point is closest to the origin.
+            var closestIntersectionPoint = null;
+            for (var i = 0; i < intersectingPoints.length; i++) {
+                if (!closestIntersectionPoint || closestIntersectionPoint.distance(this.start) > intersectingPoints[i].distance(this.start))
+                    closestIntersectionPoint = intersectingPoints[i];
+            }
+
+            return closestIntersectionPoint;
         },
 
         calculateRectangleExitPoint: function(rect) {
+            var intersectingPoints = rect.lineIntersectionPoints(this.start, this.end);
 
+            if (intersectingPoints.length < 2) {
+                // Line either doesn't intersect or ends inside the rectangle.
+                return null;
+            }
+
+            // Determine which point is furthest from the origin.
+            var furthestIntersectionPoint = null;
+            for (var i = 0; i < intersectingPoints.length; i++) {
+                if (!furthestIntersectionPoint || furthestIntersectionPoint.distance(this.start) < intersectingPoints[i].distance(this.start))
+                    furthestIntersectionPoint = intersectingPoints[i];
+            }
+
+            return furthestIntersectionPoint;
         },
 
-        calculateRectangleIntersectingPoints: function(rect) {
-
+        /**
+         * At first I just made this a property calculated upon initialization,
+         *   but then I figured that reusing it a lot over time would start to
+         *   corrupt the direction because of floating point errors.  So it can
+         *   be reused a few times in a function but not indefinitely.
+         */
+        directionVector: function() {
+            return this.end.clone().sub(this.start);
         },
 
         toLocal: function(coordinate) {
@@ -199,7 +255,7 @@ define(function(require) {
             var opacityAtEndPoint = startOpacity * Math.pow(Math.E, -fadeCoefficient * start.distance(end));
             if (opacityAtEndPoint === 0) {
                 // Theirs had us creating a vector and rotating it to be the same angle as this, but I'm just going to scale a unit vector
-                var directionVector = end.clone().sub(start).normalize();
+                var directionVector = this.directionVector().normalize();
                 // I'm guessing I need to multiply my opacity (0-1) by 255 here because the original equation is based off of values from 0-255
                 var zeroIntensityDistance = (Math.log(startOpacity * 255) - Math.log(0.4999)) / fadeCoefficient;
                 var zeroIntensityPoint = start.clone().add(directionVector.scale(zeroIntensityDistance));

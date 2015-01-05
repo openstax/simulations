@@ -250,7 +250,7 @@ describe('PiecewiseCurve', function(){
 		chai.expect(foundRightIntersection).to.be.true;
 
 		// Test a vertical line running down the center
-		intersections = rect.lineIntersectionPoints(3, 10, 3, -5);
+		intersections = rect.lineIntersectionPoints(new Vector2(3, 10), new Vector2(3, -5));
 
 		var foundTopIntersection = (_.findWhere(intersections, {
 			x: 3,
