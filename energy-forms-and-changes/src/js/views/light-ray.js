@@ -21,10 +21,10 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
-                start: new Vector2(),               // Start of the light ray
-                end:   new Vector2(),               // End of the light ray
-                color: '#fff'                       // Ray color
-                lineWidth: LightRayView.LINE_WIDTH, // Width of the ray in pixels
+                start: new Vector2(),              // Start of the light ray
+                end:   new Vector2(),              // End of the light ray
+                color: '#fff',                     // Ray color
+                lineWidth: LightRayView.LINE_WIDTH // Width of the ray in pixels
             }, options);
 
             this.start = options.start;
@@ -44,14 +44,15 @@ define(function(require) {
             this.initBounds();
             this.initGraphics();
 
-            // Create a canvas on which to draw our line segments
-            // TODO: I need to place this rectangle correctly and save the right offsets for the points so it can paint onto the canvas
-            
-
             this.updateLineSegments();
         },
 
         initBounds: function() {
+            /* I can actually just use my PieceWise curve of the line to 
+             *   calculate the bounds and origin of the bounding box that 
+             *   I'll use for the canvas as well as for translating points 
+             *   to be relative to the canvas.
+             */
             this.bounds = this.ray.getBounds();
             this.origin = new Vector2(this.bounds.x - this.padding, this.bounds.y - this.padding);
         },
@@ -99,22 +100,20 @@ define(function(require) {
             var lightAbsorbingShape;
             for (var i = 0; i < this.lightAbsorbingShapes.length; i++) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
-                if (this.ray.intersects(lightAbsorbingShape.getBounds())) {
-                    var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
-                    if (entryPoint) {
-                        points.push({ point: entryPoint, fade: lightAbsorbingShape.lightAbsorptionCoefficient });
-                        var exitPoint = this.calculateShapeExitPoint(lightAbsorbingShape);
-                        if (exitPoint) {
-                            points.push({ point: exitPoint, fade: LightRayView.FADE_COEFFICIENT_IN_AIR });
-                        }
+                var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
+                if (entryPoint) {
+                    points.push({ point: entryPoint, fade: lightAbsorbingShape.lightAbsorptionCoefficient });
+                    var exitPoint = this.calculateShapeExitPoint(lightAbsorbingShape);
+                    if (exitPoint) {
+                        points.push({ point: exitPoint, fade: LightRayView.FADE_COEFFICIENT_IN_AIR });
                     }
                 }
             }
 
             // Sort the list by distance from the origin
-            var start = this.start;
+            var startPoint = this.start;
             points.sort(function(a, b) {
-                return a.point.distance(start) - b.point.distance(start);
+                return a.point.distance(startPoint) - b.point.distance(startPoint);
             });
 
             // Draw the segments that comprise the line
@@ -132,10 +131,50 @@ define(function(require) {
         },
 
         calculateShapeEntryPoint: function(lightAbsorbingShape) {
-            
+            var shapeRect = lightAbsorbingShape.getBounds();
+            var entryPoint = null;
+            if (this.ray.intersects(shapeRect)) {
+                var boundsEntryPoint = this.calculateRectangleEntryPoint(shapeRect);
+                if (boundsEntryPoint === null)
+                    return null;
+
+                var boundsExitPoint = this.calculateRectangleExitPoint(shapeRect);
+                var searchEndPoint = (boundsExitPoint === null) ? this.end : boundsExitPoint;
+
+                // PhET: Search linearly for edge of the shape.  BIG HAIRY NOTE - This
+                //   will not work in all cases.  It worked for the coarse shapes
+                //   and rough bounds needed for this simulation.  Don't reuse if you
+                //   need good general edge finding.
+                // Patrick: and then I modified it to use scaled unit vectors instead of angles
+                var directionVector = this.end.clone().sub(this.start);
+                var testPoint = new Vector2();
+                var incrementalDistance = boundsEntryPoint.distance(searchEndPoint) / LightRayView.SEARCH_ITERATIONS;
+                for (var i = 0; i < LightRayView.SEARCH_ITERATIONS; i++) {
+                    testPoint
+                        .set(boundsEntryPoint)
+                        .add(directionVector.normalize().scale(incrementalDistance * i));
+                    if (lightAbsorbingShape.contains(testPoint)) {
+                        entryPoint = testPoint;
+                        break;
+                    }
+                }
+            }
+            return entryPoint;
         },
 
         calculateShapeExitPoint: function(lightAbsorbingShape) {
+
+        },
+
+        calculateRectangleEntryPoint: function(rect) {
+            // var intersectingPoints
+        },
+
+        calculateRectangleExitPoint: function(rect) {
+
+        },
+
+        calculateRectangleIntersectingPoints: function(rect) {
 
         },
 
@@ -157,7 +196,7 @@ define(function(require) {
 
             // Figure out what our gradient should be depending on the starting opacity and fade coefficient
             var gradient;
-            var opacityAtEndPoint = opacity * Math.pow(Math.E, -fadeCoefficient * start.distance(end));
+            var opacityAtEndPoint = startOpacity * Math.pow(Math.E, -fadeCoefficient * start.distance(end));
             if (opacityAtEndPoint === 0) {
                 // Theirs had us creating a vector and rotating it to be the same angle as this, but I'm just going to scale a unit vector
                 var directionVector = end.clone().sub(start).normalize();
@@ -180,7 +219,7 @@ define(function(require) {
 
             this.graphicsContext.moveTo(start.x, start.y);
             this.graphicsContext.lineTo(end.x,   end.y);
-            
+
             this.graphicsContext.stroke();
 
             return opacityAtEndPoint;

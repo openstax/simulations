@@ -4,6 +4,7 @@ define(function (require) {
 
     var Rectangle = require('../node_modules/rectangle-node-shimmed/index');
     var Vector2   = require('vector2-node');
+    var lineIntersect = require('./line-intersection');
 
     // Flip top and bottom calculations
     var top    = Rectangle.prototype.top;
@@ -28,6 +29,40 @@ define(function (require) {
         var y2 = Math.min(this.top(),    that.top());
 
         return this._intersectionRect.set(x1, y1, x2 - x1, y2 - y1);
+    };
+
+    /**
+     * Returns an array of points along the perimeter of the
+     *   rectangle through which the specified line passes.
+     */
+    Rectangle.prototype.lineIntersectionPoints = function(x0, y0, x1, y1) {
+        if (x0 instanceof Vector2) {
+            if (y0 instanceof Vector2) {
+                y1 = y0.y;
+                x1 = y0.x;
+                y0 = x0.y;
+                x0 = x0.x;
+            }
+            else
+                throw 'Rectangle.lineIntersectionPoints: Cannot mix and match object and flattened parameters.';
+        }
+
+        // Lines that make up the edges of the rectangle
+        var ln = [
+            [ this.left(),  this.bottom(), this.left(),  this.top()    ],
+            [ this.left(),  this.top(),    this.right(), this.top()    ],
+            [ this.right(), this.top(),    this.right(), this.bottom() ],
+            [ this.right(), this.bottom(), this.left(),  this.bottom() ]
+        ];
+
+        var intersections = [];
+        for (var i = 0; i < ln.length; i++) {
+            var intersection = lineIntersect.lineIntersection(x0, y0, x1, y1, ln[i][0], ln[i][1], ln[i][2], ln[i][3]);
+            if (intersection instanceof Vector2)
+                intersections.push(intersection.clone());
+        }
+        
+        return intersections;
     };
 
     /**

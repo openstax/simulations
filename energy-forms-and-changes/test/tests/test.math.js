@@ -5,12 +5,14 @@ describe('PiecewiseCurve', function(){
 	var PiecewiseCurve;
 	var Rectangle;
 	var Vector2;
+	var _;
 
 	before(function(done) {
-		require(['common/math/piecewise-curve', 'common/math/rectangle', 'common/math/vector2'], function(piecewiseCurve, rectangle, vector2) {
+		require(['common/math/piecewise-curve', 'common/math/rectangle', 'common/math/vector2', 'underscore'], function(piecewiseCurve, rectangle, vector2, underscore) {
 			PiecewiseCurve = piecewiseCurve;
 			Rectangle = rectangle;
 			Vector2 = vector2;
+			_ = underscore;
 			done();
 		});
 	});
@@ -226,6 +228,58 @@ describe('PiecewiseCurve', function(){
 		chai.expect(bounds.y).to.almost.equal(-4);
 		chai.expect(bounds.w).to.almost.equal( 4);
 		chai.expect(bounds.h).to.almost.equal( 4);
+	});
+
+	it('#lineIntersectionPoints should calculate points of intersection with a line', function(){
+		var rect = new Rectangle(0, 0, 5, 5);
+
+		// Test a horizontal line running through the middle
+		var intersections = rect.lineIntersectionPoints(-5, 3, 10, 3);
+
+		var foundLeftIntersection = (_.findWhere(intersections, {
+			x: 0,
+			y: 3
+		}) !== undefined);
+
+		var foundRightIntersection = (_.findWhere(intersections, {
+			x: 5,
+			y: 3
+		}) !== undefined);
+
+		chai.expect(foundLeftIntersection).to.be.true;
+		chai.expect(foundRightIntersection).to.be.true;
+
+		// Test a vertical line running down the center
+		intersections = rect.lineIntersectionPoints(3, 10, 3, -5);
+
+		var foundTopIntersection = (_.findWhere(intersections, {
+			x: 3,
+			y: 5
+		}) !== undefined);
+
+		var foundBottomIntersection = (_.findWhere(intersections, {
+			x: 3,
+			y: 0
+		}) !== undefined);
+
+		chai.expect(foundTopIntersection).to.be.true;
+		chai.expect(foundBottomIntersection).to.be.true;
+
+		// Test a diagonal line bisecting it from bottom left to top right
+		intersections = rect.lineIntersectionPoints(-2, -2, 7, 7);
+
+		var foundBottomLeftIntersection = (_.findWhere(intersections, {
+			x: 0,
+			y: 0
+		}) !== undefined);
+
+		var foundTopRightIntersection = (_.findWhere(intersections, {
+			x: 5,
+			y: 5
+		}) !== undefined);
+
+		chai.expect(foundBottomLeftIntersection).to.be.true;
+		chai.expect(foundTopRightIntersection).to.be.true;
 	});
 
 });
