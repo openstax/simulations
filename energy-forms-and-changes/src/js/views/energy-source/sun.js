@@ -118,12 +118,27 @@ define(function(require) {
                 lightAbsorptionCoefficient: 0
             }));
 
-            // Create slider handle
-            var handle = new PIXI.Graphics();
-            handle.beginFill(Colors.parseHex(SunView.SLIDER_HANDLE_FILL_COLOR), 1);
-            handle.lineStyle(1, Colors.parseHex(SunView.SLIDER_HANDLE_LINE_COLOR), 1);
-            handle.drawRect(-10, -5, 20, 10);
-            handle.endFill();
+            var bgHeight = panelHeight * 0.6;
+            var bgWidth  = SunView.SLIDER_WIDTH;
+
+            var canvas = document.createElement('canvas');
+            canvas.width  = bgWidth;
+            canvas.height = bgHeight;
+            var ctx = canvas.getContext('2d');
+
+            var gradient = ctx.createLinearGradient(0, 0, 0, bgHeight);
+            gradient.addColorStop(0, SunView.SLIDER_BG_FILL_TOP);
+            gradient.addColorStop(1, SunView.SLIDER_BG_FILL_BOTTOM);
+            
+            ctx.fillStyle = gradient;
+            ctx.lineWidth   = 1;
+            ctx.strokeStyle = SunView.SLIDER_BG_LINE_COLOR;
+            ctx.rect(0, 0, bgWidth, bgHeight);
+            ctx.fill();
+            ctx.stroke();
+
+            var sliderBackground = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            sliderBackground.anchor.x = 0.5;
 
             // Create slider
             var sliderView = new SliderView({
@@ -135,15 +150,12 @@ define(function(require) {
                 orientation: 'vertical',
                 direction: 'rtl',
 
-                width: panelHeight * 0.6,
-                backgroundHeight: 7,
-                backgroundColor: SunView.SLIDER_BG_FILL_COLOR,
-                backgroundAlpha: 1,
-                backgroundLineColor: SunView.SLIDER_BG_LINE_COLOR,
-                backgroundLineWidth: 1,
-                backgroundLineAlpha: 0.4,
+                background: sliderBackground,
                 
-                handle: handle
+                handleColor: SunView.SLIDER_HANDLE_FILL_COLOR,
+                handleLineColor: SunView.SLIDER_HANDLE_LINE_COLOR,
+                handleLineWidth: 2,
+                handleSize: 12
             });
 
             // Position it

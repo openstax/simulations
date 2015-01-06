@@ -708,10 +708,12 @@ define(function (require) {
     SunView.PANEL_HEIGHT = 0.085;
     SunView.PANEL_OFFSET = new Vector2(-0.05, SunView.PANEL_HEIGHT / 2);
     
-    SunView.SLIDER_BG_FILL_COLOR = '#aaa';
-    SunView.SLIDER_BG_LINE_COLOR = '#888';
+    SunView.SLIDER_WIDTH = 8;
+    SunView.SLIDER_BG_FILL_TOP = '#444';
+    SunView.SLIDER_BG_FILL_BOTTOM = '#fff';
+    SunView.SLIDER_BG_LINE_COLOR = '#333';
     SunView.SLIDER_HANDLE_FILL_COLOR = '#fff';
-    SunView.SLIDER_HANDLE_LINE_COLOR = '#ccc';
+    SunView.SLIDER_HANDLE_LINE_COLOR = '#888';
 
     SunView.LABEL_COLOR = '#000';
     SunView.LABEL_FONT = '16px Arial';
