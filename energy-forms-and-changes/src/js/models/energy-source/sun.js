@@ -27,6 +27,9 @@ define(function (require) {
         initialize: function(attributes, options) {
             EnergySource.prototype.initialize.apply(this, [attributes, options]);
 
+            // Cached objects
+            this._translation = new Vector2();
+
             // Energy chunk emission
             this.energyChunkEmissionCountdownTimer = Sun.ENERGY_CHUNK_EMISSION_PERIOD;
             this.currentSectorIndex = 0;
@@ -44,6 +47,11 @@ define(function (require) {
             this.sunPosition = new Vector2(this.get('position')).add(Sun.OFFSET_TO_CENTER_OF_SUN);
             this.on('change:position', function(sun, position) {
                 this.sunPosition.set(position).add(Sun.OFFSET_TO_CENTER_OF_SUN);
+
+                // Move the clouds
+                var translation = this._translation.set(position).sub(this.previous('position'));
+                for (var i = 0; i < this.clouds.length; i++)
+                    this.clouds.models[i].translate(translation);
             });
 
             // Cached things
@@ -57,9 +65,9 @@ define(function (require) {
         },
 
         addClouds: function() {
-            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.020, 0.1050) }));
-            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.017, 0.0875) }));
-            this.clouds.add(new Cloud({ relativePosition: new Vector2(-0.010, 0.0800) }));
+            this.clouds.add(new Cloud({ position: new Vector2( 0.020, 0.1050).add(this.get('position')) }));
+            this.clouds.add(new Cloud({ position: new Vector2( 0.017, 0.0875).add(this.get('position')) }));
+            this.clouds.add(new Cloud({ position: new Vector2(-0.010, 0.0800).add(this.get('position')) }));
         },
 
         preloadEnergyChunks: function(incomingEnergyRate) {
@@ -158,8 +166,7 @@ define(function (require) {
                                 var angleTowardsSun = chunk.get('velocity').angle() + Math.PI;
                                 var reflectionAngle = this._reflectionAngle
                                     .set(chunk.get('position'))
-                                    .sub(this.get('position')) // The same as subtracting (this.position + cloud.relativePosition)
-                                    .sub(cloud.get('relativePosition'))
+                                    .sub(cloud.get('position'))
                                     .angle();
 
                                 var angle;
