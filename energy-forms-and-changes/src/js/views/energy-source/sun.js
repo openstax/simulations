@@ -5,7 +5,8 @@ define(function(require) {
     var _ = require('underscore');
     var PIXI = require('pixi');
 
-    var EnergySourceView = require('views/energy-source');
+    var EnergySourceView   = require('views/energy-source');
+    var LightRaySourceView = require('views/light-ray-source');
 
     var Constants = require('constants');
 
@@ -20,18 +21,26 @@ define(function(require) {
             }, options);
 
             EnergySourceView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:visible', function(sun, visible) {
+                if (visible)
+                    this.lightRays.visible = true;
+                else
+                    this.lightRays.visible = false;
+            });
         },
 
         initGraphics: function() {
             EnergySourceView.prototype.initGraphics.apply(this);
 
             var sunRadius = this.mvt.modelToViewDeltaX(Constants.Sun.RADIUS);
+            var sunCenter = this.mvt.modelToViewDelta(Constants.Sun.OFFSET_TO_CENTER_OF_SUN);
             
-            this.initOrb(sunRadius);
-            this.initRays(sunRadius);
+            this.initOrb(sunRadius, sunCenter);
+            this.initRays(sunRadius, sunCenter);
         },
 
-        initOrb: function(sunRadius) {
+        initOrb: function(sunRadius, sunCenter) {
             // Create a texture
             var sunTexture = PIXI.Texture.generateCircleTexture(
                 sunRadius, 
@@ -48,16 +57,31 @@ define(function(require) {
             sunSprite.anchor.x = sunSprite.anchor.y = 0.5;
 
             // Move the sprite
-            var offset = this.mvt.modelToViewDelta(Constants.Sun.OFFSET_TO_CENTER_OF_SUN);
-            sunSprite.x = offset.x;
-            sunSprite.y = offset.y;
+            sunSprite.x = sunCenter.x;
+            sunSprite.y = sunCenter.y;
 
             // Add it
             this.displayObject.addChild(sunSprite);
         },
 
-        initRays: function(sunRadius) {
+        initRays: function(sunRadius, sunCenter) {
+            // Create a ray source
+            var raySource = new LightRaySourceView({
+                center:      sunCenter, 
+                innerRadius: sunRadius, 
+                outerRadius: 1000,      
+                numRays:     40,            
+                color:       SunView.RAY_COLOR
+            });
 
+            // Save it
+            this.lightRays = raySource.displayObject;
+
+            // Show it / hide it
+            this.lightRays.visible = this.model.get('visible');
+
+            // Add it
+            this.displayObject.addChild(this.lightRays);
         },
 
         initClouds: function() {

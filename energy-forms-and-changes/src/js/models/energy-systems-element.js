@@ -13,7 +13,8 @@ define(function (require) {
     var EnergySystemsElement = Positionable.extend({
 
         defaults: {
-            active: false
+            active: false,
+            visible: false
         },
         
         initialize: function(attributes, options) {

@@ -117,6 +117,9 @@ define(function (require, exports, module) {
             this.get('source').activate();
             this.get('converter').activate();
             this.get('user').activate();
+            this.get('source').set('visible', true);
+            this.get('converter').set('visible', true);
+            this.get('user').set('visible', true);
 
             //this.faucet.set('flowProportion', 0.4);
 
@@ -137,8 +140,9 @@ define(function (require, exports, module) {
                 activeElementPosition: EnergySystemsSimulation.ENERGY_USER_POSITION
             });
 
-            var activateElement = function(activeElement) { 
+            var activateElement = function(activeElement, previousElement) { 
                 activeElement.activate(); 
+                previousElement.set('visible', false);
             };
 
             this.listenTo(this.sourceAnimator,    'destination-reached', activateElement);
@@ -191,18 +195,23 @@ define(function (require, exports, module) {
         },
 
         sourceChanged: function(simulation, source) {
-            this.previous('source').deactivate();
+            this.activeElementChanged(source, this.previous('source'));
             this.sourceAnimator.set('activeElement', source);
         },
 
         converterChanged: function(simulation, converter) {
-            this.previous('converter').deactivate();
+            this.activeElementChanged(converter, this.previous('converter'));
             this.converterAnimator.set('activeElement', converter);
         },
 
         userChanged: function(simulation, user) {
-            this.previous('user').deactivate();
+            this.activeElementChanged(user, this.previous('user'));
             this.userAnimator.set('activeElement', user);
+        },
+
+        activeElementChanged: function(activeElement, previousElement) {
+            activeElement.set('visible', true);
+            previousElement.deactivate();
         }
 
     }, Constants.EnergySystemsSimulation);

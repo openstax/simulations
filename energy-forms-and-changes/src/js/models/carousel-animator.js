@@ -68,7 +68,7 @@ define(function (require) {
 
         stopAnimation: function() {
             this.animating = false;
-            this.trigger('destination-reached', this.activeElement());
+            this.trigger('destination-reached', this.activeElement(), this.previousElement());
         },
 
         update: function(time, deltaTime) {
@@ -121,7 +121,11 @@ define(function (require) {
 
         activeElement: function() {
             return this.get('elements')[this.get('activeIndex')];
-        }
+        },
+
+        previousElement: function() {
+            return this.get('elements')[this.previous('activeIndex')];
+        },
 
     });
 

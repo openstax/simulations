@@ -702,6 +702,7 @@ define(function (require) {
     SunView.GRADIENT_END = 0.7;
     SunView.LINE_WIDTH = 1;
     SunView.LINE_COLOR = '#ffff00';
+    SunView.RAY_COLOR = SunView.LINE_COLOR;
 
     Constants.SunView = SunView;
 
