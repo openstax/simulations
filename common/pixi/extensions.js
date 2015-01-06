@@ -316,7 +316,7 @@ define(function(require) {
 
         var ctx = canvas.getContext('2d');
 
-        var gradient = ctx.createRadialGradient(radius + how, radius + how, r1, r2 + how, r2 + how, radius);
+        var gradient = ctx.createRadialGradient(radius + how, radius + how, r1, radius + how, radius + how, r2);
         gradient.addColorStop(0, color1);
         gradient.addColorStop(1, color2);
 

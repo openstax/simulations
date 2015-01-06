@@ -32,6 +32,7 @@ define(function(require) {
         },
 
         initOrb: function(sunRadius) {
+            // Create a texture
             var sunTexture = PIXI.Texture.generateCircleTexture(
                 sunRadius, 
                 0, 
@@ -41,9 +42,17 @@ define(function(require) {
                 SunView.LINE_WIDTH,
                 SunView.LINE_COLOR
             );
+
+            // Create a sprite
             var sunSprite = new PIXI.Sprite(sunTexture);
             sunSprite.anchor.x = sunSprite.anchor.y = 0.5;
 
+            // Move the sprite
+            var offset = this.mvt.modelToViewDelta(Constants.Sun.OFFSET_TO_CENTER_OF_SUN);
+            sunSprite.x = offset.x;
+            sunSprite.y = offset.y;
+
+            // Add it
             this.displayObject.addChild(sunSprite);
         },
 
