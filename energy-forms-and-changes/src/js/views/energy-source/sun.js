@@ -21,13 +21,6 @@ define(function(require) {
             }, options);
 
             EnergySourceView.prototype.initialize.apply(this, [options]);
-
-            this.listenTo(this.model, 'change:visible', function(sun, visible) {
-                if (visible)
-                    this.lightRays.visible = true;
-                else
-                    this.lightRays.visible = false;
-            });
         },
 
         initGraphics: function() {
@@ -76,9 +69,6 @@ define(function(require) {
 
             // Save it
             this.lightRays = raySource.displayObject;
-
-            // Show it / hide it
-            this.lightRays.visible = this.model.get('visible');
 
             // Add it
             this.displayObject.addChild(this.lightRays);

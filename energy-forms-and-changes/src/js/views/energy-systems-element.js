@@ -21,6 +21,9 @@ define(function(require) {
             this.energyChunkLayers = [];
 
             PositionableView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:opacity', this.updateOpacity);
+            this.updateOpacity(this.model, this.model.get('opacity'));
         },
 
         initGraphics: function() {
@@ -111,6 +114,10 @@ define(function(require) {
                 for (var j = 0; j < this.energyChunkLayers[i].energyChunkViews.length; j++)
                     this.energyChunkLayers[i].energyChunkViews[j].update(time, deltaTime);
             }
+        },
+
+        updateOpacity: function(model, opacity) {
+            this.displayObject.alpha = opacity;
         }
 
     });

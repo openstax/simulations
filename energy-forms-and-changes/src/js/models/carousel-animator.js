@@ -86,6 +86,7 @@ define(function (require) {
                 .scale(deltaPercent);
 
             this.translateAllElements(translation);
+            this.updateElementOpacities();
 
             if (this.elapsedTransitionTime >= this.get('transitionDuration'))
                 this.stopAnimation();
@@ -117,6 +118,20 @@ define(function (require) {
             var elements = this.get('elements');
             for (var i = 0; i < elements.length; i++)
                 elements[i].translate(translation);
+        },
+
+        updateElementOpacities: function() {
+            var spacingDistance = this.get('elementSpacing').length();
+            var elements = this.get('elements');
+            for (var i = 0; i < elements.length; i++) {
+                var distanceFromActivePosition = elements[i].get('position').distance(this.get('activeElementPosition'));
+                var opacity = 1 - (distanceFromActivePosition / spacingDistance);
+                if (opacity > 1)
+                    opacity = 1;
+                if (opacity < 0)
+                    opacity = 0;
+                elements[i].set('opacity', opacity);
+            }
         },
 
         activeElement: function() {

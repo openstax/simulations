@@ -140,9 +140,8 @@ define(function (require, exports, module) {
                 activeElementPosition: EnergySystemsSimulation.ENERGY_USER_POSITION
             });
 
-            var activateElement = function(activeElement, previousElement) { 
-                activeElement.activate(); 
-                previousElement.set('visible', false);
+            var activateElement = function(activeElement) { 
+                activeElement.activate();
             };
 
             this.listenTo(this.sourceAnimator,    'destination-reached', activateElement);
@@ -210,7 +209,6 @@ define(function (require, exports, module) {
         },
 
         activeElementChanged: function(activeElement, previousElement) {
-            activeElement.set('visible', true);
             previousElement.deactivate();
         }
 

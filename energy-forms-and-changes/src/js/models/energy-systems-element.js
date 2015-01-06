@@ -14,7 +14,7 @@ define(function (require) {
 
         defaults: {
             active: false,
-            visible: false
+            opacity: 0
         },
         
         initialize: function(attributes, options) {
