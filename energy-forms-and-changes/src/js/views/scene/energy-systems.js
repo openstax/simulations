@@ -107,8 +107,8 @@ define(function(require) {
                 model: this.simulation.sun,
                 mvt: this.mvt
             });
-            this.frontLayer.addChild(this.sunView.displayObject);
             this.frontLayer.addChild(this.sunView.energyChunkLayer);
+            this.frontLayer.addChild(this.sunView.displayObject);
 
             // Bind visibility
             this.bindEnergyChunkVisibility(this.faucetView);

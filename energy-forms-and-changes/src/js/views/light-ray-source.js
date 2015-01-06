@@ -38,7 +38,6 @@ define(function(require) {
             this.lightRayViews = [];
 
             this.initRays();
-            this.drawDebugOrigin();
         },
 
         initRays: function() {
@@ -75,17 +74,6 @@ define(function(require) {
             _.each(this.lightRayViews, function(lightRayView) {
                 lightRayView.removeLightAbsorbingShape(shape);
             });
-        },
-
-        drawDebugOrigin: function(parent, color) {
-            var origin = new PIXI.Graphics();
-            origin.beginFill(color !== undefined ? color : 0x0000FF, 1);
-            origin.drawCircle(0, 0, 3);
-            origin.endFill();
-            if (parent === undefined)
-                this.displayObject.addChild(origin);
-            else
-                parent.addChild(origin);
         }
 
     });

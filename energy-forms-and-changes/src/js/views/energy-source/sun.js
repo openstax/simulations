@@ -80,7 +80,17 @@ define(function(require) {
 
         initControls: function() {
 
-        }
+        },
+
+        showEnergyChunks: function() {
+            EnergySourceView.prototype.showEnergyChunks.apply(this);
+            this.lightRays.visible = false;
+        },
+
+        hideEnergyChunks: function() {
+            EnergySourceView.prototype.hideEnergyChunks.apply(this);
+            this.lightRays.visible = true;
+        },
 
     }, Constants.SunView);
 
