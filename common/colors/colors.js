@@ -26,7 +26,14 @@ define(function (require) {
 		 * http://stackoverflow.com/a/5624139
 		 */
 		rgbToHex: function(r, g, b) {
-			return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+			return '#' + this.rgbToHexInteger(r, g, b).toString(16).slice(1);
+		},
+
+		/**
+		 * http://stackoverflow.com/a/5624139
+		 */
+		rgbToHexInteger: function(r, g, b) {
+			return (1 << 24) + (r << 16) + (g << 8) + b;
 		},
 
 		/**
@@ -55,17 +62,17 @@ define(function (require) {
 			if (result) {
 				if (result[4] !== undefined) {
 					return {
-						r: result[1],
-						g: result[2],
-						b: result[3],
-						a: result[4]
+						r: parseInt(result[1]),
+						g: parseInt(result[2]),
+						b: parseInt(result[3]),
+						a: parseFloat(result[4])
 					};
 				}
 				else {
 					return {
-						r: result[1],
-						g: result[2],
-						b: result[3]
+						r: parseInt(result[1]),
+						g: parseInt(result[2]),
+						b: parseInt(result[3])
 					};
 				}
 			}

@@ -117,9 +117,9 @@ define(function (require, exports, module) {
             this.get('source').activate();
             this.get('converter').activate();
             this.get('user').activate();
-            this.get('source').set('visible', true);
-            this.get('converter').set('visible', true);
-            this.get('user').set('visible', true);
+            this.get('source').set('opacity', 1);
+            this.get('converter').set('opacity', 1);
+            this.get('user').set('opacity', 1);
 
             //this.faucet.set('flowProportion', 0.4);
 

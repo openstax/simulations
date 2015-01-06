@@ -42,6 +42,8 @@ define(function (require) {
             this.energyChunksPassingThroughClouds = new EnergyChunkCollection();
             this.clouds = new Backbone.Collection([], { model: Cloud });
             this.addClouds();
+            this.on('change:cloudiness', this.cloudinessChanged);
+            this.cloudinessChanged(this, this.get('cloudiness'));
 
             // Position
             this.sunPosition = new Vector2(this.get('position')).add(Sun.OFFSET_TO_CENTER_OF_SUN);
@@ -244,6 +246,14 @@ define(function (require) {
             EnergySource.prototype.deactivate.apply(this);
 
             this.set('cloudiness', 0);
+        },
+
+        cloudinessChanged: function(sun, cloudiness) {
+            for (var i = 0; i < this.clouds.length; i++) {
+                // Stagger the existence strength of the clouds.
+                var cloudiness = this.get('cloudiness') * this.clouds.length - i;
+                this.clouds.at(i).set('existenceStrength', Math.min(1, Math.max(0, cloudiness)));
+            }
         }
 
     }, Constants.Sun);

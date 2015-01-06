@@ -6,22 +6,22 @@ define(function(require) {
 
     var LightAbsorbingShape = Backbone.Model.extend({
 
-    	defaults: {
-    		shape: null,
-    		lightAbsorptionCoefficient: 0
-    	},
+        defaults: {
+            shape: null,
+            lightAbsorptionCoefficient: 0
+        },
 
- 		initialize: function(attrs, options) {
- 			if (!this.get('shape'))
- 				throw 'LightAbsorbingShapes must be given a shape object';
- 		},
+        initialize: function(attrs, options) {
+            if (!this.get('shape'))
+                throw 'LightAbsorbingShapes must be given a shape object';
+        },
 
         getBounds: function() {
-        	this.get('shape').getBounds();
+            this.get('shape').getBounds();
         },
 
         contains: function(shape) {
-        	this.get('shape').contains(shape);
+            this.get('shape').contains(shape);
         }
 
     });

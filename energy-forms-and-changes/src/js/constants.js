@@ -704,6 +704,19 @@ define(function (require) {
     SunView.LINE_COLOR = '#ffff00';
     SunView.RAY_COLOR = SunView.LINE_COLOR;
 
+    SunView.PANEL_WIDTH  = 0.065;
+    SunView.PANEL_HEIGHT = 0.085;
+    SunView.PANEL_OFFSET = new Vector2(-0.05, SunView.PANEL_HEIGHT / 2);
+    
+    SunView.SLIDER_BG_FILL_COLOR = '#aaa';
+    SunView.SLIDER_BG_LINE_COLOR = '#888';
+    SunView.SLIDER_HANDLE_FILL_COLOR = '#fff';
+    SunView.SLIDER_HANDLE_LINE_COLOR = '#ccc';
+
+    SunView.LABEL_COLOR = '#000';
+    SunView.LABEL_FONT = '16px Arial';
+    SunView.LABEL_TITLE_FONT = '20px Arial';
+
     Constants.SunView = SunView;
 
 
