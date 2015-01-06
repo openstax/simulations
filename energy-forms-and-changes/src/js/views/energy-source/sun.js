@@ -7,7 +7,7 @@ define(function(require) {
 
     var EnergySourceView = require('views/energy-source');
 
-    // var Constants = require('constants');
+    var Constants = require('constants');
 
     var SunView = EnergySourceView.extend({
 
@@ -24,15 +24,42 @@ define(function(require) {
 
         initGraphics: function() {
             EnergySourceView.prototype.initGraphics.apply(this);
+
+            var sunRadius = this.mvt.modelToViewDeltaX(Constants.Sun.RADIUS);
             
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFFFF00, 1);
-            graphics.drawRect(0, 0, 50, 50);
-            graphics.endFill();
-            this.displayObject.addChild(graphics);
+            this.initOrb(sunRadius);
+            this.initRays(sunRadius);
+        },
+
+        initOrb: function(sunRadius) {
+            var sunTexture = PIXI.Texture.generateCircleTexture(
+                sunRadius, 
+                0, 
+                sunRadius * SunView.GRADIENT_END, 
+                SunView.INNER_FILL_COLOR, 
+                SunView.OUTER_FILL_COLOR,
+                SunView.LINE_WIDTH,
+                SunView.LINE_COLOR
+            );
+            var sunSprite = new PIXI.Sprite(sunTexture);
+            sunSprite.anchor.x = sunSprite.anchor.y = 0.5;
+
+            this.displayObject.addChild(sunSprite);
+        },
+
+        initRays: function(sunRadius) {
+
+        },
+
+        initClouds: function() {
+
+        },
+
+        initControls: function() {
+
         }
 
-    });
+    }, Constants.SunView);
 
     return SunView;
 });

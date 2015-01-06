@@ -695,6 +695,17 @@ define(function (require) {
     Constants.Sun = Sun;
 
 
+    var SunView = {};
+
+    SunView.INNER_FILL_COLOR = '#fff';
+    SunView.OUTER_FILL_COLOR = '#ffd700';
+    SunView.GRADIENT_END = 0.7;
+    SunView.LINE_WIDTH = 1;
+    SunView.LINE_COLOR = '#ffff00';
+
+    Constants.SunView = SunView;
+
+
     var Cloud = {};
 
     Cloud.CLOUD_WIDTH = 0.035; // In meters, though obviously not to scale.  Empirically determined.

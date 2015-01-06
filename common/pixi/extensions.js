@@ -278,24 +278,63 @@ define(function(require) {
      *   the point at which the color will be transparent.
      */
     PIXI.Texture.generateRoundParticleTexture = function(r1, r2, color) {
-        if (r2 <= 0)
+        var rgba = Colors.toRgba(color, true);
+
+        var color1 = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',1)';
+        var color2 = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',0)';
+
+        return PIXI.Texture.generateCircleTexture(r2, r1, r2, color1, color2);
+    };
+
+    /**
+     * Generates a texture of a circle with a radial gradient and
+     *   optionally an outline.  The first radius (radius) is the
+     *   radius of the circle texture and the radius at which the
+     *   optional outline is painted. The first color fills the
+     *   circle solidly from the center to the gradient's inner
+     *   radius (r1) and then blends into the second color until
+     *   it reaches the gradient's outer radius (r2), after which
+     *   the second color will be solid until the edge of the
+     *   circle is reached (radius).
+     */
+    PIXI.Texture.generateCircleTexture = function(radius, r1, r2, color1, color2, outlineWidth, outlineColor) {
+        if (radius <= 0)
             throw 'Outer radius cannot be zero or a negative value.';
+
+        if (outlineWidth === undefined)
+            outlineWidth = 0;
+
+        // We need to offset everything by half of the outline width
+        //   because we need to make the canvas big enough to paint
+        //   the outline.
+        var how = outlineWidth / 2; // half outline width
 
         // Draw on a canvas and then use it as a texture for our particles
         var canvas = document.createElement('canvas');
-        canvas.width  = r2 * 2;
-        canvas.height = r2 * 2;
-
-        var rgba = Colors.toRgba(color, true);
+        canvas.width  = radius * 2 + outlineWidth;
+        canvas.height = radius * 2 + outlineWidth;
 
         var ctx = canvas.getContext('2d');
 
-        var gradient = ctx.createRadialGradient(r2, r2, r1, r2, r2, r2);
-        gradient.addColorStop(0, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',1)');
-        gradient.addColorStop(1, 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',0)');
+        var gradient = ctx.createRadialGradient(radius + how, radius + how, r1, r2 + how, r2 + how, radius);
+        gradient.addColorStop(0, color1);
+        gradient.addColorStop(1, color2);
 
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, 0, r2 * 2, r2 * 2);
+        ctx.beginPath();
+        ctx.arc(radius + how, radius + how, radius, 0, 2 * Math.PI, false);
+        ctx.fill();
+
+        if (outlineWidth) {
+            if (outlineColor === undefined)
+                outlineColor = '#000';
+
+            ctx.strokeStyle = outlineColor;
+            ctx.lineWidth = outlineWidth;
+
+            
+            ctx.stroke();
+        }
 
         return new PIXI.Texture.fromCanvas(canvas);
     };
