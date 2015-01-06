@@ -109,6 +109,7 @@ define(function(require) {
             });
             this.frontLayer.addChild(this.sunView.energyChunkLayer);
             this.frontLayer.addChild(this.sunView.displayObject);
+            this.frontLayer.addChild(this.sunView.cloudLayer);
 
             // Bind visibility
             this.bindEnergyChunkVisibility(this.faucetView);

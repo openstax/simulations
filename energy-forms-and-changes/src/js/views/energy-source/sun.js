@@ -13,6 +13,7 @@ define(function(require) {
     var EnergySourceView   = require('views/energy-source');
     var LightRaySourceView = require('views/light-ray-source');
     var LightAbsorbingShape = require('views/light-absorbing-shape');
+    var CloudView          = require('views/cloud');
 
     var Constants = require('constants');
 
@@ -38,6 +39,7 @@ define(function(require) {
             this.initOrb(sunRadius, sunCenter);
             this.initRays(sunRadius, sunCenter);
             this.initControls();
+            this.initClouds();
         },
 
         initOrb: function(sunRadius, sunCenter) {
@@ -83,7 +85,14 @@ define(function(require) {
         },
 
         initClouds: function() {
-
+            this.cloudLayer = new PIXI.DisplayObjectContainer();
+            this.model.clouds.each(function(cloud) {
+                var cloudView = new CloudView({
+                    model: cloud,
+                    mvt: this.mvt
+                });
+                this.cloudLayer.addChild(cloudView.displayObject);
+            }, this);
         },
 
         initControls: function() {
