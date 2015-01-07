@@ -90,6 +90,8 @@ define(function(require) {
         },
 
         updateLineSegments: function() {
+            this.clearGraphics();
+            
             // The points that define the line segments that make up the ray as well as the fade coefficients
             var points = [];
 
@@ -101,6 +103,13 @@ define(function(require) {
             var lightAbsorbingShape;
             for (var i = 0; i < this.lightAbsorbingShapes.length; i++) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
+
+                var bounds = lightAbsorbingShape.getBounds();
+                var local = this.toLocal(bounds.position());
+                this.debugGraphics.beginFill(0xFF0022, 0.01);
+                this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
+                this.debugGraphics.endFill();
+
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
                 if (entryPoint) {
                     points.push({ point: entryPoint, fade: lightAbsorbingShape.get('lightAbsorptionCoefficient') });
@@ -118,7 +127,6 @@ define(function(require) {
             });
 
             // Draw the segments that comprise the line
-            this.clearGraphics();
             var opacity = 1;
             var start;
             var end;
