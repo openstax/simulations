@@ -13,6 +13,11 @@ define(function(require) {
     var Constants = require('constants');
 
     var DEBUG = true;
+    var rays = [];
+    window.updateRays = function() {
+        for (var i = 0; i < rays.length; i++)
+            rays[i].updateLineSegments();
+    };
 
     /**
      * A view that represents an element model
@@ -49,6 +54,8 @@ define(function(require) {
             this.initGraphics();
 
             this.updateLineSegments();
+
+            rays.push(this);
         },
 
         initBounds: function() {
@@ -138,6 +145,7 @@ define(function(require) {
                 end     = points[j + 1].point;
                 fade    = points[j].fade;
                 opacity = this.drawLine(start, end, opacity, fade);
+                console.log(fade.toFixed(3));
                 //console.log(end.x.toFixed(1) + ',' + end.y.toFixed(1));
             }
         },
