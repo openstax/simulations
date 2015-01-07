@@ -84,7 +84,7 @@ define(function(require) {
             var baseTexture = new PIXI.BaseTexture(canvas);
             var texture = PIXI.Texture.fromCanvas(baseTexture);
 
-            var canvasSprite = new PIXI.Sprite(texture);
+            var canvasSprite = new PIXI.DynamicSprite(texture);//new PIXI.Sprite(texture);
 
             this.displayObject.addChild(canvasSprite);
             this.graphicsContext = ctx;
@@ -97,7 +97,9 @@ define(function(require) {
         },
 
         updateGraphics: function() {
+            this.canvasSprite.texture.destroy(true);
             this.canvasSprite.texture = PIXI.Texture.fromCanvas(this.canvas);
+            this.canvasSprite._dirtyTexture = true;
         },
 
         addLightAbsorbingShape: function(lightAbsorbingShape) {
