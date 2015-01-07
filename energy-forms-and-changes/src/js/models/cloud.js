@@ -42,7 +42,7 @@ define(function (require) {
             var w = this.get('width');
             
             // Create an ellipse
-            return PiecewiseCurve.createEllipse(x, y, h, w);
+            return PiecewiseCurve.createEllipse(x, y, w, h);
         },
 
         getShape: function() {

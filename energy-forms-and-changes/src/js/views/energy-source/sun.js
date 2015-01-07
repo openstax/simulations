@@ -41,6 +41,8 @@ define(function(require) {
             this.initControls();
             this.initClouds();
 
+            this.raySource.update();
+
             this.drawDebugOrigin();
         },
 
@@ -95,12 +97,11 @@ define(function(require) {
                 });
                 this.cloudLayer.addChild(cloudView.displayObject);
 
-                var relativeShape = this.mvt.modelToViewDelta(cloud.getRelativelyPositionedShape().getBounds());
+                var relativeShape = this.mvt.modelToViewDelta(cloud.getRelativelyPositionedShape());
                 var shape = new LightAbsorbingShape({
-                    shape: new Rectangle(relativeShape.x, relativeShape.y - cloudView.displayObject.height, cloudView.displayObject.width, cloudView.displayObject.height),
+                    shape: relativeShape,
                     lightAbsorptionCoefficient: 0
                 });
-                console.log(shape.get('shape'));
                 this.listenTo(cloud, 'change:existenceStrength', function(model, existenceStrength) {
                     shape.set('lightAbsorptionCoefficient', existenceStrength / 10);
                 });
@@ -137,7 +138,11 @@ define(function(require) {
             //var globalPanelPosition = panel.getGlobalPosition();
             this.raySource.addLightAbsorbingShape(new LightAbsorbingShape({
                 shape: new Rectangle(panelOffset.x, panelOffset.y, panelWidth, panelHeight),
-                lightAbsorptionCoefficient: 0.2
+                lightAbsorptionCoefficient: 0.05
+            }));
+            this.raySource.addLightAbsorbingShape(new LightAbsorbingShape({
+                shape: new Rectangle(panelOffset.x, panelOffset.y - 2, panelWidth, 20),
+                lightAbsorptionCoefficient: 0.3
             }));
 
             var bgHeight = panelHeight * 0.6;

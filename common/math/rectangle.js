@@ -93,7 +93,7 @@ define(function (require) {
             precision = 4;
         return '(' + this.x.toFixed(precision) + ', ' + this.y.toFixed(precision) + ') '
                    + this.w.toFixed(precision) + 'x' + this.h.toFixed(precision);
-    }
+    };
 
     return Rectangle;
 

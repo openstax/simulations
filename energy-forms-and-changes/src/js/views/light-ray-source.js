@@ -74,6 +74,12 @@ define(function(require) {
             _.each(this.lightRayViews, function(lightRayView) {
                 lightRayView.removeLightAbsorbingShape(shape);
             });
+        },
+
+        update: function() {
+            _.each(this.lightRayViews, function(lightRayView) {
+                lightRayView.updateLineSegments();
+            });
         }
 
     });

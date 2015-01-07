@@ -12,6 +12,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var DEBUG = true;
+
     /**
      * A view that represents an element model
      */
@@ -160,9 +162,9 @@ define(function(require) {
                 var testPoint = new Vector2();
                 var incrementalDistance = boundsEntryPoint.distance(searchEndPoint) / LightRayView.SEARCH_ITERATIONS;
                 for (var i = 0; i < LightRayView.SEARCH_ITERATIONS; i++) {
-                    testPoint
-                        .set(boundsEntryPoint)
-                        .add(directionVector.normalize().scale(incrementalDistance * i));
+                    testPoint.set(boundsEntryPoint);
+                    if (i > 0)
+                        testPoint.add(directionVector.normalize().scale(incrementalDistance * i));
                     if (lightAbsorbingShape.contains(testPoint)) {
                         entryPoint = testPoint;
                         break;
@@ -201,10 +203,13 @@ define(function(require) {
                 }
                 exitPoint = this.start.clone().add(directionVector.normalize().scale(length));
 
-                var local = this.toLocal(exitPoint);
-                this.debugGraphics.beginFill(0xFF0000, 1);
-                this.debugGraphics.drawCircle(local.x, local.y, 4);
-                this.debugGraphics.endFill();
+                if (DEBUG) {
+                    var local = this.toLocal(exitPoint);
+                    this.debugGraphics.beginFill(0xFF0000, 1);
+                    this.debugGraphics.drawCircle(local.x, local.y, 4);
+                    this.debugGraphics.endFill();
+                }
+                
                 //console.log(length);
             }
             return exitPoint;
@@ -298,7 +303,7 @@ define(function(require) {
             this.graphicsContext.stroke();
             this.graphicsContext.closePath();
 
-            if (startOpacity < 1) {
+            if (DEBUG && startOpacity < 1) {
                 this.debugGraphics.beginFill(0x00FFFF, 1);
                 this.debugGraphics.drawCircle(start.x, start.y, 3);
                 this.debugGraphics.endFill();
