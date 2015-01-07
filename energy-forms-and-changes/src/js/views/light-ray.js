@@ -91,7 +91,7 @@ define(function(require) {
 
         updateLineSegments: function() {
             this.clearGraphics();
-            
+
             // The points that define the line segments that make up the ray as well as the fade coefficients
             var points = [];
 
@@ -104,11 +104,11 @@ define(function(require) {
             for (var i = 0; i < this.lightAbsorbingShapes.length; i++) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
 
-                var bounds = lightAbsorbingShape.getBounds();
-                var local = this.toLocal(bounds.position());
-                this.debugGraphics.beginFill(0xFF0022, 0.01);
-                this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
-                this.debugGraphics.endFill();
+                // var bounds = lightAbsorbingShape.getBounds();
+                // var local = this.toLocal(bounds.position());
+                // this.debugGraphics.beginFill(0xFF0022, 0.01);
+                // this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
+                // this.debugGraphics.endFill();
 
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
                 if (entryPoint) {
@@ -136,6 +136,7 @@ define(function(require) {
                 end     = points[j + 1].point;
                 fade    = points[j].fade;
                 opacity = this.drawLine(start, end, opacity, fade);
+                //console.log(end.x.toFixed(1) + ',' + end.y.toFixed(1));
             }
         },
 
@@ -189,15 +190,22 @@ define(function(require) {
                 var testLine;
                 for (var i = 0; i < LightRayView.SEARCH_ITERATIONS; i++) {
                     testPoint
-                        .set(this.origin)
+                        .set(this.start)
                         .add(directionVector.normalize().scale(length));
                     testLine = new PiecewiseCurve()
-                        .moveTo(this.origin)
-                        .lineTo(testPoint);
+                        .moveTo(testPoint)
+                        .lineTo(this.end)
+                        .close();
                     length += lengthChange * (testLine.intersects(shapeRect) ? 1 : -1);
                     lengthChange /= 2;
                 }
                 exitPoint = this.start.clone().add(directionVector.normalize().scale(length));
+
+                var local = this.toLocal(exitPoint);
+                this.debugGraphics.beginFill(0xFF0000, 1);
+                this.debugGraphics.drawCircle(local.x, local.y, 4);
+                this.debugGraphics.endFill();
+                //console.log(length);
             }
             return exitPoint;
         },
@@ -293,6 +301,10 @@ define(function(require) {
             if (startOpacity < 1) {
                 this.debugGraphics.beginFill(0x00FFFF, 1);
                 this.debugGraphics.drawCircle(start.x, start.y, 3);
+                this.debugGraphics.endFill();
+
+                this.debugGraphics.beginFill(0xFF8800, 1);
+                this.debugGraphics.drawCircle(end.x, end.y, 5);
                 this.debugGraphics.endFill();
                
                 // this.graphicsContext.beginPath();

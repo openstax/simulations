@@ -703,6 +703,7 @@ define(function (require) {
     SunView.LINE_WIDTH = 1;
     SunView.LINE_COLOR = '#ffff00';
     SunView.RAY_COLOR = SunView.LINE_COLOR;
+    SunView.RAY_DISTANCE = 1000;
 
     SunView.PANEL_WIDTH  = 0.065;
     SunView.PANEL_HEIGHT = 0.085;

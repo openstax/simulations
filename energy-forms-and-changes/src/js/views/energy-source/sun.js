@@ -73,7 +73,7 @@ define(function(require) {
             var raySource = new LightRaySourceView({
                 center:      sunCenter, 
                 innerRadius: sunRadius, 
-                outerRadius: 1000,      
+                outerRadius: 600, //SunView.RAY_DISTANCE,      
                 numRays:     40,            
                 color:       SunView.RAY_COLOR
             });
