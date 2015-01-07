@@ -18,28 +18,39 @@ define(function (require) {
         
         defaults: _.extend({}, Positionable.prototype.defaults, {
             existenceStrength: 1,
+            relativePosition: null,
             width:  Constants.Cloud.CLOUD_WIDTH,
             height: Constants.Cloud.CLOUD_HEIGHT
         }),
 
         initialize: function(attributes, options) {
             Positionable.prototype.initialize.apply(this, [attributes, options]);
+
+            if (!options.parentPosition || !this.get('relativePosition'))
+                throw 'Cloud model constructor requires a starting relativePosition as well as the parent position passed as an option.';
+
+            this.setPosition(options.parentPosition.clone().add(this.get('relativePosition')));
             
-            this.initShape();
+            this.shape         = this.createShape(this.get('position'));
+            this.relativeShape = this.createShape(this.get('relativePosition'));
         },
 
-        initShape: function() {
-            var x = this.get('position').x;
-            var y = this.get('position').y;
+        createShape: function(position) {
+            var x = position.x - this.get('width') / 2;
+            var y = position.y - this.get('height') / 2;
             var h = this.get('height');
             var w = this.get('width');
             
             // Create an ellipse
-            this.shape = PiecewiseCurve.createEllipse(x, y, h, w);
+            return PiecewiseCurve.createEllipse(x, y, h, w);
         },
 
         getShape: function() {
             return this.shape;
+        },
+
+        getRelativelyPositionedShape: function() {
+            return this.relativeShape;
         },
 
         translate: function(x, y) {

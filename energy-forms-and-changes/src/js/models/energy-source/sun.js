@@ -67,9 +67,9 @@ define(function (require) {
         },
 
         addClouds: function() {
-            this.clouds.add(new Cloud({ position: new Vector2( 0.020, 0.1050).add(this.get('position')) }));
-            this.clouds.add(new Cloud({ position: new Vector2( 0.017, 0.0875).add(this.get('position')) }));
-            this.clouds.add(new Cloud({ position: new Vector2(-0.010, 0.0800).add(this.get('position')) }));
+            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.020, 0.1050) }, { parentPosition: this.get('position') }));
+            this.clouds.add(new Cloud({ relativePosition: new Vector2( 0.017, 0.0875) }, { parentPosition: this.get('position') }));
+            this.clouds.add(new Cloud({ relativePosition: new Vector2(-0.010, 0.0800) }, { parentPosition: this.get('position') }));
         },
 
         preloadEnergyChunks: function(incomingEnergyRate) {

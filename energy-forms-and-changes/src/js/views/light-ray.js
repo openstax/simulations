@@ -73,6 +73,9 @@ define(function(require) {
             this.displayObject.addChild(canvasSprite);
             this.graphicsContext = ctx;
             this.canvasSprite = canvasSprite;
+
+            this.debugGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.debugGraphics);
         },
 
         addLightAbsorbingShape: function(lightAbsorbingShape) {
@@ -100,7 +103,7 @@ define(function(require) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
                 if (entryPoint) {
-                    points.push({ point: entryPoint, fade: lightAbsorbingShape.lightAbsorptionCoefficient });
+                    points.push({ point: entryPoint, fade: lightAbsorbingShape.get('lightAbsorptionCoefficient') });
                     var exitPoint = this.calculateShapeExitPoint(lightAbsorbingShape);
                     if (exitPoint) {
                         points.push({ point: exitPoint, fade: LightRayView.FADE_COEFFICIENT_IN_AIR });
@@ -121,9 +124,9 @@ define(function(require) {
             var end;
             var fade;
             for (var j = 0; j < points.length - 1; j++) {
-                start   = points[i].point;
-                end     = points[i + 1].point;
-                fade    = points[i].fade;
+                start   = points[j].point;
+                end     = points[j + 1].point;
+                fade    = points[j].fade;
                 opacity = this.drawLine(start, end, opacity, fade);
             }
         },
@@ -238,6 +241,7 @@ define(function(require) {
 
         clearGraphics: function() {
             this.graphicsContext.clearRect(0, 0, this.canvasSprite.width, this.canvasSprite.height);
+            this.debugGraphics.clear();
         },
 
         drawLine: function(start, end, startOpacity, fadeCoefficient) {
@@ -271,16 +275,30 @@ define(function(require) {
             this.graphicsContext.lineWidth = this.lineWidth;
             this.graphicsContext.strokeStyle = gradient;
 
+            this.graphicsContext.beginPath();
             this.graphicsContext.moveTo(start.x, start.y);
             this.graphicsContext.lineTo(end.x,   end.y);
 
             this.graphicsContext.stroke();
+            this.graphicsContext.closePath();
+
+            if (startOpacity < 1) {
+                this.debugGraphics.beginFill(0x00FFFF, 1);
+                this.debugGraphics.drawCircle(start.x, start.y, 3);
+                this.debugGraphics.endFill();
+               
+                // this.graphicsContext.beginPath();
+                // this.graphicsContext.arc(start.x, start.y, 3, 0, Math.PI * 2);
+                // this.graphicsContext.fillStyle = '#00ffff';
+                // this.graphicsContext.fill();
+                // this.graphicsContext.closePath();
+            }
 
             return opacityAtEndPoint;
         },
 
         colorWithAlpha: function(alpha) {
-            return 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + alpha + ')';
+            return 'rgba(' + this.rgba.r + ',' + this.rgba.g + ',' + this.rgba.b + ',' + alpha.toFixed(6) + ')';
         }
 
     }, Constants.LightRayView);

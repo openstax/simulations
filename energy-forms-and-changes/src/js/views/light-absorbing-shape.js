@@ -17,11 +17,11 @@ define(function(require) {
         },
 
         getBounds: function() {
-            this.get('shape').getBounds();
+            return this.get('shape').getBounds();
         },
 
         contains: function(shape) {
-            this.get('shape').contains(shape);
+            return this.get('shape').contains(shape);
         }
 
     });

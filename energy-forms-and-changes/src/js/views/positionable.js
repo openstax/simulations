@@ -16,10 +16,6 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            options = _.extend({
-                
-            }, options);
-
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
