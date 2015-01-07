@@ -144,7 +144,7 @@ define(function(require) {
                 shape: new Rectangle(panelOffset.x, panelOffset.y - 2, panelWidth, 20),
                 lightAbsorptionCoefficient: 0.3
             });
-            this.listenTo(this.model, 'change:cloudiness', function(model, cloudiness) { a.set('lightAbsorptionCoefficient', cloudiness / 100); });
+            this.listenTo(this.model, 'change:cloudiness', function(model, cloudiness) { a.set('lightAbsorptionCoefficient', cloudiness / 10); });
             this.raySource.addLightAbsorbingShape(a);
 
             var bgHeight = panelHeight * 0.6;

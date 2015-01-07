@@ -15,8 +15,12 @@ define(function(require) {
     var DEBUG = true;
     var rays = [];
     window.updateRays = function() {
-        for (var i = 0; i < rays.length; i++)
-            rays[i].updateLineSegments();
+        for (var i = 0; i < rays.length; i++) {
+            rays[i].graphicsContext.fillStyle = '#000';
+            rays[i].graphicsContext.fillRect(Math.random() * 500, Math.random() * 500, 4, 4);
+            rays[i].canvasSprite.texture = PIXI.Texture.fromCanvas(rays[i].canvas);
+            rays[i].updateGraphics();
+        }
     };
 
     /**
@@ -77,14 +81,23 @@ define(function(require) {
             canvas.height = this.bounds.h + this.padding * 2;
             var ctx = canvas.getContext('2d');
 
-            var canvasSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            var baseTexture = new PIXI.BaseTexture(canvas);
+            var texture = PIXI.Texture.fromCanvas(baseTexture);
+
+            var canvasSprite = new PIXI.Sprite(texture);
 
             this.displayObject.addChild(canvasSprite);
             this.graphicsContext = ctx;
+            this.baseTexture = baseTexture;
+            this.canvas = canvas;
             this.canvasSprite = canvasSprite;
 
             this.debugGraphics = new PIXI.Graphics();
             this.displayObject.addChild(this.debugGraphics);
+        },
+
+        updateGraphics: function() {
+            this.canvasSprite.texture = PIXI.Texture.fromCanvas(this.canvas);
         },
 
         addLightAbsorbingShape: function(lightAbsorbingShape) {
@@ -145,9 +158,10 @@ define(function(require) {
                 end     = points[j + 1].point;
                 fade    = points[j].fade;
                 opacity = this.drawLine(start, end, opacity, fade);
-                console.log(fade.toFixed(3));
+                //console.log(fade.toFixed(3));
                 //console.log(end.x.toFixed(1) + ',' + end.y.toFixed(1));
             }
+            this.updateGraphics();
         },
 
         calculateShapeEntryPoint: function(lightAbsorbingShape) {
