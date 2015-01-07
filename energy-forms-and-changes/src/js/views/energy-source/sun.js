@@ -42,8 +42,6 @@ define(function(require) {
             this.initClouds();
 
             this.raySource.update();
-
-            this.drawDebugOrigin();
         },
 
         initOrb: function(sunRadius, sunCenter) {
@@ -136,16 +134,14 @@ define(function(require) {
 
             // Block rays behind it
             //var globalPanelPosition = panel.getGlobalPosition();
-            // this.raySource.addLightAbsorbingShape(new LightAbsorbingShape({
-            //     shape: new Rectangle(panelOffset.x, panelOffset.y, panelWidth, panelHeight),
-            //     lightAbsorptionCoefficient: 0.05
-            // }));
-            var a = new LightAbsorbingShape({
+            this.raySource.addLightAbsorbingShape(new LightAbsorbingShape({
+                shape: new Rectangle(panelOffset.x, panelOffset.y, panelWidth, panelHeight),
+                lightAbsorptionCoefficient: 0.05
+            }));
+            this.raySource.addLightAbsorbingShape(new LightAbsorbingShape({
                 shape: new Rectangle(panelOffset.x, panelOffset.y - 2, panelWidth, 20),
                 lightAbsorptionCoefficient: 0.3
-            });
-            this.listenTo(this.model, 'change:cloudiness', function(model, cloudiness) { a.set('lightAbsorptionCoefficient', cloudiness / 10); });
-            this.raySource.addLightAbsorbingShape(a);
+            }));
 
             var bgHeight = panelHeight * 0.6;
             var bgWidth  = SunView.SLIDER_WIDTH;

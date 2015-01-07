@@ -12,16 +12,7 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var DEBUG = true;
-    var rays = [];
-    window.updateRays = function() {
-        for (var i = 0; i < rays.length; i++) {
-            rays[i].graphicsContext.fillStyle = '#000';
-            rays[i].graphicsContext.fillRect(Math.random() * 500, Math.random() * 500, 4, 4);
-            rays[i].canvasSprite.texture = PIXI.Texture.fromCanvas(rays[i].canvas);
-            rays[i].updateGraphics();
-        }
-    };
+    var DEBUG = false;
 
     /**
      * A view that represents an element model
@@ -58,8 +49,6 @@ define(function(require) {
             this.initGraphics();
 
             this.updateLineSegments();
-
-            rays.push(this);
         },
 
         initBounds: function() {
@@ -81,14 +70,10 @@ define(function(require) {
             canvas.height = this.bounds.h + this.padding * 2;
             var ctx = canvas.getContext('2d');
 
-            var baseTexture = new PIXI.BaseTexture(canvas);
-            var texture = PIXI.Texture.fromCanvas(baseTexture);
-
-            var canvasSprite = new PIXI.DynamicSprite(texture);//new PIXI.Sprite(texture);
+            var canvasSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
 
             this.displayObject.addChild(canvasSprite);
             this.graphicsContext = ctx;
-            this.baseTexture = baseTexture;
             this.canvas = canvas;
             this.canvasSprite = canvasSprite;
 
@@ -99,7 +84,6 @@ define(function(require) {
         updateGraphics: function() {
             this.canvasSprite.texture.destroy(true);
             this.canvasSprite.texture = PIXI.Texture.fromCanvas(this.canvas);
-            this.canvasSprite._dirtyTexture = true;
         },
 
         addLightAbsorbingShape: function(lightAbsorbingShape) {
