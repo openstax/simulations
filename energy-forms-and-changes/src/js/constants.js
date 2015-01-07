@@ -720,6 +720,8 @@ define(function (require) {
     SunView.LABEL_FONT = '16px Arial';
     SunView.LABEL_TITLE_FONT = '20px Arial';
 
+    SunView.CLOUD_ICON_WIDTH = 50;
+
     Constants.SunView = SunView;
 
 

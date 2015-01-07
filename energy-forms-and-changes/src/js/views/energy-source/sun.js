@@ -226,6 +226,13 @@ define(function(require) {
             title.y = panelHeight * 0.1;
             panel.addChild(title);    
             
+            // Create little cloud icon
+            var cloudIcon = Assets.createSprite(Assets.Images.CLOUD_1);
+            cloudIcon.scale.x = cloudIcon.scale.y = SunView.CLOUD_ICON_WIDTH / cloudIcon.width;
+            cloudIcon.anchor.x = cloudIcon.anchor.y = 0.5;
+            cloudIcon.x = panelWidth - (panelWidth - (title.y + title.width)) / 2;
+            cloudIcon.y = title.y + title.height / 2 - 2;
+            panel.addChild(cloudIcon);
         },
 
         showEnergyChunks: function() {
