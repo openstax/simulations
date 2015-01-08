@@ -2,9 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
-    var Functions = require('common/math/functions');
+    var Vector2        = require('common/math/vector2');
+    var Rectangle      = require('common/math/rectangle');
+    var Functions      = require('common/math/functions');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var ThermalContactArea = require('models/thermal-contact-area');
 
@@ -725,12 +726,69 @@ define(function (require) {
     Constants.SunView = SunView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                 CLOUD                               **
+     **                                                                     **
+     *************************************************************************/
+
     var Cloud = {};
 
     Cloud.CLOUD_WIDTH = 0.035; // In meters, though obviously not to scale.  Empirically determined.
     Cloud.CLOUD_HEIGHT = 0.0191 // In meters, the height that, given the width above, will maintain the right aspect ratio for the image
 
     Constants.Cloud = Cloud;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              SOLAR PANEL                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var SolarPanel = {};
+
+    SolarPanel.SOLAR_PANEL_OFFSET = new Vector2(0, 0.044);
+
+    SolarPanel.CONVERTER_OFFSET = new Vector2(0.015, -0.040);
+    SolarPanel.CONNECTOR_OFFSET = new Vector2(0.057, -0.040);
+
+    // Constants used for creating the path followed by the energy chunks.
+    //   Many of these numbers were empirically determined based on the images,
+    //   and will need updating if the images change.
+    SolarPanel.OFFSET_TO_CONVERGENCE_POINT  = new Vector2(SolarPanel.CONVERTER_OFFSET.x, 0.01);
+    SolarPanel.OFFSET_TO_FIRST_CURVE_POINT  = new Vector2(SolarPanel.CONVERTER_OFFSET.x, -0.025);
+    SolarPanel.OFFSET_TO_SECOND_CURVE_POINT = new Vector2(SolarPanel.CONVERTER_OFFSET.x + 0.005, -0.033);
+    SolarPanel.OFFSET_TO_THIRD_CURVE_POINT  = new Vector2(SolarPanel.CONVERTER_OFFSET.x + 0.015, SolarPanel.CONNECTOR_OFFSET.y);
+    SolarPanel.OFFSET_TO_CONNECTOR_CENTER   = SolarPanel.CONNECTOR_OFFSET;
+
+    // Inter chunk spacing time for when the chunks reach the 'convergence
+    //   point' at the bottom of the solar panel.  It is intended to
+    //   approximately match the rate at which the sun emits energy chunks.
+    SolarPanel.MIN_INTER_CHUNK_TIME = 1 / (Sun.ENERGY_CHUNK_EMISSION_PERIOD * Sun.NUM_EMISSION_SECTORS);
+
+    SolarPanel.PANEL_IMAGE_ASPECT_RATIO = 2.069149; // determined empirically and will have to change if the image changes
+    SolarPanel.PANEL_IMAGE_WIDTH = 0.15;
+    SolarPanel.PANEL_IMAGE_HEIGHT = SolarPanel.PANEL_IMAGE_WIDTH / SolarPanel.PANEL_IMAGE_ASPECT_RATIO;
+    SolarPanel.PANEL_IMAGE_BOUNDS = new Rectangle(
+        -SolarPanel.PANEL_IMAGE_WIDTH / 2,
+        -SolarPanel.PANEL_IMAGE_HEIGHT / 2,
+        SolarPanel.PANEL_IMAGE_WIDTH,
+        SolarPanel.PANEL_IMAGE_HEIGHT
+    );
+
+    // This would seem to make the opposite of what I would think is the absoprtion width (0.8 * width), but that's how they do it...
+    var absorptionZoneWidth = SolarPanel.PANEL_IMAGE_WIDTH * 0.2;
+
+    SolarPanel.ABSORPTION_SHAPE = new PiecewiseCurve()
+        .moveTo(SolarPanel.PANEL_IMAGE_BOUNDS.left(),                        SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
+        .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.right() - absorptionZoneWidth, SolarPanel.PANEL_IMAGE_BOUNDS.top())
+        .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.right(),                       SolarPanel.PANEL_IMAGE_BOUNDS.top())
+        .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.left()  + absorptionZoneWidth, SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
+        .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.left(),                        SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
+        .close();
+
+    Constants.SolarPanel = SolarPanel;
 
 
     return Constants;

@@ -340,20 +340,5 @@ define(function(require) {
     };
 
 
-    
-    PIXI.DynamicSprite = function() {
-        PIXI.Sprite.apply(this, arguments);
-        this._dirtyTexture = false;
-    };
-    PIXI.DynamicSprite.prototype = Object.create(PIXI.Sprite.prototype);
-    PIXI.DynamicSprite.prototype.constructor = PIXI.DynamicSprite;
-    PIXI.DynamicSprite.prototype._renderWebGL = function(renderSession) {
-        if (this._dirtyTexture) {
-            this._dirtyTexture = false;
-            renderSession.renderer.updateTexture(this.texture);
-        }
-        PIXI.Sprite.prototype._renderWebGL.call(this, renderSession);
-    };
-
     return PIXI;
 });
