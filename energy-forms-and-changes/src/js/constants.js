@@ -752,6 +752,8 @@ define(function (require) {
 
     SolarPanel.CONVERTER_OFFSET = new Vector2(0.015, -0.040);
     SolarPanel.CONNECTOR_OFFSET = new Vector2(0.057, -0.040);
+    SolarPanel.WIRE_OFFSET = new Vector2(SolarPanel.CONVERTER_OFFSET).add(0.009, 0.024);
+    SolarPanel.POST_OFFSET = new Vector2(SolarPanel.CONVERTER_OFFSET).add(0, 0.04);
 
     // Constants used for creating the path followed by the energy chunks.
     //   Many of these numbers were empirically determined based on the images,

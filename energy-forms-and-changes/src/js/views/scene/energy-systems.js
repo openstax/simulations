@@ -16,6 +16,7 @@ define(function(require) {
     var SunView    = require('views/energy-source/sun');
 
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
+    var SolarPanelView          = require('views/energy-converter/solar-panel');
 
     var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
     var FluorescentLightBulbView = require('views/energy-user/fluorescent-light-bulb');
@@ -134,11 +135,24 @@ define(function(require) {
             this.frontLayer.addChild(electricalGeneratorView.energyChunkLayer);
             this.frontLayer.addChild(electricalGeneratorView.hiddenEnergyChunkLayer);
 
+            // Solar panel
+            var solarPanelView = new SolarPanelView({
+                model: this.simulation.solarPanel,
+                mvt: this.mvt
+            });
+            this.solarPanelView = solarPanelView;
+
+            this.backLayer.addChild(solarPanelView.backLayer);
+            this.backLayer.addChild(solarPanelView.energyChunkLayer);
+            this.frontLayer.addChild(solarPanelView.frontLayer);
+
             // Bind visibility
             this.views.push(electricalGeneratorView);
+            this.views.push(solarPanelView);
 
             // Add to list for updating
             this.bindEnergyChunkVisibility(electricalGeneratorView);
+            this.bindEnergyChunkVisibility(solarPanelView);
         },
 
         initUsers: function() {

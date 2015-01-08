@@ -18,10 +18,6 @@ define(function(require) {
          *
          */
         initialize: function(options) {
-            options = _.extend({
-                
-            }, options);
-
             EnergyConverterView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:wheelRotationalAngle', this.updateWheelRotation);
