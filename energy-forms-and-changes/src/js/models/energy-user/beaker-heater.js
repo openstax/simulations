@@ -136,7 +136,7 @@ define(function (require) {
 
                 // Prevent the water from going beyond the boiling point.
                 if (this.beaker.getEnergyBeyondMaxTemperature() > 0)
-                    this.beaker.changeEnergy(-beaker.getEnergyBeyondMaxTemperature());
+                    this.beaker.changeEnergy(-this.beaker.getEnergyBeyondMaxTemperature());
             }
 
             if (this.beaker.getEnergyChunkBalance() > 0) {

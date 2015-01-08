@@ -342,7 +342,7 @@ define(function(require) {
         _update: function(time, deltaTime) {
             //if (!this.simulation.get('paused'))
             for (var i = 0; i < this.views.length; i++)
-                this.views[i].update(time, deltaTime);
+                this.views[i].update(time, deltaTime, this.simulation.get('paused'));
         },
 
         blockPositionChanged: function() {

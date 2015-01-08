@@ -18,8 +18,9 @@ define(function(require) {
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
     var SolarPanelView          = require('views/energy-converter/solar-panel');
 
+    var BeakerHeaterView          = require('views/energy-user/beaker-heater');
     var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
-    var FluorescentLightBulbView = require('views/energy-user/fluorescent-light-bulb');
+    var FluorescentLightBulbView  = require('views/energy-user/fluorescent-light-bulb');
 
     // Constants
     var Constants = require('constants');
@@ -172,7 +173,7 @@ define(function(require) {
             this.backLayer.addChild(incandescentLightBulbView.energyChunkLayer);
             this.backLayer.addChild(incandescentLightBulbView.frontLayer);
 
-            
+            // Fluorescent bulb
             var fluorescentLightBulbView = new FluorescentLightBulbView({
                 model: this.simulation.fluorescentLightBulb,
                 mvt: this.mvt
@@ -183,19 +184,37 @@ define(function(require) {
             this.backLayer.addChild(fluorescentLightBulbView.energyChunkLayer);
             this.backLayer.addChild(fluorescentLightBulbView.frontLayer);
 
+            // Beaker heater
+            var beakerHeaterView = new BeakerHeaterView({
+                model: this.simulation.beakerHeater,
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+            this.beakerHeaterView = beakerHeaterView;
+
+            this.backLayer.addChild(beakerHeaterView.backLayer);
+            this.backLayer.addChild(beakerHeaterView.energyChunkLayer);
+            this.backLayer.addChild(beakerHeaterView.frontLayer);
+
+            this.backLayer.addChild(beakerHeaterView.beakerView.backLayer);
+            this.backLayer.addChild(beakerHeaterView.beakerView.energyChunkLayer);
+            this.backLayer.addChild(beakerHeaterView.beakerView.frontLayer);
+
             // Bind visibility
             this.views.push(incandescentLightBulbView);
             this.views.push(fluorescentLightBulbView);
+            this.views.push(beakerHeaterView);
 
             // Add to list for updating
             this.bindEnergyChunkVisibility(incandescentLightBulbView);
             this.bindEnergyChunkVisibility(fluorescentLightBulbView);
+            this.bindEnergyChunkVisibility(beakerHeaterView);
         },
 
         _update: function(time, deltaTime) {
             //if (!this.simulation.get('paused'))
             for (var i = 0; i < this.views.length; i++)
-                this.views[i].update(time, deltaTime);
+                this.views[i].update(time, deltaTime, this.simulation.get('paused'));
         },
 
         showEnergyChunks: function() {

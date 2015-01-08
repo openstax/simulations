@@ -827,6 +827,9 @@ define(function (require) {
     BeakerHeater.RADIATION_NUM_DIRECTION_CHANGES = 4; // Empirically chosen
     BeakerHeater.RADIATION_NOMINAL_TRAVEL_VECTOR = new Vector2(0, BeakerHeater.RADIATED_ENERGY_CHUNK_TRAVEL_DISTANCE / BeakerHeater.RADIATION_NUM_DIRECTION_CHANGES);
 
+    Constants.BeakerHeater = BeakerHeater;
+
+    
 
     return Constants;
 });
