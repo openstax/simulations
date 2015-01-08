@@ -77,7 +77,7 @@ define(function (require) {
         reset: function() {
             MovableElement.prototype.reset.apply(this);
 
-            this.set('energy', this.mass * this.specificHeat * Constants.ROOM_TEMPERATURE);
+            this.set('energy', this.get('mass') * this.get('specificHeat') * Constants.ROOM_TEMPERATURE);
             this.addInitialEnergyChunks();
         },
 
