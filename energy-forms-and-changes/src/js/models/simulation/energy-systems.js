@@ -105,6 +105,11 @@ define(function (require, exports, module) {
                 this.users
             ]);
 
+            // Events
+            this.listenTo(this.electricalGenerator, 'change:active', function(faucet, active) {
+                this.faucet.set('waterPowerableElementInPlace', active);
+            });
+
             // The sun needs a reference to the solar panel
             this.sun.set('solarPanel', this.solarPanel);
 
@@ -115,7 +120,7 @@ define(function (require, exports, module) {
             this.set('converter', this.electricalGenerator);
             this.set('user',      this.incandescentLightBulb);
 
-            this.faucet.set('waterPowerableElementInPlace', true);
+            //this.faucet.set('waterPowerableElementInPlace', true);
             this.get('source').activate();
             this.get('converter').activate();
             this.get('user').activate();
