@@ -93,9 +93,6 @@ define(function(require) {
                 this.displayObject.x = globalPoint.x;
                 this.displayObject.y = globalPoint.y;
             }
-            else {
-                console.error('not ready to update position yet');
-            }
         },
 
         positionUpdated: function() {

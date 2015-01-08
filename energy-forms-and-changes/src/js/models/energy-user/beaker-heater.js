@@ -50,7 +50,7 @@ define(function (require) {
 
             // Beaker
             this.beaker = new Beaker({
-                position: BeakerHeater.BEAKER_OFFSET,
+                position: new Vector2(BeakerHeater.BEAKER_OFFSET).add(this.get('position')),
                 width:    BeakerHeater.BEAKER_WIDTH,
                 height:   BeakerHeater.BEAKER_HEIGHT
             });
@@ -58,7 +58,7 @@ define(function (require) {
             
             // Thermometer
             this.thermometer = new Thermometer({
-                position: BeakerHeater.THERMOMETER_OFFSET,
+                position: new Vector2(BeakerHeater.THERMOMETER_OFFSET).add(this.get('position')),
                 attached: true, // It's attached to the beaker permanently
                 active: true
             }, {
@@ -87,10 +87,14 @@ define(function (require) {
                 this.updateHeatingProportion(deltaTime, incomingEnergy);
 
                 // Exchange energy between the beaker and everything else
+                this.beaker.update(time, deltaTime);
                 this.updateBeakerEnergy(deltaTime);
 
                 // Move the last energy chunks
                 this.moveRadiatedEnergyChunks(deltaTime);
+
+                // Update thermometer
+                this.thermometer.update(time, deltaTime);
             }
         },
 
@@ -146,6 +150,7 @@ define(function (require) {
                     this.beaker.getRect().left() + Math.random() * this.beaker.getRect().w,
                     this.beaker.getRect().bottom() + Math.random() * (this.beaker.getRect().h * this.beaker.get('fluidLevel'))
                 );
+
                 var chunk = this.beaker.extractClosestEnergyChunk(extractionPoint);
                 if (chunk) {
                     chunk.set('zPosition', 0); // Move to front of z order.
@@ -158,6 +163,8 @@ define(function (require) {
                     ));
                 }
             }
+
+            //console.log(this.radiatedEnergyChunks.length);
         },
 
         updateHeatingProportion: function(deltaTime, incomingEnergy) {

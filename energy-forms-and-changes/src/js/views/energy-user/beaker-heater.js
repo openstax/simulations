@@ -6,8 +6,9 @@ define(function(require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var EnergyUserView = require('views/energy-user');
-    var BeakerView     = require('views/element/beaker');
+    var EnergyUserView  = require('views/energy-user');
+    var BeakerView      = require('views/element/beaker');
+    var ThermometerView = require('views/element/thermometer');
 
     var Assets = require('assets');
 
@@ -39,6 +40,10 @@ define(function(require) {
 
             this.initImages();
             this.initBeakerView();
+            this.initThermometerView();
+
+            this.createEnergyChunkLayer('radiatedEnergyChunks', this.model.radiatedEnergyChunks);
+            this.energyChunkLayer.addChild(this.radiatedEnergyChunks);
         },
 
         /**
@@ -74,6 +79,16 @@ define(function(require) {
                 simulation: this.simulation
             });
             this.beakerView = beakerView;
+        },
+
+        initThermometerView: function() {
+            var thermometerView = new ThermometerView({
+                model: this.model.thermometer,
+                mvt: this.mvt,
+                simulation: this.simulation,
+                measurableElementViews: [ this.beakerView ]
+            });
+            this.thermometerView = thermometerView;
         },
 
         updateHeatProportion: function(model, heatProportion) {

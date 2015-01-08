@@ -131,7 +131,7 @@ define(function (require) {
             else {
                 // Chunk is out of the bounds of this element, so make it wander
                 //   towards it.
-                chunk.zPosition = 0;
+                chunk.set('zPosition', 0);
                 this.approachingEnergyChunks.add(chunk);
                 this.energyChunkWanderControllers.push(new EnergyChunkWanderController(chunk, this.get('position')));
             }
@@ -237,7 +237,7 @@ define(function (require) {
                     //   almost always be chosen.
                     compensatedChunkPosition
                         .set(chunk.get('position'))
-                        .sub(0, Constants.Z_TO_Y_OFFSET_MULTIPLIER * chunk.zPosition);
+                        .sub(0, Constants.Z_TO_Y_OFFSET_MULTIPLIER * chunk.get('zPosition'));
                     compensatedDistance = compensatedChunkPosition.distance(point);
 
                     if (compensatedDistance < closestCompensatedDistance) {

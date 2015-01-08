@@ -200,6 +200,8 @@ define(function(require) {
             this.backLayer.addChild(beakerHeaterView.beakerView.energyChunkLayer);
             this.backLayer.addChild(beakerHeaterView.beakerView.frontLayer);
 
+            this.backLayer.addChild(beakerHeaterView.thermometerView.displayObject);
+
             // Bind visibility
             this.views.push(incandescentLightBulbView);
             this.views.push(fluorescentLightBulbView);
