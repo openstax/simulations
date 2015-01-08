@@ -33,6 +33,7 @@ define(function(require) {
 
             this.listenTo(this.slice.energyChunkList, 'add',    this.chunkAdded);
             this.listenTo(this.slice.energyChunkList, 'remove', this.chunkRemoved);
+            this.listenTo(this.slice.energyChunkList, 'reset',  this.chunksReset);
         },
 
         initGraphics: function() {
@@ -53,11 +54,17 @@ define(function(require) {
         chunkRemoved: function(chunk) {
             for (var i = 0; i < this.views.length; i++) {
                 if (this.views[i].model === chunk) {
-                    this.views[i].stopListening();
-                    this.displayObject.removeChild(this.views[i].displayObject);
+                    this.views[i].remove(this.displayObject);
                     this.views.slice(i, 1);
                     break;
                 }
+            }
+        },
+
+        chunksReset: function() {
+            for (var i = this.views.length - 1; i >= 0; i--) {
+                this.views[i].remove(this.displayObject);
+                this.views.splice(i, 1);
             }
         },
 

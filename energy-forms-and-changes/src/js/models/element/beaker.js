@@ -148,7 +148,7 @@ define(function (require) {
             for (var i = 0; i < EnergyChunkDistributor.NUM_INITIAL_DISTRIBUTION_ATTEMPTS; i++) {
                 if (!EnergyChunkDistributor.updatePositions(this.slices, Constants.SIM_TIME_PER_TICK_NORMAL, true))
                     break;
-                console.log('Beaker: distributing...');
+                console.log('Beaker ' + this.cid + ': distributing...');
             }
         },
 

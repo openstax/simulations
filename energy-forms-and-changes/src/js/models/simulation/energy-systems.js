@@ -49,8 +49,6 @@ define(function (require, exports, module) {
 
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
 
-            this.initComponents();
-
             this.on('change:source',    this.sourceChanged);
             this.on('change:converter', this.converterChanged);
             this.on('change:user',      this.userChanged);
