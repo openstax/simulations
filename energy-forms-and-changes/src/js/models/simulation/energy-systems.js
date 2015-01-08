@@ -21,8 +21,9 @@ define(function (require, exports, module) {
 
     var IncandescentLightBulb = require('models/energy-user/incandescent-light-bulb');
     var FluorescentLightBulb  = require('models/energy-user/fluorescent-light-bulb');
-    var CarouselAnimator      = require('models/carousel-animator');
+    var BeakerHeater          = require('models/energy-user/beaker-heater');
 
+    var CarouselAnimator     = require('models/carousel-animator');
     var EnergySystemsElement = require('models/energy-systems-element');
     
     // Constants

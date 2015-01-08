@@ -793,5 +793,37 @@ define(function (require) {
     Constants.SolarPanel = SolarPanel;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                             BEAKER HEATER                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var BeakerHeater = {};
+
+    BeakerHeater.HEATER_ELEMENT_OFFSET = new Vector2(-0.002, 0.022);
+    BeakerHeater.BEAKER_OFFSET         = new Vector2( 0,     0.025);
+    BeakerHeater.THERMOMETER_OFFSET    = new Vector2( 0.033, 0.035);
+
+    // Offsets need for creating the path followed by the energy chunks.  These
+    // were empirically determined based on images, will need to change if the
+    // images are changed.
+    BeakerHeater.OFFSET_TO_LEFT_SIDE_OF_WIRE       = new Vector2(-0.04,   -0.04);
+    BeakerHeater.OFFSET_TO_LEFT_SIDE_OF_WIRE_BEND  = new Vector2(-0.02,   -0.04);
+    BeakerHeater.OFFSET_TO_FIRST_WIRE_CURVE_POINT  = new Vector2(-0.01,   -0.0375);
+    BeakerHeater.OFFSET_TO_SECOND_WIRE_CURVE_POINT = new Vector2(-0.001,  -0.025);
+    BeakerHeater.OFFSET_TO_THIRD_WIRE_CURVE_POINT  = new Vector2(-0.0005, -0.0175);
+    BeakerHeater.OFFSET_TO_BOTTOM_OF_CONNECTOR     = new Vector2(0,       -0.01);
+    BeakerHeater.OFFSET_TO_CONVERSION_POINT        = new Vector2(0,        0.012);
+
+    BeakerHeater.BEAKER_WIDTH = 0.075; // In meters.
+    BeakerHeater.BEAKER_HEIGHT = BEAKER_WIDTH * 0.9;
+    BeakerHeater.HEATING_ELEMENT_ENERGY_CHUNK_VELOCITY = 0.0075; // In meters/sec, quite slow.
+    //BeakerHeater.HEATER_ELEMENT_2D_HEIGHT = HEATER_ELEMENT_OFF_IMAGE.getHeight();
+    BeakerHeater.MAX_HEAT_GENERATION_RATE = 5000; // Joules/sec, not connected to incoming energy.
+    BeakerHeater.RADIATED_ENERGY_CHUNK_TRAVEL_DISTANCE = 0.2; // In meters.
+    BeakerHeater.HEAT_ENERGY_CHANGE_RATE = 0.5; // In proportion per second.
+
+
     return Constants;
 });
