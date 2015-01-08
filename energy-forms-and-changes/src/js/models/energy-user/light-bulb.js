@@ -23,7 +23,7 @@ define(function (require) {
             hasFilament: false,
             proportionOfThermalChunksRadiated: 0,
 
-            // This is the only class that really needs this info, and really it should be designed
+            // Most other classes don't need this info this info, and really it should be designed
             //   to not need it, but for the sake of sticking with the original algorithms and not
             //   introducing new bugs, we're going to keep it. 
             energyChunksVisible: false 

@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var _              = require('underscore');
-    //var Vector2        = require('common/math/vector2');
+    var Vector2        = require('common/math/vector2');
     var Rectangle      = require('common/math/rectangle');
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -46,7 +46,9 @@ define(function (require) {
             // Max height above water where steam still affects the temperature.
             maxSteamHeight: 0,
 
-            specificHeat: Constants.Beaker.WATER_SPECIFIC_HEAT
+            specificHeat: Constants.Beaker.WATER_SPECIFIC_HEAT,
+
+            position: new Vector2()
         }),
 
         initialize: function(attributes, options) {

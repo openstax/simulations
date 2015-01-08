@@ -40,7 +40,6 @@ define(function (require) {
                     }, this);
                     if (!this.followedElement && this.simulation.getBeaker().getThermalContactArea().getBounds().contains(this.get('position'))) {
                         // Stick to the beaker.
-                        console.log('following beaker');
                         this.follow(this.simulation.getBeaker());
                     }
                 }

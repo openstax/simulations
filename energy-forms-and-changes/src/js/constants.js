@@ -819,10 +819,13 @@ define(function (require) {
     BeakerHeater.BEAKER_WIDTH = 0.075; // In meters.
     BeakerHeater.BEAKER_HEIGHT = BeakerHeater.BEAKER_WIDTH * 0.9;
     BeakerHeater.HEATING_ELEMENT_ENERGY_CHUNK_VELOCITY = 0.0075; // In meters/sec, quite slow.
-    //BeakerHeater.HEATER_ELEMENT_2D_HEIGHT = HEATER_ELEMENT_OFF_IMAGE.getHeight();
+    BeakerHeater.HEATER_ELEMENT_HEIGHT = 60 / Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
     BeakerHeater.MAX_HEAT_GENERATION_RATE = 5000; // Joules/sec, not connected to incoming energy.
-    BeakerHeater.RADIATED_ENERGY_CHUNK_TRAVEL_DISTANCE = 0.2; // In meters.
     BeakerHeater.HEAT_ENERGY_CHANGE_RATE = 0.5; // In proportion per second.
+
+    BeakerHeater.RADIATED_ENERGY_CHUNK_TRAVEL_DISTANCE = 0.2; // In meters.
+    BeakerHeater.RADIATION_NUM_DIRECTION_CHANGES = 4; // Empirically chosen
+    BeakerHeater.RADIATION_NOMINAL_TRAVEL_VECTOR = new Vector2(0, BeakerHeater.RADIATED_ENERGY_CHUNK_TRAVEL_DISTANCE / BeakerHeater.RADIATION_NUM_DIRECTION_CHANGES);
 
 
     return Constants;

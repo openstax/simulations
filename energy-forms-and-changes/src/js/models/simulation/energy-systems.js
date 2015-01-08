@@ -76,6 +76,7 @@ define(function (require, exports, module) {
             // Users
             this.incandescentLightBulb = new IncandescentLightBulb();
             this.fluorescentLightBulb  = new FluorescentLightBulb();
+            this.beakerHeater          = new BeakerHeater();
 
             // Group lists
             this.sources = [
@@ -91,7 +92,7 @@ define(function (require, exports, module) {
             ];
 
             this.users = [
-                new EnergySystemsElement(),
+                this.beakerHeater,
                 this.incandescentLightBulb,
                 this.fluorescentLightBulb
             ];
