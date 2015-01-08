@@ -76,9 +76,13 @@ define(function(require) {
         initElements: function() {
             this.initAir();
 
+            /* If there's to be any overlap between converters and users,
+             *   we want the converters on top, so that's why we're going
+             *   to add users first and then converters.
+            */
             this.initSources();
-            this.initConverters();
             this.initUsers();
+            this.initConverters();
         },
 
         initAir: function() {
@@ -108,6 +112,7 @@ define(function(require) {
                 model: this.simulation.sun,
                 mvt: this.mvt
             });
+            this.backLayer.addChild(this.sunView.skyLayer);
             this.frontLayer.addChild(this.sunView.energyChunkLayer);
             this.frontLayer.addChild(this.sunView.displayObject);
             this.frontLayer.addChild(this.sunView.cloudLayer);

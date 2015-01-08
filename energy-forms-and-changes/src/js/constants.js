@@ -817,7 +817,7 @@ define(function (require) {
     BeakerHeater.OFFSET_TO_CONVERSION_POINT        = new Vector2(0,        0.012);
 
     BeakerHeater.BEAKER_WIDTH = 0.075; // In meters.
-    BeakerHeater.BEAKER_HEIGHT = BEAKER_WIDTH * 0.9;
+    BeakerHeater.BEAKER_HEIGHT = BeakerHeater.BEAKER_WIDTH * 0.9;
     BeakerHeater.HEATING_ELEMENT_ENERGY_CHUNK_VELOCITY = 0.0075; // In meters/sec, quite slow.
     //BeakerHeater.HEATER_ELEMENT_2D_HEIGHT = HEATER_ELEMENT_OFF_IMAGE.getHeight();
     BeakerHeater.MAX_HEAT_GENERATION_RATE = 5000; // Joules/sec, not connected to incoming energy.

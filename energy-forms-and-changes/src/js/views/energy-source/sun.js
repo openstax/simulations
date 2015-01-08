@@ -36,12 +36,27 @@ define(function(require) {
             var sunRadius = this.mvt.modelToViewDeltaX(Constants.Sun.RADIUS);
             var sunCenter = this.mvt.modelToViewDelta(Constants.Sun.OFFSET_TO_CENTER_OF_SUN);
             
+            this.initSky(sunCenter);
             this.initOrb(sunRadius, sunCenter);
             this.initRays(sunRadius, sunCenter);
             this.initControls();
             this.initClouds();
 
             this.raySource.update();
+        },
+
+        initSky: function(sunCenter) {
+            // Create some blue sky background
+            var blueSky = new PIXI.Sprite(PIXI.Texture.generateRoundParticleTexture(120, 600, '#82CFFD'));
+            blueSky.anchor.x = blueSky.anchor.y = 0.5;
+
+            // Move it
+            blueSky.x = sunCenter.x;
+            blueSky.y = sunCenter.y;
+
+            // Put it in a separate layer to go behind everything
+            this.skyLayer = new PIXI.DisplayObjectContainer();
+            this.skyLayer.addChild(blueSky);
         },
 
         initOrb: function(sunRadius, sunCenter) {
@@ -244,6 +259,17 @@ define(function(require) {
             EnergySourceView.prototype.hideEnergyChunks.apply(this);
             this.lightRays.visible = true;
         },
+
+        updatePosition: function(model, position) {
+            var viewPoint = this.mvt.modelToView(position);
+            this.displayObject.x = this.skyLayer.x = viewPoint.x;
+            this.displayObject.y = this.skyLayer.y = viewPoint.y;
+        },
+
+        updateOpacity: function(model, opacity) {
+            EnergySourceView.prototype.updateOpacity.apply(this, [model, opacity]);
+            this.skyLayer.alpha = opacity;
+        }
 
     }, Constants.SunView);
 
