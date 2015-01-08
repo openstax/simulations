@@ -188,7 +188,7 @@ define(function (require) {
                 this.radiatedEnergyChunkMovers[i].moveAlongPath(deltaTime);
                 if (this.radiatedEnergyChunkMovers[i].finished()) {
                     // Remove the chunk and its mover
-                    this.energyChunks.remove(this.radiatedEnergyChunkMovers[i].energyChunk);
+                    this.radiatedEnergyChunks.remove(this.radiatedEnergyChunkMovers[i].energyChunk);
                     this.radiatedEnergyChunkMovers.splice(i, 1);
                 }
             }
