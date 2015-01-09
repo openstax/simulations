@@ -106,6 +106,8 @@ define(function (require, exports, module) {
             // Events
             this.listenTo(this.electricalGenerator, 'change:active', function(faucet, active) {
                 this.faucet.set('waterPowerableElementInPlace', active);
+                this.teapot.set('steamPowerableElementInPlace', active);
+                this.biker.set('mechanicalPoweredSystemIsNext', active);
             });
 
             // The sun needs a reference to the solar panel

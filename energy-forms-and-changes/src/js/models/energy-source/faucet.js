@@ -34,6 +34,7 @@ define(function (require) {
             this.transferNextAvailableChunk = true;
             this.energySinceLastChunk = 0;
 
+            // Cached objects
             this._initialChunkPosition = new Vector2();
             this._initialChunkVelocity = new Vector2();
             this._initialWaterDropPosition = new Vector2();

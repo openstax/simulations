@@ -829,7 +829,37 @@ define(function (require) {
 
     Constants.BeakerHeater = BeakerHeater;
 
-    
+
+    /*************************************************************************
+     **                                                                     **
+     **                                 TEAPOT                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Teapot = {};
+
+    Teapot.TEAPOT_OFFSET = new Vector2(0.0, 0.015);
+
+    // Offsets and other constants used for energy paths.  These are mostly
+    //   empirically determined and coordinated with the image.
+    Teapot.SPOUT_BOTTOM_OFFSET   = new Vector2(0.03, 0.02);
+    Teapot.SPOUT_TIP_OFFSET      = new Vector2(0.25, 0.3);
+    Teapot.DISTANT_TARGET_OFFSET = new Vector2(1,    1);
+    Teapot.WATER_SURFACE_HEIGHT_OFFSET = 0; // From teapot position, in meters.
+    Teapot.THERMAL_ENERGY_CHUNK_Y_ORIGIN = -0.05; // In meters, must be coordinated with heater position.
+    Teapot.THERMAL_ENERGY_CHUNK_X_ORIGIN_RANGE = range({ min: -0.015, max: 0.015 }); // In meters, must be coordinated with heater position.
+
+    // Miscellaneous other constants.
+    Teapot.MAX_ENERGY_CHANGE_RATE = Constants.MAX_ENERGY_PRODUCTION_RATE / 5; // In joules/second
+    Teapot.COOLING_CONSTANT = 0.1; // Controls rate at which tea pot cools down, empirically determined.
+    Teapot.COOL_DOWN_COMPLETE_THRESHOLD = 30; // In joules/second
+    Teapot.ENERGY_CHUNK_TRANSFER_DISTANCE_RANGE = range({ min: 0.12, max: 0.15 });
+    Teapot.ENERGY_CHUNK_WATER_TO_SPOUT_TIME = 0.7; // Used to keep chunks evenly spaced.
+    Teapot.MECHANICAL_ENERGY_CHUNK_RATE = 0.2; // Proportion of energy chunks that will be mechanical vs thermal
+
+    Constants.Teapot = Teapot;
+
+
 
     return Constants;
 });
