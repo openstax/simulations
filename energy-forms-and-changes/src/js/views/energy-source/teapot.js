@@ -68,13 +68,13 @@ define(function(require) {
             });
             this.burnerView = burnerView;
 
-            this.displayObject.addChild(burnerView.backLayer);
-            this.displayObject.addChild(burnerView.energyChunkLayer);
-            this.displayObject.addChild(burnerView.frontLayer);
+            this.displayObject.addChildAt(burnerView.frontLayer, 0);
+            this.displayObject.addChildAt(burnerView.energyChunkLayer, 0);
+            this.displayObject.addChildAt(burnerView.backLayer, 0);
 
             burnerView.setPosition(
-                burnerStandRect.center().x - burnerView.backLayer.width / 2,
-                burnerStandRect.top() - burnerView.backLayer.height + 15
+                burnerStandRect.center().x,
+                burnerStandRect.top() + 5
             );
         },
 
@@ -83,10 +83,13 @@ define(function(require) {
                 model: this.model,
                 mvt: this.mvt,
                 rectangle: burnerStandRect,
-                projectedEdgeLength: burnerStandRect.w
+                projectedEdgeLength: burnerStandRect.w * 0.2
             });
 
-            this.displayObject.addChild(burnerStandView.displayObject);
+            burnerStandView.stopListening(this.model, 'change:position');
+            burnerStandView.setPosition(0, burnerStandRect.h);
+
+            this.displayObject.addChildAt(burnerStandView.displayObject, 0);
         },
 
         initSteam: function() {
@@ -94,13 +97,13 @@ define(function(require) {
         },
 
         showEnergyChunks: function() {
-            EnergyUserView.prototype.showEnergyChunks.apply(this);
-            this.beakerView.showEnergyChunks();
+            EnergySourceView.prototype.showEnergyChunks.apply(this);
+            this.burnerView.showEnergyChunks();
         },
 
         hideEnergyChunks: function() {
-            EnergyUserView.prototype.hideEnergyChunks.apply(this);
-            this.beakerView.hideEnergyChunks();
+            EnergySourceView.prototype.hideEnergyChunks.apply(this);
+            this.burnerView.hideEnergyChunks();
         },
 
     }, Constants.TeapotView);

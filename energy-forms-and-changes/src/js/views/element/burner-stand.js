@@ -43,9 +43,9 @@ define(function(require) {
         initGraphics: function() {
             var rect = this.rectangle;
 
-            var leftCurve  = this.createSideCurve(new Vector2(rect.right(), rect.y), rect.w, this.projectedEdgeLength);
-            var rightCurve = this.createSideCurve(new Vector2(rect.x,       rect.y), rect.w, this.projectedEdgeLength);
-            var topCurve   = this.createTopCurve( new Vector2(rect.x,       rect.y), rect.h, this.projectedEdgeLength);
+            var leftCurve  = this.createSideCurve(new Vector2(rect.x,       rect.y), rect.h, this.projectedEdgeLength);
+            var rightCurve = this.createSideCurve(new Vector2(rect.right(), rect.y), rect.h, this.projectedEdgeLength);
+            var topCurve   = this.createTopCurve( new Vector2(rect.x,       rect.y), rect.w, this.projectedEdgeLength);
 
             // Outline style
             var lineStyle = {

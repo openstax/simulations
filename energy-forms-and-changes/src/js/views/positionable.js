@@ -40,8 +40,12 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            this.displayObject.x = viewPoint.x;
-            this.displayObject.y = viewPoint.y;
+            this.setPosition(viewPoint.x, viewPoint.y);
+        },
+
+        setPosition: function(x, y) {
+            this.displayObject.x = x;
+            this.displayObject.y = y;
         },
 
         update: function(time, deltaTime) {
