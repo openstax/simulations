@@ -1,5 +1,6 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
 
 .energy-system-elements-row {
@@ -40,7 +41,31 @@
 				}
 			}
 		}
+	}
+}
 
-		
+.energy-symbols-legend {
+	width: @side-panels-width;
+	position: absolute;
+	right: 15px;
+	top: 84px;
+	padding: (@side-panels-padding - 8) @side-panels-padding;
+	opacity: 0;
+	.transition(~'opacity 100ms');
+	.gray-panel();
+
+	&.visible {
+		opacity: 1;
+	}
+
+	.energy-symbols-legend-label {
+		display: block;
+		margin: 8px 0;
+
+		.energy-symbol {
+		    float: left;
+		    margin-right: 10px;
+		    margin-top: -1px;
+		}
 	}
 }

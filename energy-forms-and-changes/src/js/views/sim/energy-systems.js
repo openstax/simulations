@@ -168,13 +168,35 @@ define(function (require) {
                 ]
             };
 
+            var energySymbols = [
+                {
+                    label: 'Mechanical',
+                    src: Assets.Images.E_MECH_BLANK
+                },{
+                    label: 'Electrical',
+                    src: Assets.Images.E_ELECTRIC_BLANK
+                },{
+                    label: 'Thermal',
+                    src: Assets.Images.E_THERM_BLANK_ORANGE
+                },{
+                    label: 'Light',
+                    src: Assets.Images.E_LIGHT_BLANK
+                },{
+                    label: 'Chemical',
+                    src: Assets.Images.E_CHEM_BLANK_LIGHT
+                }
+            ];
+
             this.$el.html(this.template({
-                elementGroups: elements
+                elementGroups: elements,
+                energySymbols: energySymbols
             }));
 
             this.elementSelected(null, this.simulation.get('source'));
             this.elementSelected(null, this.simulation.get('converter'));
             this.elementSelected(null, this.simulation.get('user'));
+
+            this.$energySymbolsLegend = this.$('.energy-symbols-legend');
         },
 
         /**
@@ -254,10 +276,14 @@ define(function (require) {
         },
 
         toggleEnergySymbols: function(event) {
-            if ($(event.target).is(':checked'))
+            if ($(event.target).is(':checked')) {
                 this.sceneView.showEnergyChunks();
-            else
+                this.$energySymbolsLegend.addClass('visible');
+            }
+            else {
                 this.sceneView.hideEnergyChunks();
+                this.$energySymbolsLegend.removeClass('visible');
+            }
         }
 
     });

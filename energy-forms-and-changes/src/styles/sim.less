@@ -1,5 +1,6 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
 
 
@@ -28,30 +29,13 @@
 }
 
 .energy-symbols-checkbox-panel {
+    width: @side-panels-width;
     position: absolute;
     right: 15px;
     top: 15px;
-    padding: 15px;
+    padding: @side-panels-padding;
     color: #000;
     .gray-panel();
-
-    .energy-symbol {
-        position: relative;
-        display: inline-block;
-        float: right;
-        text-align: center;
-        color: #000;
-        font-size: 16px;
-        margin-left: 6px;
-        margin-top: -3px;
-        margin-bottom: -1px;
-        background-repeat: no-repeat;
-
-        &:after {
-            content: 'E';
-            display: block;
-        }
-    }
 
     .energy-symbols-checkbox + label {
         opacity: 0.6;
@@ -59,5 +43,30 @@
 
     .energy-symbols-checkbox:checked + label {
         opacity: 1;
+    }
+
+    .energy-symbol {
+        float: right;
+        margin-top: -4px;
+        margin-bottom: -2px;
+        margin-left: 6px;
+    }
+}
+
+.energy-symbol {
+    position: relative;
+    display: inline-block;
+    background-repeat: no-repeat;
+
+    &:after {
+        content: 'E';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        text-align: center;
+        font-size: 14px;
+        color: #000;
+        line-height: 23px;
     }
 }

@@ -2,6 +2,9 @@ define(function(require) {
     
     'use strict';
 
+    var PIXI = require('pixi');
+    PIXI.AUTO_PREVENT_DEFAULT = false
+    
     var PixiAppView = require('common/pixi/app');
 
     var IntroSimView         = require('views/sim/intro');
