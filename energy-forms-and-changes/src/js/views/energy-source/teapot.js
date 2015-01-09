@@ -48,10 +48,10 @@ define(function(require) {
             var teapotSpriteBounds = teapotSprite.getBounds();
 
             return new Rectangle(
-                teapotSpriteBounds.x,
-                teapotSpriteBounds.y,
-                teapotSpriteBounds.width,
-                teapotSpriteBounds.height
+                teapotSprite.x,
+                teapotSprite.y,
+                teapotSprite.width,
+                teapotSprite.height
             );
         },
 
@@ -62,7 +62,9 @@ define(function(require) {
                 width:  TeapotView.BURNER_WIDTH,
                 height: TeapotView.BURNER_HEIGHT,
                 openingHeight: TeapotView.BURNER_OPENING_HEIGHT,
-                energyChunkCollection: this.model.energyChunks
+                energyChunkCollection: this.model.energyChunks,
+                coolingEnabled: false,
+                sliderReturnsToCenter: false
             });
             this.burnerView = burnerView;
 

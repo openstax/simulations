@@ -286,7 +286,7 @@ define(function(require) {
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
                 simulation: this.simulation,
-                rectangle: this.simulation.leftBurner.getRawOutlineRect(),
+                rectangle: this.mvt.modelToViewDelta(this.simulation.leftBurner.getRawOutlineRect()),
                 projectedEdgeLength: burnerProjectionAmount
             });
 
@@ -294,7 +294,7 @@ define(function(require) {
                 model: this.simulation.rightBurner,
                 mvt: this.mvt,
                 simulation: this.simulation,
-                rectangle: this.simulation.rightBurner.getRawOutlineRect(),
+                rectangle: this.mvt.modelToViewDelta(this.simulation.rightBurner.getRawOutlineRect()),
                 projectedEdgeLength: burnerProjectionAmount
             });
 

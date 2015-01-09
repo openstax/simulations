@@ -30,6 +30,7 @@ define(function(require) {
                 textColor: BurnerView.TEXT_COLOR,
                 heatingEnabled: true,
                 coolingEnabled: true,
+                sliderReturnsToCenter: true,
                 energyChunkCollection: null
             }, options);
 
@@ -38,6 +39,7 @@ define(function(require) {
             this.openingHeight = options.openingHeight;
             this.heatingEnabled = options.heatingEnabled;
             this.coolingEnabled = options.coolingEnabled;
+            this.sliderReturnsToCenter = options.sliderReturnsToCenter;
 
             IntroElementView.prototype.initialize.apply(this, [options]);
 
@@ -202,13 +204,15 @@ define(function(require) {
                 }
                 this.model.set('heatCoolLevel', value);
             });
-            this.listenTo(this.sliderView, 'drag-end', function() {
-                this.sliderView.val(0);
-                this.fire.anchor.y = 0;
-                this.ice.anchor.y = 0;
-                this.model.set('heatCoolLevel', 0);
-            });
-            
+
+            if (this.sliderReturnsToCenter) {
+                this.listenTo(this.sliderView, 'drag-end', function() {
+                    this.sliderView.val(0);
+                    this.fire.anchor.y = 0;
+                    this.ice.anchor.y = 0;
+                    this.model.set('heatCoolLevel', 0);
+                });    
+            }
 
             // Labels
             var textStyle = {

@@ -21,7 +21,7 @@ define(function (require) {
     var Teapot = EnergySource.extend({
 
         defaults: _.extend({}, EnergySource.prototype.defaults, {
-            heatCoolAmount: 0,
+            heatCoolLevel: 0,
             energyProductionRate: 0,
             steamPowerableElementInPlace: false
         }),
@@ -99,11 +99,11 @@ define(function (require) {
 
         update: function(time, deltaTime) {
             if (this.active()) {
-                // Update energy production rate based on heatCoolAmount
+                // Update energy production rate based on heatCoolLevel
                 this.updateEnergyProductionRate(deltaTime);
 
                 // See if it's time to emit a new energy chunk from the heater.
-                this.heatEnergyProducedSinceLastChunk += Math.max(this.get('heatCoolAmount'), 0) * Constants.MAX_ENERGY_PRODUCTION_RATE * deltaTime;
+                this.heatEnergyProducedSinceLastChunk += Math.max(this.get('heatCoolLevel'), 0) * Constants.MAX_ENERGY_PRODUCTION_RATE * deltaTime;
                 if (this.heatEnergyProducedSinceLastChunk >= Constants.ENERGY_PER_CHUNK)
                     this.emitEnergyChunkFromHeater(deltaTime);
 
@@ -119,9 +119,9 @@ define(function (require) {
         },
 
         updateEnergyProductionRate: function(deltaTime) {
-            if (this.get('heatCoolAmount') || this.get('energyProductionRate') > Teapot.COOL_DOWN_COMPLETE_THRESHOLD) {
+            if (this.get('heatCoolLevel') || this.get('energyProductionRate') > Teapot.COOL_DOWN_COMPLETE_THRESHOLD) {
                 // Calculate the energy production rate.
-                var energyProductionIncreaseRate = this.get('heatCoolAmount') * Teapot.MAX_ENERGY_CHANGE_RATE; // Analogous to acceleration.
+                var energyProductionIncreaseRate = this.get('heatCoolLevel') * Teapot.MAX_ENERGY_CHANGE_RATE; // Analogous to acceleration.
                 var energyProductionDecreaseRate = this.get('energyProductionRate') * Teapot.COOLING_CONSTANT; // Analogous to friction.
                 this.set('energyProductionRate', Math.min(
                     this.get('energyProductionRate') + energyProductionIncreaseRate * deltaTime - energyProductionDecreaseRate * deltaTime,
@@ -248,7 +248,7 @@ define(function (require) {
 
         deactivate: function() {
             EnergySource.prototype.deactivate.apply(this);
-            this.set('heatCoolAmount', 0);
+            this.set('heatCoolLevel', 0);
             this.set('energyProductionRate', 0);
         },
 

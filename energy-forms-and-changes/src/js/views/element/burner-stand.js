@@ -41,9 +41,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            var rect = this.mvt.modelToViewDelta(this.rectangle);
+            var rect = this.rectangle;
 
-            var leftCurve  = this.createSideCurve(new Vector2(rect.right(), rect.y), rect.h, this.projectedEdgeLength);
+            var leftCurve  = this.createSideCurve(new Vector2(rect.right(), rect.y), rect.w, this.projectedEdgeLength);
             var rightCurve = this.createSideCurve(new Vector2(rect.x,       rect.y), rect.w, this.projectedEdgeLength);
             var topCurve   = this.createTopCurve( new Vector2(rect.x,       rect.y), rect.h, this.projectedEdgeLength);
 
@@ -72,8 +72,7 @@ define(function(require) {
             var lowerRightCorner = lowerLeftCorner.clone().add((new Vector2(edgeLength, 0)).rotate(-BurnerStandView.PERSPECTIVE_ANGLE));
             var upperRightCorner = lowerRightCorner.clone().add(0, -height);
 
-            var curve = new PiecewiseCurve();
-            curve
+            var curve = new PiecewiseCurve()
                 .moveTo(upperLeftCorner)
                 .lineTo(lowerLeftCorner)
                 .lineTo(lowerRightCorner)
@@ -85,9 +84,9 @@ define(function(require) {
 
         createTopCurve: function(topCenter, width, edgeLength) {
             // Create the points for the outline of the perspective rectangle.
-            var upperLeftCorner  = topCenter.clone().add((new Vector2(edgeLength / 2, 0)).rotate(-BurnerStandView.PERSPECTIVE_ANGLE));
+            var upperLeftCorner  = topCenter.clone().add(new Vector2(edgeLength / 2, 0).rotate(-BurnerStandView.PERSPECTIVE_ANGLE));
             var upperRightCorner = upperLeftCorner.clone().add(width, 0);
-            var lowerRightCorner = upperRightCorner.clone().add((new Vector2(-edgeLength, 0)).rotate(-BurnerStandView.PERSPECTIVE_ANGLE));
+            var lowerRightCorner = upperRightCorner.clone().add(new Vector2(-edgeLength, 0).rotate(-BurnerStandView.PERSPECTIVE_ANGLE));
             var lowerLeftCorner  = lowerRightCorner.clone().add(-width, 0);
 
             // Create the points for the circular opening in the top.
@@ -99,8 +98,7 @@ define(function(require) {
             // Create the control points for the circular opening in the top.
             var circularOpeningPerspectiveVector = new Vector2(edgeLength * 0.5, 0).rotate(-BurnerStandView.PERSPECTIVE_ANGLE);
 
-            var curve = new PiecewiseCurve();
-            curve
+            var curve = new PiecewiseCurve()
                 .moveTo(upperLeftCorner)
                 .lineTo(upperLeftCircularOpeningCorner)
                 .curveTo( 
