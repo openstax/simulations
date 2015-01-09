@@ -14,6 +14,7 @@ define(function(require) {
 
     var FaucetView = require('views/energy-source/faucet');
     var SunView    = require('views/energy-source/sun');
+    var TeapotView = require('views/energy-source/teapot');
 
     var ElectricalGeneratorView = require('views/energy-converter/electrical-generator');
     var SolarPanelView          = require('views/energy-converter/solar-panel');
@@ -118,13 +119,23 @@ define(function(require) {
             this.frontLayer.addChild(this.sunView.displayObject);
             this.frontLayer.addChild(this.sunView.cloudLayer);
 
+            // Teapot
+            this.teapotView = new TeapotView({
+                model: this.simulation.teapot,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.teapotView.displayObject);
+            this.frontLayer.addChild(this.teapotView.energyChunkLayer);
+
             // Bind visibility
             this.bindEnergyChunkVisibility(this.faucetView);
             this.bindEnergyChunkVisibility(this.sunView);
+            this.bindEnergyChunkVisibility(this.teapotView);
 
             // Add to list for updating
             this.views.push(this.faucetView);
             this.views.push(this.sunView);
+            this.views.push(this.teapotView);
         },
 
         initConverters: function() {

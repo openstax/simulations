@@ -25,18 +25,23 @@ define(function(require) {
                 lineWidth: BurnerStandView.LINE_WIDTH,
                 lineColor: BurnerStandView.LINE_COLOR,
                 lineJoin:  BurnerStandView.LINE_JOIN,
+                rectangle: null,
+                projectedEdgeLength: null
             }, options);
 
+            if (options.rectangle === undefined)
+                throw 'BurnerStandView constructor requires a rectangle.';
             if (options.projectedEdgeLength === undefined)
                 throw 'BurnerStandView constructor requires a projectedEdgeLength.';
             
+            this.rectangle = options.rectangle;
             this.projectedEdgeLength = options.projectedEdgeLength;
 
             IntroElementView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {
-            var rect = this.mvt.modelToViewDelta(this.model.getRawOutlineRect());
+            var rect = this.mvt.modelToViewDelta(this.rectangle);
 
             var leftCurve  = this.createSideCurve(new Vector2(rect.right(), rect.y), rect.h, this.projectedEdgeLength);
             var rightCurve = this.createSideCurve(new Vector2(rect.x,       rect.y), rect.w, this.projectedEdgeLength);

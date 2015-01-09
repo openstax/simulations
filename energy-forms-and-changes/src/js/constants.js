@@ -860,6 +860,14 @@ define(function (require) {
     Constants.Teapot = Teapot;
 
 
+    var TeapotView = {};
+
+    TeapotView.BURNER_WIDTH = 125; // Empirically determined.
+    TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.75;
+    TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.1;
+
+    Constants.TeapotView = TeapotView;
+
 
     return Constants;
 });

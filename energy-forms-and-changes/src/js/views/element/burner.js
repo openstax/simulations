@@ -15,13 +15,12 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents a block model
+     * A view that represents a burner model or any model
+     *   with a 'heatCoolLevel' property as long as the
+     *   view gets positioned externally after creation.
      */
     var BurnerView = IntroElementView.extend({
 
-        /**
-         *
-         */
         initialize: function(options) {
             options = _.extend({
                 width:  10,
@@ -30,7 +29,8 @@ define(function(require) {
                 textFont: BurnerView.TEXT_FONT,
                 textColor: BurnerView.TEXT_COLOR,
                 heatingEnabled: true,
-                coolingEnabled: true
+                coolingEnabled: true,
+                energyChunkCollection: null
             }, options);
 
             this.width = options.width;
@@ -43,8 +43,17 @@ define(function(require) {
 
             this.energyChunkViews = [];
 
-            this.listenTo(this.model.energyChunkList, 'add',    this.chunkAdded);
-            this.listenTo(this.model.energyChunkList, 'remove', this.chunkRemoved);
+            this.listenTo(options.energyChunkCollection, 'add',    this.chunkAdded);
+            this.listenTo(options.energyChunkCollection, 'remove', this.chunkRemoved);
+
+            /* This view can be used with any model--not necessarily
+             *   a Burner model--and therefore we want this view
+             *   being positioned wherever that model is because
+             *   model may not be the actual burner.  The burner
+             *   also will not move during the simulation, so it's
+             *   safe to turn this off.
+             */
+            this.stopListening(this.model, 'change:position');
         },
 
         initGraphics: function() {
@@ -254,8 +263,12 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPoint = this.mvt.modelToView(position);
-            this.backLayer.x = this.frontLayer.x = viewPoint.x;
-            this.backLayer.y = this.frontLayer.y = viewPoint.y;
+            this.setPosition(viewPoint.x, viewPoint.y);
+        },
+
+        setPosition: function(x, y) {
+            this.backLayer.x = this.frontLayer.x = x;
+            this.backLayer.y = this.frontLayer.y = y;
         },
 
         showEnergyChunks: function() {
@@ -269,12 +282,10 @@ define(function(require) {
         chunkAdded: function(chunk) {
             var energyChunkView = new EnergyChunkView({
                 model: chunk,
-                mvt: this.mvt,
-                parent: this.model
+                mvt: this.mvt
             });
             this.energyChunkLayer.addChild(energyChunkView.displayObject);
             this.energyChunkViews.push(energyChunkView);
-            console.log('added!');
         },
 
         chunkRemoved: function(chunk) {

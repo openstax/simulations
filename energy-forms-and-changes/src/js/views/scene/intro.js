@@ -286,6 +286,7 @@ define(function(require) {
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
                 simulation: this.simulation,
+                rectangle: this.simulation.leftBurner.getRawOutlineRect(),
                 projectedEdgeLength: burnerProjectionAmount
             });
 
@@ -293,6 +294,7 @@ define(function(require) {
                 model: this.simulation.rightBurner,
                 mvt: this.mvt,
                 simulation: this.simulation,
+                rectangle: this.simulation.rightBurner.getRawOutlineRect(),
                 projectedEdgeLength: burnerProjectionAmount
             });
 
@@ -302,7 +304,8 @@ define(function(require) {
                 simulation: this.simulation,
                 width: burnerWidth,
                 height: burnerHeight,
-                openingHeight: burnerOpeningHeight
+                openingHeight: burnerOpeningHeight,
+                energyChunkCollection: this.simulation.leftBurner.energyChunkList
             });
 
             var rightBurnerView = new BurnerView({
@@ -311,7 +314,8 @@ define(function(require) {
                 simulation: this.simulation,
                 width: burnerWidth,
                 height: burnerHeight,
-                openingHeight: burnerOpeningHeight
+                openingHeight: burnerOpeningHeight,
+                energyChunkCollection: this.simulation.rightBurner.energyChunkList
             });
 
             this.views.push(leftBurnerStandView);

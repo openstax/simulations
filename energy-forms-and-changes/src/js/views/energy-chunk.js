@@ -38,8 +38,6 @@ define(function(require) {
 
             this.mvt = options.mvt;
 
-            this.parent = options.parent;
-
             this.listenTo(this.model, 'change:visible',    this.updateVisibility);
             this.listenTo(this.model, 'change:zPosition',  this.updateTransparency);
             this.listenTo(this.model, 'change:energyType', this.updateEnergyType);

@@ -21,7 +21,7 @@ define(function (require) {
     var Teapot = EnergySource.extend({
 
         defaults: _.extend({}, EnergySource.prototype.defaults, {
-            heatCoolAmount: 1,
+            heatCoolAmount: 0,
             energyProductionRate: 0,
             steamPowerableElementInPlace: false
         }),
