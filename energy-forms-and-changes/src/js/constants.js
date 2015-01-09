@@ -862,8 +862,8 @@ define(function (require) {
 
     var TeapotView = {};
 
-    TeapotView.BURNER_WIDTH = 125; // Empirically determined.
-    TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.75;
+    TeapotView.BURNER_WIDTH = 120; // Empirically determined.
+    TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.80;
     TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.2;
 
     Constants.TeapotView = TeapotView;
