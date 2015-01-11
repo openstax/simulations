@@ -16,6 +16,9 @@ define(function(require) {
 
     var Assets = require('assets');
 
+    var maxParticleRadius = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.max;
+    var steamParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, maxParticleRadius, TeapotView.STEAM_PARTICLE_COLOR);
+
     var TeapotView = EnergySourceView.extend({
 
         initialize: function(options) {
@@ -93,7 +96,83 @@ define(function(require) {
         },
 
         initSteam: function() {
+            this.steamLayer = new PIXI.SpriteBatch();
+            this.displayObject(this.steamLayer);
 
+            this.activeSteamParticles = [];
+            this.dormantSteamParticles = [];
+            var particle;
+            for (var i = 0; i < TeapotView.NUM_STEAM_PARTICLES; i++) {
+                particle = new PIXI.Sprite(steamParticleTexture);
+                particle.visible = false;
+                particle.anchor.x = particle.anchor.y = 0.5;
+                this.steamLayer.addChild(particle);
+                this.dormantSteamParticles.push(particle);
+            }
+
+            this.steamParticleEmissionCounter = 0;
+
+            this.spoutTipPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_TIP_OFFSET);
+            this.spoutBottomPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_BOTTOM_OFFSET);
+            this._spoutDirection = new Vector2();
+        },
+
+        spoutDirection: function() {
+            return this._spoutDirection
+                .set(this.spoutTipPosition)
+                .sub(this.spoutBottomPosition)
+                .normalize();
+        },
+
+        update: function(time, deltaTime, simulationPaused) {
+            if (!simulationPaused) {
+                this.updateSteamParticles(time, deltaTime);
+            }
+        },
+
+        updateSteamParticles: function(time, deltaTime) {
+            this.steamParticleEmissionCounter += deltaTime;
+
+            var steamingProportion = this.model.getEnergyProductionRate() / Constants.MAX_ENERGY_PRODUCTION_RATE;
+            var emissionRate = steamingProportion * TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE;
+            var emissionInterval = 1 / emissionRate; // time between particle emissions
+            var cloudCenterDistance = steamingProportion * TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE;
+            
+            // Activate new particles
+            while (this.steamParticleEmissionCounter > emissionInterval) {
+                this.emitSteamParticle(time, steamingProportion);
+                this.steamParticleEmissionCounter -= emissionInterval;
+            }
+
+            // Update active particles
+            var particle;
+            for (var i = this.activeSteamParticles.length - 1; i >= 0; i--) {
+                particle = this.activeSteamParticles[i];
+                particle.x += particle.velocity.x * deltaTime;
+                particle.y += particle.velocity.y * deltaTime;
+
+                
+            }
+        },
+
+        emitSteamParticle: function(time, steamingProportion) {
+            if (!this.dormantSteamParticles.length)
+                return null;
+
+            var scale = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.min / (steamParticleTexture.width / 2);
+            var cloudCenterDistance
+
+            var particle = this.dormantSteamParticles.pop();
+            particle.x = this.spoutTipPosition.x;
+            particle.y = this.spoutTipPosition.y;
+            particle.scale.x = particle.scale.y = scale;
+            particle.alpha = 0;
+            particle.visible = true;
+            particle.timeToLive = BeakerView.STEAM_PARTICLE_LIFE_RANGE.random();
+            particle.lifeEndsAt = time + particle.timeToLive;
+            this.activeSteamParticles.push(particle);
+
+            return particle;
         },
 
         showEnergyChunks: function() {

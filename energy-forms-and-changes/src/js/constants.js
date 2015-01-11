@@ -866,6 +866,12 @@ define(function (require) {
     TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.80;
     TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.2;
 
+    TeapotView.NUM_STEAM_PARTICLES = 400;
+    TeapotView.STEAM_PARTICLE_RADIUS_RANGE = ({ min: 4, max: 12 });
+    TeapotView.STEAM_PARTICLE_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
+    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 10; // particles per second
+    TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 160; // pixels, rotated
+
     Constants.TeapotView = TeapotView;
 
 
