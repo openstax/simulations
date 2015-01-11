@@ -295,11 +295,25 @@ define(function(require) {
      *   radius (r1) and then blends into the second color until
      *   it reaches the gradient's outer radius (r2), after which
      *   the second color will be solid until the edge of the
-     *   circle is reached (radius).
+     *   circle is reached (radius). The parameters r1 and r2 are
+     *   optional.  If they are not specified, the texture will
+     *   be simply a solid circle of one color.
+     *
+     * @params radius, r1, r2, color1, color2, outlineWidth, outlineColor
+     * @params radius, color, outlineWidth, outlineColor
      */
     PIXI.Texture.generateCircleTexture = function(radius, r1, r2, color1, color2, outlineWidth, outlineColor) {
         if (radius <= 0)
             throw 'Outer radius cannot be zero or a negative value.';
+
+        if (_.isString(r1)) {
+            // They have specified [radius, color, outlineWidth, outlineColor]
+            color1 = r1;
+            outlineWidth = r2;
+            outlineColor = color1;
+            r1 = undefined;
+            r2 = undefined;
+        }
 
         if (outlineWidth === undefined)
             outlineWidth = 0;
@@ -316,11 +330,17 @@ define(function(require) {
 
         var ctx = canvas.getContext('2d');
 
-        var gradient = ctx.createRadialGradient(radius + how, radius + how, r1, radius + how, radius + how, r2);
-        gradient.addColorStop(0, color1);
-        gradient.addColorStop(1, color2);
+        if (r1 !== undefined && r2 !== undefined) {
+            var gradient = ctx.createRadialGradient(radius + how, radius + how, r1, radius + how, radius + how, r2);
+            gradient.addColorStop(0, color1);
+            gradient.addColorStop(1, color2);
 
-        ctx.fillStyle = gradient;
+            ctx.fillStyle = gradient;    
+        }
+        else {
+            ctx.fillStyle = color1;
+        }
+        
         ctx.beginPath();
         ctx.arc(radius + how, radius + how, radius, 0, 2 * Math.PI, false);
         ctx.fill();

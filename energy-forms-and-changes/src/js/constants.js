@@ -292,12 +292,12 @@ define(function (require) {
     BeakerView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
     BeakerView.STEAM_PARTICLE_COLOR = '#fff';
     BeakerView.STEAM_PARTICLE_SPEED_RANGE           = range({ min: 100, max: 125 }); // In screen coords (basically pixels) per second.
-    BeakerView.STEAM_PARTICLE_RADIUS_RANGE          = range({ min: 15,  max: 40  }); // In screen coords (basically pixels).
+    BeakerView.STEAM_PARTICLE_RADIUS_RANGE          = range({ min: 10,  max: 25  }); // In screen coords (basically pixels).
     BeakerView.STEAM_PARTICLE_LIFE_RANGE            = range({ min: 2,   max: 4   }); // Seconds to live
     BeakerView.STEAM_PARTICLE_PRODUCTION_RATE_RANGE = range({ min: 20,  max: 40  }); // Particles per second.
     BeakerView.STEAM_PARTICLE_GROWTH_RATE = 0.2; // Proportion per second.
-    BeakerView.MAX_STEAM_PARTICLE_OPACITY = 0.7; // Proportion, 1 is max.
-    BeakerView.NUM_STEAM_PARTICLES = 200;
+    BeakerView.MAX_STEAM_PARTICLE_OPACITY = 0.5; // Proportion, 1 is max.
+    BeakerView.NUM_STEAM_PARTICLES = 100;
 
     Constants.BeakerView = BeakerView;
 
@@ -871,6 +871,9 @@ define(function (require) {
     TeapotView.STEAM_PARTICLE_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
     TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 10; // particles per second
     TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 160; // pixels, rotated
+
+    TeapotView.STEAM_MAX_HEIGHT_AND_WIDTH = 200;
+    TeapotView.STEAM_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
 
     Constants.TeapotView = TeapotView;
 

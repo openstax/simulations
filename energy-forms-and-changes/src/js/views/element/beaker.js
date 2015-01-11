@@ -14,7 +14,7 @@ define(function(require) {
     var BV = Constants.BeakerView;
 
     // Generate a texture to use as the steam particle
-    var steamParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, BV.STEAM_PARTICLE_RADIUS_RANGE.max, BV.STEAM_PARTICLE_COLOR);
+    var steamParticleTexture = PIXI.Texture.generateCircleTexture(BV.STEAM_PARTICLE_RADIUS_RANGE.max, BV.STEAM_PARTICLE_COLOR);
 
     /**
      * A view that represents a block model
