@@ -30,6 +30,8 @@ define(function (require) {
         initialize: function(attributes, options) {
             // Create vectors
             this.set('position', vectorPool.create().set(this.get('position')));
+
+            this._offsetPosition = new Vector2();
         },
 
         setX: function(x) {
@@ -63,6 +65,10 @@ define(function (require) {
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);
+        },
+
+        offsetPosition: function(offset) {
+            return this._offsetPosition.set(this.get('position')).add(offset);
         }
 
     });

@@ -892,7 +892,28 @@ define(function (require) {
 
     var Biker = {};
 
-    
+    Biker.MAX_ANGULAR_VELOCITY_OF_CRANK = 3 * Math.PI; // In radians/sec.
+    Biker.ANGULAR_ACCELERATION = Math.PI / 2; // In radians/(sec^2).
+    Biker.MAX_ENERGY_OUTPUT_WHEN_CONNECTED_TO_GENERATOR = Constants.MAX_ENERGY_PRODUCTION_RATE; // In joules / sec
+    Biker.MAX_ENERGY_OUTPUT_WHEN_RUNNING_FREE = Biker.MAX_ENERGY_OUTPUT_WHEN_CONNECTED_TO_GENERATOR / 5; // In joules / sec
+    Biker.CRANK_TO_REAR_WHEEL_RATIO = 1;
+    Biker.INITIAL_NUM_ENERGY_CHUNKS = 15;
+    Biker.MECHANICAL_TO_THERMAL_CHUNK_RATIO = 5;
+    Biker.REAR_WHEEL_RADIUS = 0.02; // In meters, must be worked out with the image.
+
+    // Offset of the bike frame center.  Most other image offsets are relative
+    // to this one.
+    Biker.FRAME_CENTER_OFFSET = new Vector2(0.0, 0.01);
+
+    // Offsets used for creating energy chunk paths.  These need to be
+    // coordinated with the images.
+    Biker.BIKER_BUTTOCKS_OFFSET       = new Vector2(0.02,    0.04);
+    Biker.TOP_TUBE_ABOVE_CRANK_OFFSET = new Vector2(0.007,   0.015);
+    Biker.BIKE_CRANK_OFFSET           = new Vector2(0.0052, -0.006);
+    Biker.CENTER_OF_BACK_WHEEL_OFFSET = new Vector2(0.03,   -0.01);
+    Biker.BOTTOM_OF_BACK_WHEEL_OFFSET = new Vector2(0.03,   -0.03);
+    Biker.NEXT_ENERGY_SYSTEM_OFFSET   = new Vector2(0.13,   -0.01);
+    Biker.NUM_LEG_IMAGES = 24;
 
     Constants.Biker = Biker;
 
