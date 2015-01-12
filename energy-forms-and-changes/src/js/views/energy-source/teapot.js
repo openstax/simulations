@@ -7,6 +7,7 @@ define(function(require) {
     var Colors     = require('common/colors/colors');
     var SliderView = require('common/pixi/view/slider');
     var Rectangle  = require('common/math/rectangle');
+    var Vector2    = require('common/math/vector2');
 
     var EnergySourceView = require('views/energy-source');
     var BurnerView       = require('views/element/burner');
@@ -96,28 +97,25 @@ define(function(require) {
         },
 
         initSteam: function() {
-            // this.steamLayer = new PIXI.SpriteBatch();
-            // this.displayObject.addChild(this.steamLayer);
+            this.steamLayer = new PIXI.SpriteBatch();
+            this.displayObject.addChild(this.steamLayer);
 
-            // this.activeSteamParticles = [];
-            // this.dormantSteamParticles = [];
-            // var particle;
-            // for (var i = 0; i < TeapotView.NUM_STEAM_PARTICLES; i++) {
-            //     particle = new PIXI.Sprite(steamParticleTexture);
-            //     particle.visible = false;
-            //     particle.anchor.x = particle.anchor.y = 0.5;
-            //     this.steamLayer.addChild(particle);
-            //     this.dormantSteamParticles.push(particle);
-            // }
+            this.activeSteamParticles = [];
+            this.dormantSteamParticles = [];
+            var particle;
+            for (var i = 0; i < TeapotView.NUM_STEAM_PARTICLES; i++) {
+                particle = new PIXI.Sprite(steamParticleTexture);
+                particle.visible = false;
+                particle.anchor.x = particle.anchor.y = 0.5;
+                this.steamLayer.addChild(particle);
+                this.dormantSteamParticles.push(particle);
+            }
 
-            // this.steamParticleEmissionCounter = 0;
+            this.steamParticleEmissionCounter = 0;
 
-            this.steamGraphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.steamGraphics);
-
-            this.spoutTipPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_TIP_OFFSET);
-            this.spoutBottomPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_BOTTOM_OFFSET);
-            //this._spoutDirection = new Vector2();
+            this.spoutTipPosition = this.mvt.modelToViewDelta(new Vector2(0.0475, 0.045)).clone();
+            this.spoutBottomPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_BOTTOM_OFFSET).clone();
+            this._spoutDirection = new Vector2();
         },
 
         spoutDirection: function() {
@@ -127,63 +125,93 @@ define(function(require) {
                 .normalize();
         },
 
+        spoutAngle: function() {
+            return this._spoutDirection
+                .set(this.spoutTipPosition)
+                .sub(this.spoutBottomPosition)
+                .angle(); // not normalizing it so the angle's more accurate
+        },
+
         update: function(time, deltaTime, simulationPaused) {
+            EnergySourceView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
+
             if (!simulationPaused) {
-                //this.updateSteamParticles(time, deltaTime);
-                this.updateSteamCloud();
+                this.updateSteamParticles(time, deltaTime);
             }
         },
 
-        updateSteamCloud: function() {
-            // var steamingProportion = this.model.getEnergyProductionRate() / Constants.MAX_ENERGY_PRODUCTION_RATE;
-            // var heightAndWidth = steamingProportion * TeapotView.STEAM_MAX_HEIGHT_AND_WIDTH;
+        updateSteamParticles: function(time, deltaTime) {
+            this.steamParticleEmissionCounter += deltaTime;
+
+            var steamingProportion = this.model.get('energyProductionRate') / Constants.MAX_ENERGY_PRODUCTION_RATE;
+            var emissionRate = steamingProportion * TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE;
+            var emissionInterval = 1 / emissionRate; // time between particle emissions
+            var cloudCenterDistance = steamingProportion * TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE;
+            //console.log(cloudCenterDistance);
             
+            // Activate new particles
+            while (this.steamParticleEmissionCounter > emissionInterval) {
+                this.emitSteamParticle(time, steamingProportion, cloudCenterDistance);
+                this.steamParticleEmissionCounter -= emissionInterval;
+            }
+
+            // Update active particles
+            var particle;
+            var radius;
+            var lifeProgress;
+            for (var i = this.activeSteamParticles.length - 1; i >= 0; i--) {
+                particle = this.activeSteamParticles[i];
+                // Clean up dead particles
+                if (time >= particle.lifeEndsAt) {
+                    particle.visible = false;
+                    this.activeSteamParticles.splice(i, 1);
+                    this.dormantSteamParticles.push(particle);
+                }
+
+                // Move particles
+                particle.x += particle.velocity.x * deltaTime;
+                particle.y += particle.velocity.y * deltaTime;
+
+                // Find the percent of life spent
+                lifeProgress = 1 - ((particle.lifeEndsAt - time) / particle.timeToLive);
+
+                // Scale particles as they get older
+                radius = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.lerp(Math.min(lifeProgress * 2, 1)) * steamingProportion;
+                particle.scale.x = particle.scale.y = radius / TeapotView.STEAM_PARTICLE_RADIUS_RANGE.max;
+
+
+
+                // Apply repellant force on particles inversely related
+                //   to the distance from the center of the cloud.
+
+            }
         },
 
-        // updateSteamParticles: function(time, deltaTime) {
-        //     this.steamParticleEmissionCounter += deltaTime;
+        emitSteamParticle: function(time, steamingProportion, cloudCenterDistance) {
+            if (!this.dormantSteamParticles.length)
+                return null;
 
-        //     var steamingProportion = this.model.getEnergyProductionRate() / Constants.MAX_ENERGY_PRODUCTION_RATE;
-        //     var emissionRate = steamingProportion * TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE;
-        //     var emissionInterval = 1 / emissionRate; // time between particle emissions
-        //     var cloudCenterDistance = steamingProportion * TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE;
-            
-        //     // Activate new particles
-        //     while (this.steamParticleEmissionCounter > emissionInterval) {
-        //         this.emitSteamParticle(time, steamingProportion);
-        //         this.steamParticleEmissionCounter -= emissionInterval;
-        //     }
+            var scale = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.min / (steamParticleTexture.width / 2);
+            var angle = this.spoutAngle() + (Math.random() * TeapotView.STEAM_EMISSION_ANGLE) - (TeapotView.STEAM_EMISSION_ANGLE / 2);
+            console.log(angle);
+            var particle = this.dormantSteamParticles.pop();
+            if (particle) {
+                particle.x = this.spoutTipPosition.x;
+                particle.y = this.spoutTipPosition.y;
+                particle.scale.x = particle.scale.y = scale;
+                particle.alpha = TeapotView.STEAM_PARTICLE_MAX_ALPHA * steamingProportion;
+                particle.visible = true;
+                particle.velocity = new Vector2(cloudCenterDistance, 0).angle(angle);
+                //console.log(particle.velocity);
+                //console.log(cloudCenterDistance);
+                // console.log(this.spoutTipPosition);
+                particle.timeToLive = TeapotView.STEAM_PARTICLE_LIFE_RANGE.random() * steamingProportion;
+                particle.lifeEndsAt = time + particle.timeToLive;
+                this.activeSteamParticles.push(particle);    
+            }
 
-        //     // Update active particles
-        //     var particle;
-        //     for (var i = this.activeSteamParticles.length - 1; i >= 0; i--) {
-        //         particle = this.activeSteamParticles[i];
-        //         particle.x += particle.velocity.x * deltaTime;
-        //         particle.y += particle.velocity.y * deltaTime;
-
-
-        //     }
-        // },
-
-        // emitSteamParticle: function(time, steamingProportion) {
-        //     if (!this.dormantSteamParticles.length)
-        //         return null;
-
-        //     var scale = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.min / (steamParticleTexture.width / 2);
-        //     var cloudCenterDistance
-
-        //     var particle = this.dormantSteamParticles.pop();
-        //     particle.x = this.spoutTipPosition.x;
-        //     particle.y = this.spoutTipPosition.y;
-        //     particle.scale.x = particle.scale.y = scale;
-        //     particle.alpha = 0;
-        //     particle.visible = true;
-        //     particle.timeToLive = BeakerView.STEAM_PARTICLE_LIFE_RANGE.random();
-        //     particle.lifeEndsAt = time + particle.timeToLive;
-        //     this.activeSteamParticles.push(particle);
-
-        //     return particle;
-        // },
+            return particle;
+        },
 
         showEnergyChunks: function() {
             EnergySourceView.prototype.showEnergyChunks.apply(this);

@@ -74,6 +74,9 @@ define(function (require) {
 
     Constants.WATER_FILL_COLOR = '#afeeee';
 
+    // Model-view transform scale factor for Energy Systems tab.
+    Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR = 2200;
+
     /*************************************************************************
      **                                                                     **
      **                      ENERGY CONTAINER CATEGORIES                    **
@@ -292,12 +295,12 @@ define(function (require) {
     BeakerView.STEAMING_RANGE = 10; // Number of degrees Kelvin over which steam is visible.
     BeakerView.STEAM_PARTICLE_COLOR = '#fff';
     BeakerView.STEAM_PARTICLE_SPEED_RANGE           = range({ min: 100, max: 125 }); // In screen coords (basically pixels) per second.
-    BeakerView.STEAM_PARTICLE_RADIUS_RANGE          = range({ min: 10,  max: 25  }); // In screen coords (basically pixels).
+    BeakerView.STEAM_PARTICLE_RADIUS_RANGE          = range({ min: 15,  max: 40  }); // In screen coords (basically pixels).
     BeakerView.STEAM_PARTICLE_LIFE_RANGE            = range({ min: 2,   max: 4   }); // Seconds to live
     BeakerView.STEAM_PARTICLE_PRODUCTION_RATE_RANGE = range({ min: 20,  max: 40  }); // Particles per second.
     BeakerView.STEAM_PARTICLE_GROWTH_RATE = 0.2; // Proportion per second.
-    BeakerView.MAX_STEAM_PARTICLE_OPACITY = 0.5; // Proportion, 1 is max.
-    BeakerView.NUM_STEAM_PARTICLES = 100;
+    BeakerView.MAX_STEAM_PARTICLE_OPACITY = 0.7; // Proportion, 1 is max.
+    BeakerView.NUM_STEAM_PARTICLES = 200;
 
     Constants.BeakerView = BeakerView;
 
@@ -389,9 +392,6 @@ define(function (require) {
     // Constant used by all of the "energy systems" in order to keep the amount
     // of energy generated, converted, and consumed consistent.
     Constants.MAX_ENERGY_PRODUCTION_RATE = 10000; // In joules/sec.
-
-    // Model-view transform scale factor for Energy Systems tab.
-    Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR = 2200;
 
     // Constants that control the speed of the energy chunks
     Constants.ENERGY_CHUNK_VELOCITY = 0.04; // In meters/sec.
@@ -842,9 +842,10 @@ define(function (require) {
 
     // Offsets and other constants used for energy paths.  These are mostly
     //   empirically determined and coordinated with the image.
-    Teapot.SPOUT_BOTTOM_OFFSET   = new Vector2(0.03, 0.02);
-    Teapot.SPOUT_TIP_OFFSET      = new Vector2(0.25, 0.3);
-    Teapot.DISTANT_TARGET_OFFSET = new Vector2(1,    1);
+    Teapot.SPOUT_BOTTOM_OFFSET     = new Vector2(0.03, 0.02);
+    Teapot.SPOUT_TIP_OFFSET        = new Vector2(0.25, 0.3);
+    Teapot.ACTUAL_SPOUT_TIP_OFFSET = new Vector2(0.0475, 0.045); // I made this because the one above is nowhere close to the tip
+    Teapot.DISTANT_TARGET_OFFSET   = new Vector2(1,    1);
     Teapot.WATER_SURFACE_HEIGHT_OFFSET = 0; // From teapot position, in meters.
     Teapot.THERMAL_ENERGY_CHUNK_Y_ORIGIN = -0.05; // In meters, must be coordinated with heater position.
     Teapot.THERMAL_ENERGY_CHUNK_X_ORIGIN_RANGE = range({ min: -0.015, max: 0.015 }); // In meters, must be coordinated with heater position.
@@ -867,13 +868,13 @@ define(function (require) {
     TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.2;
 
     TeapotView.NUM_STEAM_PARTICLES = 400;
-    TeapotView.STEAM_PARTICLE_RADIUS_RANGE = ({ min: 4, max: 12 });
+    TeapotView.STEAM_PARTICLE_RADIUS_RANGE = range({ min: 8, max: 36 });
+    TeapotView.STEAM_PARTICLE_LIFE_RANGE   = range({ min: 3, max:  4 }); // Seconds to live
     TeapotView.STEAM_PARTICLE_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
-    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 10; // particles per second
+    TeapotView.STEAM_PARTICLE_MAX_ALPHA = 0.7;
+    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 60; // particles per second
     TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 160; // pixels, rotated
-
-    TeapotView.STEAM_MAX_HEIGHT_AND_WIDTH = 200;
-    TeapotView.STEAM_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
+    TeapotView.STEAM_EMISSION_ANGLE = Math.PI / 6;
 
     Constants.TeapotView = TeapotView;
 
