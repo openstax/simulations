@@ -110,6 +110,10 @@ define(function (require, exports, module) {
                 this.biker.set('mechanicalPoweredSystemIsNext', active);
             });
 
+            this.listenTo(this.biker, 'change:active', function(faucet, active) {
+                this.electricalGenerator.set('directCouplingMode', active);
+            });
+
             // The sun needs a reference to the solar panel
             this.sun.set('solarPanel', this.solarPanel);
 

@@ -21,6 +21,7 @@ define(function(require) {
             EnergyConverterView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:wheelRotationalAngle', this.updateWheelRotation);
+            this.listenTo(this.model, 'change:directCouplingMode',   this.directCouplingModeChanged);
         },
 
         initGraphics: function() {
@@ -64,6 +65,11 @@ define(function(require) {
         updateWheelRotation: function(model, rotation) {
             this.spokes.rotation  = -rotation;
             this.paddles.rotation = -rotation;
+        },
+
+        directCouplingModeChanged: function(model, directCouplingMode) {
+            this.paddles.visible = !directCouplingMode;
+            this.spokes.visible  =  directCouplingMode;
         }
 
     });

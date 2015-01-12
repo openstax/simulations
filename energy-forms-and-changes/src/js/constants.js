@@ -594,15 +594,9 @@ define(function (require) {
     ElectricalGenerator.MAX_ROTATIONAL_VELOCITY = Math.PI / 2; // In radians/sec, empirically determined.
 
     // Images used to represent this model element in the view.
-    // HOUSING_IMAGE = new ModelElementImage( GENERATOR, new Vector2D( 0, 0 ) );
     ElectricalGenerator.WHEEL_CENTER_OFFSET = new Vector2(0, 0.03);
     ElectricalGenerator.LEFT_SIDE_OF_WHEEL_OFFSET = new Vector2(-0.03, 0.03);
-    // WHEEL_PADDLES_IMAGE = new ModelElementImage( GENERATOR_WHEEL_PADDLES_SHORT, WHEEL_CENTER_OFFSET );
-    // WHEEL_HUB_IMAGE = new ModelElementImage( GENERATOR_WHEEL_HUB_2, WHEEL_CENTER_OFFSET );
-    // SHORT_SPOKES_IMAGE = new ModelElementImage( GENERATOR_WHEEL_SPOKES, WHEEL_CENTER_OFFSET );
     ElectricalGenerator.CONNECTOR_OFFSET = new Vector2(0.057, -0.04);
-    // CONNECTOR_IMAGE = new ModelElementImage( CONNECTOR, CONNECTOR_OFFSET ); // Offset empirically determined for optimal look.
-    // WIRE_CURVED_IMAGE = new ModelElementImage( WIRE_BLACK_LEFT, new Vector2D( 0.0185, -0.015 ) ); // Offset empirically determined for optimal look.
     ElectricalGenerator.WHEEL_RADIUS = 0.03; //WHEEL_HUB_IMAGE.getWidth() / 2;
     ElectricalGenerator.WIRE_OFFSET = new Vector2(0.0185, -0.015);
 
@@ -916,6 +910,16 @@ define(function (require) {
     Biker.NUM_LEG_IMAGES = 24;
 
     Constants.Biker = Biker;
+
+
+    var BikerView = {};
+
+    
+    BikerView.PANEL_WIDTH = 0.1;
+    BikerView.PANEL_HEIGHT = 0.03;
+    BikerView.PANEL_OFFSET = new Vector2(-BikerView.PANEL_WIDTH / 2, -BikerView.PANEL_HEIGHT - 0.008);
+
+    Constants.BikerView = BikerView;
 
 
     return Constants;
