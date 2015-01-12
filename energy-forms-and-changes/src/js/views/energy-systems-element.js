@@ -75,7 +75,7 @@ define(function(require) {
         },
 
         createSpriteWithOffset: function(image, offset, anchorX, anchorY) {
-            var sprite = Assets.createSprite(image);
+            var sprite = (image instanceof PIXI.Texture) ? new PIXI.Sprite(image) : Assets.createSprite(image);
 
             if (anchorX === undefined)
                 anchorX = 0;

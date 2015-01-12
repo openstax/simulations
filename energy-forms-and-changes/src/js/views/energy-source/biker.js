@@ -71,10 +71,23 @@ define(function(require) {
         Assets.Images.FRONT_LEG_24
     ];
 
+    var texturesInitialized = false;
+    var initTextures = function() {
+        var i;
+        for (i = 0; i < backLegTextures.length; i++)
+            backLegTextures[i] = Assets.Texture(backLegTextures[i]);
+        for (i = 0; i < frontLegTextures.length; i++)
+            frontLegTextures[i] = Assets.Texture(frontLegTextures[i]);
+        texturesInitialized = true;
+    };
+
     var BikerView = EnergySourceView.extend({
 
         initialize: function(options) {
             EnergySourceView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:bikerHasEnergy', this.bikerStateChanged);
+            this.bikerStateChanged(this.model, this.model.get('bikerHasEnergy'));
         },
 
         initGraphics: function() {
@@ -86,6 +99,9 @@ define(function(require) {
         },
 
         initImages: function() {
+            if (!texturesInitialized)
+                initTextures();
+
             var legImageOffset = new Vector2(0.009, 0.002).add(Biker.FRAME_CENTER_OFFSET);
 
             var backLeg    = this.createSpriteWithOffset(backLegTextures[0],                legImageOffset);
@@ -95,8 +111,8 @@ define(function(require) {
             var riderTired = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER_TIRED, new Vector2(-0.0032, 0.056 ).add(Biker.FRAME_CENTER_OFFSET));
             var frontLeg   = this.createSpriteWithOffset(frontLegTextures[0],               legImageOffset);
 
-            this.rider = rider;
-            this.riderTired = riderTired;
+            this.riderNormal = rider;
+            this.riderTired  = riderTired;
 
             this.displayObject.addChild(backLeg);
             this.displayObject.addChild(spokes);
@@ -164,6 +180,11 @@ define(function(require) {
 
             // Add it
             panel.addChild(sliderView.displayObject);
+        },
+
+        bikerStateChanged: function(model, bikerHasEnergy) {
+            this.riderNormal.visible =  bikerHasEnergy;
+            this.riderTired.visible  = !bikerHasEnergy;
         }
 
     }, Constants.BikerView);

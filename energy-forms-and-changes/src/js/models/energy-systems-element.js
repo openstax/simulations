@@ -50,7 +50,7 @@ define(function (require) {
         positionChanged: function(model, position) {
             var translation = this._translation.set(position).sub(model.previous('position'));
             for (var i = this.energyChunks.length - 1; i >= 0; i--) {
-                this.energyChunks[i].translate(translation);
+                this.energyChunks.models[i].translate(translation);
             }
         }
 

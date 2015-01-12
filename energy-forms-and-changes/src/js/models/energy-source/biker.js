@@ -8,7 +8,7 @@ define(function (require) {
 
     var EnergyChunk  = require('models/energy-chunk');
     var EnergySource = require('models/energy-source');
-    // var EnergyChunkCollection = require('models/energy-chunk-collection');
+    var EnergyChunkPathMover = require('models/energy-chunk-path-mover');
 
     var Constants = require('constants');
     var EnergyTypes = Constants.EnergyTypes;
@@ -172,7 +172,7 @@ define(function (require) {
                 if (energyChunkMover.finished()) {
                     if (chunk.get('energyType') === EnergyTypes.CHEMICAL) {
                         // Turn this into mechanical energy.
-                        chunk.set('energyType', EnergyType.MECHANICAL);
+                        chunk.set('energyType', EnergyTypes.MECHANICAL);
                         this.energyChunkMovers.splice(i, 1);
 
                         // Add new mover for the mechanical energy chunk.
@@ -199,7 +199,7 @@ define(function (require) {
                     else if (chunk.get('energyType') === EnergyTypes.MECHANICAL && chunk.get('position').distance(this.offsetPosition(Biker.CENTER_OF_BACK_WHEEL_OFFSET)) < 1E-6) {
                         // This is a mechanical energy chunk that has traveled
                         //   to the hub and should now become thermal energy.
-                        chunk.set('energyType', EnergyType.THERMAL);
+                        chunk.set('energyType', EnergyTypes.THERMAL);
                         this.energyChunkMovers.splice(i, 1);
                         this.energyChunkMovers.push(new EnergyChunkPathMover(
                             chunk,
@@ -336,7 +336,7 @@ define(function (require) {
             };
         },
 
-    }, Biker);
+    }, Constants.Biker);
 
     return Biker;
 });
