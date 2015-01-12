@@ -81,7 +81,7 @@ define(function (require) {
             for (var i = 0; i < Biker.INITIAL_NUM_ENERGY_CHUNKS; i++) {
                 displacement.set((Math.random() - 0.5) * 0.02, 0).rotate(Math.PI * 0.7);
                 this.energyChunks.add(new EnergyChunk({
-                    energyType: EnergyChunk.CHEMICAL, 
+                    energyType: EnergyTypes.CHEMICAL, 
                     position:   this.offsetPosition(nominalInitialoffset).add(displacement)
                 }));
             }

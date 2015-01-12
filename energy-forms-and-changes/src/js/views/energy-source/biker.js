@@ -87,6 +87,9 @@ define(function(require) {
             EnergySourceView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:bikerHasEnergy', this.bikerStateChanged);
+            this.listenTo(this.model, 'change:rearWheelAngle', this.updateRearWheelAngle);
+            this.listenTo(this.model, 'change:crankAngle',     this.updateCrankAngle);
+
             this.bikerStateChanged(this.model, this.model.get('bikerHasEnergy'));
         },
 
@@ -106,13 +109,16 @@ define(function(require) {
 
             var backLeg    = this.createSpriteWithOffset(backLegTextures[0],                legImageOffset);
             var frame      = this.createSpriteWithOffset(Assets.Images.BICYCLE_FRAME_3,     Biker.FRAME_CENTER_OFFSET);
-            var spokes     = this.createSpriteWithOffset(Assets.Images.BICYCLE_SPOKES,      new Vector2( 0.035, -0.020 ).add(Biker.FRAME_CENTER_OFFSET));
+            var spokes     = this.createSpriteWithOffset(Assets.Images.BICYCLE_SPOKES,      new Vector2( 0.035, -0.020 ).add(Biker.FRAME_CENTER_OFFSET), 0.5);
             var rider      = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER,       new Vector2(-0.0025, 0.0620).add(Biker.FRAME_CENTER_OFFSET));
             var riderTired = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER_TIRED, new Vector2(-0.0032, 0.056 ).add(Biker.FRAME_CENTER_OFFSET));
             var frontLeg   = this.createSpriteWithOffset(frontLegTextures[0],               legImageOffset);
 
             this.riderNormal = rider;
             this.riderTired  = riderTired;
+            this.spokes      = spokes;
+            this.backLeg     = backLeg;
+            this.frontLeg    = frontLeg;
 
             this.displayObject.addChild(backLeg);
             this.displayObject.addChild(spokes);
@@ -185,6 +191,16 @@ define(function(require) {
         bikerStateChanged: function(model, bikerHasEnergy) {
             this.riderNormal.visible =  bikerHasEnergy;
             this.riderTired.visible  = !bikerHasEnergy;
+        },
+
+        updateRearWheelAngle: function(model, rearWheelAngle) {
+            this.spokes.rotation = -rearWheelAngle;
+        },
+
+        updateCrankAngle: function(model, crankAngle) {
+            var index = model.mapAngleToImageIndex(crankAngle);
+            this.backLeg.texture  = backLegTextures[i];
+            this.frontLeg.texture = frontLegTextures[i];
         }
 
     }, Constants.BikerView);
