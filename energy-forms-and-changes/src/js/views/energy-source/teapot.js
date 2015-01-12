@@ -98,7 +98,7 @@ define(function(require) {
 
         initSteam: function() {
             this.steamLayer = new PIXI.SpriteBatch();
-            this.displayObject.addChild(this.steamLayer);
+            this.displayObject.addChildAt(this.steamLayer, 0);
 
             this.activeSteamParticles = [];
             this.dormantSteamParticles = [];
@@ -116,6 +116,9 @@ define(function(require) {
             this.spoutTipPosition = this.mvt.modelToViewDelta(new Vector2(0.0475, 0.045)).clone();
             this.spoutBottomPosition = this.mvt.modelToViewDelta(Constants.Teapot.SPOUT_BOTTOM_OFFSET).clone();
             this._spoutDirection = new Vector2();
+            this._cloudCenter = new Vector2();
+            this._vectorToCloudCenter = new Vector2();
+            this._repellingVector = new Vector2();
         },
 
         spoutDirection: function() {
@@ -147,7 +150,10 @@ define(function(require) {
             var emissionRate = steamingProportion * TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE;
             var emissionInterval = 1 / emissionRate; // time between particle emissions
             var cloudCenterDistance = steamingProportion * TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE;
-            //console.log(cloudCenterDistance);
+            var cloudCenter = this._cloudCenter
+                .set(this.spoutTipPosition)
+                .add(this.spoutDirection().scale(cloudCenterDistance));
+            //console.log(cloudCenter);
             
             // Activate new particles
             while (this.steamParticleEmissionCounter > emissionInterval) {
@@ -156,9 +162,17 @@ define(function(require) {
             }
 
             // Update active particles
-            var particle;
+            var baseAlpha = TeapotView.STEAM_PARTICLE_MAX_ALPHA * steamingProportion;
+            var steamCloudRadius = TeapotView.STEAM_CLOUD_RADIUS * steamingProportion;
             var radius;
-            var lifeProgress;
+            var percentLifeLeft;
+            var percentLifeSpent;
+            var particle;
+            var particleCloudCenterDistance;
+            var vectorToCloudCenter;
+            var repellingVector;
+            var repellantFactor;
+            var edgeRepellantFactor;
             for (var i = this.activeSteamParticles.length - 1; i >= 0; i--) {
                 particle = this.activeSteamParticles[i];
                 // Clean up dead particles
@@ -173,17 +187,48 @@ define(function(require) {
                 particle.y += particle.velocity.y * deltaTime;
 
                 // Find the percent of life spent
-                lifeProgress = 1 - ((particle.lifeEndsAt - time) / particle.timeToLive);
+                percentLifeLeft = ((particle.lifeEndsAt - time) / particle.timeToLive);
+                percentLifeSpent = 1 - percentLifeLeft;
 
                 // Scale particles as they get older
-                radius = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.lerp(Math.min(lifeProgress * 2, 1)) * steamingProportion;
+                radius = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.lerp(Math.min(percentLifeSpent * 2, 1)) * steamingProportion;
                 particle.scale.x = particle.scale.y = radius / TeapotView.STEAM_PARTICLE_RADIUS_RANGE.max;
 
-
+                // Fade out when it nears the end of its life
+                if (percentLifeSpent >= TeapotView.STEAM_PARTICLE_FADE_POINT)
+                    particle.alpha = (percentLifeLeft / (1 - TeapotView.STEAM_PARTICLE_FADE_POINT)) * baseAlpha;            
 
                 // Apply repellant force on particles inversely related
                 //   to the distance from the center of the cloud.
+                vectorToCloudCenter = this._vectorToCloudCenter.set(cloudCenter).sub(particle.x, particle.y);
+                particleCloudCenterDistance = vectorToCloudCenter.length();
+                // console.log(vectorToCloudCenter)
+                if (particleCloudCenterDistance < steamCloudRadius) {
+                    repellantFactor = (1 - particleCloudCenterDistance / steamCloudRadius) * TeapotView.STEAM_CLOUD_REPELLANT_FORCE;
+                    repellingVector = this._repellingVector.set(vectorToCloudCenter).scale(repellantFactor)
+                    particle.velocity.sub(repellingVector);
+                    particle.hasEnteredCloud = true;
+                }
 
+                if (particle.hasEnteredCloud) {
+                    // If it has entered the cloud, keep it in the cloud 
+                    //   by applying a force relative to the distance from
+                    //   the center (for from the edge of the circle in).
+                    edgeRepellantFactor = particleCloudCenterDistance / steamCloudRadius;
+                    // Make it quadratic
+                    edgeRepellantFactor *= edgeRepellantFactor; //console.log(edgeRepellantFactor);
+                    // Scale it according to our scalar constant
+                    edgeRepellantFactor *= TeapotView.STEAM_CLOUD_CONTAINMENT_FORCE;
+                    // Rotate it a random amount in a 90 degree area
+                    repellingVector = this._repellingVector.set(vectorToCloudCenter).rotate(Math.random() * (Math.PI) - (Math.PI / 2));
+                    particle.velocity.add(repellingVector.scale(TeapotView.STEAM_PARTICLE_CLOUD_DAMPENING));
+
+                    // Make sure it's contained
+                    if (particleCloudCenterDistance > steamCloudRadius) {
+                        particle.x += vectorToCloudCenter.x * ((particleCloudCenterDistance - steamCloudRadius) / steamCloudRadius);
+                        particle.y += vectorToCloudCenter.y * ((particleCloudCenterDistance - steamCloudRadius) / steamCloudRadius);
+                    }
+                }
             }
         },
 
@@ -193,7 +238,7 @@ define(function(require) {
 
             var scale = TeapotView.STEAM_PARTICLE_RADIUS_RANGE.min / (steamParticleTexture.width / 2);
             var angle = this.spoutAngle() + (Math.random() * TeapotView.STEAM_EMISSION_ANGLE) - (TeapotView.STEAM_EMISSION_ANGLE / 2);
-            console.log(angle);
+            
             var particle = this.dormantSteamParticles.pop();
             if (particle) {
                 particle.x = this.spoutTipPosition.x;
@@ -201,7 +246,8 @@ define(function(require) {
                 particle.scale.x = particle.scale.y = scale;
                 particle.alpha = TeapotView.STEAM_PARTICLE_MAX_ALPHA * steamingProportion;
                 particle.visible = true;
-                particle.velocity = new Vector2(cloudCenterDistance, 0).angle(angle);
+                particle.velocity = new Vector2(cloudCenterDistance, 0).rotate(angle);
+                particle.hasEnteredCloud = false;
                 //console.log(particle.velocity);
                 //console.log(cloudCenterDistance);
                 // console.log(this.spoutTipPosition);

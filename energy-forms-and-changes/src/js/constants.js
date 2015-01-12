@@ -867,14 +867,19 @@ define(function (require) {
     TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.80;
     TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.2;
 
-    TeapotView.NUM_STEAM_PARTICLES = 400;
-    TeapotView.STEAM_PARTICLE_RADIUS_RANGE = range({ min: 8, max: 36 });
-    TeapotView.STEAM_PARTICLE_LIFE_RANGE   = range({ min: 3, max:  4 }); // Seconds to live
+    TeapotView.NUM_STEAM_PARTICLES = 500;
+    TeapotView.STEAM_PARTICLE_RADIUS_RANGE = range({ min:  8, max: 40 });
+    TeapotView.STEAM_PARTICLE_LIFE_RANGE   = range({ min:  2.5, max:  3.5 }); // Seconds to live
     TeapotView.STEAM_PARTICLE_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
-    TeapotView.STEAM_PARTICLE_MAX_ALPHA = 0.7;
-    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 60; // particles per second
-    TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 160; // pixels, rotated
-    TeapotView.STEAM_EMISSION_ANGLE = Math.PI / 6;
+    TeapotView.STEAM_PARTICLE_MAX_ALPHA = 0.2;
+    TeapotView.STEAM_PARTICLE_FADE_POINT = 0.8; // percent of life at which to start fading
+    TeapotView.STEAM_EMISSION_ANGLE = Math.PI / 7;
+    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 80; // particles per second
+    TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 140; // pixels, rotated
+    TeapotView.STEAM_CLOUD_RADIUS = 50;
+    TeapotView.STEAM_CLOUD_REPELLANT_FORCE = 0.3; // a velocity modifier
+    TeapotView.STEAM_CLOUD_CONTAINMENT_FORCE = 0.0001;
+    TeapotView.STEAM_PARTICLE_CLOUD_DAMPENING = 0.90; // decelleration
 
     Constants.TeapotView = TeapotView;
 

@@ -68,10 +68,12 @@ define(function(require) {
             // Create layers
             this.backLayer  = new PIXI.DisplayObjectContainer();
             this.airLayer   = new PIXI.DisplayObjectContainer();
+            this.midLayer   = new PIXI.DisplayObjectContainer();
             this.frontLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
             this.stage.addChild(this.airLayer);
+            this.stage.addChild(this.midLayer);
             this.stage.addChild(this.frontLayer);
         },
 
@@ -124,7 +126,7 @@ define(function(require) {
                 model: this.simulation.teapot,
                 mvt: this.mvt
             });
-            this.backLayer.addChild(this.teapotView.displayObject);
+            this.frontLayer.addChild(this.teapotView.displayObject);
             this.frontLayer.addChild(this.teapotView.energyChunkLayer);
 
             // Bind visibility
@@ -148,9 +150,9 @@ define(function(require) {
 
             this.backLayer.addChild(electricalGeneratorView.backLayer);
             this.backLayer.addChild(electricalGeneratorView.electricalEnergyChunkLayer);
-            this.frontLayer.addChild(electricalGeneratorView.frontLayer);
-            this.frontLayer.addChild(electricalGeneratorView.energyChunkLayer);
-            this.frontLayer.addChild(electricalGeneratorView.hiddenEnergyChunkLayer);
+            this.midLayer.addChild(electricalGeneratorView.frontLayer);
+            this.midLayer.addChild(electricalGeneratorView.energyChunkLayer);
+            this.midLayer.addChild(electricalGeneratorView.hiddenEnergyChunkLayer);
 
             // Solar panel
             var solarPanelView = new SolarPanelView({
@@ -161,7 +163,7 @@ define(function(require) {
 
             this.backLayer.addChild(solarPanelView.backLayer);
             this.backLayer.addChild(solarPanelView.energyChunkLayer);
-            this.frontLayer.addChild(solarPanelView.frontLayer);
+            this.midLayer.addChild(solarPanelView.frontLayer);
 
             // Bind visibility
             this.views.push(electricalGeneratorView);
