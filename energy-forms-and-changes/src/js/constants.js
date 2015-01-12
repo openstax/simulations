@@ -884,5 +884,18 @@ define(function (require) {
     Constants.TeapotView = TeapotView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                 BIKER                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var Biker = {};
+
+    
+
+    Constants.Biker = Biker;
+
+
     return Constants;
 });

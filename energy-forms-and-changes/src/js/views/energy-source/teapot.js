@@ -76,6 +76,13 @@ define(function(require) {
             this.displayObject.addChildAt(burnerView.energyChunkLayer, 0);
             this.displayObject.addChildAt(burnerView.backLayer, 0);
 
+            this.listenTo(this.model, 'change:active', function(model, active) {
+                if (!active) {
+                    this.burnerView.sliderView.trigger('slide', 0);
+                    this.burnerView.sliderView.val(0);
+                }
+            });
+
             burnerView.setPosition(
                 burnerStandRect.center().x,
                 burnerStandRect.top() + 5
