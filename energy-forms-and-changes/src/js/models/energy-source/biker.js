@@ -75,6 +75,7 @@ define(function (require) {
         },
 
         replenishEnergyChunks: function() {
+            this.energyChunks.reset();
             var nominalInitialoffset = new Vector2(0.019, 0.05);
             var displacement = new Vector2();
             var chunk;

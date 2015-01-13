@@ -40,13 +40,15 @@ define(function(require) {
 
             var energyChunkViews = energyChunkLayer.energyChunkViews;
 
+            var mvt = this.mvt;
             var energyChunkAdded = function(chunk) {
                 var chunkView = new EnergyChunkView({
                     model: chunk,
-                    mvt: this.mvt
+                    mvt: mvt
                 });
                 energyChunkViews.push(chunkView);
                 energyChunkLayer.addChild(chunkView.displayObject);
+                chunkView.updatePosition(chunk, chunk.get('position'));
             };
 
             var energyChunkRemoved = function(chunk) {
