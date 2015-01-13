@@ -116,6 +116,10 @@ define(function(require) {
             this.beakerView.hideEnergyChunks();
         },
 
+        forceBeakerEnergyChunkPositionsUpdate: function() {
+            this.beakerView.forceEnergyChunkPositionsUpdate();
+        }
+
     });
 
     return BeakerHeaterView;

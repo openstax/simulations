@@ -68,6 +68,11 @@ define(function(require) {
             }
         },
 
+        forcePositionUpdate: function() {
+            for (var i = 0; i < this.views.length; i++)
+                this.views[i].forcePositionUpdate();
+        },
+
         update: function(time, deltaTime) {
             for (var i = 0; i < this.views.length; i++)
                 this.views[i].update(time, deltaTime);

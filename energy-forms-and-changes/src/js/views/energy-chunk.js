@@ -97,6 +97,10 @@ define(function(require) {
             this.updateOnNextFrame = true;
         },
 
+        forcePositionUpdate: function() {
+            this.positionUpdated();
+        },
+
         update: function(time, deltaTime) {
             if (this.updateOnNextFrame) {
                 this.updateOnNextFrame = false;

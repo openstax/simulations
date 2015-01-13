@@ -71,6 +71,11 @@ define(function(require) {
             // $thermalWanderingChunks.html(thermalWanderingChunks);
         },
 
+        forceEnergyChunkPositionsUpdate: function() {
+            for (var i = 0; i < this.sliceViews.length; i++)
+                this.sliceViews[i].forcePositionUpdate();
+        },
+
         update: function(time, deltaTime) {
             for (var i = 0; i < this.sliceViews.length; i++)
                 this.sliceViews[i].update(time, deltaTime);
