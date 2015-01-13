@@ -33,6 +33,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:visible', this.updateVisibility);
+            this.updateVisibility(this.model, this.model.get('visible'));
         },
 
         initGraphics: function() {
@@ -137,30 +138,6 @@ define(function(require) {
             //   supplementary angle of theta or just do the exact same thing with center2.
             var c2TangentPointA = directionVector.clone().rotate(-thetaS).normalize().scale(radius2 + hlw).add(center2);
             var c2TangentPointB = directionVector.clone().rotate( thetaS).normalize().scale(radius2 + hlw).add(center2);
-
-            // origin = new PIXI.Graphics();
-            // origin.beginFill(0x00FFFF, 1);
-            // origin.drawCircle(c1TangentPointA.x, c1TangentPointA.y, 3);
-            // origin.endFill();
-            // this.displayObject.addChild(origin);
-
-            // origin = new PIXI.Graphics();
-            // origin.beginFill(0x00FFFF, 1);
-            // origin.drawCircle(c1TangentPointB.x, c1TangentPointB.y, 3);
-            // origin.endFill();
-            // this.displayObject.addChild(origin);
-
-            // origin = new PIXI.Graphics();
-            // origin.beginFill(0x00FFFF, 1);
-            // origin.drawCircle(c2TangentPointA.x, c2TangentPointA.y, 3);
-            // origin.endFill();
-            // this.displayObject.addChild(origin);
-
-            // origin = new PIXI.Graphics();
-            // origin.beginFill(0x00FFFF, 1);
-            // origin.drawCircle(c2TangentPointB.x, c2TangentPointB.y, 3);
-            // origin.endFill();
-            // this.displayObject.addChild(origin);
 
             // Angle between line connecting centers and the x-axis.
             var directionVectorAngle = -Math.atan2(directionVector.y, directionVector.x); 
