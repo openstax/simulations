@@ -97,7 +97,6 @@ define(function(require) {
             EnergySourceView.prototype.initGraphics.apply(this);
 
             this.initImages();
-            this.initBelt();
             this.initControls();
         },
 
@@ -133,10 +132,6 @@ define(function(require) {
             this.displayObject.addChild(rider);
             this.displayObject.addChild(riderTired);
             this.displayObject.addChild(frontLeg);
-        },
-
-        initBelt: function() {
-
         },
 
         initControls: function() {

@@ -76,6 +76,17 @@ define(function (require, exports, module) {
             this.fluorescentLightBulb  = new FluorescentLightBulb();
             this.beakerHeater          = new BeakerHeater();
 
+            // Belt
+            // Create the belt that interconnects the biker and the generator.
+            //   Some position tweaking was needed in order to get this to
+            //   show up in the right place.  Not entirely sure why.
+            this.belt = new Belt({
+                wheel1Radius: Biker.REAR_WHEEL_RADIUS,
+                wheel1Center: new Vector2(EnergySystemsSimulation.ENERGY_SOURCE_POSITION).add(Biker.CENTER_OF_BACK_WHEEL_OFFSET).add(0.005, 0),
+                wheel2Radius: ElectricalGenerator.WHEEL_RADIUS,
+                wheel2Center: new Vector2(EnergySystemsSimulation.ENERGY_CONVERTER_POSITION).add(Biker.WHEEL_CENTER_OFFSET)
+            });
+
             // Group lists
             this.sources = [
                 this.faucet,
@@ -108,10 +119,14 @@ define(function (require, exports, module) {
                 this.faucet.set('waterPowerableElementInPlace', active);
                 this.teapot.set('steamPowerableElementInPlace', active);
                 this.biker.set('mechanicalPoweredSystemIsNext', active);
+
+                this.updateBeltVisibility();
             });
 
             this.listenTo(this.biker, 'change:active', function(faucet, active) {
                 this.electricalGenerator.set('directCouplingMode', active);
+
+                this.updateBeltVisibility();
             });
 
             // The sun needs a reference to the solar panel
@@ -221,6 +236,10 @@ define(function (require, exports, module) {
 
         activeElementChanged: function(activeElement, previousElement) {
             previousElement.deactivate();
+        },
+
+        updateBeltVisibility: function() {
+            this.belt.set('visible', this.electricalGenerator.active() && this.biker.active());
         }
 
     }, Constants.EnergySystemsSimulation);
