@@ -40,6 +40,8 @@ define(function(require) {
         },
 
         initialize: function(options) {
+            this.$ui = $('<div class="scene-ui">');
+
             SceneView.prototype.initialize.apply(this, arguments);
 
             this.views = [];
@@ -140,6 +142,7 @@ define(function(require) {
             });
             this.frontLayer.addChild(this.bikerView.displayObject);
             this.frontLayer.addChild(this.bikerView.energyChunkLayer);
+            this.$ui.append(this.bikerView.el);
 
             // Bind visibility
             this.bindEnergyChunkVisibility(this.faucetView);

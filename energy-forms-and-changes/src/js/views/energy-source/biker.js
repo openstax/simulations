@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var $ = require('jquery');
     var _ = require('underscore');
     var PIXI = require('pixi');
 
@@ -84,11 +85,16 @@ define(function(require) {
     var BikerView = EnergySourceView.extend({
 
         initialize: function(options) {
+            // This is a hybrid PIXI/HTML view
+            this.el = document.createElement('div');
+            this.$el = $(this.el);
+
             EnergySourceView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:bikerHasEnergy', this.bikerStateChanged);
             this.listenTo(this.model, 'change:rearWheelAngle', this.updateRearWheelAngle);
             this.listenTo(this.model, 'change:crankAngle',     this.updateCrankAngle);
+            this.listenTo(this.model, 'change:active',         this.updateFeedMeButton);
 
             this.bikerStateChanged(this.model, this.model.get('bikerHasEnergy'));
         },
@@ -188,11 +194,23 @@ define(function(require) {
 
             // Add it
             panel.addChild(sliderView.displayObject);
+
+            // Create button
+            var self = this;
+            this.$button = $('<button class="btn feed-me-btn">Feed Me</button>');
+            this.$button.on('click', function() {
+                self.feedMeClicked();
+            });
+
+            // Add button
+            this.$el.append(this.$button);
         },
 
         bikerStateChanged: function(model, bikerHasEnergy) {
             this.riderNormal.visible =  bikerHasEnergy;
             this.riderTired.visible  = !bikerHasEnergy;
+
+            this.updateFeedMeButton();
         },
 
         updateRearWheelAngle: function(model, rearWheelAngle) {
@@ -203,6 +221,17 @@ define(function(require) {
             var index = model.mapAngleToImageIndex(crankAngle);
             this.backLeg.gotoAndStop(index);
             this.frontLeg.gotoAndStop(index);
+        },
+
+        updateFeedMeButton: function() {
+            if (this.model.active() && !this.model.get('bikerHasEnergy'))
+                this.$button.show();
+            else
+                this.$button.hide();
+        },
+
+        feedMeClicked: function() {
+            this.model.replenishEnergyChunks();
         }
 
     }, Constants.BikerView);

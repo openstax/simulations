@@ -56,18 +56,6 @@ define(function(require) {
             var radius1 = this.mvt.modelToViewDeltaX(this.model.get('wheel1Radius'));
             var radius2 = this.mvt.modelToViewDeltaX(this.model.get('wheel2Radius'));
 
-            var origin = new PIXI.Graphics();
-            origin.beginFill(0x0000FF, 1);
-            origin.drawCircle(center1.x, center1.y, 3);
-            origin.endFill();
-            this.displayObject.addChild(origin);
-
-            origin = new PIXI.Graphics();
-            origin.beginFill(0x0000FF, 1);
-            origin.drawCircle(center2.x, center2.y, 3);
-            origin.endFill();
-            this.displayObject.addChild(origin);
-
             /* This algorithm relies on radius1 being greater than
              *   radius2, so we need to flip it if it's not and
              *   remember if it's flipped so we can flip it back

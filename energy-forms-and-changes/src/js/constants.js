@@ -914,7 +914,6 @@ define(function (require) {
 
     var BikerView = {};
 
-    
     BikerView.PANEL_WIDTH = 0.1;
     BikerView.PANEL_HEIGHT = 0.03;
     BikerView.PANEL_OFFSET = new Vector2(-BikerView.PANEL_WIDTH / 2, -BikerView.PANEL_HEIGHT - 0.008);
