@@ -7,6 +7,7 @@ define(function (require, exports, module) {
 
     // Common dependencies
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2 = require('common/math/vector2');
     
     // Project dependiencies
     var Air = require('models/air');
@@ -25,6 +26,7 @@ define(function (require, exports, module) {
 
     var CarouselAnimator     = require('models/carousel-animator');
     var EnergySystemsElement = require('models/energy-systems-element');
+    var Belt                 = require('models/belt');
     
     // Constants
     var Constants = require('constants');
@@ -84,7 +86,7 @@ define(function (require, exports, module) {
                 wheel1Radius: Biker.REAR_WHEEL_RADIUS,
                 wheel1Center: new Vector2(EnergySystemsSimulation.ENERGY_SOURCE_POSITION).add(Biker.CENTER_OF_BACK_WHEEL_OFFSET).add(0.005, 0),
                 wheel2Radius: ElectricalGenerator.WHEEL_RADIUS,
-                wheel2Center: new Vector2(EnergySystemsSimulation.ENERGY_CONVERTER_POSITION).add(Biker.WHEEL_CENTER_OFFSET)
+                wheel2Center: new Vector2(EnergySystemsSimulation.ENERGY_CONVERTER_POSITION).add(ElectricalGenerator.WHEEL_CENTER_OFFSET)
             });
 
             // Group lists

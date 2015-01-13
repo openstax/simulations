@@ -24,6 +24,8 @@ define(function(require) {
     var IncandescentLightBulbView = require('views/energy-user/incandescent-light-bulb');
     var FluorescentLightBulbView  = require('views/energy-user/fluorescent-light-bulb');
 
+    var BeltView = require('views/belt');
+
     // Constants
     var Constants = require('constants');
     var EnergySystemsSimulationView = Constants.EnergySystemsSimulationView;
@@ -88,6 +90,7 @@ define(function(require) {
             this.initSources();
             this.initUsers();
             this.initConverters();
+            this.initBelt();
         },
 
         initAir: function() {
@@ -235,6 +238,15 @@ define(function(require) {
             this.bindEnergyChunkVisibility(incandescentLightBulbView);
             this.bindEnergyChunkVisibility(fluorescentLightBulbView);
             this.bindEnergyChunkVisibility(beakerHeaterView);
+        },
+
+        initBelt: function() {
+            var belt = new BeltView({
+                model: this.simulation.belt,
+                mvt: this.mvt,
+                lineWidth: 4
+            });
+            this.midLayer.addChild(belt.displayObject);
         },
 
         _update: function(time, deltaTime) {

@@ -10,7 +10,7 @@ define(function (require) {
             wheel1Radius: 1,
             wheel1Center: new Vector2(),
             wheel2Radius: 1,
-            wheel2Center: new Vector2()
+            wheel2Center: new Vector2(),
 
             visible: false
         }
