@@ -105,14 +105,21 @@ define(function(require) {
             if (!texturesInitialized)
                 initTextures();
 
-            var legImageOffset = new Vector2(0.009, 0.002).add(Biker.FRAME_CENTER_OFFSET);
+            var legImageOffset = this.mvt.modelToViewDelta(new Vector2(0.009, 0.002).add(Biker.FRAME_CENTER_OFFSET));
 
-            var backLeg    = this.createSpriteWithOffset(backLegTextures[0],                legImageOffset);
+            var backLeg  = new PIXI.MovieClip(backLegTextures);
+            var frontLeg = new PIXI.MovieClip(frontLegTextures);
+
+            backLeg.x = frontLeg.x = legImageOffset.x;
+            backLeg.y = frontLeg.y = legImageOffset.y;
+
+            backLeg.anchor.x = frontLeg.anchor.x = 0.5;
+            backLeg.anchor.y = frontLeg.anchor.y = 0.5;
+
             var frame      = this.createSpriteWithOffset(Assets.Images.BICYCLE_FRAME_3,     Biker.FRAME_CENTER_OFFSET);
             var spokes     = this.createSpriteWithOffset(Assets.Images.BICYCLE_SPOKES,      new Vector2( 0.035, -0.020 ).add(Biker.FRAME_CENTER_OFFSET), 0.5);
             var rider      = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER,       new Vector2(-0.0025, 0.0620).add(Biker.FRAME_CENTER_OFFSET));
             var riderTired = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER_TIRED, new Vector2(-0.0032, 0.056 ).add(Biker.FRAME_CENTER_OFFSET));
-            var frontLeg   = this.createSpriteWithOffset(frontLegTextures[0],               legImageOffset);
 
             this.riderNormal = rider;
             this.riderTired  = riderTired;
@@ -199,8 +206,8 @@ define(function(require) {
 
         updateCrankAngle: function(model, crankAngle) {
             var index = model.mapAngleToImageIndex(crankAngle);
-            this.backLeg.texture  = backLegTextures[i];
-            this.frontLeg.texture = frontLegTextures[i];
+            this.backLeg.gotoAndStop(index);
+            this.frontLeg.gotoAndStop(index);
         }
 
     }, Constants.BikerView);
