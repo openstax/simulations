@@ -597,7 +597,7 @@ define(function (require) {
     ElectricalGenerator.WHEEL_CENTER_OFFSET = new Vector2(0, 0.03);
     ElectricalGenerator.LEFT_SIDE_OF_WHEEL_OFFSET = new Vector2(-0.03, 0.03);
     ElectricalGenerator.CONNECTOR_OFFSET = new Vector2(0.057, -0.04);
-    ElectricalGenerator.WHEEL_RADIUS = 0.0398; //WHEEL_HUB_IMAGE.getWidth() / 2;
+    ElectricalGenerator.WHEEL_RADIUS = 0.0388; //WHEEL_HUB_IMAGE.getWidth() / 2;
     ElectricalGenerator.WIRE_OFFSET = new Vector2(0.0185, -0.015);
 
     // Offsets used to create the paths followed by the energy chunks.
