@@ -234,9 +234,17 @@ define(function (require) {
         },
 
         getAbsorptionShape: function() {
+            return this.getTranslatedAbsorptionShape(0, 0);
+        },
+
+        getTranslatedAbsorptionShape: function(x, y) {
+            if (x instanceof Vector2) {
+                y = x.y;
+                x = x.x;
+            }
             return SolarPanel.ABSORPTION_SHAPE.clone().translate(
-                this.get('position').x + SolarPanel.SOLAR_PANEL_OFFSET.x,
-                this.get('position').y + SolarPanel.SOLAR_PANEL_OFFSET.y
+                this.get('position').x + SolarPanel.SOLAR_PANEL_OFFSET.x + x,
+                this.get('position').y + SolarPanel.SOLAR_PANEL_OFFSET.y + y
             );
         },
 

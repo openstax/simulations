@@ -12,7 +12,7 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var DEBUG = false;
+    var DEBUG = true;
 
     /**
      * A view that represents an element model
@@ -112,11 +112,11 @@ define(function(require) {
             for (var i = 0; i < this.lightAbsorbingShapes.length; i++) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
 
-                // var bounds = lightAbsorbingShape.getBounds();
-                // var local = this.toLocal(bounds.position());
-                // this.debugGraphics.beginFill(0xFF0022, 0.01);
-                // this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
-                // this.debugGraphics.endFill();
+                var bounds = lightAbsorbingShape.getBounds();
+                var local = this.toLocal(bounds.position());
+                this.debugGraphics.beginFill(0xFF0022, 0.01);
+                this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
+                this.debugGraphics.endFill();
 
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
                 if (entryPoint) {
@@ -144,9 +144,10 @@ define(function(require) {
                 end     = points[j + 1].point;
                 fade    = points[j].fade;
                 opacity = this.drawLine(start, end, opacity, fade);
-                //console.log(fade.toFixed(3));
+                //console.log(fade.toFixed(3) +' | '+opacity);
                 //console.log(end.x.toFixed(1) + ',' + end.y.toFixed(1));
             }
+            //console.log('----');
             this.updateGraphics();
         },
 

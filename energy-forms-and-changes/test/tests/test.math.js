@@ -143,6 +143,7 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.contains(pointInside)).to.be.true;
 		chai.expect(curve.contains(pointOutside)).to.not.be.true;
 
+		// Test the curveTo function
 		curve = new PiecewiseCurve();
 		curve
 			.moveTo(0, 0)
@@ -153,6 +154,22 @@ describe('PiecewiseCurve', function(){
 
 		pointInside  = new Vector2(3, 3);
 		pointOutside = new Vector2(8, 8);
+
+		chai.expect(curve.contains(pointInside)).to.be.true;
+		chai.expect(curve.contains(pointOutside)).to.not.be.true;
+
+		// Create a parallelogram
+		curve = new PiecewiseCurve();
+		curve
+			.moveTo(0, 0)
+			.lineTo(3, 4)
+			.lineTo(5, 4)
+			.lineTo(2, 0)
+			.lineTo(0, 0)
+			.close();
+
+		pointInside  = new Vector2(3, 3);
+		pointOutside = new Vector2(1, 2);
 
 		chai.expect(curve.contains(pointInside)).to.be.true;
 		chai.expect(curve.contains(pointOutside)).to.not.be.true;

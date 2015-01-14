@@ -45,6 +45,9 @@ define(function(require) {
             this.initClouds();
 
             this.raySource.update();
+
+            this.listenTo(this.model,                   'change:active', this.updateSunAndSolarPanelActiveState);
+            this.listenTo(this.model.get('solarPanel'), 'change:active', this.updateSunAndSolarPanelActiveState);
         },
 
         initSky: function(sunCenter) {
@@ -271,6 +274,39 @@ define(function(require) {
         updateOpacity: function(model, opacity) {
             EnergySourceView.prototype.updateOpacity.apply(this, [model, opacity]);
             this.skyLayer.alpha = opacity;
+        },
+
+        updateSunAndSolarPanelActiveState: function() {
+            var sun        = this.model;
+            var solarPanel = this.model.get('solarPanel');
+
+            if (sun.active() && solarPanel.active()) {
+                if (!this.solarPanelAbsorptionShape) {
+                    /*
+                     * To get the shape in model space positioned relative to
+                     *   the sun, we need to subtract the sun's position from
+                     *   the solar panel's globally positioned shape.  Then
+                     *   we'll need to transform it into view space to use it.
+                     */
+                    var x = sun.get('position').x;
+                    var y = sun.get('position').y;
+                    var shapeRelativeToSun = solarPanel.getTranslatedAbsorptionShape(-x, -y);
+                    var viewSpaceShape = this.mvt.modelToViewDelta(shapeRelativeToSun);
+
+                    this.solarPanelAbsorptionShape = new LightAbsorbingShape({
+                        shape: viewSpaceShape,
+                        lightAbsorptionCoefficient: 1
+                    });
+                    this.solarPanelAbsorptionShape.cid = 'solar-panel';
+                }
+                
+                this.raySource.addLightAbsorbingShape(this.solarPanelAbsorptionShape);
+                this.raySource.update();
+            }
+            else if (this.solarPanelAbsorptionShape) {
+                this.raySource.removeLightAbsorbingShape(this.solarPanelAbsorptionShape);
+                this.raySource.update();
+            }
         }
 
     }, Constants.SunView);

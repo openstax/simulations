@@ -781,7 +781,7 @@ define(function (require) {
         .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.right() - absorptionZoneWidth, SolarPanel.PANEL_IMAGE_BOUNDS.top())
         .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.right(),                       SolarPanel.PANEL_IMAGE_BOUNDS.top())
         .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.left()  + absorptionZoneWidth, SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
-        .lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.left(),                        SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
+        //.lineTo(SolarPanel.PANEL_IMAGE_BOUNDS.left(),                        SolarPanel.PANEL_IMAGE_BOUNDS.bottom())
         .close();
 
     Constants.SolarPanel = SolarPanel;
