@@ -54,7 +54,7 @@ define(function(require) {
         chunkRemoved: function(chunk) {
             for (var i = 0; i < this.views.length; i++) {
                 if (this.views[i].model === chunk) {
-                    this.views[i].remove(this.displayObject);
+                    this.views[i].removeFrom(this.displayObject);
                     this.views.slice(i, 1);
                     break;
                 }
@@ -63,7 +63,7 @@ define(function(require) {
 
         chunksReset: function() {
             for (var i = this.views.length - 1; i >= 0; i--) {
-                this.views[i].remove(this.displayObject);
+                this.views[i].removeFrom(this.displayObject);
                 this.views.splice(i, 1);
             }
         },

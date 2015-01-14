@@ -9,9 +9,6 @@ define(function(require) {
     var EnergyChunkView  = require('views/energy-chunk');
     var EnergyChunkContainerSliceView = require('views/energy-chunk-container-slice');
 
-    // var thermalWanderingChunks = 0;
-    // var $thermalWanderingChunks = $('<div></div>').appendTo('body').wrap('<div> thermal wandering chunks: </div>');
-
     /**
      * A view that represents a block model
      */
@@ -54,21 +51,16 @@ define(function(require) {
             });
             this.approachingEnergyChunkLayer.addChild(view.displayObject);
             this.approachingEnergyChunkViews.push(view);
-            // thermalWanderingChunks++;
-            // $thermalWanderingChunks.html(thermalWanderingChunks);
         },
 
         approachingEnergyChunkRemoved: function(chunk) {
             for (var i = 0; i < this.approachingEnergyChunkViews.length; i++) {
                 if (this.approachingEnergyChunkViews[i].model === chunk) {
-                    this.approachingEnergyChunkViews[i].stopListening();
-                    this.approachingEnergyChunkLayer.removeChild(this.approachingEnergyChunkViews[i].displayObject);
+                    this.approachingEnergyChunkViews[i].removeFrom(this.approachingEnergyChunkLayer);
                     this.approachingEnergyChunkViews.splice(i, 1);
                     break;
                 }
             }
-            // thermalWanderingChunks--;
-            // $thermalWanderingChunks.html(thermalWanderingChunks);
         },
 
         forceEnergyChunkPositionsUpdate: function() {

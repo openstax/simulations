@@ -3,7 +3,6 @@ define(function (require) {
     'use strict';
 
     var _ = require('underscore');
-    var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
 

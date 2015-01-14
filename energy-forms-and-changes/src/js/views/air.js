@@ -2,9 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    //var PIXI = require('pixi');
-
     var PixiView = require('common/pixi/view');
     var EnergyChunkView = require('views/energy-chunk');
 
@@ -45,9 +42,12 @@ define(function(require) {
         },
 
         chunkRemoved: function(chunk) {
-            var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
-            this.displayObject.removeChild(energyChunkView.displayObject);
-            this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
+            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
+                if (this.energyChunkViews[i].model === chunk) {
+                    this.energyChunkViews[i].removeFrom(this.displayObject); // Unbinds listeners too
+                    this.energyChunkViews.splice(i, 1);
+                }
+            }
         },
 
         showEnergyChunks: function() {

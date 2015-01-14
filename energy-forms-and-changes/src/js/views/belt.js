@@ -89,20 +89,20 @@ define(function(require) {
 
             d = center1.distance(center2);
             h = Math.sqrt(d * d + Math.pow(radius1 - radius2, 2)); // Pythagorean theorem
-            y = Math.sqrt(h * h + radius2 * radius2) // More Pythagorean theorem
+            y = Math.sqrt(h * h + radius2 * radius2); // More Pythagorean theorem
             theta = Math.acos((radius1 * radius1 + d * d - y * y) / (2 * radius1 * d)); // Law of cosines
             thetaS = Math.PI - theta;
 
             // Now that we have our numbers, flip it back
             if (flipped) {
-                var swap;
-                swap = center2;
+                var swap2;
+                swap2 = center2;
                 center2 = center1;
-                center1 = swap;
+                center1 = swap2;
 
-                swap = radius2;
+                swap2 = radius2;
                 radius2 = radius1;
-                radius1 = swap;
+                radius1 = swap2;
             }
 
             // Now we need to use those numbers to derrive useful points and angles with which to draw
@@ -118,14 +118,14 @@ define(function(require) {
             //   a vector pointing to the tangent point, then normalize it and scale it so
             //   it's the length of radius1, and offset it by our center point, and that 
             //   will be our first tangent point.
-            var c1TangentPointA = directionVector.clone().rotate(-thetaS).normalize().scale(radius1 + hlw).add(center1);
+        //  var c1TangentPointA = directionVector.clone().rotate(-thetaS).normalize().scale(radius1 + hlw).add(center1);
             var c1TangentPointB = directionVector.clone().rotate( thetaS).normalize().scale(radius1 + hlw).add(center1);
            
 
             // And for the second circle, we could go the opposite way and then find the
             //   supplementary angle of theta or just do the exact same thing with center2.
             var c2TangentPointA = directionVector.clone().rotate(-thetaS).normalize().scale(radius2 + hlw).add(center2);
-            var c2TangentPointB = directionVector.clone().rotate( thetaS).normalize().scale(radius2 + hlw).add(center2);
+         // var c2TangentPointB = directionVector.clone().rotate( thetaS).normalize().scale(radius2 + hlw).add(center2);
 
             // Angle between line connecting centers and the x-axis.
             var directionVectorAngle = -Math.atan2(directionVector.y, directionVector.x); 

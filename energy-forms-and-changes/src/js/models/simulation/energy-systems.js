@@ -24,9 +24,8 @@ define(function (require, exports, module) {
     var FluorescentLightBulb  = require('models/energy-user/fluorescent-light-bulb');
     var BeakerHeater          = require('models/energy-user/beaker-heater');
 
-    var CarouselAnimator     = require('models/carousel-animator');
-    var EnergySystemsElement = require('models/energy-systems-element');
-    var Belt                 = require('models/belt');
+    var CarouselAnimator = require('models/carousel-animator');
+    var Belt             = require('models/belt');
     
     // Constants
     var Constants = require('constants');
@@ -133,9 +132,6 @@ define(function (require, exports, module) {
 
             // The sun needs a reference to the solar panel
             this.sun.set('solarPanel', this.solarPanel);
-
-            // Temporary until all the models are filled in
-            _.each(this.models, function(model) { if (model.update === undefined) model.update = function(){return{type: 2, amount: 133, direction: -1.5};}; if (model.injectEnergyChunks === undefined) model.injectEnergyChunks = function(){}; });
 
             this.set('source',    this.faucet);
             this.set('converter', this.electricalGenerator);

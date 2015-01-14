@@ -2,9 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-    var Colors = require('common/colors/colors');
-
     var PositionableView = require('views/positionable');
 
     var Constants = require('constants');

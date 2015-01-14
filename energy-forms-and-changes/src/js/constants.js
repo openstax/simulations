@@ -729,7 +729,7 @@ define(function (require) {
     var Cloud = {};
 
     Cloud.CLOUD_WIDTH = 0.035; // In meters, though obviously not to scale.  Empirically determined.
-    Cloud.CLOUD_HEIGHT = 0.0191 // In meters, the height that, given the width above, will maintain the right aspect ratio for the image
+    Cloud.CLOUD_HEIGHT = 0.0191; // In meters, the height that, given the width above, will maintain the right aspect ratio for the image
 
     Constants.Cloud = Cloud;
 
@@ -861,14 +861,14 @@ define(function (require) {
     TeapotView.BURNER_HEIGHT = TeapotView.BURNER_WIDTH * 0.80;
     TeapotView.BURNER_OPENING_HEIGHT = TeapotView.BURNER_WIDTH * 0.2;
 
-    TeapotView.NUM_STEAM_PARTICLES = 500;
+    TeapotView.NUM_STEAM_PARTICLES = 400;
     TeapotView.STEAM_PARTICLE_RADIUS_RANGE = range({ min:  8, max: 40 });
     TeapotView.STEAM_PARTICLE_LIFE_RANGE   = range({ min:  2.5, max:  3.5 }); // Seconds to live
     TeapotView.STEAM_PARTICLE_COLOR = BeakerView.STEAM_PARTICLE_COLOR;
     TeapotView.STEAM_PARTICLE_MAX_ALPHA = 0.2;
     TeapotView.STEAM_PARTICLE_FADE_POINT = 0.8; // percent of life at which to start fading
     TeapotView.STEAM_EMISSION_ANGLE = Math.PI / 7;
-    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 80; // particles per second
+    TeapotView.MAX_STEAM_PARTICLE_EMISSION_RATE = 100; // particles per second
     TeapotView.MAX_STEAM_CLOUD_CENTER_DISTANCE = 140; // pixels, rotated
     TeapotView.STEAM_CLOUD_RADIUS = 50;
     TeapotView.STEAM_CLOUD_REPELLANT_FORCE = 0.3; // a velocity modifier

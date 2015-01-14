@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _ = require('underscore');
     var PIXI = require('pixi');
 
     var Colors           = require('common/colors/colors');
@@ -105,23 +104,37 @@ define(function(require) {
             this.waterLayer = new PIXI.DisplayObjectContainer();
             this.displayObject.addChild(this.waterLayer);
 
-            this.listenTo(this.model.waterDrops, 'add', this.addWaterDrop);
-            this.listenTo(this.model.waterDrops, 'reset', function() {
-                this.waterLayer.removeChildren();
-            });
+            this.waterDropViews = [];
+
+            this.listenTo(this.model.waterDrops, 'add',    this.waterDropAdded);
+            this.listenTo(this.model.waterDrops, 'remove', this.waterDropRemoved);
+            this.listenTo(this.model.waterDrops, 'reset',  this.waterDropsReset);
         },
 
-        addWaterDrop: function(waterDrop) {
+        waterDropAdded: function(waterDrop) {
             var waterDropView = new WaterDropView({
                 model: waterDrop,
                 mvt: this.mvt
             });
             this.waterLayer.addChild(waterDropView.displayObject);
+            this.waterDropViews.push(waterDropView);
+        },
 
-            this.listenTo(waterDrop, 'destroy', function() {
-                this.waterLayer.removeChild(waterDropView.displayObject);
-                this.stopListening(waterDrop);
-            });
+        waterDropRemoved: function(waterDrop) {
+            for (var i = this.waterDropViews.length - 1; i >= 0; i--) {
+                if (this.waterDropViews[i].model === waterDrop) {
+                    this.waterDropViews[i].removeFrom(this.waterLayer);
+                    this.waterDropViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        waterDropsReset: function() {
+            for (var i = this.waterDropViews.length - 1; i >= 0; i--) {
+                this.waterDropViews[i].removeFrom(this.waterLayer);
+                this.waterDropViews.splice(i, 1);
+            }
         }
 
     });

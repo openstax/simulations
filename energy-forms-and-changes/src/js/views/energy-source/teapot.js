@@ -4,10 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Colors     = require('common/colors/colors');
-    var SliderView = require('common/pixi/view/slider');
-    var Rectangle  = require('common/math/rectangle');
-    var Vector2    = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
+    var Vector2   = require('common/math/vector2');
 
     var EnergySourceView = require('views/energy-source');
     var BurnerView       = require('views/element/burner');
@@ -48,8 +46,6 @@ define(function(require) {
         initTeapot: function() {
             var teapotSprite = this.createSpriteWithOffset(Assets.Images.TEAPOT_LARGE, Constants.Teapot.TEAPOT_OFFSET);
             this.displayObject.addChild(teapotSprite);
-
-            var teapotSpriteBounds = teapotSprite.getBounds();
 
             return new Rectangle(
                 teapotSprite.x,
@@ -212,7 +208,7 @@ define(function(require) {
                 // console.log(vectorToCloudCenter)
                 if (particleCloudCenterDistance < steamCloudRadius) {
                     repellantFactor = (1 - particleCloudCenterDistance / steamCloudRadius) * TeapotView.STEAM_CLOUD_REPELLANT_FORCE;
-                    repellingVector = this._repellingVector.set(vectorToCloudCenter).scale(repellantFactor)
+                    repellingVector = this._repellingVector.set(vectorToCloudCenter).scale(repellantFactor);
                     particle.velocity.sub(repellingVector);
                     particle.hasEnteredCloud = true;
                 }

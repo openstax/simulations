@@ -111,7 +111,7 @@ define(function(require) {
          * Removes the displayObject from its parent and unbinds
          *   event listeners for the model.
          */
-        remove: function(parentDisplayObject) {
+        removeFrom: function(parentDisplayObject) {
             if (parentDisplayObject !== undefined)
                 parentDisplayObject.removeChild(this.displayObject);
             if (this.model)

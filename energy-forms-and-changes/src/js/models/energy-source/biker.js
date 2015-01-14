@@ -52,24 +52,26 @@ define(function (require) {
          *   next system changed. It removes problematic energy chunks or changes
          *   their type.
          */
-        mechanicalPoweredSystemIsNext: function(model, mechanicalPoweredSystemIsNext) {
+        mechanicalPoweredSystemIsNextChanged: function(model, mechanicalPoweredSystemIsNext) {
             var hubPosition = this.offsetPosition(Biker.CENTER_OF_BACK_WHEEL_OFFSET);
             var chunk;
             for (var i = this.energyChunkMovers.length - 1; i >= 0; i--) {
                 chunk = this.energyChunkMovers[i].energyChunk;
                 if (chunk.get('energyType') === EnergyTypes.MECHANICAL) {
-                    // Just remove this energy chunk
-                    this.energyChunkMovers.splice(i, 1);
-                    this.energyChunks.remove(chunk);
-                }
-                else {
-                    // Make sure that this energy chunk turns to thermal energy.
-                    this.energyChunkMovers.splice(i, 1);
-                    this.energyChunkMovers.push(new EnergyChunkPathMover(
-                        chunk,
-                        this.createMechanicalToThermalEnergyChunkPath(this.get('position'), chunk.get('position')),
-                        Constants.ENERGY_CHUNK_VELOCITY
-                    ));
+                    if (chunk.get('position').x > hubPosition.x) {
+                        // Just remove this energy chunk
+                        this.energyChunkMovers.splice(i, 1);
+                        this.energyChunks.remove(chunk);
+                    }
+                    else {
+                        // Make sure that this energy chunk turns to thermal energy.
+                        this.energyChunkMovers.splice(i, 1);
+                        this.energyChunkMovers.push(new EnergyChunkPathMover(
+                            chunk,
+                            this.createMechanicalToThermalEnergyChunkPath(this.get('position'), chunk.get('position')),
+                            Constants.ENERGY_CHUNK_VELOCITY
+                        ));
+                    }
                 }
             }
         },
@@ -78,7 +80,6 @@ define(function (require) {
             this.energyChunks.reset();
             var nominalInitialoffset = new Vector2(0.019, 0.05);
             var displacement = new Vector2();
-            var chunk;
             for (var i = 0; i < Biker.INITIAL_NUM_ENERGY_CHUNKS; i++) {
                 displacement.set((Math.random() - 0.5) * 0.02, 0).rotate(Math.PI * 0.7);
                 this.energyChunks.add(new EnergyChunk({
@@ -132,7 +133,7 @@ define(function (require) {
             this.set('crankAngle', (this.get('crankAngle') + this.crankAngularVelocity * deltaTime) % (2 * Math.PI));
             this.set('rearWheelAngle', (this.get('rearWheelAngle') + this.crankAngularVelocity * deltaTime * Biker.CRANK_TO_REAR_WHEEL_RATIO) % (2 * Math.PI));
 
-            if (this.crankAngularVelocity == 0 && previousAngularVelocity !== 0) {
+            if (this.crankAngularVelocity === 0 && previousAngularVelocity !== 0) {
                 // Set crank to a good position where animation will start
                 // right away when motion is restarted.
                 this.setCrankToPoisedPosition();
@@ -249,7 +250,7 @@ define(function (require) {
                 //   yet.
                 path.push(new Vector2(centerPosition).add(Biker.BIKE_CRANK_OFFSET));
             }
-            path.push(new Vector2(centerPosition).add(Biker.CENTER_OF_BACK_WHEEL_OFFSET))
+            path.push(new Vector2(centerPosition).add(Biker.CENTER_OF_BACK_WHEEL_OFFSET));
 
             return path;
         },

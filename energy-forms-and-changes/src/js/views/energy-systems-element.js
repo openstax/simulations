@@ -54,7 +54,7 @@ define(function(require) {
             var energyChunkRemoved = function(chunk) {
                 for (var i = energyChunkViews.length - 1; i >= 0; i--) {
                     if (energyChunkViews[i].model === chunk) {
-                        energyChunkViews[i].remove(energyChunkLayer);
+                        energyChunkViews[i].removeFrom(energyChunkLayer);
                         energyChunkViews.splice(i, 1);
                         break;
                     }
@@ -63,7 +63,7 @@ define(function(require) {
 
             var energyChunksReset = function() {
                 for (var i = energyChunkViews.length - 1; i >= 0; i--) {
-                    energyChunkViews[i].remove(energyChunkLayer);
+                    energyChunkViews[i].removeFrom(energyChunkLayer);
                     energyChunkViews.splice(i, 1);
                 }
             };

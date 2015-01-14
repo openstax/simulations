@@ -144,19 +144,13 @@ define(function (require) {
 
                 if (particlesRedistributed) {
                     // Update position of each energy chunk
-                    for (j = 0; j < chunks.length; j++) {
-                        chunk = chunks[j];
-                        
-                        velocity
-                            .set(chunk.get('velocity'))
-                            .scale(timeStep);
-
-                        if (silent)
-                            chunk.get('position').set(chunk.get('position').x + velocity.x, chunk.get('position').y + velocity.y);
-                        else
-                            chunk.translate(velocity);
-                    }
+                    EnergyChunkDistributor.updateChunkPositions(chunks, timeStep);
                 }
+            }
+
+            if (!silent && particlesRedistributed) {
+                // Save the position of each energy chunk
+                EnergyChunkDistributor.saveChunkPositions(chunks);
             }
 
             // Clean the pool now that we're done with it.
@@ -257,6 +251,24 @@ define(function (require) {
                 * EnergyChunkDistributor.ENERGY_CHUNK_MASS
                 * newVelocity.lengthSq()
                 + forceVector.length() * Math.PI / 2;
+        },
+
+        updateChunkPositions: function(chunks, timeStep) {
+            var chunk;
+            for (var j = 0; j < chunks.length; j++) {
+                chunk = chunks[j];
+                
+                velocity
+                    .set(chunk.get('velocity'))
+                    .scale(timeStep);
+
+                chunk.get('position').set(chunk.get('position').x + velocity.x, chunk.get('position').y + velocity.y);
+            }
+        },
+
+        saveChunkPositions: function(chunks) {
+            for (var j = 0; j < chunks.length; j++)
+                chunks[j].setPosition(chunks[j].get('position').x, chunks[j].get('position').y);
         },
 
         /**

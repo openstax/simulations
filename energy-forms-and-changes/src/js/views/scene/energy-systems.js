@@ -2,10 +2,9 @@ define(function(require) {
 
     'use strict';
 
-    // var $        = require('jquery');
-    // var _         = require('underscore');
-    var PIXI      = require('pixi');
-    var Vector2   = require('common/math/vector2');
+    var $       = require('jquery');
+    var PIXI    = require('pixi');
+    var Vector2 = require('common/math/vector2');
     // var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform   = require('common/math/model-view-transform');

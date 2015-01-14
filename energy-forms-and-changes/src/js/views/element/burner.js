@@ -293,9 +293,12 @@ define(function(require) {
         },
 
         chunkRemoved: function(chunk) {
-            var energyChunkView = _.findWhere(this.energyChunkViews, { model: chunk });
-            this.energyChunkLayer.removeChild(energyChunkView.displayObject);
-            this.energyChunkViews = _.without(this.energyChunkViews, energyChunkView);
+            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
+                if (this.energyChunkViews[i].model === chunk) {
+                    this.energyChunkViews[i].removeFrom(this.energyChunkLayer); // Unbinds listeners too
+                    this.energyChunkViews.splice(i, 1);
+                }
+            }
         },
 
         update: function(time, deltaTime) {

@@ -17,6 +17,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     var SunView = EnergySourceView.extend({
 
         /**

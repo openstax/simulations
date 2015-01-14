@@ -251,8 +251,8 @@ define(function (require) {
         cloudinessChanged: function(sun, cloudiness) {
             for (var i = 0; i < this.clouds.length; i++) {
                 // Stagger the existence strength of the clouds.
-                var cloudiness = this.get('cloudiness') * this.clouds.length - i;
-                this.clouds.at(i).set('existenceStrength', Math.min(1, Math.max(0, cloudiness)));
+                var existenceStrength = cloudiness * this.clouds.length - i;
+                this.clouds.at(i).set('existenceStrength', Math.min(1, Math.max(0, existenceStrength)));
             }
         }
 

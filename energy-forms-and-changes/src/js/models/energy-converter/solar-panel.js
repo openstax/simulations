@@ -1,14 +1,10 @@
 define(function (require) {
 
     'use strict';
-
-    var _ = require('underscore');
     
     var Vector2 = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
 
     var EnergyConverter       = require('models/energy-converter');
-    var EnergyChunkCollection = require('models/energy-chunk-collection');
     var EnergyChunkPathMover  = require('models/energy-chunk-path-mover');
     var EnergyChunk           = require('models/energy-chunk');
 

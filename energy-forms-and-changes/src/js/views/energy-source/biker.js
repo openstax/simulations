@@ -3,7 +3,6 @@ define(function(require) {
     'use strict';
 
     var $ = require('jquery');
-    var _ = require('underscore');
     var PIXI = require('pixi');
 
     var Colors     = require('common/colors/colors');
@@ -11,7 +10,6 @@ define(function(require) {
     var Vector2    = require('common/math/vector2');
 
     var EnergySourceView = require('views/energy-source');
-    var WaterDropView    = require('views/water-drop');
 
     var Constants = require('constants');
     var Biker = Constants.Biker;

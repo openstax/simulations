@@ -64,13 +64,13 @@ define(function (require) {
 
             this.on('change:position', function(model, position){
                 var translation = this._translation.set(position).sub(this.previous('position'));
-                // console.log(position.x.toFixed(4) + ',' + position.y.toFixed(4) +' | '+this.previous('position').x.toFixed(4) + ',' + this.previous('position').y.toFixed(4) +' | '+ translation.x.toFixed(4) + ',' + translation.y.toFixed(4));
-                _.each(this.slices, function(slice) {
+                var slice;
+                for (var i = this.slices.length - 1; i >= 0; i--) {
+                    slice = this.slices[i];
                     slice.getShape().translate(translation);
-                    _.each(slice.energyChunkList.models, function(chunk) {
-                        chunk.translate(translation);
-                    });
-                });
+                    for (var j = slice.energyChunkList.models.length - 1; j >= 0; j--)
+                        slice.energyChunkList.models[j].translate(translation);
+                }
             });
         },
 

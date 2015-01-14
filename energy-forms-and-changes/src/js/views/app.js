@@ -3,7 +3,7 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-    PIXI.AUTO_PREVENT_DEFAULT = false
+    PIXI.AUTO_PREVENT_DEFAULT = false;
     
     var PixiAppView = require('common/pixi/app');
 
