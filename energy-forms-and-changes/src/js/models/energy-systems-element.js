@@ -28,7 +28,13 @@ define(function (require) {
         },
 
         clearEnergyChunks: function() {
-            this.energyChunks.reset();
+            // Remove and destroy the models
+            var chunk;
+            for (var i = this.energyChunks.models.length - 1; i >= 0; i--) {
+                chunk = this.energyChunks.models[i];
+                this.energyChunks.remove(chunk);
+                chunk.destroy();
+            }
         },
 
         activate: function() {
