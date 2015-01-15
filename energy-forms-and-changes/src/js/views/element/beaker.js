@@ -393,8 +393,6 @@ define(function(require) {
                 steamingProportion = 1 - ((Constants.BOILING_POINT_TEMPERATURE - this.model.getTemperature()) / BeakerView.STEAMING_RANGE);
                 steamingProportion = Math.min(1, Math.max(steamingProportion, 0));
             }
-            //steamingProportion = 0.7;
-            //console.log(this.model.getTemperature());
 
             // Add any new steam particles
             if (steamingProportion > 0) {
@@ -453,12 +451,6 @@ define(function(require) {
             ThermalElementView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
             if (!simulationPaused) {
                 this.updateSteam(time, deltaTime);
-
-                // this.debugSlicesGraphics.clear();
-                // for (var i = 0; i < this.model.slices.length; i++) {
-                //     this.debugSlicesGraphics.lineStyle(2, this.debugSliceColors[i], 0.5);
-                //     this.debugSlicesGraphics.drawPiecewiseCurve(this.mvt.modelToView(this.model.slices[i].getShape()));
-                // }
             }
         },
 
