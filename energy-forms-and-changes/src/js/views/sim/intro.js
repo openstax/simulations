@@ -49,6 +49,8 @@ define(function (require) {
             'click .step-btn'   : 'step',
             'click .reset-btn'  : 'reset',
 
+            'change .playback-speed' : 'changePlaybackSpeed',
+
             'click .energy-symbols-checkbox': 'toggleEnergySymbols'
         },
 
@@ -152,7 +154,7 @@ define(function (require) {
             this.simulation.update(time, deltaTime);
 
             // Update the scene
-            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'));
+            this.sceneView.update(this.simulation.get('timeScale') * time / 1000, this.simulation.get('timeScale') * deltaTime / 1000, this.simulation.get('paused'));
         },
 
         /**
@@ -170,7 +172,15 @@ define(function (require) {
                 this.sceneView.showEnergyChunks();
             else
                 this.sceneView.hideEnergyChunks();
-        }
+        },
+
+        changePlaybackSpeed: function(event) {
+            var speed = $(event.target).val();
+            if (speed === 'normal')
+                this.simulation.resetTimeScale();
+            else
+                this.simulation.fastForward();
+        },
 
     });
 

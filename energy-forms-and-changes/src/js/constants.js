@@ -25,8 +25,9 @@ define(function (require) {
 
     // Time values for normal and fast-forward motion.
     Constants.FRAMES_PER_SECOND              = 30.0;
+    Constants.FAST_FORWARD_TIMESCALE         = 4;
     Constants.SIM_TIME_PER_TICK_NORMAL       = 1 / Constants.FRAMES_PER_SECOND;
-    Constants.SIM_TIME_PER_TICK_FAST_FORWARD = Constants.SIM_TIME_PER_TICK_NORMAL * 4;
+    Constants.SIM_TIME_PER_TICK_FAST_FORWARD = Constants.SIM_TIME_PER_TICK_NORMAL * Constants.FAST_FORWARD_TIMESCALE;
     Constants.MAX_HEAT_EXCHANGE_TIME_STEP    = Constants.SIM_TIME_PER_TICK_NORMAL;
 
     // Constants used for creating projections that have a 3D-ish look.

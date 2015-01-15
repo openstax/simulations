@@ -134,7 +134,7 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Resets simulation back to default state
          */
         reset: function() {
             FixedIntervalSimulation.prototype.reset.apply(this);
@@ -148,6 +148,20 @@ define(function (require, exports, module) {
             _.each(this.thermometers, function(thermometer){
                 thermometer.reset();
             });
+        },
+
+        /**
+         * Resets the playback speed to normal.
+         */
+        resetTimeScale: function() {
+            this.set('timeScale', 1);
+        },
+
+        /**
+         * 
+         */
+        fastForward: function() {
+            this.set('timeScale', Constants.FAST_FORWARD_TIMESCALE);
         },
 
         /**
