@@ -17,6 +17,9 @@ define(function(require) {
         tagName: 'div',
         className: 'app-view',
 
+        /**
+         * List of constructors to call to create each sim view (tab)
+         */
         simViewConstructors: [],
 
         events: {
@@ -24,10 +27,13 @@ define(function(require) {
             'tab-selected .sim-tab' : 'simTabSelected'
         },
 
-        initialize: function(options) {
-            
-        },
+        initialize: function(options) {},
 
+        /**
+         * This function should be called to start the app. Calling this 
+         *   function shows a loading screen, loads all the individual sim 
+         *   views (tabs), and then calls postLoad when it is finished.
+         */
         load: function() {
             this.$el.empty();
             this.showLoading();
@@ -39,22 +45,44 @@ define(function(require) {
             this.initSimViews();
         },
 
+        /**
+         * This function completes the behind-the-scenes setup of the app.  
+         *   It is called when things have been initialized but not 
+         *   rendered.  At this point, the loading screen has not yet been 
+         *   taken down, so we render everything while it's all still 
+         *   hidden by the loading screen.  After we've rendered and 
+         *   called postRender, we take down the loading screen and open 
+         *   everything up for business.
+         */
         postLoad: function() {
             this.render();
             this.postRender();
             this.hideLoading();
         },
 
+        /**
+         * Shows the loading screen, which should cover the page and hide
+         *   everything that is happening behind it.
+         */
         showLoading: function() {
             this.$loadingScreen = $(loadingScreenHtml).appendTo(this.el);
         },
 
+        /**
+         * Hides the loading screen.
+         */
         hideLoading: function() {
             this.$loadingScreen.fadeOut(300, function() {
                 this.remove();
             });
         },
 
+        /**
+         * Initializes each individual sim view (tabs) and triggers a
+         *   'sim-views-initialized' event when they've all finished
+         *   their initialization process.  This is one of the loading
+         *   processes and prerequisites for rendering.
+         */
         initSimViews: function() {
             this.simViewsInitialized = false;
             this.simViews = [];
@@ -69,6 +97,10 @@ define(function(require) {
             }, this);
         },
 
+        /**
+         * Returns the data object that will be passed to the template
+         *   when rendering the app view.
+         */
         getRenderData: function() {
             var data = {
                 simViews: _.map(this.simViews, function(simView) {
@@ -83,6 +115,9 @@ define(function(require) {
             return data;
         },
 
+        /**
+         * Renders the app view and all its child views (sim views).
+         */
         render: function() {
             // Render basic page structure
             this.$el.append(this.template(this.getRenderData()));
@@ -93,6 +128,9 @@ define(function(require) {
             return this;
         },
 
+        /**
+         * Renders an individual sim view.
+         */
         renderSimView: function(simView) {
             simView.render();
             this.$('#sim-' + simView.name).html(simView.el);
@@ -114,6 +152,10 @@ define(function(require) {
             this.$('.sim-tab').first().click();
         },
 
+        /**
+         * Calls the Backbone.View's remove function and also calls remove on
+         *   each of its child views (sim views).
+         */
         remove: function() {
             Backbone.View.prototype.remove.apply(this);
             _.each(this.simViews, function(sim, key) {
@@ -121,6 +163,12 @@ define(function(require) {
             });
         },
 
+        /**
+         * This is the event handler for when a tab is clicked. It visually
+         *   activates the desired tab and deactivates the others but leaves
+         *   the technical activation of the sim views to another handler by
+         *   triggering a 'tab-selected' jQuery event on the tab element.
+         */
         tabClicked: function(event) {
             var $tab = $(event.target).closest('.tab');
             if (!$tab.hasClass('active')) {
@@ -134,13 +182,18 @@ define(function(require) {
             }
         },
 
+        /**
+         * Handles when a tab is selected.
+         */
         simTabSelected: function(event) {
             var $tab = $(event.target).closest('.sim-tab');
             this.simSelected($tab.data('cid'));
         },
 
+        /**
+         * Plays the right sim, pausing (halting) the others.
+         */
         simSelected: function(cid) {
-            // Play the right sim, pausing the others
             _.each(this.simViews, function(sim){
                 if (sim.cid == cid)
                     sim.resume();

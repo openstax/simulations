@@ -41,9 +41,6 @@ define(function (require, exports, module) {
             user: null
         }),
         
-        /**
-         *
-         */
         initialize: function(attributes, options) {
             options = options || {};
             options.framesPerSecond = Constants.FRAMES_PER_SECOND;
@@ -56,7 +53,8 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Initializes all the model components necessary for the simulation
+         *   to function.
          */
         initComponents: function() {
             // Air
@@ -174,7 +172,7 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * Resets the simulation back to its default state.
          */
         reset: function() {
             FixedIntervalSimulation.prototype.reset.apply(this);
@@ -193,7 +191,8 @@ define(function (require, exports, module) {
         },
 
         /**
-         * 
+         * Internal update that is called on each fixed-time step
+         *   because it's a fixed-interval simulation model.
          */
         _update: function(time, deltaTime) {
             // For the time slider and anything else relying on time

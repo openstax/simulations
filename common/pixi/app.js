@@ -6,6 +6,15 @@ define(function(require) {
 
     var AppView = require('../app/app');
 
+    /**
+     * This is a version of the AppView that has asset preloading
+     *   capabilities.  When extending this view, one must pass
+     *   in an array from assets (from Assets.getAssetList() for
+     *   example).  Calling the AppView.load function will then
+     *   start the assets downloading and won't call AppView's
+     *   postLoad function until the sim views AND the assets
+     *   have been loaded.
+     */
     var PixiAppView = AppView.extend({
 
     	assets: [],
