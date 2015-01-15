@@ -173,6 +173,35 @@ describe('PiecewiseCurve', function(){
 
 		chai.expect(curve.contains(pointInside)).to.be.true;
 		chai.expect(curve.contains(pointOutside)).to.not.be.true;
+
+
+		// curve = new PiecewiseCurve();
+		// curve
+		// 	.moveTo( 0,   0)
+		// 	.lineTo(20,   0)
+		// 	.lineTo(80, -60)
+		// 	.lineTo(60, -60)
+		// 	.close();
+
+		// pointInside  = new Vector2(50, -30);
+		// pointOutside = new Vector2(70, -20);
+
+		// chai.expect(curve.contains(pointInside)).to.be.true;
+		// chai.expect(curve.contains(pointOutside)).to.not.be.true;
+
+		curve = new PiecewiseCurve();
+		curve
+			.moveTo(110,  -17)
+			.lineTo(374, -177)
+			.lineTo(440, -177)
+			.lineTo(176,  -17)
+			.close();
+
+		pointInside  = new Vector2(275,  -97);
+		pointOutside = new Vector2(384, -104);
+
+		chai.expect(curve.contains(pointInside)).to.be.true;
+		chai.expect(curve.contains(pointOutside)).to.not.be.true;
 	});
 
 	it('#intersects should correctly calculate intersection', function(){
