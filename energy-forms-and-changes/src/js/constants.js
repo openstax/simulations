@@ -6,35 +6,10 @@ define(function (require) {
     var Rectangle      = require('common/math/rectangle');
     var Functions      = require('common/math/functions');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var range          = require('common/math/range');
 
     var ThermalContactArea = require('models/thermal-contact-area');
 
-    /*************************************************************************
-     **                                                                     **
-     **                           HELPER FUNCTIONS                          **
-     **                                                                     **
-     *************************************************************************/
-
-    var range = function(rangeObject) {
-        rangeObject.random = function() {
-            return (this.max - this.min) * Math.random() + this.min;
-        };
-
-        rangeObject.lerp = function(percent) {
-            return this.length() * percent + this.min;
-        };
-
-        rangeObject.contains = function(x) {
-            return x <= this.max && x >= this.min;
-        };
-
-        rangeObject.length = function() {
-            return this.max - this.min;
-        };
-
-        return rangeObject;
-    };
-    
 
     /*************************************************************************
      **                                                                     **

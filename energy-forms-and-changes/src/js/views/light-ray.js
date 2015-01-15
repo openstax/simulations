@@ -15,13 +15,12 @@ define(function(require) {
     var DEBUG = true;
 
     /**
-     * A view that represents an element model
+     * A view that represents a single ray of light, rendered as a line
+     *   that loses its strength according to interfering objects, this
+     *   class corresponds to PhET's LightRayNode.
      */
     var LightRayView = PixiView.extend({
 
-        /**
-         *
-         */
         initialize: function(options) {
             options = _.extend({
                 start: new Vector2(),              // Start of the light ray

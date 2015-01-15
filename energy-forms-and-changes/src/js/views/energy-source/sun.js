@@ -21,9 +21,6 @@ define(function(require) {
 
     var SunView = EnergySourceView.extend({
 
-        /**
-         *
-         */
         initialize: function(options) {
             options = _.extend({
                 

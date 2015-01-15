@@ -12,7 +12,6 @@ define(function (require) {
     var EnergyTypes = Constants.EnergyTypes;
 
 
-
     var SolarPanel = EnergyConverter.extend({
         
         initialize: function(attributes, options) {
