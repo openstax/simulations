@@ -64,7 +64,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Energy Systems',
-                name: 'energy-systems',
+                name: 'energy-systems'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
