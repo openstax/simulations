@@ -23,7 +23,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Simulation',
                 name: 'sim',
-                stepDuration: 50, // milliseconds
+                stepDuration: 33, // milliseconds
                 runUpdateOnReset: false
             }, options);
 
