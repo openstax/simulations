@@ -112,11 +112,18 @@ define(function(require) {
             for (var i = 0; i < this.lightAbsorbingShapes.length; i++) {
                 lightAbsorbingShape = this.lightAbsorbingShapes[i];
 
-                var bounds = lightAbsorbingShape.getBounds();
-                var local = this.toLocal(bounds.position());
-                this.debugGraphics.beginFill(0xFF0022, 0.01);
-                this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
-                this.debugGraphics.endFill();
+                // var bounds = lightAbsorbingShape.getBounds();
+                // var local = this.toLocal(bounds.position());
+                // this.debugGraphics.beginFill(0xFF0022, 0.01);
+                // this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
+                // this.debugGraphics.endFill();
+
+                var shape = lightAbsorbingShape.get('shape');
+                if (shape instanceof PiecewiseCurve) {
+                    this.debugGraphics.beginFill(0xFF0022, 0.01);
+                    this.debugGraphics.drawPiecewiseCurve(shape, -this.origin.x, -this.origin.y);
+                    this.debugGraphics.endFill();
+                }
 
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
                 if (entryPoint) {

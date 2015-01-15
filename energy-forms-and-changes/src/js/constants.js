@@ -773,7 +773,10 @@ define(function (require) {
         SolarPanel.PANEL_IMAGE_HEIGHT
     );
 
-    // This would seem to make the opposite of what I would think is the absoprtion width (0.8 * width), but that's how they do it...
+    // This would seem to make the opposite of what I would think is the
+    //   absoprtion width (0.8 * width) would be, but it's purposely not
+    //   the entire surface area of the panel so it will not always hit
+    //   at the left and top edges.
     var absorptionZoneWidth = SolarPanel.PANEL_IMAGE_WIDTH * 0.2;
 
     SolarPanel.ABSORPTION_SHAPE = new PiecewiseCurve()

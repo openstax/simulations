@@ -20,8 +20,8 @@ define(function(require) {
             return this.get('shape').getBounds();
         },
 
-        contains: function(shape) {
-            return this.get('shape').contains(shape);
+        contains: function(x, y) {
+            return this.get('shape').contains(x, y);
         }
 
     });
