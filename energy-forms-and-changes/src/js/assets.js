@@ -2,18 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
+    var Assets = require('common/pixi/assets');
 
-    /**
-     * The assets function is an object that stores all the lists of
-     *   assets, but it's also a function that returns a PIXI texture
-     *   based on the file name, taking into account whether that 
-     *   filename is part of a sprite sheet.
-     */
-    var Assets = {};
-
-    var IMAGE_PATH = 'img/phet/optimized/';
+    Assets.Path = 'img/phet/optimized/';
 
     Assets.Images = {
         BACK_LEG_01:              'back_leg_01.png',
@@ -120,11 +111,6 @@ define(function (require) {
         WIRE_BLACK_LEFT:          'wire_black_left.png',
         WIRE_BLACK_RIGHT:         'wire_black_right.png',
     };
-
-    // // Prepend the path to each file name
-    // Assets.Images = _.each(Assets.Images, function(value, key) {
-    //     Assets.Images[key] = IMAGE_PATH + value;
-    // });
 
     Assets.SpriteSheets = {
         'bike-spritesheet.json': [
@@ -240,132 +226,6 @@ define(function (require) {
             Assets.Images.WIRE_BLACK_RIGHT
         ]
     };
-
-    Assets.Image = function(filename) {
-        return IMAGE_PATH + filename;
-    };
-
-    /**
-     * This function returns a PIXI texture based on the file
-     *   name, taking into account whether that filename is 
-     *   part of a sprite sheet.
-     */
-    Assets.Texture = function(filename) {
-        if (filename in PIXI.TextureCache)
-            return PIXI.TextureCache[filename];
-        if (IMAGE_PATH + filename in PIXI.TextureCache)
-            return PIXI.TextureCache[IMAGE_PATH + filename];
-
-        var spriteSheet;
-        _.each(Assets.SpriteSheets, function(images, key) {
-            _.each(images, function(image) {
-                if (image === filename) {
-                    spriteSheet = key;
-                    return false;
-                }
-            });
-            if (spriteSheet)
-                return false;
-        });
-
-        if (spriteSheet)
-            return PIXI.Texture.fromFrame(filename);
-        else
-            return PIXI.Texture.fromImage(IMAGE_PATH + filename);
-    };
-
-    Assets.createSprite = function(textureFileName) {
-        return new PIXI.Sprite(Assets.Texture(textureFileName));
-    };
-
-    Assets.createIcon = function(filename, attrs, iconWidth, iconHeight) {
-        if (!_.isObject(attrs)) {
-            iconWidth = attrs;
-            iconHeight = iconHeight;
-        }
-
-        var texture = Assets.Texture(filename);
-        if (!texture)
-            throw 'Texture not found for ' + filename;
-
-        var x = texture.crop.x;
-        var y = texture.crop.y;
-        var scale = 1;
-
-        if (iconWidth !== undefined) {
-            if (iconHeight === undefined)
-                iconHeight = iconWidth;
-
-            var textureRatio = texture.width / texture.height;
-            var iconRatio    = iconWidth / iconHeight;
-            
-            scale = (iconRatio > textureRatio) ? iconHeight / texture.height : iconWidth / texture.width;
-        }
-
-        var iconStyle = [
-            'position: absolute',
-            'left: 50%',
-            'top:  50%',
-            'margin-left: -' + (texture.width / 2)  + 'px',
-            'margin-top:  -' + (texture.height / 2) + 'px',
-            'background-image: url(' + texture.baseTexture.source.src + ')',
-            'background-position: -' + x + 'px -' + y + 'px',
-            'transform: scale(' + scale + ', ' + scale + ')',
-            'width: ' + texture.width  + 'px',
-            'height: '+ texture.height + 'px'
-        ].join(';');
-
-        var iconHtml = '<div style="' + iconStyle + '"></div>';
-
-        var attrsHtml = _.map(attrs, function(value, name) {
-            return name + '="' + value + '"';
-        }).join(' ');
-
-        var wrapperStyle = [
-            'position: relative',
-            'width: ' + iconWidth  + 'px',
-            'height: '+ iconHeight + 'px'
-        ].join(';');
-
-        var wrapperHtml = '<div ' + attrsHtml + ' style="' + wrapperStyle + '">' + iconHtml + '</div>';
-
-        return wrapperHtml;
-    };
-
-    Assets.getFrameData = function(filename) {
-        var texture = Assets.Texture(filename);
-        if (!texture)
-            throw 'Texture not found for ' + filename;
-
-        return {
-            src: texture.baseTexture.source.src,
-            bounds: texture.crop
-        };
-    };
-
-    /*************************************************************************
-     **                                                                     **
-     **                        ASSETS LIST FOR LOADING                      **
-     **                                                                     **
-     *************************************************************************/
-
-    Assets.assetsList = [];
-
-    // Add all the spritesheet files first
-    _.each(Assets.SpriteSheets, function(list, filename) {
-        Assets.assetsList.push(IMAGE_PATH + filename);
-    });
-
-    // Then add all the images that are on their own, not in a sprite sheet
-    var spriteSheetImages = _.flatten(_.values(Assets.SpriteSheets));
-    var leftoverImages = _.filter(Assets.Images, function(image) {
-        return !_.contains(spriteSheetImages, image);
-    });
-    _.each(leftoverImages, function(filename) {
-        Assets.assetsList.push(IMAGE_PATH + filename);
-    });
-
-    
 
     return Assets;
 });

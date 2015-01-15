@@ -16,7 +16,7 @@ define(function(require) {
 
     var EFCAppView = PixiAppView.extend({
 
-        assets: Assets.assetsList,
+        assets: Assets.getAssetList(),
 
         simViewConstructors: [
             IntroSimView,
