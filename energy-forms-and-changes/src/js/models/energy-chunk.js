@@ -79,6 +79,14 @@ define(function (require) {
             
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldVelocity);
+        },
+
+        /** 
+         * Avoid memory leaks from the pool.
+         */
+        destroy: function(options) {
+            Positionable.prototype.destroy.apply(this, [options]);
+            vectorPool.remove(this.get('velocity'));
         }
 
     }, EnergyTypes);

@@ -30,7 +30,14 @@ define(function (require) {
         clearEnergyChunks: function() {
             EnergySystemsElement.prototype.clearEnergyChunks.apply(this);
 
-            this.outgoingEnergyChunks.reset();
+            // Remove and destroy the models
+            var chunk;
+            var i;
+            for (i = this.outgoingEnergyChunks.models.length - 1; i >= 0; i--) {
+                chunk = this.outgoingEnergyChunks.models[i];
+                this.outgoingEnergyChunks.remove(chunk);
+                chunk.destroy();
+            }
         }
 
     });

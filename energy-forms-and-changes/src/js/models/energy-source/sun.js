@@ -144,6 +144,7 @@ define(function (require) {
                     // This energy chunk is out of visible range, so remove it.
                     this.energyChunks.remove(chunk);
                     this.energyChunksPassingThroughClouds.remove(chunk);
+                    chunk.destroy();
                 }
                 else {
                     var cloud;

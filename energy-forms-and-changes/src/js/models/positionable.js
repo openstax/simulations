@@ -57,6 +57,7 @@ define(function (require) {
 
         setPosition: function(x, y) {
             var oldPosition = this.get('position');
+            //console.log(vectorPool.list.length);
             
             if (x instanceof Vector2)
                 this.set('position', vectorPool.create().set(x));
@@ -69,6 +70,17 @@ define(function (require) {
 
         offsetPosition: function(offset) {
             return this._offsetPosition.set(this.get('position')).add(offset);
+        },
+
+        /**
+         * We need to make sure we release the model's vector
+         *   back into the vector pool or we get memory leaks,
+         *   so destroy must be called on all positionable
+         *   objects when we're done with them.
+         */
+        destroy: function(options) {
+            this.trigger('destroy', this, this.collection, options);
+            vectorPool.remove(this.get('position'));
         }
 
     });

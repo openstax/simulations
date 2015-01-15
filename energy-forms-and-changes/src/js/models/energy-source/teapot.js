@@ -196,6 +196,7 @@ define(function (require) {
                     else {
                         // This chunk is out of view, and we are done with it.
                         this.energyChunks.remove(chunk);
+                        chunk.destroy();
                     }
                 }
                 else {

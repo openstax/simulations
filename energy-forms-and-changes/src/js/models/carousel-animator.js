@@ -62,6 +62,8 @@ define(function (require) {
         startAnimation: function(animator, activeIndex) {
             this.elapsedTransitionTime = 0;
             this.easedPercent = 0;
+            if (this.targetPositionTranslation)
+                vectorPool.remove(this.targetPositionTranslation);
             this.targetPositionTranslation = this.translationToTargetPosition();
             this.animating = true;
         },
@@ -90,6 +92,8 @@ define(function (require) {
 
             if (this.elapsedTransitionTime >= this.get('transitionDuration'))
                 this.stopAnimation();
+
+            vectorPool.remove(translation);
         },
 
         calculateElapsedTimePercent: function(elapsedTime) {

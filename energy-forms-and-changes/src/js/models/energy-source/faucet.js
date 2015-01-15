@@ -102,8 +102,15 @@ define(function (require) {
                 }
 
                 // Make the water droplets fall.
-                for (var i = 0; i < this.waterDrops.models.length; i++)
-                    this.waterDrops.models[i].update(time, deltaTime);
+                var drop;
+                for (var i = this.waterDrops.models.length - 1; i >= 0; i--) {
+                    drop = this.waterDrops.models[i];
+                    if (drop.update(time, deltaTime)) {
+                        this.waterDrops.remove(drop);
+                        drop.destroy();
+                    }
+                }
+                    
 
                 // Check if it's time to emit an energy chunk and, if so, do it.
                 this.energySinceLastChunk += Constants.MAX_ENERGY_PRODUCTION_RATE * this.get('flowProportion') * deltaTime;
@@ -158,6 +165,7 @@ define(function (require) {
                 if (waterCenter.distance(chunk.get('position')) > Faucet.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER) {
                     this.energyChunks.remove(chunk);
                     this.exemptFromTransferEnergyChunks.remove(chunk);
+                    chunk.destroy();
                 }
             }
         },

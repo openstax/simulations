@@ -42,6 +42,7 @@ define(function (require) {
                 if (!this.getThermalContactArea().getBounds().contains(controller.energyChunk.get('position'))) {
                     this.removeEnergyChunk(controller.energyChunk);
                     this.energyChunkWanderControllers.splice(i, 1);
+                    controller.energyChunk.destroy();
                 }
             }
 

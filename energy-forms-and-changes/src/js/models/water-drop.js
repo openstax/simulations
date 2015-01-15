@@ -40,8 +40,7 @@ define(function (require) {
             this.translate(this.translation);
 
             // Remove drops that have gone out of view
-            if (this.get('position').length() > WaterDrop.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER)
-                this.destroy();
+            return (this.get('position').length() > WaterDrop.MAX_DISTANCE_FROM_FAUCET_TO_BOTTOM_OF_WATER)
         },
 
     }, Constants.WaterDrop);

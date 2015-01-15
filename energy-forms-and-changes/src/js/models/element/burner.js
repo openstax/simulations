@@ -88,7 +88,7 @@ define(function (require) {
                 if (controller.destinationReached()) {
                     this.energyChunkList.remove(controller.energyChunk);
                     this.energyChunkWanderControllers.splice(i, 1);
-                    console.log('destinationReached');
+                    controller.energyChunk.destroy();
                 }
             }
         },

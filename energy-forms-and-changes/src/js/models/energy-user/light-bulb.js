@@ -58,12 +58,15 @@ define(function (require) {
         },
 
         moveRadiatedEnergyChunks: function(deltaTime) {
+            var chunk;
             for (var i = this.radiatedEnergyChunkMovers.length - 1; i >= 0; i--) {
                 this.radiatedEnergyChunkMovers[i].moveAlongPath(deltaTime);
                 if (this.radiatedEnergyChunkMovers[i].finished()) {
                     // Remove the chunk and its mover
-                    this.energyChunks.remove(this.radiatedEnergyChunkMovers[i].energyChunk);
+                    chunk = this.radiatedEnergyChunkMovers[i].energyChunk;
+                    this.energyChunks.remove(chunk);
                     this.radiatedEnergyChunkMovers.splice(i, 1);
+                    chunk.destroy();
                 }
             }
         },

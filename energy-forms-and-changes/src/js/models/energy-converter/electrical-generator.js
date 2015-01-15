@@ -227,6 +227,7 @@ define(function (require) {
 
         extractOutgoingEnergyChunks: function() {
             var models = this.outgoingEnergyChunks.slice(0, this.outgoingEnergyChunks.length);
+            // Remove the models
             this.outgoingEnergyChunks.remove(models);
             this.electricalEnergyChunks.remove(models);
             return models;
@@ -237,6 +238,10 @@ define(function (require) {
 
             this.electricalEnergyChunks.reset();
             this.hiddenEnergyChunks.reset();
+
+            // Destroy the models
+            for (var i = this.energyChunkMovers.length - 1; i >= 0; i--)
+                this.energyChunkMovers[i].energyChunk.destroy();
             this.energyChunkMovers = [];
         },
 

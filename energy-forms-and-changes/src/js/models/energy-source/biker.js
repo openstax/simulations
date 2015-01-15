@@ -214,6 +214,7 @@ define(function (require) {
                         //   reached the end of its route.  Delete it.
                         this.energyChunkMovers.splice(i, 1);
                         this.energyChunks.remove(chunk);
+                        chunk.destroy();
                     }
                     else {
                         // Must be mechanical energy that is being passed to
