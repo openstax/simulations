@@ -12,7 +12,7 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var DEBUG = true;
+    var DEBUG = false;
 
     /**
      * A view that represents a single ray of light, rendered as a line
@@ -117,11 +117,13 @@ define(function(require) {
                 // this.debugGraphics.drawRect(local.x, local.y, bounds.w, bounds.h);
                 // this.debugGraphics.endFill();
 
-                var shape = lightAbsorbingShape.get('shape');
-                if (shape instanceof PiecewiseCurve) {
-                    this.debugGraphics.beginFill(0xFF0022, 0.01);
-                    this.debugGraphics.drawPiecewiseCurve(shape, -this.origin.x, -this.origin.y);
-                    this.debugGraphics.endFill();
+                if (DEBUG) {
+                    var shape = lightAbsorbingShape.get('shape');
+                    if (shape instanceof PiecewiseCurve) {
+                        this.debugGraphics.beginFill(0xFF0022, 0.01);
+                        this.debugGraphics.drawPiecewiseCurve(shape, -this.origin.x, -this.origin.y);
+                        this.debugGraphics.endFill();
+                    }
                 }
 
                 var entryPoint = this.calculateShapeEntryPoint(lightAbsorbingShape);
@@ -291,11 +293,11 @@ define(function(require) {
             // Figure out what our gradient should be depending on the starting opacity and fade coefficient
             var gradient;
             var opacityAtEndPoint = startOpacity * Math.pow(Math.E, -fadeCoefficient * start.distance(end));
-            if (opacityAtEndPoint === 0) {
+            if (opacityAtEndPoint < 1E-10) {
                 // Theirs had us creating a vector and rotating it to be the same angle as this, but I'm just going to scale a unit vector
                 var directionVector = this.directionVector().normalize();
                 // I'm guessing I need to multiply my opacity (0-1) by 255 here because the original equation is based off of values from 0-255
-                var zeroIntensityDistance = (Math.log(startOpacity * 255) - Math.log(0.4999)) / fadeCoefficient;
+                var zeroIntensityDistance = (Math.log(startOpacity * 255) - Math.log(0.4999 / 255)) / fadeCoefficient;
                 var zeroIntensityPoint = start.clone().add(directionVector.scale(zeroIntensityDistance));
 
                 gradient = this.graphicsContext.createLinearGradient(start.x, start.y, zeroIntensityPoint.x, zeroIntensityPoint.y);

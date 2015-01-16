@@ -637,7 +637,7 @@ define(function (require) {
     var LightRayView = {};
 
     LightRayView.LINE_WIDTH = 2;
-    LightRayView.SEARCH_ITERATIONS = 10;
+    LightRayView.SEARCH_ITERATIONS = 15;
     LightRayView.FADE_COEFFICIENT_IN_AIR = 0.005;
 
     Constants.LightRayView = LightRayView;
