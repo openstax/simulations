@@ -6,6 +6,7 @@ define(function (require) {
     var Backbone  = require('backbone');
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
+                    require('common/math/polyfills');
 
     var Air                         = require('models/air');
     var IntroElement                = require('models/intro-element');
