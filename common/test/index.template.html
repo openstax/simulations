@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Energy Forms and Changes Simulation - Test</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+
+		<script type="text/javascript" src="../node_modules/sinon/pkg/sinon-1.12.2.js"></script>
+		<script type="text/javascript" src="../node_modules/chai/chai.js"></script>
+		<script type="text/javascript" src="../node_modules/chai-stats/chai-stats.js"></script>
+		<script type="text/javascript" src="../node_modules/mocha/mocha.js"></script>
+		<script type="text/javascript" src="../node_modules/requirejs/require.js"></script>
+	</head>
+	<body>
+		<div id="mocha"></div>
+
+		<script type="text/javascript">
+			mocha.setup('bdd');
+
+			require.config({
+				baseUrl: '../src/js',
+				callback: function () {
+					require(['config'], function() {
+						require.config({
+							less: {
+								logLevel: 1,
+
+								globalVars: {
+									//dependencyDir: '"../../bower_components"'
+								}
+							},
+
+							deps: {{ tests }},
+
+							callback: mocha.run
+						});
+					});
+				}
+			})
+		</script>
+	</body>
+</html>
