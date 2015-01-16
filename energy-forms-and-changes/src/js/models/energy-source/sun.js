@@ -57,7 +57,7 @@ define(function (require) {
             });
 
             // Cached things
-            this._sunPosPlus = new Vector2();
+            this._sunPosition = new Vector2();
             this._sunToChunk = new Vector2();
             this._reflectionAngle = new Vector2();
             this._velocity = new Vector2();
@@ -127,8 +127,7 @@ define(function (require) {
         },
 
         updateEnergyChunks: function(time, deltaTime) {
-            // TODO: once it's working, determine if this second addition of the offset was a mistake in the original and take it out because it don't make no sense.
-            var sunPosPlus = this._sunPosPlus.set(this.sunPosition).add(Sun.OFFSET_TO_CENTER_OF_SUN);
+            var sunPosition = this._sunPosition.set(this.sunPosition);
 
             // Check for bouncing and absorption of the energy chunks.
             var chunk;
@@ -140,7 +139,7 @@ define(function (require) {
                     //   put it on the list of outgoing chunks.
                     this.outgoingEnergyChunks.add(chunk);
                 }
-                else if (chunk.get('position').distance(sunPosPlus) > Sun.MAX_DISTANCE_OF_E_CHUNKS_FROM_SUN) {
+                else if (chunk.get('position').distance(sunPosition) > Sun.MAX_DISTANCE_OF_E_CHUNKS_FROM_SUN) {
                     // This energy chunk is out of visible range, so remove it.
                     this.energyChunks.remove(chunk);
                     this.energyChunksPassingThroughClouds.remove(chunk);
