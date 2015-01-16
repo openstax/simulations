@@ -59,7 +59,7 @@ define(function (require) {
     PiecewiseCurve.SEG_CLOSE   = 4;
 
     // Java docs: "A big number, but not so big it can't survive a few float operations"
-    PiecewiseCurve.BIG_VALUE = Number.MAX_VALUE / 10;
+    PiecewiseCurve.BIG_VALUE = Number.MAX_VALUE / 1000;
 
     /**
      * Static Functions

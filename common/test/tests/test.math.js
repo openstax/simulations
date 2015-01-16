@@ -1,4 +1,23 @@
-// TODO: Move this test to common after configuring a tester for common files
+describe('Line Intersection', function(){
+
+	var lineIntersection;
+
+	before(function(done) {
+		require(['math/line-intersection'], function(li) {
+			lineIntersection = li;
+			done();
+		});
+	});
+
+	it('should correctly determine if lines intersect', function(){
+		chai.expect(lineIntersection.linesIntersect(180, 290, 360, 216, 287, 344, 307, 254)).to.not.be.true;
+		chai.expect(lineIntersection.linesIntersect(180, 290, 360, 216, 287, 344, 314, 192)).to.be.true;
+
+		chai.expect(lineIntersection.linesIntersect(-10, -10, -10, 10, 1E-7, 0, Number.MAX_VALUE / 1000, 0)).to.not.be.true;
+	});
+
+});
+
 
 describe('PiecewiseCurve', function(){
 
