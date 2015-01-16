@@ -8,7 +8,7 @@ define(function (require) {
         if (precision === undefined)
             precision = 4;
         return '(' + this.x.toFixed(precision) + ', ' + this.y.toFixed(precision) + ')';
-    }
+    };
 
     return Vector2;
 

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed"
+    "postinstall": "r.js -convert node_modules/solve-quadratic-equation node_modules/solve-quadratic-equation-shimmed; r.js -convert node_modules/line-intersect node_modules/line-intersect-shimmed; r.js -convert node_modules/rectangle-node node_modules/rectangle-node-shimmed; r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed"
   },
   "repository": {
     "type": "git",
@@ -23,6 +23,7 @@
     "least-squares": "0.0.2"
   },
   "devDependencies": {
+    "backbone": "^1.1.2",
     "bootstrap": "^3.2.0",
     "bower": "^1.3.9",
     "chai": "^1.10.0",
@@ -30,11 +31,17 @@
     "font-awesome": "^4.2.0",
     "grunt-contrib-jshint": "^0.10.0",
     "grunt-mocha": "^0.4.11",
+    "jquery": "^2.1.3",
     "line-intersect": "^1.0.0",
     "mocha": "^2.1.0",
+    "object-pool": "^0.1.0",
+    "pixi.js": "^2.2.3",
     "rectangle-node": "0.0.1",
     "requirejs": "^2.1.15",
+    "requirejs-text": "^2.0.12",
     "sinon": "^1.12.2",
-    "solve-quadratic-equation": "^0.1.0"
+    "solve-quadratic-equation": "^0.1.0",
+    "underscore": "^1.7.0",
+    "vector2-node": "0.0.3"
   }
 }

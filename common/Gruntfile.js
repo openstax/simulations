@@ -28,7 +28,7 @@ module.exports = function(grunt){
                 strict: true,
                 trailing: true,
                 //maxlen: 120,
-                maxcomplexity: 12,
+                //maxcomplexity: 12,
 
                 // Relaxing Options
                 camelcase: false,
@@ -64,6 +64,8 @@ module.exports = function(grunt){
                 '**/*.js',
                 '!node_modules/**/*.js',
                 '!test/**/*.js',
+                '!*.js',
+                '!binarysearch/binarysearch.js'
             ],
             test: [
                 'test/**/*.js'
@@ -83,7 +85,7 @@ module.exports = function(grunt){
             options: {
                 template: 'test/index.template.html',
                 runner: 'test/index.html',
-                files: 'test/**/*.js'
+                files: 'test/tests/**/*.js'
             }
         }
     });

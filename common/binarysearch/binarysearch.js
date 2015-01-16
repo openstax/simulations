@@ -16,15 +16,15 @@ define(function(require, exports, module) {
     if(!comparitor) comparitor = module.exports._defaultComparitor();
 
     return bs(arr,search,comparitor);
-  }
+  };
 
   module.exports.first = function(arr,search,comparitor) {
     return module.exports.closest(arr,search,{exists:true},comparitor);
-  }
+  };
 
   module.exports.last = function(arr,search,comparitor) {
     return module.exports.closest(arr,search,{exists:true,end:true},comparitor);
-  }
+  };
 
   module.exports.closest = function(arr,search,opts,comparitor) {
 
@@ -45,7 +45,7 @@ define(function(require, exports, module) {
     else if(closest < 0) closest = 0;
 
     return closest;
-  }
+  };
 
   // inserts element into the correct sorted spot into the array
   module.exports.insert = function(arr,search,opts,comparitor){ 
@@ -83,7 +83,7 @@ define(function(require, exports, module) {
       }
     }
     return closest;
-  }
+  };
 
   // this method returns the start and end indicies of a range. [start,end]
   module.exports.range = function(arr,from,to,comparitor) {
@@ -108,13 +108,13 @@ define(function(require, exports, module) {
     }
 
     return [fromi,toi];
-  }
+  };
 
   // this method returns the values of a range;
   module.exports.rangeValue = function(arr,from,to,comparitor){
     var range = module.exports.range(arr,from,to,comparitor);
     return arr.slice(range[0],range[1]+1);
-  }
+  };
 
   //
   module.exports.indexObject = function(o,extractor) {
@@ -127,11 +127,11 @@ define(function(require, exports, module) {
     return index.sort(function(o1,o2){
       return o1.v - o2.v;
     });
-  }
+  };
 
   module.exports.cmp = function(v1,v2){
     return v1 - v2;
-  }
+  };
 
   module.exports._defaultComparitor = function() {
     var indexMode,indexModeSearch;

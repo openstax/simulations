@@ -20,9 +20,9 @@
 			mocha.setup('bdd');
 
 			require.config({
-				baseUrl: '../src/js',
+				baseUrl: '../',
 				callback: function () {
-					require(['config'], function() {
+					require(['test/config'], function() {
 						require.config({
 							less: {
 								logLevel: 1,

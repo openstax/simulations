@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var AppView = require('../app/app');

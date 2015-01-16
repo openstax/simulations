@@ -19,8 +19,8 @@ define(function (require) {
             var numeA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
             var numeB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
 
-            if (denom == 0) {
-                if (numeA == 0 && numeB == 0)
+            if (denom === 0) {
+                if (numeA === 0 && numeB === 0)
                     return 'colinear';
                 return 'parallel';
             }

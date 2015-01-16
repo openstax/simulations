@@ -17,7 +17,8 @@ define(function(require) {
      */
     var PixiView = function(options) {
         // Next few lines modeled after Backbone.View's constructor
-        options || (options = {});
+        if (!options)
+            options = {};
         _.extend(this, _.pick(options, viewOptions));
         this._ensureDisplayObject();
         this.initialize.apply(this, arguments);
@@ -84,24 +85,26 @@ define(function(require) {
                 return this;
 
             for (var key in events) {
-                var method = events[key];
-                if (!_.isFunction(method))
-                    method = this[events[key]];
-                if (!method)
-                    continue;
+                if (events.hasOwnProperty(key)) {
+                    var method = events[key];
+                    if (!_.isFunction(method))
+                        method = this[events[key]];
+                    if (!method)
+                        continue;
 
-                var match = key.match(delegateEventSplitter);
-                var eventName = match[1];
-                var displayObject = this[match[2]];
+                    var match = key.match(delegateEventSplitter);
+                    var eventName = match[1];
+                    var displayObject = this[match[2]];
 
-                if (!(displayObject instanceof PIXI.DisplayObject))
-                    throw 'PixiView: this.' + match[2] + ' must be a DisplayObject to bind events on it.';
+                    if (!(displayObject instanceof PIXI.DisplayObject))
+                        throw 'PixiView: this.' + match[2] + ' must be a DisplayObject to bind events on it.';
 
-                // if (displayObject.hasOwnProperty(eventName))
-                //     throw 'PixiView: ' + eventName + ' is not a valid event.';
+                    // if (displayObject.hasOwnProperty(eventName))
+                    //     throw 'PixiView: ' + eventName + ' is not a valid event.';
 
-                displayObject[eventName] = _.bind(method, this);
-                displayObject.interactive = true;
+                    displayObject[eventName] = _.bind(method, this);
+                    displayObject.interactive = true;    
+                }
             }
 
             return this;

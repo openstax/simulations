@@ -8,7 +8,7 @@ describe('PiecewiseCurve', function(){
 	var _;
 
 	before(function(done) {
-		require(['common/math/piecewise-curve', 'common/math/rectangle', 'common/math/vector2', 'underscore'], function(piecewiseCurve, rectangle, vector2, underscore) {
+		require(['math/piecewise-curve', 'math/rectangle', 'math/vector2', 'underscore'], function(piecewiseCurve, rectangle, vector2, underscore) {
 			PiecewiseCurve = piecewiseCurve;
 			Rectangle = rectangle;
 			Vector2 = vector2;
@@ -175,25 +175,21 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.contains(pointOutside)).to.not.be.true;
 
 
-		var curve2 = new PiecewiseCurve();
-		curve2
+		curve = new PiecewiseCurve();
+		curve
 			.moveTo( 0,  0)
-			.lineTo( 0, 20)
-			.lineTo(40, 20)
-			.lineTo(40, 40)
-			.lineTo(20, 40)
 			.lineTo(20,  0)
-			
-			
-			
-			
+			.lineTo(20, 40)
+			.lineTo(40, 40)
+			.lineTo(40, 20)
+			.lineTo( 0, 20)
 			.close();
 
 		pointInside  = new Vector2(10, 10);
 		pointOutside = new Vector2(10, 35);
 
-		chai.expect(curve2.contains(pointInside)).to.be.true;
-		chai.expect(curve2.contains(pointOutside)).to.not.be.true;
+		chai.expect(curve.contains(pointInside)).to.be.true;
+		chai.expect(curve.contains(pointOutside)).to.not.be.true;
 
 		// curve = new PiecewiseCurve();
 		// curve
@@ -345,10 +341,10 @@ describe('ModelViewTransform', function(){
 
 	before(function(done) {
 		require([
-			'common/math/model-view-transform', 
-			'common/math/vector2', 
-			'common/math/rectangle',
-			'common/math/piecewise-curve'
+			'math/model-view-transform', 
+			'math/vector2', 
+			'math/rectangle',
+			'math/piecewise-curve'
 		], function(modelViewTransform, vector2, rectangle, piecewiseCurve) {
 			ModelViewTransform = modelViewTransform;
 			Vector2 = vector2;

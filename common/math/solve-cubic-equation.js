@@ -30,6 +30,7 @@ define(function (require) {
         var R2;
         var CR2;
         var CQ3;
+        var sqrtQ;
 
         if (roots === undefined)
             roots = [];
@@ -74,7 +75,7 @@ define(function (require) {
             /* Due to finite precision some double roots may be missed, and
             considered to be a pair of complex roots z = x +/- epsilon i
             close to the real axis. */
-            var sqrtQ = Math.sqrt(Q);
+            sqrtQ = Math.sqrt(Q);
 
             if (R > 0) {
                 roots[0] = -2 * sqrtQ - a / 3;
@@ -88,7 +89,7 @@ define(function (require) {
         }
         
         if (CR2 < CQ3) { /* equivalent to R2 < Q3 */
-            var sqrtQ = Math.sqrt(Q);
+            sqrtQ = Math.sqrt(Q);
             var sqrtQ3 = sqrtQ * sqrtQ * sqrtQ;
             var theta = Math.acos(R / sqrtQ3);
             var norm = -2 * sqrtQ;

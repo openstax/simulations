@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    
     require('../node_modules/least-squares/lib/least-squares'); var leastSquares = window.lsq;
 
     /**

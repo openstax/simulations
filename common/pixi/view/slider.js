@@ -217,7 +217,7 @@ define(function(require) {
             this.previousValue = this.value;
             this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
             this.positionHandle();
-            this.trigger('slide', this.value, this.previousValue)
+            this.trigger('slide', this.value, this.previousValue);
 
             var dragOffset = this._dragOffset;
             dragOffset.x = 0;

@@ -49,38 +49,39 @@ define(function (require) {
      *    the arguments can be any mix of integers and objects
      *    that have properties for x and y.
      */
-    var componentsFromArguments = function(args, numRequired, defaultValue) {
-        var i;
-        var componenets = [];
-        for (i = 0; i < args.length; i++) {
-            if (i === args.length) {
-                throw 'Invalid arguments given: ' + args;
-            }
-            else if (_.isObject(args[i])) {
-                if ('x' in args[i] && 'y' in args[i]) {
-                    components.push(args[i].x);
-                    components.push(args[i].y);
-                    i++;
-                }
-                else {
-                    throw 'Invalid arguments given: ' + args;
-                }
-            }
-            else {
-                components.push(args[i]);
-            }
-        }
+    // Don't need it right now
+    // var componentsFromArguments = function(args, numRequired, defaultValue) {
+    //     var i;
+    //     var components = [];
+    //     for (i = 0; i < args.length; i++) {
+    //         if (i === args.length) {
+    //             throw 'Invalid arguments given: ' + args;
+    //         }
+    //         else if (_.isObject(args[i])) {
+    //             if ('x' in args[i] && 'y' in args[i]) {
+    //                 components.push(args[i].x);
+    //                 components.push(args[i].y);
+    //                 i++;
+    //             }
+    //             else {
+    //                 throw 'Invalid arguments given: ' + args;
+    //             }
+    //         }
+    //         else {
+    //             components.push(args[i]);
+    //         }
+    //     }
         
-        if (components.length < numRequired && defaultValue !== undefined) {
-            i = components.length - 1;
-            while (i < numRequired) {
-                components[i] = defaultValue;
-                i++;
-            }
-        }
+    //     if (components.length < numRequired && defaultValue !== undefined) {
+    //         i = components.length - 1;
+    //         while (i < numRequired) {
+    //             components[i] = defaultValue;
+    //             i++;
+    //         }
+    //     }
         
-        return components;
-    };
+    //     return components;
+    // };
 
     /**
      * This is the equivalent of PhET's 
