@@ -44,8 +44,7 @@ define(function(require) {
         chunkAdded: function(chunk) {
             var energyChunkView = new EnergyChunkView({
                 model: chunk,
-                mvt: this.mvt,
-                parent: this.model
+                mvt: this.mvt
             });
             this.displayObject.addChild(energyChunkView.displayObject);
             this.views.push(energyChunkView);

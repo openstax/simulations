@@ -66,6 +66,7 @@ define(function(require) {
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
 
             this.updateTransparency(this.model, this.model.get('zPosition'));
+            this.positionUpdated();
         },
 
         updateVisibility: function(model, visible) {
