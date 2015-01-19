@@ -259,6 +259,10 @@ define(function(require) {
                 this.views[i].update(time, deltaTime, this.simulation.get('paused'));
         },
 
+        reset: function() {
+
+        },
+
         showEnergyChunks: function() {
             this.trigger('show-energy-chunks');
         },

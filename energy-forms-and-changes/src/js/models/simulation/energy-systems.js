@@ -53,8 +53,8 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Initializes all the model components necessary for the simulation
-         *   to function.
+         * Initializes all the model components necessary for the 
+         *   simulation to function.
          */
         initComponents: function() {
             // Air
@@ -131,19 +131,7 @@ define(function (require, exports, module) {
             // The sun needs a reference to the solar panel
             this.sun.set('solarPanel', this.solarPanel);
 
-            this.set('source',    this.faucet);
-            this.set('converter', this.electricalGenerator);
-            this.set('user',      this.incandescentLightBulb);
-
-            //this.faucet.set('waterPowerableElementInPlace', true);
-            this.get('source').activate();
-            this.get('converter').activate();
-            this.get('user').activate();
-            this.get('source').set('opacity', 1);
-            this.get('converter').set('opacity', 1);
-            this.get('user').set('opacity', 1);
-
-            //this.faucet.set('flowProportion', 0.4);
+            this.selectDefaultElements();
 
             // Animators
             this.sourceAnimator = new CarouselAnimator({
@@ -171,17 +159,34 @@ define(function (require, exports, module) {
             this.listenTo(this.userAnimator,      'destination-reached', activateElement);
         },
 
-        /**
-         * Resets the simulation back to its default state.
-         */
-        reset: function() {
-            FixedIntervalSimulation.prototype.reset.apply(this);
+        selectDefaultElements: function() {
+            this.set('source',    this.faucet);
+            this.set('converter', this.electricalGenerator);
+            this.set('user',      this.beakerHeater);
 
-            this.air.reset();
-            this.beaker.reset();
-            _.each(this.thermometers, function(thermometer){
-                thermometer.reset();
+            this.get('source').activate();
+            this.get('converter').activate();
+            this.get('user').activate();
+            this.get('source').set('opacity', 1);
+            this.get('converter').set('opacity', 1);
+            this.get('user').set('opacity', 1);
+        },
+
+        /**
+         * This is called on a reset to set the simulation
+         *   components back to defaults.  The inherited 
+         *   behavior is to just call initComponents, but
+         *   since we want to manually reset each component 
+         *   in this simulation instead of clearing them 
+         *   out and starting over, we override this
+         *   function.
+         */
+        resetComponents: function() {
+            _.each(this.models, function(model) {
+                model.reset();
             });
+
+            this.selectDefaultElements();
         },
 
         preloadEnergyChunks: function() {
@@ -232,7 +237,8 @@ define(function (require, exports, module) {
         },
 
         activeElementChanged: function(activeElement, previousElement) {
-            previousElement.deactivate();
+            if (previousElement)
+                previousElement.deactivate();
         },
 
         updateBeltVisibility: function() {

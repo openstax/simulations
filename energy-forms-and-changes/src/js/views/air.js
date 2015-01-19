@@ -24,6 +24,7 @@ define(function(require) {
 
             this.listenTo(this.model.energyChunkList, 'add',    this.chunkAdded);
             this.listenTo(this.model.energyChunkList, 'remove', this.chunkRemoved);
+            this.listenTo(this.model.energyChunkList, 'reset',  this.chunksReset);
         },
 
         update: function(time, deltaTime) {
@@ -47,6 +48,13 @@ define(function(require) {
                     this.energyChunkViews[i].removeFrom(this.displayObject); // Unbinds listeners too
                     this.energyChunkViews.splice(i, 1);
                 }
+            }
+        },
+
+        chunksReset: function() {
+            for (var i = this.energyChunkViews.length - 1; i >= 0; i--) {
+                this.energyChunkViews[i].removeFrom(this.displayObject); // Unbinds listeners too
+                this.energyChunkViews.splice(i, 1);
             }
         },
 

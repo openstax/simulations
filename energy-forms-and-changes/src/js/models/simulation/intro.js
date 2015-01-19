@@ -29,16 +29,19 @@ define(function (require, exports, module) {
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {}),
         
-        /**
-         *
-         */
+        
         initialize: function(attributes, options) {
 
             options = options || {};
             options.framesPerSecond = Constants.FRAMES_PER_SECOND;
 
             FixedIntervalSimulation.prototype.initialize.apply(this, arguments);
+        },
 
+        /**
+         * Sets up all the models necessary for the simulation.
+         */
+        initComponents: function() {
             // Burners
             this.rightBurner = new Burner({ position: new Vector2(0.18, 0) });
             this.leftBurner  = new Burner({ position: new Vector2(0.08, 0) });
@@ -104,7 +107,6 @@ define(function (require, exports, module) {
                 this.thermometers
             ]);
 
-
             // Cached objects
             this._location   = new Vector2();
             this._pointAbove = new Vector2();
@@ -127,18 +129,15 @@ define(function (require, exports, module) {
         },
 
         /**
-         *
+         * This is called on a reset to set the simulation
+         *   components back to defaults.  The inherited 
+         *   behavior is to just call initComponents, but
+         *   since we want to manually reset each component 
+         *   in this simulation instead of clearing them 
+         *   out and starting over, we override this
+         *   function.
          */
-        initComponents: function() {
-            
-        },
-
-        /**
-         * Resets simulation back to default state
-         */
-        reset: function() {
-            FixedIntervalSimulation.prototype.reset.apply(this);
-
+        resetComponents: function() {
             this.air.reset();
             this.leftBurner.reset();
             this.rightBurner.reset();

@@ -220,11 +220,13 @@ define(function (require) {
         },
 
         /**
-         *
+         * Tells the scene view to set everything back to defaults when
+         *   the user initiates a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            
+        rerender: function() {
+            this.sceneView.reset();
+            this.$('#intro-energy-symbols-checkbox').prop('checked', false);
+            this.sceneView.hideEnergyChunks();
         },
 
         /**
@@ -260,6 +262,8 @@ define(function (require) {
         },
 
         elementSelected: function(model, element) {
+            if (!element)
+                return;
             this.$('.element-icon[data-cid="' + element.cid + '"]')
                 .addClass('active')
                 .siblings()
