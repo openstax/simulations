@@ -171,7 +171,7 @@ define(function(require) {
                     max: Constants.Biker.MAX_ANGULAR_VELOCITY_OF_CRANK
                 },
 
-                width: panelWidth * 0.8,
+                width: panelWidth * 0.4,
                 backgroundHeight: 3,
                 backgroundAlpha: 0.5,
                 handleSize: 12,
@@ -179,7 +179,7 @@ define(function(require) {
 
             // Position it
             sliderView.displayObject.x = (panelWidth - sliderView.displayObject.width) / 2;
-            sliderView.displayObject.y = (panelHeight - sliderView.displayObject.height) / 2;
+            sliderView.displayObject.y = (panelHeight - 4) / 2;
 
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
@@ -192,6 +192,25 @@ define(function(require) {
 
             // Add it
             panel.addChild(sliderView.displayObject);
+
+            // Create labels
+            var textStyle = {
+                font: BikerView.LABEL_FONT,
+                fill: BikerView.LABEL_COLOR
+            };
+
+            var slow = new PIXI.Text('Slow', textStyle);
+            slow.anchor.y = 0.5;
+            slow.x = 15;
+            slow.y = panelHeight * 0.5;
+            panel.addChild(slow);
+
+            var fast = new PIXI.Text('Fast', textStyle);
+            fast.anchor.x = 1;
+            fast.anchor.y = 0.5;
+            fast.x = panelWidth - 15;
+            fast.y = panelHeight * 0.5;
+            panel.addChild(fast);
 
             // Create button
             var self = this;
