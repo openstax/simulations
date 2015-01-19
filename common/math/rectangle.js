@@ -6,7 +6,21 @@ define(function (require) {
     var Vector2   = require('vector2-node');
     var lineIntersect = require('./line-intersection');
 
-    // Flip top and bottom calculations
+    /**
+     * New constructor that adds cached objects
+     */
+    var originalConstructor = Rectangle;
+    var originalPrototype = Rectangle.prototype;
+    Rectangle = function(x, y, w, h) {
+        originalConstructor.apply(this, [x, y, w, h]);
+
+        this._centerVector = new Vector2();
+    };
+    Rectangle.prototype = originalPrototype;
+
+    /**
+     * Flipping top and bottom calculations
+     */
     var top    = Rectangle.prototype.top;
     var bottom = Rectangle.prototype.bottom;
 
@@ -88,6 +102,22 @@ define(function (require) {
         return this;
     };
 
+    /**
+     * This function is the same as the original except that 
+     *   it uses a chached center vector instead of creating 
+     *   a new one each time and throwing it away.
+     */
+    Rectangle.prototype.center = function(x, y) {
+        if (x instanceof Vector2)
+            return this.position(x.x - this.w / 2,  x.y - this.h / 2);
+        else if (x !== undefined)
+            return this.position(x - this.w / 2, this.y = y - this.h / 2);
+        return this._centerVector.set(this.x + this.w / 2, this.y + this.h / 2);
+    };
+
+    /**
+     * For easy debugging
+     */
     Rectangle.prototype.toString = function(precision) {
         if (precision === undefined)
             precision = 4;
