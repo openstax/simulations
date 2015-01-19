@@ -172,6 +172,13 @@ define(function(require) {
             this.thermometerLayer.removeChild(thermometerView.displayObject);
 
             return thermometerView;
+        },
+
+        removeThermometers: function() {
+            _.each(this.anchors, function(anchor) {
+                anchor.view = null;
+            });
+            this.thermometerLayer.removeChildren();
         }
 
     });

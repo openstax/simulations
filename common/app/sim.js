@@ -114,8 +114,7 @@ define(function (require) {
             this.updater.pause();
             this.updater.reset();
             this.resetComponents();
-            this.render();
-            this.postRender();
+            this.rerender();
 
             // Paint the first frame
             if (this.runUpdateOnReset) {
@@ -135,6 +134,18 @@ define(function (require) {
          */
         resetComponents: function() {
             this.simulation.reset();
+        },
+
+        /**
+         * Called during a reset to refresh the visuals.  If it
+         *   is not desireable in the simulation to actually
+         *   rerender the scene, this should be overriden to
+         *   do whatever is necessary to set everything back to
+         *   defaults.
+         */
+        rerender: function() {
+            this.render();
+            this.postRender();
         },
 
         /**

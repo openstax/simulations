@@ -73,6 +73,7 @@ define(function (require) {
         reset: function() {
             this.time = 0;
             this.set(this.startingAttributes);
+            this.set('timeScale', 1);
             this.applyOptions(this.startingOptions);
             this.initComponents();
         }

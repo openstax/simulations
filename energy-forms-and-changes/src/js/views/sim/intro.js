@@ -138,11 +138,14 @@ define(function (require) {
         },
 
         /**
-         *
+         * Tells the scene view to set everything back to defaults when
+         *   the user initiates a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            
+        rerender: function() {
+            this.sceneView.reset();
+            this.$('#playback-speed-normal').prop('checked', true);
+            this.$('#intro-energy-symbols-checkbox').prop('checked', false);
+            this.sceneView.hideEnergyChunks();
         },
 
         /**

@@ -234,6 +234,7 @@ define(function(require) {
                 thermometerViews.push(view);
                 this.views.push(view);
             }, this);
+            this.thermometerViews = thermometerViews;
 
             // Thermometer clips
             var thermometerClips = new ThermometerClipsView({
@@ -243,6 +244,7 @@ define(function(require) {
                 height: 180,
                 numThermometerSpots: thermometerViews.length
             });
+            this.thermometerClips = thermometerClips;
             this.backLayer.addChild(thermometerClips.displayObject);
 
             // Add thermometers to the thermometer clips
@@ -347,6 +349,14 @@ define(function(require) {
             //if (!this.simulation.get('paused'))
             for (var i = 0; i < this.views.length; i++)
                 this.views[i].update(time, deltaTime, paused, timeScale);
+        },
+
+        reset: function() {
+            this.thermometerClips.removeThermometers();
+            _.each(this.thermometerViews, function(view) {
+                var point = this.thermometerClips.addThermometer(view);
+                view.setCenterPosition(point.x, point.y);
+            }, this);
         },
 
         blockPositionChanged: function() {

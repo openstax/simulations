@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
     var IntroElement = require('models/intro-element');
 
     /**
@@ -20,6 +22,8 @@ define(function (require) {
         initialize: function(attributes, options) {
             IntroElement.prototype.initialize.apply(this, [attributes, options]);
 
+            this._initialPosition = new Vector2(this.get('position'));
+
             this.on('change:userControlled', function(model, userControlled) {
                 if (userControlled && this.getSupportingSurface()) {
                     this.stopListening(this.getSupportingSurface());
@@ -31,7 +35,7 @@ define(function (require) {
 
         reset: function() {
             this.set('userControlled', true);
-            this.setPosition(0, 0);
+            this.setPosition(this._initialPosition);
             this.set('verticalVelocity', 0);
 
             IntroElement.prototype.reset.apply(this);
