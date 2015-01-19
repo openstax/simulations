@@ -5,6 +5,7 @@ define(function (require) {
     var _         = require('underscore');
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
+    var range     = require('common/math/range');
     var Pool      = require('object-pool');
 
     /**
@@ -13,10 +14,10 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     * Static caching objects
+     * Static cached objects
      */
     var boundingRect    = new Rectangle();
-    var lengthBounds    = new Rectangle();
+
     var vectorToEdge    = new Vector2();
     var edgePosition    = new Vector2();
     var edgeForce       = new Vector2();
@@ -28,6 +29,11 @@ define(function (require) {
     var newVelocity     = new Vector2();
     var scaledForceVector = new Vector2();
 
+    var lengthBounds = range({ min: 0, max: 0 });
+
+    /**
+     * Object pools
+     */
     var forceVectorPool = Pool({
         init: function() {
             return new Vector2();
@@ -120,7 +126,6 @@ define(function (require) {
 
                         // Determine forces on each energy chunk.
                         EnergyChunkDistributor.calculateEnergyChunkForces(chunk, forceVector, chunks, bounds, containerShape, minDistance, maxDistance, forceConstant);
-                        //console.log(forceVector); // the force vectors are different here
                     }
                 }
 
@@ -132,7 +137,6 @@ define(function (require) {
                     for (j = 0; j < slice.energyChunkList.length; j++) {
                         chunk = slice.energyChunkList.models[j];
                         forceVector = energyChunkForceVectors[i][j];
-                        //console.log(forceVector); // but the force vectors are the same here
                         var energy = EnergyChunkDistributor.updateChunk(chunk, timeStep, forceVector);
                         if (energy > maxEnergy)
                             maxEnergy = energy;
@@ -190,7 +194,6 @@ define(function (require) {
             if (containerShape.contains(chunk.get('position'))) {
                 EnergyChunkDistributor.addContainerEdgeForces(chunk, forceVector, containerShape, minDistance, maxDistance, forceConstant);
                 EnergyChunkDistributor.addForcesFromOtherChunks(chunk, forceVector, chunks, minDistance, forceConstant);
-                //console.log('chunk inside shape--force vector: ' + forceVector.x.toFixed(4) + ',' + forceVector.y.toFixed(4));
             }
             else {
                 // Point is outside container, move it towards center of shape.
@@ -206,7 +209,6 @@ define(function (require) {
                         .scale(EnergyChunkDistributor.OUTSIDE_CONTAINER_FORCE)
                 );
             }
-            //console.log(forceVector);
         },
 
         updateChunk: function(chunk, timeStep, forceVector) {
@@ -240,7 +242,6 @@ define(function (require) {
             // Update velocity based on drag force.
             newVelocity.add(dragForceVector.scale(timeStep / EnergyChunkDistributor.ENERGY_CHUNK_MASS));
             chunk.get('velocity').set(newVelocity); // Too much overhead when the event system picks it up
-            //console.log(newVelocity.y.toFixed(4) + ',' + newVelocity.y.toFixed(4));
 
             // Return the new total energy
             return 0.5
@@ -304,12 +305,12 @@ define(function (require) {
             for (var angle = 0; angle < Math.PI * 2; angle += Math.PI / 2) {
                 var edgeDetectSteps = 8;
 
-                lengthBounds.x = 0;
-                lengthBounds.w = maxDistance;
+                lengthBounds.min = 0;
+                lengthBounds.max = maxDistance;
 
                 for (var step = 0; step < edgeDetectSteps; step++) {
                     vectorToEdge
-                        .set(lengthBounds.center().x, 0)
+                        .set(lengthBounds.center(), 0)
                         .rotate(angle);
 
                     edgePosition
@@ -319,30 +320,28 @@ define(function (require) {
                     var min;
                     var max;
                     if (containerShape.contains(edgePosition)) {
-                        min = lengthBounds.center().x;
-                        max = lengthBounds.right();
+                        min = lengthBounds.center();
+                        max = lengthBounds.max;
                     }
                     else {
-                        min = lengthBounds.left();
-                        max = lengthBounds.center().x;
+                        min = lengthBounds.min;
+                        max = lengthBounds.center();
                     }
-                    lengthBounds.x = min;
-                    lengthBounds.w = max;
+                    lengthBounds.min = min;
+                    lengthBounds.max = max;
                 }
 
                 // Handle case where point is too close to the container's edge.
-                if (lengthBounds.center().x < minDistance) {
-                    lengthBounds.x = minDistance;
-                    lengthBounds.w = minDistance;
+                if (lengthBounds.center() < minDistance) {
+                    lengthBounds.min = minDistance;
+                    lengthBounds.max = minDistance;
                 }
 
                 // Apply the force due to this edge.
                 edgeForce
-                    .set(forceConstant / Math.pow(lengthBounds.center().x, 2))
+                    .set(forceConstant / Math.pow(lengthBounds.center(), 2))
                     .rotate(angle + Math.PI);
                 forceVector.add(edgeForce);
-                //console.log(edgeForce.length());
-                //console.log('edge force magnitude: ' + edgeForce.length().toFixed(3));
             }
         },
 
@@ -366,7 +365,6 @@ define(function (require) {
                     .sub(otherChunk.get('position'));
 
                 if (vectorToOther.length() < minDistance) {
-                    //console.log(minDistance);
                     if (vectorToOther.length() === 0) {
                         // Create a random vector of min distance
                         var randomAngle = Math.random() * Math.PI * 2;
@@ -390,9 +388,7 @@ define(function (require) {
                         .normalize()
                         .scale(forceConstant / sqrMagnitude)
                 );
-                //console.log(vectorToOther);
             }
-            //console.log(forceVector);
         },
 
         /**

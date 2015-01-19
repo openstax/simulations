@@ -422,7 +422,7 @@ define(function (require) {
     EnergyChunkDistributor.REDISTRIBUTION_THRESHOLD_ENERGY = 1E-4; // In joules, I think.
 
     // Number of times to attempt an even distribution of energy chunks on first load
-    EnergyChunkDistributor.NUM_INITIAL_DISTRIBUTION_ATTEMPTS = 20; // 1000
+    EnergyChunkDistributor.NUM_INITIAL_DISTRIBUTION_ATTEMPTS = 1000; // 1000
 
     Constants.EnergyChunkDistributor = EnergyChunkDistributor;
 

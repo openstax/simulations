@@ -25,6 +25,10 @@ define(function (require) {
             return this.max - this.min;
         };
 
+        rangeObject.center = function() {
+            return this.min + (this.length() / 2);
+        };
+
         return rangeObject;
     };
 
