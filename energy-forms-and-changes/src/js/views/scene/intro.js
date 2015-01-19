@@ -9,7 +9,7 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform   = require('common/math/model-view-transform');
-    var SceneView            = require('views/scene');
+    var PixiSceneView        = require('common/pixi/view/scene');
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
     var ThermometerClipsView = require('views/thermometer-clips');
@@ -27,14 +27,14 @@ define(function(require) {
     /**
      *
      */
-    var IntroSceneView = SceneView.extend({
+    var IntroSceneView = PixiSceneView.extend({
 
         events: {
             
         },
 
         initialize: function(options) {
-            SceneView.prototype.initialize.apply(this, arguments);
+            PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.views = [];
         },
@@ -47,7 +47,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            SceneView.prototype.initGraphics.apply(this, arguments);
+            PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
 
@@ -343,10 +343,10 @@ define(function(require) {
             }, this);
         },
 
-        _update: function(time, deltaTime) {
+        _update: function(time, deltaTime, paused, timeScale) {
             //if (!this.simulation.get('paused'))
             for (var i = 0; i < this.views.length; i++)
-                this.views[i].update(time, deltaTime, this.simulation.get('paused'));
+                this.views[i].update(time, deltaTime, paused, timeScale);
         },
 
         blockPositionChanged: function() {

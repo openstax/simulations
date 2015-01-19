@@ -8,7 +8,7 @@ define(function(require) {
     // var Rectangle = require('common/math/rectangle');
 
     var ModelViewTransform   = require('common/math/model-view-transform');
-    var SceneView            = require('views/scene');
+    var PixiSceneView        = require('common/pixi/view/scene');
     var AirView              = require('views/air');
 
     var FaucetView = require('views/energy-source/faucet');
@@ -32,7 +32,7 @@ define(function(require) {
     /**
      *
      */
-    var EnergySystemsSceneView = SceneView.extend({
+    var EnergySystemsSceneView = PixiSceneView.extend({
 
         events: {
             
@@ -41,7 +41,7 @@ define(function(require) {
         initialize: function(options) {
             this.$ui = $('<div class="scene-ui">');
 
-            SceneView.prototype.initialize.apply(this, arguments);
+            PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.views = [];
         },
@@ -54,7 +54,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            SceneView.prototype.initGraphics.apply(this, arguments);
+            PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.viewOriginX = Math.round(this.width / 2);
             this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view

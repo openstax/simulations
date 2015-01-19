@@ -154,7 +154,7 @@ define(function (require) {
             this.simulation.update(time, deltaTime);
 
             // Update the scene
-            this.sceneView.update(this.simulation.get('timeScale') * time / 1000, this.simulation.get('timeScale') * deltaTime / 1000, this.simulation.get('paused'));
+            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'), this.simulation.get('timeScale'));
         },
 
         /**

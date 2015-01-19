@@ -277,6 +277,7 @@ define(function(require) {
             }
 
             this.particleProductionRemainder = 0;
+            this.steamTime = 0;
         },
 
         activateSteamParticle: function(time, scale, x, y) {
@@ -384,7 +385,11 @@ define(function(require) {
             this.backLayer.y = this.frontLayer.y = viewPoint.y;
         },
 
-        updateSteam: function(time, deltaTime) {
+        updateSteam: function(time, deltaTime, timeScale) {
+            deltaTime *= timeScale;
+            this.steamTime += deltaTime;
+            time = this.steamTime;
+
             var fluidTop = (this.beakerViewRect.bottom() - this.beakerViewRect.h) * this.model.get('fluidLevel');
 
             var steamingProportion = 0;
@@ -447,10 +452,10 @@ define(function(require) {
             }
         },
 
-        update: function(time, deltaTime, simulationPaused) {
+        update: function(time, deltaTime, simulationPaused, timeScale) {
             ThermalElementView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
             if (!simulationPaused) {
-                this.updateSteam(time, deltaTime);
+                this.updateSteam(time, deltaTime, timeScale);
             }
         },
 

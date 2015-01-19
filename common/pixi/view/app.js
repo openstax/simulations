@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var AppView = require('../app/app');
+    var AppView = require('../../app/app');
 
     /**
      * This is a version of the AppView that has asset preloading

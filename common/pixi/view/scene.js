@@ -11,7 +11,7 @@ define(function(require) {
      * SceneView is the main focus of the app. 
      *
      */
-    var SceneView = Backbone.View.extend({
+    var PixiSceneView = Backbone.View.extend({
 
         tagName: 'canvas',
         className: 'scene-view',
@@ -21,17 +21,11 @@ define(function(require) {
         },
 
         initialize: function(options) {
-
-            // Default values
-            options = _.extend({
-
-            }, options);
-
             // Save options
             if (options.simulation)
                 this.simulation = options.simulation;
             else
-                throw 'SceneView requires a simulation model to render.';
+                throw 'PixiSceneView requires a simulation model to render.';
 
             // Bind events
             $(window).bind('resize', $.proxy(this.windowResized, this));
@@ -114,11 +108,11 @@ define(function(require) {
             this.renderer.resize(this.width, this.height);
         },
 
-        update: function(time, deltaTime) {
+        update: function(time, deltaTime, paused, timeScale) {
             if (this.resizeOnNextUpdate)
                 this.resize();
 
-            this._update(time, deltaTime);
+            this._update(time, deltaTime, paused, timeScale);
 
             // Render everything
             this.renderer.render(this.stage);
@@ -128,5 +122,5 @@ define(function(require) {
 
     });
 
-    return SceneView;
+    return PixiSceneView;
 });

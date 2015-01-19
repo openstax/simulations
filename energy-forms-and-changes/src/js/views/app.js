@@ -5,7 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
     PIXI.AUTO_PREVENT_DEFAULT = false;
     
-    var PixiAppView = require('common/pixi/app');
+    var PixiAppView = require('common/pixi/view/app');
 
     var IntroSimView         = require('views/sim/intro');
     var EnergySystemsSimView = require('views/sim/energy-systems');
