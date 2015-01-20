@@ -225,7 +225,7 @@ define(function (require) {
          */
         rerender: function() {
             this.sceneView.reset();
-            this.$('#intro-energy-symbols-checkbox').prop('checked', false);
+            this.$('#energy-systems-energy-symbols-checkbox').prop('checked', false);
             this.sceneView.hideEnergyChunks();
         },
 
