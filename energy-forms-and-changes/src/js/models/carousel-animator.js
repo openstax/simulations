@@ -52,7 +52,7 @@ define(function (require) {
                 var offset = this.get('elementSpacing').clone().scale(index - this.get('activeIndex'));
                 var position = this.get('activeElementPosition').clone().add(offset);
                 element.setPosition(position);
-                console.log(position.toString());
+                //console.log(position.toString());
             }, this);
         },
 
@@ -78,7 +78,7 @@ define(function (require) {
                 vectorPool.remove(this.targetPositionTranslation);
             this.targetPositionTranslation = this.translationToTargetPosition();
             this.animating = true;
-            console.log(this.targetPositionTranslation.toString());
+            //console.log(this.targetPositionTranslation.toString());
         },
 
         stopAnimation: function() {
