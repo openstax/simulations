@@ -268,7 +268,7 @@ define(function (require, exports, module) {
                     });
                 }
                 else {
-                    burner.addOrRemoveEnergyToFromObject(this.air, deltaTime);
+                    burner.addOrRemoveEnergyToFromAir(this.air, deltaTime);
                 }
             }, this);
 
@@ -384,7 +384,7 @@ define(function (require, exports, module) {
                     this.air.addEnergyChunk(burner.extractClosestEnergyChunk(burner.getCenterPoint()), null);
                 else if (energyChunkCountForAir < 0)
                     burner.addEnergyChunk(this.air.requestEnergyChunk(burner.getCenterPoint()));
-            });
+            }, this);
         },
 
         /**
