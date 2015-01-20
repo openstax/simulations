@@ -51,10 +51,6 @@ define(function (require) {
             return this.get('active');
         },
 
-        reset: function() {
-            this.clearEnergyChunks();
-        },
-
         update: function(time, delta) {},
 
         positionChanged: function(model, position) {

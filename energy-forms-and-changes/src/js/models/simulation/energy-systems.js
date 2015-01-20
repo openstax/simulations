@@ -86,6 +86,19 @@ define(function (require, exports, module) {
                 wheel2Center: new Vector2(EnergySystemsSimulation.ENERGY_CONVERTER_POSITION).add(ElectricalGenerator.WHEEL_CENTER_OFFSET)
             });
 
+            // Add meaningful cids for debugging
+            this.faucet.cid = 'faucet';
+            this.sun.cid    = 'sun';
+            this.teapot.cid = 'teapot';
+            this.biker.cid  = 'biker';
+
+            this.electricalGenerator.cid = 'electrical-generator';
+            this.solarPanel.cid          = 'solar-panel';
+
+            this.incandescentLightBulb.cid = 'incandescent-light-bulb';
+            this.fluorescentLightBulb.cid  = 'fluorescent-light-bulb';
+            this.beakerHeater.cid          = 'beaker-heater';
+
             // Group lists
             this.sources = [
                 this.faucet,
@@ -132,6 +145,12 @@ define(function (require, exports, module) {
             this.sun.set('solarPanel', this.solarPanel);
 
             this.selectDefaultElements();
+            this.get('source').activate();
+            this.get('converter').activate();
+            this.get('user').activate();
+            this.get('source').set('opacity', 1);
+            this.get('converter').set('opacity', 1);
+            this.get('user').set('opacity', 1);
 
             // Animators
             this.sourceAnimator = new CarouselAnimator({
@@ -163,13 +182,6 @@ define(function (require, exports, module) {
             this.set('source',    this.faucet);
             this.set('converter', this.electricalGenerator);
             this.set('user',      this.beakerHeater);
-
-            this.get('source').activate();
-            this.get('converter').activate();
-            this.get('user').activate();
-            this.get('source').set('opacity', 1);
-            this.get('converter').set('opacity', 1);
-            this.get('user').set('opacity', 1);
         },
 
         /**
@@ -182,11 +194,35 @@ define(function (require, exports, module) {
          *   function.
          */
         resetComponents: function() {
-            _.each(this.models, function(model) {
-                model.reset();
+            /* We could have a case where one of the
+             *   currently selected items is one of
+             *   defaults, so just selecting it again
+             *   wouldn't properly deactivate it first.
+             */
+            _.each(_.flatten([
+                this.sources,
+                this.converters,
+                this.users
+            ]), function(element) {
+                if (element.active())
+                    element.deactivate();
             });
 
+            this.faucet.set('waterPowerableElementInPlace', true);
+            this.teapot.set('steamPowerableElementInPlace', true);
+            this.biker.set('mechanicalPoweredSystemIsNext', true);
+            this.electricalGenerator.set('directCouplingMode', false);
+            this.updateBeltVisibility();
+
             this.selectDefaultElements();
+
+            this.get('source').activate();
+            this.get('converter').activate();
+            this.get('user').activate();
+
+            this.sourceAnimator.reset();
+            this.converterAnimator.reset();
+            this.userAnimator.reset();
         },
 
         preloadEnergyChunks: function() {

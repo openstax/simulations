@@ -36,19 +36,31 @@ define(function (require) {
         },
         
         initialize: function(attributes, options) {
+            this.initElementPositions();
+
             // Set the initial active index
             this.activeElementChanged(this, this.get('activeElement'));
 
+            this.on('change:activeIndex',   this.startAnimation);
+            this.on('change:activeElement', this.activeElementChanged);
+        },
+
+        initElementPositions: function() {
             // Position the elements
             _.each(this.get('elements'), function(element, index) {
                 // We can just scale by the difference in index to get the correct offset
                 var offset = this.get('elementSpacing').clone().scale(index - this.get('activeIndex'));
                 var position = this.get('activeElementPosition').clone().add(offset);
                 element.setPosition(position);
+                console.log(position.toString());
             }, this);
+        },
 
-            this.on('change:activeIndex',   this.startAnimation);
-            this.on('change:activeElement', this.activeElementChanged);
+        reset: function() {
+            this.animating = false;
+            this.set('activeIndex', 0, { silent: true });
+            this.initElementPositions();
+            this.updateElementOpacities();
         },
 
         activeElementChanged: function(animator, activeElement) {
@@ -66,6 +78,7 @@ define(function (require) {
                 vectorPool.remove(this.targetPositionTranslation);
             this.targetPositionTranslation = this.translationToTargetPosition();
             this.animating = true;
+            console.log(this.targetPositionTranslation.toString());
         },
 
         stopAnimation: function() {
@@ -86,6 +99,7 @@ define(function (require) {
             var translation = vectorPool.create()
                 .set(this.targetPositionTranslation)
                 .scale(deltaPercent);
+            //console.log(translation.toString());
 
             this.translateAllElements(translation);
             this.updateElementOpacities();
