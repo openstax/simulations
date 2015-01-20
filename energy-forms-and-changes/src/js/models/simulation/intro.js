@@ -241,6 +241,9 @@ define(function (require, exports, module) {
         _exchangeEnergy: function(time, deltaTime) {
             var i;
             var j;
+            var burner;
+            var element;
+            var otherElement;
 
             /**
              *  Note: The original intent was to design all the energy containers
@@ -261,20 +264,24 @@ define(function (require, exports, module) {
 
             // Exchange thermal energy between the burners and the other thermal
             //   model elements, including air.
-            _.each(this.burners, function(burner) {
+            var burner;
+            for (i = 0; i < this.burners.length; i++) {
+                burner = this.burners[i];
                 if (burner.areAnyOnTop(this.movableElements)) {
-                    _.each(this.movableElements, function(element) {
-                        burner.addOrRemoveEnergyToFromObject(element, deltaTime);
-                    });
+                    for (j = 0; j < this.movableElements.length; j++) {
+                        burner.addOrRemoveEnergyToFromObject(this.movableElements[j], deltaTime);
+                    }
                 }
                 else {
                     burner.addOrRemoveEnergyToFromAir(this.air, deltaTime);
                 }
-            }, this);
+            }
 
             // Exchange energy chunks between burners and non-air energy containers.
-            _.each(this.burners, function(burner) {
-                _.each(this.movableElements, function(element) {
+            for (i = 0; i < this.burners.length; i++) {
+                burner = this.burners[i];
+                for (j = 0; j < this.movableElements.length; j++) {
+                    element = this.movableElements[j];
                     if (burner.inContactWith(element)) {
                         if (burner.canSupplyEnergyChunk() && (burner.getEnergyChunkBalanceWithObjects() > 0 || element.getEnergyChunkBalance() < 0)) {
                             // Push an energy chunk into the item on the burner.
@@ -287,8 +294,8 @@ define(function (require, exports, module) {
                                 burner.addEnergyChunk(chunk);
                         }
                     }
-                });
-            }, this);
+                }
+            }
 
             // Exchange energy chunks between movable thermal energy containers.
             var elem1;
@@ -311,7 +318,8 @@ define(function (require, exports, module) {
 
             // Exchange energy and energy chunks between the movable thermal
             //   energy containers and the air.
-            _.each(this.movableElements, function(element) {
+            for (i = 0; i < this.movableElements.length; i++) {
+                element = this.movableElements[i];
                 // Set up some variables that are used to decide whether or not
                 //   energy should be exchanged with air.
                 var contactWithOtherMovableElement = false;
@@ -320,7 +328,9 @@ define(function (require, exports, module) {
 
                 // Figure out the max temperature difference between touching
                 //   energy containers.
-                _.each(this.movableElements, function(otherElement) {
+                for (j = 0; j < this.movableElements.length; j++) {
+                    otherElement = this.movableElements[j];
+
                     if (element === otherElement)
                         return;
 
@@ -328,7 +338,7 @@ define(function (require, exports, module) {
                         contactWithOtherMovableElement = true;
                         maxTemperatureDifference = Math.max(Math.abs(element.getTemperature() - otherElement.getTemperature()), maxTemperatureDifference);
                     }
-                }, this);
+                }
 
                 if (this.beaker.getThermalContactArea().getBounds().contains(element.getRect())) {
                     // This model element is immersed in the beaker.
@@ -375,16 +385,17 @@ define(function (require, exports, module) {
                         element.addEnergyChunk(this.air.requestEnergyChunk(element.getCenterPoint()));
                     }
                 }
-            }, this);
+            }
 
             // Exchange energy chunks between the air and the burners.
-            _.each(this.burners, function(burner) {
+            for (i = 0; i < this.burners.length; i++) {
+                burner = this.burners[i];
                 var energyChunkCountForAir = burner.getEnergyChunkCountForAir();
                 if (energyChunkCountForAir > 0)
                     this.air.addEnergyChunk(burner.extractClosestEnergyChunk(burner.getCenterPoint()), null);
                 else if (energyChunkCountForAir < 0)
                     burner.addEnergyChunk(this.air.requestEnergyChunk(burner.getCenterPoint()));
-            }, this);
+            }
         },
 
         /**
