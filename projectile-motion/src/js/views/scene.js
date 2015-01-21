@@ -16,6 +16,9 @@ define(function(require) {
     // Constants
     var Constants = require('constants');
 
+    // CSS
+    require('less!styles/scene');
+
     /**
      *
      */
@@ -41,8 +44,8 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = Math.round(this.width * 0.25); // not centered
-            this.viewOriginY = Math.round(this.height * .75);
+            this.viewOriginX = Math.round(this.width  * Constants.SceneView.ORIGIN_X_PERCENT);
+            this.viewOriginY = Math.round(this.height * Constants.SceneView.ORIGIN_Y_PERCENT);
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
@@ -50,18 +53,41 @@ define(function(require) {
             );
 
             this.initLayers();
-            this.initElements();
+            this.initBackground();
         },
 
         initLayers: function() {
             // Create layers
             this.backLayer = new PIXI.DisplayObjectContainer();
+            this.propLayer = new PIXI.DisplayObjectContainer();
+            this.trajectoryLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
+            this.stage.addChild(this.propLayer);
+            this.stage.addChild(this.trajectoryLayer);
         },
 
-        initElements: function() {
+        initBackground: function() {
+            // Sky gradient is painted in the background by css, but we can
+            // Create ground gradient
+            var canvas = document.createElement('canvas');
+            canvas.width  = this.width;
+            canvas.height = this.height - this.viewOriginY;
+            var ctx = canvas.getContext('2d');
+
+            var gradient = ctx.createLinearGradient(0, 0, 0, this.height);
+            gradient.addColorStop(0, Constants.SceneView.GROUND_COLOR_1);
+            gradient.addColorStop(1, Constants.SceneView.GROUND_COLOR_2);
             
+            ctx.fillStyle = gradient;
+            ctx.rect(0, 0, this.width, this.height);
+            ctx.fill();
+
+            var groundSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            groundSprite.anchor.y = 1;
+            groundSprite.y = this.height;
+
+            this.backLayer.addChild(groundSprite);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
