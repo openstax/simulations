@@ -11,11 +11,13 @@ define(function (require) {
 
     require('nouislider');
     require('bootstrap');
+    require('bootstrap-select');
 
     // CSS
     require('less!styles/sim');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
+    require('less!bootstrap-select-less');
 
     // HTML
     var simHtml = require('text!templates/sim.html');
@@ -95,6 +97,7 @@ define(function (require) {
          */
         renderScaffolding: function() {
             this.$el.html(this.template());
+            this.$('select').selectpicker();
         },
 
         /**
