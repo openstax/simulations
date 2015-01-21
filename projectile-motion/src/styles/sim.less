@@ -1,10 +1,19 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
+
+@control-panel-expanded-width: 200px;
+@control-panel-collapsed-width: 60px;
 
 .sim-controls {
     background: @gray-lightest;
+    .gray-panel();
     padding-bottom: 20px;
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+    width: @control-panel-expanded-width;
 }
 
 .sound-btn-wrapper {
@@ -36,4 +45,12 @@
             display: none;
         }
     }
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+
+    color: #fff;
 }

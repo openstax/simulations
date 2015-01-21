@@ -1,7 +1,7 @@
 {
-  "name": "moving-man",
+  "name": "projectile-motion",
   "version": "1.0.0",
-  "description": "A simulation of movement--the relationship between position, velocity, acceleration, and time",
+  "description": "A simulation to show effects of environment and initial conditions of a projectile launch on a projectile's trajectory through the air.",
   "main": "main.js",
   "scripts": {
     "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed",

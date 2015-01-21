@@ -7,6 +7,7 @@ define(function(require) {
     var PIXI      = require('pixi');
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
+    var Colors    = require('common/colors/colors');
 
     var ModelViewTransform   = require('common/math/model-view-transform');
     var PixiSceneView        = require('common/pixi/view/scene');
@@ -69,25 +70,14 @@ define(function(require) {
 
         initBackground: function() {
             // Sky gradient is painted in the background by css, but we can
-            // Create ground gradient
-            var canvas = document.createElement('canvas');
-            canvas.width  = this.width;
-            canvas.height = this.height - this.viewOriginY;
-            var ctx = canvas.getContext('2d');
+            // Create the ground
+            var ground = new PIXI.Graphics();
+            ground.y = this.viewOriginY;
+            ground.beginFill(Colors.parseHex(Constants.SceneView.GROUND_COLOR), 1);
+            ground.drawRect(0, 0, this.width, this.height - this.viewOriginY);
+            ground.endFill();
 
-            var gradient = ctx.createLinearGradient(0, 0, 0, this.height);
-            gradient.addColorStop(0, Constants.SceneView.GROUND_COLOR_1);
-            gradient.addColorStop(1, Constants.SceneView.GROUND_COLOR_2);
-            
-            ctx.fillStyle = gradient;
-            ctx.rect(0, 0, this.width, this.height);
-            ctx.fill();
-
-            var groundSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-            groundSprite.anchor.y = 1;
-            groundSprite.y = this.height;
-
-            this.backLayer.addChild(groundSprite);
+            this.backLayer.addChild(ground);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

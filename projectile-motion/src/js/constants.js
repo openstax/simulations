@@ -22,8 +22,7 @@ define(function (require) {
 
     SceneView.ORIGIN_X_PERCENT = 0.15; // location of origin if 0 is left of screen and 1 is right
     SceneView.ORIGIN_Y_PERCENT = 0.85; // location of origin if 0 is top of screen and 1 is bottom
-    SceneView.GROUND_COLOR_1 = '#8CCD75';
-    SceneView.GROUND_COLOR_2 = '#4aa02c';
+    SceneView.GROUND_COLOR = '#669966';
 
     Constants.SceneView = SceneView;
 

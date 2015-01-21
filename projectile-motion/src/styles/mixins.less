@@ -1,10 +1,12 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
 @import "../../../common/styles/mixins/vendor-prefixes.less";
 @import "../../../common/styles/mixins/buttons.less";
 
 .text-button(@font-weight: bold) {
     background: transparent;
     padding: 0;
+    opacity: 0.8;
     font-weight: @font-weight;
 
     &:focus {
@@ -14,7 +16,7 @@
 
     &:hover {
         color: inherit;
-        opacity: 0.8;
+        opacity: 1;
     }
 
     &:active {
@@ -29,13 +31,18 @@
 
     > .fa {
         position: relative;
-        font-size: 16px;
+        font-size: 20px;
 
         > .fa {
-            font-size: 8px;
+            font-size: 10px;
             position: absolute;
-            top: 3px;
-            left: 3px;
+            top: 5px;
+            left: 4px;
         }
     }
+}
+
+.gray-panel(@shadow-alpha: 0.25) {
+    background: fadeout(@gray-lightest, 80%);
+    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }
