@@ -9,7 +9,7 @@
 .sim-controls {
     height: 300px;
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
-    padding-bottom: 20px;
+    padding: 15px;
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
@@ -57,6 +57,28 @@
         &:hover {
             color: #333;
         }
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: rgba(255, 255, 255, 0.27);
+            border-color: rgba(0, 0, 0, 0.1);
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
     }
 }
 
