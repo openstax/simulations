@@ -2,7 +2,7 @@
 <nav class="sim-tabs">
     <ul>
         <% _.each(simViews, function(simView){ %>
-        <li class="tab sim-tab" data-cid="<%= simView.cid %>" data-content-selector="#sim-<%= simView.name %>">
+        <li class="tab sim-tab <%= (simViews.length === 1) ? 'singleton' : '' %>" data-cid="<%= simView.cid %>" data-content-selector="#sim-<%= simView.name %>">
             <span class="tab-title"><%= simView.title %></span>
         </li>
         <% }); %>

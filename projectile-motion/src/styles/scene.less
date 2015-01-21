@@ -1,0 +1,318 @@
+@import "../../node_modules/bootstrap/less/mixins/gradients.less";
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+
+/*
+ * Clouds CSS from http://thecodeplayer.com/walkthrough/pure-css3-animated-clouds-background,
+ *   modified and adapted for LESS
+ */ 
+
+.scene-view {
+    width: 100%;
+    height: 334px;
+    position: relative;
+    overflow: hidden;
+
+    &.compact {
+        height: 174px;
+
+        & .scene {
+            height: 140px;
+        }
+
+        & .clouds {
+            position: absolute;
+            bottom: 0;
+        }
+
+        & .clock {
+            display: block;
+        }
+    }
+}
+
+/* Clouds
+ * -----------------------------------------------------------------
+ */
+.clouds {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    overflow: hidden;
+    background: #c9dbe9;
+    #gradient.vertical(#81C8FF; #fff; 0%; 100%);
+
+    &.moving {
+        > .cloud-1 {
+            .animation(moveclouds 60s linear infinite);
+        }
+        > .cloud-2 {
+            .animation(moveclouds 100s linear infinite);
+            .animation-delay(-40s);
+        }
+        > .cloud-3 {
+            .animation(moveclouds 80s linear infinite);
+            .animation-delay(-30s);
+        }
+        > .cloud-4 {
+            .animation(moveclouds 72s linear infinite);
+            .animation-delay(-50s);
+        }
+        > .cloud-5 {
+            .animation(moveclouds 80s linear infinite);
+            .animation-delay(-10s);
+        }
+    }
+}
+
+.keyframes(moveclouds, {
+    margin-left: 130%;
+},{
+    margin-left: -30%;
+});
+
+.cloud {
+    left: 0;
+    width: 200px; height: 60px;
+    background: #fff;
+    
+    border-radius: 200px;
+    -moz-border-radius: 200px;
+    -webkit-border-radius: 200px;
+    
+    position: absolute; 
+
+    &:before, 
+    &:after {
+        content: '';
+        position: absolute; 
+        background: #fff;
+        width: 100px; height: 80px;
+        position: absolute; top: -15px; left: 10px;
+        
+        border-radius: 100px;
+        -moz-border-radius: 100px;
+        -webkit-border-radius: 100px;
+        
+        .transform(rotate(30deg));
+    }
+
+    &:after {
+        width: 120px; height: 120px;
+        top: -55px; left: auto; right: 15px;
+    }
+
+    &.cloud-1 {
+        top: 50px;
+        margin-left: 700px;
+
+        .transform(scale(0.5));
+    }
+
+    &.cloud-2 {
+        top: 40px;
+        margin-left: 80px;
+        
+        .transform(scale(0.3));
+        opacity: 0.7; /*opacity proportional to the size*/
+    }
+
+    &.cloud-3 {
+        top: 30px;
+        
+        .transform(scale(-0.4, 0.4));
+        opacity: 0.9; /*opacity proportional to the size*/
+    }
+
+    &.cloud-4 {
+        top: 20px;
+        margin-left: 500px;
+        
+        .transform(scale(-0.35, 0.35));
+        opacity: 0.85; /*opacity proportional to the size*/
+    }
+
+    &.cloud-5 {
+        top: -20px;
+        margin-left: 800px;
+        
+        .transform(scale(0.4));
+        opacity: 0.9; /*opacity proportional to the size*/
+    }
+}
+
+/* Ruler (ground)
+ * -----------------------------------------------------------------
+ */
+.ruler {
+    position: absolute;
+    z-index: 60;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 34px;
+    background: @gray-lightest;
+    border-top: 4px solid #595959;
+    text-align: center;
+    .user-select(none);
+
+     .ruler-number {
+         display: inline-block;
+        width: 40px;
+        height: 100%;
+        padding-top: 6px;
+        position: relative;
+        color: #777;
+
+        &:after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 0;
+            margin-left: -1px;
+            height: 4px;
+            width: 4px;
+            border: 0px solid #777;
+            border-left-width: 2px;
+        }
+    }
+
+    .ruler-label {
+        position: absolute;
+        left: 50%;
+        margin-left: 12px;
+        top: 6px;
+        color: #777;
+    }
+}
+
+/* Scene
+ * -----------------------------------------------------------------
+ */
+.scene {
+    position: absolute;
+    width: @max-viewport-width;
+    height: 300px;
+    top: 0;
+    left: 50%;
+    margin-left: -(@max-viewport-width / 2);
+}
+
+.clock {
+    position: absolute;
+    z-index: 40;
+    left: 80px;
+    top: 7px;
+    font-size: 18px;
+    color: #004B79;
+    display: none;
+
+    > .time {
+        display: inline-block;
+        min-width: 35px;
+        text-align: right;
+    }
+}
+
+.tree {
+    position: absolute;
+    z-index: 30;
+    bottom: 0;
+    left: 75px;
+    width: 109px;
+    height: 100px;
+    background-image: url(../img/phet/tree.png);
+}
+
+.house {
+    position: absolute;
+    z-index: 30;
+    bottom: -8px;
+    right: 80px;
+    width: 100px;
+    height: 88px;
+    background-image: url(../img/phet/cottage.gif);
+}
+
+.walls-container {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+
+    #sim-intro & {
+        top: 100px;
+    }
+}
+
+.wall {
+    position: absolute;
+    z-index: 80;
+    bottom: 0;
+    width: 30px;
+    height: 140px;
+    background-image: url(../img/brick.jpg);
+    border: 2px solid #88463D;
+    border-bottom: none;
+    .transition(~'bottom 1s');
+
+    &.wall-left  { left: 0;  border-left: none;  border-top-right-radius: 2px; }
+    &.wall-right { right: 0; border-right: none; border-top-left-radius:  2px; }
+
+    & .wall-hide,
+    & .wall-show {
+        position: absolute;
+        left: 4px;
+        padding: 0;
+        font-size: 20px;
+        background: transparent;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:active {
+            .box-shadow(none);
+        }
+    }
+
+    & .wall-hide {
+        bottom: 0;
+        color: #ececec;
+        text-shadow: 0 0 5px #000;
+
+        &:hover {
+            color: #FFD700;
+        }
+    }
+
+    & .wall-show {
+        top: -30px;
+        color: #595959;
+        display: none;
+
+        &:hover {
+            opacity: 0.8;
+        }
+    }
+
+    &.disabled {
+        bottom: -140px;
+
+        & .wall-show {
+            display: inline;
+        }
+    }
+}
+
+.man-container {
+    position: absolute;
+    height: 140px;
+    width: 880px;
+    bottom: 0;
+    left: 50%;
+    margin-left: -440px;
+}

@@ -46,6 +46,11 @@
                 pointer-events: none;
                 opacity: 0.65;
             }
+
+            &.singleton > .tab-title::after,
+            &.singleton.active > .tab-title::after {
+                content: "";
+            }
         }
     }
 }
