@@ -7,13 +7,57 @@
 @control-panel-collapsed-width: 60px;
 
 .sim-controls {
-    background: @gray-lightest;
-    .gray-panel();
+    height: 300px;
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
     padding-bottom: 20px;
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
     width: @control-panel-expanded-width;
+
+    > .btn-fire,
+    > .btn-erase {
+        position: absolute;
+        top: 100%;
+        margin-top: 4px;
+        width: (@control-panel-expanded-width / 2 - 2);
+        background: fadeout(#fff, 60%);
+        box-shadow: 0 0 11px rgba(0, 0, 0, 0.13);
+        border-radius: 0;
+
+        font-weight: bold;
+
+        &:focus {
+            outline: none;
+        }
+
+        &:hover {
+            background: fadeout(#fff, 40%);
+        }
+
+        &:active {
+            margin-top: 5px;
+            box-shadow: 0 -1px 11px rgba(0, 0, 0, 0.13);
+        }
+    }
+
+    > .btn-fire {
+        left: 0;
+        color: fadeout(#A00000, 30%);
+
+        &:hover {
+            color: #A00000;
+        }
+    }
+
+    > .btn-erase {
+        right: 0;
+        color: fadeout(#333, 30%);
+
+        &:hover {
+            color: #333;
+        }
+    }
 }
 
 .sound-btn-wrapper {
