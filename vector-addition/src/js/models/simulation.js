@@ -27,14 +27,6 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
 
-        },
-
-        /**
-         * Only runs if simulation isn't currently paused.
-         * If we're recording, it saves state
-         */
-        _update: function(time, delta) {
-
         }
 
     });
