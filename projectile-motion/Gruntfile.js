@@ -68,12 +68,15 @@ module.exports = function(grunt){
 						text:       '../../bower_components/requirejs-text/text',
 						pixi:       '../../bower_components/pixi/bin/pixi',
 						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 						buzz:       '../../bower_components/buzz/dist/buzz.min',
-						fparser:    '../../bower_components/fparser/fparser',
+						'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
+						'object-pool':    '../../node_modules/object-pool-shimmed/index',
+						'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
 
 						views:      '../js/views',
 						models:     '../js/models',
+						assets:     '../js/assets',
+						constants:  '../js/constants',
 						templates:  '../templates',
 						styles:     '../styles',
 						common:     '../../../common'
