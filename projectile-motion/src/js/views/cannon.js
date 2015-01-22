@@ -33,7 +33,6 @@ define(function(require) {
             var cannon = Assets.createSprite(Assets.Images.CANNON);
             cannon.anchor.x = 0.24;
             cannon.anchor.y = 0.5;
-            cannon.y = -94;
             this.displayObject.addChild(cannon);
             this.cannon = cannon;
 
@@ -41,6 +40,7 @@ define(function(require) {
             var carriage = Assets.createSprite(Assets.Images.CANNON_CARRIAGE);
             carriage.anchor.x = 0.5;
             carriage.anchor.y = 1;
+            carriage.y = 94;
             this.displayObject.addChild(carriage);
 
             this.updateMVT(this.mvt);
