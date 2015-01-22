@@ -45,6 +45,7 @@ define(function (require) {
          */
         events: {
             'click .sound-btn' : 'changeVolume',
+            'change #air-resistance-check': 'toggleAirResistance'
         },
 
         /**
@@ -157,7 +158,16 @@ define(function (require) {
                 this.$('.sound-btn-mute').show();
                 //this.sceneView.movingManView.muteVolume();
             }
-        }
+        },
+
+        toggleAirResistance: function(event) {
+            if ($(event.target).is(':checked')) {
+                this.$('.air-resistance-parameters').show();
+            }
+            else {
+                this.$('.air-resistance-parameters').hide();
+            }
+        },
 
     });
 
