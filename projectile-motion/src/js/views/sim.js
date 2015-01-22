@@ -45,7 +45,9 @@ define(function (require) {
          */
         events: {
             'click .sound-btn' : 'changeVolume',
-            'change #air-resistance-check': 'toggleAirResistance'
+            'change #air-resistance-check': 'toggleAirResistance',
+            'click .btn-zoom-in' : 'zoomIn',
+            'click .btn-zoom-out' : 'zoomOut'
         },
 
         /**
@@ -167,6 +169,14 @@ define(function (require) {
             else {
                 this.$('.air-resistance-parameters').hide();
             }
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
         },
 
     });

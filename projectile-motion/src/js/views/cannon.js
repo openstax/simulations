@@ -6,6 +6,8 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
 
+    var Assets = require('assets');
+
     /**
      * A view that represents an element model
      */
@@ -28,12 +30,20 @@ define(function(require) {
 
         initGraphics: function() {
             // Cannon
-            this.cannon = Assets.createSprite(Assets.Images.CANNON);
-            this.cannon.anchor.x = this.cannon.anchor.y = 0.5;
-            this.displayObject.addChild(this.cannon);
+            var cannon = Assets.createSprite(Assets.Images.CANNON);
+            cannon.anchor.x = 0.24;
+            cannon.anchor.y = 0.5;
+            cannon.y = -94;
+            this.displayObject.addChild(cannon);
+            this.cannon = cannon;
 
             // Carriage
+            var carriage = Assets.createSprite(Assets.Images.CANNON_CARRIAGE);
+            carriage.anchor.x = 0.5;
+            carriage.anchor.y = 1;
+            this.displayObject.addChild(carriage);
 
+            this.updateMVT(this.mvt);
         },
 
         drawDebugOrigin: function(parent, color) {
@@ -47,10 +57,6 @@ define(function(require) {
                 parent.addChild(origin);
         },
 
-        update: function(time, deltaTime) {
-
-        },
-
         updateAngle: function(cannon, angleInDegrees) {
 
         },
@@ -61,6 +67,11 @@ define(function(require) {
             var scale = targetCannonWidth / this.cannon.width;
 
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
+
+            this.displayObject.x = mvt.modelToViewX(this.model.get('x'));
+            this.displayObject.y = mvt.modelToViewY(this.model.get('y'));
+
+            this.mvt = mvt;
         }
 
     });

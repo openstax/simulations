@@ -2,13 +2,17 @@ define(function(require) {
     
     'use strict';
 
-    var AppView = require('common/app/app');
+    var PixiAppView = require('common/pixi/view/app');
 
     var ProjectileMotionSimView = require('views/sim');
 
+    var Assets = require('assets');
+
     require('less!styles/font-awesome');
 
-    var ProjectileMotionAppView = AppView.extend({
+    var ProjectileMotionAppView = PixiAppView.extend({
+
+        assets: Assets.getAssetList(),
 
         simViewConstructors: [
             ProjectileMotionSimView

@@ -33,7 +33,8 @@ define(function (require, exports, module) {
                 x:     Constants.Cannon.START_X,
                 y:     Constants.Cannon.START_Y,
                 angle: Constants.Cannon.START_ANGLE
-            })
+            });
+            this.cannon = cannon;
         },
 
         _update: function(time, delta) {
