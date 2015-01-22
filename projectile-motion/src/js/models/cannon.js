@@ -10,7 +10,7 @@ define(function (require) {
      */
     var Constants = require('constants');
 
-    var DEGREES_TO_RADIANS = 180 / Math.PI;
+    var DEGREES_TO_RADIANS = Math.PI / 180;
 
     /**
      * 
@@ -38,7 +38,7 @@ define(function (require) {
         },
 
         firingAngle: function() {
-            return this.get('angle') * DEGREES_TO_RADIANS;
+            return -this.get('angle') * DEGREES_TO_RADIANS;
         }
 
     }, Constants.Cannon);

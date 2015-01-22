@@ -45,9 +45,10 @@ define(function (require) {
          */
         events: {
             'click .sound-btn' : 'changeVolume',
-            'change #air-resistance-check': 'toggleAirResistance',
             'click .btn-zoom-in' : 'zoomIn',
-            'click .btn-zoom-out' : 'zoomOut'
+            'click .btn-zoom-out' : 'zoomOut',
+            'change #air-resistance-check': 'toggleAirResistance',
+            'change #angle' : 'changeAngle'
         },
 
         /**
@@ -178,6 +179,10 @@ define(function (require) {
         zoomOut: function() {
             this.sceneView.zoomOut();
         },
+
+        changeAngle: function(event) {
+            this.simulation.cannon.set('angle', parseFloat($(event.target).val()));
+        }
 
     });
 

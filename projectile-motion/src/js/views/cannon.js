@@ -25,13 +25,13 @@ define(function(require) {
             //   but don't listen to x or y because those will only ever be changed
             //   through this view.
             this.listenTo(this.model, 'change:angle', this.updateAngle);
-            
+            this.updateAngle(this.model, this.model.get('angle'));
         },
 
         initGraphics: function() {
             // Cannon
             var cannon = Assets.createSprite(Assets.Images.CANNON);
-            cannon.anchor.x = 0.24;
+            cannon.anchor.x = 0.34;
             cannon.anchor.y = 0.5;
             this.displayObject.addChild(cannon);
             this.cannon = cannon;
@@ -40,7 +40,8 @@ define(function(require) {
             var carriage = Assets.createSprite(Assets.Images.CANNON_CARRIAGE);
             carriage.anchor.x = 0.5;
             carriage.anchor.y = 1;
-            carriage.y = 94;
+            carriage.y = 100;
+            carriage.x = -26;
             this.displayObject.addChild(carriage);
 
             this.updateMVT(this.mvt);
@@ -58,7 +59,7 @@ define(function(require) {
         },
 
         updateAngle: function(cannon, angleInDegrees) {
-
+            this.cannon.rotation = this.model.firingAngle();
         },
 
         updateMVT: function(mvt) {
