@@ -2,38 +2,80 @@
 @import "../../../common/styles/variables.less";
 @import "mixins.less";
 
-.sim-controls {
-    background: @gray-lightest;
-    padding-bottom: 20px;
-}
+.content-area {
+  position: relative;
 
-.sound-btn-wrapper {
+  .scene-view {
+    width: 100%;
     position: absolute;
-    top: -36px;
-    right: 30px;
+  }
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+  .sim-controls {
+    background: @gray-lightest;
+    position:relative;
+    float: right;
+    width:150px;
+    top: 190px;
+    right: 0;
+    padding:10px;
+    border: 3px solid @brand-primary;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.sound-btn-mute,
-        &.sound-btn-high {
-            display: none;
-        }
+    .row {
+      margin: 0 0 5px 0;
+      padding:3px;
+      border-bottom: 1px solid @gray-medium;
     }
+
+    p {
+      text-align:center;
+    }
+
+    ul {
+      list-style:none;
+      padding: 5px;
+      margin: 0;
+
+      li {
+        list-style-image: none;
+      }
+    }
+
+    h4 {
+      color: @brand-primary;
+    }
+
+    input[type="submit"] {
+      margin-left:20px;
+      background: red;
+      color: #fff;
+      padding-bottom: 5px;
+    }
+  }
+
+  .sim-values {
+    background: @gray-lightest;
+    position: relative;
+    width: 750px;
+    height: 75px;
+    float: left;
+    top: 20px;
+    left: 30px;
+    padding: 15px;
+    border: 3px solid @brand-primary;
+    border-radius: 10px;
+    -moz-border-radius: 10px;
+
+    input[type="text"] {
+      float: right;
+      width: 70%;
+    }
+
+    label {
+      float: left;
+      font-size: 20px;
+    }
+
+  }
 }

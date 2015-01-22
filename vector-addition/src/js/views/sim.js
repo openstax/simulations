@@ -5,26 +5,20 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView                    = require('common/app/sim');
+    var SimView = require('common/app/sim');
     var VectorAdditionSimulation = require('models/simulation');
     var VectorAdditionSceneView  = require('views/scene');
 
-    require('nouislider');
     require('bootstrap');
 
     // CSS
     require('less!styles/sim');
-    require('less!common/styles/slider');
     require('less!common/styles/radio');
 
     // HTML
     var simHtml = require('text!templates/sim.html');
 
-    /**
-     * This is the umbrella view for everything in a simulation tab.
-     *   It will be extended by both the Intro module and the Charts
-     *   and contains all the common functionality between the two.
-     */
+
     var VectorAdditionSimView = SimView.extend({
 
         /**
@@ -42,7 +36,6 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .sound-btn' : 'changeVolume',
         },
 
         /**
@@ -132,29 +125,6 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(time, delta);
         },
-
-        /**
-         * Steps between the different discrete volume values and updates
-         *   the button's icon.
-         */
-        changeVolume: function(event) {
-            var $btn = $(event.target).closest('.sound-btn');
-
-            $btn.hide();
-
-            if ($btn.hasClass('sound-btn-mute')) {
-                this.$('.sound-btn-low').show();
-                //this.sceneView.movingManView.lowVolume();
-            }
-            else if ($btn.hasClass('sound-btn-low')) {
-                this.$('.sound-btn-high').show();
-                //this.sceneView.movingManView.highVolume();
-            }
-            else if ($btn.hasClass('sound-btn-high')) {
-                this.$('.sound-btn-mute').show();
-                //this.sceneView.movingManView.muteVolume();
-            }
-        }
 
     });
 

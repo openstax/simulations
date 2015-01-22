@@ -1,14 +1,44 @@
 
 <div class="content-area">
     <span class="scene-view-placeholder"></span>
-    
-    <div class="sim-controls">
-        
+    <div class="sim-values">
+      <div class="col-md-3">
+       <label>|R|</label>
+       <input type="text" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <label>0</label>
+        <input type="text" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <label>R<sub>x</sub></label>
+        <input type="text" class="form-control"/>
+      </div>
+      <div class="col-md-3">
+        <label>R<sub>y</sub></label>
+        <input type="text" class="form-control"/>
+      </div>
     </div>
+    <div class="sim-controls">
+      <div class="row">
+        <div class="checkbox"><input type="checkbox" id="show-sum"><label for="show-sum">Show Sum</label>
+        </div>
+      </div>
+      <div class="row">
+        <h4>Component Display</h4>
+        <div class="checkbox">
+        <ul>
+          <li><input type="radio" id="none" name="components"><label for="none">None</label></li>
+          <li><input type="radio" id="style1" name="components"><label for="style1">Style 1</label></li>
+          <li><input type="radio" id="style2" name="components"><label for="style2">Style 2</label></li>
+          <li><input type="radio" id="style3" name="components"><label for="style3">Style 3</label></li>
+        </ul>
+      </div>
+    </div>
+      <div class="checkbox">
+        <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
+        </div>
+    </div>
+<input type="submit" class="btn" value="Clear All"/>
 </div>
-
-<div class="sound-btn-wrapper">
-    <button class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
-    <button class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
-    <button class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
 </div>
