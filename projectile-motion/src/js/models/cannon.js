@@ -1,0 +1,47 @@
+define(function (require) {
+
+    'use strict';
+
+    //var _        = require('underscore');
+    var Backbone = require('backbone');
+
+    /**
+     * Constants
+     */
+    var Constants = require('constants');
+
+    var DEGREES_TO_RADIANS = 180 / Math.PI;
+
+    /**
+     * 
+     */
+    var Cannon = Backbone.Model.extend({
+
+        defaults: {
+            x: 0,
+            y: 0,
+            angle: 0,
+            width: Constants.Cannon.WIDTH,
+            heightOffGround: Constants.Cannon.HEIGHT_OFF_GROUND
+        },
+
+        initialize: function(attributes, options) {
+            
+        },
+
+        firingX: function() {
+            return this.get('x');
+        },
+
+        firingY: function() {
+            return this.get('y') + this.get('heightOffGround');
+        },
+
+        firingAngle: function() {
+            return this.get('angle') * DEGREES_TO_RADIANS;
+        }
+
+    }, Constants.Cannon);
+
+    return Cannon;
+});

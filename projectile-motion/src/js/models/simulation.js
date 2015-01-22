@@ -6,9 +6,12 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var Cannon = require('models/cannon');
+
     /**
      * Constants
      */
+    var Constants = require('constants');
 
     /**
      * Wraps the update function in 
@@ -26,13 +29,13 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            var cannon = new Cannon({
+                x:     Constants.Cannon.START_X,
+                y:     Constants.Cannon.START_Y,
+                angle: Constants.Cannon.START_ANGLE
+            })
         },
 
-        /**
-         * Only runs if simulation isn't currently paused.
-         * If we're recording, it saves state
-         */
         _update: function(time, delta) {
             
         }

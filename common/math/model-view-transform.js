@@ -97,18 +97,7 @@ define(function (require) {
             0, 1, 0
         ];
 
-        // Delta transform just takes out the translation
-        this.deltaTransformMatrix = _.clone(this.transformMatrix);
-        this.deltaTransformMatrix[2] = 0;
-        this.deltaTransformMatrix[5] = 0;
-
-        // Get the inverse of the transform matrix and store it
-        this.inverseTransformMatrix = inverse(this.transformMatrix);
-
-        // Delta transform just takes out the translation
-        this.deltaInverseTransformMatrix = _.clone(this.inverseTransformMatrix);
-        this.deltaInverseTransformMatrix[2] = 0;
-        this.deltaInverseTransformMatrix[5] = 0;
+        this.generateDerivedTransformMatrices();
 
         // Cached objects for recycling
         this._point = new Vector2();
@@ -117,6 +106,7 @@ define(function (require) {
         this._point2 = new Vector2();
         this._point3 = new Vector2();
         this._point4 = new Vector2();
+        this._scale = new Vector2();
     };
 
     /**
@@ -188,6 +178,21 @@ define(function (require) {
      * Instance functions
      */
     _.extend(ModelViewTransform.prototype, {
+
+        generateDerivedTransformMatrices: function() {
+            // Delta transform just takes out the translation
+            this.deltaTransformMatrix = _.clone(this.transformMatrix);
+            this.deltaTransformMatrix[2] = 0;
+            this.deltaTransformMatrix[5] = 0;
+
+            // Get the inverse of the transform matrix and store it
+            this.inverseTransformMatrix = inverse(this.transformMatrix);
+
+            // Delta transform just takes out the translation
+            this.deltaInverseTransformMatrix = _.clone(this.inverseTransformMatrix);
+            this.deltaInverseTransformMatrix[2] = 0;
+            this.deltaInverseTransformMatrix[5] = 0;
+        },
 
         /*************************************************************************
          **                                                                     **
@@ -310,6 +315,36 @@ define(function (require) {
             clone.transform(tm);
             return clone;
         },
+
+        scale: function(scaleX, scaleY) {
+            if (scaleX === undefined) {
+                return this._scale.set(
+                    this.transformMatrix[0],
+                    this.transformMatrix[4]
+                );
+            }
+            else {
+                if (scaleY === undefined)
+                    scaleY = scaleX;
+                this.transformMatrix[0] = scaleX;
+                this.transformMatrix[4] = scaleY;
+                this.generateDerivedTransformMatrices();
+            }
+        },
+
+        scaleX: function(scaleX) {
+            if (scaleX === undefined)
+                return this.transformMatrix[0];
+            else 
+                this.scale(scaleX, this.scaleY());
+        },
+
+        scaleY: function(scaleY) {
+            if (scaleY === undefined)
+                return this.transformMatrix[4];
+            else 
+                this.scale(this.scaleX(), scaleY);
+        }
 
     });
 

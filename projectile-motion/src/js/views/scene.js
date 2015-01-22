@@ -71,10 +71,11 @@ define(function(require) {
         initBackground: function() {
             // Sky gradient is painted in the background by css, but we can
             // Create the ground
+            var groundY = Math.round(this.height * 0.82);
             var ground = new PIXI.Graphics();
-            ground.y = this.viewOriginY;
+            ground.y = groundY;
             ground.beginFill(Colors.parseHex(Constants.SceneView.GROUND_COLOR), 1);
-            ground.drawRect(0, 0, this.width, this.height - this.viewOriginY);
+            ground.drawRect(0, 0, this.width, this.height  - groundY);
             ground.endFill();
 
             this.backLayer.addChild(ground);
