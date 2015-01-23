@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var buzz = require('buzz');
     var PIXI = require('pixi');
     require('common/pixi/extensions');
     
@@ -49,6 +50,10 @@ define(function(require) {
             this.initGraphics();
 
             this._dragOffset = new PIXI.Point();
+
+            // this.blastSound = new buzz.sound('audio/blast', {
+            //     formats: ['ogg', 'mp3', 'wav']
+            // });
 
             // Listen to angle because the user can change that from the control panel,
             //   but don't listen to x or y because those will only ever be changed
