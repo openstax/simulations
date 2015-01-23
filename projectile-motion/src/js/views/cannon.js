@@ -29,6 +29,15 @@ define(function(require) {
             'mouseup         .cannon': 'dragCannonEnd',
             'touchendoutside .cannon': 'dragCannonEnd',
             'mouseupoutside  .cannon': 'dragCannonEnd',
+
+            'touchstart      .carriage': 'dragPedestalStart',
+            'mousedown       .carriage': 'dragPedestalStart',
+            'touchmove       .carriage': 'dragPedestal',
+            'mousemove       .carriage': 'dragPedestal',
+            'touchend        .carriage': 'dragPedestalEnd',
+            'mouseup         .carriage': 'dragPedestalEnd',
+            'touchendoutside .carriage': 'dragPedestalEnd',
+            'mouseupoutside  .carriage': 'dragPedestalEnd',
         },
 
         /**
@@ -65,7 +74,9 @@ define(function(require) {
             carriage.anchor.y = 1;
             carriage.y = 100;
             carriage.x = -26;
+            carriage.buttonMode = true;
             this.spritesLayer.addChild(carriage);
+            this.carriage = carriage;
 
             // Pedestal
             var pedestal = new PIXI.Graphics();
@@ -76,7 +87,7 @@ define(function(require) {
             var grass = Assets.createSprite(Assets.Images.GRASS_BLADES);
             grass.anchor.x = 0.5;
             grass.anchor.y = 1;
-            grass.y = 104;
+            grass.y = 106;
             this.spritesLayer.addChild(grass);
 
             this.displayObject.addChild(this.spritesLayer);
@@ -140,23 +151,52 @@ define(function(require) {
             this.draggingCannon = false;
         },
 
+        dragPedestalStart: function(data) {
+            this.previousPedestalY = data.global.y;
+            this.draggingPedestal = true;
+        },
+
+        dragPedestal: function(data) {
+            if (this.draggingPedestal) {
+                var dy = data.global.y - this.previousPedestalY;
+                this.previousPedestalY = data.global.y;
+
+                dy = this.mvt.viewToModelDeltaY(dy);
+
+                var y = this.model.get('y') + dy;
+                if (y < 0)
+                    y = 0;
+                this.model.set('y', y);
+
+                this.updatePosition();
+                this.drawPedestal();
+            }
+        },
+
+        dragPedestalEnd: function(data) {
+            this.draggingPedestal = false;
+        },
+
         updateAngle: function(cannon, angleInDegrees) {
             this.cannon.rotation = this.model.firingAngle();
         },
 
+        updatePosition: function() {
+            this.displayObject.x = this.mvt.modelToViewX(this.model.get('x'));
+            this.displayObject.y = this.mvt.modelToViewY(this.model.get('y'));
+        },
+
         updateMVT: function(mvt) {
+            this.mvt = mvt;
+
             // Note: Maybe we don't need to ever update at all. Could we just scale the whole scene's displayObject?
             var targetCannonWidth = mvt.modelToViewDeltaX(this.model.get('width')); // in pixels
             var scale = targetCannonWidth / this.cannon.width;
 
             this.spritesLayer.scale.x = this.spritesLayer.scale.y = scale;
 
-            this.displayObject.x = mvt.modelToViewX(this.model.get('x'));
-            this.displayObject.y = mvt.modelToViewY(this.model.get('y'));
-
+            this.updatePosition();
             this.drawPedestal();
-
-            this.mvt = mvt;
         }
 
     }, Constants.CannonView);

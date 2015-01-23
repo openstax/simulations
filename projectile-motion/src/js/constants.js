@@ -7,17 +7,17 @@ define(function (require) {
     var range     = require('common/math/range');
 
 
+    var Constants = {}; 
+
     /*************************************************************************
      **                                                                     **
      **                         UNIVERSAL CONSTANTS                         **
      **                                                                     **
      *************************************************************************/
 
-    var Constants = {}; 
-
     Constants.GRAVITY = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
-    Constants.GROUND_Y = -1;
+    Constants.GROUND_Y = -0.75;
 
 
     /*************************************************************************
@@ -47,8 +47,8 @@ define(function (require) {
     var Cannon = {};
 
     Cannon.START_X = 0;
-    Cannon.START_Y = 10;
-    Cannon.HEIGHT_OFF_GROUND = 1; // meters
+    Cannon.START_Y = 5;
+    Cannon.HEIGHT_OFF_GROUND = -Constants.GROUND_Y; // meters
     Cannon.WIDTH = 2; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
     Cannon.MIN_ANGLE = -28; // Don't want it moving into its own shadow. If we need to allow them to point it down more, I'll have to separate that shadow layer in the image.
@@ -60,7 +60,7 @@ define(function (require) {
 
     CannonView.PEDESTAL_TOP_COLOR  = SceneView.GROUND_COLOR;
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
-    CannonView.PEDESTAL_WIDTH = 3.2; // meters
+    CannonView.PEDESTAL_WIDTH = 3.4; // meters
     CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = 0.115;
 
     Constants.CannonView = CannonView;
