@@ -2,12 +2,62 @@
 <span class="scene-view-placeholder"></span>
     
 <div class="sim-controls">
+
+    <h2>Shot Parameters</h2>
+
     <select class="form-control">
         <!-- make this dynamic layer -->
         <option value="">Generic projectile</option>
         <option value="">Tank shell</option>
         <option value="">Golf ball</option>
     </select>
+
+    <div class="control-group">
+        <label for="angle" class="control-label">Angle (degrees)</label>
+        <div class="input-wrapper">
+            <input type="number" min="<%= Constants.Cannon.MIN_ANGLE %>" max="<%= Constants.Cannon.MAX_ANGLE %>" class="form-control" id="angle" value="<%= simulation.cannon.get('angle') %>">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label for="speed" class="control-label">Initial speed (m/s)</label>
+        <div class="input-wrapper">
+            <input type="number" min="0" class="form-control" id="speed" value="<%= simulation.get('initialSpeed') %>">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label for="mass" class="control-label">Mass (kg)</label>
+        <div class="input-wrapper">
+            <input type="number" min="0" class="form-control" id="mass" value="<%= simulation.get('mass') %>">
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label for="diameter" class="control-label">Diameter (m)</label>
+        <div class="input-wrapper">
+            <input type="number" min="0" class="form-control" id="diameter" value="<%= simulation.get('diameter') %>">
+        </div>
+    </div>
+
+    <input type="checkbox" id="air-resistance-check">
+    <label for="air-resistance-check" class="air-resistance-check">Air resistance</label><br>
+
+    <div class="air-resistance-parameters">
+        <div class="control-group">
+            <label for="drag" class="control-label">Drag Coefficient</label>
+            <div class="input-wrapper">
+                <input type="number" min="0" class="form-control" id="drag" value="<%= simulation.get('dragCoefficient') %>">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label for="altitude" class="control-label">Altitude (m)</label>
+            <div class="input-wrapper">
+                <input type="number" class="form-control" id="altitude" value="<%= simulation.get('altitude') %>">
+            </div>
+        </div>
+    </div>
 
     <button class="btn btn-fire">Fire!</button>
     <button class="btn btn-erase">Erase</button>

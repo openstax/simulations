@@ -12,6 +12,8 @@ define(function(require) {
     var ModelViewTransform   = require('common/math/model-view-transform');
     var PixiSceneView        = require('common/pixi/view/scene');
 
+    var CannonView = require('views/cannon');
+
     var Assets = require('assets');
 
     // Constants
@@ -32,7 +34,7 @@ define(function(require) {
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
-            this.views = [];
+            this.zoomScale = 40;
         },
 
         /**
@@ -50,11 +52,12 @@ define(function(require) {
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                10 // Scale
+                this.zoomScale // Scale, meters to pixels
             );
 
             this.initLayers();
             this.initBackground();
+            this.initCannon();
         },
 
         initLayers: function() {
@@ -71,22 +74,55 @@ define(function(require) {
         initBackground: function() {
             // Sky gradient is painted in the background by css, but we can
             // Create the ground
+            var groundY = Math.round(this.height * 0.82);
             var ground = new PIXI.Graphics();
-            ground.y = this.viewOriginY;
+            ground.y = groundY;
             ground.beginFill(Colors.parseHex(Constants.SceneView.GROUND_COLOR), 1);
-            ground.drawRect(0, 0, this.width, this.height - this.viewOriginY);
+            ground.drawRect(0, 0, this.width, this.height  - groundY);
             ground.endFill();
 
             this.backLayer.addChild(ground);
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {
-            for (var i = 0; i < this.views.length; i++)
-                this.views[i].update(time, deltaTime, paused, timeScale);
+        initCannon: function() {
+            var cannonView = new CannonView({
+                model: this.simulation.cannon,
+                mvt: this.mvt
+            });
+            this.cannonView = cannonView;
+            this.propLayer.addChild(cannonView.displayObject);
         },
+
+        _update: function(time, deltaTime, paused, timeScale) {},
 
         reset: function() {
             
+        },
+
+        zoomIn: function() {
+            var zoom = this.zoomScale * 1.5;
+            if (zoom < Constants.SceneView.MAX_SCALE) {
+                this.zoomScale = zoom;
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
+                this.cannonView.updateMVT(this.mvt);
+            }
+        },
+
+        zoomOut: function() {
+            var zoom = this.zoomScale / 1.5;
+            if (zoom > Constants.SceneView.MIN_SCALE) {
+                this.zoomScale = zoom;
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
+                this.cannonView.updateMVT(this.mvt);
+            }
         }
 
     });

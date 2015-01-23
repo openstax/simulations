@@ -104,6 +104,36 @@ define(function (require) {
 			} 
 			else
 				return null;	
+		},
+
+		/**
+		 * Algorithm from http://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
+		 */
+		darkenRgba: function(rgba, percent) {
+			var type = typeof rgba;
+			if (type !== 'object')
+				rgba = this.toRgba(rgba);
+			var amount = Math.round(255 * percent);
+			rgba.r -= amount;
+			rgba.g -= amount;
+			rgba.b -= amount;
+			if      (rgba.r > 255) rgba.r = 255;
+			else if (rgba.r < 0)   rgba.r = 0;
+			if      (rgba.g > 255) rgba.g = 255;
+			else if (rgba.g < 0)   rgba.g = 0;
+			if      (rgba.b > 255) rgba.b = 255;
+			else if (rgba.b < 0)   rgba.b = 0;
+
+			if (type === 'object')
+				return rgba;
+			else
+				return 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',' + rgba.a + ')';
+		},
+
+		darkenHex: function(colorString, percent) {
+			var rgba = this.toRgba(colorString, true);
+			this.darkenRgba(rgba, percent);
+			return this.rgbToHex(rgba.r, rgba.g, rgba.b);
 		}
 	};
 

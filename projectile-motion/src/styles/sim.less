@@ -3,17 +3,26 @@
 @import "variables.less";
 @import "mixins.less";
 
-@control-panel-expanded-width: 200px;
+@control-panel-expanded-width: 220px;
 @control-panel-collapsed-width: 60px;
 
 .sim-controls {
-    height: 300px;
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
     padding: 15px;
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
     width: @control-panel-expanded-width;
+
+    h2 {
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 0.8);
+        margin-top: 0;
+        margin-bottom: 15px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
 
     > .btn-fire,
     > .btn-erase {
@@ -48,6 +57,11 @@
         &:hover {
             color: #A00000;
         }
+
+        &:active,
+        &:focus {
+            color: #A00000;
+        }
     }
 
     > .btn-erase {
@@ -75,10 +89,58 @@
                 .box-shadow(none);
             }
         }
+
+        a:focus {
+            outline: none;
+        }
     }
 
     .bootstrap-select.open > .btn {
         .box-shadow(none);
+    }
+
+    label {
+        color: #555;
+    }
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+
+    .control-group {
+        margin-top: 10px;
+
+        label {
+            float: left;
+            width: 68%;
+            padding-right: 6px;
+            line-height: 34px;
+            text-align: right;
+        }
+        .input-wrapper {
+            float: left;
+            width: 32%;
+            padding-right: 0;
+        }
+    }
+
+    .air-resistance-check {
+        margin-top: 15px;
+    }
+
+    .air-resistance-parameters {
+        display: none;
+        border-top: 1px solid rgba(0, 0, 0, 0.09);
     }
 }
 
