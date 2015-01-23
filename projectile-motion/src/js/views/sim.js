@@ -9,6 +9,8 @@ define(function (require) {
     var ProjectileMotionSimulation = require('models/simulation');
     var ProjectileMotionSceneView  = require('views/scene');
 
+    var Constants = require('constants');
+
     require('nouislider');
     require('bootstrap');
     require('bootstrap-select');
@@ -48,7 +50,8 @@ define(function (require) {
             'click .btn-zoom-in' : 'zoomIn',
             'click .btn-zoom-out' : 'zoomOut',
             'change #air-resistance-check': 'toggleAirResistance',
-            'change #angle' : 'changeAngle'
+            'change #angle' : 'changeAngle',
+            'keyup  #angle' : 'changeAngle'
         },
 
         /**
@@ -64,8 +67,9 @@ define(function (require) {
 
             SimView.prototype.initialize.apply(this, [options]);
 
-            // Initialize the HeatmapView
             this.initSceneView();
+
+            this.listenTo(this.simulation.cannon, 'change:angle', this.angleChanged);
         },
 
         /**
@@ -181,7 +185,27 @@ define(function (require) {
         },
 
         changeAngle: function(event) {
-            this.simulation.cannon.set('angle', parseFloat($(event.target).val()));
+            var angle = parseFloat($(event.target).val())
+            if (angle < Constants.Cannon.MIN_ANGLE) {
+                angle = Constants.Cannon.MIN_ANGLE;
+                $(event.target).val(angle.toFixed(0));
+            }
+            else if (angle > Constants.Cannon.MAX_ANGLE) {
+                angle = Constants.Cannon.MAX_ANGLE;
+                $(event.target).val(angle.toFixed(0));
+            }
+
+            if (!isNaN(angle)) {
+                this.inputLock(function(){
+                    this.simulation.cannon.set('angle', angle);
+                });
+            }
+        },
+
+        angleChanged: function(model, angle) {
+            this.updateLock(function(){
+                this.$('#angle').val(parseInt(angle));
+            });
         }
 
     });

@@ -88,8 +88,16 @@ define(function(require) {
                 
                 var angle = Math.atan2(y, x);
                 var degrees = -angle * RADIANS_TO_DEGREES;
-                if (degrees >= Constants.Cannon.MIN_ANGLE && degrees <= Constants.Cannon.MAX_ANGLE)
-                    this.model.set('angle', degrees);
+                // Catch the case where we go into negatives at the 180deg mark
+                if (degrees >= -180 && degrees < Constants.Cannon.MIN_ANGLE && this.model.get('angle') > 0)
+                    degrees = 360 + degrees;
+
+                // Make sure it's within bounds
+                if (degrees < Constants.Cannon.MIN_ANGLE)
+                    degrees = Constants.Cannon.MIN_ANGLE;
+                if (degrees > Constants.Cannon.MAX_ANGLE)
+                    degrees = Constants.Cannon.MAX_ANGLE;
+                this.model.set('angle', degrees);
             }
         },
 
