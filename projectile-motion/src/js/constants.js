@@ -5,7 +5,7 @@ define(function (require) {
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
     var range     = require('common/math/range');
-
+    var Colors    = require('common/colors/colors');
 
     var Constants = {}; 
 
@@ -17,7 +17,7 @@ define(function (require) {
 
     Constants.GRAVITY = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
-    Constants.GROUND_Y = -0.75;
+    Constants.GROUND_Y = -0.77;
 
 
     /*************************************************************************
@@ -47,7 +47,7 @@ define(function (require) {
     var Cannon = {};
 
     Cannon.START_X = 0;
-    Cannon.START_Y = 5;
+    Cannon.START_Y = 0;
     Cannon.HEIGHT_OFF_GROUND = -Constants.GROUND_Y; // meters
     Cannon.WIDTH = 2; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
@@ -58,9 +58,9 @@ define(function (require) {
 
     var CannonView = {};
 
-    CannonView.PEDESTAL_TOP_COLOR  = SceneView.GROUND_COLOR;
+    CannonView.PEDESTAL_TOP_COLOR  = '#558455'; //Colors.darkenHex(SceneView.GROUND_COLOR, 0.1);
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
-    CannonView.PEDESTAL_WIDTH = 3.4; // meters
+    CannonView.PEDESTAL_WIDTH = 3.6; // meters
     CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = 0.115;
 
     Constants.CannonView = CannonView;

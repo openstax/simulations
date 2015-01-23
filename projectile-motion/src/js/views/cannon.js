@@ -12,8 +12,8 @@ define(function(require) {
 
     var Constants = require('constants');
     var RADIANS_TO_DEGREES = 180 / Math.PI;
-    var GRASS_COLOR    = Colors.parseHex(Constants.CannonView.PEDESTAL_TOP_COLOR);
-    var PEDESTAL_COLOR = Colors.parseHex(Constants.CannonView.PEDESTAL_SIDE_COLOR);
+    var PEDESTAL_TOP_COLOR  = Colors.parseHex(Constants.CannonView.PEDESTAL_TOP_COLOR);
+    var PEDESTAL_SIDE_COLOR = Colors.parseHex(Constants.CannonView.PEDESTAL_SIDE_COLOR);
 
     /**
      * A view that represents a cannon model
@@ -30,14 +30,14 @@ define(function(require) {
             'touchendoutside .cannon': 'dragCannonEnd',
             'mouseupoutside  .cannon': 'dragCannonEnd',
 
-            'touchstart      .carriage': 'dragPedestalStart',
-            'mousedown       .carriage': 'dragPedestalStart',
-            'touchmove       .carriage': 'dragPedestal',
-            'mousemove       .carriage': 'dragPedestal',
-            'touchend        .carriage': 'dragPedestalEnd',
-            'mouseup         .carriage': 'dragPedestalEnd',
-            'touchendoutside .carriage': 'dragPedestalEnd',
-            'mouseupoutside  .carriage': 'dragPedestalEnd',
+            'touchstart      .pedestal': 'dragPedestalStart',
+            'mousedown       .pedestal': 'dragPedestalStart',
+            'touchmove       .pedestal': 'dragPedestal',
+            'mousemove       .pedestal': 'dragPedestal',
+            'touchend        .pedestal': 'dragPedestalEnd',
+            'mouseup         .pedestal': 'dragPedestalEnd',
+            'touchendoutside .pedestal': 'dragPedestalEnd',
+            'mouseupoutside  .pedestal': 'dragPedestalEnd',
         },
 
         /**
@@ -74,21 +74,25 @@ define(function(require) {
             carriage.anchor.y = 1;
             carriage.y = 100;
             carriage.x = -26;
-            carriage.buttonMode = true;
+            
             this.spritesLayer.addChild(carriage);
-            this.carriage = carriage;
 
             // Pedestal
             var pedestal = new PIXI.Graphics();
+            pedestal.buttonMode = true;
             this.displayObject.addChild(pedestal);
             this.pedestal = pedestal;
 
+            var pedestalSide = new PIXI.Graphics();
+            this.displayObject.addChild(pedestalSide);
+            this.pedestalSide = pedestalSide;
+
             // Grass overlay
-            var grass = Assets.createSprite(Assets.Images.GRASS_BLADES);
-            grass.anchor.x = 0.5;
-            grass.anchor.y = 1;
-            grass.y = 106;
-            this.spritesLayer.addChild(grass);
+            // var grass = Assets.createSprite(Assets.Images.GRASS_BLADES);
+            // grass.anchor.x = 0.5;
+            // grass.anchor.y = 1;
+            // grass.y = 106;
+            // this.spritesLayer.addChild(grass);
 
             this.displayObject.addChild(this.spritesLayer);
 
@@ -97,18 +101,36 @@ define(function(require) {
 
         drawPedestal: function() {
             this.pedestal.clear();
-            var pedestalHeight = this.model.get('y') + this.model.get('heightOffGround') - Constants.GROUND_Y;
-            if (pedestalHeight > 0) {
-                var pixelHeight  = Math.abs(this.mvt.modelToViewDeltaY(pedestalHeight));
-                var pixelWidth   = this.mvt.modelToViewDeltaX(CannonView.PEDESTAL_WIDTH);
-                var pixelYOffset = Math.abs(this.mvt.modelToViewDeltaY(this.model.get('heightOffGround')));
-                var pedestal = this.pedestal;
+            this.pedestalSide.clear();
 
-                // Draw grass top
-                pedestal.beginFill(GRASS_COLOR, 1);
-                pedestal.drawEllipse(0, pixelYOffset, pixelWidth / 2, (pixelWidth * CannonView.PEDESTAL_PERSPECTIVE_MODIFIER) / 2);
-                pedestal.endFill();
-            }
+            var pedestalHeight = this.model.get('y') + this.model.get('heightOffGround') + Constants.GROUND_Y;
+            var pixelHeight  = Math.abs(this.mvt.modelToViewDeltaY(pedestalHeight));
+            var pixelWidth   = this.mvt.modelToViewDeltaX(CannonView.PEDESTAL_WIDTH);
+            var pixelYOffset = Math.abs(this.mvt.modelToViewDeltaY(this.model.get('heightOffGround')));
+            var pedestal = this.pedestal;
+            var pedestalSide = this.pedestalSide;
+
+            // Set a minimum height
+            if (pixelHeight < 2)
+                pixelHeight = 2;
+
+            var horizontalRadius = pixelWidth / 2;
+            var verticalRadius = (pixelWidth * CannonView.PEDESTAL_PERSPECTIVE_MODIFIER) / 2;
+
+            console.log(pixelHeight);
+
+            // Draw grass top
+            pedestal.beginFill(PEDESTAL_TOP_COLOR, 1);
+            pedestal.drawEllipse(0, pixelYOffset, horizontalRadius, verticalRadius);
+            pedestal.endFill();
+
+            pedestalSide.beginFill(PEDESTAL_SIDE_COLOR, 1);
+            pedestalSide.moveTo(-horizontalRadius, pixelYOffset)
+            pedestalSide.bezierCurveTo(-horizontalRadius, pixelYOffset + verticalRadius, horizontalRadius, pixelYOffset + verticalRadius, horizontalRadius, pixelYOffset);
+            pedestalSide.lineTo(horizontalRadius, pixelYOffset + pixelHeight);
+            pedestalSide.bezierCurveTo(horizontalRadius, pixelYOffset + pixelHeight + verticalRadius, -horizontalRadius, pixelYOffset + pixelHeight + verticalRadius, -horizontalRadius, pixelYOffset + pixelHeight)
+            pedestalSide.lineTo(-horizontalRadius, pixelYOffset);
+            pedestalSide.endFill();
         },
 
         drawDebugOrigin: function(parent, color) {
