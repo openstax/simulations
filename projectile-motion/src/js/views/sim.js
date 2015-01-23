@@ -174,9 +174,11 @@ define(function (require) {
         toggleAirResistance: function(event) {
             if ($(event.target).is(':checked')) {
                 this.$('.air-resistance-parameters').show();
+                this.simulation.set('airResistanceEnabled', true);
             }
             else {
                 this.$('.air-resistance-parameters').hide();
+                this.simulation.set('airResistanceEnabled', false);
             }
         },
 

@@ -62,6 +62,9 @@ define(function (require) {
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
     CannonView.PEDESTAL_WIDTH = 3.6; // meters
     CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = 0.115;
+    CannonView.AXIS_LINE_COLOR = '#000';
+    CannonView.AXIS_LINE_ALPHA = 0.4;
+    CannonView.AXIS_LINE_WIDTH = 2;
 
     Constants.CannonView = CannonView;
 

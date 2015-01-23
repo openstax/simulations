@@ -94,6 +94,10 @@ define(function(require) {
             // grass.y = 106;
             // this.spritesLayer.addChild(grass);
 
+            // Axes graphics
+            this.axes = new PIXI.Graphics();
+            this.displayObject.addChild(this.axes);
+
             this.displayObject.addChild(this.spritesLayer);
 
             this.updateMVT(this.mvt);
@@ -117,8 +121,6 @@ define(function(require) {
             var horizontalRadius = pixelWidth / 2;
             var verticalRadius = (pixelWidth * CannonView.PEDESTAL_PERSPECTIVE_MODIFIER) / 2;
 
-            console.log(pixelHeight);
-
             // Draw grass top
             pedestal.beginFill(PEDESTAL_TOP_COLOR, 1);
             pedestal.drawEllipse(0, pixelYOffset, horizontalRadius, verticalRadius);
@@ -133,19 +135,25 @@ define(function(require) {
             pedestalSide.endFill();
         },
 
-        drawDebugOrigin: function(parent, color) {
-            var origin = new PIXI.Graphics();
-            origin.beginFill(color !== undefined ? color : 0x0000FF, 1);
-            origin.drawCircle(0, 0, 3);
-            origin.endFill();
-            if (parent === undefined)
-                this.displayObject.addChild(origin);
-            else
-                parent.addChild(origin);
+        drawAxes: function() {
+            var width  = 2000; // Arbitrarily large stage sizes. displayObject.stage.width wasn't giving correct values
+            var height = 1000;
+
+            var global = this.displayObject.position;
+            var left   = Math.ceil(0 - global.x);
+            var right  = Math.ceil(width - global.x);
+            var top    = Math.ceil(0 - global.y);
+            var bottom = Math.ceil(height - global.y);
+            
+            this.axes.clear();
+            this.axes.lineStyle(CannonView.AXIS_LINE_WIDTH, CannonView.AXIS_LINE_COLOR, CannonView.AXIS_LINE_ALPHA);
+            this.axes.moveTo(left, 0);
+            this.axes.lineTo(right, 0);
+            this.axes.moveTo(0, top);
+            this.axes.lineTo(0, bottom);
         },
 
         dragCannonStart: function(data) {
-            //this.dragOffset = data.getLocalPosition(this.cannon, this._dragOffset);
             this.draggingCannon = true;
         },
 
@@ -192,6 +200,7 @@ define(function(require) {
 
                 this.updatePosition();
                 this.drawPedestal();
+                this.drawAxes();
             }
         },
 
@@ -219,6 +228,7 @@ define(function(require) {
 
             this.updatePosition();
             this.drawPedestal();
+            this.drawAxes();
         }
 
     }, Constants.CannonView);
