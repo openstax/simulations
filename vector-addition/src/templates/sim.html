@@ -4,19 +4,19 @@
     <div class="sim-values">
       <div class="col-md-3">
        <label>|R|</label>
-       <input type="text" class="form-control"/>
+       <input type="text" class="form-control" readonly/>
       </div>
       <div class="col-md-3">
-        <label>0</label>
-        <input type="text" class="form-control"/>
+        <label>&theta;</label>
+        <input type="text" class="form-control" readonly/>
       </div>
       <div class="col-md-3">
         <label>R<sub>x</sub></label>
-        <input type="text" class="form-control"/>
+        <input type="text" class="form-control" readonly/>
       </div>
       <div class="col-md-3">
         <label>R<sub>y</sub></label>
-        <input type="text" class="form-control"/>
+        <input type="text" class="form-control" readonly/>
       </div>
     </div>
     <div class="sim-controls">
@@ -36,7 +36,7 @@
       </div>
     </div>
       <div class="checkbox">
-        <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
+        <div class="checkbox"><input type="checkbox" id="show-grid" <% if (showGrid) { %>'checked="checked" <% } %>><label for="show-grid">Show Grid</label>
         </div>
     </div>
 <input type="submit" class="btn" value="Clear All"/>
