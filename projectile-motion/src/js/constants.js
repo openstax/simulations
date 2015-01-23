@@ -51,7 +51,7 @@ define(function (require) {
     Cannon.HEIGHT_OFF_GROUND = 1; // meters
     Cannon.WIDTH = 2; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
-    Cannon.MIN_ANGLE = -30;
+    Cannon.MIN_ANGLE = -28; // Don't want it moving into its own shadow. If we need to allow them to point it down more, I'll have to separate that shadow layer in the image.
     Cannon.MAX_ANGLE = 197;
 
     Constants.Cannon = Cannon;

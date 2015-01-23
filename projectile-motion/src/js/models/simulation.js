@@ -17,6 +17,15 @@ define(function (require, exports, module) {
      * Wraps the update function in 
      */
     var ProjectileMotionSimulation = Simulation.extend({
+
+        defaults: {
+            initialSpeed: 18, // m/s
+            mass: 2,          // kg
+            diameter: 0.1,    // m
+            airResistanceEnabled: false, // Note: These air resistance variables need to be passed in to the
+            dragCoefficient: 1,          //       trajectory's update function because they can be changed
+            altitude: 0                  //       mid-flight
+        },
         
         /**
          * Initialization code for moving man simulation models

@@ -104,7 +104,11 @@ define(function (require) {
          * Renders page content. Should be overriden by child classes
          */
         renderScaffolding: function() {
-            this.$el.html(this.template());
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation
+            };
+            this.$el.html(this.template(data));
             this.$('select').selectpicker();
         },
 
