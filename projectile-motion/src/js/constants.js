@@ -51,6 +51,8 @@ define(function (require) {
     Cannon.HEIGHT_OFF_GROUND = 1; // meters
     Cannon.WIDTH = 2; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
+    Cannon.MIN_ANGLE = -30;
+    Cannon.MAX_ANGLE = 197;
 
     Constants.Cannon = Cannon;
 

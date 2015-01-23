@@ -3,15 +3,30 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
     
     var PixiView = require('common/pixi/view');
 
     var Assets = require('assets');
 
+    var Constants = require('constants');
+    var RADIANS_TO_DEGREES = 180 / Math.PI;
+
     /**
-     * A view that represents an element model
+     * A view that represents a cannon model
      */
     var CannonView = PixiView.extend({
+
+        events: {
+            'touchstart      .cannon': 'dragCannonStart',
+            'mousedown       .cannon': 'dragCannonStart',
+            'touchmove       .cannon': 'dragCannon',
+            'mousemove       .cannon': 'dragCannon',
+            'touchend        .cannon': 'dragCannonEnd',
+            'mouseup         .cannon': 'dragCannonEnd',
+            'touchendoutside .cannon': 'dragCannonEnd',
+            'mouseupoutside  .cannon': 'dragCannonEnd',
+        },
 
         /**
          *
@@ -20,6 +35,8 @@ define(function(require) {
             this.mvt = options.mvt;
 
             this.initGraphics();
+
+            this._dragOffset = new PIXI.Point();
 
             // Listen to angle because the user can change that from the control panel,
             //   but don't listen to x or y because those will only ever be changed
@@ -33,6 +50,7 @@ define(function(require) {
             var cannon = Assets.createSprite(Assets.Images.CANNON);
             cannon.anchor.x = 0.34;
             cannon.anchor.y = 0.5;
+            cannon.buttonMode = true;
             this.displayObject.addChild(cannon);
             this.cannon = cannon;
 
@@ -56,6 +74,27 @@ define(function(require) {
                 this.displayObject.addChild(origin);
             else
                 parent.addChild(origin);
+        },
+
+        dragCannonStart: function(data) {
+            //this.dragOffset = data.getLocalPosition(this.cannon, this._dragOffset);
+            this.draggingCannon = true;
+        },
+
+        dragCannon: function(data) {
+            if (this.draggingCannon) {
+                var x = data.global.x - this.displayObject.x;
+                var y = data.global.y - this.displayObject.y;
+                
+                var angle = Math.atan2(y, x);
+                var degrees = -angle * RADIANS_TO_DEGREES;
+                if (degrees >= Constants.Cannon.MIN_ANGLE && degrees <= Constants.Cannon.MAX_ANGLE)
+                    this.model.set('angle', degrees);
+            }
+        },
+
+        dragCannonEnd: function(data) {
+            this.draggingCannon = false;
         },
 
         updateAngle: function(cannon, angleInDegrees) {
