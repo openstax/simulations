@@ -82,42 +82,43 @@ define(function(require) {
           gridOffset = Constants.GRID_OFFSET,
           nbrYLines = Math.round(canWidth/gridSize),
           nbrXLines = Math.round(canHeight/gridSize),
-          lines = new PIXI.Graphics();
-          lines.lineStyle(1, 0xFFDD00);
-          lines.moveTo(0,0);
+          grid = new PIXI.Graphics();
+          grid.lineStyle(1, 0xFFDD00);
+          grid.moveTo(0,0);
 
           for (var i = -gridOffset; i < nbrXLines + gridOffset; i++) {
             if ((i+2)%5 == 0) {
-              lines.lineStyle(3, 0xFFDD00);
+              grid.lineStyle(3, 0xFFDD00);
             } else {
-              lines.lineStyle(1, 0xFFDD00);
+              grid.lineStyle(1, 0xFFDD00);
             }
 
-            lines.moveTo((startX - gridOffset) *gridSize, i*gridSize);
-            lines.lineTo((nbrYLines + gridOffset) *gridSize, i*gridSize);
+            grid.moveTo((startX - gridOffset) *gridSize, i*gridSize);
+            grid.lineTo((nbrYLines + gridOffset) *gridSize, i*gridSize);
           }
 
           for (var j = -gridOffset; j < nbrYLines + gridOffset; j++) {
             if (j%5 == 0) {
-              lines.lineStyle(3, 0xFFDD00);
+              grid.lineStyle(3, 0xFFDD00);
             } else {
-              lines.lineStyle(1, 0xFFDD00);
+              grid.lineStyle(1, 0xFFDD00);
             }
 
-            lines.moveTo(j*gridSize, (startY - gridOffset) *gridSize);
-            lines.lineTo(j*gridSize, (nbrXLines + gridOffset) *gridSize);
+            grid.moveTo(j*gridSize, (startY - gridOffset) *gridSize);
+            grid.lineTo(j*gridSize, (nbrXLines + gridOffset) *gridSize);
           }
 
-          lines.visible = false;
-          this.stage.addChild(lines);
+          grid.visible = false;
+          this.stage.addChild(grid);
+          this.grid = grid;
         },
 
-        toggleGrid: function(lines) {
+        toggleGrid: function() {
           if (this.simulation.get('showGrid')) {
-            this.stage.children[0].visible = true;
+            this.grid.visible = true;
           }
           else {
-            this.stage.children[0].visible = false;
+            this.grid.visible = false;
           }
         }
 
