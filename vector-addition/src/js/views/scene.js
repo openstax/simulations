@@ -63,25 +63,39 @@ define(function(require) {
         },
 
         drawGrid: function() {
-          var canWidth = $('.scene-view').width(),
-           canHeight = $('.scene-view').height(),
-           cellWidth = 20,
-           cellHeight = 20,
-           latitude = Math.round(canWidth/cellWidth),
-           longitude = Math.round(canWidth/cellHeight),
-           lines = new PIXI.Graphics();
-           lines.lineStyle(1, 0xCCCCCC);
+          var canvas = $('.scene-view'),
+          startX = 0,
+          startY = 0,
+          canWidth = canvas.width(),
+          canHeight = canvas.height(),
+          gridSize = 10,
+          gridOffset = 5,
+          nbrYLines = Math.round(canWidth/gridSize),
+          nbrXLines = Math.round(canHeight/gridSize),
+          lines = new PIXI.Graphics();
+          lines.lineStyle(1, 0xFFDD00);
+          lines.moveTo(0,0);
 
-           //Latitude
-          for (var j = 1; j <= latitude; j++) {
-            lines.moveTo(0, cellWidth * j - 0.5);
-            lines.lineTo(canWidth, cellHeight * j - 0.5);
+          for (var i = -gridOffset; i < nbrXLines + gridOffset; i++) {
+            if ((i+2)%5 == 0) {
+              lines.lineStyle(3, 0xFFDD00);
+            } else {
+              lines.lineStyle(1, 0xFFDD00);
+            }
+
+            lines.moveTo((startX - gridOffset) *gridSize, i*gridSize);
+            lines.lineTo((nbrYLines + gridOffset) *gridSize, i*gridSize);
           }
 
-          //Longitude
-          for (var i = 1; i <= longitude; i++) {
-            lines.moveTo(cellWidth * i - 0.5, 0);
-            lines.lineTo(cellWidth * i - 0.5, canHeight);
+          for (var j = -gridOffset; j < nbrYLines + gridOffset; j++) {
+            if (j%5 == 0) {
+              lines.lineStyle(3, 0xFFDD00);
+            } else {
+              lines.lineStyle(1, 0xFFDD00);
+            }
+
+            lines.moveTo(j*gridSize, (startY - gridOffset) *gridSize);
+            lines.lineTo(j*gridSize, (nbrXLines + gridOffset) *gridSize);
           }
 
           lines.visible = false;
@@ -96,7 +110,7 @@ define(function(require) {
             this.stage.children[0].visible = false;
           }
         }
-        
+
     });
 
     return VectorAdditionSceneView;
