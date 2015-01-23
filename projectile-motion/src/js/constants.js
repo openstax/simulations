@@ -47,7 +47,7 @@ define(function (require) {
     var Cannon = {};
 
     Cannon.START_X = 0;
-    Cannon.START_Y = 0;
+    Cannon.START_Y = 10;
     Cannon.HEIGHT_OFF_GROUND = 1; // meters
     Cannon.WIDTH = 2; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
@@ -55,6 +55,15 @@ define(function (require) {
     Cannon.MAX_ANGLE = 197;
 
     Constants.Cannon = Cannon;
+
+    var CannonView = {};
+
+    CannonView.PEDESTAL_TOP_COLOR  = SceneView.GROUND_COLOR;
+    CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
+    CannonView.PEDESTAL_WIDTH = 3.2; // meters
+    CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = 0.115;
+
+    Constants.CannonView = CannonView;
 
     return Constants;
 });

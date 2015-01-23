@@ -103,7 +103,11 @@ define(function(require) {
             var zoom = this.zoomScale * 1.5;
             if (zoom < Constants.SceneView.MAX_SCALE) {
                 this.zoomScale = zoom;
-                this.mvt.scale(zoom);
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
                 this.cannonView.updateMVT(this.mvt);
             }
         },
@@ -112,7 +116,11 @@ define(function(require) {
             var zoom = this.zoomScale / 1.5;
             if (zoom > Constants.SceneView.MIN_SCALE) {
                 this.zoomScale = zoom;
-                this.mvt.scale(zoom);
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
                 this.cannonView.updateMVT(this.mvt);
             }
         }
