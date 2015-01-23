@@ -13,10 +13,10 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var Constants = {}; 
+    var Constants = {};
 
-    Constants.GRAVITY = 9.8; // m/s^2
-    Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
+    Constants.GRID_SIZE = 15;
+    Constants.GRID_OFFSET = 10;
 
 
     return Constants;

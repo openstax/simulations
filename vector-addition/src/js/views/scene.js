@@ -5,14 +5,10 @@ define(function(require) {
     var PIXI = require('pixi');
     var Vector2 = require('common/math/vector2'); //AMW Not sure if I need this yet, may remove.
     var Rectangle = require('common/math/rectangle'); //AMW Not sure if I need this yet, may remove.
-
     var ModelViewTransform = require('common/math/model-view-transform'); //AMW Not sure if I need this yet, may remove.
     var PixiSceneView = require('common/pixi/view/scene');
-
     var Assets = require('assets');
-
-    // Constants
-    var Constants = require('constants'); //AMW Not sure if I need this yet, may remove.
+    var Constants = require('constants');
 
     var VectorAdditionSceneView = PixiSceneView.extend({
 
@@ -28,13 +24,8 @@ define(function(require) {
 
         initGraphics: function() {
           this.drawGrid();
-          //X
-          this.drawLines(0, 550, 1024, 550);
-          this.drawText('x', 750, 560);
-          // Y
-          this.drawLines(75, 0, 75, 650);
-          this.drawText('y', 50, 20);
-          //Sprites
+          this.drawXYLines();
+          this.drawXYText();
           this.addSprite(Assets.createSprite(Assets.Images.Vector_Bin), 835, 10);
           this.addSprite(Assets.createSprite(Assets.Images.Trash_Can), 845, 510);
         },
@@ -45,21 +36,40 @@ define(function(require) {
           this.stage.addChild(asset);
         },
 
-        drawLines: function(startX, startY, endX, endY) {
-          var line = new PIXI.Graphics();
-          line.lineStyle(2, 0x000000);
-          line.moveTo(startX, startY);
-          line.lineTo(endX, endY);
-          line.endFill();
+        drawXYLines: function() {
+          var canvas = $('.scene-view'),
+          canWidth = canvas.width(),
+          canHeight = canvas.height(),
+          gridSize = Constants.GRID_SIZE,
+          gridOffset = Constants.GRID_OFFSET,
+          nbrYLines = Math.round(canWidth/gridSize),
+          nbrXLines = Math.round(canHeight/gridSize),
+          line = new PIXI.Graphics();
+          line.lineStyle(2,0x666666);
+          //x-axis
+          line.moveTo(-gridOffset *gridSize, (nbrXLines- gridOffset) *gridSize);
+          line.lineTo((nbrYLines+gridOffset) *gridSize, (nbrXLines - gridOffset) *gridSize);
+          //y-axis
+          line.moveTo(5 *gridSize, - gridOffset *gridSize);
+          line.lineTo(5 *gridSize, (nbrXLines + gridOffset) *gridSize);
           this.stage.addChild(line);
         },
 
-        drawText: function(displayedText, startX, startY) {
-          var textStyles = { font: '25px arial', color: 'black' };
-          var text = new PIXI.Text(displayedText, textStyles);
-          text.x = startX;
-          text.y = startY;
-          this.stage.addChild(text);
+        drawXYText: function(displayedText, x, y) {
+          var canvas = $('.scene-view'),
+          canWidth = canvas.width(),
+          canHeight = canvas.height(),
+          gridSize = Constants.GRID_SIZE,
+          textStyles = { font: '25px arial', color: 'black' },
+          textX = new PIXI.Text('x', textStyles),
+          textY = new PIXI.Text('y', textStyles);
+          textX.x = 0.8 *canWidth;
+          textX.y = canHeight - 9 *gridSize;
+          textY.x = 3 *gridSize;
+          textY.y = 5 *gridSize;
+
+          this.stage.addChild(textX);
+          this.stage.addChild(textY);
         },
 
         drawGrid: function() {
@@ -68,8 +78,8 @@ define(function(require) {
           startY = 0,
           canWidth = canvas.width(),
           canHeight = canvas.height(),
-          gridSize = 10,
-          gridOffset = 5,
+          gridSize = Constants.GRID_SIZE,
+          gridOffset = Constants.GRID_OFFSET,
           nbrYLines = Math.round(canWidth/gridSize),
           nbrXLines = Math.round(canHeight/gridSize),
           lines = new PIXI.Graphics();
