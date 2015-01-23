@@ -332,7 +332,7 @@ define(function (require, exports, module) {
                     otherElement = this.movableElements[j];
 
                     if (element === otherElement)
-                        return;
+                        break;
 
                     if (element.getThermalContactArea().getThermalContactLength(otherElement.getThermalContactArea()) > 0) {
                         contactWithOtherMovableElement = true;
