@@ -1,16 +1,16 @@
 define(function (require, exports, module) {
 
-    'use strict';
-    
-    var Simulation = require('common/simulation/simulation');
+  'use strict';
 
-    var VectorAdditionSimulation = Simulation.extend({
+  var Simulation = require('common/simulation/simulation');
 
-      defaults: {
-        showGrid: false
-      }
+  var VectorAdditionSimulation = Simulation.extend({
 
-    });
+    defaults: {
+      showGrid: false
+    }
 
-    return VectorAdditionSimulation;
+  });
+
+  return VectorAdditionSimulation;
 });
