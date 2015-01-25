@@ -36,7 +36,7 @@ define(function(require) {
       textX = new PIXI.Text('x', textStyles),
       textY = new PIXI.Text('y', textStyles),
       line = new PIXI.Graphics();
-      
+
       line.lineStyle(2,0x666666);
       //x-axis
       line.moveTo(-gridOffset *gridSize, (nbrXLines- gridOffset) *gridSize);

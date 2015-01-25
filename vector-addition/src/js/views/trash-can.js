@@ -20,7 +20,7 @@ define(function(require) {
       this.canContainer = new PIXI.DisplayObjectContainer();
       var can = Assets.createSprite(Assets.Images.Trash_Can);
 
-      can.x = 845;
+      can.x = $('.scene-view').width() - 125;
       can.y = 510;
       can.buttonMode = true;
       this.canContainer.addChild(can);

@@ -90,6 +90,7 @@ define(function (require) {
             this.simulation.set('showGrid', false);
           }
         }
+
     });
 
     return VectorAdditionSimView;

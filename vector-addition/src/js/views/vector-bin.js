@@ -26,7 +26,7 @@ define(function(require) {
       this.binContainer = new PIXI.DisplayObjectContainer();
       var bin = Assets.createSprite(Assets.Images.Vector_Bin);
 
-      bin.x = 835;
+      bin.x = $('.scene-view').width() - 125;
       bin.y = 10;
       bin.buttonMode = true;
       this.binContainer.addChild(bin);
@@ -41,7 +41,12 @@ define(function(require) {
       var arrowHead = new PIXI.Graphics(),
       arrowTail = new PIXI.Graphics(),
       fillColor = '0xFF0000',
-      positionX = $('.scene-view').width() - 150,
+      //Canvas width - width of vector bin image plus a little extra
+      max = $('.scene-view').width() - 150,
+      //Minimum x position of arrow
+      min = 800,
+      //Generating a random position in the min and max range
+      positionX = Math.random() * (max - min) + min,
       positionY = positionX - 750;
 
       arrowHead.beginFill(fillColor);
