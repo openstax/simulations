@@ -9,7 +9,8 @@ define(function (require) {
     Assets.Images = {
         CANNON:          'cannon.png',
         CANNON_CARRIAGE: 'cannon-carriage.png',
-        FLAME_PARTICLE:  'flame-particle.png'
+        FLAME_PARTICLE:  'flame-particle.png',
+        SMOKE_PARTICLE:  'smoke-particle.png'
     };
 
     Assets.SpriteSheets = {};

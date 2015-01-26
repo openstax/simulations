@@ -70,6 +70,15 @@ define(function (require) {
     CannonView.NUM_SMOKE_PARTICLES = 500;
 
     CannonView.SMOKE_PARTICLE_COLOR = '#ddd';
+    CannonView.SMOKE_PARTICLE_RADIUS_RANGE = range({ min: 20, max: 70 });
+    CannonView.SMOKE_PARTICLE_SPREAD_ANGLE = Math.PI / 12;
+    CannonView.SMOKE_PARTICLE_SPREAD_ANGLE_RANGE = range({ min: -CannonView.SMOKE_PARTICLE_SPREAD_ANGLE / 2, max: CannonView.SMOKE_PARTICLE_SPREAD_ANGLE / 2 }); // radians
+    CannonView.SMOKE_PARTICLE_VELOCITY_RANGE = range({ min: 500, max: 800 });
+    CannonView.SMOKE_PARTICLE_LIFE_SPAN = range({ min: 0.5, max: 1.0 });
+    CannonView.SMOKE_PARTICLE_EMISSION_DURATION = 0.28;
+    CannonView.SMOKE_PARTICLE_EMISSION_RATE = 400;
+    CannonView.SMOKE_PARTICLE_ALPHA = 0.5;
+    CannonView.SMOKE_PARTICLE_FADE_POINT = 0.6;
 
     CannonView.FLAME_PARTICLE_INSIDE_COLOR = '#FFD500';
     CannonView.FLAME_PARTICLE_OUTSIDE_COLOR = '#C51010';

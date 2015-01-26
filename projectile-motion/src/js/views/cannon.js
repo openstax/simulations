@@ -132,7 +132,7 @@ define(function(require) {
             this.spritesLayer.addChildAt(particleContainer, 0);
 
             var flameParticleTexture = Assets.Texture(Assets.Images.FLAME_PARTICLE);
-            var smokeParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, 20, CannonView.SMOKE_PARTICLE_COLOR);
+            var smokeParticleTexture = Assets.Texture(Assets.Images.SMOKE_PARTICLE);//PIXI.Texture.generateRoundParticleTexture(0, 20, CannonView.SMOKE_PARTICLE_COLOR);
 
             this.activeFlameParticles = [];
             this.dormantFlameParticles = [];
@@ -306,20 +306,21 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             if (!paused) {
                 this.time += deltaTime;
-                this.updateFireParticles(this.time, deltaTime);
+                this.updateFlameParticles(this.time, deltaTime);
                 this.updateSmokeParticles(this.time, deltaTime);
             }
         },
 
         cannonFired: function() {
-            this.timeToStopFireEmission = this.time + CannonView.FLAME_PARTICLE_EMISSION_DURATION;
+            this.timeToStopFlameEmission = this.time + CannonView.FLAME_PARTICLE_EMISSION_DURATION;
+            this.timeToStopSmokeEmission = this.time + CannonView.SMOKE_PARTICLE_EMISSION_DURATION;
         },
 
-        updateFireParticles: function(time, deltaTime) {
-            if (time < this.timeToStopFireEmission) {
+        updateFlameParticles: function(time, deltaTime) {
+            if (time < this.timeToStopFlameEmission) {
                 var numParticlesToEmit = Math.floor(CannonView.FLAME_PARTICLE_EMISSION_RATE * deltaTime);
                 while (numParticlesToEmit > 0) {
-                    this.emitFireParticle();
+                    this.emitFlameParticle();
                     numParticlesToEmit--;
                 }
             }
@@ -349,7 +350,6 @@ define(function(require) {
                 // Grow particles
                 radius = CannonView.FLAME_PARTICLE_RADIUS_RANGE.lerp(Math.min(percentLifeSpent * 2, 1));
                 particle.scale.x = particle.scale.y = radius / (particle.texture.width / 2);
-                console.log( particle.scale.x);
 
                 particle.rotation += -20 * deltaTime;
 
@@ -360,10 +360,49 @@ define(function(require) {
         },
 
         updateSmokeParticles: function(time, deltaTime) {
+            if (time < this.timeToStopSmokeEmission) {
+                var numParticlesToEmit = Math.floor(CannonView.SMOKE_PARTICLE_EMISSION_RATE * deltaTime);
+                while (numParticlesToEmit > 0) {
+                    this.emitSmokeParticle();
+                    numParticlesToEmit--;
+                }
+            }
 
+            var particle;
+            var percentLifeLeft;
+            var percentLifeSpent;
+            var radius;
+            for (var i = this.activeSmokeParticles.length - 1; i >= 0; i--) {
+                particle = this.activeSmokeParticles[i];
+
+                // Clean up dead particles
+                if (time >= particle.lifeEndsAt) {
+                    particle.visible = false;
+                    this.activeSmokeParticles.splice(i, 1);
+                    this.dormantSmokeParticles.push(particle);
+                }
+
+                // Move particles
+                particle.x += particle.velocity.x * deltaTime;
+                particle.y += particle.velocity.y * deltaTime;
+
+                // To use in linear interpolation functions
+                percentLifeLeft = ((particle.lifeEndsAt - time) / particle.timeToLive);
+                percentLifeSpent = 1 - percentLifeLeft;
+
+                // Grow particles
+                radius = CannonView.SMOKE_PARTICLE_RADIUS_RANGE.lerp(Math.min(percentLifeSpent * 2, 1));
+                particle.scale.x = particle.scale.y = radius / (particle.texture.width / 2);
+
+                particle.rotation += -1 * deltaTime;
+
+                // Fade particles out when they reach the end of their lives
+                if (percentLifeLeft < (1 - CannonView.SMOKE_PARTICLE_FADE_POINT))
+                    particle.alpha = (percentLifeLeft / (1 - CannonView.SMOKE_PARTICLE_FADE_POINT)) * CannonView.SMOKE_PARTICLE_ALPHA;  
+            }
         },
 
-        emitFireParticle: function() {
+        emitFlameParticle: function() {
             if (!this.dormantFlameParticles.length)
                 return null;
 
@@ -393,7 +432,40 @@ define(function(require) {
             }
 
             return particle;
+        },
+
+        emitSmokeParticle: function() {
+            if (!this.dormantSmokeParticles.length)
+                return null;
+
+            var particle = this.dormantSmokeParticles.pop();
+            if (particle) {
+                // Get the starting position of the particle if the cannon were not rotated.
+                //   Then rotate that point around the cannon's rotational axis to get the 
+                //   actual starting point.
+                var initialPosition = this._initialPosition
+                    .set(this.flameParticleStartX, this.flameParticleStartYRange.random())
+                    .rotate(this.model.firingAngle());
+
+                var scale = CannonView.SMOKE_PARTICLE_RADIUS_RANGE.min / (particle.texture.width / 2);
+                var angle = this.model.firingAngle() + CannonView.SMOKE_PARTICLE_SPREAD_ANGLE_RANGE.random();
+
+                particle.x = initialPosition.x;
+                particle.y = initialPosition.y;
+                particle.scale.x = particle.scale.y = scale;
+                particle.alpha = CannonView.SMOKE_PARTICLE_ALPHA;
+                particle.visible = true;
+                particle.timeToLive = CannonView.SMOKE_PARTICLE_LIFE_SPAN.random();
+                particle.lifeEndsAt = this.time + particle.timeToLive;
+                particle.velocity.set(CannonView.SMOKE_PARTICLE_VELOCITY_RANGE.random(), 0).rotate(angle);
+                particle.rotation = Math.random() * Math.PI;
+
+                this.activeSmokeParticles.push(particle);
+            }
+
+            return particle;
         }
+
 
     }, Constants.CannonView);
 
