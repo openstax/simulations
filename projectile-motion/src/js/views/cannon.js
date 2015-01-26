@@ -131,7 +131,7 @@ define(function(require) {
             var particleContainer = new PIXI.SpriteBatch();
             this.spritesLayer.addChildAt(particleContainer, 0);
 
-            var flameParticleTexture = PIXI.Texture.generateRoundParticleTexture(CannonView.FLAME_PARTICLE_END_RADIUS * 0.6, CannonView.FLAME_PARTICLE_END_RADIUS, CannonView.FLAME_PARTICLE_INSIDE_COLOR, CannonView.FLAME_PARTICLE_OUTSIDE_COLOR);//Assets.Texture(Assets.Images.FLAME_PARTICLE);
+            var flameParticleTexture = Assets.Texture(Assets.Images.FLAME_PARTICLE);
             var smokeParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, 20, CannonView.SMOKE_PARTICLE_COLOR);
 
             this.activeFlameParticles = [];
@@ -167,11 +167,11 @@ define(function(require) {
 
             // Range of a particle's starting y before rotation
             this.flameParticleStartYRange = range({
-                min: -CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 + CannonView.FLAME_PARTICLE_START_RADIUS,
-                max:  CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 - CannonView.FLAME_PARTICLE_START_RADIUS
+                min: -CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 + CannonView.FLAME_PARTICLE_RADIUS_RANGE.min,
+                max:  CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 - CannonView.FLAME_PARTICLE_RADIUS_RANGE.min
             });
             // End of cannon relative to origin minus the particle radius so it starts inside the bore
-            this.flameParticleStartX = this.cannon.width * (1 - this.cannon.anchor.x) - CannonView.FLAME_PARTICLE_START_RADIUS; 
+            this.flameParticleStartX = this.cannon.width * (1 - this.cannon.anchor.x) - CannonView.FLAME_PARTICLE_RADIUS_RANGE.min; 
         },        
 
 
@@ -317,38 +317,45 @@ define(function(require) {
 
         updateFireParticles: function(time, deltaTime) {
             if (time < this.timeToStopFireEmission) {
-                console.log(this.dormantFlameParticles.length);
                 var numParticlesToEmit = Math.floor(CannonView.FLAME_PARTICLE_EMISSION_RATE * deltaTime);
                 while (numParticlesToEmit > 0) {
                     this.emitFireParticle();
                     numParticlesToEmit--;
                 }
-
-                var particle;
-                for (var i = this.activeFlameParticles.length - 1; i >= 0; i--) {
-                    particle = this.activeFlameParticles[i];
-
-                    particle.x += particle.velocity.x * deltaTime;
-                    particle.y += particle.velocity.y * deltaTime;
-
-                    particle.distanceTraveled += particle.velocity.length() * deltaTime;
-
-                    if (particle.distanceTraveled > CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE) {
-                        particle.alpha = 1 - (particle.distanceTraveled - CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE) / 10;
-                        if (particle.alpha <= 0) {
-                            particle.alpha = 0;
-                            this.activeFlameParticles.splice(i, 1);
-                            this.dormantFlameParticles.push(particle);
-                        }
-                    }
-                }
             }
-            else if (this.activeFlameParticles.length) {
-                for (var i = this.activeFlameParticles.length - 1; i >= 0; i--) {
-                    this.activeFlameParticles[i].visible = false;
-                    this.dormantFlameParticles.push(this.activeFlameParticles[i]);
+
+            var particle;
+            var percentLifeLeft;
+            var percentLifeSpent;
+            var radius;
+            for (var i = this.activeFlameParticles.length - 1; i >= 0; i--) {
+                particle = this.activeFlameParticles[i];
+
+                // Clean up dead particles
+                if (time >= particle.lifeEndsAt) {
+                    particle.visible = false;
                     this.activeFlameParticles.splice(i, 1);
+                    this.dormantFlameParticles.push(particle);
                 }
+
+                // Move particles
+                particle.x += particle.velocity.x * deltaTime;
+                particle.y += particle.velocity.y * deltaTime;
+
+                // To use in linear interpolation functions
+                percentLifeLeft = ((particle.lifeEndsAt - time) / particle.timeToLive);
+                percentLifeSpent = 1 - percentLifeLeft;
+
+                // Grow particles
+                radius = CannonView.FLAME_PARTICLE_RADIUS_RANGE.lerp(Math.min(percentLifeSpent * 2, 1));
+                particle.scale.x = particle.scale.y = radius / (particle.texture.width / 2);
+                console.log( particle.scale.x);
+
+                particle.rotation += -20 * deltaTime;
+
+                // Fade particles out when they reach the end of their lives
+                if (percentLifeLeft < (1 - CannonView.FLAME_PARTICLE_FADE_POINT))
+                    particle.alpha = (percentLifeLeft / (1 - CannonView.FLAME_PARTICLE_FADE_POINT));  
             }
         },
 
@@ -369,7 +376,7 @@ define(function(require) {
                     .set(this.flameParticleStartX, this.flameParticleStartYRange.random())
                     .rotate(this.model.firingAngle());
 
-                var scale = CannonView.FLAME_PARTICLE_START_RADIUS / (particle.texture.width / 2);
+                var scale = CannonView.FLAME_PARTICLE_RADIUS_RANGE.min / (particle.texture.width / 2);
                 var angle = this.model.firingAngle() + CannonView.FLAME_PARTICLE_SPREAD_ANGLE_RANGE.random();
 
                 particle.x = initialPosition.x;
@@ -377,8 +384,10 @@ define(function(require) {
                 particle.scale.x = particle.scale.y = scale;
                 particle.alpha = 1;
                 particle.visible = true;
-                particle.velocity.set(CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE, 0).rotate(angle);
-                particle.distanceTraveled = 0;
+                particle.timeToLive = CannonView.FLAME_PARTICLE_LIFE_SPAN.random();
+                particle.lifeEndsAt = this.time + particle.timeToLive;
+                particle.velocity.set(CannonView.FLAME_PARTICLE_VELOCITY_RANGE.random(), 0).rotate(angle);
+                particle.rotation = Math.random() * Math.PI;
 
                 this.activeFlameParticles.push(particle);    
             }
