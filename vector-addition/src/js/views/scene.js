@@ -1,46 +1,87 @@
 define(function(require) {
 
-    'use strict';
+  'use strict';
 
-    var PIXI      = require('pixi');
-    var Vector2   = require('common/math/vector2'); //AMW Not sure if I need this yet, may remove.
-    var Rectangle = require('common/math/rectangle'); //AMW Not sure if I need this yet, may remove.
+  var PIXI = require('pixi');
+  var PixiSceneView = require('common/pixi/view/scene');
+  var VectorBinView = require('views/vector-bin');
+  var GridView = require('views/grid');
+  var TrashCanView = require('views/trash-can');
+  var Assets = require('assets');
+  var Constants = require('constants');
 
-    var ModelViewTransform   = require('common/math/model-view-transform'); //AMW Not sure if I need this yet, may remove.
-    var PixiSceneView        = require('common/pixi/view/scene');
+  var VectorAdditionSceneView = PixiSceneView.extend({
 
-    var Assets = require('assets');
+    initialize: function(options) {
+      PixiSceneView.prototype.initialize.apply(this, arguments);
+      this.views = [];
+    },
 
-    // Constants
-    var Constants = require('constants'); //AMW Not sure if I need this yet, may remove.
+    initGraphics: function() {
+      this.initGridView();
+      this.drawXY();
+      this.initVectorBin();
+      this.initTrashCan();
+    },
 
-    var VectorAdditionSceneView = PixiSceneView.extend({
+    drawXY: function() {
+      var canvas = $('.scene-view'),
+      canWidth = canvas.width(),
+      canHeight = canvas.height(),
+      gridSize = Constants.GRID_SIZE,
+      gridOffset = Constants.GRID_OFFSET,
+      nbrYLines = Math.round(canWidth/gridSize),
+      nbrXLines = Math.round(canHeight/gridSize),
+      textStyles = { font: '25px arial', color: 'black' },
+      textX = new PIXI.Text('x', textStyles),
+      textY = new PIXI.Text('y', textStyles),
+      line = new PIXI.Graphics();
 
-        events: {
+      line.lineStyle(2,0x666666);
+      //x-axis
+      line.moveTo(-gridOffset *gridSize, (nbrXLines- gridOffset) *gridSize);
+      line.lineTo((nbrYLines+gridOffset) *gridSize, (nbrXLines - gridOffset) *gridSize);
+      //y-axis
+      line.moveTo(5 *gridSize, - gridOffset *gridSize);
+      line.lineTo(5 *gridSize, (nbrXLines + gridOffset) *gridSize);
+      this.stage.addChild(line);
 
-        },
+      textX = new PIXI.Text('x', textStyles),
+      textY = new PIXI.Text('y', textStyles);
+      textX.x = 0.8 *canWidth;
+      textX.y = canHeight - 9 *gridSize;
+      textY.x = 3 *gridSize;
+      textY.y = 5 *gridSize;
 
-        initialize: function(options) {
-            PixiSceneView.prototype.initialize.apply(this, arguments);
-            this.views = [];
-        },
+      this.stage.addChild(textX);
+      this.stage.addChild(textY);
+    },
 
-        renderContent: function() {
+    initGridView: function() {
+      var gridView = new GridView({
+        model: this.simulation
+      });
+      this.gridView = gridView;
+      this.stage.addChild(gridView.displayObject);
+    },
 
-        },
+    initVectorBin: function() {
+      var binView = new VectorBinView({
+        model: this.simulation
+      });
+      this.binView = binView;
+      this.stage.addChild(binView.displayObject);
+    },
 
-        initGraphics: function() {
-          this.addAssets(Assets.createSprite(Assets.Images.Vector_Bin), 835, 20);
-          this.addAssets(Assets.createSprite(Assets.Images.Trash_Can), 845, 550);
-        },
+    initTrashCan: function() {
+      var trashCanView = new TrashCanView({
+        model: this.simulation
+      });
+      this.trashCanView = trashCanView;
+      this.stage.addChild(trashCanView.displayObject);
+    }
 
-        addAssets: function(asset, startX, startY) {
-          asset.x = startX;
-          asset.y = startY;
-          this.stage.addChild(asset);
-        }
+  });
 
-    });
-
-    return VectorAdditionSceneView;
+  return VectorAdditionSceneView;
 });

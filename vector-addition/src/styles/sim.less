@@ -1,6 +1,4 @@
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
-@import "mixins.less";
 
 .content-area {
   position: relative;
@@ -12,28 +10,25 @@
 
   .sim-controls {
     background: @gray-lightest;
-    position:relative;
+    position: relative;
     float: right;
-    width:150px;
-    top: 190px;
+    width: 150px;
+    top: 170px;
     right: 0;
-    padding:10px;
-    border: 3px solid @brand-primary;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
+    padding: 10px;
 
     .row {
       margin: 0 0 5px 0;
-      padding:3px;
+      padding: 3px;
       border-bottom: 1px solid @gray-medium;
     }
 
     p {
-      text-align:center;
+      text-align: center;
     }
 
     ul {
-      list-style:none;
+      list-style: none;
       padding: 5px;
       margin: 0;
 
@@ -47,9 +42,9 @@
     }
 
     input[type="submit"] {
-      margin-left:20px;
+      margin-left: 20px;
       background: red;
-      color: #fff;
+      color: #FFFFFF;
       padding-bottom: 5px;
     }
   }
@@ -57,15 +52,12 @@
   .sim-values {
     background: @gray-lightest;
     position: relative;
-    width: 750px;
-    height: 75px;
+    width: 675px;
+    height: 65px;
     float: left;
     top: 20px;
-    left: 30px;
-    padding: 15px;
-    border: 3px solid @brand-primary;
-    border-radius: 10px;
-    -moz-border-radius: 10px;
+    left: 100px;
+    padding: 12px;
 
     input[type="text"] {
       float: right;
@@ -75,6 +67,10 @@
     label {
       float: left;
       font-size: 20px;
+    }
+
+    .form-control[readonly] {
+      background-color: #FFFFFF; /* Overwriting Bootstrap style */
     }
 
   }
