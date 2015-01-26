@@ -93,7 +93,9 @@ define(function(require) {
             this.propLayer.addChild(cannonView.displayObject);
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {},
+        _update: function(time, deltaTime, paused, timeScale) {
+            this.cannonView.update(time, deltaTime, paused);
+        },
 
         reset: function() {
             

@@ -39,6 +39,10 @@ define(function (require) {
 
         firingAngle: function() {
             return -this.get('angle') * DEGREES_TO_RADIANS;
+        },
+
+        fire: function() {
+            this.trigger('fire');
         }
 
     }, Constants.Cannon);

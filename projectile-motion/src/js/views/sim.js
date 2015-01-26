@@ -51,7 +51,8 @@ define(function (require) {
             'click .btn-zoom-out' : 'zoomOut',
             'change #air-resistance-check': 'toggleAirResistance',
             'change #angle' : 'changeAngle',
-            'keyup  #angle' : 'changeAngle'
+            'keyup  #angle' : 'changeAngle',
+            'click .btn-fire': 'fireCannon'
         },
 
         /**
@@ -140,12 +141,12 @@ define(function (require) {
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */
-        update: function(time, delta) {
+        update: function(time, deltaTime) {
             // Update the model
-            this.simulation.update(time, delta);
+            this.simulation.update(time, deltaTime);
 
             // Update the scene
-            this.sceneView.update(time, delta);
+            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'));
         },
 
         /**
@@ -174,9 +175,11 @@ define(function (require) {
         toggleAirResistance: function(event) {
             if ($(event.target).is(':checked')) {
                 this.$('.air-resistance-parameters').show();
+                this.simulation.set('airResistanceEnabled', true);
             }
             else {
                 this.$('.air-resistance-parameters').hide();
+                this.simulation.set('airResistanceEnabled', false);
             }
         },
 
@@ -210,6 +213,10 @@ define(function (require) {
             this.updateLock(function(){
                 this.$('#angle').val(parseInt(angle));
             });
+        },
+
+        fireCannon: function() {
+            this.simulation.cannon.fire();
         }
 
     });
