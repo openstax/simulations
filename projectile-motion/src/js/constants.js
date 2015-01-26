@@ -74,11 +74,11 @@ define(function (require) {
     CannonView.FLAME_PARTICLE_INSIDE_COLOR = '#FFD500';
     CannonView.FLAME_PARTICLE_OUTSIDE_COLOR = '#C51010';
     CannonView.FLAME_PARTICLE_RADIUS_RANGE = range({ min: 16, max: 30 });
-    CannonView.FLAME_PARTICLE_SPREAD_ANGLE = Math.PI / 12;
+    CannonView.FLAME_PARTICLE_SPREAD_ANGLE = Math.PI / 16;
     CannonView.FLAME_PARTICLE_SPREAD_ANGLE_RANGE = range({ min: -CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2, max: CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2 }); // radians
     CannonView.FLAME_PARTICLE_VELOCITY_RANGE = range({ min: 800, max: 1200 });
-    CannonView.FLAME_PARTICLE_LIFE_SPAN = range({ min: 0.1, max: 0.15 });
-    CannonView.FLAME_PARTICLE_EMISSION_DURATION = 0.2;
+    CannonView.FLAME_PARTICLE_LIFE_SPAN = range({ min: 0.12, max: 0.18 });
+    CannonView.FLAME_PARTICLE_EMISSION_DURATION = 0.24;
     CannonView.FLAME_PARTICLE_EMISSION_RATE = 500;
     CannonView.FLAME_PARTICLE_FADE_POINT = 0.8;
 
