@@ -95,5 +95,28 @@ define(function (require) {
 
     Constants.CannonView = CannonView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                              PROJECTILES                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var Projectiles = [
+        require('models/projectile'),
+        require('models/projectile/tank-shell'),
+        require('models/projectile/golfball'),
+        require('models/projectile/baseball'),
+        require('models/projectile/bowlingball'),
+        require('models/projectile/football'),
+        require('models/projectile/pumpkin'),
+        require('models/projectile/adult-human'),
+        require('models/projectile/piano'),
+        require('models/projectile/buick')
+    ];
+
+    Constants.Projectiles = Projectiles;
+
+
     return Constants;
 });

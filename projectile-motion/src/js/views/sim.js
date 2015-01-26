@@ -52,7 +52,8 @@ define(function (require) {
             'change #air-resistance-check': 'toggleAirResistance',
             'change #angle' : 'changeAngle',
             'keyup  #angle' : 'changeAngle',
-            'click .btn-fire': 'fireCannon'
+            'click .btn-fire': 'fireCannon',
+            'change #projectile' : 'changeProjectile'
         },
 
         /**
@@ -216,7 +217,20 @@ define(function (require) {
         },
 
         fireCannon: function() {
-            this.simulation.cannon.fire();
+            this.simulation.fireCannon();
+        },
+
+        changeProjectile: function(event) {
+            var index = parseInt($(event.target).val());
+
+            // Get an instance of the projectile to give the input boxes some default values
+            var projectile = new Constants.Projectiles[index];
+            this.$('#mass').val(projectile.get('mass'));
+            this.$('#diameter').val(projectile.get('diameter'));
+            this.$('#drag').val(projectile.get('dragCoefficient'));
+
+            // Set the selected projectile on the simulation
+            this.simulation.set('projectileConstructor', Constants.Projectiles[index]);
         }
 
     });

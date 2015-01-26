@@ -24,7 +24,8 @@ define(function (require, exports, module) {
             diameter: 0.1,    // m
             airResistanceEnabled: false, // Note: These air resistance variables need to be passed in to the
             dragCoefficient: 1,          //       trajectory's update function because they can be changed
-            altitude: 0                  //       mid-flight
+            altitude: 0,                 //       mid-flight,
+            projectileConstructor: null  // Constructor for making a projectile model instance
         },
         
         /**
@@ -48,6 +49,13 @@ define(function (require, exports, module) {
 
         _update: function(time, delta) {
             
+        },
+
+        fireCannon: function() {
+            // Set up projectile
+
+
+            this.cannon.fire();
         }
 
     });
