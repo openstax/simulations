@@ -277,11 +277,15 @@ define(function(require) {
      *   second radius (r2) is the outer extend of the gradient--
      *   the point at which the color will be transparent.
      */
-    PIXI.Texture.generateRoundParticleTexture = function(r1, r2, color) {
-        var rgba = Colors.toRgba(color, true);
+    PIXI.Texture.generateRoundParticleTexture = function(r1, r2, color, outsideColor) {
+        if (outsideColor === undefined)
+            outsideColor = color;
 
-        var color1 = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',1)';
-        var color2 = 'rgba(' + rgba.r + ',' + rgba.g + ',' + rgba.b + ',0)';
+        var rgba1 = Colors.toRgba(color, true);
+        var rgba2 = Colors.toRgba(outsideColor, true);
+
+        var color1 = 'rgba(' + rgba1.r + ',' + rgba1.g + ',' + rgba1.b + ',1)';
+        var color2 = 'rgba(' + rgba2.r + ',' + rgba2.g + ',' + rgba2.b + ',0)';
 
         return PIXI.Texture.generateCircleTexture(r2, r1, r2, color1, color2);
     };

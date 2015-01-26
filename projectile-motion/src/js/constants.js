@@ -66,6 +66,23 @@ define(function (require) {
     CannonView.AXIS_LINE_ALPHA = 0.4;
     CannonView.AXIS_LINE_WIDTH = 2;
 
+    CannonView.NUM_FLAME_PARTICLES = 50;
+    CannonView.NUM_SMOKE_PARTICLES = 300;
+
+    CannonView.SMOKE_PARTICLE_COLOR = '#ddd';
+    
+    CannonView.FLAME_PARTICLE_INSIDE_COLOR = '#ffff6d';
+    CannonView.FLAME_PARTICLE_OUTSIDE_COLOR = '#FF6B1F';
+    CannonView.FLAME_PARTICLE_START_RADIUS = 6;
+    CannonView.FLAME_PARTICLE_END_RADIUS = 10;
+    CannonView.FLAME_PARTICLE_SPREAD_ANGLE = Math.PI / 9;
+    CannonView.FLAME_PARTICLE_SPREAD_ANGLE_RANGE = range({ min: -CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2, max: CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2 }); // radians
+    CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE = 200;
+    CannonView.FLAME_PARTICLE_EMISSION_DURATION = 0.2;
+    CannonView.FLAME_PARTICLE_EMISSION_RATE = CannonView.NUM_FLAME_PARTICLES / CannonView.FLAME_PARTICLE_EMISSION_DURATION;
+
+    CannonView.PARTICLE_EMISSION_AREA_WIDTH = 31; // width of the opening at the end of the cannon in pixels
+
     Constants.CannonView = CannonView;
 
     return Constants;

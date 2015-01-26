@@ -8,6 +8,8 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
+    var range    = require('common/math/range');
+    var Vector2  = require('common/math/vector2');
 
     var Assets = require('assets');
 
@@ -46,10 +48,12 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.time = 0;
 
             this.initGraphics();
 
             this._dragOffset = new PIXI.Point();
+            this._initialPosition = new Vector2();
 
             // this.blastSound = new buzz.sound('audio/blast', {
             //     formats: ['ogg', 'mp3', 'wav']
@@ -60,20 +64,38 @@ define(function(require) {
             //   through this view.
             this.listenTo(this.model, 'change:angle', this.updateAngle);
             this.updateAngle(this.model, this.model.get('angle'));
+            this.listenTo(this.model, 'fire', this.cannonFired);
         },
 
         initGraphics: function() {
+            /*
+             * The sprites layer will be used to scale all of our
+             *   sprites at once instead of individually so they
+             *   stay as a group with a common transform origin.
+             */
             this.spritesLayer = new PIXI.DisplayObjectContainer();
 
-            // Cannon
+            this.initCannon();
+            this.initCarriage();
+            this.initPedestal();
+            this.initAxes();
+            this.initParticles();
+
+            this.displayObject.addChild(this.spritesLayer);
+
+            this.updateMVT(this.mvt);
+        },
+
+        initCannon: function() {
             var cannon = Assets.createSprite(Assets.Images.CANNON);
             cannon.anchor.x = 0.34;
             cannon.anchor.y = 0.5;
             cannon.buttonMode = true;
             this.spritesLayer.addChild(cannon);
             this.cannon = cannon;
+        },
 
-            // Carriage
+        initCarriage: function() {
             var carriage = Assets.createSprite(Assets.Images.CANNON_CARRIAGE);
             carriage.anchor.x = 0.5;
             carriage.anchor.y = 1;
@@ -81,8 +103,9 @@ define(function(require) {
             carriage.x = -26;
             
             this.spritesLayer.addChild(carriage);
+        },
 
-            // Pedestal
+        initPedestal: function() {
             var pedestal = new PIXI.Graphics();
             pedestal.buttonMode = true;
             this.displayObject.addChild(pedestal);
@@ -91,22 +114,66 @@ define(function(require) {
             var pedestalSide = new PIXI.Graphics();
             this.displayObject.addChild(pedestalSide);
             this.pedestalSide = pedestalSide;
+        },
 
-            // Grass overlay
-            // var grass = Assets.createSprite(Assets.Images.GRASS_BLADES);
-            // grass.anchor.x = 0.5;
-            // grass.anchor.y = 1;
-            // grass.y = 106;
-            // this.spritesLayer.addChild(grass);
-
-            // Axes graphics
+        initAxes: function() {
             this.axes = new PIXI.Graphics();
             this.displayObject.addChild(this.axes);
-
-            this.displayObject.addChild(this.spritesLayer);
-
-            this.updateMVT(this.mvt);
         },
+
+        initParticles: function() {
+            /* 
+             * The particles will be added to the sprites layer, which is always
+             *   scaled with the images.  In this way we shouldn't ever have to
+             *   reference the mvt object and do conversions when controlling
+             *   the behavior of our particles or move their transform origin.
+             */
+            var particleContainer = new PIXI.SpriteBatch();
+            this.spritesLayer.addChildAt(particleContainer, 0);
+
+            var flameParticleTexture = PIXI.Texture.generateRoundParticleTexture(CannonView.FLAME_PARTICLE_END_RADIUS * 0.6, CannonView.FLAME_PARTICLE_END_RADIUS, CannonView.FLAME_PARTICLE_INSIDE_COLOR, CannonView.FLAME_PARTICLE_OUTSIDE_COLOR);//Assets.Texture(Assets.Images.FLAME_PARTICLE);
+            var smokeParticleTexture = PIXI.Texture.generateRoundParticleTexture(0, 20, CannonView.SMOKE_PARTICLE_COLOR);
+
+            this.activeFlameParticles = [];
+            this.dormantFlameParticles = [];
+            this.activeSmokeParticles = [];
+            this.dormantSmokeParticles = [];
+
+            var i;
+            var particle;
+
+            // Smoke particles
+            for (i = 0; i < CannonView.NUM_SMOKE_PARTICLES; i++) {
+                particle = new PIXI.Sprite(smokeParticleTexture);
+                particle.visible = false;
+                particle.anchor.x = particle.anchor.y = 0.5;
+                particle.velocity = new Vector2();
+
+                particleContainer.addChild(particle);
+                this.dormantSmokeParticles.push(particle);
+            }
+
+            // Flame particles (in front of smoke particles)
+            for (i = 0; i < CannonView.NUM_FLAME_PARTICLES; i++) {
+                particle = new PIXI.Sprite(flameParticleTexture);
+                particle.visible = false;
+                particle.anchor.x = particle.anchor.y = 0.5;
+                particle.blendMode = PIXI.blendModes.ADD; // Get that good bright flame effect
+                particle.velocity = new Vector2();
+
+                particleContainer.addChild(particle);
+                this.dormantFlameParticles.push(particle);
+            }
+
+            // Range of a particle's starting y before rotation
+            this.flameParticleStartYRange = range({
+                min: -CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 + CannonView.FLAME_PARTICLE_START_RADIUS,
+                max:  CannonView.PARTICLE_EMISSION_AREA_WIDTH / 2 - CannonView.FLAME_PARTICLE_START_RADIUS
+            });
+            // End of cannon relative to origin minus the particle radius so it starts inside the bore
+            this.flameParticleStartX = this.cannon.width * (1 - this.cannon.anchor.x) - CannonView.FLAME_PARTICLE_START_RADIUS; 
+        },        
+
 
         drawPedestal: function() {
             this.pedestal.clear();
@@ -234,6 +301,89 @@ define(function(require) {
             this.updatePosition();
             this.drawPedestal();
             this.drawAxes();
+        },
+
+        update: function(time, deltaTime, paused) {
+            if (!paused) {
+                this.time += deltaTime;
+                this.updateFireParticles(this.time, deltaTime);
+                this.updateSmokeParticles(this.time, deltaTime);
+            }
+        },
+
+        cannonFired: function() {
+            this.timeToStopFireEmission = this.time + CannonView.FLAME_PARTICLE_EMISSION_DURATION;
+        },
+
+        updateFireParticles: function(time, deltaTime) {
+            if (time < this.timeToStopFireEmission) {
+                console.log(this.dormantFlameParticles.length);
+                var numParticlesToEmit = Math.floor(CannonView.FLAME_PARTICLE_EMISSION_RATE * deltaTime);
+                while (numParticlesToEmit > 0) {
+                    this.emitFireParticle();
+                    numParticlesToEmit--;
+                }
+
+                var particle;
+                for (var i = this.activeFlameParticles.length - 1; i >= 0; i--) {
+                    particle = this.activeFlameParticles[i];
+
+                    particle.x += particle.velocity.x * deltaTime;
+                    particle.y += particle.velocity.y * deltaTime;
+
+                    particle.distanceTraveled += particle.velocity.length() * deltaTime;
+
+                    if (particle.distanceTraveled > CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE) {
+                        particle.alpha = 1 - (particle.distanceTraveled - CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE) / 10;
+                        if (particle.alpha <= 0) {
+                            particle.alpha = 0;
+                            this.activeFlameParticles.splice(i, 1);
+                            this.dormantFlameParticles.push(particle);
+                        }
+                    }
+                }
+            }
+            else if (this.activeFlameParticles.length) {
+                for (var i = this.activeFlameParticles.length - 1; i >= 0; i--) {
+                    this.activeFlameParticles[i].visible = false;
+                    this.dormantFlameParticles.push(this.activeFlameParticles[i]);
+                    this.activeFlameParticles.splice(i, 1);
+                }
+            }
+        },
+
+        updateSmokeParticles: function(time, deltaTime) {
+
+        },
+
+        emitFireParticle: function() {
+            if (!this.dormantFlameParticles.length)
+                return null;
+
+            var particle = this.dormantFlameParticles.pop();
+            if (particle) {
+                // Get the starting position of the particle if the cannon were not rotated.
+                //   Then rotate that point around the cannon's rotational axis to get the 
+                //   actual starting point.
+                var initialPosition = this._initialPosition
+                    .set(this.flameParticleStartX, this.flameParticleStartYRange.random())
+                    .rotate(this.model.firingAngle());
+
+                var scale = CannonView.FLAME_PARTICLE_START_RADIUS / (particle.texture.width / 2);
+                var angle = this.model.firingAngle() + CannonView.FLAME_PARTICLE_SPREAD_ANGLE_RANGE.random();
+
+                particle.x = initialPosition.x;
+                particle.y = initialPosition.y;
+                particle.scale.x = particle.scale.y = scale;
+                particle.alpha = 1;
+                particle.visible = true;
+                particle.velocity.set(CannonView.FLAME_PARTICLE_TRAVEL_DISTANCE, 0).rotate(angle);
+                particle.distanceTraveled = 0;
+
+                this.activeFlameParticles.push(particle);    
+            }
+
+            return particle;
         }
 
     }, Constants.CannonView);
