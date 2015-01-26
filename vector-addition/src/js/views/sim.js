@@ -36,6 +36,7 @@ define(function (require) {
 
 
             SimView.prototype.initialize.apply(this, [options]);
+            //this.listenTo(this.simulation, 'change:valueX change:valueY', this.render);
             this.initSceneView();
         },
 
