@@ -38,7 +38,7 @@ define(function (require) {
             this.vY = this.vInit * Math.sin(this.theta);
             this.aX = 0;                                 // X-component of acceleration
             this.aY = -GRAVITY;                          // Y-component of acceleration
-
+console.log(this.vInit);
             this.on('change:altitude', this.recalculateAirResistanceTerm);
             this.listenTo(this.get('projectile'), 'change:mass change:area change:dragCoefficient', this.recalculateAirResistanceTerm);
 

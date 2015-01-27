@@ -67,11 +67,13 @@ define(function(require) {
 
         initLayers: function() {
             // Create layers
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.propLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer       = new PIXI.DisplayObjectContainer();
+            this.projectileLayer = new PIXI.DisplayObjectContainer();
+            this.propLayer       = new PIXI.DisplayObjectContainer();
             this.trajectoryLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
+            this.stage.addChild(this.projectileLayer);
             this.stage.addChild(this.propLayer);
             this.stage.addChild(this.trajectoryLayer);
         },
@@ -100,16 +102,10 @@ define(function(require) {
 
         initTrajectories: function() {
             this.trajectoryViews = [];
-
-            this.trajectoryLayer = new PIXI.DisplayObjectContainer();
-            this.stage.addChild(this.trajectoryLayer);
         },
 
         initProjectiles: function() {
             this.projectileViews = [];
-
-            this.projectileLayer = new PIXI.DisplayObjectContainer();
-            this.stage.addChild(this.projectileLayer);
         },
 
         projectileLaunched: function(projectile) {
@@ -118,15 +114,11 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.projectileViews.push(projectileView);
-            this.stage.addChild(projectileView.displayObject);
+            this.projectileLayer.addChild(projectileView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.cannonView.update(time, deltaTime, paused);
-        },
-
-        reset: function() {
-            
         },
 
         zoomIn: function() {
@@ -152,6 +144,19 @@ define(function(require) {
                     this.zoomScale // Scale, meters to pixels
                 );
                 this.cannonView.updateMVT(this.mvt);
+            }
+        },
+
+        clearShots: function() {
+            var i;
+            for (i = this.projectileViews.length - 1; i >= 0; i--) {
+                this.projectileViews[i].removeFrom(this.projectileLayer);
+                this.projectileViews.splice(i, 1);
+            }
+
+            for (i = this.trajectoryViews.length - 1; i >= 0; i--) {
+                this.trajectoryViews[i].removeFrom(this.trajectoryLayer);
+                this.trajectoryViews.splice(i, 1);
             }
         }
 

@@ -67,7 +67,7 @@ define(function (require, exports, module) {
             var trajectory = new Trajectory({
                 projectile: this.get('currentProjectile'),
                 initialSpeed: this.get('initialSpeed'),
-                initialAngle: this.cannon.get('firingAngle'),
+                initialAngle: -this.cannon.firingAngle(),
                 airResistanceEnabled: this.get('airResistanceEnabled'),
                 altitude: this.get('altitude'),
             });

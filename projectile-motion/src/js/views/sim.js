@@ -49,11 +49,13 @@ define(function (require) {
             'click .sound-btn' : 'changeVolume',
             'click .btn-zoom-in' : 'zoomIn',
             'click .btn-zoom-out' : 'zoomOut',
+            'change #projectile' : 'changeProjectile',
             'change #air-resistance-check': 'toggleAirResistance',
             'change #angle' : 'changeAngle',
             'keyup  #angle' : 'changeAngle',
+            'change #speed' : 'changeSpeed',
             'click .btn-fire': 'fireCannon',
-            'change #projectile' : 'changeProjectile'
+            'click .btn-erase': 'erase'
         },
 
         /**
@@ -220,10 +222,6 @@ define(function (require) {
             this.simulation.set('initialSpeed', parseFloat(this.$('#speed').val()));
         },
 
-        fireCannon: function() {
-            this.simulation.fireCannon();
-        },
-
         changeProjectile: function(event) {
             var index = parseInt($(event.target).val());
 
@@ -247,6 +245,14 @@ define(function (require) {
             var projectile = this.simulation.get('currentProjectile');
             if (projectile)
                 projectile.set('diameter', parseFloat(this.$('#diameter').val()));
+        },
+
+        fireCannon: function() {
+            this.simulation.fireCannon();
+        },
+
+        erase: function() {
+            this.sceneView.clearShots();
         }
 
     });

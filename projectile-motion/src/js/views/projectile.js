@@ -49,7 +49,6 @@ define(function(require) {
             this.mvt = mvt;
 
             this.displayObject.scale.x = this.displayObject.scale.y = this.calculateScale();
-            console.log(this.displayObject.scale.x);
 
             this.updateX(this.model, this.model.get('x'));
             this.updateY(this.model, this.model.get('y'));
