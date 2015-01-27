@@ -73,6 +73,13 @@ define(function (require, exports, module) {
             });
             this.set('currentTrajectory', trajectory);
 
+            this.listenTo(trajectory, 'finish', function() {
+                this.stopListening(trajectory);
+                this.set('currentProjectile', new Projectile());
+            });
+
+            this.trigger('projectile-launched', this.get('currentProjectile'));
+
             trajectory.start();
             this.cannon.fire();
         }

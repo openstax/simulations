@@ -98,7 +98,7 @@ define(function (require) {
                 this.stop();
             }
             
-            console.log(this.x, this.y);
+            //console.log(this.x, this.y);
             this.get('projectile').set('x', this.x);
             this.get('projectile').set('y', this.y);
             this.set('time', t);
@@ -110,6 +110,7 @@ define(function (require) {
 
         stop: function() {
             this.set('inMotion', false);
+            this.trigger('finish');
         },
 
         recalculateAirResistanceTerm: function() {

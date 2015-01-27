@@ -12,7 +12,8 @@ define(function(require) {
     var ModelViewTransform   = require('common/math/model-view-transform');
     var PixiSceneView        = require('common/pixi/view/scene');
 
-    var CannonView = require('views/cannon');
+    var CannonView     = require('views/cannon');
+    var ProjectileView = require('views/projectile');
 
     var Assets = require('assets');
 
@@ -35,6 +36,8 @@ define(function(require) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.zoomScale = 40;
+
+            this.listenTo(this.simulation, 'projectile-launched', this.projectileLaunched);
         },
 
         /**
@@ -58,6 +61,8 @@ define(function(require) {
             this.initLayers();
             this.initBackground();
             this.initCannon();
+            this.initTrajectories();
+            this.initProjectiles();
         },
 
         initLayers: function() {
@@ -91,6 +96,29 @@ define(function(require) {
             });
             this.cannonView = cannonView;
             this.propLayer.addChild(cannonView.displayObject);
+        },
+
+        initTrajectories: function() {
+            this.trajectoryViews = [];
+
+            this.trajectoryLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.trajectoryLayer);
+        },
+
+        initProjectiles: function() {
+            this.projectileViews = [];
+
+            this.projectileLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.projectileLayer);
+        },
+
+        projectileLaunched: function(projectile) {
+            var projectileView = new ProjectileView({
+                model: projectile,
+                mvt: this.mvt
+            });
+            this.projectileViews.push(projectileView);
+            this.stage.addChild(projectileView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

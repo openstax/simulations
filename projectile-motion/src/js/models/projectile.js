@@ -7,9 +7,9 @@ define(function (require) {
     var Projectile = Backbone.Model.extend({
 
         defaults: {
-            mass: 0,
-            diameter: 0,
-            dragCoefficient: 0,
+            mass: 2,
+            diameter: 0.3,
+            dragCoefficient: 1,
             x: 0,
             y: 0
         },

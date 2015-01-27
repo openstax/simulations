@@ -9,6 +9,7 @@ define(function (require) {
     Assets.Images = {
         CANNON:          'cannon.png',
         CANNON_CARRIAGE: 'cannon-carriage.png',
+        CANNON_BALL:     'cannon-ball.png',
         FLAME_PARTICLE:  'flame-particle.png',
         SMOKE_PARTICLE:  'smoke-particle.png'
     };
