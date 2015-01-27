@@ -17,6 +17,11 @@ define(function (require) {
         initialize: function(attributes, options) {
             // Set area based on cross-sectional diameter
             this.set('area', Math.PI * this.get('diameter') * this.get('diameter') / 4);
+        },
+
+        reset: function() {
+            this.set('x', 0);
+            this.set('y', 0);
         }
 
     }, {

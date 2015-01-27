@@ -75,7 +75,9 @@ define(function (require, exports, module) {
 
             this.listenTo(trajectory, 'finish', function() {
                 this.stopListening(trajectory);
-                this.set('currentProjectile', new Projectile());
+                var newProjectile = this.get('currentProjectile').clone();
+                newProjectile.reset();
+                this.set('currentProjectile', newProjectile);
             });
 
             this.trigger('projectile-launched', this.get('currentProjectile'));

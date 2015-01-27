@@ -55,6 +55,7 @@ define(function(require) {
         },
 
         calculateScale: function() {
+            console.log(this.model.get('diameter'));
             var targetSpriteWidth = this.mvt.modelToViewDeltaX(this.model.get('diameter')); // in pixels
             return targetSpriteWidth / this.projectileSprite.width;
         }
