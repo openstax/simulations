@@ -15,7 +15,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    Constants.GRAVITY = 9.8; // m/s^2
+    Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
     Constants.GROUND_Y = -0.77;
 

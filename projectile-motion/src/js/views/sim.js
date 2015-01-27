@@ -216,6 +216,10 @@ define(function (require) {
             });
         },
 
+        changeSpeed: function(event) {
+            this.simulation.set('initialSpeed', parseFloat(this.$('#speed').val()));
+        },
+
         fireCannon: function() {
             this.simulation.fireCannon();
         },
@@ -230,7 +234,19 @@ define(function (require) {
             this.$('#drag').val(projectile.get('dragCoefficient'));
 
             // Set the selected projectile on the simulation
-            this.simulation.set('projectileConstructor', Constants.Projectiles[index]);
+            this.simulation.set('currentProjectile', projectile);
+        },
+
+        changeMass: function(event) {
+            var projectile = this.simulation.get('currentProjectile');
+            if (projectile)
+                projectile.set('mass', parseFloat(this.$('#mass').val()));
+        },
+
+        changeDiameter: function(event) {
+            var projectile = this.simulation.get('currentProjectile');
+            if (projectile)
+                projectile.set('diameter', parseFloat(this.$('#diameter').val()));
         }
 
     });
