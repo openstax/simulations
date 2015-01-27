@@ -107,13 +107,11 @@ define(function(require) {
           rect.beginFill(0xFF0000);
           rect.drawRect(10, 20, 10, 200);
         }
-
       }
     },
 
     transformEnd: function(data) {
       this.transformable = false;
-
     },
 
     transformTest: function(data) {

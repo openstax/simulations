@@ -12,7 +12,6 @@ define(function(require) {
 
     events: {
       'click .bin': 'drawArrow'
-      //'click .bin': 'drawRect'
     },
 
     initialize: function(options) {
