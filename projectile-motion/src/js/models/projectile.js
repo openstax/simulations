@@ -24,6 +24,8 @@ define(function (require) {
         reset: function() {
             this.set('x', 0);
             this.set('y', 0);
+            this.set('rotation', 0);
+            this.set('atRest', false);
         }
 
     }, {

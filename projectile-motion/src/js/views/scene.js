@@ -15,25 +15,25 @@ define(function(require) {
     var CannonView      = require('views/cannon');
     var ProjectileView  = require('views/projectile');
     var TankShellView   = require('views/projectile/tank-shell');
-    // var GolfballView    = require('views/projectile/golfball');
-    // var BaseballView    = require('views/projectile/baseball');
-    // var BowlingballView = require('views/projectile/bowlingball');
-    // var FootballView    = require('views/projectile/football');
-    // var PumpkinView     = require('views/projectile/pumpkin');
-    // var AdultHumanView  = require('views/projectile/adult-human');
-    // var PianoView       = require('views/projectile/piano');
-    // var BuickView       = require('views/projectile/buick');
+    var GolfballView    = require('views/projectile/golfball');
+    var BaseballView    = require('views/projectile/baseball');
+    var BowlingballView = require('views/projectile/bowlingball');
+    var FootballView    = require('views/projectile/football');
+    var PumpkinView     = require('views/projectile/pumpkin');
+    var AdultHumanView  = require('views/projectile/adult-human');
+    var PianoView       = require('views/projectile/piano');
+    var BuickView       = require('views/projectile/buick');
 
     var ProjectileViews = [
         TankShellView,
-        // GolfballView,
-        // BaseballView,
-        // BowlingballView,
-        // FootballView,
-        // PumpkinView,
-        // AdultHumanView,
-        // PianoView,
-        // BuickView
+        GolfballView,
+        BaseballView,
+        BowlingballView,
+        FootballView,
+        PumpkinView,
+        AdultHumanView,
+        PianoView,
+        BuickView
     ];
 
     var Assets = require('assets');
