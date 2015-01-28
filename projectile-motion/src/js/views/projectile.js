@@ -5,14 +5,13 @@ define(function(require) {
     var PixiView = require('common/pixi/view');
     var Vector2  = require('common/math/vector2');
 
+    var Projectile = require('models/projectile');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
     var RADIANS_TO_DEGREES = 180 / Math.PI;
 
-    /**
-     * A view that represents a cannon model
-     */
     var ProjectileView = PixiView.extend({
 
         initialize: function(options) {
@@ -22,6 +21,8 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:x', this.updateX);
             this.listenTo(this.model, 'change:y', this.updateY);
+            this.listenTo(this.model, 'change:atRest', this.updateRestState);
+            this.listenTo(this.model, 'change:rotation', this.updateRotation);
 
             this.updateMVT(this.mvt);
         },
@@ -30,12 +31,34 @@ define(function(require) {
          * Override this to draw different kinds of projectiles.
          */
         initGraphics: function() {
-            var projectileSprite = Assets.createSprite(Assets.Images.CANNON_BALL);
-            projectileSprite.anchor.x = projectileSprite.anchor.y = 0.5;
+            var projectileSprite = this.createProjectileSprite();
+            projectileSprite.anchor.x = 0.5;
+            projectileSprite.anchor.y = 0.5;
             this.projectileSprite = projectileSprite;
-
             this.displayObject.addChild(projectileSprite);
+
+            var restingProjectileSprite = this.createRestingProjectileSprite();
+            restingProjectileSprite.anchor.x = 0.5;
+            restingProjectileSprite.anchor.y = 0.5;
+            restingProjectileSprite.visible = false;
+            this.restingProjectileSprite = restingProjectileSprite;
+            this.displayObject.addChild(restingProjectileSprite);
         },
+
+        createProjectileSprite: function() {
+            return Assets.createSprite(Assets.Images.CANNON_BALL);
+        },
+
+        createRestingProjectileSprite: function() {
+            return Assets.createSprite(Assets.Images.CANNON_BALL);
+        },
+
+        updateRestState: function(model, atRest) {
+            this.projectileSprite.visible = !atRest;
+            this.restingProjectileSprite.visible = atRest;
+        },
+
+        updateRotation: function(model, rotation) {},
 
         updateX: function(model, x) {
             this.displayObject.x = this.mvt.modelToViewX(x);
@@ -55,11 +78,14 @@ define(function(require) {
         },
 
         calculateScale: function() {
-            console.log(this.model.get('diameter'));
             var targetSpriteWidth = this.mvt.modelToViewDeltaX(this.model.get('diameter')); // in pixels
             return targetSpriteWidth / this.projectileSprite.width;
         }
 
+    }, {
+        getModelClass: function() {
+            return Projectile;
+        }
     });
 
     return ProjectileView;

@@ -20,6 +20,8 @@ define(function (require) {
 
             initialSpeed: 0,
             initialAngle: 0,
+            initialX: 0,
+            initialY: 0,
 
             // Simulation variables
             airResistanceEnabled: false,
@@ -29,8 +31,8 @@ define(function (require) {
         initialize: function(attributes, options) {
             this.vInit = this.get('initialSpeed');       // Initial speed in m/s
             this.theta = this.get('initialAngle');       // Firing angle in radians
-            this.x = 0;                                  // Current position; start at origin
-            this.y = 0;                    
+            this.x = this.get('initialX');               // Current position; start at origin
+            this.y = this.get('initialY');
             this.lastX = 0;                              // Position at previous time step
             this.lastY = 0;                    
             this.v = this.vInit;                         // Speed of projectile
@@ -38,7 +40,7 @@ define(function (require) {
             this.vY = this.vInit * Math.sin(this.theta);
             this.aX = 0;                                 // X-component of acceleration
             this.aY = -GRAVITY;                          // Y-component of acceleration
-console.log(this.vInit);
+
             this.on('change:altitude', this.recalculateAirResistanceTerm);
             this.listenTo(this.get('projectile'), 'change:mass change:area change:dragCoefficient', this.recalculateAirResistanceTerm);
 
@@ -101,6 +103,7 @@ console.log(this.vInit);
             //console.log(this.x, this.y);
             this.get('projectile').set('x', this.x);
             this.get('projectile').set('y', this.y);
+            this.get('projectile').set('rotation', Math.atan2(-this.vY, this.vX));
             this.set('time', t);
         },
 
@@ -109,6 +112,7 @@ console.log(this.vInit);
         },
 
         stop: function() {
+            this.get('projectile').set('atRest', true);
             this.set('inMotion', false);
             this.trigger('finish');
         },

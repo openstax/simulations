@@ -9,11 +9,32 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
     var Colors    = require('common/colors/colors');
 
-    var ModelViewTransform   = require('common/math/model-view-transform');
-    var PixiSceneView        = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PixiSceneView      = require('common/pixi/view/scene');
 
-    var CannonView     = require('views/cannon');
-    var ProjectileView = require('views/projectile');
+    var CannonView      = require('views/cannon');
+    var ProjectileView  = require('views/projectile');
+    var TankShellView   = require('views/projectile/tank-shell');
+    // var GolfballView    = require('views/projectile/golfball');
+    // var BaseballView    = require('views/projectile/baseball');
+    // var BowlingballView = require('views/projectile/bowlingball');
+    // var FootballView    = require('views/projectile/football');
+    // var PumpkinView     = require('views/projectile/pumpkin');
+    // var AdultHumanView  = require('views/projectile/adult-human');
+    // var PianoView       = require('views/projectile/piano');
+    // var BuickView       = require('views/projectile/buick');
+
+    var ProjectileViews = [
+        TankShellView,
+        // GolfballView,
+        // BaseballView,
+        // BowlingballView,
+        // FootballView,
+        // PumpkinView,
+        // AdultHumanView,
+        // PianoView,
+        // BuickView
+    ];
 
     var Assets = require('assets');
 
@@ -109,10 +130,19 @@ define(function(require) {
         },
 
         projectileLaunched: function(projectile) {
-            var projectileView = new ProjectileView({
+            var projectileViewClass = ProjectileView;
+            _.each(ProjectileViews, function(View) {
+                if (projectile instanceof View.getModelClass()) {
+                    projectileViewClass = View;
+                    return false;
+                }
+            });
+
+            var projectileView = new projectileViewClass({
                 model: projectile,
                 mvt: this.mvt
             });
+
             this.projectileViews.push(projectileView);
             this.projectileLayer.addChild(projectileView.displayObject);
         },
@@ -130,7 +160,7 @@ define(function(require) {
                     new Vector2(this.viewOriginX, this.viewOriginY),
                     this.zoomScale // Scale, meters to pixels
                 );
-                this.cannonView.updateMVT(this.mvt);
+                this.updateMVTs();
             }
         },
 
@@ -143,8 +173,20 @@ define(function(require) {
                     new Vector2(this.viewOriginX, this.viewOriginY),
                     this.zoomScale // Scale, meters to pixels
                 );
-                this.cannonView.updateMVT(this.mvt);
+                this.updateMVTs();
             }
+        },
+
+        updateMVTs: function() {
+            var mvt = this.mvt;
+
+            this.cannonView.updateMVT(mvt);
+
+            for (i = this.projectileViews.length - 1; i >= 0; i--)
+                this.projectileViews[i].updateMVT(mvt);
+
+            for (i = this.trajectoryViews.length - 1; i >= 0; i--)
+                this.trajectoryViews[i].updateMVT(mvt);
         },
 
         clearShots: function() {

@@ -68,6 +68,8 @@ define(function (require, exports, module) {
                 projectile: this.get('currentProjectile'),
                 initialSpeed: this.get('initialSpeed'),
                 initialAngle: -this.cannon.firingAngle(),
+                initialX: this.cannon.firingX(),
+                initialY: this.cannon.firingY(),
                 airResistanceEnabled: this.get('airResistanceEnabled'),
                 altitude: this.get('altitude'),
             });

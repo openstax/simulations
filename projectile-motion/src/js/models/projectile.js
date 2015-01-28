@@ -11,7 +11,9 @@ define(function (require) {
             diameter: 0.3,
             dragCoefficient: 1,
             x: 0,
-            y: 0
+            y: 0,
+            rotation: 0,   // In radians
+            atRest: false  // Whether the projectile has been launched and is now at rest
         },
 
         initialize: function(attributes, options) {
