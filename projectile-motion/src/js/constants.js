@@ -129,6 +129,10 @@ define(function (require) {
     TrajectoryView.AIR_RESISTANCE_ENABLED_COLOR  = '#ff0000';
     TrajectoryView.AIR_RESISTANCE_DISABLED_COLOR = '#0923fb';
     TrajectoryView.LINE_WIDTH = 3;
+    TrajectoryView.SECOND_MARKER_COLOR = '#000';
+    TrajectoryView.SECOND_MARKER_WIDTH = 18;
+    TrajectoryView.SECOND_MARKER_ALPHA = 1;
+    TrajectoryView.SECOND_MARKER_LINE_WIDTH = 4;
 
     Constants.TrajectoryView = TrajectoryView;
 
