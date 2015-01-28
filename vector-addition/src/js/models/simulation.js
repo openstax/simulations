@@ -7,7 +7,9 @@ define(function (require, exports, module) {
   var VectorAdditionSimulation = Simulation.extend({
 
     defaults: {
-      showGrid: false
+      showGrid: false,
+      valueX: '',
+      valueY: ''
     }
 
   });
