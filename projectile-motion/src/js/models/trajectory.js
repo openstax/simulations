@@ -13,8 +13,6 @@ define(function (require) {
         defaults: {
             projectile: null, // The projectile instance in motion with this trajectory
             inMotion: false,  // Whether the projectile is still in motion
-            range: 0,         // Maximum range of trajectory so far
-            height: 0,        // Maximum height of trajectory so far
             time: 0,          // Time in flight (s)
             finished: false,  // Whether the trajectory has started and completed its course
 
@@ -81,8 +79,9 @@ define(function (require) {
                 this.vY = this.vY + this.aY * dt;
 
             }
-            
+
             // See if projectile is below ground
+            var finished = false;
             if (this.y < GROUND_Y) { 
                 // Backtrack to moment when projectile hit ground
                 var dy = this.y - GROUND_Y;
@@ -96,15 +95,18 @@ define(function (require) {
                 this.y = GROUND_Y;
                 t -= delT;
 
-                this.set('finished', true);
-                this.stop();
+                finished = true;
             }
             
-            //console.log(this.x, this.y);
             this.get('projectile').set('x', this.x);
             this.get('projectile').set('y', this.y);
             this.get('projectile').set('rotation', Math.atan2(-this.vY, this.vX));
             this.set('time', t);
+
+            if (finished) {
+                this.set('finished', true);
+                this.stop();
+            }
         },
 
         start: function() {
@@ -114,14 +116,14 @@ define(function (require) {
         stop: function() {
             this.get('projectile').set('atRest', true);
             this.set('inMotion', false);
-            this.trigger('finish');
+            this.trigger('finish', this, this.get('time'));
         },
 
         abort: function() {
             this.get('projectile').destroy();
             this.set('projectile', null);
             this.set('inMotion', false);
-            this.trigger('finish');
+            this.trigger('finish', this, this.get('time'));
         },
 
         recalculateAirResistanceTerm: function() {

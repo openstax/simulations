@@ -81,6 +81,7 @@ define(function (require) {
             this.initSceneView();
 
             this.listenTo(this.simulation.cannon, 'change:angle', this.angleChanged);
+            this.listenTo(this.simulation, 'change:currentTrajectory', this.trajectoryChanged);
         },
 
         /**
@@ -270,6 +271,33 @@ define(function (require) {
 
         erase: function() {
             this.sceneView.clearShots();
+        },
+
+        trajectoryChanged: function(simulation, trajectory) {
+            if (this.trajectory)
+                this.stopListening(this.trajectory);
+
+            if (trajectory) {
+                var lastTime = 0;
+                var printStats = _.bind(function(time) {
+                    this.$('#range').val(trajectory.x.toFixed(1));
+                    this.$('#height').val((trajectory.y - trajectory.get('initialY')).toFixed(1));
+                    this.$('#time').val(time.toFixed(1));
+                }, this);
+
+                this.listenTo(trajectory, 'change:time', function(model, time) {
+                    if (Math.floor(lastTime) !== Math.floor(time))
+                        printStats(time);
+                    lastTime = time;
+                });
+                this.listenTo(trajectory, 'finish', function() {
+                    printStats(trajectory.get('time'));
+                });
+
+                printStats(0);
+            }
+
+            this.trajectory = trajectory;
         }
 
     });

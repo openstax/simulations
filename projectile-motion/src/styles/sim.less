@@ -6,6 +6,60 @@
 @control-panel-expanded-width: 220px;
 @control-panel-collapsed-width: 60px;
 
+.trajectory-stats,
+.sim-controls {
+    h2 {
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 0.8);
+        margin-top: 0;
+    }
+
+    label {
+        color: #555;
+    }
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+}
+
+
+.trajectory-stats {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    padding: 15px;
+    position: absolute;
+    left: @panel-margin;
+    top: @panel-margin;
+
+    h2 {
+        display: inline-block;
+        margin-bottom: 0;
+        margin-right: 6px;
+        vertical-align: middle;
+    }
+
+    .stat-group {
+        display: inline-block;
+        margin-left: 20px;
+
+        input {
+            display: inline-block;
+            width: 60px;
+        }
+    }
+}
+
 .sim-controls {
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
     padding: 15px;
@@ -15,10 +69,6 @@
     width: @control-panel-expanded-width;
 
     h2 {
-        font-size: 20px;
-        font-weight: 400;
-        color: rgba(51, 51, 51, 0.8);
-        margin-top: 0;
         margin-bottom: 15px;
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
@@ -102,24 +152,6 @@
 
     .bootstrap-select.open > .btn {
         .box-shadow(none);
-    }
-
-    label {
-        color: #555;
-    }
-
-    input.form-control {
-        background: rgba(255, 255, 255, 0.27);
-        border-color: rgba(0, 0, 0, 0.1);
-        position: relative;
-
-        // Just for Chrome--they're too far left by default
-        &::-webkit-inner-spin-button, 
-        &::-webkit-outer-spin-button {
-            right: 4px;
-            margin-top: 2px;
-            position: absolute;
-        }
     }
 
     .control-group {
