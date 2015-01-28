@@ -13,6 +13,7 @@ define(function(require) {
     var PixiSceneView      = require('common/pixi/view/scene');
 
     var CannonView      = require('views/cannon');
+    var TrajectoryView  = require('views/trajectory');
     var ProjectileView  = require('views/projectile');
     var TankShellView   = require('views/projectile/tank-shell');
     var GolfballView    = require('views/projectile/golfball');
@@ -59,6 +60,7 @@ define(function(require) {
             this.zoomScale = 40;
 
             this.listenTo(this.simulation, 'projectile-launched', this.projectileLaunched);
+            this.listenTo(this.simulation, 'change:currentTrajectory',   this.trajectoryAdded);
         },
 
         /**
@@ -151,6 +153,19 @@ define(function(require) {
 
             this.projectileViews.push(projectileView);
             this.projectileLayer.addChild(projectileView.displayObject);
+        },
+
+        trajectoryAdded: function(simulation, trajectory) {
+            if (!trajectory)
+                return;
+
+            var trajectoryView = new TrajectoryView({
+                model: trajectory,
+                mvt: this.mvt
+            });
+
+            this.trajectoryViews.push(trajectoryView);
+            this.trajectoryLayer.addChild(trajectoryView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

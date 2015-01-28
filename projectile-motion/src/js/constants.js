@@ -118,5 +118,20 @@ define(function (require) {
     Constants.Projectiles = Projectiles;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                               TRAJECTORY                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var TrajectoryView = {};
+
+    TrajectoryView.AIR_RESISTANCE_ENABLED_COLOR  = '#ff0000';
+    TrajectoryView.AIR_RESISTANCE_DISABLED_COLOR = '#0923fb';
+    TrajectoryView.LINE_WIDTH = 3;
+
+    Constants.TrajectoryView = TrajectoryView;
+
+
     return Constants;
 });
