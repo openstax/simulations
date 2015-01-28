@@ -11,9 +11,12 @@ define(function(require) {
     var TankShellView = ProjectileView.extend({
 
         createProjectileSprite: function() {
-            return Assets.createSprite(Assets.Images.TANK_SHELL);
+            var sprite = Assets.createSprite(Assets.Images.TANK_SHELL);
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            return sprite;
         },
-
+        
         createRestingProjectileSprite: function() {
             return this.createProjectileSprite();
         },

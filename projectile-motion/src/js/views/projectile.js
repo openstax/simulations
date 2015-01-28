@@ -32,25 +32,28 @@ define(function(require) {
          */
         initGraphics: function() {
             var projectileSprite = this.createProjectileSprite();
-            projectileSprite.anchor.x = 0.5;
-            projectileSprite.anchor.y = 0.5;
+            
             this.projectileSprite = projectileSprite;
             this.displayObject.addChild(projectileSprite);
 
             var restingProjectileSprite = this.createRestingProjectileSprite();
-            restingProjectileSprite.anchor.x = 0.5;
-            restingProjectileSprite.anchor.y = 0.5;
             restingProjectileSprite.visible = false;
             this.restingProjectileSprite = restingProjectileSprite;
             this.displayObject.addChild(restingProjectileSprite);
         },
 
         createProjectileSprite: function() {
-            return Assets.createSprite(Assets.Images.CANNON_BALL);
+            var sprite = Assets.createSprite(Assets.Images.CANNON_BALL);
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            return sprite;
         },
 
         createRestingProjectileSprite: function() {
-            return Assets.createSprite(Assets.Images.CANNON_BALL);
+            var sprite = Assets.createSprite(Assets.Images.CANNON_BALL);
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            return sprite;
         },
 
         updateRestState: function(model, atRest) {
