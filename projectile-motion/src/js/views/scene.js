@@ -9,10 +9,33 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
     var Colors    = require('common/colors/colors');
 
-    var ModelViewTransform   = require('common/math/model-view-transform');
-    var PixiSceneView        = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PixiSceneView      = require('common/pixi/view/scene');
 
-    var CannonView = require('views/cannon');
+    var CannonView      = require('views/cannon');
+    var TrajectoryView  = require('views/trajectory');
+    var ProjectileView  = require('views/projectile');
+    var TankShellView   = require('views/projectile/tank-shell');
+    var GolfballView    = require('views/projectile/golfball');
+    var BaseballView    = require('views/projectile/baseball');
+    var BowlingballView = require('views/projectile/bowlingball');
+    var FootballView    = require('views/projectile/football');
+    var PumpkinView     = require('views/projectile/pumpkin');
+    var AdultHumanView  = require('views/projectile/adult-human');
+    var PianoView       = require('views/projectile/piano');
+    var BuickView       = require('views/projectile/buick');
+
+    var ProjectileViews = [
+        TankShellView,
+        GolfballView,
+        BaseballView,
+        BowlingballView,
+        FootballView,
+        PumpkinView,
+        AdultHumanView,
+        PianoView,
+        BuickView
+    ];
 
     var Assets = require('assets');
 
@@ -35,6 +58,9 @@ define(function(require) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.zoomScale = 40;
+
+            this.listenTo(this.simulation, 'projectile-launched', this.projectileLaunched);
+            this.listenTo(this.simulation, 'change:currentTrajectory',   this.trajectoryAdded);
         },
 
         /**
@@ -58,15 +84,19 @@ define(function(require) {
             this.initLayers();
             this.initBackground();
             this.initCannon();
+            this.initTrajectories();
+            this.initProjectiles();
         },
 
         initLayers: function() {
             // Create layers
-            this.backLayer = new PIXI.DisplayObjectContainer();
-            this.propLayer = new PIXI.DisplayObjectContainer();
+            this.backLayer       = new PIXI.DisplayObjectContainer();
+            this.projectileLayer = new PIXI.DisplayObjectContainer();
+            this.propLayer       = new PIXI.DisplayObjectContainer();
             this.trajectoryLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.backLayer);
+            this.stage.addChild(this.projectileLayer);
             this.stage.addChild(this.propLayer);
             this.stage.addChild(this.trajectoryLayer);
         },
@@ -93,12 +123,53 @@ define(function(require) {
             this.propLayer.addChild(cannonView.displayObject);
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {
-            this.cannonView.update(time, deltaTime, paused);
+        initTrajectories: function() {
+            this.trajectoryViews = [];
         },
 
-        reset: function() {
-            
+        initProjectiles: function() {
+            this.projectileViews = [];
+        },
+
+        projectileLaunched: function(projectile) {
+            var projectileViewClass = ProjectileView;
+            _.each(ProjectileViews, function(View) {
+                if (projectile instanceof View.getModelClass()) {
+                    projectileViewClass = View;
+                    return false;
+                }
+            });
+
+            var projectileView = new projectileViewClass({
+                model: projectile,
+                mvt: this.mvt
+            });
+
+            this.listenTo(projectile, 'destroy', function() {
+                projectileView.removeFrom(this.projectileLayer);
+                var index = _.indexOf(this.projectileViews, projectileView);
+                this.projectileViews.splice(index, 0);
+            });
+
+            this.projectileViews.push(projectileView);
+            this.projectileLayer.addChild(projectileView.displayObject);
+        },
+
+        trajectoryAdded: function(simulation, trajectory) {
+            if (!trajectory)
+                return;
+
+            var trajectoryView = new TrajectoryView({
+                model: trajectory,
+                mvt: this.mvt
+            });
+
+            this.trajectoryViews.push(trajectoryView);
+            this.trajectoryLayer.addChild(trajectoryView.displayObject);
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            this.cannonView.update(time, deltaTime, paused);
         },
 
         zoomIn: function() {
@@ -110,7 +181,7 @@ define(function(require) {
                     new Vector2(this.viewOriginX, this.viewOriginY),
                     this.zoomScale // Scale, meters to pixels
                 );
-                this.cannonView.updateMVT(this.mvt);
+                this.updateMVTs();
             }
         },
 
@@ -123,7 +194,32 @@ define(function(require) {
                     new Vector2(this.viewOriginX, this.viewOriginY),
                     this.zoomScale // Scale, meters to pixels
                 );
-                this.cannonView.updateMVT(this.mvt);
+                this.updateMVTs();
+            }
+        },
+
+        updateMVTs: function() {
+            var mvt = this.mvt;
+
+            this.cannonView.updateMVT(mvt);
+
+            for (i = this.projectileViews.length - 1; i >= 0; i--)
+                this.projectileViews[i].updateMVT(mvt);
+
+            for (i = this.trajectoryViews.length - 1; i >= 0; i--)
+                this.trajectoryViews[i].updateMVT(mvt);
+        },
+
+        clearShots: function() {
+            var i;
+            for (i = this.projectileViews.length - 1; i >= 0; i--) {
+                this.projectileViews[i].removeFrom(this.projectileLayer);
+                this.projectileViews.splice(i, 1);
+            }
+
+            for (i = this.trajectoryViews.length - 1; i >= 0; i--) {
+                this.trajectoryViews[i].removeFrom(this.trajectoryLayer);
+                this.trajectoryViews.splice(i, 1);
             }
         }
 

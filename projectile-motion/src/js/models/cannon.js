@@ -34,7 +34,7 @@ define(function (require) {
         },
 
         firingY: function() {
-            return this.get('y') + this.get('heightOffGround');
+            return this.get('y');
         },
 
         firingAngle: function() {

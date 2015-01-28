@@ -29,7 +29,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var MovingManSimView = SimView.extend({
+    var ProjectileMotionSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -46,13 +46,23 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .sound-btn' : 'changeVolume',
-            'click .btn-zoom-in' : 'zoomIn',
-            'click .btn-zoom-out' : 'zoomOut',
+            'click .sound-btn':    'changeVolume',
+            'click .btn-zoom-in':  'zoomIn',
+            'click .btn-zoom-out': 'zoomOut',
+            'change #projectile':  'changeProjectile',
+            'change #angle':       'changeAngle',
+            'keyup  #angle':       'changeAngle',
+            'change #speed':       'changeSpeed',
+            'keyup  #speed':       'changeSpeed',
+            'change #diameter':    'changeDiameter',
+            'keyup  #diameter':    'changeDiameter',
+            'change #drag':        'changeDrag',
+            'keyup  #drag':        'changeDrag',
+            'change #altitude':    'changeAltitude',
+            'keyup  #altitude':    'changeAltitude',
             'change #air-resistance-check': 'toggleAirResistance',
-            'change #angle' : 'changeAngle',
-            'keyup  #angle' : 'changeAngle',
-            'click .btn-fire': 'fireCannon'
+            'click .btn-fire':  'fireCannon',
+            'click .btn-erase': 'erase'
         },
 
         /**
@@ -215,11 +225,54 @@ define(function (require) {
             });
         },
 
+        changeSpeed: function(event) {
+            this.simulation.set('initialSpeed', parseFloat(this.$('#speed').val()));
+        },
+
+        changeProjectile: function(event) {
+            var index = parseInt($(event.target).val());
+
+            // Get an instance of the projectile to give the input boxes some default values
+            var projectile = new Constants.Projectiles[index];
+            this.$('#mass').val(projectile.get('mass'));
+            this.$('#diameter').val(projectile.get('diameter'));
+            this.$('#drag').val(projectile.get('dragCoefficient'));
+
+            // Set the selected projectile on the simulation
+            this.simulation.set('currentProjectile', projectile);
+        },
+
+        changeMass: function(event) {
+            var projectile = this.simulation.get('currentProjectile');
+            if (projectile)
+                projectile.set('mass', parseFloat(this.$('#mass').val()));
+        },
+
+        changeDiameter: function(event) {
+            var projectile = this.simulation.get('currentProjectile');
+            if (projectile)
+                projectile.set('diameter', parseFloat(this.$('#diameter').val()));
+        },
+
+        changeDrag: function(event) {
+            var projectile = this.simulation.get('currentProjectile');
+            if (projectile)
+                projectile.set('dragCoefficient', parseFloat(this.$('#drag').val()));
+        },
+
+        changeAltitude: function(event) {
+            this.simulation.set('altitude', parseFloat(this.$('#altitude').val()));
+        },
+
         fireCannon: function() {
-            this.simulation.cannon.fire();
+            this.simulation.fireCannon();
+        },
+
+        erase: function() {
+            this.sceneView.clearShots();
         }
 
     });
 
-    return MovingManSimView;
+    return ProjectileMotionSimView;
 });

@@ -5,11 +5,10 @@
 
     <h2>Shot Parameters</h2>
 
-    <select class="form-control">
-        <!-- make this dynamic layer -->
-        <option value="">Generic projectile</option>
-        <option value="">Tank shell</option>
-        <option value="">Golf ball</option>
+    <select class="form-control" id="projectile">
+    <% _.each(Constants.Projectiles, function(projectile, index) { %>
+        <option value="<%= index %>"><%= projectile.getName() %></option>
+    <% }); %>
     </select>
 
     <div class="control-group">
@@ -29,14 +28,14 @@
     <div class="control-group">
         <label for="mass" class="control-label">Mass (kg)</label>
         <div class="input-wrapper">
-            <input type="number" min="0" class="form-control" id="mass" value="<%= simulation.get('mass') %>">
+            <input type="number" min="0" class="form-control" id="mass" value="<%= simulation.get('currentProjectile').get('mass') %>">
         </div>
     </div>
 
     <div class="control-group">
         <label for="diameter" class="control-label">Diameter (m)</label>
         <div class="input-wrapper">
-            <input type="number" min="0" class="form-control" id="diameter" value="<%= simulation.get('diameter') %>">
+            <input type="number" min="0" class="form-control" id="diameter" value="<%= simulation.get('currentProjectile').get('diameter') %>">
         </div>
     </div>
 
@@ -47,7 +46,7 @@
         <div class="control-group">
             <label for="drag" class="control-label">Drag Coefficient</label>
             <div class="input-wrapper">
-                <input type="number" min="0" class="form-control" id="drag" value="<%= simulation.get('dragCoefficient') %>">
+                <input type="number" min="0" class="form-control" id="drag" value="<%= simulation.get('currentProjectile').get('dragCoefficient') %>">
             </div>
         </div>
 

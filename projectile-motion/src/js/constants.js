@@ -15,7 +15,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    Constants.GRAVITY = 9.8; // m/s^2
+    Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
     Constants.GROUND_Y = -0.77;
 
@@ -94,6 +94,48 @@ define(function (require) {
     CannonView.PARTICLE_EMISSION_AREA_WIDTH = 31; // width of the opening at the end of the cannon in pixels
 
     Constants.CannonView = CannonView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              PROJECTILES                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var Projectiles = [
+        require('models/projectile'),
+        require('models/projectile/tank-shell'),
+        require('models/projectile/golfball'),
+        require('models/projectile/baseball'),
+        require('models/projectile/bowlingball'),
+        require('models/projectile/football'),
+        require('models/projectile/pumpkin'),
+        require('models/projectile/adult-human'),
+        require('models/projectile/piano'),
+        require('models/projectile/buick')
+    ];
+
+    Constants.Projectiles = Projectiles;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                               TRAJECTORY                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var TrajectoryView = {};
+
+    TrajectoryView.AIR_RESISTANCE_ENABLED_COLOR  = '#ff0000';
+    TrajectoryView.AIR_RESISTANCE_DISABLED_COLOR = '#0923fb';
+    TrajectoryView.LINE_WIDTH = 3;
+    TrajectoryView.SECOND_MARKER_COLOR = '#000';
+    TrajectoryView.SECOND_MARKER_WIDTH = 18;
+    TrajectoryView.SECOND_MARKER_ALPHA = 1;
+    TrajectoryView.SECOND_MARKER_LINE_WIDTH = 4;
+
+    Constants.TrajectoryView = TrajectoryView;
+
 
     return Constants;
 });
