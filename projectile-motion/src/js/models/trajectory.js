@@ -117,6 +117,13 @@ define(function (require) {
             this.trigger('finish');
         },
 
+        abort: function() {
+            this.get('projectile').destroy();
+            this.set('projectile', null);
+            this.set('inMotion', false);
+            this.trigger('finish');
+        },
+
         recalculateAirResistanceTerm: function() {
             var rho = 1.6 * Math.exp(-this.get('altitude') / 8400);
             var m = this.get('projectile').get('mass');

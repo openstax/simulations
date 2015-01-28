@@ -143,6 +143,12 @@ define(function(require) {
                 mvt: this.mvt
             });
 
+            this.listenTo(projectile, 'destroy', function() {
+                projectileView.removeFrom(this.projectileLayer);
+                var index = _.indexOf(this.projectileViews, projectileView);
+                this.projectileViews.splice(index, 0);
+            });
+
             this.projectileViews.push(projectileView);
             this.projectileLayer.addChild(projectileView.displayObject);
         },

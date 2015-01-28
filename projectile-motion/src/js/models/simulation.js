@@ -64,6 +64,10 @@ define(function (require, exports, module) {
         },
 
         fireCannon: function() {
+            // Abort any currently running trajectories
+            if (this.get('currentTrajectory'))
+                this.get('currentTrajectory').abort();
+
             var trajectory = new Trajectory({
                 projectile: this.get('currentProjectile'),
                 initialSpeed: this.get('initialSpeed'),
@@ -76,7 +80,11 @@ define(function (require, exports, module) {
             this.set('currentTrajectory', trajectory);
 
             this.listenTo(trajectory, 'finish', function() {
+                // Stop listening and forget trajectory
                 this.stopListening(trajectory);
+                this.set('currentTrajectory', null);
+
+                // Make a new projectile and ready it for launch
                 var newProjectile = this.get('currentProjectile').clone();
                 newProjectile.reset();
                 this.set('currentProjectile', newProjectile);
