@@ -98,17 +98,17 @@ define(function (require) {
 
                 finished = true;
             }
+            
+            this.get('projectile').set('x', this.x);
+            this.get('projectile').set('y', this.y);
+            this.get('projectile').set('rotation', Math.atan2(-this.vY, this.vX));
+            this.set('time', t);
 
             var collisionObjects = this.get('collisionObjects');
             for (var i = 0; i < collisionObjects.length; i++) {
                 if (collisionObjects[i].get('collisionEnabled'))
                     collisionObjects[i].calculateCollision(this.get('projectile'));
             }
-            
-            this.get('projectile').set('x', this.x);
-            this.get('projectile').set('y', this.y);
-            this.get('projectile').set('rotation', Math.atan2(-this.vY, this.vX));
-            this.set('time', t);
 
             if (finished) {
                 this.set('finished', true);
