@@ -40,7 +40,7 @@ define(function(require) {
             'touchend        .pedestal': 'dragPedestalEnd',
             'mouseup         .pedestal': 'dragPedestalEnd',
             'touchendoutside .pedestal': 'dragPedestalEnd',
-            'mouseupoutside  .pedestal': 'dragPedestalEnd',
+            'mouseupoutside  .pedestal': 'dragPedestalEnd'
         },
 
         /**

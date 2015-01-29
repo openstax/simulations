@@ -273,6 +273,8 @@ define(function (require) {
         erase: function() {
             this.sceneView.clearShots();
             this.simulation.target.reset();
+            if (this.simulation.get('currentTrajectory'))
+                this.simulation.get('currentTrajectory').abort();
             this.$el.removeClass('score');
         },
 

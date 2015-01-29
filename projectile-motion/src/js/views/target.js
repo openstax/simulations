@@ -91,11 +91,11 @@ define(function(require) {
                 dx = this.mvt.viewToModelDeltaY(dx);
 
                 var x = this.model.get('x') + dx;
-                if (x < 0)
-                    x = 0;
+                if (x < 1)
+                    x = 1;
                 this.model.set('x', x);
 
-                this.drawTarget();
+                this.updatePosition();
             }
         },
 
