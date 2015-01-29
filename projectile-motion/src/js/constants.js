@@ -18,6 +18,7 @@ define(function (require) {
     Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
     Constants.GROUND_Y = -0.77;
+    Constants.CYLINDER_PERSPECTIVE_MODIFIER = 0.15;
 
 
     /*************************************************************************
@@ -61,7 +62,7 @@ define(function (require) {
     CannonView.PEDESTAL_TOP_COLOR  = '#558455'; //Colors.darkenHex(SceneView.GROUND_COLOR, 0.1);
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
     CannonView.PEDESTAL_WIDTH = 3.6; // meters
-    CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = 0.115;
+    CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = Constants.CYLINDER_PERSPECTIVE_MODIFIER;
     CannonView.AXIS_LINE_COLOR = '#000';
     CannonView.AXIS_LINE_ALPHA = 0.4;
     CannonView.AXIS_LINE_WIDTH = 2;
@@ -135,6 +136,35 @@ define(function (require) {
     TrajectoryView.SECOND_MARKER_LINE_WIDTH = 4;
 
     Constants.TrajectoryView = TrajectoryView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                                 TARGET                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Target = {};
+
+    Target.DEFAULT_RADIUS = 1.25; // meters
+    Target.DEFAULT_X = 16.8;      // meters
+
+    Constants.Target = Target;
+
+
+    var TargetView = {};
+
+    TargetView.NUM_RINGS = 3;
+    TargetView.RING_COLORS = [
+        '#ff0000',
+        '#ffffff'
+    ];
+    TargetView.LINE_COLOR = '#000';
+    TargetView.LINE_WIDTH = 1;
+    TargetView.PERSPECTIVE_MODIFIER = Constants.CYLINDER_PERSPECTIVE_MODIFIER;
+
+    Constants.TargetView = TargetView;
+
 
 
     return Constants;

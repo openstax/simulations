@@ -9,6 +9,7 @@ define(function (require, exports, module) {
     var Cannon     = require('models/cannon');
     var Projectile = require('models/projectile');
     var Trajectory = require('models/trajectory');
+    var Target     = require('models/target');
 
     /**
      * Constants
@@ -56,6 +57,12 @@ define(function (require, exports, module) {
                 angle: Constants.Cannon.START_ANGLE
             });
             this.cannon = cannon;
+
+            this.target = new Target();
+
+            this.collisionObjects = [
+                this.target
+            ];
         },
 
         _update: function(time, deltaTime) {
@@ -76,6 +83,7 @@ define(function (require, exports, module) {
                 initialY: this.cannon.firingY(),
                 airResistanceEnabled: this.get('airResistanceEnabled'),
                 altitude: this.get('altitude'),
+                collisionObjects: this.collisionObjects
             });
             this.set('currentTrajectory', trajectory);
 

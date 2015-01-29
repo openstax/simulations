@@ -82,6 +82,7 @@ define(function (require) {
 
             this.listenTo(this.simulation.cannon, 'change:angle', this.angleChanged);
             this.listenTo(this.simulation, 'change:currentTrajectory', this.trajectoryChanged);
+            this.listenTo(this.simulation.target, 'collide', this.targetHit);
         },
 
         /**
@@ -271,6 +272,8 @@ define(function (require) {
 
         erase: function() {
             this.sceneView.clearShots();
+            this.simulation.target.reset();
+            this.$el.removeClass('score');
         },
 
         trajectoryChanged: function(simulation, trajectory) {
@@ -298,6 +301,11 @@ define(function (require) {
             }
 
             this.trajectory = trajectory;
+        },
+
+        targetHit: function() {
+            console.log('hit!');
+            this.$el.addClass('score');
         }
 
     });
