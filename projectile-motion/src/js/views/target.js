@@ -32,26 +32,26 @@ define(function(require) {
     var TargetView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd',
+            'touchstart      .graphics': 'dragStart',
+            'mousedown       .graphics': 'dragStart',
+            'touchmove       .graphics': 'drag',
+            'mousemove       .graphics': 'drag',
+            'touchend        .graphics': 'dragEnd',
+            'mouseup         .graphics': 'dragEnd',
+            'touchendoutside .graphics': 'dragEnd',
+            'mouseupoutside  .graphics': 'dragEnd'
         },
 
         initialize: function(options) {
             this.mvt = options.mvt;
 
             this.initGraphics();
-
-            this._dragOffset = new PIXI.Point();
         },
 
         initGraphics: function() {
             this.graphics = new PIXI.Graphics();
+            this.graphics.buttonMode = true;
+            this.graphics.defaultCursor = 'ew-resize';
             this.displayObject.addChild(this.graphics);
 
             this.updateMVT(this.mvt);
@@ -78,6 +78,7 @@ define(function(require) {
         },
 
         dragStart: function(data) {
+            console.log('drag start');
             this.previousX = data.global.x;
             this.dragging = true;
         },
@@ -94,9 +95,7 @@ define(function(require) {
                     x = 0;
                 this.model.set('x', x);
 
-                this.updatePosition();
-                this.drawPedestal();
-                this.drawAxes();
+                this.drawTarget();
             }
         },
 

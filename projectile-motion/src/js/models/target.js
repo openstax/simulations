@@ -43,11 +43,9 @@ define(function (require) {
 
         calculateCollision: function(projectile) {
             var collision = this._bounds.overlaps(projectile.bounds());
-            console.log(projectile.bounds().toString());
             if (collision) {
                 this.trigger('collide', this, projectile);
                 this.set('collisionEnabled', false);
-                console.log('collide');
             }
             return collision;
         },

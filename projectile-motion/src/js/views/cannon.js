@@ -52,7 +52,6 @@ define(function(require) {
 
             this.initGraphics();
 
-            this._dragOffset = new PIXI.Point();
             this._initialPosition = new Vector2();
 
             // this.blastSound = new buzz.sound('audio/blast', {
@@ -108,6 +107,7 @@ define(function(require) {
         initPedestal: function() {
             var pedestal = new PIXI.Graphics();
             pedestal.buttonMode = true;
+            pedestal.defaultCursor = 'ns-resize';
             this.displayObject.addChild(pedestal);
             this.pedestal = pedestal;
 

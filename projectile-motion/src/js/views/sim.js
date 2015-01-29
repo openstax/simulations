@@ -304,7 +304,6 @@ define(function (require) {
         },
 
         targetHit: function() {
-            console.log('hit!');
             this.$el.addClass('score');
         }
 
