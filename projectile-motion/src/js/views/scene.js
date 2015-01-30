@@ -229,6 +229,8 @@ define(function(require) {
 
             for (i = this.trajectoryViews.length - 1; i >= 0; i--)
                 this.trajectoryViews[i].updateMVT(mvt);
+
+            this.trigger('change:mvt', this, mvt);
         },
 
         clearShots: function() {

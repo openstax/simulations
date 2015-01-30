@@ -116,6 +116,9 @@ define(function (require) {
                 }, this),
                 units: 'm'
             });
+            this.listenTo(this.sceneView, 'change:mvt', function() {
+                this.measuringTapeView.updateOnNextFrame = true;
+            });
         },
 
         /**
