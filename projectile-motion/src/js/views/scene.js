@@ -13,6 +13,8 @@ define(function(require) {
     var PixiSceneView      = require('common/pixi/view/scene');
 
     var CannonView      = require('views/cannon');
+    var TargetView      = require('views/target');
+    var DavidView       = require('views/david');
     var TrajectoryView  = require('views/trajectory');
     var ProjectileView  = require('views/projectile');
     var TankShellView   = require('views/projectile/tank-shell');
@@ -86,6 +88,8 @@ define(function(require) {
             this.initCannon();
             this.initTrajectories();
             this.initProjectiles();
+            this.initTarget();
+            this.initDavid();
         },
 
         initLayers: function() {
@@ -129,6 +133,22 @@ define(function(require) {
 
         initProjectiles: function() {
             this.projectileViews = [];
+        },
+
+        initTarget: function() {
+            this.targetView = new TargetView({
+                model: this.simulation.target,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.targetView.displayObject);
+        },
+
+        initDavid: function() {
+            this.davidView = new DavidView({
+                model: this.simulation.david,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.davidView.displayObject);
         },
 
         projectileLaunched: function(projectile) {
@@ -202,12 +222,15 @@ define(function(require) {
             var mvt = this.mvt;
 
             this.cannonView.updateMVT(mvt);
+            this.targetView.updateMVT(mvt);
 
             for (i = this.projectileViews.length - 1; i >= 0; i--)
                 this.projectileViews[i].updateMVT(mvt);
 
             for (i = this.trajectoryViews.length - 1; i >= 0; i--)
                 this.trajectoryViews[i].updateMVT(mvt);
+
+            this.trigger('change:mvt', this, mvt);
         },
 
         clearShots: function() {

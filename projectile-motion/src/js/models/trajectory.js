@@ -23,7 +23,8 @@ define(function (require) {
 
             // Simulation variables
             airResistanceEnabled: false,
-            altitude: 0
+            altitude: 0,
+            collisionObjects: [] // Objects that can collide with the projectile
         },
 
         initialize: function(attributes, options) {
@@ -102,6 +103,12 @@ define(function (require) {
             this.get('projectile').set('y', this.y);
             this.get('projectile').set('rotation', Math.atan2(-this.vY, this.vX));
             this.set('time', t);
+
+            var collisionObjects = this.get('collisionObjects');
+            for (var i = 0; i < collisionObjects.length; i++) {
+                if (collisionObjects[i].get('collisionEnabled'))
+                    collisionObjects[i].calculateCollision(this.get('projectile'));
+            }
 
             if (finished) {
                 this.set('finished', true);

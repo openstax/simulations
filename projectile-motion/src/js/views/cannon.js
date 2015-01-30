@@ -40,7 +40,7 @@ define(function(require) {
             'touchend        .pedestal': 'dragPedestalEnd',
             'mouseup         .pedestal': 'dragPedestalEnd',
             'touchendoutside .pedestal': 'dragPedestalEnd',
-            'mouseupoutside  .pedestal': 'dragPedestalEnd',
+            'mouseupoutside  .pedestal': 'dragPedestalEnd'
         },
 
         /**
@@ -52,12 +52,12 @@ define(function(require) {
 
             this.initGraphics();
 
-            this._dragOffset = new PIXI.Point();
             this._initialPosition = new Vector2();
 
-            // this.blastSound = new buzz.sound('audio/blast', {
-            //     formats: ['ogg', 'mp3', 'wav']
-            // });
+            this.blastSound = new buzz.sound('audio/boom', {
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 80
+            });
 
             // Listen to angle because the user can change that from the control panel,
             //   but don't listen to x or y because those will only ever be changed
@@ -108,6 +108,7 @@ define(function(require) {
         initPedestal: function() {
             var pedestal = new PIXI.Graphics();
             pedestal.buttonMode = true;
+            pedestal.defaultCursor = 'ns-resize';
             this.displayObject.addChild(pedestal);
             this.pedestal = pedestal;
 
@@ -314,6 +315,8 @@ define(function(require) {
         cannonFired: function() {
             this.timeToStopFlameEmission = this.time + CannonView.FLAME_PARTICLE_EMISSION_DURATION;
             this.timeToStopSmokeEmission = this.time + CannonView.SMOKE_PARTICLE_EMISSION_DURATION;
+            this.blastSound.stop();
+            this.blastSound.play();
         },
 
         updateFlameParticles: function(time, deltaTime) {
@@ -464,6 +467,18 @@ define(function(require) {
             }
 
             return particle;
+        },
+
+        muteVolume: function() {
+            this.blastSound.setVolume(0);
+        },
+
+        lowVolume: function() {
+            this.blastSound.setVolume(20);
+        },
+
+        highVolume: function() {
+            this.blastSound.setVolume(80);
         }
 
 

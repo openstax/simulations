@@ -25,7 +25,9 @@ define(function (require) {
         PIANO:              'piano.png',
         PIANO_IMPACT:       'piano-impact.png',
         BUICK:              'buick.png',
-        BUICK_IMPACT:       'buick-impact.png'
+        BUICK_IMPACT:       'buick-impact.png',
+        DAVID_SHORTS:       'david-shorts.png',
+        DAVID_NO_SHORTS:    'david-no-shorts.png'
     };
 
     Assets.SpriteSheets = {};
