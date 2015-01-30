@@ -17,7 +17,7 @@ define(function (require) {
 
     Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
-    Constants.GROUND_Y = -0.77;
+    Constants.GROUND_Y = -1.3;
     Constants.CYLINDER_PERSPECTIVE_MODIFIER = 0.15;
 
 
@@ -50,7 +50,7 @@ define(function (require) {
     Cannon.START_X = 0;
     Cannon.START_Y = 0;
     Cannon.HEIGHT_OFF_GROUND = -Constants.GROUND_Y; // meters
-    Cannon.WIDTH = 2; // meters, the length of the cannon
+    Cannon.WIDTH = 3.5; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
     Cannon.MIN_ANGLE = -28; // Don't want it moving into its own shadow. If we need to allow them to point it down more, I'll have to separate that shadow layer in the image.
     Cannon.MAX_ANGLE = 197;
@@ -61,7 +61,7 @@ define(function (require) {
 
     CannonView.PEDESTAL_TOP_COLOR  = '#558455'; //Colors.darkenHex(SceneView.GROUND_COLOR, 0.1);
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
-    CannonView.PEDESTAL_WIDTH = 3.6; // meters
+    CannonView.PEDESTAL_WIDTH = 5.5; // meters
     CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = Constants.CYLINDER_PERSPECTIVE_MODIFIER;
     CannonView.AXIS_LINE_COLOR = '#000';
     CannonView.AXIS_LINE_ALPHA = 0.4;
@@ -88,7 +88,7 @@ define(function (require) {
     CannonView.FLAME_PARTICLE_SPREAD_ANGLE_RANGE = range({ min: -CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2, max: CannonView.FLAME_PARTICLE_SPREAD_ANGLE / 2 }); // radians
     CannonView.FLAME_PARTICLE_VELOCITY_RANGE = range({ min: 800, max: 1200 });
     CannonView.FLAME_PARTICLE_LIFE_SPAN = range({ min: 0.12, max: 0.18 });
-    CannonView.FLAME_PARTICLE_EMISSION_DURATION = 0.24;
+    CannonView.FLAME_PARTICLE_EMISSION_DURATION = 0.18;
     CannonView.FLAME_PARTICLE_EMISSION_RATE = 500;
     CannonView.FLAME_PARTICLE_FADE_POINT = 0.8;
 
