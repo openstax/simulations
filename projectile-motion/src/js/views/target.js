@@ -75,13 +75,9 @@ define(function(require) {
                 this.graphics.drawEllipse(0, 0, ellipseWidth / 2, ellipseHeight / 2);
                 this.graphics.endFill();
             }
-
-            console.log(this.graphics.getBounds());
-            //this.graphics.hitArea = new PIXI.Ellipse(0, 0, totalWidth / 2, totalHeight / 2);
         },
 
         dragStart: function(data) {
-            console.log('drag start');
             this.previousX = data.global.x;
             this.dragging = true;
         },
