@@ -166,6 +166,19 @@ define(function (require) {
     Constants.TargetView = TargetView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                 DAVID                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var David = {};
+
+    David.DEFAULT_X = 4;  // meters
+    David.HEIGHT = 2.353; // meters
+    David.BOUNDS_RELATIVE_TO_HEIGHT = new Rectangle(0.156, 0, 0.211, 1);
+
+    Constants.David = David;
 
     return Constants;
 });

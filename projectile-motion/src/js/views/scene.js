@@ -14,6 +14,7 @@ define(function(require) {
 
     var CannonView      = require('views/cannon');
     var TargetView      = require('views/target');
+    var DavidView       = require('views/david');
     var TrajectoryView  = require('views/trajectory');
     var ProjectileView  = require('views/projectile');
     var TankShellView   = require('views/projectile/tank-shell');
@@ -88,6 +89,7 @@ define(function(require) {
             this.initTrajectories();
             this.initProjectiles();
             this.initTarget();
+            this.initDavid();
         },
 
         initLayers: function() {
@@ -139,6 +141,14 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.backLayer.addChild(this.targetView.displayObject);
+        },
+
+        initDavid: function() {
+            this.davidView = new DavidView({
+                model: this.simulation.david,
+                mvt: this.mvt
+            });
+            this.backLayer.addChild(this.davidView.displayObject);
         },
 
         projectileLaunched: function(projectile) {
