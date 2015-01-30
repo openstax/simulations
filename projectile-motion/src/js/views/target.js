@@ -62,8 +62,8 @@ define(function(require) {
             this.graphics.lineStyle(TargetView.LINE_WIDTH, TargetView.LINE_COLOR, 1);
             
             // Paint the rings from the outside one to the inside
-            var totalWidth  = this.mvt.modelToViewDeltaX(this.model.get('radius')) * 2;
-            var totalHeight = this.mvt.modelToViewDeltaY(this.model.get('radius')) * 2 * TargetView.PERSPECTIVE_MODIFIER;
+            var totalWidth  =  this.mvt.modelToViewDeltaX(this.model.get('radius')) * 2;
+            var totalHeight = -this.mvt.modelToViewDeltaY(this.model.get('radius')) * 2 * TargetView.PERSPECTIVE_MODIFIER;
             var widthPerRing  = totalWidth  / TargetView.NUM_RINGS;
             var heightPerRing = totalHeight / TargetView.NUM_RINGS;
             var ellipseWidth;
@@ -91,7 +91,7 @@ define(function(require) {
                 var dx = data.global.x - this.previousX;
                 this.previousX = data.global.x;
 
-                dx = this.mvt.viewToModelDeltaY(dx);
+                dx = this.mvt.viewToModelDeltaX(dx);
 
                 var x = this.model.get('x') + dx;
                 if (x < 1)
