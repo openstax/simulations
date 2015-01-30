@@ -5,7 +5,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView                    = require('common/app/sim');
+    var MeasuringTapeView = require('common/tools/measuring-tape');
+    var SimView           = require('common/app/sim');
+    var Vector2           = require('common/math/vector2');
+
     var ProjectileMotionSimulation = require('models/simulation');
     var ProjectileMotionSceneView  = require('views/scene');
 
@@ -79,6 +82,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initMeasuringTapeView();
 
             this.listenTo(this.simulation.cannon, 'change:angle', this.angleChanged);
             this.listenTo(this.simulation, 'change:currentTrajectory', this.trajectoryChanged);
@@ -101,6 +105,19 @@ define(function (require) {
             });
         },
 
+        initMeasuringTapeView: function() {
+            this.measuringTapeView = new MeasuringTapeView({
+                dragFrame: this.el,
+                viewToModelDeltaX: _.bind(function(dx){
+                    return this.sceneView.mvt.viewToModelDeltaX(dx);
+                }, this),
+                viewToModelDeltaY: _.bind(function(dy){
+                    return this.sceneView.mvt.viewToModelDeltaY(dy);
+                }, this),
+                units: 'm'
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -109,6 +126,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderMeasuringTape();
 
             return this;
         },
@@ -133,12 +151,21 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+        renderMeasuringTape: function() {
+            this.measuringTapeView.render();
+            this.$el.append(this.measuringTapeView.el);
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.measuringTapeView.postRender();
+            this.measuringTapeView.setStart(this.sceneView.width * 0.6, this.sceneView.height * 0.92);
+            this.measuringTapeView.setEnd(  this.sceneView.width * 0.9, this.sceneView.height * 0.92);
         },
 
         /**
@@ -157,8 +184,12 @@ define(function (require) {
             // Update the model
             this.simulation.update(time, deltaTime);
 
+            var timeSeconds = time / 1000;
+            var dtSeconds   = deltaTime / 1000;
+
             // Update the scene
-            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'));
+            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.measuringTapeView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         /**
