@@ -206,15 +206,15 @@ define(function (require) {
 
             if ($btn.hasClass('sound-btn-mute')) {
                 this.$('.sound-btn-low').show();
-                //this.sceneView.movingManView.lowVolume();
+                this.sceneView.cannonView.lowVolume();
             }
             else if ($btn.hasClass('sound-btn-low')) {
                 this.$('.sound-btn-high').show();
-                //this.sceneView.movingManView.highVolume();
+                this.sceneView.cannonView.highVolume();
             }
             else if ($btn.hasClass('sound-btn-high')) {
                 this.$('.sound-btn-mute').show();
-                //this.sceneView.movingManView.muteVolume();
+                this.sceneView.cannonView.muteVolume();
             }
         },
 
