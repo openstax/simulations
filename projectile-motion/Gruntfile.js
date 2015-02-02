@@ -1,4 +1,9 @@
-module.exports = function(grunt){
+module.exports = function(grunt) {
+
+	'use strict';
+
+	var _               = grunt.util._;
+	var requireJsConfig = require('./src/js/config.js');
 
 	var BANNER_TEMPLATE_STRING = '/*! <%= pkg.name %> - v<%= pkg.version %> - '
 		+ '<%= grunt.template.today("yyyy-mm-dd") %> */\n';
@@ -55,56 +60,13 @@ module.exports = function(grunt){
 		},
 		requirejs: {
 			compile: {
-				options: {
+				options: _.merge(requireJsConfig, {
 					baseUrl: 'src/js',
-					mainConfigFile: 'src/js/config.js',
 					findNestedDependencies: true,
 					optimize: 'uglify2',
-					paths: {
-						jquery:     '../../bower_components/jquery/dist/jquery',
-						underscore: '../../bower_components/lodash/dist/lodash',
-						backbone:   '../../bower_components/backbone/backbone',
-						bootstrap:  '../../bower_components/bootstrap/dist/js/bootstrap.min',
-						text:       '../../bower_components/requirejs-text/text',
-						pixi:       '../../bower_components/pixi/bin/pixi',
-						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-						buzz:       '../../bower_components/buzz/dist/buzz.min',
-						'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
-						'object-pool':    '../../node_modules/object-pool-shimmed/index',
-						'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
-						'bootstrap-select':      '../../node_modules/bootstrap-select/dist/js/bootstrap-select',
-						'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
-
-						views:      '../js/views',
-						models:     '../js/models',
-						assets:     '../js/assets',
-						constants:  '../js/constants',
-						templates:  '../templates',
-						styles:     '../styles',
-						common:     '../../../common'
-					},
-					packages: [{
-						name: 'css',
-						location: '../../bower_components/require-css',
-						main: 'css'
-					}, {
-						name: 'less',
-						location: '../../bower_components/require-less',
-						main: 'less'
-					}],
-					less: {
-						modifyVars: {
-							'fa-font-path': '"../node_modules/font-awesome/fonts/"'
-						}
-					},
-					shim: {
-						'bootstrap-select': {
-							deps: ['jquery']
-						}
-					},
 					name: 'main',
 					out: 'src/optimized.js'
-				}
+				})
 			}
 		},
 		uglify: {
