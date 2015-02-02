@@ -9,7 +9,7 @@ define(function (require) {
 
         defaults: {
             mass: 2,
-            diameter: 0.3,
+            diameter: 0.1,
             dragCoefficient: 1,
             x: 0,
             y: 0,

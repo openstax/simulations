@@ -223,6 +223,7 @@ define(function(require) {
 
             this.cannonView.updateMVT(mvt);
             this.targetView.updateMVT(mvt);
+            this.davidView.updateMVT(mvt);
 
             for (i = this.projectileViews.length - 1; i >= 0; i--)
                 this.projectileViews[i].updateMVT(mvt);

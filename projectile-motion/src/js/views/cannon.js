@@ -99,7 +99,7 @@ define(function(require) {
             var carriage = Assets.createSprite(Assets.Images.CANNON_CARRIAGE);
             carriage.anchor.x = 0.5;
             carriage.anchor.y = 1;
-            carriage.y = 100;
+            carriage.y =  97;
             carriage.x = -26;
             
             this.spritesLayer.addChild(carriage);
