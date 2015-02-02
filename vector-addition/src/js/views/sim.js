@@ -25,7 +25,8 @@ define(function (require) {
         template: _.template(simHtml),
 
         events: {
-          'change #show-grid' : 'showGrid'
+          'change #show-grid' : 'showGrid',
+          'click .btn': 'clearAll'
         },
 
         initialize: function(options) {
@@ -34,9 +35,9 @@ define(function (require) {
                 name: 'vector-addition',
             }, options);
 
-
             SimView.prototype.initialize.apply(this, [options]);
-            //this.listenTo(this.simulation, 'change:valueX change:valueY', this.render);
+            this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText',
+             this.updateFields);
             this.initSceneView();
         },
 
@@ -90,6 +91,17 @@ define(function (require) {
           else {
             this.simulation.set('showGrid', false);
           }
+        },
+
+        clearAll: function() {
+          this.simulation.set('emptyStage', true);
+        },
+
+        updateFields: function() {
+          this.$el.find('input.rText').val(this.simulation.get('rText'));
+          this.$el.find('input.thetaText').val(this.simulation.get('thetaText'));
+          this.$el.find('input.rXText').val(this.simulation.get('rXText'));
+          this.$el.find('input.rYText').val(this.simulation.get('rYText'));
         }
 
     });

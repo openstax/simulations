@@ -15,8 +15,8 @@ define(function (require) {
 
     var Constants = {};
 
-    Constants.GRID_SIZE = 15;
-    Constants.GRID_OFFSET = 10;
+    Constants.GRID_SIZE = 10;
+    Constants.GRID_OFFSET = 5;
 
 
     return Constants;
