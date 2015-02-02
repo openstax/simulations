@@ -64,6 +64,9 @@ module.exports = function(grunt) {
 					optimize: 'uglify2',
 					name: 'main',
 					out: 'src/optimized.js'
+
+					// Doing it this way doesn't work:
+					// mainConfigFile: 'src/js/config.js'
 				})
 			}
 		},
