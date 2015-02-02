@@ -70,6 +70,7 @@ module.exports = function(grunt){
 						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
 						buzz:       '../../bower_components/buzz/dist/buzz.min',
+						'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
 						fparser:    '../../bower_components/fparser/fparser',
 
 						views:      '../js/views',
@@ -117,8 +118,8 @@ module.exports = function(grunt){
 				files: {
 					'dist/index.html': 'src/index.html'
 				}
-			}		
-		},		
+			}
+		},
 		watch: {
 			styles: {
 				files: ['src/less/**/*.less'], // files to watch
@@ -129,7 +130,7 @@ module.exports = function(grunt){
 			}
 		},
 		jshint: {
-			options: {		
+			options: {
 				globals: {
 					require: true,
 					define: true
@@ -178,7 +179,7 @@ module.exports = function(grunt){
 				sub: false,
 				supernew: false,
 				validthis: false,
-				
+
 				// Environments
 				browser: true,
 				devel: false
@@ -215,7 +216,7 @@ module.exports = function(grunt){
 
 	grunt.registerTask('build_tests', function(){
 		var options = this.options();
-		
+
 		// Get all the files and prepend the '../' relative path
 		var tests = grunt.file.expand(options.files).map(function(file){
 			grunt.log.write('../' + file);
