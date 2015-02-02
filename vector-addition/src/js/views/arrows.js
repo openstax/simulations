@@ -4,27 +4,75 @@ define(function(require) {
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
+  var Vectors = require('vector-addition')
 
   var ArrowView = PixiView.extend({
 
+    events: {
+      'click .arrowTail': 'getFields',
+      'click .arrowHead': 'getFields',
+      'mousedown .arrowHead': 'rotateStart',
+      'mousemove .arrowHead': 'rotate',
+      'touchmove .arrowHead': 'rotate',
+      'mouseup .arrowHead': 'rotateEnd',
+      'mouseupoutside .arrowHead': 'rotateEnd',
+      'touchend .arrowHead': 'rotateEnd',
+      'touchendoutside .arrowHead': 'rotateEnd',
+      'mousedown .arrowTail': 'dragStart',
+      'mousemove .arrowTail': 'dragMove',
+      'touchmove .arrowTail': 'dragMove',
+      'mouseup .arrowTail': 'dragEnd',
+      'mouseupoutside .arrowTail': 'dragEnd',
+      'touchend .arrowTail': 'dragEnd',
+      'touchendoutside .arrowTail': 'dragEnd'
+    },
+
     initialize: function() {
       this.drawArrow();
+      this.sumVector();
+      this.listenTo(this.model, 'change:emptyStage', this.clearAll)
+      this.listenTo(this.model, 'change:rText change:thetaText change:rXText change:rYText',
+       this.getFields);
+    },
+
+    clearAll: function() {
+      var displayObject = this.displayObject;
+      var arrows = _.where(displayObject.children, {name: 'arrow'})
+      _.each(arrows, function(arrow){
+        displayObject.removeChild(arrow)
+      })
+    },
+
+    //TODO
+    sumVector: function() {
+      var sumVector = new Vectors.Vector(10,10,-1);
+      sumVector.rotation = 0;
+      sumVector.width = 0;
+      return sumVector;
     },
 
     dragStart: function(data) {
       data.originalEvent.preventDefault();
       this.data = data;
       this.dragging = true;
-      this.dragOffset = data.getLocalPosition(this.parent);
     },
 
     dragMove: function(data) {
+      var xCoord = data.global.x - this.displayObject.x;
+      var yCoord = data.global.y - this.displayObject.y;
+      var x = Vectors.roundGrid(xCoord);
+      var y = Vectors.roundGrid(yCoord);
+      var length = Math.sqrt(x*x+y*y);
+      var degrees = (180/Math.PI) * Math.atan2(y, x);
+
       if (this.dragging) {
-        var newPosition = this.data.getLocalPosition(this.parent.parent);
-        newPosition.x -= this.dragOffset.x;
-        newPosition.y -= this.dragOffset.y;
-        this.parent.position.x = newPosition.x;
-        this.parent.position.y = newPosition.y;
+        this.arrowContainer.position.x = x;
+        this.arrowContainer.position.y = y;
+
+        Vectors.updateFields(this.model, length, degrees, x, y);
+
+        //TODO
+        //Vectors.updateComponents();
       }
     },
 
@@ -36,86 +84,84 @@ define(function(require) {
       this.arrowContainer = new PIXI.DisplayObjectContainer();
       var arrowHead = new PIXI.Graphics(),
       arrowTail = new PIXI.Graphics(),
-      max = $('.scene-view').width() - 150,
-      min = 770;
+      canvas = $('.scene-view');
 
       this.arrowContainer.fillColor = '0xFF00000';
 
       arrowHead.beginFill(this.arrowContainer.fillColor);
-      arrowHead.moveTo(0, 25);
-      arrowHead.lineTo(15, 5);
-      arrowHead.lineTo(30, 25);
+      arrowHead.moveTo(0, 40);
+      arrowHead.lineTo(10, 0);
+      arrowHead.lineTo(20, 40);
       arrowHead.endFill();
       arrowHead.interactive = true;
       arrowHead.buttonMode = true;
-      arrowHead.defaultCursor = 'nwse-resize';
-      arrowHead.mousedown = this.transformStart;
-      arrowHead.touchstart = this.transformStart;
-      arrowHead.mousemove = this.transform;
-      arrowHead.touchmove = this.transform;
-      arrowHead.mouseup = this.transformEnd;
-      arrowHead.mouseupoutside = this.transformEnd;
-      arrowHead.touchend = this.transformEnd;
-      arrowHead.touchendoutside = this.transformEnd;
       this.arrowHead = arrowHead;
 
       arrowTail.beginFill(this.arrowContainer.fillColor);
-      arrowTail.drawRect(10, 20, 10, 100);
+      arrowTail.drawRect(6, 40, 8, 160);
       arrowTail.interactive = true;
       arrowTail.buttonMode = true;
       arrowTail.defaultCursor = 'move';
-      arrowTail.mousedown = this.dragStart;
-      arrowTail.touchstart = this.dragStart;
-      arrowTail.mousemove = this.dragMove;
-      arrowTail.touchmove = this.dragMove;
-      arrowTail.mouseup = this.dragEnd;
-      arrowTail.mouseupoutside = this.dragEnd;
-      arrowTail.touchend = this.dragEnd;
-      arrowTail.touchendoutside = this.dragEnd;
       this.arrowTail = arrowTail;
 
       this.arrowContainer.addChild(this.arrowHead);
       this.arrowContainer.addChild(this.arrowTail);
-      this.arrowContainer.position.x = Math.random() * (max - min) + min;
-      this.arrowContainer.position.y = 0;
-      this.arrowContainer.pivot = new PIXI.Point(0, 0);
+      this.displayObject.position.x = 0.8 * canvas.width() + 10 *Math.random() - 5;
+      this.displayObject.position.y = 0.25 * canvas.height() + 10 *Math.random() - 5;
+      this.arrowContainer.name ='arrow';
+      this.arrowContainer.pivot.set(20, 160);
 
       this.displayObject.addChild(this.arrowContainer);
+      this.model.set('emptyStage', false);
+      this.model.set({
+        'rText': Vectors.padZero(Vectors.round1(180/10)),
+        'thetaText': Vectors.padZero(Vectors.round1(90)),
+        'rXText': Vectors.round0(this.arrowContainer.position.x/10),
+        'rYText': Vectors.round0(this.arrowContainer.position.y/10)
+      });
+      this.getFields();
     },
 
-    transformStart: function(data) {
+    rotateStart: function(data) {
       this.transformable = true;
-      this.oldX = data.originalEvent.x;
-      this.oldY = data.originalEvent.y;
+      this.data = data;
     },
 
-    transform: function(data) {
-      var mousePosition = data.getLocalPosition(this),
-      rect = this.parent.children[1],
-      newX = data.originalEvent.x,
-      newY = data.originalEvent.y;
+    rotate: function(data) {
+      var arrowContainer = this.arrowContainer;
+      var xCoord = data.global.x - this.displayObject.x;
+      var yCoord = data.global.y - this.displayObject.y;
+      var x = Vectors.roundGrid(xCoord);
+      var y = Vectors.roundGrid(yCoord);
+      var length = Math.sqrt(x*x+y*y);
+      var degrees = (180/Math.PI) * Math.atan2(y, x);
+      var height = length - 0.9 * this.arrowHead.height;
 
       if (this.transformable) {
-        //Scale up and down
-        if (this.oldY < newY) {
-          rect.clear();
-          rect.beginFill(0xFF0000);
-          rect.drawRect(10, 20, 10, 50);
-        }
-        else {
-          rect.clear();
-          rect.beginFill(0xFF0000);
-          rect.drawRect(10, 20, 10, 200);
-        }
+        arrowContainer.rotation = 0;
+        this.arrowTail.clear();
+        this.arrowTail.beginFill(this.arrowContainer.fillColor);
+        this.arrowTail.drawRect(6, 40, 8, height);
+        arrowContainer.rotation = degrees;
+
+        //TODO
+        //Vectors.updateComponents();
+        //Vectors.updateSumVector();
+        //Vectors.updateAfterEvent();
+
+        Vectors.updateFields(this.model, length, degrees, x, y);
       }
     },
 
-    transformEnd: function(data) {
+    rotateEnd: function(data) {
       this.transformable = false;
     },
 
-    transformTest: function(data) {
-      this.parent.rotation += 0.1;
+    getFields: function() {
+      this.model.get('rText');
+      this.model.get('thetaText');
+      this.model.get('rXText');
+      this.model.get('rYText');
     }
 
   });

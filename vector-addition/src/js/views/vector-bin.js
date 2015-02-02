@@ -26,8 +26,8 @@ define(function(require) {
       this.binContainer = new PIXI.DisplayObjectContainer();
       var bin = Assets.createSprite(Assets.Images.Vector_Bin);
 
-      var x = $('.scene-view').width() - 125;
-      var y = 10;
+      var x = 0.87 * $('.scene-view').width();
+      var y = 0.02 * $('.scene-view').height();
       bin.buttonMode = true;
       this.binContainer.addChild(bin);
       this.bin = bin;

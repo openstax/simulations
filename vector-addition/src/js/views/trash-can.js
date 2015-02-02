@@ -5,6 +5,7 @@ define(function(require) {
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
   var Assets = require('assets');
+  var Constants = require('constants');
 
   var TrashCanView = PixiView.extend({
 
@@ -20,8 +21,8 @@ define(function(require) {
       this.canContainer = new PIXI.DisplayObjectContainer();
       var can = Assets.createSprite(Assets.Images.Trash_Can);
 
-      can.x = $('.scene-view').width() - 125;
-      can.y = 510;
+      can.x = 0.9 * $('.scene-view').width();
+      can.y = 0.75 * $('.scene-view').height();
       can.buttonMode = true;
       this.canContainer.addChild(can);
       this.can = can;

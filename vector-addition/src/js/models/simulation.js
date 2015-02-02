@@ -8,8 +8,11 @@ define(function (require, exports, module) {
 
     defaults: {
       showGrid: false,
-      valueX: '',
-      valueY: ''
+      rText: '',
+      thetaText: '',
+      rXText: '',
+      rYText: '',
+      emptyStage: false
     }
 
   });
