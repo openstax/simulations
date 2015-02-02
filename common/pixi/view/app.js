@@ -39,12 +39,20 @@ define(function(require) {
 
     	loadAssets: function() {
             this.assetsLoaded = false;
-            var assetLoader = new PIXI.AssetLoader(this.assets);
-            assetLoader.onComplete = _.bind(function(){
+
+            var onComplete = _.bind(function(){
                 this.assetsLoaded = true;
                 this.trigger('assets-loaded');
             }, this);
-            assetLoader.load();
+
+            if (this.assets.length > 0) {
+                var assetLoader = new PIXI.AssetLoader(this.assets);
+                assetLoader.onComplete = onComplete;
+                assetLoader.load();   
+            }
+            else {
+                onComplete();
+            }
         },
     });
 
