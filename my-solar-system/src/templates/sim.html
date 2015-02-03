@@ -7,65 +7,62 @@
 
 <div class="playback-controls-wrapper">
 
-	<div class="playback-speed-wrapper">
-	    <label>Accurate</label><div class="slider playback-speed"></div><label>Fast</label>
-	</div>
+    <div class="playback-speed-wrapper">
+        <label>Accurate</label><div class="slider playback-speed"></div><label>Fast</label>
+    </div>
 
-	<button class="playback-btn rewind-btn" title="Rewind"><span class="fa fa-fast-backward"></span></button>
+    <button class="playback-btn rewind-btn" title="Rewind"><span class="fa fa-fast-backward"></span></button>
     <button class="playback-btn play-btn"  title="Resume"><span class="fa fa-play"></span></button>
     <button class="playback-btn pause-btn" title="Pause"><span class="fa fa-pause"></span></button>
 
     <div class="playback-time-wrapper">
-    	<label>Time: </label><span id="time">0.0</span>
+        <label>Time: </label><span id="time">0.0</span>
     </div>
     
 </div>
 
 <div class="view-options">
 
-	<input type="checkbox" id="system-centered-check">
-	<label for="system-centered-check" class="system-centered-check">System Centered</label><br>
+    <input type="checkbox" id="system-centered-check">
+    <label for="system-centered-check" class="system-centered-check">System Centered</label><br>
 
-	<input type="checkbox" id="show-traces-check">
-	<label for="show-traces-check" class="show-traces-check">Show Traces</label><br>
+    <input type="checkbox" id="show-traces-check">
+    <label for="show-traces-check" class="show-traces-check">Show Traces</label><br>
 
-	<input type="checkbox" id="show-grid-check">
-	<label for="show-grid-check" class="show-grid-check">Show Grid</label><br>
+    <input type="checkbox" id="show-grid-check">
+    <label for="show-grid-check" class="show-grid-check">Show Grid</label><br>
 
-	<input type="checkbox" id="tape-measure-check">
-	<label for="tape-measure-check" class="tape-measure-check">Tape Measure</label>
+    <input type="checkbox" id="tape-measure-check">
+    <label for="tape-measure-check" class="tape-measure-check">Tape Measure</label>
 
 </div>
 
 <div class="initial-settings">
-	<table>
-		<thead>
-			<tr>
-				<th></th>
-				<th></th>
-				<th colspan="2">position</th>
-				<th colspan="2">velocity</th>
-			</tr>
-			<tr>
-				<th></th>
-				<th>mass</th>
-				<th>x</th>
-				<th>y</th>
-				<th>x</th>
-				<th>y</th>
-			</tr>
-		</thead>
-		<tbody>
-		<% _.each(Constants.BODY_COLORS, function(color, index) { %>
-			<tr>
-				<td>Body <%= index + 1 %></td>
-				<td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-				<td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-				<td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-				<td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-				<td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-			</tr>
-		<% }); %>
-		</tbody>
-	</table>
+    <div>
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>mass</th>
+                    <th>x</th>
+                    <th>y</th>
+                    <th>v<sub>x</sub></th>
+                    <th>v<sub>y</sub></th>
+                </tr>
+            </thead>
+            <tbody>
+            <% _.each(Constants.BODY_COLORS, function(color, index) { %>
+                <tr>
+                    <td>Body <%= index + 1 %></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><% if (index === Constants.BODY_COLORS.length - 1) { %><button class="remove-body-btn"><span class="fa fa-minus-circle"></span></button><% } %></td>
+                </tr>
+            <% }); %>
+            </tbody>
+        </table>
+    </div>
 </div>
