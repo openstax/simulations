@@ -59,7 +59,7 @@ define(function(require) {
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
-            this.zoomScale = 40;
+            this.zoomScale = 27;
 
             this.listenTo(this.simulation, 'projectile-launched', this.projectileLaunched);
             this.listenTo(this.simulation, 'change:currentTrajectory',   this.trajectoryAdded);
