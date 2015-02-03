@@ -3,12 +3,16 @@
 @import "variables.less";
 @import "mixins.less";
 
-.sound-btn-wrapper {
+#sim-my-solar-system.sim-content {
+    min-height: 620px;
+}
+
+.help-btn-wrapper {
     position: absolute;
     top: -36px;
     right: 30px;
 
-    > .sound-btn {
+    > .help-btn {
         background: @gray-lightest;
         color: @link-color;
         outline: none;
@@ -26,18 +30,110 @@
             background: @link-color;
             color: #fff;
         }
-
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
-        }
     }
 }
 
-.hello-world {
+.playback-controls-wrapper {
     position: absolute;
-    top: 44%;
+    bottom: 0;
     width: 100%;
+    padding: 10px;
+    background: @panel-bg;
     text-align: center;
-    font-size: 26px;
+    .user-select(none);
+
+    > .playback-btn {
+        display: inline-block;
+        background: @panel-btn-bg;
+        color: @panel-btn-fg;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @panel-btn-fg;
+            color: @panel-btn-bg;
+        }
+
+        &.pause-btn {
+            display: none;
+        }
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+        .sim-view.playing &.play-btn {
+            display: none;
+        }
+
+        &.play-btn,
+        &.pause-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@panel-btn-fg, @panel-btn-bg, #fff, @panel-btn-fg);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    label {
+        color: @panel-fg;
+        font-weight: normal;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        left: 100px;
+        height: 100%;
+        top: 0;
+        padding-top: 18px;
+
+        .playback-speed {
+            width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+            background: #aaa;
+
+            &.slider .noUi-handle:after {
+                background: #222;
+            }
+        }
+
+        label {
+            vertical-align: middle;
+            margin: 0 8px;
+        }
+    }
+
+    .playback-time-wrapper {
+        position: absolute;
+        top: 0;
+        right: 350px;
+        line-height: 62px;
+
+        & label {
+            margin-right: 16px;
+        }
+    }
 }

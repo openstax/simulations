@@ -1,10 +1,22 @@
 
 <span class="scene-view-placeholder"></span>
 
-<div class="sound-btn-wrapper">
-    <button class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
-    <button class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
-    <button class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
+<div class="help-btn-wrapper">
+    <button class="help-btn" title="Help"><span class="fa fa-question"></span></button>
 </div>
 
-<div class="hello-world">Hello World.</div>
+<div class="playback-controls-wrapper">
+
+	<div class="playback-speed-wrapper">
+	    <label>Accurate</label><div class="slider playback-speed"></div><label>Fast</label>
+	</div>
+
+	<button class="playback-btn rewind-btn" title="Rewind"><span class="fa fa-fast-backward"></span></button>
+    <button class="playback-btn play-btn"  title="Resume"><span class="fa fa-play"></span></button>
+    <button class="playback-btn pause-btn" title="Pause"><span class="fa fa-pause"></span></button>
+
+    <div class="playback-time-wrapper">
+    	<label>Time: </label><span id="time"></span>
+    </div>
+    
+</div>

@@ -30,7 +30,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var TemplateSimView = SimView.extend({
+    var MSSSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -57,8 +57,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Template Sim',
-                name: 'template-sim',
+                title: 'My Solar System',
+                name: 'my-solar-system',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
@@ -103,7 +103,17 @@ define(function (require) {
                 simulation: this.simulation
             };
             this.$el.html(this.template(data));
+
             this.$('select').selectpicker();
+
+            this.$('.playback-speed').noUiSlider({
+                start: 1,
+                range: {
+                    'min': [ 0.2 ],
+                    '50%': [ 1 ],
+                    'max': [ 4 ]
+                }
+            });
         },
 
         /**
@@ -147,5 +157,5 @@ define(function (require) {
 
     });
 
-    return TemplateSimView;
+    return MSSSimView;
 });
