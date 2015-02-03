@@ -33,6 +33,49 @@
     }
 }
 
+.view-options {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    position: absolute;
+    top: @panel-margin;
+    right: @panel-margin;
+    padding: 15px;
+}
+
+.initial-settings {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    position: absolute;
+    bottom: 80px;
+    right: @panel-margin;
+    padding: 15px;
+
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+
+        th {
+            text-align: center;
+        }
+
+        td:first-child {
+            padding-right: 6px;
+        }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+        display: none;
+    }
+
+    input {
+        width: 48px;
+        height: auto;
+        padding: 3px 5px;
+        border: 1px solid rgba(0, 0, 0, 0.22);
+        color: #000;
+        text-align: right;
+    }
+}
+
 .playback-controls-wrapper {
     position: absolute;
     bottom: 0;
@@ -117,6 +160,7 @@
 
             &.slider .noUi-handle:after {
                 background: #222;
+                border: 2px solid #aaa;
             }
         }
 
@@ -129,11 +173,20 @@
     .playback-time-wrapper {
         position: absolute;
         top: 0;
-        right: 350px;
+        right: 273px;
         line-height: 62px;
 
         & label {
             margin-right: 16px;
         }
+
+        #time {
+            color: #fff;
+        }
     }
+}
+
+#sim-my-solar-system input[type="radio"] + label:before, 
+#sim-my-solar-system input[type="checkbox"] + label:before {
+    background: rgba(255, 255, 255, 0.18);
 }
