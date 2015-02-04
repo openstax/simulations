@@ -1,0 +1,91 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="help-btn-wrapper">
+    <button class="help-btn" title="Help" data-toggle="modal" data-target="#help-dialog"><span class="fa fa-question"></span></button>
+</div>
+
+<div class="playback-controls-wrapper">
+
+    <div class="playback-speed-wrapper">
+        <label>Accurate</label><div class="slider playback-speed"></div><label>Fast</label>
+    </div>
+
+    <button class="playback-btn rewind-btn" title="Rewind"><span class="fa fa-fast-backward"></span></button>
+    <button class="playback-btn play-btn"  title="Resume"><span class="fa fa-play"></span></button>
+    <button class="playback-btn pause-btn" title="Pause"><span class="fa fa-pause"></span></button>
+
+    <div class="playback-time-wrapper">
+        <label>Time: </label><span id="time">0.0</span>
+    </div>
+    
+</div>
+
+<div class="view-options">
+
+    <input type="checkbox" id="system-centered-check">
+    <label for="system-centered-check" class="system-centered-check">System Centered</label><br>
+
+    <input type="checkbox" id="show-traces-check">
+    <label for="show-traces-check" class="show-traces-check">Show Traces</label><br>
+
+    <input type="checkbox" id="show-grid-check">
+    <label for="show-grid-check" class="show-grid-check">Show Grid</label><br>
+
+    <input type="checkbox" id="tape-measure-check">
+    <label for="tape-measure-check" class="tape-measure-check">Tape Measure</label>
+
+</div>
+
+<div class="initial-settings">
+    <div>
+        <table id="body-settings-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>mass</th>
+                    <th>x</th>
+                    <th>y</th>
+                    <th>v<sub>x</sub></th>
+                    <th>v<sub>y</sub></th>
+                    <td></td>
+                </tr>
+            </thead>
+            <tbody>
+            <% _.each(Constants.BODY_COLORS, function(color, index) { %>
+                <tr>
+                    <td>Body <%= index + 1 %></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><button class="remove-body-btn" style="display: none"><span class="fa fa-minus-circle"></span></button></td>
+                </tr>
+            <% }); %>
+                <tr class="add-body-row" style="display: none">
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td><button class="add-body-btn"><span class="fa fa-plus-circle"></span></button></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="preset-wrapper">
+    <label>Preset:</label><br>
+    <select id="preset" class="form-control">
+        <!-- make dynamic layer -->
+        <option>Sun and planet</option>
+        <option>Sun, planet, moon</option>
+        <option>Sun, planet, comet</option>
+        <option>Binary star, planet</option>
+    </select>
+</div>
+
+<span class="help-dialog-placeholder"></span>
