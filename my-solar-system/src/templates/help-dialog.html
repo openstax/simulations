@@ -1,0 +1,35 @@
+<div class="modal" id="help-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Help</h4>
+            </div>
+            <div class="modal-body">
+                <ul>
+                    <li>Make your own solar system by dragging bodies and the V symbol (V for velocity) or by typing into the initial settings table in the upper-left corner of the simulation.</li>
+
+                    <li>Distances, masses, and times are in arbitrary units.  Invent your own!</li>
+
+                    <li>Keep masses less than a few thousand or risk strange results.</li>
+
+                    <li>For current position and velocity of a specific body, press the stop button and mouse over (or tap and hold) the body.</li>
+
+                    <li>When <em>System Centered</em> is checked, the system's center-of-mass motion is removed.</li>
+
+                    <li>
+                        This simulation uses a fixed-timestep velocity-Verlet algorithm to integrate trajectories:
+
+                        <p class="math">x<sub>n+1</sub> = x<sub>n</sub> + v<sub>n</sub>&Delta;t + (1/2)a<sub>n</sub>&Delta;t<sup>2</sup></p>
+                        <p class="math">v<sub>n+1</sub> = v<sub>n</sub> + (1/2)(a<sub>n+1</sub> + a<sub>n</sub>)&Delta;t</p>
+                        
+                        Unlike Runge-Kutta, the Verlet algorithm conserves energy in oscillatory systems, producing stable orbits.  As with any fixed-timestep algorithm, Verlet produces unphysical results when bodies get too close and the resulting accelerations are too large.  To prevent this, bodies that get too close are fused in a momentum-conserving collision.
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

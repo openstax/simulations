@@ -41,7 +41,7 @@ define(function(require) {
             this.gridView = new GridView({
                 origin: new Vector2(this.width / 2, this.height / 2),
                 bounds: new Rectangle(0, 0, this.width, this.height),
-                gridSize: 100,
+                gridSize: 120,
                 lineColor: '#fff',
                 lineAlpha: 0.1
             });

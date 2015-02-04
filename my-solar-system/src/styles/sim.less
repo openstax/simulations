@@ -59,6 +59,10 @@
             padding-right: 6px;
         }
 
+        .add-body-row {
+            .user-select(none);
+        }
+
         .add-body-row > td {
             text-align: center;
         }
@@ -248,4 +252,26 @@
 #sim-my-solar-system input[type="radio"] + label:before, 
 #sim-my-solar-system input[type="checkbox"] + label:before {
     background: rgba(255, 255, 255, 0.18);
+}
+
+.modal {
+    background: fadeout(#000, 50%);
+}
+
+#help-dialog {
+    font-size: 1.1em;
+
+    li {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .math {
+        font-family: monaco, Consolas, 'Lucida Console', monospace;
+    }
+
+    p.math {
+        margin-left: 112px;
+        margin-top: 8px;
+    }
 }

@@ -24,6 +24,7 @@ define(function (require) {
 
     // HTML
     var simHtml = require('text!templates/sim.html');
+    var helpDialogHtml = require('text!templates/help-dialog.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -94,6 +95,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderHelpDialog();
 
             this.updateBodyInputs(this.simulation, this.simulation.get('numBodies'));
 
@@ -128,6 +130,13 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
+
+        /**
+         * Renders the help dialog html
+         */
+        renderHelpDialog: function() {
+            this.$('.help-dialog-placeholder').replaceWith(helpDialogHtml);
         },
 
         /**
