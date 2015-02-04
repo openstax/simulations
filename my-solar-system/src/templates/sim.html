@@ -39,7 +39,7 @@
 
 <div class="initial-settings">
     <div>
-        <table>
+        <table id="body-settings-table">
             <thead>
                 <tr>
                     <th></th>
@@ -60,7 +60,7 @@
                     <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
                     <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
                     <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-                    <td><% if (index === Constants.BODY_COLORS.length - 1) { %><button class="remove-body-btn"><span class="fa fa-minus-circle"></span></button><% } %></td>
+                    <td><button class="remove-body-btn" style="display: none"><span class="fa fa-minus-circle"></span></button></td>
                 </tr>
             <% }); %>
                 <tr class="add-body-row" style="display: none">

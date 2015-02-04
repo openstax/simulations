@@ -21,12 +21,13 @@ define(function (require) {
         // '#f47b4d',
         // '#eeeeee',
         // '#71b653'
-        '#D86565',
         '#D89965',
+        '#D86565',
         '#3C8282',
         '#50AD50'
     ];
-
+    Constants.MAX_BODIES = Constants.BODY_COLORS.length;
+    Constants.MIN_BODIES = 2;
 
 
     return Constants;

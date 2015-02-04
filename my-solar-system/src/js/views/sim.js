@@ -47,7 +47,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .remove-body-btn': 'removeBody',
+            'click .add-body-btn':    'addBody'
         },
 
         /**
@@ -64,6 +65,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyInputs);
+
         },
 
         /**
@@ -90,6 +94,8 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+
+            this.updateBodyInputs(this.simulation, this.simulation.get('numBodies'));
 
             return this;
         },
@@ -154,6 +160,39 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        removeBody: function() {
+            this.simulation.removeBody();
+        },
+
+        addBody: function() {
+            this.simulation.addBody();
+        },
+
+        updateBodyInputs: function(simulation, numBodies) {
+            var $rows = this.$('#body-settings-table tbody tr');
+
+            $rows.each(function(index, row) {
+                // Show/hide body input rows
+                if (index + 1 <= numBodies)
+                    $(row).show();
+                else
+                    $(row).hide();
+
+                // Hide minus buttons
+                $(row).find('.remove-body-btn').hide();
+            });
+
+            // Show last minus button if appropriate
+            if (numBodies > Constants.MIN_BODIES)
+                $rows.eq(numBodies - 1).find('.remove-body-btn').show();
+
+            // Show/hide plus button as appropriate
+            if (numBodies < Constants.MAX_BODIES)
+                $rows.last().show();
+            else
+                $rows.last().hide();
+        }
 
     });
 
