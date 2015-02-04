@@ -1,0 +1,277 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+#sim-my-solar-system.sim-content {
+    min-height: 620px;
+}
+
+.help-btn-wrapper {
+    position: absolute;
+    top: -36px;
+    right: 30px;
+
+    > .help-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+    }
+}
+
+.view-options {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    position: absolute;
+    top: @panel-margin;
+    right: @panel-margin;
+    padding: 15px;
+}
+
+.initial-settings {
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#fff, 14%);
+
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+
+        th {
+            text-align: center;
+        }
+
+        td:first-child {
+            padding-right: 6px;
+        }
+
+        .add-body-row {
+            .user-select(none);
+        }
+
+        .add-body-row > td {
+            text-align: center;
+        }
+
+        .remove-body-btn,
+        .add-body-btn {
+            background: transparent;
+            border: none;
+            opacity: 0.7;
+            padding: 0;
+            margin-left: 6px;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                color: inherit;
+            }
+
+            &:active {
+                //margin-top: 1px;
+            }
+        }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+        display: none;
+    }
+
+    input {
+        width: 48px;
+        height: auto;
+        padding: 0px 5px;
+        border: 1px solid rgba(0, 0, 0, 0.22);
+        color: #000;
+        text-align: right;
+    }
+}
+
+.preset-wrapper {
+    position: absolute;
+    left: 360px;
+    top: @panel-margin;
+    color: fadeout(#fff, 14%);
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 60%);
+            border-color: rgba(0, 0, 0, 0.1);
+            //color: #fff;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+}
+
+.playback-controls-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    > .playback-btn {
+        display: inline-block;
+        background: @panel-btn-bg;
+        color: @panel-btn-fg;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @panel-btn-fg;
+            color: @panel-btn-bg;
+        }
+
+        &.pause-btn {
+            display: none;
+        }
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+        .sim-view.playing &.play-btn {
+            display: none;
+        }
+
+        &.play-btn,
+        &.pause-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@panel-btn-fg, @panel-btn-bg, #fff, @panel-btn-fg);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    label {
+        color: @panel-fg;
+        font-weight: normal;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        left: 100px;
+        height: 100%;
+        top: 0;
+        padding-top: 18px;
+
+        .playback-speed {
+            width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+            background: #aaa;
+
+            &.slider .noUi-handle:after {
+                background: #222;
+                border: 2px solid #aaa;
+            }
+        }
+
+        label {
+            vertical-align: middle;
+            margin: 0 8px;
+        }
+    }
+
+    .playback-time-wrapper {
+        position: absolute;
+        top: 0;
+        right: 273px;
+        line-height: 62px;
+
+        & label {
+            margin-right: 16px;
+        }
+
+        #time {
+            color: #fff;
+        }
+    }
+}
+
+#sim-my-solar-system input[type="radio"] + label:before, 
+#sim-my-solar-system input[type="checkbox"] + label:before {
+    background: rgba(255, 255, 255, 0.18);
+}
+
+.modal {
+    background: fadeout(#000, 50%);
+}
+
+#help-dialog {
+    font-size: 1.1em;
+
+    li {
+        margin-top: 20px;
+        margin-bottom: 20px;
+    }
+
+    .math {
+        font-family: monaco, Consolas, 'Lucida Console', monospace;
+    }
+
+    p.math {
+        margin-left: 112px;
+        margin-top: 8px;
+    }
+}
