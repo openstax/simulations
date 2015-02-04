@@ -40,11 +40,16 @@ define(function (require) {
       },
 
       updateFields: function(arrowModel, model, x, y, length, degrees) {
-
-        arrowModel.set('length', length);
-        arrowModel.set('degrees', degrees);
-        arrowModel.set('x', x);
-        arrowModel.set('y', y);
+        if (arrowModel !== undefined) {
+          arrowModel.set('length', length);
+          arrowModel.set('degrees', degrees);
+          arrowModel.set('x', x);
+          arrowModel.set('y', y);
+          arrowModel.set('rText', Vectors.padZero(Vectors.round1(length/10)));
+          arrowModel.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
+          arrowModel.set('rXText', Vectors.round0(x/10));
+          arrowModel.set('rYText', Vectors.round0(y/10));
+        }
 
         model.set('rText', Vectors.padZero(Vectors.round1(length/10)));
         model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
@@ -108,8 +113,47 @@ define(function (require) {
         //  vLineL._visible = false;
         //  vLineR._visible = false;
       //  }
-      //}
+      //},
 
+      sum: function(model, displayObject, sumVectorContainer, sumVectorTail) {
+        var canvas = $('.scene-view');
+        var arrows = model.get('arrows').models;
+        var xSum = 0;
+        var ySum = 0;
+
+        if (arrows !== undefined) {
+          _.each(arrows, function(arrow) {
+            xSum += arrow.get('x');
+            ySum += arrow.get('y');
+          });
+
+          var length = Math.sqrt(xSum * xSum + ySum * ySum);
+          var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
+
+          displayObject.x = xSum;
+          displayObject.y = ySum;
+
+          this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length, canvas);
+          this.setSumVectorReadouts(model, length, degrees, xSum, ySum);
+         }
+
+      },
+
+      redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length, canvas) {
+        sumVectorContainer.rotation = Math.atan2(ySum, xSum);
+        sumVectorTail.clear();
+        sumVectorTail.beginFill(0x76EE00);
+        sumVectorTail.drawRect(6, 20, 8, length);
+        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height/2);
+        sumVectorContainer.position = new PIXI.Point(canvas.width()/2, canvas.height()/2);
+      },
+
+      setSumVectorReadouts: function(model, length, degrees, xSum, ySum) {
+        model.set('sumVectorRText', Vectors.padZero(Vectors.round1(length/10)));
+        model.set('sumVectorThetaText', Vectors.padZero(Vectors.round1(degrees)));
+        model.set('sumVectorRXText', Vectors.round0(xSum/10));
+        model.set('sumVectorRYText', Vectors.round0(ySum/10));
+      }
 
     };
 

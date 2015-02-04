@@ -37,7 +37,8 @@ define(function (require) {
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
-            this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateFields);
+            this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
+            this.listenTo(this.simulation, 'change:sumVectorRText change:sumVectorThetaText change:sumVectorRXText change:sumVectorRYText', this.updateSumReadouts);
             this.initSceneView();
         },
 
@@ -97,11 +98,18 @@ define(function (require) {
           this.simulation.set('emptyStage', true);
         },
 
-        updateFields: function() {
+        updateReadouts: function() {
           this.$el.find('input.rText').val(this.simulation.get('rText'));
           this.$el.find('input.thetaText').val(this.simulation.get('thetaText'));
           this.$el.find('input.rXText').val(this.simulation.get('rXText'));
           this.$el.find('input.rYText').val(this.simulation.get('rYText'));
+        },
+
+        updateSumReadouts: function() {
+          this.$el.find('input.rText').val(this.simulation.get('sumVectorRText'));
+          this.$el.find('input.thetaText').val(this.simulation.get('sumVectorThetaText'));
+          this.$el.find('input.rXText').val(this.simulation.get('sumVectorRXText'));
+          this.$el.find('input.rYText').val(this.simulation.get('sumVectorRYText'));
         },
 
         showSum: function() {

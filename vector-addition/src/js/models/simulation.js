@@ -8,11 +8,16 @@ define(function (require) {
 
     defaults: {
       showGrid: false,
+      sumVectorVisible: false,
       rText: '',
       thetaText: '',
       rXText: '',
       rYText: '',
-      emptyStage: false
+      emptyStage: false,
+      sumVectorRText: '',
+      sumVectorThetaText: '',
+      sumVectorRXText: '',
+      sumVectorRYText: ''
     }
 
   });

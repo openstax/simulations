@@ -34,9 +34,8 @@ define(function(require) {
     },
 
     initialize: function() {
-      this.drawArrow();
-      this.listenTo(this.model, 'change:emptyStage', this.clearAll)
-      this.listenTo(this.model, 'change:arrows.rText change:arrows.thetaText change:arrows.rXText change:arrows.rYText', this.updateReadouts);
+      this.drawArrow(10, 10 , 1);
+      this.listenTo(this.model, 'change:emptyStage', this.clearAll);
     },
 
     dragStart: function(data) {
@@ -47,40 +46,39 @@ define(function(require) {
 
     dragMove: function(data) {
       var model = this.model,
-      container = this.container,
-      arrowModel = model.get('arrows').models[container.index],
-      xCoord = data.global.x - this.displayObject.x,
-      yCoord = data.global.y - this.displayObject.y,
-      x = Vectors.roundGrid(xCoord),
-      y = Vectors.roundGrid(yCoord),
-      length = Math.sqrt(x*x+y*y),
+      arrowModel = model.get('arrows').models[this.container.index],
+      x = Vectors.roundGrid(data.global.x - this.displayObject.x),
+      y = Vectors.roundGrid(data.global.y - this.displayObject.y),
+      length = Math.sqrt(x * x + y * y),
       degrees = (180/Math.PI) * Math.atan2(y, x);
 
       if (this.dragging) {
-        this.container.position.x = x;
-        this.container.position.y = y;
-
-        Vectors.updateFields(arrowModel, model, x, y , length, degrees);
+        this.container.x = x;
+        this.container.y = y;
 
         //TODO
         //Vectors.updateComponents();
       }
-
     },
 
     dragEnd: function(data) {
       this.dragging = false;
     },
 
-    drawArrow: function() {
+    drawArrow: function(x, y, i) {
       this.container = new PIXI.DisplayObjectContainer();
       var canvas = $('.scene-view');
 
+      this.displayObject.x = x;
+      this.displayObject.y = y;
+      var length = Math.sqrt(x * x + y * y);
+      var degrees = (180/Math.PI) * Math.atan2(y, x);
+
       var arrowHead = new PIXI.Graphics();
       arrowHead.beginFill(0xFF0000);
-      arrowHead.moveTo(0, 40);
+      arrowHead.moveTo(0, 20);
       arrowHead.lineTo(10, 0);
-      arrowHead.lineTo(20, 40);
+      arrowHead.lineTo(20, 20);
       arrowHead.endFill();
       arrowHead.interactive = true;
       arrowHead.buttonMode = true;
@@ -89,7 +87,7 @@ define(function(require) {
 
       var arrowTail = new PIXI.Graphics();
       arrowTail.beginFill(0xFF0000);
-      arrowTail.drawRect(6, 40, 8, 60);
+      arrowTail.drawRect(6, 20, 8, length);
       arrowTail.interactive = true;
       arrowTail.buttonMode = true;
       arrowTail.defaultCursor = 'move';
@@ -105,38 +103,46 @@ define(function(require) {
       nbrVectors.push(this.container);
       this.container.index = nbrVectors.indexOf(this.container);
 
-      this.setValues();
+      this.updateOrCreateArrowsCollection();
+      this.model.set('emptyStage', false);
     },
 
-    setValues: function() {
+    updateOrCreateArrowsCollection: function() {
       var model = this.model,
        container = this.container,
        vectors = nbrVectors,
-       x = Vectors.roundGrid(container.x),
-       y = Vectors.roundGrid(container.y),
-       length = Math.sqrt(x*x+y*y),
+       x = Vectors.roundGrid(this.displayObject.x),
+       y = Vectors.roundGrid(this.displayObject.y),
+       length = Math.sqrt(x * x + y * y),
        degrees = (180/Math.PI) + Math.atan2(y, x),
        height = length - 0.2 * this.arrowHead.height,
-       index = vectors.indexOf(container),
-       arrows = new ArrowsCollection();
+       index = vectors.indexOf(container);
 
-      _.each(vectors, function(vector) {
-        var arrow = new Backbone.Model({
-          'x': x,
-          'y': y,
-          'width': vector.width,
-          'height': vector.height,
-          'length': length,
-          'degrees': degrees
-          });
-
-          arrows.add(arrow);
-      });
-
-      this.model.set('arrows', arrows);
-      this.model.set('emptyStage', false);
+      if (this.model.get('arrows') !== undefined) {
+        this.updateArrowsCollection(model, container, vectors, x, y, length, degrees);
+      }
+      else {
+        this.createArrowsCollection(model, container, vectors, x, y, length, degrees);
+      }
 
       Vectors.updateFields(model.get('arrows').models[container.index], model, x, y , length, degrees);
+    },
+
+    createArrowsCollection: function(model, container, vectors, x, y, length, degrees) {
+       var arrows = new ArrowsCollection();
+      _.each(vectors, function(vector) {
+        var arrow = new Backbone.Model({'x': x,'y': y,'length': length,'degrees': degrees});
+        arrows.add(arrow);
+      });
+      model.set('arrows', arrows);
+    },
+
+    updateArrowsCollection: function(model, container, vectors, x, y, length, degrees) {
+      var arrows = this.model.get('arrows');
+      _.each(vectors, function(vector) {
+        var arrow = new Backbone.Model({'x': x,'y': y,'length': length,'degrees': degrees});
+        arrows.add(arrow);
+      });
     },
 
     rotateStart: function(data) {
@@ -148,11 +154,9 @@ define(function(require) {
       var model = this.model,
        container = this.container,
        arrowModel = model.get('arrows').models[container.index],
-       xCoord = data.global.x - container.x,
-       yCoord = data.global.y - container.y,
-       x = Vectors.roundGrid(xCoord),
-       y = Vectors.roundGrid(yCoord),
-       length = Math.sqrt(x*x+y*y),
+       x = Vectors.roundGrid(data.global.x - container.x),
+       y = Vectors.roundGrid(data.global.y - container.y),
+       length = Math.sqrt(x * x + y * y),
        degrees = (180/Math.PI) + Math.atan2(y, x),
        height = length - 0.2 * this.arrowHead.height;
 
@@ -160,8 +164,8 @@ define(function(require) {
         container.rotation = 0;
         this.arrowTail.clear();
         this.arrowTail.beginFill(0xFF0000);
-        this.arrowTail.drawRect(6, 40, 8, height);
-        this.container.pivot.set(container.width/2, container.height);
+        this.arrowTail.drawRect(6, 20, 8, height);
+        container.pivot.set(container.width/2, container.height);
         container.rotation = Math.atan2(y, x);
 
         Vectors.updateFields(arrowModel, model, x, y , length, degrees);
