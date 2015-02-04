@@ -11,7 +11,8 @@ define(function (require) {
       rText: '',
       thetaText: '',
       rXText: '',
-      rYText: ''
+      rYText: '',
+      emptyStage: false
     }
 
   });

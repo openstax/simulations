@@ -17,9 +17,7 @@ define(function (require) {
 
       roundGrid: function(nbr) {
         var gridSize = 10;
-        var ans = (nbr/gridSize)*gridSize;
-
-        return ans;
+        return (nbr/gridSize)*gridSize;
       },
 
       round0: function(nbr) {
