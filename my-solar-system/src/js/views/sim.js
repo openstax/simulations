@@ -49,7 +49,8 @@ define(function (require) {
          */
         events: {
             'click .remove-body-btn': 'removeBody',
-            'click .add-body-btn':    'addBody'
+            'click .add-body-btn':    'addBody',
+            'keyup #body-settings-table input': 'bodySettingsInputKeyup'
         },
 
         /**
@@ -201,6 +202,24 @@ define(function (require) {
                 $rows.last().show();
             else
                 $rows.last().hide();
+        },
+
+        bodySettingsInputKeyup: function(event) {
+            var code = event.keyCode || event.which;
+            if (code == 13) { // ENTER pressed
+                var colIndex = $(event.target).closest('td').index();
+                var rowIndex = $(event.target).closest('tr').index();
+
+                if (rowIndex + 1 <= Constants.MAX_BODIES) {
+                    $(event.target)
+                        .closest('tr')
+                        .next()
+                        .children()
+                        .eq(colIndex)
+                        .find('input')
+                            .focus();
+                }
+            }
         }
 
     });
