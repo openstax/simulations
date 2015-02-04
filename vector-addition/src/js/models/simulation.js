@@ -1,4 +1,4 @@
-define(function (require, exports, module) {
+define(function (require) {
 
   'use strict';
 
@@ -11,8 +11,7 @@ define(function (require, exports, module) {
       rText: '',
       thetaText: '',
       rXText: '',
-      rYText: '',
-      emptyStage: false
+      rYText: ''
     }
 
   });

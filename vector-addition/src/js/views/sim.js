@@ -26,7 +26,8 @@ define(function (require) {
 
         events: {
           'change #show-grid' : 'showGrid',
-          'click .btn': 'clearAll'
+          'click .btn': 'clearAll',
+          'change #show-sum': 'showSum'
         },
 
         initialize: function(options) {
@@ -36,8 +37,7 @@ define(function (require) {
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
-            this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText',
-             this.updateFields);
+            this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateFields);
             this.initSceneView();
         },
 
@@ -102,6 +102,16 @@ define(function (require) {
           this.$el.find('input.thetaText').val(this.simulation.get('thetaText'));
           this.$el.find('input.rXText').val(this.simulation.get('rXText'));
           this.$el.find('input.rYText').val(this.simulation.get('rYText'));
+        },
+
+        showSum: function() {
+          var sumBox = this.$el.find('input[type="checkbox"]').attr('id', 'show-sum');
+          if (sumBox.is(':checked')) {
+            this.simulation.set('sumVectorVisible', true);
+          }
+          else {
+            this.simulation.set('sumVectorVisible', false);
+          }
         }
 
     });
