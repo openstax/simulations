@@ -99,6 +99,40 @@
     }
 }
 
+.preset-wrapper {
+    position: absolute;
+    left: 360px;
+    top: @panel-margin;
+    color: fadeout(#fff, 14%);
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 60%);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #fff;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+}
+
 .playback-controls-wrapper {
     position: absolute;
     bottom: 0;
