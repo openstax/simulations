@@ -5,14 +5,18 @@ define(function(require) {
     var PIXI = require('pixi');
     var PixiView = require('../view');
 
-    var Colors = require('../../colors/colors');
+    var Colors    = require('../../colors/colors');
+    var Vector2   = require('../../math/vector2');
+    var Rectangle = require('../../math/rectangle');
+
+    var EPSILON = 0.0001;
 
     var GridView = PixiView.extend({
 
         initialize: function(options) {
             options = _.extend({
-                width:  400,
-                height: 400,
+                origin: new Vector2(),
+                bounds: new Rectangle(0, 0, 500, 500),
                 gridSize: 25,
                 gridOffsetX: 0,
                 gridOffsetY: 0,
@@ -28,8 +32,8 @@ define(function(require) {
                 smallLineAlpha: 1
             }, options);
 
-            this.width = options.width;
-            this.height = options.height;
+            this.origin = options.origin;
+            this.bounds = options.bounds;
             this.gridSize = options.gridSize;
             this.gridOffsetX = options.gridOffsetX;
             this.gridOffsetY = options.gridOffsetY;
@@ -78,7 +82,7 @@ define(function(require) {
             this.drawGrid(
                 this.smallGrid, 
                 this.smallGridSize, 
-                this.gridSize / this.smallGridSize, 
+                this.gridSize, 
                 this.smallLineColor,
                 this.smallLineWidth,
                 this.smallLineAlpha
@@ -86,31 +90,33 @@ define(function(require) {
         },
 
         drawGrid: function(grid, gridSize, skipEvery, color, lineWidth, alpha) {
-            var startX = 0;
-            var startY = 0;
-            var gridOffsetX = this.gridOffsetX;
-            var gridOffsetY = this.gridOffsetY;
-            var numYLines = Math.ceil(this.width  / gridSize);
-            var numXLines = Math.ceil(this.height / gridSize);
+            var origin = this.origin;
+            var top    = this.bounds.top();
+            var bottom = this.bounds.bottom();
+            var left   = this.bounds.left();
+            var right  = this.bounds.right();
+
+            var startX = left   + ((origin.x - left)   % gridSize);
+            var startY = bottom + ((origin.y - bottom) % gridSize);
 
             grid.clear();
             grid.lineStyle(lineWidth, color, alpha);
             grid.moveTo(0,0);
 
-            for (var i = -gridOffsetX; i < numXLines + gridOffsetX; i++) {
-                if (skipEvery !== null && i % skipEvery === 0)
+            for (var x = startX; x <= right; x += gridSize) {
+                if (skipEvery !== null && (x - origin.x) % skipEvery < EPSILON && (x - origin.x) % skipEvery > -EPSILON)
                     continue;
 
-                grid.moveTo((startX    - gridOffsetX) * gridSize, i * gridSize);
-                grid.lineTo((numYLines + gridOffsetX) * gridSize, i * gridSize);
+                grid.moveTo(x, top);
+                grid.lineTo(x, bottom);
             }
 
-            for (var j = -gridOffsetY; j < numYLines + gridOffsetY; j++) {
-                if (skipEvery !== null && i % skipEvery === 0)
+            for (var y = startY; y <= top; y += gridSize) {
+                if (skipEvery !== null && (y - origin.y) % skipEvery < EPSILON && (y - origin.y) % skipEvery > -EPSILON)
                     continue;
 
-                grid.moveTo(j * gridSize, (startY    - gridOffsetY) * gridSize);
-                grid.lineTo(j * gridSize, (numXLines + gridOffsetY) * gridSize);
+                grid.moveTo(left,  y);
+                grid.lineTo(right, y);
             }
         },
 
@@ -150,29 +156,28 @@ define(function(require) {
             this.drawGrids();
         },
 
-        setGridOffsetX: function(gridOffsetX) {
-            this.gridOffsetX = gridOffsetX;
+        setOrigin: function(origin) {
+            this.origin.set(origin);
             this.drawGrids();
         },
 
-        setGridOffsetY: function(gridOffsetY) {
-            this.gridOffsetY = gridOffsetY;
-            this.drawGrids();
-        },
-
-        setGridOffset: function(x, y) {
-            this.gridOffsetX = x;
-            this.gridOffsetY = y;
+        setBounds: function(bounds) {
+            this.bounds.set(bounds);
             this.drawGrids();
         },
 
         set: function(options) {
             options = _.extend({
+                origin:        this.origin,
+                bounds:        this.bounds,
                 gridSize:      this.gridSize,
                 gridOffsetX:   this.gridOffsetX,
                 gridOffsetY:   this.gridOffsetY,
                 smallGridSize: this.smallGridSize
             }, options);
+
+            this.origin.set(options.origin);
+            this.bounds.set(options.bounds);
 
             this.gridSize = options.gridSize;
             this.gridOffsetX = options.gridOffsetX;

@@ -7,6 +7,8 @@ define(function(require) {
 
     var PixiSceneView = require('common/pixi/view/scene');
     var GridView      = require('common/pixi/view/grid');
+    var Vector2       = require('common/math/vector2');
+    var Rectangle     = require('common/math/rectangle');
 
     var Assets = require('assets');
 
@@ -37,8 +39,8 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.gridView = new GridView({
-                width:  this.width,
-                height: this.height,
+                origin: new Vector2(this.width / 2, this.height / 2),
+                bounds: new Rectangle(0, 0, this.width, this.height),
                 gridSize: 100,
                 lineColor: '#fff',
                 lineAlpha: 0.1
