@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView = require('common/pixi/view/scene');
+    var GridView      = require('common/pixi/view/grid');
 
     var Assets = require('assets');
 
@@ -18,7 +19,7 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var MSSSceneView = PixiSceneView.extend({
 
         events: {
             
@@ -34,6 +35,15 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            this.gridView = new GridView({
+                width:  this.width,
+                height: this.height,
+                gridSize: 100,
+                lineColor: '#fff',
+                lineAlpha: 0.1
+            });
+            this.stage.addChild(this.gridView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -42,5 +52,5 @@ define(function(require) {
 
     });
 
-    return TemplateSceneView;
+    return MSSSceneView;
 });
