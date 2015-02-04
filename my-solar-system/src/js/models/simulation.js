@@ -5,6 +5,8 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var Simulation = require('common/simulation/simulation');
+    
+    var Body = require('models/body');
 
     /**
      * Constants
@@ -14,7 +16,7 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var TemplateSimulation = Simulation.extend({
+    var MSSSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
             numBodies: 2,
@@ -38,6 +40,21 @@ define(function (require, exports, module) {
             
         },
 
+        /**
+         * Steps forward N steps and then updates the bodies' final property values.
+         */
+        stepForwardNTimes: function(n) {
+            for (var i = 0; i < n; i++)
+                this.stepForwardVelocityVerlet();
+            
+            for (var j = 0; j < this.bodies.length; j++)
+                this.bodies[j].updateAttributes();
+        },
+
+        stepForwardVelocityVerlet: function() {
+
+        },
+
         addBody: function() {
             if (this.get('numBodies') === Constants.MAX_BODIES)
                 return false;
@@ -56,10 +73,21 @@ define(function (require, exports, module) {
             if (speed > this.stepTimes.length - 1 || speed < 0)
                 throw 'Invalid speed setting';
 
-
+            if (this.integrationOn) {
+                this.stopIntegration();
+                this.maxAccel = 0;
+                this.timeStep = this.stepTimes[speed];
+                this.numStepsPerFrame = this.stepCountsPerFrame[speed];
+                this.startIntegration();
+            }
+            else {
+                this.maxAccel = 0;
+                this.timeStep = this.stepTimes[speed];
+                this.numStepsPerFrame = this.stepCountsPerFrame[speed];
+            }
         }
 
     });
 
-    return TemplateSimulation;
+    return MSSSimulation;
 });
