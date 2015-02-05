@@ -3,3 +3,5 @@ node_modules/
 dist/
 .grunt/
 .DS_Store
+
+*.log

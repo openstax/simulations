@@ -4,21 +4,21 @@ define(function(require) {
 
     var PixiAppView = require('common/pixi/view/app');
 
-    var TemplateSimView = require('views/sim');
+    var MassesAndSpringsSimView = require('views/sim');
 
     var Assets = require('assets');
 
     require('less!styles/font-awesome');
 
-    var TemplateAppView = PixiAppView.extend({
+    var MassesAndSpringsAppView = PixiAppView.extend({
 
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            TemplateSimView
+            MassesAndSpringsSimView
         ]
 
     });
 
-    return TemplateAppView;
+    return MassesAndSpringsAppView;
 });

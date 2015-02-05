@@ -18,7 +18,7 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var MassesAndSprings = PixiSceneView.extend({
 
         events: {
             
@@ -42,5 +42,5 @@ define(function(require) {
 
     });
 
-    return TemplateSceneView;
+    return MassesAndSprings;
 });

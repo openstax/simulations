@@ -1,0 +1,8 @@
+<ul class="<%= displayAs %>">
+    <% _.each(options, function(option){ %>
+        <li>
+            <input type="<%= displayAs %>" name="<%= inputName %>" value="<%= option.value %>" id="<%= inputName + '-' + option.label + '-' + option.value %>" <% if (option.isDefault) { %>checked="checked"<% } %> >
+            <label  for="<%= inputName + '-' + option.label + '-' + option.value %>"><%= option.label %></label>
+        </li>
+    <% }); %>
+</ul>

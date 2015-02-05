@@ -25,6 +25,9 @@ define(function (require) {
     // HTML
     var simHtml = require('text!templates/sim.html');
 
+    // Partials
+    var radioOrCheckboxListTemplate = _.template(require('text!templates/radio-or-checkbox-list.html'));
+
     /**
      * This is the umbrella view for everything in a simulation tab.
      *   It will be extended by both the Intro module and the Charts
@@ -89,6 +92,8 @@ define(function (require) {
             this.$el.empty();
 
             this.renderScaffolding();
+            this.renderPlaybackControls();
+            this.renderSceneControls();
             this.renderSceneView();
 
             return this;
@@ -112,6 +117,80 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
+
+        /**
+         * Renders the playback controls
+         */
+        renderPlaybackControls: function() {
+
+            var speedSettings = Constants.SPEED_SETTINGS;
+            var defaultSetting = _.find(speedSettings, {isDefault : true});
+            var range = _.object(_.pluck(speedSettings,'range'), _.pluck(speedSettings,'value'));
+
+            var inputName = 'playback-speed';
+            var displayAs = 'radio';
+            var $sliderOrRadio = this.$('.playback-speed');
+
+            if(displayAs === 'slider'){
+                // Intialize controls
+                $sliderOrRadio.noUiSlider({
+                    start: defaultSetting.value,
+                    snap: true,
+                    range: range
+                });
+
+                $sliderOrRadio.noUiSlider_pips({
+                    mode: 'steps',
+                    density: 50,
+                    format: {
+                        to: function( value ){
+                            return _.find(speedSettings, {'value' : value}).label;
+                        }
+                    }
+                });
+            }else{
+                $sliderOrRadio.replaceWith(radioOrCheckboxListTemplate({displayAs : displayAs, options: speedSettings.reverse(), inputName: inputName}));
+            }
+        },
+
+        /**
+         * Renders the scene UI global controls in the upper right hand corner
+         */
+        renderSceneControls: function(){
+
+            var gravitySettings = Constants.GRAVITY_SETTINGS;
+            var defaultSetting = _.find(gravitySettings, {isDefault : true});
+
+            var gravitySettingsOrdered = _.sortBy(gravitySettings, 'value');
+            var range = _.object(_.pluck(gravitySettingsOrdered,'range'), _.pluck(gravitySettingsOrdered,'value'));
+            var $placeholder = this.$('.gravity-settings-placeholder');
+
+            var inputName = 'gravitySetting';
+            var displayAs = 'radio';
+
+            if(displayAs === 'slider'){
+                // Intialize controls
+                $placeholder.addClass(displayAs);
+                $placeholder.noUiSlider({
+                    start: defaultSetting.value,
+                    snap: true,
+                    range: range
+                });
+
+                $placeholder.noUiSlider_pips({
+                    mode: 'steps',
+                    density: 50,
+                    format: {
+                        to: function( value ){
+                            return _.find(gravitySettings, {'value' : value}).label;
+                        }
+                    }
+                });
+            }else{
+                $placeholder.replaceWith(radioOrCheckboxListTemplate({displayAs : displayAs, options: gravitySettings, inputName: inputName}));
+            }
+
         },
 
         /**
