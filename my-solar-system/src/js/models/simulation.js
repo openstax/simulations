@@ -23,7 +23,8 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
             numBodies: 2,
             speed: 7,
-            time: 0
+            time: 0,
+            systemCentered: true
         }),
         
         initialize: function(attributes, options) {
@@ -56,8 +57,13 @@ define(function (require, exports, module) {
             this.steppingForward = false;
             this.resettingNumBodies = false;
             this.cmMotionRemoved = false;
-            this.wantCMMotionRemoved = true;
             this.collisionJustOccurred = false;
+        },
+
+        play: function() {
+            this.makeFirstStep();
+
+            Simulation.prototype.play.apply(this);
         },
 
         reset: function() {
@@ -261,7 +267,7 @@ define(function (require, exports, module) {
         makeFirstStep: function() {
             this.setForcesAndAccels();
             this.time += this.timeStep;
-            if (this.wantCMMotionRemoved && !this.cmMotionRemoved)
+            if (this.get('systemCentered') && !this.cmMotionRemoved)
                 this.removeCMMotion();
         },
 
