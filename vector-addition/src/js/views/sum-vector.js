@@ -22,7 +22,7 @@ define(function (require){
     },
 
     initGraphics: function() {
-      this.sumVector(10, 10);
+      this.sumVector(10, 100, 1);
     },
 
     sumVector: function(x, y) {
@@ -48,7 +48,7 @@ define(function (require){
       var sumVectorTail = new PIXI.Graphics();
 
       sumVectorTail.beginFill(0x76EE00);
-      sumVectorTail.drawRect(6, 20, 8, 10);
+      sumVectorTail.drawRect(6, 20, 8, length - this.sumVectorHead.height);
       sumVectorTail.interactive = true;
       sumVectorTail.buttonMode = true;
       this.sumVectorTail = sumVectorTail;
@@ -85,6 +85,8 @@ define(function (require){
       model.set('thetaText', model.get('sumVectorThetaText'));
       model.set('rXText', model.get('sumVectorRXText'));
       model.set('rYText', model.get('sumVectorRYText'));
+      model.set('className', 'green');
+      console.log(model.get('className'))
     },
 
     clearSumVector: function() {

@@ -144,7 +144,7 @@ define(function (require) {
         sumVectorTail.clear();
         sumVectorTail.beginFill(0x76EE00);
         sumVectorTail.drawRect(6, 20, 8, length);
-        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height/2);
+        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
         sumVectorContainer.position = new PIXI.Point(canvas.width()/2, canvas.height()/2);
       },
 

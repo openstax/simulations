@@ -17,7 +17,8 @@ define(function (require) {
       sumVectorRText: '',
       sumVectorThetaText: '',
       sumVectorRXText: '',
-      sumVectorRYText: ''
+      sumVectorRYText: '',
+      className: 'red'
     }
 
   });

@@ -34,7 +34,7 @@ define(function(require) {
     },
 
     initialize: function() {
-      this.drawArrow(10, 10 , 1);
+      this.drawArrow(10, 100 , 1);
       this.listenTo(this.model, 'change:emptyStage', this.clearAll);
     },
 
@@ -87,7 +87,7 @@ define(function(require) {
 
       var arrowTail = new PIXI.Graphics();
       arrowTail.beginFill(0xFF0000);
-      arrowTail.drawRect(6, 20, 8, length);
+      arrowTail.drawRect(6, 20, 8, length - this.arrowHead.height);
       arrowTail.interactive = true;
       arrowTail.buttonMode = true;
       arrowTail.defaultCursor = 'move';
@@ -115,7 +115,7 @@ define(function(require) {
        y = Vectors.roundGrid(this.displayObject.y),
        length = Math.sqrt(x * x + y * y),
        degrees = (180/Math.PI) + Math.atan2(y, x),
-       height = length - 0.2 * this.arrowHead.height,
+       height = length - 0.9 * this.arrowHead.height,
        index = vectors.indexOf(container);
 
       if (this.model.get('arrows') !== undefined) {
@@ -158,7 +158,7 @@ define(function(require) {
        y = Vectors.roundGrid(data.global.y - container.y),
        length = Math.sqrt(x * x + y * y),
        degrees = (180/Math.PI) + Math.atan2(y, x),
-       height = length - 0.2 * this.arrowHead.height;
+       height = length - 0.9 * this.arrowHead.height;
 
       if (this.transformable) {
         container.rotation = 0;
@@ -188,6 +188,8 @@ define(function(require) {
       model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
       model.set('rXText', Vectors.round0(x/10));
       model.set('rYText', Vectors.round0(y/10));
+
+      //model.set('className', 'red');
     },
 
     clearAll: function() {
