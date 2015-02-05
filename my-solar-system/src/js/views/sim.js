@@ -7,8 +7,9 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var Presets       = require('models/presets');
+    var MSSSimulation = require('models/simulation');
+    var MSSSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -69,21 +70,20 @@ define(function (require) {
             this.initSceneView();
 
             this.listenTo(this.simulation, 'change:numBodies', this.updateBodyInputs);
-
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new MSSSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new MSSSceneView({
                 simulation: this.simulation
             });
         },
@@ -109,7 +109,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                presetNames: _.keys(Presets)
             };
             this.$el.html(this.template(data));
 
@@ -173,10 +174,12 @@ define(function (require) {
 
         removeBody: function() {
             this.simulation.removeBody();
+            this.$('#preset').val('');
         },
 
         addBody: function() {
             this.simulation.addBody();
+            this.$('#preset').val('');
         },
 
         updateBodyInputs: function(simulation, numBodies) {
