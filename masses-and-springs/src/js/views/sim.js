@@ -123,14 +123,22 @@ define(function (require) {
          * Renders the playback controls
          */
         renderPlaybackControls: function() {
-            this.renderSlider(this.$('.playback-speed'), Constants.SPEED_SETTINGS);
+            this.renderSlider(this.$('.playback-speed'), Constants.SimSettings.SPEED);
         },
 
         /**
          * Renders the scene UI global controls in the upper right hand corner
          */
         renderSceneControls: function(){
-            this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.GRAVITY_SETTINGS, {inputName: 'gravity-setting'});
+
+            this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.SimSettings.GRAVITY, {inputName: 'gravity-setting'});
+            this.renderSlider(this.$('.friction-settings-placeholder'), this.getFrictionSettings(), {
+                pips : {
+                    mode : 'positions',
+                    values : [0, 50, 100]
+                }
+            });
+
         },
 
         /**
@@ -165,6 +173,35 @@ define(function (require) {
         },
 
 
+        /**
+         * get friction settings
+         */
+
+         getFrictionSettings : function(){
+            var frictionSettings = this.generateChoices(Constants.SimSettings.FRICTION_STEPS, Constants.SimSettings.FRICTION_EQUATION);
+
+            frictionSettings[0].label = 'none';
+            frictionSettings[5].isDefault = true;
+            frictionSettings[10].label = 'lots';
+
+            return frictionSettings;
+         },
+
+
+        /**
+         * get softness settings
+         */
+
+         getSoftnessSettings : function(){
+            var softnessSettings = this.generateChoices(Constants.SimSettings.SOFTNESS_STEPS, Constants.SimSettings.SOFTNESS_EQUATION);
+
+            softnessSettings[0].label = 'soft';
+            softnessSettings[5].isDefault = true;
+            softnessSettings[10].label = 'hard';
+
+            return softnessSettings;
+         },
+
 
         /**
          * HELPER RENDER FUNCTIONS
@@ -179,18 +216,22 @@ define(function (require) {
                 return;
             }
 
-            options = _.extend({
+            options = _.merge({
                 snap : true,
                 pips : {
                     mode: 'steps',
                     density: calculateDensity(choices),
                     format: {
                         to: function( value ){
-                            return _.find(choices, {'value' : value}).label;
+                            var step = _.find(choices, function(choice){
+                                return parseFloat(choice.value.toFixed(4)) === parseFloat(value.toFixed(4));
+                            });
+
+                            return step? step.label : '';
                         }
                     }
                 }
-            }, options);
+            }, options || {});
 
             var defaultChoice = _.find(choices, {isDefault : true});
             var range = getRange(choices);
@@ -224,7 +265,7 @@ define(function (require) {
                         return;
                     }
 
-                    range[order*options.pips.density+'%'] = choice.value;
+                    range[order*density+'%'] = choice.value;
                 });
 
                 return range;
@@ -254,6 +295,24 @@ define(function (require) {
 
             options.choices = choices;
             $element.replaceWith(this.choiceListTemplate(options));
+        },
+
+
+
+        /**
+         * HELPER OPTIONS GENERATOR
+         */
+        generateChoices : function(numberOfSteps, functionForEachStep){
+
+            var choices = new Array(numberOfSteps);
+
+            _.each(choices, function(choice, iter){
+                choices[iter] = {
+                    value : functionForEachStep(iter),
+                    label : ''
+                };
+            });
+            return choices;
         }
     });
 

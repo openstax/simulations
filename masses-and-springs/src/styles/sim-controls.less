@@ -67,7 +67,8 @@
     }
 
     .control-group {
-        margin-top: 10px;
+        .clearfix();
+        margin-bottom: 20px;
 
         // label {
         //     float: left;
@@ -94,6 +95,25 @@
         }
     }
 
+    .slider {
+        .noUi-base{
+            z-index: 1;
+            // sneaky padding to cover the labels a bit and extend the click-able area of the slider
+            padding: 16px;
+        }
+
+        .noUi-pips{
+            z-index: 0;
+        }
+
+        .noUi-value{
+            width: auto;
+        }
+
+        &.noUi-background{
+            background: @link-color;
+        }
+    }
 }
 
 
