@@ -74,9 +74,10 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyInputs);
+            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+            this.listenTo(this.simulation, 'bodies-reset',     this.updateBodyInputs);
         },
 
         /**
@@ -107,7 +108,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderHelpDialog();
 
-            this.updateBodyInputs(this.simulation, this.simulation.get('numBodies'));
+            this.updateBodyRows(  this.simulation, this.simulation.get('numBodies'));
+            this.updateBodyInputs(this.simulation, this.simulation.bodies);
 
             return this;
         },
@@ -203,7 +205,7 @@ define(function (require) {
             this.$('#preset').val('');
         },
 
-        updateBodyInputs: function(simulation, numBodies) {
+        updateBodyRows: function(simulation, numBodies) {
             var $rows = this.$('#body-settings-table tbody tr');
 
             $rows.each(function(index, row) {
@@ -226,6 +228,18 @@ define(function (require) {
                 $rows.last().show();
             else
                 $rows.last().hide();
+        },
+
+        updateBodyInputs: function(simulation, bodies) {
+            this.$('#body-settings-table tbody tr').each(function(i) {
+                if (i in bodies) {
+                    $(this).find('.mass').val(bodies[i].get('mass'));
+                    $(this).find('.pos-x').val(bodies[i].get('x'));
+                    $(this).find('.pos-y').val(bodies[i].get('y'));
+                    $(this).find('.vel-x').val(bodies[i].get('vx'));
+                    $(this).find('.vel-y').val(bodies[i].get('vy'));
+                }
+            });
         },
 
         bodySettingsInputKeyup: function(event) {

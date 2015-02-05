@@ -55,11 +55,11 @@
             <% _.each(Constants.BODY_COLORS, function(color, index) { %>
                 <tr>
                     <td>Body <%= index + 1 %></td>
-                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control mass"  style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control pos-x" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control pos-y" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control vel-x" style="background-color: <%= color %>" /></td>
+                    <td><input type="number" class="form-control vel-y" style="background-color: <%= color %>" /></td>
                     <td><button class="remove-body-btn" style="display: none"><span class="fa fa-minus-circle"></span></button></td>
                 </tr>
             <% }); %>
