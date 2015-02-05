@@ -3,7 +3,9 @@ define(function (require) {
     'use strict';
 
     $ = require('jquery');
+
     var PIXI = require('pixi');
+    var ArrowsCollection = require('collections/arrows');
 
     var Vectors = {
 
@@ -115,47 +117,40 @@ define(function (require) {
       //  }
       //},
 
-      sum: function(model, displayObject, sumVectorContainer, sumVectorTail) {
-        var canvas = $('.scene-view');
-        var arrows = model.get('arrows').models;
+      sum: function(model, sumVectorContainer, sumVectorTail) {
         var xSum = 0;
         var ySum = 0;
+        var arrows = model.get('arrows').models;
+        var canvas = $('.scene-view');
 
-        if (arrows !== undefined) {
-          _.each(arrows, function(arrow) {
-            xSum += arrow.get('x');
-            ySum += arrow.get('y');
-          });
+        _.each(arrows, function(arrow) {
+          xSum += arrow.get('x');
+          ySum += arrow.get('y');
+        });
 
-          var length = Math.sqrt(xSum * xSum + ySum * ySum);
-          var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
+        var length = Math.sqrt(xSum * xSum + ySum * ySum);
+        var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
 
-          displayObject.x = xSum;
-          displayObject.y = ySum;
-
-          this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length, canvas);
-          this.setSumVectorReadouts(model, length, degrees, xSum, ySum);
-         }
-
-      },
-
-      redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length, canvas) {
-        sumVectorContainer.rotation = Math.atan2(ySum, xSum);
-        sumVectorTail.clear();
-        sumVectorTail.beginFill(0x76EE00);
-        sumVectorTail.drawRect(6, 20, 8, length);
-        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
-        sumVectorContainer.position = new PIXI.Point(canvas.width()/2, canvas.height()/2);
-      },
-
-      setSumVectorReadouts: function(model, length, degrees, xSum, ySum) {
         model.set('sumVectorRText', Vectors.padZero(Vectors.round1(length/10)));
         model.set('sumVectorThetaText', Vectors.padZero(Vectors.round1(degrees)));
         model.set('sumVectorRXText', Vectors.round0(xSum/10));
         model.set('sumVectorRYText', Vectors.round0(ySum/10));
+
+        sumVectorContainer.position.x = canvas.width()/2;
+        sumVectorContainer.position.y = canvas.height()/4;
+        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
+
+        this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length)
+      },
+
+      redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length) {
+        sumVectorContainer.rotation = Math.atan2(ySum, xSum);
+        sumVectorTail.clear();
+        sumVectorTail.beginFill(0x76EE00);
+        sumVectorTail.drawRect(6, 20, 8, length - 20);
       }
 
-    };
+  };
 
     return Vectors;
 });

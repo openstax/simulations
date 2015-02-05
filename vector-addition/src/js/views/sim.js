@@ -26,7 +26,7 @@ define(function (require) {
 
         events: {
           'change #show-grid' : 'showGrid',
-          'click .btn': 'clearAll',
+          'click .btn': 'clearArrows',
           'change #show-sum': 'showSum'
         },
 
@@ -38,7 +38,8 @@ define(function (require) {
 
             SimView.prototype.initialize.apply(this, [options]);
             this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
-            this.listenTo(this.simulation, 'change:sumVectorRText change:sumVectorThetaText change:sumVectorRXText change:sumVectorRYText', this.updateSumReadouts);
+            //this.listenTo(this.simulation, 'change:sumVectorRText change:sumVectorThetaText change:sumVectorRXText change:sumVectorRYText', this.updateSumReadouts);
+            this.listenTo(this.simulation, 'change:sumVectorVisible', this.sumVectorVisible);
             this.initSceneView();
         },
 
@@ -94,6 +95,17 @@ define(function (require) {
           }
         },
 
+        clearArrows: function() {
+          var arrowsCollection = this.simulation.get('arrows');
+          var arrows = arrowsCollection.models.slice(1);
+
+          arrowsCollection.remove(arrows);
+          this.simulation.set('sumVectorVisible', false);
+          this.simulation.set('emptyStage', true);
+          this.$el.find('label').removeClass('green');
+
+        },
+
         clearAll: function() {
           this.simulation.set('emptyStage', true);
         },
@@ -113,12 +125,21 @@ define(function (require) {
         },
 
         showSum: function() {
-          var sumBox = this.$el.find('input[type="checkbox"]').attr('id', 'show-sum');
+          var sumBox = this.$el.find('#show-sum');
           if (sumBox.is(':checked')) {
             this.simulation.set('sumVectorVisible', true);
           }
           else {
             this.simulation.set('sumVectorVisible', false);
+          }
+        },
+
+        sumVectorVisible: function() {
+          if (this.simulation.get('sumVectorVisible')) {
+            this.$el.find('#show-sum').prop('checked', true);
+          }
+          else {
+            this.$el.find('#show-sum').prop('checked', false);
           }
         }
 
