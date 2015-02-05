@@ -123,7 +123,7 @@ define(function (require) {
          * Renders the playback controls
          */
         renderPlaybackControls: function() {
-            this.renderSlider(this.$('.playback-speed'), Constants.SimSettings.SPEED);
+            this.renderChoiceList(this.$('.playback-speed'), Constants.SimSettings.SPEED, {inputName: 'playback-speed'});
         },
 
         /**

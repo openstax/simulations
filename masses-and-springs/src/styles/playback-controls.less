@@ -1,16 +1,15 @@
 .playback-controls-wrapper {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
+    position: relative;
+    margin-top: 10px;
     padding: 10px;
-    background: @panel-bg;
+    background: @gray-lightest;
     text-align: center;
     .user-select(none);
 
     > .playback-btn {
         display: inline-block;
-        background: @panel-btn-bg;
-        color: @panel-btn-fg;
+        background: @btn-bg;
+        color: @link-color;
         outline: none;
         border: none;
         border-radius: 50%;
@@ -23,22 +22,29 @@
         }
 
         &:active {
-            background: @panel-btn-fg;
-            color: @panel-btn-bg;
+            background: @link-color;
+            color: #fff;
         }
 
-        &.play-btn {
+        &.play-btn,
+        &.record-btn,
+        &.pause-btn {
             display: none;
+        }
+
+        .sim-view:not(.record-mode):not(.playing) &.play-btn {
+            display: inline-block;
+        }
+        .sim-view.record-mode:not(.playing) &.record-btn  {
+            display: inline-block;
         }
         .sim-view.playing &.pause-btn {
             display: inline-block;
         }
-        .sim-view.playing &.play-btn {
-            display: none;
-        }
 
         &.play-btn,
-        &.pause-btn {
+        &.pause-btn,
+        &.record-btn {
             width: 42px;
             height: 42px;
             font-size: 16px;
@@ -50,7 +56,7 @@
     }
 
     .btn-normal {
-        .button-variant(@panel-btn-fg, @panel-btn-bg, #fff, @panel-btn-fg);
+        .button-variant(@link-color, @btn-bg, #fff, @link-color);
         margin: 5px 5px 0;
     }
 
@@ -62,11 +68,6 @@
         float: right;
     }
 
-    label {
-        color: @panel-fg;
-        font-weight: normal;
-    }
-
     .playback-speed-wrapper {
         position: absolute;
         height: 100%;
@@ -75,42 +76,49 @@
 
         .playback-speed {
             width: 140px;
-            margin-left: 20px;
             display: inline-block;
             vertical-align: middle;
             background: #aaa;
-
-            &.slider .noUi-handle:after {
-                background: #222;
-                border: 2px solid #aaa;
-            }
         }
 
-        .slider {
-            .noUi-base{
-                cursor: pointer;
-                z-index: 1;
-                // sneaky padding to cover the labels a bit and extend the click-able area of the slider
-                padding: 16px;
-            }
+        > label {
+            vertical-align: middle;
+            margin: 0 8px;
+            color: #777;
+            font-weight: normal;
+        }
 
-            .noUi-pips{
-                z-index: 0;
-            }
-
-            .noUi-pips-horizontal{
-                padding: 0;
-                margin-top: -6px;
-            }
-
-            .noUi-value{
-                width: auto;
-            }
+        .sim-view.record-mode & {
+            display: none;
         }
     }
+
+    .playback-mode-wrapper {
+        position: absolute;
+        top: 22px;
+        left: 170px;
+
+        & label {
+            margin-right: 16px;
+        }
+    }
+
+
 
     li{
         float: left;
         padding-right: 30px;
     }
+
+    .stopwatch{
+        cursor: pointer;
+        padding-top: 12px;
+        float: right;
+        margin-right: 12px;
+
+        label{
+            cursor: pointer;
+        }
+    }
+
 }

@@ -14,7 +14,7 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var TemplateSimulation = Simulation.extend({
+    var MassesAndSpringsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
 
@@ -38,5 +38,5 @@ define(function (require, exports, module) {
 
     });
 
-    return TemplateSimulation;
+    return MassesAndSpringsSimulation;
 });

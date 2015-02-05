@@ -7,7 +7,7 @@
     top: @panel-margin;
     width: @control-panel-expanded-width;
 
-    label {
+    > label {
         color: #555;
     }
 
@@ -33,6 +33,10 @@
         font-weight: 400;
         color: rgba(51, 51, 51, 0.8);
         margin-top: 0;
+    }
+
+    h5{
+        margin-bottom: 0;
     }
 
     .bootstrap-select {
@@ -125,5 +129,9 @@ ul.radio, ul.checkbox{
     li {
         text-align: left;
         list-style-image: none;
+
+        label{
+            font-weight: bold;
+        }
     }
 }
