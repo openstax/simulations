@@ -41,8 +41,10 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.maxAccel = 0;
 
-            this.timeStep = Constants.DEFAULT_TIME_STEP;
-            this.numStepsPerFrame = Constants.DEFAULT_NUM_STEPS_PER_FRAME;
+            this.frameAccumulator = 0;
+            this.frameDuration = Constants.FRAME_DURATION;
+            this.timeStep      = Constants.DEFAULT_TIME_STEP;
+            this.stepsPerFrame = Constants.DEFAULT_NUM_STEPS_PER_FRAME;
 
             this.velCM = new Vector2();
 
@@ -60,8 +62,23 @@ define(function (require, exports, module) {
 
         },
 
-        _update: function(time, deltaTime) {
-            
+        /**
+         * Overrides the normal Simulation update function so
+         *   that we can both fix the framerate and keep the
+         *   step time independent of the number of frames.
+         *   This will allow us to run more steps per frame
+         *   at small timesteps to achieve greater accuracy
+         *   and fewer steps per frame ?????????
+         */
+        update: function(time, deltaTime) {
+            if (!this.paused) {
+                this.frameAccumulator += deltaTime;
+
+                while (this.frameAccumulator >= this.frameDuration) {
+                    this.stepForwardNTimes(this.stepsPerFrame);
+                    this.frameAccumulator -= this.frameDuration;
+                }    
+            }
         },
 
         /**
@@ -76,6 +93,9 @@ define(function (require, exports, module) {
         },
 
         stepForwardVelocityVerlet: function() {
+            var dt = this.timeStep;
+            this.time += dt;
+
 
         },
 
@@ -87,40 +107,26 @@ define(function (require, exports, module) {
 
         },
 
-        addBody: function() {
-            if (this.get('numBodies') === Constants.MAX_BODIES)
-                return false;
-            else
-                this.set('numBodies', this.get('numBodies') + 1);
-        },
-
-        removeBody: function() {
-            if (this.get('numBodies') <= Constants.MIN_BODIES)
-                return false;
-            else
-                this.set('numBodies', this.get('numBodies') - 1);
-        },
-
         shiftSpeed: function(simulation, speed) {
             if (speed > Constants.STEP_TIMES.length - 1 || speed < 0)
                 throw 'Invalid speed setting';
 
-            if (this.integrationOn) {
-                this.stopIntegration();
+            if (!this.get('paused')) {
+                this.pause();
                 this.maxAccel = 0;
                 this.timeStep = Constants.STEP_TIMES[speed];
-                this.numStepsPerFrame = Constants.STEP_COUNTS_PER_FRAME[speed];
-                this.startIntegration();
+                this.stepsPerFrame = Constants.STEP_COUNTS_PER_FRAME[speed];
+                this.play();
             }
             else {
                 this.maxAccel = 0;
                 this.timeStep = Constants.STEP_TIMES[speed];
-                this.numStepsPerFrame = Constants.STEP_COUNTS_PER_FRAME[speed];
+                this.stepsPerFrame = Constants.STEP_COUNTS_PER_FRAME[speed];
             }
         },
 
         updateNumBodies: function(simulation, numBodies) {
-            this.stopIntegration();
+            this.pause();
             this.resettingNumBodies = true;
 
             this.initBodies();
@@ -159,14 +165,18 @@ define(function (require, exports, module) {
             this.trigger('bodies-reset');
         },
 
-        stopIntegration: function() {
-            if (this.integrationOn && !this.steppingForward) {
-
-            }
+        addBody: function() {
+            if (this.get('numBodies') === Constants.MAX_BODIES)
+                return false;
+            else
+                this.set('numBodies', this.get('numBodies') + 1);
         },
 
-        startIntegration: function() {
-
+        removeBody: function() {
+            if (this.get('numBodies') <= Constants.MIN_BODIES)
+                return false;
+            else
+                this.set('numBodies', this.get('numBodies') - 1);
         },
 
         loadPreset: function(presetNumber) {
