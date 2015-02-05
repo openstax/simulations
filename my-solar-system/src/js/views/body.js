@@ -41,7 +41,7 @@ define(function(require) {
 
         drawBody: function() {
             var diameter = 2.5 * Math.pow(this.model.get('mass'), 1/3) + 6;
-            var radius = diameter / 2;
+            var radius = this.mvt.modelToViewDeltaX(diameter) / 2;
 
             this.graphics.clear();
             this.graphics.beginFill(this.color, 1);
