@@ -49,8 +49,13 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .remove-body-btn': 'removeBody',
-            'click .add-body-btn':    'addBody',
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .rewind-btn' : 'reset',
+
+            'click .remove-body-btn' : 'removeBody',
+            'click .add-body-btn'    : 'addBody',
+
             'keyup #body-settings-table input': 'bodySettingsInputKeyup'
         },
 
@@ -70,13 +75,17 @@ define(function (require) {
             this.initSceneView();
 
             this.listenTo(this.simulation, 'change:numBodies', this.updateBodyInputs);
+            this.listenTo(this.simulation, 'change:time',      this.updateTime);
+            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new MSSSimulation();
+            this.simulation = new MSSSimulation({
+                paused: true
+            });
         },
 
         /**
@@ -124,6 +133,8 @@ define(function (require) {
                     'max': [ 4 ]
                 }
             });
+
+            this.$time = this.$('#time');
         },
 
         /**
@@ -147,6 +158,16 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+        },
+
+        /**
+         * Overrides to remove the confirmation dialog because it's
+         *   not important in this sim and also to make sure it is
+         *   paused after a reset.
+         */
+        reset: function(event) {
+            this.pause();
+            this.resetSimulation();
         },
 
         /**
@@ -223,7 +244,21 @@ define(function (require) {
                             .focus();
                 }
             }
-        }
+        },
+
+        updateTime: function(simulation, time) {
+            this.$time.html(time.toFixed(1));
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
 
     });
 

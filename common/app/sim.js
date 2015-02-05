@@ -104,11 +104,13 @@ define(function (require) {
          * Click event handler that resets the simulation back to time zero.
          */
         reset: function(event) {
-            if (!confirm('Are you sure you want to reset everything?'))
-                return;
-            
+            if (confirm('Are you sure you want to reset everything?'))
+                this.resetSimulation();
+        },
+
+        resetSimulation: function() {
             // Save whether or not it was paused when we reset
-            var wasPaused = this.simulation.paused;
+            var wasPaused = this.simulation.get('paused');
 
             // Set pause the updater and reset everything
             this.updater.pause();

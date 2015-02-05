@@ -53,7 +53,6 @@ define(function (require, exports, module) {
 
             this.updateNumBodies(this, this.get('numBodies'));
 
-            this.integrationOn = false;
             this.steppingForward = false;
             this.resettingNumBodies = false;
             this.cmMotionRemoved = false;
@@ -62,7 +61,17 @@ define(function (require, exports, module) {
         },
 
         reset: function() {
+            for (var i = 0; i < this.get('numBodies'); i++){
+                this.bodies[i].mass = this.bodies[i].initMass;
+                this.bodies[i].pos  = this.bodies[i].initPos.clone();
+                this.bodies[i].vel  = this.bodies[i].initVel.clone();
+            }
+            this.maxAccel = 0;
+            this.time = 0;
+            this.cmMotionRemoved = false;
+            this.steppingForward = false;
 
+            this.updateModels();
         },
 
         /**
@@ -74,7 +83,7 @@ define(function (require, exports, module) {
          *   and fewer steps per frame ?????????
          */
         update: function(time, deltaTime) {
-            if (!this.paused) {
+            if (!this.get('paused')) {
                 this.frameAccumulator += deltaTime;
 
                 while (this.frameAccumulator >= this.frameDuration) {
@@ -95,7 +104,12 @@ define(function (require, exports, module) {
                 this.stepForwardVelocityVerlet();
 
             // Then update the model attributes to trigger updates to the views
+            this.updateModels();
+        },
+
+        updateModels: function() {
             this.set('time', this.time);
+
             for (var j = 0; j < this.bodies.length; j++)
                 this.bodies[j].updateAttributes();
         },
@@ -241,6 +255,35 @@ define(function (require, exports, module) {
                 this.maxAccel = 0;
                 this.timeStep = Constants.STEP_TIMES[speed];
                 this.stepsPerFrame = Constants.STEP_COUNTS_PER_FRAME[speed];
+            }
+        },
+
+        makeFirstStep: function() {
+            this.setForcesAndAccels();
+            this.time += this.timeStep;
+            if (this.wantCMMotionRemoved && !this.cmMotionRemoved)
+                this.removeCMMotion();
+        },
+
+        removeCMMotion: function() {
+            if (!this.cmMotionRemoved){
+                for(var i = 0; i < this.get('numBodies'); i++){
+                    var vel = this.bodies[i].vel;
+                    vel.x -= this.velCM.x;
+                    vel.y -= this.velCM.y;
+                }
+                this.cmMotionRemoved = true;
+            }
+        },
+
+        addCMMotion: function() {
+            if (this.cmMotionRemoved) {
+                for (var i = 0; i < this.get('numBodies'); i++) {
+                    var vel = this.bodies[i].vel;
+                    vel.x += this.velCM.x;
+                    vel.y += this.velCM.y;
+                }
+                this.cmMotionRemoved = false;
             }
         },
 
