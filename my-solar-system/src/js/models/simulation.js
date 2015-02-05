@@ -208,7 +208,7 @@ define(function (require, exports, module) {
                 product * delX,
                 product * delY
             );
-        }
+        },
 
         /**
          * Calculates the new velocity center-of-mass.
@@ -281,7 +281,7 @@ define(function (require, exports, module) {
                 this.bodies.push(bodies[i]);
 
             // Make sure the views know we've got new bodies
-            this.trigger('bodies-reset');
+            this.trigger('bodies-reset', this, this.bodies);
         },
 
         addBody: function() {
