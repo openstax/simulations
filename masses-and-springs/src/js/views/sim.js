@@ -24,9 +24,7 @@ define(function (require) {
 
     // HTML
     var simHtml = require('text!templates/sim.html');
-
-    // Partials
-    var radioOrCheckboxListTemplate = _.template(require('text!templates/radio-or-checkbox-list.html'));
+    var choiceListHtml = require('text!templates/choice-list.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -45,6 +43,8 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+
+        choiceListTemplate : _.template(choiceListHtml),
 
         /**
          * Dom event listeners
@@ -123,74 +123,14 @@ define(function (require) {
          * Renders the playback controls
          */
         renderPlaybackControls: function() {
-
-            var speedSettings = Constants.SPEED_SETTINGS;
-            var defaultSetting = _.find(speedSettings, {isDefault : true});
-            var range = _.object(_.pluck(speedSettings,'range'), _.pluck(speedSettings,'value'));
-
-            var inputName = 'playback-speed';
-            var displayAs = 'radio';
-            var $sliderOrRadio = this.$('.playback-speed');
-
-            if(displayAs === 'slider'){
-                // Intialize controls
-                $sliderOrRadio.noUiSlider({
-                    start: defaultSetting.value,
-                    snap: true,
-                    range: range
-                });
-
-                $sliderOrRadio.noUiSlider_pips({
-                    mode: 'steps',
-                    density: 50,
-                    format: {
-                        to: function( value ){
-                            return _.find(speedSettings, {'value' : value}).label;
-                        }
-                    }
-                });
-            }else{
-                $sliderOrRadio.replaceWith(radioOrCheckboxListTemplate({displayAs : displayAs, options: speedSettings.reverse(), inputName: inputName}));
-            }
+            this.renderSlider(this.$('.playback-speed'), Constants.SPEED_SETTINGS);
         },
 
         /**
          * Renders the scene UI global controls in the upper right hand corner
          */
         renderSceneControls: function(){
-
-            var gravitySettings = Constants.GRAVITY_SETTINGS;
-            var defaultSetting = _.find(gravitySettings, {isDefault : true});
-
-            var gravitySettingsOrdered = _.sortBy(gravitySettings, 'value');
-            var range = _.object(_.pluck(gravitySettingsOrdered,'range'), _.pluck(gravitySettingsOrdered,'value'));
-            var $placeholder = this.$('.gravity-settings-placeholder');
-
-            var inputName = 'gravitySetting';
-            var displayAs = 'radio';
-
-            if(displayAs === 'slider'){
-                // Intialize controls
-                $placeholder.addClass(displayAs);
-                $placeholder.noUiSlider({
-                    start: defaultSetting.value,
-                    snap: true,
-                    range: range
-                });
-
-                $placeholder.noUiSlider_pips({
-                    mode: 'steps',
-                    density: 50,
-                    format: {
-                        to: function( value ){
-                            return _.find(gravitySettings, {'value' : value}).label;
-                        }
-                    }
-                });
-            }else{
-                $placeholder.replaceWith(radioOrCheckboxListTemplate({displayAs : displayAs, options: gravitySettings, inputName: inputName}));
-            }
-
+            this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.GRAVITY_SETTINGS, {inputName: 'gravity-setting'});
         },
 
         /**
@@ -224,6 +164,97 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+
+
+        /**
+         * HELPER RENDER FUNCTIONS
+         *
+         * Renders a list of choices as an ordered slider
+         */
+        renderSlider : function($element, choices, options){
+
+            if(!_.isArray(choices) || !$element){
+                // TODO: Determine whether this needs an error?
+                // No choices or no element to place the list into, don't try to render list.
+                return;
+            }
+
+            options = _.extend({
+                snap : true,
+                pips : {
+                    mode: 'steps',
+                    density: calculateDensity(choices),
+                    format: {
+                        to: function( value ){
+                            return _.find(choices, {'value' : value}).label;
+                        }
+                    }
+                }
+            }, options);
+
+            var defaultChoice = _.find(choices, {isDefault : true});
+            var range = getRange(choices);
+
+            // Intialize slider
+            $element.addClass('slider');
+            $element.noUiSlider({
+                start: defaultChoice.value,
+                snap: options.snap,
+                range: range
+            });
+
+            if(options.pips){            
+                $element.noUiSlider_pips(options.pips);
+            }
+
+
+            function getRange(choices, density){
+                var range = {};
+                var density = density || calculateDensity(choices);
+                var orderedChoices = _.sortBy(choices, 'value');
+
+                _.each(orderedChoices, function(choice, order){
+                    if(order === 0){
+                        range['min'] = choice.value;
+                        return;
+                    }
+
+                    if(order === orderedChoices.length - 1){
+                        range['max'] = choice.value;
+                        return;
+                    }
+
+                    range[order*options.pips.density+'%'] = choice.value;
+                });
+
+                return range;
+            }
+
+            function calculateDensity(choices){
+                return 100/(choices.length - 1);
+            }
+        },
+
+
+        /**
+         * Renders a list of choices that are either radio or checklist inputs
+         */
+        renderChoiceList : function($element, choices, options){
+
+            if(!_.isArray(choices) || !$element){
+                // TODO: Determine whether this needs an error?
+                // No choices or no element to place the list into, don't try to render list.
+                return;
+            }
+
+            options = _.extend({
+                displayAs: 'radio',
+                inputName : ''
+            }, options);
+
+            options.choices = choices;
+            $element.replaceWith(this.choiceListTemplate(options));
+        }
     });
 
     return TemplateSimView;
