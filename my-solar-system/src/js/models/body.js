@@ -14,7 +14,8 @@ define(function (require) {
             y: 0,
             vx: 0,
             vy: 0,
-            mass: 1
+            mass: 1,
+            destroyedInCollsion: false
         },
 
         initialize: function(attributes, options) {
@@ -52,6 +53,13 @@ define(function (require) {
                 vy: this.vel.y,
                 mass: this.mass
             });
+        },
+
+        destroyInCollision: function() {
+            this.mass = Constants.MIN_BODY_MASS;
+            this.pos.set(3000, 0);
+            this.vel.set(10, 0);
+            this.set('destroyedInCollsion', true);
         }
 
     });

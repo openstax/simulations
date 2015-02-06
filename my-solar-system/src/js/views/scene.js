@@ -11,7 +11,8 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
-    var BodyView = require('views/body');
+    var BodyView      = require('views/body');
+    var CollisionView = require('views/collision');
 
     var Assets = require('assets');
 
@@ -36,6 +37,7 @@ define(function(require) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.simulation, 'bodies-reset', this.initBodyViews);
+            this.listenTo(this.simulation, 'collision',    this.showCollision);
         },
 
         renderContent: function() {
@@ -56,6 +58,7 @@ define(function(require) {
             this.initGridView();
             this.initBodyLayer();
             this.initBodyViews(this.simulation, this.simulation.bodies);
+            this.initCollisions();
         },
 
         initGridView: function() {
@@ -87,8 +90,26 @@ define(function(require) {
             }
         },
 
+        initCollisions: function() {
+            this.collisionViews = [];
+            this.collisionLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.collisionLayer);
+        },
+
+        showCollision: function(simulation, position) {
+            this.collisionViews.push(new CollisionView({
+                position: position
+            }));
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            // Update collision views
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                this.collisionViews[i].update(time, deltaTime, paused);
+
+                if (this.collisionViews[i].finished())
+                    this.collisionViews.slice(i, 1);
+            }
         },
 
     });

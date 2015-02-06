@@ -246,6 +246,86 @@ define(function (require, exports, module) {
             this.velCM.y = sumMVY / totalMass;
         },
 
+        getIndicesOfClosestBodies: function() {
+            var minDist = 10000;
+            var distanceData = [];
+            for(var i = 0; i < this.get('numBodies'); i++){
+                for(var j = i + 1; j < this.get('numBodies'); j++){
+                    var distIJ = this.getDistanceBetweenBodies(i, j);
+                    if(distIJ < minDist){
+                        minDist = distIJ;
+                        distanceData[0] = i;
+                        distanceData[1] = j;
+                        distanceData[2] = minDist;
+                    }
+                }
+            }
+            return distanceData;
+        },
+
+        getDistanceBetweenBodies: function(body1Index, body2Index) {
+            var body1 = bodies[body1Index];
+            var body2 = bodies[body2Index];
+            var delX = body2.pos.x - body1.pos.x;
+            var delY = body2.pos.y - body1.pos.y;
+            var distSq = delX*delX + delY*delY;
+            var dist = Math.sqrt(distSq);
+            return dist;
+        },
+
+        /**
+         * When bodies collide, combine them into single body
+         */
+        collideBodies: function(body1Index, body2Index) {
+            this.pause();
+
+            /* Note that we can afford to create new objects
+             *   in this function because a collision happens 
+             *   a maximum of 3 times in a simulation's run.
+             */
+
+            var bodyA = this.bodies[body1Index];
+            var bodyB = this.bodies[body2Index];
+
+            var totalMass = bodyA.mass + bodyB.mass;
+
+            var velXCM = (1/totalMass)*(bodyA.mass*bodyA.vel.x + bodyB.mass*bodyB.vel.x);
+            var velYCM = (1/totalMass)*(bodyA.mass*bodyA.vel.y + bodyB.mass*bodyB.vel.y);
+            var velCM = new Vector2(velXCM, velYCM);
+
+            var posXCM = (1/totalMass)*(bodyA.mass*bodyA.pos.x + bodyB.mass*bodyB.pos.x);
+            var posYCM = (1/totalMass)*(bodyA.mass*bodyA.pos.y + bodyB.mass*bodyB.pos.y);
+            var posCM = new Vector2(posXCM, posYCM);
+
+            var largerMass = Math.max(bodyA.mass, bodyB.mass);
+            var indexToHide;
+            var bigBody;
+            var smallBody;
+
+            if (largerMass == bodyA.mass){
+                indexToHide = body2Index;
+                bigBody = bodyA;
+                smallBody = bodyB;
+            }
+            else {
+                indexToHide = body1Index;
+                bigBody = bodyB;
+                smallBody = bodyA;
+            }
+
+            bigBody.mass = totalMass;
+            bigBody.pos = posCM;
+            bigBody.vel = velCM;
+
+            smallBody.destroyInCollision();
+            this.trigger('collision', this, posCM);
+            
+            this.setForcesAndAccels();
+            this.maxAccel = 0;
+
+            this.play();
+        },
+
         shiftSpeed: function(simulation, speed) {
             if (speed > Constants.STEP_TIMES.length - 1 || speed < 0)
                 throw 'Invalid speed setting';
