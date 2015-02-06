@@ -25,6 +25,7 @@ define(function (require) {
     // HTML
     var simHtml = require('text!templates/sim.html');
     var choiceListHtml = require('text!templates/choice-list.html');
+    var graphHtml = require('text!templates/graph.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -45,6 +46,8 @@ define(function (require) {
         template: _.template(simHtml),
 
         choiceListTemplate : _.template(choiceListHtml),
+
+        tabbedGraphTemplate : _.template(graphHtml),
 
         /**
          * Dom event listeners
@@ -94,6 +97,8 @@ define(function (require) {
             this.renderScaffolding();
             this.renderPlaybackControls();
             this.renderSceneControls();
+            this.renderEnergyGraphs();
+
             this.renderSceneView();
 
             return this;
@@ -132,14 +137,43 @@ define(function (require) {
         renderSceneControls: function(){
 
             this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.SimSettings.GRAVITY, {inputName: 'gravity-setting'});
-            this.renderSlider(this.$('.friction-settings-placeholder'), this.getFrictionSettings(), {
+
+            this.renderDiscreteSlider(this.$('.friction-settings-placeholder'), this.getFrictionSettings(), {
                 pips : {
-                    mode : 'positions',
-                    values : [0, 50, 100]
+                    mode : 'count',
+                    values : 3
                 }
             });
 
+            // TODO make this for softness.  There's some weird bug right now with the last tick label.
+            // this.renderDiscreteSlider(this.$('.softness-settings-placeholder'), this.getSoftnessSettings(), {
+            //     pips : {
+            //         mode : 'count',
+            //         values : 3
+            //     }
+            // });
+
         },
+
+
+        /**
+         * Renders the graphs
+         */
+         renderEnergyGraphs: function(){
+
+            var mockSprings = [{
+                spring : 'one'
+            },{
+                spring : 'two'
+            },{
+                spring : 'three'
+            }]
+
+            this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
+
+         },
+
+
 
         /**
          * Called after every component on the page has rendered to make sure
@@ -208,7 +242,7 @@ define(function (require) {
          *
          * Renders a list of choices as an ordered slider
          */
-        renderSlider : function($element, choices, options){
+        renderDiscreteSlider : function($element, choices, options){
 
             if(!_.isArray(choices) || !$element){
                 // TODO: Determine whether this needs an error?
@@ -223,7 +257,7 @@ define(function (require) {
                     density: calculateDensity(choices),
                     format: {
                         to: function( value ){
-                            var step = _.find(choices, function(choice){
+                            var step = _.find(choices, function(choice, iter){
                                 return parseFloat(choice.value.toFixed(4)) === parseFloat(value.toFixed(4));
                             });
 
@@ -297,6 +331,24 @@ define(function (require) {
             $element.replaceWith(this.choiceListTemplate(options));
         },
 
+
+        /**
+         * Renders tabbed graphs
+         */
+        renderTabbedGraph : function($element, data, options){
+
+            if(!_.isArray(data) || !$element){
+                // TODO: Determine whether this needs an error?
+                // No choices or no element to place the list into, don't try to render list.
+                return;
+            }
+
+            options = _.extend({}, options);
+
+            options.data = data;
+            $element.replaceWith(this.tabbedGraphTemplate(options));
+
+        },
 
 
         /**

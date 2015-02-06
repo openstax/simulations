@@ -1,0 +1,11 @@
+<nav class="sim-tabs">
+    <ul class="singleton">
+        <% _.each(data, function(info, count){ %>
+            <li class="tab sim-tab">
+                <span class="tab-title">
+                    <%= count+1 %>
+                </span>
+            </li>
+        <% }); %>
+    </ul>
+</nav>
