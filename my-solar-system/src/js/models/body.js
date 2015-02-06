@@ -55,6 +55,36 @@ define(function (require) {
             });
         },
 
+        setInitialMass: function(mass) {
+            this.initMass = mass;
+            this.mass = mass;
+            this.set('mass', mass);
+        },
+
+        setInitialX: function(x) {
+            this.initPos.x = x;
+            this.pos.x = x;
+            this.set('x', x);
+        },
+
+        setInitialY: function(y) {
+            this.initPos.y = y;
+            this.pos.y = y;
+            this.set('y', y);
+        },
+
+        setInitialVX: function(vx) {
+            this.initVel.x = vx;
+            this.vel.x = vx;
+            this.set('vx', vx);
+        },
+
+        setInitialVY: function(vy) {
+            this.initVel.y = vy;
+            this.vel.y = vy;
+            this.set('vy', vy);
+        },
+
         destroyInCollision: function() {
             this.mass = Constants.MIN_BODY_MASS;
             this.pos.set(3000, 0);

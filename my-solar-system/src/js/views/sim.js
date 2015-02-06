@@ -56,9 +56,10 @@ define(function (require) {
             'click .remove-body-btn' : 'removeBody',
             'click .add-body-btn'    : 'addBody',
 
-            'keyup #body-settings-table input': 'bodySettingsInputKeyup',
+            'keyup  #body-settings-table input': 'bodySettingsInputKeyup',
+            'change #body-settings-table input': 'bodySettingsInputChanged',
 
-            'slide .playback-speed' : 'changeSpeed'
+            'slide .playback-speed' : 'changeSpeed',
         },
 
         /**
@@ -259,6 +260,43 @@ define(function (require) {
                         .find('input')
                             .focus();
                 }
+            }
+            else
+                this.bodySettingsInputChanged(event);
+        },
+
+        bodySettingsInputChanged: function(event) {
+            var $input = $(event.target);
+
+            var value = parseFloat($input.val());
+
+            var bodyIndex = $input.closest('tr').index();
+            var body = this.simulation.bodies[bodyIndex];
+
+            if ($input.hasClass('mass')) {
+                this.inputLock(function(){
+                    body.setInitialMass(value);
+                });
+            }
+            else if ($input.hasClass('pos-x')) {
+                this.inputLock(function(){
+                    body.setInitialX(value);
+                });
+            }
+            else if ($input.hasClass('pos-y')) {
+                this.inputLock(function(){
+                    body.setInitialY(value);
+                });
+            }
+            else if ($input.hasClass('vel-x')) {
+                this.inputLock(function(){
+                    body.setInitialVX(value);
+                });
+            }
+            else if ($input.hasClass('vel-y')) {
+                this.inputLock(function(){
+                    body.setInitialVY(value);
+                });
             }
         },
 
