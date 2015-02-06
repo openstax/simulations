@@ -1,0 +1,125 @@
+.playback-controls-wrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    > .playback-btn {
+        display: inline-block;
+        background: @panel-btn-bg;
+        color: @panel-btn-fg;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @panel-btn-fg;
+            color: @panel-btn-bg;
+        }
+
+        &.pause-btn {
+            display: none;
+        }
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+        .sim-view.playing &.play-btn {
+            display: none;
+        }
+
+        &.play-btn,
+        &.pause-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@panel-btn-fg, @panel-btn-bg, #fff, @panel-btn-fg);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    label {
+        color: @panel-fg;
+        font-weight: normal;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        left: 100px;
+        height: 100%;
+        top: 0;
+        padding-top: 18px;
+
+        .playback-speed {
+            width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+            background: #aaa;
+
+            &.slider .noUi-handle:after {
+                background: #222;
+                border: 2px solid #aaa;
+            }
+
+            .ticks {
+                position: absolute;
+                top: 1px;
+                left: 0;
+                width: 100%;
+
+                .tick {
+                    position: absolute;
+                    top: -2px;
+                    width: 4px;
+                    height: 4px;
+                    margin-left: -1px;
+                    background: #aaa;
+                    border-radius: 50%;
+                }
+            }
+        }
+
+        label {
+            vertical-align: middle;
+            margin: 0 8px;
+        }
+    }
+
+    .playback-time-wrapper {
+        position: absolute;
+        top: 0;
+        right: 273px;
+        line-height: 62px;
+
+        #time {
+            color: #fff;
+            width: 50px;
+            display: inline-block;
+            text-align: right;
+        }
+    }
+}

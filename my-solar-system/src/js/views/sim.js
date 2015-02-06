@@ -79,6 +79,7 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+            this.listenTo(this.simulation, 'change:started',   this.updateStartedState);
             this.listenTo(this.simulation, 'bodies-reset',     this.updateBodyInputs);
         },
 
@@ -277,6 +278,13 @@ define(function (require) {
 
         changeSpeed: function(event) {
             this.simulation.set('speed', parseInt($(event.target).val()));
+        },
+
+        updateStartedState: function(simulation, started) {
+            if (started)
+                this.$('.initial-settings').addClass('disabled');
+            else
+                this.$('.initial-settings').removeClass('disabled');
         }
 
     });

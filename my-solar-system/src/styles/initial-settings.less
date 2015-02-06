@@ -1,0 +1,116 @@
+.initial-settings {
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#fff, 14%);
+    .user-select(none);
+
+    &.disabled {
+        opacity: 0.5;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+
+        th {
+            text-align: center;
+        }
+
+        td:first-child {
+            padding-right: 6px;
+        }
+
+        .add-body-row {
+            .user-select(none);
+        }
+
+        .add-body-row > td {
+            text-align: center;
+        }
+
+        .remove-body-btn,
+        .add-body-btn {
+            background: transparent;
+            border: none;
+            opacity: 0.7;
+            padding: 0;
+            margin-left: 6px;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                color: inherit;
+            }
+
+            &:active {
+                //margin-top: 1px;
+            }
+        }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+        display: none;
+    }
+
+    input {
+        width: 48px;
+        height: auto;
+        padding: 0px 5px;
+        border: 1px solid rgba(0, 0, 0, 0.22);
+        color: #000;
+        text-align: right;
+
+        &.mass {
+            width: 71px;
+        }
+    }
+}
+
+.preset-wrapper {
+    position: absolute;
+    left: 383px;
+    top: @panel-margin;
+    color: fadeout(#fff, 14%);
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 60%);
+            border-color: rgba(0, 0, 0, 0.1);
+            //color: #fff;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            //text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+}

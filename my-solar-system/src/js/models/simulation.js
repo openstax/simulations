@@ -24,7 +24,8 @@ define(function (require, exports, module) {
             numBodies: 2,
             speed: 7,
             time: 0,
-            systemCentered: true
+            systemCentered: true,
+            started: false
         }),
         
         initialize: function(attributes, options) {
@@ -62,6 +63,7 @@ define(function (require, exports, module) {
 
         play: function() {
             this.makeFirstStep();
+            this.set('started', true);
 
             Simulation.prototype.play.apply(this);
         },
@@ -76,6 +78,8 @@ define(function (require, exports, module) {
             this.steppingForward = false;
 
             this.updateModels();
+
+            this.set('started', false);
         },
 
         /**
@@ -406,7 +410,7 @@ define(function (require, exports, module) {
                 new Body({ mass: 200, x:   0, y: 0, vx: 0, vy:   -1 }),
                 new Body({ mass:  10, x: 142, y: 0, vx: 0, vy:  140 }),
                 new Body({ mass:   0, x: 166, y: 0, vx: 0, vy:   74 }),
-                new Body({ mass:   0, x: -84, y: 0, vx: 20, vy: 0 })// new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
+                new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
             ];
 
             // Only take what we need
