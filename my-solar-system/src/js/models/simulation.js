@@ -67,11 +67,9 @@ define(function (require, exports, module) {
         },
 
         reset: function() {
-            for (var i = 0; i < this.get('numBodies'); i++){
-                this.bodies[i].mass = this.bodies[i].initMass;
-                this.bodies[i].pos  = this.bodies[i].initPos.clone();
-                this.bodies[i].vel  = this.bodies[i].initVel.clone();
-            }
+            for (var i = 0; i < this.get('numBodies'); i++)
+                this.bodies[i].reset();
+            
             this.maxAccel = 0;
             this.time = 0;
             this.cmMotionRemoved = false;
@@ -132,20 +130,24 @@ define(function (require, exports, module) {
             this.time += dt;
 
             // Update positions
+            var bodies = this.bodies;
             var pos;
             var vel;
             var acc;
             for (var i = 0; i < this.get('numBodies'); i++) {
-                pos = this.bodies[i].pos;
-                vel = this.bodies[i].vel;
-                acc = this.bodies[i].acc;
+                if (bodies[i].get('destroyedInCollision'))
+                    continue;
+
+                pos = bodies[i].pos;
+                vel = bodies[i].vel;
+                acc = bodies[i].acc;
                 
                 // Update position
                 pos.x = pos.x + vel.x*dt + (0.5)*acc.x*dt*dt;
                 pos.y = pos.y + vel.y*dt + (0.5)*acc.y*dt*dt;
 
                 // Copy the current state of the acceleration vector
-                this.bodies[i].preAcc.set(acc); 
+                bodies[i].preAcc.set(acc); 
             }
 
             this.setForcesAndAccels();
@@ -153,9 +155,9 @@ define(function (require, exports, module) {
             // Update velocities
             var preAcc;
             for (var i = 0; i < this.get('numBodies'); i++) {
-                vel    = this.bodies[i].vel;
-                acc    = this.bodies[i].acc;
-                preAcc = this.bodies[i].preAcc;
+                vel    = bodies[i].vel;
+                acc    = bodies[i].acc;
+                preAcc = bodies[i].preAcc;
 
                 vel.x = vel.x + (0.5)*(acc.x + preAcc.x)*dt;
                 vel.y = vel.y + (0.5)*(acc.y + preAcc.y)*dt;
@@ -264,8 +266,8 @@ define(function (require, exports, module) {
         },
 
         getDistanceBetweenBodies: function(body1Index, body2Index) {
-            var body1 = bodies[body1Index];
-            var body2 = bodies[body2Index];
+            var body1 = this.bodies[body1Index];
+            var body2 = this.bodies[body2Index];
             var delX = body2.pos.x - body1.pos.x;
             var delY = body2.pos.y - body1.pos.y;
             var distSq = delX*delX + delY*delY;
@@ -286,6 +288,9 @@ define(function (require, exports, module) {
 
             var bodyA = this.bodies[body1Index];
             var bodyB = this.bodies[body2Index];
+
+            if (bodyA.get('destroyedInCollision') || bodyB.get('destroyedInCollision'))
+                return;
 
             var totalMass = bodyA.mass + bodyB.mass;
 
@@ -401,7 +406,7 @@ define(function (require, exports, module) {
                 new Body({ mass: 200, x:   0, y: 0, vx: 0, vy:   -1 }),
                 new Body({ mass:  10, x: 142, y: 0, vx: 0, vy:  140 }),
                 new Body({ mass:   0, x: 166, y: 0, vx: 0, vy:   74 }),
-                new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
+                new Body({ mass:   0, x: -84, y: 0, vx: 20, vy: 0 })// new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
             ];
 
             // Only take what we need

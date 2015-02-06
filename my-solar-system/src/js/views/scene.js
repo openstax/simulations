@@ -97,9 +97,12 @@ define(function(require) {
         },
 
         showCollision: function(simulation, position) {
-            this.collisionViews.push(new CollisionView({
-                position: position
-            }));
+            var collisionView = new CollisionView({
+                position: position,
+                mvt: this.mvt
+            });
+            this.collisionLayer.addChild(collisionView.displayObject);
+            this.collisionViews.push(collisionView);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -107,8 +110,11 @@ define(function(require) {
             for (var i = this.collisionViews.length - 1; i >= 0; i--) {
                 this.collisionViews[i].update(time, deltaTime, paused);
 
-                if (this.collisionViews[i].finished())
+                if (this.collisionViews[i].finished()) {
+                    this.collisionViews[i].removeFrom(this.collisionLayer);
                     this.collisionViews.slice(i, 1);
+                }
+                    
             }
         },
 

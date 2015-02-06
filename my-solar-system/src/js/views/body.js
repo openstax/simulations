@@ -26,6 +26,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:vx', this.drawVelocity);
             this.listenTo(this.model, 'change:vy', this.drawVelocity);
             this.listenTo(this.model, 'change:mass', this.drawBody);
+            this.listenTo(this.model, 'change:destroyedInCollision', this.updateDestroyedState);
 
             this.updateMVT(this.mvt);
         },
@@ -67,6 +68,10 @@ define(function(require) {
             this.drawBody();
             this.updateX(this.model, this.model.get('x'));
             this.updateY(this.model, this.model.get('y'));
+        },
+
+        updateDestroyedState: function(body, destroyedInCollision) {
+            this.displayObject.visible = !destroyedInCollision;
         }
 
     });

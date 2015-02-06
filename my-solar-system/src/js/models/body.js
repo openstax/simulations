@@ -15,7 +15,7 @@ define(function (require) {
             vx: 0,
             vy: 0,
             mass: 1,
-            destroyedInCollsion: false
+            destroyedInCollision: false
         },
 
         initialize: function(attributes, options) {
@@ -59,7 +59,14 @@ define(function (require) {
             this.mass = Constants.MIN_BODY_MASS;
             this.pos.set(3000, 0);
             this.vel.set(10, 0);
-            this.set('destroyedInCollsion', true);
+            this.set('destroyedInCollision', true);
+        },
+
+        reset: function() {
+            this.mass = this.initMass;
+            this.pos  = this.initPos.clone();
+            this.vel  = this.initVel.clone();
+            this.set('destroyedInCollision', false);
         }
 
     });

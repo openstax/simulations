@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var range = require('common/math/range');
 
     var Constants = {}; 
 
@@ -11,7 +12,6 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    //Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.BODY_COLORS = [
     	// 'yellow', 
      //    'magenta', 
@@ -37,6 +37,24 @@ define(function (require) {
     Constants.STEP_COUNTS_PER_FRAME = [ 25, 20, 16, 12, 10, 8, 6, 5, 4, 3, 2 ];
     Constants.DEFAULT_TIME_STEP = 0.009;
     Constants.DEFAULT_NUM_STEPS_PER_FRAME = 4;
+
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                           COLLISION VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var CollisionView = {};
+
+    CollisionView.DIAMETER_RANGE = range({ min: 40, max: 60 }); // Simulation units
+    CollisionView.ANIMATION_DURATION = 1; // Seconds
+    CollisionView.ANIMATION_MIDPOINT = 0.65;
+    CollisionView.ANIMATION_ROTATION = Math.PI / 2;
+
+    Constants.CollisionView = CollisionView;
+
 
 
     return Constants;
