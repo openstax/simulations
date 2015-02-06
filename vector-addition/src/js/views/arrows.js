@@ -78,22 +78,11 @@ define(function(require) {
       var degrees = (180/Math.PI) * Math.atan2(y, x);
 
       var arrowHead = new PIXI.Graphics();
-      arrowHead.beginFill(0xFF0000);
-      arrowHead.moveTo(0, 20);
-      arrowHead.lineTo(10, 0);
-      arrowHead.lineTo(20, 20);
-      arrowHead.endFill();
-      arrowHead.interactive = true;
-      arrowHead.buttonMode = true;
-      arrowHead.defaultCursor = 'ew-resize';
+      Vectors.drawVectorHead(arrowHead, '0xFF0000', true, true, 'ew-resize');
       this.arrowHead = arrowHead;
 
       var arrowTail = new PIXI.Graphics();
-      arrowTail.beginFill(0xFF0000);
-      arrowTail.drawRect(6, 20, 8, length - this.arrowHead.height);
-      arrowTail.interactive = true;
-      arrowTail.buttonMode = true;
-      arrowTail.defaultCursor = 'move';
+      Vectors.drawVectorTail(arrowTail, '0xFF0000', true, true, 'move');
       this.arrowTail = arrowTail;
 
       this.container.addChild(this.arrowHead);

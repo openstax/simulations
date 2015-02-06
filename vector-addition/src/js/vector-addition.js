@@ -9,6 +9,25 @@ define(function (require) {
 
     var Vectors = {
 
+      drawVectorHead: function(vectorHead, fillColor, interactiveBool, buttonModeBool, defaultCursor) {
+        vectorHead.beginFill(fillColor);
+        vectorHead.moveTo(0, 20);
+        vectorHead.lineTo(10, 0);
+        vectorHead.lineTo(20, 20);
+        vectorHead.endFill();
+        vectorHead.interactive = interactiveBool;
+        vectorHead.buttonMode = buttonModeBool;
+        vectorHead.defaultCursor = defaultCursor;
+      },
+
+      drawVectorTail: function(vectorTail, fillColor, interactiveBool, buttonModeBool, defaultCursor) {
+        vectorTail.beginFill(fillColor);
+        vectorTail.drawRect(6, 20, 8, 0);
+        vectorTail.interactive = interactiveBool;
+        vectorTail.buttonMode = buttonModeBool;
+        vectortail.defaultCursor = defaultCursor;
+      },
+
       VectorArrow: function(x,y,i){
         this.x = x;
         this.y = y;

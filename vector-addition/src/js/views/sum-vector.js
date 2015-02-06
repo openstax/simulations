@@ -63,27 +63,14 @@ define(function (require){
     },
 
     sumVector: function(x, y) {
-      this.displayObject.x = x;
-      this.displayObject.y = y;
-
       this.sumVectorContainer = new PIXI.DisplayObjectContainer();
-      //Arrow Head
+
       var sumVectorHead = new PIXI.Graphics();
-      sumVectorHead.beginFill(0x76EE00);
-      sumVectorHead.moveTo(0, 20);
-      sumVectorHead.lineTo(10, 0);
-      sumVectorHead.lineTo(20, 20);
-      sumVectorHead.endFill();
-      sumVectorHead.interactive = true;
-      sumVectorHead.buttonMode = true;
+      Vectors.drawVectorHead(sumVectorHead, '0x76EE00', true, true);
       this.sumVectorHead = sumVectorHead;
 
-      //Arrow Tail
       var sumVectorTail = new PIXI.Graphics();
-      sumVectorTail.beginFill(0x76EE00);
-      sumVectorTail.drawRect(6, 20, 8, 0);
-      sumVectorTail.interactive = true;
-      sumVectorTail.buttonMode = true;
+      Vectors.drawVectorHead(sumVectorTail, '0x76EE00', true, true);
       this.sumVectorTail = sumVectorTail;
 
       //Arrow Container
