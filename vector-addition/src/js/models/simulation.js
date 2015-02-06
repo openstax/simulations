@@ -1,4 +1,4 @@
-define(function (require, exports, module) {
+define(function (require) {
 
   'use strict';
 
@@ -8,11 +8,17 @@ define(function (require, exports, module) {
 
     defaults: {
       showGrid: false,
+      sumVectorVisible: false,
       rText: '',
       thetaText: '',
       rXText: '',
       rYText: '',
-      emptyStage: false
+      emptyStage: false,
+      sumVectorRText: '',
+      sumVectorThetaText: '',
+      sumVectorRXText: '',
+      sumVectorRYText: '',
+      labelColor: 'red'
     }
 
   });

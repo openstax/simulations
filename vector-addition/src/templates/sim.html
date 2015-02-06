@@ -3,25 +3,26 @@
     <span class="scene-view-placeholder"></span>
     <div class="sim-values">
       <div class="col-md-3">
-       <label>|R|</label>
+       <label class="<%= labelColor %>">|R|</label>
        <input type="text" class="form-control rText" readonly value=" <%= rText %>"/>
       </div>
       <div class="col-md-3">
-        <label>&theta;</label>
+        <label class="<%= labelColor %>">&theta;</label>
         <input type="text" class="form-control thetaText" readonly value=" <%= thetaText %>"/>
       </div>
       <div class="col-md-3">
-        <label>R<sub>x</sub></label>
+        <label class="<%= labelColor %>">R<sub>x</sub></label>
         <input type="text" class="form-control rXText" readonly value="<%= rXText %>"/>
       </div>
       <div class="col-md-3">
-        <label>R<sub>y</sub></label>
+        <label class="<%= labelColor %>">R<sub>y</sub></label>
         <input type="text" class="form-control rYText" readonly value="<%= rYText %>"/>
       </div>
     </div>
     <div class="sim-controls">
       <div class="row">
         <div class="checkbox"><input type="checkbox" id="show-sum"><label for="show-sum">Show Sum</label>
+          <% if (sumVectorVisible) { %> checked = "checked" <% } %>
         </div>
       </div>
       <div class="row">
@@ -36,7 +37,7 @@
       </div>
     </div>
       <div class="checkbox">
-        <div class="checkbox"><input type="checkbox" id="show-grid" <% if (showGrid) { %>'checked="checked" <% } %>><label for="show-grid">Show Grid</label>
+        <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
         </div>
     </div>
 <input type="submit" class="btn" value="Clear All"/>
