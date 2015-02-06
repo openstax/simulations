@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var range = require('common/math/range');
 
     var Constants = {}; 
 
@@ -47,10 +48,10 @@ define(function (require) {
 
     var CollisionView = {};
 
-    CollisionView.START_COLLISION_DIAMETER = 40; // Simulation units
-    CollisionView.END_COLLISION_DIAMETER   = 60; // Simulation units
-
-    CollisionView.ANIMATION_DURATION = 2; // Seconds
+    CollisionView.DIAMETER_RANGE = range({ min: 40, max: 60 }); // Simulation units
+    CollisionView.ANIMATION_DURATION = 1; // Seconds
+    CollisionView.ANIMATION_MIDPOINT = 0.65;
+    CollisionView.ANIMATION_ROTATION = Math.PI / 2;
 
     Constants.CollisionView = CollisionView;
 

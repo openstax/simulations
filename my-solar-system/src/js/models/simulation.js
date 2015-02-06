@@ -67,11 +67,9 @@ define(function (require, exports, module) {
         },
 
         reset: function() {
-            for (var i = 0; i < this.get('numBodies'); i++){
-                this.bodies[i].mass = this.bodies[i].initMass;
-                this.bodies[i].pos  = this.bodies[i].initPos.clone();
-                this.bodies[i].vel  = this.bodies[i].initVel.clone();
-            }
+            for (var i = 0; i < this.get('numBodies'); i++)
+                this.bodies[i].reset();
+            
             this.maxAccel = 0;
             this.time = 0;
             this.cmMotionRemoved = false;

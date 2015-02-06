@@ -60,6 +60,13 @@ define(function (require) {
             this.pos.set(3000, 0);
             this.vel.set(10, 0);
             this.set('destroyedInCollision', true);
+        },
+
+        reset: function() {
+            this.mass = this.initMass;
+            this.pos  = this.initPos.clone();
+            this.vel  = this.initVel.clone();
+            this.set('destroyedInCollision', false);
         }
 
     });
