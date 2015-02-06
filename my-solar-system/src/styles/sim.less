@@ -102,12 +102,16 @@
         border: 1px solid rgba(0, 0, 0, 0.22);
         color: #000;
         text-align: right;
+
+        &.mass {
+            width: 71px;
+        }
     }
 }
 
 .preset-wrapper {
     position: absolute;
-    left: 360px;
+    left: 383px;
     top: @panel-margin;
     color: fadeout(#fff, 14%);
 
@@ -130,7 +134,7 @@
         }
 
         a {
-            text-transform: capitalize;
+            //text-transform: capitalize;
         }
 
         a:focus {
@@ -225,6 +229,22 @@
                 background: #222;
                 border: 2px solid #aaa;
             }
+
+            .ticks {
+                position: absolute;
+                top: 1px;
+                left: 0;
+                width: 100%;
+
+                .tick {
+                    position: absolute;
+                    top: -2px;
+                    width: 4px;
+                    height: 4px;
+                    background: #aaa;
+                    border-radius: 50%;
+                }
+            }
         }
 
         label {
@@ -239,12 +259,11 @@
         right: 273px;
         line-height: 62px;
 
-        & label {
-            margin-right: 16px;
-        }
-
         #time {
             color: #fff;
+            width: 50px;
+            display: inline-block;
+            text-align: right;
         }
     }
 }
