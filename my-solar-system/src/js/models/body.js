@@ -25,9 +25,11 @@ define(function (require) {
             this.vel = new Vector2(this.get('vx'), this.get('vy'));
             this.mass = this.get('mass');
 
-            this.initMass = this.get('mass');
-            this.initPos  = this.pos.clone();
-            this.initVel  = this.vel.clone();
+            this.set('initMass', this.get('mass'));
+            this.set('initX', this.pos.x);
+            this.set('initY', this.pos.y);
+            this.set('initVX', this.vel.x);
+            this.set('initVY', this.vel.y);
 
             this.prePos = new Vector2();
             this.acc    = new Vector2();
@@ -35,7 +37,14 @@ define(function (require) {
             this.pos_arr = [];
             this.acc_arr = [];
 
-            this.on('change:mass', this.massChanged);
+            this.on('change:mass',     this.massChanged);
+
+            // These functions assume they aren't being called after the sim has started
+            this.on('change:initMass', this.initMassChanged);
+            this.on('change:initX',    this.initXChanged);
+            this.on('change:initY',    this.initYChanged);
+            this.on('change:initVX',   this.initVXChanged);
+            this.on('change:initVY',   this.initVYChanged);
         },
 
         massChanged: function(model, mass) {
@@ -55,32 +64,27 @@ define(function (require) {
             });
         },
 
-        setInitialMass: function(mass) {
-            this.initMass = mass;
+        initMassChanged: function(model, mass) {
             this.mass = mass;
             this.set('mass', mass);
         },
 
-        setInitialX: function(x) {
-            this.initPos.x = x;
+        initXChanged: function(model, x) {
             this.pos.x = x;
             this.set('x', x);
         },
 
-        setInitialY: function(y) {
-            this.initPos.y = y;
+        initYChanged: function(model, y) {
             this.pos.y = y;
             this.set('y', y);
         },
 
-        setInitialVX: function(vx) {
-            this.initVel.x = vx;
+        initVXChanged: function(model, vx) {
             this.vel.x = vx;
             this.set('vx', vx);
         },
 
-        setInitialVY: function(vy) {
-            this.initVel.y = vy;
+        initVYChanged: function(model, vy) {
             this.vel.y = vy;
             this.set('vy', vy);
         },
@@ -93,9 +97,11 @@ define(function (require) {
         },
 
         reset: function() {
-            this.mass = this.initMass;
-            this.pos  = this.initPos.clone();
-            this.vel  = this.initVel.clone();
+            this.mass  = this.get('initMass');
+            this.pos.x = this.get('initX');
+            this.pos.y = this.get('initY');
+            this.vel.x = this.get('initVX');
+            this.vel.y = this.get('initVY');
             this.set('destroyedInCollision', false);
         }
 

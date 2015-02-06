@@ -245,8 +245,8 @@ define(function (require, exports, module) {
             var sumMVY = 0; // Sum of mass * velocity in the y direction
             for (var i = 0; i < this.get('numBodies'); i++) {
                 totalMass += this.bodies[i].mass;
-                sumMVX += this.bodies[i].mass * this.bodies[i].initVel.x;
-                sumMVY += this.bodies[i].mass * this.bodies[i].initVel.y;
+                sumMVX += this.bodies[i].mass * this.bodies[i].get('initVX');
+                sumMVY += this.bodies[i].mass * this.bodies[i].get('initVY');
             }
             this.velCM.x = sumMVX / totalMass;
             this.velCM.y = sumMVY / totalMass;

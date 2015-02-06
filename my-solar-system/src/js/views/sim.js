@@ -59,7 +59,7 @@ define(function (require) {
             'keyup  #body-settings-table input': 'bodySettingsInputKeyup',
             'change #body-settings-table input': 'bodySettingsInputChanged',
 
-            'slide .playback-speed' : 'changeSpeed',
+            'slide .playback-speed' : 'changeSpeed'
         },
 
         /**
@@ -81,7 +81,9 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
             this.listenTo(this.simulation, 'change:started',   this.updateStartedState);
-            this.listenTo(this.simulation, 'bodies-reset',     this.updateBodyInputs);
+            this.listenTo(this.simulation, 'bodies-reset',     this.bodiesReset);
+
+            this.bodiesWeAreListeningTo = [];
         },
 
         /**
@@ -112,8 +114,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderHelpDialog();
 
-            this.updateBodyRows(  this.simulation, this.simulation.get('numBodies'));
-            this.updateBodyInputs(this.simulation, this.simulation.bodies);
+            this.updateBodyRows(this.simulation, this.simulation.get('numBodies'));
+            this.bodiesReset(this.simulation, this.simulation.bodies);
 
             return this;
         },
@@ -208,6 +210,22 @@ define(function (require) {
             this.$('#preset').val('');
         },
 
+        bodiesReset: function(simulation, bodies) {
+            // Stop listening to the previous set of bodies
+            for (var j = this.bodiesWeAreListeningTo.length - 1; j >= 0; j--) {
+                this.stopListening(this.bodiesWeAreListeningTo[j]);
+                this.bodiesWeAreListeningTo.splice(j, 1);
+            }
+
+            // Start listening to the new set of bodies
+            for (var i = 0; i < bodies.length; i++) {
+                this.listenTo(bodies[i], 'change:initMass change:initX change:initY change:initVX change:initVY', this.updateBodyInputs);
+                this.bodiesWeAreListeningTo.push(bodies[i]);
+            }
+
+            this.updateBodyInputs(simulation, bodies);
+        },
+
         updateBodyRows: function(simulation, numBodies) {
             var $rows = this.$('#body-settings-table tbody tr');
 
@@ -233,15 +251,19 @@ define(function (require) {
                 $rows.last().hide();
         },
 
-        updateBodyInputs: function(simulation, bodies) {
-            this.$('#body-settings-table tbody tr').each(function(i) {
-                if (i in bodies) {
-                    $(this).find('.mass').val(bodies[i].get('mass'));
-                    $(this).find('.pos-x').val(bodies[i].get('x'));
-                    $(this).find('.pos-y').val(bodies[i].get('y'));
-                    $(this).find('.vel-x').val(bodies[i].get('vx'));
-                    $(this).find('.vel-y').val(bodies[i].get('vy'));
-                }
+        updateBodyInputs: function() {
+            var bodies = this.simulation.bodies;
+
+            this.updateLock(function() {
+                this.$('#body-settings-table tbody tr').each(function(i) {
+                    if (i in bodies) {
+                        $(this).find('.mass').val(bodies[i].get('mass'));
+                        $(this).find('.pos-x').val(bodies[i].get('x'));
+                        $(this).find('.pos-y').val(bodies[i].get('y'));
+                        $(this).find('.vel-x').val(bodies[i].get('vx'));
+                        $(this).find('.vel-y').val(bodies[i].get('vy'));
+                    }
+                });
             });
         },
 
@@ -275,27 +297,27 @@ define(function (require) {
 
             if ($input.hasClass('mass')) {
                 this.inputLock(function(){
-                    body.setInitialMass(value);
+                    body.set('initMass', value);
                 });
             }
             else if ($input.hasClass('pos-x')) {
                 this.inputLock(function(){
-                    body.setInitialX(value);
+                    body.set('initX', value);
                 });
             }
             else if ($input.hasClass('pos-y')) {
                 this.inputLock(function(){
-                    body.setInitialY(value);
+                    body.set('initY', value);
                 });
             }
             else if ($input.hasClass('vel-x')) {
                 this.inputLock(function(){
-                    body.setInitialVX(value);
+                    body.set('initVX', value);
                 });
             }
             else if ($input.hasClass('vel-y')) {
                 this.inputLock(function(){
-                    body.setInitialVY(value);
+                    body.set('initVY', value);
                 });
             }
         },
