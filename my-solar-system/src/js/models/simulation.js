@@ -351,6 +351,8 @@ define(function (require, exports, module) {
 
         }
 
+    }, {
+        MAX_SPEED: Constants.STEP_TIMES.length - 1
     });
 
     return MSSSimulation;

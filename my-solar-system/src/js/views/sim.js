@@ -56,7 +56,9 @@ define(function (require) {
             'click .remove-body-btn' : 'removeBody',
             'click .add-body-btn'    : 'addBody',
 
-            'keyup #body-settings-table input': 'bodySettingsInputKeyup'
+            'keyup #body-settings-table input': 'bodySettingsInputKeyup',
+
+            'slide .playback-speed' : 'changeSpeed'
         },
 
         /**
@@ -127,14 +129,21 @@ define(function (require) {
 
             this.$('select').selectpicker();
 
-            this.$('.playback-speed').noUiSlider({
-                start: 1,
-                range: {
-                    'min': [ 0.2 ],
-                    '50%': [ 1 ],
-                    'max': [ 4 ]
-                }
-            });
+            var ticks = '<div class="ticks">';
+            for (var i = 0; i <= MSSSimulation.MAX_SPEED; i++)
+                ticks += '<div class="tick" style="left: ' + ((i / MSSSimulation.MAX_SPEED) * 100) + '%"></div>';
+            ticks += '</div>';
+
+            this.$('.playback-speed')
+                .noUiSlider({
+                    start: 7,
+                    step:  1,
+                    range: {
+                        'min': 0,
+                        'max': MSSSimulation.MAX_SPEED
+                    }
+                })
+                .append(ticks);
 
             this.$time = this.$('#time');
         },
@@ -273,6 +282,10 @@ define(function (require) {
             else
                 this.$el.addClass('playing');
         },
+
+        changeSpeed: function(event) {
+            this.simulation.set('speed', parseInt($(event.target).val()));
+        }
 
     });
 
