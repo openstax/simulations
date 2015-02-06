@@ -11,7 +11,8 @@ define(function (require) {
 
         /**
          * Initialization code for new FixedIntervalSimulation objects.
-         *   Sets the timestep and initializes the accumulator to zero.
+         *   Sets the frame duration and initializes the frame 
+         *   accumulator to zero.
          */
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
@@ -19,8 +20,8 @@ define(function (require) {
             options = options || {};
             var fps = options.framesPerSecond || 30;
 
-            this.timestep = 1 / fps; // milliseconds, from PhET's WaveInterferenceClock
-            this.accumulator = 0;
+            this.frameDuration = 1 / fps; // milliseconds, from PhET's WaveInterferenceClock
+            this.frameAccumulator = 0;
         },
 
         /**
@@ -37,14 +38,14 @@ define(function (require) {
 
             if (!this.paused) {
                 delta = (delta / 1000) * this.get('timeScale');
-                this.accumulator += delta;
+                this.frameAccumulator += delta;
 
-                while (this.accumulator >= this.timestep) {
-                    this.time += this.timestep;
+                while (this.frameAccumulator >= this.frameDuration) {
+                    this.time += this.frameDuration;
 
-                    this._update(this.time, this.timestep);
+                    this._update(this.time, this.frameDuration);
                     
-                    this.accumulator -= this.timestep;
+                    this.frameAccumulator -= this.frameDuration;
                 }    
             }
             

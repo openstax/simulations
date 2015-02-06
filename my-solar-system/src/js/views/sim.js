@@ -7,8 +7,9 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var Presets       = require('models/presets');
+    var MSSSimulation = require('models/simulation');
+    var MSSSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -48,8 +49,16 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .remove-body-btn': 'removeBody',
-            'click .add-body-btn':    'addBody'
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .rewind-btn' : 'reset',
+
+            'click .remove-body-btn' : 'removeBody',
+            'click .add-body-btn'    : 'addBody',
+
+            'keyup #body-settings-table input': 'bodySettingsInputKeyup',
+
+            'slide .playback-speed' : 'changeSpeed'
         },
 
         /**
@@ -67,22 +76,26 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyInputs);
-
+            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
+            this.listenTo(this.simulation, 'change:time',      this.updateTime);
+            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+            this.listenTo(this.simulation, 'bodies-reset',     this.updateBodyInputs);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new MSSSimulation({
+                paused: true
+            });
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new MSSSceneView({
                 simulation: this.simulation
             });
         },
@@ -97,7 +110,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderHelpDialog();
 
-            this.updateBodyInputs(this.simulation, this.simulation.get('numBodies'));
+            this.updateBodyRows(  this.simulation, this.simulation.get('numBodies'));
+            this.updateBodyInputs(this.simulation, this.simulation.bodies);
 
             return this;
         },
@@ -108,20 +122,30 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                presetNames: _.keys(Presets)
             };
             this.$el.html(this.template(data));
 
             this.$('select').selectpicker();
 
-            this.$('.playback-speed').noUiSlider({
-                start: 1,
-                range: {
-                    'min': [ 0.2 ],
-                    '50%': [ 1 ],
-                    'max': [ 4 ]
-                }
-            });
+            var ticks = '<div class="ticks">';
+            for (var i = 0; i <= MSSSimulation.MAX_SPEED; i++)
+                ticks += '<div class="tick" style="left: ' + ((i / MSSSimulation.MAX_SPEED) * 100) + '%"></div>';
+            ticks += '</div>';
+
+            this.$('.playback-speed')
+                .noUiSlider({
+                    start: 7,
+                    step:  1,
+                    range: {
+                        'min': 0,
+                        'max': MSSSimulation.MAX_SPEED
+                    }
+                })
+                .append(ticks);
+
+            this.$time = this.$('#time');
         },
 
         /**
@@ -148,11 +172,13 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Overrides to remove the confirmation dialog because it's
+         *   not important in this sim and also to make sure it is
+         *   paused after a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        reset: function(event) {
+            this.pause();
+            this.resetSimulation();
         },
 
         /**
@@ -172,13 +198,15 @@ define(function (require) {
 
         removeBody: function() {
             this.simulation.removeBody();
+            this.$('#preset').val('');
         },
 
         addBody: function() {
             this.simulation.addBody();
+            this.$('#preset').val('');
         },
 
-        updateBodyInputs: function(simulation, numBodies) {
+        updateBodyRows: function(simulation, numBodies) {
             var $rows = this.$('#body-settings-table tbody tr');
 
             $rows.each(function(index, row) {
@@ -201,6 +229,54 @@ define(function (require) {
                 $rows.last().show();
             else
                 $rows.last().hide();
+        },
+
+        updateBodyInputs: function(simulation, bodies) {
+            this.$('#body-settings-table tbody tr').each(function(i) {
+                if (i in bodies) {
+                    $(this).find('.mass').val(bodies[i].get('mass'));
+                    $(this).find('.pos-x').val(bodies[i].get('x'));
+                    $(this).find('.pos-y').val(bodies[i].get('y'));
+                    $(this).find('.vel-x').val(bodies[i].get('vx'));
+                    $(this).find('.vel-y').val(bodies[i].get('vy'));
+                }
+            });
+        },
+
+        bodySettingsInputKeyup: function(event) {
+            var code = event.keyCode || event.which;
+            if (code == 13) { // ENTER pressed
+                var colIndex = $(event.target).closest('td').index();
+                var rowIndex = $(event.target).closest('tr').index();
+
+                if (rowIndex + 1 <= Constants.MAX_BODIES) {
+                    $(event.target)
+                        .closest('tr')
+                        .next()
+                        .children()
+                        .eq(colIndex)
+                        .find('input')
+                            .focus();
+                }
+            }
+        },
+
+        updateTime: function(simulation, time) {
+            this.$time.html(time.toFixed(1));
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        changeSpeed: function(event) {
+            this.simulation.set('speed', parseInt($(event.target).val()));
         }
 
     });

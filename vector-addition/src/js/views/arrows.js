@@ -4,13 +4,17 @@ define(function(require) {
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
-  var Vectors = require('vector-addition')
+  var Vectors = require('vector-addition');
+  var Simulation = require('models/simulation');
+  var ArrowsModel = require('models/arrows');
+  var ArrowsCollection = require('collections/arrows');
+
+  var nbrVectors = [];
 
   var ArrowView = PixiView.extend({
 
     events: {
-      'click .arrowTail': 'getFields',
-      'click .arrowHead': 'getFields',
+      'click .arrowHead': 'vectorReadouts',
       'mousedown .arrowHead': 'rotateStart',
       'mousemove .arrowHead': 'rotate',
       'touchmove .arrowHead': 'rotate',
@@ -18,6 +22,8 @@ define(function(require) {
       'mouseupoutside .arrowHead': 'rotateEnd',
       'touchend .arrowHead': 'rotateEnd',
       'touchendoutside .arrowHead': 'rotateEnd',
+
+      'click .arrowTail': 'vectorReadouts',
       'mousedown .arrowTail': 'dragStart',
       'mousemove .arrowTail': 'dragMove',
       'touchmove .arrowTail': 'dragMove',
@@ -28,27 +34,8 @@ define(function(require) {
     },
 
     initialize: function() {
-      this.drawArrow();
-      this.sumVector();
-      this.listenTo(this.model, 'change:emptyStage', this.clearAll)
-      this.listenTo(this.model, 'change:rText change:thetaText change:rXText change:rYText',
-       this.getFields);
-    },
-
-    clearAll: function() {
-      var displayObject = this.displayObject;
-      var arrows = _.where(displayObject.children, {name: 'arrow'})
-      _.each(arrows, function(arrow){
-        displayObject.removeChild(arrow)
-      })
-    },
-
-    //TODO
-    sumVector: function() {
-      var sumVector = new Vectors.Vector(10,10,-1);
-      sumVector.rotation = 0;
-      sumVector.width = 0;
-      return sumVector;
+      this.drawArrow(0, 100 , 1);
+      this.listenTo(this.model, 'change:emptyStage', this.clearArrows);
     },
 
     dragStart: function(data) {
@@ -58,98 +45,97 @@ define(function(require) {
     },
 
     dragMove: function(data) {
-      var xCoord = data.global.x - this.displayObject.x;
-      var yCoord = data.global.y - this.displayObject.y;
-      var x = Vectors.roundGrid(xCoord);
-      var y = Vectors.roundGrid(yCoord);
-      var length = Math.sqrt(x*x+y*y);
-      var degrees = (180/Math.PI) * Math.atan2(y, x);
+      if (this.model.get('arrows') !== undefined) {
+        var x = Vectors.roundGrid(data.global.x - this.displayObject.x),
+          y = Vectors.roundGrid(data.global.y - this.displayObject.y),
+          length = Math.sqrt(x * x + y * y),
+          degrees = (180/Math.PI) * Math.atan2(y, x);
 
-      if (this.dragging) {
-        this.arrowContainer.position.x = x;
-        this.arrowContainer.position.y = y;
+        if (this.dragging) {
+           this.container.x = x;
+           this.container.y = y;
 
-        Vectors.updateFields(this.model, length, degrees, x, y);
+          //TODO
+          //Vectors.updateComponents();
+        }
 
-        //TODO
-        //Vectors.updateComponents();
       }
+
     },
 
     dragEnd: function(data) {
       this.dragging = false;
     },
 
-    drawArrow: function() {
-      this.arrowContainer = new PIXI.DisplayObjectContainer();
-      var arrowHead = new PIXI.Graphics(),
-      arrowTail = new PIXI.Graphics(),
-      canvas = $('.scene-view');
+    drawArrow: function(x, y, i) {
+      this.container = new PIXI.DisplayObjectContainer();
+      var model = this.model,
+       canvas = $('.scene-view');
 
-      this.arrowContainer.fillColor = '0xFF00000';
+      this.displayObject.x = x;
+      this.displayObject.y = y;
+      var length = Math.sqrt(x * x + y * y);
+      var degrees = (180/Math.PI) * Math.atan2(y, x);
 
-      arrowHead.beginFill(this.arrowContainer.fillColor);
-      arrowHead.moveTo(0, 40);
-      arrowHead.lineTo(10, 0);
-      arrowHead.lineTo(20, 40);
-      arrowHead.endFill();
-      arrowHead.interactive = true;
-      arrowHead.buttonMode = true;
+      var arrowHead = new PIXI.Graphics();
+      Vectors.drawVectorHead(arrowHead, '0xFF0000', true, true, 'ew-resize');
       this.arrowHead = arrowHead;
 
-      arrowTail.beginFill(this.arrowContainer.fillColor);
-      arrowTail.drawRect(6, 40, 8, 160);
-      arrowTail.interactive = true;
-      arrowTail.buttonMode = true;
-      arrowTail.defaultCursor = 'move';
+      var arrowTail = new PIXI.Graphics();
+      Vectors.drawVectorTail(arrowTail, '0xFF0000', true, true, 'move');
       this.arrowTail = arrowTail;
 
-      this.arrowContainer.addChild(this.arrowHead);
-      this.arrowContainer.addChild(this.arrowTail);
-      this.displayObject.position.x = 0.8 * canvas.width() + 10 *Math.random() - 5;
-      this.displayObject.position.y = 0.25 * canvas.height() + 10 *Math.random() - 5;
-      this.arrowContainer.name ='arrow';
-      this.arrowContainer.pivot.set(20, 160);
+      this.container.addChild(this.arrowHead);
+      this.container.addChild(this.arrowTail);
+      this.displayObject.addChild(this.container);
 
-      this.displayObject.addChild(this.arrowContainer);
+      this.container.position.x = 0.8 * canvas.width() + 10 *Math.random() - 5;
+      this.container.position.y = 0.25 * canvas.width() + 10 *Math.random() - 5;
+      this.container.pivot.set(this.container.width/2, this.container.height);
+
+      nbrVectors.push(this.container);
+      this.container.index = nbrVectors.indexOf(this.container);
+
+      this.createArrowsCollection(nbrVectors, x, y,  length, degrees);
       this.model.set('emptyStage', false);
-      this.model.set({
-        'rText': Vectors.padZero(Vectors.round1(180/10)),
-        'thetaText': Vectors.padZero(Vectors.round1(90)),
-        'rXText': Vectors.round0(this.arrowContainer.position.x/10),
-        'rYText': Vectors.round0(this.arrowContainer.position.y/10)
-      });
-      this.getFields();
+      Vectors.updateFields(model.get('arrows').models[this.container.index], this.model, x, y , length, degrees);
+
     },
+
+    createArrowsCollection: function(nbrVectors, x, y, length, degrees) {
+      var arrows = new ArrowsCollection();
+      _.each(nbrVectors, function(vector) {
+        var arrow = new Backbone.Model({'x': x,'y': y,'length': length,'degrees': degrees});
+        arrows.add(arrow);
+      });
+
+      this.model.set('arrows', arrows);
+  },
 
     rotateStart: function(data) {
       this.transformable = true;
       this.data = data;
     },
 
-    rotate: function(data) {
-      var arrowContainer = this.arrowContainer;
-      var xCoord = data.global.x - this.displayObject.x;
-      var yCoord = data.global.y - this.displayObject.y;
-      var x = Vectors.roundGrid(xCoord);
-      var y = Vectors.roundGrid(yCoord);
-      var length = Math.sqrt(x*x+y*y);
-      var degrees = (180/Math.PI) * Math.atan2(y, x);
-      var height = length - 0.9 * this.arrowHead.height;
+    rotate: function(data, e) {
+      var model = this.model,
+       container = this.container,
+       arrowModel = model.get('arrows').models[container.index],
+       x = Vectors.roundGrid(data.global.x - this.container.x),
+       y = Vectors.roundGrid(data.global.y - this.container.y),
+       length = Math.sqrt(x * x + y * y),
+       degrees = (180/Math.PI) + Math.atan2(y, x),
+       height = length - 0.9 * this.arrowHead.height;
 
       if (this.transformable) {
-        arrowContainer.rotation = 0;
+        container.rotation = 0;
         this.arrowTail.clear();
-        this.arrowTail.beginFill(this.arrowContainer.fillColor);
-        this.arrowTail.drawRect(6, 40, 8, height);
-        arrowContainer.rotation = degrees;
+        this.arrowTail.beginFill(0xFF0000);
+        this.arrowTail.drawRect(6, 20, 8, height);
+        container.pivot.set(container.width/2, container.height);
+        container.rotation = Math.atan2(y, x);
 
-        //TODO
-        //Vectors.updateComponents();
-        //Vectors.updateSumVector();
-        //Vectors.updateAfterEvent();
-
-        Vectors.updateFields(this.model, length, degrees, x, y);
+        Vectors.updateFields(arrowModel, model, x, y , length, degrees);
       }
     },
 
@@ -157,12 +143,33 @@ define(function(require) {
       this.transformable = false;
     },
 
-    getFields: function() {
-      this.model.get('rText');
-      this.model.get('thetaText');
-      this.model.get('rXText');
-      this.model.get('rYText');
-    }
+    vectorReadouts: function() {
+      var model = this.model;
+      var arrowModel = this.model.get('arrows').models[this.container.index];
+      var x = arrowModel.get('x');
+      var y = arrowModel.get('y');
+      var length = arrowModel.get('length');
+      var degrees = arrowModel.get('degrees');
+
+      model.set('rText', Vectors.padZero(Vectors.round1(length/10)));
+      model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
+      model.set('rXText', Vectors.round0(x/10));
+      model.set('rYText', Vectors.round0(y/10));
+
+      $('label').removeClass('green');
+
+    },
+
+    clearArrows: function() {
+      if (this.model.get('emptyStage') == true) {
+        var arrowsCollection = this.model.get('arrows');
+        var arrowsToRemove = arrowsCollection.slice(0);
+        arrowsCollection.remove(arrowsToRemove);
+        this.displayObject.removeChild(this.container);
+        nbrVectors.length = 0;
+      }
+    },
+
 
   });
 
