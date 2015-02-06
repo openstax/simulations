@@ -59,7 +59,14 @@ define(function (require) {
             'keyup  #body-settings-table input': 'bodySettingsInputKeyup',
             'change #body-settings-table input': 'bodySettingsInputChanged',
 
-            'slide .playback-speed' : 'changeSpeed'
+            'change #preset': 'changePreset',
+
+            'slide .playback-speed' : 'changeSpeed',
+
+            'click #system-centered-check' : 'changeSystemCentered',
+            'click #show-traces-check'     : 'changeShowTraces',
+            'click #show-grid-check'       : 'changeShowGrid',
+            'click #tape-measure-check'    : 'changeShowTapeMeasure'
         },
 
         /**
@@ -77,7 +84,7 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
+            //this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
             this.listenTo(this.simulation, 'change:started',   this.updateStartedState);
@@ -114,7 +121,6 @@ define(function (require) {
             this.renderSceneView();
             this.renderHelpDialog();
 
-            this.updateBodyRows(this.simulation, this.simulation.get('numBodies'));
             this.bodiesReset(this.simulation, this.simulation.bodies);
 
             return this;
@@ -127,7 +133,7 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                presetNames: _.keys(Presets)
+                presetNames: _.pluck(Presets, 'name')
             };
             this.$el.html(this.template(data));
 
@@ -223,10 +229,12 @@ define(function (require) {
                 this.bodiesWeAreListeningTo.push(bodies[i]);
             }
 
-            this.updateBodyInputs(simulation, bodies);
+            this.updateBodyRows();
+            this.updateBodyInputs();
         },
 
-        updateBodyRows: function(simulation, numBodies) {
+        updateBodyRows: function() {
+            var numBodies = this.simulation.get('numBodies');
             var $rows = this.$('#body-settings-table tbody tr');
 
             $rows.each(function(index, row) {
@@ -345,6 +353,36 @@ define(function (require) {
                 this.$('.initial-settings').addClass('disabled');
             else
                 this.$('.initial-settings').removeClass('disabled');
+        },
+
+        changeSystemCentered: function(event) {
+            this.simulation.set('systemCentered', $(event.target).is(':checked'));
+            console.log($(event.target).is(':checked'));
+
+            // Needs to be reset with this algorithm for changes to take effect.
+            // this.simulation.pause();
+            // this.simulation.play();
+        },
+
+        changeShowTraces: function(event) {
+
+        },
+
+        changeShowGrid: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.gridView.show();
+            else
+                this.sceneView.gridView.hide();
+        },
+
+        changeShowTapeMeasure: function(event) {
+
+        },
+
+        changePreset: function(event) {
+            var indexString = $(event.target).val();
+            if (indexString !== '')
+                this.simulation.loadPreset(parseInt(indexString));
         }
 
     });

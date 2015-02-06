@@ -15,6 +15,13 @@ define(function (require, exports, module) {
      */
     var Constants = require('constants');
 
+    var DEFAULT_BODIES = [
+        new Body({ mass: 200, x:   0, y: 0, vx: 0, vy:   -1 }),
+        new Body({ mass:  10, x: 142, y: 0, vx: 0, vy:  140 }),
+        new Body({ mass:   0, x: 166, y: 0, vx: 0, vy:   74 }),
+        new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
+    ];
+
     /**
      * Wraps the update function in 
      */
@@ -53,6 +60,7 @@ define(function (require, exports, module) {
 
             this.velCM = new Vector2();
 
+            this.bodies = [];
             this.updateNumBodies(this, this.get('numBodies'));
 
             this.steppingForward = false;
@@ -386,7 +394,7 @@ define(function (require, exports, module) {
             this.pause();
             this.resettingNumBodies = true;
 
-            this.initBodies();
+            this.initDefaultBodies();
             this.initForces();
             this.setForcesAndAccels();
             this.reset();
@@ -404,22 +412,26 @@ define(function (require, exports, module) {
             }
         },
 
-        initBodies: function() {
-            // List of all the initial body models
-            var bodies = [
-                new Body({ mass: 200, x:   0, y: 0, vx: 0, vy:   -1 }),
-                new Body({ mass:  10, x: 142, y: 0, vx: 0, vy:  140 }),
-                new Body({ mass:   0, x: 166, y: 0, vx: 0, vy:   74 }),
-                new Body({ mass:   0, x: -84, y: 0, vx: 0, vy: -133 })
-            ];
+        initBodies: function(bodies) {
+            // Stop listening to the previous set of bodies
+            for (var j = this.bodies.length - 1; j >= 0; j--) {
+                this.stopListening(this.bodies[j]);
+                this.bodies.splice(j, 1);
+            }
 
-            // Only take what we need
-            this.bodies = [];
-            for (var i = 0; i < this.get('numBodies'); i++)
-                this.bodies.push(bodies[i]);
+            // Clone the bodies from the list, add them, and listen to them
+            for (var i = 0; i < this.get('numBodies'); i++) {
+                this.bodies.push(bodies[i].clone());
+                this.listenTo(this.bodies[i], 'change:initMass', this.bodyInitialMassChanged);
+            }
 
             // Make sure the views know we've got new bodies
             this.trigger('bodies-reset', this, this.bodies);
+        },
+
+        initDefaultBodies: function() {
+            // Only take what we need
+            this.initBodies(DEFAULT_BODIES.slice(0, this.get('numBodies')));
         },
 
         addBody: function() {
@@ -436,8 +448,29 @@ define(function (require, exports, module) {
                 this.set('numBodies', this.get('numBodies') - 1);
         },
 
-        loadPreset: function(presetNumber) {
+        bodyInitialMassChanged: function(body, mass) {
+            if (this.cmMotionRemoved) {
+                // Add back our old center-of-mass motion
+                this.addCMMotion();
 
+                // Update to our new center-of-mass and remove it
+                this.setVelocityCenterOfMass();
+                this.removeCMMotion();
+            }
+            else
+                this.setVelocityCenterOfMass();
+        },
+
+        loadPreset: function(presetNumber) {
+            this.pause();
+
+            this.set('numBodies', Presets[presetNumber].bodies.length, { silent: true });
+
+            this.initBodies(Presets[presetNumber].bodies);
+            this.initForces();
+            this.setForcesAndAccels();
+            this.reset();
+            this.setVelocityCenterOfMass();
         }
 
     }, {
