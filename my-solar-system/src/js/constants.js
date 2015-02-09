@@ -57,7 +57,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                           COLLISION VIEW                            **
+     **                                  BODY                               **
      **                                                                     **
      *************************************************************************/
 
@@ -76,6 +76,12 @@ define(function (require) {
 
     Constants.BodyView = BodyView;
 
+
+    var BodyTraceView = {};
+
+    BodyTraceView.LINE_WIDTH = 3;
+
+    Constants.BodyTraceView = BodyTraceView;
 
 
     return Constants;

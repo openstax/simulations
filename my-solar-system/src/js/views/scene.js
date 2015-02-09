@@ -154,6 +154,8 @@ define(function(require) {
         },
 
         showTraces: function() {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].clear();
             this.bodyTraceLayer.visible = true;
         },
 

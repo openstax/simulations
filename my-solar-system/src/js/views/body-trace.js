@@ -30,7 +30,7 @@ define(function(require) {
 
         initGraphics: function() {
             this.trace = new PIXI.Graphics();
-            this.trace.lineStyle(3, this.color, 1);
+            this.trace.lineStyle(BodyTraceView.LINE_WIDTH, this.color, 1);
                         
             this.displayObject.addChild(this.trace);
 
@@ -57,9 +57,14 @@ define(function(require) {
         update: function(time, deltaTime, simulationPaused) {
             if (!simulationPaused)
                 this.appendTracePoint();
+        },
+
+        clear: function() {
+            this.trace.clear();
+            this.trace.lineStyle(BodyTraceView.LINE_WIDTH, this.color, 1);
         }
 
-    });
+    }, Constants.BodyTraceView);
 
 
     return BodyTraceView;
