@@ -39,7 +39,6 @@ define(function (require) {
     Constants.DEFAULT_NUM_STEPS_PER_FRAME = 4;
 
 
-
     /*************************************************************************
      **                                                                     **
      **                           COLLISION VIEW                            **

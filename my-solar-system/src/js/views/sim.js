@@ -56,9 +56,17 @@ define(function (require) {
             'click .remove-body-btn' : 'removeBody',
             'click .add-body-btn'    : 'addBody',
 
-            'keyup #body-settings-table input': 'bodySettingsInputKeyup',
+            'keyup  #body-settings-table input': 'bodySettingsInputKeyup',
+            'change #body-settings-table input': 'bodySettingsInputChanged',
 
-            'slide .playback-speed' : 'changeSpeed'
+            'change #preset': 'changePreset',
+
+            'slide .playback-speed' : 'changeSpeed',
+
+            'click #system-centered-check' : 'changeSystemCentered',
+            'click #show-traces-check'     : 'changeShowTraces',
+            'click #show-grid-check'       : 'changeShowGrid',
+            'click #tape-measure-check'    : 'changeShowTapeMeasure'
         },
 
         /**
@@ -76,10 +84,13 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
+            //this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
-            this.listenTo(this.simulation, 'bodies-reset',     this.updateBodyInputs);
+            this.listenTo(this.simulation, 'change:started',   this.updateStartedState);
+            this.listenTo(this.simulation, 'bodies-reset',     this.bodiesReset);
+
+            this.bodiesWeAreListeningTo = [];
         },
 
         /**
@@ -110,8 +121,7 @@ define(function (require) {
             this.renderSceneView();
             this.renderHelpDialog();
 
-            this.updateBodyRows(  this.simulation, this.simulation.get('numBodies'));
-            this.updateBodyInputs(this.simulation, this.simulation.bodies);
+            this.bodiesReset(this.simulation, this.simulation.bodies);
 
             return this;
         },
@@ -123,7 +133,7 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                presetNames: _.keys(Presets)
+                presetNames: _.pluck(Presets, 'name')
             };
             this.$el.html(this.template(data));
 
@@ -206,7 +216,25 @@ define(function (require) {
             this.$('#preset').val('');
         },
 
-        updateBodyRows: function(simulation, numBodies) {
+        bodiesReset: function(simulation, bodies) {
+            // Stop listening to the previous set of bodies
+            for (var j = this.bodiesWeAreListeningTo.length - 1; j >= 0; j--) {
+                this.stopListening(this.bodiesWeAreListeningTo[j]);
+                this.bodiesWeAreListeningTo.splice(j, 1);
+            }
+
+            // Start listening to the new set of bodies
+            for (var i = 0; i < bodies.length; i++) {
+                this.listenTo(bodies[i], 'change:initMass change:initX change:initY change:initVX change:initVY', this.updateBodyInputs);
+                this.bodiesWeAreListeningTo.push(bodies[i]);
+            }
+
+            this.updateBodyRows();
+            this.updateBodyInputs();
+        },
+
+        updateBodyRows: function() {
+            var numBodies = this.simulation.get('numBodies');
             var $rows = this.$('#body-settings-table tbody tr');
 
             $rows.each(function(index, row) {
@@ -231,15 +259,19 @@ define(function (require) {
                 $rows.last().hide();
         },
 
-        updateBodyInputs: function(simulation, bodies) {
-            this.$('#body-settings-table tbody tr').each(function(i) {
-                if (i in bodies) {
-                    $(this).find('.mass').val(bodies[i].get('mass'));
-                    $(this).find('.pos-x').val(bodies[i].get('x'));
-                    $(this).find('.pos-y').val(bodies[i].get('y'));
-                    $(this).find('.vel-x').val(bodies[i].get('vx'));
-                    $(this).find('.vel-y').val(bodies[i].get('vy'));
-                }
+        updateBodyInputs: function() {
+            var bodies = this.simulation.bodies;
+
+            this.updateLock(function() {
+                this.$('#body-settings-table tbody tr').each(function(i) {
+                    if (i in bodies) {
+                        $(this).find('.mass').val(bodies[i].get('mass'));
+                        $(this).find('.pos-x').val(bodies[i].get('x'));
+                        $(this).find('.pos-y').val(bodies[i].get('y'));
+                        $(this).find('.vel-x').val(bodies[i].get('vx'));
+                        $(this).find('.vel-y').val(bodies[i].get('vy'));
+                    }
+                });
             });
         },
 
@@ -259,6 +291,43 @@ define(function (require) {
                             .focus();
                 }
             }
+            else
+                this.bodySettingsInputChanged(event);
+        },
+
+        bodySettingsInputChanged: function(event) {
+            var $input = $(event.target);
+
+            var value = parseFloat($input.val());
+
+            var bodyIndex = $input.closest('tr').index();
+            var body = this.simulation.bodies[bodyIndex];
+
+            if ($input.hasClass('mass')) {
+                this.inputLock(function(){
+                    body.set('initMass', value);
+                });
+            }
+            else if ($input.hasClass('pos-x')) {
+                this.inputLock(function(){
+                    body.set('initX', value);
+                });
+            }
+            else if ($input.hasClass('pos-y')) {
+                this.inputLock(function(){
+                    body.set('initY', value);
+                });
+            }
+            else if ($input.hasClass('vel-x')) {
+                this.inputLock(function(){
+                    body.set('initVX', value);
+                });
+            }
+            else if ($input.hasClass('vel-y')) {
+                this.inputLock(function(){
+                    body.set('initVY', value);
+                });
+            }
         },
 
         updateTime: function(simulation, time) {
@@ -277,6 +346,43 @@ define(function (require) {
 
         changeSpeed: function(event) {
             this.simulation.set('speed', parseInt($(event.target).val()));
+        },
+
+        updateStartedState: function(simulation, started) {
+            if (started)
+                this.$('.initial-settings').addClass('disabled');
+            else
+                this.$('.initial-settings').removeClass('disabled');
+        },
+
+        changeSystemCentered: function(event) {
+            this.simulation.set('systemCentered', $(event.target).is(':checked'));
+            console.log($(event.target).is(':checked'));
+
+            // Needs to be reset with this algorithm for changes to take effect.
+            // this.simulation.pause();
+            // this.simulation.play();
+        },
+
+        changeShowTraces: function(event) {
+
+        },
+
+        changeShowGrid: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.gridView.show();
+            else
+                this.sceneView.gridView.hide();
+        },
+
+        changeShowTapeMeasure: function(event) {
+
+        },
+
+        changePreset: function(event) {
+            var indexString = $(event.target).val();
+            if (indexString !== '')
+                this.simulation.loadPreset(parseInt(indexString));
         }
 
     });

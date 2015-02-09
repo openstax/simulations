@@ -69,6 +69,7 @@ define(function(require) {
                 lineColor: '#fff',
                 lineAlpha: 0.1
             });
+            this.gridView.hide();
             this.stage.addChild(this.gridView.displayObject);
         },
 
