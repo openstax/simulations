@@ -7,55 +7,53 @@ define(function(require) {
 
     var ArrowView = require('./arrow');
 
-    var Colors    = require('../../colors/colors');
-    var Vector2   = require('../../math/vector2');
-    var Rectangle = require('../../math/rectangle');
-
-
-    var ArrowViewModel = new Backbone.Model.extend({
-        defaults: {
-            originX: 0,
-            originY: 0,
-
-            targetX: 50,
-            targetY: 0,
-
-            minLength: 25,
-            maxLength: null
-        }
-    });
-
+    var Colors  = require('../../colors/colors');
+    var Vector2 = require('../../math/vector2');
 
     var DraggableArrowView = ArrowView.extend({
+
+        events: {
+            'touchstart      .tailGraphics': 'dragStart',
+            'mousedown       .tailGraphics': 'dragStart',
+            'touchmove       .tailGraphics': 'drag',
+            'mousemove       .tailGraphics': 'drag',
+            'touchend        .tailGraphics': 'dragEnd',
+            'mouseup         .tailGraphics': 'dragEnd',
+            'touchendoutside .tailGraphics': 'dragEnd',
+            'mouseupoutside  .tailGraphics': 'dragEnd',
+
+            'touchstart      .headGraphics': 'dragHeadStart',
+            'mousedown       .headGraphics': 'dragHeadStart',
+            'touchmove       .headGraphics': 'dragHead',
+            'mousemove       .headGraphics': 'dragHead',
+            'touchend        .headGraphics': 'dragHeadEnd',
+            'mouseup         .headGraphics': 'dragHeadEnd',
+            'touchendoutside .headGraphics': 'dragHeadEnd',
+            'mouseupoutside  .headGraphics': 'dragHeadEnd'
+        },
 
         initialize: function(options) {
             options = _.extend({
                 dragFillColor: undefined,
-                dragFillAlpha: undefined
+                dragFillAlpha: undefined,
+
+                bodyDraggingEnabled: true,
+                headDraggingEnabled: true
             }, options);
 
-            
+            ArrowView.prototype.initialize.apply(this, [options]);
 
-            this.initGraphics();
+            this.bodyDraggingEnabled = options.bodyDraggingEnabled;
+            this.headDraggingEnabled = options.headDraggingEnabled;
+
+            this.dragFillColor = options.dragFillColor !== undefined ? Colors.parseHex(options.dragFillColor) : this.fillColor;
+            this.dragFillAlpha = options.dragFillAlpha !== undefined ? options.dragFillAlpha : this.fillAlpha;
         },
 
         initGraphics: function() {
             ArrowView.prototype.initGraphics();
             
         },
-
-        drawArrow: function() {
-            var graphics = this.graphics();
-
-            if (this.lineWidth)
-                graphics.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
-
-
-        }
-
-    }, {
-
-        ArrowViewModel: ArrowViewModel
 
     });
 

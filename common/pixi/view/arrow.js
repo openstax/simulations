@@ -8,7 +8,6 @@ define(function(require) {
 
     var Colors    = require('../../colors/colors');
     var Vector2   = require('../../math/vector2');
-    var Rectangle = require('../../math/rectangle');
 
 
     var ArrowViewModel = Backbone.Model.extend({
@@ -52,7 +51,9 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', this.drawArrow);
+            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', function() {
+                this.drawArrow(this.fillColor, this.fillAlpha);
+            });
         },
 
         initGraphics: function() {
@@ -62,10 +63,10 @@ define(function(require) {
             this.displayObject.addChild(this.tailGraphics);
             this.displayObject.addChild(this.headGraphics);
 
-            this.drawArrow();
+            this.drawArrow(this.fillColor, this.fillAlpha);
         },
 
-        drawArrow: function() {
+        drawArrow: function(fillColor, fillAlpha) {
             var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
             var target = this._targetVector.set(this.model.get('targetX'), this.model.get('targetY'));
 
@@ -84,11 +85,11 @@ define(function(require) {
             tail.clear();
             head.clear();
 
-            tail.beginFill(this.fillColor, this.fillAlpha);
+            tail.beginFill(fillColor, fillAlpha);
             tail.drawRect(0, -this.tailWidth / 2, length - this.headLength, this.tailWidth);
             tail.endFill();
 
-            head.beginFill(this.fillColor, this.fillAlpha);
+            head.beginFill(fillColor, fillAlpha);
             head.moveTo(length, 0);
             head.lineTo(length - this.headLength,  this.headWidth / 2);
             head.lineTo(length - this.headLength, -this.headWidth / 2);
