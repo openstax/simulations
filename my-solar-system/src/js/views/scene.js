@@ -12,6 +12,7 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var BodyView      = require('views/body');
+    var BodyTraceView = require('views/body-trace');
     var CollisionView = require('views/collision');
 
     var Assets = require('assets');
@@ -57,6 +58,7 @@ define(function(require) {
             );
 
             this.initGridView();
+            this.initBodyTraceLayer();
             this.initBodyLayer();
             this.initBodyViews(this.simulation, this.simulation.bodies);
             this.initCollisions();
@@ -79,9 +81,16 @@ define(function(require) {
             this.stage.addChild(this.bodyLayer);
         },
 
+        initBodyTraceLayer: function() {
+            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.bodyTraceLayer);
+        },
+
         initBodyViews: function(simulation, bodies) {
             this.bodyLayer.removeChildren();
+            this.bodyTraceLayer.removeChildren();
             this.bodyViews = [];
+            this.bodyTraceViews = [];
 
             for (var i = 0; i < bodies.length; i++) {
                 var bodyView = new BodyView({
@@ -91,6 +100,14 @@ define(function(require) {
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
                 this.bodyViews.push(bodyView);
+
+                var bodyTraceView = new BodyTraceView({
+                    model: bodies[i],
+                    mvt: this.mvt,
+                    color: Constants.BODY_COLORS[i]
+                });
+                this.bodyTraceLayer.addChild(bodyTraceView.displayObject);
+                this.bodyTraceViews.push(bodyTraceView);
             }
         },
 
@@ -120,6 +137,9 @@ define(function(require) {
                 }
                     
             }
+
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].update(time, deltaTime, paused);
         },
 
         startedChanged: function(simulation, started) {
@@ -131,6 +151,16 @@ define(function(require) {
                 for (var j = 0; j < this.bodyViews.length; j++)
                     this.bodyViews[j].enableInteraction(); 
             }
+        },
+
+        showTraces: function() {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].clear();
+            this.bodyTraceLayer.visible = true;
+        },
+
+        hideTraces: function() {
+            this.bodyTraceLayer.visible = false;
         }
 
     });

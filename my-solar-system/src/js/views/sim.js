@@ -365,7 +365,10 @@ define(function (require) {
         },
 
         changeShowTraces: function(event) {
-
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
         },
 
         changeShowGrid: function(event) {
