@@ -160,6 +160,12 @@ define(function (require) {
         sumVectorTail.clear();
         sumVectorTail.beginFill(0x76EE00);
         sumVectorTail.drawRect(6, 20, 8, length - 20);
+      },
+
+      deleteArrow: function(model, container) {
+        var arrows = model.get('arrows');
+        var arrowToRemove = arrows.indexOf(container.index);
+        arrows.remove(arrowToRemove);
       }
   };
 
