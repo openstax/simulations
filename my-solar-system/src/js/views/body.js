@@ -41,6 +41,9 @@ define(function(require) {
                 originY: 0
             });
 
+            this._dragOffset   = new PIXI.Point();
+            this._dragLocation = new PIXI.Point();
+
             this.initGraphics();
 
             this.listenTo(this.model, 'change:x', this.updateX);
@@ -108,6 +111,29 @@ define(function(require) {
             this.graphics.beginFill(this.color, 1);
             this.graphics.drawCircle(0, 0, radius);
             this.graphics.endFill();
+        },
+
+        dragStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+            this.dragging = true;
+        },
+
+        drag: function(data) {
+            if (this.dragging) {
+                var local = data.getLocalPosition(this.velocityMarker, this._dragLocation);
+                var dx = local.x - this.dragOffset.x;
+                var dy = local.y - this.dragOffset.y;
+                
+                this.velocityMarker.x += dx;
+                this.velocityMarker.y += dy;
+
+                // dx = this.mvt.viewToModelDeltaX(dx);
+                // dy = this.mvt.viewToModelDeltaY(dy);
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
         },
 
         updateVelocity: function() {
