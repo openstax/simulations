@@ -36,8 +36,9 @@ define(function(require) {
 
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation, 'bodies-reset', this.initBodyViews);
-            this.listenTo(this.simulation, 'collision',    this.showCollision);
+            this.listenTo(this.simulation, 'bodies-reset',   this.initBodyViews);
+            this.listenTo(this.simulation, 'collision',      this.showCollision);
+            this.listenTo(this.simulation, 'change:started', this.startedChanged);
         },
 
         renderContent: function() {
@@ -80,6 +81,7 @@ define(function(require) {
 
         initBodyViews: function(simulation, bodies) {
             this.bodyLayer.removeChildren();
+            this.bodyViews = [];
 
             for (var i = 0; i < bodies.length; i++) {
                 var bodyView = new BodyView({
@@ -88,6 +90,7 @@ define(function(require) {
                     color: Constants.BODY_COLORS[i]
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
+                this.bodyViews.push(bodyView);
             }
         },
 
@@ -118,6 +121,17 @@ define(function(require) {
                     
             }
         },
+
+        startedChanged: function(simulation, started) {
+            if (started) {
+                for (var i = 0; i < this.bodyViews.length; i++)
+                    this.bodyViews[i].disableInteraction();    
+            }
+            else {
+                for (var j = 0; j < this.bodyViews.length; j++)
+                    this.bodyViews[j].enableInteraction(); 
+            }
+        }
 
     });
 

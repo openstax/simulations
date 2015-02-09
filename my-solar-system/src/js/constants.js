@@ -55,6 +55,28 @@ define(function (require) {
     Constants.CollisionView = CollisionView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           COLLISION VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var BodyView = {};
+
+    BodyView.ARROW_TAIL_WIDTH  = 5;
+    BodyView.ARROW_HEAD_WIDTH  = 17;
+    BodyView.ARROW_HEAD_LENGTH = 17;
+    BodyView.ARROW_COLOR = '#cd2520';
+    BodyView.ARROW_ALPHA = 1;
+    BodyView.VELOCITY_MARKER_COLOR = '#fff';
+    BodyView.VELOCITY_MARKER_ALPHA = 0.5;
+    BodyView.VELOCITY_MARKER_RADIUS = 20;
+    BodyView.VELOCITY_MARKER_THICKNESS = 4;
+    BodyView.VELOCITY_MARKER_FONT = '28px Arial';
+
+    Constants.BodyView = BodyView;
+
+
 
     return Constants;
 });
