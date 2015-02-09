@@ -6,12 +6,18 @@ define(function(require) {
   var PixiView = require('common/pixi/view');
   var Assets = require('assets');
   var Constants = require('constants');
-  var trashCanTextures = [Assets.Images.Trash_Can, Assets.Images.Trash_Can_Open];
 
   var TrashCanView = PixiView.extend({
 
+    events: {
+      'mouseover .can': 'openTrashCan',
+      'mouseout .can': 'closeTrashCan'
+    },
+
     initialize: function(options) {
       this.initGraphics();
+      this.listenTo(this.model, 'change:deleteVector', this.openTrashCan);
+      this.listenTo(this.model, 'change:deleteVector', this.closeTrashCan);
     },
 
     initGraphics: function() {
@@ -20,16 +26,43 @@ define(function(require) {
 
     trashCan: function() {
       this.canContainer = new PIXI.DisplayObjectContainer();
-      var can = Assets.createSprite(Assets.Images.Trash_Can);
-      var can_open = Assets.createSprite(Assets.Images.Trash_Can_Open);
+      var can = Assets.createSprite(Assets.Images.Trash_Can),
+       can_open = Assets.createSprite(Assets.Images.Trash_Can_Open),
+       canvas = $('.scene-view');
 
-      can.x = 0.88 * $('.scene-view').width();
-      can.y = 0.70 * $('.scene-view').height();
-      can.buttonMode = true;
+
+      this.canContainer.buttonMode = true;
       this.canContainer.addChild(can);
       this.can = can;
 
+      this.can.position.x = 0.88 * canvas.width();
+      this.can.position.y = 0.70 * canvas.height();
+
+      this.canContainer.addChild(can_open);
+      this.can_open = can_open;
+      this.can_open.position.x = 0.88 * canvas.width();
+      this.can_open.position.y = 0.70 * canvas.height();
+
       this.displayObject.addChild(this.canContainer);
+
+      this.can_open.alpha = 0;
+
+      this.model.set('trashCanPositionX', this.can.position.x);
+      this.model.set('trashCanPositionY', this.can.position.y);
+    },
+
+    openTrashCan: function() {
+      if (this.model.get('deleteVector')) {
+        this.can_open.alpha = 1;
+        this.can.alpha = 0;
+      }
+    },
+
+    closeTrashCan: function() {
+      if (this.model.get('deleteVector') == false) {
+        this.can_open.alpha = 0;
+        this.can.alpha = 1;
+      }
     }
 
   });

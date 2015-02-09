@@ -18,10 +18,10 @@ define(function (require) {
       sumVectorThetaText: '',
       sumVectorRXText: '',
       sumVectorRYText: '',
-      labelColor: 'red'
+      labelColor: 'red',
+      deleteVector: false
     }
 
   });
-
   return VectorAdditionSimulation;
 });

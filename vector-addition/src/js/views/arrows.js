@@ -46,20 +46,32 @@ define(function(require) {
     dragMove: function(data) {
       if (this.model.get('arrows') !== undefined) {
         var x = Vectors.roundGrid(data.global.x - this.displayObject.x),
-            y = Vectors.roundGrid(data.global.y - this.displayObject.y);
+            y = Vectors.roundGrid(data.global.y - this.displayObject.y),
+            arrows = this.model.get('arrows');
 
         if (this.dragging) {
            this.container.x = x;
            this.container.y = y;
 
-          //TODO
-          //Vectors.updateComponents();
+           if (this.container.x >= this.model.get('trashCanPositionX') || this.container.y >= this.model.get('trashCanPositionY')) {
+             this.model.set('deleteVector', true);
+           }
+           else {
+             this.model.set('deleteVector', false);
+           }
         }
       }
     },
 
     dragEnd: function(data) {
       this.dragging = false;
+      if (this.container.position.x >= this.model.get('trashCanPositionX') || this.container.position.y >= this.model.get('trashCanPositionY')) {
+        if (this.model.set('deleteVector', true)) {
+          Vectors.deleteArrow(this.model, this.container);
+          this.displayObject.removeChild(this.container);
+          this.model.set('deleteVector', false);
+        }
+      }
     },
 
     drawArrow: function(x, y) {
@@ -133,8 +145,6 @@ define(function(require) {
         container.pivot.set(this.arrowHead.width/2, length);
         container.rotation = Math.atan2(y, x) + 180/Math.PI *2 + .09;
 
-
-
         Vectors.updateReadouts(arrowModel, model, x, -y, length, -degrees);
       }
     },
@@ -168,8 +178,8 @@ define(function(require) {
         nbrVectors.length = 0;
       }
     }
+
   });
 
  return ArrowView;
-
   });
