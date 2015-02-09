@@ -18,22 +18,33 @@ define(function(require) {
     var BodyView = PixiView.extend({
 
         events: {
-            'touchstart      .velocityMarker': 'dragStart',
-            'mousedown       .velocityMarker': 'dragStart',
-            'touchmove       .velocityMarker': 'drag',
-            'mousemove       .velocityMarker': 'drag',
-            'touchend        .velocityMarker': 'dragEnd',
-            'mouseup         .velocityMarker': 'dragEnd',
-            'touchendoutside .velocityMarker': 'dragEnd',
-            'mouseupoutside  .velocityMarker': 'dragEnd',
+            'touchstart      .body': 'dragStart',
+            'mousedown       .body': 'dragStart',
+            'touchmove       .body': 'drag',
+            'mousemove       .body': 'drag',
+            'touchend        .body': 'dragEnd',
+            'mouseup         .body': 'dragEnd',
+            'touchendoutside .body': 'dragEnd',
+            'mouseupoutside  .body': 'dragEnd',
+
+            'touchstart      .velocityMarker': 'dragVelocityStart',
+            'mousedown       .velocityMarker': 'dragVelocityStart',
+            'touchmove       .velocityMarker': 'dragVelocity',
+            'mousemove       .velocityMarker': 'dragVelocity',
+            'touchend        .velocityMarker': 'dragVelocityEnd',
+            'mouseup         .velocityMarker': 'dragVelocityEnd',
+            'touchendoutside .velocityMarker': 'dragVelocityEnd',
+            'mouseupoutside  .velocityMarker': 'dragVelocityEnd'
         },
 
         initialize: function(options) {
             options = _.extend({
-                color: '#ddd'
+                color: '#ddd',
+                interactionEnabled: true
             }, options);
 
             this.color = Colors.parseHex(options.color);
+            this.interactionEnabled = options.interactionEnabled;
             this.mvt = options.mvt;
 
             this.arrowViewModel = new ArrowView.ArrowViewModel({
@@ -58,7 +69,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.graphics = new PIXI.Graphics();
+            this.body = new PIXI.Graphics();
+            this.body.buttonMode = true;
+            this.body.defaultCursor = 'move';
 
             this.arrowView = new ArrowView({ 
                 model: this.arrowViewModel,
@@ -75,7 +88,7 @@ define(function(require) {
             
             this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.arrowView.displayObject);
-            this.displayObject.addChild(this.graphics);
+            this.displayObject.addChild(this.body);
 
             this.updateMVT(this.mvt);
         },
@@ -107,19 +120,51 @@ define(function(require) {
             var diameter = 2.5 * Math.pow(this.model.get('mass'), 1/3) + 6;
             var radius = this.mvt.modelToViewDeltaX(diameter) / 2;
 
-            this.graphics.clear();
-            this.graphics.beginFill(this.color, 1);
-            this.graphics.drawCircle(0, 0, radius);
-            this.graphics.endFill();
+            this.body.clear();
+            this.body.beginFill(this.color, 1);
+            this.body.drawCircle(0, 0, radius);
+            this.body.endFill();
         },
 
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+            if (!this.interactionEnabled)
+                return;
+
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
         drag: function(data) {
             if (this.dragging) {
+                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                
+                this.displayObject.x += dx;
+                this.displayObject.y += dy;
+
+                var position = this.mvt.viewToModelX(this.displayObject.x, this.displayObject.y);
+
+                this.inputLock(function() {
+                    this.model.set('x', position.x);
+                    this.model.set('y', position.y);
+                });
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
+        },
+
+        dragVelocityStart: function(data) {
+            if (!this.interactionEnabled)
+                return;
+
+            this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
+            this.draggingVelocity = true;
+        },
+
+        dragVelocity: function(data) {
+            if (this.draggingVelocity) {
                 var local = data.getLocalPosition(this.velocityMarker, this._dragLocation);
                 var dx = local.x - this.dragOffset.x;
                 var dy = local.y - this.dragOffset.y;
@@ -132,8 +177,8 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
-            this.dragging = false;
+        dragVelocityEnd: function(data) {
+            this.draggingVelocity = false;
         },
 
         updateVelocity: function() {
@@ -156,11 +201,15 @@ define(function(require) {
         },
 
         updateX: function(model, x) {
-            this.displayObject.x = this.mvt.modelToViewX(x);
+            this.updateLock(function() {
+                this.displayObject.x = this.mvt.modelToViewX(x);
+            });
         },
 
         updateY: function(model, y) {
-            this.displayObject.y = this.mvt.modelToViewY(y);
+            this.updateLock(function() {
+                this.displayObject.y = this.mvt.modelToViewY(y);
+            });
         },
 
         updateMVT: function(mvt) {
@@ -174,6 +223,18 @@ define(function(require) {
 
         updateDestroyedState: function(body, destroyedInCollision) {
             this.displayObject.visible = !destroyedInCollision;
+        },
+
+        enableInteraction: function() {
+            this.interactionEnabled = true;
+            this.body.buttonMode = true;
+            this.velocityMarker.buttonMode = true;
+        },
+
+        disableInteraction: function() {
+            this.interactionEnabled = false;
+            this.body.buttonMode = false;
+            this.velocityMarker.buttonMode = false;
         }
 
     }, Constants.BodyView);
