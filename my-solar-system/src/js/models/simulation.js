@@ -369,7 +369,7 @@ define(function (require, exports, module) {
         },
 
         removeCMMotion: function() {
-            if (!this.cmMotionRemoved){
+            if (!this.cmMotionRemoved) {
                 for(var i = 0; i < this.get('numBodies'); i++){
                     var vel = this.bodies[i].vel;
                     vel.x -= this.velCM.x;
@@ -423,6 +423,7 @@ define(function (require, exports, module) {
             for (var i = 0; i < this.get('numBodies'); i++) {
                 this.bodies.push(bodies[i].clone());
                 this.listenTo(this.bodies[i], 'change:initMass', this.bodyInitialMassChanged);
+                this.listenTo(this.bodies[i], 'change:initVX change:initVY', this.setVelocityCenterOfMass);
             }
 
             // Make sure the views know we've got new bodies

@@ -142,7 +142,7 @@ define(function(require) {
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
 
-                var position = this.mvt.viewToModelX(this.displayObject.x, this.displayObject.y);
+                var position = this.mvt.viewToModelDelta(this.displayObject.x, this.displayObject.y);
 
                 this.inputLock(function() {
                     this.model.set('x', position.x);
@@ -165,12 +165,12 @@ define(function(require) {
 
         dragVelocity: function(data) {
             if (this.draggingVelocity) {
-                var local = data.getLocalPosition(this.velocityMarker, this._dragLocation);
-                var dx = local.x - this.dragOffset.x;
-                var dy = local.y - this.dragOffset.y;
+                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var x = local.x - this.dragOffset.x;
+                var y = local.y - this.dragOffset.y;
                 
-                this.velocityMarker.x += dx;
-                this.velocityMarker.y += dy;
+                this.velocityMarker.x = x;
+                this.velocityMarker.y = y;
 
                 this.arrowViewModel.set('targetX', this.velocityMarker.x);
                 this.arrowViewModel.set('targetY', this.velocityMarker.y);
@@ -196,7 +196,7 @@ define(function(require) {
         changeVelocity: function() {
             this.inputLock(function() {
                 this.model.set('initVX', Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'))));
-                this.model.set('initVY', Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetY'))));
+                this.model.set('initVY', Math.round(this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'))));
             });
         },
 
