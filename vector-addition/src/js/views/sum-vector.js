@@ -30,7 +30,7 @@ define(function (require){
     },
 
     initGraphics: function() {
-      this.sumVector(0, 100, 1);
+      this.sumVector(0, 100);
     },
 
     dragStart: function(data) {
@@ -55,7 +55,6 @@ define(function (require){
         }
 
       }
-
     },
 
     dragEnd: function(data) {
@@ -82,11 +81,11 @@ define(function (require){
     },
 
     sumVectorVisible: function() {
-      if (this.model.get('sumVectorVisible') == false) {
-        this.sumVectorContainer.visible = false;
+      if (this.model.get('sumVectorVisible') && this.model.get('arrows') !== undefined) {
+        this.sumVectorContainer.visible = true;
       }
       else {
-        this.sumVectorContainer.visible = true;
+        this.sumVectorContainer.visible = false;
       }
     },
 
@@ -109,7 +108,6 @@ define(function (require){
         this.sumVectorTail.height = 80;
       }
     }
-
   });
 
   return SumVectorView;
