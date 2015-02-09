@@ -3,7 +3,6 @@ define(function (require) {
     'use strict';
 
     $ = require('jquery');
-
     var PIXI = require('pixi');
     var ArrowsCollection = require('collections/arrows');
 
@@ -20,20 +19,12 @@ define(function (require) {
         vectorHead.defaultCursor = defaultCursor;
       },
 
-      drawVectorTail: function(vectorTail, fillColor, interactiveBool, buttonModeBool, defaultCursor) {
+      drawVectorTail: function(vectorTail, fillColor, length, interactiveBool, buttonModeBool, defaultCursor) {
         vectorTail.beginFill(fillColor);
-        vectorTail.drawRect(6, 20, 8, 0);
+        vectorTail.drawRect(6, 20, 8, length);
         vectorTail.interactive = interactiveBool;
         vectorTail.buttonMode = buttonModeBool;
-        vectortail.defaultCursor = defaultCursor;
-      },
-
-      VectorArrow: function(x,y,i){
-        this.x = x;
-        this.y = y;
-        this.length = Math.sqrt(x * x + y * y);
-        this.degrees = (180/Math.PI) * Math.atan2(y, x);
-        this.i = i;  //index of vector in vectors array
+        vectorTail.defaultCursor = defaultCursor;
       },
 
       roundGrid: function(nbr) {
@@ -60,7 +51,7 @@ define(function (require) {
         return text;
       },
 
-      updateFields: function(arrowModel, model, x, y, length, degrees) {
+      updateReadouts: function(arrowModel, model, x, y, length, degrees) {
         if (arrowModel !== undefined) {
           arrowModel.set('length', length);
           arrowModel.set('degrees', degrees);
@@ -76,7 +67,7 @@ define(function (require) {
         model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
         model.set('rXText', Vectors.round0(x/10));
         model.set('rYText', Vectors.round0(y/10));
-
+        $('label').removeClass('green');
       },
 
       //TODO
@@ -139,27 +130,29 @@ define(function (require) {
       sum: function(model, sumVectorContainer, sumVectorTail) {
         var xSum = 0;
         var ySum = 0;
-        var arrows = model.get('arrows').models;
-        var canvas = $('.scene-view');
+        if (model.get('arrows') !== undefined) {
+          var arrows = model.get('arrows').models;
+          var canvas = $('.scene-view');
 
-        _.each(arrows, function(arrow) {
-          xSum += arrow.get('x');
-          ySum += arrow.get('y');
-        });
+          _.each(arrows, function(arrow) {
+            xSum += arrow.get('x');
+            ySum += arrow.get('y');
+          });
 
-        var length = Math.sqrt(xSum * xSum + ySum * ySum);
-        var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
+          var length = Math.sqrt(xSum * xSum + ySum * ySum);
+          var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
 
-        model.set('sumVectorRText', Vectors.padZero(Vectors.round1(length/10)));
-        model.set('sumVectorThetaText', Vectors.padZero(Vectors.round1(degrees)));
-        model.set('sumVectorRXText', Vectors.round0(xSum/10));
-        model.set('sumVectorRYText', Vectors.round0(ySum/10));
+          model.set('sumVectorRText', Vectors.padZero(Vectors.round1(length/10)));
+          model.set('sumVectorThetaText', Vectors.padZero(Vectors.round1(degrees)));
+          model.set('sumVectorRXText', Vectors.round0(xSum/10));
+          model.set('sumVectorRYText', Vectors.round0(ySum/10));
 
-        sumVectorContainer.position.x = canvas.width()/2;
-        sumVectorContainer.position.y = canvas.height()/4;
-        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
+          sumVectorContainer.position.x = canvas.width()/2;
+          sumVectorContainer.position.y = canvas.height()/4;
+          sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
 
-        this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length)
+          this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length);
+        }
       },
 
       redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length) {
@@ -168,7 +161,6 @@ define(function (require) {
         sumVectorTail.beginFill(0x76EE00);
         sumVectorTail.drawRect(6, 20, 8, length - 20);
       }
-
   };
 
     return Vectors;
