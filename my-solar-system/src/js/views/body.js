@@ -73,8 +73,8 @@ define(function(require) {
 
             this.initVelocityMarker();
             
-            this.displayObject.addChild(this.arrowView.displayObject);
             this.displayObject.addChild(this.velocityMarker);
+            this.displayObject.addChild(this.arrowView.displayObject);
             this.displayObject.addChild(this.graphics);
 
             this.updateMVT(this.mvt);
@@ -127,8 +127,8 @@ define(function(require) {
                 this.velocityMarker.x += dx;
                 this.velocityMarker.y += dy;
 
-                // dx = this.mvt.viewToModelDeltaX(dx);
-                // dy = this.mvt.viewToModelDeltaY(dy);
+                this.arrowViewModel.set('targetX', this.velocityMarker.x);
+                this.arrowViewModel.set('targetY', this.velocityMarker.y);
             }
         },
 
@@ -138,16 +138,20 @@ define(function(require) {
 
         updateVelocity: function() {
             this.updateLock(function() {
+                var x = this.mvt.modelToViewDeltaX(this.model.get('initVX'));
+                var y = this.mvt.modelToViewDeltaY(this.model.get('initVY'));
+                this.velocityMarker.x = x;
+                this.velocityMarker.y = y;
                 // We don't want it to draw twice, so make the first silent
-                this.arrowViewModel.set('targetX', this.mvt.modelToViewDeltaX(this.model.get('initVX')), silent);
-                this.arrowViewModel.set('targetY', this.mvt.modelToViewDeltaY(this.model.get('initVY')));
+                this.arrowViewModel.set('targetX', x, silent);
+                this.arrowViewModel.set('targetY', y);
             });
         },
 
         changeVelocity: function() {
             this.inputLock(function() {
-                this.model.set('initVX', this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX')));
-                this.model.set('initVY', this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetY')));
+                this.model.set('initVX', Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'))));
+                this.model.set('initVY', Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetY'))));
             });
         },
 
