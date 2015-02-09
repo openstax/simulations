@@ -188,7 +188,7 @@ define(function(require) {
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
                 // We don't want it to draw twice, so make the first silent
-                this.arrowViewModel.set('targetX', x, silent);
+                this.arrowViewModel.set('targetX', x);
                 this.arrowViewModel.set('targetY', y);
             });
         },
