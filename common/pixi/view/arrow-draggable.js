@@ -4,7 +4,8 @@ define(function(require) {
 
     var Backbone = require('backbone');
     var PIXI     = require('pixi');
-    var PixiView = require('../view');
+
+    var ArrowView = require('./arrow');
 
     var Colors    = require('../../colors/colors');
     var Vector2   = require('../../math/vector2');
@@ -25,53 +26,22 @@ define(function(require) {
     });
 
 
-    var ArrowView = PixiView.extend({
+    var DraggableArrowView = ArrowView.extend({
 
         initialize: function(options) {
             options = _.extend({
-                tailWidth: 10,
-
-                headWidth: 20,
-                headLength: 20,
-
-                fillColor: '#ff0000',
-                fillAlpha: 1,
-
-                lineColor: '#000',
-                lineWidth: 0,
-                lineAlpha: 1,
-
                 dragFillColor: undefined,
-                dragFillAlpha: undefined,
-
-                dragLineColor: undefined,
-                dragLineWidth: undefined,
-                dragLineAlpha: undefined
+                dragFillAlpha: undefined
             }, options);
 
-            this.origin = options.origin;
-            this.bounds = options.bounds;
-            this.gridSize = options.gridSize;
-            this.gridOffsetX = options.gridOffsetX;
-            this.gridOffsetY = options.gridOffsetY;
-            this.smallGridSize = options.smallGridSize;
-            this.smallGridEnabled = options.smallGridEnabled;
-
-            this.lineColor = Colors.parseHex(options.lineColor);
-            this.lineWidth = options.lineWidth;
-            this.lineAlpha = options.lineAlpha;
+            
 
             this.initGraphics();
         },
 
         initGraphics: function() {
-            this.smallGrid = new PIXI.Graphics();
-            this.largeGrid = new PIXI.Graphics();
-
-            this.displayObject.addChild(this.smallGrid);
-            this.displayObject.addChild(this.largeGrid);
-
-            this.drawGrids();
+            ArrowView.prototype.initGraphics();
+            
         },
 
         drawArrow: function() {
@@ -89,5 +59,5 @@ define(function(require) {
 
     });
 
-    return ArrowView;
+    return DraggableArrowView;
 });

@@ -10,10 +10,23 @@ define(function(require) {
     //var Vector2  = require('common/math/vector2');
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
+
+    var Constants = require('constants');
     
     var silent = { silent: true };
 
     var BodyView = PixiView.extend({
+
+        events: {
+            'touchstart      .velocityMarker': 'dragStart',
+            'mousedown       .velocityMarker': 'dragStart',
+            'touchmove       .velocityMarker': 'drag',
+            'mousemove       .velocityMarker': 'drag',
+            'touchend        .velocityMarker': 'dragEnd',
+            'mouseup         .velocityMarker': 'dragEnd',
+            'touchendoutside .velocityMarker': 'dragEnd',
+            'mouseupoutside  .velocityMarker': 'dragEnd',
+        },
 
         initialize: function(options) {
             options = _.extend({
@@ -47,15 +60,44 @@ define(function(require) {
             this.arrowView = new ArrowView({ 
                 model: this.arrowViewModel,
 
-                tailWidth: 6,
-                headWidth: 18,
-                headLength: 18
+                tailWidth:  BodyView.ARROW_TAIL_WIDTH,
+                headWidth:  BodyView.ARROW_HEAD_WIDTH,
+                headLength: BodyView.ARROW_HEAD_LENGTH,
+
+                fillColor: BodyView.ARROW_COLOR,
+                fillAlpha: BodyView.ARROW_ALPHA
             });
 
+            this.initVelocityMarker();
+            
             this.displayObject.addChild(this.arrowView.displayObject);
+            this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.graphics);
 
             this.updateMVT(this.mvt);
+        },
+
+        initVelocityMarker: function() {
+            this.velocityMarker = new PIXI.DisplayObjectContainer();
+            this.velocityMarker.hitArea = new PIXI.Circle(0, 0, BodyView.VELOCITY_MARKER_RADIUS);
+            this.velocityMarker.buttonMode = true;
+
+            var color = Colors.parseHex(BodyView.VELOCITY_MARKER_COLOR);
+
+            var circle = new PIXI.Graphics();
+            circle.lineStyle(BodyView.VELOCITY_MARKER_THICKNESS, color, BodyView.VELOCITY_MARKER_ALPHA);
+            circle.drawCircle(0, 0, BodyView.VELOCITY_MARKER_RADIUS);
+
+            var label = new PIXI.Text('V', {
+                font: BodyView.VELOCITY_MARKER_FONT,
+                fill: BodyView.VELOCITY_MARKER_COLOR
+            });
+            label.anchor.x = 0.5
+            label.anchor.y = 0.4;
+            label.alpha = BodyView.VELOCITY_MARKER_ALPHA;
+
+            this.velocityMarker.addChild(circle);
+            this.velocityMarker.addChild(label);
         },
 
         drawBody: function() {
@@ -104,7 +146,7 @@ define(function(require) {
             this.displayObject.visible = !destroyedInCollision;
         }
 
-    });
+    }, Constants.BodyView);
 
 
     // Add input/update locking functionality to the prototype
