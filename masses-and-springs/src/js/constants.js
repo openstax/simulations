@@ -16,8 +16,6 @@ define(function (require) {
 
 
 
-
-
     /*************************************************************************
      **                                                                     **
      **                        SIM SETTINGS CONSTANTS                       **
@@ -68,7 +66,60 @@ define(function (require) {
 
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                       SIM SYSTEM EQUATIONS                          **
+     **                                                                     **
+     *************************************************************************/
+
     var SystemEquations = {};
+    SystemEquations.PERIOD = function(mass, springStiffness){
+        return 2 * Math.PI * Math.sqrt(mass/springStiffness);
+    };
+    SystemEquations.KINETIC_ENERGY = function(mass, velocity){
+        return 0.5 * mass * velocity * velocity;
+    };
+    SystemEquations.ELASTIC_POTENTIAL_ENERGY = function(stiffness, deltaY){
+        return 0.5 * stiffness * deltaY * deltaY;
+    };
+    SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY = function(mass, gravity, yPosOfMass){
+        return mass * gravity * yPosOfMass;
+    };
+    SystemEquations.DELTA_THERMAL = function(deltaDeltaY, mass, frictionConstant, velocity2){
+        return deltaDeltaY * mass * frictionConstant * velocity2;
+    };
+    SystemEquations.TOTAL_ENERGY = function(kinetic, elasticPotential, gravitationalPotential, thermal){
+        return kinetic + elasticPotential + gravitationalPotential + thermal;
+    };
+
+
+    SystemEquations.ACCELERATION = function(gravity, stiffness, mass, deltaY, frictionConstant, velocity){
+        return gravity - (stiffness / mass) * deltaY - frictionConstant * velocity;
+    };
+    SystemEquations.VELOCITY2 = function(velocity, acceleration, time){
+        return velocity + acceleration * time;
+    };
+    SystemEquations.DISPLACEMENT = function(velocity, time, acceleration){
+        return velocity * time + 0.5 * acceleration * time * time;
+    };
+
+
+    Constants.SystemEquations = SystemEquations;
+
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                       SIM DEFAULT MODEL VALUES                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var SpringDefaults = {};
+    SpringDefaults.REST_L = 0.3;
+    SpringDefaults.STIFFNESS = 10;
+
+    Constants.SpringDefaults = SpringDefaults;
+
 
 
 
