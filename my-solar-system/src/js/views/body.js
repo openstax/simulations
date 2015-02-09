@@ -228,13 +228,15 @@ define(function(require) {
         enableInteraction: function() {
             this.interactionEnabled = true;
             this.body.buttonMode = true;
-            this.velocityMarker.buttonMode = true;
+            this.velocityMarker.visible = true;
+            this.arrowView.show();
         },
 
         disableInteraction: function() {
             this.interactionEnabled = false;
             this.body.buttonMode = false;
-            this.velocityMarker.buttonMode = false;
+            this.velocityMarker.visible = false;
+            this.arrowView.hide();
         }
 
     }, Constants.BodyView);

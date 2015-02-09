@@ -97,6 +97,14 @@ define(function(require) {
             this.displayObject.rotation = angle;
             this.displayObject.scale.x = scale;
             this.displayObject.scale.y = scale;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     }, {
