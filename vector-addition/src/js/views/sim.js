@@ -38,7 +38,6 @@ define(function (require) {
 
             SimView.prototype.initialize.apply(this, [options]);
             this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
-            //this.listenTo(this.simulation, 'change:sumVectorRText change:sumVectorThetaText change:sumVectorRXText change:sumVectorRYText', this.updateSumReadouts);
             this.listenTo(this.simulation, 'change:sumVectorVisible', this.sumVectorVisible);
             this.initSceneView();
         },
@@ -96,14 +95,15 @@ define(function (require) {
         },
 
         clearArrows: function() {
-          var arrowsCollection = this.simulation.get('arrows');
-          var arrows = arrowsCollection.models.slice(1);
+          if (this.simulation.get('arrows') !== undefined) {
+            var arrowsCollection = this.simulation.get('arrows');
+            var arrows = arrowsCollection.models.slice(1);
 
-          arrowsCollection.remove(arrows);
-          this.simulation.set('sumVectorVisible', false);
-          this.simulation.set('emptyStage', true);
-          this.$el.find('label').removeClass('green');
-
+            arrowsCollection.remove(arrows);
+            this.simulation.set('sumVectorVisible', false);
+            this.simulation.set('emptyStage', true);
+            this.$el.find('label').removeClass('green');
+          }
         },
 
         clearAll: function() {
@@ -126,7 +126,7 @@ define(function (require) {
 
         showSum: function() {
           var sumBox = this.$el.find('#show-sum');
-          if (sumBox.is(':checked')) {
+          if (sumBox.is(':checked') && this.simulation.get('arrows') !== undefined) {
             this.simulation.set('sumVectorVisible', true);
           }
           else {
@@ -142,7 +142,6 @@ define(function (require) {
             this.$el.find('#show-sum').prop('checked', false);
           }
         }
-
     });
 
     return VectorAdditionSimView;

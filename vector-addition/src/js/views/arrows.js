@@ -8,7 +8,6 @@ define(function(require) {
   var Simulation = require('models/simulation');
   var ArrowsModel = require('models/arrows');
   var ArrowsCollection = require('collections/arrows');
-
   var nbrVectors = [];
 
   var ArrowView = PixiView.extend({
@@ -34,7 +33,7 @@ define(function(require) {
     },
 
     initialize: function() {
-      this.drawArrow(0, 100 , 1);
+      this.drawArrow(0, 100);
       this.listenTo(this.model, 'change:emptyStage', this.clearArrows);
     },
 
@@ -47,9 +46,7 @@ define(function(require) {
     dragMove: function(data) {
       if (this.model.get('arrows') !== undefined) {
         var x = Vectors.roundGrid(data.global.x - this.displayObject.x),
-          y = Vectors.roundGrid(data.global.y - this.displayObject.y),
-          length = Math.sqrt(x * x + y * y),
-          degrees = (180/Math.PI) * Math.atan2(y, x);
+            y = Vectors.roundGrid(data.global.y - this.displayObject.y);
 
         if (this.dragging) {
            this.container.x = x;
@@ -58,22 +55,21 @@ define(function(require) {
           //TODO
           //Vectors.updateComponents();
         }
-
       }
-
     },
 
     dragEnd: function(data) {
       this.dragging = false;
     },
 
-    drawArrow: function(x, y, i) {
+    drawArrow: function(x, y) {
       this.container = new PIXI.DisplayObjectContainer();
       var model = this.model,
        canvas = $('.scene-view');
 
       this.displayObject.x = x;
       this.displayObject.y = y;
+
       var length = Math.sqrt(x * x + y * y);
       var degrees = (180/Math.PI) * Math.atan2(y, x);
 
@@ -82,7 +78,7 @@ define(function(require) {
       this.arrowHead = arrowHead;
 
       var arrowTail = new PIXI.Graphics();
-      Vectors.drawVectorTail(arrowTail, '0xFF0000', true, true, 'move');
+      Vectors.drawVectorTail(arrowTail, '0xFF0000', length - this.arrowHead.height, true, true, 'move');
       this.arrowTail = arrowTail;
 
       this.container.addChild(this.arrowHead);
@@ -90,16 +86,15 @@ define(function(require) {
       this.displayObject.addChild(this.container);
 
       this.container.position.x = 0.8 * canvas.width() + 10 *Math.random() - 5;
-      this.container.position.y = 0.25 * canvas.width() + 10 *Math.random() - 5;
-      this.container.pivot.set(this.container.width/2, this.container.height);
+      this.container.position.y = 0.25 * canvas.height() + 10 *Math.random() - 5;
+      this.container.pivot.set(this.arrowHead.width/2, this.container.height);
 
       nbrVectors.push(this.container);
       this.container.index = nbrVectors.indexOf(this.container);
 
       this.createArrowsCollection(nbrVectors, x, y,  length, degrees);
       this.model.set('emptyStage', false);
-      Vectors.updateFields(model.get('arrows').models[this.container.index], this.model, x, y , length, degrees);
-
+      Vectors.updateReadouts(model.get('arrows').models[this.container.index], model, x, y , length, degrees);
     },
 
     createArrowsCollection: function(nbrVectors, x, y, length, degrees) {
@@ -110,32 +105,37 @@ define(function(require) {
       });
 
       this.model.set('arrows', arrows);
-  },
+    },
 
     rotateStart: function(data) {
       this.transformable = true;
       this.data = data;
     },
 
-    rotate: function(data, e) {
+    rotate: function(data) {
       var model = this.model,
        container = this.container,
        arrowModel = model.get('arrows').models[container.index],
        x = Vectors.roundGrid(data.global.x - this.container.x),
        y = Vectors.roundGrid(data.global.y - this.container.y),
        length = Math.sqrt(x * x + y * y),
-       degrees = (180/Math.PI) + Math.atan2(y, x),
+       degrees = (180/Math.PI) * Math.atan2(y, x),
        height = length - 0.9 * this.arrowHead.height;
 
       if (this.transformable) {
+        this.displayObject.x = 0;
+        this.displayObject.y = length/10;
+
         container.rotation = 0;
         this.arrowTail.clear();
         this.arrowTail.beginFill(0xFF0000);
         this.arrowTail.drawRect(6, 20, 8, height);
-        container.pivot.set(container.width/2, container.height);
-        container.rotation = Math.atan2(y, x);
+        container.pivot.set(this.arrowHead.width/2, length);
+        container.rotation = Math.atan2(y, x) + 180/Math.PI *2 + .09;
 
-        Vectors.updateFields(arrowModel, model, x, y , length, degrees);
+
+
+        Vectors.updateReadouts(arrowModel, model, x, -y, length, -degrees);
       }
     },
 
@@ -157,7 +157,6 @@ define(function(require) {
       model.set('rYText', Vectors.round0(y/10));
 
       $('label').removeClass('green');
-
     },
 
     clearArrows: function() {
@@ -168,9 +167,7 @@ define(function(require) {
         this.displayObject.removeChild(this.container);
         nbrVectors.length = 0;
       }
-    },
-
-
+    }
   });
 
  return ArrowView;

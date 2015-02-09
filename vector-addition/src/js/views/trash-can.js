@@ -6,6 +6,7 @@ define(function(require) {
   var PixiView = require('common/pixi/view');
   var Assets = require('assets');
   var Constants = require('constants');
+  var trashCanTextures = [Assets.Images.Trash_Can, Assets.Images.Trash_Can_Open];
 
   var TrashCanView = PixiView.extend({
 
@@ -20,9 +21,10 @@ define(function(require) {
     trashCan: function() {
       this.canContainer = new PIXI.DisplayObjectContainer();
       var can = Assets.createSprite(Assets.Images.Trash_Can);
+      var can_open = Assets.createSprite(Assets.Images.Trash_Can_Open);
 
-      can.x = 0.9 * $('.scene-view').width();
-      can.y = 0.75 * $('.scene-view').height();
+      can.x = 0.88 * $('.scene-view').width();
+      can.y = 0.70 * $('.scene-view').height();
       can.buttonMode = true;
       this.canContainer.addChild(can);
       this.can = can;
