@@ -1,0 +1,155 @@
+.sim-controls-panel{
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+}
+
+
+.sim-controls {
+
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    padding: 15px;
+    position: relative;
+    margin-top: 4px;
+    width: @control-panel-expanded-width;
+
+    > label {
+        color: #555;
+    }
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+
+    h2 {
+        margin-bottom: 15px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+        font-size: 20px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 0.8);
+        margin-top: 0;
+    }
+
+    h5{
+        margin: 0;
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: rgba(255, 255, 255, 0.27);
+            border-color: rgba(0, 0, 0, 0.1);
+            text-transform: capitalize;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
+    }
+
+    .control-group {
+        .clearfix();
+    }
+
+    .sim-tabs{
+        margin-top: 10px;
+
+        > ul{
+            padding: 0 0 0 6px;
+
+            > li{
+                background: @sim-controls-graph-background;
+            }
+        }
+
+    }
+
+
+    ul {
+        list-style: none;
+        padding: 5px;
+        margin: 0;
+
+        li {
+            list-style-image: none;
+        }
+    }
+
+    .slider {
+        .noUi-base{
+            z-index: 1;
+            // sneaky padding to cover the labels a bit and extend the click-able area of the slider
+            padding: 16px;
+        }
+
+        .noUi-pips{
+            z-index: 0;
+        }
+
+        .noUi-value{
+            color: @sim-controls-color;
+            font-weight: bold;
+        }
+
+        &.noUi-background{
+            background: @link-color;
+        }
+    }
+
+    .discrete-slider-wrapper{
+        padding: 0 12px 20px 12px;
+        .clearfix();
+    }
+
+    .compact-list{
+        li{
+            float: left;
+            width: 90px;
+        }
+    }
+}
+
+
+ul.radio, ul.checkbox{
+    list-style: none;
+    padding: 5px;
+    margin: 0;
+
+    li {
+        text-align: left;
+        list-style-image: none;
+
+        label{
+            font-weight: bold;
+        }
+    }
+}

@@ -1,0 +1,88 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+@import "sim-controls.less";
+@import "playback-controls.less";
+
+/**
+ * Sim Settings, top right
+ */
+.sim-settings{
+    position: absolute;
+    top: -36px;
+    right: 0;
+
+    > div{
+        float: left;
+        margin: 4px;
+    }
+}
+.sound-btn-wrapper {
+
+    > .sound-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.sound-btn-mute,
+        &.sound-btn-low {
+            display: none;
+        }
+    }
+}
+
+.help-btn-wrapper {
+
+    > .help-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+    }
+}
+
+/**
+ * Slider modifications
+ */
+.slider{
+    &.noUi-horizontal .noUi-handle{
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+        cursor: grab;
+
+        &.noUi-active{
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
+        }
+    }
+}
