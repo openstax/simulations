@@ -4,6 +4,8 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
+    var underscoreDeepExtend = require('underscoreDeepExtend');
+    _.mixin({deepExtend: underscoreDeepExtend(_)});
 
     var SimView = require('common/app/sim');
 
@@ -250,7 +252,7 @@ define(function (require) {
                 return;
             }
 
-            options = _.merge({
+            options = _.deepExtend({
                 snap : true,
                 pips : {
                     mode: 'steps',
@@ -325,7 +327,7 @@ define(function (require) {
             options = _.extend({
                 displayAs: 'radio',
                 inputName : ''
-            }, options);
+            }, options || {});
 
             options.choices = choices;
             $element.replaceWith(this.choiceListTemplate(options));

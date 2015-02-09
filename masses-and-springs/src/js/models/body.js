@@ -2,7 +2,7 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('lodash');
+    var _ = require('underscore');
 
     var Simulation = require('backbone');
 

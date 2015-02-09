@@ -25,6 +25,7 @@
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
     "pixi": "~2.2.5",
-    "buzz": "~1.1.7"
+    "buzz": "~1.1.7",
+    "underscore-deep-extend": "~0.0.5"
   }
 }
