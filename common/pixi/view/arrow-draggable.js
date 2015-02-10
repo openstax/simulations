@@ -48,6 +48,8 @@ define(function(require) {
 
             this.dragFillColor = options.dragFillColor !== undefined ? Colors.parseHex(options.dragFillColor) : this.fillColor;
             this.dragFillAlpha = options.dragFillAlpha !== undefined ? options.dragFillAlpha : this.fillAlpha;
+            this.normalFillColor = this.fillColor;
+            this.normalFillAlpha = this.fillAlpha;
 
             this._attributes = {};
             this._dragOffset = new PIXI.Point();
@@ -73,6 +75,8 @@ define(function(require) {
             if (!this.bodyDraggingEnabled)
                 return;
 
+            this.setDraggingFill();
+
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.draggingBody = true;
         },
@@ -94,17 +98,21 @@ define(function(require) {
 
         dragBodyEnd: function(data) {
             this.draggingBody = false;
+            this.setNormalFill();
+            this.drawArrow();
         },
 
         dragHeadStart: function(data) {
             if (!this.bodyDraggingEnabled)
                 return;
 
+            this.setDraggingFill();
+
             var pointRelativeToObjectOrigin = data.getLocalPosition(this.displayObject, this._dragOffset);
             var pointRelativeToArrowTip = this._tipRelativeDragOffset;
             pointRelativeToArrowTip.x = pointRelativeToObjectOrigin.x + this.model.get('originX') - this.model.get('targetX');
             pointRelativeToArrowTip.y = pointRelativeToObjectOrigin.y + this.model.get('originY') - this.model.get('targetY');
-            
+
             this.dragOffset = pointRelativeToArrowTip;
             this.draggingHead = true;
         },
@@ -126,7 +134,19 @@ define(function(require) {
 
         dragHeadEnd: function(data) {
             this.draggingHead = false;
+            this.setNormalFill();
+            this.drawArrow();
         },
+
+        setDraggingFill: function() {
+            this.fillColor = this.dragFillColor;
+            this.fillAlpha = this.dragFillAlpha;
+        },
+
+        setNormalFill: function() {
+            this.fillColor = this.normalFillColor;
+            this.fillAlpha = this.normalFillAlpha;
+        }
 
     });
 

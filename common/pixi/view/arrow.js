@@ -51,9 +51,7 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', function() {
-                this.drawArrow(this.fillColor, this.fillAlpha);
-            });
+            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', this.drawArrow);
         },
 
         initGraphics: function() {
@@ -66,10 +64,10 @@ define(function(require) {
 
             this.displayObject.addChild(this.transformFrame);
 
-            this.drawArrow(this.fillColor, this.fillAlpha);
+            this.drawArrow();
         },
 
-        drawArrow: function(fillColor, fillAlpha) {
+        drawArrow: function() {
             var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
             var target = this._targetVector.set(this.model.get('targetX'), this.model.get('targetY'));
 
@@ -88,11 +86,11 @@ define(function(require) {
             tail.clear();
             head.clear();
 
-            tail.beginFill(fillColor, fillAlpha);
+            tail.beginFill(this.fillColor, this.fillAlpha);
             tail.drawRect(0, -this.tailWidth / 2, length - this.headLength, this.tailWidth);
             tail.endFill();
 
-            head.beginFill(fillColor, fillAlpha);
+            head.beginFill(this.fillColor, this.fillAlpha);
             head.moveTo(length, 0);
             head.lineTo(length - this.headLength,  this.headWidth / 2);
             head.lineTo(length - this.headLength, -this.headWidth / 2);

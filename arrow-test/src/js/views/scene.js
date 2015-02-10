@@ -44,7 +44,8 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.arrowView = new DraggableArrowView({ 
-                model: this.arrowViewModel
+                model: this.arrowViewModel,
+                dragFillColor: '#ff6b00'
             });
 
             this.stage.addChild(this.arrowView.displayObject);
