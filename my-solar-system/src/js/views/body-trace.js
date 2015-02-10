@@ -51,7 +51,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            
+            this.clear();
         },
 
         update: function(time, deltaTime, simulationPaused) {
@@ -62,6 +62,8 @@ define(function(require) {
         clear: function() {
             this.trace.clear();
             this.trace.lineStyle(BodyTraceView.LINE_WIDTH, this.color, 1);
+            this.previousPoint.x = this.mvt.modelToViewX(this.model.get('x'));
+            this.previousPoint.y = this.mvt.modelToViewY(this.model.get('y'));
         }
 
     }, Constants.BodyTraceView);
