@@ -67,7 +67,10 @@ define(function (require) {
             'click #system-centered-check' : 'changeSystemCentered',
             'click #show-traces-check'     : 'changeShowTraces',
             'click #show-grid-check'       : 'changeShowGrid',
-            'click #tape-measure-check'    : 'changeShowTapeMeasure'
+            'click #tape-measure-check'    : 'changeShowTapeMeasure',
+
+            'click .btn-zoom-in':  'zoomIn',
+            'click .btn-zoom-out': 'zoomOut'
         },
 
         /**
@@ -425,6 +428,14 @@ define(function (require) {
             var indexString = $(event.target).val();
             if (indexString !== '')
                 this.simulation.loadPreset(parseInt(indexString));
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
         }
 
     });

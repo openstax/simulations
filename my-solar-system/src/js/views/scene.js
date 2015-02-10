@@ -68,7 +68,7 @@ define(function(require) {
             this.gridView = new GridView({
                 origin: new Vector2(this.width / 2, this.height / 2),
                 bounds: new Rectangle(0, 0, this.width, this.height),
-                gridSize: this.mvt.modelToViewDeltaX(100),
+                gridSize: this.mvt.modelToViewDeltaX(Constants.SceneView.GRID_SIZE),
                 lineColor: '#fff',
                 lineAlpha: 0.1
             });
@@ -124,6 +124,49 @@ define(function(require) {
             });
             this.collisionLayer.addChild(collisionView.displayObject);
             this.collisionViews.push(collisionView);
+        },
+
+        zoomIn: function() {
+            var zoom = this.zoomScale * 1.5;
+            if (zoom < Constants.SceneView.MAX_SCALE) {
+                this.zoomScale = zoom;
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
+                this.updateMVTs();
+            }
+        },
+
+        zoomOut: function() {
+            var zoom = this.zoomScale / 1.5;
+            if (zoom > Constants.SceneView.MIN_SCALE) {
+                this.zoomScale = zoom;
+                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                    new Vector2(0, 0),
+                    new Vector2(this.viewOriginX, this.viewOriginY),
+                    this.zoomScale // Scale, meters to pixels
+                );
+                this.updateMVTs();
+            }
+        },
+
+        updateMVTs: function() {
+            var mvt = this.mvt;
+
+            this.gridView.setGridSize(this.mvt.modelToViewDeltaX(Constants.SceneView.GRID_SIZE));
+
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) 
+                this.collisionViews[i].updateMVT(mvt);
+
+            for (var j = this.bodyTraceViews.length - 1; j >= 0; j--)
+                this.bodyTraceViews[j].updateMVT(mvt);
+
+            for (var j = this.bodyViews.length - 1; j >= 0; j--)
+                this.bodyViews[j].updateMVT(mvt);
+
+            this.trigger('change:mvt', this, mvt);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
