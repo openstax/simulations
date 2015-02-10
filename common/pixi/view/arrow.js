@@ -28,7 +28,7 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                tailWidth: 10,
+                tailWidth: 8,
 
                 headWidth: 20,
                 headLength: 20,
@@ -51,22 +51,23 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', function() {
-                this.drawArrow(this.fillColor, this.fillAlpha);
-            });
+            this.listenTo(this.model, 'change:originX change:originY change:targetX change:targetY', this.drawArrow);
         },
 
         initGraphics: function() {
             this.tailGraphics = new PIXI.Graphics();
             this.headGraphics = new PIXI.Graphics();
 
-            this.displayObject.addChild(this.tailGraphics);
-            this.displayObject.addChild(this.headGraphics);
+            this.transformFrame = new PIXI.DisplayObjectContainer();
+            this.transformFrame.addChild(this.tailGraphics);
+            this.transformFrame.addChild(this.headGraphics);
 
-            this.drawArrow(this.fillColor, this.fillAlpha);
+            this.displayObject.addChild(this.transformFrame);
+
+            this.drawArrow();
         },
 
-        drawArrow: function(fillColor, fillAlpha) {
+        drawArrow: function() {
             var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
             var target = this._targetVector.set(this.model.get('targetX'), this.model.get('targetY'));
 
@@ -85,19 +86,21 @@ define(function(require) {
             tail.clear();
             head.clear();
 
-            tail.beginFill(fillColor, fillAlpha);
+            tail.beginFill(this.fillColor, this.fillAlpha);
             tail.drawRect(0, -this.tailWidth / 2, length - this.headLength, this.tailWidth);
             tail.endFill();
 
-            head.beginFill(fillColor, fillAlpha);
+            head.beginFill(this.fillColor, this.fillAlpha);
             head.moveTo(length, 0);
             head.lineTo(length - this.headLength,  this.headWidth / 2);
             head.lineTo(length - this.headLength, -this.headWidth / 2);
             head.endFill();
 
-            this.displayObject.rotation = angle;
-            this.displayObject.scale.x = scale;
-            this.displayObject.scale.y = scale;
+            this.displayObject.x = origin.x;
+            this.displayObject.y = origin.y;
+            this.transformFrame.rotation = angle;
+            this.transformFrame.scale.x = scale;
+            this.transformFrame.scale.y = scale;
         },
 
         show: function() {
