@@ -52,6 +52,7 @@ define(function(require) {
             this._attributes = {};
             this._dragOffset = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
+            this._tipRelativeDragOffset = new PIXI.Point();
 
             // Has to be done after the graphics get drawn once
             if (this.bodyDraggingEnabled)
@@ -99,23 +100,25 @@ define(function(require) {
             if (!this.bodyDraggingEnabled)
                 return;
 
-            this.lastPoint = data.getLocalPosition(this.displayObject, this._dragOffset);
+            var pointRelativeToObjectOrigin = data.getLocalPosition(this.displayObject, this._dragOffset);
+            var pointRelativeToArrowTip = this._tipRelativeDragOffset;
+            pointRelativeToArrowTip.x = pointRelativeToObjectOrigin.x + this.model.get('originX') - this.model.get('targetX');
+            pointRelativeToArrowTip.y = pointRelativeToObjectOrigin.y + this.model.get('originY') - this.model.get('targetY');
+            
+            this.dragOffset = pointRelativeToArrowTip;
             this.draggingHead = true;
         },
 
         dragHead: function(data) {
             if (this.draggingHead) {
                 var local = data.getLocalPosition(this.displayObject, this._dragLocation);
-                var dx = local.x - this.lastPoint.x;
-                var dy = local.y - this.lastPoint.y;
-                
-                this.lastPoint.x = local.x;
-                this.lastPoint.y = local.y;
+                var x = this.model.get('originX') + local.x - this.dragOffset.x;
+                var y = this.model.get('originY') + local.y - this.dragOffset.y;
                 
                 delete this._attributes.originX;
                 delete this._attributes.originY;
-                this._attributes.targetX = this.model.get('targetX') + dx;
-                this._attributes.targetY = this.model.get('targetY') + dy;
+                this._attributes.targetX = x;
+                this._attributes.targetY = y;
 
                 this.model.set(this._attributes);
             }
