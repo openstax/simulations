@@ -154,6 +154,9 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+        /**
+         * Renders the MeasuringTapeView
+         */
         renderMeasuringTape: function() {
             this.measuringTapeView.render();
             this.$el.append(this.measuringTapeView.el);
