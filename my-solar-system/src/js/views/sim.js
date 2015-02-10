@@ -221,6 +221,14 @@ define(function (require) {
         },
 
         /**
+         * Overrides so that we don't rerender on a reset.
+         */
+        rerender: function(event) {
+            this.sceneView.reset();
+            this.updateTime(this.simulatoin, this.simulation.get('time'));
+        },
+
+        /**
          * Overrides to remove the confirmation dialog because it's
          *   not important in this sim and also to make sure it is
          *   paused after a reset.
