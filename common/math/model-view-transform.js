@@ -279,7 +279,7 @@ define(function (require) {
         transform: function(tm, coordinates) {
             if (coordinates instanceof Rectangle)
                 return this.transformRectangle(tm, coordinates);
-            else if (coordinates instanceof Vector2 || ('x' in coordinates && 'y' in coordinates))
+            else if (coordinates instanceof Vector2 || (_.isObject(coordinates) && 'x' in coordinates && 'y' in coordinates))
                 return this.transformPoint(tm, coordinates);
             else if (coordinates instanceof PiecewiseCurve)
                 return this.transformPiecewiseCurve(tm, coordinates);
