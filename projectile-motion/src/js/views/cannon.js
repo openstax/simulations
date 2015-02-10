@@ -184,6 +184,8 @@ define(function(require) {
             var pixelHeight  = Math.abs(this.mvt.modelToViewDeltaY(pedestalHeight));
             var pixelWidth   = this.mvt.modelToViewDeltaX(CannonView.PEDESTAL_WIDTH);
             var pixelYOffset = Math.abs(this.mvt.modelToViewDeltaY(this.model.get('heightOffGround')));
+            var pixelXShift  = this.mvt.modelToViewDeltaX(CannonView.PEDESTAL_X_SHIFT);
+            var pixelYShift  = this.mvt.modelToViewDeltaY(CannonView.PEDESTAL_Y_SHIFT);
             var pedestal = this.pedestal;
             var pedestalSide = this.pedestalSide;
 
@@ -206,6 +208,11 @@ define(function(require) {
             pedestalSide.bezierCurveTo(horizontalRadius, pixelYOffset + pixelHeight + verticalRadius, -horizontalRadius, pixelYOffset + pixelHeight + verticalRadius, -horizontalRadius, pixelYOffset + pixelHeight)
             pedestalSide.lineTo(-horizontalRadius, pixelYOffset);
             pedestalSide.endFill();
+
+            pedestal.x = pixelXShift;
+            pedestal.y = pixelYShift;
+            pedestalSide.x = pixelXShift;
+            pedestalSide.y = pixelYShift;
         },
 
         drawAxes: function() {

@@ -17,7 +17,7 @@ define(function (require) {
 
     Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
     Constants.AIR_DENSITY_AT_SEA_LEVEL = 1.6; // kg/m^3
-    Constants.GROUND_Y = -1.3;
+    Constants.GROUND_Y = -1.2;
     Constants.CYLINDER_PERSPECTIVE_MODIFIER = 0.15;
 
 
@@ -50,7 +50,7 @@ define(function (require) {
     Cannon.START_X = 0;
     Cannon.START_Y = 0;
     Cannon.HEIGHT_OFF_GROUND = -Constants.GROUND_Y; // meters
-    Cannon.WIDTH = 3.5; // meters, the length of the cannon
+    Cannon.WIDTH = 3.8; // meters, the length of the cannon
     Cannon.START_ANGLE = 80;
     Cannon.MIN_ANGLE = -28; // Don't want it moving into its own shadow. If we need to allow them to point it down more, I'll have to separate that shadow layer in the image.
     Cannon.MAX_ANGLE = 197;
@@ -63,6 +63,8 @@ define(function (require) {
     CannonView.PEDESTAL_SIDE_COLOR = '#ccc';
     CannonView.PEDESTAL_WIDTH = 5.5; // meters
     CannonView.PEDESTAL_PERSPECTIVE_MODIFIER = Constants.CYLINDER_PERSPECTIVE_MODIFIER;
+    CannonView.PEDESTAL_X_SHIFT = -0.25; // meters
+    CannonView.PEDESTAL_Y_SHIFT = -0.2; // meters
     CannonView.AXIS_LINE_COLOR = '#000';
     CannonView.AXIS_LINE_ALPHA = 0.4;
     CannonView.AXIS_LINE_WIDTH = 2;

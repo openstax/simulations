@@ -167,8 +167,8 @@ define(function (require) {
             this.sceneView.postRender();
 
             this.measuringTapeView.postRender();
-            this.measuringTapeView.setStart(this.sceneView.width * 0.6, this.sceneView.height * 0.92);
-            this.measuringTapeView.setEnd(  this.sceneView.width * 0.9, this.sceneView.height * 0.92);
+            this.measuringTapeView.setStart(this.sceneView.width * 0.25, this.sceneView.height * 0.925);
+            this.measuringTapeView.setEnd(  this.sceneView.width * 0.56, this.sceneView.height * 0.925);
         },
 
         /**
