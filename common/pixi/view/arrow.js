@@ -28,7 +28,7 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                tailWidth: 10,
+                tailWidth: 8,
 
                 headWidth: 20,
                 headLength: 20,
@@ -60,8 +60,11 @@ define(function(require) {
             this.tailGraphics = new PIXI.Graphics();
             this.headGraphics = new PIXI.Graphics();
 
-            this.displayObject.addChild(this.tailGraphics);
-            this.displayObject.addChild(this.headGraphics);
+            this.transformFrame = new PIXI.DisplayObjectContainer();
+            this.transformFrame.addChild(this.tailGraphics);
+            this.transformFrame.addChild(this.headGraphics);
+
+            this.displayObject.addChild(this.transformFrame);
 
             this.drawArrow(this.fillColor, this.fillAlpha);
         },
@@ -95,9 +98,11 @@ define(function(require) {
             head.lineTo(length - this.headLength, -this.headWidth / 2);
             head.endFill();
 
-            this.displayObject.rotation = angle;
-            this.displayObject.scale.x = scale;
-            this.displayObject.scale.y = scale;
+            this.displayObject.x = origin.x;
+            this.displayObject.y = origin.y;
+            this.transformFrame.rotation = angle;
+            this.transformFrame.scale.x = scale;
+            this.transformFrame.scale.y = scale;
         },
 
         show: function() {
