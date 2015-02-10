@@ -184,6 +184,17 @@ define(function(require) {
                 this.bodyTraceViews[i].update(time, deltaTime, paused);
         },
 
+        reset: function() {
+            // Remove collision views
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                this.collisionViews[i].removeFrom(this.collisionLayer);
+                this.collisionViews.slice(i, 1);
+            }
+
+            // Make new body views and trace views
+            this.initBodyViews(this.simulation, this.simulation.bodies);
+        },
+
         startedChanged: function(simulation, started) {
             if (started) {
                 for (var i = 0; i < this.bodyViews.length; i++)
