@@ -27,7 +27,8 @@ define(function (require) {
         events: {
           'change #show-grid' : 'showGrid',
           'click .btn': 'clearArrows',
-          'change #show-sum': 'showSum'
+          'change #show-sum': 'showSum',
+          'change input[name="components"]': 'componentStyles'
         },
 
         initialize: function(options) {
@@ -39,6 +40,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
             this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
             this.listenTo(this.simulation, 'change:sumVectorVisible', this.sumVectorVisible);
+            //this.listenTo(this.simulation, 'change:componentStyles', this.componentStyles);
             this.initSceneView();
         },
 
@@ -140,6 +142,21 @@ define(function (require) {
           }
           else {
             this.$el.find('#show-sum').prop('checked', false);
+          }
+        },
+
+        componentStyles: function() {
+          if ($('#0').is(':checked')) {
+            this.simulation.set('componentStyles', 0);
+          }
+          else if ($('#1').is(':checked')) {
+            this.simulation.set('componentStyles', 1);
+          }
+          else if ($('#2').is(':checked')) {
+            this.simulation.set('componentStyles', 2);
+          }
+          else if ($('#3').is(':checked')) {
+            this.simulation.set('componentStyles', 3);
           }
         }
     });

@@ -70,7 +70,63 @@ define(function (require) {
         $('label').removeClass('green');
       },
 
-      //TODO
+      updateComponents: function(model, vector, vectorX, vectorY) {
+        var xV = vector.x;
+        var yV = vector.y;
+
+        if (xV > 0) {
+          vectorX.rotation = 0;
+        }
+        else {
+          vectorX.rotation = 180;
+        }
+
+        if (yV < 0) {
+          vectorY.rotation = 0;
+        }
+        else {
+          vectorY.rotation = 180;
+        }
+
+       vector.parent.height = Math.abs(yV);
+
+      if (yV < 0) {
+          vectorY.rotation = 0;
+        }
+        else {
+          vectorY.rotation = 180;
+        }
+
+        if (model.get('componentStyles') == 0) {
+          vectorX.visible = false;
+          vectorY.visible = false;
+        }
+        else {
+          vectorX.visible = true;
+          vectorY.visible = true;
+        }
+
+        if (model.get('componentStyles') == 1) {
+          vectorX.y = 0;
+          vectorY.x = 0;
+        }
+
+        else if (model.get('componentStyles') == 2) {
+          console.log(xV)
+          vectorX.y = 0;
+          vectorY.x = xV;
+        }
+
+        else if (model.get('componentStyles') == 3) {
+          console.log('style 3');
+        }
+
+      },
+
+
+
+
+
       //updateComponents: function () {
       //  var xV = _root.sumVector.x;
       //  var yV = _root.sumVector.y;

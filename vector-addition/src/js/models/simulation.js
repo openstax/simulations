@@ -19,7 +19,8 @@ define(function (require) {
       sumVectorRXText: '',
       sumVectorRYText: '',
       labelColor: 'red',
-      deleteVector: false
+      deleteVector: false,
+      componentStyles: 0
     }
 
   });
