@@ -357,7 +357,6 @@ define(function (require) {
 
         changeSystemCentered: function(event) {
             this.simulation.set('systemCentered', $(event.target).is(':checked'));
-            console.log($(event.target).is(':checked'));
 
             // Needs to be reset with this algorithm for changes to take effect.
             // this.simulation.pause();
