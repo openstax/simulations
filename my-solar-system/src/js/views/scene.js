@@ -178,7 +178,6 @@ define(function(require) {
                     this.collisionViews[i].removeFrom(this.collisionLayer);
                     this.collisionViews.slice(i, 1);
                 }
-                    
             }
 
             for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)

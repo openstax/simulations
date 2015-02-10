@@ -55,7 +55,7 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, simulationPaused) {
-            if (!simulationPaused)
+            if (!simulationPaused && !this.model.get('destroyedInCollision'))
                 this.appendTracePoint();
         },
 
