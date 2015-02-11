@@ -255,11 +255,11 @@ define(function (require) {
         },
 
         viewToModelX: function(x) {
-            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(x, 0));
+            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(x, 0)).x;
         },
 
         viewToModelY: function(y) {
-            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(0, y));
+            return this.transformPoint(this.inverseTransformMatrix, this._point1.set(0, y)).y;
         },
 
         viewToModelDeltaX: function(x) {

@@ -142,12 +142,12 @@ define(function(require) {
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
 
-                var x = this.mvt.viewToModelDeltaX(this.displayObject.x);
-                var y = this.mvt.viewToModelDeltaY(this.displayObject.y);
+                var x = Math.round(this.mvt.viewToModelX(this.displayObject.x));
+                var y = Math.round(this.mvt.viewToModelY(this.displayObject.y));
 
                 this.inputLock(function() {
-                    this.model.set('x', x);
-                    this.model.set('y', y);
+                    this.model.set('initX', x);
+                    this.model.set('initY', y);
                 });
             }
         },
