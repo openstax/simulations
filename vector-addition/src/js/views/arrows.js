@@ -161,8 +161,8 @@ define(function(require) {
         this.arrowContainer.pivot.set(this.arrowHead.width/2, length);
         this.arrowContainer.rotation = angle;
 
-        ComponentVectors.updateVectorX(model, this.vectorX.children[1], this.model.get('pink'), x);
-        ComponentVectors.updateVectorY(model, this.vectorY.children[1], this.model.get('pink'), y);
+        ComponentVectors.updateVector(model, this.vectorX.children[1], this.model.get('pink'), Math.abs(x));
+        ComponentVectors.updateVector(model, this.vectorY.children[1], this.model.get('pink'), Math.abs(y));
         this.vectorX.pivot.set(this.arrowContainer.width/2, this.vectorX.height);
         this.vectorY.pivot.set(this.arrowContainer.width/2, this.vectorY.height);
 

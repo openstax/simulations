@@ -64,7 +64,7 @@ define(function (require) {
         }
 
         if (model.get('componentStyles') == 1) {
-          this.componentStyles1(vectorX, vectorY, yV);
+          this.componentStyles1(vectorX, vectorY, xV, yV);
         }
 
         else if (model.get('componentStyles') == 2) {
@@ -98,12 +98,16 @@ define(function (require) {
         }
       },
 
-      componentStyles1: function(vectorX, vectorY, yV) {
+      componentStyles1: function(vectorX, vectorY, xV, yV) {
         vectorX.y = 0;
         vectorY.x = 0;
 
         if (yV == 0) {
           vectorY.visible = false
+        }
+
+        if (xV == 0) {
+          vectorX.visible = false;
         }
       },
 
@@ -113,6 +117,8 @@ define(function (require) {
       },
 
       componentStyles3: function(xV, xY, vectorX, vectorY) {
+        var canvas = $('.scene-view');
+
       //TODO
       // xVector_mc._y = stageH - thisHere._y - (5-nbrVectors*0.2)*gridSize;
       // yVector_mc._x = -thisHere._x + (5-nbrVectors*0.2)*gridSize;
@@ -162,7 +168,6 @@ define(function (require) {
         sumVectorTail.drawRect(6, 20, 8, length - 20);
         sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
         sumVectorContainer.rotation = -Math.atan2(ySum, xSum)  + 180/Math.PI *2;
-        console.log(sumVectorContainer.rotation);
       },
 
       deleteArrow: function(model, container) {

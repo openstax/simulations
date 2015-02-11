@@ -43,6 +43,13 @@ define(function (require) {
       return this.vectorY;
     },
 
+    updateVector: function(model, vector, fillColor, x) {
+      vector.clear();
+      vector.beginFill(fillColor);
+      vector.drawRect(6, 20, 8, x);
+      vector.height = x;
+    },
+
     updateVectorX: function(model, vector, fillColor, x) {
       vector.clear();
       vector.beginFill(fillColor);
