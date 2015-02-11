@@ -127,7 +127,7 @@ define(function(require) {
         },
 
         zoomIn: function() {
-            var zoom = this.zoomScale * 1.5;
+            var zoom = this.zoomScale + 0.4;
             if (zoom < Constants.SceneView.MAX_SCALE) {
                 this.zoomScale = zoom;
                 this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
@@ -140,7 +140,7 @@ define(function(require) {
         },
 
         zoomOut: function() {
-            var zoom = this.zoomScale / 1.5;
+            var zoom = this.zoomScale - 0.4;
             if (zoom > Constants.SceneView.MIN_SCALE) {
                 this.zoomScale = zoom;
                 this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
