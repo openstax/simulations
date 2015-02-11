@@ -38,10 +38,6 @@ define(function(require) {
             this.graphics = new PIXI.Graphics();
             this.drawSpring();
             this.displayObject.addChild(this.graphics);
-
-            // this.springSprite = Assets.createSprite(Assets.Images.Spring);
-            // this.displayObject.addChild(this.springSprite);
-
         },
 
         drawSpring : function(){
@@ -67,42 +63,52 @@ define(function(require) {
 
         },
 
-        drawSpringRing: function(){
-
-        },
-
         makeCoilPoints: function(){
             var points = [];
             var fromCenter = Constants.SpringDefaults.WIDTH/2;
             var coilHeight = this.model.restL * h / Constants.SpringDefaults.COILS;
             var coilCount = 0;
+            var ringRadius = 10;
 
-            points.push([this.model.x + fromCenter, this.model.y1]);
-            points.push([this.model.x - fromCenter, this.model.y1]);
+            this.makeCoilRing(points, this.model.x - ringRadius, this.model.y1 + 0.5 * ringRadius, ringRadius);
 
             while(coilCount <= Constants.SpringDefaults.COILS){
-
-                // this.makeCoilPoint(points, this.model.x, this.model.y1, fromCenter, coilCount, coilHeight);
                 this.makeBezierCoilPoint(points, this.model.x, this.model.y1, fromCenter, coilCount, coilHeight);
-
                 coilCount ++;
             }
 
-            points[points.length - 1] = [this.model.x - fromCenter, coilHeight * (coilCount - 0.5) + this.model.y1];
+            points[points.length - 1] = [this.model.x, this.model.y1 + coilHeight * (coilCount - 0.5)];
+            points[points.length] = [this.model.x, this.model.y1 + coilHeight * coilCount];
 
             return points;
         },
 
-        makeCoilPoint: function(points, x, y, fromCenter, coilCount, coilHeight){
-            points.push([x + fromCenter, y + coilCount * coilHeight + coilHeight/2]);
-            points.push([x - fromCenter, y + coilCount * coilHeight + coilHeight]);
+        makeCoilRing: function(points, x, y, radius){
+            points.push([
+                x + radius, y
+            ]);
+            points.push([
+                x + (2 * radius), y,
+                x + (2 * radius), y - (1.5 * radius),
+                x + radius, y - (1.5 * radius)
+            ]);
+            points.push([
+                x, y - (1.5 * radius),
+                x, y,
+                x + radius, y
+            ]);
         },
 
         makeBezierCoilPoint: function(points, x, y, fromCenter, coilCount, coilHeight){
             points.push([
-                x + fromCenter, y + coilCount * coilHeight + coilHeight/2,
-                x - fromCenter, y + coilCount * coilHeight + coilHeight,
-                x - fromCenter, y + coilCount * coilHeight + coilHeight
+                x, y + (coilCount + 0.25) * coilHeight,
+                x + fromCenter, y + (coilCount + 0.25) * coilHeight,
+                x + fromCenter, y + (coilCount + 0.5) * coilHeight
+            ]);
+            points.push([
+                x, y + (coilCount + 0.75) * coilHeight,
+                x - fromCenter, y + (coilCount + 0.75) * coilHeight,
+                x - fromCenter, y + (coilCount + 1) * coilHeight
             ]);
         },
 
