@@ -253,10 +253,10 @@ define(function(require) {
             this.midLayer.addChild(belt.displayObject);
         },
 
-        _update: function(time, deltaTime) {
+        _update: function(time, deltaTime, paused, timeScale) {
             //if (!this.simulation.get('paused'))
             for (var i = 0; i < this.views.length; i++)
-                this.views[i].update(time, deltaTime, this.simulation.get('paused'));
+                this.views[i].update(time, deltaTime, paused, timeScale);
         },
 
         reset: function() {
