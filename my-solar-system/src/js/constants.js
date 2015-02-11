@@ -14,18 +14,26 @@ define(function (require) {
 
     Constants.BODY_COLORS = [
     	// 'yellow', 
-     //    'magenta', 
-     //    'cyan',
-     //    'green'
+        // 'magenta', 
+        // 'cyan',
+        // 'green'
+
         // '#f0cf31',
         // '#f47b4d',
         // '#eeeeee',
         // '#71b653'
-        '#D89965',
+
+        // '#D89965',
+        // '#D86565',
+        // '#3C8282',
+        // '#50AD50'
+
+        '#E8AE1A',
         '#D86565',
         '#3C8282',
         '#50AD50'
     ];
+    
     Constants.MAX_BODIES = Constants.BODY_COLORS.length;
     Constants.MIN_BODIES = 2;
     Constants.MIN_BODY_MASS = 0.000001;
