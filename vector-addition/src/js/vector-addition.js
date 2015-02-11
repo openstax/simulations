@@ -5,14 +5,15 @@ define(function (require) {
     $ = require('jquery');
     var PIXI = require('pixi');
     var ArrowsCollection = require('collections/arrows');
+    var Constants = require('constants')
 
     var Vectors = {
 
       drawVectorHead: function(vectorHead, fillColor, interactiveBool, buttonModeBool, defaultCursor) {
         vectorHead.beginFill(fillColor);
-        vectorHead.moveTo(0, 20);
+        vectorHead.moveTo(0, Constants.ARROWHEAD_HEIGHT);
         vectorHead.lineTo(10, 0);
-        vectorHead.lineTo(20, 20);
+        vectorHead.lineTo(Constants.ARROWHEAD_HEIGHT, Constants.ARROWHEAD_HEIGHT);
         vectorHead.endFill();
         vectorHead.interactive = interactiveBool;
         vectorHead.buttonMode = buttonModeBool;
@@ -21,34 +22,10 @@ define(function (require) {
 
       drawVectorTail: function(vectorTail, fillColor, length, interactiveBool, buttonModeBool, defaultCursor) {
         vectorTail.beginFill(fillColor);
-        vectorTail.drawRect(6, 20, 8, length);
+        vectorTail.drawRect(6, Constants.ARROWHEAD_HEIGHT, 8, length);
         vectorTail.interactive = interactiveBool;
         vectorTail.buttonMode = buttonModeBool;
         vectorTail.defaultCursor = defaultCursor;
-      },
-
-      roundGrid: function(nbr) {
-        var gridSize = 10;
-        return (nbr/gridSize)*gridSize;
-      },
-
-      round0: function(nbr) {
-        return Math.round(nbr);
-      },
-
-      round1: function(nbr) {
-        var ans = (Math.round(nbr *10)) /10;
-        return ans;
-      },
-
-      padZero: function(nbr) {
-        var text = nbr;
-
-        if (nbr % 1 == 0) {
-          text = text + ".0"
-          }
-
-        return text;
       },
 
       updateReadouts: function(arrowModel, model, x, y, length, degrees) {
@@ -73,29 +50,9 @@ define(function (require) {
       updateComponents: function(model, vector, vectorX, vectorY) {
         var xV = vector.x;
         var yV = vector.y;
+        console.log(xV, yV)
 
-        if (xV > 0) {
-          vectorX.rotation = 0;
-        }
-        else {
-          vectorX.rotation = 180;
-        }
-
-        if (yV < 0) {
-          vectorY.rotation = 0;
-        }
-        else {
-          vectorY.rotation = 180;
-        }
-
-       vector.parent.height = Math.abs(yV);
-
-      if (yV < 0) {
-          vectorY.rotation = 0;
-        }
-        else {
-          vectorY.rotation = 180;
-        }
+        this.vectorRotations(xV, yV, vectorX, vectorY);
 
         if (model.get('componentStyles') == 0) {
           vectorX.visible = false;
@@ -107,81 +64,69 @@ define(function (require) {
         }
 
         if (model.get('componentStyles') == 1) {
-          vectorX.y = 0;
-          vectorY.x = 0;
+          this.componentStyles1(vectorX, vectorY, yV);
         }
 
         else if (model.get('componentStyles') == 2) {
-          console.log(xV)
-          vectorX.y = 0;
-          vectorY.x = xV;
+          this.componentStyles2(xV, vectorX, vectorY);
         }
-
         else if (model.get('componentStyles') == 3) {
-          console.log('style 3');
+          this.componentStyles3(xV, xY, vectorX, vectorY);
         }
-
       },
 
+      vectorRotations: function(xV, yV, vectorX, vectorY) {
+        var angle = 180 * Math.PI/180;
 
+        if (xV > 0) {
+          vectorX.rotation = angle/2;
+        }
 
+        else if (xV < 0) {
+          vectorX.rotation = -angle/2;
+        }
 
+        else {
+          vectorX.rotation = 0;
+        }
 
-      //updateComponents: function () {
-      //  var xV = _root.sumVector.x;
-      //  var yV = _root.sumVector.y;
-        //trace("sumVectorHolder: " + xV);
-        //trace("_root.sumVector.x: " + _root.sumVector.x);
-      //  xVector_mc._width = Math.abs(xV);
+        if (yV < 0) {
+          vectorY.rotation = 0;
+        }
+        else if (yV > 0) {
+          vectorY.rotation = angle;
+        }
+      },
 
-      //  if(xV > 0){
-        //  xVector_mc._rotation = 0;
-      //  } else {xVector_mc._rotation = 180;}
-      //  yVector_mc._height = Math.abs(yV);
-      //  if(yV < 0){
-      //    yVector_mc._rotation = 0;
-      //  }else{yVector_mc._rotation = 180;}
-      //  if(componentStyle == 0){
-      //    xVector_mc._visible = false;
-      //    yVector_mc._visible = false;
+      componentStyles1: function(vectorX, vectorY, yV) {
+        vectorX.y = 0;
+        vectorY.x = 0;
 
-      //  } else {
-      //    xVector_mc._visible = true;
-      //    yVector_mc._visible = true;
-      //  }
-      //  if(componentStyle == 1){
-      //    xVector_mc._y = 0;
-      //    yVector_mc._x = 0;
-      //  }else if(componentStyle == 2){
-      //    xVector_mc._y = 0;
-        //  yVector_mc._x = xV;
-      //  } else if(componentStyle == 3){
-          //trace(thisHere._x);
-        //  xVector_mc._y = stageH - thisHere._y - (5-nbrVectors*0.2)*gridSize;
-      //    yVector_mc._x = -thisHere._x + (5-nbrVectors*0.2)*gridSize;
-      //    hLineT._x = -thisHere._x + 5*gridSize;
-        //  hLineT._y = yV;
-        //  hLineT._width = thisHere._x + xV - 5*gridSize;
-        //  hLineB._x = -thisHere._x + 5*gridSize;
-        //  hLineB._width = thisHere._x - 5*gridSize;
-        //  vLineL._y = stageH - thisHere._y - 5*gridSize;
-        //  vLineL._height = stageH - thisHere._y - 5*gridSize ;
-        //  vLineR._x = xV;
-        //  vLineR._y = stageH - thisHere._y - 5*gridSize;
-        //  vLineR._height = stageH - thisHere._y  - 5*gridSize - yV;
-        //}
-        //if(componentStyle == 3){
-        //  hLineT._visible = true;
-        //  hLineB._visible = true;
-        //  vLineL._visible = true;
-        //  vLineR._visible = true;
-      //  }else {
-        //  hLineT._visible = false;
-        //  hLineB._visible = false;
-        //  vLineL._visible = false;
-        //  vLineR._visible = false;
-      //  }
-      //},
+        if (yV == 0) {
+          vectorY.visible = false
+        }
+      },
+
+      componentStyles2: function(xV, vectorX, vectorY) {
+        vectorX.y = 0;
+        vectorY.x = xV * 10;
+      },
+
+      componentStyles3: function(xV, xY, vectorX, vectorY) {
+      //TODO
+      // xVector_mc._y = stageH - thisHere._y - (5-nbrVectors*0.2)*gridSize;
+      // yVector_mc._x = -thisHere._x + (5-nbrVectors*0.2)*gridSize;
+      // hLineT._x = -thisHere._x + 5*gridSize;
+      // hLineT._y = yV;
+      // hLineT._width = thisHere._x + xV - 5*gridSize;
+      // hLineB._x = -thisHere._x + 5*gridSize;
+      // hLineB._width = thisHere._x - 5*gridSize;
+      // vLineL._y = stageH - thisHere._y - 5*gridSize;
+      // vLineL._height = stageH - thisHere._y - 5*gridSize ;
+      // vLineR._x = xV;
+      // vLineR._y = stageH - thisHere._y - 5*gridSize;
+      // vLineR._height = stageH - thisHere._y  - 5*gridSize - yV;
+    },
 
       sum: function(model, sumVectorContainer, sumVectorTail) {
         var xSum = 0;
@@ -222,7 +167,40 @@ define(function (require) {
         var arrows = model.get('arrows');
         var arrowToRemove = arrows.indexOf(container.index);
         arrows.remove(arrowToRemove);
-      }
+      },
+
+      calculateLength: function(x, y) {
+        return Math.sqrt(x * x + y * y);
+      },
+
+      calculateDegrees: function(x, y) {
+        return (180/Math.PI) * Math.atan2(y, x);
+      },
+
+      roundGrid: function(nbr) {
+        var gridSize = 10;
+        return (nbr/gridSize)*gridSize;
+      },
+
+      round0: function(nbr) {
+        return Math.round(nbr);
+      },
+
+      round1: function(nbr) {
+        var ans = (Math.round(nbr *10)) /10;
+        return ans;
+      },
+
+      padZero: function(nbr) {
+        var text = nbr;
+
+        if (nbr % 1 == 0) {
+          text = text + ".0"
+          }
+
+        return text;
+      },
+
   };
 
     return Vectors;

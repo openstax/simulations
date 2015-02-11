@@ -20,7 +20,9 @@ define(function (require) {
       sumVectorRYText: '',
       labelColor: 'red',
       deleteVector: false,
-      componentStyles: 0
+      componentStyles: 0,
+      red: '0xFF0000',
+      pink: '0xFFB4D9'
     }
 
   });

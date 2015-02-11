@@ -40,7 +40,6 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
             this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
             this.listenTo(this.simulation, 'change:sumVectorVisible', this.sumVectorVisible);
-            //this.listenTo(this.simulation, 'change:componentStyles', this.componentStyles);
             this.initSceneView();
         },
 
