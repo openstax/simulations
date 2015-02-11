@@ -63,7 +63,13 @@ module.exports = function(grunt) {
 					findNestedDependencies: true,
 					optimize: 'uglify2',
 					name: 'main',
-					out: 'src/optimized.js'
+					out: 'src/optimized.js',
+
+					less: {
+					    modifyVars: {
+					        'fa-font-path': '"../node_modules/font-awesome/fonts/"'
+					    }
+					}
 
 					// Doing it this way doesn't work:
 					// mainConfigFile: 'src/js/config.js'
