@@ -69,7 +69,9 @@ define(function(require) {
             _.each(springs, function(spring, iter){
                 var springView = new SpringView({
                     mvt: this.mvt,
-                    model: spring
+                    model: spring,
+                    width: this.width,
+                    height: this.height
                 });
                 this.springLayer.addChild(springView.displayObject);
             }, this);

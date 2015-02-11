@@ -14,13 +14,10 @@ define(function (require, exports, module) {
      */
     var Constants = require('constants');
 
-    var w = 960;
-    var h = 620;
-
     var SPRINGS = [
-        new Spring({x : 0.15 * w, y1: 0.1 * h}),
-        new Spring({x : 0.30 * w, y1: 0.1 * h}),
-        new Spring({x : 0.45 * w, y1: 0.1 * h})
+        new Spring({x : 0.15, y1: 0.1}),
+        new Spring({x : 0.30, y1: 0.1}),
+        new Spring({x : 0.45, y1: 0.1})
     ];
 
     /**

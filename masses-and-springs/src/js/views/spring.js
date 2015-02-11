@@ -16,9 +16,6 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    // TODO pull this out.
-    var h = 620;
-
     /**
      * A view that represents a movable target model
      */
@@ -27,6 +24,10 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
 
+            this.width = options.width;
+            this.height = options.height;
+
+            this.scaleSpring();
             this.initGraphics();
 
             // this.listenTo(this.model, 'change:state', this.updateState);
@@ -40,19 +41,29 @@ define(function(require) {
             this.displayObject.addChild(this.graphics);
         },
 
-        drawSpring : function(){
+        scaleSpring: function(){
+            this.model.scaled = this.model;
+
+            this.model.scaled.x = this.model.scaled.x * this.width;
+            this.model.scaled.y1 = this.model.scaled.y1 * this.height;
+            this.model.scaled.y2 = this.model.scaled.y2 * this.height;
+            this.model.scaled.restL = this.model.scaled.restL * this.height;
+            this.model.scaled.thickness = this.model.scaled.k * Constants.SpringDefaults.THICKNESS_FACTOR;
+        },
+
+        drawSpring: function(){
 
             var points = this.makeCoilPoints();
             var curve = new PiecewiseCurve();
 
             // set a fill and line style
-            this.graphics.lineStyle(3, Colors.parseHex(Constants.SpringDefaults.COLOR), 1);
+            this.graphics.lineStyle(this.model.scaled.thickness, Colors.parseHex(Constants.SpringDefaults.COLOR), 1);
 
-            // draw a shape
+            // draw curves for spring
             _.each(points, function(point, iter){
-                if(iter === 0){
+                if (iter === 0){
                     curve.moveTo.apply(curve, point);
-                }else if(point.length == 6){
+                }else if (point.length > 4){
                     curve.curveTo.apply(curve, point);
                 }else{
                     curve.lineTo.apply(curve, point);
@@ -64,26 +75,29 @@ define(function(require) {
         },
 
         makeCoilPoints: function(){
-            var points = [];
-            var fromCenter = Constants.SpringDefaults.WIDTH/2;
-            var coilHeight = this.model.restL * h / Constants.SpringDefaults.COILS;
-            var coilCount = 0;
-            var ringRadius = 10;
 
-            this.makeCoilRing(points, this.model.x - ringRadius, this.model.y1 + 0.5 * ringRadius, ringRadius);
+            var points = [];
+            var coilCount = 0;
+
+            this.makeCoilRing(points, this.model.scaled.x, this.model.scaled.y1);
 
             while(coilCount <= Constants.SpringDefaults.COILS){
-                this.makeBezierCoilPoint(points, this.model.x, this.model.y1, fromCenter, coilCount, coilHeight);
+                this.makeBezierCoilPoint(points, this.model.scaled.x, this.model.scaled.y1, coilCount);
                 coilCount ++;
             }
 
-            points[points.length - 1] = [this.model.x, this.model.y1 + coilHeight * (coilCount - 0.5)];
-            points[points.length] = [this.model.x, this.model.y1 + coilHeight * coilCount];
+            this.makeCoilClose(points);
 
             return points;
         },
 
-        makeCoilRing: function(points, x, y, radius){
+        makeCoilRing: function(points, x, y){
+
+            var radius = Constants.SpringDefaults.RING_RADIUS;
+
+            x = x - radius;
+            y = y + 0.5 * radius;
+
             points.push([
                 x + radius, y
             ]);
@@ -99,7 +113,10 @@ define(function(require) {
             ]);
         },
 
-        makeBezierCoilPoint: function(points, x, y, fromCenter, coilCount, coilHeight){
+        makeBezierCoilPoint: function(points, x, y, coilCount){
+            var fromCenter = Constants.SpringDefaults.WIDTH/2;
+            var coilHeight = this.model.scaled.restL / Constants.SpringDefaults.COILS;
+
             points.push([
                 x, y + (coilCount + 0.25) * coilHeight,
                 x + fromCenter, y + (coilCount + 0.25) * coilHeight,
@@ -110,6 +127,11 @@ define(function(require) {
                 x - fromCenter, y + (coilCount + 0.75) * coilHeight,
                 x - fromCenter, y + (coilCount + 1) * coilHeight
             ]);
+        },
+
+        makeCoilClose: function(points){
+            points[points.length - 1] = [this.model.scaled.x, this.model.scaled.y2 + Constants.SpringDefaults.RING_RADIUS];
+            points[points.length] = [this.model.scaled.x, this.model.scaled.y2 + 2 * Constants.SpringDefaults.RING_RADIUS];
         },
 
         updateMVT: function(mvt) {

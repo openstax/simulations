@@ -126,6 +126,8 @@ define(function (require) {
     SpringDefaults.COILS = 9;
     SpringDefaults.WIDTH = 50;
 
+    SpringDefaults.RING_RADIUS = 10;
+    SpringDefaults.THICKNESS_FACTOR = 0.3;
 
     Constants.SpringDefaults = SpringDefaults;
 
