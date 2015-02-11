@@ -149,7 +149,7 @@ define(function (require) {
           model.set('sumVectorRYText', Vectors.round0(ySum/10));
 
           sumVectorContainer.position.x = canvas.width()/2;
-          sumVectorContainer.position.y = canvas.height()/4;
+          sumVectorContainer.position.y = canvas.height()/2;
           sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
 
           this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length);
@@ -157,10 +157,12 @@ define(function (require) {
       },
 
       redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length) {
-        sumVectorContainer.rotation = Math.atan2(ySum, xSum);
         sumVectorTail.clear();
         sumVectorTail.beginFill(0x76EE00);
         sumVectorTail.drawRect(6, 20, 8, length - 20);
+        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
+        sumVectorContainer.rotation = -Math.atan2(ySum, xSum)  + 180/Math.PI *2;
+        console.log(sumVectorContainer.rotation);
       },
 
       deleteArrow: function(model, container) {
