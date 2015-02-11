@@ -18,6 +18,23 @@ define(function (require) {
 
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           SCENE CONSTANTS                           **
+     **                                                                     **
+     *************************************************************************/
+
+     var Scene = {};
+     Scene.DTT = 0.01;  //target time increment in seconds (independent of frame rate)
+     Scene.RATE = 1;    //overall time rate: 1 = normal, 0.5 = halfspeed, 0.25 = quarter speed
+     Scene.PX_PER_METER = 500;  //scale factor f=500  pixels per meter
+     Scene.FPS = 20;    //frames per second of movie
+     Scene.FDT = 1/Scene.FPS;   //time increment for free-falling mass
+     Scene.SOUNDS_ENABLED = true;   //true if sounds enabled; allows user to turn off sounds
+
+     Constants.Scene = Scene;
+
+
 
     /*************************************************************************
      **                                                                     **
@@ -123,7 +140,7 @@ define(function (require) {
 
     // Appearance related
     SpringDefaults.COLOR = colorConstants['cool-gray'];
-    SpringDefaults.COILS = 9;
+    SpringDefaults.COILS = 16;
     SpringDefaults.WIDTH = 50;
 
     SpringDefaults.RING_RADIUS = 10;
