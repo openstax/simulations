@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView           = require('common/app/sim');
+    var MeasuringTapeView = require('common/tools/measuring-tape');
 
     var Presets       = require('models/presets');
     var MSSSimulation = require('models/simulation');
@@ -66,7 +67,10 @@ define(function (require) {
             'click #system-centered-check' : 'changeSystemCentered',
             'click #show-traces-check'     : 'changeShowTraces',
             'click #show-grid-check'       : 'changeShowGrid',
-            'click #tape-measure-check'    : 'changeShowTapeMeasure'
+            'click #tape-measure-check'    : 'changeShowTapeMeasure',
+
+            'click .btn-zoom-in':  'zoomIn',
+            'click .btn-zoom-out': 'zoomOut'
         },
 
         /**
@@ -83,6 +87,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initMeasuringTapeView();
 
             //this.listenTo(this.simulation, 'change:numBodies', this.updateBodyRows);
             this.listenTo(this.simulation, 'change:time',      this.updateTime);
@@ -112,6 +117,26 @@ define(function (require) {
         },
 
         /**
+         * Initializes the MeasuringTapeView.
+         */
+        initMeasuringTapeView: function() {
+            this.measuringTapeView = new MeasuringTapeView({
+                dragFrame: this.el,
+                viewToModelDeltaX: _.bind(function(dx){
+                    return this.sceneView.mvt.viewToModelDeltaX(dx);
+                }, this),
+                viewToModelDeltaY: _.bind(function(dy){
+                    return this.sceneView.mvt.viewToModelDeltaY(dy);
+                }, this),
+                units: '',
+                decimalPlaces: 0
+            });
+            this.listenTo(this.sceneView, 'change:mvt', function() {
+                this.measuringTapeView.updateOnNextFrame = true;
+            });
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
@@ -120,6 +145,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderHelpDialog();
+            this.renderMeasuringTape();
 
             this.bodiesReset(this.simulation, this.simulation.bodies);
 
@@ -174,11 +200,32 @@ define(function (require) {
         },
 
         /**
+         * Renders the MeasuringTapeView
+         */
+        renderMeasuringTape: function() {
+            this.measuringTapeView.render();
+            this.$el.append(this.measuringTapeView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.measuringTapeView.postRender();
+            this.measuringTapeView.setStart(this.sceneView.width * 0.20,  this.sceneView.height * 0.58);
+            this.measuringTapeView.setEnd(  this.sceneView.width * 0.464, this.sceneView.height * 0.58);
+            this.measuringTapeView.hide();
+        },
+
+        /**
+         * Overrides so that we don't rerender on a reset.
+         */
+        rerender: function(event) {
+            this.sceneView.reset();
+            this.updateTime(this.simulatoin, this.simulation.get('time'));
         },
 
         /**
@@ -204,6 +251,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.measuringTapeView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         removeBody: function() {
@@ -357,7 +405,6 @@ define(function (require) {
 
         changeSystemCentered: function(event) {
             this.simulation.set('systemCentered', $(event.target).is(':checked'));
-            console.log($(event.target).is(':checked'));
 
             // Needs to be reset with this algorithm for changes to take effect.
             // this.simulation.pause();
@@ -365,7 +412,10 @@ define(function (require) {
         },
 
         changeShowTraces: function(event) {
-
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
         },
 
         changeShowGrid: function(event) {
@@ -376,13 +426,24 @@ define(function (require) {
         },
 
         changeShowTapeMeasure: function(event) {
-
+            if ($(event.target).is(':checked'))
+                this.measuringTapeView.show();
+            else
+                this.measuringTapeView.hide();
         },
 
         changePreset: function(event) {
             var indexString = $(event.target).val();
             if (indexString !== '')
                 this.simulation.loadPreset(parseInt(indexString));
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
         }
 
     });

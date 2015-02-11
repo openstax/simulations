@@ -1,0 +1,62 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.settings-btn-wrapper {
+    position: absolute;
+    top: 0;
+    right: 30px;
+
+    > .settings-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+    }
+}
+
+#settings-dialog {
+    .modal-header {
+        border-color: #dfdfdf;
+    }
+
+    .modal-body {
+        background: @gray-lightest;
+        padding: 40px 60px;
+        .user-select(none);
+
+        label {
+            margin-bottom: 0;
+        }
+
+        .control-column {
+            text-align: right;
+        }
+
+        #temperature-celsius + label {
+            margin-left: 22px;
+        }
+    }
+
+    .modal-footer {
+        border-color: #dfdfdf;
+    }
+} 
+
+.modal {
+    background: fadeout(#000, 50%);
+}

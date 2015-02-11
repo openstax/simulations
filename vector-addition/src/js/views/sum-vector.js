@@ -50,8 +50,12 @@ define(function (require){
            this.sumVectorContainer.x = x;
            this.sumVectorContainer.y = y;
 
-          //TODO
-          //Vectors.updateComponents();
+          if (this.sumVectorContainer.x >= this.model.get('trashCanPositionX') || this.sumVectorContainer.y >= this.model.get('trashCanPositionY')) {
+            this.model.set('deleteVector', true);
+          }
+          else {
+            this.model.set('deleteVector', false);
+          }
         }
 
       }
@@ -59,6 +63,14 @@ define(function (require){
 
     dragEnd: function(data) {
       this.dragging = false;
+      if (this.sumVectorContainer.position.x >= this.model.get('trashCanPositionX') || this.sumVectorContainer.position.y >= this.model.get('trashCanPositionY')) {
+        if (this.model.set('deleteVector', true)) {
+          Vectors.deleteArrow(this.model, this.sumVectorContainer);
+          this.displayObject.removeChild(this.sumVectorContainer);
+          this.model.set('deleteVector', false);
+          this.model.set('sumVectorVisible', false);
+        }
+      }
     },
 
     sumVector: function(x, y) {

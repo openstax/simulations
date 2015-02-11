@@ -49,7 +49,8 @@ define(function (require) {
 				end:   new Vector2(120, 30),
 				viewToModelDeltaX: function() { return 1; },
 				viewToModelDeltaY: function() { return 1; },
-				units: 'm'
+				units: 'm',
+				decimalPlaces: 2
 			}, options);
 
 			Draggable.prototype.initialize.apply(this, [options]);
@@ -58,6 +59,7 @@ define(function (require) {
 			this.end   = options.end;
 
 			this.units = options.units;
+			this.decimalPlaces = options.decimalPlaces;
 
 			this.viewToModelDeltaX = options.viewToModelDeltaX;
 			this.viewToModelDeltaY = options.viewToModelDeltaY;
@@ -230,7 +232,15 @@ define(function (require) {
 				Math.pow(this.viewToModelDeltaY(this.end.y - this.start.y), 2)
 			);
 
-			this.$label.html(modelLineLength.toFixed(2) + ' ' + this.units);
+			this.$label.html(modelLineLength.toFixed(this.decimalPlaces) + ' ' + this.units);
+		},
+
+		show: function() {
+			this.$el.show();
+		},
+
+		hide: function() {
+			this.$el.hide();
 		}
 	});
 

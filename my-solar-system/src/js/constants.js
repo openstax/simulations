@@ -41,6 +41,21 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                             SCENE VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.GRID_SIZE = 100;
+    SceneView.MIN_SCALE = 0.3;
+    SceneView.MAX_SCALE = 2.0;
+
+    Constants.SceneView = SceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                           COLLISION VIEW                            **
      **                                                                     **
      *************************************************************************/
@@ -54,6 +69,34 @@ define(function (require) {
 
     Constants.CollisionView = CollisionView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                                  BODY                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var BodyView = {};
+
+    BodyView.ARROW_TAIL_WIDTH  = 5;
+    BodyView.ARROW_HEAD_WIDTH  = 17;
+    BodyView.ARROW_HEAD_LENGTH = 17;
+    BodyView.ARROW_COLOR = '#cd2520';
+    BodyView.ARROW_ALPHA = 1;
+    BodyView.VELOCITY_MARKER_COLOR = '#fff';
+    BodyView.VELOCITY_MARKER_ALPHA = 0.5;
+    BodyView.VELOCITY_MARKER_RADIUS = 20;
+    BodyView.VELOCITY_MARKER_THICKNESS = 4;
+    BodyView.VELOCITY_MARKER_FONT = '28px Arial';
+
+    Constants.BodyView = BodyView;
+
+
+    var BodyTraceView = {};
+
+    BodyTraceView.LINE_WIDTH = 3;
+
+    Constants.BodyTraceView = BodyTraceView;
 
 
     return Constants;

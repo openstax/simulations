@@ -9,6 +9,10 @@
 @import "playback-controls.less";
 @import "initial-settings.less";
 
+.sim-view {
+	min-height: 620px;
+}
+
 #sim-my-solar-system.sim-content {
     min-height: 620px;
 }
@@ -18,4 +22,33 @@
     background: rgba(255, 255, 255, 0.18);
 }
 
+#sim-my-solar-system .measuring-tape-view {
 
+	> .measuring-tape {
+		border-color: @gray-lightest;
+
+		> .measuring-tape-handle {
+
+			&:before {
+				border-color: @gray-lightest;
+			}
+
+			&:after {
+				border-color: @gray-lightest;
+			}
+		}
+	}
+
+	> .measuring-tape-label {
+		.animation-name(none);
+	}
+	
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 82px;
+    right: 20px;
+
+    color: #fff;
+}
