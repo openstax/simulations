@@ -136,6 +136,14 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        useKelvin: function() {
+
+        },
+
+        useCelsius: function() {
+            
+        }
+
     });
 
     return SOMSimView;
