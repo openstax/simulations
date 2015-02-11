@@ -24,8 +24,8 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
 
-            this.width = options.width;
-            this.height = options.height;
+            this.sceneWidth = options.sceneWidth;
+            this.sceneHeight = options.sceneHeight;
 
             this.scaleSpring();
             this.initGraphics();
@@ -44,10 +44,10 @@ define(function(require) {
         scaleSpring: function(){
             this.model.scaled = this.model;
 
-            this.model.scaled.x = this.model.scaled.x * this.width;
-            this.model.scaled.y1 = this.model.scaled.y1 * this.height;
-            this.model.scaled.y2 = this.model.scaled.y2 * this.height;
-            this.model.scaled.restL = this.model.scaled.restL * this.height;
+            this.model.scaled.x = this.model.scaled.x * this.sceneWidth;
+            this.model.scaled.y1 = this.model.scaled.y1 * this.sceneHeight;
+            this.model.scaled.y2 = this.model.scaled.y2 * this.sceneHeight;
+            this.model.scaled.restL = this.model.scaled.restL * this.sceneHeight;
             this.model.scaled.thickness = this.model.scaled.k * Constants.SpringDefaults.THICKNESS_FACTOR;
         },
 

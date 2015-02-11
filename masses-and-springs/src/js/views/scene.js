@@ -13,6 +13,7 @@ define(function(require) {
     var PixiSceneView = require('common/pixi/view/scene');
 
     var SpringView = require('views/spring');
+    var BodyView = require('views/body');
 
     var Assets = require('assets');
 
@@ -70,11 +71,16 @@ define(function(require) {
                 var springView = new SpringView({
                     mvt: this.mvt,
                     model: spring,
-                    width: this.width,
-                    height: this.height
+                    sceneWidth: this.width,
+                    sceneHeight: this.height
                 });
                 this.springLayer.addChild(springView.displayObject);
             }, this);
+
+        },
+
+
+        initBodies: function(){
 
         },
 
