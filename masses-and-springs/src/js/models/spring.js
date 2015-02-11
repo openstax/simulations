@@ -33,7 +33,6 @@ define(function (require, exports, module) {
             this.y1 = this.get('y1');       //y position of top of spring
 
             this.restY2(); //y-position of bottom of spring
-
         },
 
         hang: function(body){
@@ -60,11 +59,11 @@ define(function (require, exports, module) {
         },
 
         updateY2 : function(deltaY){
-            this.y2 = this.y1 + this.restL + deltaY;
+            this.y2 = this.y1 + this.restL + (deltaY || 0);
         },
 
         restY2 : function(){
-            this.y2 = this.updateY2(0);
+            this.updateY2(0);
         },
 
         isSnagged : function(){

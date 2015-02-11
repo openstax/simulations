@@ -9,8 +9,8 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var MassesAndSpringsSimulation = require('models/simulation');
+    var MassesAndSpringsSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -34,7 +34,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var TemplateSimView = SimView.extend({
+    var MassesAndSpringsSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -78,14 +78,14 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new MassesAndSpringsSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new MassesAndSpringsSceneView({
                 simulation: this.simulation
             });
         },
@@ -370,5 +370,5 @@ define(function (require) {
         }
     });
 
-    return TemplateSimView;
+    return MassesAndSpringsSimView;
 });

@@ -4,6 +4,9 @@ define(function (require) {
 
 
     var Constants = {}; 
+    var colorConstants = {
+        'cool-gray' : '#768393'
+    };
 
     /*************************************************************************
      **                                                                     **
@@ -117,6 +120,12 @@ define(function (require) {
     var SpringDefaults = {};
     SpringDefaults.REST_L = 0.3;
     SpringDefaults.STIFFNESS = 10;
+
+    // Appearance related
+    SpringDefaults.COLOR = colorConstants['cool-gray'];
+    SpringDefaults.COILS = 9;
+    SpringDefaults.WIDTH = 50;
+
 
     Constants.SpringDefaults = SpringDefaults;
 
