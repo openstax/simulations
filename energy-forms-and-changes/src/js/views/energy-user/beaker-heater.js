@@ -102,9 +102,9 @@ define(function(require) {
             this.backLayer.y = this.frontLayer.y = viewPoint.y;
         },
 
-        update: function(time, deltaTime, simulationPaused) {
+        update: function(time, deltaTime, simulationPaused, timeScale) {
             EnergyUserView.prototype.update.apply(this, [time, deltaTime, simulationPaused]);
-            this.beakerView.update(time, deltaTime, simulationPaused);
+            this.beakerView.update(time, deltaTime, simulationPaused, timeScale);
         },
 
         showEnergyChunks: function() {

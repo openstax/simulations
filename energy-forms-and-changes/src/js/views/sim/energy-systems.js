@@ -238,7 +238,7 @@ define(function (require) {
             this.simulation.update(time, deltaTime);
 
             // Update the scene
-            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'));
+            this.sceneView.update(time / 1000, deltaTime / 1000, this.simulation.get('paused'), this.simulation.get('timeScale'));
         },
 
         elementIconClicked: function(event) {
