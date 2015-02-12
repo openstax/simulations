@@ -30,9 +30,17 @@ define(function(require) {
             this.scaleSpring();
             this.initGraphics();
 
-            // this.listenTo(this.model, 'change:state', this.updateState);
-
             this.updateMVT(this.mvt);
+
+            this.listenTo(this.model, 'change:y2', this.animateSpring);
+            this.listenTo(this.model, 'change:k', this.animateSpring);
+        },
+
+        animateSpring: function(){
+            this.scaleSpring();
+            this.graphics.clear();
+
+            this.drawSpring();
         },
 
         initGraphics: function() {
@@ -42,7 +50,7 @@ define(function(require) {
         },
 
         scaleSpring: function(){
-            this.model.scaled = this.model;
+            this.model.scaled = _.clone(this.model);
 
             this.model.scaled.x = this.model.scaled.x * this.sceneWidth;
             this.model.scaled.y1 = this.model.scaled.y1 * this.sceneHeight;
@@ -81,8 +89,8 @@ define(function(require) {
 
             this.makeCoilRing(points, this.model.scaled.x, this.model.scaled.y1);
 
-            while(coilCount <= Constants.SpringDefaults.COILS){
-                this.makeBezierCoilPoint(points, this.model.scaled.x, this.model.scaled.y1, coilCount);
+            while(coilCount < Constants.SpringDefaults.COILS){
+                this.makeBezierCoilPoint(points, this.model.scaled.x, this.model.scaled.y1 + 2 * Constants.SpringDefaults.RING_RADIUS, coilCount);
                 coilCount ++;
             }
 
@@ -96,7 +104,7 @@ define(function(require) {
             var radius = Constants.SpringDefaults.RING_RADIUS;
 
             x = x - radius;
-            y = y + 0.5 * radius;
+            y = y + 2 * radius;
 
             points.push([
                 x + radius, y
@@ -115,7 +123,7 @@ define(function(require) {
 
         makeBezierCoilPoint: function(points, x, y, coilCount){
             var fromCenter = Constants.SpringDefaults.WIDTH/2;
-            var coilHeight = this.model.scaled.restL / Constants.SpringDefaults.COILS;
+            var coilHeight = (this.model.scaled.y2 - this.model.scaled.y1 - 3 * Constants.SpringDefaults.RING_RADIUS) / Constants.SpringDefaults.COILS;
 
             points.push([
                 x, y + (coilCount + 0.25) * coilHeight,
@@ -130,8 +138,8 @@ define(function(require) {
         },
 
         makeCoilClose: function(points){
-            points[points.length - 1] = [this.model.scaled.x, this.model.scaled.y2 + Constants.SpringDefaults.RING_RADIUS];
-            points[points.length] = [this.model.scaled.x, this.model.scaled.y2 + 2 * Constants.SpringDefaults.RING_RADIUS];
+            points[points.length - 1] = [this.model.scaled.x, this.model.scaled.y2 - Constants.SpringDefaults.RING_RADIUS];
+            points[points.length] = [this.model.scaled.x, this.model.scaled.y2];
         },
 
         updateMVT: function(mvt) {

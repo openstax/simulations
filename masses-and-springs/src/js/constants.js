@@ -140,7 +140,7 @@ define(function (require) {
 
     // Appearance related
     SpringDefaults.COLOR = colorConstants['cool-gray'];
-    SpringDefaults.COILS = 16;
+    SpringDefaults.COILS = 12;
     SpringDefaults.WIDTH = 50;
 
     SpringDefaults.RING_RADIUS = 10;
