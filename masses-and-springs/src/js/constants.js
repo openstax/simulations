@@ -4,6 +4,9 @@ define(function (require) {
 
 
     var Constants = {}; 
+    var colorConstants = {
+        'cool-gray' : '#768393'
+    };
 
     /*************************************************************************
      **                                                                     **
@@ -15,6 +18,21 @@ define(function (require) {
 
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           SCENE CONSTANTS                           **
+     **                                                                     **
+     *************************************************************************/
+
+     var Scene = {};
+     Scene.DTT = 0.01;  //target time increment in seconds (independent of frame rate)
+     Scene.RATE = 1;    //overall time rate: 1 = normal, 0.5 = halfspeed, 0.25 = quarter speed
+     Scene.PX_PER_METER = 500;  //scale factor f=500  pixels per meter
+     Scene.FPS = 20;    //frames per second of movie
+     Scene.FDT = 1/Scene.FPS;   //time increment for free-falling mass
+     Scene.SOUNDS_ENABLED = true;   //true if sounds enabled; allows user to turn off sounds
+
+     Constants.Scene = Scene;
 
 
 
@@ -68,7 +86,68 @@ define(function (require) {
 
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                       SIM SYSTEM EQUATIONS                          **
+     **                                                                     **
+     *************************************************************************/
+
     var SystemEquations = {};
+    SystemEquations.PERIOD = function(mass, springStiffness){
+        return 2 * Math.PI * Math.sqrt(mass/springStiffness);
+    };
+    SystemEquations.KINETIC_ENERGY = function(mass, velocity){
+        return 0.5 * mass * velocity * velocity;
+    };
+    SystemEquations.ELASTIC_POTENTIAL_ENERGY = function(stiffness, deltaY){
+        return 0.5 * stiffness * deltaY * deltaY;
+    };
+    SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY = function(mass, gravity, yPosOfMass){
+        return mass * gravity * yPosOfMass;
+    };
+    SystemEquations.DELTA_THERMAL = function(deltaDeltaY, mass, frictionConstant, velocity2){
+        return deltaDeltaY * mass * frictionConstant * velocity2;
+    };
+    SystemEquations.TOTAL_ENERGY = function(kinetic, elasticPotential, gravitationalPotential, thermal){
+        return kinetic + elasticPotential + gravitationalPotential + thermal;
+    };
+
+
+    SystemEquations.ACCELERATION = function(gravity, stiffness, mass, deltaY, frictionConstant, velocity){
+        return gravity - (stiffness / mass) * deltaY - frictionConstant * velocity;
+    };
+    SystemEquations.VELOCITY2 = function(velocity, acceleration, time){
+        return velocity + acceleration * time;
+    };
+    SystemEquations.DISPLACEMENT = function(velocity, time, acceleration){
+        return velocity * time + 0.5 * acceleration * time * time;
+    };
+
+
+    Constants.SystemEquations = SystemEquations;
+
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                       SIM DEFAULT MODEL VALUES                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var SpringDefaults = {};
+    SpringDefaults.REST_L = 0.3;
+    SpringDefaults.STIFFNESS = 10;
+
+    // Appearance related
+    SpringDefaults.COLOR = colorConstants['cool-gray'];
+    SpringDefaults.COILS = 16;
+    SpringDefaults.WIDTH = 50;
+
+    SpringDefaults.RING_RADIUS = 10;
+    SpringDefaults.THICKNESS_FACTOR = 0.25;
+
+    Constants.SpringDefaults = SpringDefaults;
+
 
 
 
