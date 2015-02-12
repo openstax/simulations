@@ -17,6 +17,7 @@ define(function (require) {
 
     Constants.GRID_SIZE = 10;
     Constants.GRID_OFFSET = 5;
+    Constants.ARROWHEAD_HEIGHT = 20;
 
 
     return Constants;

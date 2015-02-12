@@ -88,7 +88,7 @@ define(function (require){
       this.sumVectorContainer.addChild(this.sumVectorHead);
       this.sumVectorContainer.addChild(this.sumVectorTail);
       this.displayObject.addChild(this.sumVectorContainer);
-
+      
       this.sumVectorContainer.visible = false;
     },
 

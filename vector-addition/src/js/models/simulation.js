@@ -19,7 +19,10 @@ define(function (require) {
       sumVectorRXText: '',
       sumVectorRYText: '',
       labelColor: 'red',
-      deleteVector: false
+      deleteVector: false,
+      componentStyles: 0,
+      red: '0xFF0000',
+      pink: '0xFFB4D9'
     }
 
   });
