@@ -29,9 +29,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            // this.graphics = new PIXI.Graphics();
-            // this.drawBody();
-            // this.displayObject.addChild(this.graphics);
+            this.graphics = new PIXI.Graphics();
+            this.drawBody();
+            this.displayObject.addChild(this.graphics);
 
             // this.bodySprite = Assets.createSprite(Assets.Images.BODY);
             // this.displayObject.addChild(this.bodySprite);
@@ -42,6 +42,15 @@ define(function(require) {
 
 
             this.graphics.clear();
+        },
+
+        drawHook: function(){
+
+
+        },
+
+        drawMass: function(){
+
         },
 
         updateMVT: function(mvt) {
