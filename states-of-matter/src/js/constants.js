@@ -100,6 +100,93 @@ define(function (require) {
     Constants.Atoms = Atoms;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              SIMULATION                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var SOMSimulation = {};
+
+    // The internal model temperature values for the various states.
+    SOMSimulation.SOLID_TEMPERATURE = 0.15;
+    SOMSimulation.SLUSH_TEMPERATURE = 0.33;
+    SOMSimulation.LIQUID_TEMPERATURE = 0.34;
+    SOMSimulation.GAS_TEMPERATURE = 1.0;
+
+    // Constants that control various aspects of the model behavior.
+    SOMSimulation.DEFAULT_MOLECULE = MoleculeTypes.NEON;
+    SOMSimulation.INITIAL_TEMPERATURE = SOMSimulation.SOLID_TEMPERATURE;
+    SOMSimulation.MAX_TEMPERATURE = 50.0;
+    SOMSimulation.MIN_TEMPERATURE = 0.0001;
+    SOMSimulation.INITIAL_GRAVITATIONAL_ACCEL = 0.045;
+    SOMSimulation.MAX_GRAVITATIONAL_ACCEL = 0.4;
+    SOMSimulation.MAX_TEMPERATURE_CHANGE_PER_ADJUSTMENT = 0.025;
+    SOMSimulation.TICKS_PER_TEMP_ADJUSTMENT = 10;
+    SOMSimulation.MIN_INJECTED_MOLECULE_VELOCITY = 0.5;
+    SOMSimulation.MAX_INJECTED_MOLECULE_VELOCITY = 2.0;
+    SOMSimulation.MAX_INJECTED_MOLECULE_ANGLE = Math.PI * 0.8;
+    SOMSimulation.VERLET_CALCULATIONS_PER_CLOCK_TICK = 8;
+
+    // Constants used for setting the phase directly.
+    SOMSimulation.PHASE_SOLID = 1;
+    SOMSimulation.PHASE_LIQUID = 2;
+    SOMSimulation.PHASE_GAS = 3;
+    SOMSimulation.INJECTION_POINT_HORIZ_PROPORTION = 0.95;
+    SOMSimulation.INJECTION_POINT_VERT_PROPORTION = 0.5;
+
+    // Possible thermostat settings.
+    SOMSimulation.NO_THERMOSTAT = 0;
+    SOMSimulation.ISOKINETIC_THERMOSTAT = 1;
+    SOMSimulation.ANDERSEN_THERMOSTAT = 2;
+    SOMSimulation.ADAPTIVE_THERMOSTAT = 3;
+
+    // Parameters to control rates of change of the container size.
+    SOMSimulation.MAX_PER_TICK_CONTAINER_SHRINKAGE = 50;
+    SOMSimulation.MAX_PER_TICK_CONTAINER_EXPANSION = 200;
+
+    // Countdown value used when recalculating temperature when the
+    // container size is changing.
+    SOMSimulation.CONTAINER_SIZE_CHANGE_RESET_COUNT = 25;
+
+    // Range for deciding if the temperature is near the current set point.
+    // The units are internal model units.
+    SOMSimulation.TEMPERATURE_CLOSENESS_RANGE = 0.15;
+
+    // Constant for deciding if a particle should be considered near to the
+    // edges of the container.
+    SOMSimulation.PARTICLE_EDGE_PROXIMITY_RANGE = 2.5;
+
+    // Values used for converting from model temperature to the temperature
+    // for a given particle.
+    SOMSimulation.TRIPLE_POINT_MONATOMIC_MODEL_TEMPERATURE = 0.26;    // Empirically determined.
+    SOMSimulation.CRITICAL_POINT_MONATOMIC_MODEL_TEMPERATURE = 0.8;  // Empirically determined.
+    SOMSimulation.NEON_TRIPLE_POINT_IN_KELVIN = 23;   // Tweaked a little from actual value for better temperature mapping.
+    SOMSimulation.NEON_CRITICAL_POINT_IN_KELVIN = 44;
+    SOMSimulation.ARGON_TRIPLE_POINT_IN_KELVIN = 75;  // Tweaked a little from actual value for better temperature mapping.
+    SOMSimulation.ARGON_CRITICAL_POINT_IN_KELVIN = 151;
+    SOMSimulation.O2_TRIPLE_POINT_IN_KELVIN = 54;
+    SOMSimulation.O2_CRITICAL_POINT_IN_KELVIN = 155;
+    SOMSimulation.WATER_TRIPLE_POINT_IN_KELVIN = 273;
+    SOMSimulation.WATER_CRITICAL_POINT_IN_KELVIN = 647;
+
+    // The following values are used for temperature conversion for the
+    // adjustable molecule.  These are somewhat arbitrary, since in the real
+    // world the values would change if epsilon were changed.  They have been
+    // chosen to be similar to argon, because the default epsilon value is
+    // half of the allowable range, and this value ends up being similar to
+    // argon.
+    SOMSimulation.ADJUSTABLE_ATOM_TRIPLE_POINT_IN_KELVIN = 75;
+    SOMSimulation.ADJUSTABLE_ATOM_CRITICAL_POINT_IN_KELVIN = 140;
+
+    // Min a max values for adjustable epsilon.  Originally there was a wider
+    // allowable range, but the simulation did not work so well, so the range
+    // below was arrived at empirically and seems to work reasonably well.
+    SOMSimulation.MIN_ADJUSTABLE_EPSILON = 1.5 * Atoms.NeonAtom.EPSILON;
+    SOMSimulation.MAX_ADJUSTABLE_EPSILON = StatesOfMatterConstants.EPSILON_FOR_WATER;
+
+    Constants.SOMSimulation = SOMSimulation;
+
 
     return Constants;
 });
