@@ -15,26 +15,11 @@ define(function (require, exports, module) {
      */
     var Constants = require('constants');
 
-    // TODO may move w and h back in here.
-    var SPRINGS = [
-        new Spring({x : 0.15, y1: 0.1}),
-        new Spring({x : 0.30, y1: 0.1}),
-        new Spring({x : 0.45, y1: 0.1})
-    ];
-
-    var BODIES = [
-        new Body({mass : 0.05, x : 0.3, y: 0.8}),
-        new Body({mass : 0.10, x : 0.4, y: 0.8}),
-        new Body({mass : 0.25, x : 0.5, y: 0.8}),
-        new Body({mass : 0.07, x : 0.3, y: 0.8}),
-        new Body({mass : 0.16, x : 0.4, y: 0.8}),
-        new Body({mass : 0.31, x : 0.5, y: 0.8}),
-        new Body({mass : 0.10, x : 0.5, y: 0.8})
-    ];
-
-    var SYSTEMS = [
-
-    ];
+    // Plain object holding initial information about the stage objects
+    // i.e. Springs, Pegs, Bodies, etc.
+    // 
+    // I wanted to isolate that data into it's own file.
+    var Initials = require('initials');
 
 
     /**
@@ -58,16 +43,24 @@ define(function (require, exports, module) {
         initComponents: function() {
 
             this.initSprings();
+            this.initBodies();
+
         },
 
         initSprings: function(){
 
-            this.springs = SPRINGS;
+            this.springs = _.map(Initials.Springs, function(spring){
+                return new Spring(spring);
+            });
+
         },
 
         initBodies: function(){
 
-            this.bodies = BODIES;
+            this.bodies = _.map(Initials.Bodies, function(body){
+                return new Body(body);
+            });
+
         },
 
         _update: function(time, deltaTime) {

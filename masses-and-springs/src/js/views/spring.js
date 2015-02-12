@@ -27,45 +27,44 @@ define(function(require) {
             this.sceneWidth = options.sceneWidth;
             this.sceneHeight = options.sceneHeight;
 
-            this.scaleSpring();
             this.initGraphics();
 
             this.updateMVT(this.mvt);
 
-            this.listenTo(this.model, 'change:y2', this.animateSpring);
-            this.listenTo(this.model, 'change:k', this.animateSpring);
-        },
-
-        animateSpring: function(){
-            this.scaleSpring();
-            this.graphics.clear();
-
-            this.drawSpring();
+            this.listenTo(this.model, 'change:k', this.drawSpring);
+            this.listenTo(this.model, 'change:y2', this.drawSpring);
         },
 
         initGraphics: function() {
-            this.graphics = new PIXI.Graphics();
-            this.drawSpring();
-            this.displayObject.addChild(this.graphics);
+            this.spring = new PIXI.Graphics();
+            this.displayObject.addChild(this.spring);
         },
 
-        scaleSpring: function(){
-            this.model.scaled = _.clone(this.model);
+        calculateSpringViewModel: function(){
+            this.viewModel = this.viewModel || {};
 
-            this.model.scaled.x = this.model.scaled.x * this.sceneWidth;
-            this.model.scaled.y1 = this.model.scaled.y1 * this.sceneHeight;
-            this.model.scaled.y2 = this.model.scaled.y2 * this.sceneHeight;
-            this.model.scaled.restL = this.model.scaled.restL * this.sceneHeight;
-            this.model.scaled.thickness = this.model.scaled.k * Constants.SpringDefaults.THICKNESS_FACTOR;
+            this.viewModel.x = this.model.x * this.sceneWidth;
+            this.viewModel.y1 = this.model.y1 * this.sceneHeight;
+            this.viewModel.y2 = this.model.y2 * this.sceneHeight;
+            this.viewModel.restL = this.model.restL * this.sceneHeight;
+            this.viewModel.thickness = this.model.k * Spring.THICKNESS_FACTOR;
+
+            this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
+            this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1 - 3 * Spring.RING_RADIUS;
+            this.viewModel.color = Colors.parseHex(Spring.COLOR);
         },
 
         drawSpring: function(){
 
-            var points = this.makeCoilPoints();
             var curve = new PiecewiseCurve();
+            var points;
 
+            this.calculateSpringViewModel();
+            points = this.makeCoilPoints();
+
+            this.spring.clear();
             // set a fill and line style
-            this.graphics.lineStyle(this.model.scaled.thickness, Colors.parseHex(Constants.SpringDefaults.COLOR), 1);
+            this.spring.lineStyle(this.viewModel.thickness, this.viewModel.color, 1);
 
             // draw curves for spring
             _.each(points, function(point, iter){
@@ -78,7 +77,7 @@ define(function(require) {
                 }
             }, this);
 
-            this.graphics.drawPiecewiseCurve(curve, 0, 0);
+            this.spring.drawPiecewiseCurve(curve, 0, 0);
 
         },
 
@@ -87,10 +86,10 @@ define(function(require) {
             var points = [];
             var coilCount = 0;
 
-            this.makeCoilRing(points, this.model.scaled.x, this.model.scaled.y1);
+            this.makeCoilRing(points, this.viewModel.x, this.viewModel.y1);
 
-            while(coilCount < Constants.SpringDefaults.COILS){
-                this.makeBezierCoilPoint(points, this.model.scaled.x, this.model.scaled.y1 + 2 * Constants.SpringDefaults.RING_RADIUS, coilCount);
+            while(coilCount < Spring.COILS){
+                this.makeBezierCoilPoint(points, this.viewModel.x, this.viewModel.y1 + this.viewModel.ringOffset, coilCount);
                 coilCount ++;
             }
 
@@ -101,7 +100,7 @@ define(function(require) {
 
         makeCoilRing: function(points, x, y){
 
-            var radius = Constants.SpringDefaults.RING_RADIUS;
+            var radius = Spring.RING_RADIUS;
 
             x = x - radius;
             y = y + 2 * radius;
@@ -122,8 +121,8 @@ define(function(require) {
         },
 
         makeBezierCoilPoint: function(points, x, y, coilCount){
-            var fromCenter = Constants.SpringDefaults.WIDTH/2;
-            var coilHeight = (this.model.scaled.y2 - this.model.scaled.y1 - 3 * Constants.SpringDefaults.RING_RADIUS) / Constants.SpringDefaults.COILS;
+            var fromCenter = Spring.WIDTH/2;
+            var coilHeight = this.viewModel.coilsLength / Spring.COILS;
 
             points.push([
                 x, y + (coilCount + 0.25) * coilHeight,
@@ -138,8 +137,8 @@ define(function(require) {
         },
 
         makeCoilClose: function(points){
-            points[points.length - 1] = [this.model.scaled.x, this.model.scaled.y2 - Constants.SpringDefaults.RING_RADIUS];
-            points[points.length] = [this.model.scaled.x, this.model.scaled.y2];
+            points[points.length - 1] = [this.viewModel.x, this.viewModel.y2 - Spring.RING_RADIUS];
+            points[points.length] = [this.viewModel.x, this.viewModel.y2];
         },
 
         updateMVT: function(mvt) {
@@ -149,7 +148,7 @@ define(function(require) {
             this.drawSpring();
         }
 
-    });
+    }, Constants.SpringDefaults);
 
     return Spring;
 });
