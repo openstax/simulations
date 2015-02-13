@@ -40,18 +40,26 @@ define(function(require) {
             this.displayObject.addChild(this.spring);
         },
 
-        calculateSpringViewModel: function(){
-            this.viewModel = this.viewModel || {};
+        updateSpringViewModel: function(){
 
-            this.viewModel.x = this.model.x * this.sceneWidth;
-            this.viewModel.y1 = this.model.y1 * this.sceneHeight;
+            if(!this.viewModel){
+                // intializing view model, setting static values
+                this.viewModel = {};
+
+                this.viewModel.x = this.model.x * this.sceneWidth;
+                this.viewModel.y1 = this.model.y1 * this.sceneHeight;
+                this.viewModel.restL = this.model.restL * this.sceneHeight;
+
+                this.viewModel.color = Colors.parseHex(Spring.COLOR);
+                this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
+                this.viewModel.coilRadius = Spring.WIDTH/2;
+            }
+
+            // Things that will change and need to update
             this.viewModel.y2 = this.model.y2 * this.sceneHeight;
-            this.viewModel.restL = this.model.restL * this.sceneHeight;
-            this.viewModel.thickness = this.model.k * Spring.THICKNESS_FACTOR;
-
-            this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
             this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1 - 3 * Spring.RING_RADIUS;
-            this.viewModel.color = Colors.parseHex(Spring.COLOR);
+            this.viewModel.coilHeight = this.viewModel.coilsLength / Spring.COILS;
+            this.viewModel.thickness = this.model.k * Spring.THICKNESS_FACTOR;
         },
 
         drawSpring: function(){
@@ -59,8 +67,8 @@ define(function(require) {
             var curve = new PiecewiseCurve();
             var points;
 
-            this.calculateSpringViewModel();
-            points = this.makeCoilPoints();
+            this.updateSpringViewModel();
+            points = this.makeSpringPoints();
 
             this.spring.clear();
             // set a fill and line style
@@ -81,62 +89,57 @@ define(function(require) {
 
         },
 
-        makeCoilPoints: function(){
+        makeSpringPoints: function(){
 
             var points = [];
             var coilCount = 0;
 
-            this.makeCoilRing(points, this.viewModel.x, this.viewModel.y1);
+            this.makeHangRing(points, this.viewModel.x, this.viewModel.y1);
 
             while(coilCount < Spring.COILS){
-                this.makeBezierCoilPoint(points, this.viewModel.x, this.viewModel.y1 + this.viewModel.ringOffset, coilCount);
+                this.makeCoil(points, this.viewModel.x, this.viewModel.y1 + this.viewModel.ringOffset, coilCount);
                 coilCount ++;
             }
 
-            this.makeCoilClose(points);
+            this.makeSpringEnd(points);
 
             return points;
         },
 
-        makeCoilRing: function(points, x, y){
+        makeHangRing: function(points, x, y){
 
-            var radius = Spring.RING_RADIUS;
-
-            x = x - radius;
-            y = y + 2 * radius;
+            x = x - Spring.RING_RADIUS;
+            y = y + 2 * Spring.RING_RADIUS;
 
             points.push([
-                x + radius, y
+                x + Spring.RING_RADIUS, y
             ]);
             points.push([
-                x + (2 * radius), y,
-                x + (2 * radius), y - (1.5 * radius),
-                x + radius, y - (1.5 * radius)
+                x + (2 * Spring.RING_RADIUS), y,
+                x + (2 * Spring.RING_RADIUS), y - (1.5 * Spring.RING_RADIUS),
+                x + Spring.RING_RADIUS, y - (1.5 * Spring.RING_RADIUS)
             ]);
             points.push([
-                x, y - (1.5 * radius),
+                x, y - (1.5 * Spring.RING_RADIUS),
                 x, y,
-                x + radius, y
+                x + Spring.RING_RADIUS, y
             ]);
         },
 
-        makeBezierCoilPoint: function(points, x, y, coilCount){
-            var fromCenter = Spring.WIDTH/2;
-            var coilHeight = this.viewModel.coilsLength / Spring.COILS;
-
+        makeCoil: function(points, x, y, coilCount){
             points.push([
-                x, y + (coilCount + 0.25) * coilHeight,
-                x + fromCenter, y + (coilCount + 0.25) * coilHeight,
-                x + fromCenter, y + (coilCount + 0.5) * coilHeight
+                x, y + (coilCount + 0.25) * this.viewModel.coilHeight,
+                x + this.viewModel.coilRadius, y + (coilCount + 0.25) * this.viewModel.coilHeight,
+                x + this.viewModel.coilRadius, y + (coilCount + 0.5) * this.viewModel.coilHeight
             ]);
             points.push([
-                x, y + (coilCount + 0.75) * coilHeight,
-                x - fromCenter, y + (coilCount + 0.75) * coilHeight,
-                x - fromCenter, y + (coilCount + 1) * coilHeight
+                x, y + (coilCount + 0.75) * this.viewModel.coilHeight,
+                x - this.viewModel.coilRadius, y + (coilCount + 0.75) * this.viewModel.coilHeight,
+                x - this.viewModel.coilRadius, y + (coilCount + 1) * this.viewModel.coilHeight
             ]);
         },
 
-        makeCoilClose: function(points){
+        makeSpringEnd: function(points){
             points[points.length - 1] = [this.viewModel.x, this.viewModel.y2 - Spring.RING_RADIUS];
             points[points.length] = [this.viewModel.x, this.viewModel.y2];
         },
