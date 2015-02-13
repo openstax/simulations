@@ -59,8 +59,10 @@ define(function(require) {
             this.viewModel.x = this.model.x * this.sceneWidth;
             this.viewModel.y = this.model.y * this.sceneHeight;
 
+
             this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
             this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
+            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
 
             this.viewModel.color = Colors.parseHex(this.model.color);
         },
@@ -68,7 +70,6 @@ define(function(require) {
         drawBody : function(){
 
             this.calculateBodyViewModel();
-
 
             this.body.clear();
             this.body.buttonMode = true;
@@ -81,10 +82,13 @@ define(function(require) {
 
         drawHook: function(){
 
-            // var hook = new PiecewiseCurve();
-            // hook.moveTo();
+            var hook = new PiecewiseCurve();
+
+            hook.moveTo(this.viewModel.x, this.viewModel.y);
+            hook.curveTo([]);
 
             this.body.lineStyle(2, this.viewModel.color, 1);
+            this.body.drawPiecewiseCurve(hook, 0, 0);
 
         },
 
@@ -120,7 +124,7 @@ define(function(require) {
 
         dropBody: function(){
 
-            if(this.model.spring){
+            if(this.model.isHung()){
 
             }else{
 
