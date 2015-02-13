@@ -50,6 +50,8 @@ define(function(require) {
                 this.viewModel.y1 = this.model.y1 * this.sceneHeight;
                 this.viewModel.restL = this.model.restL * this.sceneHeight;
 
+                this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
+
                 this.viewModel.color = Colors.parseHex(Spring.COLOR);
                 this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
                 this.viewModel.coilRadius = Spring.WIDTH/2;
@@ -88,7 +90,7 @@ define(function(require) {
             curve.close();
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
-
+            this.spring.hitArea = new PIXI.Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, Spring.RING_RADIUS);
         },
 
         makeSpringPoints: function(){

@@ -70,11 +70,6 @@ define(function(require) {
             this.viewModel.hookThickness = 2.5;
             this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
-            this.viewModel.hookTop = this.viewModel.top - this.viewModel.hookHeight;
-            this.viewModel.hookBottom = this.viewModel.hookTop + 2 * this.viewModel.hookRadius;
-            this.viewModel.hookLeft = this.viewModel.center - this.viewModel.hookRadius;
-            this.viewModel.hookRight = this.viewModel.center + this.viewModel.hookRadius;
-            this.viewModel.hookMiddle = this.viewModel.hookTop + this.viewModel.hookRadius;
         },
 
         drawBody : function(){
@@ -91,29 +86,40 @@ define(function(require) {
 
         drawHook: function(){
 
-            var hook = new PiecewiseCurve()
-                .moveTo(this.viewModel.center, this.viewModel.top)
-                .lineTo(this.viewModel.center, this.viewModel.hookBottom)
-                .curveTo(
-                    this.viewModel.hookLeft, this.viewModel.hookBottom,
-                    this.viewModel.hookRight, this.viewModel.hookBottom,
-                    this.viewModel.hookRight, this.viewModel.hookMiddle
-                )
-                .curveTo(
-                    this.viewModel.hookRight, this.viewModel.hookTop,
-                    this.viewModel.hookLeft, this.viewModel.hookTop,
-                    this.viewModel.hookLeft, this.viewModel.hookMiddle
-                );
-
-            hook.close();
+            this.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
 
             this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.color, 1);
-            this.body.drawPiecewiseCurve(hook, 0, 0);
+            this.body.drawPiecewiseCurve(this.hook, 0, 0);
+        },
+
+        makeHook: function(center, hookBase){
+
+            var hookTop = hookBase - this.viewModel.hookHeight;
+            var hookBottom = hookTop + 2 * this.viewModel.hookRadius;
+            var hookLeft = center - this.viewModel.hookRadius;
+            var hookRight = center + this.viewModel.hookRadius;
+            var hookMiddle = hookTop + this.viewModel.hookRadius;
+
+            return new PiecewiseCurve()
+                .moveTo(center, hookBase)
+                .lineTo(center, hookBottom)
+                .curveTo(
+                    hookLeft, hookBottom,
+                    hookRight, hookBottom,
+                    hookRight, hookMiddle
+                )
+                .curveTo(
+                    hookRight, hookTop,
+                    hookLeft, hookTop,
+                    hookLeft, hookMiddle
+                )
+                .close();
         },
 
         drawMass: function(){
             this.body.beginFill(this.viewModel.color, 1);
             this.body.drawRect(this.viewModel.left, this.viewModel.top, this.viewModel.width, this.viewModel.height);
+            // this.body.drawRect(this.sceneWidth/2, this.sceneHeight/2, 200, 200);
             this.body.endFill();
         },
 
@@ -123,7 +129,7 @@ define(function(require) {
         },
 
         dragEnd: function(data){
-            this.grabbed = false;
+            this.checkIntersect();
             this.dropBody();
         },
 
@@ -132,16 +138,30 @@ define(function(require) {
 
                 var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
                 var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
-                
+
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
 
-                this.model.set('x', this.displayObject.x/this.sceneWidth);
-                this.model.set('y', this.displayObject.y/this.sceneHeight);
+                // this.updateModelPosition();
             }
         },
 
+        updateModelPosition: function(){
+            // TODO
+            // this is probably wrong.  will need to check this.
+            this.model.set('x', this.displayObject.x/this.sceneWidth);
+            this.model.set('y', this.displayObject.y/this.sceneHeight);
+        },
+
+        checkIntersect: function(){
+
+            // TODO broadcast event to global system for it to check intersect.
+
+        },
+
         dropBody: function(){
+
+            this.grabbed = false;
 
             if(this.model.isHung()){
 
