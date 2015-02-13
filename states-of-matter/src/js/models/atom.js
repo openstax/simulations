@@ -35,6 +35,9 @@ define(function (require) {
             return _.clone(this);
         }
 
+        // The original atom model had listeners, but it's only
+        //   necessary in the advanced and developer modes.
+
     });
 
 
