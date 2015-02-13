@@ -59,12 +59,22 @@ define(function(require) {
             this.viewModel.x = this.model.x * this.sceneWidth;
             this.viewModel.y = this.model.y * this.sceneHeight;
 
-
             this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
             this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
-            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
 
+            this.viewModel.left = this.viewModel.x;
+            this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
+            this.viewModel.top = this.viewModel.y - this.viewModel.height;
             this.viewModel.color = Colors.parseHex(this.model.color);
+
+            this.viewModel.hookThickness = 2.5;
+            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
+            this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
+            this.viewModel.hookTop = this.viewModel.top - this.viewModel.hookHeight;
+            this.viewModel.hookBottom = this.viewModel.hookTop + 2 * this.viewModel.hookRadius;
+            this.viewModel.hookLeft = this.viewModel.center - this.viewModel.hookRadius;
+            this.viewModel.hookRight = this.viewModel.center + this.viewModel.hookRadius;
+            this.viewModel.hookMiddle = this.viewModel.hookTop + this.viewModel.hookRadius;
         },
 
         drawBody : function(){
@@ -77,24 +87,33 @@ define(function(require) {
 
             this.drawHook();
             this.drawMass();
-
         },
 
         drawHook: function(){
 
-            var hook = new PiecewiseCurve();
+            var hook = new PiecewiseCurve()
+                .moveTo(this.viewModel.center, this.viewModel.top)
+                .lineTo(this.viewModel.center, this.viewModel.hookBottom)
+                .curveTo(
+                    this.viewModel.hookLeft, this.viewModel.hookBottom,
+                    this.viewModel.hookRight, this.viewModel.hookBottom,
+                    this.viewModel.hookRight, this.viewModel.hookMiddle
+                )
+                .curveTo(
+                    this.viewModel.hookRight, this.viewModel.hookTop,
+                    this.viewModel.hookLeft, this.viewModel.hookTop,
+                    this.viewModel.hookLeft, this.viewModel.hookMiddle
+                );
 
-            hook.moveTo(this.viewModel.x, this.viewModel.y);
-            hook.curveTo([]);
+            hook.close();
 
-            this.body.lineStyle(2, this.viewModel.color, 1);
+            this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.color, 1);
             this.body.drawPiecewiseCurve(hook, 0, 0);
-
         },
 
         drawMass: function(){
             this.body.beginFill(this.viewModel.color, 1);
-            this.body.drawRect(this.viewModel.x, this.viewModel.y - this.viewModel.height, this.viewModel.width, this.viewModel.height);
+            this.body.drawRect(this.viewModel.left, this.viewModel.top, this.viewModel.width, this.viewModel.height);
             this.body.endFill();
         },
 
@@ -129,7 +148,6 @@ define(function(require) {
             }else{
 
             }
-
         },
 
         updateMVT: function(mvt) {

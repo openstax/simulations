@@ -58,7 +58,7 @@ define(function (require, exports, module) {
         },
 
         isHung: function(){
-            return _.isDefined(this.spring);
+            return !_.isUndefined(this.spring);
         }
 
 

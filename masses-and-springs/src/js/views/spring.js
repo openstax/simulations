@@ -85,6 +85,8 @@ define(function(require) {
                 }
             }, this);
 
+            curve.close();
+
             this.spring.drawPiecewiseCurve(curve, 0, 0);
 
         },

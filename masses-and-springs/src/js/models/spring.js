@@ -78,7 +78,7 @@ define(function (require, exports, module) {
         },
 
         isSnagged : function(){
-            return _.isDefined(this.body);
+            return !_.isUndefined(this.body);
         }
 
     });
