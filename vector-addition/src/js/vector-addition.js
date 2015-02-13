@@ -4,7 +4,6 @@ define(function (require) {
 
     $ = require('jquery');
     var PIXI = require('pixi');
-    var ArrowsCollection = require('collections/arrows');
     var Constants = require('constants')
 
     var Vectors = {
@@ -28,29 +27,28 @@ define(function (require) {
         vectorTail.defaultCursor = defaultCursor;
       },
 
-      updateReadouts: function(arrowModel, model, x, y, length, degrees) {
-        if (arrowModel !== undefined) {
-          arrowModel.set('length', length);
-          arrowModel.set('degrees', degrees);
-          arrowModel.set('x', x);
-          arrowModel.set('y', y);
-          arrowModel.set('rText', Vectors.padZero(Vectors.round1(length/10)));
-          arrowModel.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
-          arrowModel.set('rXText', Vectors.round0(x/10));
-          arrowModel.set('rYText', Vectors.round0(y/10));
+      updateReadouts: function(container, model, arrowModel, x, y, length, degrees) {
+        var width = x;
+        var height = y;
+
+        if (arrowModel.get('targetX') < arrowModel.get('originX')) {
+          width = -width;
         }
 
+        if (arrowModel.get('targetY') > arrowModel.get('originY')) {
+          height = -height;
+        }
+
+        arrowModel.set('degrees', Vectors.calculateDegrees(width, height));
         model.set('rText', Vectors.padZero(Vectors.round1(length/10)));
         model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
         model.set('rXText', Vectors.round0(x/10));
         model.set('rYText', Vectors.round0(y/10));
-        $('label').removeClass('green');
       },
 
       updateComponents: function(model, vector, vectorX, vectorY) {
         var xV = vector.x;
         var yV = vector.y;
-        console.log(xV, yV)
 
         this.vectorRotations(xV, yV, vectorX, vectorY);
 
@@ -117,63 +115,38 @@ define(function (require) {
       },
 
       componentStyles3: function(xV, xY, vectorX, vectorY) {
-        var canvas = $('.scene-view');
 
-      //TODO
-      // xVector_mc._y = stageH - thisHere._y - (5-nbrVectors*0.2)*gridSize;
-      // yVector_mc._x = -thisHere._x + (5-nbrVectors*0.2)*gridSize;
-      // hLineT._x = -thisHere._x + 5*gridSize;
-      // hLineT._y = yV;
-      // hLineT._width = thisHere._x + xV - 5*gridSize;
-      // hLineB._x = -thisHere._x + 5*gridSize;
-      // hLineB._width = thisHere._x - 5*gridSize;
-      // vLineL._y = stageH - thisHere._y - 5*gridSize;
-      // vLineL._height = stageH - thisHere._y - 5*gridSize ;
-      // vLineR._x = xV;
-      // vLineR._y = stageH - thisHere._y - 5*gridSize;
-      // vLineR._height = stageH - thisHere._y  - 5*gridSize - yV;
     },
 
-      sum: function(model, sumVectorContainer, sumVectorTail) {
-        var xSum = 0;
-        var ySum = 0;
-        if (model.get('arrows') !== undefined) {
-          var arrows = model.get('arrows').models;
-          var canvas = $('.scene-view');
+      sum: function(model, sumVectorModel, sumVectorContainer, sumVectorView) {
+        var length = 0;
+        var degrees = 0;
 
+        if (model.arrowCollection.length > 0) {
+            var arrows = model.arrowCollection.models;
           _.each(arrows, function(arrow) {
-            xSum += arrow.get('x');
-            ySum += arrow.get('y');
+            length += arrow.get('length');
+            degrees += arrow.get('degrees');
           });
 
-          var length = Math.sqrt(xSum * xSum + ySum * ySum);
-          var degrees = (180/Math.PI) * Math.atan2(ySum, xSum);
-
-          model.set('sumVectorRText', Vectors.padZero(Vectors.round1(length/10)));
-          model.set('sumVectorThetaText', Vectors.padZero(Vectors.round1(degrees)));
-          model.set('sumVectorRXText', Vectors.round0(xSum/10));
-          model.set('sumVectorRYText', Vectors.round0(ySum/10));
-
-          sumVectorContainer.position.x = canvas.width()/2;
-          sumVectorContainer.position.y = canvas.height()/2;
-          sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
-
-          this.redrawSumVector(sumVectorContainer, sumVectorTail, ySum, xSum, length);
+          sumVectorModel.set('length', length);
+          this.redrawSumVector(model, sumVectorView, sumVectorModel);
         }
       },
 
-      redrawSumVector: function(sumVectorContainer, sumVectorTail, ySum, xSum, length) {
-        sumVectorTail.clear();
-        sumVectorTail.beginFill(0x76EE00);
-        sumVectorTail.drawRect(6, 20, 8, length - 20);
-        sumVectorContainer.pivot.set(sumVectorContainer.width/2, sumVectorContainer.height);
-        sumVectorContainer.rotation = -Math.atan2(ySum, xSum)  + 180/Math.PI *2;
-      },
+      redrawSumVector: function(model, sumVectorView, sumVectorModel) {
+        sumVectorView.tailGraphics.clear();
+        sumVectorView.headGraphics.clear();
 
-      deleteArrow: function(model, container) {
-        var arrows = model.get('arrows');
-        var arrowToRemove = arrows.indexOf(container.index);
-        arrows.remove(arrowToRemove);
+        sumVectorView.tailGraphics.beginFill(model.get('green'));
+        sumVectorView.tailGraphics.drawRect(0, -sumVectorView.tailWidth / 2, sumVectorModel.get('length') - sumVectorView.headLength, sumVectorView.tailWidth);
+        sumVectorView.tailGraphics.endFill();
+
+        sumVectorView.headGraphics.beginFill(model.get('green'));
+        sumVectorView.headGraphics.moveTo(sumVectorModel.get('length'), 0);
+        sumVectorView.headGraphics.lineTo(sumVectorModel.get('length') - sumVectorView.headLength,  sumVectorView.headWidth / 2);
+        sumVectorView.headGraphics.lineTo(sumVectorModel.get('length') - sumVectorView.headLength, -sumVectorView.headWidth / 2);
+        sumVectorView.headGraphics.endFill();
       },
 
       calculateLength: function(x, y) {
