@@ -34,6 +34,9 @@ define(function (require, exports, module) {
             this.y = this.get('y');
             this.color = this.get('color');
 
+            this.on('change:x', this.xChanged);
+            this.on('change:y', this.yChanged);
+
         },
 
         hangOn: function(spring){
@@ -55,6 +58,14 @@ define(function (require, exports, module) {
             // this.body.spring = undefined;
 
             this.hangOn(undefined);
+        },
+
+        xChanged: function(model, x){
+            this.x = x;
+        },
+
+        yChanged: function(model, y){
+            this.y = y;
         },
 
         isHung: function(){

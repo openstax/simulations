@@ -39,53 +39,58 @@ define(function(require) {
             this.sceneWidth = options.sceneWidth;
             this.sceneHeight = options.sceneHeight;
 
-            this._dragOffset   = new PIXI.Point();
             this.initGraphics();
 
-            // this.listenTo(this.model, 'change:state', this.updateState);
+            this.listenTo(this.model, 'change:y', this.updatePosition);
 
             this.updateMVT(this.mvt);
         },
 
         initGraphics: function() {
+            // reference point for drag delta x and y
+            this._dragOffset   = new PIXI.Point();
+
             this.body = new PIXI.Graphics();
             this.displayObject.addChild(this.body);
         },
 
         calculateBodyViewModel: function(){
 
-            this.viewModel = this.viewModel || {};
+            if(!this.viewModel){
+                this.viewModel = {};
 
-            this.viewModel.x = this.model.x * this.sceneWidth;
-            this.viewModel.y = this.model.y * this.sceneHeight;
+                // TODO need a non-linear equation for mass to dimensions because the 
+                // lightest weights are tiny right now.
+                this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
+                this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
 
-            this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
-            this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
+                this.viewModel.color = Colors.parseHex(this.model.color);
 
-            this.viewModel.left = this.viewModel.x;
+                this.viewModel.hookThickness = 2.5;
+                this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
+                this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
+            }
+
+            this.viewModel.left = this.model.x * this.sceneWidth;
+            this.viewModel.bottom = this.model.y * this.sceneHeight;
+
+            this.viewModel.top = this.viewModel.bottom - this.viewModel.height;
             this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
-            this.viewModel.top = this.viewModel.y - this.viewModel.height;
-            this.viewModel.color = Colors.parseHex(this.model.color);
-
-            this.viewModel.hookThickness = 2.5;
-            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
-            this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
         },
 
         drawBody : function(){
-
             this.calculateBodyViewModel();
+            this.clearPositionOffsets();
 
             this.body.clear();
             this.body.buttonMode = true;
             this.body.defaultCursor = 'move';
 
             this.drawHook();
-            this.drawMass();
+            this.drawBlock();
         },
 
         drawHook: function(){
-
             this.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
 
             this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.color, 1);
@@ -93,7 +98,6 @@ define(function(require) {
         },
 
         makeHook: function(center, hookBase){
-
             var hookTop = hookBase - this.viewModel.hookHeight;
             var hookBottom = hookTop + 2 * this.viewModel.hookRadius;
             var hookLeft = center - this.viewModel.hookRadius;
@@ -116,10 +120,9 @@ define(function(require) {
                 .close();
         },
 
-        drawMass: function(){
+        drawBlock: function(){
             this.body.beginFill(this.viewModel.color, 1);
             this.body.drawRect(this.viewModel.left, this.viewModel.top, this.viewModel.width, this.viewModel.height);
-            // this.body.drawRect(this.sceneWidth/2, this.sceneHeight/2, 200, 200);
             this.body.endFill();
         },
 
@@ -129,45 +132,46 @@ define(function(require) {
         },
 
         dragEnd: function(data){
+            this.updateModelPosition();
             this.checkIntersect();
             this.dropBody();
         },
 
         drag: function(data){
             if(this.grabbed){
-
                 var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
                 var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
-
-                // this.updateModelPosition();
             }
         },
 
         updateModelPosition: function(){
-            // TODO
-            // this is probably wrong.  will need to check this.
-            this.model.set('x', this.displayObject.x/this.sceneWidth);
-            this.model.set('y', this.displayObject.y/this.sceneHeight);
+            var newX = this.viewModel.left + this.displayObject.x;
+            var newY = this.viewModel.bottom + this.displayObject.y;
+
+            this.model.set('x', newX/this.sceneWidth);
+            this.model.set('y', newY/this.sceneHeight);
+        },
+
+        clearPositionOffsets: function(){
+            // clear position offsets
+            this.displayObject.x = 0;
+            this.displayObject.y = 0;
+        },
+
+        updatePosition: function(){
+            this.drawBody();
         },
 
         checkIntersect: function(){
-
             // TODO broadcast event to global system for it to check intersect.
 
         },
 
         dropBody: function(){
-
             this.grabbed = false;
-
-            if(this.model.isHung()){
-
-            }else{
-
-            }
         },
 
         updateMVT: function(mvt) {
