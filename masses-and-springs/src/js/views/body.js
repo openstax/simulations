@@ -65,8 +65,9 @@ define(function(require) {
                 this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
 
                 this.viewModel.color = Colors.parseHex(this.model.color);
+                this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
 
-                this.viewModel.hookThickness = 2.5;
+                this.viewModel.hookThickness = 3;
                 this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
                 this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
             }
@@ -93,7 +94,7 @@ define(function(require) {
         drawHook: function(){
             this.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
 
-            this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.color, 1);
+            this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
             this.body.drawPiecewiseCurve(this.hook, 0, 0);
         },
 
