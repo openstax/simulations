@@ -19,7 +19,8 @@ define(function(require) {
             targetY: 0,
 
             minLength: 25,
-            maxLength: null
+            maxLength: null,
+            length: 0
         }
     });
 
@@ -79,9 +80,11 @@ define(function(require) {
                 length = this.headLength;
             }
 
+            this.model.set('length', length);
+
             var tail = this.tailGraphics;
             var head = this.headGraphics;
-            
+
             // Draw it pointing straight to the right and then rotate it.
             tail.clear();
             head.clear();

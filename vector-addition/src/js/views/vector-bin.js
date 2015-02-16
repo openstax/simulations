@@ -4,9 +4,9 @@ define(function(require) {
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
+  var ArrowView = require('views/arrows');
   var Assets = require('assets');
   var Constants = require('constants');
-  var ArrowView = require('views/arrows');
 
   var VectorBinView = PixiView.extend({
 

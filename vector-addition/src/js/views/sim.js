@@ -96,11 +96,8 @@ define(function (require) {
         },
 
         clearArrows: function() {
-          if (this.simulation.get('arrows') !== undefined) {
-            var arrowsCollection = this.simulation.get('arrows');
-            var arrows = arrowsCollection.models.slice(1);
-
-            arrowsCollection.remove(arrows);
+          if (this.simulation.arrowCollection !== undefined) {
+            this.simulation.arrowCollection.remove(this.arrows);
             this.simulation.set('sumVectorVisible', false);
             this.simulation.set('emptyStage', true);
             this.$el.find('label').removeClass('green');
@@ -127,7 +124,7 @@ define(function (require) {
 
         showSum: function() {
           var sumBox = this.$el.find('#show-sum');
-          if (sumBox.is(':checked') && this.simulation.get('arrows') !== undefined) {
+          if (sumBox.is(':checked') && this.simulation.arrowCollection.length > 0) {
             this.simulation.set('sumVectorVisible', true);
           }
           else {

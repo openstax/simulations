@@ -7,7 +7,7 @@ define(function (require) {
 
   var ComponentVectors = {
 
-    drawVectorX: function(model, length, arrowHead, container) {
+    drawVectorX: function(model, length, container) {
       this.vectorX = new PIXI.DisplayObjectContainer();
 
       var vectorHeadX = new PIXI.Graphics();
@@ -15,17 +15,17 @@ define(function (require) {
       this.vectorHeadX = vectorHeadX;
 
       var vectorTailX = new PIXI.Graphics();
-      Vectors.drawVectorTail(vectorTailX, model.get('pink'), length, true, true);
+      Vectors.drawVectorTail(vectorTailX, model.get('pink'), Vectors.padZero(Vectors.round1(length/10)), true, true);
       this.vectorTailX = vectorTailX;
 
       this.vectorX.addChild(vectorHeadX);
       this.vectorX.addChild(vectorTailX);
-      this.vectorX.visible = false;
+      this.vectorX.visible = true;
 
       return this.vectorX;
     },
 
-    drawVectorY: function(model, length, arrowHead, container, height) {
+    drawVectorY: function(model, length, container, height) {
       this.vectorY = new PIXI.DisplayObjectContainer();
 
       var vectorHeadY = new PIXI.Graphics();
