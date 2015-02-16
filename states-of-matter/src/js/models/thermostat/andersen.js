@@ -12,8 +12,8 @@ define(function(require) {
      * This class implements what is known as an Andersen Thermostat for adjusting
      *   the kinetic energy in a set of molecules toward a desired setpoint.
      */
-    var AndersenThermostat = function() {
-        Thermostat.apply(this);
+    var AndersenThermostat = function(moleculeDataSet, minTemperature) {
+        Thermostat.apply(this, [moleculeDataSet, minTemperature]);
     };
 
     _.extend(AndersenThermostat.prototype, Thermostat.prototype, {
@@ -23,7 +23,7 @@ define(function(require) {
             var gammaY = gammaX;
             var temperature = this.targetTemperature;
 
-            if ( temperature <= m_minModelTemperature ) {
+            if (temperature <= this.minModelTemperature) {
                 // Use a values that will cause the molecules to stop
                 //   moving if we are below the minimum temperature, since
                 //   we want to create the appearance of absolute zero.

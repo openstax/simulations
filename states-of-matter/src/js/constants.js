@@ -188,5 +188,32 @@ define(function (require) {
     Constants.SOMSimulation = SOMSimulation;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                         PHASE STATE CHANGER                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhaseStateChanger = {};
+
+    PhaseStateChanger.SOLID  = 1;
+    PhaseStateChanger.LIQUID = 2;
+    PhaseStateChanger.GAS    = 3;
+
+    PhaseStateChanger.DISTANCE_BETWEEN_PARTICLES_IN_CRYSTAL = 0.12;  // In particle diameters.
+    PhaseStateChanger.MAX_PLACEMENT_ATTEMPTS = 500; // For random placement of particles.
+    PhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE = 2.5;
+
+    Constants.PhaseStateChanger = PhaseStateChanger;
+
+
+    var MonatomicPhaseStateChanger = {};
+
+    MonatomicPhaseStateChanger.MIN_INITIAL_INTER_PARTICLE_DISTANCE = 1.12;
+
+    Constants.MonatomicPhaseStateChanger = MonatomicPhaseStateChanger;
+
+
+
     return Constants;
 });

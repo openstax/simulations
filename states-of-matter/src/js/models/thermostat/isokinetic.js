@@ -12,8 +12,8 @@ define(function(require) {
      * This class implements what is known as an Andersen Thermostat for adjusting
      *   the kinetic energy in a set of molecules toward a desired setpoint.
      */
-    var IsokineticThermostat = function() {
-        Thermostat.apply(this);
+    var IsokineticThermostat = function(moleculeDataSet, minTemperature) {
+        Thermostat.apply(this, [moleculeDataSet, minTemperature]);
     };
 
     _.extend(IsokineticThermostat.prototype, Thermostat.prototype, {

@@ -425,7 +425,7 @@ define(function (require, exports, module) {
 
         /*************************************************************************
          **                                                                     **
-         **                   VALUE CALCULATIONS / CONVERSIONS                  **
+         **             VALUE CALCULATIONS / CONVERSIONS / ACCESSORS            **
          **                                                                     **
          *************************************************************************/
 
@@ -610,6 +610,14 @@ define(function (require, exports, module) {
             }
 
             return temperatureInKelvin;
+        },
+
+        getNormalizedContainerWidth: function() {
+            return this.normalizedContainerWidth;
+        },
+
+        getNormalizedContainerHeight: function() {
+            return this.normalizedContainerHeight;
         },
 
 
