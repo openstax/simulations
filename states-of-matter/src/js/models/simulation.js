@@ -25,13 +25,14 @@ define(function (require, exports, module) {
             particleContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
             targetContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
             heatingCoolingAmount: 0,
-            moleculeType: MoleculeTypes.NEON
+            temperatureSetPoint: 0,
+            moleculeType: S.DEFAULT_MOLECULE
         }),
 
         // this.atomPositionUpdater;
         // this.moleculeForceAndMotionCalculator = new NullMoleculeForceAndMotionCalculator();
         // this.phaseStateChanger;
-        // this.isoKineticThermostat;
+        // this.isokineticThermostat;
         // this.andersenThermostat;
 
         // // Attributes of the container and simulation as a whole.
@@ -75,6 +76,7 @@ define(function (require, exports, module) {
 
             this.on('change:moleculeType', this.moleculeTypeChanged);
             this.on('change:targetContainerHeight', this.targetContainerHeightChanged);
+            this.on('change:temperatureSetPoint', this.temperatureSetPointChanged);
         },
 
         /**
@@ -190,7 +192,7 @@ define(function (require, exports, module) {
             this.phaseStateChanger = new MonatomicPhaseStateChanger(this);
             this.atomPositionUpdater = new MonatomicAtomPositionUpdater();
             this.moleculeForceAndMotionCalculator = new MonatomicVerletAlgorithm(this);
-            this.isoKineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
+            this.isokineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
             this.andersenThermostat = new AndersenThermostat(this.moleculeDataSet, this.minModelTemperature);
 
             // Create the individual atoms and add them to the data set.
@@ -265,7 +267,7 @@ define(function (require, exports, module) {
             this.phaseStateChanger = new DiatomicPhaseStateChanger(this);
             this.atomPositionUpdater = new DiatomicAtomPositionUpdater();
             this.moleculeForceAndMotionCalculator = new DiatomicVerletAlgorithm(this);
-            this.isoKineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
+            this.isokineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
             this.andersenThermostat = new AndersenThermostat(this.moleculeDataSet, this.minModelTemperature);
 
             // Create the individual atoms and add them to the data set.
@@ -316,7 +318,7 @@ define(function (require, exports, module) {
             this.phaseStateChanger = new WaterPhaseStateChanger(this);
             this.atomPositionUpdater = new WaterAtomPositionUpdater();
             this.moleculeForceAndMotionCalculator = new WaterVerletAlgorithm(this);
-            this.isoKineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
+            this.isokineticThermostat = new IsokineticThermostat(this.moleculeDataSet, this.minModelTemperature);
             this.andersenThermostat = new AndersenThermostat(this.moleculeDataSet, this.minModelTemperature);
 
             // Create the individual atoms and add them to the data set.
@@ -676,6 +678,23 @@ define(function (require, exports, module) {
                 this.set('targetContainerHeight', S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             else if (targetContainerHeight < this.minAllowableContainerHeight)
                 this.set('targetContainerHeight', this.minAllowableContainerHeight);
+        },
+
+        temperatureSetPointChanged: function(simulation, temperatureSetPoint) {
+            if (temperatureSetPoint > S.MAX_TEMPERATURE) {
+                this.set('temperatureSetPoint', S.MAX_TEMPERATURE);
+                return;
+            }
+            else if (temperatureSetPoint < S.MIN_TEMPERATURE) {
+                this.set('temperatureSetPoint', S.MIN_TEMPERATURE);
+                return;
+            }
+
+            if (this.isokineticThermostat)
+                this.isokineticThermostat.setTargetTemperature(temperatureSetPoint);
+
+            if (this.andersenThermostat)
+                this.andersenThermostat.setTargetTemperature(temperatureSetPoint);
         },
 
 
