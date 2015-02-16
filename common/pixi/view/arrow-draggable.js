@@ -156,7 +156,32 @@ define(function(require) {
                     this._attributes.targetY = y;
                 }
 
-                this.model.set(this._attributes);
+                // Constrain with min and max lengths
+                var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
+                var target = this._targetVector.set(this._attributes.targetX, this._attributes.targetY);
+                var length = origin.distance(target);
+                
+                if ((this.model.get('minLength') === null || this.model.get('minLength') === undefined || length >= this.model.get('minLength')) &&
+                    (this.model.get('maxLength') === null || this.model.get('maxLength') === undefined || length <= this.model.get('maxLength'))
+                ) {
+                    this.model.set(this._attributes);
+                }
+                else if (!this.snappingEnabled) {
+                    // We will need to scale our desired target offset
+                    var direction = this._direction.set(target).sub(origin);
+
+                    var targetLength;
+                    if (this.model.get('minLength') !== null && this.model.get('minLength') !== undefined && length < this.model.get('minLength'))
+                        targetLength = this.model.get('minLength');
+                    else if (this.model.get('maxLength') !== null && this.model.get('maxLength') !== undefined && length > this.model.get('maxLength'))
+                        targetLength = this.model.get('maxLength');
+
+                    direction.normalize().scale(targetLength);
+
+                    this._attributes.targetX = this.model.get('originX') + direction.x;
+                    this._attributes.targetY = this.model.get('originY') + direction.y;
+                    this.model.set(this._attributes);
+                }
             }
         },
 
