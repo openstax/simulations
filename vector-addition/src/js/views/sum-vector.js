@@ -4,96 +4,52 @@ define(function (require){
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
+  var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var SumVectorViewModel = require('models/sum-vector');
   var Vectors = require('vector-addition');
-  var ArrowsCollection = require('collections/arrows');
 
   var SumVectorView = PixiView.extend({
 
     events: {
-      'click .sumVectorHead': 'sumVectorReadouts',
-      'click .sumVectorTail': 'sumVectorReadouts',
-
-      'mousedown .sumVectorContainer': 'dragStart',
-      'mousemove .sumVectorContainer': 'dragMove',
-      'touchmove .sumVectorContainer': 'dragMove',
-      'mouseup .sumVectorContainer': 'dragEnd',
-      'mouseupoutside .sumVectorContainer': 'dragEnd',
-      'touchend .sumVectorContainer': 'dragEnd',
-      'touchendoutside .sumVectorContainer': 'dragEnd'
+      'click .tailGraphics': 'updateReadouts',
+      'click .headGraphics': 'updateReadouts'
     },
 
     initialize: function() {
+      this.sumVectorModel = new SumVectorViewModel();
       this.initGraphics()
       this.listenTo(this.model, 'change:sumVectorVisible', this.sumVectorVisible);
       this.listenTo(this.model, 'change', this.updateSum);
-      this.listenTo(this.model, 'change:emptyStage', this.resetSumVector);
+      this.listenTo(this.sumVectorModel, 'change', this.updateSum);
     },
 
     initGraphics: function() {
-      this.sumVector(0, 100);
+      this.sumVector();
     },
 
-    dragStart: function(data) {
-      data.originalEvent.preventDefault();
-      this.data = data;
-      this.dragging = true;
-    },
-
-    dragMove: function(data) {
-      if (this.model.get('arrows') !== undefined) {
-        var x = Vectors.roundGrid(data.global.x - this.displayObject.x),
-          y = Vectors.roundGrid(data.global.y - this.displayObject.y),
-          length = Math.sqrt(x * x + y * y),
-          degrees = (180/Math.PI) * Math.atan2(y, x);
-
-        if (this.dragging) {
-           this.sumVectorContainer.x = x;
-           this.sumVectorContainer.y = y;
-
-          if (this.sumVectorContainer.x >= this.model.get('trashCanPositionX') || this.sumVectorContainer.y >= this.model.get('trashCanPositionY')) {
-            this.model.set('deleteVector', true);
-          }
-          else {
-            this.model.set('deleteVector', false);
-          }
-        }
-
-      }
-    },
-
-    dragEnd: function(data) {
-      this.dragging = false;
-      if (this.sumVectorContainer.position.x >= this.model.get('trashCanPositionX') || this.sumVectorContainer.position.y >= this.model.get('trashCanPositionY')) {
-        if (this.model.set('deleteVector', true)) {
-          Vectors.deleteArrow(this.model, this.sumVectorContainer);
-          this.displayObject.removeChild(this.sumVectorContainer);
-          this.model.set('deleteVector', false);
-          this.model.set('sumVectorVisible', false);
-        }
-      }
-    },
-
-    sumVector: function(x, y) {
+    sumVector: function() {
       this.sumVectorContainer = new PIXI.DisplayObjectContainer();
 
-      var sumVectorHead = new PIXI.Graphics();
-      Vectors.drawVectorHead(sumVectorHead, '0x76EE00', true, true);
-      this.sumVectorHead = sumVectorHead;
+      this.sumVectorView = new DraggableArrowView({
+          model: this.sumVectorModel,
+          fillColor: this.model.get('green'),
+          headDraggingEnabled: false,
+          bodyDraggingEnabled: false
+      });
 
-      var sumVectorTail = new PIXI.Graphics();
-      Vectors.drawVectorHead(sumVectorTail, '0x76EE00', true, true);
-      this.sumVectorTail = sumVectorTail;
-
-      //Arrow Container
-      this.sumVectorContainer.addChild(this.sumVectorHead);
-      this.sumVectorContainer.addChild(this.sumVectorTail);
+      this.tailGraphics = this.sumVectorView.tailGraphics;
+      this.headGraphics = this.sumVectorView.headGraphics;
+      this.sumVectorContainer.addChild(this.sumVectorView.displayObject);
       this.displayObject.addChild(this.sumVectorContainer);
-      
+
+      this.sumVectorContainer.x = $('.scene-view').width()/6;
+      this.sumVectorContainer.y = $('.scene-view').height()/6;
       this.sumVectorContainer.visible = false;
     },
 
     sumVectorVisible: function() {
-      if (this.model.get('sumVectorVisible') && this.model.get('arrows') !== undefined) {
+      this.updateSum();
+      if (this.model.get('sumVectorVisible') && this.model.arrowCollection.length > 0) {
         this.sumVectorContainer.visible = true;
       }
       else {
@@ -102,24 +58,18 @@ define(function (require){
     },
 
     updateSum: function() {
-      Vectors.sum(this.model, this.sumVectorContainer, this.sumVectorTail);
+      Vectors.sum(this.model, this.sumVectorModel, this.sumVectorContainer, this.sumVectorView);
     },
 
-    sumVectorReadouts: function() {
-      var model = this.model;
-      model.set('rText', model.get('sumVectorRText'));
-      model.set('thetaText', model.get('sumVectorThetaText'));
-      model.set('rXText', model.get('sumVectorRXText'));
-      model.set('rYText', model.get('sumVectorRYText'));
-
+    updateReadouts: function() {
+      var width = this.sumVectorContainer.width;
+      var height = this.sumVectorContainer.height;
+      var length = this.sumVectorModel.get('length');
+      var degrees = this.sumVectorModel.get('degrees');
+      Vectors.updateReadouts(this.sumVectorContainer, this.model, this.sumVectorModel, width, height, length, degrees);
       $('label').addClass('green');
-    },
-
-    resetSumVector: function() {
-      if (this.model.get('emptyStage')) {
-        this.sumVectorTail.height = 80;
-      }
     }
+
   });
 
   return SumVectorView;

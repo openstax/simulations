@@ -4,206 +4,195 @@ define(function(require) {
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
-  var Vectors = require('vector-addition');
-  var ComponentVectors = require('component-vectors');
   var Simulation = require('models/simulation');
-  var ArrowsModel = require('models/arrows');
-  var ArrowsCollection = require('collections/arrows');
+  var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var ArrowViewModel = require('models/arrows');
+  var VectorXViewModel = require('models/vector-x');
+  var VectorYViewModel = require('models/vector-y');
+  var Vectors = require('vector-addition');
   var Constants = require('constants');
-  var nbrVectors = [];
 
   var ArrowView = PixiView.extend({
 
     events: {
-      'click .arrowHead': 'vectorReadouts',
-      'mousedown .arrowHead': 'rotateStart',
-      'mousemove .arrowHead': 'rotate',
-      'touchmove .arrowHead': 'rotate',
-      'mouseup .arrowHead': 'rotateEnd',
-      'mouseupoutside .arrowHead': 'rotateEnd',
-      'touchend .arrowHead': 'rotateEnd',
-      'touchendoutside .arrowHead': 'rotateEnd',
-
-      'click .arrowTail': 'vectorReadouts',
-      'mousedown .arrowTail': 'dragStart',
-      'mousemove .arrowTail': 'dragMove',
-      'touchmove .arrowTail': 'dragMove',
-      'mouseup .arrowTail': 'dragEnd',
-      'mouseupoutside .arrowTail': 'dragEnd',
-      'touchend .arrowTail': 'dragEnd',
-      'touchendoutside .arrowTail': 'dragEnd'
+      'click .tailGraphics': 'updateReadouts',
+      'click .headGraphics': 'updateReadouts'
     },
 
     initialize: function() {
-      this.drawArrow(0, -100);
+      this.arrowViewModel = new ArrowViewModel();
+      this.vectorXViewModel = new VectorXViewModel();
+      this.vectorYViewModel = new VectorYViewModel();
+      this.initGraphics();
       this.listenTo(this.model, 'change:emptyStage', this.clearArrows);
-      this.listenTo(this.model, 'change:componentStyles', this.updateStyleComponents);
+      this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.updateReadouts);
+      this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.deleteArrow);
+      this.listenTo(this.arrowViewModel, 'change:targetX', this.updateVectorX);
+      this.listenTo(this.arrowViewModel, 'change:targetY', this.updateVectorY);
+      this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
     },
 
-    dragStart: function(data) {
-      data.originalEvent.preventDefault();
-      this.data = data;
-      this.dragging = true;
+    initGraphics: function() {
+      this.drawArrow();
     },
 
-    dragMove: function(data) {
-      if (this.model.get('arrows') !== undefined) {
-        var x = Vectors.roundGrid(data.global.x - this.displayObject.x),
-            y = Vectors.roundGrid(data.global.y - this.displayObject.y),
-            arrows = this.model.get('arrows');
+    drawArrow: function() {
+      this.drawVectorX();
+      this.drawVectorY();
 
-        if (this.dragging) {
-           this.container.x = x;
-           this.container.y = y;
+      this.arrowView = new DraggableArrowView({
+          model: this.arrowViewModel
+      });
 
-           if (this.container.x >= this.model.get('trashCanPositionX') || this.container.y >= this.model.get('trashCanPositionY')) {
-             this.model.set('deleteVector', true);
-           }
-           else {
-             this.model.set('deleteVector', false);
-           }
+      this.tailGraphics = this.arrowView.tailGraphics;
+      this.headGraphics = this.arrowView.headGraphics;
 
-           Vectors.updateComponents(this.model, this.displayObject, this.vectorX, this.vectorY);
-        }
-      }
-    },
-
-    dragEnd: function(data) {
-      this.dragging = false;
-      if (this.container.position.x >= this.model.get('trashCanPositionX') || this.container.position.y >= this.model.get('trashCanPositionY')) {
-        if (this.model.set('deleteVector', true)) {
-          Vectors.deleteArrow(this.model, this.container);
-          this.displayObject.removeChild(this.container);
-          this.model.set('deleteVector', false);
-        }
-      }
-    },
-
-    drawArrow: function(x, y) {
       this.container = new PIXI.DisplayObjectContainer();
-
-      var length = Vectors.calculateLength(x, y);
-      var degrees = Vectors.calculateDegrees(x, y);
-
-      this.displayObject.x = x;
-      this.displayObject.y = y;
-
-      this.arrowContainer = new PIXI.DisplayObjectContainer();
-
-      var arrowHead = new PIXI.Graphics();
-      Vectors.drawVectorHead(arrowHead, this.model.get('red'), true, true, 'ew-resize');
-      this.arrowHead = arrowHead;
-
-      var arrowTail = new PIXI.Graphics();
-      Vectors.drawVectorTail(arrowTail, this.model.get('red'), length - this.arrowHead.height, true, true, 'move');
-      this.arrowTail = arrowTail;
-
-      var vectorX = ComponentVectors.drawVectorX(this.model, length - this.arrowHead.height, this.arrowHead, this.container);
-      var vectorY = ComponentVectors.drawVectorY(this.model, length - this.arrowHead.height, this.arrowHead, this.container, this.arrowHead.height);
-
-      this.vectorX = vectorX;
-      this.vectorY = vectorY;
-      this.container.addChild(this.vectorX);
-      this.container.addChild(this.vectorY);
-
-      this.arrowContainer.addChild(this.arrowHead);
-      this.arrowContainer.addChild(this.arrowTail);
-      this.container.addChild(this.arrowContainer);
+      this.container.addChild(this.arrowView.displayObject);
       this.displayObject.addChild(this.container);
 
-      this.container.position.x = 0.8 * $('.scene-view').width() + 10 *Math.random() - 5;
-      this.container.position.y = 0.50 * $('.scene-view').height() + 10 *Math.random() - 5;
+      var width = Math.floor(this.container.width);
+      var height = Math.floor(this.container.height);
 
-      this.arrowContainer.pivot.set(this.container.width/2, this.container.height);
-      this.vectorX.pivot.set(this.arrowContainer.width/2, this.arrowContainer.height);
-      this.vectorY.pivot.set(this.arrowContainer.width/2, this.arrowContainer.height);
-
-      nbrVectors.push(this.container);
-      this.container.index = nbrVectors.indexOf(this.container);
-
-      this.createArrowsCollection(nbrVectors, x, y,  length, degrees);
+      this.arrowViewModel.set('degrees', Vectors.calculateDegrees(this.arrowViewModel.get('originX'), this.arrowViewModel.get('originY')));
+      this.arrowViewModel.set('angle', this.arrowView.transformFrame.rotation);
       this.model.set('emptyStage', false);
-      Vectors.updateReadouts(this.model.get('arrows').models[this.container.index], this.model, x, -y , length, -degrees);
+
+      Vectors.updateReadouts(this.container, this.model, this.arrowViewModel, width, height, this.arrowViewModel.get('length'), this.arrowViewModel.get('degrees'));
+      this.model.arrowCollection.add(this.arrowViewModel);
     },
 
-    createArrowsCollection: function(nbrVectors, x, y, length, degrees) {
-      var arrows = new ArrowsCollection();
-      _.each(nbrVectors, function(vector) {
-        var arrow = new Backbone.Model({'x': x,'y': y,'length': length,'degrees': degrees});
-        arrows.add(arrow);
+    drawVectorX: function() {
+      this.vectorXView = new DraggableArrowView({
+          model: this.vectorXViewModel,
+          fillColor: this.model.get('pink'),
+          bodyDraggingEnabled: false,
+          headDraggingEnabled: false
       });
-      this.model.set('arrows', arrows);
+
+      this.vectorXContainer = new PIXI.DisplayObjectContainer();
+      this.vectorXContainer.addChild(this.vectorXView.displayObject);
+      this.displayObject.addChild(this.vectorXContainer);
+      this.vectorXView.transformFrame.rotation = 0;
+      this.vectorXContainer.visible = false;
+      this.model.arrowCollection.add(this.vectorXViewModel);
     },
 
-    rotateStart: function(data) {
-      this.transformable = true;
-      this.data = data;
+    updateVectorX: function() {
+      var vectorView = this.vectorXView;
+      var vectorModel = this.arrowViewModel;
+      var fillColor = this.model.get('pink');
+      var angle = this.arrowViewModel.get('angle');
+      Vectors.redrawVector(vectorView, vectorModel, fillColor, 0);
     },
 
-    rotate: function(data) {
-      var model = this.model,
-       arrowModel = model.get('arrows').models[this.container.index],
-       x = Vectors.roundGrid(data.global.x - this.container.x),
-       y = Vectors.roundGrid(data.global.y - this.container.y),
-       length = Math.sqrt(x * x + y * y),
-       degrees = (180/Math.PI) * Math.atan2(y, x),
-       height = length - this.arrowHead.height,
-       angle = Math.atan2(y, x) + 180/Math.PI *2;
+    drawVectorY: function() {
+      this.vectorYView = new DraggableArrowView({
+          model: this.vectorYViewModel,
+          fillColor: this.model.get('pink'),
+          bodyDraggingEnabled: false,
+          headDraggingEnabled: false
+      });
 
-      if (this.transformable) {
-        this.displayObject.x = Vectors.round0(x/10);
-        this.displayObject.y = Vectors.round0(y/10);
+      this.vectorYContainer = new PIXI.DisplayObjectContainer();
+      this.vectorYContainer.addChild(this.vectorYView.displayObject);
+      this.displayObject.addChild(this.vectorYContainer);
+      this.vectorYView.transformFrame.rotation = 4.733219300420907; //TODO
+      this.vectorYContainer.visible = false;
+      this.model.arrowCollection.add(this.vectorYViewModel);
+    },
 
-        this.arrowContainer.rotation = 0;
-        this.arrowTail.clear();
-        this.arrowTail.beginFill(model.get('red'));
-        this.arrowTail.drawRect(6, 20, 8, height);
-        this.arrowContainer.pivot.set(this.arrowHead.width/2, length);
-        this.arrowContainer.rotation = angle;
+    updateVectorY: function() {
+      var vectorView = this.vectorYView;
+      var vectorModel = this.arrowViewModel;
+      var fillColor = this.model.get('pink');
+      var angle = this.arrowViewModel.get('angle');
+      var theta = this.model.get('thetaText');
+      this.scaleVectors(theta);
+      if (theta > 0) {
+        angle = 4.733219300420907; //TODO angle
+      }
+      else {
+        angle = -4.733219300420907; //TODO angle
+      }
+      Vectors.redrawVector(vectorView, vectorModel, fillColor, angle);
+    },
 
-        ComponentVectors.updateVector(model, this.vectorX.children[1], this.model.get('pink'), Math.abs(x));
-        ComponentVectors.updateVector(model, this.vectorY.children[1], this.model.get('pink'), Math.abs(y));
-        this.vectorX.pivot.set(this.arrowContainer.width/2, this.vectorX.height);
-        this.vectorY.pivot.set(this.arrowContainer.width/2, this.vectorY.height);
+    scaleVectors: function(theta) {
+      if (theta == 0 || theta == 180) {
+        this.vectorYView.transformFrame.scale.y = 0;
+      }
+      else {
+        this.vectorYView.transformFrame.scale.y = 1;
+      }
 
-        Vectors.updateReadouts(arrowModel, model, x, -y, length, -degrees);
-        Vectors.updateComponents(this.model, this.displayObject, this.vectorX, this.vectorY);
+      if (theta == 90 || theta == -90 ) {
+        this.vectorXView.transformFrame.scale.x = 0;
+      }
+      else {
+        this.vectorXView.transformFrame.scale.x = 1;
       }
     },
 
-    rotateEnd: function(data) {
-      this.transformable = false;
-    },
-
-    vectorReadouts: function() {
-      var model = this.model;
-      var arrowModel = this.model.get('arrows').models[this.container.index];
-      var x = arrowModel.get('x');
-      var y = arrowModel.get('y');
+    updateReadouts: function() {
+      var arrowModel = this.arrowViewModel;
+      var width = Math.floor(this.container.width);
+      var height = Math.floor(this.container.height);
       var length = arrowModel.get('length');
       var degrees = arrowModel.get('degrees');
 
-      model.set('rText', Vectors.padZero(Vectors.round1(length/10)));
-      model.set('thetaText', Vectors.padZero(Vectors.round1(degrees)));
-      model.set('rXText', Vectors.round0(x/10));
-      model.set('rYText', Vectors.round0(y/10));
+      arrowModel.set('degrees', Vectors.calculateDegrees(width/10, height/10));
+      arrowModel.set('angle', this.arrowView.transformFrame.rotation);
 
+      Vectors.updateReadouts(this.container, this.model, arrowModel, width, height, length, degrees);
       $('label').removeClass('green');
     },
 
     clearArrows: function() {
       if (this.model.get('emptyStage') == true) {
-        var arrowsCollection = this.model.get('arrows');
-        var arrowsToRemove = arrowsCollection.slice(0);
-        arrowsCollection.remove(arrowsToRemove);
+        this.model.arrowCollection.remove(this.arrowViewModel);
+        this.model.arrowCollection.remove(this.vectorXViewModel);
+        this.model.arrowCollection.remove(this.vectorYViewModel);
         this.displayObject.removeChild(this.container);
-        nbrVectors.length = 0;
+        this.displayObject.removeChild(this.vectorXContainer);
+        this.displayObject.removeChild(this.vectorYContainer);
       }
     },
 
-    updateStyleComponents: function() {
-      Vectors.updateComponents(this.model, this.displayObject, this.vectorX, this.vectorY);
+    deleteArrow: function() {
+      var arrowX = this.arrowViewModel.get('targetX');
+      var arrowY = this.arrowViewModel.get('targetY');
+      var trashCanX = this.model.get('trashCanPositionX');
+      var trashCanY = this.model.get('trashCanPositionY');
+
+      if (arrowX >= trashCanX) {
+        this.model.set('deleteVector', true);
+        this.model.arrowCollection.remove(this.arrowViewModel);
+        this.displayObject.removeChild(this.container);
+        this.model.set('deleteVector', false);
+        this.model.set('sumVectorVisible', false);
+      }
     },
+
+    showComponentStyles: function() {
+      if (this.model.get('componentStyles') == 0) {
+        this.vectorXContainer.visible = false;
+        this.vectorYContainer.visible = false;
+      }
+      else {
+        this.vectorXContainer.visible = true;
+        this.vectorYContainer.visible = true;
+      }
+
+      if (this.model.get('componentStyles') == 1) {
+        //TODO
+      }
+
+      if (this.model.get('componentStyles') == 2) {
+        //TODO
+      }
+
+    }
 
   });
 
