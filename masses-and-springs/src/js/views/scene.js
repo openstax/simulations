@@ -55,13 +55,16 @@ define(function(require) {
 
             this.initLayers();
             this.initSprings(this.simulation, this.simulation.springs);
+            this.initBodies(this.simulation, this.simulation.bodies);
         },
 
         initLayers: function() {
 
             this.springLayer    =   new PIXI.DisplayObjectContainer();
+            this.bodyLayer    =   new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.springLayer);
+            this.stage.addChild(this.bodyLayer);
         },
 
 
@@ -79,8 +82,17 @@ define(function(require) {
 
         },
 
+        initBodies: function(simulation, bodies){
 
-        initBodies: function(){
+            _.each(bodies, function(body, iter){
+                var bodyView = new BodyView({
+                    mvt: this.mvt,
+                    model: body,
+                    sceneWidth: this.width,
+                    sceneHeight: this.height
+                });
+                this.bodyLayer.addChild(bodyView.displayObject);
+            }, this);
 
         },
 

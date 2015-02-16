@@ -33,6 +33,9 @@ define(function (require, exports, module) {
             this.y1 = this.get('y1');       //y position of top of spring
 
             this.restY2(); //y-position of bottom of spring
+
+            this.on('change:k', this.kChanged);
+            this.on('change:y2', this.y2Changed);
         },
 
         hang: function(body){
@@ -66,8 +69,16 @@ define(function (require, exports, module) {
             this.updateY2(0);
         },
 
+        kChanged: function(model, k){
+            this.k = k;
+        },
+
+        y2Changed: function(model, y2){
+            this.y2 = y2;
+        },
+
         isSnagged : function(){
-            return _.isDefined(this.body);
+            return !_.isUndefined(this.body);
         }
 
     });

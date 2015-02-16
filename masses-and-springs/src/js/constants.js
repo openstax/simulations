@@ -4,9 +4,17 @@ define(function (require) {
 
 
     var Constants = {}; 
-    var colorConstants = {
-        'cool-gray' : '#768393'
+    var ColorConstants = {
+        'cool-gray' : '#6a7686',
+        'dark-gray' : '#2d3239',
+        'light-gray': '#939daa',
+        'pale-orange': '#ef9152',
+        'sky-blue'  : '#52b0ef',
+        'pale-green': '#aed1c0'        
     };
+
+
+    Constants.ColorConstants = ColorConstants;
 
     /*************************************************************************
      **                                                                     **
@@ -139,8 +147,8 @@ define(function (require) {
     SpringDefaults.STIFFNESS = 10;
 
     // Appearance related
-    SpringDefaults.COLOR = colorConstants['cool-gray'];
-    SpringDefaults.COILS = 16;
+    SpringDefaults.COLOR = ColorConstants['cool-gray'];
+    SpringDefaults.COILS = 12;
     SpringDefaults.WIDTH = 50;
 
     SpringDefaults.RING_RADIUS = 10;
@@ -149,8 +157,14 @@ define(function (require) {
     Constants.SpringDefaults = SpringDefaults;
 
 
+    var BodyDefaults = {};
+    BodyDefaults.HOOK_TO_BODY_RATIO = 0.25;
+    BodyDefaults.MASS_TO_RADIUS_RATIO = 100;
+    BodyDefaults.MASS_TO_HEIGHT_RATIO = 300;
 
+    BodyDefaults.COLOR = ColorConstants['light-gray'];
 
+    Constants.BodyDefaults = BodyDefaults;
 
 
     return Constants;

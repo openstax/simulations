@@ -8,17 +8,19 @@ define(function (require, exports, module) {
 
 
     var Spring  = require('models/spring');
+    var Body  = require('models/body');
 
     /**
      * Constants
      */
     var Constants = require('constants');
 
-    var SPRINGS = [
-        new Spring({x : 0.15, y1: 0.1}),
-        new Spring({x : 0.30, y1: 0.1}),
-        new Spring({x : 0.45, y1: 0.1})
-    ];
+    // Plain object holding initial information about the stage objects
+    // i.e. Springs, Pegs, Bodies, etc.
+    // 
+    // I wanted to isolate that data into it's own file.
+    var Initials = require('initials');
+
 
     /**
      * Wraps the update function in 
@@ -41,11 +43,24 @@ define(function (require, exports, module) {
         initComponents: function() {
 
             this.initSprings();
+            this.initBodies();
+
         },
 
         initSprings: function(){
 
-            this.springs = SPRINGS;
+            this.springs = _.map(Initials.Springs, function(spring){
+                return new Spring(spring);
+            });
+
+        },
+
+        initBodies: function(){
+
+            this.bodies = _.map(Initials.Bodies, function(body){
+                return new Body(body);
+            });
+
         },
 
         _update: function(time, deltaTime) {

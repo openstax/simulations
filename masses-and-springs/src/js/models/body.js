@@ -21,7 +21,8 @@ define(function (require, exports, module) {
             x : 0,
             y : 0,
             spring : undefined, //a spring can be attached to a body;
-            grabbed : false    //a body is grabbed if view is being dragged by mouse
+            grabbed : false,    //a body is grabbed if view is being dragged by mouse
+            color : Constants.BodyDefaults.COLOR
             // hung : false,       //a body is hung if it is attached to a spring
             // onWhichSpring : -1 // trying without onWhichSpring index
         },
@@ -31,6 +32,10 @@ define(function (require, exports, module) {
             this.mass = this.get('mass');   //mass in kg,
             this.x = this.get('x');         //x-y position on stage of (upper left corner of body)
             this.y = this.get('y');
+            this.color = this.get('color');
+
+            this.on('change:x', this.xChanged);
+            this.on('change:y', this.yChanged);
 
         },
 
@@ -55,8 +60,16 @@ define(function (require, exports, module) {
             this.hangOn(undefined);
         },
 
+        xChanged: function(model, x){
+            this.x = x;
+        },
+
+        yChanged: function(model, y){
+            this.y = y;
+        },
+
         isHung: function(){
-            return _.isDefined(this.spring);
+            return !_.isUndefined(this.spring);
         }
 
 
