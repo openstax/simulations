@@ -183,7 +183,7 @@ define(function (require) {
     // allowable range, but the simulation did not work so well, so the range
     // below was arrived at empirically and seems to work reasonably well.
     SOMSimulation.MIN_ADJUSTABLE_EPSILON = 1.5 * Atoms.NeonAtom.EPSILON;
-    SOMSimulation.MAX_ADJUSTABLE_EPSILON = StatesOfMatterConstants.EPSILON_FOR_WATER;
+    SOMSimulation.MAX_ADJUSTABLE_EPSILON = Constants.EPSILON_FOR_WATER;
 
     Constants.SOMSimulation = SOMSimulation;
 

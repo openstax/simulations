@@ -53,17 +53,17 @@ define(function (require) {
      *
      *   var atom = new Atom.OxygenAtom(0, 2);
      */
-    _.each(Constants.Atoms, function(key) {
+    _.each(Constants.Atoms, function(AtomConstants, key) {
         // Define a generic constructor that uses constants for radius and mass
         Atom[key] = function(x, y) {
-            Atom.apply(this, [x, y, Constants.Atoms[key].RADIUS, Constants.Atoms[key].MASS]);
+            Atom.apply(this, [x, y, AtomConstants.RADIUS, AtomConstants.MASS]);
         };
 
         // Apply instance functions/properties
         _.extend(Atom[key].prototype, Atom.prototype);
 
         // Apply static functions/properties
-        _.extend(Atom[key], Constants.Atoms[key]);
+        _.extend(Atom[key], AtomConstants);
     });
 
 

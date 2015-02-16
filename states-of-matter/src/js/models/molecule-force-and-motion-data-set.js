@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var WaterMoleculeStructure = require('models/molecule-force-and-motion-data-set');
+    var WaterMoleculeStructure = require('models/water-molecule-structure');
 
     var Constants = require('constants');
     var MAX_NUM_ATOMS = Constants.MAX_NUM_ATOMS;
@@ -114,7 +114,7 @@ define(function (require) {
             for (var i = 0; i < this.atomsPerMolecule; i++)
                 this.atomPositions.push(atomPositions[i]);
 
-            int numberOfMolecules = this.numberOfAtoms / this.atomsPerMolecule;
+            var numberOfMolecules = this.numberOfAtoms / this.atomsPerMolecule;
             this.moleculeCenterOfMassPositions[numberOfMolecules] = moleculeCenterOfMassPosition;
             this.moleculeVelocities[numberOfMolecules] = moleculeVelocity;
             this.moleculeRotationRates[numberOfMolecules] = moleculeRotationRate;

@@ -7,6 +7,9 @@ define(function (require, exports, module) {
     var Simulation = require('common/simulation/simulation');
 
     var Atom = require('models/atom');
+    var MoleculeForceAndMotionDataSet = require('models/molecule-force-and-motion-data-set');
+    var AndersenThermostat = require('models/thermostat/andersen');
+    var IsokineticThermostat = require('models/thermostat/isokinetic');
 
     /**
      * Constants
@@ -96,7 +99,7 @@ define(function (require, exports, module) {
                 heatingCoolingAmount: 0
             });
 
-            resetContainerSize();
+            this.resetContainerSize();
         },
 
         /**
@@ -114,24 +117,24 @@ define(function (require, exports, module) {
          * Initialize the particles by calling the appropriate initialization
          *   routine, which will set their positions, velocities, etc.
          */
-        initializeParticles: function(phase) {
+        initParticles: function(phase) {
 
             // Initialize the particles
             switch(this.currentMolecule) {
                 case MoleculeTypes.DIATOMIC_OXYGEN:
-                    this.initializeDiatomic(this.currentMolecule, phase);
+                    this.initDiatomic(this.currentMolecule, phase);
                     break;
                 case MoleculeTypes.NEON:
-                    this.initializeMonatomic(this.currentMolecule, phase);
+                    this.initMonatomic(this.currentMolecule, phase);
                     break;
                 case MoleculeTypes.ARGON:
-                    this.initializeMonatomic(this.currentMolecule, phase);
+                    this.initMonatomic(this.currentMolecule, phase);
                     break;
                 case MoleculeTypes.USER_DEFINED_MOLECULE:
-                    this.initializeMonatomic(this.currentMolecule, phase);
+                    this.initMonatomic(this.currentMolecule, phase);
                     break;
                 case MoleculeTypes.WATER:
-                    this.initializeTriatomic(this.currentMolecule, phase);
+                    this.initTriatomic(this.currentMolecule, phase);
                     break;
                 default:
                     console.error('ERROR: Unrecognized particle type, using default.');
@@ -155,7 +158,7 @@ define(function (require, exports, module) {
                 moleculeType === MoleculeTypes.NEON ||
                 moleculeType === MoleculeTypes.ARGON ||
                 moleculeType === MoleculeTypes.USER_DEFINED
-            ) {
+            )) {
                 throw 'Molecule specified is not monatomic';
             }
 
@@ -184,7 +187,7 @@ define(function (require, exports, module) {
             //   container.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(StatesOfMatterConstants.CONTAINER_BOUNDS.width / ((particleDiameter * 1.05) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.width / ((particleDiameter * 1.05) * 3)),
                     2 
                 )
             );
@@ -235,7 +238,7 @@ define(function (require, exports, module) {
             // For the atom with adjustable interaction, set its temperature a
             // bit higher initially so that it is easier to see the effect of
             // changing the epsilon value.
-            // if ( getMoleculeType() == StatesOfMatterConstants.USER_DEFINED_MOLECULE ) {
+            // if ( getMoleculeType() == Constants.USER_DEFINED_MOLECULE ) {
             //     setTemperature( SLUSH_TEMPERATURE );
             // }
         },
@@ -244,7 +247,7 @@ define(function (require, exports, module) {
          * Initialize the various model components to handle a simulation in which
          *   each molecule consists of two atoms, e.g. oxygen.
          */
-        initializeDiatomic: function(moleculeType, phase) {
+        initDiatomic: function(moleculeType, phase) {
             // Verify that a valid molecule type was provided.
             if (moleculeType !== MoleculeTypes.DIATOMIC_OXYGEN)
                 throw 'Molecule specified is not a valid diatomic molecule';
@@ -255,14 +258,14 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(StatesOfMatterConstants.CONTAINER_BOUNDS.width / ((OxygenAtom.RADIUS * 2.1) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.width / ((OxygenAtom.RADIUS * 2.1) * 3)),
                     2 
                 )
             );
 
-            if ( numberOfAtoms % 2 != 0 )
+            if (numberOfAtoms % 2 != 0)
                 numberOfAtoms--;
-            int numberOfMolecules = numberOfAtoms / 2;
+            var numberOfMolecules = numberOfAtoms / 2;
 
             // Create the normalized data set for the one-atom-per-molecule case.
             this.moleculeDataSet = new MoleculeForceAndMotionDataSet(2);
@@ -300,7 +303,7 @@ define(function (require, exports, module) {
          * Initialize the various model components to handle a simulation in which
          * each molecule consists of three atoms, e.g. water.
          */
-        initializeTriatomic: function(moleculeType, phase) {
+        initTriatomic: function(moleculeType, phase) {
             // Verify that a valid molecule type was provided.
             if (moleculeType !== MoleculeTypes.WATER)
                 throw 'Molecule specified is not a valid diatomic molecule';
@@ -311,7 +314,7 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var waterMoleculeDiameter = OxygenAtom.RADIUS * 2.1;
             var moleculesAcrossBottom = Math.round(
-                StatesOfMatterConstants.CONTAINER_BOUNDS.width / (waterMoleculeDiameter * 1.2)
+                Constants.CONTAINER_BOUNDS.width / (waterMoleculeDiameter * 1.2)
             );
             var numberOfMolecules = Math.floor(Math.pow(moleculesAcrossBottom / 3, 2));
 
@@ -409,6 +412,14 @@ define(function (require, exports, module) {
         unexplode: function() {
             this.set('isExploded', false);
             this.resetContainerSize();
+        },
+
+        removeAllParticles: function() {
+            for (var i = this.particles.length - 1; i >= 0; i--)
+                this.particles.splice(i, 1);
+
+            // Get rid of the normalized particles.
+            this.moleculeDataSet = null;
         },
 
 
@@ -625,7 +636,7 @@ define(function (require, exports, module) {
 
             // Remove existing particles and reset the global model parameters.
             this.removeAllParticles();
-            this.initializeModelParameters();
+            this.initComponents();
 
             // Set the new molecule type.
             this.currentMolecule = moleculeType;
@@ -667,7 +678,7 @@ define(function (require, exports, module) {
 
             // Initiate a reset in order to get the particles into predetermined
             //   locations and energy levels.
-            this.initializeParticles(phase);
+            this.initParticles(phase);
 
             // Notify listeners that the molecule type has changed.
             this.trigger('interaction-strength-changed');
@@ -930,15 +941,15 @@ define(function (require, exports, module) {
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
                     for (var i = 0; i < atomsPerMolecule; i++) {
-                        this.particles.add(Atom.new OxygenAtom(0, 0));
+                        this.particles.add(new Atom.OxygenAtom(0, 0));
                         atomPositions[i] = new Point2D.Double();
                     }
                 }
                 else if (atomsPerMolecule === 3) {
                     // Add atoms to model set.
-                    this.particles.add(Atom.new OxygenAtom(0, 0));
-                    this.particles.add(Atom.new HydrogenAtom(0, 0));
-                    this.particles.add(Atom.new HydrogenAtom(0, 0));
+                    this.particles.add(new Atom.OxygenAtom(0, 0));
+                    this.particles.add(new Atom.HydrogenAtom(0, 0));
+                    this.particles.add(new Atom.HydrogenAtom(0, 0));
                     atomPositions[0] = new Vector2();
                     atomPositions[1] = new Vector2();
                     atomPositions[2] = new Vector2();
