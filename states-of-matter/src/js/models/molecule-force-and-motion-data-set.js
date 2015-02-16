@@ -27,7 +27,7 @@ define(function (require) {
         this.nextMoleculeForces = [];
 
         // Note that some of the following are not used in the monatomic case,
-        // but need to be here for compatibility.
+        //   but need to be here for compatibility.
         this.moleculeRotationAngles = [];
         this.moleculeRotationRates = [];
         this.moleculeTorques = [];
