@@ -10,6 +10,12 @@ define(function(require) {
     var Colors  = require('../../colors/colors');
     var Vector2 = require('../../math/vector2');
 
+    // Default snapping function just snaps to nearest 10 pixels
+    var defaultSnappingFunction = function(coordinateComponent) {
+        return Math.round(coordinateComponent / 10) * 10;
+    };
+
+
     var DraggableArrowView = ArrowView.extend({
 
         events: {
@@ -38,7 +44,11 @@ define(function(require) {
                 dragFillAlpha: undefined,
 
                 bodyDraggingEnabled: true,
-                headDraggingEnabled: true
+                headDraggingEnabled: true,
+
+                snappingEnabled: false,
+                snappingXFunction: defaultSnappingFunction,
+                snappingYFunction: defaultSnappingFunction
             }, options);
 
             ArrowView.prototype.initialize.apply(this, [options]);
@@ -50,6 +60,10 @@ define(function(require) {
             this.dragFillAlpha = options.dragFillAlpha !== undefined ? options.dragFillAlpha : this.fillAlpha;
             this.normalFillColor = this.fillColor;
             this.normalFillAlpha = this.fillAlpha;
+
+            this.snappingEnabled = options.snappingEnabled;
+            this.snappingXFunction = options.snappingXFunction;
+            this.snappingYFunction = options.snappingYFunction;
 
             this._attributes = {};
             this._dragOffset = new PIXI.Point();
@@ -87,10 +101,18 @@ define(function(require) {
                 var dx = local.x - this.displayObject.x - this.dragOffset.x;
                 var dy = local.y - this.displayObject.y - this.dragOffset.y;
                 
-                this._attributes.originX = this.model.get('originX') + dx;
-                this._attributes.originY = this.model.get('originY') + dy;
-                this._attributes.targetX = this.model.get('targetX') + dx;
-                this._attributes.targetY = this.model.get('targetY') + dy;
+                if (this.snappingEnabled) {
+                    this._attributes.originX = this.snappingXFunction(this.model.get('originX') + dx);
+                    this._attributes.originY = this.snappingYFunction(this.model.get('originY') + dy);
+                    this._attributes.targetX = this.snappingXFunction(this.model.get('targetX') + dx);
+                    this._attributes.targetY = this.snappingYFunction(this.model.get('targetY') + dy);
+                }
+                else {
+                    this._attributes.originX = this.model.get('originX') + dx;
+                    this._attributes.originY = this.model.get('originY') + dy;
+                    this._attributes.targetX = this.model.get('targetX') + dx;
+                    this._attributes.targetY = this.model.get('targetY') + dy;
+                }
 
                 this.model.set(this._attributes);
             }
@@ -125,8 +147,14 @@ define(function(require) {
                 
                 delete this._attributes.originX;
                 delete this._attributes.originY;
-                this._attributes.targetX = x;
-                this._attributes.targetY = y;
+                if (this.snappingEnabled) {
+                    this._attributes.targetX = this.snappingXFunction(x);
+                    this._attributes.targetY = this.snappingYFunction(y);
+                }
+                else {
+                    this._attributes.targetX = x;
+                    this._attributes.targetY = y;
+                }
 
                 this.model.set(this._attributes);
             }
