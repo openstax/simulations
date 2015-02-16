@@ -7,8 +7,9 @@ define(function (require, exports, module) {
     var Simulation = require('common/simulation/simulation');
 
 
-    var Spring  = require('models/spring');
-    var Body  = require('models/body');
+    var Springs  = require('collections/springs');
+    var Bodies  = require('collections/bodies');
+    var Systems  = require('collections/body-spring-systems');
 
     /**
      * Constants
@@ -30,7 +31,7 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
 
         }),
-        
+
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
@@ -45,22 +46,29 @@ define(function (require, exports, module) {
             this.initSprings();
             this.initBodies();
 
+            this.initSystems();
+
         },
 
         initSprings: function(){
-
-            this.springs = _.map(Initials.Springs, function(spring){
-                return new Spring(spring);
-            });
-
+            this.springs = new Springs(Initials.Springs);
         },
 
         initBodies: function(){
+            this.bodies = new Bodies(Initials.Bodies);
+        },
 
-            this.bodies = _.map(Initials.Bodies, function(body){
-                return new Body(body);
+        initSystems: function(){
+            var springs = this.springs.map(function(spring){
+                return {
+                    spring: spring,
+                    // TODO should update and read from UI input.  temporary defaults
+                    gravity : 9.8,
+                    b: 0.66
+                };
             });
 
+            this.systems = new Systems(springs);
         },
 
         _update: function(time, deltaTime) {

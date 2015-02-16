@@ -42,6 +42,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
+            this.listenTo(this.model, 'change:top', this.updateTopPosition);
 
             this.updateMVT(this.mvt);
         },
@@ -54,22 +55,10 @@ define(function(require) {
             this.displayObject.addChild(this.body);
         },
 
-        calculateBodyViewModel: function(){
+        updateBodyViewModel: function(){
 
             if(!this.viewModel){
-                this.viewModel = {};
-
-                // TODO need a non-linear equation for mass to dimensions because the 
-                // lightest weights are tiny right now.
-                this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
-                this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
-
-                this.viewModel.color = Colors.parseHex(this.model.color);
-                this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
-
-                this.viewModel.hookThickness = 3;
-                this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
-                this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
+                this.initializeBodyViewModel();
             }
 
             this.viewModel.left = this.model.x * this.sceneWidth;
@@ -79,8 +68,24 @@ define(function(require) {
             this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
         },
 
+        initializeBodyViewModel: function(){
+            this.viewModel = {};
+
+            // TODO need a non-linear equation for mass to dimensions because the 
+            // lightest weights are tiny right now.
+            this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
+            this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
+
+            this.viewModel.color = Colors.parseHex(this.model.color);
+            this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
+
+            this.viewModel.hookThickness = 3;
+            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
+            this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
+        },
+
         drawBody : function(){
-            this.calculateBodyViewModel();
+            this.updateBodyViewModel();
             this.clearPositionOffsets();
 
             this.body.clear();
@@ -92,10 +97,11 @@ define(function(require) {
         },
 
         drawHook: function(){
-            this.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
+            this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
+            this.model.set('hook', this.model.hook);
 
             this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
-            this.body.drawPiecewiseCurve(this.hook, 0, 0);
+            this.body.drawPiecewiseCurve(this.model.hook, 0, 0);
         },
 
         makeHook: function(center, hookBase){
@@ -133,12 +139,21 @@ define(function(require) {
         },
 
         dragEnd: function(data){
+
+            // TODO will need figure out updating model so that hook intercept
+            // works on drag and not just one drag end
             this.updateModelPosition();
-            this.checkIntersect();
             this.dropBody();
         },
 
         drag: function(data){
+
+            if(this.grabbed && this.model.isHung()){
+                this.model.unhang();
+                return;
+            }
+
+
             if(this.grabbed){
                 var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
                 var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
@@ -166,9 +181,8 @@ define(function(require) {
             this.drawBody();
         },
 
-        checkIntersect: function(){
-            // TODO broadcast event to global system for it to check intersect.
-
+        updateTopPosition: function(model, top){
+            this.model.set('y', top + (this.viewModel.height + this.viewModel.hookHeight - this.viewModel.hookRadius/2)/this.sceneHeight);
         },
 
         dropBody: function(){

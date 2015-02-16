@@ -34,8 +34,8 @@ define(function (require, exports, module) {
 
             this.restY2(); //y-position of bottom of spring
 
-            this.on('change:k', this.kChanged);
-            this.on('change:y2', this.y2Changed);
+            // this.on('change:k', this.kChanged);
+            // this.on('change:y2', this.y2Changed);
         },
 
         hang: function(body){
@@ -63,6 +63,7 @@ define(function (require, exports, module) {
 
         updateY2 : function(deltaY){
             this.y2 = this.y1 + this.restL + (deltaY || 0);
+            this.set('y2', this.y2);
         },
 
         restY2 : function(){

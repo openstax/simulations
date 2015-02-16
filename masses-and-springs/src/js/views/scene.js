@@ -56,21 +56,23 @@ define(function(require) {
             this.initLayers();
             this.initSprings(this.simulation, this.simulation.springs);
             this.initBodies(this.simulation, this.simulation.bodies);
+
+            this.listenTo(this.simulation.bodies, 'change:hook', this.checkIntersect);
         },
 
         initLayers: function() {
 
-            this.springLayer    =   new PIXI.DisplayObjectContainer();
             this.bodyLayer    =   new PIXI.DisplayObjectContainer();
+            this.springLayer    =   new PIXI.DisplayObjectContainer();
 
-            this.stage.addChild(this.springLayer);
             this.stage.addChild(this.bodyLayer);
+            this.stage.addChild(this.springLayer);
         },
 
 
         initSprings: function(simulation, springs){
 
-            _.each(springs, function(spring, iter){
+            springs.each(function(spring, iter){
                 var springView = new SpringView({
                     mvt: this.mvt,
                     model: spring,
@@ -84,7 +86,7 @@ define(function(require) {
 
         initBodies: function(simulation, bodies){
 
-            _.each(bodies, function(body, iter){
+            bodies.each(function(body, iter){
                 var bodyView = new BodyView({
                     mvt: this.mvt,
                     model: body,
@@ -93,6 +95,16 @@ define(function(require) {
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
             }, this);
+        },
+
+        checkIntersect: function(body){
+
+            this.simulation.systems.each(function(system){
+
+                if(body.hook.intersects(system.spring.hitArea)){
+                    system.addBody(body);
+                }
+            });
 
         },
 

@@ -48,6 +48,10 @@ define(function (require, exports, module) {
 
             this.spring = spring;
             this.set('spring', spring);
+
+            if(this.isHung()){
+                this.set('top', this.spring.y2);                
+            }
         },
 
 

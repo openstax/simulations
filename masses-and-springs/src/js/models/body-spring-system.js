@@ -19,22 +19,30 @@ define(function (require, exports, module) {
         defaults: {
             period : 0, //period of system, zero until a mass is added
             b : 0,      //friction constant: F_drag = -b*v 
-            velocity : 0       //velocity of mass(body) always initialized to zero
+            velocity : 0,       //velocity of mass(body) always initialized to zero,
+            deltaY : 0,
+            scaledMaxY : 1
         },
 
         initialize: function(attributes, options) {
 
             this.spring = this.get('spring');
             this.deltaY = this.get('deltaY');   //displacement from equilibrium
-            this.i = this.get('i');         //Kludge: index labeling instance for use setInterval function
+            this.gravity = this.get('gravity');   // gravity
+            this.b = this.get('b');
+            this.velocity = this.get('velocity');
+            this.period = this.get('period');
+            this.scaledMaxY = this.get('scaledMaxY');
+            // this.i = this.get('i');         //Kludge: index labeling instance for use setInterval function
 
             // this.oldT = getTimer(); //each system needs to keep its own time
+
 
         },
 
         addBody: function(body) {
 
-            if(this.spring.isSnagged){
+            if(this.spring.isSnagged()){
                 console.log('This spring is already snagged!  Unsnag to hang this new mass.');
                 return;
             }
@@ -43,7 +51,7 @@ define(function (require, exports, module) {
             this.period = Constants.SystemEquations.PERIOD(this.body.mass, this.spring.k);
 
             // Update children models body and spring with new state
-            this.body.hangOn(spring);
+            this.body.hangOn(this.spring);
             this.spring.hang(body);
 
             //begin evolution
@@ -51,13 +59,14 @@ define(function (require, exports, module) {
 
             this.Q = 0; //heat
             this.updateEnergies();
-
+            this.listenTo(this.body, 'change:spring', this.removeBody);
         },
 
         removeBody: function(){
 
             this.body.unhang();
             this.spring.unhang();
+            this.stop();
 
             this.deltaY = 0;
             this.initializeEnergies();
@@ -68,10 +77,6 @@ define(function (require, exports, module) {
             this.PEelas = Constants.SystemEquations.ELASTIC_POTENTIAL_ENERGY(this.spring.k, this.deltaY);
             this.PEgrav = Constants.SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY(this.body.mass, this.gravity, this.scaledMaxY - this.spring.y2);
             this.Etot = Constants.SystemEquations.TOTAL_ENERGY(this.KE, this.PEelas, this.PEgrav, this.Q);
-            // this.KE = 0.5*this.body.mass*this.v*this.v;
-            // this.PEelas = (0.5)*this.spring.k*this.deltaY*this.deltaY;
-            // this.PEgrav = this.body.mass*g*(stageHeight/f - this.spring.y2);
-            // this.Etot = this.KE + this.PEelas + this.PEgrav + Q;
         },
 
         initializeEnergies: function(){
@@ -83,10 +88,18 @@ define(function (require, exports, module) {
         },
 
         start : function(){
-
+            // TODO THIS IS TEMPORARRRYYY.
+            // and bad.
+            // just for the satisfaction of something animating for now.
+            var that = this;
+            this.timeInt = setInterval(function(){
+                that.evolve(100);
+            }, 50);
         },
 
         stop : function(){
+
+            clearInterval(this.timeInt);
 
         },
 
@@ -129,23 +142,22 @@ define(function (require, exports, module) {
                 if(dt > this.period / 15){
                     dt = this.period / 15;
                 }
-
                 // Would like to better organize this logic at some point
                 // Simple Euler-Cromer
-                acceleration = Constants.SystemEquations.ACCELERATION(this.gravity, this.spring.k, this.body.mass, this.deltaY, this.velocity);
+                acceleration = Constants.SystemEquations.ACCELERATION(this.gravity, this.spring.k, this.body.mass, this.deltaY, this.b, this.velocity);
                 deltaDeltaY = Constants.SystemEquations.DISPLACEMENT(this.velocity, dt, acceleration);
                 this.deltaY = this.deltaY + deltaDeltaY;
 
                 velocity2 = Constants.SystemEquations.VELOCITY2(this.velocity, acceleration, dt);
-                acceleration2 = Constants.SystemEquations.ACCELERATION(this.gravity, this.spring.k, this.body.mass, this.deltaY, velocity2);
+                acceleration2 = Constants.SystemEquations.ACCELERATION(this.gravity, this.spring.k, this.body.mass, this.deltaY, this.b, velocity2);
 
                 averageAcceleration = (acceleration2 + acceleration) / 2;
                 // Approximate new velocity based on an average of initial and final acceleration
                 this.velocity = Constants.SystemEquations.VELOCITY2(this.velocity, averageAcceleration, dt);
 
-
                 this.spring.updateY2(this.deltaY);
-                this.body.y = this.spring.y2;
+                // this.body.y = this.spring.y2;
+                this.body.set('top', this.spring.y2);
 
                 this.Q += Constants.SystemEquations.DELTA_THERMAL(deltaDeltaY, this.body.mass, this.b, velocity2);
 
