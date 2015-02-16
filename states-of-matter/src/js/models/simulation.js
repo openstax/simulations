@@ -10,6 +10,7 @@ define(function (require, exports, module) {
     var MoleculeForceAndMotionDataSet = require('models/molecule-force-and-motion-data-set');
     var AndersenThermostat = require('models/thermostat/andersen');
     var IsokineticThermostat = require('models/thermostat/isokinetic');
+    var MonatomicPhaseStateChanger = require('models/phase-state-changer/monatomic');
 
     /**
      * Constants

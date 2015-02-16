@@ -9,6 +9,7 @@ define(function(require) {
     var Vector2 = require('common/math/vector2');
 
     var PhaseStateChanger = require('../phase-state-changer');
+    var MonatomicAtomPositionUpdater = require('models/atom-position-updater/monatomic');
 
     var Constants = require('constants');
 
@@ -17,6 +18,8 @@ define(function(require) {
      */
     var MonatomicPhaseStateChanger = function(simulation) {
         PhaseStateChanger.apply(this, [simulation]);
+
+        this.positionUpdater = new MonatomicAtomPositionUpdater();
     };
 
     _.extend(MonatomicPhaseStateChanger.prototype, PhaseStateChanger.prototype, {

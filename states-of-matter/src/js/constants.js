@@ -214,6 +214,17 @@ define(function (require) {
     Constants.MonatomicPhaseStateChanger = MonatomicPhaseStateChanger;
 
 
+    var DiatomicPhaseStateChanger = {};
+
+    DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE = 2.0;
+    // The following constants can be adjusted to make the the corresponding
+    //   phase more or less dense.
+    DiatomicPhaseStateChanger.LIQUID_SPACING_FACTOR = 0.7;
+    DiatomicPhaseStateChanger.GAS_SPACING_FACTOR = 1.0;
+
+    Constants.DiatomicPhaseStateChanger = DiatomicPhaseStateChanger;
+
+
 
     return Constants;
 });

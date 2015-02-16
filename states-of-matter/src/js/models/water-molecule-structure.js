@@ -33,14 +33,14 @@ define(function (require) {
     var xcm0 = (moleculeStructureX[0] + 0.25 * moleculeStructureX[1] + 0.25 * moleculeStructureX[2]) / 1.5;
     var ycm0 = (moleculeStructureY[0] + 0.25 * moleculeStructureY[1] + 0.25 * moleculeStructureY[2]) / 1.5;
 
-    for (int i = 0; i < atoms.length; i++) {
+    for (var i = 0; i < atoms.length; i++) {
         moleculeStructureX[i] -= xcm0;
         moleculeStructureY[i] -= ycm0;
     }
 
-    var rotationalInertia = (Math.pow(this.moleculeStructureX[0], 2) + Math.pow(this.moleculeStructureY[0], 2))
-                   + 0.25 * (Math.pow(this.moleculeStructureX[1], 2) + Math.pow(this.moleculeStructureY[1], 2))
-                   + 0.25 * (Math.pow(this.moleculeStructureX[2], 2) + Math.pow(this.moleculeStructureY[2], 2));
+    var rotationalInertia = (Math.pow(moleculeStructureX[0], 2) + Math.pow(moleculeStructureY[0], 2))
+                   + 0.25 * (Math.pow(moleculeStructureX[1], 2) + Math.pow(moleculeStructureY[1], 2))
+                   + 0.25 * (Math.pow(moleculeStructureX[2], 2) + Math.pow(moleculeStructureY[2], 2));
 
     /**
      * A singleton object that aids in molecule calculations
