@@ -5,6 +5,7 @@ define(function (require){
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var SumVectorViewModel = require('models/sum-vector');
   var Vectors = require('vector-addition');
 
   var SumVectorView = PixiView.extend({
@@ -15,10 +16,10 @@ define(function (require){
     },
 
     initialize: function() {
-      this.sumVectorModel = new DraggableArrowView.ArrowViewModel();
+      this.sumVectorModel = new SumVectorViewModel();
       this.initGraphics()
       this.listenTo(this.model, 'change:sumVectorVisible', this.sumVectorVisible);
-      this.listenTo(this.model.arrowCollection, 'change', this.updateSum);
+      this.listenTo(this.model, 'change', this.updateSum);
       this.listenTo(this.sumVectorModel, 'change', this.updateSum);
     },
 
@@ -31,7 +32,9 @@ define(function (require){
 
       this.sumVectorView = new DraggableArrowView({
           model: this.sumVectorModel,
-          fillColor: this.model.get('green')
+          fillColor: this.model.get('green'),
+          headDraggingEnabled: false,
+          bodyDraggingEnabled: false
       });
 
       this.tailGraphics = this.sumVectorView.tailGraphics;
@@ -39,8 +42,8 @@ define(function (require){
       this.sumVectorContainer.addChild(this.sumVectorView.displayObject);
       this.displayObject.addChild(this.sumVectorContainer);
 
-      this.sumVectorContainer.x = $('.scene-view').width()/2;
-      this.sumVectorContainer.y = $('.scene-view').height()/2;
+      this.sumVectorContainer.x = $('.scene-view').width()/6;
+      this.sumVectorContainer.y = $('.scene-view').height()/6;
       this.sumVectorContainer.visible = false;
     },
 

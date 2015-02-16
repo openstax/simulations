@@ -3,6 +3,10 @@ define(function (require) {
   'use strict';
 
   var Simulation = require('common/simulation/simulation');
+  var ArrowViewModel = require('models/arrows');
+  var VectorXViewModel = require('models/vector-x');
+  var VectorYViewModel = require('models/vector-y');
+  var SumVectorViewModel = require('models/sum-vector');
 
   var VectorAdditionSimulation = Simulation.extend({
 
@@ -33,10 +37,30 @@ define(function (require) {
 
     initComponents: function() {
         this.initArrowsCollection();
+        this.initArrows();
+        this.initVectorX();
+        this.initVectorY();
+        this.initSumVector();
     },
 
     initArrowsCollection: function() {
       this.arrowCollection = new Backbone.Collection();
+    },
+
+    initArrows: function() {
+      this.arrowViewModel = new ArrowViewModel();
+    },
+
+    initVectorX: function() {
+      this.vectorXViewModel = new VectorXViewModel();
+    },
+
+    initVectorY: function() {
+      this.vectorYViewModel = new VectorYViewModel();
+    },
+
+    initSumVector: function() {
+      this.sumVectorViewModel = new SumVectorViewModel();
     }
 
   });

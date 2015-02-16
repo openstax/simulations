@@ -1,10 +1,8 @@
 define(function(require) {
 
-  'use strict'
-
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
 
-  var ArrowViewModel = DraggableArrowView.ArrowViewModel.extend({
+  var VectorXViewModel = DraggableArrowView.ArrowViewModel.extend({
     defaults: {
       originX: 300,
       originY: 300,
@@ -12,11 +10,12 @@ define(function(require) {
       targetY: 220
     },
 
-    initialize: function(attributes, options) {
-    },
+    initialize: function() {
+
+    }
 
   });
 
-  return ArrowViewModel;
+  return VectorXViewModel;
 
 });

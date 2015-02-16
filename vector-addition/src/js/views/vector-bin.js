@@ -7,7 +7,7 @@ define(function(require) {
   var ArrowView = require('views/arrows');
   var Assets = require('assets');
   var Constants = require('constants');
-  
+
   var VectorBinView = PixiView.extend({
 
     events: {
