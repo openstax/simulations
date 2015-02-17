@@ -161,8 +161,11 @@ define(function (require, exports, module) {
                 // TODO stop evolution when equilibrium approximated
                 solvedValues = this._solveODESForDisplacementAndVelocity(dt);
 
-                this.body.set('top', this.spring.y2);
+                // weird, don't know if this needs to be fixed, but the order
+                // of when the spring y2 and the body position updates affects
+                // whether the spring and body look attached when animating...
                 this.spring.updateY2(this.deltaY);
+                this.body.set('top', this.spring.y2);
 
                 this.updateEnergies(solvedValues);
             }
