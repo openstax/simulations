@@ -10,12 +10,16 @@ define(function (require, exports, module) {
     var MoleculeForceAndMotionDataSet = require('models/molecule-force-and-motion-data-set');
     var AndersenThermostat            = require('models/thermostat/andersen');
     var IsokineticThermostat          = require('models/thermostat/isokinetic');
+    var PhaseStateChanger             = require('models/phase-state-changer');
     var MonatomicPhaseStateChanger    = require('models/phase-state-changer/monatomic');
     var DiatomicPhaseStateChanger     = require('models/phase-state-changer/diatomic');
     var WaterPhaseStateChanger        = require('models/phase-state-changer/water');
     var MonatomicAtomPositionUpdater  = require('models/atom-position-updater/monatomic');
     var DiatomicAtomPositionUpdater   = require('models/atom-position-updater/diatomic');
     var WaterAtomPositionUpdater      = require('models/atom-position-updater/water');
+    var MonatomicVerletAlgorithm      = require('models/verlet-algorithm/monatomic');
+    var DiatomicVerletAlgorithm       = require('models/verlet-algorithm/diatomic');
+    var WaterVerletAlgorithm          = require('models/verlet-algorithm/water');
 
     /**
      * Constants
@@ -30,7 +34,7 @@ define(function (require, exports, module) {
     var SOMSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            isExploded: false,
+            exploded: false,
             particleContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
             targetContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
             heatingCoolingAmount: 0,
@@ -101,7 +105,7 @@ define(function (require, exports, module) {
             this.temperatureSetPoint = S.INITIAL_TEMPERATURE;
 
             this.set({
-                isExploded: false,
+                exploded: false,
                 heatingCoolingAmount: 0
             });
 
@@ -363,7 +367,7 @@ define(function (require, exports, module) {
          *   the container has exploded, otherwise it has no effect.
          */
         returnLid: function() {
-            if (!this.get('isExploded')) {
+            if (!this.get('exploded')) {
                 System.out.println('Warning: Ignoring attempt to return lid when container hadn\'t exploded.');
                 return;
             }
@@ -412,11 +416,11 @@ define(function (require, exports, module) {
         },
 
         explode: function() {
-            this.set('isExploded', true);
+            this.set('exploded', true);
         },
 
         unexplode: function() {
-            this.set('isExploded', false);
+            this.set('exploded', false);
             this.resetContainerSize();
         },
 
@@ -431,7 +435,7 @@ define(function (require, exports, module) {
 
         /*************************************************************************
          **                                                                     **
-         **             VALUE CALCULATIONS / CONVERSIONS / ACCESSORS            **
+         **      VALUE CALCULATIONS / CONVERSIONS / ACCESSORS / MODIFIERS       **
          **                                                                     **
          *************************************************************************/
 
@@ -442,6 +446,12 @@ define(function (require, exports, module) {
         calculateMinAllowableContainerHeight: function() {
             this.minAllowableContainerHeight = this.particleDiameter
                 * (this.moleculeDataSet.getNumberOfMolecules() / this.normalizedContainerWidth);
+        },
+
+        setPhase: function(phase) {
+            this.phaseStateChanger.setPhase(phase);
+
+            this.syncParticlePositions();
         },
 
         /**
@@ -626,6 +636,10 @@ define(function (require, exports, module) {
             return this.normalizedContainerHeight;
         },
 
+        getGravitationalAcceleration: function() {
+            return this.gravitationalAcceleration;
+        },
+
 
         /*************************************************************************
          **                                                                     **
@@ -747,7 +761,7 @@ define(function (require, exports, module) {
         },
 
         step: function() {
-            if (!this.get('isExploded')) {
+            if (!this.get('exploded')) {
                 // Adjust the particle container height if needed.
                 if (this.get('targetContainerHeight') != this.particleContainerHeight) {
                     this.heightChangeCounter = S.CONTAINER_SIZE_CHANGE_RESET_COUNT;
@@ -848,7 +862,7 @@ define(function (require, exports, module) {
          */
         runThermostat: function() {
 
-            if (this.get('isExploded')) {
+            if (this.get('exploded')) {
                 // Don't bother to run any thermostat if the lid is blown off -
                 //   just let those little particles run free!
                 return;
@@ -875,7 +889,7 @@ define(function (require, exports, module) {
             }
             else if (
                 (this.thermostatType == S.ISOKINETIC_THERMOSTAT) ||
-                (this.thermostatType == ADAPTIVE_THERMOSTAT && (
+                (this.thermostatType == S.ADAPTIVE_THERMOSTAT && (
                     temperatureIsChanging || this.get('temperatureSetPoint') > S.LIQUID_TEMPERATURE
                 ))
             ) {
@@ -883,8 +897,8 @@ define(function (require, exports, module) {
                 this.isoKineticThermostat.adjustTemperature();
             }
             else if (
-                (this.thermostatType == ANDERSEN_THERMOSTAT) ||
-                (this.thermostatType == ADAPTIVE_THERMOSTAT && !temperatureIsChanging)
+                (this.thermostatType == S.ANDERSEN_THERMOSTAT) ||
+                (this.thermostatType == S.ADAPTIVE_THERMOSTAT && !temperatureIsChanging)
             ) {
                 // The temperature isn't changing and it is below a certain
                 //   threshold, so use the Andersen thermostat.  This is done for
@@ -909,7 +923,7 @@ define(function (require, exports, module) {
             // Make sure that it is okay to inject a new molecule.
             if (this.moleculeDataSet.getNumberOfRemainingSlots() > 1 &&
                 this.normalizedContainerHeight > injectionPointY * 1.05 &&
-                !this.get('isExploded')) {
+                !this.get('exploded')) {
 
                 var angle = Math.PI + ((Math.random() - 0.5 ) * S.MAX_INJECTED_MOLECULE_ANGLE);
                 var velocity = S.MIN_INJECTED_MOLECULE_VELOCITY + (

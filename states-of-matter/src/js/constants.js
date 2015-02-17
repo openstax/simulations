@@ -236,6 +236,53 @@ define(function (require) {
     Constants.WaterPhaseStateChanger = WaterPhaseStateChanger;
     
 
+    /*************************************************************************
+     **                                                                     **
+     **                           VERLET ALGORITHM                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var VerletAlgorithm = {};
+
+    // Constants that control various aspects of the Verlet algorithm.
+    VerletAlgorithm.TIME_STEP = 0.020;  // Time per simulation clock tick, in seconds.
+    VerletAlgorithm.TIME_STEP_SQR_HALF = VerletAlgorithm.TIME_STEP * VerletAlgorithm.TIME_STEP * 0.5;
+    VerletAlgorithm.TIME_STEP_HALF = VerletAlgorithm.TIME_STEP / 2;
+    VerletAlgorithm.PARTICLE_INTERACTION_DISTANCE_THRESH_SQRD = 6.25;
+    VerletAlgorithm.PRESSURE_CALC_WEIGHTING = 0.999;
+    VerletAlgorithm.WALL_DISTANCE_THRESHOLD = 1.122462048309373017;
+    VerletAlgorithm.SAFE_INTER_MOLECULE_DISTANCE = 2.0;
+
+    // Constant used to limit how close the atoms are allowed to get to one
+    //   another so that we don't end up getting crazy big forces.
+    VerletAlgorithm.MIN_DISTANCE_SQUARED = 0.7225;
+
+    // Parameters that control the increasing of gravity as the temperature
+    //   approaches zero.  This is done to counteract the tendency of the
+    //   thermostat to slow falling molecules noticeably at low temps.  This
+    //   is a "hollywooding" thing.
+    VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES = 0.10;
+    VerletAlgorithm.LOW_TEMPERATURE_GRAVITY_INCREASE_RATE = 50;
+
+    // Pressure at which explosion of the container will occur.
+    VerletAlgorithm.EXPLOSION_PRESSURE = 1.05;  // Currently set so that container blows roughly
+                                                //   when the pressure gauge hits its max value.
+
+    Constants.VerletAlgorithm = VerletAlgorithm;
+
+
+    var WaterVerletAlgorithm = {};
+
+    // Parameters used for "hollywooding" of the water crystal.
+    WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE = 0.3;
+    WaterVerletAlgorithm.WATER_FULLY_MELTED_ELECTROSTATIC_FORCE = 1.0;
+    WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE = 0.22;
+    WaterVerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE = 4.0;
+    WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER = 3.0;
+
+    Constants.WaterVerletAlgorithm = WaterVerletAlgorithm;
+
+
 
     return Constants;
 });
