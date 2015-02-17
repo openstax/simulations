@@ -43,6 +43,7 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
+            this.listenTo(this.model, 'change:center', this.updateCenterPosition);
 
             this.updateMVT(this.mvt);
         },
@@ -183,6 +184,10 @@ define(function(require) {
 
         updateTopPosition: function(model, top){
             this.model.set('y', top + (this.viewModel.height + this.viewModel.hookHeight - this.viewModel.hookRadius/2)/this.sceneHeight);
+        },
+
+        updateCenterPosition: function(model, center){
+            this.model.set('x', center - (this.viewModel.width/2)/this.sceneWidth);
         },
 
         dropBody: function(){

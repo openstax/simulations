@@ -50,10 +50,9 @@ define(function (require, exports, module) {
             this.set('spring', spring);
 
             if(this.isHung()){
-                this.set('top', this.spring.y2);
+                this.snapBodyTopCenter(this.spring.y2, this.spring.x);
             }
         },
-
 
         unhang: function(){
             // Simplified version of the following
@@ -62,6 +61,11 @@ define(function (require, exports, module) {
             // this.body.spring = undefined;
 
             this.hangOn(undefined);
+        },
+
+        snapBodyTopCenter: function(top, center){
+            this.set('top', top);
+            this.set('center', center);
         },
 
         xChanged: function(model, x){
