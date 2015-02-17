@@ -11,6 +11,7 @@ define(function(require) {
   var VectorXViewModel = require('models/vector-x');
   var VectorYViewModel = require('models/vector-y');
   var Vectors = require('vector-addition');
+  var ComponentVectors = require('component-vectors');
   var Constants = require('constants');
 
   var ArrowView = PixiView.extend({
@@ -61,7 +62,7 @@ define(function(require) {
 
       Vectors.updateReadouts(this.container, this.model, this.arrowViewModel, width, height, this.arrowViewModel.get('length'), this.arrowViewModel.get('degrees'));
       this.model.arrowCollection.add(this.arrowViewModel);
-      this.showComponentStyles();
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     drawVectorX: function() {
@@ -84,19 +85,14 @@ define(function(require) {
       model.set('oldOriginX', model.get('originX'));
       model.set('oldOriginY', model.get('originY'));
       model.set('rotation', 0);
-
-      this.model.arrowCollection.add(this.vectorXViewModel);
     },
 
     updateVectorX: function() {
-      var vectorContainer = this.vectorXContainer;
       var model = this.vectorXViewModel;
-      var vectorView = this.vectorXView;
       var vectorModel = this.arrowViewModel;
-      var fillColor = this.model.get('pink');
       var angle = this.arrowViewModel.get('angle');
       var theta = this.model.get('thetaText');
-      this.showVectors(theta);
+      ComponentVectors.showVectors(theta, this.vectorXContainer, this.vectorYContainer);
 
       if (theta > 90) {
         angle = Constants.VECTOR_X_ROTATION;
@@ -113,7 +109,7 @@ define(function(require) {
       model.set('targetX', vectorModel.get('targetX'));
       model.set('targetY', vectorModel.get('targetY'));
 
-      Vectors.redrawVector(vectorView, vectorModel, fillColor, angle);
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     drawVectorY: function() {
@@ -136,19 +132,14 @@ define(function(require) {
       model.set('oldOriginX', model.get('originX'));
       model.set('oldOriginY', model.get('originY'));
       model.set('rotation', Constants.VECTOR_Y_ROTATION);
-
-      this.model.arrowCollection.add(this.vectorYViewModel);
     },
 
     updateVectorY: function() {
       var model = this.vectorYViewModel;
-      var vectorView = this.vectorYView;
       var vectorModel = this.arrowViewModel;
-      var fillColor = this.model.get('pink');
       var angle = this.arrowViewModel.get('angle');
       var theta = this.model.get('thetaText');
-      var rotation = model.get('rotation');
-      this.showVectors(theta);
+      ComponentVectors.showVectors(theta, this.vectorXContainer, this.vectorYContainer);
 
       if (theta > 0) {
         angle = Constants.VECTOR_Y_ROTATION;
@@ -166,24 +157,7 @@ define(function(require) {
       model.set('oldOriginY', vectorModel.get('originY'));
       model.set('oldOriginX', vectorModel.get('originX'));
 
-      Vectors.redrawVector(vectorView, vectorModel, fillColor, angle);
-      this.showComponentStyles();
-    },
-
-    showVectors: function(theta) {
-      if (theta == 0 || theta == 180) {
-        this.vectorYContainer.visible = false;
-      }
-      else {
-        this.vectorYContainer.visible = true;
-      }
-
-      if (theta == 90 || theta == -90 ) {
-        this.vectorXContainer.visible = false;
-      }
-      else {
-        this.vectorXContainer.visible = true;
-      }
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     updateReadouts: function() {
@@ -201,8 +175,6 @@ define(function(require) {
     clearArrows: function() {
       if (this.model.get('emptyStage') == true) {
         this.model.arrowCollection.remove(this.arrowViewModel);
-        this.model.arrowCollection.remove(this.vectorXViewModel);
-        this.model.arrowCollection.remove(this.vectorYViewModel);
         this.displayObject.removeChild(this.container);
         this.displayObject.removeChild(this.vectorXContainer);
         this.displayObject.removeChild(this.vectorYContainer);
@@ -212,10 +184,6 @@ define(function(require) {
     deleteArrow: function() {
       var arrowX = this.arrowViewModel.get('targetX');
       var arrowY = this.arrowViewModel.get('targetY');
-      var vectorXx = this.vectorXViewModel.get('targetX');
-      var vectorXy = this.vectorXViewModel.get('targetY');
-      var vectorYx = this.vectorYViewModel.get('targetX');
-      var vectorYy = this.vectorYViewModel.get('targetY')
       var trashCanX = this.model.get('trashCanPositionX');
       var trashCanY = this.model.get('trashCanPositionY');
 
@@ -231,32 +199,9 @@ define(function(require) {
     },
 
     showComponentStyles: function() {
-      var vectorYModel = this.vectorYViewModel;
-      var vectorXModel = this.vectorXViewModel;
-      var arrowViewModel = this.arrowViewModel;
-      var oldOriginX = vectorYModel.get('oldOriginX');
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
+    },
 
-      if (this.model.get('componentStyles') == 0) {
-        this.vectorXContainer.visible = false;
-        this.vectorYContainer.visible = false;
-      }
-      else {
-        this.vectorXContainer.visible = true;
-        this.vectorYContainer.visible = true;
-      }
-
-      if (this.model.get('componentStyles') == 1) {
-        vectorYModel.set('originX', oldOriginX);
-        this.vectorYView.transformFrame.rotation = vectorYModel.get('rotation');
-        this.vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
-
-      }
-
-      if (this.model.get('componentStyles') == 2) {
-        vectorYModel.set('originX', this.arrowViewModel.get('targetX'));
-        this.vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
-      }
-    }
 
   });
 
