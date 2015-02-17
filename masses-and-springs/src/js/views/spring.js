@@ -11,6 +11,7 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
     // var Vector2  = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Rectangle = require('common/math/rectangle');
 
     var Assets = require('assets');
 
@@ -46,15 +47,14 @@ define(function(require) {
                 // intializing view model, setting static values
                 this.viewModel = {};
 
-                this.viewModel.x = this.model.x * this.sceneWidth;
-                this.viewModel.y1 = this.model.y1 * this.sceneHeight;
-                this.viewModel.restL = this.model.restL * this.sceneHeight;
-
-                this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
-
                 this.viewModel.color = Colors.parseHex(Spring.COLOR);
                 this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
                 this.viewModel.coilRadius = Spring.WIDTH/2;
+
+                this.viewModel.x = this.model.x * this.sceneWidth;
+                this.viewModel.y1 = this.model.y1 * this.sceneHeight;
+                this.viewModel.restL = this.model.restL * this.sceneHeight;
+                this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
             }
 
             // Things that will change and need to update
@@ -90,7 +90,9 @@ define(function(require) {
             curve.close();
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
-            this.spring.hitArea = new PIXI.Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, Spring.RING_RADIUS);
+            if(!this.model.isSnagged()){
+                this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, 1.5 * Spring.RING_RADIUS);
+            }
         },
 
         makeSpringPoints: function(){
