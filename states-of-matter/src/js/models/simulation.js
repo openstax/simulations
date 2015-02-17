@@ -77,6 +77,9 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
+            this.frameDuration = SOMSimulation.FRAME_DURATION;
+            this.frameAccumulator = 0;
+
             this.currentMolecule = S.DEFAULT_MOLECULE;
             this.particleDiameter = 1;
             this.thermostatType = S.ADAPTIVE_THERMOSTAT;
@@ -756,8 +759,15 @@ define(function (require, exports, module) {
          **                                                                     **
          *************************************************************************/
 
-        _update: function(time, deltaTime) {
-            
+        update: function(time, deltaTime) {
+            if (!this.get('paused')) {
+                this.frameAccumulator += deltaTime;
+
+                while (this.frameAccumulator >= this.frameDuration) {
+                    this.step();
+                    this.frameAccumulator -= this.frameDuration;
+                }    
+            }
         },
 
         step: function() {

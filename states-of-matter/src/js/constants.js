@@ -108,6 +108,9 @@ define(function (require) {
 
     var SOMSimulation = {};
 
+    SOMSimulation.FRAME_DURATION = 1000 / 30; // Seconds between each frame
+    SOMSimulation.STEP_DT = 5; // Milliseconds per tick.
+
     // The internal model temperature values for the various states.
     SOMSimulation.SOLID_TEMPERATURE = 0.15;
     SOMSimulation.SLUSH_TEMPERATURE = 0.33;
