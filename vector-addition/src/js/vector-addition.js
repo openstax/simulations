@@ -46,6 +46,10 @@ define(function (require) {
 
           sumVectorModel.set('length', length);
           sumVectorModel.set('angle', angle);
+
+          sumVectorModel.set('targetX', sumVectorModel.get('originX') + length);
+          sumVectorModel.set('targetY', sumVectorModel.get('originY') + length);
+
           this.redrawVector(sumVectorView, sumVectorModel, model.get('green'), sumVectorModel.get('angle'))
         }
       },

@@ -7,74 +7,58 @@ define(function (require) {
 
   var ComponentVectors = {
 
-    drawVectorX: function(model, length, container) {
-      this.vectorX = new PIXI.DisplayObjectContainer();
+    showVectors: function(theta, vectorXContainer, vectorYContainer) {
 
-      var vectorHeadX = new PIXI.Graphics();
-      Vectors.drawVectorHead(vectorHeadX, model.get('pink'), true, true);
-      this.vectorHeadX = vectorHeadX;
+      if (vectorYContainer !== undefined) {
+        if (theta == 0 || theta == 180) {
+          vectorYContainer.visible = false;
+        }
+        else {
+          vectorYContainer.visible = true;
+        }
+      }
 
-      var vectorTailX = new PIXI.Graphics();
-      Vectors.drawVectorTail(vectorTailX, model.get('pink'), Vectors.padZero(Vectors.round1(length/10)), true, true);
-      this.vectorTailX = vectorTailX;
+      if (vectorXContainer !== undefined) {
+        if (theta == 90 || theta == -90 ) {
+          vectorXContainer.visible = false;
+        }
+        else {
+          vectorXContainer.visible = true;
+        }
+      }
 
-      this.vectorX.addChild(vectorHeadX);
-      this.vectorX.addChild(vectorTailX);
-      this.vectorX.visible = true;
-
-      return this.vectorX;
     },
 
-    drawVectorY: function(model, length, container, height) {
-      this.vectorY = new PIXI.DisplayObjectContainer();
+    showComponentStyles: function(vectorYModel, vectorXModel, arrowModel, model, vectorXContainer, vectorYContainer, vectorYView, vectorXView) {
+      var vectorYModel = vectorYModel;
+      var vectorXModel = vectorXModel;
+      var arrowViewModel = arrowModel;
+      var oldOriginX = vectorYModel.get('oldOriginX');
 
-      var vectorHeadY = new PIXI.Graphics();
-      Vectors.drawVectorHead(vectorHeadY, model.get('pink'), true, true);
-      this.vectorHeadY = vectorHeadY;
-
-      var vectorTailY = new PIXI.Graphics();
-      Vectors.drawVectorTail(vectorTailY, model.get('pink'), length - height, true, true);
-      this.vectorTailY = vectorTailY;
-
-      this.vectorY.addChild(vectorHeadY);
-      this.vectorY.addChild(vectorTailY);
-      this.vectorY.visible = false;
-
-      return this.vectorY;
-    },
-
-    updateVector: function(model, vector, fillColor, x) {
-      vector.clear();
-      vector.beginFill(fillColor);
-      vector.drawRect(6, 20, 8, x);
-      vector.height = x;
-    },
-
-    updateVectorX: function(model, vector, fillColor, x) {
-      vector.clear();
-      vector.beginFill(fillColor);
-
-      if (x > 0) {
-        x = x - 30;
+      if (model.get('componentStyles') == 0) {
+        vectorXContainer.visible = false;
+        vectorYContainer.visible = false;
       }
       else {
-        x = -x - 10;
+        vectorXContainer.visible = true;
+        vectorYContainer.visible = true;
       }
 
-      vector.drawRect(6, 20, 8, x);
-      vector.height = x;
-    },
+      if (model.get('componentStyles') == 1) {
+        vectorYModel.set('originX', oldOriginX);
+        vectorYView.transformFrame.rotation = vectorYModel.get('rotation');
+        vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
 
-    updateVectorY: function(model, vector, fillColor, y) {
-      vector.clear();
-      vector.beginFill(fillColor);
-
-      if (y < 0) {
-        y = -y;
       }
 
-      vector.drawRect(6, 20, 8, y);
-      vector.height = y;
+      if (model.get('componentStyles') == 2) {
+        vectorYModel.set('originX', arrowModel.get('targetX'));
+        vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
+      }
+
+      if (model.get('componentStyles') == 3) {
+
+      }
     }
   }
 

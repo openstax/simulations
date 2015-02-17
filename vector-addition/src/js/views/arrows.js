@@ -6,10 +6,12 @@ define(function(require) {
   var PixiView = require('common/pixi/view');
   var Simulation = require('models/simulation');
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var CommonArrowView = require('common/pixi/view/arrow');
   var ArrowViewModel = require('models/arrows');
   var VectorXViewModel = require('models/vector-x');
   var VectorYViewModel = require('models/vector-y');
   var Vectors = require('vector-addition');
+  var ComponentVectors = require('component-vectors');
   var Constants = require('constants');
 
   var ArrowView = PixiView.extend({
@@ -27,8 +29,8 @@ define(function(require) {
       this.listenTo(this.model, 'change:emptyStage', this.clearArrows);
       this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.updateReadouts);
       this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.deleteArrow);
-      this.listenTo(this.arrowViewModel, 'change:targetX', this.updateVectorX);
-      this.listenTo(this.arrowViewModel, 'change:targetY', this.updateVectorY);
+      this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.updateVectorX);
+      this.listenTo(this.arrowViewModel, 'change:targetY change:targetX', this.updateVectorY);
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
     },
 
@@ -60,78 +62,102 @@ define(function(require) {
 
       Vectors.updateReadouts(this.container, this.model, this.arrowViewModel, width, height, this.arrowViewModel.get('length'), this.arrowViewModel.get('degrees'));
       this.model.arrowCollection.add(this.arrowViewModel);
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     drawVectorX: function() {
-      this.vectorXView = new DraggableArrowView({
+      this.vectorXView = new CommonArrowView({
           model: this.vectorXViewModel,
-          fillColor: this.model.get('pink'),
-          bodyDraggingEnabled: false,
-          headDraggingEnabled: false
+          fillColor: this.model.get('pink')
       });
 
       this.vectorXContainer = new PIXI.DisplayObjectContainer();
       this.vectorXContainer.addChild(this.vectorXView.displayObject);
       this.displayObject.addChild(this.vectorXContainer);
-      this.vectorXView.transformFrame.rotation = 0;
       this.vectorXContainer.visible = false;
-      this.model.arrowCollection.add(this.vectorXViewModel);
+
+      var model = this.vectorXViewModel;
+
+      model.set('originX', this.arrowViewModel.get('originX'));
+      model.set('originY', this.arrowViewModel.get('originY'));
+      model.set('targetX', this.arrowViewModel.get('targetX'));
+      model.set('targetY', this.arrowViewModel.get('targetY'));
+      model.set('oldOriginX', model.get('originX'));
+      model.set('oldOriginY', model.get('originY'));
+      model.set('rotation', 0);
     },
 
     updateVectorX: function() {
-      var vectorView = this.vectorXView;
+      var model = this.vectorXViewModel;
       var vectorModel = this.arrowViewModel;
-      var fillColor = this.model.get('pink');
       var angle = this.arrowViewModel.get('angle');
-      Vectors.redrawVector(vectorView, vectorModel, fillColor, 0);
+      var theta = this.model.get('thetaText');
+      ComponentVectors.showVectors(theta, this.vectorXContainer, this.vectorYContainer);
+
+      if (theta > 90) {
+        angle = Constants.VECTOR_X_ROTATION;
+        model.set('rotation', angle)
+      }
+
+      else {
+        angle = 0;
+        model.set('rotation', angle)
+      }
+
+      model.set('originX', vectorModel.get('originX'));
+      model.set('originY', vectorModel.get('originY'));
+      model.set('targetX', vectorModel.get('targetX'));
+      model.set('targetY', vectorModel.get('targetY'));
+
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     drawVectorY: function() {
-      this.vectorYView = new DraggableArrowView({
+      this.vectorYView = new CommonArrowView({
           model: this.vectorYViewModel,
-          fillColor: this.model.get('pink'),
-          bodyDraggingEnabled: false,
-          headDraggingEnabled: false
+          fillColor: this.model.get('pink')
       });
 
       this.vectorYContainer = new PIXI.DisplayObjectContainer();
       this.vectorYContainer.addChild(this.vectorYView.displayObject);
       this.displayObject.addChild(this.vectorYContainer);
-      this.vectorYView.transformFrame.rotation = 4.733219300420907; //TODO
       this.vectorYContainer.visible = false;
-      this.model.arrowCollection.add(this.vectorYViewModel);
+
+      var model = this.vectorYViewModel;
+
+      model.set('originX', this.arrowViewModel.get('originX'));
+      model.set('originY', this.arrowViewModel.get('originY'));
+      model.set('targetX', this.arrowViewModel.get('targetX'));
+      model.set('targetY', this.arrowViewModel.get('targetY'));
+      model.set('oldOriginX', model.get('originX'));
+      model.set('oldOriginY', model.get('originY'));
+      model.set('rotation', Constants.VECTOR_Y_ROTATION);
     },
 
     updateVectorY: function() {
-      var vectorView = this.vectorYView;
+      var model = this.vectorYViewModel;
       var vectorModel = this.arrowViewModel;
-      var fillColor = this.model.get('pink');
       var angle = this.arrowViewModel.get('angle');
       var theta = this.model.get('thetaText');
-      this.scaleVectors(theta);
+      ComponentVectors.showVectors(theta, this.vectorXContainer, this.vectorYContainer);
+
       if (theta > 0) {
-        angle = 4.733219300420907; //TODO angle
+        angle = Constants.VECTOR_Y_ROTATION;
+        model.set('rotation', angle);
       }
       else {
-        angle = -4.733219300420907; //TODO angle
-      }
-      Vectors.redrawVector(vectorView, vectorModel, fillColor, angle);
-    },
-
-    scaleVectors: function(theta) {
-      if (theta == 0 || theta == 180) {
-        this.vectorYView.transformFrame.scale.y = 0;
-      }
-      else {
-        this.vectorYView.transformFrame.scale.y = 1;
+        angle = -Constants.VECTOR_Y_ROTATION;
+        model.set('rotation', angle);
       }
 
-      if (theta == 90 || theta == -90 ) {
-        this.vectorXView.transformFrame.scale.x = 0;
-      }
-      else {
-        this.vectorXView.transformFrame.scale.x = 1;
-      }
+      model.set('originX', vectorModel.get('originX'));
+      model.set('originY', vectorModel.get('originY'));
+      model.set('targetX', vectorModel.get('targetX'));
+      model.set('targetY', vectorModel.get('targetY'));
+      model.set('oldOriginY', vectorModel.get('originY'));
+      model.set('oldOriginX', vectorModel.get('originX'));
+
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
     },
 
     updateReadouts: function() {
@@ -140,10 +166,8 @@ define(function(require) {
       var height = Math.floor(this.container.height);
       var length = arrowModel.get('length');
       var degrees = arrowModel.get('degrees');
-
       arrowModel.set('degrees', Vectors.calculateDegrees(width/10, height/10));
       arrowModel.set('angle', this.arrowView.transformFrame.rotation);
-
       Vectors.updateReadouts(this.container, this.model, arrowModel, width, height, length, degrees);
       $('label').removeClass('green');
     },
@@ -151,8 +175,6 @@ define(function(require) {
     clearArrows: function() {
       if (this.model.get('emptyStage') == true) {
         this.model.arrowCollection.remove(this.arrowViewModel);
-        this.model.arrowCollection.remove(this.vectorXViewModel);
-        this.model.arrowCollection.remove(this.vectorYViewModel);
         this.displayObject.removeChild(this.container);
         this.displayObject.removeChild(this.vectorXContainer);
         this.displayObject.removeChild(this.vectorYContainer);
@@ -169,30 +191,17 @@ define(function(require) {
         this.model.set('deleteVector', true);
         this.model.arrowCollection.remove(this.arrowViewModel);
         this.displayObject.removeChild(this.container);
+        this.displayObject.removeChild(this.vectorXContainer);
+        this.displayObject.removeChild(this.vectorYContainer);
         this.model.set('deleteVector', false);
         this.model.set('sumVectorVisible', false);
       }
     },
 
     showComponentStyles: function() {
-      if (this.model.get('componentStyles') == 0) {
-        this.vectorXContainer.visible = false;
-        this.vectorYContainer.visible = false;
-      }
-      else {
-        this.vectorXContainer.visible = true;
-        this.vectorYContainer.visible = true;
-      }
+      ComponentVectors.showComponentStyles(this.vectorYViewModel, this.vectorXViewModel, this.arrowViewModel, this.model, this.vectorXContainer, this.vectorYContainer, this.vectorYView, this.vectorXView);
+    },
 
-      if (this.model.get('componentStyles') == 1) {
-        //TODO
-      }
-
-      if (this.model.get('componentStyles') == 2) {
-        //TODO
-      }
-
-    }
 
   });
 
