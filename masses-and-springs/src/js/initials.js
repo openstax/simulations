@@ -36,7 +36,7 @@ define(function (require) {
             label: false
         },{
             mass : 0.31,
-            x : 0.5,
+            x : 0.52,
             y: 0.95,
             color: Constants.ColorConstants['pale-orange'],
             label: false

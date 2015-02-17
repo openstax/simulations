@@ -72,16 +72,14 @@ define(function(require) {
         initializeBodyViewModel: function(){
             this.viewModel = {};
 
-            // TODO need a non-linear equation for mass to dimensions because the 
-            // lightest weights are tiny right now.
-            this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
-            this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
+            this.viewModel.width = Body.MASS_TO_WIDTH(this.model.mass);
+            this.viewModel.height = Body.MASS_TO_HEIGHT(this.model.mass);
 
             this.viewModel.color = Colors.parseHex(this.model.color);
             this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
 
             this.viewModel.hookThickness = 3;
-            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
+            this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width);
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
         },
 

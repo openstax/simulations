@@ -158,9 +158,16 @@ define(function (require) {
 
 
     var BodyDefaults = {};
-    BodyDefaults.HOOK_TO_BODY_RATIO = 0.25;
-    BodyDefaults.MASS_TO_RADIUS_RATIO = 100;
-    BodyDefaults.MASS_TO_HEIGHT_RATIO = 300;
+    // TODO convert from px to meters
+    BodyDefaults.WIDTH_TO_HOOK_RADIUS = function(width){
+        return 8 + 0.1 * width;
+    };
+    BodyDefaults.MASS_TO_HEIGHT = function(mass){
+        return 20 + 240 * mass;
+    };
+    BodyDefaults.MASS_TO_WIDTH = function(mass){
+        return 20 + 160 * mass;
+    };
 
     BodyDefaults.COLOR = ColorConstants['light-gray'];
 
