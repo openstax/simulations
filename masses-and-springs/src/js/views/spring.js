@@ -25,9 +25,6 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
 
-            this.sceneWidth = options.sceneWidth;
-            this.sceneHeight = options.sceneHeight;
-
             this.initGraphics();
 
             this.updateMVT(this.mvt);
@@ -48,18 +45,19 @@ define(function(require) {
                 this.viewModel = {};
 
                 this.viewModel.color = Colors.parseHex(Spring.COLOR);
-                this.viewModel.ringOffset = 2 * Spring.RING_RADIUS;
-                this.viewModel.coilRadius = Spring.WIDTH/2;
+                this.viewModel.ringRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER;
+                this.viewModel.ringOffset = 2 * this.viewModel.ringRadius;
+                this.viewModel.coilRadius = (Spring.WIDTH * Constants.Scene.PX_PER_METER)/2;
 
-                this.viewModel.x = this.model.x * this.sceneWidth;
-                this.viewModel.y1 = this.model.y1 * this.sceneHeight;
-                this.viewModel.restL = this.model.restL * this.sceneHeight;
+                this.viewModel.x = this.model.x * Constants.Scene.PX_PER_METER;
+                this.viewModel.y1 = this.model.y1 * Constants.Scene.PX_PER_METER;
+                this.viewModel.restL = this.model.restL * Constants.Scene.PX_PER_METER;
                 this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
             }
 
             // Things that will change and need to update
-            this.viewModel.y2 = this.model.y2 * this.sceneHeight;
-            this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1 - 3 * Spring.RING_RADIUS;
+            this.viewModel.y2 = this.model.y2 * Constants.Scene.PX_PER_METER;
+            this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1 - 3 * this.viewModel.ringRadius;
             this.viewModel.coilHeight = this.viewModel.coilsLength / Spring.COILS;
             this.viewModel.thickness = this.model.k * Spring.THICKNESS_FACTOR;
         },
@@ -91,7 +89,7 @@ define(function(require) {
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
             if(!this.model.isSnagged()){
-                this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, 1.5 * Spring.RING_RADIUS);
+                this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * this.viewModel.ringRadius, 2 * this.viewModel.coilRadius, 1.5 * this.viewModel.ringRadius);
             }else{
                 this.model.hitArea = undefined;
             }
@@ -116,21 +114,21 @@ define(function(require) {
 
         makeHangRing: function(points, x, y){
 
-            x = x - Spring.RING_RADIUS;
-            y = y + 2 * Spring.RING_RADIUS;
+            x = x - this.viewModel.ringRadius;
+            y = y + 2 * this.viewModel.ringRadius;
 
             points.push([
-                x + Spring.RING_RADIUS, y
+                x + this.viewModel.ringRadius, y
             ]);
             points.push([
-                x + (2 * Spring.RING_RADIUS), y,
-                x + (2 * Spring.RING_RADIUS), y - (1.5 * Spring.RING_RADIUS),
-                x + Spring.RING_RADIUS, y - (1.5 * Spring.RING_RADIUS)
+                x + (2 * this.viewModel.ringRadius), y,
+                x + (2 * this.viewModel.ringRadius), y - (1.5 * this.viewModel.ringRadius),
+                x + this.viewModel.ringRadius, y - (1.5 * this.viewModel.ringRadius)
             ]);
             points.push([
-                x, y - (1.5 * Spring.RING_RADIUS),
+                x, y - (1.5 * this.viewModel.ringRadius),
                 x, y,
-                x + Spring.RING_RADIUS, y
+                x + this.viewModel.ringRadius, y
             ]);
         },
 
@@ -148,7 +146,7 @@ define(function(require) {
         },
 
         makeSpringEnd: function(points){
-            points[points.length - 1] = [this.viewModel.x, this.viewModel.y2 - Spring.RING_RADIUS];
+            points[points.length - 1] = [this.viewModel.x, this.viewModel.y2 - this.viewModel.ringRadius];
             points[points.length] = [this.viewModel.x, this.viewModel.y2];
         },
 

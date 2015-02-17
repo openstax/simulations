@@ -21,7 +21,7 @@ define(function (require, exports, module) {
             b : 0,      //friction constant: F_drag = -b*v 
             velocity : 0,       //velocity of mass(body) always initialized to zero,
             deltaY : 0,
-            scaledMaxY : 1
+            maxY : 1.24
         },
 
         initialize: function(attributes, options) {
@@ -31,7 +31,7 @@ define(function (require, exports, module) {
             this.b = this.get('b');
             this.velocity = this.get('velocity');
             this.period = this.get('period');
-            this.scaledMaxY = this.get('scaledMaxY');
+            this.maxY = this.get('maxY');
             // this.oldT = getTimer(); //each system needs to keep its own time
         },
 
@@ -82,7 +82,7 @@ define(function (require, exports, module) {
 
             this.KE = Constants.SystemEquations.KINETIC_ENERGY(this.body.mass, this.velocity);
             this.PEelas = Constants.SystemEquations.ELASTIC_POTENTIAL_ENERGY(this.spring.k, this.deltaY);
-            this.PEgrav = Constants.SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY(this.body.mass, this.gravity, this.scaledMaxY - this.spring.y2);
+            this.PEgrav = Constants.SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY(this.body.mass, this.gravity, this.maxY - this.spring.y2);
             this.Q += Constants.SystemEquations.DELTA_THERMAL(solvedValues.deltaDeltaY, this.body.mass, this.b, solvedValues.velocity2);
 
             this.Etot = Constants.SystemEquations.TOTAL_ENERGY(this.KE, this.PEelas, this.PEgrav, this.Q);

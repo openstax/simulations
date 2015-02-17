@@ -75,9 +75,7 @@ define(function(require) {
             springs.each(function(spring, iter){
                 var springView = new SpringView({
                     mvt: this.mvt,
-                    model: spring,
-                    sceneWidth: this.width,
-                    sceneHeight: this.height
+                    model: spring
                 });
                 this.springLayer.addChild(springView.displayObject);
             }, this);
@@ -89,9 +87,7 @@ define(function(require) {
             bodies.each(function(body, iter){
                 var bodyView = new BodyView({
                     mvt: this.mvt,
-                    model: body,
-                    sceneWidth: this.width,
-                    sceneHeight: this.height
+                    model: body
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
             }, this);
