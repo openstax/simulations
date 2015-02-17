@@ -38,21 +38,27 @@ define(function (require, exports, module) {
         },
 
         hangOn: function(spring){
-            this.spring = spring;
-            this.set('spring', spring);
-
-            if(this.isHung()){
-                this.snapBodyTopCenter(this.spring.y2, this.spring.x);
-            }
+            this.updateSpring(spring);
+            this.snapBodyTopCenter(this.spring.y2, this.spring.x);
         },
 
         unhang: function(){
-            this.hangOn(undefined);
+            this.updateSpring(undefined);
+            this.unsnap();
+        },
+
+        updateSpring: function(spring){
+            this.spring = spring;
+            this.set('spring', spring);
         },
 
         snapBodyTopCenter: function(top, center){
-            this.set('top', top);
             this.set('center', center);
+            this.set('top', top);
+        },
+
+        unsnap: function(){
+            this.unset('center');
         },
 
         xChanged: function(model, x){
