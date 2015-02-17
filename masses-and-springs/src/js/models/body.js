@@ -50,7 +50,7 @@ define(function (require, exports, module) {
             this.set('spring', spring);
 
             if(this.isHung()){
-                this.set('top', this.spring.y2);                
+                this.set('top', this.spring.y2);
             }
         },
 

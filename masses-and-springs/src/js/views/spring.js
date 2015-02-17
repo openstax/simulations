@@ -90,7 +90,9 @@ define(function(require) {
             curve.close();
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
-            this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, Spring.RING_RADIUS);
+            if(!this.model.isSnagged()){
+                this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * Spring.RING_RADIUS, 2 * this.viewModel.coilRadius, 1.5 * Spring.RING_RADIUS);
+            }
         },
 
         makeSpringPoints: function(){
