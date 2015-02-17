@@ -30,7 +30,16 @@ define(function(require) {
                 originX: 300,
                 originY: 300,
                 targetX: 380,
-                targetY: 220
+                targetY: 220,
+                maxLength: 220
+            });
+
+            this.snappingArrowViewModel = new DraggableArrowView.ArrowViewModel({
+                originX: 500,
+                originY: 300,
+                targetX: 320,
+                targetY: 380,
+                minLength: 20
             });
 
             PixiSceneView.prototype.initialize.apply(this, arguments);
@@ -48,7 +57,14 @@ define(function(require) {
                 dragFillColor: '#ff6b00'
             });
 
+            this.snappingArrowView = new DraggableArrowView({ 
+                model: this.snappingArrowViewModel,
+                fillColor: '#00ECFF',
+                snappingEnabled: true
+            });
+
             this.stage.addChild(this.arrowView.displayObject);
+            this.stage.addChild(this.snappingArrowView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
