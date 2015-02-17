@@ -4,10 +4,12 @@ define(function(require) {
 
   var VectorYViewModel = DraggableArrowView.ArrowViewModel.extend({
     defaults: {
-      originX: 300,
-      originY: 300,
-      targetX: 380,
-      targetY: 220
+      originX: 0,
+      originY: 0,
+      targetX: 0,
+      targetY: 0,
+      oldOriginX: 0,
+      oldOriginY: 0
     },
 
     initialize: function() {
