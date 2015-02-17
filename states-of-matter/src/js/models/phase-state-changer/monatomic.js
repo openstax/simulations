@@ -19,7 +19,7 @@ define(function(require) {
     var MonatomicPhaseStateChanger = function(simulation) {
         PhaseStateChanger.apply(this, [simulation]);
 
-        this.positionUpdater = new MonatomicAtomPositionUpdater();
+        this.positionUpdater = MonatomicAtomPositionUpdater;
     };
 
     _.extend(MonatomicPhaseStateChanger.prototype, PhaseStateChanger.prototype, {

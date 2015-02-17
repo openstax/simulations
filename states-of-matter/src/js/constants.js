@@ -225,6 +225,17 @@ define(function (require) {
     Constants.DiatomicPhaseStateChanger = DiatomicPhaseStateChanger;
 
 
+    var WaterPhaseStateChanger = {};
+
+    WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE = 1.4;
+    // The following constants can be adjusted to make the the corresponding
+    //   phase more or less dense.
+    WaterPhaseStateChanger.LIQUID_SPACING_FACTOR = 0.8;
+    WaterPhaseStateChanger.GAS_SPACING_FACTOR = 1.0;
+
+    Constants.WaterPhaseStateChanger = WaterPhaseStateChanger;
+    
+
 
     return Constants;
 });

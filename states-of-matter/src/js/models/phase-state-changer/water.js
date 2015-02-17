@@ -9,39 +9,34 @@ define(function(require) {
     var Vector2 = require('common/math/vector2');
 
     var PhaseStateChanger = require('../phase-state-changer');
-    var DiatomicAtomPositionUpdater = require('models/atom-position-updater/diatomic');
+    var WaterAtomPositionUpdater = require('models/atom-position-updater/water');
 
     var Constants = require('constants');
 
     /**
      * Allows users to directly set the phase state (i.e. solid, liquid, or gas)
      */
-    var DiatomicPhaseStateChanger = function(simulation) {
+    var WaterPhaseStateChanger = function(simulation) {
         PhaseStateChanger.apply(this, [simulation]);
 
-        this.positionUpdater = DiatomicAtomPositionUpdater;
+        this.positionUpdater = WaterAtomPositionUpdater;
     };
 
-    _.extend(DiatomicPhaseStateChanger.prototype, PhaseStateChanger.prototype, {
+    _.extend(WaterPhaseStateChanger.prototype, PhaseStateChanger.prototype, {
 
         /**
          * Sets to the specified phase.
          */
         setPhase: function(phase) {
-            var postChangeModelSteps = 0;
-
             switch (phase) {
                 case PhaseStateChanger.SOLID:
                     this.setPhaseSolid();
-                    postChangeModelSteps = 0;
                     break;
                 case PhaseStateChanger.LIQUID:
                     this.setPhaseLiquid();
-                    postChangeModelSteps = 200;
                     break;
                 case PhaseStateChanger.GAS:
                     this.setPhaseGas();
-                    postChangeModelSteps = 0;
                     break;
             }
 
@@ -57,7 +52,7 @@ define(function(require) {
             // Step the model a number of times in order to prevent the particles
             //   from looking too organized.  The number of steps was empirically
             //   determined.
-            for (var i = 0; i < postChangeModelSteps; i++)
+            for (var i = 0; i < 100; i++)
                 this.simulation.step();
         },
 
@@ -73,39 +68,48 @@ define(function(require) {
             var moleculeCenterOfMassPositions = moleculeDataSet.moleculeCenterOfMassPositions;
             var moleculeVelocities = moleculeDataSet.moleculeVelocities;
             var moleculeRotationAngles = moleculeDataSet.moleculeRotationAngles;
+            var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
-            var atomsPerLayer = Math.round(Math.sqrt(numberOfAtoms));
+            var moleculesPerLayer = Math.floor(Math.sqrt(numberOfMolecules));
+
+            // Initialize the velocities and angles of the molecules.
+            for (var i = 0; i < numberOfMolecules; i++) {
+
+                // Assign each molecule an initial velocity.
+                moleculeVelocities[i].set( 
+                    temperatureSqrt * gaussRandom(),
+                    temperatureSqrt * gaussRandom()
+                );
+
+                // Assign each molecule an initial rotation rate.
+                moleculeRotationRates[i] = Math.random() * temperatureSqrt * Math.PI * 2;
+            }
 
             // Establish the starting position, which will be the lower left corner
-            //   of the "cube".  The molecules will all be rotated so that they are
-            //   lying down.
-            var crystalWidth = moleculesPerLayer * (2.0 - 0.3); // Final term is a fudge factor that can be adjusted to center the cube.
+            //   of the "cube".
+            var crystalWidth = (moleculesPerLayer - 1) * WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE;
             var startingPosX = (this.simulation.getNormalizedContainerWidth() / 2) - (crystalWidth / 2);
-            var startingPosY = 1.2 + DiatomicPhaseStateChanger.DISTANCE_BETWEEN_PARTICLES_IN_CRYSTAL; // Multiplier can be tweaked to minimize initial "bounce".
+            var startingPosY = WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE;
 
             // Place the molecules by placing their centers of mass.
             var moleculesPlaced = 0;
             var xPos, yPos;
-            for (var i = 0; i < numberOfMolecules; i++) { // One iteration per layer.
+            for (var i = 0; i < numberOfMolecules; i++ ) { // One iteration per layer.
                 for (var j = 0; (j < moleculesPerLayer) && (moleculesPlaced < numberOfMolecules); j++) {
-                    xPos = startingPosX + (j * DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE);
-                    if (i % 2 != 0) {
+                    xPos = startingPosX + (j * WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE);
+                    if (i % 2 !== 0) {
                         // Every other row is shifted a bit to create hexagonal pattern.
-                        xPos += (1 + DiatomicPhaseStateChanger.DISTANCE_BETWEEN_PARTICLES_IN_CRYSTAL) / 2;
+                        xPos += WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE / 2;
                     }
-                    yPos = startingPosY + (i * DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * 0.5);
+                    yPos = startingPosY + (i * WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * 0.866);
+
                     moleculeCenterOfMassPositions[(i * moleculesPerLayer) + j].set(xPos, yPos);
-                    moleculeRotationAngles[(i * moleculesPerLayer) + j] = 0;
+                    moleculeRotationAngles[(i * moleculesPerLayer) + j] = Math.random() * 2 * Math.PI;
 
                     moleculesPlaced++;
-
-                    // Assign each molecule an initial velocity.
-                    var xVel = temperatureSqrt * gaussRandom();
-                    var yVel = temperatureSqrt * gaussRandom();
-                    moleculeVelocities[(i * moleculesPerLayer) + j].set(xVel, yVel);
                 }
             }
         },
@@ -125,11 +129,12 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             // Initialize the velocities and angles of the molecules.
             for (var i = 0; i < numberOfMolecules; i++) {
+
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
                     temperatureSqrt * gaussRandom(),
@@ -153,32 +158,37 @@ define(function(require) {
 
             for (var i = 0; i < numberOfMolecules; i++ ) {
                 for (var j = 0; j < MAX_PLACEMENT_ATTEMPTS; j++ ) {
-
-                    var distanceFromCenter = currentLayer * DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.LIQUID_SPACING_FACTOR;
+                    var distanceFromCenter = currentLayer * 
+                        WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * 
+                        WaterPhaseStateChanger.LIQUID_SPACING_FACTOR;
                     var angle = (particlesOnCurrentLayer / particlesThatWillFitOnCurrentLayer * 2 * Math.PI) + (
-                        particlesThatWillFitOnCurrentLayer / ( 4 * Math.PI )
+                        particlesThatWillFitOnCurrentLayer / (4 * Math.PI)
                     );
                     var xPos = centerPoint.x + (distanceFromCenter * Math.cos(angle));
                     var yPos = centerPoint.y + (distanceFromCenter * Math.sin(angle));
                     particlesOnCurrentLayer++;  // Consider this spot used even if we don't actually put the
                                                 //   particle there.
                     if (particlesOnCurrentLayer >= particlesThatWillFitOnCurrentLayer) {
+
                         // This layer is full - move to the next one.
                         currentLayer++;
-                        particlesThatWillFitOnCurrentLayer = currentLayer * 2 * Math.PI / ( 
-                            DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.LIQUID_SPACING_FACTOR 
+                        particlesThatWillFitOnCurrentLayer = Math.floor(
+                            currentLayer * 2 * Math.PI / (
+                                WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * 
+                                WaterPhaseStateChanger.LIQUID_SPACING_FACTOR
+                            ) 
                         );
                         particlesOnCurrentLayer = 0;
                     }
 
                     // Check if the position is too close to the wall.  Note
-                    // that we don't check inter-particle distances here - we rely
-                    // on the placement algorithm to make sure that this is not a
-                    // problem.
-                    if ((xPos > DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
-                        (xPos < this.simulation.getNormalizedContainerWidth() - DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
-                        (yPos > DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
-                        (xPos < this.simulation.getNormalizedContainerHeight() - DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE)) {
+                    //   that we don't check inter-particle distances here - we rely
+                    //   on the placement algorithm to make sure that this is not a
+                    //   problem.
+                    if ((xPos > WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
+                        (xPos < this.simulation.getNormalizedContainerWidth() - WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
+                        (yPos > WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE) &&
+                        (xPos < this.simulation.getNormalizedContainerHeight() - WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE)) {
 
                         // This is an acceptable position.
                         moleculeCenterOfMassPositions[moleculesPlaced].set(xPos, yPos);
@@ -205,7 +215,7 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             for (var i = 0; i < numberOfMolecules; i++) {
@@ -214,8 +224,8 @@ define(function(require) {
 
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
-                    temperatureSqrt * rand.nextGaussian(),
-                    temperatureSqrt * rand.nextGaussian() 
+                    temperatureSqrt * gaussRandom(),
+                    temperatureSqrt * gaussRandom()
                 );
 
                 // Assign each molecule an initial rotational position.
@@ -229,18 +239,18 @@ define(function(require) {
             //   sure that they are not too close together or they end up with a
             //   disproportionate amount of kinetic energy.
             var newPosX, newPosY;
-            var rangeX = this.simulation.getNormalizedContainerWidth()  - (2 * DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
-            var rangeY = this.simulation.getNormalizedContainerHeight() - (2 * DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
+            var rangeX = this.simulation.getNormalizedContainerWidth()  - (2 * WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
+            var rangeY = this.simulation.getNormalizedContainerHeight() - (2 * WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
             for (var i = 0; i < numberOfMolecules; i++) {
-                for (var j = 0; j < DiatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
+                for (var j = 0; j < WaterPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
                     // Pick a random position.
-                    newPosX = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
-                    newPosY = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
-                    var positionAvailable = true;
+                    newPosX = WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
+                    newPosY = WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
                     var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
+                    var positionAvailable = true;
                     // See if this position is available.
                     for (var k = 0; k < i; k++) {
-                        if (distanceToNew < DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.GAS_SPACING_FACTOR) {
+                        if (distanceToNew < WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * WaterPhaseStateChanger.GAS_SPACING_FACTOR) {
                             positionAvailable = false;
                             break;
                         }
@@ -250,11 +260,13 @@ define(function(require) {
                         moleculeCenterOfMassPositions[i].set(newPosX, newPosY);
                         break;
                     }
-                    else if (j === DiatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS - 1) {
-                        // This is the last attempt, so use this position anyway.
+                    else if (j === WaterPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS - 1) {
+                        // This is the last attempt, so do a linear search for a
+                        //   usable spot.
                         var openPoint = this.findOpenMoleculeLocation();
-                        if (openPoint !== null)
+                        if (openPoint !== null) {
                             moleculeCenterOfMassPositions[i].set(openPoint);
+                        }
                     }
                 }
             }
@@ -265,7 +277,7 @@ define(function(require) {
     /**
      * Static constants
      */
-    _.extend(DiatomicPhaseStateChanger, Constants.DiatomicPhaseStateChanger);
+    _.extend(WaterPhaseStateChanger, Constants.WaterPhaseStateChanger);
 
-    return DiatomicPhaseStateChanger;
+    return WaterPhaseStateChanger;
 });
