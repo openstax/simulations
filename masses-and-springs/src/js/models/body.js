@@ -23,8 +23,6 @@ define(function (require, exports, module) {
             spring : undefined, //a spring can be attached to a body;
             grabbed : false,    //a body is grabbed if view is being dragged by mouse
             color : Constants.BodyDefaults.COLOR
-            // hung : false,       //a body is hung if it is attached to a spring
-            // onWhichSpring : -1 // trying without onWhichSpring index
         },
 
         initialize: function(attributes, options) {
@@ -40,12 +38,6 @@ define(function (require, exports, module) {
         },
 
         hangOn: function(spring){
-            // Simplified version of the following
-            // //this.body.x = this.spring.x;  //position mass directly under spring
-            // this.body.hung = true;
-            // this.body.onWhichSpring = this.i;
-            // this.body.spring = this.spring; //attach spring to body
-
             this.spring = spring;
             this.set('spring', spring);
 
@@ -55,11 +47,6 @@ define(function (require, exports, module) {
         },
 
         unhang: function(){
-            // Simplified version of the following
-            // this.body.onWhichSpring = -1;
-            // this.body.hung = false;
-            // this.body.spring = undefined;
-
             this.hangOn(undefined);
         },
 

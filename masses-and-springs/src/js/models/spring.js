@@ -39,24 +39,11 @@ define(function (require, exports, module) {
         },
 
         hang: function(body){
-
-            // simplified version of
-            // this.spring.snagged = true;
-            // this.spring.body = body;    //attach body to spring
-            // 
-            // The hope to reduce duplicated state.
-
             this.body = body;
             this.set('body', body);
         },
 
         unhang: function(){
-
-            // simplified version of
-            // this.spring.snagged = false;
-            // this.spring.body = undefined;
-            // this.spring.y2 = this.spring.y1 + this.spring.restL;
-
             this.hang(undefined);
             this.restY2();
         },

@@ -58,9 +58,16 @@ define(function (require, exports, module) {
 
         removeBody: function(){
 
+            if(!this.hasBody()){
+                return;
+            }
+
             this.body.unhang();
             this.spring.unhang();
             this.stop();
+
+            this.stopListening(this.body, 'change:spring');
+            delete this.body;
 
             this.deltaY = 0;
             this.initializeEnergies();
@@ -94,15 +101,19 @@ define(function (require, exports, module) {
             // and bad.
             // just for the satisfaction of something animating for now.
             var that = this;
+
+            if(this.timeInt){
+                return;
+            }
+
             this.timeInt = setInterval(function(){
                 that.evolve(100);
             }, 50);
         },
 
         stop : function(){
-
             clearInterval(this.timeInt);
-
+            delete this.timeInt;
         },
 
         resetEnergy : function(){
@@ -119,6 +130,7 @@ define(function (require, exports, module) {
 
             if(!this.spring.isSnagged()){
                 this.deltaY = 0;
+                this.stop();
                 return;
             }
 
@@ -155,6 +167,10 @@ define(function (require, exports, module) {
                 this.updateEnergies(solvedValues);
             }
 
+        },
+
+        hasBody: function(){
+            return !_.isUndefined(this.body);
         },
 
         // Yes, I do like weirdly long but explicit function names.
