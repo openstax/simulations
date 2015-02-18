@@ -52,6 +52,11 @@ define(function(require) {
 
         initReadout: function() {
 
+        },
+
+        connect: function(connectorPosition) {
+            this.displayObject.x = connectorPosition.x;
+            this.displayObject.y = connectorPosition.y;
         }
 
     });

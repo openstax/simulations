@@ -9,6 +9,8 @@ define(function(require) {
 
     var ParticleTankView  = require('views/particle-tank');
     var PressureGaugeView = require('views/pressure-gauge');
+    var HoseView          = require('views/hose');
+    var PumpView          = require('views/pump');
 
     var Assets = require('assets');
 
@@ -41,6 +43,8 @@ define(function(require) {
             var tankY = Math.floor(this.height * 0.8);
             this.initParticleTankView(tankY);
             this.initPressureGaugeView();
+            this.initPumpView(tankY);
+            this.initHoseView();
         },
 
         initParticleTankView: function(y) {
@@ -48,7 +52,7 @@ define(function(require) {
                 simulation: this.simulation
             });
             this.particleTankView.displayObject.y = y;
-            this.particleTankView.displayObject.x = Math.floor(this.width * 0.3);
+            this.particleTankView.displayObject.x = Math.floor(this.width * 0.25);
             this.stage.addChild(this.particleTankView.displayObject);
         },
 
@@ -56,12 +60,27 @@ define(function(require) {
             this.pressureGaugeView = new PressureGaugeView({
                 simulation: this.simulation
             });
-
-            var connectorPosition = this.particleTankView.getLeftConnectorPosition();
-            this.pressureGaugeView.displayObject.x = connectorPosition.x;
-            this.pressureGaugeView.displayObject.y = connectorPosition.y;
+            this.pressureGaugeView.connect(this.particleTankView.getLeftConnectorPosition());
 
             this.stage.addChild(this.pressureGaugeView.displayObject);
+        },
+
+        initPumpView: function(y) {
+            this.pumpView = new PumpView({
+                simulation: this.simulation
+            });
+            this.pumpView.displayObject.y = y;
+            this.pumpView.displayObject.x = Math.floor(this.width * 0.65);
+
+            this.stage.addChild(this.pumpView.displayObject);
+        },
+
+        initHoseView: function() {
+            this.hoseView = new HoseView();
+            this.hoseView.connect1(this.particleTankView.getRightConnectorPosition());
+            this.hoseView.connect2(this.pumpView.getLeftConnectorPosition());
+
+            this.stage.addChild(this.hoseView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

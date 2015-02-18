@@ -36,6 +36,8 @@ define(function(require) {
             this.simulation = options.simulation;
             this.lidDraggable = options.lidDraggable;
 
+            this._leftConnectorPosition  = new Vector2();
+            this._rightConnectorPosition = new Vector2();
             this._dragOffset = new PIXI.Point();
 
             this.initGraphics();
@@ -46,9 +48,6 @@ define(function(require) {
         initGraphics: function() {
             this.initTank();
             this.initLid();
-
-            this._leftConnectorPosition  = new Vector2();
-            this._rightConnectorPosition = new Vector2();
         },
 
         initTank: function() {
