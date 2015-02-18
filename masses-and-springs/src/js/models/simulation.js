@@ -63,7 +63,7 @@ define(function (require, exports, module) {
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
-                    gravity : 9.8,
+                    gravity : _.find(Constants.SimSettings.GRAVITY, {isDefault: true}).value,
                     b: 0.66
                 };
             });
@@ -74,6 +74,10 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             this.systems.each(function(system){
                 system.evolve(deltaTime);
+            });
+
+            this.bodies.each(function(body){
+                body.evolve(deltaTime);
             });
         }
 

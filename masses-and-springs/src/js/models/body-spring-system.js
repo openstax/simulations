@@ -72,6 +72,10 @@ define(function (require, exports, module) {
             this.initializeEnergies();
         },
 
+        hasBody: function(){
+            return !_.isUndefined(this.body);
+        },
+
         updateEnergies: function(solvedValues){
 
             solvedValues = _.extend({
@@ -108,7 +112,6 @@ define(function (require, exports, module) {
             var solvedValues;
 
             if(!this.spring.isSnagged()){
-                this.deltaY = 0;
                 return;
             }
 
@@ -140,10 +143,6 @@ define(function (require, exports, module) {
                 this.updateEnergies(solvedValues);
             }
 
-        },
-
-        hasBody: function(){
-            return !_.isUndefined(this.body);
         },
 
         stepForwardVelocityVerlet: function(dt){

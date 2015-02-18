@@ -40,6 +40,8 @@ define(function (require) {
      Scene.FDT = 1/Scene.FPS;   //time increment for free-falling mass
      Scene.SOUNDS_ENABLED = true;   //true if sounds enabled; allows user to turn off sounds
 
+     Scene.SHELF_FROM_TOP = 0.95;
+
      Constants.Scene = Scene;
 
 

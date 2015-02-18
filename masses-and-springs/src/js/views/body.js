@@ -135,6 +135,7 @@ define(function(require) {
         dragStart: function(data){
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.grabbed = true;
+            this.model.set('resting', true);
         },
 
         dragEnd: function(data){
@@ -151,7 +152,6 @@ define(function(require) {
                 this.model.unhang();
                 return;
             }
-
 
             if(this.grabbed){
                 var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
@@ -203,6 +203,7 @@ define(function(require) {
 
         dropBody: function(){
             this.grabbed = false;
+            this.model.set('resting', false);
         },
 
         updateMVT: function(mvt) {
