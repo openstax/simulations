@@ -7,7 +7,12 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        TANK:           'tank.png',
+        TANK_LID:       'tank-lid.png',
+        HOSE_CONNECTOR: 'hose-connector.png',
+        PRESSURE_GAUGE: 'pressure-gauge.png',
+        PUMP_BASE:      'pump-base.png',
+        PUMP_HANDLE:    'pump-handle.png'
     };
 
     Assets.SpriteSheets = {};

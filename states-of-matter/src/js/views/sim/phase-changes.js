@@ -19,8 +19,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Solid, Liquid, Gass',
-                name: 'solid-liquid-gas-sim',
+                title: 'Phase Changes',
+                name: 'phase-changes-sim',
             }, options);
 
             SOMSimView.prototype.initialize.apply(this, [options]);
