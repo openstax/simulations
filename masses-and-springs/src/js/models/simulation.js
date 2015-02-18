@@ -72,7 +72,9 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.systems.each(function(system){
+                system.evolve(deltaTime);
+            });
         }
 
     });

@@ -53,7 +53,7 @@ define(function (require, exports, module) {
 
             this.initializeEnergies();
             this.updateEnergies();
-            this.start();
+            // this.start();
         },
 
         removeBody: function(){
@@ -64,7 +64,6 @@ define(function (require, exports, module) {
 
             this.body.unhang();
             this.spring.unhang();
-            this.stop();
 
             this.stopListening(this.body, 'change:spring');
             delete this.body;
@@ -96,26 +95,6 @@ define(function (require, exports, module) {
             this.Etot = this.KE + this.PEelas + this.PEgrav + this.Q;
         },
 
-        start : function(){
-            // TODO THIS IS TEMPORARRRYYY.
-            // and bad.
-            // just for the satisfaction of something animating for now.
-            var that = this;
-
-            if(this.timeInt){
-                return;
-            }
-
-            this.timeInt = setInterval(function(){
-                that.evolve(100);
-            }, 50);
-        },
-
-        stop : function(){
-            clearInterval(this.timeInt);
-            delete this.timeInt;
-        },
-
         resetEnergy : function(){
             if(this.spring.isSnagged()){
                 this.updateEnergies();
@@ -130,7 +109,6 @@ define(function (require, exports, module) {
 
             if(!this.spring.isSnagged()){
                 this.deltaY = 0;
-                this.stop();
                 return;
             }
 
@@ -143,23 +121,15 @@ define(function (require, exports, module) {
                 this.spring.updateY2(this.deltaY);
 
                 this.updateEnergies();
-
-                // this.oldT = getTime();
             }
 
             if(!this.body.grabbed){
-                // The velocity verlet will be pulled out to the main simulation model.
-
-                // newT = getTimer();
-                // var dt = frameRate * (newT - this.oldT) / 1000;
-                // this.oldT = newT;
 
                 if(dt > this.period / 15){
                     dt = this.period / 15;
                 }
 
-                // TODO stop evolution when equilibrium approximated
-                solvedValues = this._solveODESForDisplacementAndVelocity(dt);
+                solvedValues = this.stepForwardVelocityVerlet(dt);
 
                 // weird, don't know if this needs to be fixed, but the order
                 // of when the spring y2 and the body position updates affects
@@ -176,12 +146,9 @@ define(function (require, exports, module) {
             return !_.isUndefined(this.body);
         },
 
-        // Yes, I do like weirdly long but explicit function names.
-        _solveODESForDisplacementAndVelocity: function(dt){
+        stepForwardVelocityVerlet: function(dt){
 
             var solvedValues = {};
-
-            // Simple Euler-Cromer
 
             // Solve for initial acceleration based on system properties
             solvedValues.acceleration = Constants.SystemEquations.ACCELERATION(this.gravity, this.spring.k, this.body.mass, this.deltaY, this.b, this.velocity);
