@@ -48,7 +48,7 @@ define(function(require) {
                 simulation: this.simulation
             });
             this.particleTankView.displayObject.y = y;
-            this.particleTankView.displayObject.x = this.width * 0.3;
+            this.particleTankView.displayObject.x = Math.floor(this.width * 0.3);
             this.stage.addChild(this.particleTankView.displayObject);
         },
 
@@ -58,7 +58,6 @@ define(function(require) {
             });
 
             var connectorPosition = this.particleTankView.getLeftConnectorPosition();
-            console.log(connectorPosition);
             this.pressureGaugeView.displayObject.x = connectorPosition.x;
             this.pressureGaugeView.displayObject.y = connectorPosition.y;
 

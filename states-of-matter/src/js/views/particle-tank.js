@@ -17,8 +17,26 @@ define(function(require) {
      */
     var ParticleTankView = PixiView.extend({
 
+        events: {
+            'touchstart      .lid': 'dragStart',
+            'mousedown       .lid': 'dragStart',
+            'touchmove       .lid': 'drag',
+            'mousemove       .lid': 'drag',
+            'touchend        .lid': 'dragEnd',
+            'mouseup         .lid': 'dragEnd',
+            'touchendoutside .lid': 'dragEnd',
+            'mouseupoutside  .lid': 'dragEnd'
+        },
+
         initialize: function(options) {
+            options = _.extend({
+                lidDraggable: true
+            }, options);
+
             this.simulation = options.simulation;
+            this.lidDraggable = options.lidDraggable;
+
+            this._dragOffset = new PIXI.Point();
 
             this.initGraphics();
 
@@ -42,12 +60,16 @@ define(function(require) {
         },
 
         initLid: function() {
-            this.lidYRange = range({ min: -20, max: -20 - 255  });
+            this.lidYRange = range({ max: -20, min: -20 - 255  });
 
             this.lid = Assets.createSprite(Assets.Images.TANK_LID);
             this.lid.anchor.x = 0.5;
             this.lid.anchor.y = 1;
-            this.lid.y = this.lidYRange.max;
+            this.lid.y = this.lidYRange.min;
+            if (this.lidDraggable) {
+                this.lid.buttonMode = true;
+                this.lid.defaultCursor = 'ns-resize';
+            }
 
             this.displayObject.addChild(this.lid);
         },
@@ -55,7 +77,7 @@ define(function(require) {
         updateLidPosition: function() {
             var relativeHeight = this.simulation.get('particleContainerHeight') / Constants.CONTAINER_BOUNDS.height;
             
-            this.lid.y = this.lidYRange.lerp(relativeHeight);
+            this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
         },
 
         getLeftConnectorPosition: function() {
@@ -68,7 +90,33 @@ define(function(require) {
             return this._rightConnectorPosition
                 .set(this.displayObject.x, this.displayObject.y)
                 .add(this.displayObject.width / 2, -37);
-        }
+        },
+
+        dragStart: function(data) {
+            if (!this.lidDraggable)
+                return;
+
+            this.dragOffset = data.getLocalPosition(this.lid, this._dragOffset);
+            this.dragging = true;
+        },
+
+        drag: function(data) {
+            if (this.dragging) {
+                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var y = local.y - this.dragOffset.y;
+                
+                if (y > this.lidYRange.max)
+                    y = this.lidYRange.max;
+                if (y < this.lidYRange.min)
+                    y = this.lidYRange.min;
+                    
+                this.lid.y = y;
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
+        },
 
     });
 
