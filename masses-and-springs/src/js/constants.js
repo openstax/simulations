@@ -149,18 +149,25 @@ define(function (require) {
     // Appearance related
     SpringDefaults.COLOR = ColorConstants['cool-gray'];
     SpringDefaults.COILS = 12;
-    SpringDefaults.WIDTH = 50;
+    SpringDefaults.WIDTH = 0.10;
 
-    SpringDefaults.RING_RADIUS = 10;
+    SpringDefaults.RING_RADIUS = 0.02;
     SpringDefaults.THICKNESS_FACTOR = 0.25;
 
     Constants.SpringDefaults = SpringDefaults;
 
 
     var BodyDefaults = {};
-    BodyDefaults.HOOK_TO_BODY_RATIO = 0.25;
-    BodyDefaults.MASS_TO_RADIUS_RATIO = 100;
-    BodyDefaults.MASS_TO_HEIGHT_RATIO = 300;
+    // TODO convert from px to meters
+    BodyDefaults.WIDTH_TO_HOOK_RADIUS = function(width){
+        return (8 + 0.1 * width)/Scene.PX_PER_METER;
+    };
+    BodyDefaults.MASS_TO_HEIGHT = function(mass){
+        return (20 + 240 * mass)/Scene.PX_PER_METER;
+    };
+    BodyDefaults.MASS_TO_WIDTH = function(mass){
+        return (20 + 160 * mass)/Scene.PX_PER_METER;
+    };
 
     BodyDefaults.COLOR = ColorConstants['light-gray'];
 

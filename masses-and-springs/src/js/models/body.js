@@ -23,8 +23,6 @@ define(function (require, exports, module) {
             spring : undefined, //a spring can be attached to a body;
             grabbed : false,    //a body is grabbed if view is being dragged by mouse
             color : Constants.BodyDefaults.COLOR
-            // hung : false,       //a body is hung if it is attached to a spring
-            // onWhichSpring : -1 // trying without onWhichSpring index
         },
 
         initialize: function(attributes, options) {
@@ -40,28 +38,27 @@ define(function (require, exports, module) {
         },
 
         hangOn: function(spring){
-            // Simplified version of the following
-            // //this.body.x = this.spring.x;  //position mass directly under spring
-            // this.body.hung = true;
-            // this.body.onWhichSpring = this.i;
-            // this.body.spring = this.spring; //attach spring to body
-
-            this.spring = spring;
-            this.set('spring', spring);
-
-            if(this.isHung()){
-                this.set('top', this.spring.y2);
-            }
+            this.updateSpring(spring);
+            this.snapBodyTopCenter(this.spring.y2, this.spring.x);
         },
 
-
         unhang: function(){
-            // Simplified version of the following
-            // this.body.onWhichSpring = -1;
-            // this.body.hung = false;
-            // this.body.spring = undefined;
+            this.updateSpring(undefined);
+            this.unsnap();
+        },
 
-            this.hangOn(undefined);
+        updateSpring: function(spring){
+            this.spring = spring;
+            this.set('spring', spring);
+        },
+
+        snapBodyTopCenter: function(top, center){
+            this.set('center', center);
+            this.set('top', top);
+        },
+
+        unsnap: function(){
+            this.unset('center');
         },
 
         xChanged: function(model, x){

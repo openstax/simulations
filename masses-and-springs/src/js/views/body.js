@@ -35,16 +35,13 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
 
-            // TODO will move this out...I don't think this belongs in here.
-            this.sceneWidth = options.sceneWidth;
-            this.sceneHeight = options.sceneHeight;
-
             this.initGraphics();
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
+            this.listenTo(this.model, 'change:center', this.updateCenterPosition);
 
-            this.updateMVT(this.mvt);
+            this.drawBody();
         },
 
         initGraphics: function() {
@@ -61,8 +58,8 @@ define(function(require) {
                 this.initializeBodyViewModel();
             }
 
-            this.viewModel.left = this.model.x * this.sceneWidth;
-            this.viewModel.bottom = this.model.y * this.sceneHeight;
+            this.viewModel.left = this.model.x * Constants.Scene.PX_PER_METER;
+            this.viewModel.bottom = this.model.y * Constants.Scene.PX_PER_METER;
 
             this.viewModel.top = this.viewModel.bottom - this.viewModel.height;
             this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
@@ -71,16 +68,14 @@ define(function(require) {
         initializeBodyViewModel: function(){
             this.viewModel = {};
 
-            // TODO need a non-linear equation for mass to dimensions because the 
-            // lightest weights are tiny right now.
-            this.viewModel.width = this.model.mass * 2 * Body.MASS_TO_RADIUS_RATIO;
-            this.viewModel.height = this.model.mass * Body.MASS_TO_HEIGHT_RATIO;
+            this.viewModel.width = Body.MASS_TO_WIDTH(this.model.mass) * Constants.Scene.PX_PER_METER;
+            this.viewModel.height = Body.MASS_TO_HEIGHT(this.model.mass) * Constants.Scene.PX_PER_METER;
 
             this.viewModel.color = Colors.parseHex(this.model.color);
             this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
 
             this.viewModel.hookThickness = 3;
-            this.viewModel.hookRadius = this.viewModel.width * Body.HOOK_TO_BODY_RATIO;
+            this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width) * Constants.Scene.PX_PER_METER;
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
         },
 
@@ -167,8 +162,8 @@ define(function(require) {
             var newX = this.viewModel.left + this.displayObject.x;
             var newY = this.viewModel.bottom + this.displayObject.y;
 
-            this.model.set('x', newX/this.sceneWidth);
-            this.model.set('y', newY/this.sceneHeight);
+            this.model.set('x', newX/Constants.Scene.PX_PER_METER);
+            this.model.set('y', newY/Constants.Scene.PX_PER_METER);
         },
 
         clearPositionOffsets: function(){
@@ -182,7 +177,11 @@ define(function(require) {
         },
 
         updateTopPosition: function(model, top){
-            this.model.set('y', top + (this.viewModel.height + this.viewModel.hookHeight - this.viewModel.hookRadius/2)/this.sceneHeight);
+            this.model.set('y', top + (this.viewModel.height + this.viewModel.hookHeight - this.viewModel.hookRadius/2)/Constants.Scene.PX_PER_METER);
+        },
+
+        updateCenterPosition: function(model, center){
+            this.model.set('x', center - (this.viewModel.width/2)/Constants.Scene.PX_PER_METER);
         },
 
         dropBody: function(){
