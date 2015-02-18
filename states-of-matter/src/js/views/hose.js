@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
     
     var PixiView       = require('common/pixi/view');
     var Vector2        = require('common/math/vector2');
@@ -24,6 +25,7 @@ define(function(require) {
             }, options);
 
             this.color = Colors.parseHex(options.color);
+            this.loopHeight = 100;
 
             this.initGraphics();
         },
@@ -47,7 +49,44 @@ define(function(require) {
         },
 
         drawHose: function() {
+            var curve = new PiecewiseCurve();
 
+            var start = new Vector2(this.connector1.x, this.connector1.y);
+            var end   = new Vector2(this.connector2.x, this.connector2.y);
+
+            var delta = end.clone().sub(start);
+            var dx = delta.x;
+            var dy = delta.y;
+            var height = this.loopHeight;
+
+            var A  = new Vector2(start);
+            var A2 = new Vector2(start).add(dx * 0.33, dy * 0.33);
+
+            var B1 = new Vector2(start).add(dx * 0.58, dy * 0.67 + height * 0.12);
+            var B  = new Vector2(start).add(dx * 0.67, dy * 0.67 + height * 0.33);
+            var B2 = new Vector2(start).add(dx * 0.77, dy * 0.67 + height * 0.63);
+
+            var C1 = new Vector2(start).add(dx * 0.67, dy * 0.5 + height);
+            var C  = new Vector2(start).add(dx * 0.50, dy * 0.5 + height);
+            var C2 = new Vector2(start).add(dx * 0.33, dy * 0.5 + height);
+
+            var D1 = new Vector2(start).add(dx * 0.23, dy * 0.33 + height * 0.63);
+            var D  = new Vector2(start).add(dx * 0.33, dy * 0.33 + height * 0.33);
+            var D2 = new Vector2(start).add(dx * 0.42, dy * 0.33 + height * 0.12);
+
+            var E1 = new Vector2(start).add(dx * 0.67, dy * 0.67);
+            var E  = new Vector2(end);
+
+            curve
+                .moveTo(A)
+                .curveTo(A2, B1, B)
+                .curveTo(B2, C1, C)
+                .curveTo(C2, D1, D)
+                .curveTo(D2, E1, E);
+
+            this.hose.clear();
+            this.hose.lineStyle(13, this.color, 1);
+            this.hose.drawPiecewiseCurve(curve);
         },
 
         connect1: function(connectorPosition) {
