@@ -19,7 +19,7 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Solid, Liquid, Gass',
+                title: 'Solid, Liquid, Gas',
                 name: 'solid-liquid-gas-sim',
             }, options);
 
