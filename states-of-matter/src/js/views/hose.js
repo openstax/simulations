@@ -25,7 +25,7 @@ define(function(require) {
             }, options);
 
             this.color = Colors.parseHex(options.color);
-            this.loopHeight = -100;
+            this.loopHeight = 100;
 
             this.initGraphics();
         },

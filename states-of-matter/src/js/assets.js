@@ -12,7 +12,11 @@ define(function (require) {
         HOSE_CONNECTOR: 'hose-connector.png',
         PRESSURE_GAUGE: 'pressure-gauge.png',
         PUMP_BASE:      'pump-base.png',
-        PUMP_HANDLE:    'pump-handle.png'
+        PUMP_HANDLE:    'pump-handle.png',
+
+        FLAME:  'flame.png',
+        ICE:    'ice-cube-stack.png',
+        FINGER: 'finger-4.png'
     };
 
     Assets.SpriteSheets = {};

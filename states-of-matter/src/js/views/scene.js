@@ -5,7 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView    = require('common/pixi/view/scene');
+    var HeaterCoolerView = require('common/pixi/view/heater-cooler');
 
     var ParticleTankView  = require('views/particle-tank');
     var PressureGaugeView = require('views/pressure-gauge');
@@ -40,11 +41,31 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var tankY = Math.floor(this.height * 0.84);
+            var tankY = Math.floor(this.height * 0.76);
+
+            this.initHeaterCoolerView();
             this.initParticleTankView(tankY);
             this.initPressureGaugeView();
             this.initPumpView(tankY);
             this.initHoseView();
+        },
+
+        initHeaterCoolerView: function() {
+            var viewModel = new HeaterCoolerView.HeaterCoolerViewModel();
+
+            this.heaterCoolerView = new HeaterCoolerView({
+                model: viewModel,
+                width: 100,
+                height: 76,
+                openingHeight: 0, // Make it look flat
+                lineWidth: 0,
+                lineColor: '#999',
+                iceAssetReference:  Assets.Images.ICE,
+                fireAssetReference: Assets.Images.FLAME
+            });
+            this.heaterCoolerView.displayObject.x = Math.floor(this.width * 0.25);
+            this.heaterCoolerView.displayObject.y = Math.floor(this.height * 0.98);
+            this.stage.addChild(this.heaterCoolerView.displayObject);
         },
 
         initParticleTankView: function(y) {
