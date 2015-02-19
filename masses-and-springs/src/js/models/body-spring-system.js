@@ -113,9 +113,7 @@ define(function (require, exports, module) {
 
             if(!this.spring.isSnagged()){
                 return;
-            }
-
-            if(this.body.grabbed){
+            } else if(this.body.grabbed){
 
                 this.velocity = 0;
                 this.Q = 0;
@@ -124,9 +122,7 @@ define(function (require, exports, module) {
                 this.spring.updateY2(this.deltaY);
 
                 this.updateEnergies();
-            }
-
-            if(!this.body.grabbed){
+            } else {
 
                 if(dt > this.period / 15){
                     dt = this.period / 15;

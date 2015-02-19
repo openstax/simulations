@@ -76,7 +76,9 @@ define(function (require, exports, module) {
                 system.evolve(deltaTime);
             });
 
-            this.bodies.each(function(body){
+            // would like to make it so that models that need to evolve are being checked
+            // on update
+            this.bodies.chain().where({resting: false}).each(function(body){
                 body.evolve(deltaTime);
             });
         }

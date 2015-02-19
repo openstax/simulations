@@ -119,7 +119,7 @@ define(function (require, exports, module) {
 
         evolve: function(dt){
 
-            if(this.resting || this.isHung()){
+            if(this.isHung()){
                 return;
             }
 
