@@ -5,9 +5,12 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SOMSimView = require('views/sim');
+    var SOMSimView              = require('views/sim');
+    var SolidLiquidGasSceneView = require('views/scene/solid-liquid-gas');
 
     var Constants = require('constants');
+
+    var phaseChangeButtons = require('text!templates/phase-change-buttons.html');
 
 
     var SolidLiquidGasSimView = SOMSimView.extend({
@@ -26,7 +29,25 @@ define(function (require) {
             SOMSimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
-        }
+        },
+
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
+        renderScaffolding: function() {
+            SOMSimView.prototype.renderScaffolding.apply(this);
+
+            this.$('.side-panel').append(phaseChangeButtons);
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new SolidLiquidGasSceneView({
+                simulation: this.simulation
+            });
+        },
 
     });
 

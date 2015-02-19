@@ -5,12 +5,11 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView    = require('common/pixi/view/scene');
+    var HeaterCoolerView = require('common/pixi/view/heater-cooler');
+    var Vector2          = require('common/math/vector2');
 
-    var ParticleTankView  = require('views/particle-tank');
-    var PressureGaugeView = require('views/pressure-gauge');
-    var HoseView          = require('views/hose');
-    var PumpView          = require('views/pump');
+    var ParticleTankView = require('views/particle-tank');
 
     var Assets = require('assets');
 
@@ -29,6 +28,9 @@ define(function(require) {
             
         },
 
+        heaterCoolerPosition: new Vector2(),
+        particleTankPosition: new Vector2(),
+
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
@@ -40,47 +42,37 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var tankY = Math.floor(this.height * 0.8);
-            this.initParticleTankView(tankY);
-            this.initPressureGaugeView();
-            this.initPumpView(tankY);
-            this.initHoseView();
+            this.initHeaterCoolerView();
+            this.initParticleTankView();
         },
 
-        initParticleTankView: function(y) {
+        initHeaterCoolerView: function() {
+            var viewModel = new HeaterCoolerView.HeaterCoolerViewModel();
+
+            this.heaterCoolerView = new HeaterCoolerView({
+                model: viewModel,
+                width: 100,
+                height: 76,
+                openingHeight: 0, // Make it look flat
+                lineWidth: 0,
+                lineColor: '#999',
+                iceAssetReference:  Assets.Images.ICE,
+                fireAssetReference: Assets.Images.FLAME
+            });
+            this.heaterCoolerView.displayObject.x = Math.floor(this.width  * this.heaterCoolerPosition.x);
+            this.heaterCoolerView.displayObject.y = Math.floor(this.height * this.heaterCoolerPosition.y);
+            this.stage.addChild(this.heaterCoolerView.displayObject);
+        },
+
+        initParticleTankView: function() {
             this.particleTankView = new ParticleTankView({
                 simulation: this.simulation
             });
-            this.particleTankView.displayObject.y = y;
-            this.particleTankView.displayObject.x = Math.floor(this.width * 0.25);
+
+            this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
+            this.particleTankView.displayObject.y = Math.floor(this.height * this.particleTankPosition.y);
+
             this.stage.addChild(this.particleTankView.displayObject);
-        },
-
-        initPressureGaugeView: function() {
-            this.pressureGaugeView = new PressureGaugeView({
-                simulation: this.simulation
-            });
-            this.pressureGaugeView.connect(this.particleTankView.getLeftConnectorPosition());
-
-            this.stage.addChild(this.pressureGaugeView.displayObject);
-        },
-
-        initPumpView: function(y) {
-            this.pumpView = new PumpView({
-                simulation: this.simulation
-            });
-            this.pumpView.displayObject.y = y;
-            this.pumpView.displayObject.x = Math.floor(this.width * 0.65);
-
-            this.stage.addChild(this.pumpView.displayObject);
-        },
-
-        initHoseView: function() {
-            this.hoseView = new HoseView();
-            this.hoseView.connect1(this.particleTankView.getRightConnectorPosition());
-            this.hoseView.connect2(this.pumpView.getLeftConnectorPosition());
-
-            this.stage.addChild(this.hoseView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
