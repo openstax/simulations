@@ -15,27 +15,27 @@ define(function(require) {
     },
 
     sum: function(model, sumVectorView) {
-      var length = 0;
-      var angle = 0;
+      var changesX = 0;
+      var changesY = 0;
+      var sumX = 0;
+      var sumY = 0;
 
       if (model.vectorCollection.length > 0) {
           var vectors = model.vectorCollection.models;
         _.each(vectors, function(vector) {
-          length += vector.get('length');
-          angle += vector.get('angle');
-        });
+          changesX = vector.get('targetX') - vector.get('originX');
+          changesY = vector.get('targetY') - vector.get('originY');
+          sumX += changesX;
+          sumY += changesY;
 
-        this.set('length', length);
-        this.set('angle', angle);
+        });
 
         this.set('originX', this.get('originX'));
         this.set('originY', this.get('originY'));
-        this.set('targetX', this.get('originX') + this.get('length'));
-        this.set('targetY', this.get('originY') + this.get('length'));
-
-        sumVectorView.transformFrame.rotation = this.get('angle');
+        this.set('targetX', this.get('originX') + sumX);
+        this.set('targetY', this.get('originY') + sumY);
       }
-    },
+    }
 
   });
 
