@@ -4,14 +4,14 @@ define(function(require) {
 
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
-  var ArrowView = require('views/arrows');
+  var VectorView = require('views/vectors');
   var Assets = require('assets');
   var Constants = require('constants');
 
   var VectorBinView = PixiView.extend({
 
     events: {
-      'click .bin': 'drawArrow'
+      'mousedown .bin': 'drawVectors'
     },
 
     initialize: function(options) {
@@ -36,12 +36,12 @@ define(function(require) {
       this.displayObject.addChild(this.binContainer);
     },
 
-    drawArrow: function() {
-      var arrowView = new ArrowView({
+    drawVectors: function() {
+      var vectorView = new VectorView({
         model: this.model
       });
-      this.arrowView = arrowView;
-      this.displayObject.parent.addChild(arrowView.displayObject);
+      this.vectorView = vectorView;
+      this.displayObject.parent.addChild(vectorView.displayObject);
     }
 
   });
