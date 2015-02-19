@@ -29,11 +29,15 @@ define(function (require, exports, module) {
     var MassesAndSpringsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            gravity : Constants.SimSettings.GRAVITY_DEFAULT,
+            friction : Constants.SimSettings.FRICTION_DEFAULT
         }),
 
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.on('change:gravity', this.updateGravity);
+            this.on('change:friction', this.updateFriction);
 
             this.initComponents();
         },
@@ -59,16 +63,32 @@ define(function (require, exports, module) {
         },
 
         initSystems: function(){
+            var that = this;
             var springs = this.springs.map(function(spring){
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
-                    gravity : _.find(Constants.SimSettings.GRAVITY, {isDefault: true}).value,
-                    b: 0.66
+                    gravity : that.get('gravity'),
+                    b: that.get('friction')
                 };
             });
 
             this.systems = new Systems(springs);
+        },
+
+        updateGravity: function(model, gravity){
+            this.systems.each(function(system){
+                system.set('gravity', gravity);
+            });
+            this.bodies.each(function(body){
+                body.set('gravity', gravity);
+            });
+        },
+
+        updateFriction: function(model, friction){
+            this.systems.each(function(system){
+                system.set('b', friction);
+            });
         },
 
         _update: function(time, deltaTime) {

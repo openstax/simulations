@@ -59,7 +59,7 @@ define(function(require) {
             this.viewModel.y2 = this.model.y2 * Constants.Scene.PX_PER_METER;
             this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1 - 3 * this.viewModel.ringRadius;
             this.viewModel.coilHeight = this.viewModel.coilsLength / Spring.COILS;
-            this.viewModel.thickness = this.model.k * Spring.THICKNESS_FACTOR;
+            this.viewModel.thickness = Spring.K_TO_THICKNESS(this.model.k);
         },
 
         drawSpring: function(){
