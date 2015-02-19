@@ -37,7 +37,7 @@ define(function(require) {
 
       this.listenTo(this.model, 'change:sumVectorVisible', this.sumVectorVisible);
       this.listenTo(this.model.vectorViewModel, 'change', this.updateSum);
-      this.listenTo(this.model.vectorCollection, 'change', this.updateSum);
+      this.listenTo(this.model.vectorCollection, 'change add remove', this.updateSum);
       this.listenTo(this.sumVectorModel, 'change', this.updateSum);
     },
 
@@ -92,6 +92,8 @@ define(function(require) {
       this.vectorViewModel.set('degrees', this.model.calculateDegrees(this.vectorViewModel.get('originX'), this.vectorViewModel.get('originY')));
       this.vectorViewModel.set('angle', this.arrowView.transformFrame.rotation);
       this.model.set('emptyStage', false);
+      this.model.set('width', width);
+      this.model.set('height', height);
 
       this.model.updateReadouts(this.container, this.model, this.vectorViewModel, width, height, this.vectorViewModel.get('length'), this.vectorViewModel.get('degrees'));
       this.model.vectorCollection.add(this.vectorViewModel);
@@ -204,8 +206,12 @@ define(function(require) {
         this.vectorXView.displayObject.removeChild(this.vectorXView.vectorXContainer);
         this.vectorYView.displayObject.removeChild(this.vectorYView.vectorYContainer);
         this.componentsView.displayObject.removeChild(this.componentsView.linesContainer);
+
+        if (this.model.vectorCollection.length <= 0) {
+          this.model.set('sumVectorVisible', false);
+        }
+
         this.model.set('deleteVector', false);
-        this.model.set('sumVectorVisible', false);
       }
     },
 
