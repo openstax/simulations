@@ -9,6 +9,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var phaseChangeButtons = require('text!templates/phase-change-buttons.html');
+
 
     var SolidLiquidGasSimView = SOMSimView.extend({
 
@@ -26,6 +28,12 @@ define(function (require) {
             SOMSimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+        },
+
+        renderScaffolding: function() {
+            SOMSimView.prototype.renderScaffolding.apply(this);
+
+            this.$('.side-panel').append(phaseChangeButtons);
         }
 
     });

@@ -9,6 +9,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var phaseDiagram = require('text!templates/phase-diagram.html');
+
 
     var PhaseChangesSimView = SOMSimView.extend({
 
@@ -26,6 +28,12 @@ define(function (require) {
             SOMSimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+        },
+
+        renderScaffolding: function() {
+            SOMSimView.prototype.renderScaffolding.apply(this);
+
+            this.$('.side-panel').append(phaseDiagram);
         }
 
     });
