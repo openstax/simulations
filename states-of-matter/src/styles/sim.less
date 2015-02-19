@@ -4,10 +4,61 @@
 @import "mixins.less";
 @import "playback-controls.less";
 
-.settings-panel {
+.side-panel {
 	position: absolute;
 	top: @panel-margin;
 	right: @panel-margin;
-	padding: 15px;
-	background: @panel-bg;
+	
+	.settings {
+		padding: 15px;
+		.white-panel(@background-fade-percent: 50%);
+	}
+
+	h2 {
+	    font-size: 20px;
+	    font-weight: 400;
+	    color: rgba(51, 51, 51, 0.8);
+	    margin-top: 0;
+	    margin-bottom: 15px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+	}
+
+	label {
+	    color: #555;
+	}
+
+	.btn-show-phase-diagram {
+		position: absolute;
+		top: 100%;
+		left: 0;
+		margin-top: 4px;
+		padding: 10px 4px;
+		width: 100%;
+		color: @link-color;
+		background: fadeout(#fff, 60%);
+		box-shadow: 0 0 11px rgba(0, 0, 0, 0.13);
+		border-radius: 0;
+
+		font-weight: bold;
+
+		&:focus {
+		    outline: none;
+		}
+
+		&:hover {
+		    background: fadeout(#fff, 40%);
+		}
+
+		&:active {
+		    margin-top: 5px;
+		    box-shadow: 0 -1px 11px rgba(0, 0, 0, 0.13);
+		}
+	}
 }
+
+.sim-view {
+	/* Background pattern from subtlepatterns.com */
+	background: url(../img/wavegrid.png);
+}
+
