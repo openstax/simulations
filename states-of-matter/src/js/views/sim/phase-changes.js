@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SOMSimView = require('views/sim');
+    var SOMSimView            = require('views/sim');
+    var PhaseChangesSceneView = require('views/scene/phase-changes');
 
     var Constants = require('constants');
 
@@ -30,11 +31,23 @@ define(function (require) {
             this.initSceneView();
         },
 
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
         renderScaffolding: function() {
             SOMSimView.prototype.renderScaffolding.apply(this);
 
             this.$('.side-panel').append(phaseDiagram);
-        }
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new PhaseChangesSceneView({
+                simulation: this.simulation
+            });
+        },
 
     });
 

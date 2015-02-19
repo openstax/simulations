@@ -246,7 +246,7 @@ define(function(require) {
                 var cool = new PIXI.Text('Cool', textStyle);
                 cool.anchor.y = 0.64;
                 cool.x = textOffset;
-                cool.y = this.sliderView.displayObject.y + this.sliderView.displayObject.height; console.log(this.sliderView.displayObject.y, this.sliderView.displayObject.height)
+                cool.y = this.sliderView.displayObject.y + this.sliderView.displayObject.height;
                 this.frontLayer.addChild(cool);
             }
         },

@@ -8,7 +8,7 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var SOMSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var SOMSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -68,7 +68,7 @@ define(function (require) {
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new SOMSceneView({
                 simulation: this.simulation
             });
         },
@@ -91,7 +91,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                name: this.name
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();

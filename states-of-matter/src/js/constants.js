@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var Rectangle = require('common/math/rectangle');
-
+    var Vector2   = require('common/math/vector2');
 
     var Constants = {}; 
 
@@ -284,6 +284,36 @@ define(function (require) {
     WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER = 3.0;
 
     Constants.WaterVerletAlgorithm = WaterVerletAlgorithm;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                    SOLID, LIQUID, GAS SCENE VIEW                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var SolidLiquidGasSceneView = {};
+
+    SolidLiquidGasSceneView.TANK_POSITION          = new Vector2(0.39, 0.76);
+    SolidLiquidGasSceneView.HEATER_COOLER_POSITION = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.98);
+
+    Constants.SolidLiquidGasSceneView = SolidLiquidGasSceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         PHASE CHANGES VIEW                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhaseChangesSceneView = {};
+
+    // These positions are proportions of the width and height of the scene
+    PhaseChangesSceneView.TANK_POSITION          = new Vector2(0.25, 0.76);
+    PhaseChangesSceneView.PUMP_POSITION          = new Vector2(0.65, PhaseChangesSceneView.TANK_POSITION.y);
+    PhaseChangesSceneView.HEATER_COOLER_POSITION = new Vector2(PhaseChangesSceneView.TANK_POSITION.x, 0.98);
+
+    Constants.PhaseChangesSceneView = PhaseChangesSceneView;
 
 
 
