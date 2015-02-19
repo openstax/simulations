@@ -65,8 +65,8 @@ define(function(require) {
             this.bodyLayer    =   new PIXI.DisplayObjectContainer();
             this.springLayer    =   new PIXI.DisplayObjectContainer();
 
-            this.stage.addChild(this.bodyLayer);
             this.stage.addChild(this.springLayer);
+            this.stage.addChild(this.bodyLayer);
         },
 
 

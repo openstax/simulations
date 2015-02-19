@@ -63,7 +63,7 @@ define(function (require, exports, module) {
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
-                    gravity : 9.8,
+                    gravity : _.find(Constants.SimSettings.GRAVITY, {isDefault: true}).value,
                     b: 0.66
                 };
             });
@@ -72,7 +72,15 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.systems.each(function(system){
+                system.evolve(deltaTime);
+            });
+
+            // would like to make it so that models that need to evolve are being checked
+            // on update
+            this.bodies.chain().where({resting: false}).each(function(body){
+                body.evolve(deltaTime);
+            });
         }
 
     });

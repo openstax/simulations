@@ -70,6 +70,7 @@ define(function(require) {
 
             this.viewModel.width = Body.MASS_TO_WIDTH(this.model.mass) * Constants.Scene.PX_PER_METER;
             this.viewModel.height = Body.MASS_TO_HEIGHT(this.model.mass) * Constants.Scene.PX_PER_METER;
+            this.viewModel.radius = this.viewModel.width / 2;
 
             this.viewModel.color = Colors.parseHex(this.model.color);
             this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
@@ -77,6 +78,9 @@ define(function(require) {
             this.viewModel.hookThickness = 3;
             this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width) * Constants.Scene.PX_PER_METER;
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
+
+            this.viewModel.totalHeight = this.viewModel.height + this.viewModel.hookHeight;
+            this.viewModel.snapPointBuffer = this.viewModel.hookRadius/2;
         },
 
         drawBody : function(){
@@ -131,6 +135,7 @@ define(function(require) {
         dragStart: function(data){
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.grabbed = true;
+            this.model.set('resting', true);
         },
 
         dragEnd: function(data){
@@ -148,7 +153,6 @@ define(function(require) {
                 return;
             }
 
-
             if(this.grabbed){
                 var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
                 var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
@@ -159,11 +163,8 @@ define(function(require) {
         },
 
         updateModelPosition: function(){
-            var newX = this.viewModel.left + this.displayObject.x;
-            var newY = this.viewModel.bottom + this.displayObject.y;
-
-            this.model.set('x', newX/Constants.Scene.PX_PER_METER);
-            this.model.set('y', newY/Constants.Scene.PX_PER_METER);
+            this.model.set('x', this._calcXFromLeftDrag());
+            this.model.set('y', this._calcYFromBottomDrag());
         },
 
         clearPositionOffsets: function(){
@@ -177,15 +178,32 @@ define(function(require) {
         },
 
         updateTopPosition: function(model, top){
-            this.model.set('y', top + (this.viewModel.height + this.viewModel.hookHeight - this.viewModel.hookRadius/2)/Constants.Scene.PX_PER_METER);
+            this.model.set('y', this._calcYFromSpringY2(top));
         },
 
         updateCenterPosition: function(model, center){
-            this.model.set('x', center - (this.viewModel.width/2)/Constants.Scene.PX_PER_METER);
+            this.model.set('x', this._calcXFromViewCenter(center));
+        },
+
+        _calcXFromLeftDrag: function(){
+            return (this.viewModel.left + this.displayObject.x)/Constants.Scene.PX_PER_METER;
+        },
+
+        _calcYFromBottomDrag: function(){
+            return (this.viewModel.bottom + this.displayObject.y)/Constants.Scene.PX_PER_METER;
+        },
+
+        _calcYFromSpringY2: function(springY2){
+            return springY2 + (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
+        },
+
+        _calcXFromViewCenter: function(center){
+            return center - this.viewModel.radius / Constants.Scene.PX_PER_METER;
         },
 
         dropBody: function(){
             this.grabbed = false;
+            this.model.set('resting', false);
         },
 
         updateMVT: function(mvt) {
