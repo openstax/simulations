@@ -52,7 +52,7 @@ define(function(require) {
             this.handle.defaultCursor = 'move';
 
             this.handleYRange = range({ 
-                min: -this.base.height + this.handle.height * 0.2, 
+                min: -this.base.height + this.handle.height * 0.24, 
                 max: -this.base.height + this.handle.height * 0.9 
             });
             this.handle.y = this.handleYRange.lerp(0.8);

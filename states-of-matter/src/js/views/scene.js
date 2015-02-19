@@ -40,7 +40,7 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var tankY = Math.floor(this.height * 0.8);
+            var tankY = Math.floor(this.height * 0.84);
             this.initParticleTankView(tankY);
             this.initPressureGaugeView();
             this.initPumpView(tankY);

@@ -59,7 +59,7 @@ define(function(require) {
             var dy = delta.y;
             var height = this.loopHeight;
 
-            var A  = new Vector2(start);
+            var A  = new Vector2(start).add(this.connector1.width, 0);
             var A2 = new Vector2(start).add(dx * 0.33, dy * 0.33);
 
             var B1 = new Vector2(start).add(dx * 0.58, dy * 0.67 + height * 0.12);
@@ -75,14 +75,16 @@ define(function(require) {
             var D2 = new Vector2(start).add(dx * 0.42, dy * 0.33 + height * 0.12);
 
             var E1 = new Vector2(start).add(dx * 0.67, dy * 0.67);
-            var E  = new Vector2(end);
+            var E  = new Vector2(end).sub(Math.abs(this.connector2.width), 0);
 
             curve
-                .moveTo(A)
+                .moveTo(start)
+                .lineTo(A)
                 .curveTo(A2, B1, B)
                 .curveTo(B2, C1, C)
                 .curveTo(C2, D1, D)
-                .curveTo(D2, E1, E);
+                .curveTo(D2, E1, E)
+                .lineTo(end);
 
             this.hose.clear();
             this.hose.lineStyle(13, this.color, 1);
