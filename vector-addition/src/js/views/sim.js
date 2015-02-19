@@ -4,7 +4,6 @@ define(function (require) {
 
     var $ = require('jquery');
     var _ = require('underscore');
-
     var SimView = require('common/app/sim');
     var VectorAdditionSimulation = require('models/simulation');
     var VectorAdditionSceneView = require('views/scene');
@@ -96,8 +95,8 @@ define(function (require) {
         },
 
         clearArrows: function() {
-          if (this.simulation.arrowCollection !== undefined) {
-            this.simulation.arrowCollection.remove(this.arrows);
+          if (this.simulation.vectorCollection !== undefined) {
+            this.simulation.vectorCollection.remove(this.arrows);
             this.simulation.set('sumVectorVisible', false);
             this.simulation.set('emptyStage', true);
             this.$el.find('label').removeClass('green');
@@ -124,7 +123,7 @@ define(function (require) {
 
         showSum: function() {
           var sumBox = this.$el.find('#show-sum');
-          if (sumBox.is(':checked') && this.simulation.arrowCollection.length > 0) {
+          if (sumBox.is(':checked') && this.simulation.vectorCollection.length > 0) {
             this.simulation.set('sumVectorVisible', true);
           }
           else {
