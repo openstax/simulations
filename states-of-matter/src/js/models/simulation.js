@@ -5,6 +5,7 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var Simulation = require('common/simulation/simulation');
+    var Vector2    = require('common/math/vector2');
 
     var Atom                          = require('models/atom');
     var MoleculeForceAndMotionDataSet = require('models/molecule-force-and-motion-data-set');
@@ -42,30 +43,6 @@ define(function (require, exports, module) {
             gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL,
             moleculeType: S.DEFAULT_MOLECULE
         }),
-
-        // this.atomPositionUpdater;
-        // this.moleculeForceAndMotionCalculator = new NullMoleculeForceAndMotionCalculator();
-        // this.phaseStateChanger;
-        // this.isokineticThermostat;
-        // this.andersenThermostat;
-
-        // // Attributes of the container and simulation as a whole.
-        // this.minAllowableContainerHeight;
-        // this.particles = [];
-
-        // // Data set containing the atom and molecule position, motion, and force information.
-        // this.moleculeDataSet;
-
-        // this.normalizedContainerWidth;
-        // this.normalizedContainerHeight;
-        // this.temperatureSetPoint;
-        // this.gravitationalAcceleration;
-        // this.tempAdjustTickCounter;
-        // this.currentMolecule;
-        // this.particleDiameter;
-        // this.thermostatType;
-        // this.heightChangeCounter;
-        // this.minModelTemperature;
 
 
         /*************************************************************************
@@ -200,7 +177,7 @@ define(function (require, exports, module) {
             //   container.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(Constants.CONTAINER_BOUNDS.width / ((particleDiameter * 1.05) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.w / ((particleDiameter * 1.05) * 3)),
                     2 
                 )
             );
@@ -271,7 +248,7 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(Constants.CONTAINER_BOUNDS.width / ((OxygenAtom.RADIUS * 2.1) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.w / ((OxygenAtom.RADIUS * 2.1) * 3)),
                     2 
                 )
             );
@@ -327,7 +304,7 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var waterMoleculeDiameter = OxygenAtom.RADIUS * 2.1;
             var moleculesAcrossBottom = Math.round(
-                Constants.CONTAINER_BOUNDS.width / (waterMoleculeDiameter * 1.2)
+                Constants.CONTAINER_BOUNDS.w / (waterMoleculeDiameter * 1.2)
             );
             var numberOfMolecules = Math.floor(Math.pow(moleculesAcrossBottom / 3, 2));
 
@@ -927,8 +904,8 @@ define(function (require, exports, module) {
          */
         injectMolecule: function() {
 
-            var injectionPointX = Constants.CONTAINER_BOUNDS.width  / this.particleDiameter * S.INJECTION_POINT_HORIZ_PROPORTION;
-            var injectionPointY = Constants.CONTAINER_BOUNDS.height / this.particleDiameter * S.INJECTION_POINT_VERT_PROPORTION;
+            var injectionPointX = Constants.CONTAINER_BOUNDS.w  / this.particleDiameter * S.INJECTION_POINT_HORIZ_PROPORTION;
+            var injectionPointY = Constants.CONTAINER_BOUNDS.h / this.particleDiameter * S.INJECTION_POINT_VERT_PROPORTION;
 
             // Make sure that it is okay to inject a new molecule.
             if (this.moleculeDataSet.getNumberOfRemainingSlots() > 1 &&

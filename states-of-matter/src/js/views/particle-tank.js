@@ -83,16 +83,21 @@ define(function(require) {
         },
 
         initParticleContainer: function() {
-            // To multiply by view width to get view height
-            var heightWidthRatio = Constants.CONTAINER_BOUNDS.h / Constants.CONTAINER_BOUNDS.w;
+            // Distance from the edge of the image (in pixels) that the container inside starts
+            var xOffsetFromEdge = 31;
+
+            // A fudge factor--it's a limitation of using normalized diameters
+            //   for the particle calculations and means that it's difficult to
+            //   calculate it in a way that is satisfactory for all particle
+            //   sizes, so it's easier just to come up with a value that looks
+            //   nice.
+            var particleSizeOffset = 6;
+            xOffsetFromEdge += particleSizeOffset;
 
             // Create, position, and add container
             this.particleContainer = new PIXI.DisplayObjectContainer();
-            this.particleContainer.x = -this.tank.width / 2 + 31;
-            this.particleContainer.y = -19;
-            this.particleContainerWidth = this.tank.width - (2 * 31);
-            this.particleContainerMaxHeight = heightWidthRatio * this.particleContainerWidth;
-            this.particleContainerHeight = this.particleContainerMaxHeight;
+            this.particleContainer.x = -this.tank.width / 2 + xOffsetFromEdge;
+            this.particleContainer.y = -19 - particleSizeOffset;
 
             this.displayObject.addChild(this.particleContainer);
 
@@ -104,7 +109,8 @@ define(function(require) {
             this.particleContainer.addChild(this.upperParticleLayer);
 
             // Set up model view transform for particles
-            var scale = this.particleContainerWidth / Constants.CONTAINER_BOUNDS.w;
+            var particleContainerWidth = this.tank.width - (2 * xOffsetFromEdge);
+            var scale = particleContainerWidth / Constants.CONTAINER_BOUNDS.w;
             this.mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(), scale, -scale);
         },
 
@@ -119,8 +125,6 @@ define(function(require) {
         },
 
         addInitialParticles: function() {
-            for (var j = 0; j < 10; j++)
-                this.addParticle(new Atom.ArgonAtom(Math.random() * Constants.CONTAINER_BOUNDS.w, Math.random() * Constants.CONTAINER_BOUNDS.h));
             for (var i = 0; i < this.simulation.particles.length; i++)
                 this.addParticle(this.simulation.particles[i]);
         },
@@ -162,7 +166,6 @@ define(function(require) {
         particleContainerHeightChanged: function(simulation, particleContainerHeight) {
             var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h
 
-            this.particleContainerHeight = this.particleContainerMaxHeight * relativeHeight;
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
         },
 
