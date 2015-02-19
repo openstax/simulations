@@ -92,6 +92,8 @@ define(function(require) {
       this.vectorViewModel.set('degrees', this.model.calculateDegrees(this.vectorViewModel.get('originX'), this.vectorViewModel.get('originY')));
       this.vectorViewModel.set('angle', this.arrowView.transformFrame.rotation);
       this.model.set('emptyStage', false);
+      this.model.set('width', width);
+      this.model.set('height', height);
 
       this.model.updateReadouts(this.container, this.model, this.vectorViewModel, width, height, this.vectorViewModel.get('length'), this.vectorViewModel.get('degrees'));
       this.model.vectorCollection.add(this.vectorViewModel);
