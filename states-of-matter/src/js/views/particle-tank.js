@@ -4,9 +4,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
-    var Vector2  = require('common/math/vector2');
-    var range    = require('common/math/range');
+    var PixiView           = require('common/pixi/view');
+    var Vector2            = require('common/math/vector2');
+    var range              = require('common/math/range');
+    var ModelViewTransform = require('common/math/model-view-transform');
 
     var Assets = require('assets');
 
@@ -42,12 +43,13 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.simulation, 'change:particleContainerHeight', this.updateLidPosition);
+            this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
         },
 
         initGraphics: function() {
             this.initTank();
             this.initLid();
+            this.initParticleContainer();
         },
 
         initTank: function() {
@@ -65,6 +67,7 @@ define(function(require) {
             this.lid.anchor.x = 0.5;
             this.lid.anchor.y = 1;
             this.lid.y = this.lidYRange.min;
+
             if (this.lidDraggable) {
                 this.lid.buttonMode = true;
                 this.lid.defaultCursor = 'ns-resize';
@@ -73,9 +76,29 @@ define(function(require) {
             this.displayObject.addChild(this.lid);
         },
 
-        updateLidPosition: function() {
-            var relativeHeight = this.simulation.get('particleContainerHeight') / Constants.CONTAINER_BOUNDS.height;
-            
+        initParticleContainer: function() {
+            // To multiply by view width to get view height
+            var heightWidthRatio = Constants.CONTAINER_BOUNDS.height / Constants.CONTAINER_BOUNDS.width;
+
+            // Create and position container
+            this.particleContainer = new PIXI.SpriteBatch();
+            this.particleContainer.x = -this.tank.width / 2 + 31;
+            this.particleContainer.y = -19;
+            this.particleContainerWidth = this.tank.width - (2 * 31);
+            this.particleContainerMaxHeight = heightWidthRatio * this.particleContainerWidth;
+            this.particleContainerHeight = this.particleContainerMaxHeight;
+
+            // Set up model view transform for particles
+            var scale = this.particleContainerWidth / Constants.CONTAINER_BOUNDS.width;
+            this.mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(), scale, -scale);
+
+            this.displayObject.addChild(this.particleContainer);
+        },
+
+        particleContainerHeightChanged: function(simulation, particleContainerHeight) {
+            var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.height
+
+            this.particleContainerHeight = this.particleContainerMaxHeight * relativeHeight;
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
         },
 
