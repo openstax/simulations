@@ -30,6 +30,7 @@ define(function(require) {
 
         heaterCoolerPosition: new Vector2(),
         particleTankPosition: new Vector2(),
+        particleTankInteractive: false,
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
@@ -66,7 +67,8 @@ define(function(require) {
 
         initParticleTankView: function() {
             this.particleTankView = new ParticleTankView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                lidDraggable: this.particleTankInteractive
             });
 
             this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
@@ -76,7 +78,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.particleTankView.update(time, deltaTime);
         },
 
     });

@@ -312,9 +312,9 @@ define(function(require) {
 
         if (_.isString(r1)) {
             // They have specified [radius, color, outlineWidth, outlineColor]
-            color1 = r1;
-            outlineWidth = r2;
             outlineColor = color1;
+            outlineWidth = r2;
+            color1 = r1;
             r1 = undefined;
             r2 = undefined;
         }

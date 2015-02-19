@@ -16,6 +16,7 @@ define(function (require) {
 
         heaterCoolerPosition: Constants.PhaseChangesSceneView.HEATER_COOLER_POSITION,
         particleTankPosition: Constants.PhaseChangesSceneView.TANK_POSITION,
+        particleTankInteractive: true,
 
         initialize: function(options) {
             SOMSceneView.prototype.initialize.apply(this, [options]);
