@@ -37,7 +37,7 @@ define(function(require) {
 
       this.listenTo(this.model, 'change:sumVectorVisible', this.sumVectorVisible);
       this.listenTo(this.model.vectorViewModel, 'change', this.updateSum);
-      this.listenTo(this.model.vectorCollection, 'change', this.updateSum);
+      this.listenTo(this.model.vectorCollection, 'change add remove', this.updateSum);
       this.listenTo(this.sumVectorModel, 'change', this.updateSum);
     },
 
@@ -206,8 +206,12 @@ define(function(require) {
         this.vectorXView.displayObject.removeChild(this.vectorXView.vectorXContainer);
         this.vectorYView.displayObject.removeChild(this.vectorYView.vectorYContainer);
         this.componentsView.displayObject.removeChild(this.componentsView.linesContainer);
+
+        if (this.model.vectorCollection.length <= 0) {
+          this.model.set('sumVectorVisible', false);
+        }
+
         this.model.set('deleteVector', false);
-        this.model.set('sumVectorVisible', false);
       }
     },
 
