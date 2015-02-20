@@ -3,17 +3,25 @@ define(function(require) {
   'use strict'
 
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
+  var Constants = require('constants');
+
 
   var ArrowViewModel = DraggableArrowView.ArrowViewModel.extend({
+
     defaults: {
-      originX: 300,
-      originY: 300,
-      targetX: 380,
-      targetY: 220
+
     },
 
     initialize: function(attributes, options) {
+      var originX = 0.8 * Constants.CANVAS_WIDTH + 15 * Math.random() - 10;
+      var originY = 0.25 * Constants.CANVAS_HEIGHT + 15 * Math.random() - 10;
+      var targetX = originX + 80;
+      var targetY = originY - 80;
 
+      this.set('originX', originX);
+      this.set('originY', originY);
+      this.set('targetX', targetX);
+      this.set('targetY', targetY);
     }
 
   });
