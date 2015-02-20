@@ -54,7 +54,8 @@ define(function(require) {
 
     drawVector: function() {
       this.arrowView = new DraggableArrowView({
-          model: this.vectorViewModel
+          model: this.vectorViewModel,
+          snappingEnabled: true
       });
 
       this.tailGraphics = this.arrowView.tailGraphics;
