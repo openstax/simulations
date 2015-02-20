@@ -80,26 +80,12 @@ define(function(require) {
             var alteredCharges = [ -2 * q0, 1.67 * q0, 0.33 * q0 ];
 
             // Update center of mass positions and angles for the molecules.
-            for (var i = 0; i < numberOfMolecules; i++) {
-
-                var xPos = moleculeCenterOfMassPositions[i].x + 
-                    (VerletAlgorithm.TIME_STEP * moleculeVelocities[i].x) + 
-                    (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeForces[i].x * massInverse);
-
-                var yPos = moleculeCenterOfMassPositions[i].y + 
-                    (VerletAlgorithm.TIME_STEP * moleculeVelocities[i].y) +
-                    (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeForces[i].y * massInverse);
-
-                moleculeCenterOfMassPositions[i].set(xPos, yPos);
-
-                moleculeRotationAngles[i] += (VerletAlgorithm.TIME_STEP * moleculeRotationRates[i]) +
-                                             (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeTorques[i] * inertiaInverse);
-            }
+            this.updateCenterOfMassPositions(numberOfMolecules, moleculeCenterOfMassPositions, moleculeVelocities, moleculeForces, moleculeRotationRates, moleculeTorques, massInverse, inertiaInverse);
 
             this.positionUpdater.updateAtomPositions(moleculeDataSet);
 
             // Calculate the force from the walls.  This force is assumed to act
-            // on the center of mass, so there is no torque.
+            //    on the center of mass, so there is no torque.
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 // Clear the previous calculation's particle forces and torques.
@@ -261,7 +247,27 @@ define(function(require) {
 
             // Record the calculated temperature.
             this.temperature = (centersOfMassKineticEnergy + rotationalKineticEnergy) / numberOfMolecules / 1.5;
-        }
+        },
+
+        updateCenterOfMassPositions: function(numberOfMolecules, moleculeCenterOfMassPositions, moleculeVelocities, moleculeForces, moleculeRotationRates, moleculeTorques, massInverse, inertiaInverse) {
+            for (var i = 0; i < numberOfMolecules; i++) {
+
+                var xPos = moleculeCenterOfMassPositions[i].x + 
+                    (VerletAlgorithm.TIME_STEP * moleculeVelocities[i].x) + 
+                    (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeForces[i].x * massInverse);
+
+                var yPos = moleculeCenterOfMassPositions[i].y + 
+                    (VerletAlgorithm.TIME_STEP * moleculeVelocities[i].y) +
+                    (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeForces[i].y * massInverse);
+
+                moleculeCenterOfMassPositions[i].set(xPos, yPos);
+
+                moleculeRotationAngles[i] += (VerletAlgorithm.TIME_STEP * moleculeRotationRates[i]) +
+                                             (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeTorques[i] * inertiaInverse);
+            }
+        },
+
+
 
     });
 
