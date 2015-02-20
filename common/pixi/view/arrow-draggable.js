@@ -10,7 +10,7 @@ define(function(require) {
     var Colors  = require('../../colors/colors');
     var Vector2 = require('../../math/vector2');
 
-    // Default snapping function just snaps to nearest 10 pixels
+    // Default snapping function just snaps to nearest 15 pixels
     var defaultSnappingFunction = function(coordinateComponent) {
         return Math.round(coordinateComponent / 15) * 15;
     };
