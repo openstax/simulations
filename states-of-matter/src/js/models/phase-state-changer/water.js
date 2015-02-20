@@ -277,7 +277,7 @@ define(function(require) {
     /**
      * Static constants
      */
-    _.extend(WaterPhaseStateChanger, Constants.WaterPhaseStateChanger);
+    _.extend(WaterPhaseStateChanger, Constants.PhaseStateChanger, Constants.WaterPhaseStateChanger);
 
     return WaterPhaseStateChanger;
 });

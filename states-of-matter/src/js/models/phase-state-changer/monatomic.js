@@ -229,7 +229,7 @@ define(function(require) {
     /**
      * Static constants
      */
-    _.extend(MonatomicPhaseStateChanger, Constants.MonatomicPhaseStateChanger);
+    _.extend(MonatomicPhaseStateChanger, Constants.PhaseStateChanger, Constants.MonatomicPhaseStateChanger);
 
     return MonatomicPhaseStateChanger;
 });

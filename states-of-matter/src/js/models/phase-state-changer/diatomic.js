@@ -266,7 +266,7 @@ define(function(require) {
     /**
      * Static constants
      */
-    _.extend(DiatomicPhaseStateChanger, Constants.DiatomicPhaseStateChanger);
+    _.extend(DiatomicPhaseStateChanger, Constants.PhaseStateChanger, Constants.DiatomicPhaseStateChanger);
 
     return DiatomicPhaseStateChanger;
 });
