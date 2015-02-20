@@ -63,6 +63,7 @@ define(function(require) {
                 moleculeForces,
                 moleculeTorques, 
                 moleculeRotationRates, 
+                moleculeRotationAngles,
                 massInverse, 
                 inertiaInverse
             );
@@ -75,6 +76,7 @@ define(function(require) {
             //   walls and by gravity.
             var pressureZoneWallForce = this._calculateWallAndGravityForces(
                 nextMoleculeForces, 
+                nextMoleculeTorques,
                 numberOfMolecules, 
                 moleculeCenterOfMassPositions, 
                 normalizedContainerWidth, 
@@ -105,6 +107,7 @@ define(function(require) {
             this._calculateVelocities(
                 moleculeVelocities, 
                 numberOfMolecules, 
+                moleculeRotationRates,
                 moleculeForces, 
                 moleculeTorques, 
                 nextMoleculeForces, 
@@ -121,7 +124,7 @@ define(function(require) {
          *  Updates the positions of all particles based on their current
          *    velocities and the forces acting on them.
          */
-        _updateCenterOfMassPositions: function(moleculeCenterOfMassPositions, numberOfMolecules, moleculeVelocities, moleculeForces, moleculeTorques, moleculeRotationRates, massInverse, inertiaInverse) {
+        _updateCenterOfMassPositions: function(moleculeCenterOfMassPositions, numberOfMolecules, moleculeVelocities, moleculeForces, moleculeTorques, moleculeRotationRates, moleculeRotationAngles, massInverse, inertiaInverse) {
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xPos = moleculeCenterOfMassPositions[i].x + 
@@ -143,7 +146,7 @@ define(function(require) {
          * Calculate the forces exerted on the particles by the container
          *   walls and by gravity.
          */
-        _calculateWallAndGravityForces: function(nextMoleculeForces, numberOfMolecules, moleculeCenterOfMassPositions, normalizedContainerWidth, normalizedContainerHeight, gravitationalAcceleration, temperatureSetPoint) {
+        _calculateWallAndGravityForces: function(nextMoleculeForces, nextMoleculeTorques, numberOfMolecules, moleculeCenterOfMassPositions, normalizedContainerWidth, normalizedContainerHeight, gravitationalAcceleration, temperatureSetPoint) {
             var pressureZoneWallForce = 0;
 
             for (var i = 0; i < numberOfMolecules; i++) {
@@ -238,7 +241,7 @@ define(function(require) {
          * Calculate the new velocities based on the old ones and the forces
          *   that are acting on the particle.
          */
-        _calculateVelocities: function(moleculeVelocities, numberOfMolecules, moleculeForces, moleculeTorques, nextMoleculeForces, nextMoleculeTorques, moleculeMass, moleculeRotationalInertia, massInverse, inertiaInverse) {
+        _calculateVelocities: function(moleculeVelocities, numberOfMolecules, moleculeRotationRates, moleculeForces, moleculeTorques, nextMoleculeForces, nextMoleculeTorques, moleculeMass, moleculeRotationalInertia, massInverse, inertiaInverse) {
             var centersOfMassKineticEnergy = 0;
             var rotationalKineticEnergy = 0;
 
