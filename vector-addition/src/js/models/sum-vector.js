@@ -19,6 +19,7 @@ define(function(require) {
       var changesY = 0;
       var sumX = 0;
       var sumY = 0;
+      var rotation = 0;
 
       if (model.vectorCollection.length > 0) {
           var vectors = model.vectorCollection.models;
@@ -27,13 +28,14 @@ define(function(require) {
           changesY = vector.get('targetY') - vector.get('originY');
           sumX += changesX;
           sumY += changesY;
-
+          rotation += vector.get('rotation');
         });
 
         this.set('originX', this.get('originX'));
         this.set('originY', this.get('originY'));
         this.set('targetX', this.get('originX') + sumX);
         this.set('targetY', this.get('originY') + sumY);
+        this.set('rotation', rotation);
       }
     }
 
