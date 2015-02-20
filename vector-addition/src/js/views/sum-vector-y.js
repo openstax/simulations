@@ -47,23 +47,25 @@ define(function(require) {
       var angle = this.sumVectorModel.get('angle');
       var theta = this.model.get('thetaText');
 
-      if (theta > 90) {
+      if (theta > 0) {
         angle = Constants.VECTOR_Y_ROTATION;
-        model.set('rotation', angle)
+        model.set('rotation', angle);
       }
-
       else {
-        angle = 0;
-        model.set('rotation', angle)
+        angle = -Constants.VECTOR_Y_ROTATION;
+        model.set('rotation', angle);
       }
 
-      model.set('originX', this.sumVectorModel.get('originX'));
-      model.set('originY', this.sumVectorModel.get('originY'));
-      model.set('targetX', this.sumVectorModel.get('targetX'));
-      model.set('targetY', this.sumVectorModel.get('targetY'));
-      model.set('oldOriginX', this.sumVectorModel.get('originX'));
-      model.set('oldOriginY', this.sumVectorModel.get('originY'));
-      this.sumVectorYView.transformFrame.rotation = model.get('rotation');
+      if (this.model.get('componentStyles') !== 3) {
+        model.set('originX', this.sumVectorModel.get('originX'));
+        model.set('originY', this.sumVectorModel.get('originY'));
+        model.set('targetX', this.sumVectorModel.get('targetX'));
+        model.set('targetY', this.sumVectorModel.get('targetY'));
+        model.set('oldOriginX', this.sumVectorModel.get('originX'));
+        model.set('oldOriginY', this.sumVectorModel.get('originY'));
+        this.sumVectorYView.transformFrame.rotation = model.get('rotation');
+      }
+
     }
 
   });

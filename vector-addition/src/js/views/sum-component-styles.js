@@ -23,6 +23,7 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
+      this.listenTo(this.sumVectorModel, 'change:targetX change:targetY', this.showComponentStyles);
     },
 
     showComponentStyles: function() {
