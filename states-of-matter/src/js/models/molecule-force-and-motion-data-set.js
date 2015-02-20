@@ -39,7 +39,7 @@ define(function (require) {
         }
         else if (atomsPerMolecule === 2) {
             this.moleculeMass = 2; // Two molecules, assumed to be the same.
-            this.moleculeRotationalInertia = Math.pow(StatesOfMatterConstants.DIATOMIC_PARTICLE_DISTANCE, 2) / 2;
+            this.moleculeRotationalInertia = Math.pow(Constants.DIATOMIC_PARTICLE_DISTANCE, 2) / 2;
         }
         else if (atomsPerMolecule === 3) {
             this.moleculeMass = 1.5; // Two molecules, assumed to be the same.

@@ -76,6 +76,7 @@ define(function(require) {
 
             // Create and initialize other variables needed to do the job.
             var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
             var atomsPerLayer = Math.round(Math.sqrt(numberOfAtoms));
 
@@ -125,7 +126,7 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             // Initialize the velocities and angles of the molecules.
@@ -205,7 +206,7 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             for (var i = 0; i < numberOfMolecules; i++) {

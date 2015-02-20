@@ -27,6 +27,7 @@ define(function (require) {
             var sineTheta;
             var i, j;
 
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             for (i = 0; i < numberOfMolecules; i++) {
                 cosineTheta = Math.cos(moleculeRotationAngles[i]);
                 sineTheta   = Math.sin(moleculeRotationAngles[i]);

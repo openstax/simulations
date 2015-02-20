@@ -80,14 +80,9 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.gravitationalAcceleration = S.INITIAL_GRAVITATIONAL_ACCEL;
-            this.tempAdjustTickCounter = 0;
-            this.temperatureSetPoint = S.INITIAL_TEMPERATURE;
+            this.initModelParameters();
 
-            this.set({
-                exploded: false,
-                heatingCoolingAmount: 0
-            });
+            this.set('moleculeType', S.DEFAULT_MOLECULE);
 
             this.resetContainerSize();
         },
@@ -101,6 +96,17 @@ define(function (require, exports, module) {
             this.set('targetContainerHeight',   S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             this.normalizedContainerHeight = this.get('particleContainerHeight') / this.particleDiameter;
             this.normalizedContainerWidth  = S.PARTICLE_CONTAINER_WIDTH / this.particleDiameter;
+        },
+
+        initModelParameters: function() {
+            this.tempAdjustTickCounter = 0;
+
+            this.set({
+                exploded: false,
+                heatingCoolingAmount: 0,
+                temperatureSetPoint: S.INITIAL_TEMPERATURE,
+                gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL
+            });
         },
 
         /**
@@ -248,7 +254,7 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(Constants.CONTAINER_BOUNDS.w / ((OxygenAtom.RADIUS * 2.1) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.w / ((Atom.OxygenAtom.RADIUS * 2.1) * 3)),
                     2 
                 )
             );
@@ -302,7 +308,7 @@ define(function (require, exports, module) {
             //   (really a square, since it's 2D, but you get the idea) that takes
             //   up a fixed amount of the bottom of the container, so the number of
             //   molecules that can fit depends on the size of the individual atom.
-            var waterMoleculeDiameter = OxygenAtom.RADIUS * 2.1;
+            var waterMoleculeDiameter = Atom.OxygenAtom.RADIUS * 2.1;
             var moleculesAcrossBottom = Math.round(
                 Constants.CONTAINER_BOUNDS.w / (waterMoleculeDiameter * 1.2)
             );
@@ -644,7 +650,7 @@ define(function (require, exports, module) {
 
             // Remove existing particles and reset the global model parameters.
             this.removeAllParticles();
-            this.initComponents();
+            this.initModelParameters();
 
             // Set the new molecule type.
             this.currentMolecule = moleculeType;
@@ -723,6 +729,8 @@ define(function (require, exports, module) {
                 this.set('gravitationalAcceleration', S.MAX_GRAVITATIONAL_ACCEL);
             else if (gravitationalAcceleration < 0)
                 this.set('gravitationalAcceleration', 0);
+            else
+                this.gravitationalAcceleration = gravitationalAcceleration;
         },
 
         heatingCoolingAmountChanged: function(model, heatingCoolingAmount) {
@@ -815,7 +823,7 @@ define(function (require, exports, module) {
                     newTemperature = this.minModelTemperature;
                 }
                 this.temperatureSetPoint = newTemperature;
-                this.isoKineticThermostat.setTargetTemperature(this.temperatureSetPoint);
+                this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
                 this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
 
                 this.trigger('temperature-changed');
@@ -881,7 +889,7 @@ define(function (require, exports, module) {
                 ))
             ) {
                 // Use the isokinetic thermostat.
-                this.isoKineticThermostat.adjustTemperature();
+                this.isokineticThermostat.adjustTemperature();
             }
             else if (
                 (this.thermostatType == S.ANDERSEN_THERMOSTAT) ||
@@ -951,20 +959,20 @@ define(function (require, exports, module) {
                             particle = new Atom.NeonAtom( 0, 0 );
                             break;
                     }
-                    this.particles.add(particle);
+                    this.particles.push(particle);
                 }
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
                     for (var i = 0; i < atomsPerMolecule; i++) {
-                        this.particles.add(new Atom.OxygenAtom(0, 0));
+                        this.particles.push(new Atom.OxygenAtom(0, 0));
                         atomPositions[i] = new Point2D.Double();
                     }
                 }
                 else if (atomsPerMolecule === 3) {
                     // Add atoms to model set.
-                    this.particles.add(new Atom.OxygenAtom(0, 0));
-                    this.particles.add(new Atom.HydrogenAtom(0, 0));
-                    this.particles.add(new Atom.HydrogenAtom(0, 0));
+                    this.particles.push(new Atom.OxygenAtom(0, 0));
+                    this.particles.push(new Atom.HydrogenAtom(0, 0));
+                    this.particles.push(new Atom.HydrogenAtom(0, 0));
                     atomPositions[0] = new Vector2();
                     atomPositions[1] = new Vector2();
                     atomPositions[2] = new Vector2();

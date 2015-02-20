@@ -138,11 +138,11 @@ define(function(require) {
             }
 
             // Update the pressure calculation.
-            updatePressure(pressureZoneWallForce);
+            this.updatePressure(pressureZoneWallForce);
 
             // If there are any atoms that are currently designated as "unsafe",
             // check them to see if they can be moved into the "safe" category.
-            if (moleculeDataSet.getNumberOfSafeMolecules() < numberOfMolecules)
+            if (moleculeDataSet.numberOfSafeMolecules < numberOfMolecules)
                 this.updateMoleculeSafety();
 
             // Calculate the force and torque due to inter-particle interactions.

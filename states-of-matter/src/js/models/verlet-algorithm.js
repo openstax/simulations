@@ -101,7 +101,7 @@ define(function (require) {
                         // The particles are energetic enough to end up outside
                         // the container, so consider it to be exploded (if it
                         // isn't already).
-                        simulation.explodeContainer();
+                        simulation.explode();
                     }
                     yPos = minDistance;
                 }
