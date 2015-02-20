@@ -36,8 +36,8 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             exploded: false,
-            particleContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
-            targetContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
+            particleContainerHeight: Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT,
+            targetContainerHeight: Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT,
             heatingCoolingAmount: 0,
             temperatureSetPoint: 0,
             gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL,
@@ -52,11 +52,11 @@ define(function (require, exports, module) {
          *************************************************************************/
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
+            // Managing frame rate
             this.frameDuration = SOMSimulation.FRAME_DURATION;
             this.frameAccumulator = 0;
 
+            // Initializing some properties
             this.currentMolecule = S.DEFAULT_MOLECULE;
             this.particleDiameter = 1;
             this.thermostatType = S.ADAPTIVE_THERMOSTAT;
@@ -68,6 +68,8 @@ define(function (require, exports, module) {
             this.particles = [];
 
             this.moleculeTypeChanged(this, this.get('moleculeType'));
+
+            Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:moleculeType', this.moleculeTypeChanged);
             this.on('change:targetContainerHeight', this.targetContainerHeightChanged);
@@ -92,10 +94,10 @@ define(function (require, exports, module) {
          *   when the lid is returned after being blown away.
          */
         resetContainerSize: function() {
-            this.set('particleContainerHeight', S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
-            this.set('targetContainerHeight',   S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            this.set('particleContainerHeight', Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            this.set('targetContainerHeight',   Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             this.normalizedContainerHeight = this.get('particleContainerHeight') / this.particleDiameter;
-            this.normalizedContainerWidth  = S.PARTICLE_CONTAINER_WIDTH / this.particleDiameter;
+            this.normalizedContainerWidth  = Constants.PARTICLE_CONTAINER_WIDTH / this.particleDiameter;
         },
 
         initModelParameters: function() {
@@ -403,6 +405,7 @@ define(function (require, exports, module) {
 
         explode: function() {
             this.set('exploded', true);
+            console.log('EXPLODED');
         },
 
         unexplode: function() {
@@ -699,8 +702,8 @@ define(function (require, exports, module) {
         },
 
         targetContainerHeightChanged: function(simulation, targetContainerHeight) {
-            if (targetContainerHeight > S.PARTICLE_CONTAINER_INITIAL_HEIGHT)
-                this.set('targetContainerHeight', S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            if (targetContainerHeight > Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
+                this.set('targetContainerHeight', Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             else if (targetContainerHeight < this.minAllowableContainerHeight)
                 this.set('targetContainerHeight', this.minAllowableContainerHeight);
         },
@@ -822,9 +825,10 @@ define(function (require, exports, module) {
                 else if (newTemperature <= this.minModelTemperature) {
                     newTemperature = this.minModelTemperature;
                 }
-                this.temperatureSetPoint = newTemperature;
-                this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
-                this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
+                //this.temperatureSetPoint = newTemperature;
+                this.set('temperatureSetPoint', this.temperatureSetPoint);
+                // this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
+                // this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
 
                 this.trigger('temperature-changed');
             }

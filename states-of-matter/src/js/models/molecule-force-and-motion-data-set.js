@@ -45,6 +45,13 @@ define(function (require) {
             this.moleculeMass = 1.5; // Two molecules, assumed to be the same.
             this.moleculeRotationalInertia = WaterMoleculeStructure.rotationalInertia;
         }
+
+        for (var i = 0; i < Constants.MAX_NUM_ATOMS; i++) {
+            this.moleculeRotationAngles.push(0);
+            this.moleculeRotationRates.push(0);
+            this.moleculeTorques.push(0);
+            this.nextMoleculeTorques.push(0);
+        }
     };
 
     /**
