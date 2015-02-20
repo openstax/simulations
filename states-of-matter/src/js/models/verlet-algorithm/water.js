@@ -197,14 +197,15 @@ define(function(require) {
                 }
 
                 // Add in the effect of gravity.
+                var _gravitationalAcceleration = gravitationalAcceleration;
                 if (temperatureSetPoint < VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES) {
                     // Below a certain temperature, gravity is increased to counteract some odd-looking behavior
                     // caused by the thermostat.
-                    gravitationalAcceleration = gravitationalAcceleration *
+                    _gravitationalAcceleration = gravitationalAcceleration *
                         ((VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES - temperatureSetPoint) *
                         VerletAlgorithm.LOW_TEMPERATURE_GRAVITY_INCREASE_RATE + 1);
                 }
-                nextMoleculeForces[i].y = nextMoleculeForces[i].y - gravitationalAcceleration;
+                nextMoleculeForces[i].y = nextMoleculeForces[i].y - _gravitationalAcceleration;
             }
 
             return pressureZoneWallForce;
