@@ -34,114 +34,53 @@ define(function(require) {
     },
 
     showComponentStyles: function() {
-      var arrowModel = this.vectorViewModel;
-      var sumVectorModel = this.sumVectorModel;
-
-      var vectorYModel = this.vectorYViewModel;
-      var vectorYView = this.vectorYView;
-      var vectorYContainer = this.vectorYContainer;
-
-      var vectorXModel = this.vectorXViewModel;
-      var vectorXView = this.vectorXView;
-      var vectorXContainer = this.vectorXContainer;
-
-      var sumVectorXModel = this.sumVectorXModel;
-      var sumVectorXView = this.sumVectorXView;
-      var sumVectorXContainer = this.sumVectorXContainer;
-
-      var sumVectorYModel = this.sumVectorYModel;
-      var sumVectorYView = this.sumVectorYView;
-      var sumVectorYContainer = this.sumVectorYContainer;
-
       var canvas = $('.scene-view');
       var xOffset = canvas.height() - Constants.X_OFFSET;
       var yOffset = canvas.width() - Constants.Y_OFFSET;
 
-      this.resetOrigins(vectorXModel);
-      this.resetOrigins(vectorYModel);
-      this.clearComponentLines();
+      this.model.resetOrigins(this.vectorXViewModel);
+      this.model.resetOrigins(this.vectorYViewModel);
+      this.model.clearComponentLines(this.lines);
 
       if (this.model.get('componentStyles') == 0) {
-        vectorXContainer.visible = false;
-        vectorYContainer.visible = false;
+        this.vectorXContainer.visible = false;
+        this.vectorYContainer.visible = false;
       }
       else {
-        vectorXContainer.visible = true;
-        vectorYContainer.visible = true;
-
-        if (this.model.get('sumVectorVisible')) {
-          sumVectorXContainer = true;
-          sumVectorYContainer = true;
-        }
+        this.vectorXContainer.visible = true;
+        this.vectorYContainer.visible = true;
       }
 
       if (this.model.get('componentStyles') == 1) {
-        vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
-        vectorYView.transformFrame.rotation = vectorYModel.get('rotation');
-
-        if (this.model.get('sumVectorVisible')) {
-
-          sumVectorXView.transformFrame.rotation = vectorXModel.get('rotation');
-          sumVectorYView.transformFrame.rotation = vectorYModel.get('rotation');
-          this.sumVectorXContainer.visible = true;
-          this.sumVectorYContainer.visible = true;
-        }
+        this.vectorXView.transformFrame.rotation = this.vectorXViewModel.get('rotation');
+        this.vectorYView.transformFrame.rotation = this.vectorYViewModel.get('rotation');
       }
 
       if (this.model.get('componentStyles') == 2) {
-        vectorYModel.set('originX', arrowModel.get('targetX'));
-        vectorYModel.set('targetX', arrowModel.get('targetX'));
-        vectorXModel.set('originX', arrowModel.get('originX'));
-        vectorXModel.set('originY', arrowModel.get('originY'));
-        vectorXModel.set('targetX', arrowModel.get('targetX'));
-        vectorXModel.set('targetY', arrowModel.get('targetY'));
-        vectorXView.transformFrame.rotation = vectorXModel.get('rotation');
+        this.vectorYViewModel.set('originX', this.vectorViewModel.get('targetX'));
+        this.vectorYViewModel.set('targetX', this.vectorViewModel.get('targetX'));
 
-        if (this.model.get('sumVectorVisible')) {
-          sumVectorYModel.set('originX', sumVectorModel.get('targetX'));
-          sumVectorYModel.set('targetX', sumVectorModel.get('targetX'));
-          sumVectorXModel.set('originX', sumVectorModel.get('originX'));
-          sumVectorXModel.set('originY', sumVectorModel.get('originY'));
-          sumVectorXModel.set('targetX', sumVectorModel.get('targetX'));
-          sumVectorXModel.set('targetY', sumVectorModel.get('targetY'));
-          sumVectorXView.transformFrame.rotation = vectorXModel.get('rotation');
-        }
+        this.vectorXViewModel.set('originX', this.vectorViewModel.get('originX'));
+        this.vectorXViewModel.set('originY', this.vectorViewModel.get('originY'));
+        this.vectorXViewModel.set('targetX', this.vectorViewModel.get('targetX'));
+        this.vectorXViewModel.set('targetY', this.vectorViewModel.get('targetY'));
+        this.vectorXView.transformFrame.rotation = this.vectorXViewModel.get('rotation');
       }
 
       if (this.model.get('componentStyles') == 3) {
-        this.clearComponentLines();
-        vectorXModel.set('originX', arrowModel.get('originX'));
-        vectorXModel.set('originY', xOffset);
-        vectorXModel.set('targetX', arrowModel.get('targetX'));
-        vectorXModel.set('targetY', xOffset);
+        this.model.clearComponentLines(this.lines);
+        this.vectorXViewModel.set('originX', this.vectorViewModel.get('originX'));
+        this.vectorXViewModel.set('originY', xOffset);
+        this.vectorXViewModel.set('targetX', this.vectorViewModel.get('targetX'));
+        this.vectorXViewModel.set('targetY', xOffset);
 
-        vectorYModel.set('originX', yOffset);
-        vectorYModel.set('originY', arrowModel.get('originY'));
-        vectorYModel.set('targetX', yOffset);
-        vectorYModel.set('targetY', arrowModel.get('targetY'));
+        this.vectorYViewModel.set('originX', yOffset);
+        this.vectorYViewModel.set('originY', this.vectorViewModel.get('originY'));
+        this.vectorYViewModel.set('targetX', yOffset);
+        this.vectorYViewModel.set('targetY', this.vectorViewModel.get('targetY'));
 
-        this.drawComponentLines(vectorYModel, arrowModel, vectorXModel);
-
-        if (this.model.get('sumVectorVisible')) {
-          this.clearComponentLines();
-          sumVectorXModel.set('originX', sumVectorModel.get('originX'));
-          sumVectorXModel.set('originY', xOffset);
-          sumVectorXModel.set('targetX', sumVectorModel.get('targetX'));
-          sumVectorXModel.set('targetY', xOffset);
-
-          sumVectorYModel.set('originX', yOffset);
-          sumVectorYModel.set('originY', sumVectorModel.get('originY'));
-          sumVectorYModel.set('targetX', yOffset);
-          sumVectorYModel.set('targetY', sumVectorModel.get('targetY'));
-
-          this.drawComponentLines(sumVectorYModel, sumVectorModel, sumVectorXModel);
-        }
+        this.drawComponentLines(this.vectorYViewModel, this.vectorViewModel, this.vectorXViewModel);
       }
-    },
-
-    resetOrigins: function(vectorModel) {
-      vectorModel.set('originX', vectorModel.get('oldOriginX'));
-      vectorModel.set('originY', vectorModel.get('oldOriginY'));
     },
 
     drawComponentLines: function(vectorYModel, vectorModel, vectorXModel) {
@@ -159,17 +98,9 @@ define(function(require) {
 
       this.linesContainer.addChild(this.lines);
       this.displayObject.addChild(this.linesContainer);
-    },
-
-    clearComponentLines: function() {
-      if (this.lines !== undefined) {
-        this.lines.clear();
-      }
     }
-
   });
 
   return ComponentsStyles;
-
 
 });

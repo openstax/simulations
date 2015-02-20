@@ -77,6 +77,17 @@ define(function (require) {
       this.set('offsetX', this.get('rXText') * 10);
     },
 
+    resetOrigins: function(vectorModel) {
+      vectorModel.set('originX', vectorModel.get('oldOriginX'));
+      vectorModel.set('originY', vectorModel.get('oldOriginY'));
+    },
+
+    clearComponentLines: function(lines) {
+      if (lines !== undefined) {
+        lines.clear();
+      }
+    },
+
     //PHET
     calculateLength: function(x, y) {
       return Math.sqrt(x * x + y * y);
