@@ -44,7 +44,7 @@ define(function(require) {
 
             // Update the positions of all particles based on their current
             //   velocities and the forces acting on them.
-            this.updateCenterOfMassPositions(
+            this._updateCenterOfMassPositions(
                 moleculeCenterOfMassPositions, 
                 numberOfAtoms, 
                 moleculeVelocities, 
@@ -53,7 +53,7 @@ define(function(require) {
 
             // Calculate the forces exerted on the particles by the container
             //   walls and by gravity.
-            var pressureZoneWallForce = this.calculateWallAndGravityForces(
+            var pressureZoneWallForce = this._calculateWallAndGravityForces(
                 nextMoleculeForces, 
                 numberOfAtoms, 
                 moleculeCenterOfMassPositions,
@@ -74,7 +74,7 @@ define(function(require) {
 
             // Calculate the forces created through interactions with other
             //   particles.
-            var potentialEnergy = this.calculateInteractionForces(
+            var potentialEnergy = this._calculateInteractionForces(
                 nextMoleculeForces, 
                 numberOfSafeMolecules, 
                 moleculeCenterOfMassPositions
@@ -82,7 +82,7 @@ define(function(require) {
 
             // Calculate the new velocities based on the old ones and the forces
             //   that are acting on the particle.
-            var kineticEnergy = this.calculateVelocities(
+            var kineticEnergy = this._calculateVelocities(
                 moleculeVelocities, 
                 numberOfAtoms, 
                 moleculeForces, 
@@ -100,7 +100,11 @@ define(function(require) {
                 moleculeForces[i].set(nextMoleculeForces[i].x, nextMoleculeForces[i].y);
         },
 
-        updateCenterOfMassPositions: function(moleculeCenterOfMassPositions, numberOfAtoms, moleculeVelocities, moleculeForces) {
+        /**
+         *  Updates the positions of all particles based on their current
+         *    velocities and the forces acting on them.
+         */
+        _updateCenterOfMassPositions: function(moleculeCenterOfMassPositions, numberOfAtoms, moleculeVelocities, moleculeForces) {
             for (var i = 0; i < numberOfAtoms; i++) {
                 var xPos = moleculeCenterOfMassPositions[i].x + 
                     (VerletAlgorithm.TIME_STEP * moleculeVelocities[i].x) +
@@ -114,7 +118,11 @@ define(function(require) {
             }
         },
 
-        calculateWallAndGravityForces: function(nextMoleculeForces, numberOfAtoms, moleculeCenterOfMassPositions, containerWidth, containerHeight, gravitationalAcceleration) {
+        /**
+         * Calculate the forces exerted on the particles by the container
+         *   walls and by gravity.
+         */
+        _calculateWallAndGravityForces: function(nextMoleculeForces, numberOfAtoms, moleculeCenterOfMassPositions, containerWidth, containerHeight, gravitationalAcceleration) {
             var pressureZoneWallForce = 0;
 
             for (var i = 0; i < numberOfAtoms; i++) {
@@ -147,7 +155,11 @@ define(function(require) {
             return pressureZoneWallForce;
         },
 
-        calculateInteractionForces: function(nextMoleculeForces, numberOfSafeMolecules, moleculeCenterOfMassPositions) {
+        /**
+         * Calculate the forces created through interactions with other
+         *   particles.
+         */
+        _calculateInteractionForces: function(nextMoleculeForces, numberOfSafeMolecules, moleculeCenterOfMassPositions) {
             var potentialEnergy = 0;
 
             var force = new Vector2();
@@ -189,7 +201,11 @@ define(function(require) {
             return potentialEnergy;
         },
 
-        calculateVelocities: function(moleculeVelocities, numberOfAtoms, moleculeForces, nextMoleculeForces) {
+        /**
+         * Calculate the new velocities based on the old ones and the forces
+         *   that are acting on the particle.
+         */
+        _calculateVelocities: function(moleculeVelocities, numberOfAtoms, moleculeForces, nextMoleculeForces) {
             var kineticEnergy = 0;
 
             var velocityIncrement = new Vector2();
