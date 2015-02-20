@@ -7,6 +7,7 @@ define(function(require) {
   var VectorBinView = require('views/vector-bin');
   var GridView = require('views/grid');
   var TrashCanView = require('views/trash-can');
+  var SumVectorView = require('views/sum-vector');
   var Assets = require('assets');
   var Constants = require('constants');
 
@@ -22,6 +23,7 @@ define(function(require) {
       this.drawXY();
       this.initVectorBin();
       this.initTrashCan();
+      this.initSumVector();
     },
 
     drawXY: function() {
@@ -79,6 +81,14 @@ define(function(require) {
       });
       this.trashCanView = trashCanView;
       this.stage.addChild(trashCanView.displayObject);
+    },
+
+    initSumVector: function() {
+      var sumVectorView = new SumVectorView({
+        model: this.simulation
+      });
+      this.sumVectorView = sumVectorView;
+      this.stage.addChild(sumVectorView.displayObject);
     }
 
   });

@@ -4,6 +4,7 @@ define(function (require) {
 
   var Simulation = require('common/simulation/simulation');
   var VectorsViewModel = require('models/vectors');
+  var Constants = require('constants');
 
   var VectorAdditionSimulation = Simulation.extend({
 
@@ -25,7 +26,8 @@ define(function (require) {
       red: '0xFF0000',
       pink: '0xFFB4D9',
       green: '0x66CD00',
-      lightGreen: '0x76EE00'
+      lightGreen: '0x76EE00',
+      darkOrange: '0xEE7600'
 
     }),
 
@@ -65,16 +67,27 @@ define(function (require) {
       }
 
       vectorModel.set('degrees', this.calculateDegrees(width, height));
-      this.set('rText', this.padZero(this.round1(length/10)));
+      this.set('rText', this.padZero(this.round1(length/Constants.GRID_SIZE)));
       this.set('thetaText', this.padZero(this.round1(degrees)));
-      this.set('rXText', this.round0(width/10));
-      this.set('rYText', this.round0(height/10));
+      this.set('rXText', this.round0(width/Constants.GRID_SIZE));
+      this.set('rYText', this.round0(height/Constants.GRID_SIZE));
 
       this.vectorOffsets();
     },
 
     vectorOffsets: function() {
-      this.set('offsetX', this.get('rXText') * 10);
+      this.set('offsetX', this.get('rXText') * Constants.GRID_SIZE);
+    },
+
+    resetOrigins: function(vectorModel) {
+      vectorModel.set('originX', vectorModel.get('oldOriginX'));
+      vectorModel.set('originY', vectorModel.get('oldOriginY'));
+    },
+
+    clearComponentLines: function(lines) {
+      if (lines !== undefined) {
+        lines.clear();
+      }
     },
 
     //PHET
@@ -87,7 +100,7 @@ define(function (require) {
     },
 
     roundGrid: function(nbr) {
-      var gridSize = 10;
+      var gridSize = Constants.GRID_SIZE;
       return (nbr/gridSize)*gridSize;
     },
 
@@ -96,7 +109,7 @@ define(function (require) {
     },
 
     round1: function(nbr) {
-      var ans = (Math.round(nbr *10)) /10;
+      var ans = (Math.round(nbr *Constants.GRID_SIZE)) /Constants.GRID_SIZE;
       return ans;
     },
 

@@ -52,9 +52,79 @@ define(function(require) {
             var inertiaInverse = 1 / moleculeDataSet.moleculeRotationalInertia;
             var normalizedContainerHeight = simulation.getNormalizedContainerHeight();
             var normalizedContainerWidth = simulation.getNormalizedContainerWidth();
-            var pressureZoneWallForce = 0;
+            var gravitationalAcceleration = simulation.getGravitationalAcceleration();
+            var temperatureSetPoint = simulation.get('temperatureSetPoint');
 
             // Update center of mass positions and angles for the molecules.
+            this._updateCenterOfMassPositions(
+                moleculeCenterOfMassPositions, 
+                numberOfMolecules, 
+                moleculeVelocities, 
+                moleculeForces,
+                moleculeTorques, 
+                moleculeRotationRates, 
+                moleculeRotationAngles,
+                massInverse, 
+                inertiaInverse
+            );
+
+            this.positionUpdater.updateAtomPositions(moleculeDataSet);
+
+            // Calculate the force from the walls.  This force is assumed to act
+            //   on the center of mass, so there is no torque.
+            //   Calculate the forces exerted on the particles by the container
+            //   walls and by gravity.
+            var pressureZoneWallForce = this._calculateWallAndGravityForces(
+                nextMoleculeForces, 
+                nextMoleculeTorques,
+                numberOfMolecules, 
+                moleculeCenterOfMassPositions, 
+                normalizedContainerWidth, 
+                normalizedContainerHeight, 
+                gravitationalAcceleration, 
+                temperatureSetPoint
+            );
+
+            // Update the pressure calculation.
+            this.updatePressure(pressureZoneWallForce);
+
+            // If there are any atoms that are currently designated as "unsafe",
+            //   check them to see if they can be moved into the "safe" category.
+            if (moleculeDataSet.numberOfSafeMolecules < numberOfMolecules)
+                this.updateMoleculeSafety();
+
+            // Calculate the force and torque due to inter-particle interactions.
+            this._calculateInteractionForces(
+                nextMoleculeForces, 
+                nextMoleculeTorques, 
+                moleculeDataSet.numberOfSafeMolecules, 
+                atomPositions, 
+                moleculeCenterOfMassPositions
+            );
+
+            // Update center of mass velocities and angles and calculate kinetic
+            //   energy.
+            this._calculateVelocities(
+                moleculeVelocities, 
+                numberOfMolecules, 
+                moleculeRotationRates,
+                moleculeForces, 
+                moleculeTorques, 
+                nextMoleculeForces, 
+                nextMoleculeTorques, 
+                moleculeDataSet.moleculeMass, 
+                moleculeDataSet.moleculeRotationalInertia, 
+                massInverse, 
+                inertiaInverse
+            );
+        },
+
+
+        /**
+         *  Updates the positions of all particles based on their current
+         *    velocities and the forces acting on them.
+         */
+        _updateCenterOfMassPositions: function(moleculeCenterOfMassPositions, numberOfMolecules, moleculeVelocities, moleculeForces, moleculeTorques, moleculeRotationRates, moleculeRotationAngles, massInverse, inertiaInverse) {
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xPos = moleculeCenterOfMassPositions[i].x + 
@@ -70,13 +140,15 @@ define(function(require) {
                 moleculeRotationAngles[i] += (VerletAlgorithm.TIME_STEP * moleculeRotationRates[i]) +
                                              (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeTorques[i] * inertiaInverse);
             }
+        },
 
-            this.positionUpdater.updateAtomPositions(moleculeDataSet);
+        /**
+         * Calculate the forces exerted on the particles by the container
+         *   walls and by gravity.
+         */
+        _calculateWallAndGravityForces: function(nextMoleculeForces, nextMoleculeTorques, numberOfMolecules, moleculeCenterOfMassPositions, normalizedContainerWidth, normalizedContainerHeight, gravitationalAcceleration, temperatureSetPoint) {
+            var pressureZoneWallForce = 0;
 
-            // Calculate the force from the walls.  This force is assumed to act
-            //   on the center of mass, so there is no torque.
-            //   Calculate the forces exerted on the particles by the container
-            //   walls and by gravity.
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 // Clear the previous calculation's particle forces and torques.
@@ -96,37 +168,36 @@ define(function(require) {
                 if (nextMoleculeForces[i].y < 0) {
                     pressureZoneWallForce += -nextMoleculeForces[i].y;
                 }
-                else if (moleculeCenterOfMassPositions[i].y > simulation.getNormalizedContainerHeight() / 2) {
+                else if (moleculeCenterOfMassPositions[i].y > normalizedContainerHeight / 2) {
                     // If the particle bounced on one of the walls above the midpoint, add
                     //   in that value to the pressure.
                     pressureZoneWallForce += Math.abs(nextMoleculeForces[i].x);
                 }
 
                 // Add in the effect of gravity.
-                var gravitationalAcceleration = simulation.getGravitationalAcceleration();
-                if (simulation.get('temperatureSetPoint') < VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES) {
+                var _gravitationalAcceleration = gravitationalAcceleration;
+                if (temperatureSetPoint < VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES) {
                     // Below a certain temperature, gravity is increased to counteract some
                     //   odd-looking behaviorcaused by the thermostat.
-                    gravitationalAcceleration = gravitationalAcceleration * (
-                        (VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES - simulation.get('temperatureSetPoint')) *
+                    _gravitationalAcceleration = gravitationalAcceleration * (
+                        (VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES - temperatureSetPoint) *
                         VerletAlgorithm.LOW_TEMPERATURE_GRAVITY_INCREASE_RATE + 1
                     );
                 }
-                nextMoleculeForces[i].y = nextMoleculeForces[i].y - gravitationalAcceleration;
+                nextMoleculeForces[i].y = nextMoleculeForces[i].y - _gravitationalAcceleration;
             }
 
-            // Update the pressure calculation.
-            this.updatePressure(pressureZoneWallForce);
+            return pressureZoneWallForce;
+        },
 
-            // If there are any atoms that are currently designated as "unsafe",
-            //   check them to see if they can be moved into the "safe" category.
-            if (moleculeDataSet.numberOfSafeMolecules < numberOfMolecules)
-                this.updateMoleculeSafety();
-
-            // Calculate the force and torque due to inter-particle interactions.
+        /**
+         * Calculate the forces created through interactions with other
+         *   particles.
+         */
+        _calculateInteractionForces: function(nextMoleculeForces, nextMoleculeTorques, numberOfSafeMolecules, atomPositions, moleculeCenterOfMassPositions) {
             var force = new Vector2();
-            for (var i = 0; i < moleculeDataSet.numberOfSafeMolecules; i++) {
-                for (var j = i + 1; j < moleculeDataSet.numberOfSafeMolecules; j++) {
+            for (var i = 0; i < numberOfSafeMolecules; i++) {
+                for (var j = i + 1; j < numberOfSafeMolecules; j++) {
                     for (var ii = 0; ii < 2; ii++) {
                         for (var jj = 0; jj < 2; jj++) {
                             // Calculate the distance between the potentially
@@ -163,10 +234,17 @@ define(function(require) {
                 }
             }
 
-            // Update center of mass velocities and angles and calculate kinetic
-            //   energy.
+            return this.potentialEnergy;
+        },
+
+        /**
+         * Calculate the new velocities based on the old ones and the forces
+         *   that are acting on the particle.
+         */
+        _calculateVelocities: function(moleculeVelocities, numberOfMolecules, moleculeRotationRates, moleculeForces, moleculeTorques, nextMoleculeForces, nextMoleculeTorques, moleculeMass, moleculeRotationalInertia, massInverse, inertiaInverse) {
             var centersOfMassKineticEnergy = 0;
             var rotationalKineticEnergy = 0;
+
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xVel = moleculeVelocities[i].x + 
@@ -178,11 +256,11 @@ define(function(require) {
                 moleculeRotationRates[i] += VerletAlgorithm.TIME_STEP_HALF * (moleculeTorques[i] + nextMoleculeTorques[i]) * inertiaInverse;
 
                 centersOfMassKineticEnergy += 0.5 * 
-                    moleculeDataSet.moleculeMass *
+                    moleculeMass *
                     (Math.pow(moleculeVelocities[i].x, 2) + Math.pow(moleculeVelocities[i].y, 2));
 
                 rotationalKineticEnergy += 0.5 * 
-                    moleculeDataSet.getMoleculeRotationalInertia() *
+                    moleculeRotationalInertia *
                     Math.pow(moleculeRotationRates[i], 2);
 
                 // Move the newly calculated forces and torques into the current spots.

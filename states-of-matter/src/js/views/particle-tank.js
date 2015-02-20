@@ -3,14 +3,19 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
     
-    var PixiView = require('common/pixi/view');
-    var Vector2  = require('common/math/vector2');
-    var range    = require('common/math/range');
+    var PixiView           = require('common/pixi/view');
+    var Vector2            = require('common/math/vector2');
+    var range              = require('common/math/range');
+    var ModelViewTransform = require('common/math/model-view-transform');
+
+    var Atom = require('models/atom');
 
     var Assets = require('assets');
 
     var Constants = require('constants');
+
 
     /**
      * A view that represents the particle tank
@@ -42,12 +47,15 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.simulation, 'change:particleContainerHeight', this.updateLidPosition);
+            this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
         },
 
         initGraphics: function() {
             this.initTank();
             this.initLid();
+            this.initParticleContainer();
+            this.initParticleTextures();
+            this.addInitialParticles();
         },
 
         initTank: function() {
@@ -65,6 +73,7 @@ define(function(require) {
             this.lid.anchor.x = 0.5;
             this.lid.anchor.y = 1;
             this.lid.y = this.lidYRange.min;
+
             if (this.lidDraggable) {
                 this.lid.buttonMode = true;
                 this.lid.defaultCursor = 'ns-resize';
@@ -73,9 +82,90 @@ define(function(require) {
             this.displayObject.addChild(this.lid);
         },
 
-        updateLidPosition: function() {
-            var relativeHeight = this.simulation.get('particleContainerHeight') / Constants.CONTAINER_BOUNDS.height;
-            
+        initParticleContainer: function() {
+            // Distance from the edge of the image (in pixels) that the container inside starts
+            var xOffsetFromEdge = 31;
+
+            // A fudge factor--it's a limitation of using normalized diameters
+            //   for the particle calculations and means that it's difficult to
+            //   calculate it in a way that is satisfactory for all particle
+            //   sizes, so it's easier just to come up with a value that looks
+            //   nice.
+            var particleSizeOffset = 6;
+            xOffsetFromEdge += particleSizeOffset;
+
+            // Create, position, and add container
+            this.particleContainer = new PIXI.DisplayObjectContainer();
+            this.particleContainer.x = -this.tank.width / 2 + xOffsetFromEdge;
+            this.particleContainer.y = -19 - particleSizeOffset;
+
+            this.displayObject.addChild(this.particleContainer);
+
+            // Create particle layers for different atoms in a molecule
+            this.lowerParticleLayer = new PIXI.SpriteBatch();
+            this.upperParticleLayer = new PIXI.SpriteBatch();
+
+            this.particleContainer.addChild(this.lowerParticleLayer);
+            this.particleContainer.addChild(this.upperParticleLayer);
+
+            // Set up model view transform for particles
+            var particleContainerWidth = this.tank.width - (2 * xOffsetFromEdge);
+            var scale = particleContainerWidth / Constants.CONTAINER_BOUNDS.w;
+            this.mvt = ModelViewTransform.createOffsetScaleMapping(new Vector2(), scale, -scale);
+        },
+
+        initParticleTextures: function() {
+            // Generate particle textures
+            var lineWidth = ParticleTankView.PARTICLE_LINE_WIDTH;
+            var lineColor = ParticleTankView.PARTICLE_LINE_COLOR;
+            this.argonTexture    = PIXI.Texture.generateCircleTexture(this.mvt.modelToViewDeltaX(Atom.ArgonAtom.RADIUS),    Atom.ArgonAtom.COLOR,    lineWidth, lineColor);
+            this.neonTexture     = PIXI.Texture.generateCircleTexture(this.mvt.modelToViewDeltaX(Atom.NeonAtom.RADIUS),     Atom.NeonAtom.COLOR,     lineWidth, lineColor);
+            this.oxygenTexture   = PIXI.Texture.generateCircleTexture(this.mvt.modelToViewDeltaX(Atom.OxygenAtom.RADIUS),   Atom.OxygenAtom.COLOR,   lineWidth, lineColor);
+            this.hydrogenTexture = PIXI.Texture.generateCircleTexture(this.mvt.modelToViewDeltaX(Atom.HydrogenAtom.RADIUS), Atom.HydrogenAtom.COLOR, lineWidth, lineColor);
+        },
+
+        addInitialParticles: function() {
+            for (var i = 0; i < this.simulation.particles.length; i++)
+                this.addParticle(this.simulation.particles[i]);
+        },
+
+        addParticle: function(particleModel) {
+            var texture;
+            var layer;
+
+            // Determine the layer and texture based on the type
+            if (particleModel instanceof Atom.HydrogenAtom) {
+                texture = this.hydrogenTexture;
+
+                if (math.random() <  ParticleTankView.PERCENT_HYDROGEN_ON_TOP)
+                    layer = this.upperParticleLayer;
+                else
+                    layer = this.lowerParticleLayer;
+            }
+            else {
+                layer = this.upperParticleLayer;
+
+                if (particleModel instanceof Atom.ArgonAtom)
+                    texture = this.argonTexture;
+                else if (particleModel instanceof Atom.NeonAtom)
+                    texture = this.neonTexture;
+                else if (particleModel instanceof Atom.OxygenAtom)
+                    texture = this.oxygenTexture;
+            }
+
+            var particle = new PIXI.Sprite(texture);
+            particle.anchor.x = 0.5;
+            particle.anchor.y = 0.5;
+            particle.model = particleModel;
+
+            layer.addChild(particle);
+
+            this.updateParticle(particle);
+        },
+
+        particleContainerHeightChanged: function(simulation, particleContainerHeight) {
+            var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h
+
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
         },
 
@@ -117,7 +207,26 @@ define(function(require) {
             this.dragging = false;
         },
 
-    });
+        update: function() {
+            var children;
+            var i;
+
+            children = this.lowerParticleLayer.children;
+            for (i = 0; i < children.length; i++)
+                this.updateParticle(children[i]);
+
+            children = this.upperParticleLayer.children;
+            for (i = 0; i < children.length; i++)
+                this.updateParticle(children[i]);
+        },
+
+        updateParticle: function(particle) {
+            var viewPosition = this.mvt.modelToView(particle.model.position);
+            particle.x = viewPosition.x;
+            particle.y = viewPosition.y;
+        }
+
+    }, Constants.ParticleTankView);
 
     return ParticleTankView;
 });

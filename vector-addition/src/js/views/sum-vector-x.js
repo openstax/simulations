@@ -57,13 +57,15 @@ define(function(require) {
         model.set('rotation', angle)
       }
 
-      model.set('originX', this.sumVectorModel.get('originX'));
-      model.set('originY', this.sumVectorModel.get('originY'));
-      model.set('targetX', this.sumVectorModel.get('targetX'));
-      model.set('targetY', this.sumVectorModel.get('targetY'));
-      model.set('oldOriginX', this.sumVectorModel.get('originX'));
-      model.set('oldOriginY', this.sumVectorModel.get('originY'));
-      this.sumVectorXView.transformFrame.rotation = model.get('rotation');
+      if (this.model.get('componentStyles') !== 3) {
+        model.set('originX', this.sumVectorModel.get('originX'));
+        model.set('originY', this.sumVectorModel.get('originY'));
+        model.set('targetX', this.sumVectorModel.get('targetX'));
+        model.set('targetY', this.sumVectorModel.get('targetY'));
+        model.set('oldOriginX', this.sumVectorModel.get('originX'));
+        model.set('oldOriginY', this.sumVectorModel.get('originY'));
+        this.sumVectorXView.transformFrame.rotation = model.get('rotation');
+      }
     }
 
   });

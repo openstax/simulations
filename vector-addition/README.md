@@ -1,7 +1,7 @@
-The Moving Man
+Vector Addition
 ===========
 
-This simulation is based off PhET's The Moving Man simulation, which can be [found here](http://phet.colorado.edu/en/simulation/moving-man).
+This simulation is based off PhET's Vector Addition simulation, which can be [found here](http://phet.colorado.edu/en/simulation/vector-addition).
 
 Original simulation Copyright 2002-2011, University of Colorado.
 
@@ -9,26 +9,26 @@ Original simulation Copyright 2002-2011, University of Colorado.
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
 2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
-3. From the root `moving-man` directory, run `npm install` in the command line to install test and build dependencies.
+3. From the root directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
 ## Building & Testing
 
 ### Building
 
-From the root `moving-man` directory, run `grunt dist`.
+From the root directory, run `grunt dist`.
 
-The `dist` directory containing the built site will be added to the root `moving-man` directory.
+The `dist` directory containing the built site will be added to the root directory.
 
 ### Testing
 
-To run command-line tests, run `grunt test` from the root `moving-man` directory.
+To run command-line tests, run `grunt test` from the root directory.
 
 To view tests in a browser, you first need to
 
 1. set up a server (check out the Hosting section below)
-2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`) 
-3. then go to [http://localhost:8000/test/](http://localhost:8000/test/). 
+2. build the test index file by running `grunt build_tests` or `grunt test` (which runs `build_tests`)
+3. then go to [http://localhost:8000/test/](http://localhost:8000/test/).
 
 ## Development
 
@@ -38,7 +38,7 @@ To host a development server for this project, follow the instructions found in 
 
 ### Updating
 
-From the root `moving-man` directory, run `npm run-script upgrade`, which executes the following commands:
+From the root directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`

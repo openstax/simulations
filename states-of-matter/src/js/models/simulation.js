@@ -5,6 +5,7 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var Simulation = require('common/simulation/simulation');
+    var Vector2    = require('common/math/vector2');
 
     var Atom                          = require('models/atom');
     var MoleculeForceAndMotionDataSet = require('models/molecule-force-and-motion-data-set');
@@ -35,37 +36,13 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             exploded: false,
-            particleContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
-            targetContainerHeight: S.PARTICLE_CONTAINER_INITIAL_HEIGHT,
-            heatingCoolingAmount: 0,
-            temperatureSetPoint: 0,
-            gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL,
+            particleContainerHeight: null,
+            targetContainerHeight: null,
+            heatingCoolingAmount: null,
+            temperatureSetPoint: null,
+            gravitationalAcceleration: null,
             moleculeType: S.DEFAULT_MOLECULE
         }),
-
-        // this.atomPositionUpdater;
-        // this.moleculeForceAndMotionCalculator = new NullMoleculeForceAndMotionCalculator();
-        // this.phaseStateChanger;
-        // this.isokineticThermostat;
-        // this.andersenThermostat;
-
-        // // Attributes of the container and simulation as a whole.
-        // this.minAllowableContainerHeight;
-        // this.particles = [];
-
-        // // Data set containing the atom and molecule position, motion, and force information.
-        // this.moleculeDataSet;
-
-        // this.normalizedContainerWidth;
-        // this.normalizedContainerHeight;
-        // this.temperatureSetPoint;
-        // this.gravitationalAcceleration;
-        // this.tempAdjustTickCounter;
-        // this.currentMolecule;
-        // this.particleDiameter;
-        // this.thermostatType;
-        // this.heightChangeCounter;
-        // this.minModelTemperature;
 
 
         /*************************************************************************
@@ -75,11 +52,11 @@ define(function (require, exports, module) {
          *************************************************************************/
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
+            // Managing frame rate
             this.frameDuration = SOMSimulation.FRAME_DURATION;
             this.frameAccumulator = 0;
 
+            // Initializing some properties
             this.currentMolecule = S.DEFAULT_MOLECULE;
             this.particleDiameter = 1;
             this.thermostatType = S.ADAPTIVE_THERMOSTAT;
@@ -90,27 +67,24 @@ define(function (require, exports, module) {
             this.minAllowableContainerHeight;
             this.particles = [];
 
-            this.moleculeTypeChanged(this, this.get('moleculeType'));
-
             this.on('change:moleculeType', this.moleculeTypeChanged);
             this.on('change:targetContainerHeight', this.targetContainerHeightChanged);
             this.on('change:temperatureSetPoint', this.temperatureSetPointChanged);
             this.on('change:gravitationalAcceleration', this.gravitationalAccelerationChanged);
             this.on('change:heatingCoolingAmount', this.heatingCoolingAmountChanged);
+
+            this.moleculeTypeChanged(this, this.get('moleculeType'));
+
+            Simulation.prototype.initialize.apply(this, [attributes, options]); 
         },
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.gravitationalAcceleration = S.INITIAL_GRAVITATIONAL_ACCEL;
-            this.tempAdjustTickCounter = 0;
-            this.temperatureSetPoint = S.INITIAL_TEMPERATURE;
+            this.initModelParameters();
 
-            this.set({
-                exploded: false,
-                heatingCoolingAmount: 0
-            });
+            this.set('moleculeType', S.DEFAULT_MOLECULE);
 
             this.resetContainerSize();
         },
@@ -120,10 +94,21 @@ define(function (require, exports, module) {
          *   when the lid is returned after being blown away.
          */
         resetContainerSize: function() {
-            this.set('particleContainerHeight', S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
-            this.set('targetContainerHeight',   S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            this.set('particleContainerHeight', Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            this.set('targetContainerHeight',   Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             this.normalizedContainerHeight = this.get('particleContainerHeight') / this.particleDiameter;
-            this.normalizedContainerWidth  = S.PARTICLE_CONTAINER_WIDTH / this.particleDiameter;
+            this.normalizedContainerWidth  = Constants.PARTICLE_CONTAINER_WIDTH / this.particleDiameter;
+        },
+
+        initModelParameters: function() {
+            this.tempAdjustTickCounter = 0;
+
+            this.set({
+                exploded: false,
+                heatingCoolingAmount: 0,
+                temperatureSetPoint: S.INITIAL_TEMPERATURE,
+                gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL
+            });
         },
 
         /**
@@ -200,7 +185,7 @@ define(function (require, exports, module) {
             //   container.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(Constants.CONTAINER_BOUNDS.width / ((particleDiameter * 1.05) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.w / ((particleDiameter * 1.05) * 3)),
                     2 
                 )
             );
@@ -271,7 +256,7 @@ define(function (require, exports, module) {
             //   molecules that can fit depends on the size of the individual atom.
             var numberOfAtoms = Math.floor(
                 Math.pow(
-                    Math.round(Constants.CONTAINER_BOUNDS.width / ((OxygenAtom.RADIUS * 2.1) * 3)),
+                    Math.round(Constants.CONTAINER_BOUNDS.w / ((Atom.OxygenAtom.RADIUS * 2.1) * 3)),
                     2 
                 )
             );
@@ -325,9 +310,9 @@ define(function (require, exports, module) {
             //   (really a square, since it's 2D, but you get the idea) that takes
             //   up a fixed amount of the bottom of the container, so the number of
             //   molecules that can fit depends on the size of the individual atom.
-            var waterMoleculeDiameter = OxygenAtom.RADIUS * 2.1;
+            var waterMoleculeDiameter = Atom.OxygenAtom.RADIUS * 2.1;
             var moleculesAcrossBottom = Math.round(
-                Constants.CONTAINER_BOUNDS.width / (waterMoleculeDiameter * 1.2)
+                Constants.CONTAINER_BOUNDS.w / (waterMoleculeDiameter * 1.2)
             );
             var numberOfMolecules = Math.floor(Math.pow(moleculesAcrossBottom / 3, 2));
 
@@ -420,6 +405,7 @@ define(function (require, exports, module) {
 
         explode: function() {
             this.set('exploded', true);
+            console.log('EXPLODED');
         },
 
         unexplode: function() {
@@ -667,7 +653,7 @@ define(function (require, exports, module) {
 
             // Remove existing particles and reset the global model parameters.
             this.removeAllParticles();
-            this.initComponents();
+            this.initModelParameters();
 
             // Set the new molecule type.
             this.currentMolecule = moleculeType;
@@ -716,8 +702,8 @@ define(function (require, exports, module) {
         },
 
         targetContainerHeightChanged: function(simulation, targetContainerHeight) {
-            if (targetContainerHeight > S.PARTICLE_CONTAINER_INITIAL_HEIGHT)
-                this.set('targetContainerHeight', S.PARTICLE_CONTAINER_INITIAL_HEIGHT);
+            if (targetContainerHeight > Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
+                this.set('targetContainerHeight', Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT);
             else if (targetContainerHeight < this.minAllowableContainerHeight)
                 this.set('targetContainerHeight', this.minAllowableContainerHeight);
         },
@@ -746,6 +732,8 @@ define(function (require, exports, module) {
                 this.set('gravitationalAcceleration', S.MAX_GRAVITATIONAL_ACCEL);
             else if (gravitationalAcceleration < 0)
                 this.set('gravitationalAcceleration', 0);
+            else
+                this.gravitationalAcceleration = gravitationalAcceleration;
         },
 
         heatingCoolingAmountChanged: function(model, heatingCoolingAmount) {
@@ -791,7 +779,7 @@ define(function (require, exports, module) {
                             this.particleContainerHeight = this.minAllowableContainerHeight;
                     }
                     this.normalizedContainerHeight = this.particleContainerHeight / this.particleDiameter;
-                    this.trigger('container-size-changed');
+                    this.set('particleContainerHeight', this.particleContainerHeight);
                 }
                 else if (this.heightChangeCounter > 0)
                     this.heightChangeCounter--;
@@ -800,7 +788,7 @@ define(function (require, exports, module) {
                 // The lid is blowing off the container, so increase the container
                 // size until the lid should be well off the screen.
                 this.particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
-                notifyContainerSizeChanged();
+                this.set('particleContainerHeight', this.particleContainerHeight);
             }
 
             // Record the pressure to see if it changes.
@@ -837,9 +825,10 @@ define(function (require, exports, module) {
                 else if (newTemperature <= this.minModelTemperature) {
                     newTemperature = this.minModelTemperature;
                 }
-                this.temperatureSetPoint = newTemperature;
-                this.isoKineticThermostat.setTargetTemperature(this.temperatureSetPoint);
-                this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
+                //this.temperatureSetPoint = newTemperature;
+                this.set('temperatureSetPoint', this.temperatureSetPoint);
+                // this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
+                // this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
 
                 this.trigger('temperature-changed');
             }
@@ -856,6 +845,7 @@ define(function (require, exports, module) {
             var atomPositions = this.moleculeDataSet.atomPositions;
 
             for (var i = 0; i < this.moleculeDataSet.numberOfAtoms; i++) {
+                //console.log(this.moleculeDataSet.moleculeCenterOfMassPositions[i].toString());
                 this.particles[i].position.set(
                     atomPositions[i].x * positionMultiplier,
                     atomPositions[i].y * positionMultiplier
@@ -904,7 +894,7 @@ define(function (require, exports, module) {
                 ))
             ) {
                 // Use the isokinetic thermostat.
-                this.isoKineticThermostat.adjustTemperature();
+                this.isokineticThermostat.adjustTemperature();
             }
             else if (
                 (this.thermostatType == S.ANDERSEN_THERMOSTAT) ||
@@ -927,8 +917,8 @@ define(function (require, exports, module) {
          */
         injectMolecule: function() {
 
-            var injectionPointX = Constants.CONTAINER_BOUNDS.width  / this.particleDiameter * S.INJECTION_POINT_HORIZ_PROPORTION;
-            var injectionPointY = Constants.CONTAINER_BOUNDS.height / this.particleDiameter * S.INJECTION_POINT_VERT_PROPORTION;
+            var injectionPointX = Constants.CONTAINER_BOUNDS.w  / this.particleDiameter * S.INJECTION_POINT_HORIZ_PROPORTION;
+            var injectionPointY = Constants.CONTAINER_BOUNDS.h / this.particleDiameter * S.INJECTION_POINT_VERT_PROPORTION;
 
             // Make sure that it is okay to inject a new molecule.
             if (this.moleculeDataSet.getNumberOfRemainingSlots() > 1 &&
@@ -974,20 +964,20 @@ define(function (require, exports, module) {
                             particle = new Atom.NeonAtom( 0, 0 );
                             break;
                     }
-                    this.particles.add(particle);
+                    this.particles.push(particle);
                 }
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
                     for (var i = 0; i < atomsPerMolecule; i++) {
-                        this.particles.add(new Atom.OxygenAtom(0, 0));
+                        this.particles.push(new Atom.OxygenAtom(0, 0));
                         atomPositions[i] = new Point2D.Double();
                     }
                 }
                 else if (atomsPerMolecule === 3) {
                     // Add atoms to model set.
-                    this.particles.add(new Atom.OxygenAtom(0, 0));
-                    this.particles.add(new Atom.HydrogenAtom(0, 0));
-                    this.particles.add(new Atom.HydrogenAtom(0, 0));
+                    this.particles.push(new Atom.OxygenAtom(0, 0));
+                    this.particles.push(new Atom.HydrogenAtom(0, 0));
+                    this.particles.push(new Atom.HydrogenAtom(0, 0));
                     atomPositions[0] = new Vector2();
                     atomPositions[1] = new Vector2();
                     atomPositions[2] = new Vector2();

@@ -39,6 +39,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
             this.listenTo(this.simulation, 'change:rText change:thetaText change:rXText change:rYText', this.updateReadouts);
             this.listenTo(this.simulation, 'change:sumVectorVisible', this.sumVectorVisible);
+            this.listenTo(this.simulation, 'change:sumVectorVisible', this.showSum);
             this.initSceneView();
         },
 
@@ -123,7 +124,7 @@ define(function (require) {
 
         showSum: function() {
           var sumBox = this.$el.find('#show-sum');
-          if (sumBox.is(':checked') && this.simulation.vectorCollection.length > 0) {
+          if (sumBox.is(':checked')) {
             this.simulation.set('sumVectorVisible', true);
           }
           else {
