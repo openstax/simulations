@@ -23,6 +23,7 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
+      this.listenTo(this.model, 'change:emptyStage', this.clearSumVectors);
       this.listenTo(this.sumVectorModel, 'change:targetX change:targetY', this.showComponentStyles);
     },
 
@@ -92,6 +93,13 @@ define(function(require) {
 
       this.sumLinesContainer.addChild(this.sumLines);
       this.displayObject.addChild(this.sumLinesContainer);
+    },
+
+    clearSumVectors: function() {
+      if (this.model.get('emptyStage')) {
+        this.sumVectorXContainer.visible = false;
+        this.sumVectorYContainer.visible = false;
+      }
     }
 
   });
