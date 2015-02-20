@@ -23,6 +23,7 @@ define(function(require) {
       this.sumVectorModel = new SumVectorViewModel()
       this.initGraphics();
       this.listenTo(this.model, 'change:sumVectorVisible', this.sumVectorVisible);
+      this.listenTo(this.model.vectorCollection, 'add remove', this.sumVectorVisible);
       this.listenTo(this.model.vectorViewModel, 'change', this.updateSum);
       this.listenTo(this.model.vectorCollection, 'change add remove', this.updateSum);
       this.listenTo(this.sumVectorModel, 'change', this.updateSum);
@@ -79,7 +80,7 @@ define(function(require) {
     },
 
     sumVectorVisible: function() {
-      if (this.model.get('sumVectorVisible')) {
+      if (this.model.get('sumVectorVisible') && this.model.vectorCollection.length > 0) {
         this.sumVectorContainer.visible = true;
       }
       else {

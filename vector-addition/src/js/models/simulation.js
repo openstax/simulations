@@ -25,7 +25,8 @@ define(function (require) {
       red: '0xFF0000',
       pink: '0xFFB4D9',
       green: '0x66CD00',
-      lightGreen: '0x76EE00'
+      lightGreen: '0x76EE00',
+      darkOrange: '0xEE7600'
 
     }),
 

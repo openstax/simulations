@@ -30,6 +30,7 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
+      this.listenTo(this.model.vectorCollection, 'add remove', this.showComponentStyles);
       this.listenTo(this.vectorViewModel, 'change:targetY change:targetX', this.showComponentStyles);
     },
 
@@ -87,7 +88,7 @@ define(function(require) {
       this.linesContainer = new PIXI.DisplayObjectContainer();
 
       var lines = new PIXI.Graphics();
-      lines.lineStyle(1, 0xFFA500, 1);
+      lines.lineStyle(1, this.model.get('darkOrange'), 1);
       lines.moveTo(vectorYModel.get('originX'), vectorYModel.get('originY'));
       lines.lineTo(vectorModel.get('originX'), vectorModel.get('originY'));
       lines.lineTo(vectorXModel.get('originX'), vectorXModel.get('originY'));

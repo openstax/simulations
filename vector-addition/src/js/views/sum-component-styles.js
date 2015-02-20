@@ -23,7 +23,10 @@ define(function(require) {
       this.sumVectorYModel = options.sumVectorYViewModel;
 
       this.listenTo(this.model, 'change:componentStyles', this.showComponentStyles);
+      this.listenTo(this.model, 'change:componentStyles', this.clearSumVectorXandYComponents);
       this.listenTo(this.model, 'change:emptyStage', this.clearSumVectorXandYComponents);
+      this.listenTo(this.model, 'change:sumVectorVisible', this.showComponentStyles);
+      this.listenTo(this.model.vectorCollection, 'add remove', this.showComponentStyles);
       this.listenTo(this.sumVectorModel, 'change:targetX change:targetY', this.showComponentStyles);
     },
 
@@ -36,45 +39,52 @@ define(function(require) {
       this.model.resetOrigins(this.sumVectorYModel);
       this.model.clearComponentLines(this.sumLines);
 
-      if (this.model.get('componentStyles') == 0) {
+      if (this.model.get('sumVectorVisible') && this.model.vectorCollection.length > 0) {
+        if (this.model.get('componentStyles') == 0) {
+          this.sumVectorXContainer.visible = false;
+          this.sumVectorYContainer.visible = false;
+        }
+        else {
+          this.sumVectorXContainer.visible = true;
+          this.sumVectorYContainer.visible = true;
+        }
+
+        if (this.model.get('componentStyles') == 1 && this.model.get('sumVectorVisible')) {
+          this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
+          this.sumVectorYView.transformFrame.rotation = this.sumVectorYModel.get('rotation');
+          this.sumVectorXContainer.visible = true;
+          this.sumVectorYContainer.visible = true;
+        }
+
+        if (this.model.get('componentStyles') == 2 && this.model.get('sumVectorVisible')) {
+          this.sumVectorYModel.set('originX', this.sumVectorModel.get('targetX'));
+          this.sumVectorYModel.set('targetX', this.sumVectorModel.get('targetX'));
+          this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
+          this.sumVectorXModel.set('originY', this.sumVectorModel.get('originY'));
+          this.sumVectorXModel.set('targetX', this.sumVectorModel.get('targetX'));
+          this.sumVectorXModel.set('targetY', this.sumVectorModel.get('targetY'));
+          this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
+        }
+
+        if (this.model.get('componentStyles') == 3 && this.model.get('sumVectorVisible')) {
+          this.model.clearComponentLines(this.sumLines);
+          this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
+          this.sumVectorXModel.set('originY', xOffset);
+          this.sumVectorXModel.set('targetX', this.sumVectorModel.get('targetX'));
+          this.sumVectorXModel.set('targetY', xOffset);
+
+          this.sumVectorYModel.set('originX', yOffset);
+          this.sumVectorYModel.set('originY', this.sumVectorModel.get('originY'));
+          this.sumVectorYModel.set('targetX', yOffset);
+          this.sumVectorYModel.set('targetY', this.sumVectorModel.get('targetY'));
+
+          this.drawComponentLines(this.sumVectorYModel, this.sumVectorModel, this.sumVectorXModel);
+        }
+      }
+
+      else {
         this.sumVectorXContainer.visible = false;
         this.sumVectorYContainer.visible = false;
-      }
-      else {
-        this.sumVectorXContainer.visible = true;
-        this.sumVectorYContainer.visible = true;
-      }
-
-      if (this.model.get('componentStyles') == 1 && this.model.get('sumVectorVisible')) {
-        this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
-        this.sumVectorYView.transformFrame.rotation = this.sumVectorYModel.get('rotation');
-        this.sumVectorXContainer.visible = true;
-        this.sumVectorYContainer.visible = true;
-      }
-
-      if (this.model.get('componentStyles') == 2 && this.model.get('sumVectorVisible')) {
-        this.sumVectorYModel.set('originX', this.sumVectorModel.get('targetX'));
-        this.sumVectorYModel.set('targetX', this.sumVectorModel.get('targetX'));
-        this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
-        this.sumVectorXModel.set('originY', this.sumVectorModel.get('originY'));
-        this.sumVectorXModel.set('targetX', this.sumVectorModel.get('targetX'));
-        this.sumVectorXModel.set('targetY', this.sumVectorModel.get('targetY'));
-        this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
-      }
-
-      if (this.model.get('componentStyles') == 3 && this.model.get('sumVectorVisible')) {
-        this.model.clearComponentLines(this.sumLines);
-        this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
-        this.sumVectorXModel.set('originY', xOffset);
-        this.sumVectorXModel.set('targetX', this.sumVectorModel.get('targetX'));
-        this.sumVectorXModel.set('targetY', xOffset);
-
-        this.sumVectorYModel.set('originX', yOffset);
-        this.sumVectorYModel.set('originY', this.sumVectorModel.get('originY'));
-        this.sumVectorYModel.set('targetX', yOffset);
-        this.sumVectorYModel.set('targetY', this.sumVectorModel.get('targetY'));
-
-        this.drawComponentLines(this.sumVectorYModel, this.sumVectorModel, this.sumVectorXModel);
       }
     },
 
@@ -82,7 +92,7 @@ define(function(require) {
       this.sumLinesContainer = new PIXI.DisplayObjectContainer();
 
       var sumLines = new PIXI.Graphics();
-      sumLines.lineStyle(1, 0xFFA500, 1);
+      sumLines.lineStyle(1, this.model.get('darkOrange'), 1);
       sumLines.moveTo(vectorYModel.get('originX'), vectorYModel.get('originY'));
       sumLines.lineTo(vectorModel.get('originX'), vectorModel.get('originY'));
       sumLines.lineTo(vectorXModel.get('originX'), vectorXModel.get('originY'));
