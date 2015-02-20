@@ -81,16 +81,22 @@ define(function (require) {
             label: 'g = 0',
             value : 0,
     }];
+    SimSettings.GRAVITY_DEFAULT = _.find(SimSettings.GRAVITY, {isDefault: true}).value;
 
     SimSettings.FRICTION_STEPS = 11;
     SimSettings.FRICTION_EQUATION = function(step){
         return (0.1*Math.pow(1.5, step)) - 0.1;
     };
+    SimSettings.FRICTION_STEP_DEFAULT = 5;
+    SimSettings.FRICTION_DEFAULT = SimSettings.FRICTION_EQUATION(SimSettings.FRICTION_STEP_DEFAULT);
+
 
     SimSettings.SOFTNESS_STEPS = 11;
     SimSettings.SOFTNESS_EQUATION = function(step){
         return 10*0.18593*Math.pow(1.4, step);
     };
+    SimSettings.SOFTNESS_STEP_DEFAULT = 5;
+    SimSettings.SOFTNESS_DEFAULT = SimSettings.SOFTNESS_EQUATION(SimSettings.SOFTNESS_STEP_DEFAULT);
 
     Constants.SimSettings = SimSettings;
 
@@ -146,7 +152,7 @@ define(function (require) {
 
     var SpringDefaults = {};
     SpringDefaults.REST_L = 0.3;
-    SpringDefaults.STIFFNESS = 10;
+    SpringDefaults.STIFFNESS = SimSettings.SOFTNESS_DEFAULT;
 
     // Appearance related
     SpringDefaults.COLOR = ColorConstants['cool-gray'];
@@ -154,7 +160,10 @@ define(function (require) {
     SpringDefaults.WIDTH = 0.10;
 
     SpringDefaults.RING_RADIUS = 0.02;
-    SpringDefaults.THICKNESS_FACTOR = 0.25;
+    SpringDefaults.K_TO_THICKNESS = function(k){
+        return 2 + 0.03 * k;
+    };
+
 
     Constants.SpringDefaults = SpringDefaults;
 

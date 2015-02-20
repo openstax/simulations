@@ -33,6 +33,9 @@ define(function (require, exports, module) {
             this.period = this.get('period');
             this.maxY = this.get('maxY');
             // this.oldT = getTimer(); //each system needs to keep its own time
+            // 
+            this.on('change:gravity', this.updateGravity);
+            this.on('change:b', this.updateFriction);
         },
 
         addBody: function(body) {
@@ -91,6 +94,14 @@ define(function (require, exports, module) {
             this.Etot = Constants.SystemEquations.TOTAL_ENERGY(this.KE, this.PEelas, this.PEgrav, this.Q);
         },
 
+        updateGravity: function(model, gravity){
+            this.gravity = gravity;
+        },
+
+        updateFriction: function(model, friction){
+            this.b = friction;
+        },
+
         initializeEnergies: function(){
             this.KE = 0;    //all energy set to zero
             this.PEelas = 0;
@@ -119,7 +130,7 @@ define(function (require, exports, module) {
                 this.Q = 0;
 
                 this.deltaY = _calculateRestingDeltaY();
-                this.spring.updateY2(this.deltaY);
+                this.spring.updateY2ByDelta(this.deltaY);
 
                 this.updateEnergies();
             } else {
@@ -133,7 +144,7 @@ define(function (require, exports, module) {
                 // weird, don't know if this needs to be fixed, but the order
                 // of when the spring y2 and the body position updates affects
                 // whether the spring and body look attached when animating...
-                this.spring.updateY2(this.deltaY);
+                this.spring.updateY2ByDelta(this.deltaY);
                 this.body.set('top', this.spring.y2);
 
                 this.updateEnergies(solvedValues);

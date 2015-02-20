@@ -55,7 +55,9 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'change input[name=gravity-setting]' : 'updateGravity',
+            'change .friction-settings-placeholder' : 'updateFriction',
+            'change .softness3-settings-placeholder' : 'updateSoftness3'
         },
 
         /**
@@ -147,14 +149,17 @@ define(function (require) {
                 }
             });
 
-            // TODO make this for softness.  There's some weird bug right now with the last tick label.
-            // this.renderDiscreteSlider(this.$('.softness-settings-placeholder'), this.getSoftnessSettings(), {
-            //     pips : {
-            //         mode : 'count',
-            //         values : 3
-            //     }
-            // });
+            // TODO There's some weird bug right now with the last tick label.
+            this.renderDiscreteSlider(this.$('.softness3-settings-placeholder'), this.getSoftnessSettings(), {
+                pips : {
+                    mode : 'count',
+                    values : 3
+                }
+            });
 
+            this.updateGravity();
+            this.updateFriction();
+            this.updateSoftness3();
         },
 
 
@@ -173,6 +178,27 @@ define(function (require) {
 
             this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
 
+         },
+
+        /**
+         * Functions that link to UI inputs
+         */
+         updateGravity: function() {
+
+            var gravity = this.$('input[name=gravity-setting]:checked').val();
+            this.simulation.set('gravity', gravity);
+         },
+
+         updateFriction: function(){
+
+            var friction = this.$('.friction-settings-placeholder').val();
+            this.simulation.set('friction', friction);
+         },
+
+         updateSoftness3: function(){
+
+            var softness3 = this.$('.softness3-settings-placeholder').val();
+            this.simulation.springs.at(2).set('k', softness3);
          },
 
 
@@ -217,8 +243,8 @@ define(function (require) {
             var frictionSettings = this.generateChoices(Constants.SimSettings.FRICTION_STEPS, Constants.SimSettings.FRICTION_EQUATION);
 
             frictionSettings[0].label = 'none';
-            frictionSettings[5].isDefault = true;
-            frictionSettings[10].label = 'lots';
+            frictionSettings[Constants.SimSettings.FRICTION_STEP_DEFAULT].isDefault = true;
+            frictionSettings[frictionSettings.length - 1].label = 'lots';
 
             return frictionSettings;
          },
@@ -232,8 +258,8 @@ define(function (require) {
             var softnessSettings = this.generateChoices(Constants.SimSettings.SOFTNESS_STEPS, Constants.SimSettings.SOFTNESS_EQUATION);
 
             softnessSettings[0].label = 'soft';
-            softnessSettings[5].isDefault = true;
-            softnessSettings[10].label = 'hard';
+            softnessSettings[Constants.SimSettings.SOFTNESS_STEP_DEFAULT].isDefault = true;
+            softnessSettings[softnessSettings.length - 1].label = 'hard';
 
             return softnessSettings;
          },

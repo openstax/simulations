@@ -23,7 +23,7 @@ define(function (require, exports, module) {
             spring : undefined, //a spring can be attached to a body;
             grabbed : false,    //a body is grabbed if view is being dragged by mouse
             color : Constants.BodyDefaults.COLOR,
-            g : _.find(Constants.SimSettings.GRAVITY, {isDefault: true}).value
+            acceleration : Constants.SimSettings.GRAVITY_DEFAULT
         },
 
         initialize: function(attributes, options) {
@@ -32,14 +32,14 @@ define(function (require, exports, module) {
             this.x = this.get('x');         //x-y position on stage of (upper left corner of body)
             this.y = this.get('y');
             this.color = this.get('color');
-            this.g = this.get('g');
+            this.acceleration = this.get('acceleration');
 
             this.rest(this.y);
 
-            this.on('change:x', this.xChanged);
-            this.on('change:y', this.yChanged);
-            this.on('change:g', this.gChanged);
-            this.on('change:resting', this.restingChanged);
+            this.on('change:x', this.updateX);
+            this.on('change:y', this.updateY);
+            this.on('change:acceleration', this.updateAcceleration);
+            this.on('change:resting', this.updateResting);
 
         },
 
@@ -68,7 +68,7 @@ define(function (require, exports, module) {
         },
 
         drop: function(dt){
-            this.velocityY += this.g * dt;
+            this.velocityY += this.acceleration * dt;
             this.y += this.velocityY * dt;
             this.set('y', this.y);
         },
@@ -97,19 +97,19 @@ define(function (require, exports, module) {
 
         },
 
-        gChanged: function(model, g){
-            this.g = g;
+        updateAcceleration: function(model, acceleration){
+            this.acceleration = acceleration;
         },
 
-        xChanged: function(model, x){
+        updateX: function(model, x){
             this.x = x;
         },
 
-        yChanged: function(model, y){
+        updateY: function(model, y){
             this.y = y;
         },
 
-        restingChanged: function(model, resting){
+        updateResting: function(model, resting){
             this.resting = resting;
         },
 
