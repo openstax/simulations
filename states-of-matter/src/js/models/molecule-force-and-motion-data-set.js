@@ -60,7 +60,7 @@ define(function (require) {
         },
 
         getNumberOfMolecules: function() {
-            this.numberOfAtoms / this.atomsPerMolecule;
+            return this.numberOfAtoms / this.atomsPerMolecule;
         },
 
         /**

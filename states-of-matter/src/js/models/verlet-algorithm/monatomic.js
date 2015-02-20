@@ -26,6 +26,14 @@ define(function(require) {
 
     _.extend(MonatomicVerletAlgorithm.prototype, VerletAlgorithm.prototype, {
 
+        setScaledEpsilon: function(scaledEpsilon) {
+           this.epsilon = scaledEpsilon;
+        },
+
+        getScaledEpsilon: function() {
+            return this.epsilon;
+        },
+
         /**
          * Update the motion of the particles and the forces that are acting upon
          *   them.  This is the heart of this class, and it is here that the actual
@@ -170,7 +178,7 @@ define(function(require) {
                     var dy = moleculeCenterOfMassPositions[i].y - moleculeCenterOfMassPositions[j].y;
                     var distanceSqrd = (dx * dx) + (dy * dy);
 
-                    if (distanceSqrd == 0) {
+                    if (distanceSqrd === 0) {
                         // Handle the special case where the particles are right
                         // on top of each other by assigning an arbitrary spacing.
                         // In general, this only happens when injecting new
@@ -183,12 +191,12 @@ define(function(require) {
                     if (distanceSqrd < VerletAlgorithm.PARTICLE_INTERACTION_DISTANCE_THRESH_SQRD) {
                         // This pair of particles is close enough to one another
                         // that we need to calculate their interaction forces.
-                        if (distanceSqrd < VerletAlgorithm.MIN_DISTANCE_SQUARED) {
+                        if (distanceSqrd < VerletAlgorithm.MIN_DISTANCE_SQUARED)
                             distanceSqrd = VerletAlgorithm.MIN_DISTANCE_SQUARED;
-                        }
+                        
                         var r2inv = 1 / distanceSqrd;
                         var r6inv = r2inv * r2inv * r2inv;
-                        var forceScalar = 48 * r2inv * r6inv * (r6inv - 0.5) * m_epsilon;
+                        var forceScalar = 48 * r2inv * r6inv * (r6inv - 0.5) * this.epsilon;
                         force.x = dx * forceScalar;
                         force.y = dy * forceScalar;
                         nextMoleculeForces[i].add(force);
