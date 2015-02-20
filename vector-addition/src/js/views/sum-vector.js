@@ -96,11 +96,10 @@ define(function(require) {
       var width = Math.floor(this.sumVectorContainer.width);
       var height = Math.floor(this.sumVectorContainer.height);
       var length = this.sumVectorModel.get('length');
-      var degrees = this.sumVectorModel.get('degrees');
 
       this.sumVectorModel.set('degrees', this.model.calculateDegrees(width/10, height/10));
       this.sumVectorModel.set('angle', this.sumVectorView.transformFrame.rotation);
-      this.model.updateReadouts(this.sumVectorContainer, this.model, this.sumVectorModel, width, height, length, degrees);
+      this.model.updateReadouts(this.sumVectorContainer, this.model, this.sumVectorModel, width, height, length);
       $('label').addClass('green');
     },
 

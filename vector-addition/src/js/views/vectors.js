@@ -70,7 +70,6 @@ define(function(require) {
       var width = Math.floor(this.container.width);
       var height = Math.floor(this.container.height);
 
-      this.vectorViewModel.set('degrees', this.model.calculateDegrees(this.vectorViewModel.get('originX'), this.vectorViewModel.get('originY')));
       this.vectorViewModel.set('angle', this.arrowView.transformFrame.rotation);
       this.model.set('emptyStage', false);
       this.model.set('width', width);
@@ -105,13 +104,10 @@ define(function(require) {
       var width = Math.floor(this.container.width);
       var height = Math.floor(this.container.height);
       var length = this.vectorViewModel.get('length');
-      var degrees = this.vectorViewModel.get('degrees');
 
       this.vectorViewModel.set('degrees', this.model.calculateDegrees(width/10, height/10));
       this.vectorViewModel.set('angle', this.arrowView.transformFrame.rotation);
-      this.model.updateReadouts(this.container, this.model, this.vectorViewModel, width, height, length, degrees);
-
-      this.model.updateReadouts(this.container, this.model, this.vectorViewModel, width, height, this.vectorViewModel.get('length'), this.vectorViewModel.get('degrees'));
+      this.model.updateReadouts(this.container, this.model, this.vectorViewModel, width, height, length);
       $('label').removeClass('green');
     },
 
