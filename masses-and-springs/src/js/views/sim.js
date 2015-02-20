@@ -55,9 +55,12 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
             'change input[name=gravity-setting]' : 'updateGravity',
-            'change .friction-settings-placeholder' : 'updateFriction',
-            'change .softness3-settings-placeholder' : 'updateSoftness3'
+            'slide .friction-settings-placeholder' : 'updateFriction',
+            'slide .softness3-settings-placeholder' : 'updateSoftness3',
+            'change input[name=playback-speed]' : 'updatePlaybackSpeed'
         },
 
         /**
@@ -74,6 +77,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -160,6 +166,7 @@ define(function (require) {
             this.updateGravity();
             this.updateFriction();
             this.updateSoftness3();
+            this.updatePlaybackSpeed();
         },
 
 
@@ -202,6 +209,23 @@ define(function (require) {
          },
 
 
+         updatePlaybackSpeed: function(){
+             
+            var speed = this.$('input[name=playback-speed]:checked').val();
+            this.timeRate = speed;
+         },
+         
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
 
         /**
          * Called after every component on the page has rendered to make sure
@@ -224,6 +248,10 @@ define(function (require) {
          *   simulation and the views.
          */
         update: function(time, deltaTime) {
+
+            // adjust delta time to time rate
+            deltaTime = deltaTime * this.timeRate;
+
             // Update the model
             this.simulation.update(time, deltaTime);
 
