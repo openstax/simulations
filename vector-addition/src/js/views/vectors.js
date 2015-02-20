@@ -23,7 +23,6 @@ define(function(require) {
       this.vectorViewModel = new VectorViewModel();
 
       this.initGraphics();
-      this.initComponents();
 
       this.listenTo(this.model, 'change:emptyStage', this.clearStage);
       this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.updateReadouts);
@@ -31,6 +30,9 @@ define(function(require) {
     },
 
     initGraphics: function() {
+      this.initVectorX();
+      this.initVectorY();
+      this.initComponents();
       this.drawVector();
     },
 
@@ -51,9 +53,6 @@ define(function(require) {
     },
 
     drawVector: function() {
-      this.initVectorX();
-      this.initVectorY();
-
       this.arrowView = new DraggableArrowView({
           model: this.vectorViewModel
       });
