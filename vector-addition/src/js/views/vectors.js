@@ -53,9 +53,6 @@ define(function(require) {
     },
 
     drawVector: function() {
-      //this.initVectorX();
-      //this.initVectorY();
-
       this.arrowView = new DraggableArrowView({
           model: this.vectorViewModel
       });
