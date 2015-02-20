@@ -12,7 +12,7 @@ define(function(require) {
 
     // Default snapping function just snaps to nearest 10 pixels
     var defaultSnappingFunction = function(coordinateComponent) {
-        return Math.round(coordinateComponent / 10) * 10;
+        return Math.round(coordinateComponent / 15) * 15;
     };
 
 
@@ -100,7 +100,7 @@ define(function(require) {
                 var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
                 var dx = local.x - this.displayObject.x - this.dragOffset.x;
                 var dy = local.y - this.displayObject.y - this.dragOffset.y;
-                
+
                 if (this.snappingEnabled) {
                     this._attributes.originX = this.snappingXFunction(this.model.get('originX') + dx);
                     this._attributes.originY = this.snappingYFunction(this.model.get('originY') + dy);
@@ -144,7 +144,7 @@ define(function(require) {
                 var local = data.getLocalPosition(this.displayObject, this._dragLocation);
                 var x = this.model.get('originX') + local.x - this.dragOffset.x;
                 var y = this.model.get('originY') + local.y - this.dragOffset.y;
-                
+
                 delete this._attributes.originX;
                 delete this._attributes.originY;
                 if (this.snappingEnabled) {
@@ -160,7 +160,7 @@ define(function(require) {
                 var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
                 var target = this._targetVector.set(this._attributes.targetX, this._attributes.targetY);
                 var length = origin.distance(target);
-                
+
                 if ((this.model.get('minLength') === null || this.model.get('minLength') === undefined || length >= this.model.get('minLength')) &&
                     (this.model.get('maxLength') === null || this.model.get('maxLength') === undefined || length <= this.model.get('maxLength'))
                 ) {
