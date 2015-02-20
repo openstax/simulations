@@ -82,19 +82,23 @@ define(function (require) {
 
     Atoms.ArgonAtom = {
         RADIUS: 181,      // In picometers.
-        MASS: 39.948     // In atomic mass units.
+        MASS: 39.948,     // In atomic mass units.
+        COLOR: '#ffb0bf'
     };
     Atoms.HydrogenAtom = {
         RADIUS: 120,      // In picometers.
-        MASS: 1.00794     // In atomic mass units.
+        MASS: 1.00794,    // In atomic mass units.
+        COLOR: '#ffffff'
     };
     Atoms.NeonAtom = {
         RADIUS: 154,      // In picometers.
-        MASS: 20.1797     // In atomic mass units.
+        MASS: 20.1797,    // In atomic mass units.
+        COLOR: '#60caff'
     };
     Atoms.OxygenAtom = {
         RADIUS: 181,     // In picometers.
-        MASS: 39.948     // In atomic mass units.
+        MASS: 39.948,    // In atomic mass units.
+        COLOR: '#ff3c00'
     };
 
     Constants.Atoms = Atoms;
@@ -314,6 +318,21 @@ define(function (require) {
     PhaseChangesSceneView.HEATER_COOLER_POSITION = new Vector2(PhaseChangesSceneView.TANK_POSITION.x, 0.98);
 
     Constants.PhaseChangesSceneView = PhaseChangesSceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         PARTICLE TANK VIEW                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var ParticleTankView = {};
+
+    ParticleTankView.PERCENT_HYDROGEN_ON_TOP = 0.5;
+    ParticleTankView.PARTICLE_LINE_WIDTH = 1;
+    ParticleTankView.PARTICLE_LINE_COLOR = '#000';
+
+    Constants.ParticleTankView = ParticleTankView;
 
 
 

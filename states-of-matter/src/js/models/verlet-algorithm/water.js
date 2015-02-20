@@ -47,12 +47,75 @@ define(function(require) {
             var inertiaInverse = 1 / moleculeDataSet.moleculeRotationalInertia;
             var normalizedContainerHeight = simulation.getNormalizedContainerHeight();
             var normalizedContainerWidth = simulation.getNormalizedContainerWidth();
-            var pressureZoneWallForce = 0;
+            var gravitationalAcceleration = simulation.getGravitationalAcceleration();
             var temperatureSetPoint = simulation.get('temperatureSetPoint');
 
-            // Set up the values for the charges that will be used when
-            // calculating the coloumb interactions.
+            // Update center of mass positions and angles for the molecules.
+            this._updateCenterOfMassPositions(
+                numberOfMolecules, 
+                moleculeCenterOfMassPositions, 
+                moleculeVelocities, 
+                moleculeForces, 
+                moleculeRotationRates, 
+                moleculeTorques, 
+                massInverse, 
+                inertiaInverse
+            );
+
+            this.positionUpdater.updateAtomPositions(moleculeDataSet);
+
+            // Calculate the force from the walls.  This force is assumed to act
+            //    on the center of mass, so there is no torque.
+            var pressureZoneWallForce = this._calculateWallAndGravityForces(
+                nextMoleculeForces, 
+                nextMoleculeTorques, 
+                numberOfMolecules, 
+                moleculeCenterOfMassPositions, 
+                normalizedContainerWidth, 
+                normalizedContainerHeight, 
+                gravitationalAcceleration, 
+                temperatureSetPoint
+            );
+
+            // Update the pressure calculation.
+            this.updatePressure(pressureZoneWallForce);
+
+            // If there are any atoms that are currently designated as "unsafe",
+            // check them to see if they can be moved into the "safe" category.
+            if (moleculeDataSet.numberOfSafeMolecules < numberOfMolecules)
+                this.updateMoleculeSafety();
+
+            // Calculate the force and torque due to inter-particle interactions.
+            this._calculateInteractionForces(
+                nextMoleculeForces, 
+                moleculeDataSet.numberOfSafeMolecules, 
+                moleculeCenterOfMassPositions, 
+                temperatureSetPoint
+            );
+
+            // Update the velocities and rotation rates and calculate kinetic
+            // energy.
+            this._calculateVelocitiesAndRotationRates(
+                moleculeVelocities, 
+                moleculeRotationRates, 
+                numberOfMolecules, 
+                moleculeForces, 
+                nextMoleculeForces, 
+                moleculeDataSet.moleculeMass, 
+                moleculeDataSet.moleculeRotationalInertia, 
+                nextMoleculeTorques, 
+                massInverse, 
+                inertiaInverse
+            );
+        },
+
+        /**
+         * Determines based on the temperature what value of electrostatic
+         *   force to be used in a Coulomb's law equation.
+         */
+        determineElectrostaticForce: function(temperatureSetPoint) {
             var q0;
+
             if (temperatureSetPoint < VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) {
                 // Use stronger electrostatic forces in order to create more of
                 // a crystal structure.
@@ -76,10 +139,14 @@ define(function(require) {
                     )
                 );
             }
-            var normalCharges  = [ -2 * q0, q0, q0 ];
-            var alteredCharges = [ -2 * q0, 1.67 * q0, 0.33 * q0 ];
 
-            // Update center of mass positions and angles for the molecules.
+            return q0;
+        },
+
+        /**
+         * Updates center of mass positions and angles for the molecules.
+         */
+        _updateCenterOfMassPositions: function(numberOfMolecules, moleculeCenterOfMassPositions, moleculeVelocities, moleculeForces, moleculeRotationRates, moleculeTorques, massInverse, inertiaInverse) {
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xPos = moleculeCenterOfMassPositions[i].x + 
@@ -95,11 +162,15 @@ define(function(require) {
                 moleculeRotationAngles[i] += (VerletAlgorithm.TIME_STEP * moleculeRotationRates[i]) +
                                              (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeTorques[i] * inertiaInverse);
             }
+        },
 
-            this.positionUpdater.updateAtomPositions(moleculeDataSet);
+        /**
+         * Calculates the force from the walls.  This force is assumed to 
+         *   act on the center of mass, so there is no torque.
+         */
+        _calculateWallAndGravityForces: function(nextMoleculeForces, nextMoleculeTorques, numberOfMolecules, moleculeCenterOfMassPositions, normalizedContainerWidth, normalizedContainerHeight, gravitationalAcceleration, temperatureSetPoint) {
+            var pressureZoneWallForce = 0;
 
-            // Calculate the force from the walls.  This force is assumed to act
-            // on the center of mass, so there is no torque.
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 // Clear the previous calculation's particle forces and torques.
@@ -119,41 +190,47 @@ define(function(require) {
                 if (nextMoleculeForces[i].y < 0) {
                     pressureZoneWallForce += -nextMoleculeForces[i].y;
                 }
-                else if (moleculeCenterOfMassPositions[i].y > simulation.getNormalizedContainerHeight() / 2) {
+                else if (moleculeCenterOfMassPositions[i].y > normalizedContainerHeight / 2) {
                     // If the particle bounced on one of the walls above the midpoint, add
                     // in that value to the pressure.
                     pressureZoneWallForce += Math.abs(nextMoleculeForces[i].x);
                 }
 
                 // Add in the effect of gravity.
-                var gravitationalAcceleration = simulation.getGravitationalAcceleration();
-                if (simulation.getTemperatureSetPoint() < VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES) {
+                var _gravitationalAcceleration = gravitationalAcceleration;
+                if (temperatureSetPoint < VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES) {
                     // Below a certain temperature, gravity is increased to counteract some odd-looking behavior
                     // caused by the thermostat.
-                    gravitationalAcceleration = gravitationalAcceleration *
-                        ((VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES - simulation.getTemperatureSetPoint()) *
+                    _gravitationalAcceleration = gravitationalAcceleration *
+                        ((VerletAlgorithm.TEMPERATURE_BELOW_WHICH_GRAVITY_INCREASES - temperatureSetPoint) *
                         VerletAlgorithm.LOW_TEMPERATURE_GRAVITY_INCREASE_RATE + 1);
                 }
-                nextMoleculeForces[i].y = nextMoleculeForces[i].y - gravitationalAcceleration;
+                nextMoleculeForces[i].y = nextMoleculeForces[i].y - _gravitationalAcceleration;
             }
 
-            // Update the pressure calculation.
-            updatePressure(pressureZoneWallForce);
+            return pressureZoneWallForce;
+        },
 
-            // If there are any atoms that are currently designated as "unsafe",
-            // check them to see if they can be moved into the "safe" category.
-            if (moleculeDataSet.getNumberOfSafeMolecules() < numberOfMolecules)
-                this.updateMoleculeSafety();
+        /**
+         * Calculates the force and torque due to inter-particle interactions.
+         */
+        _calculateInteractionForces: function(nextMoleculeForces, numberOfSafeMolecules, moleculeCenterOfMassPositions, temperatureSetPoint) {
+            //var potentialEnergy = 0;
 
-            // Calculate the force and torque due to inter-particle interactions.
+            // Set up the values for the charges that will be used when
+            //   calculating the coloumb interactions.
+            var q0 = this.determineElectrostaticForce(temperatureSetPoint);
+            var normalCharges  = [ -2 * q0, q0, q0 ];
+            var alteredCharges = [ -2 * q0, 1.67 * q0, 0.33 * q0 ];
+
             var force = new Vector2();
-            for (var i = 0; i < moleculeDataSet.numberOfSafeMolecules; i++) {
+            for (var i = 0; i < numberOfSafeMolecules; i++) {
                 // Select which charges to use for this molecule.  This is part
                 //    ofthe "hollywooding" to make the solid form appear more
                 //    crystalline.
                 var chargesA = (i % 2 === 0) ? normalCharges : alteredCharges;
 
-                for (var j = i + 1; j < moleculeDataSet.numberOfSafeMolecules; j++) {
+                for (var j = i + 1; j < numberOfSafeMolecules; j++) {
                     // Select charges for this molecule.
                     var chargesB = (j % 2 === 0) ? normalCharges : alteredCharges;
 
@@ -236,23 +313,30 @@ define(function(require) {
                 }
             }
 
-            // Update the velocities and rotation rates and calculate kinetic
-            // energy.
+            return this.potentialEnergy;
+        },
+
+        /**
+         * Updates the velocities and rotation rates and calculate kinetic
+         *   energy.
+         */
+        _calculateVelocitiesAndRotationRates: function(moleculeVelocities, moleculeRotationRates, numberOfMolecules, moleculeForces, nextMoleculeForces, moleculeMass, moleculeRotationalInertia, nextMoleculeTorques, massInverse, inertiaInverse) {
             var centersOfMassKineticEnergy = 0;
             var rotationalKineticEnergy = 0;
+
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xVel = moleculeVelocities[i].x + VerletAlgorithm.TIME_STEP_HALF * (moleculeForces[i].x + nextMoleculeForces[i].x) * massInverse;
                 var yVel = moleculeVelocities[i].y + VerletAlgorithm.TIME_STEP_HALF * (moleculeForces[i].y + nextMoleculeForces[i].y) * massInverse;
-                moleculeVelocities[i].setComponents(xVel, yVel);
+                moleculeVelocities[i].set(xVel, yVel);
 
                 moleculeRotationRates[i] += VerletAlgorithm.TIME_STEP_HALF * (moleculeTorques[i] + nextMoleculeTorques[i]) * inertiaInverse;
 
-                centersOfMassKineticEnergy += 0.5 * moleculeDataSet.getMoleculeMass() * (
+                centersOfMassKineticEnergy += 0.5 * moleculeMass * (
                     Math.pow(moleculeVelocities[i].x, 2) + Math.pow(moleculeVelocities[i].y, 2)
                 );
 
-                rotationalKineticEnergy += 0.5 * moleculeDataSet.getMoleculeRotationalInertia() * Math.pow(moleculeRotationRates[i], 2);
+                rotationalKineticEnergy += 0.5 * moleculeRotationalInertia * Math.pow(moleculeRotationRates[i], 2);
 
                 // Move the newly calculated forces and torques into the current spots.
                 moleculeForces[i].set(nextMoleculeForces[i].x, nextMoleculeForces[i].y);
@@ -262,7 +346,7 @@ define(function(require) {
             // Record the calculated temperature.
             this.temperature = (centersOfMassKineticEnergy + rotationalKineticEnergy) / numberOfMolecules / 1.5;
         }
-
+        
     });
 
     /**

@@ -39,11 +39,19 @@ define(function (require) {
         }
         else if (atomsPerMolecule === 2) {
             this.moleculeMass = 2; // Two molecules, assumed to be the same.
-            this.moleculeRotationalInertia = Math.pow(StatesOfMatterConstants.DIATOMIC_PARTICLE_DISTANCE, 2) / 2;
+            this.moleculeRotationalInertia = Math.pow(Constants.DIATOMIC_PARTICLE_DISTANCE, 2) / 2;
         }
         else if (atomsPerMolecule === 3) {
             this.moleculeMass = 1.5; // Two molecules, assumed to be the same.
             this.moleculeRotationalInertia = WaterMoleculeStructure.rotationalInertia;
+        }
+
+        for (var i = 0; i < Constants.MAX_NUM_ATOMS; i++) {
+            this.moleculeRotationAngles.push(0);
+            this.moleculeRotationRates.push(0);
+            this.moleculeTorques.push(0);
+            this.nextMoleculeTorques.push(0);
+            //this.nextMoleculeForces.push(0);
         }
     };
 
@@ -60,7 +68,7 @@ define(function (require) {
         },
 
         getNumberOfMolecules: function() {
-            this.numberOfAtoms / this.atomsPerMolecule;
+            return this.numberOfAtoms / this.atomsPerMolecule;
         },
 
         /**

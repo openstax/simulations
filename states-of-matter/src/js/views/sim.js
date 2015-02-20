@@ -43,7 +43,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'change .molecule-type' : 'changeMoleculeType'
         },
 
         /**
@@ -55,6 +55,8 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:moleculeType', this.moleculeTypeChanged);
         },
 
         /**
@@ -143,6 +145,15 @@ define(function (require) {
 
         useCelsius: function() {
             
+        },
+
+        changeMoleculeType: function(event) {
+            var moleculeType = parseInt($(event.target).val());
+            this.simulation.set('moleculeType', moleculeType);
+        },
+
+        moleculeTypeChanged: function(simulation, moleculeType) {
+            this.$('.molecule-type[value="' + moleculeType + '"]').attr('checked', 'checked');
         }
 
     });

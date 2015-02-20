@@ -76,6 +76,7 @@ define(function(require) {
 
             // Create and initialize other variables needed to do the job.
             var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
             var atomsPerLayer = Math.round(Math.sqrt(numberOfAtoms));
 
@@ -125,7 +126,7 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             // Initialize the velocities and angles of the molecules.
@@ -205,7 +206,7 @@ define(function(require) {
             var moleculeRotationRates = moleculeDataSet.moleculeRotationRates;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
+            var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
 
             for (var i = 0; i < numberOfMolecules; i++) {
@@ -214,8 +215,8 @@ define(function(require) {
 
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
-                    temperatureSqrt * rand.nextGaussian(),
-                    temperatureSqrt * rand.nextGaussian() 
+                    temperatureSqrt * gaussRandom(),
+                    temperatureSqrt * gaussRandom() 
                 );
 
                 // Assign each molecule an initial rotational position.
@@ -237,9 +238,9 @@ define(function(require) {
                     newPosX = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
                     newPosY = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
                     var positionAvailable = true;
-                    var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
                     // See if this position is available.
                     for (var k = 0; k < i; k++) {
+                        var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
                         if (distanceToNew < DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.GAS_SPACING_FACTOR) {
                             positionAvailable = false;
                             break;
@@ -265,7 +266,7 @@ define(function(require) {
     /**
      * Static constants
      */
-    _.extend(DiatomicPhaseStateChanger, Constants.DiatomicPhaseStateChanger);
+    _.extend(DiatomicPhaseStateChanger, Constants.PhaseStateChanger, Constants.DiatomicPhaseStateChanger);
 
     return DiatomicPhaseStateChanger;
 });
