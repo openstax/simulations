@@ -36,11 +36,11 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             exploded: false,
-            particleContainerHeight: Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT,
-            targetContainerHeight: Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT,
-            heatingCoolingAmount: 0,
-            temperatureSetPoint: 0,
-            gravitationalAcceleration: S.INITIAL_GRAVITATIONAL_ACCEL,
+            particleContainerHeight: null,
+            targetContainerHeight: null,
+            heatingCoolingAmount: null,
+            temperatureSetPoint: null,
+            gravitationalAcceleration: null,
             moleculeType: S.DEFAULT_MOLECULE
         }),
 
@@ -67,15 +67,15 @@ define(function (require, exports, module) {
             this.minAllowableContainerHeight;
             this.particles = [];
 
-            this.moleculeTypeChanged(this, this.get('moleculeType'));
-
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
             this.on('change:moleculeType', this.moleculeTypeChanged);
             this.on('change:targetContainerHeight', this.targetContainerHeightChanged);
             this.on('change:temperatureSetPoint', this.temperatureSetPointChanged);
             this.on('change:gravitationalAcceleration', this.gravitationalAccelerationChanged);
             this.on('change:heatingCoolingAmount', this.heatingCoolingAmountChanged);
+
+            this.moleculeTypeChanged(this, this.get('moleculeType'));
+
+            Simulation.prototype.initialize.apply(this, [attributes, options]); 
         },
 
         /**
@@ -779,7 +779,7 @@ define(function (require, exports, module) {
                             this.particleContainerHeight = this.minAllowableContainerHeight;
                     }
                     this.normalizedContainerHeight = this.particleContainerHeight / this.particleDiameter;
-                    this.trigger('container-size-changed');
+                    this.set('particleContainerHeight', this.particleContainerHeight);
                 }
                 else if (this.heightChangeCounter > 0)
                     this.heightChangeCounter--;
@@ -788,7 +788,7 @@ define(function (require, exports, module) {
                 // The lid is blowing off the container, so increase the container
                 // size until the lid should be well off the screen.
                 this.particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
-                notifyContainerSizeChanged();
+                this.set('particleContainerHeight', this.particleContainerHeight);
             }
 
             // Record the pressure to see if it changes.
@@ -845,6 +845,7 @@ define(function (require, exports, module) {
             var atomPositions = this.moleculeDataSet.atomPositions;
 
             for (var i = 0; i < this.moleculeDataSet.numberOfAtoms; i++) {
+                //console.log(this.moleculeDataSet.moleculeCenterOfMassPositions[i].toString());
                 this.particles[i].position.set(
                     atomPositions[i].x * positionMultiplier,
                     atomPositions[i].y * positionMultiplier

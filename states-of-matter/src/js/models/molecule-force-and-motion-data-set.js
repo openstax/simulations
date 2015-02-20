@@ -51,6 +51,7 @@ define(function (require) {
             this.moleculeRotationRates.push(0);
             this.moleculeTorques.push(0);
             this.nextMoleculeTorques.push(0);
+            //this.nextMoleculeForces.push(0);
         }
     };
 
