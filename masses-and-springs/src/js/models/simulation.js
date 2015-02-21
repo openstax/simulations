@@ -63,15 +63,15 @@ define(function (require, exports, module) {
         },
 
         initSystems: function(){
-            var that = this;
+
             var springs = this.springs.map(function(spring){
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
-                    gravity : that.get('gravity'),
-                    b: that.get('friction')
+                    gravity : this.get('gravity'),
+                    b: this.get('friction')
                 };
-            });
+            }, this);
 
             this.systems = new Systems(springs);
         },

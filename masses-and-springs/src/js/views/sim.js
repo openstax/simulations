@@ -57,10 +57,13 @@ define(function (require) {
         events: {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
+            'change input[name=playback-speed]' : 'updatePlaybackSpeed',
+
+            'click .sound-btn' : 'changeVolume',
+
             'change input[name=gravity-setting]' : 'updateGravity',
             'slide .friction-settings-placeholder' : 'updateFriction',
             'slide .softness3-settings-placeholder' : 'updateSoftness3',
-            'change input[name=playback-speed]' : 'updatePlaybackSpeed'
         },
 
         /**
@@ -224,6 +227,28 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+
+
+        /**
+         * Steps between the different discrete volume values and updates
+         *   the button's icon.
+         */
+        changeVolume: function(event) {
+            var $btn = $(event.target).closest('.sound-btn');
+            var fromVolumeToVolume = {
+                mute : 'low',
+                low : 'high',
+                high : 'mute'
+            };
+            var fromVolume = $btn.data('volume');
+            var toVolume = fromVolumeToVolume[fromVolume];
+
+            $btn.hide();
+
+            this.$('.sound-btn-'+toVolume).show();
+            this.sceneView.setVolume(toVolume);
         },
 
 

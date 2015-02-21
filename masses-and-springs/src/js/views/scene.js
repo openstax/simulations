@@ -72,24 +72,28 @@ define(function(require) {
 
         initSprings: function(simulation, springs){
 
+            this.springViews = [];
+
             springs.each(function(spring, iter){
                 var springView = new SpringView({
-                    mvt: this.mvt,
                     model: spring
                 });
                 this.springLayer.addChild(springView.displayObject);
+                this.springViews.push(springView);
             }, this);
 
         },
 
         initBodies: function(simulation, bodies){
 
+            this.bodyViews = [];
+
             bodies.each(function(body, iter){
                 var bodyView = new BodyView({
-                    mvt: this.mvt,
                     model: body
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
+                this.bodyViews.push(bodyView);
             }, this);
         },
 
@@ -102,6 +106,16 @@ define(function(require) {
                 }
             });
 
+        },
+
+        setVolume: function(setting){
+            _(this.bodyViews).each(function(bodyView){
+                bodyView.setVolume(setting);
+            });
+
+            _(this.springViews).each(function(springView){
+                springView.setVolume(setting);
+            });
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

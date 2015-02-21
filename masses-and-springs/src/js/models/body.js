@@ -86,6 +86,7 @@ define(function (require, exports, module) {
         rebound: function(dt){
 
             if(this.bounced){
+                this.trigger('hitGround');
                 this.set('y', this.restingY);
                 return;
             }

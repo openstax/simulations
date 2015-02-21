@@ -13,8 +13,7 @@ define(function(require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
     var Rectangle = require('common/math/rectangle');
 
-    var Assets = require('assets');
-
+    var buzz = require('buzz');
     var Constants = require('constants');
 
     /**
@@ -23,14 +22,23 @@ define(function(require) {
     var Spring = PixiView.extend({
 
         initialize: function(options) {
-            this.mvt = options.mvt;
 
             this.initGraphics();
 
-            this.updateMVT(this.mvt);
+            this.boingSound = new buzz.sound('audio/boing', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+
+            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
+
+
+            this.drawSpring();
 
             this.listenTo(this.model, 'change:k', this.drawSpring);
             this.listenTo(this.model, 'change:y2', this.drawSpring);
+            this.listenTo(this.model, 'unsnag', function(){
+                this.boingSound.play();
+            });
         },
 
         initGraphics: function() {
@@ -150,11 +158,16 @@ define(function(require) {
             points[points.length] = [this.viewModel.x, this.viewModel.y2];
         },
 
-        updateMVT: function(mvt) {
-            this.mvt = mvt;
+        setVolume: function(setting){
+            var volumes = {
+                mute : 0,
+                low : 20,
+                high : 50
+            };
 
-            // this.updatePosition();
-            this.drawSpring();
+            var volume = volumes[setting] || 0;
+
+            this.boingSound.setVolume(volume);
         }
 
     }, Constants.SpringDefaults);
