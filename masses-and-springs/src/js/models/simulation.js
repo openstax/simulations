@@ -30,7 +30,10 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             gravity : Constants.SimSettings.GRAVITY_DEFAULT,
-            friction : Constants.SimSettings.FRICTION_DEFAULT
+            friction : Constants.SimSettings.FRICTION_DEFAULT,
+            units : {
+                time : 's'
+            }
         }),
 
         initialize: function(attributes, options) {

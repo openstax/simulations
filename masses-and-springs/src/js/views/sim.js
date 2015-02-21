@@ -8,6 +8,7 @@ define(function (require) {
     _.mixin({deepExtend: underscoreDeepExtend(_)});
 
     var SimView = require('common/app/sim');
+    var StopwatchView = require('common/tools/stopwatch');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -55,15 +56,21 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            // playback
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'change input[name=playback-speed]' : 'updatePlaybackSpeed',
 
+            // settings
             'click .sound-btn' : 'changeVolume',
 
+            // tools
+            'change .stopwatch-check'      : 'toggleStopwatch',
+
+            // simulation properties
             'change input[name=gravity-setting]' : 'updateGravity',
             'slide .friction-settings-placeholder' : 'updateFriction',
-            'slide .softness3-settings-placeholder' : 'updateSoftness3',
+            'slide .softness3-settings-placeholder' : 'updateSoftness3'
         },
 
         /**
@@ -111,6 +118,7 @@ define(function (require) {
             this.renderPlaybackControls();
             this.renderSceneControls();
             this.renderEnergyGraphs();
+            this.renderTools();
 
             this.renderSceneView();
 
@@ -174,6 +182,23 @@ define(function (require) {
 
 
         /**
+         * Renders Tools
+         */
+         renderTools: function(){
+            this.stopwatchView = new StopwatchView({
+                dragFrame: this.el,
+                units : this.simulation.get('units').time,
+                position: {
+                    x : 630,
+                    y: 520
+                }
+            });
+            this.stopwatchView.render();
+            this.$el.append(this.stopwatchView.el);
+         },
+
+
+        /**
          * Renders the graphs
          */
          renderEnergyGraphs: function(){
@@ -215,9 +240,20 @@ define(function (require) {
          updatePlaybackSpeed: function(){
              
             var speed = this.$('input[name=playback-speed]:checked').val();
-            this.timeRate = speed;
+            this.timeScale = speed;
          },
-         
+
+
+        /**
+         * Toggles the stopwatch's visibility
+         */
+        toggleStopwatch: function(event) {
+            if ($(event.target).is(':checked'))
+                this.stopwatchView.show();
+            else
+                this.stopwatchView.hide();
+        },
+
 
         /**
          * The simulation changed its paused state.
@@ -257,7 +293,10 @@ define(function (require) {
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
+            this.stopwatchView.postRender();
             this.sceneView.postRender();
+
+            this.stopwatchView.hide();
         },
 
         /**
@@ -275,7 +314,7 @@ define(function (require) {
         update: function(time, deltaTime) {
 
             // adjust delta time to time rate
-            deltaTime = deltaTime * this.timeRate;
+            deltaTime = deltaTime * this.timeScale;
 
             // Update the model
             this.simulation.update(time, deltaTime);
@@ -285,6 +324,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
 
