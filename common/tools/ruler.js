@@ -4,6 +4,11 @@ define(function (require) {
 
 	var _ = require('underscore');
 
+	// DEEP EXTEND...you may need to add this line in your sim's config if you are trying to use this:
+	// underscoreDeepExtend: '../../bower_components/underscore-deep-extend/index',
+	var underscoreDeepExtend = require('underscoreDeepExtend');
+	_.mixin({deepExtend: underscoreDeepExtend(_)});
+
 	var selectText = require('../dom/select-text');
 	var Draggable = require('./draggable');
 
@@ -28,7 +33,7 @@ define(function (require) {
 		},
 
 		initialize: function(options) {
-			options = _.extend({
+			options = _.deepExtend({
 				position: {
 					x: 30,
 					y: 30
@@ -81,8 +86,34 @@ define(function (require) {
 
 			this.viewModel = {
 				orientation : this.orientation,
-				viewCSS: {},
-				rulerCSS: ''
+				css : [{
+					selector : '.tick',
+					rule : {
+						width: this.pxPerUnit + 'px',
+						height: this.rulerWidth * this.pxPerUnit + 'px'
+					}
+				},{
+					selector : '.tick label',
+					rule : {
+						lineHeight: this.rulerWidth * this.pxPerUnit + 'px'
+					}
+				},{
+					selector : '.tick-full .top, .tick-full .bottom',
+					rule : {
+						height: this.rulerWidth * this.pxPerUnit * 0.24 + 'px'
+					}
+				},{
+					selector : '.tick-mid .top, .tick-mid .bottom',
+					rule : {
+						height: this.rulerWidth * this.pxPerUnit * 0.2 + 'px'
+					}
+				},{
+					selector : '.tick-unit .top, .tick-unit .bottom',
+					rule : {
+						height: this.rulerWidth * this.pxPerUnit * 0.16 + 'px'
+					}
+				}],
+				viewCSS: {}
 			};
 
 			if(this.orientation === 'vertical'){
@@ -90,7 +121,14 @@ define(function (require) {
 					width : this.rulerWidth * this.pxPerUnit + 'px',
 					height: (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px'
 				};
-				this.viewModel.rulerCSS = 'margin-top: -' + this.rulerWidth * this.pxPerUnit + 'px; width:' + (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px;';
+				this.viewModel.css.push({
+					selector : '.ruler',
+					rule : {
+						marginTop : -1 * this.rulerWidth * this.pxPerUnit + 'px',
+						width : (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px',
+						height : this.rulerWidth * this.pxPerUnit + 'px',
+					}
+				});
 			}
 
 			this.renderTicks();
@@ -122,9 +160,13 @@ define(function (require) {
 		},
 
 		renderRuler: function() {
+
 			this.$el.html(this.template(this.viewModel));
 			this.$el.css(this.viewModel.viewCSS);
-			this.$labelValue = this.$('.ruler-label-value');
+
+			_(this.viewModel.css).each(function(css){
+				this.$el.find(css.selector).css(css.rule);
+			}, this);
 		},
 
 		panelDown: function(event) {

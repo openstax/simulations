@@ -4,6 +4,7 @@
 @import "../styles/variables.less";
 
 @ruler-background: #fcd076;
+@ruler-font-size: 16px;
 
 .ruler-view {
 	position: absolute;
@@ -17,9 +18,6 @@
 	overflow: hidden;
 	.box-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
 
-	// width: 50px;
-	// height: 502px;
-
 	&.dragging {
 		cursor: -webkit-grabbing;
 		cursor: grabbing;
@@ -28,7 +26,6 @@
 	.ruler{
 		list-style: none;
 		padding: 0 0 0 5px;
-		height: 50px;
 		margin: 0;
 		background: @ruler-background;
 		border: 1px solid darken(@ruler-background, 30%);
@@ -41,9 +38,6 @@
 			-webkit-transform: rotate(90deg);
 			transform: rotate(90deg);
 			white-space: nowrap;
-
-			// margin-top: -50px;
-			// width: 502px;
 
 			&:after{
 				content: "";
@@ -58,25 +52,21 @@
 		float: left;
 		clear: none;
 		position: relative;
-		width: 5px;
-		height: 50px;
 		margin: 0;
 		padding: 0;
 
-		&:before, &:after{
-			content: '';
+		.top, .bottom{
 			position: absolute;
+			left: 0;
 			font-size: 1px;
 			overflow: hidden;
 		}
 
-		&:before{
+		.top{
 			top : 0;
-			left: 0;
 		}
-		&:after{
+		.bottom{
 			bottom: 0;
-			left: 0;
 		}
 
 		label{
@@ -91,31 +81,22 @@
 			user-select: none;
 
 			position: absolute;
-			top: 14px;
-			left: -8px;
+			top: 0;
+			font-size: @ruler-font-size;
+			left: -0.5 * @ruler-font-size;
+			width: 5 * @ruler-font-size;
 			max-width: none;
-			width: 100px;
 			font-weight: normal;
-			font-size: 16px;
 		}
 
 		&.tick-unit{
-			&:before, &:after{
-				height: 8px;
+			.top, .bottom{
 				border-left: 1px solid darken(@ruler-background, 30%);
 			}
 		}
 
-		&.tick-mid{
-			&:before, &:after{
-				height: 10px;
-				border-left: 1px solid darken(@ruler-background, 40%);
-			}
-		}
-
-		&.tick-full{
-			&:before, &:after{
-				height: 12px;
+		&.tick-mid, &.tick-full{
+			.top, .bottom{
 				border-left: 1px solid darken(@ruler-background, 40%);
 			}
 		}
