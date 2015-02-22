@@ -1,0 +1,7 @@
+<ul class="ruler ruler-<%= orientation%>" style="<%= rulerCSS%>">
+	<% _.each(ticks, function(tick){ %>
+		<li class="tick tick-<%= tick.type %>">
+			<label><%= tick.at %></label>
+		</li>
+	<% }); %>
+</ul>

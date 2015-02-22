@@ -9,6 +9,7 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
     var StopwatchView = require('common/tools/stopwatch');
+    var RulerView = require('common/tools/ruler');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -195,6 +196,13 @@ define(function (require) {
             });
             this.stopwatchView.render();
             this.$el.append(this.stopwatchView.el);
+
+
+            this.rulerView = new RulerView({
+                dragFrame: this.el
+            });
+            this.rulerView.render();
+            this.$el.append(this.rulerView.el);
          },
 
 
@@ -293,7 +301,11 @@ define(function (require) {
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
+
+            // tools
             this.stopwatchView.postRender();
+            this.rulerView.postRender();
+
             this.sceneView.postRender();
 
             this.stopwatchView.hide();
@@ -325,6 +337,7 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
             this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.rulerView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
 
