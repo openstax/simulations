@@ -10,6 +10,7 @@ define(function (require) {
     var SimView = require('common/app/sim');
     var StopwatchView = require('common/tools/stopwatch');
     var RulerView = require('common/tools/ruler');
+    var ReferenceLineView = require('common/tools/reference-line');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -194,15 +195,27 @@ define(function (require) {
                     y: 520
                 }
             });
-            this.stopwatchView.render();
-            this.$el.append(this.stopwatchView.el);
-
 
             this.rulerView = new RulerView({
                 dragFrame: this.el
             });
+
+            this.referenceLineView = new ReferenceLineView({
+                dragFrame: this.el,
+                position: {
+                    x : 100,
+                    y : 180
+                },
+                width: 380
+            });
+
+            this.referenceLineView.render();
             this.rulerView.render();
+            this.stopwatchView.render();
+
+            this.$el.append(this.referenceLineView.el);
             this.$el.append(this.rulerView.el);
+            this.$el.append(this.stopwatchView.el);
          },
 
 
@@ -305,6 +318,7 @@ define(function (require) {
             // tools
             this.stopwatchView.postRender();
             this.rulerView.postRender();
+            this.referenceLineView.postRender();
 
             this.sceneView.postRender();
 
@@ -337,7 +351,8 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
             this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
-            this.rulerView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.rulerView.update();
+            this.referenceLineView.update();
         },
 
 

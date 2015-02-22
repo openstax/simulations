@@ -78,7 +78,7 @@ define(function (require) {
 			this.renderRuler();
 			this.bindDragEvents();
 			this.resize();
-			this.update(0, 0);
+			this.update();
 		},
 
 
@@ -212,7 +212,7 @@ define(function (require) {
 			}
 		},
 
-		update: function() {
+		update: function(time, delta, paused, timeScale) {
 
 			// If there aren't any changes, don't do anything.
 			if (!this.updateOnNextFrame)

@@ -1,0 +1,29 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../styles/mixins/vendor-prefixes.less";
+@import "../styles/variables.less";
+
+.reference-line-view{
+    position: absolute;
+    margin-top: -20px;
+    top: 0;
+    left: 0;
+    cursor: ns-resize;
+    z-index: 200;
+
+    &.dragging {
+        cursor: ns-resize;
+    }
+
+    .reference-line{
+        border-bottom: 2px dashed #333;
+        opacity: 0.75;
+        height: 0;
+        width: 100%;
+        position: relative;
+        margin: 20px 0;
+
+        &:before{
+            content: ''
+        }
+    }
+}
