@@ -753,24 +753,26 @@ define(function (require, exports, module) {
         },
 
         step: function() {
+            var particleContainerHeight = this.get('particleContainerHeight')
             if (!this.get('exploded')) {
                 // Adjust the particle container height if needed.
-                if (this.get('targetContainerHeight') != this.particleContainerHeight) {
+                if (this.get('targetContainerHeight') != particleContainerHeight) {
                     this.heightChangeCounter = S.CONTAINER_SIZE_CHANGE_RESET_COUNT;
                     this.adjustContainerHeight();
                 }
                 else if (this.heightChangeCounter > 0)
                     this.heightChangeCounter--;
             }
-            else if (this.particleContainerHeight < Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT * 10 ) {
+            else if (particleContainerHeight < Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT * 10 ) {
                 // The lid is blowing off the container, so increase the container
                 // size until the lid should be well off the screen.
-                this.particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
-                this.set('particleContainerHeight', this.particleContainerHeight);
+                particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
+                this.set('particleContainerHeight', particleContainerHeight);
             }
 
             // Record the pressure to see if it changes.
             var pressureBeforeAlgorithm = this.getModelPressure();
+            //console.log(pressureBeforeAlgorithm);
 
             // Execute the Verlet algorithm.  The algorithm may be run several times
             // for each time step.
@@ -900,23 +902,24 @@ define(function (require, exports, module) {
          *   targetContainerHeight and simulation constraints.
          */
         adjustContainerHeight: function() {
-            var heightChange = this.get('targetContainerHeight') - this.particleContainerHeight;
+            var particleContainerHeight = this.get('particleContainerHeight');
+            var heightChange = this.get('targetContainerHeight') - particleContainerHeight;
             if (heightChange > 0) {
                 // The container is growing.
-                if (this.particleContainerHeight + heightChange <= Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
-                    this.particleContainerHeight += Math.min(heightChange, S.MAX_PER_TICK_CONTAINER_EXPANSION);
+                if (particleContainerHeight + heightChange <= Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
+                    particleContainerHeight += Math.min(heightChange, S.MAX_PER_TICK_CONTAINER_EXPANSION);
                 else
-                    this.particleContainerHeight = Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT;
+                    particleContainerHeight = Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT;
             }
             else {
                 // The container is shrinking.
-                if (this.particleContainerHeight - heightChange >= this.minAllowableContainerHeight)
-                    this.particleContainerHeight += Math.max(heightChange, -S.MAX_PER_TICK_CONTAINER_SHRINKAGE);
+                if (particleContainerHeight - heightChange >= this.minAllowableContainerHeight)
+                    particleContainerHeight += Math.max(heightChange, -S.MAX_PER_TICK_CONTAINER_SHRINKAGE);
                 else
-                    this.particleContainerHeight = this.minAllowableContainerHeight;
+                    particleContainerHeight = this.minAllowableContainerHeight;
             }
-            this.normalizedContainerHeight = this.particleContainerHeight / this.particleDiameter;
-            this.set('particleContainerHeight', this.particleContainerHeight);
+            this.normalizedContainerHeight = particleContainerHeight / this.particleDiameter;
+            this.set('particleContainerHeight', particleContainerHeight);
         },
 
         /**

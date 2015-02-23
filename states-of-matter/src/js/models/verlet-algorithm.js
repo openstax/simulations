@@ -225,7 +225,6 @@ define(function (require) {
                 this.pressure = (1 - VerletAlgorithm.PRESSURE_CALC_WEIGHTING) *
                     (pressureZoneWallForce / (this.simulation.getNormalizedContainerWidth() + this.simulation.getNormalizedContainerHeight())) +
                     VerletAlgorithm.PRESSURE_CALC_WEIGHTING * this.pressure;
-
                 if ((this.pressure > VerletAlgorithm.EXPLOSION_PRESSURE) && !this.simulation.get('exploded')) {
                     // The pressure has reached the point where the container should
                     //   explode, so blow 'er up.
