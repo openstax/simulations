@@ -142,21 +142,22 @@ define(function (require) {
                 return;
             }
 
-            var moleculeDataSet               = this.simulation.moleculeDataSet;
             var atomsPerMolecule              = moleculeDataSet.atomsPerMolecule;
+            var atomPositions                 = moleculeDataSet.atomPositions;
             var moleculeCenterOfMassPositions = moleculeDataSet.moleculeCenterOfMassPositions;
             var moleculeVelocities            = moleculeDataSet.moleculeVelocities;
             var moleculeForces                = moleculeDataSet.moleculeForces;
             var moleculeRotationAngles        = moleculeDataSet.moleculeRotationAngles;
             var moleculeRotationRates         = moleculeDataSet.moleculeRotationRates;
 
-            for (var i = numberOfSafeMolecules; i < numberOfMolecules; i++) {
+            var i, j;
+            for (i = numberOfSafeMolecules; i < numberOfMolecules; i++) {
 
                 var moleculeIsUnsafe = false;
 
                 // Find out if this molecule is still too close to all the "safe"
                 //   molecules to become safe itself.
-                for (var j = 0; j < numberOfSafeMolecules; j++) {
+                for (j = 0; j < numberOfSafeMolecules; j++) {
                     if (moleculeCenterOfMassPositions[i].distance(moleculeCenterOfMassPositions[j]) < VerletAlgorithm.SAFE_INTER_MOLECULE_DISTANCE) {
                         moleculeIsUnsafe = true;
                         break;
@@ -174,7 +175,7 @@ define(function (require) {
                         // Swap the atoms that comprise the safe molecules with the
                         //   first unsafe one.
                         var tempAtomPosition;
-                        for (var j = 0; j < atomsPerMolecule; j++) {
+                        for (j = 0; j < atomsPerMolecule; j++) {
                             tempAtomPosition = atomPositions[(numberOfSafeMolecules * atomsPerMolecule) + j];
                             atomPositions[(numberOfSafeMolecules * atomsPerMolecule) + j] = atomPositions[(atomsPerMolecule * i) + j];
                             atomPositions[(atomsPerMolecule * i) + j] = tempAtomPosition;

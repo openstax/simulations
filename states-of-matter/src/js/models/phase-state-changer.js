@@ -4,6 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var Vector2 = require('common/math/vector2');
+
     var Constants = require('constants');
 
     /**

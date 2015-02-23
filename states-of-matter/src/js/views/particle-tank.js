@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
     require('common/pixi/extensions');
     
@@ -137,7 +138,7 @@ define(function(require) {
             if (particleModel instanceof Atom.HydrogenAtom) {
                 texture = this.hydrogenTexture;
 
-                if (math.random() <  ParticleTankView.PERCENT_HYDROGEN_ON_TOP)
+                if (Math.random() <  ParticleTankView.PERCENT_HYDROGEN_ON_TOP)
                     layer = this.upperParticleLayer;
                 else
                     layer = this.lowerParticleLayer;
@@ -164,7 +165,7 @@ define(function(require) {
         },
 
         particleContainerHeightChanged: function(simulation, particleContainerHeight) {
-            var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h
+            var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h;
 
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
         },

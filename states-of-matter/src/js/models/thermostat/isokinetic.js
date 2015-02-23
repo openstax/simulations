@@ -4,7 +4,6 @@ define(function(require) {
     'use strict';
 
     var _ = require('underscore');
-    var gaussRandom = require('gauss-random');
 
     var Thermostat = require('../thermostat');
 
@@ -26,13 +25,15 @@ define(function(require) {
         },
 
         _adjustTemperatureFromMeasured: function() {
+            var i;
             var measuredTemperature;
+            var centersOfMassKineticEnergy = 0;
             var numberOfMolecules = this.moleculeDataSet.getNumberOfMolecules();
+
             if (this.moleculeDataSet.atomsPerMolecule > 1) {
                 // Include rotational inertia in the calculation.
-                var centersOfMassKineticEnergy = 0;
                 var rotationalKineticEnergy = 0;
-                for (var i = 0; i < numberOfMolecules; i++ ) {
+                for (i = 0; i < numberOfMolecules; i++ ) {
                     centersOfMassKineticEnergy += 0.5 * this.moleculeDataSet.moleculeMass * (
                         Math.pow(this.moleculeVelocities[i].x, 2) + Math.pow(this.moleculeVelocities[i].y, 2)
                     );
@@ -41,8 +42,7 @@ define(function(require) {
                 measuredTemperature = (centersOfMassKineticEnergy + rotationalKineticEnergy) / numberOfMolecules / 1.5;
             }
             else {
-                var centersOfMassKineticEnergy = 0;
-                for (var i = 0; i < this.moleculeDataSet.getNumberOfMolecules(); i++ ) {
+                for (i = 0; i < this.moleculeDataSet.getNumberOfMolecules(); i++ ) {
                     // For single-atom molecules, exclude rotational inertia from the calculation.
                     centersOfMassKineticEnergy += 0.5 * this.moleculeDataSet.moleculeMass * (
                         Math.pow(this.moleculeVelocities[i].x, 2) + Math.pow(this.moleculeVelocities[i].y, 2)

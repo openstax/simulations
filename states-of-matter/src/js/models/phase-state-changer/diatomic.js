@@ -75,10 +75,9 @@ define(function(require) {
             var moleculeRotationAngles = moleculeDataSet.moleculeRotationAngles;
 
             // Create and initialize other variables needed to do the job.
-            var numberOfAtoms = moleculeDataSet.numberOfAtoms;
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
-            var atomsPerLayer = Math.round(Math.sqrt(numberOfAtoms));
+            var moleculesPerLayer = Math.floor(Math.sqrt(numberOfMolecules));
 
             // Establish the starting position, which will be the lower left corner
             //   of the "cube".  The molecules will all be rotated so that they are
@@ -93,7 +92,7 @@ define(function(require) {
             for (var i = 0; i < numberOfMolecules; i++) { // One iteration per layer.
                 for (var j = 0; (j < moleculesPerLayer) && (moleculesPlaced < numberOfMolecules); j++) {
                     xPos = startingPosX + (j * DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE);
-                    if (i % 2 != 0) {
+                    if (i % 2 !== 0) {
                         // Every other row is shifted a bit to create hexagonal pattern.
                         xPos += (1 + DiatomicPhaseStateChanger.DISTANCE_BETWEEN_PARTICLES_IN_CRYSTAL) / 2;
                     }
@@ -128,9 +127,10 @@ define(function(require) {
             // Create and initialize other variables needed to do the job.
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
+            var i, j;
 
             // Initialize the velocities and angles of the molecules.
-            for (var i = 0; i < numberOfMolecules; i++) {
+            for (i = 0; i < numberOfMolecules; i++) {
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
                     temperatureSqrt * gaussRandom(),
@@ -152,8 +152,8 @@ define(function(require) {
             var particlesOnCurrentLayer = 0;
             var particlesThatWillFitOnCurrentLayer = 1;
 
-            for (var i = 0; i < numberOfMolecules; i++ ) {
-                for (var j = 0; j < MAX_PLACEMENT_ATTEMPTS; j++ ) {
+            for (i = 0; i < numberOfMolecules; i++ ) {
+                for (j = 0; j < DiatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++ ) {
 
                     var distanceFromCenter = currentLayer * DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.LIQUID_SPACING_FACTOR;
                     var angle = (particlesOnCurrentLayer / particlesThatWillFitOnCurrentLayer * 2 * Math.PI) + (
@@ -208,8 +208,9 @@ define(function(require) {
             // Create and initialize other variables needed to do the job.
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
+            var i, j;
 
-            for (var i = 0; i < numberOfMolecules; i++) {
+            for (i = 0; i < numberOfMolecules; i++) {
                 // Temporarily position the molecules at (0,0).
                 moleculeCenterOfMassPositions[i].set(0, 0);
 
@@ -232,13 +233,14 @@ define(function(require) {
             var newPosX, newPosY;
             var rangeX = this.simulation.getNormalizedContainerWidth()  - (2 * DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
             var rangeY = this.simulation.getNormalizedContainerHeight() - (2 * DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
-            for (var i = 0; i < numberOfMolecules; i++) {
-                for (var j = 0; j < DiatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
+            for (i = 0; i < numberOfMolecules; i++) {
+                for (j = 0; j < DiatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
                     // Pick a random position.
                     newPosX = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
                     newPosY = DiatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
-                    var positionAvailable = true;
+                    
                     // See if this position is available.
+                    var positionAvailable = true;
                     for (var k = 0; k < i; k++) {
                         var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
                         if (distanceToNew < DiatomicPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * DiatomicPhaseStateChanger.GAS_SPACING_FACTOR) {

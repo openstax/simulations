@@ -63,8 +63,7 @@ define(function (require, exports, module) {
             this.heightChangeCounter = 0;
             this.heatingCoolingAmount = this.get('heatingCoolingAmount');
 
-            // Attributes of the container and simulation as a whole.
-            this.minAllowableContainerHeight;
+            // All the non-normalized particles
             this.particles = [];
 
             this.on('change:moleculeType', this.moleculeTypeChanged);
@@ -160,25 +159,28 @@ define(function (require, exports, module) {
                 throw 'Molecule specified is not monatomic';
             }
 
+            
+            
+            var atomConstructor;
+            switch (moleculeType) {
+                case MoleculeTypes.NEON:
+                    atomConstructor = Atom.NeonAtom;
+                    break;
+                case MoleculeTypes.ARGON:
+                    atomConstructor = Atom.ArgonAtom;
+                    break;
+                default:
+                    // Force it to neon
+                    moleculeType = MoleculeTypes.NEON;
+                    atomConstructor = Atom.NeonAtom;
+                    break;
+            }
+
             // Determine the number of atoms/molecules to create.  This will be a cube
             //   (really a square, since it's 2D, but you get the idea) that takes
             //   up a fixed amount of the bottom of the container, so the number of
             //   molecules that can fit depends on the size of the individual.
-            var particleDiameter;
-            switch (moleculeType) {
-                case MoleculeTypes.NEON:
-                    particleDiameter = Atom.NeonAtom.RADIUS * 2;
-                    break;
-                case MoleculeTypes.ARGON:
-                    particleDiameter = Atom.ArgonAtom.RADIUS * 2;
-                    break;
-                case MoleculeTypes.USER_DEFINED:
-                default:
-                    // Force it to neon
-                    moleculeType = MoleculeTypes.NEON;
-                    particleDiameter = Atom.NeonAtom.RADIUS * 2;
-                    break;
-            }
+            var particleDiameter = atomConstructor.RADIUS * 2;
 
             // Initialize the number of atoms assuming that the solid form, when
             //   made into a square, will consume about 1/3 the width of the
@@ -213,21 +215,7 @@ define(function (require, exports, module) {
                 this.moleculeDataSet.addMolecule(atomPositions, moleculeCenterOfMassPosition, moleculeVelocity, 0);
 
                 // Add particle to model set.
-                var atom;
-                var particleDiameter;
-                switch (moleculeType) {
-                    case MoleculeTypes.NEON:
-                        atom = new Atom.NeonAtom(0, 0);
-                        break;
-                    case MoleculeTypes.ARGON:
-                        atom = new Atom.ArgonAtom(0, 0);
-                        break;
-                    case MoleculeTypes.USER_DEFINED:
-                    default:
-                        atom = new Atom.NeonAtom(0, 0);
-                        break;
-                }
-                this.particles.push(atom);
+                this.particles.push(new atomConstructor(0, 0));
             }
 
             // Initialize the particle positions according the to requested phase.
@@ -261,7 +249,7 @@ define(function (require, exports, module) {
                 )
             );
 
-            if (numberOfAtoms % 2 != 0)
+            if (numberOfAtoms % 2 !== 0)
                 numberOfAtoms--;
             var numberOfMolecules = numberOfAtoms / 2;
 
@@ -356,7 +344,7 @@ define(function (require, exports, module) {
          */
         returnLid: function() {
             if (!this.get('exploded')) {
-                System.out.println('Warning: Ignoring attempt to return lid when container hadn\'t exploded.');
+                console.error('Warning: Ignoring attempt to return lid when container hadn\'t exploded.');
                 return;
             }
 
@@ -853,7 +841,7 @@ define(function (require, exports, module) {
             }
 
             if (this.moleculeDataSet.numberOfAtoms !== this.particles.length)
-                Console.error('Inconsistent number of normalized versus non-normalized particles.');
+                console.error('Inconsistent number of normalized versus non-normalized particles.');
         },
 
         /**
@@ -970,7 +958,7 @@ define(function (require, exports, module) {
                     // Add particles to model set.
                     for (var i = 0; i < atomsPerMolecule; i++) {
                         this.particles.push(new Atom.OxygenAtom(0, 0));
-                        atomPositions[i] = new Point2D.Double();
+                        atomPositions[i] = new Vector2();
                     }
                 }
                 else if (atomsPerMolecule === 3) {

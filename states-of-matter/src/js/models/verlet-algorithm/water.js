@@ -57,6 +57,7 @@ define(function(require) {
                 moleculeVelocities, 
                 moleculeForces, 
                 moleculeRotationRates, 
+                moleculeRotationAngles,
                 moleculeTorques, 
                 massInverse, 
                 inertiaInverse
@@ -88,8 +89,10 @@ define(function(require) {
             // Calculate the force and torque due to inter-particle interactions.
             this._calculateInteractionForces(
                 nextMoleculeForces, 
+                nextMoleculeTorques, 
                 moleculeDataSet.numberOfSafeMolecules, 
                 moleculeCenterOfMassPositions, 
+                atomPositions, 
                 temperatureSetPoint
             );
 
@@ -97,6 +100,7 @@ define(function(require) {
             // energy.
             this._calculateVelocitiesAndRotationRates(
                 moleculeVelocities, 
+                moleculeTorques, 
                 moleculeRotationRates, 
                 numberOfMolecules, 
                 moleculeForces, 
@@ -146,7 +150,7 @@ define(function(require) {
         /**
          * Updates center of mass positions and angles for the molecules.
          */
-        _updateCenterOfMassPositions: function(numberOfMolecules, moleculeCenterOfMassPositions, moleculeVelocities, moleculeForces, moleculeRotationRates, moleculeTorques, massInverse, inertiaInverse) {
+        _updateCenterOfMassPositions: function(numberOfMolecules, moleculeCenterOfMassPositions, moleculeVelocities, moleculeForces, moleculeRotationRates, moleculeRotationAngles, moleculeTorques, massInverse, inertiaInverse) {
             for (var i = 0; i < numberOfMolecules; i++) {
 
                 var xPos = moleculeCenterOfMassPositions[i].x + 
@@ -214,7 +218,7 @@ define(function(require) {
         /**
          * Calculates the force and torque due to inter-particle interactions.
          */
-        _calculateInteractionForces: function(nextMoleculeForces, numberOfSafeMolecules, moleculeCenterOfMassPositions, temperatureSetPoint) {
+        _calculateInteractionForces: function(nextMoleculeForces, nextMoleculeTorques, numberOfSafeMolecules, moleculeCenterOfMassPositions, atomPositions, temperatureSetPoint) {
             //var potentialEnergy = 0;
 
             // Set up the values for the charges that will be used when
@@ -222,6 +226,9 @@ define(function(require) {
             var q0 = this.determineElectrostaticForce(temperatureSetPoint);
             var normalCharges  = [ -2 * q0, q0, q0 ];
             var alteredCharges = [ -2 * q0, 1.67 * q0, 0.33 * q0 ];
+            var r2inv;
+            var r6inv;
+            var forceScalar;
 
             var force = new Vector2();
             for (var i = 0; i < numberOfSafeMolecules; i++) {
@@ -244,8 +251,8 @@ define(function(require) {
                         if (distanceSquared < VerletAlgorithm.MIN_DISTANCE_SQUARED)
                             distanceSquared = VerletAlgorithm.MIN_DISTANCE_SQUARED;
 
-                        var r2inv = 1 / distanceSquared;
-                        var r6inv = r2inv * r2inv * r2inv;
+                        r2inv = 1 / distanceSquared;
+                        r6inv = r2inv * r2inv * r2inv;
 
                         // A scaling factor is added here for the repulsive
                         //   portion of the Lennard-Jones force.  The idea is that
@@ -273,7 +280,7 @@ define(function(require) {
                                 temperatureFactor * (VerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - 1)
                             );
                         }
-                        var forceScalar = 48 * r2inv * r6inv * ((r6inv * repulsiveForceScalingFactor) - 0.5);
+                        forceScalar = 48 * r2inv * r6inv * ((r6inv * repulsiveForceScalingFactor) - 0.5);
                         force.x = dx * forceScalar;
                         force.y = dy * forceScalar;
                         nextMoleculeForces[i].add(force);
@@ -286,7 +293,7 @@ define(function(require) {
                         // individual water molecules.
                         for (var ii = 0; ii < 3; ii++) {
                             for (var jj = 0; jj < 3; jj++) {
-                                if (((3 * i + ii + 1) % 6 == 0) || ((3 * j + jj + 1) % 6 == 0)) {
+                                if (((3 * i + ii + 1) % 6 === 0) || ((3 * j + jj + 1) % 6 === 0)) {
                                     // This is a hydrogen atom that is not going to be included
                                     //   in the calculation in order to try to create a more
                                     //   crystalline solid.  This is part of the "hollywooding"
@@ -296,8 +303,8 @@ define(function(require) {
                                 }
                                 dx = atomPositions[3 * i + ii].x - atomPositions[3 * j + jj].x;
                                 dy = atomPositions[3 * i + ii].y - atomPositions[3 * j + jj].y;
-                                var r2inv = 1 / (dx * dx + dy * dy);
-                                var forceScalar = chargesA[ii] * chargesB[jj] * r2inv * r2inv;
+                                r2inv = 1 / (dx * dx + dy * dy);
+                                forceScalar = chargesA[ii] * chargesB[jj] * r2inv * r2inv;
                                 force.x = dx * forceScalar;
                                 force.y = dy * forceScalar;
 
@@ -320,7 +327,7 @@ define(function(require) {
          * Updates the velocities and rotation rates and calculate kinetic
          *   energy.
          */
-        _calculateVelocitiesAndRotationRates: function(moleculeVelocities, moleculeRotationRates, numberOfMolecules, moleculeForces, nextMoleculeForces, moleculeMass, moleculeRotationalInertia, nextMoleculeTorques, massInverse, inertiaInverse) {
+        _calculateVelocitiesAndRotationRates: function(moleculeVelocities, moleculeTorques, moleculeRotationRates, numberOfMolecules, moleculeForces, nextMoleculeForces, moleculeMass, moleculeRotationalInertia, nextMoleculeTorques, massInverse, inertiaInverse) {
             var centersOfMassKineticEnergy = 0;
             var rotationalKineticEnergy = 0;
 
