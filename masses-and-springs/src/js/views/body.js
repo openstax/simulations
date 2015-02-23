@@ -35,20 +35,12 @@ define(function(require) {
             // this.mvt = options.mvt;
 
             this.initGraphics();
-
-            this.thudSound = new buzz.sound('audio/thud', {
-                formats: ['ogg', 'mp3', 'wav']
-            });
-
-            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
+            this.initSound();
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
             this.listenTo(this.model, 'change:center', this.updateCenterPosition);
-            this.listenTo(this.model, 'hitGround', function(){
-                this.setVolumeByVelocity();
-                this.thudSound.play();
-            });
+            this.listenTo(this.model, 'hitGround', this.playSound);
 
             this.drawBody();
         },
@@ -59,6 +51,14 @@ define(function(require) {
 
             this.body = new PIXI.Graphics();
             this.displayObject.addChild(this.body);
+        },
+
+        initSound: function(){
+            this.thudSound = new buzz.sound('audio/thud', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+
+            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
         },
 
         updateBodyViewModel: function(){
@@ -213,6 +213,11 @@ define(function(require) {
         dropBody: function(){
             this.grabbed = false;
             this.model.set('resting', false);
+        },
+
+        playSound: function(){
+            this.setVolumeByVelocity();
+            this.thudSound.play();
         },
 
         setVolume: function(setting){

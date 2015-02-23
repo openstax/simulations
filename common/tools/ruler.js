@@ -85,37 +85,79 @@ define(function (require) {
 		renderViewModel: function(){
 
 			this.viewModel = {
-				orientation : this.orientation,
-				css : [{
-					selector : '.tick',
-					rule : {
-						width: this.pxPerUnit + 'px',
-						height: this.rulerWidth * this.pxPerUnit + 'px'
-					}
-				},{
-					selector : '.tick label',
-					rule : {
-						lineHeight: this.rulerWidth * this.pxPerUnit + 'px'
-					}
-				},{
-					selector : '.tick-full .top, .tick-full .bottom',
-					rule : {
-						height: this.rulerWidth * this.pxPerUnit * 0.24 + 'px'
-					}
-				},{
-					selector : '.tick-mid .top, .tick-mid .bottom',
-					rule : {
-						height: this.rulerWidth * this.pxPerUnit * 0.2 + 'px'
-					}
-				},{
-					selector : '.tick-unit .top, .tick-unit .bottom',
-					rule : {
-						height: this.rulerWidth * this.pxPerUnit * 0.16 + 'px'
-					}
-				}],
-				viewCSS: {}
+				orientation : this.orientation
 			};
 
+			this.makeTicks();
+			this.makeCSS();	
+		},
+
+		renderRuler: function() {
+
+			this.$el.html(this.template(this.viewModel));
+			this.$el.css(this.viewModel.viewCSS);
+
+			_(this.viewModel.css).each(function(css){
+				this.$el.find(css.selector).css(css.rule);
+			}, this);
+		},
+
+		/**
+		 * make an array of label and tick types
+		 */
+		makeTicks: function(){
+
+			this.viewModel.ticks = [];
+
+			// counting by one up to the full ruler length...
+			for(var iter = 1; iter < this.rulerMeasureUnits; iter++){
+
+				// find out the kind of tick that is at this iteration
+				var tickIter = _.find(this.ticks, function(tick){
+					return !(iter % tick.at);
+				});
+
+				// if a tick type does not make, go on to the next iteration
+				// without adding a tick for this iteration
+				if(_.isUndefined(tickIter)){
+					continue;
+				}
+
+				// add the new tick type and value
+				this.viewModel.ticks.push({
+					at : iter,
+					type: tickIter.type
+				});
+			}
+
+			// modify the last "full" tick to include the unit label
+			_.last(_.where(this.viewModel.ticks, {type : this.ticks[0].type})).at += ' ' + this.units;
+		},
+
+		/**
+		 * Adjust css on view model for property dependent visual details
+		 */
+		makeCSS: function(){
+
+			this.viewModel.viewCSS = {};
+
+			this.viewModel.css = [{
+				// ensures proper width of tick.
+				// Font-size is crucial -- set to full "width" of ruler so that child elements
+				// such as label and ticks will all be set proportionally by "ems" in css.
+				selector : '.tick',
+				rule : {
+					width: this.pxPerUnit + 'px',
+					fontSize : this.rulerWidth * this.pxPerUnit + 'px'
+				}
+			},{	// center tick label between ticks
+				selector : '.tick label',
+				rule : {
+					lineHeight: this.rulerWidth * this.pxPerUnit + 'px'
+				}
+			}];
+
+			// tricky css stuff for when the ruler is vertical
 			if(this.orientation === 'vertical'){
 				this.viewModel.viewCSS = {
 					width : this.rulerWidth * this.pxPerUnit + 'px',
@@ -130,43 +172,6 @@ define(function (require) {
 					}
 				});
 			}
-
-			this.renderTicks();
-		},
-
-		/**
-		 * make an array of label and tick types
-		 */
-		renderTicks: function(){
-
-			this.viewModel.ticks = [];
-
-			for(var iter = 1; iter < this.rulerMeasureUnits; iter++){
-				var tickIter = _.find(this.ticks, function(tick){
-					return !(iter % tick.at);
-				});
-
-				if(_.isUndefined(tickIter)){
-					return;
-				}
-
-				this.viewModel.ticks.push({
-					at : iter,
-					type: tickIter.type
-				});
-			}
-
-			_.last(_.where(this.viewModel.ticks, {type : this.ticks[0].type})).at += ' ' + this.units;
-		},
-
-		renderRuler: function() {
-
-			this.$el.html(this.template(this.viewModel));
-			this.$el.css(this.viewModel.viewCSS);
-
-			_(this.viewModel.css).each(function(css){
-				this.$el.find(css.selector).css(css.rule);
-			}, this);
 		},
 
 		panelDown: function(event) {
