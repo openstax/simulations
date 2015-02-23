@@ -27,6 +27,7 @@ define(function(require) {
       this.listenTo(this.model.vectorViewModel, 'change', this.updateSum);
       this.listenTo(this.model.vectorCollection, 'change add remove', this.updateSum);
       this.listenTo(this.sumVectorModel, 'change', this.updateSum);
+      this.listenTo(this.sumVectorModel, 'change:targetX change:targetY', this.deleteSumVector);
 
       this.initSumComponents();
     },
@@ -55,6 +56,10 @@ define(function(require) {
 
       this.sumVectorModel.set('degrees', this.model.calculateDegrees(this.sumVectorModel.get('originX'), this.sumVectorModel.get('originY')));
       this.sumVectorModel.set('rotation', this.sumVectorView.transformFrame.rotation);
+      this.sumVectorModel.set('oldOriginX', this.sumVectorModel.get('originX'));
+      this.sumVectorModel.set('oldOriginY', this.sumVectorModel.get('originY'));
+      this.sumVectorModel.set('oldTargetX', this.sumVectorModel.get('targetX'));
+      this.sumVectorModel.set('oldTargetY', this.sumVectorModel.get('targetY'));
     },
 
     initSumVectorX: function() {
@@ -118,7 +123,23 @@ define(function(require) {
 
       this.sumComponentsView = sumComponentsView;
       this.displayObject.addChild(this.sumComponentsView.displayObject);
-    }
+    },
+
+    deleteSumVector: function() {
+      var vectorX = this.sumVectorModel.get('targetX');
+      var vectorY = this.sumVectorModel.get('targetY');
+      var minX = this.model.get('trashCanPositionX');
+      var maxX = this.model.get('trashCanPositionX') + this.model.get('trashCanWidth');
+      var minY = this.model.get('trashCanPositionY');
+      var maxY = this.model.get('trashCanPositionY') + this.model.get('trashCanHeight');
+
+      if (vectorX >= minX && vectorX <= maxX && vectorY >= minY && vectorY <= maxY){
+        this.model.set('deleteVector', true);
+        this.model.set('sumVectorVisible', false);
+        this.sumVectorModel.resetSumOrigins();
+        this.model.set('deleteVector', false);
+      }
+    },
 
   });
 
