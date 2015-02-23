@@ -62,9 +62,11 @@ define(function(require) {
 
         initLayers: function() {
 
+            this.toolsLayer    =   new PIXI.DisplayObjectContainer();
             this.bodyLayer    =   new PIXI.DisplayObjectContainer();
             this.springLayer    =   new PIXI.DisplayObjectContainer();
 
+            this.stage.addChild(this.toolsLayer);
             this.stage.addChild(this.springLayer);
             this.stage.addChild(this.bodyLayer);
         },
@@ -97,6 +99,12 @@ define(function(require) {
             }, this);
 
             window.bodyTest = _.last(this.bodyViews);
+        },
+
+        initTools: function(tools){
+            _.each(tools, function(tool){
+                this.toolsLayer.addChild(tool.displayObject);
+            }, this);
         },
 
         checkIntersect: function(body){
