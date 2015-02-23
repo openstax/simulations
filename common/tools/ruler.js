@@ -150,11 +150,6 @@ define(function (require) {
 					width: this.pxPerUnit + 'px',
 					fontSize : this.rulerWidth * this.pxPerUnit + 'px'
 				}
-			},{	// center tick label between ticks
-				selector : '.tick label',
-				rule : {
-					lineHeight: this.rulerWidth * this.pxPerUnit + 'px'
-				}
 			}];
 
 			// tricky css stuff for when the ruler is vertical
