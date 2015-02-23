@@ -36,6 +36,7 @@ define(function (require) {
         // Set default values.
         if (atomsPerMolecule === 1) {
             this.moleculeMass = 1;
+            this.moleculeRotationalInertia = 0;
         }
         else if (atomsPerMolecule === 2) {
             this.moleculeMass = 2; // Two molecules, assumed to be the same.

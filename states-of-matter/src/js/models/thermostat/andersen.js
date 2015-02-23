@@ -34,7 +34,7 @@ define(function(require) {
             }
 
             var massInverse = 1 / this.moleculeDataSet.moleculeMass;
-            var inertiaInverse = 1 / this.moleculeDataSet.moleculeRotationInertia;
+            var inertiaInverse = 1 / this.moleculeDataSet.moleculeRotationalInertia;
             var velocityScalingFactor = Math.sqrt(temperature * massInverse    * (1 - Math.pow(gammaX, 2)));
             var rotationScalingFactor = Math.sqrt(temperature * inertiaInverse * (1 - Math.pow(gammaX, 2)));
 
