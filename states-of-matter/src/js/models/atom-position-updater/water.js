@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var WaterMoleculeStructure = require('models/molecule-force-and-motion-data-set');
+    var WaterMoleculeStructure = require('models/water-molecule-structure');
     var structureX = WaterMoleculeStructure.moleculeStructureX;
     var structureY = WaterMoleculeStructure.moleculeStructureY;
 
