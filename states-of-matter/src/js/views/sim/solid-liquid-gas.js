@@ -4,6 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var PhaseStateChanger = require('models/phase-state-changer');
+
     var SOMSimView              = require('views/sim');
     var SolidLiquidGasSceneView = require('views/scene/solid-liquid-gas');
 
@@ -11,6 +13,13 @@ define(function (require) {
 
 
     var SolidLiquidGasSimView = SOMSimView.extend({
+
+        events: _.extend(SOMSimView.prototype.events, {
+            // Playback controls
+            'click #phase-solid'  : 'makeSolid',
+            'click #phase-liquid' : 'makeSolid',
+            'click #phase-gas'    : 'makeGas'
+        }),
 
         /**
          * Inits simulation, views, and variables.
@@ -45,6 +54,18 @@ define(function (require) {
                 simulation: this.simulation
             });
         },
+
+        makeSolid: function() {
+            this.simulation.setPhase(PhaseStateChanger.SOLID);
+        },
+
+        makeLiquid: function() {
+            this.simulation.setPhase(PhaseStateChanger.LIQUID);
+        },
+
+        makeGas: function() {
+            this.simulation.setPhase(PhaseStateChanger.GAS);
+        }
 
     });
 

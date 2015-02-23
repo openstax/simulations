@@ -368,7 +368,7 @@ define(function (require, exports, module) {
             // temperature for the particles that remain in the container. Doing
             // this generally cools them down into a more manageable state.
             if (particlesOutsideOfContainer > 0)
-                this.phaseStateChanger.setPhase(PhaseStateChanger.PHASE_GAS);
+                this.phaseStateChanger.setPhase(PhaseStateChanger.GAS);
         },
 
         /**
@@ -437,6 +437,9 @@ define(function (require, exports, module) {
         },
 
         setPhase: function(phase) {
+            if (phase === undefined)
+                phase = PhaseStateChanger.SOLID;
+
             this.phaseStateChanger.setPhase(phase);
 
             this.syncParticlePositions();
@@ -449,11 +452,11 @@ define(function (require, exports, module) {
             var phase;
 
             if (this.temperatureSetPoint < S.SOLID_TEMPERATURE + ((S.LIQUID_TEMPERATURE - S.SOLID_TEMPERATURE) / 2)) 
-                phase = S.PHASE_SOLID;
+                phase = PhaseStateChanger.SOLID;
             else if (this.temperatureSetPoint < S.LIQUID_TEMPERATURE + ((S.GAS_TEMPERATURE - S.LIQUID_TEMPERATURE) / 2)) 
-                phase = S.PHASE_LIQUID;
+                phase = PhaseStateChanger.LIQUID;
             else
-                phase = S.PHASE_GAS;
+                phase = PhaseStateChanger.GAS;
 
             return phase;
         },
