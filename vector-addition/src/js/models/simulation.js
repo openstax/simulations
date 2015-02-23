@@ -69,8 +69,6 @@ define(function (require) {
       var sizeX = vectorModel.get('targetX') - vectorModel.get('originX');
       var sizeY = vectorModel.get('originY') - vectorModel.get('targetY');
 
-
-
       vectorModel.set('degrees', this.calculateDegrees(width, height, vectorModel));
       this.set('rText', this.padZero(this.round1(length/Constants.GRID_SIZE)));
       this.set('thetaText', this.padZero(this.round1(vectorModel.get('degrees'))));
