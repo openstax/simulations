@@ -32,8 +32,6 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            // this.mvt = options.mvt;
-
             this.initGraphics();
             this.initSound();
 
@@ -46,9 +44,6 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            // reference point for drag delta x and y
-            this._dragOffset   = new PIXI.Point();
-
             this.body = new PIXI.Graphics();
             this.displayObject.addChild(this.body);
         },
@@ -94,7 +89,7 @@ define(function(require) {
 
         drawBody : function(){
             this.updateBodyViewModel();
-            this.clearPositionOffsets();
+            this.positionBody();
 
             this.body.clear();
             this.body.buttonMode = true;
@@ -102,14 +97,21 @@ define(function(require) {
 
             this.drawHook();
             this.drawBlock();
+
+        },
+
+        positionBody: function(){
+            this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
+
+            this.displayObject.x = this.viewModel.left;
+            this.displayObject.y = this.viewModel.top;
         },
 
         drawHook: function(){
-            this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
-            this.model.set('hook', this.model.hook);
+            var hook = this.makeHook(this.viewModel.radius, 0);
 
             this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
-            this.body.drawPiecewiseCurve(this.model.hook, 0, 0);
+            this.body.drawPiecewiseCurve(hook, 0, 0);
         },
 
         makeHook: function(center, hookBase){
@@ -137,49 +139,53 @@ define(function(require) {
 
         drawBlock: function(){
             this.body.beginFill(this.viewModel.color, 1);
-            this.body.drawRect(this.viewModel.left, this.viewModel.top, this.viewModel.width, this.viewModel.height);
+            this.body.drawRect(0, 0, this.viewModel.width, this.viewModel.height);
             this.body.endFill();
         },
 
         dragStart: function(data){
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
-            this.grabbed = true;
+            this.dragOffset = data.getLocalPosition(this.displayObject);
+            this.model.grabbed = true;
             this.model.set('resting', true);
         },
 
         dragEnd: function(data){
-
-            // TODO will need figure out updating model so that hook intercept
-            // works on drag and not just one drag end
-            this.updateModelPosition();
             this.dropBody();
         },
 
         drag: function(data){
 
-            if(this.grabbed && this.model.isHung()){
-                this.model.unhang();
-                return;
-            }
+            var newBodyLeft;
+            var newBodyBottom;
 
-            if(this.grabbed){
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+            if(this.model.grabbed){
 
-                this.displayObject.x += dx;
-                this.displayObject.y += dy;
+                newBodyLeft = data.global.x - this.dragOffset.x;
+                newBodyBottom = data.global.y - this.dragOffset.y;
+
+                if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
+                    this.model.unhang();
+                } else if(!this.model.isHung()){
+                    // only update x for weak sideway drags if the body is not hung
+                    this.displayObject.x = newBodyLeft;
+                }
+
+                this.displayObject.y = newBodyBottom;
+
+                this.updateModelPosition();
             }
         },
 
-        updateModelPosition: function(){
-            this.model.set('x', this._calcXFromLeftDrag());
-            this.model.set('y', this._calcYFromBottomDrag());
+        isSidewaysDrag: function(newX){
+            // is the sideways drag more than half the width of the spring hit area?
+            return Math.abs(newX - this.displayObject.x) > this.model.spring.hitArea.w / 2;
         },
 
-        clearPositionOffsets: function(){
-            // clear position offsets
-            this.displayObject.x = 0;
-            this.displayObject.y = 0;
+        updateModelPosition: function(dx, dy){
+            this.model.set('x', this._calcXFromLeftDrag(dx));
+            this.model.set('y', this._calcYFromBottomDrag(dy));
+
+            this.model.set('top', this._calcSpringY2FromY());
         },
 
         updatePosition: function(){
@@ -194,16 +200,20 @@ define(function(require) {
             this.model.set('x', this._calcXFromViewCenter(center));
         },
 
-        _calcXFromLeftDrag: function(){
-            return (this.viewModel.left + this.displayObject.x)/Constants.Scene.PX_PER_METER;
+        _calcXFromLeftDrag: function(dx){
+            return this.displayObject.x/Constants.Scene.PX_PER_METER;
         },
 
-        _calcYFromBottomDrag: function(){
-            return (this.viewModel.bottom + this.displayObject.y)/Constants.Scene.PX_PER_METER;
+        _calcYFromBottomDrag: function(dy){
+            return (this.displayObject.y + this.viewModel.height)/Constants.Scene.PX_PER_METER;
         },
 
         _calcYFromSpringY2: function(springY2){
             return springY2 + (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
+        },
+
+        _calcSpringY2FromY: function(){
+            return this.model.y - (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
         },
 
         _calcXFromViewCenter: function(center){
@@ -211,7 +221,7 @@ define(function(require) {
         },
 
         dropBody: function(){
-            this.grabbed = false;
+            this.model.grabbed = false;
             this.model.set('resting', false);
         },
 

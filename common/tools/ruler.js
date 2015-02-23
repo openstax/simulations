@@ -9,7 +9,6 @@ define(function (require) {
 	var underscoreDeepExtend = require('underscoreDeepExtend');
 	_.mixin({deepExtend: underscoreDeepExtend(_)});
 
-	var selectText = require('../dom/select-text');
 	var Draggable = require('./draggable');
 
 	var html  = require('text!./ruler.html');
