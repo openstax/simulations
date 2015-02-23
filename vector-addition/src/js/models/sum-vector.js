@@ -37,6 +37,13 @@ define(function(require) {
         this.set('targetY', this.get('originY') + sumY);
         this.set('rotation', rotation);
       }
+    },
+
+    resetSumOrigins: function() {
+      this.set('originX', 300);
+      this.set('originY', 300);
+      this.set('targetX', 380);
+      this.set('targetY', 220);
     }
 
   });

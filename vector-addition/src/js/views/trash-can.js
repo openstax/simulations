@@ -46,8 +46,10 @@ define(function(require) {
 
       this.can_open.alpha = 0;
 
-      this.model.set('trashCanPositionX', this.can.position.x + this.can.width/2);
-      this.model.set('trashCanPositionY', this.can.position.y + this.can.height/2);
+      this.model.set('trashCanPositionX', this.can.position.x);
+      this.model.set('trashCanPositionY', this.can.position.y);
+      this.model.set('trashCanWidth', this.can.width);
+      this.model.set('trashCanHeight', this.can.height);
     },
 
     openTrashCan: function() {

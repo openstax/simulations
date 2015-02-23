@@ -122,12 +122,14 @@ define(function(require) {
     },
 
     deleteArrow: function() {
-      var arrowX = this.vectorViewModel.get('targetX');
-      var arrowY = this.vectorViewModel.get('targetY');
-      var trashCanX = this.model.get('trashCanPositionX');
-      var trashCanY = this.model.get('trashCanPositionY');
+      var vectorX = this.vectorViewModel.get('targetX');
+      var vectorY = this.vectorViewModel.get('targetY');
+      var minX = this.model.get('trashCanPositionX');
+      var maxX = this.model.get('trashCanPositionX') + this.model.get('trashCanWidth');
+      var minY = this.model.get('trashCanPositionY');
+      var maxY = this.model.get('trashCanPositionY') + this.model.get('trashCanHeight');
 
-      if (arrowX >= trashCanX) {
+      if (vectorX >= minX && vectorX <= maxX && vectorY >= minY && vectorY <= maxY){
         this.model.set('deleteVector', true);
         this.model.vectorCollection.remove(this.vectorViewModel);
         this.displayObject.removeChild(this.container);
