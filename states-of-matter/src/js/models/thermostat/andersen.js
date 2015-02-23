@@ -42,7 +42,10 @@ define(function(require) {
                 var xVel = this.moleculeVelocities[i].x * gammaX + gaussRandom() * velocityScalingFactor;
                 var yVel = this.moleculeVelocities[i].y * gammaY + gaussRandom() * velocityScalingFactor;
                 this.moleculeVelocities[i].set(xVel, yVel);
+                //console.log('before(' + i + '): ' + this.moleculeRotationRates[i]);
+                //console.log(gammaX, rotationScalingFactor);
                 this.moleculeRotationRates[i] = gammaX * this.moleculeRotationRates[i] + gaussRandom() * rotationScalingFactor;
+                //console.log('after(' + i + '): ' + this.moleculeRotationRates[i]);
             }
         },
 
