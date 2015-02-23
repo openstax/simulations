@@ -60,7 +60,7 @@ define(function(require) {
       if (this.model.get('componentStyles') == 0) {
         this.vectorYContainer.visible = false;
       }
-
+      
       model.set('originX', this.vectorViewModel.get('originX'));
       model.set('originY', this.vectorViewModel.get('originY'));
       model.set('targetX', this.vectorViewModel.get('targetX'));

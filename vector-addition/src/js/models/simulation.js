@@ -48,15 +48,15 @@ define(function (require) {
       this.vectorViewModel = new VectorsViewModel();
     },
 
-    updateReadouts: function(container, model, vectorModel, x, y, length, degrees) {
+    updateReadouts: function(container, model, vectorModel, x, y, length) {
       var width = x;
       var height = y;
 
       if (vectorModel.get('targetX') < vectorModel.get('originX')) {
-        width = -width;
+        width = -x;
       }
       else if (vectorModel.get('targetY') > vectorModel.get('originY')) {
-        height = -height;
+        height = -y;
       }
 
       if (width == 20) {
@@ -65,18 +65,14 @@ define(function (require) {
       else if (height == 20) {
         height = 0
       }
+      var sizeX = vectorModel.get('targetX') - vectorModel.get('originX');
+      var sizeY = vectorModel.get('originY') - vectorModel.get('targetY');
 
       vectorModel.set('degrees', this.calculateDegrees(width, height));
       this.set('rText', this.padZero(this.round1(length/Constants.GRID_SIZE)));
-      this.set('thetaText', this.padZero(this.round1(degrees)));
-      this.set('rXText', this.round0(width/Constants.GRID_SIZE));
-      this.set('rYText', this.round0(height/Constants.GRID_SIZE));
-
-      this.vectorOffsets();
-    },
-
-    vectorOffsets: function() {
-      this.set('offsetX', this.get('rXText') * Constants.GRID_SIZE);
+      this.set('thetaText', this.padZero(this.round1(vectorModel.get('degrees'))));
+      this.set('rXText', this.round0(sizeX/Constants.GRID_SIZE));
+      this.set('rYText', this.round0(sizeY/Constants.GRID_SIZE));
     },
 
     resetOrigins: function(vectorModel) {
@@ -109,7 +105,7 @@ define(function (require) {
     },
 
     round1: function(nbr) {
-      var ans = (Math.round(nbr *Constants.GRID_SIZE)) /Constants.GRID_SIZE;
+      var ans = (Math.round(nbr *100)) /100;
       return ans;
     },
 
