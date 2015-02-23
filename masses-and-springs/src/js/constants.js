@@ -38,7 +38,7 @@ define(function (require) {
      Scene.PX_PER_METER = 500;  //scale factor f=500  pixels per meter
      Scene.FPS = 20;    //frames per second of movie
      Scene.FDT = 1/Scene.FPS;   //time increment for free-falling mass
-     Scene.SOUNDS_ENABLED = true;   //true if sounds enabled; allows user to turn off sounds
+     Scene.SOUNDS_ENABLED = 'high';   //true if sounds enabled; allows user to turn off sounds
 
      Scene.SHELF_FROM_TOP = 0.95;
 

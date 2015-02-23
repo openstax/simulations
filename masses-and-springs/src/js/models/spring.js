@@ -45,6 +45,7 @@ define(function (require, exports, module) {
 
         unhang: function(){
             this.hang(undefined);
+            this.trigger('unsnag');
             // TODO how to do spring animation?
             this.restY2();
         },

@@ -8,6 +8,9 @@ define(function (require) {
     _.mixin({deepExtend: underscoreDeepExtend(_)});
 
     var SimView = require('common/app/sim');
+    var StopwatchView = require('common/tools/stopwatch');
+    var RulerView = require('common/tools/ruler');
+    var ReferenceLineView = require('common/tools/reference-line');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -55,9 +58,21 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            // playback
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'change input[name=playback-speed]' : 'updatePlaybackSpeed',
+
+            // settings
+            'click .sound-btn' : 'changeVolume',
+
+            // tools
+            'change .stopwatch-check'      : 'toggleStopwatch',
+
+            // simulation properties
             'change input[name=gravity-setting]' : 'updateGravity',
-            'change .friction-settings-placeholder' : 'updateFriction',
-            'change .softness3-settings-placeholder' : 'updateSoftness3'
+            'slide .friction-settings-placeholder' : 'updateFriction',
+            'slide .softness3-settings-placeholder' : 'updateSoftness3'
         },
 
         /**
@@ -74,6 +89,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -102,6 +120,7 @@ define(function (require) {
             this.renderPlaybackControls();
             this.renderSceneControls();
             this.renderEnergyGraphs();
+            this.renderTools();
 
             this.renderSceneView();
 
@@ -160,7 +179,44 @@ define(function (require) {
             this.updateGravity();
             this.updateFriction();
             this.updateSoftness3();
+            this.updatePlaybackSpeed();
         },
+
+
+        /**
+         * Renders Tools
+         */
+         renderTools: function(){
+            this.stopwatchView = new StopwatchView({
+                dragFrame: this.el,
+                units : this.simulation.get('units').time,
+                position: {
+                    x : 630,
+                    y: 520
+                }
+            });
+
+            this.rulerView = new RulerView({
+                dragFrame: this.el
+            });
+
+            this.referenceLineView = new ReferenceLineView({
+                dragFrame: this.el,
+                position: {
+                    x : 100,
+                    y : 180
+                },
+                width: 380
+            });
+
+            this.referenceLineView.render();
+            this.rulerView.render();
+            this.stopwatchView.render();
+
+            this.$el.append(this.referenceLineView.el);
+            this.$el.append(this.rulerView.el);
+            this.$el.append(this.stopwatchView.el);
+         },
 
 
         /**
@@ -202,13 +258,71 @@ define(function (require) {
          },
 
 
+         updatePlaybackSpeed: function(){
+             
+            var speed = this.$('input[name=playback-speed]:checked').val();
+            this.timeScale = speed;
+         },
+
+
+        /**
+         * Toggles the stopwatch's visibility
+         */
+        toggleStopwatch: function(event) {
+            if ($(event.target).is(':checked'))
+                this.stopwatchView.show();
+            else
+                this.stopwatchView.hide();
+        },
+
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+
+
+        /**
+         * Steps between the different discrete volume values and updates
+         *   the button's icon.
+         */
+        changeVolume: function(event) {
+            var $btn = $(event.target).closest('.sound-btn');
+            var fromVolumeToVolume = {
+                mute : 'low',
+                low : 'high',
+                high : 'mute'
+            };
+            var fromVolume = $btn.data('volume');
+            var toVolume = fromVolumeToVolume[fromVolume];
+
+            $btn.hide();
+
+            this.$('.sound-btn-'+toVolume).show();
+            this.sceneView.setVolume(toVolume);
+        },
+
 
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
+
+            // tools
+            this.stopwatchView.postRender();
+            this.rulerView.postRender();
+            this.referenceLineView.postRender();
+
             this.sceneView.postRender();
+
+            this.stopwatchView.hide();
         },
 
         /**
@@ -224,6 +338,10 @@ define(function (require) {
          *   simulation and the views.
          */
         update: function(time, deltaTime) {
+
+            // adjust delta time to time rate
+            deltaTime = deltaTime * this.timeScale;
+
             // Update the model
             this.simulation.update(time, deltaTime);
 
@@ -232,6 +350,9 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.rulerView.update();
+            this.referenceLineView.update();
         },
 
 

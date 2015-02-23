@@ -30,7 +30,10 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             gravity : Constants.SimSettings.GRAVITY_DEFAULT,
-            friction : Constants.SimSettings.FRICTION_DEFAULT
+            friction : Constants.SimSettings.FRICTION_DEFAULT,
+            units : {
+                time : 's'
+            }
         }),
 
         initialize: function(attributes, options) {
@@ -63,15 +66,15 @@ define(function (require, exports, module) {
         },
 
         initSystems: function(){
-            var that = this;
+
             var springs = this.springs.map(function(spring){
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
-                    gravity : that.get('gravity'),
-                    b: that.get('friction')
+                    gravity : this.get('gravity'),
+                    b: this.get('friction')
                 };
-            });
+            }, this);
 
             this.systems = new Systems(springs);
         },

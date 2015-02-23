@@ -12,8 +12,7 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
 
 
-    var Assets = require('assets');
-
+    var buzz = require('buzz');
     var Constants = require('constants');
 
     /**
@@ -33,13 +32,23 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            this.mvt = options.mvt;
+            // this.mvt = options.mvt;
 
             this.initGraphics();
+
+            this.thudSound = new buzz.sound('audio/thud', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+
+            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
             this.listenTo(this.model, 'change:center', this.updateCenterPosition);
+            this.listenTo(this.model, 'hitGround', function(){
+                this.setVolumeByVelocity();
+                this.thudSound.play();
+            });
 
             this.drawBody();
         },
@@ -206,11 +215,26 @@ define(function(require) {
             this.model.set('resting', false);
         },
 
-        updateMVT: function(mvt) {
-            this.mvt = mvt;
+        setVolume: function(setting){
+            this.volumeSetting = setting;
+        },
 
-            // this.updatePosition();
-            this.drawBody();
+        setVolumeByVelocity: function(){
+            this.thudSound.setVolume(this._calcVolume());
+        },
+
+        _calcVolume: function(){
+
+            var factors = {
+                mute : 0,
+                low : 20,
+                high : 100
+            };
+
+            var volumeFactor = factors[this.volumeSetting] || 0;
+            var volume = volumeFactor * (this.model.velocityY / 2.6) * (this.model.velocityY / 2.6);
+
+            return volume;
         }
 
     }, Constants.BodyDefaults);

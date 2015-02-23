@@ -1,0 +1,110 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../styles/mixins/vendor-prefixes.less";
+@import "../styles/variables.less";
+
+@ruler-background: #fcd076;
+@ruler-font-size: 16px;
+
+.ruler-view {
+	position: absolute;
+	top: 0;
+	left: 0;
+	z-index: 200;
+	color: #000;
+	cursor: -webkit-grab;
+	cursor: grab;
+
+	overflow: hidden;
+	.box-shadow(0px 2px 4px rgba(0, 0, 0, 0.3));
+
+	&.dragging {
+		cursor: -webkit-grabbing;
+		cursor: grabbing;
+	}
+
+	.ruler{
+		list-style: none;
+		padding: 0 0 0 5px;
+		margin: 0;
+		background: @ruler-background;
+		border: 1px solid darken(@ruler-background, 30%);
+
+		&.ruler-vertical{
+			-ms-transform-origin: 0% 100%;
+			-webkit-transform-origin: 0% 100%;
+			transform-origin: 0% 100%;
+			-ms-transform: rotate(90deg);
+			-webkit-transform: rotate(90deg);
+			transform: rotate(90deg);
+			white-space: nowrap;
+
+			&:after{
+				content: "";
+				float: left;
+				margin-top: 100%;
+ 			}
+		}
+	}
+
+	.tick{
+		display: block;
+		float: left;
+		clear: none;
+		position: relative;
+		margin: 0;
+		padding: 0;
+
+		.top, .bottom{
+			position: absolute;
+			left: 0;
+			font-size: 1px;
+			overflow: hidden;
+		}
+
+		.top{
+			top : 0;
+		}
+		.bottom{
+			bottom: 0;
+		}
+
+		label{
+			position: relative;
+			cursor: -webkit-grab;
+			cursor: grab;
+			-webkit-touch-callout: none;
+			-webkit-user-select: none;
+			-khtml-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+
+			position: absolute;
+			top: 0;
+			font-size: @ruler-font-size;
+			left: -0.5 * @ruler-font-size;
+			width: 5 * @ruler-font-size;
+			max-width: none;
+			font-weight: normal;
+		}
+
+		&.tick-unit{
+			.top, .bottom{
+				border-left: 1px solid darken(@ruler-background, 30%);
+			}
+		}
+
+		&.tick-mid, &.tick-full{
+			.top, .bottom{
+				border-left: 1px solid darken(@ruler-background, 40%);
+			}
+		}
+
+		&.tick-unit, &.tick-mid{
+			> label{
+				display: none;
+			}
+		}
+	}
+
+}
