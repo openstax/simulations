@@ -65,10 +65,11 @@ define(function (require) {
       else if (height == 20) {
         height = 0
       }
+
       var sizeX = vectorModel.get('targetX') - vectorModel.get('originX');
       var sizeY = vectorModel.get('originY') - vectorModel.get('targetY');
 
-      vectorModel.set('degrees', this.calculateDegrees(width, height));
+      vectorModel.set('degrees', this.calculateDegrees(width, height, vectorModel));
       this.set('rText', this.padZero(this.round1(length/Constants.GRID_SIZE)));
       this.set('thetaText', this.padZero(this.round1(vectorModel.get('degrees'))));
       this.set('rXText', this.round0(sizeX/Constants.GRID_SIZE));
@@ -91,8 +92,14 @@ define(function (require) {
       return Math.sqrt(x * x + y * y);
     },
 
-    calculateDegrees: function(x, y) {
-      return (180/Math.PI) * Math.atan2(y, x);
+    calculateDegrees: function(x, y, vectorModel) {
+      var degrees = (180/Math.PI) * Math.atan2(y, x);
+      if (vectorModel !== undefined) {
+      if (vectorModel.get('targetY') > vectorModel.get('originY') && vectorModel.get('targetX') < vectorModel.get('originX') || degrees == 180) {
+        return -degrees;
+        }
+      }
+      return degrees;
     },
 
     roundGrid: function(nbr) {
