@@ -24,7 +24,7 @@ define(function (require) {
 	var propertiesHtml = require('text!templates/properties-panel.html');
 
 	/**
-	 * 
+	 *
 	 */
 	var GOSimView = SimView.extend({
 
@@ -56,6 +56,10 @@ define(function (require) {
 		 * @params options
 		 */
 		initialize: function(options) {
+			options = _.extend({
+					link: 'gravity-and-orbits',
+			}, options);
+
 			SimView.prototype.initialize.apply(this, [options]);
 
 			// Initialize the scene view
@@ -149,7 +153,7 @@ define(function (require) {
 		 */
 		resetComponents: function() {
 			SimView.prototype.resetComponents.apply(this);
-			
+
 		},
 
 		/**

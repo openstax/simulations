@@ -31,12 +31,12 @@ define(function (require) {
 	 * "Local" variables for functions to share and recycle
 	 */
 	var i;
-	
+
 
 	/**
 	 * SimView represents a tab in the simulation.  SimView is extended to create
 	 *   three new views representing the water, sound, and light tabs.  SimViews
-	 *   interface with a WaveSimulation and contain all necessary views for 
+	 *   interface with a WaveSimulation and contain all necessary views for
 	 *   visualizing and interacting with a wave simulation.
 	 */
 	var SimView = Backbone.View.extend({
@@ -108,6 +108,7 @@ define(function (require) {
 				heatmapBrightness: 0.5,
 				title: 'Simulation',
 				name: 'sim',
+				link: 'wave-interference',
 				segmentPotentialName: 'Wall',
 				detectorYLabel: 'Water Level'
 			}, options);
@@ -267,7 +268,7 @@ define(function (require) {
 			var $controlPanel = $(controlPanelHtml);
 
 			// Run the template for the oscillator controls
-			var oscillatorControls = _.template(oscillatorControlsHtml)({ 
+			var oscillatorControls = _.template(oscillatorControlsHtml)({
 				oscillatorName:       this.waveSimulation.get('oscillatorName'),
 				oscillatorNamePlural: this.waveSimulation.get('oscillatorNamePlural'),
 				unique: this.cid
@@ -418,7 +419,7 @@ define(function (require) {
 		postRender: function() {
 			this.heatmapView.postRender();
 			this.crossSectionGraphView.postRender();
-			
+
 			this.measuringTapeView.hide();
 			this.stopwatchView.hide();
 		},
@@ -459,7 +460,7 @@ define(function (require) {
 		reset: function(event) {
 			if (!window.confirm('Are you sure you want to reset everything?'))
 				return;
-			
+
 			// Save whether or not it was paused when we reset
 			var wasPaused = this.waveSimulation.paused;
 
@@ -578,9 +579,9 @@ define(function (require) {
 				case 2:
 					this.$barrierSliders.removeAttr('disabled');
 					break;
-				default: 
+				default:
 					this.$barrierSliders.attr('disabled', 'disabled');
-			} 
+			}
 
 			this.waveSimulation.set('barrierStyle', val);
 		},
@@ -717,7 +718,7 @@ define(function (require) {
 		},
 
 		/**
-		 * Tell the graph view that we've stopped making changes to the cross section 
+		 * Tell the graph view that we've stopped making changes to the cross section
 		 *   location.
 		 */
 		crossSectionSlideStop: function(){
