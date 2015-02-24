@@ -271,31 +271,27 @@ define(function(require) {
                         }
                         else {
                             // We are somewhere between fully frozen and fully
-                            // liquified, so adjust the scaling factor accordingly.
+                            //   liquified, so adjust the scaling factor accordingly.
                             var temperatureFactor = (temperatureSetPoint - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) / (
                                 WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE
                             );
-                            //console.log(VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE);
-                            //console.log(temperatureFactor);
                             repulsiveForceScalingFactor = WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - (
                                 temperatureFactor * (WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - 1)
                             );
                         }
-                        //console.log(repulsiveForceScalingFactor);
+
                         forceScalar = 48 * r2inv * r6inv * ((r6inv * repulsiveForceScalingFactor) - 0.5);
                         force.x = dx * forceScalar;
                         force.y = dy * forceScalar;
-                        //console.log(force);
-                        //console.log('before: ' + nextMoleculeForces[i]);
                         nextMoleculeForces[i].add(force);
                         nextMoleculeForces[j].sub(force);
-                        //console.log('after: ' + nextMoleculeForces[i]);
+
                         this.potentialEnergy += 4 * r6inv * (r6inv - 1) + 0.016316891136;
                     }
 
                     if (distanceSquared < VerletAlgorithm.PARTICLE_INTERACTION_DISTANCE_THRESH_SQRD) {
                         // Calculate coulomb-like interactions between atoms on
-                        // individual water molecules.
+                        //   individual water molecules.
                         for (var ii = 0; ii < 3; ii++) {
                             for (var jj = 0; jj < 3; jj++) {
                                 if (((3 * i + ii + 1) % 6 === 0) || ((3 * j + jj + 1) % 6 === 0)) {
