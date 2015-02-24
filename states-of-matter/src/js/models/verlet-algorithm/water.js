@@ -120,26 +120,26 @@ define(function(require) {
         determineElectrostaticForce: function(temperatureSetPoint) {
             var q0;
 
-            if (temperatureSetPoint < VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) {
+            if (temperatureSetPoint < WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) {
                 // Use stronger electrostatic forces in order to create more of
                 // a crystal structure.
-                q0 = VerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE;
+                q0 = WaterVerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE;
             }
-            else if (temperatureSetPoint > VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE) {
+            else if (temperatureSetPoint > WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE) {
                 // Use weaker electrostatic forces in order to create more of an
                 // appearance of liquid.
-                q0 = VerletAlgorithm.WATER_FULLY_MELTED_ELECTROSTATIC_FORCE;
+                q0 = WaterVerletAlgorithm.WATER_FULLY_MELTED_ELECTROSTATIC_FORCE;
             }
             else {
                 // We are somewhere in between the temperature for being fully
                 // melted or frozen, so scale accordingly.
-                var temperatureFactor = (temperatureSetPoint - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) / (
-                    VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE
+                var temperatureFactor = (temperatureSetPoint - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) / (
+                    WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE
                 );
 
-                q0 = VerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE - (
+                q0 = WaterVerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE - (
                     temperatureFactor * (
-                        VerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE - VerletAlgorithm.WATER_FULLY_MELTED_ELECTROSTATIC_FORCE
+                        WaterVerletAlgorithm.WATER_FULLY_FROZEN_ELECTROSTATIC_FORCE - WaterVerletAlgorithm.WATER_FULLY_MELTED_ELECTROSTATIC_FORCE
                     )
                 );
             }
@@ -162,7 +162,7 @@ define(function(require) {
                     (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeForces[i].y * massInverse);
 
                 moleculeCenterOfMassPositions[i].set(xPos, yPos);
-
+                //var rate = !isNaN(moleculeRotationRates[i]) ? moleculeRotationRates[i] : 1;
                 moleculeRotationAngles[i] += (VerletAlgorithm.TIME_STEP * moleculeRotationRates[i]) +
                                              (VerletAlgorithm.TIME_STEP_SQR_HALF * moleculeTorques[i] * inertiaInverse);
             }
@@ -261,30 +261,35 @@ define(function(require) {
                         //   physics, it is "hollywooding" in order to get the
                         //   crystalline behavior we need for ice.
                         var repulsiveForceScalingFactor;
-                        if (temperatureSetPoint > VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE) {
+                        if (temperatureSetPoint > WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE) {
                             // No scaling of the repulsive force.
                             repulsiveForceScalingFactor = 1;
                         }
-                        else if (temperatureSetPoint < VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) {
+                        else if (temperatureSetPoint < WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) {
                             // Scale by the max to force space in the crystal.
-                            repulsiveForceScalingFactor = VerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER;
+                            repulsiveForceScalingFactor = WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER;
                         }
                         else {
                             // We are somewhere between fully frozen and fully
                             // liquified, so adjust the scaling factor accordingly.
-                            var temperatureFactor = (temperatureSetPoint - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) / (
-                                VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE
+                            var temperatureFactor = (temperatureSetPoint - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE) / (
+                                WaterVerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - WaterVerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE
                             );
-
-                            repulsiveForceScalingFactor = VerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - (
-                                temperatureFactor * (VerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - 1)
+                            //console.log(VerletAlgorithm.WATER_FULLY_MELTED_TEMPERATURE - VerletAlgorithm.WATER_FULLY_FROZEN_TEMPERATURE);
+                            //console.log(temperatureFactor);
+                            repulsiveForceScalingFactor = WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - (
+                                temperatureFactor * (WaterVerletAlgorithm.MAX_REPULSIVE_SCALING_FACTOR_FOR_WATER - 1)
                             );
                         }
+                        //console.log(repulsiveForceScalingFactor);
                         forceScalar = 48 * r2inv * r6inv * ((r6inv * repulsiveForceScalingFactor) - 0.5);
                         force.x = dx * forceScalar;
                         force.y = dy * forceScalar;
+                        //console.log(force);
+                        //console.log('before: ' + nextMoleculeForces[i]);
                         nextMoleculeForces[i].add(force);
                         nextMoleculeForces[j].sub(force);
+                        //console.log('after: ' + nextMoleculeForces[i]);
                         this.potentialEnergy += 4 * r6inv * (r6inv - 1) + 0.016316891136;
                     }
 
