@@ -16,6 +16,7 @@ define(function (require) {
     var MassesAndSpringsSceneView  = require('views/scene');
 
     var Constants = require('constants');
+    var Initials = require('initials');
 
     require('nouislider');
     require('bootstrap');
@@ -192,19 +193,23 @@ define(function (require) {
                 units : this.simulation.get('units').time,
                 position: {
                     x : 630,
-                    y: 520
+                    y : 520
                 }
             });
 
             this.rulerView = new RulerView({
-                dragFrame: this.el
+                dragFrame: this.el,
+                position : {
+                    x : 30,
+                    y : Initials.SpringsY1 * Constants.Scene.PX_PER_METER
+                }
             });
 
             this.referenceLineView = new ReferenceLineView({
                 dragFrame: this.el,
                 position: {
                     x : 100,
-                    y : 180
+                    y : (Initials.SpringsY1 + Constants.SpringDefaults.REST_L) * Constants.Scene.PX_PER_METER
                 },
                 width: 380
             });

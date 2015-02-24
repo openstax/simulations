@@ -10,7 +10,8 @@ define(function (require) {
         'light-gray': '#939daa',
         'pale-orange': '#ef9152',
         'sky-blue'  : '#52b0ef',
-        'pale-green': '#aed1c0'        
+        'pale-green': '#aed1c0',
+        'navy-blue' : '#21366b'
     };
 
 
@@ -155,6 +156,7 @@ define(function (require) {
     SpringDefaults.STIFFNESS = SimSettings.SOFTNESS_DEFAULT;
 
     // Appearance related
+    SpringDefaults.PEG_COLOR = ColorConstants['navy-blue'];
     SpringDefaults.COLOR = ColorConstants['cool-gray'];
     SpringDefaults.COILS = 12;
     SpringDefaults.WIDTH = 0.10;

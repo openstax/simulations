@@ -3,8 +3,8 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-    
+    var PIXI = require('common/pixi/extensions');
+
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
     // var Vector2  = require('common/math/vector2');
@@ -34,7 +34,7 @@ define(function(require) {
         initialize: function(options) {
 
             options = _.extend({
-                labelFont : '14px Arial',
+                labelFont : 'bold 14px Arial',
                 labelAlign : 'center'
             }, options);
 
@@ -119,7 +119,8 @@ define(function(require) {
                     font : this.labelFont,
                     align : this.labelAlign,
                     wordWrap: true,
-                    wordWrapWidth: this.viewModel.width
+                    wordWrapWidth: this.viewModel.width,
+                    fill : Colors.darkenHex(this.model.color, .2)
                 });
 
                 this._centerLabel(labelText);
@@ -135,7 +136,7 @@ define(function(require) {
 
         _centerLabel: function(label){
 
-            label.anchor = new PIXI.Point(0.5, 0.5);
+            label.anchor = new PIXI.Point(0.45, 0.5);
 
             label.x = this.viewModel.radius;
             label.y = this.viewModel.height / 2;
