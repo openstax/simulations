@@ -17,7 +17,7 @@ define(function (require) {
         events: _.extend(SOMSimView.prototype.events, {
             // Playback controls
             'click #phase-solid'  : 'makeSolid',
-            'click #phase-liquid' : 'makeSolid',
+            'click #phase-liquid' : 'makeLiquid',
             'click #phase-gas'    : 'makeGas'
         }),
 
