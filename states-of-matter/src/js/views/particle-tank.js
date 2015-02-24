@@ -49,6 +49,9 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
+            this.listenTo(this.simulation, 'particles-injected', this.particlesInjected);
+            this.listenTo(this.simulation, 'particles-cleared', this.removeAllParticles);
+            this.listenTo(this.simulation, 'particles-initialized', this.addInitialParticles);
         },
 
         initGraphics: function() {
@@ -162,6 +165,33 @@ define(function(require) {
             layer.addChild(particle);
 
             this.updateParticle(particle);
+        },
+
+        removeParticle: function(particleModel) {
+            var children;
+            var i;
+
+            children = this.lowerParticleLayer.children;
+            for (i = 0; i < children.length; i++) {
+                if (children[i].model === particleModel) {
+                    this.lowerParticleLayer.removeChildAt(i);
+                    break;
+                }
+            }
+                this.updateParticle(children[i]);
+
+            children = this.upperParticleLayer.children;
+            for (i = 0; i < children.length; i++) {
+                if (children[i].model === particleModel) {
+                    this.upperParticleLayer.removeChildAt(i);
+                    break;
+                }
+            }
+        },
+
+        removeAllParticles: function() {
+            this.lowerParticleLayer.removeChildren();
+            this.upperParticleLayer.removeChildren();
         },
 
         particleContainerHeightChanged: function(simulation, particleContainerHeight) {
