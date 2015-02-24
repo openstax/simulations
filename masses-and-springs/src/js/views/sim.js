@@ -213,7 +213,6 @@ define(function (require) {
             this.rulerView.render();
             this.stopwatchView.render();
 
-            this.$el.append(this.referenceLineView.el);
             this.$el.append(this.rulerView.el);
             this.$el.append(this.stopwatchView.el);
          },
@@ -318,9 +317,10 @@ define(function (require) {
             // tools
             this.stopwatchView.postRender();
             this.rulerView.postRender();
-            this.referenceLineView.postRender();
 
+            this.referenceLineView.postRender();
             this.sceneView.postRender();
+            this.sceneView.initTools([this.referenceLineView]);
 
             this.stopwatchView.hide();
         },

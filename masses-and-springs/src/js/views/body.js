@@ -32,33 +32,39 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            // this.mvt = options.mvt;
+
+            options = _.extend({
+                labelFont : '14px Arial',
+                labelAlign : 'center'
+            }, options);
+
+            this.label = this.model.label;
+            this.labelFont = options.labelFont;
+            this.labelAlign = options.labelAlign;
 
             this.initGraphics();
+            this.initSound();
 
+            this.listenTo(this.model, 'change:y', this.updatePosition);
+            this.listenTo(this.model, 'change:top', this.updateTopPosition);
+            this.listenTo(this.model, 'change:center', this.updateCenterPosition);
+            this.listenTo(this.model, 'hitGround', this.hitGround);
+
+            this.drawBody();
+            this.labelBody();
+        },
+
+        initGraphics: function() {
+            this.body = new PIXI.Graphics();
+            this.displayObject.addChild(this.body);
+        },
+
+        initSound: function(){
             this.thudSound = new buzz.sound('audio/thud', {
                 formats: ['ogg', 'mp3', 'wav']
             });
 
             this.setVolume(Constants.Scene.SOUNDS_ENABLED);
-
-            this.listenTo(this.model, 'change:y', this.updatePosition);
-            this.listenTo(this.model, 'change:top', this.updateTopPosition);
-            this.listenTo(this.model, 'change:center', this.updateCenterPosition);
-            this.listenTo(this.model, 'hitGround', function(){
-                this.setVolumeByVelocity();
-                this.thudSound.play();
-            });
-
-            this.drawBody();
-        },
-
-        initGraphics: function() {
-            // reference point for drag delta x and y
-            this._dragOffset   = new PIXI.Point();
-
-            this.body = new PIXI.Graphics();
-            this.displayObject.addChild(this.body);
         },
 
         updateBodyViewModel: function(){
@@ -94,7 +100,7 @@ define(function(require) {
 
         drawBody : function(){
             this.updateBodyViewModel();
-            this.clearPositionOffsets();
+            this.positionBody();
 
             this.body.clear();
             this.body.buttonMode = true;
@@ -102,14 +108,51 @@ define(function(require) {
 
             this.drawHook();
             this.drawBlock();
+
+        },
+
+        labelBody: function(){
+            var labelText;
+
+            if(this.label){
+                labelText = new PIXI.Text(this._makeLabelText(), {
+                    font : this.labelFont,
+                    align : this.labelAlign,
+                    wordWrap: true,
+                    wordWrapWidth: this.viewModel.width
+                });
+
+                this._centerLabel(labelText);
+
+                labelText.blendMode = PIXI.blendModes.MULTIPLY;
+                this.displayObject.addChild(labelText);
+            }
+        },
+
+        _makeLabelText: function(){
+            return (this.model.mass * 1000).toFixed(0) + ' ' + this.model.units;
+        },
+
+        _centerLabel: function(label){
+
+            label.anchor = new PIXI.Point(0.5, 0.5);
+
+            label.x = this.viewModel.radius;
+            label.y = this.viewModel.height / 2;
+        },
+
+        positionBody: function(){
+            this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
+
+            this.displayObject.x = this.viewModel.left;
+            this.displayObject.y = this.viewModel.top;
         },
 
         drawHook: function(){
-            this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
-            this.model.set('hook', this.model.hook);
+            var hook = this.makeHook(this.viewModel.radius, 0);
 
             this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
-            this.body.drawPiecewiseCurve(this.model.hook, 0, 0);
+            this.body.drawPiecewiseCurve(hook, 0, 0);
         },
 
         makeHook: function(center, hookBase){
@@ -137,49 +180,76 @@ define(function(require) {
 
         drawBlock: function(){
             this.body.beginFill(this.viewModel.color, 1);
-            this.body.drawRect(this.viewModel.left, this.viewModel.top, this.viewModel.width, this.viewModel.height);
+            this.body.drawRect(0, 0, this.viewModel.width, this.viewModel.height);
             this.body.endFill();
         },
 
         dragStart: function(data){
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
-            this.grabbed = true;
+            this.bringToFront();
+            this.dragOffset = data.getLocalPosition(this.displayObject);
+            this.model.grabbed = true;
             this.model.set('resting', true);
         },
 
         dragEnd: function(data){
-
-            // TODO will need figure out updating model so that hook intercept
-            // works on drag and not just one drag end
-            this.updateModelPosition();
             this.dropBody();
         },
 
         drag: function(data){
 
-            if(this.grabbed && this.model.isHung()){
-                this.model.unhang();
-                return;
-            }
+            var newBodyLeft;
+            var newBodyBottom;
 
-            if(this.grabbed){
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+            if(this.model.grabbed){
 
-                this.displayObject.x += dx;
-                this.displayObject.y += dy;
+                newBodyLeft = data.global.x - this.dragOffset.x;
+                newBodyBottom = data.global.y - this.dragOffset.y;
+
+                if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
+                    this.model.unhang();
+                } else if(!this.model.isHung()){
+                    // only update x for weak sideway drags if the body is not hung
+                    this.displayObject.x = newBodyLeft;
+                }
+
+                this.displayObject.y = newBodyBottom;
+
+                this.updateModelPosition();
             }
         },
 
-        updateModelPosition: function(){
-            this.model.set('x', this._calcXFromLeftDrag());
-            this.model.set('y', this._calcYFromBottomDrag());
+        isSidewaysDrag: function(newX){
+            // is the sideways drag more than half the width of the spring hit area?
+            return Math.abs(newX - this.displayObject.x) > this.model.spring.hitArea.w / 2;
         },
 
-        clearPositionOffsets: function(){
-            // clear position offsets
-            this.displayObject.x = 0;
-            this.displayObject.y = 0;
+        bringToFront: function(){
+            var originalParentIndex;
+
+            if(!this.originalParent){
+                originalParentIndex = this.displayObject.parent.parent.getChildIndex(this.displayObject.parent);
+            }
+
+            this.displayObject.parent.parent.children[this.displayObject.parent.parent.children.length - 1].addChild(this.displayObject);
+
+            if(!this.originalParent){
+                this.originalParent = this.displayObject.parent.parent.children[originalParentIndex];
+            }
+        },
+
+        returnToOriginalLayer: function(){
+            this.originalParent.addChild(this.displayObject);
+        },
+
+        getFrontBodiesIndex: function(){
+            return this.displayObject.parent.children.length - 1;
+        },
+
+        updateModelPosition: function(dx, dy){
+            this.model.set('x', this._calcXFromLeftDrag(dx));
+            this.model.set('y', this._calcYFromBottomDrag(dy));
+
+            this.model.set('top', this._calcSpringY2FromY());
         },
 
         updatePosition: function(){
@@ -194,16 +264,20 @@ define(function(require) {
             this.model.set('x', this._calcXFromViewCenter(center));
         },
 
-        _calcXFromLeftDrag: function(){
-            return (this.viewModel.left + this.displayObject.x)/Constants.Scene.PX_PER_METER;
+        _calcXFromLeftDrag: function(dx){
+            return this.displayObject.x/Constants.Scene.PX_PER_METER;
         },
 
-        _calcYFromBottomDrag: function(){
-            return (this.viewModel.bottom + this.displayObject.y)/Constants.Scene.PX_PER_METER;
+        _calcYFromBottomDrag: function(dy){
+            return (this.displayObject.y + this.viewModel.height)/Constants.Scene.PX_PER_METER;
         },
 
         _calcYFromSpringY2: function(springY2){
             return springY2 + (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
+        },
+
+        _calcSpringY2FromY: function(){
+            return this.model.y - (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
         },
 
         _calcXFromViewCenter: function(center){
@@ -211,8 +285,15 @@ define(function(require) {
         },
 
         dropBody: function(){
-            this.grabbed = false;
+            this.model.grabbed = false;
             this.model.set('resting', false);
+        },
+
+        hitGround: function(){
+            this.setVolumeByVelocity();
+            this.thudSound.play();
+
+            this.returnToOriginalLayer();
         },
 
         setVolume: function(setting){

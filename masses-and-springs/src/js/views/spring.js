@@ -24,26 +24,26 @@ define(function(require) {
         initialize: function(options) {
 
             this.initGraphics();
-
-            this.boingSound = new buzz.sound('audio/boing', {
-                formats: ['ogg', 'mp3', 'wav']
-            });
-
-            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
-
+            this.initSound();
 
             this.drawSpring();
 
             this.listenTo(this.model, 'change:k', this.drawSpring);
             this.listenTo(this.model, 'change:y2', this.drawSpring);
-            this.listenTo(this.model, 'unsnag', function(){
-                this.boingSound.play();
-            });
+            this.listenTo(this.model, 'unsnag', this.playSound);
         },
 
         initGraphics: function() {
             this.spring = new PIXI.Graphics();
             this.displayObject.addChild(this.spring);
+        },
+
+        initSound: function(){
+            this.boingSound = new buzz.sound('audio/boing', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+
+            this.setVolume(Constants.Scene.SOUNDS_ENABLED);
         },
 
         updateSpringViewModel: function(){
@@ -96,11 +96,7 @@ define(function(require) {
             curve.close();
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
-            if(!this.model.isSnagged()){
-                this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * this.viewModel.ringRadius, 2 * this.viewModel.coilRadius, 1.5 * this.viewModel.ringRadius);
-            }else{
-                this.model.hitArea = undefined;
-            }
+            this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * this.viewModel.ringRadius, 2 * this.viewModel.coilRadius, 1.5 * this.viewModel.ringRadius);
         },
 
         makeSpringPoints: function(){
@@ -156,6 +152,10 @@ define(function(require) {
         makeSpringEnd: function(points){
             points[points.length - 1] = [this.viewModel.x, this.viewModel.y2 - this.viewModel.ringRadius];
             points[points.length] = [this.viewModel.x, this.viewModel.y2];
+        },
+
+        playSound: function(){
+            this.boingSound.play();
         },
 
         setVolume: function(setting){
