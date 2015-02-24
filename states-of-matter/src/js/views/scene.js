@@ -43,6 +43,9 @@ define(function(require) {
 
         initHeaterCoolerView: function() {
             var viewModel = new HeaterCoolerView.HeaterCoolerViewModel();
+            this.listenTo(viewModel, 'change:heatCoolLevel', function(model, heatCoolLevel) {
+                this.simulation.set('heatingCoolingAmount', heatCoolLevel);
+            });
 
             this.heaterCoolerView = new HeaterCoolerView({
                 model: viewModel,

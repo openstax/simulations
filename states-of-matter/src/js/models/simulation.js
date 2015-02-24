@@ -158,8 +158,6 @@ define(function (require, exports, module) {
             )) {
                 throw 'Molecule specified is not monatomic';
             }
-
-            
             
             var atomConstructor;
             switch (moleculeType) {
@@ -407,7 +405,6 @@ define(function (require, exports, module) {
 
         explode: function() {
             this.set('exploded', true);
-            console.log('EXPLODED');
         },
 
         unexplode: function() {
@@ -898,10 +895,7 @@ define(function (require, exports, module) {
             else if (newTemperature <= this.minModelTemperature) {
                 newTemperature = this.minModelTemperature;
             }
-            //this.temperatureSetPoint = newTemperature;
-            this.set('temperatureSetPoint', this.temperatureSetPoint);
-            // this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
-            // this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
+            this.set('temperatureSetPoint', newTemperature);
         },
 
         /**
