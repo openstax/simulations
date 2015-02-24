@@ -200,7 +200,7 @@ define(function (require) {
             this.rulerView = new RulerView({
                 dragFrame: this.el,
                 position : {
-                    x : 30,
+                    x : 20,
                     y : Initials.SpringsY1 * Constants.Scene.PX_PER_METER
                 }
             });
@@ -208,10 +208,10 @@ define(function (require) {
             this.referenceLineView = new ReferenceLineView({
                 dragFrame: this.el,
                 position: {
-                    x : 100,
+                    x : (Initials.Springs[0].x - 0.75 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER,
                     y : (Initials.SpringsY1 + Constants.SpringDefaults.REST_L) * Constants.Scene.PX_PER_METER
                 },
-                width: 380
+                width: (Initials.Springs[Initials.Springs.length - 1].x - Initials.Springs[0].x + 1.5 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER
             });
 
             this.referenceLineView.render();

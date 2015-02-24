@@ -38,7 +38,7 @@ define(function(require) {
                 buffer : 15,
                 color : '#333',
                 opacity : 0.75,
-                dashWidth : 10,
+                dashWidth : 8,
                 yOnly : true
             }, options);
 
@@ -85,11 +85,16 @@ define(function(require) {
         drawDashedLine: function(){
 
             var lineTo = 0;
+            var dashWidth;
+
             this.body.lineStyle(this.thickness, Colors.parseHex(this.color), this.opacity);
 
-            while(lineTo + this.dashWidth < this.width){
+            while(lineTo < this.width){
+
+                dashWidth = Math.min(this.dashWidth, this.width - lineTo);
+
                 this.body.moveTo(lineTo, 0);
-                this.body.lineTo(lineTo + this.dashWidth, 0);
+                this.body.lineTo(lineTo + dashWidth, 0);
 
                 lineTo += 2 * this.dashWidth;
             }
