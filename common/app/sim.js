@@ -10,7 +10,7 @@ define(function (require) {
     /**
      * SimView represents a tab in the simulation.  SimView must be extended
      *   to create specific simulation views with specific simulation models.
-     *   SimViews interface with a simulation model and contain all necessary 
+     *   SimViews interface with a simulation model and contain all necessary
      *   views for visualizing and interacting with the simulation model.
      */
     var SimView = Backbone.View.extend({
@@ -22,12 +22,14 @@ define(function (require) {
             options = _.extend({
                 title: 'Simulation',
                 name: 'sim',
+                link: '',
                 stepDuration: 33, // milliseconds
                 runUpdateOnReset: false
             }, options);
 
             this.title = options.title;
             this.name  = options.name;
+            this.link = options.link;
             this.stepDuration = options.stepDuration;
             this.runUpdateOnReset = options.runUpdateOnReset;
 
