@@ -32,15 +32,26 @@ define(function(require) {
         },
 
         initialize: function(options) {
+
+            options = _.extend({
+                labelFont : '14px Arial',
+                labelAlign : 'center'
+            }, options);
+
+            this.label = this.model.label;
+            this.labelFont = options.labelFont;
+            this.labelAlign = options.labelAlign;
+
             this.initGraphics();
             this.initSound();
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
             this.listenTo(this.model, 'change:center', this.updateCenterPosition);
-            this.listenTo(this.model, 'hitGround', this.playSound);
+            this.listenTo(this.model, 'hitGround', this.hitGround);
 
             this.drawBody();
+            this.labelBody();
         },
 
         initGraphics: function() {
@@ -100,6 +111,36 @@ define(function(require) {
 
         },
 
+        labelBody: function(){
+            var labelText;
+
+            if(this.label){
+                labelText = new PIXI.Text(this._makeLabelText(), {
+                    font : this.labelFont,
+                    align : this.labelAlign,
+                    wordWrap: true,
+                    wordWrapWidth: this.viewModel.width
+                });
+
+                this._centerLabel(labelText);
+
+                labelText.blendMode = PIXI.blendModes.MULTIPLY;
+                this.displayObject.addChild(labelText);
+            }
+        },
+
+        _makeLabelText: function(){
+            return (this.model.mass * 1000).toFixed(0) + ' ' + this.model.units;
+        },
+
+        _centerLabel: function(label){
+
+            label.anchor = new PIXI.Point(0.5, 0.5);
+
+            label.x = this.viewModel.radius;
+            label.y = this.viewModel.height / 2;
+        },
+
         positionBody: function(){
             this.model.hook = this.makeHook(this.viewModel.center, this.viewModel.top);
 
@@ -144,6 +185,7 @@ define(function(require) {
         },
 
         dragStart: function(data){
+            this.bringToFront();
             this.dragOffset = data.getLocalPosition(this.displayObject);
             this.model.grabbed = true;
             this.model.set('resting', true);
@@ -179,6 +221,28 @@ define(function(require) {
         isSidewaysDrag: function(newX){
             // is the sideways drag more than half the width of the spring hit area?
             return Math.abs(newX - this.displayObject.x) > this.model.spring.hitArea.w / 2;
+        },
+
+        bringToFront: function(){
+            var originalParentIndex;
+
+            if(!this.originalParent){
+                originalParentIndex = this.displayObject.parent.parent.getChildIndex(this.displayObject.parent);
+            }
+
+            this.displayObject.parent.parent.children[this.displayObject.parent.parent.children.length - 1].addChild(this.displayObject);
+
+            if(!this.originalParent){
+                this.originalParent = this.displayObject.parent.parent.children[originalParentIndex];
+            }
+        },
+
+        returnToOriginalLayer: function(){
+            this.originalParent.addChild(this.displayObject);
+        },
+
+        getFrontBodiesIndex: function(){
+            return this.displayObject.parent.children.length - 1;
         },
 
         updateModelPosition: function(dx, dy){
@@ -225,9 +289,11 @@ define(function(require) {
             this.model.set('resting', false);
         },
 
-        playSound: function(){
+        hitGround: function(){
             this.setVolumeByVelocity();
             this.thudSound.play();
+
+            this.returnToOriginalLayer();
         },
 
         setVolume: function(setting){

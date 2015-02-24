@@ -23,7 +23,9 @@ define(function (require, exports, module) {
             spring : undefined, //a spring can be attached to a body;
             grabbed : false,    //a body is grabbed if view is being dragged by mouse
             color : Constants.BodyDefaults.COLOR,
-            acceleration : Constants.SimSettings.GRAVITY_DEFAULT
+            acceleration : Constants.SimSettings.GRAVITY_DEFAULT,
+            label : true,
+            units : 'g'
         },
 
         initialize: function(attributes, options) {
@@ -32,7 +34,9 @@ define(function (require, exports, module) {
             this.x = this.get('x');         //x-y position on stage of (upper left corner of body)
             this.y = this.get('y');
             this.color = this.get('color');
+            this.label = this.get('label');
             this.acceleration = this.get('acceleration');
+            this.units = this.get('units');
 
             this.rest(this.y);
 

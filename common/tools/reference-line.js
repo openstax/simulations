@@ -28,7 +28,7 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            options = _.deepExtend({
+            options = _.extend({
                 position: {
                     x: 30,
                     y: 30
@@ -78,7 +78,7 @@ define(function(require) {
 
         drawDraggableZone: function(){
             this.body.beginFill(Colors.parseHex(this.color), 0);
-            this.body.drawRect(0, -1 * this.buffer, this.width, 2 * this.buffer);
+            this.body.drawRect(0, -1 * (this.buffer + this.thickness/2), this.width, 2 * this.buffer + this.thickness);
             this.body.endFill();
         },
 

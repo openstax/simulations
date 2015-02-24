@@ -174,10 +174,10 @@ define(function (require) {
         return (8 + 0.1 * width)/Scene.PX_PER_METER;
     };
     BodyDefaults.MASS_TO_HEIGHT = function(mass){
-        return (20 + 240 * mass)/Scene.PX_PER_METER;
+        return (30 + 240 * mass)/Scene.PX_PER_METER;
     };
     BodyDefaults.MASS_TO_WIDTH = function(mass){
-        return (20 + 160 * mass)/Scene.PX_PER_METER;
+        return (30 + 160 * mass)/Scene.PX_PER_METER;
     };
 
     BodyDefaults.COLOR = ColorConstants['light-gray'];
