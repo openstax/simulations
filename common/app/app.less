@@ -33,7 +33,7 @@ body {
         @thickness: 10px;
         @width: 100px;
         @liquid-height: @beaker-liquid-height;
-         
+
         .beaker {
             /* Based off this CodePen icon: http://codepen.io/joshnh/pen/EsoDv */
             border-radius: 10px;
@@ -173,4 +173,27 @@ body {
 .sim-view {
     height: 100%;
     width: 100%;
+}
+
+.footer {
+  position: absolute;
+  margin:10px 0px 10px 0px;
+  padding: 10px 0px 10px 0px;
+  float: left;
+  width: 100%;
+  background: @gray-medium;
+  font-size: 12px;
+  color: #fff;
+
+  .logo {
+
+    img {
+      width: 50%;
+    }
+
+    .middle {
+      vertical-align: middle;
+      padding-right: 5px;
+    }
+  }
 }

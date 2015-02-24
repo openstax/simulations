@@ -77,6 +77,10 @@ define(function (require) {
          * @params options
          */
         initialize: function(options) {
+            options = _.extend({
+                link: 'moving-man',
+            }, options);
+
             SimView.prototype.initialize.apply(this, [options]);
 
             // Initialize the HeatmapView
@@ -181,7 +185,7 @@ define(function (require) {
             this.$variables.each(function(){
                 var $slider = $(this).find('.variable-slider');
                 $slider.noUiSlider(sliderOptions);
-                $slider.Link('lower').to($(this).find('.variable-text'));    
+                $slider.Link('lower').to($(this).find('.variable-text'));
             });
         },
 
@@ -290,7 +294,7 @@ define(function (require) {
              */
             this.$('.position .slider').attr('disabled', 'disabled');
 
-            this.changeExpression();            
+            this.changeExpression();
         },
 
         /**
@@ -300,7 +304,7 @@ define(function (require) {
             this.$('.position').removeClass('expression');
 
             this.$('.position .slider').removeAttr('disabled');
-            
+
             // Update simulation
             this.simulation.dropCustomPositionFunction();
         },
@@ -362,7 +366,7 @@ define(function (require) {
                 this.inputLock(function(){
                     this.simulation.movingMan.accelerationDriven(true);
                     this.simulation.movingMan.set('acceleration', acceleration);
-                });    
+                });
             }
         },
 
@@ -373,7 +377,7 @@ define(function (require) {
             if (!this.simulation.movingMan.positionDriven() || this.sceneView.movingManView.dragging || this.simulation.playingBack()) {
                 this.updateLock(function(){
                     this.$positionInputs.val(value.toFixed(2));
-                });    
+                });
             }
         },
 
@@ -447,13 +451,13 @@ define(function (require) {
             if (model.positionDriven())
                 $variable = this.$position;
             else if (model.velocityDriven())
-                $variable = this.$velocity; 
+                $variable = this.$velocity;
             else if (model.accelerationDriven())
                 $variable = this.$acceleration;
 
             this.$variables.removeClass('driving');
 
-            $variable.addClass('driving');        
+            $variable.addClass('driving');
         },
 
         /**

@@ -82,6 +82,7 @@ define(function (require) {
             options = _.extend({
                 title: 'My Solar System',
                 name: 'my-solar-system',
+                link: 'my-solar-system',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
