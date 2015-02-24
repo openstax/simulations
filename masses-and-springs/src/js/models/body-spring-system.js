@@ -56,7 +56,6 @@ define(function (require, exports, module) {
 
             this.initializeEnergies();
             this.updateEnergies();
-            // this.start();
         },
 
         removeBody: function(){
@@ -129,7 +128,7 @@ define(function (require, exports, module) {
                 this.velocity = 0;
                 this.Q = 0;
 
-                this.deltaY = _calculateRestingDeltaY();
+                this.deltaY = this._calculateRestingDeltaY();
                 this.spring.updateY2ByDelta(this.deltaY);
 
                 this.updateEnergies();
@@ -145,7 +144,7 @@ define(function (require, exports, module) {
                 // of when the spring y2 and the body position updates affects
                 // whether the spring and body look attached when animating...
                 this.spring.updateY2ByDelta(this.deltaY);
-                this.body.set('top', this.spring.y2);
+                this.body.snapBodyTopCenter(this.spring.y2, this.spring.x);
 
                 this.updateEnergies(solvedValues);
             }
@@ -175,7 +174,7 @@ define(function (require, exports, module) {
         },
 
         _calculateRestingDeltaY : function(){
-            return this.body.y - this.spring.y1 - this.spring.restL;
+            return this.body.get('top') - this.spring.y1 - this.spring.restL;
         }
 
     });

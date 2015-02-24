@@ -23,7 +23,7 @@ define(function (require) {
     var controlsHtml = require('text!templates/intro-controls.html');
 
     /**
-     * 
+     *
      */
     var IntroSimView = SimView.extend({
 
@@ -63,6 +63,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Intro',
                 name: 'intro',
+                link: 'energy-forms-and-changes',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

@@ -217,6 +217,7 @@ define(function (require, exports, module) {
                 // Add particle to model set.
                 this.particles.push(new atomConstructor(0, 0));
             }
+            this.trigger('particles-initialized');
 
             // Initialize the particle positions according the to requested phase.
             this.setPhase(phase);
@@ -280,6 +281,7 @@ define(function (require, exports, module) {
                 this.particles.push(new Atom.OxygenAtom(0, 0));
                 this.particles.push(new Atom.OxygenAtom(0, 0));
             }
+            this.trigger('particles-initialized');
 
             // Initialize the particle positions according the to requested phase.
             this.setPhase(phase);
@@ -333,6 +335,7 @@ define(function (require, exports, module) {
                 this.particles.push(new Atom.HydrogenAtom(0, 0));
                 this.particles.push(new Atom.HydrogenAtom(0, 0));
             }
+            this.trigger('particles-initialized');
 
             // Initialize the particle positions according the to requested phase.
             this.setPhase(phase);
@@ -418,6 +421,7 @@ define(function (require, exports, module) {
 
             // Get rid of the normalized particles.
             this.moleculeDataSet = null;
+            this.trigger('particles-cleared');
         },
 
 
@@ -976,12 +980,14 @@ define(function (require, exports, module) {
                             break;
                     }
                     this.particles.push(particle);
+                    this.trigger('particles-injected', particles, 1);
                 }
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
                     for (var j = 0; j < atomsPerMolecule; j++) {
                         this.particles.push(new Atom.OxygenAtom(0, 0));
                         atomPositions[j] = new Vector2();
+                        this.trigger('particles-injected', particles, 2);
                     }
                 }
                 else if (atomsPerMolecule === 3) {
@@ -992,6 +998,7 @@ define(function (require, exports, module) {
                     atomPositions[0] = new Vector2();
                     atomPositions[1] = new Vector2();
                     atomPositions[2] = new Vector2();
+                    this.trigger('particles-injected', particles, 3);
                 }
 
                 if (this.particles.length === 1) {

@@ -34,6 +34,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Vector Addition',
                 name: 'vector-addition',
+                link: 'vector-addition',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

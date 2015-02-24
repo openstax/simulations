@@ -23,7 +23,9 @@ define(function (require, exports, module) {
             spring : undefined, //a spring can be attached to a body;
             grabbed : false,    //a body is grabbed if view is being dragged by mouse
             color : Constants.BodyDefaults.COLOR,
-            acceleration : Constants.SimSettings.GRAVITY_DEFAULT
+            acceleration : Constants.SimSettings.GRAVITY_DEFAULT,
+            label : true,
+            units : 'g'
         },
 
         initialize: function(attributes, options) {
@@ -32,20 +34,23 @@ define(function (require, exports, module) {
             this.x = this.get('x');         //x-y position on stage of (upper left corner of body)
             this.y = this.get('y');
             this.color = this.get('color');
+            this.label = this.get('label');
             this.acceleration = this.get('acceleration');
+            this.units = this.get('units');
 
             this.rest(this.y);
 
             this.on('change:x', this.updateX);
             this.on('change:y', this.updateY);
+
             this.on('change:acceleration', this.updateAcceleration);
             this.on('change:resting', this.updateResting);
 
+            this.on('change:top', this.updateTop);
         },
 
         hangOn: function(spring){
             this.updateSpring(spring);
-            this.snapBodyTopCenter(this.spring.y2, this.spring.x);
         },
 
         unhang: function(){
@@ -95,7 +100,6 @@ define(function (require, exports, module) {
             this.y -= this.velocityY * dt;
             this.set('y', this.y);
             this.bounced ++;
-
         },
 
         updateAcceleration: function(model, acceleration){
@@ -108,6 +112,10 @@ define(function (require, exports, module) {
 
         updateY: function(model, y){
             this.y = y;
+        },
+
+        updateTop: function(model, top){
+            this.top = top;
         },
 
         updateResting: function(model, resting){

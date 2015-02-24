@@ -77,6 +77,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Projectile Motion',
                 name: 'projectile-motion',
+                link: 'projectile-motion',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

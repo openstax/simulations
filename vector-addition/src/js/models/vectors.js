@@ -23,6 +23,13 @@ define(function(require) {
     },
 
     initialize: function(attributes, options) {
+    },
+
+    resetVectors: function(model) {
+      model.set('originX', this.get('originX'));
+      model.set('originY', this.get('originY'));
+      model.set('targetX', this.get('targetX'));
+      model.set('targetY', this.get('targetY'));
     }
 
   });

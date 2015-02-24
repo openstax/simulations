@@ -53,6 +53,8 @@ define(function(require) {
       }
 
       if (this.model.get('componentStyles') == 1) {
+        this.vectorViewModel.resetVectors(this.vectorXViewModel);
+        this.vectorViewModel.resetVectors(this.vectorYViewModel);
         this.vectorXView.transformFrame.rotation = this.vectorXViewModel.get('rotation');
         this.vectorYView.transformFrame.rotation = this.vectorYViewModel.get('rotation');
       }

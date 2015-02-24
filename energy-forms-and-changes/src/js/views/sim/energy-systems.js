@@ -25,7 +25,7 @@ define(function (require) {
     var controlsHtml = require('text!templates/energy-systems-controls.html');
 
     /**
-     * 
+     *
      */
     var EnergySystemsSimView = SimView.extend({
 
@@ -64,7 +64,8 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Energy Systems',
-                name: 'energy-systems'
+                name: 'energy-systems',
+                link: 'energy-forms-and-changes',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
@@ -124,45 +125,45 @@ define(function (require) {
             var elements = {
                 sources: [
                     {
-                        cid: this.simulation.sources[0].cid, 
+                        cid: this.simulation.sources[0].cid,
                         src: Assets.Images.FAUCET_ICON,
                         type: 'source'
                     },{
-                        cid: this.simulation.sources[1].cid, 
+                        cid: this.simulation.sources[1].cid,
                         src: Assets.Images.SUN_ICON,
                         type: 'source'
                     },{
-                        cid: this.simulation.sources[2].cid, 
+                        cid: this.simulation.sources[2].cid,
                         src: Assets.Images.TEAPOT_ICON,
                         type: 'source'
                     },{
-                        cid: this.simulation.sources[3].cid, 
+                        cid: this.simulation.sources[3].cid,
                         src: Assets.Images.BICYCLE_ICON,
                         type: 'source'
                     }
                 ],
                 converters: [
                     {
-                        cid: this.simulation.converters[0].cid, 
+                        cid: this.simulation.converters[0].cid,
                         src: Assets.Images.GENERATOR_ICON,
                         type: 'converter'
                     },{
-                        cid: this.simulation.converters[1].cid, 
+                        cid: this.simulation.converters[1].cid,
                         src: Assets.Images.SOLAR_PANEL_ICON,
                         type: 'converter'
                     }
                 ],
                 users: [
                     {
-                        cid: this.simulation.users[0].cid, 
+                        cid: this.simulation.users[0].cid,
                         src: Assets.Images.WATER_ICON,
                         type: 'user'
                     },{
-                        cid: this.simulation.users[1].cid, 
+                        cid: this.simulation.users[1].cid,
                         src: Assets.Images.INCANDESCENT_ICON,
                         type: 'user'
                     },{
-                        cid: this.simulation.users[2].cid, 
+                        cid: this.simulation.users[2].cid,
                         src: Assets.Images.FLUORESCENT_ICON,
                         type: 'user'
                     }
@@ -258,7 +259,7 @@ define(function (require) {
                     this.simulation.set('user', element);
                     break;
             }
-            
+
         },
 
         elementSelected: function(model, element) {

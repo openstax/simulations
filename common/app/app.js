@@ -30,8 +30,8 @@ define(function(require) {
         initialize: function(options) {},
 
         /**
-         * This function should be called to start the app. Calling this 
-         *   function shows a loading screen, loads all the individual sim 
+         * This function should be called to start the app. Calling this
+         *   function shows a loading screen, loads all the individual sim
          *   views (tabs), and then calls postLoad when it is finished.
          */
         load: function() {
@@ -46,12 +46,12 @@ define(function(require) {
         },
 
         /**
-         * This function completes the behind-the-scenes setup of the app.  
-         *   It is called when things have been initialized but not 
-         *   rendered.  At this point, the loading screen has not yet been 
-         *   taken down, so we render everything while it's all still 
-         *   hidden by the loading screen.  After we've rendered and 
-         *   called postRender, we take down the loading screen and open 
+         * This function completes the behind-the-scenes setup of the app.
+         *   It is called when things have been initialized but not
+         *   rendered.  At this point, the loading screen has not yet been
+         *   taken down, so we render everything while it's all still
+         *   hidden by the loading screen.  After we've rendered and
+         *   called postRender, we take down the loading screen and open
          *   everything up for business.
          */
         postLoad: function() {
@@ -103,6 +103,7 @@ define(function(require) {
          */
         getRenderData: function() {
             var data = {
+                link: this.simViews[0].link,
                 simViews: _.map(this.simViews, function(simView) {
                     return {
                         cid:   simView.cid,
