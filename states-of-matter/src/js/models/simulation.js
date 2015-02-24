@@ -63,8 +63,7 @@ define(function (require, exports, module) {
             this.heightChangeCounter = 0;
             this.heatingCoolingAmount = this.get('heatingCoolingAmount');
 
-            // Attributes of the container and simulation as a whole.
-            this.minAllowableContainerHeight;
+            // All the non-normalized particles
             this.particles = [];
 
             this.on('change:moleculeType', this.moleculeTypeChanged);
@@ -160,25 +159,28 @@ define(function (require, exports, module) {
                 throw 'Molecule specified is not monatomic';
             }
 
+            
+            
+            var atomConstructor;
+            switch (moleculeType) {
+                case MoleculeTypes.NEON:
+                    atomConstructor = Atom.NeonAtom;
+                    break;
+                case MoleculeTypes.ARGON:
+                    atomConstructor = Atom.ArgonAtom;
+                    break;
+                default:
+                    // Force it to neon
+                    moleculeType = MoleculeTypes.NEON;
+                    atomConstructor = Atom.NeonAtom;
+                    break;
+            }
+
             // Determine the number of atoms/molecules to create.  This will be a cube
             //   (really a square, since it's 2D, but you get the idea) that takes
             //   up a fixed amount of the bottom of the container, so the number of
             //   molecules that can fit depends on the size of the individual.
-            var particleDiameter;
-            switch (moleculeType) {
-                case MoleculeTypes.NEON:
-                    particleDiameter = Atom.NeonAtom.RADIUS * 2;
-                    break;
-                case MoleculeTypes.ARGON:
-                    particleDiameter = Atom.ArgonAtom.RADIUS * 2;
-                    break;
-                case MoleculeTypes.USER_DEFINED:
-                default:
-                    // Force it to neon
-                    moleculeType = MoleculeTypes.NEON;
-                    particleDiameter = Atom.NeonAtom.RADIUS * 2;
-                    break;
-            }
+            var particleDiameter = atomConstructor.RADIUS * 2;
 
             // Initialize the number of atoms assuming that the solid form, when
             //   made into a square, will consume about 1/3 the width of the
@@ -213,21 +215,7 @@ define(function (require, exports, module) {
                 this.moleculeDataSet.addMolecule(atomPositions, moleculeCenterOfMassPosition, moleculeVelocity, 0);
 
                 // Add particle to model set.
-                var atom;
-                var particleDiameter;
-                switch (moleculeType) {
-                    case MoleculeTypes.NEON:
-                        atom = new Atom.NeonAtom(0, 0);
-                        break;
-                    case MoleculeTypes.ARGON:
-                        atom = new Atom.ArgonAtom(0, 0);
-                        break;
-                    case MoleculeTypes.USER_DEFINED:
-                    default:
-                        atom = new Atom.NeonAtom(0, 0);
-                        break;
-                }
-                this.particles.push(atom);
+                this.particles.push(new atomConstructor(0, 0));
             }
 
             // Initialize the particle positions according the to requested phase.
@@ -261,7 +249,7 @@ define(function (require, exports, module) {
                 )
             );
 
-            if (numberOfAtoms % 2 != 0)
+            if (numberOfAtoms % 2 !== 0)
                 numberOfAtoms--;
             var numberOfMolecules = numberOfAtoms / 2;
 
@@ -356,13 +344,40 @@ define(function (require, exports, module) {
          */
         returnLid: function() {
             if (!this.get('exploded')) {
-                System.out.println('Warning: Ignoring attempt to return lid when container hadn\'t exploded.');
+                console.error('Warning: Ignoring attempt to return lid when container hadn\'t exploded.');
                 return;
             }
 
             // Remove any particles that are outside of the container. 
             //   We work with the normalized particles for this.
+            var particlesOutsideOfContainer = this.removeMoleculesOutsideContainer();
+
+            // Remove enough of the non-normalized particles so that we have the
+            //   same number as the normalized.  They don't have to be the same
+            //   particles since the normalized and non-normalized particles are
+            //   explicitly synced up elsewhere.
+            var numParticlesToRemove = this.particles.length - this.moleculeDataSet.numberOfAtoms;
+            for (var i = 0; i < numParticlesToRemove; i++)
+                this.particles.splice(i, 1);
+
+            // Set the container to be unexploded.
+            this.unexplode();
+
+            // Set the phase to be gas, since otherwise the extremely high
+            // kinetic energy of the particles causes an unreasonably high
+            // temperature for the particles that remain in the container. Doing
+            // this generally cools them down into a more manageable state.
+            if (particlesOutsideOfContainer > 0)
+                this.phaseStateChanger.setPhase(PhaseStateChanger.GAS);
+        },
+
+        /**
+         * Removes any molecules from the molecule data set that are outside
+         *   the container and returns the number of molecules removed.
+         */
+        removeMoleculesOutsideContainer: function() {
             var particlesOutsideOfContainer = 0;
+
             var numberOfMolecules = this.moleculeDataSet.getNumberOfMolecules();
             var firstOutsideMoleculeIndex;
             do {
@@ -384,23 +399,7 @@ define(function (require, exports, module) {
             }
             while (firstOutsideMoleculeIndex != numberOfMolecules);
 
-            // Remove enough of the non-normalized particles so that we have the
-            //   same number as the normalized.  They don't have to be the same
-            //   particles since the normalized and non-normalized particles are
-            //   explicitly synced up elsewhere.
-            var numParticlesToRemove = this.particles.length - this.moleculeDataSet.numberOfAtoms;
-            for (var i = 0; i < numParticlesToRemove; i++)
-                this.particles.splice(i, 1);
-
-            // Set the container to be unexploded.
-            this.unexplode();
-
-            // Set the phase to be gas, since otherwise the extremely high
-            // kinetic energy of the particles causes an unreasonably high
-            // temperature for the particles that remain in the container. Doing
-            // this generally cools them down into a more manageable state.
-            if (particlesOutsideOfContainer > 0)
-                this.phaseStateChanger.setPhase(PhaseStateChanger.PHASE_GAS);
+            return particlesOutsideOfContainer;
         },
 
         explode: function() {
@@ -438,6 +437,9 @@ define(function (require, exports, module) {
         },
 
         setPhase: function(phase) {
+            if (phase === undefined)
+                phase = PhaseStateChanger.SOLID;
+
             this.phaseStateChanger.setPhase(phase);
 
             this.syncParticlePositions();
@@ -450,11 +452,11 @@ define(function (require, exports, module) {
             var phase;
 
             if (this.temperatureSetPoint < S.SOLID_TEMPERATURE + ((S.LIQUID_TEMPERATURE - S.SOLID_TEMPERATURE) / 2)) 
-                phase = S.PHASE_SOLID;
+                phase = PhaseStateChanger.SOLID;
             else if (this.temperatureSetPoint < S.LIQUID_TEMPERATURE + ((S.GAS_TEMPERATURE - S.LIQUID_TEMPERATURE) / 2)) 
-                phase = S.PHASE_LIQUID;
+                phase = PhaseStateChanger.LIQUID;
             else
-                phase = S.PHASE_GAS;
+                phase = PhaseStateChanger.GAS;
 
             return phase;
         },
@@ -573,11 +575,6 @@ define(function (require, exports, module) {
                     criticalPoint = S.ARGON_CRITICAL_POINT_IN_KELVIN;
                     break;
 
-                case MoleculeTypes.USER_DEFINED_MOLECULE:
-                    triplePoint   = S.ADJUSTABLE_ATOM_TRIPLE_POINT_IN_KELVIN;
-                    criticalPoint = S.ADJUSTABLE_ATOM_CRITICAL_POINT_IN_KELVIN;
-                    break;
-
                 case MoleculeTypes.WATER:
                     triplePoint   = S.WATER_TRIPLE_POINT_IN_KELVIN;
                     criticalPoint = S.WATER_CRITICAL_POINT_IN_KELVIN;
@@ -647,13 +644,13 @@ define(function (require, exports, module) {
                 return;
             }
 
-            // Retain the current phase so that we can set the particles back to
-            //   this phase once they have been created and initialized.
-            var phase = this.mapTemperatureToPhase();
-
             // Remove existing particles and reset the global model parameters.
             this.removeAllParticles();
             this.initModelParameters();
+
+            // Retain the current phase so that we can set the particles back to
+            //   this phase once they have been created and initialized.
+            var phase = this.mapTemperatureToPhase();
 
             // Set the new molecule type.
             this.currentMolecule = moleculeType;
@@ -759,40 +756,26 @@ define(function (require, exports, module) {
         },
 
         step: function() {
+            var particleContainerHeight = this.get('particleContainerHeight')
             if (!this.get('exploded')) {
                 // Adjust the particle container height if needed.
-                if (this.get('targetContainerHeight') != this.particleContainerHeight) {
+                if (this.get('targetContainerHeight') != particleContainerHeight) {
                     this.heightChangeCounter = S.CONTAINER_SIZE_CHANGE_RESET_COUNT;
-                    var heightChange = this.get('targetContainerHeight') - this.particleContainerHeight;
-                    if (heightChange > 0) {
-                        // The container is growing.
-                        if (this.particleContainerHeight + heightChange <= Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
-                            this.particleContainerHeight += Math.min(heightChange, S.MAX_PER_TICK_CONTAINER_EXPANSION);
-                        else
-                            this.particleContainerHeight = Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT;
-                    }
-                    else {
-                        // The container is shrinking.
-                        if (this.particleContainerHeight - heightChange >= this.minAllowableContainerHeight)
-                            this.particleContainerHeight += Math.max(heightChange, -S.MAX_PER_TICK_CONTAINER_SHRINKAGE);
-                        else
-                            this.particleContainerHeight = this.minAllowableContainerHeight;
-                    }
-                    this.normalizedContainerHeight = this.particleContainerHeight / this.particleDiameter;
-                    this.set('particleContainerHeight', this.particleContainerHeight);
+                    this.adjustContainerHeight();
                 }
                 else if (this.heightChangeCounter > 0)
                     this.heightChangeCounter--;
             }
-            else if (this.particleContainerHeight < Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT * 10 ) {
+            else if (particleContainerHeight < Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT * 10 ) {
                 // The lid is blowing off the container, so increase the container
                 // size until the lid should be well off the screen.
-                this.particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
-                this.set('particleContainerHeight', this.particleContainerHeight);
+                particleContainerHeight += S.MAX_PER_TICK_CONTAINER_EXPANSION;
+                this.set('particleContainerHeight', particleContainerHeight);
             }
 
             // Record the pressure to see if it changes.
             var pressureBeforeAlgorithm = this.getModelPressure();
+            //console.log(pressureBeforeAlgorithm);
 
             // Execute the Verlet algorithm.  The algorithm may be run several times
             // for each time step.
@@ -813,24 +796,7 @@ define(function (require, exports, module) {
             this.tempAdjustTickCounter++;
             if (this.tempAdjustTickCounter > S.TICKS_PER_TEMP_ADJUSTMENT && this.heatingCoolingAmount !== 0) {
                 this.tempAdjustTickCounter = 0;
-                var newTemperature = this.temperatureSetPoint + this.heatingCoolingAmount;
-                if (newTemperature >= S.MAX_TEMPERATURE) {
-                    newTemperature = S.MAX_TEMPERATURE;
-                }
-                else if ((newTemperature <= SOLID_TEMPERATURE * 0.9) && (this.heatingCoolingAmount < 0)) {
-                    // The temperature goes down more slowly as we begin to
-                    // approach absolute zero.
-                    newTemperature = this.temperatureSetPoint * 0.95;  // Multiplier determined empirically.
-                }
-                else if (newTemperature <= this.minModelTemperature) {
-                    newTemperature = this.minModelTemperature;
-                }
-                //this.temperatureSetPoint = newTemperature;
-                this.set('temperatureSetPoint', this.temperatureSetPoint);
-                // this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
-                // this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
-
-                this.trigger('temperature-changed');
+                this.adjustTemperature();
             }
         },
 
@@ -853,7 +819,7 @@ define(function (require, exports, module) {
             }
 
             if (this.moleculeDataSet.numberOfAtoms !== this.particles.length)
-                Console.error('Inconsistent number of normalized versus non-normalized particles.');
+                console.error('Inconsistent number of normalized versus non-normalized particles.');
         },
 
         /**
@@ -871,13 +837,13 @@ define(function (require, exports, module) {
             var calculatedTemperature = this.moleculeForceAndMotionCalculator.getTemperature();
             var temperatureIsChanging = false;
 
-            if ((this.heatingCoolingAmount != 0) ||
+            if ((this.heatingCoolingAmount !== 0) ||
                 (this.temperatureSetPoint + S.TEMPERATURE_CLOSENESS_RANGE < calculatedTemperature) ||
                 (this.temperatureSetPoint - S.TEMPERATURE_CLOSENESS_RANGE > calculatedTemperature)) {
                 temperatureIsChanging = true;
             }
 
-            if (this.heightChangeCounter != 0 && this.particlesNearTop()) {
+            if (this.heightChangeCounter !== 0 && this.particlesNearTop()) {
                 // The height of the container is currently changing and there
                 //   are particles close enough to the top that they may be
                 //   interacting with it.  Since this can end up adding or removing
@@ -888,8 +854,8 @@ define(function (require, exports, module) {
                 this.set('temperatureSetPoint', this.moleculeDataSet.calculateTemperatureFromKineticEnergy());
             }
             else if (
-                (this.thermostatType == S.ISOKINETIC_THERMOSTAT) ||
-                (this.thermostatType == S.ADAPTIVE_THERMOSTAT && (
+                (this.thermostatType === S.ISOKINETIC_THERMOSTAT) ||
+                (this.thermostatType === S.ADAPTIVE_THERMOSTAT && (
                     temperatureIsChanging || this.get('temperatureSetPoint') > S.LIQUID_TEMPERATURE
                 ))
             ) {
@@ -897,8 +863,8 @@ define(function (require, exports, module) {
                 this.isokineticThermostat.adjustTemperature();
             }
             else if (
-                (this.thermostatType == S.ANDERSEN_THERMOSTAT) ||
-                (this.thermostatType == S.ADAPTIVE_THERMOSTAT && !temperatureIsChanging)
+                (this.thermostatType === S.ANDERSEN_THERMOSTAT) ||
+                (this.thermostatType === S.ADAPTIVE_THERMOSTAT && !temperatureIsChanging)
             ) {
                 // The temperature isn't changing and it is below a certain
                 //   threshold, so use the Andersen thermostat.  This is done for
@@ -909,6 +875,54 @@ define(function (require, exports, module) {
 
             // Note that there will be some circumstances in which no thermostat
             //   is run.  This is intentional.
+        },
+
+        /**
+         * Changes the temperatureSetPoint according to the heatingCoolingAmount
+         *   and simulation constraints.
+         */
+        adjustTemperature: function() {
+            var newTemperature = this.temperatureSetPoint + this.heatingCoolingAmount;
+            if (newTemperature >= S.MAX_TEMPERATURE) {
+                newTemperature = S.MAX_TEMPERATURE;
+            }
+            else if ((newTemperature <= S.SOLID_TEMPERATURE * 0.9) && (this.heatingCoolingAmount < 0)) {
+                // The temperature goes down more slowly as we begin to
+                // approach absolute zero.
+                newTemperature = this.temperatureSetPoint * 0.95;  // Multiplier determined empirically.
+            }
+            else if (newTemperature <= this.minModelTemperature) {
+                newTemperature = this.minModelTemperature;
+            }
+            //this.temperatureSetPoint = newTemperature;
+            this.set('temperatureSetPoint', this.temperatureSetPoint);
+            // this.isokineticThermostat.setTargetTemperature(this.temperatureSetPoint);
+            // this.andersenThermostat.setTargetTemperature(this.temperatureSetPoint);
+        },
+
+        /**
+         * Changes the particleContainerHeight according to the
+         *   targetContainerHeight and simulation constraints.
+         */
+        adjustContainerHeight: function() {
+            var particleContainerHeight = this.get('particleContainerHeight');
+            var heightChange = this.get('targetContainerHeight') - particleContainerHeight;
+            if (heightChange > 0) {
+                // The container is growing.
+                if (particleContainerHeight + heightChange <= Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT)
+                    particleContainerHeight += Math.min(heightChange, S.MAX_PER_TICK_CONTAINER_EXPANSION);
+                else
+                    particleContainerHeight = Constants.PARTICLE_CONTAINER_INITIAL_HEIGHT;
+            }
+            else {
+                // The container is shrinking.
+                if (particleContainerHeight - heightChange >= this.minAllowableContainerHeight)
+                    particleContainerHeight += Math.max(heightChange, -S.MAX_PER_TICK_CONTAINER_SHRINKAGE);
+                else
+                    particleContainerHeight = this.minAllowableContainerHeight;
+            }
+            this.normalizedContainerHeight = particleContainerHeight / this.particleDiameter;
+            this.set('particleContainerHeight', particleContainerHeight);
         },
 
         /**
@@ -956,9 +970,6 @@ define(function (require, exports, module) {
                         case MoleculeTypes.NEON:
                             particle = new Atom.NeonAtom( 0, 0 );
                             break;
-                        // case MoleculeTypes.USER_DEFINED_MOLECULE:
-                        //     particle = new ConfigurableStatesOfMatterAtom( 0, 0 );
-                        //     break;
                         default:
                             // Use the default.
                             particle = new Atom.NeonAtom( 0, 0 );
@@ -968,9 +979,9 @@ define(function (require, exports, module) {
                 }
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
-                    for (var i = 0; i < atomsPerMolecule; i++) {
+                    for (var j = 0; j < atomsPerMolecule; j++) {
                         this.particles.push(new Atom.OxygenAtom(0, 0));
-                        atomPositions[i] = new Point2D.Double();
+                        atomPositions[j] = new Vector2();
                     }
                 }
                 else if (atomsPerMolecule === 3) {

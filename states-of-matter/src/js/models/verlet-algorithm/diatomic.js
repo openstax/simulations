@@ -10,8 +10,6 @@ define(function(require) {
     var VerletAlgorithm = require('../verlet-algorithm');
     var DiatomicAtomPositionUpdater = require('models/atom-position-updater/diatomic');
 
-    var Constants = require('constants');
-
     /**
      * Implementation of the Verlet algorithm for simulating molecular interaction
      *   based on the Lennard-Jones potential - diatomic (i.e. two atoms per

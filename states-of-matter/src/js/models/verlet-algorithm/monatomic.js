@@ -10,7 +10,6 @@ define(function(require) {
     var VerletAlgorithm = require('../verlet-algorithm');
     var MonatomicAtomPositionUpdater = require('models/atom-position-updater/monatomic');
 
-    var Constants = require('constants');
 
     /**
      * Implementation of the Verlet algorithm for simulating molecular interaction
@@ -82,7 +81,7 @@ define(function(require) {
 
             // Calculate the forces created through interactions with other
             //   particles.
-            var potentialEnergy = this._calculateInteractionForces(
+            this._calculateInteractionForces(
                 nextMoleculeForces, 
                 numberOfSafeMolecules, 
                 moleculeCenterOfMassPositions

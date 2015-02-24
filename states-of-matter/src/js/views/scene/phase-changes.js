@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var SOMSceneView      = require('views/scene');
     var PressureGaugeView = require('views/pressure-gauge');
     var HoseView          = require('views/hose');

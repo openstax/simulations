@@ -36,6 +36,7 @@ define(function (require) {
         // Set default values.
         if (atomsPerMolecule === 1) {
             this.moleculeMass = 1;
+            this.moleculeRotationalInertia = 0;
         }
         else if (atomsPerMolecule === 2) {
             this.moleculeMass = 2; // Two molecules, assumed to be the same.
@@ -82,9 +83,10 @@ define(function (require) {
             var rotationalKineticEnergy = 0;
             var numberOfMolecules = this.numberOfAtoms / this.atomsPerMolecule;
             var kineticEnergyPerMolecule;
+            var i;
 
             if (this.atomsPerMolecule === 1) {
-                for (var i = 0; i < this.numberOfAtoms; i++) {
+                for (i = 0; i < this.numberOfAtoms; i++) {
                     translationalKineticEnergy += (
                         (this.moleculeVelocities[i].x * this.moleculeVelocities[i].x) +
                         (this.moleculeVelocities[i].y * this.moleculeVelocities[i].y)
@@ -93,7 +95,7 @@ define(function (require) {
                 kineticEnergyPerMolecule = translationalKineticEnergy / this.numberOfAtoms;
             }
             else {
-                for (var i = 0; i < this.numberOfAtoms / this.atomsPerMolecule; i++) {
+                for (i = 0; i < this.numberOfAtoms / this.atomsPerMolecule; i++) {
                     translationalKineticEnergy += 0.5 * this.moleculeMass * (
                         Math.pow(this.moleculeVelocities[i].x, 2) + Math.pow(this.moleculeVelocities[i].y, 2)
                     );
@@ -154,14 +156,14 @@ define(function (require) {
                 return;
             }
 
-            this.moleculeCenterOfMassPositions.splice(i, 1);
-            this.moleculeVelocities.splice(i, 1);
-            this.moleculeForces.splice(i, 1);
-            this.nextMoleculeForces.splice(i, 1);
-            this.moleculeRotationAngles.splice(i, 1);
-            this.moleculeRotationRates.splice(i, 1);
-            this.moleculeTorques.splice(i, 1);
-            this.nextMoleculeTorques.splice(i, 1);
+            this.moleculeCenterOfMassPositions.splice(moleculeIndex, 1);
+            this.moleculeVelocities.splice(moleculeIndex, 1);
+            this.moleculeForces.splice(moleculeIndex, 1);
+            this.nextMoleculeForces.splice(moleculeIndex, 1);
+            this.moleculeRotationAngles.splice(moleculeIndex, 1);
+            this.moleculeRotationRates.splice(moleculeIndex, 1);
+            this.moleculeTorques.splice(moleculeIndex, 1);
+            this.nextMoleculeTorques.splice(moleculeIndex, 1);
 
             // Reduce the atom count.
             this.numberOfAtoms -= this.atomsPerMolecule;

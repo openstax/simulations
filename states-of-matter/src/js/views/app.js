@@ -2,6 +2,8 @@ define(function(require) {
     
     'use strict';
 
+    var _ = require('underscore');
+
     var PixiAppView = require('common/pixi/view/app');
 
     var SolidLiquidGasSimView = require('views/sim/solid-liquid-gas');

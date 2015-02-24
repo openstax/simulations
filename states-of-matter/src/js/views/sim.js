@@ -43,6 +43,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'  : 'play',
+            'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step',
+
             'change .molecule-type' : 'changeMoleculeType'
         },
 
@@ -57,6 +61,7 @@ define(function (require) {
             this.initSceneView();
 
             this.listenTo(this.simulation, 'change:moleculeType', this.moleculeTypeChanged);
+            this.listenTo(this.simulation, 'change:paused',       this.pausedChanged);
         },
 
         /**
@@ -83,6 +88,8 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+
+            this.simulation.trigger('change:paused');
 
             return this;
         },
@@ -154,7 +161,17 @@ define(function (require) {
 
         moleculeTypeChanged: function(simulation, moleculeType) {
             this.$('.molecule-type[value="' + moleculeType + '"]').attr('checked', 'checked');
-        }
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
 
     });
 

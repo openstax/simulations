@@ -74,9 +74,10 @@ define(function(require) {
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
             var moleculesPerLayer = Math.floor(Math.sqrt(numberOfMolecules));
+            var i, j;
 
             // Initialize the velocities and angles of the molecules.
-            for (var i = 0; i < numberOfMolecules; i++) {
+            for (i = 0; i < numberOfMolecules; i++) {
 
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
@@ -97,8 +98,8 @@ define(function(require) {
             // Place the molecules by placing their centers of mass.
             var moleculesPlaced = 0;
             var xPos, yPos;
-            for (var i = 0; i < numberOfMolecules; i++ ) { // One iteration per layer.
-                for (var j = 0; (j < moleculesPerLayer) && (moleculesPlaced < numberOfMolecules); j++) {
+            for (i = 0; i < numberOfMolecules; i++ ) { // One iteration per layer.
+                for (j = 0; (j < moleculesPerLayer) && (moleculesPlaced < numberOfMolecules); j++) {
                     xPos = startingPosX + (j * WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE);
                     if (i % 2 !== 0) {
                         // Every other row is shifted a bit to create hexagonal pattern.
@@ -131,9 +132,10 @@ define(function(require) {
             // Create and initialize other variables needed to do the job.
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
+            var i, j;
 
             // Initialize the velocities and angles of the molecules.
-            for (var i = 0; i < numberOfMolecules; i++) {
+            for (i = 0; i < numberOfMolecules; i++) {
 
                 // Assign each molecule an initial velocity.
                 moleculeVelocities[i].set( 
@@ -156,8 +158,8 @@ define(function(require) {
             var particlesOnCurrentLayer = 0;
             var particlesThatWillFitOnCurrentLayer = 1;
 
-            for (var i = 0; i < numberOfMolecules; i++ ) {
-                for (var j = 0; j < MAX_PLACEMENT_ATTEMPTS; j++ ) {
+            for (i = 0; i < numberOfMolecules; i++ ) {
+                for (j = 0; j < WaterPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++ ) {
                     var distanceFromCenter = currentLayer * 
                         WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * 
                         WaterPhaseStateChanger.LIQUID_SPACING_FACTOR;
@@ -217,8 +219,9 @@ define(function(require) {
             // Create and initialize other variables needed to do the job.
             var numberOfMolecules = moleculeDataSet.getNumberOfMolecules();
             var temperatureSqrt = Math.sqrt(this.simulation.get('temperatureSetPoint'));
+            var i, j;
 
-            for (var i = 0; i < numberOfMolecules; i++) {
+            for (i = 0; i < numberOfMolecules; i++) {
                 // Temporarily position the molecules at (0,0).
                 moleculeCenterOfMassPositions[i].set(0, 0);
 
@@ -241,15 +244,16 @@ define(function(require) {
             var newPosX, newPosY;
             var rangeX = this.simulation.getNormalizedContainerWidth()  - (2 * WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
             var rangeY = this.simulation.getNormalizedContainerHeight() - (2 * WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
-            for (var i = 0; i < numberOfMolecules; i++) {
-                for (var j = 0; j < WaterPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
+            for (i = 0; i < numberOfMolecules; i++) {
+                for (j = 0; j < WaterPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
                     // Pick a random position.
                     newPosX = WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
                     newPosY = WaterPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
-                    var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
-                    var positionAvailable = true;
+                    
                     // See if this position is available.
+                    var positionAvailable = true;
                     for (var k = 0; k < i; k++) {
+                        var distanceToNew = moleculeCenterOfMassPositions[k].distance(newPosX, newPosY);
                         if (distanceToNew < WaterPhaseStateChanger.MIN_INITIAL_DIAMETER_DISTANCE * WaterPhaseStateChanger.GAS_SPACING_FACTOR) {
                             positionAvailable = false;
                             break;

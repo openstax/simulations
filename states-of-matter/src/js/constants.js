@@ -135,10 +135,6 @@ define(function (require) {
     SOMSimulation.MAX_INJECTED_MOLECULE_ANGLE = Math.PI * 0.8;
     SOMSimulation.VERLET_CALCULATIONS_PER_CLOCK_TICK = 8;
 
-    // Constants used for setting the phase directly.
-    SOMSimulation.PHASE_SOLID = 1;
-    SOMSimulation.PHASE_LIQUID = 2;
-    SOMSimulation.PHASE_GAS = 3;
     SOMSimulation.INJECTION_POINT_HORIZ_PROPORTION = 0.95;
     SOMSimulation.INJECTION_POINT_VERT_PROPORTION = 0.5;
 

@@ -133,7 +133,7 @@ define(function(require) {
             var particlesThatWillFitOnCurrentLayer = 1;
 
             for (var j = 0; j < numberOfAtoms; j++) {
-                for (var k = 0; k < MAX_PLACEMENT_ATTEMPTS; k++) {
+                for (var k = 0; k < MonatomicPhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; k++) {
 
                     var distanceFromCenter = currentLayer * MonatomicPhaseStateChanger.MIN_INITIAL_INTER_PARTICLE_DISTANCE;
                     var angle = (particlesOnCurrentLayer / particlesThatWillFitOnCurrentLayer * 2 * Math.PI) + (
@@ -182,11 +182,13 @@ define(function(require) {
             var numberOfAtoms = this.simulation.moleculeDataSet.numberOfAtoms;
             var moleculeCenterOfMassPositions = this.simulation.moleculeDataSet.moleculeCenterOfMassPositions;
             var moleculeVelocities = this.simulation.moleculeDataSet.moleculeVelocities;
-            for (var k = 0; k < numberOfAtoms; k++) {
+            var i, j;
+            
+            for (i = 0; i < numberOfAtoms; i++) {
                 // Temporarily position the particles at (0,0).
-                moleculeCenterOfMassPositions[k].set(0, 0);
+                moleculeCenterOfMassPositions[i].set(0, 0);
                 // Assign each particle an initial velocity.
-                moleculeVelocities[k].set(
+                moleculeVelocities[i].set(
                     temperatureSqrt * gaussRandom(),
                     temperatureSqrt * gaussRandom()
                 );
@@ -198,13 +200,14 @@ define(function(require) {
             var newPosX, newPosY;
             var rangeX = this.simulation.getNormalizedContainerWidth()  - (2 * MonatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
             var rangeY = this.simulation.getNormalizedContainerHeight() - (2 * MonatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE);
-            for (var i = 0; i < numberOfAtoms; i++) {
-                for (var j = 0; j < PhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
+            for (i = 0; i < numberOfAtoms; i++) {
+                for (j = 0; j < PhaseStateChanger.MAX_PLACEMENT_ATTEMPTS; j++) {
                     // Pick a random position.
                     newPosX = MonatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeX);
                     newPosY = MonatomicPhaseStateChanger.MIN_INITIAL_PARTICLE_TO_WALL_DISTANCE + (Math.random() * rangeY);
-                    var positionAvailable = true;
+                    
                     // See if this position is available.
+                    var positionAvailable = true;
                     for (var k = 0; k < i; k++) {
                         if (moleculeCenterOfMassPositions[k].distance(newPosX, newPosY) < MonatomicPhaseStateChanger.MIN_INITIAL_INTER_PARTICLE_DISTANCE) {
                             positionAvailable = false;

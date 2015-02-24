@@ -2,9 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-
     var PixiSceneView    = require('common/pixi/view/scene');
     var HeaterCoolerView = require('common/pixi/view/heater-cooler');
     var Vector2          = require('common/math/vector2');
@@ -12,9 +9,6 @@ define(function(require) {
     var ParticleTankView = require('views/particle-tank');
 
     var Assets = require('assets');
-
-    // Constants
-    var Constants = require('constants');
 
     // CSS
     require('less!styles/scene');

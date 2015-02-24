@@ -34,7 +34,7 @@ define(function(require) {
             }
 
             var massInverse = 1 / this.moleculeDataSet.moleculeMass;
-            var inertiaInverse = 1 / this.moleculeDataSet.moleculeRotationInertia;
+            var inertiaInverse = 1 / this.moleculeDataSet.moleculeRotationalInertia;
             var velocityScalingFactor = Math.sqrt(temperature * massInverse    * (1 - Math.pow(gammaX, 2)));
             var rotationScalingFactor = Math.sqrt(temperature * inertiaInverse * (1 - Math.pow(gammaX, 2)));
 
@@ -42,7 +42,10 @@ define(function(require) {
                 var xVel = this.moleculeVelocities[i].x * gammaX + gaussRandom() * velocityScalingFactor;
                 var yVel = this.moleculeVelocities[i].y * gammaY + gaussRandom() * velocityScalingFactor;
                 this.moleculeVelocities[i].set(xVel, yVel);
+                //console.log('before(' + i + '): ' + this.moleculeRotationRates[i]);
+                //console.log(gammaX, rotationScalingFactor);
                 this.moleculeRotationRates[i] = gammaX * this.moleculeRotationRates[i] + gaussRandom() * rotationScalingFactor;
+                //console.log('after(' + i + '): ' + this.moleculeRotationRates[i]);
             }
         },
 

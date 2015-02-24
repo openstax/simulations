@@ -2,13 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var $ = require('jquery');
     var _ = require('underscore');
 
     var SOMSimView            = require('views/sim');
     var PhaseChangesSceneView = require('views/scene/phase-changes');
-
-    var Constants = require('constants');
 
     var phaseDiagram = require('text!templates/phase-diagram.html');
 
