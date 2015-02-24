@@ -14,27 +14,29 @@ define(function (require) {
     var Initials = {};
 
     Initials.ShelfY = Constants.Scene.SHELF_FROM_TOP * sceneHeight / Constants.Scene.PX_PER_METER;
+    Initials.SpringsY1 = 0.075 * sceneHeight / Constants.Scene.PX_PER_METER;
+
 
     var Bodies = [
         {
             mass : 0.05,
-            x : 0.1 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.20,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.15 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.30,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.20 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.42,
             y: Initials.ShelfY
         },{
             mass : 0.25,
-            x : 0.25 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.28 * sceneWidth / Constants.Scene.PX_PER_METER,
             y: Initials.ShelfY
         },{
             mass : 0.07,
-            x : 0.4 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.76,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['pale-green'],
             label: false
@@ -55,13 +57,13 @@ define(function (require) {
 
     var Springs = [{
         x : 0.15 * sceneWidth / Constants.Scene.PX_PER_METER,
-        y1: 0.05 * sceneHeight / Constants.Scene.PX_PER_METER
+        y1: Initials.SpringsY1
     },{
         x : 0.30 * sceneWidth / Constants.Scene.PX_PER_METER,
-        y1: 0.05 * sceneHeight / Constants.Scene.PX_PER_METER
+        y1: Initials.SpringsY1
     },{
         x : 0.45 * sceneWidth / Constants.Scene.PX_PER_METER,
-        y1: 0.05 * sceneHeight / Constants.Scene.PX_PER_METER
+        y1: Initials.SpringsY1
     }];
 
     var Pegs = [];

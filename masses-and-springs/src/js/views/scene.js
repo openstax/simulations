@@ -97,8 +97,6 @@ define(function(require) {
                 this.bodyLayer.addChild(bodyView.displayObject);
                 this.bodyViews.push(bodyView);
             }, this);
-
-            window.bodyTest = _.last(this.bodyViews);
         },
 
         initTools: function(tools){
@@ -118,7 +116,6 @@ define(function(require) {
                     system.addBody(body);
                 }
             });
-
         },
 
         setVolume: function(setting){
