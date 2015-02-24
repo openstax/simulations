@@ -21,26 +21,35 @@ define(function(require) {
 
         initialize: function(options) {
 
+            options = _.extend({
+                labelOptions : Constants.LabelSettings
+            }, options);
+
+            this.label = this.model.label;
+            this.labelOptions = options.labelOptions;
+
             this.initGraphics();
             this.initSound();
 
             this.initializeSpringViewModel();
             this.updateSpringViewModel();
 
-            this.listenTo(this.model, 'change:k', this.update);
-            this.listenTo(this.model, 'change:y2', this.update);
-            this.listenTo(this.model, 'unsnag', this.playSound);
+            this.positionGraphics();
 
             this.drawPeg();
             this.drawSpring();
+
+            this.listenTo(this.model, 'change:k', this.update);
+            this.listenTo(this.model, 'change:y2', this.update);
+            this.listenTo(this.model, 'unsnag', this.playSound);
         },
 
         initGraphics: function() {
             this.peg = new PIXI.Graphics();
             this.spring = new PIXI.Graphics();
 
-            this.displayObject.addChild(this.spring);
             this.displayObject.addChild(this.peg);
+            this.displayObject.addChild(this.spring);
         },
 
         initSound: function(){
@@ -67,8 +76,6 @@ define(function(require) {
 
             this.viewModel.pegColor = Colors.parseHex(Spring.PEG_COLOR);
             this.viewModel.pegRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER * 0.65;
-            this.viewModel.pegX = this.viewModel.x;
-            this.viewModel.pegY = this.viewModel.y1 - this.viewModel.ringRadius;
        },
 
         updateSpringViewModel: function(){
@@ -79,6 +86,8 @@ define(function(require) {
             this.viewModel.thickness = Spring.K_TO_THICKNESS(this.model.k);
 
             this.viewModel.ringRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER + 0.5 * this.viewModel.thickness;
+
+            this.viewModel.color = this.model.isSnagged()? Colors.parseHex(this.model.body.color) : Colors.parseHex(Spring.COLOR);
         },
 
         update: function(){
@@ -91,8 +100,7 @@ define(function(require) {
             this.peg.drawCircle(0, 0, this.viewModel.pegRadius);
             this.peg.endFill();
 
-            this.peg.x = this.viewModel.pegX;
-            this.peg.y = this.viewModel.pegY;
+            this.peg.y = -1 * this.viewModel.ringRadius;
 
             this.labelSpring();
         },
@@ -120,7 +128,13 @@ define(function(require) {
             curve.close();
 
             this.spring.drawPiecewiseCurve(curve, 0, 0);
-            this.model.hitArea = new Rectangle(this.viewModel.coilLeft, this.viewModel.y2 - .5 * this.viewModel.ringRadius, 2 * this.viewModel.coilRadius, 1.5 * this.viewModel.ringRadius);
+
+            this.model.hitArea = new Rectangle(
+                this.viewModel.coilLeft,
+                this.viewModel.y2 - .5 * this.viewModel.ringRadius,
+                2 * this.viewModel.coilRadius,
+                1.5 * this.viewModel.ringRadius
+            );
         },
 
         makeSpringPoints: function(){
@@ -128,14 +142,14 @@ define(function(require) {
             var points = [];
             var coilCount = 0;
 
-            this.makeHangRing(points, this.viewModel.x, this.viewModel.y1);
+            this.makeHangRing(points, 0, 0);
 
             while(coilCount < Spring.COILS){
-                this.makeCoil(points, this.viewModel.x, this.viewModel.y1, coilCount);
+                this.makeCoil(points, 0, 0, coilCount);
                 coilCount ++;
             }
 
-            this.makeSpringEnd(points);
+            this.makeSpringEnd(points, 0, this.viewModel.y2 - this.viewModel.y1, this.viewModel.ringRadius);
 
             return points;
         },
@@ -173,15 +187,22 @@ define(function(require) {
             ]);
         },
 
-        makeSpringEnd: function(points){
-            points[points.length - 1] = [this.viewModel.x, this.viewModel.y2];
-            points[points.length] = [this.viewModel.x, this.viewModel.y2 + this.viewModel.ringRadius];
+        makeSpringEnd: function(points, x, y, height){
+            points[points.length - 1] = [x, y];
+            points[points.length] = [x, y + height];
+        },
+
+        positionGraphics: function(){
+            this.displayObject.x = this.viewModel.x;
+            this.displayObject.y = this.viewModel.y1;
         },
 
         labelSpring: function(){
 
             var labelText = new PIXI.Text(this._makeLabelText(), {
-
+                font : this.labelOptions.font,
+                align : this.labelOptions.align,
+                fill : Colors.darkenHex(Spring.PEG_COLOR, .2)
             });
 
             this.peg.addChild(labelText);
@@ -193,7 +214,8 @@ define(function(require) {
         },
 
         _positionLabelText: function(label){
-            console.log(label.parent);
+            label.anchor = new PIXI.Point(0.5, 0.5);
+            label.y = -14;
         },
 
         playSound: function(){
