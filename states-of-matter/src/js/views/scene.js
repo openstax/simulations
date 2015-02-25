@@ -27,6 +27,8 @@ define(function(require) {
         particleTankInteractive: false,
 
         initialize: function(options) {
+            this.$ui = $('<div class="scene-ui">');
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -71,6 +73,7 @@ define(function(require) {
 
             this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
             this.particleTankView.displayObject.y = Math.floor(this.height * this.particleTankPosition.y);
+            this.$ui.append(this.particleTankView.el);
 
             this.stage.addChild(this.particleTankView.displayObject);
         },
