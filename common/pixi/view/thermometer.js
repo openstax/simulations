@@ -43,7 +43,7 @@ define(function(require) {
 
             this.liquidColor = Colors.parseHex(options.liquidColor);
 
-            this.value = 1.2;
+            this.value = 0;
 
             this.padding = 2;
             this.outlineFix = 0.5;
@@ -157,6 +157,22 @@ define(function(require) {
             this.tubeLiquid.beginFill(this.liquidColor, 1);
             this.tubeLiquid.drawRect(x, y, width, -y);
             this.tubeLiquid.endFill();
+        },
+
+        setValue: function(value) {
+            this.value = value;
+            this.drawTubeLiquid();
+        },
+
+        getValue: function() {
+            return this.value;
+        },
+
+        val: function(value) {
+            if (value === undefined)
+                return this.getValue();
+            else
+                this.setValue(value);
         }
 
     });
