@@ -30,6 +30,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.simulation = options.simulation;
+            this.pumpAmount = 0;
 
             this._leftConnectorPosition  = new Vector2();
             this._rightConnectorPosition = new Vector2();
@@ -59,6 +60,8 @@ define(function(require) {
 
             this.displayObject.addChild(this.handle);
             this.displayObject.addChild(this.base);
+
+            this.pumpingRequiredToInject = this.handle.height * PumpView.PUMPING_PROPORTION_REQUIRE_TO_INJECT;
         },
 
         dragStart: function(data) {
@@ -75,6 +78,15 @@ define(function(require) {
                     y = this.handleYRange.max;
                 if (y < this.handleYRange.min)
                     y = this.handleYRange.min;
+
+                var dy = y - this.handle.y;
+                if (dy > 0) {
+                    this.pumpAmount += dy;
+                    if (this.pumpAmount >= this.pumpingRequiredToInject) {
+                        this.simulation.injectMolecule();
+                        this.pumpAmount = 0;
+                    }
+                }
                     
                 this.handle.y = y;
             }
@@ -96,7 +108,7 @@ define(function(require) {
                 .add(22, -37);
         },
 
-    });
+    }, Constants.PumpView);
 
     return PumpView;
 });

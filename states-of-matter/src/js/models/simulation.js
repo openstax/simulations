@@ -790,8 +790,8 @@ define(function (require, exports, module) {
             this.syncParticlePositions();
 
             // If the pressure changed, notify the listeners.
-            if (this.getModelPressure() !== pressureBeforeAlgorithm) {
-                this.trigger('pressure-changed'); console.log('pressure changed')}
+            if (this.getModelPressure() !== pressureBeforeAlgorithm)
+                this.trigger('pressure-changed');
 
             // Adjust the temperature if needed.
             this.tempAdjustTickCounter++;
@@ -943,7 +943,7 @@ define(function (require, exports, module) {
                 );
                 var xVel = Math.cos(angle) * velocity;
                 var yVel = Math.sin(angle) * velocity;
-                var atomsPerMolecule = this.moleculeDataSet.getAtomsPerMolecule();
+                var atomsPerMolecule = this.moleculeDataSet.atomsPerMolecule;
                 var moleculeCenterOfMassPosition = new Vector2(injectionPointX, injectionPointY);
                 var moleculeVelocity = new Vector2(xVel, yVel);
                 var moleculeRotationRate = (Math.random() - 0.5) * (Math.PI / 2);
@@ -974,14 +974,14 @@ define(function (require, exports, module) {
                             break;
                     }
                     this.particles.push(particle);
-                    this.trigger('particles-injected', particles, 1);
+                    this.trigger('particles-injected', this.particles, 1);
                 }
                 else if (this.moleculeDataSet.atomsPerMolecule === 2) {
                     // Add particles to model set.
                     for (var j = 0; j < atomsPerMolecule; j++) {
                         this.particles.push(new Atom.OxygenAtom(0, 0));
                         atomPositions[j] = new Vector2();
-                        this.trigger('particles-injected', particles, 2);
+                        this.trigger('particles-injected', this.particles, 2);
                     }
                 }
                 else if (atomsPerMolecule === 3) {
@@ -992,7 +992,7 @@ define(function (require, exports, module) {
                     atomPositions[0] = new Vector2();
                     atomPositions[1] = new Vector2();
                     atomPositions[2] = new Vector2();
-                    this.trigger('particles-injected', particles, 3);
+                    this.trigger('particles-injected', this.particles, 3);
                 }
 
                 if (this.particles.length === 1) {

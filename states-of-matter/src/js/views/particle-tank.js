@@ -115,7 +115,7 @@ define(function(require) {
             //   calculate it in a way that is satisfactory for all particle
             //   sizes, so it's easier just to come up with a value that looks
             //   nice.
-            var particleSizeOffset = 6;
+            var particleSizeOffset = -2;
             xOffsetFromEdge += particleSizeOffset;
 
             // Create, position, and add container
@@ -212,6 +212,11 @@ define(function(require) {
         removeAllParticles: function() {
             this.lowerParticleLayer.removeChildren();
             this.upperParticleLayer.removeChildren();
+        },
+
+        particlesInjected: function(particles, numParticlesInjected) {
+            for (var i = particles.length - 1; i > particles.length - 1 - numParticlesInjected; i--)
+                this.addParticle(particles[i]);
         },
 
         particleContainerHeightChanged: function(simulation, particleContainerHeight) {

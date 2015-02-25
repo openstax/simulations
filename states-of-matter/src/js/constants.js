@@ -135,8 +135,8 @@ define(function (require) {
     SOMSimulation.MAX_INJECTED_MOLECULE_ANGLE = Math.PI * 0.8;
     SOMSimulation.VERLET_CALCULATIONS_PER_CLOCK_TICK = 8;
 
-    SOMSimulation.INJECTION_POINT_HORIZ_PROPORTION = 0.95;
-    SOMSimulation.INJECTION_POINT_VERT_PROPORTION = 0.5;
+    SOMSimulation.INJECTION_POINT_HORIZ_PROPORTION = 0.96;
+    SOMSimulation.INJECTION_POINT_VERT_PROPORTION = 0.07;
 
     // Possible thermostat settings.
     SOMSimulation.NO_THERMOSTAT = 0;
@@ -349,6 +349,19 @@ define(function (require) {
     PressureGaugeView.OVERLOAD_FONT = '8px Arial';
 
     Constants.PressureGaugeView = PressureGaugeView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              PUMP VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var PumpView = {};
+
+    PumpView.PUMPING_PROPORTION_REQUIRE_TO_INJECT = 0.1;
+
+    Constants.PumpView = PumpView;
 
 
 
