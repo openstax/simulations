@@ -36,19 +36,26 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                lidDraggable: true
+                lidDraggable: true,
+                showFinger: true
             }, options);
 
             this.simulation = options.simulation;
             this.lidDraggable = options.lidDraggable;
+            this.showFinger = options.showFinger;
 
             this._leftConnectorPosition  = new Vector2();
             this._rightConnectorPosition = new Vector2();
             this._dragOffset = new PIXI.Point();
 
+            // This is a hybrid PIXI/HTML view
+            this.el = document.createElement('div');
+            this.$el = $(this.el);
+
             this.initGraphics();
 
             this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
+            this.listenTo(this.simulation, 'change:exploded', this.containerExplodedStateChanged);
             this.listenTo(this.simulation, 'particles-injected', this.particlesInjected);
             this.listenTo(this.simulation, 'particles-cleared', this.removeAllParticles);
             this.listenTo(this.simulation, 'particles-initialized', this.addInitialParticles);
@@ -57,6 +64,7 @@ define(function(require) {
         initGraphics: function() {
             this.initTank();
             this.initLid();
+            this.initReturnLidButton();
             this.initParticleContainer();
             this.initParticleTextures();
             this.addInitialParticles();
@@ -84,6 +92,18 @@ define(function(require) {
             }
 
             this.displayObject.addChild(this.lid);
+        },
+
+        initReturnLidButton: function() {
+            // Create button
+            var self = this;
+            this.$button = $('<button class="btn return-lid-btn">Return Lid</button>');
+            this.$button.on('click', function() {
+                self.returnLidClicked();
+            });
+
+            // Add button
+            this.$el.append(this.$button);
         },
 
         initParticleContainer: function() {
@@ -129,7 +149,7 @@ define(function(require) {
         },
 
         addInitialParticles: function() {
-            for (var i = 0; i < this.simulation.particles.length; i++)
+            for (var i = 0; i < this.simulation.moleculeDataSet.numberOfAtoms; i++)
                 this.addParticle(this.simulation.particles[i]);
         },
 
@@ -198,6 +218,28 @@ define(function(require) {
             var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h;
 
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
+
+            if (this.simulation.get('exploded')) {
+                // Rotate the lid to create the visual appearance of it being
+                //   blown off the top of the container.
+                this.lid.rotation += this.rotationAmount;
+            }
+        },
+
+        containerExplodedStateChanged: function(simulation, exploded) {
+            if (exploded) {
+                this.$button.show();
+
+                var containerHeightAtExplosion = simulation.get('particleContainerHeight');
+                this.rotationAmount = Math.PI / 100 + (Math.random() * Math.PI / 50);
+                if (Math.random() > 0.5)
+                    this.rotationAmount *= -1;
+            }
+            else {
+                this.lid.rotation = 0;
+                this.removeAllParticles();
+                this.addInitialParticles();
+            }
         },
 
         getLeftConnectorPosition: function() {
@@ -230,12 +272,20 @@ define(function(require) {
                 if (y < this.lidYRange.min)
                     y = this.lidYRange.min;
                     
-                this.lid.y = y;
+                //this.lid.y = y;
+                var rangePercent = this.lidYRange.percent(y);
+                var targetHeight = Constants.CONTAINER_BOUNDS.h * (1 - rangePercent);
+                this.simulation.set('targetContainerHeight', targetHeight);
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
+        },
+
+        returnLidClicked: function() {
+            this.simulation.returnLid();
+            this.$button.hide();
         },
 
         update: function() {

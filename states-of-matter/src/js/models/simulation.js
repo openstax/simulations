@@ -359,7 +359,7 @@ define(function (require, exports, module) {
             //   explicitly synced up elsewhere.
             var numParticlesToRemove = this.particles.length - this.moleculeDataSet.numberOfAtoms;
             for (var i = 0; i < numParticlesToRemove; i++)
-                this.particles.splice(i, 1);
+                this.particles.splice(0, 1);
 
             // Set the container to be unexploded.
             this.unexplode();
@@ -379,10 +379,10 @@ define(function (require, exports, module) {
         removeMoleculesOutsideContainer: function() {
             var particlesOutsideOfContainer = 0;
 
-            var numberOfMolecules = this.moleculeDataSet.getNumberOfMolecules();
+            var moleculeDataSet = this.moleculeDataSet;
             var firstOutsideMoleculeIndex;
             do {
-                for (firstOutsideMoleculeIndex = 0; firstOutsideMoleculeIndex < numberOfMolecules; firstOutsideMoleculeIndex++) {
+                for (firstOutsideMoleculeIndex = 0; firstOutsideMoleculeIndex < moleculeDataSet.getNumberOfMolecules(); firstOutsideMoleculeIndex++) {
                     var pos = this.moleculeDataSet.moleculeCenterOfMassPositions[firstOutsideMoleculeIndex];
                     if (
                         pos.x < 0 || pos.x > this.normalizedContainerWidth || 
@@ -392,13 +392,13 @@ define(function (require, exports, module) {
                         break;
                     }
                 }
-                if (firstOutsideMoleculeIndex < numberOfMolecules) {
+                if (firstOutsideMoleculeIndex < moleculeDataSet.getNumberOfMolecules()) {
                     // Remove the particle that was found.
                     this.moleculeDataSet.removeMolecule(firstOutsideMoleculeIndex);
                     particlesOutsideOfContainer++;
                 }
             }
-            while (firstOutsideMoleculeIndex != numberOfMolecules);
+            while (firstOutsideMoleculeIndex != moleculeDataSet.getNumberOfMolecules());
 
             return particlesOutsideOfContainer;
         },
