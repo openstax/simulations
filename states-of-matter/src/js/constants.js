@@ -331,6 +331,26 @@ define(function (require) {
     Constants.ParticleTankView = ParticleTankView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                         PRESSURE GAUGE VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var PressureGaugeView = {};
+
+    PressureGaugeView.MAX_PRESSURE = 200;
+    PressureGaugeView.MAX_ANGLE = 210 * (Math.PI / 180);
+    PressureGaugeView.MIN_ANGLE = -30 * (Math.PI / 180);
+    PressureGaugeView.STEP = -12 * (Math.PI / 180);
+
+    PressureGaugeView.READOUT_FONT = '10px Arial';
+    PressureGaugeView.UNITS_FONT    = '7px Arial';
+    PressureGaugeView.OVERLOAD_FONT = '8px Arial';
+
+    Constants.PressureGaugeView = PressureGaugeView;
+
+
 
     return Constants;
 });
