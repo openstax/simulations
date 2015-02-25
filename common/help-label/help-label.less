@@ -1,0 +1,39 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../styles/mixins/vendor-prefixes.less";
+@import "../styles/variables.less";
+.white-panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
+    background: fadeout(#fff, @background-fade-percent);
+    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+}
+
+
+.help-label-view{
+    position: relative;
+    width: inherit;
+    height: inherit;
+    z-index: 100;
+
+    .help-label{
+        position: absolute;
+
+        &.center{
+            text-align: center;
+        }
+
+        &.left{
+            text-align: left;
+        }
+
+        &.right{
+            text-align: right;
+        }
+
+        &.bottom {
+            bottom: -4em;
+        }
+
+        &.top {
+            top: -4em;
+        }
+    }
+}
