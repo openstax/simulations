@@ -19,6 +19,10 @@ module.exports = function(grunt){
 			dist: {
 				src: '*/dist/**/*',
 				dest: 'dist/'
+			},
+			common: {
+				src: 'common/img/*',
+				dest: 'dist/'
 			}
 		},
 		targethtml: {
@@ -133,6 +137,7 @@ module.exports = function(grunt){
 	grunt.registerTask('copy-dists', [
 		'clean:dist',
 		'copy:dist',
+        'copy:common',
 		'fix-dist-directories'
 	]);
 
