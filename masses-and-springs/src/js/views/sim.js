@@ -195,7 +195,7 @@ define(function (require) {
                 units : this.simulation.get('units').time,
                 position: {
                     x : 650,
-                    y : 530
+                    y : 505 
                 }
             });
 
@@ -270,7 +270,10 @@ define(function (require) {
             this.timeScale = speed;
          },
 
-         updateShowHideHelp: function(){
+         updateShowHideHelp: function(event){
+
+            $(event.currentTarget).toggleClass('active');
+
             _.each(this.helpLabels, function(helpLabel){
                 helpLabel.toggle();
             }, this);

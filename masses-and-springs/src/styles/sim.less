@@ -18,57 +18,66 @@
         float: left;
         margin: 0 4px;
     }
+
+    button{
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover, &:active, &.active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.active{
+            &:hover{
+                background: fade(@link-color, 75%);
+            }
+        }
+    }
 }
 .sound-btn-wrapper {
 
     > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
-
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
         &.sound-btn-mute,
         &.sound-btn-low {
             display: none;
         }
-    }
-}
 
-.help-btn-wrapper {
-
-    > .help-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
-
-        &:hover {
-            opacity: 0.9;
+        &.sound-btn-mute{
+            &:hover{
+                background: fade(@link-color, 75%);
+                color: #fff;
+            }
         }
 
-        &:active {
+        &.sound-btn-high{
             background: @link-color;
             color: #fff;
+
+            &:hover{
+                background: @gray-lightest;
+                color: @link-color;
+            }
+        }
+
+
+        &.sound-btn-low{
+            background: fade(@link-color, 75%);
+            color: #fff;
+
+            &:hover{
+                background: @link-color;
+            }
         }
     }
 }
+
 
 /**
  * Slider modifications
