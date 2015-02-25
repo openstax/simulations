@@ -7,6 +7,7 @@ define(function(require) {
     require('common/pixi/extensions');
     
     var PixiView           = require('common/pixi/view');
+    var ThermometerView    = require('common/pixi/view/thermometer');
     var Vector2            = require('common/math/vector2');
     var range              = require('common/math/range');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -64,6 +65,7 @@ define(function(require) {
         initGraphics: function() {
             this.initTank();
             this.initLid();
+            this.initThermometer();
             this.initReturnLidButton();
             this.initParticleContainer();
             this.initParticleTextures();
@@ -81,10 +83,13 @@ define(function(require) {
         initLid: function() {
             this.lidYRange = range({ max: -20, min: -20 - 255  });
 
-            this.lid = Assets.createSprite(Assets.Images.TANK_LID);
-            this.lid.anchor.x = 0.5;
-            this.lid.anchor.y = 1;
+            var lidSprite = Assets.createSprite(Assets.Images.TANK_LID);
+            lidSprite.anchor.x = 0.5;
+            lidSprite.anchor.y = 1;
+
+            this.lid = new PIXI.DisplayObjectContainer();
             this.lid.y = this.lidYRange.min;
+            this.lid.addChild(lidSprite);
 
             if (this.lidDraggable) {
                 this.lid.buttonMode = true;
@@ -92,6 +97,15 @@ define(function(require) {
             }
 
             this.displayObject.addChild(this.lid);
+        },
+
+        initThermometer: function() {
+            var thermometerView = new ThermometerView({
+
+            });
+            thermometerView.displayObject.x = -this.lid.width * 0.38;
+            thermometerView.displayObject.y = 14;
+            this.lid.addChild(thermometerView.displayObject);
         },
 
         initReturnLidButton: function() {
