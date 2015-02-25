@@ -32,6 +32,8 @@ define(function(require) {
             this.initTicks();
             this.initNeedle();
             this.initReadout();
+
+            this.updatePressureGauge();
         },
 
         initSprite: function() {
@@ -85,14 +87,43 @@ define(function(require) {
             this.needle.y = this.gaugeCenter.y;
 
             this.displayObject.addChild(this.needle);
-
-            this.updatePressureGauge();
         },
 
         initReadout: function() {
-            // var background = new PIXI.Graphics();
+            var yOffset = 15;
+            var bgWidth = 28;
+            var bgHeight = 12;
 
-            // this.readout = new PIXI.Text();
+            var background = new PIXI.Graphics();
+            background.beginFill(0xDDDDDD, 1);
+            background.drawRect(this.gaugeCenter.x - bgWidth / 2, this.gaugeCenter.y + yOffset, bgWidth, bgHeight);
+            background.endFill();
+            //this.displayObject.addChild(background);
+
+            this.readout = new PIXI.Text('100.0 ATM', {
+                font: PressureGaugeView.READOUT_FONT
+            });
+            this.readout.x = this.gaugeCenter.x;
+            this.readout.y = this.gaugeCenter.y + 8 + 2;
+            this.readout.anchor.x = 0.5;
+            this.displayObject.addChild(this.readout);
+
+            this.units = new PIXI.Text('ATM', {
+                font: PressureGaugeView.UNITS_FONT
+            });
+            this.units.x = this.readout.x;
+            this.units.y = this.readout.y + 12;
+            this.units.anchor.x = 0.5;
+            this.displayObject.addChild(this.units);
+
+            this.overload = new PIXI.Text('OVERLOAD', {
+                font: PressureGaugeView.OVERLOAD_FONT,
+                fill: '#ff0000'
+            });
+            this.overload.x = this.readout.x;
+            this.overload.y = this.readout.y + 4;
+            this.overload.anchor.x = 0.5;
+            this.displayObject.addChild(this.overload);
         },
 
         connect: function(connectorPosition) {
@@ -101,10 +132,22 @@ define(function(require) {
         },
 
         updatePressureGauge: function() {
-            var pressurePercent = this.pressureRange.percent(this.simulation.getPressureInAtmospheres());
+            var pressure = this.simulation.getPressureInAtmospheres();
+            var pressurePercent = this.pressureRange.percent(pressure);
             var angle = this.angleRange.lerp(1 - pressurePercent);
-            console.log(pressurePercent)
             this.needle.rotation = -angle;
+            this.readout.setText(pressure.toFixed(2));
+
+            if (pressurePercent > 1) {
+                this.overload.visible = true;
+                this.units.visible = false;
+                this.readout.visible = false;
+            }
+            else {
+                this.overload.visible = false;
+                this.units.visible = true;
+                this.readout.visible = true;
+            }
         }
 
     }, Constants.PressureGaugeView);

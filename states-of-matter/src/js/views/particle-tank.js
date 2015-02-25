@@ -281,6 +281,7 @@ define(function(require) {
 
         dragEnd: function(data) {
             this.dragging = false;
+            this.simulation.set('targetContainerHeight', this.simulation.get('particleContainerHeight'));
         },
 
         returnLidClicked: function() {

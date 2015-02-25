@@ -344,6 +344,10 @@ define(function (require) {
     PressureGaugeView.MIN_ANGLE = -30 * (Math.PI / 180);
     PressureGaugeView.STEP = -12 * (Math.PI / 180);
 
+    PressureGaugeView.READOUT_FONT = '10px Arial';
+    PressureGaugeView.UNITS_FONT    = '7px Arial';
+    PressureGaugeView.OVERLOAD_FONT = '8px Arial';
+
     Constants.PressureGaugeView = PressureGaugeView;
 
 
