@@ -31,10 +31,10 @@ define(function(require) {
 
             this.labelModel = {};
 
-            this.labelModel.style = options.style;
-            this.labelModel.orientation = options.orientation;
+            this.labelModel.style = options.style; // not fully implemented
+            this.labelModel.orientation = options.orientation; // not fully implemented
             this.labelModel.title = options.title;
-            this.labelModel.content = options.content;
+            this.labelModel.content = options.content; // not fully implemented
         },
 
         render: function(){
@@ -46,7 +46,7 @@ define(function(require) {
         renderHelpLabel: function(){
             // this.$el.html(this.template(this.labelModel));
             this.labelText = new PIXI.Text(this.labelModel.title, {
-                font : '12pt Arial'
+                font : 'bold 11pt Helvetica Neue'
             });
             this.displayObject.addChild(this.labelText);
             this.resize();
@@ -73,9 +73,12 @@ define(function(require) {
 
         resize: function(){
             this.displayObject.y = (this.position.y)? this.position.y : this.attachTo.height;
+            this.displayObject.y = Math.round(this.displayObject.y);
+
 
             if(this.position.x){
                 this.displayObject.x = this.position.x;
+                this.displayObject.x = Math.round(this.displayObject.x);
             }
         }
 
