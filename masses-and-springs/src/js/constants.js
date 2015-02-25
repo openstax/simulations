@@ -10,7 +10,8 @@ define(function (require) {
         'light-gray': '#939daa',
         'pale-orange': '#ef9152',
         'sky-blue'  : '#52b0ef',
-        'pale-green': '#aed1c0'        
+        'pale-green': '#7a9d8c',
+        'navy-blue' : '#21366b'
     };
 
 
@@ -44,6 +45,18 @@ define(function (require) {
 
      Constants.Scene = Scene;
 
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         SCENE LABEL SETTINGS                        **
+     **                                                                     **
+     *************************************************************************/
+     var LabelSettings = {};
+     LabelSettings.font = 'bold 14px Arial';
+     LabelSettings.align = 'center';
+
+     Constants.LabelSettings = LabelSettings;
 
 
     /*************************************************************************
@@ -155,8 +168,9 @@ define(function (require) {
     SpringDefaults.STIFFNESS = SimSettings.SOFTNESS_DEFAULT;
 
     // Appearance related
+    SpringDefaults.PEG_COLOR = ColorConstants['navy-blue'];
     SpringDefaults.COLOR = ColorConstants['cool-gray'];
-    SpringDefaults.COILS = 12;
+    SpringDefaults.COILS = 11;
     SpringDefaults.WIDTH = 0.10;
 
     SpringDefaults.RING_RADIUS = 0.02;

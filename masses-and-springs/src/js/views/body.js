@@ -3,8 +3,8 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-    
+    var PIXI = require('common/pixi/extensions');
+
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
     // var Vector2  = require('common/math/vector2');
@@ -34,24 +34,26 @@ define(function(require) {
         initialize: function(options) {
 
             options = _.extend({
-                labelFont : '14px Arial',
-                labelAlign : 'center'
+                labelOptions : Constants.LabelSettings
             }, options);
 
             this.label = this.model.label;
-            this.labelFont = options.labelFont;
-            this.labelAlign = options.labelAlign;
+            this.labelOptions = options.labelOptions;
 
             this.initGraphics();
             this.initSound();
+
+            this.initializeBodyViewModel();
+            this.updateBodyViewModel();
+
+            this.positionBody();
+            this.drawBody();
+            this.labelBody();
 
             this.listenTo(this.model, 'change:y', this.updatePosition);
             this.listenTo(this.model, 'change:top', this.updateTopPosition);
             this.listenTo(this.model, 'change:center', this.updateCenterPosition);
             this.listenTo(this.model, 'hitGround', this.hitGround);
-
-            this.drawBody();
-            this.labelBody();
         },
 
         initGraphics: function() {
@@ -69,10 +71,6 @@ define(function(require) {
 
         updateBodyViewModel: function(){
 
-            if(!this.viewModel){
-                this.initializeBodyViewModel();
-            }
-
             this.viewModel.left = this.model.x * Constants.Scene.PX_PER_METER;
             this.viewModel.bottom = this.model.y * Constants.Scene.PX_PER_METER;
 
@@ -88,27 +86,22 @@ define(function(require) {
             this.viewModel.radius = this.viewModel.width / 2;
 
             this.viewModel.color = Colors.parseHex(this.model.color);
-            this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, .1));
+            this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, 0.1));
 
             this.viewModel.hookThickness = 3;
             this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width) * Constants.Scene.PX_PER_METER;
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
 
             this.viewModel.totalHeight = this.viewModel.height + this.viewModel.hookHeight;
-            this.viewModel.snapPointBuffer = this.viewModel.hookRadius/2;
         },
 
         drawBody : function(){
-            this.updateBodyViewModel();
-            this.positionBody();
-
             this.body.clear();
             this.body.buttonMode = true;
             this.body.defaultCursor = 'move';
 
             this.drawHook();
             this.drawBlock();
-
         },
 
         labelBody: function(){
@@ -116,10 +109,11 @@ define(function(require) {
 
             if(this.label){
                 labelText = new PIXI.Text(this._makeLabelText(), {
-                    font : this.labelFont,
-                    align : this.labelAlign,
+                    font : this.labelOptions.font,
+                    align : this.labelOptions.align,
                     wordWrap: true,
-                    wordWrapWidth: this.viewModel.width
+                    wordWrapWidth: this.viewModel.width,
+                    fill : Colors.darkenHex(this.model.color, .2)
                 });
 
                 this._centerLabel(labelText);
@@ -135,7 +129,7 @@ define(function(require) {
 
         _centerLabel: function(label){
 
-            label.anchor = new PIXI.Point(0.5, 0.5);
+            label.anchor = new PIXI.Point(0.45, 0.5);
 
             label.x = this.viewModel.radius;
             label.y = this.viewModel.height / 2;
@@ -253,7 +247,8 @@ define(function(require) {
         },
 
         updatePosition: function(){
-            this.drawBody();
+            this.updateBodyViewModel();
+            this.positionBody();
         },
 
         updateTopPosition: function(model, top){
@@ -273,11 +268,11 @@ define(function(require) {
         },
 
         _calcYFromSpringY2: function(springY2){
-            return springY2 + (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
+            return springY2 + this.viewModel.totalHeight/Constants.Scene.PX_PER_METER;
         },
 
         _calcSpringY2FromY: function(){
-            return this.model.y - (this.viewModel.totalHeight - this.viewModel.snapPointBuffer)/Constants.Scene.PX_PER_METER;
+            return this.model.y - this.viewModel.totalHeight/Constants.Scene.PX_PER_METER;
         },
 
         _calcXFromViewCenter: function(center){
