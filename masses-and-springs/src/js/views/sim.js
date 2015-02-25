@@ -11,6 +11,7 @@ define(function (require) {
     var StopwatchView = require('common/tools/stopwatch');
     var RulerView = require('common/tools/ruler');
     var ReferenceLineView = require('common/tools/reference-line');
+    var HelpLabelView = require('common/help-label/index');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -66,6 +67,7 @@ define(function (require) {
 
             // settings
             'click .sound-btn' : 'changeVolume',
+            'click .help-btn' : 'updateShowHideHelp',
 
             // tools
             'change .stopwatch-check'      : 'toggleStopwatch',
@@ -192,8 +194,8 @@ define(function (require) {
                 dragFrame: this.el,
                 units : this.simulation.get('units').time,
                 position: {
-                    x : 630,
-                    y : 520
+                    x : 650,
+                    y : 530
                 }
             });
 
@@ -268,6 +270,12 @@ define(function (require) {
             this.timeScale = speed;
          },
 
+         updateShowHideHelp: function(){
+            _.each(this.helpLabels, function(helpLabel){
+                helpLabel.toggle();
+            }, this);
+         },
+
 
         /**
          * Toggles the stopwatch's visibility
@@ -328,6 +336,44 @@ define(function (require) {
             this.sceneView.initTools([this.referenceLineView]);
 
             this.stopwatchView.hide();
+
+            this.renderHelp();
+        },
+
+
+        renderHelp: function(){
+
+            this.helpLabels = [];
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo : this.rulerView,
+                title : 'Draggable Ruler'
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo : this.referenceLineView,
+                title : 'Draggable Reference Line'
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo : this.stopwatchView,
+                title : 'Draggable Timer'
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.sceneView.toolsLayer,
+                position : {
+                    x : 300,
+                    y : 300
+                },
+                width : '300px',
+                title : 'Pull mass sideways to detach from spring'
+            }));
+
+            _.each(this.helpLabels, function(helpLabel){
+                helpLabel.render();
+            }, this);
+
         },
 
         /**
