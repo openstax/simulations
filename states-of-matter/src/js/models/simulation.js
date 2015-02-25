@@ -359,7 +359,7 @@ define(function (require, exports, module) {
             //   explicitly synced up elsewhere.
             var numParticlesToRemove = this.particles.length - this.moleculeDataSet.numberOfAtoms;
             for (var i = 0; i < numParticlesToRemove; i++)
-                this.particles.splice(i, 1);
+                this.particles.splice(0, 1);
 
             // Set the container to be unexploded.
             this.unexplode();
