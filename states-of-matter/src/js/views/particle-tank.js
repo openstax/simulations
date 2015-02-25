@@ -36,11 +36,13 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                lidDraggable: true
+                lidDraggable: true,
+                showFinger: true
             }, options);
 
             this.simulation = options.simulation;
             this.lidDraggable = options.lidDraggable;
+            this.showFinger = options.showFinger;
 
             this._leftConnectorPosition  = new Vector2();
             this._rightConnectorPosition = new Vector2();
@@ -230,7 +232,10 @@ define(function(require) {
                 if (y < this.lidYRange.min)
                     y = this.lidYRange.min;
                     
-                this.lid.y = y;
+                //this.lid.y = y;
+                var rangePercent = this.lidYRange.percent(y);
+                var targetHeight = Constants.CONTAINER_BOUNDS.h * (1 - rangePercent);
+                this.simulation.set('targetContainerHeight', targetHeight);
             }
         },
 

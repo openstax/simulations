@@ -17,6 +17,10 @@ define(function (require) {
             return this.length() * percent + this.min;
         };
 
+        rangeObject.percent = function(x) {
+            return (x - this.min) / this.length();
+        };
+
         rangeObject.contains = function(x) {
             return x <= this.max && x >= this.min;
         };

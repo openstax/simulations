@@ -65,7 +65,8 @@ define(function(require) {
         initParticleTankView: function() {
             this.particleTankView = new ParticleTankView({
                 simulation: this.simulation,
-                lidDraggable: this.particleTankInteractive
+                lidDraggable: this.particleTankInteractive,
+                showFinger: this.particleTankInteractive
             });
 
             this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
