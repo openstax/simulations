@@ -20,12 +20,14 @@ define(function(require) {
 
                 numberOfTicks: 7,
 
-                lineColor: '#000',
+                lineColor: '#999',
                 lineWidth: 1,
-                lineAlpha: 0.5,
+                lineAlpha: 1,
 
                 fillColor: '#fff',
-                fillAlpha: 0.5
+                fillAlpha: 0.3,
+
+                liquidColor: '#ff3c00'
             }, options);
 
             this.bulbDiameter = options.bulbDiameter;
@@ -39,12 +41,19 @@ define(function(require) {
             this.fillColor = Colors.parseHex(options.fillColor);
             this.fillAlpha = options.fillAlpha;
 
+            this.liquidColor = Colors.parseHex(options.liquidColor);
+
+            this.value = 1.2;
+
+            this.padding = 2;
+            this.outlineFix = 0.5;
+
             this.initGraphics();
         },
 
         initGraphics: function() {
             this.initShape();
-            this.initFill();
+            this.initLiquid();
             this.initTicks();
         },
 
@@ -87,18 +96,37 @@ define(function(require) {
             this.displayObject.addChild(outline);
         },
 
-        initFill: function() {
-            var bulbFill = new PIXI.Graphics();
+        initLiquid: function() {
+            var padding = this.padding;
+            var outlineFix = this.outlineFix;
+            var radius = Math.floor(this.bulbDiameter / 2) - padding;
+            var halfWidth = Math.floor(this.tubeWidth / 2) - padding;
+            var width = halfWidth * 2;
+            var height = Math.floor(this.tubeHeight) - padding;
 
+            var bulbLiquid = new PIXI.Graphics();
+            bulbLiquid.beginFill(this.liquidColor, 1);
+            bulbLiquid.drawCircle(outlineFix, outlineFix, radius);
+            bulbLiquid.endFill();
 
-            var tubeFill = new PIXI.Graphics();
-            var tubeFillMask = new PIXI.Graphics();
+            var tubeLiquid = new PIXI.Graphics();
+            var tubeLiquidMask = new PIXI.Graphics();
 
-            this.displayObject.addChild(bulbFill);
-            this.displayObject.addChild(tubeFill);
-            this.displayObject.addChild(tubeFillMask);
+            var x = -halfWidth + outlineFix;
+            var y = -radius - height + outlineFix - padding * 2;
+            tubeLiquidMask.beginFill(0x000000, 1);
+            tubeLiquidMask.drawRect(x, y, width, -y);
+            tubeLiquidMask.drawCircle(outlineFix, y, halfWidth);
+            tubeLiquidMask.endFill();
+            tubeLiquid.mask = tubeLiquidMask;
 
-            this.tubeFill = tubeFill;
+            this.displayObject.addChild(bulbLiquid);
+            this.displayObject.addChild(tubeLiquid);
+            this.displayObject.addChild(tubeLiquidMask);
+
+            this.tubeLiquid = tubeLiquid;
+
+            this.drawTubeLiquid();
         },
 
         initTicks: function() {
@@ -107,6 +135,28 @@ define(function(require) {
 
 
             this.displayObject.addChild(ticks);
+        },
+
+        drawTubeLiquid: function() {
+            var height = this.tubeHeight * this.value;
+            if (height > this.tubeHeight * 2)
+                height = this.tubeHeight * 2;
+            if (height < 0)
+                height = 0;
+
+            var padding = this.padding;
+            var outlineFix = this.outlineFix;
+            var radius = Math.floor(this.bulbDiameter / 2);
+            var halfWidth = Math.floor(this.tubeWidth / 2) - padding;
+            var width = halfWidth * 2;
+
+            var x = -halfWidth + outlineFix;
+            var y = -radius - height + outlineFix + padding;
+
+            this.tubeLiquid.clear();
+            this.tubeLiquid.beginFill(this.liquidColor, 1);
+            this.tubeLiquid.drawRect(x, y, width, -y);
+            this.tubeLiquid.endFill();
         }
 
     });
