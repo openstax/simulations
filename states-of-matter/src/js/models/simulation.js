@@ -790,8 +790,8 @@ define(function (require, exports, module) {
             this.syncParticlePositions();
 
             // If the pressure changed, notify the listeners.
-            if (this.getModelPressure() !== pressureBeforeAlgorithm)
-                this.trigger('pressure-changed');
+            if (this.getModelPressure() !== pressureBeforeAlgorithm) {
+                this.trigger('pressure-changed'); console.log('pressure changed')}
 
             // Adjust the temperature if needed.
             this.tempAdjustTickCounter++;
