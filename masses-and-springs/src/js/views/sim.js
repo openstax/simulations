@@ -162,7 +162,7 @@ define(function (require) {
          */
         renderSceneControls: function(){
 
-            this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.SimSettings.GRAVITY, {inputName: 'gravity-setting'});
+            this.renderChoiceList(this.$('.gravity-settings-placeholder'), _.shuffle(Constants.SimSettings.GRAVITY), {inputName: 'gravity-setting'});
 
             this.renderDiscreteSlider(this.$('.friction-settings-placeholder'), this.getFrictionSettings(), {
                 pips : {

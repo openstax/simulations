@@ -16,39 +16,39 @@ define(function (require) {
     Initials.ShelfY = Constants.Scene.SHELF_FROM_TOP * sceneHeight / Constants.Scene.PX_PER_METER;
     Initials.SpringsY1 = 0.075 * sceneHeight / Constants.Scene.PX_PER_METER;
 
-
+    // x and y are in meters
     var Bodies = [
         {
             mass : 0.05,
-            x : 0.20,
+            x : 0.17,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.30,
+            x : 0.265,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.42,
+            x : 0.38,
             y: Initials.ShelfY
         },{
             mass : 0.25,
-            x : 0.28 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.495,
             y: Initials.ShelfY
         },{
             mass : 0.07,
-            x : 0.76,
+            x : 0.70,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['pale-green'],
             label: false
         },{
             mass : 0.16,
-            x : 0.45 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.805,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['sky-blue'],
             label: false
         },{
             mass : 0.31,
-            x : 0.52 * sceneWidth / Constants.Scene.PX_PER_METER,
+            x : 0.94,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['pale-orange'],
             label: false
