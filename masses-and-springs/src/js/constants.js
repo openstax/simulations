@@ -53,7 +53,8 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
      var LabelSettings = {};
-     LabelSettings.font = 'bold 14px Arial';
+     LabelSettings.smallFont = '12px Arial';
+     LabelSettings.font = 'bold 18px Arial';
      LabelSettings.align = 'center';
 
      Constants.LabelSettings = LabelSettings;

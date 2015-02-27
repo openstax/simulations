@@ -25,7 +25,7 @@ define(function (require, exports, module) {
             color : Constants.BodyDefaults.COLOR,
             acceleration : Constants.SimSettings.GRAVITY_DEFAULT,
             label : true,
-            units : 'g'
+            units : 'grams'
         },
 
         initialize: function(attributes, options) {
