@@ -12,6 +12,8 @@ define(function (require) {
     var RulerView = require('common/tools/ruler');
     var ReferenceLineView = require('common/tools/reference-line');
     var HelpLabelView = require('common/help-label/index');
+    var BarGraphView = require('common/bar-graph/bar-graph');
+
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -150,6 +152,16 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+
+        renderEnergyGraphs: function(){
+            this.energyGraph = new BarGraphView({
+                model : this.simulation.systems.models[0],
+                title : 'Energy of 1'
+            });
+            this.energyGraph.render();
+            this.$('.energy-graph-placeholder').html(this.energyGraph.el);
+        },
+
         /**
          * Renders the playback controls
          */
@@ -225,22 +237,22 @@ define(function (require) {
          },
 
 
-        /**
-         * Renders the graphs
-         */
-         renderEnergyGraphs: function(){
+        // /**
+        //  * Renders the graphs
+        //  */
+        //  renderEnergyGraphs: function(){
 
-            var mockSprings = [{
-                spring : 'one'
-            },{
-                spring : 'two'
-            },{
-                spring : 'three'
-            }];
+        //     var mockSprings = [{
+        //         spring : 'one'
+        //     },{
+        //         spring : 'two'
+        //     },{
+        //         spring : 'three'
+        //     }];
 
-            // this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
+        //     // this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
 
-         },
+        //  },
 
         /**
          * Functions that link to UI inputs

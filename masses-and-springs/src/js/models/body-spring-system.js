@@ -32,8 +32,9 @@ define(function (require, exports, module) {
             this.velocity = this.get('velocity');
             this.period = this.get('period');
             this.maxY = this.get('maxY');
-            // this.oldT = getTimer(); //each system needs to keep its own time
-            // 
+
+            this.initializeEnergies();
+
             this.on('change:gravity', this.updateGravity);
             this.on('change:b', this.updateFriction);
         },
@@ -54,7 +55,7 @@ define(function (require, exports, module) {
 
             this.period = Constants.SystemEquations.PERIOD(this.body.mass, this.spring.k);
 
-            this.initializeEnergies();
+            this.resetEnergies();
             this.updateEnergies();
         },
 
@@ -71,7 +72,7 @@ define(function (require, exports, module) {
             delete this.body;
 
             this.deltaY = 0;
-            this.initializeEnergies();
+            this.resetEnergies();
         },
 
         hasBody: function(){
@@ -85,12 +86,12 @@ define(function (require, exports, module) {
                 velocity2   : 0
             }, solvedValues);
 
-            this.KE = Constants.SystemEquations.KINETIC_ENERGY(this.body.mass, this.velocity);
-            this.PEelas = Constants.SystemEquations.ELASTIC_POTENTIAL_ENERGY(this.spring.k, this.deltaY);
-            this.PEgrav = Constants.SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY(this.body.mass, this.gravity, this.maxY - this.spring.y2);
-            this.Q += Constants.SystemEquations.DELTA_THERMAL(solvedValues.deltaDeltaY, this.body.mass, this.b, solvedValues.velocity2);
+            this.set('KE', Constants.SystemEquations.KINETIC_ENERGY(this.body.mass, this.velocity));
+            this.set('PEelas', Constants.SystemEquations.ELASTIC_POTENTIAL_ENERGY(this.spring.k, this.deltaY));
+            this.set('PEgrav', Constants.SystemEquations.GRAVITATIONAL_POTENTIAL_ENERGY(this.body.mass, this.gravity, this.maxY - this.spring.y2));
+            this.set('Q', this.get('Q') + Constants.SystemEquations.DELTA_THERMAL(solvedValues.deltaDeltaY, this.body.mass, this.b, solvedValues.velocity2));
 
-            this.Etot = Constants.SystemEquations.TOTAL_ENERGY(this.KE, this.PEelas, this.PEgrav, this.Q);
+            this.set('Etot', Constants.SystemEquations.TOTAL_ENERGY(this.get('KE'), this.get('PEelas'), this.get('PEgrav'), this.get('Q')));
         },
 
         updateGravity: function(model, gravity){
@@ -101,20 +102,50 @@ define(function (require, exports, module) {
             this.b = friction;
         },
 
-        initializeEnergies: function(){
-            this.KE = 0;    //all energy set to zero
-            this.PEelas = 0;
-            this.PEgrav = 0;
-            this.Q = 0;
-            this.Etot = this.KE + this.PEelas + this.PEgrav + this.Q;
+        resetEnergies: function(){
+            this.set('KE',0);    //all energy set to zero
+            this.set('PEelas',0);
+            this.set('PEgrav',0);
+            this.set('Q',0);
+            this.set('Etot', this.get('KE') + this.get('PEelas') + this.get('PEgrav') + this.get('Q'));
         },
 
-        resetEnergy : function(){
-            if(this.spring.isSnagged()){
-                this.updateEnergies();
-            }else{
-                this.initializeEnergies();
-            }
+        initializeEnergies : function(){
+            this.resetEnergies();
+
+            this.set({bars: [{
+                    linkTo : 'KE',
+                    label : 'KE'
+                },{
+                    linkTo : 'PEgrav',
+                    label : 'PE<sub>grav</sub>'
+                },{
+                    linkTo : 'PEelas',
+                    label : 'PE<sub>elas</sub>'
+                },{
+                    linkTo : 'Q',
+                    label : 'Thermal'
+                },{
+                    linkTo : 'Etot',
+                    label : 'Total',
+                    style : 'total'
+                }
+            ]});
+
+            _.each(this.get('bars'), this._initializeEnergy, this);
+        },
+
+        _initializeEnergy : function(energy){
+            energy.value = this.get(energy.linkTo);
+            this.on('change:' + energy.linkTo, this.updateEnergyBars);
+        },
+
+        updateEnergyBars : function(energy){
+            var energyChanged = _.keys(energy.changed)[0];
+            var bar = _.findWhere(this.get('bars'), {linkTo : energyChanged});
+            bar.value = this.get(energyChanged);
+
+            this.trigger('change:bars', bar);
         },
 
         evolve : function(dt){
@@ -126,7 +157,7 @@ define(function (require, exports, module) {
             } else if(this.body.grabbed){
 
                 this.velocity = 0;
-                this.Q = 0;
+                this.set('Q', 0);
 
                 this.deltaY = this._calculateRestingDeltaY();
                 this.spring.updateY2ByDelta(this.deltaY);

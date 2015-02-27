@@ -1,0 +1,65 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../styles/mixins/vendor-prefixes.less";
+@import "../styles/variables.less";
+
+@graph-height: 460px;
+
+.bar-graph-view{
+    position: relative;
+    height: 525px;
+
+    .title{
+        text-align: center;
+        width: @graph-height;
+        position: absolute;
+        bottom: 31px;
+        left: -0.75em;
+
+        .transform-origin(0, 0);
+
+        -ms-transform: rotate(270deg);
+        -webkit-transform: rotate(270deg);
+        transform: rotate(270deg);
+    }
+}
+
+.bar-graph{
+    height: inherit;
+}
+
+.attribute{
+    width: 20px;
+    display: block;
+    margin: 0;
+    float: left;
+    height: @graph-height;
+    position: relative;
+    border-bottom: 1px solid #000;
+
+
+    &:first-child{
+        border-left: 1px solid #000;
+    }
+
+    label{
+        position: absolute;
+        bottom: -1em;
+
+        .transform-origin(0, 100%);
+
+        -ms-transform: rotate(90deg);
+        -webkit-transform: rotate(90deg);
+        transform: rotate(90deg);
+    }
+
+    .bar{
+        .transform-origin(0, 100%);
+        transform: scale(1, 0);
+        transition: transform .1s ease-in-out;
+        -moz-transition: -moz-transform .1s ease-in-out;
+        -webkit-transition: -webkit-transform .1s ease-in-out;
+        margin: 0 2px;
+        height: inherit;
+        background: #333;
+    }
+}
