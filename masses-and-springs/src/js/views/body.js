@@ -226,6 +226,12 @@ define(function(require) {
 
                 if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
                     this.model.unhang();
+                } else if (this.model.isHung() && (this.displayObject.x != newBodyLeft)){
+                    // unset the center so that change to center can be detected
+                    // if the body needs to resnap to the spring
+                    this.model.unset('center', {
+                        silent : true
+                    });
                 }
 
                 this.displayObject.x = newBodyLeft;
