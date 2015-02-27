@@ -87,6 +87,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Masses &amp; Springs',
                 name: 'masses-and-springs',
+                link: 'mass-spring-lab'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
