@@ -24,13 +24,13 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 title: '',
-                maxValue : 9.5 // can calculate this later
+                maxValue : 6 // can calculate this later
             }, options);
 
             this.title = options.title;
             this.maxValue = options.maxValue;
 
-            this.listenTo(this.model, 'change:bars', this.updateBar);
+            this.listenTo(this.model, 'change:bar', this.updateBar);
         },
 
         render: function(){

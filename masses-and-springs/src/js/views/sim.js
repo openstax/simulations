@@ -153,13 +153,33 @@ define(function (require) {
         },
 
 
-        renderEnergyGraphs: function(){
-            this.energyGraph = new BarGraphView({
-                model : this.simulation.systems.models[0],
-                title : 'Energy of 1'
-            });
-            this.energyGraph.render();
-            this.$('.energy-graph-placeholder').html(this.energyGraph.el);
+        renderEnergyGraphs: function(system){
+
+            this.energyGraphs = [];
+
+            this.listenTo(this.simulation.systems, 'change:body', this.showEnergyGraph);
+
+            this.simulation.systems.each(function(system, iter){
+                var barGraph = new BarGraphView({
+                    model : system,
+                    title : 'Energy of ' + (iter + 1)
+                });
+
+                barGraph.render();
+                this.$('.energy-graph-placeholder').append(barGraph.el);
+                barGraph.$el.hide();
+                this.energyGraphs.push(barGraph);
+            }, this);
+        },
+
+        showEnergyGraph: function(system){
+            _.each(this.energyGraphs, function(graph){
+                if(graph.model === system){
+                    graph.$el.show();
+                } else {
+                    graph.$el.hide();
+                }
+            }, this);
         },
 
         /**

@@ -11,7 +11,10 @@ define(function (require) {
         'pale-orange': '#ef9152',
         'sky-blue'  : '#52b0ef',
         'pale-green': '#7a9d8c',
-        'navy-blue' : '#21366b'
+        'navy-blue' : '#21366b',
+        'pale-red'  : '#e15454',
+        'pale-blue' : '#549be1',
+        'pale-aqua' : '#54e19b'
     };
 
 

@@ -3,6 +3,7 @@
 @import "../styles/variables.less";
 
 @graph-height: 460px;
+@graph-color: #333;
 
 .bar-graph-view{
     position: relative;
@@ -34,11 +35,11 @@
     float: left;
     height: @graph-height;
     position: relative;
-    border-bottom: 1px solid #000;
+    border-bottom: 1px solid @graph-color;
 
 
     &:first-child{
-        border-left: 1px solid #000;
+        border-left: 1px solid @graph-color;
     }
 
     label{
@@ -60,6 +61,18 @@
         -webkit-transition: -webkit-transform .1s ease-in-out;
         margin: 0 2px;
         height: inherit;
-        background: #333;
+        background: @graph-color;
+
+        // &.total{
+        //     &.marker{
+        //         position: absolute;
+        //         top: 0;
+        //         right: 0;
+        //         border-top: 1px dashed @graph-color;
+        //         width: 100px;
+        //         height: 1px;
+        //         content: 'hello';
+        //     }
+        // }
     }
 }

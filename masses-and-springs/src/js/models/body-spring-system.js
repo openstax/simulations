@@ -47,6 +47,7 @@ define(function (require, exports, module) {
             }
 
             // attach body to system
+            this.set('body', body);
             this.body = body;
             // Update children models body and spring with new state
             this.body.hangOn(this.spring);
@@ -66,10 +67,12 @@ define(function (require, exports, module) {
             }
 
             this.body.unhang();
+
             this.spring.unhang();
 
             this.stopListening(this.body, 'change:spring');
             delete this.body;
+            this.unset('body', {silent: true});
 
             this.deltaY = 0;
             this.resetEnergies();
@@ -128,7 +131,7 @@ define(function (require, exports, module) {
                 },{
                     linkTo : 'Etot',
                     label : 'Total',
-                    style : 'total'
+                    class : 'total'
                 }
             ]});
 
@@ -145,7 +148,7 @@ define(function (require, exports, module) {
             var bar = _.findWhere(this.get('bars'), {linkTo : energyChanged});
             bar.value = this.get(energyChanged);
 
-            this.trigger('change:bars', bar);
+            this.trigger('change:bar', bar);
         },
 
         evolve : function(dt){
