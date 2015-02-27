@@ -32,7 +32,7 @@ define(function (require, exports, module) {
             gravity : Constants.SimSettings.GRAVITY_DEFAULT,
             friction : Constants.SimSettings.FRICTION_DEFAULT,
             units : {
-                time : 's'
+                time : 'sec'
             }
         }),
 

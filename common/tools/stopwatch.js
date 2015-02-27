@@ -40,7 +40,7 @@ define(function (require) {
 				},
 				captureOnBody: false,
 				mouseLeaveCancels: true,
-				units : 's',
+				units : 'sec',
 				decimals : 2,
 				unitRatio : 1
 			}, options);
