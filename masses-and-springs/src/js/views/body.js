@@ -201,11 +201,9 @@ define(function(require) {
 
                 if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
                     this.model.unhang();
-                } else if(!this.model.isHung()){
-                    // only update x for weak sideway drags if the body is not hung
-                    this.displayObject.x = newBodyLeft;
                 }
 
+                this.displayObject.x = newBodyLeft;
                 this.displayObject.y = newBodyBottom;
 
                 this.updateModelPosition();
@@ -213,8 +211,8 @@ define(function(require) {
         },
 
         isSidewaysDrag: function(newX){
-            // is the sideways drag more than half the width of the spring hit area?
-            return Math.abs(newX - this.displayObject.x) > this.model.spring.hitArea.w / 2;
+            // is the drag outside the bounds of the spring's attachment area?
+            return !this.model.hook.intersects(this.model.spring.hitArea);
         },
 
         bringToFront: function(){
