@@ -131,9 +131,9 @@ define(function(require) {
 
             this.model.hitArea = new Rectangle(
                 this.viewModel.coilLeft,
-                this.viewModel.y2 - .5 * this.viewModel.ringRadius,
+                this.viewModel.y2,
                 2 * this.viewModel.coilRadius,
-                1.5 * this.viewModel.ringRadius
+                3 * this.viewModel.ringRadius
             );
         },
 
