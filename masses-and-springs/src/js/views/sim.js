@@ -236,9 +236,9 @@ define(function (require) {
                 spring : 'two'
             },{
                 spring : 'three'
-            }]
+            }];
 
-            this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
+            // this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
 
          },
 
