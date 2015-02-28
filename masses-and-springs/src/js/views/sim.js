@@ -171,11 +171,14 @@ define(function (require) {
                 barGraph.$el.hide();
                 this.energyGraphs.push(barGraph);
             }, this);
+
+            this.energyGraphs[0].$el.show();
         },
 
         showEnergyGraph: function(system){
+
             _.each(this.energyGraphs, function(graph){
-                if(graph.model === system){
+                if(graph.model === system  &&  system.hasBody()){
                     graph.$el.show();
                 } else {
                     graph.$el.hide();

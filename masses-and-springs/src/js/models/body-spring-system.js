@@ -79,7 +79,7 @@ define(function (require, exports, module) {
         },
 
         hasBody: function(){
-            return !_.isUndefined(this.body);
+            return !_.isUndefined(this.get('body'));
         },
 
         updateEnergies: function(solvedValues){

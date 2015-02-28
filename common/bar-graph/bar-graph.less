@@ -4,17 +4,20 @@
 
 @graph-height: 460px;
 @graph-color: #333;
+@graph-left-padding: 10px;
 
 .bar-graph-view{
     position: relative;
-    height: 525px;
+    height: @graph-height;
+    margin-bottom: 65px;
+    padding: 0 0 0 @graph-left-padding;
 
     .title{
         text-align: center;
         width: @graph-height;
         position: absolute;
-        bottom: 31px;
-        left: -0.75em;
+        bottom: -30px;
+        left: -0.7em;
 
         .transform-origin(0, 0);
 
@@ -25,7 +28,25 @@
 }
 
 .bar-graph{
-    height: inherit;
+    height: @graph-height;
+}
+
+.sim-controls ul.bar-graph{
+    padding: 0;
+}
+
+#total-marker{
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px dashed @graph-color;
+    font-size: @graph-height;
+    bottom: 0;
+
+    p{
+        font-size: 14px;
+        margin-bottom: 0;
+        text-align: center;
+    }
 }
 
 .attribute{
@@ -62,17 +83,5 @@
         margin: 0 2px;
         height: inherit;
         background: @graph-color;
-
-        // &.total{
-        //     &.marker{
-        //         position: absolute;
-        //         top: 0;
-        //         right: 0;
-        //         border-top: 1px dashed @graph-color;
-        //         width: 100px;
-        //         height: 1px;
-        //         content: 'hello';
-        //     }
-        // }
     }
 }
