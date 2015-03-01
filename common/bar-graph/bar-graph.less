@@ -20,10 +20,7 @@
         left: -0.7em;
 
         .transform-origin(0, 0);
-
-        -ms-transform: rotate(270deg);
-        -webkit-transform: rotate(270deg);
-        transform: rotate(270deg);
+        .transform(~"rotate(-90deg)");
     }
 }
 
@@ -58,7 +55,6 @@
     position: relative;
     border-bottom: 1px solid @graph-color;
 
-
     &:first-child{
         border-left: 1px solid @graph-color;
     }
@@ -68,20 +64,37 @@
         bottom: -1em;
 
         .transform-origin(0, 100%);
-
-        -ms-transform: rotate(90deg);
-        -webkit-transform: rotate(90deg);
-        transform: rotate(90deg);
+        .transform(~"rotate(90deg)");
     }
 
     .bar{
-        .transform-origin(0, 100%);
-        transform: scale(1, 0);
-        transition: transform .1s ease-in-out;
-        -moz-transition: -moz-transform .1s ease-in-out;
-        -webkit-transition: -webkit-transform .1s ease-in-out;
-        margin: 0 2px;
-        height: inherit;
+        font-size: @graph-height;
+        position: absolute;
+        bottom: 0;
+        width: 90%;
+
+        transition: height .1s ease-in-out;
+        -moz-transition: height .1s ease-in-out;
+        -webkit-transition: height .1s ease-in-out;
+        margin: 0 auto;
+        max-height: 0;
+        height: @graph-height;
         background: @graph-color;
+    }
+
+    .bar-wrapper{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+
+        .bar{
+            position: relative;
+        }
+    }
+
+    .total{
+        .bar{
+            position: relative;
+        }
     }
 }
