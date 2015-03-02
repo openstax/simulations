@@ -402,7 +402,7 @@ define(function (require) {
             this.helpLabels.push(new HelpLabelView({
                 attachTo: this.sceneView.toolsLayer,
                 position : {
-                    x : 300,
+                    x : 140,
                     y : 300
                 },
                 width : '300px',

@@ -20,35 +20,35 @@ define(function (require) {
     var Bodies = [
         {
             mass : 0.05,
-            x : 0.17,
+            x : 0.19,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.265,
+            x : 0.285,
             y: Initials.ShelfY
         },{
             mass : 0.10,
-            x : 0.38,
+            x : 0.40,
             y: Initials.ShelfY
         },{
             mass : 0.25,
-            x : 0.495,
+            x : 0.515,
             y: Initials.ShelfY
         },{
             mass : 0.07,
-            x : 0.70,
+            x : 0.72,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['pale-green'],
             label: false
         },{
             mass : 0.16,
-            x : 0.805,
+            x : 0.825,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['sky-blue'],
             label: false
         },{
             mass : 0.31,
-            x : 0.94,
+            x : 0.96,
             y: Initials.ShelfY,
             color: Constants.ColorConstants['pale-orange'],
             label: false
@@ -56,13 +56,13 @@ define(function (require) {
     ];
 
     var Springs = [{
-        x : 0.15 * sceneWidth / Constants.Scene.PX_PER_METER,
+        x : 0.175 * sceneWidth / Constants.Scene.PX_PER_METER,
         y1: Initials.SpringsY1
     },{
-        x : 0.30 * sceneWidth / Constants.Scene.PX_PER_METER,
+        x : 0.325 * sceneWidth / Constants.Scene.PX_PER_METER,
         y1: Initials.SpringsY1
     },{
-        x : 0.45 * sceneWidth / Constants.Scene.PX_PER_METER,
+        x : 0.475 * sceneWidth / Constants.Scene.PX_PER_METER,
         y1: Initials.SpringsY1
     }];
 
