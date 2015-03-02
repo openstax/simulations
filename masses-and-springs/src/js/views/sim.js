@@ -77,7 +77,9 @@ define(function (require) {
             // simulation properties
             'change input[name=gravity-setting]' : 'updateGravity',
             'slide .friction-settings-placeholder' : 'updateFriction',
-            'slide .softness3-settings-placeholder' : 'updateSoftness3'
+            'slide .softness3-settings-placeholder' : 'updateSoftness3',
+
+            'click .tab' : 'changeEnergyTab'
         },
 
         /**
@@ -157,9 +159,6 @@ define(function (require) {
         renderEnergyGraphs: function(system){
 
             this.energyGraphs = [];
-
-            this.listenTo(this.simulation.systems, 'change:body', this.showEnergyGraph);
-
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
@@ -172,18 +171,26 @@ define(function (require) {
                 this.energyGraphs.push(barGraph);
             }, this);
 
-            this.energyGraphs[0].$el.show();
+            this.renderTabbedGraph(this.$('.energy-graph-tabs'), this.simulation.systems);
         },
 
         showEnergyGraph: function(system){
 
+            $('.tab').removeClass('active');
+            $('.tab[data-system-cid=' + system.cid + ']').addClass('active');
+
             _.each(this.energyGraphs, function(graph){
-                if(graph.model === system  &&  system.hasBody()){
+                if(graph.model === system){
                     graph.$el.show();
                 } else {
                     graph.$el.hide();
                 }
             }, this);
+        },
+
+        changeEnergyTab: function(clickEvent){
+            var systemCID = $(clickEvent.currentTarget).data('system-cid');
+            this.showEnergyGraph(this.simulation.systems.get(systemCID));
         },
 
         /**
@@ -259,24 +266,6 @@ define(function (require) {
             this.$el.append(this.rulerView.el);
             this.$el.append(this.stopwatchView.el);
          },
-
-
-        // /**
-        //  * Renders the graphs
-        //  */
-        //  renderEnergyGraphs: function(){
-
-        //     var mockSprings = [{
-        //         spring : 'one'
-        //     },{
-        //         spring : 'two'
-        //     },{
-        //         spring : 'three'
-        //     }];
-
-        //     // this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
-
-        //  },
 
         /**
          * Functions that link to UI inputs
@@ -377,6 +366,8 @@ define(function (require) {
             this.stopwatchView.hide();
 
             this.renderHelp();
+
+            this.showEnergyGraph(this.simulation.systems.first());
         },
 
 
@@ -574,17 +565,11 @@ define(function (require) {
         /**
          * Renders tabbed graphs
          */
-        renderTabbedGraph : function($element, data, options){
-
-            if(!_.isArray(data) || !$element){
-                // TODO: Determine whether this needs an error?
-                // No choices or no element to place the list into, don't try to render list.
-                return;
-            }
+        renderTabbedGraph : function($element, collection, options){
 
             options = _.extend({}, options);
 
-            options.data = data;
+            options.collection = collection;
             $element.replaceWith(this.tabbedGraphTemplate(options));
 
         },
