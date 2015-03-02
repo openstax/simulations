@@ -73,6 +73,7 @@ define(function(require) {
 
             this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
             this.particleTankView.displayObject.y = Math.floor(this.height * this.particleTankPosition.y);
+            this.particleTankView.positionButton();
             this.$ui.append(this.particleTankView.el);
 
             this.stage.addChild(this.particleTankView.displayObject);

@@ -57,6 +57,7 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
             this.listenTo(this.simulation, 'change:exploded', this.containerExplodedStateChanged);
+            this.listenTo(this.simulation, 'change:temperatureSetPoint', this.temperatureChanged);
             this.listenTo(this.simulation, 'particles-injected', this.particlesInjected);
             this.listenTo(this.simulation, 'particles-cleared', this.removeAllParticles);
             this.listenTo(this.simulation, 'particles-initialized', this.addInitialParticles);
@@ -64,11 +65,11 @@ define(function(require) {
 
         initGraphics: function() {
             this.initTank();
+            this.initParticleContainer();
+            this.initParticleTextures();
             this.initLid();
             this.initThermometer();
             this.initReturnLidButton();
-            this.initParticleContainer();
-            this.initParticleTextures();
             this.addInitialParticles();
         },
 
@@ -106,6 +107,17 @@ define(function(require) {
             thermometerView.displayObject.x = -this.lid.width * 0.38;
             thermometerView.displayObject.y = 14;
             this.lid.addChild(thermometerView.displayObject);
+            this.thermometerView = thermometerView;
+
+            var thermometerLabel = new PIXI.Text('0 K', {
+                font: 'bold 12px Arial',
+                fill: '#000'
+            });
+            thermometerLabel.anchor.x = 0.5;
+            thermometerLabel.x = thermometerView.displayObject.x;
+            thermometerLabel.y = thermometerView.displayObject.y - thermometerView.displayObject.height - 4;
+            this.lid.addChild(thermometerLabel);
+            this.thermometerLabel = thermometerLabel;
         },
 
         initReturnLidButton: function() {
@@ -261,6 +273,12 @@ define(function(require) {
             }
         },
 
+        temperatureChanged: function(simulation, temperature) {
+            var temp = simulation.convertInternalTemperatureToKelvin();
+            this.thermometerView.val(temp / Constants.MAX_DISPLAYED_TEMPERATURE);
+            this.thermometerLabel.setText(temp.toFixed(0) + ' K');
+        },
+
         getLeftConnectorPosition: function() {
             return this._leftConnectorPosition
                 .set(this.displayObject.x, this.displayObject.y)
@@ -325,6 +343,13 @@ define(function(require) {
             var viewPosition = this.mvt.modelToView(particle.model.position);
             particle.x = viewPosition.x;
             particle.y = viewPosition.y;
+        },
+
+        positionButton: function() {
+            this.$button.css({
+                top: (this.displayObject.y - this.tank.height - 74) + 'px',
+                left: this.displayObject.x + 'px'
+            });
         }
 
     }, Constants.ParticleTankView);

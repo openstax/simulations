@@ -20,19 +20,24 @@ define(function(require) {
 
                 numberOfTicks: 7,
 
-                lineColor: '#999',
+                lineColor: '#555',
                 lineWidth: 1,
                 lineAlpha: 1,
 
                 fillColor: '#fff',
                 fillAlpha: 0.3,
 
-                liquidColor: '#ff3c00'
+                liquidColor: '#ff3c00',
+
+                tickColor: '#555',
+                tickWidth: 1
             }, options);
 
             this.bulbDiameter = options.bulbDiameter;
             this.tubeWidth = options.tubeWidth;
             this.tubeHeight = options.tubeHeight;
+
+            this.numberOfTicks = options.numberOfTicks;
 
             this.lineColor = Colors.parseHex(options.lineColor);
             this.lineWidth = options.lineWidth;
@@ -42,6 +47,9 @@ define(function(require) {
             this.fillAlpha = options.fillAlpha;
 
             this.liquidColor = Colors.parseHex(options.liquidColor);
+
+            this.tickColor = Colors.parseHex(options.tickColor);
+            this.tickWidth = options.tickWidth;
 
             this.value = 0;
 
@@ -132,7 +140,18 @@ define(function(require) {
         initTicks: function() {
             var ticks = new PIXI.Graphics();
 
+            var ySpacing = this.tubeHeight / this.numberOfTicks;
+            var radius = Math.floor(this.bulbDiameter / 2);
+            var halfWidth = Math.floor(this.tubeWidth / 2);
+            var tickLength = Math.floor(this.tubeWidth * 0.4);
 
+            ticks.lineStyle(this.tickWidth, this.tickColor, 1);
+
+            for (var i = 0; i < this.numberOfTicks; i++) {
+                var y = Math.floor(-radius - ySpacing * (i + 0.5));
+                ticks.moveTo(-halfWidth, y);
+                ticks.lineTo(-halfWidth + tickLength, y);
+            }
 
             this.displayObject.addChild(ticks);
         },
