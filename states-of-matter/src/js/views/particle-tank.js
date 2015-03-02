@@ -7,6 +7,7 @@ define(function(require) {
     require('common/pixi/extensions');
     
     var PixiView           = require('common/pixi/view');
+    var ThermometerView    = require('common/pixi/view/thermometer');
     var Vector2            = require('common/math/vector2');
     var range              = require('common/math/range');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -56,6 +57,7 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'change:particleContainerHeight', this.particleContainerHeightChanged);
             this.listenTo(this.simulation, 'change:exploded', this.containerExplodedStateChanged);
+            this.listenTo(this.simulation, 'change:temperatureSetPoint', this.temperatureChanged);
             this.listenTo(this.simulation, 'particles-injected', this.particlesInjected);
             this.listenTo(this.simulation, 'particles-cleared', this.removeAllParticles);
             this.listenTo(this.simulation, 'particles-initialized', this.addInitialParticles);
@@ -63,10 +65,11 @@ define(function(require) {
 
         initGraphics: function() {
             this.initTank();
-            this.initLid();
-            this.initReturnLidButton();
             this.initParticleContainer();
             this.initParticleTextures();
+            this.initLid();
+            this.initThermometer();
+            this.initReturnLidButton();
             this.addInitialParticles();
         },
 
@@ -81,10 +84,13 @@ define(function(require) {
         initLid: function() {
             this.lidYRange = range({ max: -20, min: -20 - 255  });
 
-            this.lid = Assets.createSprite(Assets.Images.TANK_LID);
-            this.lid.anchor.x = 0.5;
-            this.lid.anchor.y = 1;
+            var lidSprite = Assets.createSprite(Assets.Images.TANK_LID);
+            lidSprite.anchor.x = 0.5;
+            lidSprite.anchor.y = 1;
+
+            this.lid = new PIXI.DisplayObjectContainer();
             this.lid.y = this.lidYRange.min;
+            this.lid.addChild(lidSprite);
 
             if (this.lidDraggable) {
                 this.lid.buttonMode = true;
@@ -92,6 +98,26 @@ define(function(require) {
             }
 
             this.displayObject.addChild(this.lid);
+        },
+
+        initThermometer: function() {
+            var thermometerView = new ThermometerView({
+
+            });
+            thermometerView.displayObject.x = -this.lid.width * 0.38;
+            thermometerView.displayObject.y = 14;
+            this.lid.addChild(thermometerView.displayObject);
+            this.thermometerView = thermometerView;
+
+            var thermometerLabel = new PIXI.Text('0 K', {
+                font: 'bold 12px Arial',
+                fill: '#000'
+            });
+            thermometerLabel.anchor.x = 0.5;
+            thermometerLabel.x = thermometerView.displayObject.x;
+            thermometerLabel.y = thermometerView.displayObject.y - thermometerView.displayObject.height - 4;
+            this.lid.addChild(thermometerLabel);
+            this.thermometerLabel = thermometerLabel;
         },
 
         initReturnLidButton: function() {
@@ -247,6 +273,12 @@ define(function(require) {
             }
         },
 
+        temperatureChanged: function(simulation, temperature) {
+            var temp = simulation.convertInternalTemperatureToKelvin();
+            this.thermometerView.val(temp / Constants.MAX_DISPLAYED_TEMPERATURE);
+            this.thermometerLabel.setText(temp.toFixed(0) + ' K');
+        },
+
         getLeftConnectorPosition: function() {
             return this._leftConnectorPosition
                 .set(this.displayObject.x, this.displayObject.y)
@@ -311,6 +343,13 @@ define(function(require) {
             var viewPosition = this.mvt.modelToView(particle.model.position);
             particle.x = viewPosition.x;
             particle.y = viewPosition.y;
+        },
+
+        positionButton: function() {
+            this.$button.css({
+                top: (this.displayObject.y - this.tank.height - 74) + 'px',
+                left: this.displayObject.x + 'px'
+            });
         }
 
     }, Constants.ParticleTankView);
