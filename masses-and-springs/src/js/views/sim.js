@@ -12,6 +12,8 @@ define(function (require) {
     var RulerView = require('common/tools/ruler');
     var ReferenceLineView = require('common/tools/reference-line');
     var HelpLabelView = require('common/help-label/index');
+    var BarGraphView = require('common/bar-graph/bar-graph');
+
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -87,6 +89,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Masses &amp; Springs',
                 name: 'masses-and-springs',
+                link: 'mass-spring-lab'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
@@ -150,6 +153,39 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+
+        renderEnergyGraphs: function(system){
+
+            this.energyGraphs = [];
+
+            this.listenTo(this.simulation.systems, 'change:body', this.showEnergyGraph);
+
+            this.simulation.systems.each(function(system, iter){
+                var barGraph = new BarGraphView({
+                    model : system,
+                    title : 'Energy of ' + (iter + 1)
+                });
+
+                barGraph.render();
+                this.$('.energy-graph-placeholder').append(barGraph.el);
+                barGraph.$el.hide();
+                this.energyGraphs.push(barGraph);
+            }, this);
+
+            this.energyGraphs[0].$el.show();
+        },
+
+        showEnergyGraph: function(system){
+
+            _.each(this.energyGraphs, function(graph){
+                if(graph.model === system  &&  system.hasBody()){
+                    graph.$el.show();
+                } else {
+                    graph.$el.hide();
+                }
+            }, this);
+        },
+
         /**
          * Renders the playback controls
          */
@@ -162,7 +198,7 @@ define(function (require) {
          */
         renderSceneControls: function(){
 
-            this.renderChoiceList(this.$('.gravity-settings-placeholder'), Constants.SimSettings.GRAVITY, {inputName: 'gravity-setting'});
+            this.renderChoiceList(this.$('.gravity-settings-placeholder'), _.shuffle(Constants.SimSettings.GRAVITY), {inputName: 'gravity-setting'});
 
             this.renderDiscreteSlider(this.$('.friction-settings-placeholder'), this.getFrictionSettings(), {
                 pips : {
@@ -225,22 +261,22 @@ define(function (require) {
          },
 
 
-        /**
-         * Renders the graphs
-         */
-         renderEnergyGraphs: function(){
+        // /**
+        //  * Renders the graphs
+        //  */
+        //  renderEnergyGraphs: function(){
 
-            var mockSprings = [{
-                spring : 'one'
-            },{
-                spring : 'two'
-            },{
-                spring : 'three'
-            }]
+        //     var mockSprings = [{
+        //         spring : 'one'
+        //     },{
+        //         spring : 'two'
+        //     },{
+        //         spring : 'three'
+        //     }];
 
-            this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
+        //     // this.renderTabbedGraph(this.$('.energy-graph-placeholder'), mockSprings);
 
-         },
+        //  },
 
         /**
          * Functions that link to UI inputs

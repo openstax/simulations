@@ -48,3 +48,10 @@
       -ms-transform: @transform; // IE9 only
           transform: @transform;
 }
+
+.transform-origin(@origin-x, @origin-y) {
+  -webkit-transform-origin: @origin-x @origin-y;
+     -moz-transform-origin: @origin-x @origin-y;
+      -ms-transform-origin: @origin-x @origin-y; // IE9 only
+          transform-origin: @origin-x @origin-y;
+}

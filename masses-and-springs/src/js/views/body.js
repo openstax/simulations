@@ -57,7 +57,9 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.hook = new PIXI.Graphics();
             this.body = new PIXI.Graphics();
+            this.displayObject.addChild(this.hook);
             this.displayObject.addChild(this.body);
         },
 
@@ -105,26 +107,48 @@ define(function(require) {
         },
 
         labelBody: function(){
+
+            var labelSettings = {
+                font : this.labelOptions.font,
+                align : this.labelOptions.align,
+                wordWrap: true,
+                wordWrapWidth: this.viewModel.width,
+                fill : Colors.darkenHex(this.model.color, .2)
+            };
+            var unitSettings;
             var labelText;
+            var unitsLabel;
 
             if(this.label){
-                labelText = new PIXI.Text(this._makeLabelText(), {
-                    font : this.labelOptions.font,
-                    align : this.labelOptions.align,
-                    wordWrap: true,
-                    wordWrapWidth: this.viewModel.width,
-                    fill : Colors.darkenHex(this.model.color, .2)
-                });
+                unitSettings = _.clone(labelSettings);
+                unitSettings.font = this.labelOptions.smallFont;
 
-                this._centerLabel(labelText);
+                labelText = new PIXI.Text(this._makeLabelText(), labelSettings);
+                unitsLabel = new PIXI.Text(this.model.units, unitSettings);
+
+                this._positionLabel(labelText, unitsLabel);
 
                 labelText.blendMode = PIXI.blendModes.MULTIPLY;
-                this.displayObject.addChild(labelText);
+                unitsLabel.blendMode = PIXI.blendModes.MULTIPLY;
+                this.body.addChild(labelText);
+                this.body.addChild(unitsLabel);
             }
         },
 
         _makeLabelText: function(){
-            return (this.model.mass * 1000).toFixed(0) + ' ' + this.model.units;
+            return (this.model.mass * 1000).toFixed(0)
+        },
+
+        _positionLabel: function(labelText, unitsLabel){
+
+            this._centerLabel(labelText);
+            this._centerLabel(unitsLabel);
+
+            labelText.x -= 1;
+            unitsLabel.x -= 1;
+
+            labelText.y -= 4;
+            unitsLabel.y += 10;
         },
 
         _centerLabel: function(label){
@@ -145,8 +169,8 @@ define(function(require) {
         drawHook: function(){
             var hook = this.makeHook(this.viewModel.radius, 0);
 
-            this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
-            this.body.drawPiecewiseCurve(hook, 0, 0);
+            this.hook.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
+            this.hook.drawPiecewiseCurve(hook, 0, 0);
         },
 
         makeHook: function(center, hookBase){
@@ -173,6 +197,7 @@ define(function(require) {
         },
 
         drawBlock: function(){
+            this.body.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
             this.body.beginFill(this.viewModel.color, 1);
             this.body.drawRect(0, 0, this.viewModel.width, this.viewModel.height);
             this.body.endFill();
@@ -201,11 +226,15 @@ define(function(require) {
 
                 if(this.model.isHung() && this.isSidewaysDrag(newBodyLeft)){
                     this.model.unhang();
-                } else if(!this.model.isHung()){
-                    // only update x for weak sideway drags if the body is not hung
-                    this.displayObject.x = newBodyLeft;
+                } else if (this.model.isHung() && (this.displayObject.x != newBodyLeft)){
+                    // unset the center so that change to center can be detected
+                    // if the body needs to resnap to the spring
+                    this.model.unset('center', {
+                        silent : true
+                    });
                 }
 
+                this.displayObject.x = newBodyLeft;
                 this.displayObject.y = newBodyBottom;
 
                 this.updateModelPosition();
@@ -213,8 +242,8 @@ define(function(require) {
         },
 
         isSidewaysDrag: function(newX){
-            // is the sideways drag more than half the width of the spring hit area?
-            return Math.abs(newX - this.displayObject.x) > this.model.spring.hitArea.w / 2;
+            // is the drag outside the bounds of the spring's attachment area?
+            return !this.model.hook.intersects(this.model.spring.hitArea);
         },
 
         bringToFront: function(){

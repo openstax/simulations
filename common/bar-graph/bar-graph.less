@@ -1,0 +1,100 @@
+@import "../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../styles/mixins/vendor-prefixes.less";
+@import "../styles/variables.less";
+
+@graph-height: 460px;
+@graph-color: #333;
+@graph-left-padding: 10px;
+
+.bar-graph-view{
+    position: relative;
+    height: @graph-height;
+    margin-bottom: 65px;
+    padding: 0 0 0 @graph-left-padding;
+
+    .title{
+        text-align: center;
+        width: @graph-height;
+        position: absolute;
+        bottom: -30px;
+        left: -0.7em;
+
+        .transform-origin(0, 0);
+        .transform(~"rotate(-90deg)");
+    }
+}
+
+.bar-graph{
+    height: @graph-height;
+}
+
+.sim-controls ul.bar-graph{
+    padding: 0;
+}
+
+#total-marker{
+    position: absolute;
+    width: 100%;
+    border-bottom: 1px dashed @graph-color;
+    font-size: @graph-height;
+    bottom: 0;
+
+    p{
+        font-size: 14px;
+        margin-bottom: 0;
+        text-align: center;
+    }
+}
+
+.attribute{
+    width: 20px;
+    display: block;
+    margin: 0;
+    float: left;
+    height: @graph-height;
+    position: relative;
+    border-bottom: 1px solid @graph-color;
+
+    &:first-child{
+        border-left: 1px solid @graph-color;
+    }
+
+    label{
+        position: absolute;
+        bottom: -1em;
+
+        .transform-origin(0, 100%);
+        .transform(~"rotate(90deg)");
+    }
+
+    .bar{
+        font-size: @graph-height;
+        position: absolute;
+        bottom: 0;
+        width: 90%;
+
+        transition: height .1s ease-in-out;
+        -moz-transition: height .1s ease-in-out;
+        -webkit-transition: height .1s ease-in-out;
+        margin: 0 auto;
+        max-height: 0;
+        height: @graph-height;
+        background: @graph-color;
+    }
+
+    .bar-wrapper{
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+
+        .bar{
+            position: relative;
+        }
+    }
+
+    .total{
+        .bar{
+            position: relative;
+        }
+    }
+}
