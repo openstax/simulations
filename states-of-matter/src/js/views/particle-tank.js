@@ -128,7 +128,7 @@ define(function(require) {
                 finger.anchor.y = 1;
                 finger.scale.x = finger.scale.y = 0.8;
                 finger.x = this.lid.width * 0.5;
-                finger.y = -22;
+                finger.y = this.lid.y - 22;
                 this.displayObject.addChild(finger);
                 this.finger = finger;
             }
