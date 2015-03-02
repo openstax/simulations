@@ -72,7 +72,8 @@ define(function (require) {
 		},
 
 		panelDown: function(event) {
-			if (event.target === this.el) {
+
+			if (event.currentTarget === this.el) {
 				event.preventDefault();
 
 				this.$el.addClass('dragging');

@@ -35,10 +35,10 @@ define(function(require) {
 
 			this.labelModel = {};
 
-			this.labelModel.style = options.style;
-			this.labelModel.orientation = options.orientation;
+			this.labelModel.style = options.style; // not fully implemented
+			this.labelModel.orientation = options.orientation; // not fully implemented
 			this.labelModel.title = options.title;
-			this.labelModel.content = options.content;
+			this.labelModel.content = options.content; // not fully implemented
 		},
 
 		render: function(){
