@@ -37,6 +37,8 @@ define(function (require, exports, module) {
 
             this.on('change:gravity', this.updateGravity);
             this.on('change:b', this.updateFriction);
+
+            this.listenTo(this.spring, 'displayEnergy', this.showGraph);
         },
 
         addBody: function(body) {
@@ -209,6 +211,10 @@ define(function (require, exports, module) {
 
         _calculateRestingDeltaY : function(){
             return this.body.get('top') - this.spring.y1 - this.spring.restL;
+        },
+
+        showGraph : function(){
+            this.trigger('showGraph');
         }
 
     });

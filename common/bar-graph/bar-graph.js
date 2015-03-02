@@ -53,11 +53,27 @@ define(function(require) {
             this.$el.find('.attribute').css({
                 width: width
             });
+
+            _.each(this.model.get('bars').reverse(), function(bar, iter){
+                var $bar;
+
+                if(bar.class === 'total'){
+                    return;
+                }
+
+                $bar = $('<div class="bar ' + bar.linkTo + '"></div>');
+                $bar.css({
+                    zIndex: iter
+                });
+                this.$el.find('.total').append($bar);
+            }, this);
+
+            this.$el.find('.total .bar').wrapAll('<div class="bar-wrapper"/>');
         },
 
         updateBar: function(bar){
-            this.$el.find('#' + bar.linkTo).children('.bar').css({
-                transform: 'scale(1, ' + bar.value/this.maxValue + ')'
+            this.$el.find('.' + bar.linkTo).css({
+                maxHeight: bar.value/this.maxValue + 'em'
             });
 
             if(bar.class === 'total'){
