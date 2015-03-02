@@ -69,6 +69,7 @@ define(function(require) {
             this.initParticleTextures();
             this.initLid();
             this.initThermometer();
+            this.initFinger();
             this.initReturnLidButton();
             this.addInitialParticles();
         },
@@ -118,6 +119,19 @@ define(function(require) {
             thermometerLabel.y = thermometerView.displayObject.y - thermometerView.displayObject.height - 4;
             this.lid.addChild(thermometerLabel);
             this.thermometerLabel = thermometerLabel;
+        },
+
+        initFinger: function() {
+            if (this.lidDraggable) {
+                var finger = Assets.createSprite(Assets.Images.FINGER);
+                finger.anchor.x = 1;
+                finger.anchor.y = 1;
+                finger.scale.x = finger.scale.y = 0.8;
+                finger.x = this.lid.width * 0.5;
+                finger.y = this.lid.y - 22;
+                this.displayObject.addChild(finger);
+                this.finger = finger;
+            }
         },
 
         initReturnLidButton: function() {
@@ -249,6 +263,9 @@ define(function(require) {
             var relativeHeight = particleContainerHeight / Constants.CONTAINER_BOUNDS.h;
 
             this.lid.y = this.lidYRange.lerp(1 - relativeHeight);
+
+            if (this.finger)
+                this.finger.y = this.lid.y - 22;
 
             if (this.simulation.get('exploded')) {
                 // Rotate the lid to create the visual appearance of it being
