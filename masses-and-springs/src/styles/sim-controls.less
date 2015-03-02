@@ -80,21 +80,6 @@
         .clearfix();
     }
 
-    .sim-tabs{
-        margin-top: 10px;
-
-        > ul{
-            padding: 0 0 0 6px;
-
-            > li{
-                background: @sim-controls-graph-background;
-                padding: 7px 8px;
-            }
-        }
-
-    }
-
-
     ul {
         list-style: none;
         padding: 5px;
@@ -144,10 +129,31 @@
     vertical-align: top;
     width: @control-panel-expanded-width;
     margin-left: 8px;
+
+    .sim-tabs{
+
+        > ul{
+            border-bottom: none;
+
+            > li{
+                // background: @sim-controls-graph-background;
+                .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 95%);
+                padding: 7px 8px;
+
+                &.active{
+                    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 55%);
+                    color: @link-color;
+                }
+            }
+        }
+
+    }
 }
 
 .energy-graphs{
     position: absolute;
+    padding-top: 0;
+    margin-top: 0;
 }
 
 

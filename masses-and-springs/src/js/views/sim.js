@@ -176,8 +176,10 @@ define(function (require) {
 
         showEnergyGraph: function(system){
 
-            $('.tab').removeClass('active');
-            $('.tab[data-system-cid=' + system.cid + ']').addClass('active');
+            var $activeTab = $('.tab[data-system-cid=' + system.cid + ']');
+
+            $activeTab.siblings().removeClass('active');
+            $activeTab.addClass('active');
 
             _.each(this.energyGraphs, function(graph){
                 if(graph.model === system){
