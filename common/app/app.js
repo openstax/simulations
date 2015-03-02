@@ -23,8 +23,7 @@ define(function(require) {
         simViewConstructors: [],
 
         events: {
-            'click .tab' : 'tabClicked',
-            'tab-selected .sim-tab' : 'simTabSelected'
+            'click .sim-tab' : 'tabClicked'
         },
 
         initialize: function(options) {},
@@ -179,16 +178,9 @@ define(function(require) {
                     .addClass('active')
                     .siblings()
                     .removeClass('active');
-                $tab.trigger('tab-selected');
-            }
-        },
 
-        /**
-         * Handles when a tab is selected.
-         */
-        simTabSelected: function(event) {
-            var $tab = $(event.target).closest('.sim-tab');
-            this.simSelected($tab.data('cid'));
+                this.simSelected($tab.data('cid'));
+            }
         },
 
         /**
