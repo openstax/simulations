@@ -21,14 +21,14 @@ define(function(require) {
     var Body = PixiView.extend({
 
         events: {
-            'touchstart      .body': 'dragStart',
-            'mousedown       .body': 'dragStart',
-            'touchmove       .body': 'drag',
-            'mousemove       .body': 'drag',
-            'touchend        .body': 'dragEnd',
-            'mouseup         .body': 'dragEnd',
-            'touchendoutside .body': 'dragEnd',
-            'mouseupoutside  .body': 'dragEnd',
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
         },
 
         initialize: function(options) {
@@ -99,8 +99,8 @@ define(function(require) {
 
         drawBody : function(){
             this.body.clear();
-            this.body.buttonMode = true;
-            this.body.defaultCursor = 'move';
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = 'move';
 
             this.drawHook();
             this.drawBlock();
@@ -171,6 +171,8 @@ define(function(require) {
 
             this.hook.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
             this.hook.drawPiecewiseCurve(hook, 0, 0);
+
+            this.hook.hitArea = new PIXI.Rectangle(0, -1 * this.viewModel.hookHeight, this.viewModel.width, this.viewModel.hookHeight);
         },
 
         makeHook: function(center, hookBase){

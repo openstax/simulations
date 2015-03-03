@@ -54,7 +54,7 @@ define(function(require) {
                 width: width
             });
 
-            _.each(this.model.get('bars').reverse(), function(bar, iter){
+            _.each(this.model.get('bars'), function(bar, iter){
                 var $bar;
 
                 if(bar.class === 'total'){
