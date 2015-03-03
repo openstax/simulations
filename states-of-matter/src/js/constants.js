@@ -364,6 +364,57 @@ define(function (require) {
     Constants.PumpView = PumpView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            PHASE DIAGRAM                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhaseDiagramView = {};
+
+    // Constants that control the look of the axes.
+    PhaseDiagramView.AXES_LINE_WIDTH = 1;
+    PhaseDiagramView.AXES_ARROW_HEAD_WIDTH = 5 * PhaseDiagramView.AXES_LINE_WIDTH;
+    PhaseDiagramView.AXES_ARROW_HEAD_HEIGHT = 8 * PhaseDiagramView.AXES_LINE_WIDTH;
+    PhaseDiagramView.HORIZ_AXIS_SIZE_PROPORTION = 0.88;
+    PhaseDiagramView.VERT_AXIS_SIZE_PROPORTION  = 0.80; // original: 0.85
+
+    // Constant for size of the close button.
+    PhaseDiagramView.CLOSE_BUTTON_PROPORTION = 0.11;  // Button size as proportion of diagram height.
+
+    // Constants that control the location of the origin for the graph.
+    PhaseDiagramView.X_ORIGIN_POSITION = 0.10;
+    PhaseDiagramView.Y_ORIGIN_POSITION = 0.85;
+
+    // Font for the labels used on the axes.
+    PhaseDiagramView.AXIS_LABEL_FONT = '14px Arial';
+
+    // Fonts for labels in the interior of the diagram.
+    PhaseDiagramView.LARGER_INNER_FONT       = '14px Arial';
+    PhaseDiagramView.SMALLER_INNER_FONT_SIZE = '12px Arial';
+
+    // Colors for the various sections of the diagram.
+    PhaseDiagramView.SOLID_COLOR    = '#C6BDD6';
+    PhaseDiagramView.LIQUID_COLOR   = '#88FFBB';
+    PhaseDiagramView.GAS_COLOR      = '#FFBB00';
+    PhaseDiagramView.CRITICAL_COLOR = '#CEDF76';
+    PhaseDiagramView.CURRENT_STATE_MARKER_COLOR  = '#ff0000';
+
+    // Constants that control the appearance of the phase diagram for the
+    // various substances.  Note that all points are controlled as proportions
+    // of the overall graph size and not as absolute values.
+    PhaseDiagramView.POINT_MARKER_DIAMETER         = 4;
+    PhaseDiagramView.CURRENT_STATE_MARKER_DIAMETER = 7;
+    PhaseDiagramView.DEFAULT_TOP_OF_SOLID_LIQUID_LINE   = new Vector2(0.40, 1);
+    PhaseDiagramView.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER = new Vector2(0.30, 1);
+    PhaseDiagramView.DEFAULT_TRIPLE_POINT               = new Vector2(0.35, 0.2);
+    PhaseDiagramView.DEFAULT_CRITICAL_POINT             = new Vector2(0.8,  0.45);
+    PhaseDiagramView.DEFAULT_SOLID_LABEL_LOCATION       = new Vector2(0.2,  0.72);
+    PhaseDiagramView.DEFAULT_LIQUID_LABEL_LOCATION      = new Vector2(0.6,  0.60);
+    PhaseDiagramView.DEFAULT_GAS_LABEL_LOCATION         = new Vector2(0.6,  0.15);
+
+    Constants.PhaseDiagramView = PhaseDiagramView;
+
 
     return Constants;
 });
