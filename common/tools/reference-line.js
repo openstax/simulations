@@ -17,14 +17,14 @@ define(function(require) {
     var ReferenceLine = PixiView.extend({
 
         events: {
-            'touchstart      .body': 'dragStart',
-            'mousedown       .body': 'dragStart',
-            'touchmove       .body': 'drag',
-            'mousemove       .body': 'drag',
-            'touchend        .body': 'dragEnd',
-            'mouseup         .body': 'dragEnd',
-            'touchendoutside .body': 'dragEnd',
-            'mouseupoutside  .body': 'dragEnd',
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
         },
 
         initialize: function(options) {
@@ -35,7 +35,7 @@ define(function(require) {
                 },
                 width : 400,
                 thickness : 2,
-                buffer : 15,
+                buffer : 20,
                 color : '#333',
                 opacity : 0.75,
                 dashWidth : 8,
@@ -64,11 +64,12 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.body = new PIXI.Graphics();
-            this.displayObject.addChild(this.body);
-            this.body.clear();
-            this.body.buttonMode = true;
-            this.body.defaultCursor = this.yOnly? 'ns-resize': 'move';
+            this.referenceLine = new PIXI.Graphics();
+            this.referenceLine.clear();
+
+            this.displayObject.addChild(this.referenceLine);
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = this.yOnly? 'ns-resize': 'move';
         },
 
         drawLine: function(){
@@ -77,9 +78,7 @@ define(function(require) {
         },
 
         drawDraggableZone: function(){
-            this.body.beginFill(Colors.parseHex(this.color), 0);
-            this.body.drawRect(0, -1 * (this.buffer + this.thickness/2), this.width, 2 * this.buffer + this.thickness);
-            this.body.endFill();
+            this.referenceLine.hitArea = new PIXI.Rectangle(0, -1 * (this.buffer + this.thickness/2), this.width, 2 * this.buffer + this.thickness);
         },
 
         drawDashedLine: function(){
@@ -87,14 +86,14 @@ define(function(require) {
             var lineTo = 0;
             var dashWidth;
 
-            this.body.lineStyle(this.thickness, Colors.parseHex(this.color), this.opacity);
+            this.referenceLine.lineStyle(this.thickness, Colors.parseHex(this.color), this.opacity);
 
             while(lineTo < this.width){
 
                 dashWidth = Math.min(this.dashWidth, this.width - lineTo);
 
-                this.body.moveTo(lineTo, 0);
-                this.body.lineTo(lineTo + dashWidth, 0);
+                this.referenceLine.moveTo(lineTo, 0);
+                this.referenceLine.lineTo(lineTo + dashWidth, 0);
 
                 lineTo += 2 * this.dashWidth;
             }
