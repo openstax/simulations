@@ -406,11 +406,13 @@ define(function (require) {
     PhaseDiagramView.CURRENT_STATE_MARKER_RADIUS = 3;
     PhaseDiagramView.DEFAULT_TOP_OF_SOLID_LIQUID_LINE   = new Vector2(0.40, 1);
     PhaseDiagramView.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER = new Vector2(0.30, 1);
+
     PhaseDiagramView.DEFAULT_TRIPLE_POINT               = new Vector2(0.35, 0.2);
     PhaseDiagramView.DEFAULT_CRITICAL_POINT             = new Vector2(0.8,  0.45);
-    PhaseDiagramView.DEFAULT_SOLID_LABEL_LOCATION       = new Vector2(0.2,  0.72);
-    PhaseDiagramView.DEFAULT_LIQUID_LABEL_LOCATION      = new Vector2(0.6,  0.60);
-    PhaseDiagramView.DEFAULT_GAS_LABEL_LOCATION         = new Vector2(0.6,  0.15);
+
+    PhaseDiagramView.SOLID_LABEL_LOCATION       = new Vector2(0.16, 0.72);
+    PhaseDiagramView.LIQUID_LABEL_LOCATION      = new Vector2(0.6,  0.60);
+    PhaseDiagramView.GAS_LABEL_LOCATION         = new Vector2(0.6,  0.15);
 
     Constants.PhaseDiagramView = PhaseDiagramView;
 

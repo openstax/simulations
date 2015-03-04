@@ -182,6 +182,7 @@ define(function(require) {
             this.drawAxes(xAxis, yAxis, xAxisArrow, yAxisArrow);
 
             // Paint the labels
+            this.drawLabels(graphOffsetX, graphOffsetY, gw, gh);
         },
 
         drawAreas: function(solidArea, liquidArea, gasArea, criticalArea) {
@@ -235,6 +236,20 @@ define(function(require) {
 
             PIXI.drawPiecewiseCurve(ctx, xAxisArrow, 0, 0, true, false);
             PIXI.drawPiecewiseCurve(ctx, yAxisArrow, 0, 0, true, false);
+        },
+
+        drawLabels: function(x, y, gw, gh) {
+            var ctx = this.context;
+
+            ctx.textAlign = 'center';
+            ctx.fillStyle = C.LINE_COLOR;
+
+            ctx.font = PhaseDiagramView.LARGER_INNER_FONT;
+            ctx.fillText('solid',  C.SOLID_LABEL_LOCATION.x  * gw + x, C.SOLID_LABEL_LOCATION.y  * -gh + y);
+            ctx.fillText('liquid', C.LIQUID_LABEL_LOCATION.x * gw + x, C.LIQUID_LABEL_LOCATION.y * -gh + y);
+            ctx.fillText('gas',    C.GAS_LABEL_LOCATION.x    * gw + x, C.GAS_LABEL_LOCATION.y    * -gh + y);
+            
+            ctx.font = PhaseDiagramView.SMALLER_INNER_FONT;
         },
 
         show: function() {
