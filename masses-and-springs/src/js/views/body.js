@@ -94,6 +94,9 @@ define(function(require) {
             this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width) * Constants.Scene.PX_PER_METER;
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
 
+            this.viewModel.hookLeftOffset = this.viewModel.width/2 - this.viewModel.hookRadius;
+            this.viewModel.hookTopOffset = -1 * this.viewModel.hookHeight;
+
             this.viewModel.totalHeight = this.viewModel.height + this.viewModel.hookHeight;
         },
 
@@ -172,7 +175,7 @@ define(function(require) {
             this.hook.lineStyle(this.viewModel.hookThickness, this.viewModel.borderColor, 1);
             this.hook.drawPiecewiseCurve(hook, 0, 0);
 
-            this.hook.hitArea = new PIXI.Rectangle(0, -1 * this.viewModel.hookHeight, this.viewModel.width, this.viewModel.hookHeight);
+            this.hook.hitArea = new PIXI.Rectangle(this.viewModel.hookLeftOffset, this.viewModel.hookTopOffset, 2 * this.viewModel.hookRadius, this.viewModel.hookHeight);
         },
 
         makeHook: function(center, hookBase){

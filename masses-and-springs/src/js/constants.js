@@ -189,7 +189,7 @@ define(function (require) {
     var BodyDefaults = {};
     // TODO convert from px to meters
     BodyDefaults.WIDTH_TO_HOOK_RADIUS = function(width){
-        return (8 + 0.1 * width)/Scene.PX_PER_METER;
+        return (9 + 0.1 * width)/Scene.PX_PER_METER;
     };
     BodyDefaults.MASS_TO_HEIGHT = function(mass){
         return (30 + 240 * mass)/Scene.PX_PER_METER;
