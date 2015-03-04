@@ -19,7 +19,12 @@ define(function(require) {
         template : _.template(html),
 
         tagName : 'div',
-        className : 'energy-graph-view',
+        className : 'bar-graph-view',
+
+        events : {
+            'click .btn-zoom-in' : 'zoomIn',
+            'click .btn-zoom-out' : 'zoomOut'
+        },
 
         initialize: function(options) {
             options = _.extend({
@@ -81,6 +86,14 @@ define(function(require) {
                     bottom: bar.value/this.maxValue + 'em'
                 });
             }
+        },
+
+        zoomIn: function(){
+
+        },
+
+        zoomOut: function(){
+
         }
 
     });
