@@ -53,12 +53,12 @@ define(function(require) {
             var ctx = this.context;
 
             // Graph dimensions
-            var gw = C.HORIZ_AXIS_SIZE_PROPORTION * this.width;  // Graph width
-            var gh = C.VERT_AXIS_SIZE_PROPORTION  * this.height; // Graph height
+            var gw = this.width  - C.AXES_ARROW_HEAD_HEIGHT - C.X_ORIGIN_POSITION;
+            var gh = this.height - C.AXES_ARROW_HEAD_HEIGHT - C.Y_ORIGIN_POSITION; 
 
             // Graph offsets
-            var graphOffsetX = C.X_ORIGIN_POSITION * this.width;
-            var graphOffsetY = C.Y_ORIGIN_POSITION * this.height;
+            var graphOffsetX = C.X_ORIGIN_POSITION;
+            var graphOffsetY = this.height - C.Y_ORIGIN_POSITION;
 
             // Determine which graph to draw
             var topOfSolidLiquidLine;
@@ -130,19 +130,63 @@ define(function(require) {
                 .lineTo(gw, 0)
                 close();
 
-            // Translate them to make space on the edges for the axes and axis labels
+            var xAxis = new PiecewiseCurve()
+                .moveTo(0,  0)
+                .lineTo(gw, 0);
+
+            var yAxis = new PiecewiseCurve()
+                .moveTo(0,   0)
+                .lineTo(0, -gh);
+
+            var xAxisArrow = new PiecewiseCurve()
+                .moveTo(gw, -PhaseDiagramView.AXES_ARROW_HEAD_WIDTH / 2)
+                .lineTo(gw + PhaseDiagramView.AXES_ARROW_HEAD_HEIGHT, 0)
+                .lineTo(gw,  PhaseDiagramView.AXES_ARROW_HEAD_WIDTH / 2)
+                .close();
+
+            var yAxisArrow = new PiecewiseCurve()
+                .moveTo(-PhaseDiagramView.AXES_ARROW_HEAD_WIDTH / 2, -gh)
+                .lineTo(0, -gh - PhaseDiagramView.AXES_ARROW_HEAD_HEIGHT)
+                .lineTo(PhaseDiagramView.AXES_ARROW_HEAD_WIDTH / 2, -gh)
+                .close();
+
+            // Translate everything to make space on the edges for the axis labels
             _.each([
                 solidBorder,
                 solidArea,
                 liquidBottomBorder,
                 liquidArea,
                 criticalArea,
-                gasArea
+                gasArea,
+                xAxis,
+                yAxis,
+                xAxisArrow,
+                yAxisArrow
             ], function(curve) {
                 curve.translate(graphOffsetX, graphOffsetY);
             });
+
+            triplePoint.add(graphOffsetX, graphOffsetY);
+            criticalPoint.add(graphOffsetX, graphOffsetY);
             
-            // Paint the areas
+            // Paint the filled areas
+            this.drawAreas(solidArea, liquidArea, gasArea, criticalArea);
+
+            // Paint the lines
+            this.drawLines(solidBorder, liquidBottomBorder);
+
+            // Paint the dots
+            this.drawDots(triplePoint, criticalPoint);
+
+            // Paint the axes
+            this.drawAxes(xAxis, yAxis, xAxisArrow, yAxisArrow);
+
+            // Paint the labels
+        },
+
+        drawAreas: function(solidArea, liquidArea, gasArea, criticalArea) {
+            var ctx = this.context;
+
             ctx.fillStyle = C.SOLID_COLOR;
             PIXI.drawPiecewiseCurve(ctx, solidArea, 0, 0, true, false);
             ctx.fillStyle = C.LIQUID_COLOR;
@@ -151,9 +195,46 @@ define(function(require) {
             PIXI.drawPiecewiseCurve(ctx, gasArea, 0, 0, true, false);
             ctx.fillStyle = C.CRITICAL_COLOR;
             PIXI.drawPiecewiseCurve(ctx, criticalArea, 0, 0, true, false);
+        },
 
-            // Paint the lines
+        drawLines: function(solidBorder, liquidBottomBorder) {
+            var ctx = this.context;
 
+            ctx.strokeStyle = C.LINE_COLOR;
+            ctx.lineWidth = 1;
+            ctx.lineJoin = 'round';
+
+            PIXI.drawPiecewiseCurve(ctx, solidBorder,        0, 0, false, true);
+            PIXI.drawPiecewiseCurve(ctx, liquidBottomBorder, 0, 0, false, true);
+        },
+
+        drawDots: function(triplePoint, criticalPoint) {
+            var ctx = this.context;
+
+            ctx.fillStyle = C.LINE_COLOR;
+
+            ctx.beginPath();
+            ctx.arc(triplePoint.x + 0, triplePoint.y + 0, C.POINT_RADIUS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+
+            ctx.beginPath();
+            ctx.arc(criticalPoint.x + 0, criticalPoint.y + 0, C.POINT_RADIUS, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.closePath();
+        },
+
+        drawAxes: function(xAxis, yAxis, xAxisArrow, yAxisArrow) {
+            var ctx = this.context;
+
+            ctx.fillStyle = C.LINE_COLOR;
+            ctx.strokeStyle = C.LINE_COLOR;
+
+            PIXI.drawPiecewiseCurve(ctx, xAxis, 0, 0, false, true);
+            PIXI.drawPiecewiseCurve(ctx, yAxis, 0, 0, false, true);
+
+            PIXI.drawPiecewiseCurve(ctx, xAxisArrow, 0, 0, true, false);
+            PIXI.drawPiecewiseCurve(ctx, yAxisArrow, 0, 0, true, false);
         },
 
         show: function() {

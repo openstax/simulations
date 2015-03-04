@@ -41,11 +41,11 @@ define(function (require) {
 
             this.phaseDiagramView = new PhaseDiagramView();
             this.phaseDiagramView.render();
-            //this.phaseDiagramView.hide();
 
-            this.$('.side-panel')
-                .append(phaseDiagramHtml)
-                .append(this.phaseDiagramView.el);
+            this.$('.side-panel').append(phaseDiagramHtml);
+            this.$phaseDiagramPanel = this.$('.phase-diagram-panel');
+            this.$phaseDiagramPanel.append(this.phaseDiagramView.el);
+            //this.$phaseDiagramPanel.hide();
         },
 
         /**
@@ -68,7 +68,7 @@ define(function (require) {
         },
 
         showPhaseDiagram: function() {
-            this.phaseDiagramView.show();
+            this.$phaseDiagramPanel.show();
         }
 
     });

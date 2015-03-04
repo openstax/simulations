@@ -376,15 +376,13 @@ define(function (require) {
     PhaseDiagramView.AXES_LINE_WIDTH = 1;
     PhaseDiagramView.AXES_ARROW_HEAD_WIDTH = 5 * PhaseDiagramView.AXES_LINE_WIDTH;
     PhaseDiagramView.AXES_ARROW_HEAD_HEIGHT = 8 * PhaseDiagramView.AXES_LINE_WIDTH;
-    PhaseDiagramView.HORIZ_AXIS_SIZE_PROPORTION = 0.88;
-    PhaseDiagramView.VERT_AXIS_SIZE_PROPORTION  = 0.80; // original: 0.85
 
     // Constant for size of the close button.
     PhaseDiagramView.CLOSE_BUTTON_PROPORTION = 0.11;  // Button size as proportion of diagram height.
 
     // Constants that control the location of the origin for the graph.
-    PhaseDiagramView.X_ORIGIN_POSITION = 0.10;
-    PhaseDiagramView.Y_ORIGIN_POSITION = 0.85;
+    PhaseDiagramView.X_ORIGIN_POSITION = 20; // in pixels
+    PhaseDiagramView.Y_ORIGIN_POSITION = 20; // in pixels
 
     // Font for the labels used on the axes.
     PhaseDiagramView.AXIS_LABEL_FONT = '14px Arial';
@@ -399,12 +397,13 @@ define(function (require) {
     PhaseDiagramView.GAS_COLOR      = '#FFBB00';
     PhaseDiagramView.CRITICAL_COLOR = '#CEDF76';
     PhaseDiagramView.CURRENT_STATE_MARKER_COLOR  = '#ff0000';
+    PhaseDiagramView.LINE_COLOR = '#000';
 
     // Constants that control the appearance of the phase diagram for the
     // various substances.  Note that all points are controlled as proportions
     // of the overall graph size and not as absolute values.
-    PhaseDiagramView.POINT_MARKER_DIAMETER         = 4;
-    PhaseDiagramView.CURRENT_STATE_MARKER_DIAMETER = 7;
+    PhaseDiagramView.POINT_RADIUS                = 2;
+    PhaseDiagramView.CURRENT_STATE_MARKER_RADIUS = 3;
     PhaseDiagramView.DEFAULT_TOP_OF_SOLID_LIQUID_LINE   = new Vector2(0.40, 1);
     PhaseDiagramView.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER = new Vector2(0.30, 1);
     PhaseDiagramView.DEFAULT_TRIPLE_POINT               = new Vector2(0.35, 0.2);
