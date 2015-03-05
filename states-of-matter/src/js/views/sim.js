@@ -46,6 +46,7 @@ define(function (require) {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
+            'click .reset-btn' : 'reset',
 
             'change .molecule-type' : 'changeMoleculeType'
         },
@@ -125,11 +126,16 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Overrides so that we don't rerender on a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        rerender: function(event) {
+            this.sceneView.reset();
+
+            var currentMoleculeType = this.simulation.get('moleculeType');
+            this.$('.molecule-type').each(function() {
+                if ($(this).val() == currentMoleculeType)
+                    $(this).click();
+            });
         },
 
         /**

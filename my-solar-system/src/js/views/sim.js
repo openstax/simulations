@@ -226,7 +226,7 @@ define(function (require) {
          */
         rerender: function(event) {
             this.sceneView.reset();
-            this.updateTime(this.simulatoin, this.simulation.get('time'));
+            this.updateTime(this.simulation, this.simulation.get('time'));
         },
 
         /**
