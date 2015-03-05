@@ -12,6 +12,7 @@ define(function(require) {
 
     var Constants = require('constants');
     var C = Constants.PhaseDiagramView;
+    var MoleculeTypes = Constants.MoleculeTypes;
 
     // CSS
     require('less!styles/phase-diagram');
@@ -31,6 +32,7 @@ define(function(require) {
             this.temperatureHistory = [];
 
             this.listenTo(this.simulation, 'change:exploded', this.explodedChanged);
+            this.listenTo(this.simulation, 'change:moleculeType', this.moleculeTypeChanged);
         },
 
         render: function() {
@@ -433,6 +435,14 @@ define(function(require) {
             this.depictingWater = depictingWater;
             this.drawDiagram();
         },
+
+        moleculeTypeChanged: function(simulation, moleculeType) {
+            if (moleculeType === MoleculeTypes.WATER)
+                this.depictingWater = true;
+            else
+                this.depictingWater = false;
+            this.drawDiagram();
+        }
 
     }, Constants.PhaseDiagramView);
 
