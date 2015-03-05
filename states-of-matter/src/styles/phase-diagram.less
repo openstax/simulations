@@ -1,0 +1,39 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+
+.phase-diagram {
+	position: relative;
+	width: 170px;
+	height: 120px;
+
+	label {
+		position: absolute;
+		z-index: 5;
+		font-weight: normal;
+		color: #000;
+		line-height: 1;
+		font-size: 1em;
+
+		&.triple-point-label,
+		&.critical-point-label {
+			font-size: 0.8em;
+		}
+
+		&.triple-point-label {
+			text-align: right;
+		}
+
+		&.y-axis-label {
+			.rotate(-90deg);
+		}
+	}
+
+	.current-state-marker {
+		position: absolute;
+		width: 6px;
+		height: 6px;
+		margin-left: -3px;
+		margin-top: -3px;
+		border-radius: 50%;
+		background-color: #ff0000;
+	}
+}

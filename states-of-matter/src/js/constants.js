@@ -364,6 +364,72 @@ define(function (require) {
     Constants.PumpView = PumpView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            PHASE DIAGRAM                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhaseDiagramView = {};
+
+    // Constants that control the look of the axes.
+    PhaseDiagramView.AXES_LINE_WIDTH = 1;
+    PhaseDiagramView.AXES_ARROW_HEAD_WIDTH = 5 * PhaseDiagramView.AXES_LINE_WIDTH;
+    PhaseDiagramView.AXES_ARROW_HEAD_HEIGHT = 8 * PhaseDiagramView.AXES_LINE_WIDTH;
+
+    // Constant for size of the close button.
+    PhaseDiagramView.CLOSE_BUTTON_PROPORTION = 0.11;  // Button size as proportion of diagram height.
+
+    // Constants that control the location of the origin for the graph.
+    PhaseDiagramView.X_ORIGIN_POSITION = 20; // in pixels
+    PhaseDiagramView.Y_ORIGIN_POSITION = 20; // in pixels
+
+    // Font for the labels used on the axes.
+    PhaseDiagramView.AXIS_LABEL_FONT = '14px Arial';
+
+    // Fonts for labels in the interior of the diagram.
+    PhaseDiagramView.LARGER_INNER_FONT       = '14px Arial';
+    PhaseDiagramView.SMALLER_INNER_FONT_SIZE = '12px Arial';
+
+    // Colors for the various sections of the diagram.
+    PhaseDiagramView.SOLID_COLOR    = '#98C0E8';
+    PhaseDiagramView.LIQUID_COLOR   = '#a5da91';
+    PhaseDiagramView.GAS_COLOR      = '#f1a1a1';
+    PhaseDiagramView.CRITICAL_COLOR = '#ffdfaa';
+    PhaseDiagramView.CURRENT_STATE_MARKER_COLOR  = '#ff0000';
+    PhaseDiagramView.LINE_COLOR = '#000';
+
+    // Constants that control the appearance of the phase diagram for the
+    // various substances.  Note that all points are controlled as proportions
+    // of the overall graph size and not as absolute values.
+    PhaseDiagramView.POINT_RADIUS                = 2;
+    PhaseDiagramView.CURRENT_STATE_MARKER_RADIUS = 3;
+    PhaseDiagramView.DEFAULT_TOP_OF_SOLID_LIQUID_LINE   = new Vector2(0.40, 1);
+    PhaseDiagramView.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER = new Vector2(0.30, 1);
+
+    PhaseDiagramView.DEFAULT_TRIPLE_POINT               = new Vector2(0.35, 0.2);
+    PhaseDiagramView.DEFAULT_CRITICAL_POINT             = new Vector2(0.8,  0.45);
+
+    PhaseDiagramView.SOLID_LABEL_LOCATION               = new Vector2(0.16, 0.72);
+    PhaseDiagramView.LIQUID_LABEL_LOCATION              = new Vector2(0.6,  0.60);
+    PhaseDiagramView.GAS_LABEL_LOCATION                 = new Vector2(0.6,  0.15);
+
+    PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL = SOMSimulation.TRIPLE_POINT_MONATOMIC_MODEL_TEMPERATURE;
+    PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM = 0.375;
+    PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_IN_MODEL = SOMSimulation.CRITICAL_POINT_MONATOMIC_MODEL_TEMPERATURE;
+    PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_ON_DIAGRAM = 0.8;
+    PhaseDiagramView.SLOPE_IN_1ST_REGION = PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM / PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL;
+    PhaseDiagramView.SLOPE_IN_2ND_REGION =
+        (PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_ON_DIAGRAM - PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM) /
+        (PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_IN_MODEL - PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL);
+    PhaseDiagramView.OFFSET_IN_2ND_REGION = PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM - 
+        (PhaseDiagramView.SLOPE_IN_2ND_REGION * PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL);
+    PhaseDiagramView.PRESSURE_FACTOR = 35;
+
+    PhaseDiagramView.MAX_NUM_HISTORY_SAMPLES = 100;
+
+    Constants.PhaseDiagramView = PhaseDiagramView;
+
 
     return Constants;
 });
