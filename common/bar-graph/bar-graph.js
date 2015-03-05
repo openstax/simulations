@@ -19,18 +19,27 @@ define(function(require) {
         template : _.template(html),
 
         tagName : 'div',
-        className : 'energy-graph-view',
+        className : 'bar-graph-view',
+
+        events : {
+            'click .btn-zoom-in' : 'zoomIn',
+            'click .btn-zoom-out' : 'zoomOut'
+        },
 
         initialize: function(options) {
             options = _.extend({
                 title: '',
                 totalLabel : 'Total E',
-                maxValue : 6 // can calculate this later
+                maxValue : 6, // can calculate this later
+                graphHeight: 440,
+                zoom: 1
             }, options);
 
             this.title = options.title;
             this.totalLabel = options.totalLabel;
             this.maxValue = options.maxValue;
+            this.graphHeight = options.graphHeight;
+            this._zoom = options.zoom;
 
             this.listenTo(this.model, 'change:bar', this.updateBar);
         },
@@ -39,18 +48,27 @@ define(function(require) {
             var data = {
                 title : this.title,
                 totalLabel : this.totalLabel,
-                bars : this.model.get('bars')
+                bars : this.model.get('bars'),
+                zoom : this._zoom
             };
 
             this.$el.html(this.template(data));
 
             this.initBars();
+            this.resize();
         },
 
         initBars: function() {
             var width = 100 / this.model.get('bars').length + '%';
 
-            this.$el.find('.attribute').css({
+            this.$barGraph = this.$el.find('.bar-graph');
+            this.$title = this.$barGraph.find('.title');
+            this.$totalMarker = this.$barGraph.find('.total-marker');
+            this.$attribute = this.$barGraph.find('.attribute');
+            this.$total = this.$barGraph.find('.total');
+            this.$zoom = this.$el.find('.zoom');
+
+            this.$attribute.css({
                 width: width
             });
 
@@ -65,10 +83,12 @@ define(function(require) {
                 $bar.css({
                     zIndex: iter
                 });
-                this.$el.find('.total').append($bar);
+                this.$total.append($bar);
             }, this);
 
-            this.$el.find('.total .bar').wrapAll('<div class="bar-wrapper"/>');
+            this.$total.find('.bar').wrapAll('<div class="bar-wrapper"/>');
+
+            this.$bar = this.$barGraph.find('.bar');
         },
 
         updateBar: function(bar){
@@ -77,10 +97,57 @@ define(function(require) {
             });
 
             if(bar.class === 'total'){
-                this.$el.find('#total-marker').css({
+                this.$el.find('.total-marker').css({
                     bottom: bar.value/this.maxValue + 'em'
                 });
             }
+        },
+
+        zoomIn: function(){
+            this._zoom = Math.round(this._zoom);
+            this._zoom ++;
+            this.zoom();
+        },
+
+        zoomOut: function(){
+
+            if(this._zoom < 0.25){
+                return;
+            }
+
+            if(this._zoom <= 1){
+                this._zoom = this._zoom * 0.5;                
+            }else{
+                this._zoom --;
+            }
+
+            this.zoom();
+        },
+
+        zoom: function(){
+            var zoomSize = this._zoom * this.graphHeight;
+
+            this.$bar.add(this.$totalMarker).css({
+                fontSize: zoomSize + 'px'
+            });
+
+            this.$zoom.text((this._zoom * 100) + '%');
+        },
+
+        resize: function(){
+            this.$title.css({
+                width: this.graphHeight + 'px'
+            });
+
+            this.$barGraph.add(this.$bars).add(this.$attribute).css({
+                height: this.graphHeight + 'px'
+            });
+
+            this.$bar.css({
+                height: (10 * this.graphHeight)+ 'px'
+            });
+
+            this.zoom();
         }
 
     });

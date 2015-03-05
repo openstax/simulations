@@ -6,10 +6,10 @@
 @graph-color: #333;
 @graph-left-padding: 10px;
 
-.bar-graph-view{
+.bar-graph{
     position: relative;
     height: @graph-height;
-    margin-bottom: 65px;
+    margin-bottom: 60px;
     margin-top: 20px;
     padding: 0 0 0 @graph-left-padding;
 
@@ -25,15 +25,15 @@
     }
 }
 
-.bar-graph{
+.bars{
     height: @graph-height;
 }
 
-.sim-controls ul.bar-graph{
+.sim-controls ul.bars{
     padding: 0;
 }
 
-#total-marker{
+.total-marker{
     position: absolute;
     width: 100%;
     border-bottom: 1px dashed @graph-color;
@@ -78,7 +78,7 @@
         -webkit-transition: height .1s ease-in-out;
         margin: 0 auto;
         max-height: 0;
-        height: @graph-height;
+        height: 10 * @graph-height;
         background: @graph-color;
     }
 
@@ -91,10 +91,9 @@
             position: relative;
         }
     }
+}
 
-    .total{
-        .bar{
-            position: relative;
-        }
-    }
+.zoomer{
+    text-align: center;
+    padding-top: 0.5em;
 }
