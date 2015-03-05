@@ -39,7 +39,7 @@ define(function (require) {
         renderScaffolding: function() {
             SOMSimView.prototype.renderScaffolding.apply(this);
 
-            this.phaseDiagramView = new PhaseDiagramView();
+            this.phaseDiagramView = new PhaseDiagramView({ simulation: this.simulation });
             this.phaseDiagramView.render();
 
             this.$('.side-panel').append(phaseDiagramHtml);
@@ -65,6 +65,15 @@ define(function (require) {
             SOMSimView.prototype.postRender.apply(this);
 
             this.phaseDiagramView.postRender();
+        },
+
+        update: function(time, deltaTime) {
+            SOMSimView.prototype.update.apply(this, [time, deltaTime]);
+
+            var timeSeconds = time / 1000;
+            var dtSeconds   = deltaTime / 1000;
+
+            this.phaseDiagramView.update(timeSeconds, dtSeconds);
         },
 
         showPhaseDiagram: function() {

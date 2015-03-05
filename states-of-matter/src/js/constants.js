@@ -410,9 +410,23 @@ define(function (require) {
     PhaseDiagramView.DEFAULT_TRIPLE_POINT               = new Vector2(0.35, 0.2);
     PhaseDiagramView.DEFAULT_CRITICAL_POINT             = new Vector2(0.8,  0.45);
 
-    PhaseDiagramView.SOLID_LABEL_LOCATION       = new Vector2(0.16, 0.72);
-    PhaseDiagramView.LIQUID_LABEL_LOCATION      = new Vector2(0.6,  0.60);
-    PhaseDiagramView.GAS_LABEL_LOCATION         = new Vector2(0.6,  0.15);
+    PhaseDiagramView.SOLID_LABEL_LOCATION               = new Vector2(0.16, 0.72);
+    PhaseDiagramView.LIQUID_LABEL_LOCATION              = new Vector2(0.6,  0.60);
+    PhaseDiagramView.GAS_LABEL_LOCATION                 = new Vector2(0.6,  0.15);
+
+    PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL = SOMSimulation.TRIPLE_POINT_MONATOMIC_MODEL_TEMPERATURE;
+    PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM = 0.375;
+    PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_IN_MODEL = SOMSimulation.CRITICAL_POINT_MONATOMIC_MODEL_TEMPERATURE;
+    PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_ON_DIAGRAM = 0.8;
+    PhaseDiagramView.SLOPE_IN_1ST_REGION = PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM / PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL;
+    PhaseDiagramView.SLOPE_IN_2ND_REGION =
+        (PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_ON_DIAGRAM - PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM) /
+        (PhaseDiagramView.CRITICAL_POINT_TEMPERATURE_IN_MODEL - PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL);
+    PhaseDiagramView.OFFSET_IN_2ND_REGION = PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM - 
+        (PhaseDiagramView.SLOPE_IN_2ND_REGION * PhaseDiagramView.TRIPLE_POINT_TEMPERATURE_IN_MODEL);
+    PhaseDiagramView.PRESSURE_FACTOR = 35;
+
+    PhaseDiagramView.MAX_NUM_HISTORY_SAMPLES = 100;
 
     Constants.PhaseDiagramView = PhaseDiagramView;
 

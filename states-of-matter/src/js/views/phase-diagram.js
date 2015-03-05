@@ -28,6 +28,8 @@ define(function(require) {
 
             this.depictingWater = false;
 
+            this.temperatureHistory = [];
+
             this.listenTo(this.simulation, 'change:exploded', this.explodedChanged);
         },
 
@@ -345,12 +347,71 @@ define(function(require) {
             if (x + radius > graphOffsetX + gw )
                 x = graphOffsetX + gw - radius;
             if (y < graphOffsetY - gh)
-                y = graphOffsetY - gh
+                y = graphOffsetY - gh;
+
+            var transform = 'translate(' + x + 'px, ' + y + 'px)';
 
             this.$currentStateMarker.css({
-                left: x + 'px',
-                top:  y + 'px'
+                left: '0px',
+                top:  '0px'
             });
+            
+            this.$currentStateMarker.css({
+                '-webkit-transform': transform,
+                '-ms-transform':     transform,
+                '-o-transform':      transform,
+                'transform':         transform,
+            });
+        },
+
+        getTemperatureHistoryAverage: function() {
+            var sum = 0;
+            for (var i = 0; i < this.temperatureHistory.length; i++)
+                sum += this.temperatureHistory[i];
+            return sum / this.temperatureHistory.length;
+        },
+
+        mapModelTemperatureToPhaseDiagramTemperature: function(modelTemperature) {
+            var mappedTemperature;
+
+            if (modelTemperature < C.TRIPLE_POINT_TEMPERATURE_IN_MODEL)
+                mappedTemperature = C.SLOPE_IN_1ST_REGION * modelTemperature;
+            else
+                mappedTemperature = modelTemperature * C.SLOPE_IN_2ND_REGION + C.OFFSET_IN_2ND_REGION;
+
+            return Math.min(mappedTemperature, 1);
+        },
+
+        /**
+         * Map the model temperature and pressure to a normalized pressure value
+         *   suitable for use in setting the marker position on the phase chart.
+         */
+        mapModelTempAndPressureToPhaseDiagramPressure: function(modelPressure, modelTemperature) {
+            // This method is a total tweak fest.  All values and equations are
+            //   made to map to the phase diagram, and are NOT based on any real-
+            //   world equations that define phases of matter.
+            var cutOverTemperature = C.TRIPLE_POINT_TEMPERATURE_ON_DIAGRAM - 0.025;
+            var mappedTemperature = this.mapModelTemperatureToPhaseDiagramTemperature( modelTemperature );
+
+            var mappedPressure;
+            if (mappedTemperature < cutOverTemperature)
+                mappedPressure = Math.pow(mappedTemperature, 1.5);
+            else
+                mappedPressure = Math.pow(mappedTemperature - cutOverTemperature, 1.8) + 0.2;
+ 
+            return Math.min(mappedPressure, 1);
+        },
+
+        update: function(time, deltaTime) {
+            this.temperatureHistory.push(this.simulation.get('temperatureSetPoint'));
+            if (this.temperatureHistory.length > C.MAX_NUM_HISTORY_SAMPLES)
+                this.temperatureHistory.shift();
+
+            var averageTemperature = this.getTemperatureHistoryAverage();
+            var pressure = this.simulation.getModelPressure();
+            var mappedTemperature = this.mapModelTemperatureToPhaseDiagramTemperature(averageTemperature);
+            var mappedPressure = this.mapModelTempAndPressureToPhaseDiagramPressure(pressure, averageTemperature);
+            this.setStateMarkerPosition(mappedTemperature, mappedPressure);
         },
 
         show: function() {
