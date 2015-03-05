@@ -1,0 +1,23 @@
+.phase-diagram {
+	position: relative;
+	width: 200px;
+	height: 150px;
+
+	label {
+		position: absolute;
+		z-index: 5;
+		font-weight: normal;
+		color: #000;
+		line-height: 1;
+		font-size: 1.1em;
+
+		&.triple-point-label,
+		&.critical-point-label {
+			font-size: 0.86em;
+		}
+
+		&.triple-point-label {
+			text-align: right;
+		}
+	}
+}

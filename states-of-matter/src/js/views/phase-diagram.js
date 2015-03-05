@@ -13,6 +13,9 @@ define(function(require) {
     var Constants = require('constants');
     var C = Constants.PhaseDiagramView;
 
+    // CSS
+    require('less!styles/phase-diagram');
+
     /**
      * Draws a phase diagram on a canvas element.
      */
@@ -26,8 +29,17 @@ define(function(require) {
 
         render: function() {
             this.$canvas = $('<canvas>').appendTo(this.el);
-
             this.context = this.$canvas[0].getContext('2d');
+
+            this.$solidLabel         = $('<label class="solid-label">solid</label>').appendTo(this.$el);
+            this.$liquidLabel        = $('<label class="liquid-label">liquid</label>').appendTo(this.$el);
+            this.$gasLabel           = $('<label class="gas-label">gas</label>').appendTo(this.$el);
+
+            this.$triplePointLabel   = $('<label class="triple-point-label">triple point</label>').appendTo(this.$el);
+            this.$criticalPointLabel = $('<label class="critical-point-label">critical point</label>').appendTo(this.$el);
+
+            this.$pressureLabel      = $('<label class="x-axis-label">Pressure</label>').appendTo(this.$el);
+            this.$temperatureLabel   = $('<label class="y-axis-label">Temperature</label>').appendTo(this.$el);
 
             return this;
         },
@@ -182,7 +194,7 @@ define(function(require) {
             this.drawAxes(xAxis, yAxis, xAxisArrow, yAxisArrow);
 
             // Paint the labels
-            this.drawLabels(graphOffsetX, graphOffsetY, gw, gh);
+            this.positionLabels(graphOffsetX, graphOffsetY, gw, gh, triplePoint, criticalPoint);
         },
 
         drawAreas: function(solidArea, liquidArea, gasArea, criticalArea) {
@@ -238,18 +250,45 @@ define(function(require) {
             PIXI.drawPiecewiseCurve(ctx, yAxisArrow, 0, 0, true, false);
         },
 
-        drawLabels: function(x, y, gw, gh) {
-            var ctx = this.context;
-
-            ctx.textAlign = 'center';
-            ctx.fillStyle = C.LINE_COLOR;
-
-            ctx.font = PhaseDiagramView.LARGER_INNER_FONT;
-            ctx.fillText('solid',  C.SOLID_LABEL_LOCATION.x  * gw + x, C.SOLID_LABEL_LOCATION.y  * -gh + y);
-            ctx.fillText('liquid', C.LIQUID_LABEL_LOCATION.x * gw + x, C.LIQUID_LABEL_LOCATION.y * -gh + y);
-            ctx.fillText('gas',    C.GAS_LABEL_LOCATION.x    * gw + x, C.GAS_LABEL_LOCATION.y    * -gh + y);
+        positionLabels: function(x, y, gw, gh, triplePoint, criticalPoint) {
+            this.$solidLabel.css({  left: C.SOLID_LABEL_LOCATION.x  * gw + x + 'px', top: C.SOLID_LABEL_LOCATION.y  * -gh + y + 'px' });
+            this.$liquidLabel.css({ left: C.LIQUID_LABEL_LOCATION.x * gw + x + 'px', top: C.LIQUID_LABEL_LOCATION.y * -gh + y + 'px' });
+            this.$gasLabel.css({    left: C.GAS_LABEL_LOCATION.x    * gw + x + 'px', top: C.GAS_LABEL_LOCATION.y    * -gh + y + 'px' });
             
-            ctx.font = PhaseDiagramView.SMALLER_INNER_FONT;
+            this.$triplePointLabel.css({   left: C.SOLID_LABEL_LOCATION.x  * gw + x + 'px', top: C.SOLID_LABEL_LOCATION.y  * -gh + y + 'px' });
+            this.$criticalPointLabel.css({ left: C.SOLID_LABEL_LOCATION.x  * gw + x + 'px', top: C.SOLID_LABEL_LOCATION.y  * -gh + y + 'px' });
+
+            _.each([
+                this.$solidLabel,
+                this.$liquidLabel,
+                this.$gasLabel,
+
+                this.$pressureLabel, 
+                this.$temperatureLabel
+            ], function($label) {
+                $label.css({ 
+                    'margin-left': (-$label.width() / 2) + 'px',
+                    'margin-top':  (-$label.height() / 2) + 'px'
+                });
+            });
+
+            this.$triplePointLabel
+                .width(40)
+                .css({
+                    left: triplePoint.x + 'px',
+                    top:  triplePoint.y + 'px',
+                    'margin-left': (-this.$triplePointLabel.width() - 10) + 'px',
+                    'margin-top':  -this.$triplePointLabel.height() + 'px'
+                });
+
+            this.$criticalPointLabel
+                .width(40)
+                .css({
+                    left: criticalPoint.x + 'px',
+                    top:  criticalPoint.y + 'px',
+                    'margin-left': '7px',
+                    'margin-top': (-this.$triplePointLabel.height() / 2) + 'px'
+                });
         },
 
         show: function() {
