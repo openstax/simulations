@@ -38,8 +38,8 @@ define(function(require) {
             this.$triplePointLabel   = $('<label class="triple-point-label">triple point</label>').appendTo(this.$el);
             this.$criticalPointLabel = $('<label class="critical-point-label">critical point</label>').appendTo(this.$el);
 
-            this.$pressureLabel      = $('<label class="x-axis-label">Pressure</label>').appendTo(this.$el);
-            this.$temperatureLabel   = $('<label class="y-axis-label">Temperature</label>').appendTo(this.$el);
+            this.$temperatureLabel   = $('<label class="x-axis-label">Temperature</label>').appendTo(this.$el);
+            this.$pressureLabel      = $('<label class="y-axis-label">Pressure</label>').appendTo(this.$el);
 
             return this;
         },
@@ -289,6 +289,9 @@ define(function(require) {
                     'margin-left': '7px',
                     'margin-top': (-this.$triplePointLabel.height() / 2) + 'px'
                 });
+
+            this.$pressureLabel.css({ top: (y - gh / 2) + 'px', left: '6px' });
+            this.$temperatureLabel.css({ top: (y + 12) + 'px', left: (x + gw / 2) + 'px' });
         },
 
         show: function() {
