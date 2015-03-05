@@ -45,7 +45,6 @@ define(function (require) {
             this.$('.side-panel').append(phaseDiagramHtml);
             this.$phaseDiagramPanel = this.$('.phase-diagram-panel');
             this.$phaseDiagramPanel.append(this.phaseDiagramView.el);
-            //this.$phaseDiagramPanel.hide();
         },
 
         /**
@@ -65,6 +64,7 @@ define(function (require) {
             SOMSimView.prototype.postRender.apply(this);
 
             this.phaseDiagramView.postRender();
+            this.$phaseDiagramPanel.hide();
         },
 
         update: function(time, deltaTime) {
@@ -78,6 +78,7 @@ define(function (require) {
 
         showPhaseDiagram: function() {
             this.$phaseDiagramPanel.show();
+            this.$('.btn-show-phase-diagram').hide();
         }
 
     });
