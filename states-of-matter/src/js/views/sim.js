@@ -148,11 +148,11 @@ define(function (require) {
         },
 
         useKelvin: function() {
-
+            this.sceneView.useKelvin();
         },
 
         useCelsius: function() {
-            
+            this.sceneView.useCelsius();
         },
 
         changeMoleculeType: function(event) {
