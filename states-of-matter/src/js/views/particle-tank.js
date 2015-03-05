@@ -44,6 +44,7 @@ define(function(require) {
             this.simulation = options.simulation;
             this.lidDraggable = options.lidDraggable;
             this.showFinger = options.showFinger;
+            this.usingKelvin = true;
 
             this._leftConnectorPosition  = new Vector2();
             this._rightConnectorPosition = new Vector2();
@@ -293,7 +294,13 @@ define(function(require) {
         temperatureChanged: function(simulation, temperature) {
             var temp = simulation.convertInternalTemperatureToKelvin();
             this.thermometerView.val(temp / Constants.MAX_DISPLAYED_TEMPERATURE);
-            this.thermometerLabel.setText(temp.toFixed(0) + ' K');
+            if (this.usingKelvin) {
+                this.thermometerLabel.setText(Math.round(temp) + ' K');
+            }
+            else {
+                temp -= 273.15;
+                this.thermometerLabel.setText(Math.round(temp) + ' C');
+            }
         },
 
         getLeftConnectorPosition: function() {
@@ -367,6 +374,16 @@ define(function(require) {
                 top: (this.displayObject.y - this.tank.height - 74) + 'px',
                 left: this.displayObject.x + 'px'
             });
+        },
+
+        useKelvin: function() {
+            this.usingKelvin = true;
+            this.temperatureChanged(this.simulation, this.simulation.get('temperatureSetPoint'));
+        },
+
+        useCelsius: function() {
+            this.usingKelvin = false;
+            this.temperatureChanged(this.simulation, this.simulation.get('temperatureSetPoint'));
         }
 
     }, Constants.ParticleTankView);

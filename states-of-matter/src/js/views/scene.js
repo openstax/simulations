@@ -83,6 +83,14 @@ define(function(require) {
             this.particleTankView.update(time, deltaTime);
         },
 
+        useKelvin: function() {
+            this.particleTankView.useKelvin();
+        },
+
+        useCelsius: function() {
+            this.particleTankView.useCelsius();
+        }
+
     });
 
     return SOMSceneView;
