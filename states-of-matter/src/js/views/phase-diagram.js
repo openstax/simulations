@@ -24,7 +24,11 @@ define(function(require) {
         className: 'phase-diagram',
 
         initialize: function(options) {
+            this.simulation = options.simulation;
+
             this.depictingWater = false;
+
+            this.listenTo(this.simulation, 'change:exploded', this.explodedChanged);
         },
 
         render: function() {
@@ -40,6 +44,8 @@ define(function(require) {
 
             this.$temperatureLabel   = $('<label class="x-axis-label">Temperature</label>').appendTo(this.$el);
             this.$pressureLabel      = $('<label class="y-axis-label">Pressure</label>').appendTo(this.$el);
+
+            this.$currentStateMarker = $('<div class="current-state-marker"></div>').appendTo(this.$el);
 
             return this;
         },
@@ -61,16 +67,32 @@ define(function(require) {
             this.drawDiagram();
         },
 
+        getGraphWidth: function() {
+            return this.width  - C.AXES_ARROW_HEAD_HEIGHT - C.X_ORIGIN_POSITION;
+        },
+
+        getGraphHeight: function() {
+            return this.height - C.AXES_ARROW_HEAD_HEIGHT - C.Y_ORIGIN_POSITION;
+        },
+
+        getGraphXOffset: function() {
+            return C.X_ORIGIN_POSITION;
+        },
+
+        getGraphYOffset: function() {
+            return this.height - C.Y_ORIGIN_POSITION;
+        },
+
         drawDiagram: function() {
             var ctx = this.context;
 
             // Graph dimensions
-            var gw = this.width  - C.AXES_ARROW_HEAD_HEIGHT - C.X_ORIGIN_POSITION;
-            var gh = this.height - C.AXES_ARROW_HEAD_HEIGHT - C.Y_ORIGIN_POSITION; 
+            var gw = this.getGraphWidth();
+            var gh = this.getGraphHeight(); 
 
             // Graph offsets
-            var graphOffsetX = C.X_ORIGIN_POSITION;
-            var graphOffsetY = this.height - C.Y_ORIGIN_POSITION;
+            var graphOffsetX = this.getGraphXOffset();
+            var graphOffsetY = this.getGraphYOffset();
 
             // Determine which graph to draw
             var topOfSolidLiquidLine;
@@ -195,6 +217,9 @@ define(function(require) {
 
             // Paint the labels
             this.positionLabels(graphOffsetX, graphOffsetY, gw, gh, triplePoint, criticalPoint);
+
+            // Set an initial position for the marker
+            this.setStateMarkerPosition(0, 0);
         },
 
         drawAreas: function(solidArea, liquidArea, gasArea, criticalArea) {
@@ -294,12 +319,53 @@ define(function(require) {
             this.$temperatureLabel.css({ top: (y + 12) + 'px', left: (x + gw / 2) + 'px' });
         },
 
+        setStateMarkerPosition: function(normalizedTemperature, normalizedPressure) {
+            if (normalizedTemperature < 0 || normalizedTemperature > 1 ||
+                normalizedPressure    < 0 || normalizedPressure    > 1) {
+
+                // Parameter out of range - throw exception.
+                throw 'Value out of range, temperature = ' + normalizedTemperature + ', pressure = ' + normalizedPressure;
+            }
+
+            // Graph dimensions
+            var gw = this.getGraphWidth();
+            var gh = this.getGraphHeight(); 
+
+            // Graph offsets
+            var graphOffsetX = this.getGraphXOffset();
+            var graphOffsetY = this.getGraphYOffset();
+
+            var x = normalizedTemperature *  gw + graphOffsetX;
+            var y = normalizedPressure    * -gh + graphOffsetY;
+
+            var radius = this.$currentStateMarker.width() / 2;
+
+            // Limit the actual position values, if necessary, to prevent the
+            //   marker from being partially off of the diagram.
+            if (x + radius > graphOffsetX + gw )
+                x = graphOffsetX + gw - radius;
+            if (y < graphOffsetY - gh)
+                y = graphOffsetY - gh
+
+            this.$currentStateMarker.css({
+                left: x + 'px',
+                top:  y + 'px'
+            });
+        },
+
         show: function() {
             this.$el.show();
         },
 
         hide: function() {
             this.$el.hide();
+        },
+
+        explodedChanged: function(simulation, exploded) {
+            if (exploded && this.$currentStateMarker)
+                this.$currentStateMarker.hide();
+            else
+                this.$currentStateMarker.show();
         },
 
         setWaterMode: function(depictingWater) {
