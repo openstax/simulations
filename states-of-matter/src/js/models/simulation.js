@@ -96,6 +96,15 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Overrides the default reset function because the original
+         *   resets to the starting attributes in silent mode, and
+         *   we don't want that in this case.
+         */
+        reset: function() {
+            this.resetComponents();
+        },
+
+        /**
          * Sets the container size to defaults.  Called at the start and
          *   when the lid is returned after being blown away.
          */
@@ -109,7 +118,6 @@ define(function (require, exports, module) {
         initModelParameters: function() {
             this.tempAdjustTickCounter = 0;
 
-            this.set('temperatureSetPoint', 0);
             this.set({
                 exploded: false,
                 heatingCoolingAmount: 0,

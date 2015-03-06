@@ -190,8 +190,10 @@ define(function(require) {
         },
 
         addInitialParticles: function() {
-            for (var i = 0; i < this.simulation.moleculeDataSet.numberOfAtoms; i++)
-                this.addParticle(this.simulation.particles[i]);
+            if (this.simulation.moleculeDataSet) {
+                for (var i = 0; i < this.simulation.moleculeDataSet.numberOfAtoms; i++)
+                    this.addParticle(this.simulation.particles[i]);
+            }
         },
 
         addParticle: function(particleModel) {
@@ -286,6 +288,7 @@ define(function(require) {
             }
             else {
                 this.lid.rotation = 0;
+                this.$button.hide();
                 this.removeAllParticles();
                 this.addInitialParticles();
             }
