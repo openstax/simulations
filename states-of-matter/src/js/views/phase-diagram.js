@@ -87,6 +87,10 @@ define(function(require) {
             return this.height - C.Y_ORIGIN_POSITION;
         },
 
+        /**
+         * For it to work correctly, this function has to be called
+         *   while the graph is visible because of the label positioning.
+         */
         drawDiagram: function() {
             var ctx = this.context;
 
@@ -279,6 +283,11 @@ define(function(require) {
             PIXI.drawPiecewiseCurve(ctx, yAxisArrow, 0, 0, true, false);
         },
 
+        /**
+         * This function positions the labels, which are HTML elements.
+         *   For it to work correctly, this function has to be called
+         *   while the graph is visible.
+         */
         positionLabels: function(x, y, gw, gh, triplePoint, criticalPoint) {
             this.$solidLabel.css({  left: C.SOLID_LABEL_LOCATION.x  * gw + x + 'px', top: C.SOLID_LABEL_LOCATION.y  * -gh + y + 'px' });
             this.$liquidLabel.css({ left: C.LIQUID_LABEL_LOCATION.x * gw + x + 'px', top: C.LIQUID_LABEL_LOCATION.y * -gh + y + 'px' });
@@ -429,11 +438,6 @@ define(function(require) {
                 this.$currentStateMarker.hide();
             else
                 this.$currentStateMarker.show();
-        },
-
-        setWaterMode: function(depictingWater) {
-            this.depictingWater = depictingWater;
-            this.drawDiagram();
         },
 
         moleculeTypeChanged: function(simulation, moleculeType) {
