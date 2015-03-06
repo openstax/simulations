@@ -544,8 +544,9 @@ define(function (require) {
                 var orderedChoices = _.sortBy(choices, 'value');
 
                 _.each(orderedChoices, function(choice, order){
-
-                    choice.value = choice.value.toFixed(5) * 1;
+console.log(choice.value);
+                    choice.value = parseFloat(choice.value.toFixed(5));
+console.log(choice.value);
 
                     if(order === 0){
                         range['min'] = choice.value;
