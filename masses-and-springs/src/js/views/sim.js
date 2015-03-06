@@ -79,7 +79,9 @@ define(function (require) {
             'slide .friction-settings-placeholder' : 'updateFriction',
             'slide .softness3-settings-placeholder' : 'updateSoftness3',
 
-            'click .tab' : 'changeEnergyTab'
+            'click .tab' : 'changeEnergyTab',
+            'click .btn-zoom-in' : 'zoomInGraph',
+            'click .btn-zoom-out' : 'zoomOutGraph'
         },
 
         /**
@@ -159,6 +161,8 @@ define(function (require) {
         renderEnergyGraphs: function(system){
 
             this.energyGraphs = [];
+            this.$zoom = this.$el.find('.zoom');
+
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
@@ -172,6 +176,8 @@ define(function (require) {
             }, this);
 
             this.renderTabbedGraph(this.$('.energy-graph-tabs'), this.simulation.systems);
+
+            this.$zoom.text((this.energyGraphs[0]._zoom) + 'x');
         },
 
         showEnergyGraph: function(system){
@@ -194,6 +200,23 @@ define(function (require) {
             var systemCID = $(clickEvent.currentTarget).data('system-cid');
             this.showEnergyGraph(this.simulation.systems.get(systemCID));
         },
+
+        zoomInGraph: function(){
+            _.each(this.energyGraphs, function(graph){
+                graph.zoomIn();
+            }, this);
+
+            this.$zoom.text((this.energyGraphs[0]._zoom) + 'x');
+        },
+
+        zoomOutGraph: function(){
+            _.each(this.energyGraphs, function(graph){
+                graph.zoomOut();
+            }, this);
+
+            this.$zoom.text((this.energyGraphs[0]._zoom) + 'x');
+        },
+
 
         /**
          * Renders the playback controls
@@ -239,8 +262,8 @@ define(function (require) {
                 dragFrame: this.el,
                 units : this.simulation.get('units').time,
                 position: {
-                    x : 650,
-                    y : 505 
+                    x : 525,
+                    y : 625 
                 }
             });
 

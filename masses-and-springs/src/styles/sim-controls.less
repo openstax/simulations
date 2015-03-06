@@ -131,18 +131,29 @@
     margin-left: 8px;
 
     .sim-tabs{
+        position: absolute;
+        bottom: -35px;
+        margin: 0 -15px;
 
         > ul{
             border-bottom: none;
+            overflow: hidden;
+            height: 36px;
 
             > li{
-                // background: @sim-controls-graph-background;
-                .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 95%);
                 padding: 7px 8px;
+                margin-top: -4px;
+                background: transparent;
+
+                &:hover{
+                    background: fade(@sim-controls-graph-background, 95%);
+                }
 
                 &.active{
-                    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 55%);
+                    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 0%);
+                    background: #FCFCFC;
                     color: @link-color;
+                    font-weight: bold;
                 }
             }
         }
@@ -170,4 +181,14 @@ ul.radio, ul.checkbox{
             font-weight: bold;
         }
     }
+}
+
+.zoomer{
+    text-align: center;
+    padding-top: 0.5em;
+    position: absolute;
+    bottom: -64px;
+    display: block;
+    width: 100%;
+    margin: 0 -15px;
 }
