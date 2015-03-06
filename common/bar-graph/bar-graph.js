@@ -21,11 +21,6 @@ define(function(require) {
         tagName : 'div',
         className : 'bar-graph-view',
 
-        events : {
-            'click .btn-zoom-in' : 'zoomIn',
-            'click .btn-zoom-out' : 'zoomOut'
-        },
-
         initialize: function(options) {
             options = _.extend({
                 title: '',
@@ -66,7 +61,6 @@ define(function(require) {
             this.$totalMarker = this.$barGraph.find('.total-marker');
             this.$attribute = this.$barGraph.find('.attribute');
             this.$total = this.$barGraph.find('.total');
-            this.$zoom = this.$el.find('.zoom');
 
             this.$attribute.css({
                 width: width
@@ -130,8 +124,6 @@ define(function(require) {
             this.$bar.add(this.$totalMarker).css({
                 fontSize: zoomSize + 'px'
             });
-
-            this.$zoom.text((this._zoom * 100) + '%');
         },
 
         resize: function(){
