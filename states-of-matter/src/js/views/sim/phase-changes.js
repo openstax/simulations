@@ -78,6 +78,7 @@ define(function (require) {
 
         showPhaseDiagram: function() {
             this.$phaseDiagramPanel.show();
+            this.phaseDiagramView.drawDiagram();
             this.$('.btn-show-phase-diagram').hide();
         }
 
