@@ -108,6 +108,10 @@ define(function(require) {
             this.renderer.resize(this.width, this.height);
         },
 
+        reset: function() {
+
+        },
+
         update: function(time, deltaTime, paused, timeScale) {
             if (this.resizeOnNextUpdate)
                 this.resize();

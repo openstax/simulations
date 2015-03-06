@@ -88,6 +88,22 @@ define(function (require, exports, module) {
             this.resetContainerSize();
         },
 
+        resetComponents: function() {
+            if (this.get('moleculeType') === S.DEFAULT_MOLECULE)
+                this.moleculeTypeChanged(this, this.get('moleculeType'));
+            else
+                this.set('moleculeType', S.DEFAULT_MOLECULE);
+        },
+
+        /**
+         * Overrides the default reset function because the original
+         *   resets to the starting attributes in silent mode, and
+         *   we don't want that in this case.
+         */
+        reset: function() {
+            this.resetComponents();
+        },
+
         /**
          * Sets the container size to defaults.  Called at the start and
          *   when the lid is returned after being blown away.
@@ -678,10 +694,6 @@ define(function (require, exports, module) {
                     this.particleDiameter = Atom.OxygenAtom.RADIUS * 2.9;
                     this.minModelTemperature = 0.5 * S.TRIPLE_POINT_MONATOMIC_MODEL_TEMPERATURE / S.WATER_TRIPLE_POINT_IN_KELVIN;
                     break;
-                // case MoleculeTypes.USER_DEFINED_MOLECULE:
-                //     this.particleDiameter = ConfigurableStatesOfMatterAtom.DEFAULT_RADIUS * 2;
-                //     this.minModelTemperature = 0.5 * TRIPLE_POINT_MONATOMIC_MODEL_TEMPERATURE / ADJUSTABLE_ATOM_TRIPLE_POINT_IN_KELVIN;
-                //     break;
                 default:
                     throw 'Current molecule unsupported.'; // Should never happen, so it should be debugged if it does.
             }
