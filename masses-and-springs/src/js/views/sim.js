@@ -513,7 +513,7 @@ define(function (require) {
                     format: {
                         to: function( value ){
                             var step = _.find(choices, function(choice, iter){
-                                return parseFloat(choice.value.toFixed(4)) === parseFloat(value.toFixed(4));
+                                return choice.value == value;
                             });
 
                             return step? step.label : '';
@@ -544,6 +544,9 @@ define(function (require) {
                 var orderedChoices = _.sortBy(choices, 'value');
 
                 _.each(orderedChoices, function(choice, order){
+
+                    choice.value = choice.value.toFixed(5) * 1;
+
                     if(order === 0){
                         range['min'] = choice.value;
                         return;
