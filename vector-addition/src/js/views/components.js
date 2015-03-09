@@ -7,7 +7,7 @@ define(function(require) {
   var Simulation = require('models/simulation');
   var Constants = require('constants');
 
-  var ComponentsStyles = PixiView.extend({
+  var ComponentsView = PixiView.extend({
 
     initialize: function(options) {
       this.model = options.model;
@@ -113,6 +113,6 @@ define(function(require) {
     }
   });
 
-  return ComponentsStyles;
+  return ComponentsView;
 
 });

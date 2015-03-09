@@ -5,7 +5,7 @@ define(function(require) {
   var PIXI = require('pixi');
   var PixiView = require('common/pixi/view');
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
-  var ComponentsView = require('views/component-styles');
+  var ComponentsView = require('views/components');
   var VectorXView = require('views/vector-x');
   var VectorYView = require('views/vector-y');
   var Simulation = require('models/simulation');

@@ -7,7 +7,7 @@ define(function(require) {
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
   var SumVectorXView = require('views/sum-vector-x');
   var SumVectorYView = require('views/sum-vector-y');
-  var SumComponentsView = require('views/sum-component-styles');
+  var SumComponentsView = require('views/sum-components');
   var Simulation = require('models/simulation');
   var SumVectorViewModel = require('models/sum-vector');
   var Constants = require('constants');
