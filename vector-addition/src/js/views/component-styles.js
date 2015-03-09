@@ -52,11 +52,19 @@ define(function(require) {
         this.vectorYContainer.visible = true;
       }
 
+      var dx = this.vectorViewModel.get('targetX') - this.vectorViewModel.get('originX');
+      var dy = this.vectorViewModel.get('targetY') - this.vectorViewModel.get('originY');
+
       if (this.model.get('componentStyles') == 1) {
-        this.vectorViewModel.resetVectors(this.vectorXViewModel);
-        this.vectorViewModel.resetVectors(this.vectorYViewModel);
-        this.vectorXView.transformFrame.rotation = this.vectorXViewModel.get('rotation');
-        this.vectorYView.transformFrame.rotation = this.vectorYViewModel.get('rotation');
+        this.vectorXViewModel.set('originX', this.vectorViewModel.get('originX'));
+        this.vectorXViewModel.set('originY', this.vectorViewModel.get('originY'));
+        this.vectorXViewModel.set('targetX', this.vectorViewModel.get('originX') + dx);
+        this.vectorXViewModel.set('targetY', this.vectorViewModel.get('originY'));
+
+        this.vectorYViewModel.set('originX', this.vectorViewModel.get('originX'));
+        this.vectorYViewModel.set('originY', this.vectorViewModel.get('originY'));
+        this.vectorYViewModel.set('targetX', this.vectorViewModel.get('originX'));
+        this.vectorYViewModel.set('targetY', this.vectorViewModel.get('originY') + dy);
       }
 
       if (this.model.get('componentStyles') == 2) {
@@ -65,9 +73,8 @@ define(function(require) {
 
         this.vectorXViewModel.set('originX', this.vectorViewModel.get('originX'));
         this.vectorXViewModel.set('originY', this.vectorViewModel.get('originY'));
-        this.vectorXViewModel.set('targetX', this.vectorViewModel.get('targetX'));
-        this.vectorXViewModel.set('targetY', this.vectorViewModel.get('targetY'));
-        this.vectorXView.transformFrame.rotation = this.vectorXViewModel.get('rotation');
+        this.vectorXViewModel.set('targetX', this.vectorViewModel.get('originX') + dx);
+        this.vectorXViewModel.set('targetY', this.vectorViewModel.get('originY'));
       }
 
       if (this.model.get('componentStyles') == 3) {
