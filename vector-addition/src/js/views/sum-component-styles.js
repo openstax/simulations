@@ -49,11 +49,19 @@ define(function(require) {
           this.sumVectorYContainer.visible = true;
         }
 
+        var dx = this.sumVectorXModel.get('targetX') - this.sumVectorXModel.get('originX');
+        var dy = this.sumVectorYModel.get('targetY') - this.sumVectorYModel.get('originY');
+
         if (this.model.get('componentStyles') == 1 && this.model.get('sumVectorVisible')) {
-          this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
-          this.sumVectorYView.transformFrame.rotation = this.sumVectorYModel.get('rotation');
-          this.sumVectorXContainer.visible = true;
-          this.sumVectorYContainer.visible = true;
+          this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
+          this.sumVectorXModel.set('originY', this.sumVectorModel.get('originY'));
+          this.sumVectorXModel.set('targetX', this.sumVectorModel.get('originX') + dx);
+          this.sumVectorXModel.set('targetY', this.sumVectorModel.get('originY'));
+
+          this.sumVectorYModel.set('originX', this.sumVectorModel.get('originX'));
+          this.sumVectorYModel.set('originY', this.sumVectorModel.get('originY'));
+          this.sumVectorYModel.set('targetX', this.sumVectorModel.get('originX'));
+          this.sumVectorYModel.set('targetY', this.sumVectorModel.get('originY') + dy);
         }
 
         if (this.model.get('componentStyles') == 2 && this.model.get('sumVectorVisible')) {

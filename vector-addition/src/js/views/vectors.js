@@ -56,8 +56,8 @@ define(function(require) {
       this.arrowView = new DraggableArrowView({
           model: this.vectorViewModel,
           snappingEnabled: true,
-          snappingXFunction: this.defaultSnappingFunction,
-          snappingYFunction: this.defaultSnappingFunction
+          snappingXFunction: Constants.SNAPPING_FUNCTION,
+          snappingYFunction: Constants.SNAPPING_FUNCTION
       });
 
       this.tailGraphics = this.arrowView.tailGraphics;
@@ -143,10 +143,6 @@ define(function(require) {
 
         this.model.set('deleteVector', false);
       }
-    },
-
-    defaultSnappingFunction: function(coordinateComponent) {
-      return Math.round(coordinateComponent / 15) * 15;
     }
 
   });

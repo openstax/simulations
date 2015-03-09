@@ -44,7 +44,12 @@ define(function(require) {
 
       this.sumVectorView = new DraggableArrowView({
           model: this.sumVectorModel,
-          fillColor: this.model.get('green')
+          fillColor: this.model.get('green'),
+          bodyDraggingEnabled: true,
+          headDraggingEnabled: false,
+          snappingEnabled: true,
+          snappingXFunction: Constants.SNAPPING_FUNCTION,
+          snappingYFunction: Constants.SNAPPING_FUNCTION
       });
 
       this.sumTailGraphics = this.sumVectorView.tailGraphics;

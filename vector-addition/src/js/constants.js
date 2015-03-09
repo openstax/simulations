@@ -26,5 +26,9 @@ define(function (require) {
     Constants.X_OFFSET = 150;
     Constants.Y_OFFSET = 885;
 
+    Constants.SNAPPING_FUNCTION = function(coordinateComponent) {
+        return Math.round(coordinateComponent / 15) * 15;
+    };
+
     return Constants;
 });
