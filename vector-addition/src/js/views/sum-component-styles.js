@@ -65,13 +65,15 @@ define(function(require) {
         }
 
         if (this.model.get('componentStyles') == 2 && this.model.get('sumVectorVisible')) {
-          this.sumVectorYModel.set('originX', this.sumVectorModel.get('targetX'));
-          this.sumVectorYModel.set('targetX', this.sumVectorModel.get('targetX'));
           this.sumVectorXModel.set('originX', this.sumVectorModel.get('originX'));
           this.sumVectorXModel.set('originY', this.sumVectorModel.get('originY'));
-          this.sumVectorXModel.set('targetX', this.sumVectorModel.get('targetX'));
-          this.sumVectorXModel.set('targetY', this.sumVectorModel.get('targetY'));
-          this.sumVectorXView.transformFrame.rotation = this.sumVectorXModel.get('rotation');
+          this.sumVectorXModel.set('targetX', this.sumVectorModel.get('originX') + dx);
+          this.sumVectorXModel.set('targetY', this.sumVectorModel.get('originY'));
+
+          this.sumVectorYModel.set('originX', this.sumVectorModel.get('targetX'));
+          this.sumVectorYModel.set('originY', this.sumVectorModel.get('originY'));
+          this.sumVectorYModel.set('targetX', this.sumVectorModel.get('targetX'));
+          this.sumVectorYModel.set('targetY', this.sumVectorModel.get('targetY'));
         }
 
         if (this.model.get('componentStyles') == 3 && this.model.get('sumVectorVisible')) {

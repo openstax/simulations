@@ -15,8 +15,8 @@ define(function(require) {
   var SumVectorView = PixiView.extend({
 
     events: {
-      'click .sumTailGraphics': 'updateSumReadouts',
-      'click .sumHeadGraphics': 'updateSumReadouts'
+      'touchstart .sumVectorDisplayObject': 'updateSumReadouts',
+      'mousedown  .sumVectorDisplayObject': 'updateSumReadouts'
     },
 
     initialize: function() {
@@ -52,8 +52,7 @@ define(function(require) {
           snappingYFunction: Constants.SNAPPING_FUNCTION
       });
 
-      this.sumTailGraphics = this.sumVectorView.tailGraphics;
-      this.sumHeadGraphics = this.sumVectorView.headGraphics;
+      this.sumVectorDisplayObject = this.sumVectorView.displayObject;
 
       this.sumVectorContainer.addChild(this.sumVectorView.displayObject);
       this.displayObject.addChild(this.sumVectorContainer);

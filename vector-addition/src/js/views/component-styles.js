@@ -68,13 +68,15 @@ define(function(require) {
       }
 
       if (this.model.get('componentStyles') == 2) {
-        this.vectorYViewModel.set('originX', this.vectorViewModel.get('targetX'));
-        this.vectorYViewModel.set('targetX', this.vectorViewModel.get('targetX'));
-
         this.vectorXViewModel.set('originX', this.vectorViewModel.get('originX'));
         this.vectorXViewModel.set('originY', this.vectorViewModel.get('originY'));
         this.vectorXViewModel.set('targetX', this.vectorViewModel.get('originX') + dx);
         this.vectorXViewModel.set('targetY', this.vectorViewModel.get('originY'));
+
+        this.vectorYViewModel.set('originX', this.vectorViewModel.get('targetX'));
+        this.vectorYViewModel.set('originY', this.vectorViewModel.get('originY'));
+        this.vectorYViewModel.set('targetX', this.vectorViewModel.get('targetX'));
+        this.vectorYViewModel.set('targetY', this.vectorViewModel.get('targetY'));
       }
 
       if (this.model.get('componentStyles') == 3) {
