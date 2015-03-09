@@ -151,6 +151,6 @@ define(function(require) {
 
   });
 
- return VectorView;
+  return VectorView;
 
-  });
+});
