@@ -26,10 +26,10 @@ module.exports = function(grunt) {
 			},
 			fonts: {
 				expand: true,
-				filter: 'isFile',
-				flatten: true,
-				src: ['bower_components/font-awesome/fonts/**'],
-				dest: 'dist/bower_components/font-awesome/fonts/'
+                filter: 'isFile',
+                flatten: true,
+                src: ['node_modules/font-awesome/fonts/**'],
+                dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
 				src: [
