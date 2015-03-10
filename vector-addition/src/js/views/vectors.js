@@ -135,10 +135,10 @@ define(function(require) {
       var dy = this.vectorViewModel.get('targetY') - this.vectorViewModel.get('originY');
 
       this.vectorViewModel.set({
-        originX: x - dx / 2,
-        originY: y - dy / 2,
-        targetX: x + dx / 2,
-        targetY: y + dy / 2
+        originX: Constants.SNAPPING_FUNCTION(x - dx / 2),
+        originY: Constants.SNAPPING_FUNCTION(y - dy / 2),
+        targetX: Constants.SNAPPING_FUNCTION(x + dx / 2),
+        targetY: Constants.SNAPPING_FUNCTION(y + dy / 2)
       });
     },
 

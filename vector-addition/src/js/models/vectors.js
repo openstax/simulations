@@ -15,10 +15,10 @@ define(function(require) {
       var targetY = originY - 110;
 
       return {
-        originX: originX,
-        originY: originY,
-        targetX: targetX,
-        targetY: targetY
+        originX: Constants.SNAPPING_FUNCTION(originX),
+        originY: Constants.SNAPPING_FUNCTION(originY),
+        targetX: Constants.SNAPPING_FUNCTION(targetX),
+        targetY: Constants.SNAPPING_FUNCTION(targetY)
       }
     },
 
