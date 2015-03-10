@@ -16,8 +16,7 @@ define(function(require) {
 
     initialize: function(options) {
       this.initGraphics();
-      this.listenTo(this.model, 'change:deleteVector', this.openTrashCan);
-      this.listenTo(this.model, 'change:deleteVector', this.closeTrashCan);
+      this.listenTo(this.model, 'change:deleteVector', this.openCloseTrashCan);
     },
 
     initGraphics: function() {
@@ -52,20 +51,14 @@ define(function(require) {
       this.model.set('trashCanHeight', this.can.height);
     },
 
-    openTrashCan: function() {
+    openCloseTrashCan: function() {
       if (this.model.get('deleteVector')) {
         this.can_open.alpha = 1;
         this.can.alpha = 0;
       }
-    },
-
-    closeTrashCan: function() {
-      var self = this;
-      if (this.model.get('deleteVector') == false) {
-        setTimeout(function() {
-          self.can_open.alpha = 0;
-          self.can.alpha = 1;
-        }, 1000)
+      else {
+        this.can_open.alpha = 0;
+        this.can.alpha = 1;
       }
     }
 

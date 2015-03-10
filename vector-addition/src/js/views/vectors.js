@@ -3,6 +3,8 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
+
+  var Rectangle = require('common/math/rectangle');
   var PixiView = require('common/pixi/view');
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
   var ComponentsView = require('views/components');
@@ -15,8 +17,14 @@ define(function(require) {
   var VectorView = PixiView.extend({
 
     events: {
-      'click .tailGraphics': 'updateReadouts',
-      'click .headGraphics': 'updateReadouts'
+      'touchstart .arrowDisplayObject': 'updateReadouts',
+      'mousedown  .arrowDisplayObject': 'updateReadouts',
+
+      'touchmove  .arrowDisplayObject': 'dragArrow',
+      'mousemove  .arrowDisplayObject': 'dragArrow',
+
+      'touchend   .arrowDisplayObject': 'dragArrowStop',
+      'mouseup    .arrowDisplayObject': 'dragArrowStop'
     },
 
     initialize: function() {
@@ -26,7 +34,7 @@ define(function(require) {
 
       this.listenTo(this.model, 'change:emptyStage', this.clearStage);
       this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.updateReadouts);
-      this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.deleteArrow);
+      this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.dragArrow);
     },
 
     initGraphics: function() {
@@ -60,8 +68,7 @@ define(function(require) {
           snappingYFunction: Constants.SNAPPING_FUNCTION
       });
 
-      this.tailGraphics = this.arrowView.tailGraphics;
-      this.headGraphics = this.arrowView.headGraphics;
+      this.arrowDisplayObject = this.arrowView.displayObject;
 
       this.container = new PIXI.DisplayObjectContainer();
       this.container.addChild(this.arrowView.displayObject);
@@ -121,21 +128,38 @@ define(function(require) {
       }
     },
 
-    deleteArrow: function() {
-      var vectorX = this.vectorViewModel.get('targetX');
-      var vectorY = this.vectorViewModel.get('targetY');
-      var minX = this.model.get('trashCanPositionX');
-      var maxX = this.model.get('trashCanPositionX') + this.model.get('trashCanWidth');
-      var minY = this.model.get('trashCanPositionY');
-      var maxY = this.model.get('trashCanPositionY') + this.model.get('trashCanHeight');
+    dragArrow: function() {
+      var bounds = this.arrowView.displayObject.getBounds();
+      var vectorBounds = new Rectangle(
+        bounds.x,
+        bounds.y,
+        bounds.width,
+        bounds.height
+      );
+      var trashCanBounds = new Rectangle(
+        this.model.get('trashCanPositionX'),
+        this.model.get('trashCanPositionY'),
+        this.model.get('trashCanWidth'),
+        this.model.get('trashCanHeight')
+      );
 
-      if (vectorX >= minX && vectorX <= maxX && vectorY >= minY && vectorY <= maxY){
+      if (vectorBounds.overlaps(trashCanBounds)) {
+        this.deleting = true;
         this.model.set('deleteVector', true);
+      }
+      else {
+        this.deleting = false;
+        this.model.set('deleteVector', false);
+      }
+    },
+
+    dragArrowStop: function() {
+      if (this.deleting) {
         this.model.vectorCollection.remove(this.vectorViewModel);
-        this.displayObject.removeChild(this.container);
-        this.vectorXView.displayObject.removeChild(this.vectorXView.vectorXContainer);
-        this.vectorYView.displayObject.removeChild(this.vectorYView.vectorYContainer);
-        this.componentsView.displayObject.removeChild(this.componentsView.linesContainer);
+        this.componentsView.displayObject.parent.removeChild(this.componentsView.displayObject);
+        this.vectorXView.displayObject.parent.removeChild(this.vectorXView.displayObject);
+        this.vectorYView.displayObject.parent.removeChild(this.vectorYView.displayObject);
+        this.displayObject.parent.removeChild(this.displayObject);
 
         if (this.model.vectorCollection.length <= 0) {
           this.model.set('sumVectorVisible', false);
