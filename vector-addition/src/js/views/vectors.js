@@ -129,6 +129,9 @@ define(function(require) {
     },
 
     dragArrow: function() {
+      if (!this.arrowView.draggingBody)
+        return;
+
       var bounds = this.arrowView.displayObject.getBounds();
       var vectorBounds = new Rectangle(
         bounds.x,
