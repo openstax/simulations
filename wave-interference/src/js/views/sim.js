@@ -16,6 +16,12 @@ define(function (require) {
 	var DetectorView          = require('./detector');
 
 	require('nouislider');
+	require('bootstrap');
+
+	// CSS
+	require('less!styles/sim');
+	require('less!common/styles/slider');
+	require('less!common/styles/radio');
 
 	// Templates
 	var simHtml                = require('text!../../templates/sim.html');

@@ -12,6 +12,9 @@ define(function (require) {
 	var SimView          = require('../sim');
 	var LightCrossSectionGraphView = require('../graph/light-cross-section');
 
+	// CSS
+	require('less!styles/light');
+
 	/*
 	 * Constants
 	 */

@@ -12,6 +12,9 @@ define(function (require) {
 	
 	var html  = require('text!../../templates/detector.html');
 
+	// CSS
+	require('less!styles/detector');
+
 	var angle,
 	    lineLength,
 	    dx,

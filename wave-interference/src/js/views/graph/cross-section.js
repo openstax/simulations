@@ -5,6 +5,8 @@ define(function(require) {
 	var GraphView       = require('../graph');
 	var StaticGraphView = require('./static');
 
+	require('less!styles/cross-section-graph');
+
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */

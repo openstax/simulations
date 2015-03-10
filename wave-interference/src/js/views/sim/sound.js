@@ -15,6 +15,10 @@ define(function (require) {
 	var audioControlsHtml    = require('text!../../../templates/control-panel-components/audio.html');
 	var particleControlsHtml = require('text!../../../templates/control-panel-components/particles.html');
 
+	// CSS
+	require('less!styles/sound');
+	
+
 	var SoundSimView = SimView.extend({
 
 		events: _.extend({

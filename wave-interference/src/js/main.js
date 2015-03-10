@@ -9,10 +9,10 @@
 				var appView = new AppView();
 
 				// Append to body
-				$('body').append(appView.el);
+                $('body').append(appView.el);
 
-				// Render main app view
-				appView.render();
+                // Render main app view
+                appView.load();
 
 				// For demoing
 				var better = false;
@@ -30,11 +30,7 @@
 						}
 					}
 				});	
-
-				// Trigger window resize to update canvases
-				//$(window).trigger('resize');
-
-				appView.postRender();
+				
 			});
 	
 		});
