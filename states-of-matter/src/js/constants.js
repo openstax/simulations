@@ -392,8 +392,8 @@ define(function (require) {
     PhaseDiagramView.SMALLER_INNER_FONT_SIZE = '12px Arial';
 
     // Colors for the various sections of the diagram.
-    PhaseDiagramView.SOLID_COLOR    = '#98C0E8';
-    PhaseDiagramView.LIQUID_COLOR   = '#a5da91';
+    PhaseDiagramView.SOLID_COLOR    = '#a5da91';
+    PhaseDiagramView.LIQUID_COLOR   = '#98C0E8';
     PhaseDiagramView.GAS_COLOR      = '#f1a1a1';
     PhaseDiagramView.CRITICAL_COLOR = '#ffdfaa';
     PhaseDiagramView.CURRENT_STATE_MARKER_COLOR  = '#ff0000';
