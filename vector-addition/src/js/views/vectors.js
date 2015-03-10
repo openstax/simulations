@@ -23,8 +23,10 @@ define(function(require) {
       'touchmove  .arrowDisplayObject': 'dragArrow',
       'mousemove  .arrowDisplayObject': 'dragArrow',
 
-      'touchend   .arrowDisplayObject': 'dragArrowStop',
-      'mouseup    .arrowDisplayObject': 'dragArrowStop'
+      'touchend        .arrowDisplayObject': 'dragArrowStop',
+      'mouseup         .arrowDisplayObject': 'dragArrowStop',
+      'touchendoutside .arrowDisplayObject': 'dragArrowStop',
+      'mouseupoutside  .arrowDisplayObject': 'dragArrowStop'
     },
 
     initialize: function() {
