@@ -130,6 +130,22 @@ define(function(require) {
       }
     },
 
+    centerAt: function(x, y) {
+      var dx = this.vectorViewModel.get('targetX') - this.vectorViewModel.get('originX');
+      var dy = this.vectorViewModel.get('targetY') - this.vectorViewModel.get('originY');
+
+      this.vectorViewModel.set({
+        originX: x - dx / 2,
+        originY: y - dy / 2,
+        targetX: x + dx / 2,
+        targetY: y + dy / 2
+      });
+    },
+
+    positionDefault: function() {
+      this.vectorViewModel.set(this.vectorViewModel.defaults());
+    },
+
     dragArrow: function() {
       if (!this.arrowView.draggingBody)
         return;
