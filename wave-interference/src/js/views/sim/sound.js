@@ -32,6 +32,8 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Sound',
+				name: 'sound',
+				link: 'wave-interference',
 				detectorYLabel: 'Pressure'
 			}, options);
 			

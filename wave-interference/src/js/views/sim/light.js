@@ -33,6 +33,8 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Light',
+				name: 'light',
+				link: 'wave-interference',
 				segmentPotentialName: 'Mirror',
 				detectorYLabel: 'E-Field'
 			}, options);

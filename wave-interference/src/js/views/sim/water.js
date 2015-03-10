@@ -18,6 +18,8 @@ define(function(require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Water',
+				name: 'water',
+				link: 'wave-interference',
 				detectorYLabel: 'Water Level'
 			}, options);
 			
