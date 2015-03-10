@@ -13,24 +13,6 @@
 
                 // Render main app view
                 appView.load();
-
-				// For demoing
-				var better = false;
-				$(document).bind('keydown', function(event) {
-					if (event.which === 66) {
-						if (better) {
-							$('body').removeClass('better');
-							$(window).trigger('worse');
-							better = false;
-						}
-						else {
-							$('body').addClass('better');
-							$(window).trigger('better');
-							better = true;
-						}
-					}
-				});	
-				
 			});
 	
 		});

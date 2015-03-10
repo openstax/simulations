@@ -69,6 +69,7 @@ define(function (require) {
 			'click .reset-btn': 'reset',
 
 			// General Control-Panel
+			'click .tab'      : 'tabClicked',
 			'click .panel-btn': 'panelButtonClicked',
 
 			// Tools
@@ -299,12 +300,13 @@ define(function (require) {
 
 			// Fill the properties section of the control panel
 			$controlPanel.find('.properties-panel')
-				.append(waveControls)
 				.append(oscillatorControls)
 				.append(barrierControls);
 
+			this.$('.heatmap-column').after(waveControls);
+
 			// Initialize all of the sliders
-			$controlPanel.find('.frequency').noUiSlider({
+			this.$('.frequency').noUiSlider({
 				start: this.waveSimulation.get('frequency'),
 				connect: 'lower',
 				range: {
@@ -313,7 +315,7 @@ define(function (require) {
 				}
 			});
 
-			$controlPanel.find('.amplitude').noUiSlider({
+			this.$('.amplitude').noUiSlider({
 				start: this.waveSimulation.get('amplitude'),
 				connect: 'lower',
 				range: {
@@ -366,14 +368,6 @@ define(function (require) {
 
 			// Place it in the view
 			this.$('#control-panel-placeholder').replaceWith($controlPanel);
-
-			// Do special things on 'better' mode
-			$(window)
-				.off('better', $.proxy(_.bind(this.reattachOscillatorControls, this), this))
-				.on( 'better', $.proxy(_.bind(this.reattachOscillatorControls, this), this))
-				.off('worse',  $.proxy(_.bind(this.detachOscillatorControls, this), this))
-				.on( 'worse',  $.proxy(_.bind(this.detachOscillatorControls, this), this));
-			this.detachOscillatorControls();
 		},
 
 		/**
@@ -533,6 +527,18 @@ define(function (require) {
 
 			for (i = 0; i < this.detectorViews.length; i++)
 				this.detectorViews[i].update(time, delta);
+		},
+
+		tabClicked: function(event) {
+			var $tab = $(event.target).closest('.tab');
+			if (!$tab.hasClass('active')) {
+				// Activate the right tab, deactivating the others
+				var selector = $tab.data('content-selector');
+				$tab.add(this.$(selector))
+					.addClass('active')
+					.siblings()
+					.removeClass('active');
+			}
 		},
 
 		/**
@@ -729,18 +735,8 @@ define(function (require) {
 		 */
 		crossSectionSlideStop: function(){
 			this.crossSectionGraphView.stopChanging();
-		},
+		}
 
-
-		/**
-		 * Temporary functions used for toggling the 'better' view
-		 */
-		detachOscillatorControls: function() {
-			this.$('.wave-properties').insertAfter(this.$('.heatmap-column'));
-		},
-		reattachOscillatorControls: function() {
-			this.$('.wave-properties').prependTo(this.$('.properties-panel'));
-		},
 	});
 
 	return SimView;
