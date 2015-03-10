@@ -21,12 +21,14 @@
     </div>
     <div class="sim-controls">
       <div class="row">
-        <div class="checkbox"><input type="checkbox" id="show-sum"><label for="show-sum">Show Sum</label>
+        <div class="checkbox show-sum-checkbox-wrapper">
+          <input type="checkbox" id="show-sum">
+          <label for="show-sum">Show Sum</label>
           <% if (sumVectorVisible) { %> checked = "checked" <% } %>
         </div>
       </div>
       <div class="row">
-        <h4>Component Display</h4>
+        <h5>Component Display</h5>
         <div class="checkbox">
         <ul>
           <li><input type="radio" id="0" name="components" checked><label for="0">None</label></li>
@@ -36,7 +38,7 @@
         </ul>
       </div>
     </div>
-      <div class="checkbox">
+      <div class="checkbox show-grid-checkbox-wrapper">
         <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
         </div>
     </div>

@@ -7,7 +7,7 @@ define(function(require) {
   var DraggableArrowView = require('common/pixi/view/arrow-draggable');
   var SumVectorXView = require('views/sum-vector-x');
   var SumVectorYView = require('views/sum-vector-y');
-  var SumComponentsView = require('views/sum-component-styles');
+  var SumComponentsView = require('views/sum-components');
   var Simulation = require('models/simulation');
   var SumVectorViewModel = require('models/sum-vector');
   var Constants = require('constants');
@@ -15,8 +15,8 @@ define(function(require) {
   var SumVectorView = PixiView.extend({
 
     events: {
-      'click .sumTailGraphics': 'updateSumReadouts',
-      'click .sumHeadGraphics': 'updateSumReadouts'
+      'touchstart .sumVectorDisplayObject': 'updateSumReadouts',
+      'mousedown  .sumVectorDisplayObject': 'updateSumReadouts'
     },
 
     initialize: function() {
@@ -44,11 +44,15 @@ define(function(require) {
 
       this.sumVectorView = new DraggableArrowView({
           model: this.sumVectorModel,
-          fillColor: this.model.get('green')
+          fillColor: this.model.get('green'),
+          bodyDraggingEnabled: true,
+          headDraggingEnabled: false,
+          snappingEnabled: true,
+          snappingXFunction: Constants.SNAPPING_FUNCTION,
+          snappingYFunction: Constants.SNAPPING_FUNCTION
       });
 
-      this.sumTailGraphics = this.sumVectorView.tailGraphics;
-      this.sumHeadGraphics = this.sumVectorView.headGraphics;
+      this.sumVectorDisplayObject = this.sumVectorView.displayObject;
 
       this.sumVectorContainer.addChild(this.sumVectorView.displayObject);
       this.displayObject.addChild(this.sumVectorContainer);

@@ -17,8 +17,6 @@ define(function(require) {
       this.container = options.container;
 
       this.drawVectorY();
-
-      this.listenTo(this.vectorViewModel, 'change:targetX change:targetY', this.updateVectorY);
     },
 
     drawVectorY: function() {
@@ -40,34 +38,6 @@ define(function(require) {
       model.set('targetY', this.vectorViewModel.get('targetY'));
       model.set('oldOriginX', model.get('originX'));
       model.set('oldOriginY', model.get('originY'));
-      model.set('rotation', Constants.VECTOR_Y_ROTATION);
-    },
-
-    updateVectorY: function() {
-      var model = this.vectorYViewModel;
-      var angle = this.vectorViewModel.get('angle');
-      var theta = this.model.get('thetaText');
-
-      if (theta > 0) {
-        angle = Constants.VECTOR_Y_ROTATION;
-        model.set('rotation', angle);
-      }
-      else {
-        angle = -Constants.VECTOR_Y_ROTATION;
-        model.set('rotation', angle);
-      }
-
-      if (this.model.get('componentStyles') == 0) {
-        this.vectorYContainer.visible = false;
-      }
-      
-      model.set('originX', this.vectorViewModel.get('originX'));
-      model.set('originY', this.vectorViewModel.get('originY'));
-      model.set('targetX', this.vectorViewModel.get('targetX'));
-      model.set('targetY', this.vectorViewModel.get('targetY'));
-      model.set('oldOriginX', this.vectorViewModel.get('originX'));
-      model.set('oldOriginY', this.vectorViewModel.get('originY'));
-      this.vectorYView.transformFrame.rotation = model.get('rotation');
     }
 
   });

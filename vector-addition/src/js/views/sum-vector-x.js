@@ -39,23 +39,10 @@ define(function(require) {
       model.set('targetY', this.sumVectorModel.get('targetY'));
       model.set('oldOriginX', model.get('originX'));
       model.set('oldOriginY', model.get('originY'));
-      model.set('rotation', 0);
     },
 
     updateSumVectorX: function() {
       var model = this.sumVectorXViewModel;
-      var angle = this.sumVectorModel.get('angle');
-      var theta = this.model.get('thetaText');
-
-      if (theta > 90) {
-        angle = Constants.VECTOR_X_ROTATION;
-        model.set('rotation', angle)
-      }
-
-      else {
-        angle = 0;
-        model.set('rotation', angle)
-      }
 
       if (this.model.get('componentStyles') !== 3) {
         model.set('originX', this.sumVectorModel.get('originX'));
@@ -64,7 +51,6 @@ define(function(require) {
         model.set('targetY', this.sumVectorModel.get('targetY'));
         model.set('oldOriginX', this.sumVectorModel.get('originX'));
         model.set('oldOriginY', this.sumVectorModel.get('originY'));
-        this.sumVectorXView.transformFrame.rotation = model.get('rotation');
       }
     }
 

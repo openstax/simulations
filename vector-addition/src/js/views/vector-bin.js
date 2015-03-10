@@ -11,7 +11,16 @@ define(function(require) {
   var VectorBinView = PixiView.extend({
 
     events: {
-      'mousedown .bin': 'drawVectors'
+      'touchstart      .bin': 'dragStart',
+      'mousedown       .bin': 'dragStart',
+
+      'touchmove       .bin': 'drag',
+      'mousemove       .bin': 'drag',
+
+      'touchend        .bin': 'dragEnd',
+      'mouseup         .bin': 'dragEnd',
+      'touchendoutside .bin': 'dragEnd',
+      'mouseupoutside  .bin': 'dragEnd'
     },
 
     initialize: function(options) {
@@ -36,12 +45,35 @@ define(function(require) {
       this.displayObject.addChild(this.binContainer);
     },
 
-    drawVectors: function() {
+    addVector: function() {
       var vectorView = new VectorView({
         model: this.model
       });
       this.vectorView = vectorView;
       this.displayObject.parent.addChild(vectorView.displayObject);
+    },
+
+    dragStart: function(data) {
+      this.dragging = true;
+      this.addVector();
+      this.vectorView.centerAt(data.global.x, data.global.y);
+      this.didDrag = false;
+    },
+
+    drag: function(data) {
+      if (this.dragging) {
+        this.vectorView.centerAt(data.global.x, data.global.y);
+        this.didDrag = true;
+      }
+    },
+
+    dragEnd: function(data) {
+      this.dragging = false;
+
+      // It was just a click
+      if (!this.didDrag) {
+        this.vectorView.positionDefault();
+      }
     }
 
   });
