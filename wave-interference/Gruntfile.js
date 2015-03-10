@@ -38,6 +38,12 @@ module.exports = function(grunt) {
 				dest: 'dist/common/'
 			}
 		},
+		rename: {
+		    optimized: {
+		        src: 'src/optimized.js',
+		        dest: 'dist/js/optimized.js'
+		    }
+		},
 		connect: {
 			dist: {
 				options: {
@@ -189,6 +195,7 @@ module.exports = function(grunt) {
 		'clean:dist',
 		'requirejs:compile',
 		'copy',
+		'rename:optimized',
 		'targethtml'
 	]);
 
