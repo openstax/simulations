@@ -37,7 +37,9 @@ module.exports = function(grunt) {
 			},
 			common: {
 				src: [
-					'../common/**/*.{eot,svg,ttf,woff,otf}'
+					'!../common/**/docs/**/*',
+                    '../common/**/*.{eot,svg,ttf,woff,otf}',
+                    '../common/img/**/*.{png,jpg,jpeg,gif}'
 				],
 				dest: 'dist/common/'
 			}
