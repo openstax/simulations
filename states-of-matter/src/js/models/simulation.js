@@ -661,13 +661,13 @@ define(function (require, exports, module) {
                 return;
             }
 
-            // Remove existing particles and reset the global model parameters.
-            this.removeAllParticles();
-            this.initModelParameters();
-
             // Retain the current phase so that we can set the particles back to
             //   this phase once they have been created and initialized.
             var phase = this.mapTemperatureToPhase();
+
+            // Remove existing particles and reset the global model parameters.
+            this.removeAllParticles();
+            this.initModelParameters();
 
             // Set the new molecule type.
             this.currentMolecule = moleculeType;
