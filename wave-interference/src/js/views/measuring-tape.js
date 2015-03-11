@@ -10,6 +10,9 @@ define(function (require) {
 	var Utils = require('../utils/utils');
 	var html  = require('text!../../templates/measuring-tape.html');
 
+	// CSS
+	require('less!styles/measuring-tape');
+
 	var padding,
 	    angle,
 	    lineLength,

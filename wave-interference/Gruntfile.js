@@ -1,4 +1,9 @@
-module.exports = function(grunt){
+module.exports = function(grunt) {
+
+	'use strict';
+
+	var _               = grunt.util._;
+	var requireJsConfig = require('./src/js/config.js');
 
 	var BANNER_TEMPLATE_STRING = '/*! <%= pkg.name %> - v<%= pkg.version %> - '
 		+ '<%= grunt.template.today("yyyy-mm-dd") %> */\n';
@@ -21,10 +26,10 @@ module.exports = function(grunt){
 			},
 			fonts: {
 				expand: true,
-				filter: 'isFile',
-				flatten: true,
-				src: ['bower_components/font-awesome/fonts/**'],
-				dest: 'dist/bower_components/font-awesome/fonts/'
+                filter: 'isFile',
+                flatten: true,
+                src: ['node_modules/font-awesome/fonts/**'],
+                dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
 				src: [
@@ -34,6 +39,12 @@ module.exports = function(grunt){
 				],
 				dest: 'dist/common/'
 			}
+		},
+		rename: {
+		    optimized: {
+		        src: 'src/optimized.js',
+		        dest: 'dist/js/optimized.js'
+		    }
 		},
 		connect: {
 			dist: {
@@ -45,24 +56,19 @@ module.exports = function(grunt){
 		},
 		requirejs: {
 			compile: {
-				options: {
+				options: _.merge(requireJsConfig, {
 					baseUrl: 'src/js',
-					mainConfigFile: 'src/js/config.js',
 					findNestedDependencies: true,
 					optimize: 'uglify2',
-					paths: {
-						jquery:     '../../bower_components/jquery/dist/jquery',
-						underscore: '../../bower_components/lodash/dist/lodash',
-						backbone:   '../../bower_components/backbone/backbone',
-						text:       '../../bower_components/requirejs-text/text',
-						pixi:       '../../bower_components/pixi/bin/pixi',
-						nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-						timbre:     '../../bower_components/timbre/timbre.dev',
-						glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix'
-					},
 					name: 'main',
-					out: 'dist/js/optimized.js'
-				}
+					out: 'src/optimized.js',
+
+					less: {
+					    modifyVars: {
+					        'fa-font-path': '"../node_modules/font-awesome/fonts/"'
+					    }
+					}
+				})
 			}
 		},
 		uglify: {
@@ -81,35 +87,6 @@ module.exports = function(grunt){
 					'dist/index.html': 'src/index.html'
 				}
 			}		
-		},		
-		less: {
-			development: {
-				options: {
-					paths: ['src/less']
-				},
-				files: {
-					'src/css/main.css': 'src/less/main.less'
-				}
-			},
-			dist: {
-				options: {
-					paths: ['src/less'],
-					compress: true,
-					optimization: 2
-				},
-				files: {
-					'dist/css/main.css': 'src/less/main.less'
-				}
-			}
-		},
-		watch: {
-			styles: {
-				files: ['src/less/**/*.less'], // files to watch
-				tasks: ['less:development'],
-				options: {
-					nospawn: true
-				}
-			}
 		},
 		jshint: {
 			options: {		
@@ -191,12 +168,6 @@ module.exports = function(grunt){
 				runner: 'test/index.html',
 				files: 'test/**/*.js'
 			}
-		},
-		'gh-pages': {
-			options: {
-				base: 'dist'
-			},
-			src: ['**']
 		}
 	});
 
@@ -226,7 +197,7 @@ module.exports = function(grunt){
 		'clean:dist',
 		'requirejs:compile',
 		'copy',
-		'less:dist',
+		'rename:optimized',
 		'targethtml'
 	]);
 

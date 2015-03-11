@@ -8,6 +8,10 @@ define(function(require) {
 
 	var html  = require('text!../../templates/oscillator.html');
 
+	// CSS
+	require('less!styles/oscillator');
+
+
 	var OscillatorView = Backbone.View.extend({
 
 		template: _.template(html),

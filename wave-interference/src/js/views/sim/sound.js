@@ -15,6 +15,10 @@ define(function (require) {
 	var audioControlsHtml    = require('text!../../../templates/control-panel-components/audio.html');
 	var particleControlsHtml = require('text!../../../templates/control-panel-components/particles.html');
 
+	// CSS
+	require('less!styles/sound');
+	
+
 	var SoundSimView = SimView.extend({
 
 		events: _.extend({
@@ -28,6 +32,8 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Sound',
+				name: 'sound',
+				link: 'wave-interference',
 				detectorYLabel: 'Pressure'
 			}, options);
 			

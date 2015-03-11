@@ -6,11 +6,20 @@
 			jquery:     '../../bower_components/jquery/dist/jquery',
 			underscore: '../../bower_components/lodash/dist/lodash',
 			backbone:   '../../bower_components/backbone/backbone',
+			bootstrap:  '../../bower_components/bootstrap/dist/js/bootstrap.min',
 			text:       '../../bower_components/requirejs-text/text',
 			pixi:       '../../bower_components/pixi/bin/pixi',
 			nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
 			timbre:     '../../bower_components/timbre/timbre.dev',
-			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix'
+			glmatrix:   '../../bower_components/gl-matrix/dist/gl-matrix',
+
+			views:      '../js/views',
+			models:     '../js/models',
+			assets:     '../js/assets',
+			constants:  '../js/constants',
+			templates:  '../templates',
+			styles:     '../styles',
+			common:     '../../../common'
 		},
 
 		packages: [{
@@ -21,8 +30,22 @@
 			name: 'less',
 			location: '../../bower_components/require-less',
 			main: 'less'
-		}]
+		}],
+
+		less: {
+		    logLevel: 1,
+
+		    globalVars: {
+		        dependencyDir: '"/bower_components"'
+		    }
+		}
 	};
 
-	require.config(config);
+	// Expose to the rest of the world 
+	if (typeof module !== 'undefined') { 
+	    module.exports = config; // For nodejs 
+	} 
+	else if (typeof require.config !== 'undefined') { 
+	    require.config(config); // For requirejs 
+	}
 })();

@@ -1,9 +1,9 @@
-@import "/bower_components/bootstrap/less/mixins.less"; // Bootstrap Mixins
-
-@import "mixins/prefixes.less";
-@import "mixins/flexbox.less";
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/buttons.less";
 @import "mixins/graph-view.less";
-@import "mixins/buttons.less";
+
 
 .social-button(@url: "images/social/mail.png") {
 	font-size: 0;
@@ -51,9 +51,3 @@
   .clearfix();
 }
 
-.transform(@transform) {
-  -webkit-transform: @transform;
-     -moz-transform: @transform;
-      -ms-transform: @transform; // IE9 only
-          transform: @transform;
-}

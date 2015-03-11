@@ -9,6 +9,9 @@ define(function (require) {
 	var Utils = require('../utils/utils');
 	var html  = require('text!../../templates/stopwatch.html');
 
+	// CSS
+	require('less!styles/stopwatch');
+
 	var dx,
 	    dy,
 	    translate;

@@ -6,6 +6,9 @@ define(function(require) {
 
 	var StaticGraphView = require('./static');
 
+	// CSS
+	require('less!styles/intensity-graph');
+
 	/*
 	 * "Local" variables for functions to share and recycle
 	 */

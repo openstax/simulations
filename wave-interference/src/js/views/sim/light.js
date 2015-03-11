@@ -12,6 +12,9 @@ define(function (require) {
 	var SimView          = require('../sim');
 	var LightCrossSectionGraphView = require('../graph/light-cross-section');
 
+	// CSS
+	require('less!styles/light');
+
 	/*
 	 * Constants
 	 */
@@ -30,6 +33,8 @@ define(function (require) {
 			options = _.extend({
 				heatmapBrightness: 0.5,
 				title: 'Light',
+				name: 'light',
+				link: 'wave-interference',
 				segmentPotentialName: 'Mirror',
 				detectorYLabel: 'E-Field'
 			}, options);

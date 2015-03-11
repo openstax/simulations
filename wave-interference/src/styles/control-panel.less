@@ -23,17 +23,11 @@
 	> .panel-content-wrapper {
 		
 		> .panel-content {
-			display: block;
+			display: none;
 
-			.better & {
-				display: none;
-
-				&.active {
-					display: block;
-				}
+			&.active {
+				display: block;
 			}
-
-			
 		}
 	}
 
@@ -67,22 +61,27 @@
 	width: 100%;
 	background-color: @gray-lightest;
 	margin-top: 2px;
-	padding: 16px;
+	padding: 14px 16px;
 	.user-select(none);
 }
 
-body:not(.better) .wave-properties {
+.panel-btn {
+	padding: 11px 16px;
+}
+
+.wave-properties {
 	width: auto;
 	min-width: 160px;
 	margin-left: 20px;
 	margin-right: 20px;
 	margin-bottom: 20px;
+	padding: 16px;
 
 	@media (min-width: @screen-sm-min) {
 		width: auto;
 		min-width: 160px;
 		position: absolute;
-		bottom: 60px;
+		top: 480px;
 		left: 0px;
 		margin: 0;
 	}
@@ -92,14 +91,8 @@ body:not(.better) .wave-properties {
 // Should be identical to tabs found in ".media-tabs" in webview
 
 .panel-tabs {
-	display: none;
-}
-
-.better .panel-tabs {
 	display: block;
 	color: @brand-primary;
-	background-color: @gray-lightest; 
-	padding-top: 8px;
 
 	> ul {
 		margin: 0;
@@ -110,11 +103,12 @@ body:not(.better) .wave-properties {
 		color: @link-color;
 
 		> li {
-			display: inline-block;
+			display: block;
 			padding: 7px 10px;
 			margin-right: 3px;
+			//margin-bottom: 3px;
 			font-size: 1.5rem;
-			background-color: white;
+			background-color: @gray-lightest;
 			cursor: pointer;
 			.user-select(none);
 
@@ -141,7 +135,26 @@ body:not(.better) .wave-properties {
 			}
 
 			&:not(.active) {
-				#gradient.vertical(#fff; #ededed; 60%; 100%);
+				background: lighten(@gray-lightest, 5%);
+				//#gradient.vertical(#fff; lighten(@gray-lightest, 5%); 0%; 100%);
+			}
+
+			&:first-child {
+				margin-left: 0;
+			}
+
+			&:last-child {
+				margin-right: 0;
+			}
+
+			&.tools-tab {
+				width: ((@control-panel-width - 3) * 0.47);
+				float: left;
+			}
+
+			&.properties-tab {
+				width: ((@control-panel-width - 3) * 0.53);
+				float: right;
 			}
 		}
 	}

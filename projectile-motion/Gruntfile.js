@@ -93,15 +93,6 @@ module.exports = function(grunt) {
 					'dist/index.html': 'src/index.html'
 				}
 			}		
-		},		
-		watch: {
-			styles: {
-				files: ['src/less/**/*.less'], // files to watch
-				tasks: ['less:development'],
-				options: {
-					nospawn: true
-				}
-			}
 		},
 		jshint: {
 			options: {		

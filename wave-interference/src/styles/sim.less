@@ -1,22 +1,30 @@
+@import "variables.less";
+@import "mixins.less";
+
+@import "control-panel.less";
+
 .sim-view {
 	height: 100%;
 	width: 100%;
 }
 
+@btn-bg: #ccc;
+@btn-fg: @link-color;
+@panel-bg: @gray-lightest;
+
 .playback-controls-wrapper {
 	position: absolute;
-	top: -36px;
-	right: 10px;
-	
-	// @media (min-width: @screen-sm-min) {
-	// 	position: absolute;
-	// 	bottom: 10px;
-	// 	left: 10px;
-	// 	z-index: @above-canvas;
-	// }
+	top: 617px;
+	left: 0;
+	height: 62px;
+	width: 160px;
+	padding: 10px;
+	text-align: center;
+	background: @panel-bg;
 
 	> .playback-btn {
-		background: @gray-lightest;
+		display: inline-block;
+		background: @btn-bg;
 		color: @link-color;
 		outline: none;
 		border: none;
@@ -26,13 +34,12 @@
 		text-align: center;
 
 		&:hover {
-			opacity: 0.9;
+		    opacity: 0.9;
 		}
 
 		&:active {
-			//border: 1px solid #fff;
-			background: @link-color;
-			color: #fff;
+		    background: @link-color;
+		    color: #fff;
 		}
 
 		.sim-view.playing &.play-btn {
@@ -41,6 +48,18 @@
 		.sim-view:not(.playing) &.pause-btn {
 			display: none;
 		}
+
+		&.play-btn,
+		&.pause-btn {
+		    width: 42px;
+		    height: 42px;
+		    font-size: 16px;
+		}
+
+		&.play-btn {
+		    padding-left: 10px;
+		}
+		
 	}
 }
 
