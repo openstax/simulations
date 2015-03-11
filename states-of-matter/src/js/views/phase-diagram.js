@@ -106,14 +106,14 @@ define(function(require) {
             var topOfSolidLiquidLine;
             if (this.depictingWater) {
                 topOfSolidLiquidLine = new Vector2(
-                    C.DEFAULT_TOP_OF_SOLID_LIQUID_LINE.x * gw,
-                    C.DEFAULT_TOP_OF_SOLID_LIQUID_LINE.y * -gh
+                    C.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER.x * gw,
+                    C.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER.y * -gh
                 );
             }
             else {
                 topOfSolidLiquidLine = new Vector2(
-                    C.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER.x * gw,
-                    C.TOP_OF_SOLID_LIQUID_LINE_FOR_WATER.y * -gh
+                    C.DEFAULT_TOP_OF_SOLID_LIQUID_LINE.x * gw,
+                    C.DEFAULT_TOP_OF_SOLID_LIQUID_LINE.y * -gh
                 );
             }
 
@@ -239,7 +239,17 @@ define(function(require) {
             PIXI.drawPiecewiseCurve(ctx, liquidArea, 0, 0, true, false);
             ctx.fillStyle = C.GAS_COLOR;
             PIXI.drawPiecewiseCurve(ctx, gasArea, 0, 0, true, false);
-            ctx.fillStyle = C.CRITICAL_COLOR;
+
+            var gw = this.getGraphWidth();
+            var gh = this.getGraphHeight(); 
+
+            var x = this.getGraphXOffset();
+            var y = this.getGraphYOffset();
+
+            var gradient = ctx.createLinearGradient(x, y - gh, x, y);
+            gradient.addColorStop(0, C.LIQUID_COLOR);
+            gradient.addColorStop(1, C.GAS_COLOR);
+            ctx.fillStyle = gradient;
             PIXI.drawPiecewiseCurve(ctx, criticalArea, 0, 0, true, false);
         },
 
