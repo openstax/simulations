@@ -40,6 +40,7 @@ define(function (require, exports, module) {
 
         hang: function(body){
             this.body = body;
+            this.trigger('snag');
             this.set('body', body);
         },
 
