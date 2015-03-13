@@ -84,7 +84,7 @@ define(function (require, exports, module) {
                 system.set('gravity', gravity);
             });
             this.bodies.each(function(body){
-                body.set('gravity', gravity);
+                body.set('acceleration', gravity);
             });
         },
 
