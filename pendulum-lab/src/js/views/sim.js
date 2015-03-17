@@ -69,6 +69,7 @@ define(function (require) {
             'click .sound-btn' : 'changeVolume',
             'slide .length-slider' : 'changeLength',
             'slide .mass-slider'   : 'changeMass',
+            'click #pendulum-2-checkbox' : 'changePendulum2Visibility',
 
             // tools
             'change .stopwatch-check' : 'toggleStopwatch',
@@ -199,6 +200,7 @@ define(function (require) {
             var lengthSliderSettings = {
                 step:  SimSettings.LENGTH_STEP,
                 start: SimSettings.DEFAULT_LENGTH,
+                connect: 'lower',
                 range: {
                     'min': SimSettings.LENGTH_MIN,
                     'max': SimSettings.LENGTH_MAX
@@ -208,6 +210,7 @@ define(function (require) {
             var massSliderSettings = {
                 step:  SimSettings.MASS_STEP,
                 start: SimSettings.DEFAULT_MASS,
+                connect: 'lower',
                 range: {
                     'min': SimSettings.MASS_MIN,
                     'max': SimSettings.MASS_MAX
@@ -380,6 +383,19 @@ define(function (require) {
             this.$('#' + $(event.target).attr('id') + '-value').text(mass.toFixed(2) + 'kg');
         },
 
+        changePendulum2Visibility: function(event) {
+            if ($(event.target).is(':checked')) {
+                this.$('.pendulum-2-controls').removeClass('disabled');
+                this.$('#length-slider-2, #mass-slider-2').removeAttr('disabled');
+                this.sceneView.showSecondPendulum();
+            }
+            else {
+                this.$('.pendulum-2-controls').addClass('disabled');
+                this.$('#length-slider-2, #mass-slider-2').attr('disabled', 'disabled');
+                this.sceneView.hideSecondPendulum();
+            }
+        },
+
         /**
          * Resets all the components of the view.
          */
@@ -460,6 +476,7 @@ define(function (require) {
             $element.noUiSlider({
                 start: defaultChoice.value,
                 snap: options.snap,
+                connect: 'lower',
                 range: range
             });
 

@@ -6,26 +6,11 @@
 
 
 .sim-controls {
-
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
     padding: 15px;
     position: relative;
     margin-bottom: 12px;
     width: @control-panel-expanded-width;
-
-    input.form-control {
-        background: rgba(255, 255, 255, 0.27);
-        border-color: rgba(0, 0, 0, 0.1);
-        position: relative;
-
-        // Just for Chrome--they're too far left by default
-        &::-webkit-inner-spin-button, 
-        &::-webkit-outer-spin-button {
-            right: 4px;
-            margin-top: 2px;
-            position: absolute;
-        }
-    }
 
     h2 {
         font-size: 16px;
@@ -73,14 +58,20 @@
         .clearfix();
     }
 
-    ul {
-        list-style: none;
-        padding: 5px;
-        margin: 0;
+    label,
+    .slider-value {
+        .transition(color 200ms);
+    }
 
-        li {
-            list-style-image: none;
+    &.disabled {
+        label,
+        .slider-value {
+            color: fadeout(#000, 50%);
         }
+
+        // .slider.noUi-background {
+        //     background-color: fadeout(#000, 50%);
+        // }
     }
 
     .slider {
@@ -98,22 +89,11 @@
             color: @sim-controls-color;
             font-weight: bold;
         }
-
-        &.noUi-background{
-            background: @link-color;
-        }
     }
 
     .discrete-slider-wrapper{
         padding: 0 7px 20px 7px;
         .clearfix();
-    }
-
-    .compact-list{
-        li{
-            float: left;
-            width: 90px;
-        }
     }
 
     .slider-label {

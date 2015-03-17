@@ -68,6 +68,14 @@ define(function(require) {
 
         setVolume: function(volume) {
 
+        },
+
+        showSecondPendulum: function() {
+
+        },
+
+        hideSecondPendulum: function() {
+            
         }
 
     });
