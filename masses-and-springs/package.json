@@ -1,5 +1,5 @@
 {
-  "name": "projectile-motion",
+  "name": "masses-and-springs",
   "version": "1.0.0",
   "description": "A simulation to show effects of environment and initial conditions of a projectile launch on a projectile's trajectory through the air.",
   "main": "main.js",

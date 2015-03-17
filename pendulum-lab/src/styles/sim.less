@@ -1,0 +1,70 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+@import "sim-controls.less";
+@import "sim-energies.less";
+@import "playback-controls.less";
+
+/**
+ * Sim Settings, top right
+ */
+.sim-settings{
+    position: absolute;
+    top: -36px;
+    right: 0;
+    z-index: 10;
+
+    > div{
+        float: left;
+        margin: 0 4px;
+    }
+
+    button{
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.7;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+    }
+}
+.sound-btn-wrapper {
+
+    > .sound-btn {
+        &.sound-btn-mute,
+        &.sound-btn-low {
+            display: none;
+        }
+    }
+}
+
+
+/**
+ * Slider modifications
+ */
+.slider{
+    &.noUi-horizontal .noUi-handle{
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+        cursor: grab;
+
+        &.noUi-active{
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            cursor: grabbing;
+        }
+    }
+}

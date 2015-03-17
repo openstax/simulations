@@ -1,0 +1,94 @@
+
+<div class="sim-settings">
+    <div class="sound-btn-wrapper">
+        <button data-volume="mute" class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
+        <button data-volume="low" class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
+        <button data-volume="high" class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
+    </div>
+</div>
+
+<div class="scene-view-placeholder"></div>
+
+
+<div class="sim-controls-panel">
+    <div class="sim-controls-column">
+        <div class="sim-controls">
+            <h2>Global Settings</h2>
+
+            <label class="slider-label">Gravity</label>
+            <select class="form-control" id="gravity-setting"></select>
+
+            <label class="slider-label">Friction</label>
+            <div class="control-group discrete-slider-wrapper">
+                <div class="friction-slider"></div>
+            </div>
+        </div>
+
+        <div class="sim-controls">
+            <h2>Pendulum 1</h2>
+
+            <div class="row">
+                <div class="col-sm-4"><label for="length-slider-1" class="slider-label">Length</label></div>
+                <div class="col-sm-8 slider-value" id="length-slider-1-value">2.00m</div>
+            </div>
+            <div class="slider length-slider" id="length-slider-1" data-number="1"></div>
+
+            
+            <div class="row">
+                <div class="col-sm-4"><label for="mass-slider-1" class="slider-label">Mass</label></div>
+                <div class="col-sm-8 slider-value" id="mass-slider-1-value">1.00kg</div>
+            </div>
+            <div class="slider mass-slider" id="mass-slider-1" data-number="1"></div>
+        </div>
+
+        <div class="sim-controls">
+            <h2>Pendulum 2</h2>
+
+            <input type="checkbox" id="pendulum-2-checkbox" class="pendulum-2-checkbox">
+            <label for="pendulum-2-checkbox">Enabled</label>
+
+            <div class="row">
+                <div class="col-sm-4"><label for="length-slider-2" class="slider-label">Length</label></div>
+                <div class="col-sm-8 slider-value" id="length-slider-2-value">2.00m</div>
+            </div>
+            <div class="slider length-slider" id="length-slider-2" data-number="2"></div>
+
+            
+            <div class="row">
+                <div class="col-sm-4"><label for="mass-slider-2" class="slider-label">Mass</label></div>
+                <div class="col-sm-8 slider-value" id="mass-slider-2-value">1.00kg</div>
+            </div>
+            <div class="slider mass-slider" id="mass-slider-2" data-number="2"></div>
+        </div>
+    </div>
+    <div class="sim-controls-column">
+        <div class="sim-controls energy-graphs">
+            <div class="energy-graph-placeholder"></div>
+            <div class="energy-graph-tabs"></div>
+            <div class="zoomer">
+                <button class="btn btn-zoom-out">
+                    <span class="fa fa-search"><span class="fa fa-minus"></span></span>
+                </button>
+                <span class="zoom"></span>
+                <button class="btn btn-zoom-in">
+                    <span class="fa fa-search"><span class="fa fa-plus"></span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="playback-controls-wrapper">
+    <button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
+    <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
+
+    <div class="playback-speed-wrapper">
+        <div class="slider playback-speed"></div>
+    </div>
+
+    <div class="stopwatch">
+        <input type="checkbox" id="stopwatch" class="stopwatch-check">
+        <label for="stopwatch">Stopwatch</label>
+    </div>
+</div>

@@ -1,0 +1,9 @@
+<nav class="sim-tabs">
+    <ul class="singleton">
+        <% collection.each(function(info, count){ %>
+            <li class="tab" data-system-cid="<%=info.cid %>">
+                <span class="tab-title"><%= count+1 %></span>
+            </li>
+        <% }); %>
+    </ul>
+</nav>
