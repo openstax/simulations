@@ -12,6 +12,22 @@
 
 <div class="sim-controls-panel">
     <div class="sim-controls-column">
+        <div class="sim-controls energy-graphs">
+            <div class="energy-graph-placeholder"></div>
+            <div class="energy-graph-tabs"></div>
+            <div class="zoomer">
+                <button class="btn btn-zoom-out">
+                    <span class="fa fa-search"><span class="fa fa-minus"></span></span>
+                </button>
+                <span class="zoom"></span>
+                <button class="btn btn-zoom-in">
+                    <span class="fa fa-search"><span class="fa fa-plus"></span></span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="sim-controls-column">
         <div class="sim-controls">
             <h2>Global Settings</h2>
 
@@ -45,7 +61,7 @@
             <h2>Pendulum 2</h2>
 
             <input type="checkbox" id="pendulum-2-checkbox" class="pendulum-2-checkbox">
-            <label for="pendulum-2-checkbox">Enabled</label>
+            <label for="pendulum-2-checkbox">Visible</label>
 
             <div class="row">
                 <div class="col-sm-4"><label for="length-slider-2" class="slider-label">Length</label></div>
@@ -59,21 +75,6 @@
                 <div class="col-sm-8 slider-value" id="mass-slider-2-value">1.00kg</div>
             </div>
             <div class="slider mass-slider" id="mass-slider-2" data-number="2"></div>
-        </div>
-    </div>
-    <div class="sim-controls-column">
-        <div class="sim-controls energy-graphs">
-            <div class="energy-graph-placeholder"></div>
-            <div class="energy-graph-tabs"></div>
-            <div class="zoomer">
-                <button class="btn btn-zoom-out">
-                    <span class="fa fa-search"><span class="fa fa-minus"></span></span>
-                </button>
-                <span class="zoom"></span>
-                <button class="btn btn-zoom-in">
-                    <span class="fa fa-search"><span class="fa fa-plus"></span></span>
-                </button>
-            </div>
         </div>
     </div>
 </div>
