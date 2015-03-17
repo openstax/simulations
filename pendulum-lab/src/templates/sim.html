@@ -12,6 +12,16 @@
 
 <div class="sim-controls-panel">
     <div class="sim-controls-column">
+        <div class="sim-controls">
+            <h2>Visibility Options</h2>
+
+            <input type="checkbox" id="show-velocity-checkbox">
+            <label for="show-velocity-checkbox">Velocity</label>
+
+            <input type="checkbox" id="show-acceleration-checkbox">
+            <label for="show-acceleration-checkbox">Acceleration</label>
+        </div>
+
         <div class="sim-controls energy-graphs">
             <div class="energy-graph-placeholder"></div>
             <div class="energy-graph-tabs"></div>
@@ -26,7 +36,7 @@
             </div>
         </div>
     </div>
-    
+
     <div class="sim-controls-column">
         <div class="sim-controls">
             <h2>Global Settings</h2>
@@ -85,11 +95,16 @@
     <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
 
     <div class="playback-speed-wrapper">
-        <div class="slider playback-speed"></div>
+        <div class="playback-speed"></div>
     </div>
 
-    <div class="stopwatch">
-        <input type="checkbox" id="stopwatch" class="stopwatch-check">
-        <label for="stopwatch">Stopwatch</label>
+    <div class="photogate-timer-wrapper">
+        <input type="checkbox" id="photogate-timer" class="photogate-timer-check">
+        <label for="photogate-timer">Photogate Timer</label>
+    </div>
+
+    <div class="other-tools-wrapper">
+        <input type="checkbox" id="other-tools" class="other-tools-check">
+        <label for="other-tools">Other Tools</label>
     </div>
 </div>

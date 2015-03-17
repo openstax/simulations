@@ -1,6 +1,6 @@
 .playback-controls-wrapper {
     position: relative;
-    margin-top: 10px;
+    margin-top: -5px;
     padding: 10px;
     background: @gray-lightest;
     text-align: center;
@@ -72,53 +72,32 @@
         position: absolute;
         height: 100%;
         top: 0;
-        padding-top: 18px;
-
-        .playback-speed {
-            width: 140px;
-            display: inline-block;
-            vertical-align: middle;
-            background: #aaa;
-        }
-
-        > label {
-            vertical-align: middle;
-            margin: 0 8px;
-            color: #777;
-            font-weight: normal;
-        }
-
-        .sim-view.record-mode & {
-            display: none;
-        }
+        left: 20px;
+        padding-top: 16px;
     }
 
-    .playback-mode-wrapper {
-        position: absolute;
-        top: 22px;
-        left: 170px;
-
-        & label {
-            margin-right: 16px;
-        }
-    }
-
-
-
-    li{
+    li {
         float: left;
         padding-right: 30px;
     }
 
-    .stopwatch{
-        cursor: pointer;
+    .other-tools-wrapper,
+    .photogate-timer-wrapper {
         position: absolute;
         top: 22px;
-        right: 22px;
+        cursor: pointer;
 
-        label{
+        label {
             cursor: pointer;
         }
+    }
+
+    .other-tools-wrapper {
+        right: 24px;
+    }
+
+    .photogate-timer-wrapper {
+        right: 170px;
     }
 
 }

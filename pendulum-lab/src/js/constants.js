@@ -56,10 +56,10 @@ define(function (require) {
      *************************************************************************/
     var SimSettings = {};
     SimSettings.SPEED = [{
-            label : '1/16 time',
+            label : '<sup>1</sup>/<sub>16</sub> time',
             value : 0.0625
         }, {
-            label : '1/4 time',
+            label : '<sup>1</sup>/<sub>4</sub> time',
             value : 0.25
         }, {
             label : 'Normal',
