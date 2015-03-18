@@ -13,6 +13,7 @@ define(function(require) {
      * Shared variables
      */
     var _rect = new Rectangle();
+    var position = { col: 0, row: 0 };
 
     /**
      * A level object contains the level data and functions
@@ -133,6 +134,43 @@ define(function(require) {
                 TILE_SIZE,
                 TILE_SIZE
             );
+        },
+
+        /**
+         * Returns an object containing the column and row
+         *   of the start position or false if it doesn't
+         *   exist.
+         */
+        startPosition: function() {
+            return this.findFirst(Level.TILE_START);
+        },
+
+        /**
+         * Returns an object containing the column and row
+         *   of the finish position or false if it doesn't
+         *   exist.
+         */
+        finishPosition: function() {
+            return this.findFirst(Level.TILE_FINISH);
+        },
+
+        /**
+         * Returns an object containing the column and row
+         *   of the first tile of the specified tile type
+         *   or false if it can't find one.
+         */
+        findFirst: function(tileType) {
+            var data = this.data;
+            for (var r = 0; r < data.length; r++) {
+                for (var c = 0; c < data[r].length; c++) {
+                    if (data[r][c] === tileType) {
+                        position.col = c;
+                        position.row = r;
+                        return position;
+                    }
+                }
+            }
+            return false;
         }
 
     });

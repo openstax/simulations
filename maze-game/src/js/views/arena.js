@@ -15,7 +15,7 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents a movable target model
+     * Draws the level and the player particle
      */
     var ArenaView = PixiView.extend({
 
@@ -79,21 +79,15 @@ define(function(require) {
                 }
             }
 
-            // Find and create the FINISH tile
+            // Create the FINISH tile
             var level = this.model.get('level');
-            var data = level.data;
-            for (var r = 0; r < data.length; r++) {
-                for (var c = 0; c < data[r].length; c++) {
-                    if (data[r][c] === Level.TILE_FINISH) {
-                        tileSprite = Assets.createSprite(Assets.Images.FINISH);
-                        tileSprite.x = this.mvt.modelToViewX(level.colToX(c));
-                        tileSprite.y = this.mvt.modelToViewY(level.rowToY(r));
-                        tileSprite.scale.x = this.tileScale;
-                        tileSprite.scale.y = this.tileScale;
-                        this.floor.addChild(tileSprite);
-                    }
-                }
-            }
+            var finish = level.finishPosition();
+            tileSprite = Assets.createSprite(Assets.Images.FINISH);
+            tileSprite.x = this.mvt.modelToViewX(level.colToX(finish.col));
+            tileSprite.y = this.mvt.modelToViewY(level.rowToY(finish.row));
+            tileSprite.scale.x = this.tileScale;
+            tileSprite.scale.y = this.tileScale;
+            this.floor.addChild(tileSprite);
         },
 
         drawWalls: function() {
