@@ -62,6 +62,22 @@ define(function (require) {
             'W                              W',
             'W                              W',
             'W                              W'
+        ],
+        'Certain Death': [
+            '       WWWWWWWWWWWWWWWWW       W',
+            '       W       W       W   S   W',
+            '       W               W       W',
+            '       W  W                    W',
+            '       W  WWWWWWWW        WWWWWW',
+            '       W  W      W  W          W',
+            'WWWWWWWW  W      W  W          W',
+            'W             W  W  W          W',
+            'W             W     W      W   W',
+            'W             W     W      W   W',
+            'W  F       WWWWWWWWWWWWWWWWW   W',
+            'W             W     W      W   W',
+            '              W     W          W',
+            '   WWWWWWWWWWWW                W'
         ]
     };
 
