@@ -44,8 +44,8 @@ define(function(require) {
             this.shadows.cacheAsBitmap = false;
             this.walls.cacheAsBitmap   = false;
 
-
-
+            this.drawFloor();
+            this.drawWalls();
 
             // Cache each layer because they don't change
             this.floor.cacheAsBitmap   = true;
@@ -54,20 +54,23 @@ define(function(require) {
         },
 
         drawFloor: function() {
+            this.floor.removeChildren();
 
+            // Draw tiles out to the edges of the scene as a base layer
+
+
+            // Find and create the FINISH tile
         },
 
         drawWalls: function() {
-
+            this.shadows.removeChildren();
+            this.walls.removeChildren();
         },
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            // var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(this.model.get('height'))); // in pixels
-            // var scale = targetSpriteHeight / this.davidClothed.height;
-            // this.displayObject.scale.x = scale;
-            // this.displayObject.scale.y = scale;
+            this.tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
 
             this.drawLevel();
         }

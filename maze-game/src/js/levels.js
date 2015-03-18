@@ -2,20 +2,16 @@ define(function (require) {
 
     'use strict';
 
-    var Levels = {};
+    var Level = require('models/level');
 
-    // Define tile values
-    Levels.TILE_FLOOR  = 0;
-    Levels.TILE_WALLS  = 1;
-    Levels.TILE_START  = 2;
-    Levels.TILE_FINISH = 3;
+    var Levels = {};
 
     // Character values to make mapping easier
     var charsToTileValues = {
-        ' ': Levels.TILE_FLOOR,
-        'W': Levels.TILE_WALLS,
-        'S': Levels.TILE_START,
-        'F': Levels.TILE_FINISH
+        ' ': Level.TILE_FLOOR,
+        'W': Level.TILE_WALLS,
+        'S': Level.TILE_START,
+        'F': Level.TILE_FINISH
     };
 
     var levels = {
@@ -56,7 +52,7 @@ define(function (require) {
     // Convert the level source strings into the tile values
     Levels.levels = {};
     _.each(levels, function(levelSource, key) {
-        var level = [];
+        var data = [];
 
         for (var i = 0; i < levelSource.length; i++) {
             var cells = levelSource[i].split('');
@@ -65,10 +61,10 @@ define(function (require) {
             for (var j = 0; j < cells.length; j++)
                 row[j] = charsToTileValues[cells[j]];
 
-            level.push(row);
+            data.push(row);
         }
 
-        Levels.levels[key] = level;
+        Levels.levels[key] = new Level(data);
     });
 
     return Levels;

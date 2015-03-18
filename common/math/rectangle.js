@@ -116,6 +116,28 @@ define(function (require) {
     };
 
     /**
+     * Finds out if the rectangle overlaps with a circle.
+     *   Algorithm from this Stack Overflow response:
+     *   http://stackoverflow.com/a/402010/4085004
+     */
+    Rectangle.prototype.overlapsCircle = function(x, y, radius) {
+        var distanceX = Math.abs(x - this.x);
+        var distanceY = Math.abs(y - this.y);
+
+        if (distanceX > (this.w / 2 + radius)) return false;
+        if (distanceY > (this.h / 2 + radius)) return false;
+
+        if (distanceX <= (this.w / 2)) return true;
+        if (distanceY <= (this.h / 2)) return true;
+
+        cornerDistanceSquared = 
+            Math.pow(distanceX - this.w / 2, 2) +
+            Math.pow(distanceY - this.h / 2, 2);
+
+        return (cornerDistanceSquared <= (radius * radius));
+    };
+
+    /**
      * For easy debugging
      */
     Rectangle.prototype.toString = function(precision) {
@@ -126,26 +148,5 @@ define(function (require) {
     };
 
     return Rectangle;
-
-    // A failed attempt to make a requirejs config path definition for 'vector2-node' unnecessary:
-    // var Rectangle;
-
-    // /* The shimmed rectangle-node module has a require('vector2-node')
-    //  *   in it, and it won't know where to find it, even though it has
-    //  *   its own copy in node_modules because requirejs is stupid.
-    //  */
-    // var oldBaseUrl = requirejs.s.contexts._.config.baseUrl;
-    // requirejs.config({
-    //     baseUrl: './',
-    //     paths: {
-    //         'vector2-node': '../node_modules/vector2-node-shimmed/index'
-    //     }
-    // });
-
-    // require(['../node_modules/rectangle-node-shimmed/index', 'vector2-node'], function(rectangle, Vector2) {
-    //     requirejs.config({
-    //         baseUrl: oldBaseUrl
-    //     });
-    //     Rectangle = rectangle;
 
 });

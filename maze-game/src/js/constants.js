@@ -11,7 +11,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-   	
+   	Constants.TILE_SIZE = 1; // meters
 
     return Constants;
 });
