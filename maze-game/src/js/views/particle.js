@@ -32,26 +32,30 @@ define(function(require) {
             this.sprite = Assets.createSprite(Assets.Images.PARTICLE);
             this.sprite.anchor.x = 0.5;
             this.sprite.anchor.y = 0.5;
+            this.displayObject.addChild(this.sprite);
 
             this.updateMVT(this.mvt);
         },
 
         updateX: function(particle, x) {
-            this.sprite.x = this.mvt.modelToViewX(x);
+            this.displayObject.x = this.mvt.modelToViewX(x);
         },
 
         updateY: function(particle, y) {
-            this.sprite.y = this.mvt.modelToViewY(y);
+            this.displayObject.y = this.mvt.modelToViewY(y);
         },
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
             var tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
-            var tileScale = this.tileSize / Assets.Texture(Assets.Images.FLOOR).width;
+            var tileScale = tileSize / Assets.Texture(Assets.Images.FLOOR).width;
 
-            this.sprite.scale.x = tileScale;
-            this.sprite.scale.y = tileScale;
+            this.displayObject.scale.x = tileScale;
+            this.displayObject.scale.y = tileScale;
+
+            this.updateX(this.model, this.model.get('x'));
+            this.updateY(this.model, this.model.get('y'));
         },
 
         update: function(time, deltaTime, paused) {

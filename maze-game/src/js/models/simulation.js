@@ -6,6 +6,8 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var Particle = require('models/particle');
+
     var Levels = require('levels');
 
     var Constants = require('constants');
@@ -22,23 +24,33 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            this.particle = new Particle(); 
+
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-
+            this.on('change:level', this.levelChanged);
         },
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.x = 0;
-            this.y = 0;
+            this.resetParticle();
+        },
 
-            this.vx = 0;
-            this.vy = 0;
+        resetParticle: function() {
+            var startPosition = this.get('level').startPosition();
+            this.particle.set({
+                // Position it in the middle of the start tile
+                x: this.get('level').colToX(startPosition.col) + Constants.TILE_SIZE / 2,
+                y: this.get('level').rowToY(startPosition.row) + Constants.TILE_SIZE / 2,
 
-            this.ax = 0;
-            this.ay = 0;
+                // And reset the velocity and acceleration
+                vx: 0,
+                vy: 0,
+                ax: 0,
+                ay: 0
+            });
         },
 
         setPosition: function(x, y) {
@@ -58,6 +70,10 @@ define(function (require, exports, module) {
 
         _update: function(time, deltaTime) {
             
+        },
+
+        levelChanged: function(simulation, level) {
+            this.resetParticle();
         }
 
     });

@@ -17,7 +17,15 @@ define(function (require) {
         defaults: {
             x: 0,
             y: 0,
+
+            vx: 0,
+            vy: 0,
+            
+            ax: 0,
+            ay: 0,
+
             radius: Constants.PARTICLE_RADIUS,
+
             colliding: false
         },
 

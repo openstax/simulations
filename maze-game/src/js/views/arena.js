@@ -10,6 +10,8 @@ define(function(require) {
 
     var Level = require('models/level');
 
+    var ParticleView = require('views/particle');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -40,7 +42,18 @@ define(function(require) {
             this.displayObject.addChild(this.shadows);
             this.displayObject.addChild(this.walls);
 
+            this.initParticleView();
+
             this.updateMVT(this.mvt);
+        },
+
+        initParticleView: function() {
+            this.particleView = new ParticleView({
+                model: this.model.particle,
+                mvt: this.mvt
+            });
+
+            this.displayObject.addChild(this.particleView.displayObject);
         },
 
         drawLevel: function() {
@@ -136,6 +149,10 @@ define(function(require) {
             this.tileScale = this.tileSize / Assets.Texture(Assets.Images.FLOOR).width;
 
             this.drawLevel();
+        },
+
+        update: function(time, deltaTime, paused) {
+            this.particleView.update(time, deltaTime, paused);
         }
 
     });

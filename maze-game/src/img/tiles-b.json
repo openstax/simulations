@@ -37,7 +37,7 @@
 		"trimmed": true,
 		"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
 		"sourceSize": {"w":72,"h":72},
-		"pivot": {"x":0.5,"y":0.5}
+		"pivot": {"x":0,"y":0}
 	}
 },
 "meta": {

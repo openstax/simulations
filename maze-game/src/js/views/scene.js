@@ -77,7 +77,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.arenaView.update(time, deltaTime, paused);
         },
 
     });
