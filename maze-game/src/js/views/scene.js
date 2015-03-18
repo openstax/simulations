@@ -55,8 +55,8 @@ define(function(require) {
             
             var scale = (sceneRatio > levelRatio) ? this.height / levelHeight : this.width / levelWidth;
 
-            this.viewOriginX = Math.round(this.width  / 2);
-            this.viewOriginY = Math.round(this.height / 2);
+            this.viewOriginX = Math.round(this.width / 2);            // Center
+            this.viewOriginY = Math.round((levelHeight * scale) / 2); // Top
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
@@ -69,7 +69,8 @@ define(function(require) {
             this.arenaView = new ArenaView({
                 model: this.simulation,
                 mvt: this.mvt,
-                bounds: new Rectangle(0, 0, this.width, this.height)
+                sceneWidth: this.width,
+                sceneHeight: this.height
             });
 
             this.stage.addChild(this.arenaView.displayObject);

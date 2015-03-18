@@ -12,12 +12,6 @@ define(function(require) {
 
     var Assets = require('assets');
 
-    // var FLOOR_TILES = [
-    //     Assets.Images.FLOOR_1,
-    //     Assets.Images.FLOOR_2,
-    //     Assets.Images.FLOOR_3
-    // ];
-
     var Constants = require('constants');
 
     /**
@@ -27,7 +21,8 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.bounds = options.bounds || new Rectangle();
+            this.sceneWidth = options.sceneWidth;
+            this.sceneHeight = options.sceneHeight;
 
             this.initGraphics();
 
@@ -67,14 +62,14 @@ define(function(require) {
             this.floor.removeChildren();
 
             // Draw tiles out to the edges of the scene as a base layer
-            var modelXDistanceFromCenter = Math.abs(this.mvt.viewToModelX(0));
-            var modelYDistanceFromCenter = Math.abs(this.mvt.viewToModelY(0));
-            var xTilesFromCenter = Math.ceil(modelXDistanceFromCenter / Constants.TILE_SIZE);
-            var yTilesFromCenter = Math.ceil(modelYDistanceFromCenter / Constants.TILE_SIZE);
+            var xStartTile = Math.floor(this.mvt.viewToModelX(0) / Constants.TILE_SIZE);
+            var yStartTile = Math.floor(this.mvt.viewToModelY(0) / Constants.TILE_SIZE);
+            var xEndTile = Math.ceil(this.mvt.viewToModelX(this.sceneWidth)  / Constants.TILE_SIZE);
+            var yEndTile = Math.ceil(this.mvt.viewToModelY(this.sceneHeight) / Constants.TILE_SIZE);
 
             var tileSprite;
-            for (var x = -xTilesFromCenter; x < xTilesFromCenter; x++) {
-                for (var y = -yTilesFromCenter; y < yTilesFromCenter; y++) {
+            for (var x = xStartTile; x < xEndTile; x++) {
+                for (var y = yStartTile; y < yEndTile; y++) {
                     tileSprite = Assets.createSprite(Assets.Images.FLOOR);
                     tileSprite.x = this.mvt.modelToViewX(x * Constants.TILE_SIZE);
                     tileSprite.y = this.mvt.modelToViewY(y * Constants.TILE_SIZE);
@@ -147,10 +142,6 @@ define(function(require) {
             this.tileScale = this.tileSize / Assets.Texture(Assets.Images.FLOOR).width;
 
             this.drawLevel();
-        },
-
-        randomFloorImage: function() {
-            return FLOOR_TILES[Math.floor(Math.random() * FLOOR_TILES.length)];
         }
 
     });
