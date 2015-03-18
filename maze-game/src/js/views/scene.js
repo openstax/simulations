@@ -10,6 +10,7 @@ define(function(require) {
     var PixiSceneView      = require('common/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
 
     // Project dependencies
     var Level = require('models/level');
@@ -46,8 +47,8 @@ define(function(require) {
         },
 
         initMVT: function() {
-            var levelWidth  = Level.LEVEL_WIDTH  * Constants.TILE_SIZE;
-            var levelHeight = Level.LEVEL_HEIGHT * Constants.TILE_SIZE;
+            var levelWidth  = Level.WIDTH  * Constants.TILE_SIZE;
+            var levelHeight = Level.HEIGHT * Constants.TILE_SIZE;
 
             var sceneRatio = this.width / this.height;
             var levelRatio = levelWidth / levelHeight;
@@ -67,7 +68,8 @@ define(function(require) {
         initArenaView: function() {
             this.arenaView = new ArenaView({
                 model: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                bounds: new Rectangle(0, 0, this.width, this.height)
             });
 
             this.stage.addChild(this.arenaView.displayObject);

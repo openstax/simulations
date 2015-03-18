@@ -7,9 +7,7 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        FLOOR_1:     'floor1',
-        FLOOR_2:     'floor2',
-        FLOOR_3:     'floor3',
+        FLOOR:       'floor',
         WALL:        'wall',
         WALL_SHADOW: 'wall-shadow',
         FINISH:      'finish',
@@ -17,10 +15,8 @@ define(function (require) {
     };
 
     Assets.SpriteSheets = {
-        'tiles.json': [
-            Assets.Images.FLOOR_1,
-            Assets.Images.FLOOR_2,
-            Assets.Images.FLOOR_3,
+        'tiles-b.json': [
+            Assets.Images.FLOOR,
             Assets.Images.WALL,
             Assets.Images.WALL_SHADOW,
             Assets.Images.FINISH,

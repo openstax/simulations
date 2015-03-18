@@ -16,8 +16,8 @@ define(function (require, exports, module) {
     var MazeGameSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            level: Levels.levels['Practice'],
-            levelName: 'Practice',
+            level: Levels.levels['Level 2'],
+            levelName: 'Level 2',
             collisions: 0
         }),
         
