@@ -3,14 +3,11 @@ define(function(require) {
     'use strict';
 
     // Third-party dependencies
-    var _    = require('underscore');
-    var PIXI = require('pixi');
 
     // Common dependencies
     var PixiSceneView      = require('common/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
-    var Rectangle          = require('common/math/rectangle');
 
     // Project dependencies
     var Level = require('models/level');

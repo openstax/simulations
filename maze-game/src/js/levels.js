@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    
     var Level = require('models/level');
 
     var Levels = {};
@@ -84,19 +86,7 @@ define(function (require) {
     // Convert the level source strings into the tile values
     Levels.levels = {};
     _.each(levels, function(levelSource, key) {
-        var data = [];
-
-        for (var i = 0; i < levelSource.length; i++) {
-            var cells = levelSource[i].split('');
-
-            var row = [];
-            for (var j = 0; j < cells.length; j++)
-                row[j] = charsToTileValues[cells[j]];
-
-            data.push(row);
-        }
-
-        Levels.levels[key] = new Level(data);
+        Levels.levels[key] = Level.fromStringArray(levelSource, charsToTileValues);
     });
 
     return Levels;

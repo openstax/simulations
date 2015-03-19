@@ -5,11 +5,8 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView  = require('common/pixi/view');
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
 
     var Level = require('models/level');
-
     var ParticleView = require('views/particle');
 
     var Assets = require('assets');

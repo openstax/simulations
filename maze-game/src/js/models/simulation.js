@@ -71,8 +71,8 @@ define(function (require, exports, module) {
             else
                 this.particle.set('colliding', false);
 
-            if (this.get('level').collidesWithTileTypeAt(Level.TILE_FINISH, x, y, radius))
-                console.log('finish!!');
+            // if (this.get('level').collidesWithTileTypeAt(Level.TILE_FINISH, x, y, radius))
+            //     console.log('finish!!');
         },
 
         levelChanged: function(simulation, level) {

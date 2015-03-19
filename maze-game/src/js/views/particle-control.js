@@ -6,15 +6,11 @@ define(function(require) {
     require('common/pixi/extensions');
 
     var PixiView           = require('common/pixi/view');
-    var Vector2            = require('common/math/vector2');
-    var Rectangle          = require('common/math/rectangle');
     var PiecewiseCurve     = require('common/math/piecewise-curve');
     var Colors             = require('common/colors/colors');
     var DraggableArrowView = require('common/pixi/view/arrow-draggable');
 
     var Level = require('models/level');
-
-    var Assets = require('assets');
 
     var Constants = require('constants');
     var TAB_BG_COLOR = Colors.parseHex(Constants.TAB_BG_COLOR);
