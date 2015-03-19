@@ -48,6 +48,8 @@ define(function(require) {
         initGraphics: function() {
             this.initTabbedPanels();
             this.initArrows();
+
+            this.selectTab(this.selectedIndex);
         },
 
         initTabbedPanels: function() {
@@ -165,8 +167,6 @@ define(function(require) {
             this.shadow = PIXI.Sprite.fromPiecewiseCurve(outline, drawStyle);
             this.shadow.alpha = 0.3;
             this.displayObject.addChild(this.shadow);
-
-            this.selectTab(this.selectedIndex);
         },
 
         initArrows: function() {
@@ -258,6 +258,14 @@ define(function(require) {
         },
 
         selectTab: function(index) {
+            this.model.set({
+                vx: 0,
+                vy: 0,
+                ax: 0,
+                ay: 0
+            });
+            this.repositionArrows();
+
             this.selectedIndex = index;
 
             for (var i = 0; i < Constants.TABS.length; i++) {
