@@ -178,13 +178,15 @@ define(function(require) {
                     originX: 0,
                     originY: 0,
                     targetX: 40,
-                    targetY: 40
+                    targetY: 40,
+                    minLength: null
                 });
 
                 var arrowView = new DraggableArrowView({
                     model: arrowModel,
                     fillColor: Constants.TABS[i].color,
-                    bodyDraggingEnabled: false
+                    bodyDraggingEnabled: false,
+                    useDotWhenSmall: true
                 });
                 this.panels.getChildAt(i).addChild(arrowView.displayObject);
 

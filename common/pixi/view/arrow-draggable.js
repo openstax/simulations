@@ -35,7 +35,16 @@ define(function(require) {
             'touchend        .headGraphics': 'dragHeadEnd',
             'mouseup         .headGraphics': 'dragHeadEnd',
             'touchendoutside .headGraphics': 'dragHeadEnd',
-            'mouseupoutside  .headGraphics': 'dragHeadEnd'
+            'mouseupoutside  .headGraphics': 'dragHeadEnd',
+
+            'touchstart      .smallDot': 'dragHeadStart',
+            'mousedown       .smallDot': 'dragHeadStart',
+            'touchmove       .smallDot': 'dragHead',
+            'mousemove       .smallDot': 'dragHead',
+            'touchend        .smallDot': 'dragHeadEnd',
+            'mouseup         .smallDot': 'dragHeadEnd',
+            'touchendoutside .smallDot': 'dragHeadEnd',
+            'mouseupoutside  .smallDot': 'dragHeadEnd'
         },
 
         initialize: function(options) {
@@ -48,7 +57,9 @@ define(function(require) {
 
                 snappingEnabled: false,
                 snappingXFunction: defaultSnappingFunction,
-                snappingYFunction: defaultSnappingFunction
+                snappingYFunction: defaultSnappingFunction,
+
+                useDotWhenSmall: false
             }, options);
 
             ArrowView.prototype.initialize.apply(this, [options]);
@@ -65,6 +76,9 @@ define(function(require) {
             this.snappingXFunction = options.snappingXFunction;
             this.snappingYFunction = options.snappingYFunction;
 
+            this.useDotWhenSmall = options.useDotWhenSmall;
+            this.initSmallDot();
+
             this._attributes = {};
             this._dragOffset = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -80,9 +94,14 @@ define(function(require) {
             this.headGraphics.defaultCursor = 'pointer';
         },
 
-        initGraphics: function() {
-            ArrowView.prototype.initGraphics.apply(this);
+        initSmallDot: function() {
+            this.smallDot = new PIXI.Graphics();
+            this.smallDot.beginFill(this.fillColor, this.fillAlpha * 0.5);
+            this.smallDot.drawCircle(0, 0, 6);
+            this.smallDot.endFill();
+            this.smallDot.visible = false;
 
+            this.displayObject.addChild(this.smallDot);
         },
 
         dragBodyStart: function(data) {
@@ -165,6 +184,19 @@ define(function(require) {
                     (this.model.get('maxLength') === null || this.model.get('maxLength') === undefined || length <= this.model.get('maxLength'))
                 ) {
                     this.model.set(this._attributes);
+
+                    if (this.useDotWhenSmall) {
+                        if (length < this.headLength) {
+                            this.smallDot.x = this._attributes.targetX - origin.x;
+                            this.smallDot.y = this._attributes.targetY - origin.y;
+                            this.smallDot.visible = false;
+                            this.smallDotEnabled = true;
+                        }
+                        else {
+                            this.smallDot.visible = false;
+                            this.smallDotEnabled = false;
+                        }
+                    }
                 }
                 else if (!this.snappingEnabled) {
                     // We will need to scale our desired target offset
@@ -178,6 +210,8 @@ define(function(require) {
 
                     direction.normalize().scale(targetLength);
 
+                    
+
                     this._attributes.targetX = this.model.get('originX') + direction.x;
                     this._attributes.targetY = this.model.get('originY') + direction.y;
                     this.model.set(this._attributes);
@@ -189,6 +223,10 @@ define(function(require) {
             this.draggingHead = false;
             this.setNormalFill();
             this.drawArrow();
+
+            if (this.useDotWhenSmall && this.smallDotEnabled) {
+                this.smallDot.visible = true;
+            }
         },
 
         setDraggingFill: function() {
