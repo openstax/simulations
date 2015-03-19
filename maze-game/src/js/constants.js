@@ -14,7 +14,7 @@ define(function (require) {
     Constants.TAB_ACTIVE_BG_ALPHA = 1;
     Constants.TAB_FONT = 'bold 14px Arial';
     Constants.TAB_WIDTH = 110;
-    Constants.TAB_HEIGHT = 32;
+    Constants.TAB_HEIGHT = 36;
     Constants.TABS = [{
         label: 'Position',
         color: '#2575BA',
@@ -25,6 +25,8 @@ define(function (require) {
         label: 'Acceleration',
         color: '#349E34',
     }];
+    Constants.PANEL_PADDING = 10;
+    Constants.ARROW_AREA_COLOR = '#fff';
 
     return Constants;
 });
