@@ -92,6 +92,10 @@ define(function(require) {
             return this.data[this.yToRow(y)][this.xToCol(x)];
         },
 
+        inBounds: function(row, col) {
+            return (row > 0 && row < Level.HEIGHT && col > 0 && col < Level.WIDTH);
+        },
+
         /**
          * Returns wether or not the given tile type is
          *   touched by a circle at position (x, y) with
@@ -101,14 +105,16 @@ define(function(require) {
             var c = this.xToCol(x);
             var r = this.yToRow(y);
 
-            if (this.data[r][c] === tileType) 
+            if (this.inBounds(r, c) && this.data[r][c] === tileType) 
                 return true;
 
             for (var i = -1; i <= 1; i++) {
                 for (var j = -1; j <= 1; j++) {
-                    var tileRect = this.getTileRect(c + i, r + j);
-                    if (tileRect.overlapsCircle(x, y, radius) && this.data[r + j][c + i] === tileType)
-                        return true;
+                    if (this.inBounds(r + j,c + i)) {
+                        var tileRect = this.getTileRect(c + i, r + j);
+                        if (tileRect.overlapsCircle(x, y, radius) && this.data[r + j][c + i] === tileType)
+                            return true;
+                    }
                 }
             }
 

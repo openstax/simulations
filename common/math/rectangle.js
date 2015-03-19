@@ -130,7 +130,7 @@ define(function (require) {
         if (distanceX <= (this.w / 2)) return true;
         if (distanceY <= (this.h / 2)) return true;
 
-        cornerDistanceSquared = 
+        var cornerDistanceSquared = 
             Math.pow(distanceX - this.w / 2, 2) +
             Math.pow(distanceY - this.h / 2, 2);
 

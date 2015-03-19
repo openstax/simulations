@@ -7,6 +7,7 @@ define(function (require, exports, module) {
     var Simulation = require('common/simulation/simulation');
 
     var Particle = require('models/particle');
+    var Level    = require('models/level');
 
     var Levels = require('levels');
 
@@ -29,6 +30,10 @@ define(function (require, exports, module) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:level', this.levelChanged);
+            this.listenTo(this.particle, 'change:colliding', function(particle, colliding) {
+                if (colliding)
+                    this.set('collisions', this.get('collisions') + 1);
+            });
         },
 
         /**
@@ -54,8 +59,20 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-
+            // Update the position
             this.particle.update(time, deltaTime);
+            var x = this.particle.get('x');
+            var y = this.particle.get('y');
+            var radius = this.particle.get('radius');
+
+            // Check for collisions
+            if (this.get('level').collidesWithTileTypeAt(Level.TILE_WALL, x, y, radius))
+                this.particle.set('colliding', true);
+            else
+                this.particle.set('colliding', false);
+
+            if (this.get('level').collidesWithTileTypeAt(Level.TILE_FINISH, x, y, radius))
+                console.log('finish!!');
         },
 
         levelChanged: function(simulation, level) {

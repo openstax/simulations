@@ -294,7 +294,8 @@ define(function(require) {
         },
 
         velocityChanged: function(arrowModel) {
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaWidth;
+            // I am purposely dividing by the height both times so it's a 1:1 ratio
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaHeight;
             var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / this.areaHeight;
 
             this.model.set('vx', xPercent * 8);
@@ -302,7 +303,8 @@ define(function(require) {
         },
 
         accelerationChanged: function(arrowModel) {
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaWidth;
+            // I am purposely dividing by the height both times so it's a 1:1 ratio
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaHeight;
             var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / this.areaHeight;
 
             this.model.set('ax', xPercent * 2);
