@@ -97,7 +97,7 @@ define(function(require) {
         initSmallDot: function() {
             this.smallDot = new PIXI.Graphics();
             this.smallDot.beginFill(this.fillColor, this.fillAlpha * 0.5);
-            this.smallDot.drawCircle(0, 0, 6);
+            this.smallDot.drawCircle(0, 0, this.headLength / 2);
             this.smallDot.endFill();
             this.smallDot.visible = false;
 
