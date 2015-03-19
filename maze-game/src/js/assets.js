@@ -15,7 +15,7 @@ define(function (require) {
     };
 
     Assets.SpriteSheets = {
-        'tiles-b.json': [
+        'tiles-c.json': [
             Assets.Images.FLOOR,
             Assets.Images.WALL,
             Assets.Images.WALL_SHADOW,

@@ -14,7 +14,8 @@ define(function(require) {
 
     // Project dependencies
     var Level = require('models/level');
-    var ArenaView = require('views/arena');
+    var ArenaView           = require('views/arena');
+    var ParticleControlView = require('views/particle-control');
 
     // Constants
     var Constants = require('constants');
@@ -44,6 +45,7 @@ define(function(require) {
 
             this.initMVT();
             this.initArenaView();
+            this.initParticleControlView();
         },
 
         initMVT: function() {
@@ -74,6 +76,28 @@ define(function(require) {
             });
 
             this.stage.addChild(this.arenaView.displayObject);
+        },
+
+        initParticleControlView: function() {
+            var controlAreaHeight = this.calculateControlAreaHeight();
+            var controlAreaWidth  = Math.round((Level.WIDTH / Level.HEIGHT) * controlAreaHeight);
+
+            this.particleControlView = new ParticleControlView({
+                model: this.simulation,
+                areaWidth: controlAreaWidth,
+                areaHeight: controlAreaHeight
+            });
+
+            this.particleControlView.displayObject.x = this.width - 15;
+            this.particleControlView.displayObject.y = this.height - 15;
+
+            this.stage.addChild(this.particleControlView.displayObject);
+        },
+
+        calculateControlAreaHeight: function() {
+            var tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
+            var availableHeight = this.height - (tileSize * Level.HEIGHT);
+            return availableHeight - 55;
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

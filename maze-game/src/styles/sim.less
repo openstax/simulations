@@ -33,3 +33,69 @@
         }
     }
 }
+
+.playback-controls-wrapper {
+    position: relative;
+    margin-top: 5px;
+    padding: 10px;
+    background: @gray-lightest;
+    text-align: center;
+    .user-select(none);
+
+    > .playback-btn {
+        display: inline-block;
+        background: @btn-bg;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.pause-btn {
+            display: none;
+        }
+
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+        .sim-view.playing &.play-btn {
+            display: none;
+        }
+
+        &.play-btn,
+        &.pause-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@link-color, @btn-bg, #fff, @link-color);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+}
