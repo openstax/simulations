@@ -4,12 +4,13 @@ define(function(require) {
 
     var PIXI = require('pixi');
     require('common/pixi/extensions');
-    
-    var PixiView  = require('common/pixi/view');
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-    var Colors    = require('common/colors/colors');
+
+    var PixiView           = require('common/pixi/view');
+    var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var Colors             = require('common/colors/colors');
+    var DraggableArrowView = require('common/pixi/view/arrow-draggable');
 
     var Level = require('models/level');
 
@@ -169,15 +170,54 @@ define(function(require) {
         },
 
         initArrows: function() {
-            var panels = this.panels.children;
-            for (var i = 0; i < panels.length; i++) {
-                
+            var models = [];
+            var views = [];
+
+            for (var i = 0; i < Constants.TABS.length; i++) {
+                var arrowModel = new DraggableArrowView.ArrowViewModel({
+                    originX: 0,
+                    originY: 0,
+                    targetX: 40,
+                    targetY: 40
+                });
+
+                var arrowView = new DraggableArrowView({
+                    model: arrowModel,
+                    fillColor: Constants.TABS[i].color,
+                    bodyDraggingEnabled: false
+                });
+                this.panels.getChildAt(i).addChild(arrowView.displayObject);
+
+                models.push(arrowModel);
+                views.push(arrowView);
+            }
+
+            this.arrowModels = models;
+            this.arrowViews = views;
+
+            this.positionArrows();
+        },
+
+        positionArrows: function() {
+            var models = this.arrowModels;
+
+            for (var i = 0; i < Constants.TABS.length; i++) {
+                var dx = models[i].get('targetX') - models[i].get('originX');
+                var dy = models[i].get('targetY') - models[i].get('originY');
+
+                models[i].set('originX', -this.areaWidth  / 2 - Constants.PANEL_PADDING);
+                models[i].set('originY', -this.areaHeight / 2 - Constants.PANEL_PADDING);
+                models[i].set('targetX', models[i].get('originX') + dx);
+                models[i].set('targetY', models[i].get('originY') + dy);
             }
         },
 
         setAreaDimensions: function(areaWidth, areaHeight) {
             this.areaWidth = areaWidth;
             this.areaHeight = areaHeight;
+
+            this.drawTabbedPanels();
+            this.positionArrows();
         },
 
         positionSelected: function(data) {

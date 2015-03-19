@@ -42,6 +42,13 @@ define(function(require) {
                 minLength: 20
             });
 
+            this.anchoredArrowViewModel = new DraggableArrowView.ArrowViewModel({
+                originX: 700,
+                originY: 500,
+                targetX: 650,
+                targetY: 550
+            });
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -63,8 +70,14 @@ define(function(require) {
                 snappingEnabled: true
             });
 
+            this.anchoredArrowView = new DraggableArrowView({ 
+                model: this.anchoredArrowViewModel,
+                bodyDraggingEnabled: false
+            });
+
             this.stage.addChild(this.arrowView.displayObject);
             this.stage.addChild(this.snappingArrowView.displayObject);
+            this.stage.addChild(this.anchoredArrowView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

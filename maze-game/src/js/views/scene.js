@@ -97,7 +97,7 @@ define(function(require) {
         calculateControlAreaHeight: function() {
             var tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
             var availableHeight = this.height - (tileSize * Level.HEIGHT);
-            return availableHeight - 55;
+            return availableHeight - 50;
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

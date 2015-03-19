@@ -125,7 +125,7 @@ define(function(require) {
         },
 
         dragHeadStart: function(data) {
-            if (!this.bodyDraggingEnabled)
+            if (!this.headDraggingEnabled)
                 return;
 
             this.setDraggingFill();
