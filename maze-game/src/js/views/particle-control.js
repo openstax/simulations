@@ -201,6 +201,8 @@ define(function(require) {
 
             // Listen for position changes
             this.listenTo(models[0], 'change:targetX change:targetY', this.positionChanged);
+            this.listenTo(models[1], 'change:targetX change:targetY', this.velocityChanged);
+            this.listenTo(models[2], 'change:targetX change:targetY', this.accelerationChanged);
         },
 
         repositionArrows: function(maintainTargetPosition) {
@@ -262,7 +264,8 @@ define(function(require) {
                 vx: 0,
                 vy: 0,
                 ax: 0,
-                ay: 0
+                ay: 0,
+                mode: index
             });
             this.repositionArrows();
 
@@ -288,6 +291,22 @@ define(function(require) {
 
             this.model.set('x', x);
             this.model.set('y', y);
+        },
+
+        velocityChanged: function(arrowModel) {
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaWidth;
+            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / this.areaHeight;
+
+            this.model.set('vx', xPercent * 8);
+            this.model.set('vy', yPercent * 8);
+        },
+
+        accelerationChanged: function(arrowModel) {
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / this.areaWidth;
+            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / this.areaHeight;
+
+            this.model.set('ax', xPercent * 2);
+            this.model.set('ay', yPercent * 2);
         }
 
     });

@@ -53,23 +53,9 @@ define(function (require, exports, module) {
             });
         },
 
-        setPosition: function(x, y) {
-            this.x = x;
-            this.y = y;
-        },
-
-        setVelocity: function(vx, vy) {
-            this.vx = vx;
-            this.vy = vy;
-        },
-
-        setAcceleration: function(ax, ay) {
-            this.ax = ax;
-            this.ay = ay;
-        },
-
         _update: function(time, deltaTime) {
-            
+
+            this.particle.update(time, deltaTime);
         },
 
         levelChanged: function(simulation, level) {
