@@ -13,7 +13,7 @@ define(function (require) {
     Constants.TAB_ACTIVE_BG_COLOR = '#EDEDED';
     Constants.TAB_ACTIVE_BG_ALPHA = 1;
     Constants.TAB_FONT = 'bold 14px Arial';
-    Constants.TAB_WIDTH = 110;
+    Constants.TAB_WIDTH = 108;
     Constants.TAB_HEIGHT = 36;
     Constants.TABS = [{
         label: 'Position',

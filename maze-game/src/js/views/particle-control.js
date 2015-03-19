@@ -29,9 +29,17 @@ define(function(require) {
      */
     var ParticleControlView = PixiView.extend({
 
+        events: {
+            'click .positionTab'     : 'positionSelected',
+            'click .velocityTab'     : 'velocitySelected',
+            'click .accelerationTab' : 'accelerationSelected',
+        },
+
         initialize: function(options) {
             this.areaWidth  = options.areaWidth;
             this.areaHeight = options.areaHeight;
+
+            this.selectedIndex = 0;
 
             this.initGraphics();
         },
@@ -82,6 +90,10 @@ define(function(require) {
                 this.panels.addChild(panel);
             }
 
+            this.positionTab     = this.tabs.getChildAt(0).background;
+            this.velocityTab     = this.tabs.getChildAt(1).background;
+            this.accelerationTab = this.tabs.getChildAt(2).background;
+
             // Draw the backgrounds and position everything
             this.drawTabbedPanels();
             
@@ -110,12 +122,12 @@ define(function(require) {
                 panel.controlArea.drawRect(0, 0, this.areaWidth, this.areaHeight);
                 panel.controlArea.endFill();
 
-                panel.visible = false;
-
                 var tab = this.tabs.getChildAt(i);
                 tab.x = -pw;
                 tab.y = -ph + i * th;
 
+                tab.background.buttonMode = true;
+                tab.background.defaultCursor = 'pointer';
                 tab.background.clear();
                 tab.background.beginFill(TAB_BG_COLOR, Constants.TAB_BG_ALPHA);
                 tab.background.drawRect(-tw, 0, tw, th);
@@ -125,7 +137,6 @@ define(function(require) {
                 tab.activeBackground.beginFill(TAB_ACTIVE_BG_COLOR, Constants.TAB_ACTIVE_BG_ALPHA);
                 tab.activeBackground.drawRect(-tw, 0, tw, th);
                 tab.activeBackground.endFill();
-                tab.activeBackground.visible = false;
 
                 tab.label.anchor.x = 1;
                 tab.label.anchor.y = 0.5;
@@ -154,9 +165,7 @@ define(function(require) {
             this.shadow.alpha = 0.3;
             this.displayObject.addChild(this.shadow);
 
-            this.panels.getChildAt(0).visible = true;
-            this.tabs.getChildAt(0).background.visible = false;
-            this.tabs.getChildAt(0).activeBackground.visible = true;
+            this.selectTab(this.selectedIndex);
         },
 
         initArrows: function() {
@@ -169,7 +178,34 @@ define(function(require) {
         setAreaDimensions: function(areaWidth, areaHeight) {
             this.areaWidth = areaWidth;
             this.areaHeight = areaHeight;
+        },
+
+        positionSelected: function(data) {
+            this.selectTab(0);
+        },
+
+        velocitySelected: function(data) {
+            this.selectTab(1);
+        },
+
+        accelerationSelected: function(data) {
+            this.selectTab(2);
+        },
+
+        selectTab: function(index) {
+            this.selectedIndex = index;
+
+            for (var i = 0; i < Constants.TABS.length; i++) {
+                this.tabs.getChildAt(i).background.visible = true;
+                this.tabs.getChildAt(i).activeBackground.visible = false;
+                this.panels.getChildAt(i).visible = false;
+            }
+
+            this.tabs.getChildAt(index).background.visible = false;
+            this.tabs.getChildAt(index).activeBackground.visible = true;
+            this.panels.getChildAt(index).visible = true;
         }
+
     });
 
     return ParticleControlView;
