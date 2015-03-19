@@ -83,7 +83,7 @@ define(function(require) {
             var controlAreaWidth  = Math.round((Level.WIDTH / Level.HEIGHT) * controlAreaHeight);
 
             this.particleControlView = new ParticleControlView({
-                model: this.simulation,
+                model: this.simulation.particle,
                 areaWidth: controlAreaWidth,
                 areaHeight: controlAreaHeight
             });

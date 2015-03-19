@@ -102,6 +102,8 @@ define(function(require) {
             this.smallDot.visible = false;
 
             this.displayObject.addChild(this.smallDot);
+
+            this.listenTo(this.model, 'change', this.modelChanged);
         },
 
         dragBodyStart: function(data) {
@@ -184,19 +186,6 @@ define(function(require) {
                     (this.model.get('maxLength') === null || this.model.get('maxLength') === undefined || length <= this.model.get('maxLength'))
                 ) {
                     this.model.set(this._attributes);
-
-                    if (this.useDotWhenSmall) {
-                        if (length < this.headLength) {
-                            this.smallDot.x = this._attributes.targetX - origin.x;
-                            this.smallDot.y = this._attributes.targetY - origin.y;
-                            this.smallDot.visible = false;
-                            this.smallDotEnabled = true;
-                        }
-                        else {
-                            this.smallDot.visible = false;
-                            this.smallDotEnabled = false;
-                        }
-                    }
                 }
                 else if (!this.snappingEnabled) {
                     // We will need to scale our desired target offset
@@ -209,8 +198,6 @@ define(function(require) {
                         targetLength = this.model.get('maxLength');
 
                     direction.normalize().scale(targetLength);
-
-                    
 
                     this._attributes.targetX = this.model.get('originX') + direction.x;
                     this._attributes.targetY = this.model.get('originY') + direction.y;
@@ -237,6 +224,22 @@ define(function(require) {
         setNormalFill: function() {
             this.fillColor = this.normalFillColor;
             this.fillAlpha = this.normalFillAlpha;
+        },
+
+        modelChanged: function() {
+            var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
+            var target = this._targetVector.set(this.model.get('targetX'), this.model.get('targetY'));
+            var length = origin.distance(target);
+
+            if (this.useDotWhenSmall && length < this.headLength) {
+                this.smallDot.x = target.x - origin.x;
+                this.smallDot.y = target.y - origin.y;
+
+                this.smallDot.visible = true;
+            }
+            else {
+                this.smallDot.visible = false;
+            }
         }
 
     });

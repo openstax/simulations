@@ -197,10 +197,13 @@ define(function(require) {
             this.arrowModels = models;
             this.arrowViews = views;
 
-            this.positionArrows();
+            this.repositionArrows();
+
+            // Listen for position changes
+            this.listenTo(models[0], 'change:targetX change:targetY', this.positionChanged);
         },
 
-        positionArrows: function() {
+        repositionArrows: function(maintainTargetPosition) {
             var models = this.arrowModels;
 
             for (var i = 0; i < Constants.TABS.length; i++) {
@@ -209,8 +212,28 @@ define(function(require) {
 
                 models[i].set('originX', -this.areaWidth  / 2 - Constants.PANEL_PADDING);
                 models[i].set('originY', -this.areaHeight / 2 - Constants.PANEL_PADDING);
-                models[i].set('targetX', models[i].get('originX') + dx);
-                models[i].set('targetY', models[i].get('originY') + dy);
+                if (maintainTargetPosition) {
+                    models[i].set('targetX', models[i].get('originX') + dx);
+                    models[i].set('targetY', models[i].get('originY') + dy);
+                }
+            }
+
+            if (!maintainTargetPosition) {
+                // Position
+                var xPercent = this.model.get('x') / (Level.WIDTH  * Constants.TILE_SIZE);
+                var yPercent = this.model.get('y') / (Level.HEIGHT * Constants.TILE_SIZE);
+                var x = xPercent * this.areaWidth;
+                var y = yPercent * this.areaHeight;
+                models[0].set('targetX', models[0].get('originX') + x);
+                models[0].set('targetY', models[0].get('originY') + y);
+
+                // Velocity
+                models[1].set('targetX', models[1].get('originX'));
+                models[1].set('targetY', models[1].get('originY'));
+
+                // Acceleration
+                models[2].set('targetX', models[2].get('originX'));
+                models[2].set('targetY', models[2].get('originY'));
             }
         },
 
@@ -246,6 +269,17 @@ define(function(require) {
             this.tabs.getChildAt(index).background.visible = false;
             this.tabs.getChildAt(index).activeBackground.visible = true;
             this.panels.getChildAt(index).visible = true;
+        },
+
+        positionChanged: function(arrowModel) {
+            var dx = arrowModel.get('targetX') - arrowModel.get('originX');
+            var dy = arrowModel.get('targetY') - arrowModel.get('originY');
+
+            var x = (dx / this.areaWidth)  * (Level.WIDTH  * Constants.TILE_SIZE);
+            var y = (dy / this.areaHeight) * (Level.HEIGHT * Constants.TILE_SIZE);
+
+            this.model.set('x', x);
+            this.model.set('y', y);
         }
 
     });
