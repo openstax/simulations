@@ -26,6 +26,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:level', this.drawLevel);
+            this.listenTo(this.model, 'change:collisions', this.collisionsChanged);
         },
 
         initGraphics: function() {
@@ -33,13 +34,18 @@ define(function(require) {
             this.floor   = new PIXI.DisplayObjectContainer();
             this.shadows = new PIXI.DisplayObjectContainer();
             this.walls   = new PIXI.DisplayObjectContainer();
+            this.lowerEffects = new PIXI.DisplayObjectContainer();
+            this.upperEffects = new PIXI.DisplayObjectContainer();
 
             // Add layers
             this.displayObject.addChild(this.floor);
             this.displayObject.addChild(this.shadows);
             this.displayObject.addChild(this.walls);
+            this.displayObject.addChild(this.lowerEffects);
 
             this.initParticleView();
+
+            this.displayObject.addChild(this.upperEffects);
 
             this.updateMVT(this.mvt);
         },
@@ -92,12 +98,22 @@ define(function(require) {
             // Create the FINISH tile
             var level = this.model.get('level');
             var finish = level.finishPosition();
-            tileSprite = Assets.createSprite(Assets.Images.FINISH);
-            tileSprite.x = this.mvt.modelToViewX(level.colToX(finish.col));
-            tileSprite.y = this.mvt.modelToViewY(level.rowToY(finish.row));
-            tileSprite.scale.x = this.tileScale;
-            tileSprite.scale.y = this.tileScale;
-            this.floor.addChild(tileSprite);
+            var finishTile = Assets.createSprite(Assets.Images.FINISH);
+            finishTile.x = this.mvt.modelToViewX(level.colToX(finish.col));
+            finishTile.y = this.mvt.modelToViewY(level.rowToY(finish.row));
+            finishTile.scale.x = this.tileScale;
+            finishTile.scale.y = this.tileScale;
+            this.floor.addChild(finishTile);
+
+            // Create the closed FINISH tile to draw over the other one
+            var finishClosedTile = Assets.createSprite(Assets.Images.FINISH_CLOSED);
+            finishClosedTile.x = finishTile.x;
+            finishClosedTile.y = finishTile.y;
+            finishClosedTile.scale.x = this.tileScale;
+            finishClosedTile.scale.y = this.tileScale;
+            finishClosedTile.visible = false;
+            this.lowerEffects.addChild(finishClosedTile);
+            this.finishClosedTile = finishClosedTile;
         },
 
         drawWalls: function() {
@@ -150,6 +166,13 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {
             this.particleView.update(time, deltaTime, paused);
+        },
+
+        collisionsChanged: function(simulation, collisions) {
+            if (collisions)
+                this.finishClosedTile.visible = true;
+            else
+                this.finishClosedTile.visible = false;
         }
 
     });
