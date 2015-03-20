@@ -143,7 +143,6 @@ define(function(require) {
 
             // Create a pulsing ring for when the player wins
             this.finishWinPulse = this.createPulseSprite(this.finishTile.x, this.finishTile.y, Assets.Images.FINISH_WIN_PULSE);;
-            this.winPulseIntervalCounter = 0;
             this.winPulseDurationCounter = null;
         },
 
@@ -222,6 +221,7 @@ define(function(require) {
             }
 
             this.animateFinishPulse(deltaTime);
+            this.animateFinishWinPulse(deltaTime);
         },
 
         startFinishPulse: function() {
@@ -229,6 +229,13 @@ define(function(require) {
             this.pulseScaleRange.min = this.tileScale * 0.5;
             this.pulseScaleRange.max = this.tileScale * 1.8;
             this.finishPulse.alpha = 1;
+        },
+
+        startFinishWinPulse: function() {
+            this.winPulseDurationCounter = 0;
+            this.pulseScaleRange.min = this.tileScale * 0.5;
+            this.pulseScaleRange.max = this.tileScale * 1.8;
+            this.finishWinPulse.alpha = 1;
         },
 
         animateFinishPulse: function(deltaTime) {
@@ -247,18 +254,36 @@ define(function(require) {
                 this.finishPulse.alpha = 0;
         },
 
+        animateFinishWinPulse: function(deltaTime) {
+            if (this.winPulseDurationCounter !== null) {
+                var percent = this.winPulseDurationCounter / Constants.PULSE_DURATION;
+                var scale = this.pulseScaleRange.lerp(percent);
+                this.finishWinPulse.scale.x = scale;
+                this.finishWinPulse.scale.y = scale;
+                this.finishWinPulse.alpha = 1 - percent;
+
+                this.winPulseDurationCounter += deltaTime;
+                if (this.winPulseDurationCounter > Constants.PULSE_DURATION)
+                    this.winPulseDurationCounter = null;
+            }
+            else
+                this.finishWinPulse.alpha = 0;
+        },
+
         collisionsChanged: function(simulation, collisions) {
             if (collisions)
                 this.finishClosedTile.visible = true;
             else
                 this.finishClosedTile.visible = false;
-            
+
             this.changeFinishPulseVisibility();
         },
 
         winStateChanged: function(simulation, won) {
-            if (won)
+            if (won) {
                 this.finishWinTile.visible = true;
+                this.startFinishWinPulse();
+            }
             else 
                 this.finishWinTile.visible = false;
 
