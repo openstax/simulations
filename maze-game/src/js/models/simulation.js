@@ -51,7 +51,7 @@ define(function (require, exports, module) {
             this.resetParticle();
             this.ambientSound
                 .play()
-                .fadeIn()
+                .fadeTo(80)
                 .loop();
         },
 
