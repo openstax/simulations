@@ -47,6 +47,14 @@
 		"sourceSize": {"w":72,"h":72},
 		"pivot": {"x":0,"y":0}
 	},
+	"finish-win-pulse": {
+		"frame": {"x":73,"y":110,"w":72,"h":72},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":72,"h":72},
+		"sourceSize": {"w":72,"h":72},
+		"pivot": {"x":0,"y":0}
+	},
 	"particle": {
 		"frame": {"x":0,"y":37,"w":72,"h":72},
 		"rotated": false,

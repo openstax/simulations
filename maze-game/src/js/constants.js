@@ -28,5 +28,8 @@ define(function (require) {
     Constants.PANEL_PADDING = 10;
     Constants.ARROW_AREA_COLOR = '#fff';
 
+    Constants.PULSE_INTERVAL = 8;
+    Constants.PULSE_DURATION = 0.8;
+
     return Constants;
 });

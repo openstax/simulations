@@ -66,6 +66,7 @@ define(function(require) {
             this.walls.cacheAsBitmap   = false;
 
             this.drawFloor();
+            this.drawEffects();
             this.drawWalls();
 
             // Cache each layer because they don't change
@@ -104,16 +105,42 @@ define(function(require) {
             finishTile.scale.x = this.tileScale;
             finishTile.scale.y = this.tileScale;
             this.floor.addChild(finishTile);
+            this.finishTile = finishTile;
+        },
 
+        drawEffects: function() {
             // Create the closed FINISH tile to draw over the other one
             var finishClosedTile = Assets.createSprite(Assets.Images.FINISH_CLOSED);
-            finishClosedTile.x = finishTile.x;
-            finishClosedTile.y = finishTile.y;
+            finishClosedTile.x = this.finishTile.x;
+            finishClosedTile.y = this.finishTile.y;
             finishClosedTile.scale.x = this.tileScale;
             finishClosedTile.scale.y = this.tileScale;
             finishClosedTile.visible = false;
             this.lowerEffects.addChild(finishClosedTile);
             this.finishClosedTile = finishClosedTile;
+
+            // Create pulsing ring around the finish to get the player's attention
+            var finishPulse = Assets.createSprite(Assets.Images.FINISH_PULSE);
+            finishPulse.x = this.finishTile.x;
+            finishPulse.y = this.finishTile.y;
+            finishPulse.scale.x = this.tileScale;
+            finishPulse.scale.y = this.tileScale;
+            finishPulse.visible = false;
+            this.lowerEffects.addChild(finishPulse);
+            this.finishPulse = finishPulse;
+            this.pulseIntervalCounter = 0;
+            this.pulseDurationCounter = 0;
+
+            var finishWinPulse = Assets.createSprite(Assets.Images.FINISH_WIN_PULSE);
+            finishWinPulse.x = this.finishTile.x;
+            finishWinPulse.y = this.finishTile.y;
+            finishWinPulse.scale.x = this.tileScale;
+            finishWinPulse.scale.y = this.tileScale;
+            finishWinPulse.visible = false;
+            this.lowerEffects.addChild(finishWinPulse);
+            this.finishWinPulse = finishWinPulse;
+            this.winPulseIntervalCounter = 0;
+            this.winPulseDurationCounter = 0;
         },
 
         drawWalls: function() {
@@ -166,6 +193,16 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {
             this.particleView.update(time, deltaTime, paused);
+
+            this.pulseIntervalCounter += deltaTime;
+            this.winPulseIntervalCounter += deltaTime;
+
+            if (this.pulseIntervalCounter > Constants.PULSE_INTERVAL) {
+                // animate
+
+                if (this.pulseIntervalCounter > Constants.PULSE_INTERVAL + Constants.PULSE_DURATION)
+                    this.pulseIntervalCounter -= Constants.PULSE_INTERVAL;
+            }
         },
 
         collisionsChanged: function(simulation, collisions) {
