@@ -1,3 +1,29 @@
+describe('Rectangle', function(){
+
+	var Rectangle;
+
+	before(function(done) {
+		require(['math/rectangle'], function(rectangle) {
+			Rectangle = rectangle;
+			done();
+		});
+	});
+
+	it('#overlapsCircle should determine if a circle of a given radius overlaps rectangle', function(){
+		var rect = new Rectangle(0, 0, 1, 1);
+
+		chai.expect(rect.overlapsCircle( 1,     1, 0.5)).to.be.true;
+		chai.expect(rect.overlapsCircle( 0,     0, 0.5)).to.be.true;
+		chai.expect(rect.overlapsCircle( 1.5,   0, 0.2)).to.be.false;
+		chai.expect(rect.overlapsCircle(-0.5,   0, 0.2)).to.be.false;
+		chai.expect(rect.overlapsCircle( 0,   1.5, 0.2)).to.be.false;
+		chai.expect(rect.overlapsCircle( 0,  -0.5, 0.2)).to.be.false;
+		chai.expect(rect.overlapsCircle( 2,   2,   1.5)).to.be.true;
+		chai.expect(rect.overlapsCircle(-1,   2,   1.5)).to.be.true;
+	});
+
+});
+
 describe('Line Intersection', function(){
 
 	var lineIntersection;

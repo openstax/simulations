@@ -112,7 +112,7 @@ define(function(require) {
         },
 
         inBounds: function(col, row) {
-            return (row > 0 && row < Level.HEIGHT && col > 0 && col < Level.WIDTH);
+            return (row >= 0 && row < Level.HEIGHT && col >= 0 && col < Level.WIDTH);
         },
 
         /**
@@ -124,19 +124,17 @@ define(function(require) {
             var c = this.xToCol(x);
             var r = this.yToRow(y);
 
-            if (this.inBounds(c, r) && this.data[r][c] === tileType) {
-                //console.log(c, r)
+            if (this.inBounds(c, r) && this.data[r][c] === tileType)
                 return true;
-            }
 
-            for (var i = -1; i <= 1; i++) {
-                for (var j = -1; j <= 1; j++) {
-                    if (this.inBounds(c + i, r + j)) {
-                        var tileRect = this.getTileRect(c + i, r + j);
-                        if (tileRect.overlapsCircle(x, y, radius) && this.data[r + j][c + i] === tileType) {
-                            console.log(c + i, r + j, tileRect);
+            for (var i = -radius; i <= radius; i += radius) {
+                for (var j = -radius; j <= radius; j += radius) {
+                    c = this.xToCol(x + i);
+                    r = this.yToRow(y + j);
+                    if (this.inBounds(c, r)) {
+                        var tileRect = this.getTileRect(c, r);
+                        if (tileRect.overlapsCircle(x, y, radius) && this.data[r][c] === tileType)
                             return true;
-                        }
                     }
                 }
             }

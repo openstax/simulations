@@ -63,6 +63,9 @@ describe('Level', function(){
         chai.expect(testLevel.collidesWithTileTypeAt(Level.TILE_WALL, -14.5, -6.5, 0.4)).to.be.true;
         chai.expect(testLevel.collidesWithTileTypeAt(Level.TILE_WALL, -13.5, -5.5, 0.4)).to.be.true;
         chai.expect(testLevel.collidesWithTileTypeAt(Level.TILE_WALL, -14.5, -4.5, 0.4)).to.be.false;
+
+        chai.expect(testLevel.collidesWithTileTypeAt(Level.TILE_FINISH, -13, 5.5, 1.2)).to.be.true;
+        chai.expect(testLevel.collidesWithTileTypeAt(Level.TILE_FINISH, -13, 5.5, 0.6)).to.be.false;
     });
 
 });

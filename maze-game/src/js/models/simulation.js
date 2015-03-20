@@ -58,6 +58,19 @@ define(function (require, exports, module) {
             });
         },
 
+        startTimer: function() {
+            this.set('time', 0);
+            this.timing = true;
+        },
+
+        stopTimer: function() {
+            this.timing = false;
+        },
+
+        resetTimer: function() {
+            this.set('time', 0);
+        },
+
         _update: function(time, deltaTime) {
             // Update the position
             this.particle.update(time, deltaTime);
@@ -71,8 +84,11 @@ define(function (require, exports, module) {
             else
                 this.particle.set('colliding', false);
 
-            // if (this.get('level').collidesWithTileTypeAt(Level.TILE_FINISH, x, y, radius))
-            //     console.log('finish!!');
+            if (this.get('level').collidesWithTileTypeAt(Level.TILE_FINISH, x, y, radius))
+                console.log('finish!!');
+
+            if (this.timing)
+                this.set('time', this.get('time') + deltaTime);
         },
 
         levelChanged: function(simulation, level) {
