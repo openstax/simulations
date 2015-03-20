@@ -47,7 +47,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .sound-btn': 'changeVolume'
         },
 
         /**
@@ -144,6 +144,29 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * Steps between the different discrete volume values and updates
+         *   the button's icon.
+         */
+        changeVolume: function(event) {
+            var $btn = $(event.target).closest('.sound-btn');
+
+            $btn.hide();
+
+            if ($btn.hasClass('sound-btn-mute')) {
+                this.$('.sound-btn-low').show();
+                this.simulation.set('soundVolume', 20);
+            }
+            else if ($btn.hasClass('sound-btn-low')) {
+                this.$('.sound-btn-high').show();
+                this.simulation.set('soundVolume', 80);
+            }
+            else if ($btn.hasClass('sound-btn-high')) {
+                this.$('.sound-btn-mute').show();
+                this.simulation.set('soundVolume', 0);
+            }
+        }
 
     });
 
