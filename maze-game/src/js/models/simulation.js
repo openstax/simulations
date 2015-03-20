@@ -3,6 +3,7 @@ define(function (require, exports, module) {
     'use strict';
 
     var _ = require('underscore');
+    var buzz = require('buzz');
 
     var Simulation = require('common/simulation/simulation');
 
@@ -21,19 +22,26 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
             level: Levels.levels['Certain Death'],
             levelName: 'Level 2',
-            collisions: 0
+            collisions: 0,
+            soundVolume: 80
         }),
         
         initialize: function(attributes, options) {
             this.particle = new Particle(); 
 
+            // Sounds
+            this.ambientSound = new buzz.sound('audio/ambient-loop', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+            this.collisionSound = new buzz.sound('audio/computer-twitches', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:level', this.levelChanged);
-            this.listenTo(this.particle, 'change:colliding', function(particle, colliding) {
-                if (colliding)
-                    this.set('collisions', this.get('collisions') + 1);
-            });
+            this.on('change:soundVolume', this.volumeChanged);
+            this.listenTo(this.particle, 'change:colliding', this.collidingChanged);
         },
 
         /**
@@ -41,6 +49,10 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             this.resetParticle();
+            this.ambientSound
+                .play()
+                .fadeIn()
+                .loop();
         },
 
         resetParticle: function() {
@@ -93,6 +105,23 @@ define(function (require, exports, module) {
 
         levelChanged: function(simulation, level) {
             this.resetParticle();
+        },
+
+        volumeChanged: function(simulation, volume) {
+            this.collisionSound.setVolume(volume);
+            this.ambientSound.setVolume(volume);
+        },
+
+        collidingChanged: function(particle, colliding) {
+            if (colliding) {
+                this.set('collisions', this.get('collisions') + 1);
+                this.collisionSound
+                    .play()
+                    .loop();
+            }
+            else {
+                this.collisionSound.pause();
+            }
         }
 
     });
