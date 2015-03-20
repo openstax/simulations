@@ -39,6 +39,14 @@
 		"sourceSize": {"w":36,"h":36},
 		"pivot": {"x":0,"y":0}
 	},
+	"finish-win": {
+		"frame": {"x":148,"y":0,"w":36,"h":36},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":36,"h":36},
+		"sourceSize": {"w":36,"h":36},
+		"pivot": {"x":0,"y":0}
+	},
 	"finish-pulse": {
 		"frame": {"x":0,"y":110,"w":72,"h":72},
 		"rotated": false,

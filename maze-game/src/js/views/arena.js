@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView  = require('common/pixi/view');
+    var range     = require('common/math/range');
 
     var Level = require('models/level');
     var ParticleView = require('views/particle');
@@ -27,6 +28,7 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:level', this.drawLevel);
             this.listenTo(this.model, 'change:collisions', this.collisionsChanged);
+            this.listenTo(this.model, 'change:won', this.winStateChanged);
         },
 
         initGraphics: function() {
@@ -48,6 +50,8 @@ define(function(require) {
             this.displayObject.addChild(this.upperEffects);
 
             this.updateMVT(this.mvt);
+
+            this.startFinishPulse();
         },
 
         initParticleView: function() {
@@ -109,6 +113,9 @@ define(function(require) {
         },
 
         drawEffects: function() {
+            this.lowerEffects.removeChildren();
+            this.upperEffects.removeChildren();
+
             // Create the closed FINISH tile to draw over the other one
             var finishClosedTile = Assets.createSprite(Assets.Images.FINISH_CLOSED);
             finishClosedTile.x = this.finishTile.x;
@@ -119,28 +126,40 @@ define(function(require) {
             this.lowerEffects.addChild(finishClosedTile);
             this.finishClosedTile = finishClosedTile;
 
-            // Create pulsing ring around the finish to get the player's attention
-            var finishPulse = Assets.createSprite(Assets.Images.FINISH_PULSE);
-            finishPulse.x = this.finishTile.x;
-            finishPulse.y = this.finishTile.y;
-            finishPulse.scale.x = this.tileScale;
-            finishPulse.scale.y = this.tileScale;
-            finishPulse.visible = false;
-            this.lowerEffects.addChild(finishPulse);
-            this.finishPulse = finishPulse;
-            this.pulseIntervalCounter = 0;
-            this.pulseDurationCounter = 0;
+            var finishWinTile = Assets.createSprite(Assets.Images.FINISH_WIN);
+            finishWinTile.x = this.finishTile.x;
+            finishWinTile.y = this.finishTile.y;
+            finishWinTile.scale.x = this.tileScale;
+            finishWinTile.scale.y = this.tileScale;
+            finishWinTile.visible = false;
+            this.lowerEffects.addChild(finishWinTile);
+            this.finishWinTile = finishWinTile;
 
-            var finishWinPulse = Assets.createSprite(Assets.Images.FINISH_WIN_PULSE);
-            finishWinPulse.x = this.finishTile.x;
-            finishWinPulse.y = this.finishTile.y;
-            finishWinPulse.scale.x = this.tileScale;
-            finishWinPulse.scale.y = this.tileScale;
-            finishWinPulse.visible = false;
-            this.lowerEffects.addChild(finishWinPulse);
-            this.finishWinPulse = finishWinPulse;
+            // Create pulsing ring around the finish to get the player's attention
+            this.finishPulse = this.createPulseSprite(this.finishTile.x, this.finishTile.y, Assets.Images.FINISH_PULSE);
+            this.pulseIntervalCounter = 0;
+            this.pulseDurationCounter = null;
+            this.pulseScaleRange = range({ min: this.tileScale * 0.2, max: this.tileScale });
+
+            // Create a pulsing ring for when the player wins
+            this.finishWinPulse = this.createPulseSprite(this.finishTile.x, this.finishTile.y, Assets.Images.FINISH_WIN_PULSE);;
             this.winPulseIntervalCounter = 0;
-            this.winPulseDurationCounter = 0;
+            this.winPulseDurationCounter = null;
+        },
+
+        createPulseSprite: function(tileX, tileY, imageRef) {
+            var pulse = Assets.createSprite(imageRef);
+            pulse.x = tileX + this.tileSize / 2;
+            pulse.y = tileY + this.tileSize / 2;
+            pulse.scale.x = this.tileScale;
+            pulse.scale.y = this.tileScale;
+            pulse.anchor.x = 0.5;
+            pulse.anchor.y = 0.5;
+            pulse.alpha = 0;
+            //pulse.visible = false;
+            this.lowerEffects.addChild(pulse);
+
+            return pulse;
         },
 
         drawWalls: function() {
@@ -198,11 +217,34 @@ define(function(require) {
             this.winPulseIntervalCounter += deltaTime;
 
             if (this.pulseIntervalCounter > Constants.PULSE_INTERVAL) {
-                // animate
-
-                if (this.pulseIntervalCounter > Constants.PULSE_INTERVAL + Constants.PULSE_DURATION)
-                    this.pulseIntervalCounter -= Constants.PULSE_INTERVAL;
+                this.pulseIntervalCounter -= Constants.PULSE_INTERVAL;
+                this.startFinishPulse();
             }
+
+            this.animateFinishPulse(deltaTime);
+        },
+
+        startFinishPulse: function() {
+            this.pulseDurationCounter = 0;
+            this.pulseScaleRange.min = this.tileScale * 0.5;
+            this.pulseScaleRange.max = this.tileScale * 1.8;
+            this.finishPulse.alpha = 1;
+        },
+
+        animateFinishPulse: function(deltaTime) {
+            if (this.pulseDurationCounter !== null) {
+                var percent = this.pulseDurationCounter / Constants.PULSE_DURATION;
+                var scale = this.pulseScaleRange.lerp(percent);
+                this.finishPulse.scale.x = scale;
+                this.finishPulse.scale.y = scale;
+                this.finishPulse.alpha = 1 - percent;
+
+                this.pulseDurationCounter += deltaTime;
+                if (this.pulseDurationCounter > Constants.PULSE_DURATION)
+                    this.pulseDurationCounter = null;
+            }
+            else
+                this.finishPulse.alpha = 0;
         },
 
         collisionsChanged: function(simulation, collisions) {
@@ -210,6 +252,24 @@ define(function(require) {
                 this.finishClosedTile.visible = true;
             else
                 this.finishClosedTile.visible = false;
+            
+            this.changeFinishPulseVisibility();
+        },
+
+        winStateChanged: function(simulation, won) {
+            if (won)
+                this.finishWinTile.visible = true;
+            else 
+                this.finishWinTile.visible = false;
+
+            this.changeFinishPulseVisibility();
+        },
+
+        changeFinishPulseVisibility: function() {
+            if (this.model.get('won') || this.model.get('collisions'))
+                this.finishPulse.visible = false;
+            else
+                this.finishPulse.visible = true;
         }
 
     });
