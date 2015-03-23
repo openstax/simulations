@@ -31,6 +31,8 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'change:level', this.levelChanged);
         },
 
         renderContent: function() {
@@ -97,9 +99,17 @@ define(function(require) {
             return availableHeight - 50;
         },
 
+        reset: function() {
+            this.particleControlView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             this.arenaView.update(time, deltaTime, paused);
         },
+
+        levelChanged: function(simulation, level) {
+            this.particleControlView.reset();
+        }
 
     });
 

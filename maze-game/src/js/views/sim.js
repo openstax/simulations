@@ -149,11 +149,18 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Overrides so that we don't rerender on a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        rerender: function(event) {
+            this.sceneView.reset();
+        },
+
+        /**
+         * Overrides to remove the confirmation dialog because it's
+         *   not important in this sim.
+         */
+        reset: function(event) {
+            this.resetSimulation();
         },
 
         /**

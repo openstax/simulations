@@ -243,6 +243,10 @@ define(function(require) {
             this.positionArrows();
         },
 
+        reset: function() {
+            this.selectTab(0);
+        },
+
         positionSelected: function(data) {
             this.selectTab(0);
         },

@@ -60,6 +60,18 @@ define(function (require, exports, module) {
                 .loop();
         },
 
+        /**
+         * Overrides simulation's reset function
+         */
+        reset: function() {
+            this.resetParticle();
+            this.set({
+                time: 0,
+                won: false,
+                collisions: 0
+            });
+        },
+
         resetParticle: function() {
             var startPosition = this.get('level').startPosition();
             this.particle.set({
