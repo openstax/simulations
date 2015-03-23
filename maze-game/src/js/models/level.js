@@ -49,6 +49,25 @@ define(function(require) {
     Level.TILE_FINISH = 3;
 
     /**
+     * Static functions
+     */
+    Level.fromStringArray = function(levelSource, characterToTileMap) {
+        var data = [];
+
+        for (var i = 0; i < levelSource.length; i++) {
+            var cells = levelSource[i].split('');
+
+            var row = [];
+            for (var j = 0; j < cells.length; j++)
+                row[j] = characterToTileMap[cells[j]];
+
+            data.push(row);
+        }
+
+        return new Level(data);
+    };
+
+    /**
      * Prototype functions/properties
      */
     _.extend(Level.prototype, {
@@ -92,6 +111,10 @@ define(function(require) {
             return this.data[this.yToRow(y)][this.xToCol(x)];
         },
 
+        inBounds: function(col, row) {
+            return (row >= 0 && row < Level.HEIGHT && col >= 0 && col < Level.WIDTH);
+        },
+
         /**
          * Returns wether or not the given tile type is
          *   touched by a circle at position (x, y) with
@@ -101,14 +124,18 @@ define(function(require) {
             var c = this.xToCol(x);
             var r = this.yToRow(y);
 
-            if (this.data[r][c] === tileType) 
+            if (this.inBounds(c, r) && this.data[r][c] === tileType)
                 return true;
 
-            for (var i = -1; i <= 1; i++) {
-                for (var j = -1; j <= 1; j++) {
-                    var tileRect = this.getTileRect(c + i, r + j);
-                    if (tileRect.overlapsCircle(x, y, radius) && this.data[r + j][c + i] === tileType)
-                        return true;
+            for (var i = -radius; i <= radius; i += radius) {
+                for (var j = -radius; j <= radius; j += radius) {
+                    c = this.xToCol(x + i);
+                    r = this.yToRow(y + j);
+                    if (this.inBounds(c, r)) {
+                        var tileRect = this.getTileRect(c, r);
+                        if (tileRect.overlapsCircle(x, y, radius) && this.data[r][c] === tileType)
+                            return true;
+                    }
                 }
             }
 

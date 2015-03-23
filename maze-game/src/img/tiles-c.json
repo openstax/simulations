@@ -41,7 +41,7 @@
 	}
 },
 "meta": {
-	"image": "tiles-b.png",
+	"image": "tiles-c.png",
 	"format": "RGBA8888",
 	"size": {"w":147,"h":109},
 	"scale": "1"

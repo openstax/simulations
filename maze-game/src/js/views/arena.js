@@ -5,10 +5,9 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView  = require('common/pixi/view');
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
 
     var Level = require('models/level');
+    var ParticleView = require('views/particle');
 
     var Assets = require('assets');
 
@@ -40,7 +39,18 @@ define(function(require) {
             this.displayObject.addChild(this.shadows);
             this.displayObject.addChild(this.walls);
 
+            this.initParticleView();
+
             this.updateMVT(this.mvt);
+        },
+
+        initParticleView: function() {
+            this.particleView = new ParticleView({
+                model: this.model.particle,
+                mvt: this.mvt
+            });
+
+            this.displayObject.addChild(this.particleView.displayObject);
         },
 
         drawLevel: function() {
@@ -136,6 +146,10 @@ define(function(require) {
             this.tileScale = this.tileSize / Assets.Texture(Assets.Images.FLOOR).width;
 
             this.drawLevel();
+        },
+
+        update: function(time, deltaTime, paused) {
+            this.particleView.update(time, deltaTime, paused);
         }
 
     });

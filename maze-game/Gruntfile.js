@@ -108,7 +108,9 @@ module.exports = function(grunt) {
 			options: {		
 				globals: {
 					require: true,
-					define: true
+					define: true,
+					module: true,
+					console: true
 				},
 
 				// Enforcing Options

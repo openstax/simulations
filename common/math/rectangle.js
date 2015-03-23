@@ -121,8 +121,9 @@ define(function (require) {
      *   http://stackoverflow.com/a/402010/4085004
      */
     Rectangle.prototype.overlapsCircle = function(x, y, radius) {
-        var distanceX = Math.abs(x - this.x);
-        var distanceY = Math.abs(y - this.y);
+        // Distance from center of circle to center of rectangle
+        var distanceX = Math.abs(x - (this.x + this.w / 2));
+        var distanceY = Math.abs(y - (this.y + this.h / 2));
 
         if (distanceX > (this.w / 2 + radius)) return false;
         if (distanceY > (this.h / 2 + radius)) return false;
@@ -130,7 +131,7 @@ define(function (require) {
         if (distanceX <= (this.w / 2)) return true;
         if (distanceY <= (this.h / 2)) return true;
 
-        cornerDistanceSquared = 
+        var cornerDistanceSquared = 
             Math.pow(distanceX - this.w / 2, 2) +
             Math.pow(distanceY - this.h / 2, 2);
 

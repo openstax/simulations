@@ -35,7 +35,16 @@ define(function(require) {
             'touchend        .headGraphics': 'dragHeadEnd',
             'mouseup         .headGraphics': 'dragHeadEnd',
             'touchendoutside .headGraphics': 'dragHeadEnd',
-            'mouseupoutside  .headGraphics': 'dragHeadEnd'
+            'mouseupoutside  .headGraphics': 'dragHeadEnd',
+
+            'touchstart      .smallDot': 'dragHeadStart',
+            'mousedown       .smallDot': 'dragHeadStart',
+            'touchmove       .smallDot': 'dragHead',
+            'mousemove       .smallDot': 'dragHead',
+            'touchend        .smallDot': 'dragHeadEnd',
+            'mouseup         .smallDot': 'dragHeadEnd',
+            'touchendoutside .smallDot': 'dragHeadEnd',
+            'mouseupoutside  .smallDot': 'dragHeadEnd'
         },
 
         initialize: function(options) {
@@ -48,7 +57,9 @@ define(function(require) {
 
                 snappingEnabled: false,
                 snappingXFunction: defaultSnappingFunction,
-                snappingYFunction: defaultSnappingFunction
+                snappingYFunction: defaultSnappingFunction,
+
+                useDotWhenSmall: false
             }, options);
 
             ArrowView.prototype.initialize.apply(this, [options]);
@@ -65,6 +76,9 @@ define(function(require) {
             this.snappingXFunction = options.snappingXFunction;
             this.snappingYFunction = options.snappingYFunction;
 
+            this.useDotWhenSmall = options.useDotWhenSmall;
+            this.initSmallDot();
+
             this._attributes = {};
             this._dragOffset = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -80,9 +94,16 @@ define(function(require) {
             this.headGraphics.defaultCursor = 'pointer';
         },
 
-        initGraphics: function() {
-            ArrowView.prototype.initGraphics.apply(this);
+        initSmallDot: function() {
+            this.smallDot = new PIXI.Graphics();
+            this.smallDot.beginFill(this.fillColor, this.fillAlpha * 0.5);
+            this.smallDot.drawCircle(0, 0, this.headLength / 2);
+            this.smallDot.endFill();
+            this.smallDot.visible = false;
 
+            this.displayObject.addChild(this.smallDot);
+
+            this.listenTo(this.model, 'change', this.modelChanged);
         },
 
         dragBodyStart: function(data) {
@@ -125,7 +146,7 @@ define(function(require) {
         },
 
         dragHeadStart: function(data) {
-            if (!this.bodyDraggingEnabled)
+            if (!this.headDraggingEnabled)
                 return;
 
             this.setDraggingFill();
@@ -189,6 +210,10 @@ define(function(require) {
             this.draggingHead = false;
             this.setNormalFill();
             this.drawArrow();
+
+            if (this.useDotWhenSmall && this.smallDotEnabled) {
+                this.smallDot.visible = true;
+            }
         },
 
         setDraggingFill: function() {
@@ -199,6 +224,22 @@ define(function(require) {
         setNormalFill: function() {
             this.fillColor = this.normalFillColor;
             this.fillAlpha = this.normalFillAlpha;
+        },
+
+        modelChanged: function() {
+            var origin = this._originVector.set(this.model.get('originX'), this.model.get('originY'));
+            var target = this._targetVector.set(this.model.get('targetX'), this.model.get('targetY'));
+            var length = origin.distance(target);
+
+            if (this.useDotWhenSmall && length < this.headLength) {
+                this.smallDot.x = target.x - origin.x;
+                this.smallDot.y = target.y - origin.y;
+
+                this.smallDot.visible = true;
+            }
+            else {
+                this.smallDot.visible = false;
+            }
         }
 
     });

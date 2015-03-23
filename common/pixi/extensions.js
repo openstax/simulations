@@ -189,7 +189,9 @@ define(function(require) {
         style = _.extend({
             lineWidth: 1,
             lineJoin: 'miter',
-            fillAlpha: 1
+            fillAlpha: 1,
+            shadowBlur: 0,
+            shadowColor: '#000'
         }, style);
 
         // Determine the bounds for all the points
@@ -228,6 +230,9 @@ define(function(require) {
             ctx.globalAlpha = style.fillAlpha;
             fill = true;
         }
+
+        ctx.shadowBlur = style.shadowBlur;
+        ctx.shadowColor = style.shadowColor;
         
         PIXI.drawPiecewiseCurve(ctx, curve, xShift, yShift, fill, stroke);
 
