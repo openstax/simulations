@@ -1,0 +1,42 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.level-selection-panel {
+	position: absolute;
+	bottom: 87px;
+	left: 15px;
+	.white-panel(@shadow-alpha: 0.28, @background-fade-percent: 0%);
+	.user-select(none);
+	background-color: #ccc;
+
+	h2 {
+	    font-size: 18px;
+	    font-weight: 400;
+	    color: rgba(51, 51, 51, 0.8);
+	    margin: 0 15px 0 15px;
+	    padding-top: 15px;
+	    padding-bottom: 4px;
+	    border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+	}
+
+	ul {
+		margin: 0;
+		padding: 5px 0;
+		list-style-type: none;
+
+		> li {
+			display: block;
+			margin-top: 0;
+			margin-left: 0;
+			font-weight: bold;
+			padding: 5px 15px;
+			cursor: pointer;
+
+			&.selected {
+				background: @gray-lightest;
+			}
+		}
+	}
+}

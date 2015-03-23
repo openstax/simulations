@@ -35,6 +35,7 @@
 }
 
 .playback-controls-wrapper {
+    height: 62px;
     position: relative;
     margin-top: 5px;
     padding: 10px;
@@ -42,46 +43,53 @@
     text-align: center;
     .user-select(none);
 
-    > .playback-btn {
-        display: inline-block;
-        background: @btn-bg;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+    > .playback-buttons-wrapper {
+        width: 200px;
+        position: absolute;
+        left: 50%;
+        margin-left: -100px;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.pause-btn {
-            display: none;
-        }
-
-        .sim-view.playing &.pause-btn {
+        > .playback-btn {
             display: inline-block;
-        }
-        .sim-view.playing &.play-btn {
-            display: none;
-        }
+            background: @btn-bg;
+            color: @link-color;
+            outline: none;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            text-align: center;
 
-        &.play-btn,
-        &.pause-btn {
-            width: 42px;
-            height: 42px;
-            font-size: 16px;
-        }
+            &:hover {
+                opacity: 0.9;
+            }
 
-        &.play-btn {
-            padding-left: 10px;
+            &:active {
+                background: @link-color;
+                color: #fff;
+            }
+
+            &.pause-btn {
+                display: none;
+            }
+
+            .sim-view.playing &.pause-btn {
+                display: inline-block;
+            }
+            .sim-view.playing &.play-btn {
+                display: none;
+            }
+
+            &.play-btn,
+            &.pause-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            &.play-btn {
+                padding-left: 10px;
+            }
         }
     }
 
@@ -90,12 +98,35 @@
         margin: 5px 5px 0;
     }
 
-    .clear-btn {
+    .reset-btn {
         float: left;
     }
 
-    .reset-btn {
+    .start-game-btn {
         float: right;
+        .button-variant(#fff, @brand-secondary, #fff, darken(@brand-secondary, 10%));
+        margin: 5px 5px 0;
+    }
+
+    .time-wrapper,
+    .collisions-wrapper {
+        //float: left;
+        line-height: 32px;
+        margin: 5px 20px;
+
+        span {
+            width: 50px;
+            display: inline-block;
+            text-align: right;
+        }
+    }
+
+    .time-wrapper {
+        float: right;
+    }
+
+    .collisions-wrapper {
+        float: left;
     }
 
 }

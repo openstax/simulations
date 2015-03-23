@@ -6,8 +6,6 @@ define(function (require) {
     
     var Level = require('models/level');
 
-    var Levels = {};
-
     // Character values to make mapping easier
     var charsToTileValues = {
         ' ': Level.TILE_FLOOR,
@@ -19,6 +17,7 @@ define(function (require) {
     var levels = {
         'Practice': [
             '                                ',
+            '                           S    ',
             '                                ',
             '                                ',
             '                                ',
@@ -27,8 +26,7 @@ define(function (require) {
             '                                ',
             '                                ',
             '                                ',
-            '                                ',
-            '                                ',
+            '   F                            ',
             '                                ',
             '                                ',
             '                                '
@@ -84,9 +82,9 @@ define(function (require) {
     };
 
     // Convert the level source strings into the tile values
-    Levels.levels = {};
+    var Levels = {};
     _.each(levels, function(levelSource, key) {
-        Levels.levels[key] = Level.fromStringArray(levelSource, charsToTileValues);
+        Levels[key] = Level.fromStringArray(levelSource, charsToTileValues);
     });
 
     return Levels;

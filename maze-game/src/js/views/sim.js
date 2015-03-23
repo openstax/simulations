@@ -10,6 +10,8 @@ define(function (require) {
     var MazeGameSimulation = require('models/simulation');
     var MazeGameSceneView  = require('views/scene');
 
+    var Levels = require('levels');
+
     var Constants = require('constants');
 
     require('nouislider');
@@ -18,12 +20,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/level-select');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml         = require('text!templates/sim.html');
+    var levelSelectHtml = require('text!templates/level-select.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -41,12 +45,21 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template:            _.template(simHtml),
+        levelSelectTemplate: _.template(levelSelectHtml),
 
         /**
          * Dom event listeners
          */
         events: {
+            'click .play-btn' : 'play',
+            'click .pause-btn': 'pause',
+
+            'click .start-game-btn' : 'startGame',
+            'click .reset-btn'      : 'reset',
+
+            'click .level-option' : 'selectLevel',
+
             'click .sound-btn': 'changeVolume'
         },
 
@@ -64,6 +77,8 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:levelName', this.levelNameChanged);
         },
 
         /**
@@ -90,6 +105,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderLevelSelect();
 
             return this;
         },
@@ -112,6 +128,16 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
+
+        /**
+         * Renders the level selection menu
+         */
+        renderLevelSelect: function() {
+            this.$el.append(this.levelSelectTemplate({
+                levels: _.keys(Levels)
+            }));
+            this.levelNameChanged(this.simulation, this.simulation.get('levelName'));
         },
 
         /**
@@ -166,6 +192,26 @@ define(function (require) {
                 this.$('.sound-btn-mute').show();
                 this.simulation.set('soundVolume', 0);
             }
+        },
+
+        /**
+         * Starts the game timer
+         */
+        startGame: function() {
+            this.simulation.startTimer();
+        },
+
+        levelNameChanged: function(simulation, levelName) {
+            this.$('.level-selection-panel li').each(function(){
+                if ($(this).text() === levelName)
+                    $(this).addClass('selected')
+                else
+                    $(this).removeClass('selected');
+            });
+        },
+
+        selectLevel: function(event) {
+            this.simulation.changeLevel($(event.target).text());
         }
 
     });
