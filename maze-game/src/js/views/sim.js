@@ -10,6 +10,8 @@ define(function (require) {
     var MazeGameSimulation = require('models/simulation');
     var MazeGameSceneView  = require('views/scene');
 
+    var Levels = require('levels');
+
     var Constants = require('constants');
 
     require('nouislider');
@@ -18,12 +20,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/level-select');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml         = require('text!templates/sim.html');
+    var levelSelectHtml = require('text!templates/level-select.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -41,12 +45,21 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template:            _.template(simHtml),
+        levelSelectTemplate: _.template(levelSelectHtml),
 
         /**
          * Dom event listeners
          */
         events: {
+            'click .play-btn' : 'play',
+            'click .pause-btn': 'pause',
+
+            'click .start-game-btn' : 'startGame',
+            'click .reset-btn'      : 'reset',
+
+            'click .level-option' : 'selectLevel',
+
             'click .sound-btn': 'changeVolume'
         },
 
@@ -64,6 +77,12 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:levelName',  this.levelNameChanged);
+            this.listenTo(this.simulation, 'change:time',       this.timeChanged);
+            this.listenTo(this.simulation, 'change:collisions', this.collisionsChanged);
+            this.listenTo(this.simulation, 'change:paused',     this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -90,6 +109,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderLevelSelect();
 
             return this;
         },
@@ -104,6 +124,9 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.$time = this.$('#time');
+            this.$collisions = this.$('#collisions');
         },
 
         /**
@@ -115,6 +138,16 @@ define(function (require) {
         },
 
         /**
+         * Renders the level selection menu
+         */
+        renderLevelSelect: function() {
+            this.$el.append(this.levelSelectTemplate({
+                levels: _.keys(Levels)
+            }));
+            this.levelNameChanged(this.simulation, this.simulation.get('levelName'));
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
@@ -123,11 +156,18 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Overrides so that we don't rerender on a reset.
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        rerender: function(event) {
+            this.sceneView.reset();
+        },
+
+        /**
+         * Overrides to remove the confirmation dialog because it's
+         *   not important in this sim.
+         */
+        reset: function(event) {
+            this.resetSimulation();
         },
 
         /**
@@ -143,6 +183,16 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
         },
 
         /**
@@ -166,6 +216,46 @@ define(function (require) {
                 this.$('.sound-btn-mute').show();
                 this.simulation.set('soundVolume', 0);
             }
+        },
+
+        /**
+         * Starts the game timer
+         */
+        startGame: function() {
+            this.simulation.startTimer();
+        },
+
+        /**
+         * Handle change in sim's levelName
+         */
+        levelNameChanged: function(simulation, levelName) {
+            this.$('.level-selection-panel li').each(function(){
+                if ($(this).text() === levelName)
+                    $(this).addClass('selected')
+                else
+                    $(this).removeClass('selected');
+            });
+        },
+
+        /**
+         * Select new level according to user input
+         */
+        selectLevel: function(event) {
+            this.simulation.changeLevel($(event.target).text());
+        },
+
+        /**
+         * Update time counter
+         */
+        timeChanged: function(simulation, time) {
+            this.$time.text(time.toFixed(1));
+        },
+
+        /**
+         * Update collisions counter
+         */
+        collisionsChanged: function(simulation, collisions) {
+            this.$collisions.text(collisions);
         }
 
     });

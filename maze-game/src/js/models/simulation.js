@@ -20,8 +20,8 @@ define(function (require, exports, module) {
     var MazeGameSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            level: Levels.levels['Certain Death'],
-            levelName: 'Level 2',
+            level: Levels['Practice'],
+            levelName: 'Practice',
             collisions: 0,
             soundVolume: 80,
             won: false
@@ -60,6 +60,19 @@ define(function (require, exports, module) {
                 .loop();
         },
 
+        /**
+         * Overrides simulation's reset function
+         */
+        reset: function() {
+            this.stopTimer();
+            this.resetParticle();
+            this.set({
+                time: 0,
+                won: false,
+                collisions: 0
+            });
+        },
+
         resetParticle: function() {
             var startPosition = this.get('level').startPosition();
             this.particle.set({
@@ -90,6 +103,14 @@ define(function (require, exports, module) {
 
         win: function() {
             this.winSound.play();
+            this.stopTimer();
+        },
+
+        changeLevel: function(levelName) {
+            this.set({
+                levelName: levelName,
+                level: Levels[levelName]
+            });
         },
 
         _update: function(time, deltaTime) {

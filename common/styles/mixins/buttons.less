@@ -14,7 +14,7 @@
         opacity: 0.9;
     }
 
-    &:active {
+    &:active, &:focus:active {
         color: @active-color;
         background: @active-background;
         outline: 0;
@@ -23,6 +23,7 @@
 
     &:focus {
         outline: 0;
+        color: @color;
     }
 
     &.disabled,
