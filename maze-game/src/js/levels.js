@@ -65,19 +65,19 @@ define(function (require) {
         ],
         'Certain Death': [
             '       WWWWWWWWWWWWWWWWW       W',
-            '       W       W       W   S   W',
-            '       W               W       W',
-            '       W  W                    W',
-            '       W  WWWWWWWW        WWWWWW',
-            '       W  W      W  W          W',
-            'WWWWWWWW  W      W  W          W',
-            'W             W  W  W          W',
-            'W             W     W      W   W',
-            'W             W     W      W   W',
-            'W  F       WWWWWWWWWWWWWWWWW   W',
-            'W             W     W      W   W',
-            '              W     W          W',
-            '   WWWWWWWWWWWW                W'
+            '  W W  W     W     W   W   S   W',
+            '       W     W     W   W       W',
+            '  WWW  W  W     W              W',
+            ' W   W W  W     W          WWWWW',
+            '       W  WWWWWWW  W  W W      W',
+            'WWWWWWWW  W     W  W           W',
+            'W         W     W  W W   W     W',
+            'W            W     W  WWW  W  WW',
+            'W      W     W     W       W   W',
+            'W  F   WWWWWWWWWWWWWWWWWWWWW   W',
+            'W        W     W     W     W  WW',
+            'W           W     W     W      W',
+            'WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW'
         ]
     };
 
