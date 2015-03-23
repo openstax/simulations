@@ -3,6 +3,8 @@ OpenStax Simulations
 
 This repository holds all simulations that will be embedded into OpenStax textbooks.
 
+[Demo here](http://connexions.github.io/simulations/)
+
 ## <a name="deploying-and-building"></a>Building and Deploying
 
 ### <a name="pre-build-setup"></a>Pre-Build Setup:
