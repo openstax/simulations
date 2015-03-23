@@ -11,7 +11,8 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-   	
+   	Constants.TILE_SIZE = 1; // meters
+   	Constants.PARTICLE_RADIUS = 0.375; // meters
 
     return Constants;
 });
