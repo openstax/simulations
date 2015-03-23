@@ -81,7 +81,8 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:levelName',  this.levelNameChanged);
             this.listenTo(this.simulation, 'change:time',       this.timeChanged);
             this.listenTo(this.simulation, 'change:collisions', this.collisionsChanged);
-            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused',     this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
