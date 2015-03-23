@@ -64,6 +64,7 @@ define(function (require, exports, module) {
          * Overrides simulation's reset function
          */
         reset: function() {
+            this.stopTimer();
             this.resetParticle();
             this.set({
                 time: 0,
@@ -102,6 +103,7 @@ define(function (require, exports, module) {
 
         win: function() {
             this.winSound.play();
+            this.stopTimer();
         },
 
         changeLevel: function(levelName) {

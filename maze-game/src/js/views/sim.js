@@ -78,7 +78,10 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:levelName', this.levelNameChanged);
+            this.listenTo(this.simulation, 'change:levelName',  this.levelNameChanged);
+            this.listenTo(this.simulation, 'change:time',       this.timeChanged);
+            this.listenTo(this.simulation, 'change:collisions', this.collisionsChanged);
+            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
         },
 
         /**
@@ -120,6 +123,9 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.$time = this.$('#time');
+            this.$collisions = this.$('#collisions');
         },
 
         /**
@@ -179,6 +185,16 @@ define(function (require) {
         },
 
         /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        /**
          * Steps between the different discrete volume values and updates
          *   the button's icon.
          */
@@ -208,6 +224,9 @@ define(function (require) {
             this.simulation.startTimer();
         },
 
+        /**
+         * Handle change in sim's levelName
+         */
         levelNameChanged: function(simulation, levelName) {
             this.$('.level-selection-panel li').each(function(){
                 if ($(this).text() === levelName)
@@ -217,8 +236,25 @@ define(function (require) {
             });
         },
 
+        /**
+         * Select new level according to user input
+         */
         selectLevel: function(event) {
             this.simulation.changeLevel($(event.target).text());
+        },
+
+        /**
+         * Update time counter
+         */
+        timeChanged: function(simulation, time) {
+            this.$time.text(time.toFixed(1));
+        },
+
+        /**
+         * Update collisions counter
+         */
+        collisionsChanged: function(simulation, collisions) {
+            this.$collisions.text(collisions);
         }
 
     });
