@@ -15,8 +15,23 @@ define(function(require) {
      */
     var LadybugView = PixiView.extend({
 
+        events: {
+            'touchstart      .ladybug': 'dragStart',
+            'mousedown       .ladybug': 'dragStart',
+            'touchmove       .ladybug': 'drag',
+            'mousemove       .ladybug': 'drag',
+            'touchend        .ladybug': 'dragEnd',
+            'mouseup         .ladybug': 'dragEnd',
+            'touchendoutside .ladybug': 'dragEnd',
+            'mouseupoutside  .ladybug': 'dragEnd',
+        },
+
         initialize: function(options) {
             this.mvt = options.mvt;
+
+            // Object caches
+            this._dragOffset = new PIXI.Point();
+            this._dragLocation = new PIXI.Point();
 
             this.initGraphics();
 
@@ -36,6 +51,7 @@ define(function(require) {
             ladybugOpenWings.anchor.y = 0.5;
             ladybugOpenWings.visible = false;
 
+            this.ladybug = new PIXI.DisplayObjectContainer();
             this.idleWings = new PIXI.DisplayObjectContainer();
             this.openWings = new PIXI.DisplayObjectContainer();
 
@@ -43,8 +59,9 @@ define(function(require) {
             this.openWings.addChild(ladybugOpenWings);
             this.openWings.visible = false;
 
-            this.displayObject.addChild(this.idleWings);
-            this.displayObject.addChild(this.openWings);
+            this.ladybug.addChild(this.idleWings);
+            this.ladybug.addChild(this.openWings);
+            this.displayObject.addChild(this.ladybug);
 
             this.updateMVT(this.mvt);
         },
@@ -66,6 +83,28 @@ define(function(require) {
         calculateScale: function() {
             var targetSpriteHeight = this.mvt.modelToViewDeltaY(this.model.get('length')); // in pixels
             return targetSpriteHeight / this.ladybugSprite.height;
+        },
+
+        dragStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+        },
+
+        drag: function(data) {
+            if (this.dragging) {
+                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var dx = local.x - this.displayObject.x - this.dragOffset.x;
+                var dy = local.y - this.displayObject.y - this.dragOffset.y;
+
+                dx = this.mvt.viewToModelDeltaX(dx);
+                dy = this.mvt.viewToModelDeltaX(dy);
+
+                this.model.translate(dx, dy);
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
         },
 
         update: function(time, deltaTime, paused) {
