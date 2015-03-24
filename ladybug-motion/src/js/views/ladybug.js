@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var PIXI = require('pixi');
+
     var PixiView  = require('common/pixi/view');
 
     var Assets = require('assets');
@@ -24,16 +26,25 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.ladybug = Assets.createSprite(Assets.Images.LADYBUG);
-            this.ladybug.anchor.x = 0.5;
-            this.ladybug.anchor.y = 0.5;
-            this.displayObject.addChild(this.ladybug);
+            var ladybug = Assets.createSprite(Assets.Images.LADYBUG);
+            ladybug.anchor.x = 0.5;
+            ladybug.anchor.y = 0.5;
+            this.ladybugSprite = ladybug;
 
-            this.ladybugOpenWings = Assets.createSprite(Assets.Images.LADYBUG_OPEN_WINGS);
-            this.ladybugOpenWings.anchor.x = 0.5;
-            this.ladybugOpenWings.anchor.y = 0.5;
-            this.ladybugOpenWings.visible = false;
-            this.displayObject.addChild(this.ladybugOpenWings);
+            var ladybugOpenWings = Assets.createSprite(Assets.Images.LADYBUG_OPEN_WINGS);
+            ladybugOpenWings.anchor.x = 0.5;
+            ladybugOpenWings.anchor.y = 0.5;
+            ladybugOpenWings.visible = false;
+
+            this.idleWings = new PIXI.DisplayObjectContainer();
+            this.openWings = new PIXI.DisplayObjectContainer();
+
+            this.idleWings.addChild(ladybug);
+            this.openWings.addChild(ladybugOpenWings);
+            this.openWings.visible = false;
+
+            this.displayObject.addChild(this.idleWings);
+            this.displayObject.addChild(this.openWings);
 
             this.updateMVT(this.mvt);
         },
@@ -54,7 +65,7 @@ define(function(require) {
 
         calculateScale: function() {
             var targetSpriteHeight = this.mvt.modelToViewDeltaY(this.model.get('length')); // in pixels
-            return targetSpriteHeight / this.ladybug.height;
+            return targetSpriteHeight / this.ladybugSprite.height;
         },
 
         update: function(time, deltaTime, paused) {
@@ -63,12 +74,12 @@ define(function(require) {
 
         velocityChanged: function(simulation, velocity) {
             if (velocity.length() >= LadybugView.WING_OPEN_VELOCITY) {
-                this.ladybug.visible = false;
-                this.ladybugOpenWings.visible = true;
+                this.idleWings.visible = false;
+                this.openWings.visible = true;
             }
             else {
-                this.ladybug.visible = true;
-                this.ladybugOpenWings.visible = false;
+                this.idleWings.visible = true;
+                this.openWings.visible = false;
             }
 
             // TODO: change the velocity vector arrow
