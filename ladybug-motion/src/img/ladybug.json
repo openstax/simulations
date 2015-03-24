@@ -1,0 +1,25 @@
+{"frames": {
+	"ladybug": {
+		"frame": {"x":0,"y":0,"w":117,"h":157},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":117,"h":157},
+		"sourceSize": {"w":117,"h":157},
+		"pivot": {"x":0,"y":0}
+	},
+	"ladybug-open-wings": {
+		"frame": {"x":118,"y":0,"w":136,"h":157},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":136,"h":157},
+		"sourceSize": {"w":136,"h":157},
+		"pivot": {"x":0,"y":0}
+	}
+},
+"meta": {
+	"image": "ladybug.png",
+	"format": "RGBA8888",
+	"size": {"w":254,"h":157},
+	"scale": "1"
+}
+}

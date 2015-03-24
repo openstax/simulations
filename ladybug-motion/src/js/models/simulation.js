@@ -6,6 +6,8 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var Ladybug = require('models/ladybug');
+
     /**
      * Constants
      */
@@ -21,8 +23,9 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            this.ladybug = new Ladybug();
 
+            Simulation.prototype.initialize.apply(this, [attributes, options]);
         },
 
         /**

@@ -7,10 +7,16 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        LADYBUG: 'ladybug',
+        LADYBUG_OPEN_WINGS: 'ladybug-open-wings'
     };
 
-    Assets.SpriteSheets = {};
+    Assets.SpriteSheets = {
+        'ladybug.json': [
+            Assets.Images.LADYBUG,
+            Assets.Images.LADYBUG_OPEN_WINGS,
+        ]
+    };
 
     return Assets;
 });
