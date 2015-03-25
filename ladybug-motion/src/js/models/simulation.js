@@ -437,6 +437,21 @@ define(function (require, exports, module) {
          */
         getBounds: function() {
             return this.bounds;
+        },
+
+        /**
+         * Returns the ladybug to the center.
+         */
+        returnLadybug: function() {
+            this.ladybug.setPosition(0, 0);
+            this.ladybug.setVelocity(0, 0);
+            this.clearSampleHistory();
+            this.setSamplePoint(this.ladybug.get('position'));
+            this.resetSamplingMotionModel();
+        },
+
+        ladybugOutOfBounds: function() {
+            return !this.bounds.contains(this.ladybug.get('position'));
         }
 
     });

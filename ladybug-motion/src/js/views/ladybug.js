@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/pixi/view');
+    var HybridView  = require('common/pixi/view/hybrid');
 
     var Assets = require('assets');
 
@@ -13,7 +13,7 @@ define(function(require) {
     /**
      * A view that represents the player particle
      */
-    var LadybugView = PixiView.extend({
+    var LadybugView = HybridView.extend({
 
         events: {
             'touchstart      .ladybug': 'dragStart',
@@ -24,6 +24,13 @@ define(function(require) {
             'mouseup         .ladybug': 'dragEnd',
             'touchendoutside .ladybug': 'dragEnd',
             'mouseupoutside  .ladybug': 'dragEnd',
+        },
+
+        tagName: 'button',
+        className: 'btn btn-secondary return-ladybug-btn',
+
+        htmlEvents: {
+            'click': 'returnButtonClicked'
         },
 
         initialize: function(options) {
@@ -43,6 +50,10 @@ define(function(require) {
             this.listenTo(this.model, 'change:velocity',     this.velocityChanged);
             this.listenTo(this.model, 'change:acceleration', this.accelerationChanged);
             this.listenTo(this.model, 'change:angle',        this.angleChanged);
+
+            this.$el.html('Return Ladybug');
+            this.$el.hide();
+            this.returnButtonHidden = true;
         },
 
         initGraphics: function() {
@@ -75,6 +86,11 @@ define(function(require) {
             var viewPos = this.mvt.modelToView(position);
             this.displayObject.x = viewPos.x;
             this.displayObject.y = viewPos.y;
+
+            if (this.simulation.ladybugOutOfBounds())
+                this.showReturnButton();
+            else
+                this.hideReturnButton();
         },
 
         updateMVT: function(mvt) {
@@ -137,6 +153,24 @@ define(function(require) {
 
         angleChanged: function(model, angle) {
             this.ladybug.rotation = angle + Math.PI / 2;
+        },
+
+        returnButtonClicked: function(event) {
+            this.simulation.returnLadybug();
+        },
+
+        hideReturnButton: function() {
+            if (!this.returnButtonHidden) {
+                this.$el.hide();
+                this.returnButtonHidden = true;
+            }
+        },
+
+        showReturnButton: function() {
+            if (this.returnButtonHidden) {
+                this.$el.show();
+                this.returnButtonHidden = false;
+            }
         }
 
     }, Constants.LadybugView);

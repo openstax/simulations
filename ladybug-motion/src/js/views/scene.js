@@ -59,6 +59,13 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+
+            this.simulation.setBounds(
+                this.mvt.viewToModelX(0), 
+                this.mvt.viewToModelY(0), 
+                this.mvt.viewToModelX(this.width), 
+                this.mvt.viewToModelY(this.height)
+            );
         },
 
         initLadybugView: function() {
@@ -68,6 +75,7 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.stage.addChild(this.ladybugView.displayObject);
+            this.$ui.append(this.ladybugView.el);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
