@@ -12,6 +12,7 @@ define(function (require) {
      *************************************************************************/
 
     Constants.MIN_SCENE_DIAMETER = 5; // centimeters
+    Constants.ESTIMATION_SAMPLE_SIZE = 6;
 
     /*************************************************************************
      **                                                                     **

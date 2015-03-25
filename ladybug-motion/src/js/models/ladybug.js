@@ -12,7 +12,8 @@ define(function (require) {
 
         defaults: _.extend({}, MotionObject.prototype.defaults, {
             width:  Constants.Ladybug.DEFAULT_WIDTH,
-            length: Constants.Ladybug.DEFAULT_LENGTH
+            length: Constants.Ladybug.DEFAULT_LENGTH,
+            angle: 0
         }),
 
         reset: function() {
