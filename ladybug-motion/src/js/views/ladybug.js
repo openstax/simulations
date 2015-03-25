@@ -36,6 +36,9 @@ define(function(require) {
 
             this.initGraphics();
 
+            this.ladybug.buttonMode = true;
+            this.ladybug.cursor = 'pointer';
+
             this.listenTo(this.model, 'change:position',     this.updatePosition);
             this.listenTo(this.model, 'change:velocity',     this.velocityChanged);
             this.listenTo(this.model, 'change:acceleration', this.accelerationChanged);
@@ -133,7 +136,7 @@ define(function(require) {
         },
 
         angleChanged: function(model, angle) {
-            this.ladybug.rotation = angle;
+            this.ladybug.rotation = angle + Math.PI / 2;
         }
 
     }, Constants.LadybugView);

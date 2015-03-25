@@ -331,7 +331,20 @@ define(function (require, exports, module) {
          * Records the current state in the state history.
          */
         recordState: function() {
-
+            // TODO: this is TEMPORARY
+            this.modelHistory.push({
+                time: this.get('time'),
+                state: {
+                    position: {
+                        x: this.ladybug.get('position').x,
+                        y: this.ladybug.get('position').y
+                    },
+                    velocity: {
+                        x: this.ladybug.get('velocity').x,
+                        y: this.ladybug.get('velocity').y
+                    }
+                }
+            });
         },
 
         /**
