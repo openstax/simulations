@@ -64,6 +64,7 @@ define(function(require) {
         initLadybugView: function() {
             this.ladybugView = new LadybugView({
                 model: this.simulation.ladybug,
+                simulation: this.simulation,
                 mvt: this.mvt
             });
             this.stage.addChild(this.ladybugView.displayObject);

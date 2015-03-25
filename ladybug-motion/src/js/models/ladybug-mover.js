@@ -36,6 +36,10 @@ define(function (require) {
 
         reset: function() {
             this.setMotionType(LadybugMover.MOTION_TYPE_MANUAL);
+        },
+
+        isInManualMode: function() {
+            return this.motionType === LadybugMover.MOTION_TYPE_MANUAL;
         }
 
     });
@@ -183,7 +187,12 @@ define(function (require) {
 
     LadybugMover.MOTION_TYPE_ELLIPTICAL = {
 
-        t: 0,
+        /**
+         * This is an internal "time" that really has nothing to do with
+         *   actual simulation time. It's just used to determine where
+         *   we are on the elliptical path relative to when we began.
+         */
+        time: 0,
 
         init: function() {},
 
@@ -194,8 +203,8 @@ define(function (require) {
             var b = LadybugMover.ELLIPSE_B;
 
             var n = 79 * deltaTime / 0.015 * 0.7 * 2;
-            this.t += 2 * Math.PI / Math.floor(n);
-            var t = this.t;
+            this.time += 2 * Math.PI / Math.floor(n);
+            var t = this.time;
 
             ladybug.setPosition(     a * Math.cos(t),  b * Math.sin(t));
             ladybug.setVelocity(    -a * Math.sin(t),  b * Math.cos(t));

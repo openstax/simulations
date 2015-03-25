@@ -7,14 +7,18 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
     var MotionMath = require('common/math/motion');
+    var Vector2    = require('common/math/vector2');
+    var Rectangle  = require('common/math/rectangle');
 
     var Ladybug             = require('models/ladybug');
+    var LadybugMover        = require('models/ladybug-mover');
     var SamplingMotionModel = require('models/sampling-motion-model');
 
     /**
      * Constants
      */
     var Constants = require('constants');
+    var UpdateMode = Constants.UpdateMode;
 
     /**
      * Object pooling
@@ -36,7 +40,8 @@ define(function (require, exports, module) {
     var LadybugMotionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            updateMode: UpdateMode.POSITION,
+            recording: true
         }),
         
         initialize: function(attributes, options) {
@@ -48,10 +53,11 @@ define(function (require, exports, module) {
             //   of where we want the ladybug to go.  It can either be from the
             //   user dragging the ladybug around the screen or from the remote
             //   control arrows.
-            this.samplingMotionModel = new SamplingMotionModel();
+            this.samplingMotionModel = new SamplingMotionModel(10, 5, 0, 0);
             this.penPath = []; // Holds the pen positions and the time they were taken
             this.penDown = false; // Whether or not the "pen" is down--whether we're receiving input
             this.penPoint = new Vector2(); // Current position of the pen
+            this.ladybugMover = new LadybugMover(this);
 
             // State history
             this.modelHistory = [];
@@ -106,9 +112,17 @@ define(function (require, exports, module) {
 
             if (this.get('recording')) {
                 // Run update and then save state
-                this.movingMan.update(time, delta);
+                this.ladybugMover.update(deltaTime);
+
+                if (this.ladybugMover.isInManualMode())
+                    this.updateManualMovement(deltaTime);
+
                 this.recordState();
                 this.set('furthestRecordedTime', time);
+
+                this.recordCurrentPenPoint();
+                this.trimSampleHistory();
+
             }
             else {
                 // We're playing back, so apply a saved state instead of updating
@@ -117,6 +131,31 @@ define(function (require, exports, module) {
                 // And if we've reached the end of what we've recorded, stop
                 if (time >= this.get('furthestRecordedTime'))
                     this.pause();
+            }
+        },
+
+        /**
+         * Figures out which update function to run depending
+         *   on whether the user is dragging the ladybug
+         *   directly (penDown) or not and which update mode
+         *   is currently selected.
+         */
+        updateManualMovement: function(deltaTime) {
+            if (this.penDown) {
+                this.updatePositionMode(deltaTime);
+            }
+            else {
+                switch (this.get('updateMode')) {
+                    case UpdateMode.POSITION:
+                        this.updatePositionMode(deltaTime);
+                        break;
+                    case UpdateMode.VELOCITY: 
+                        this.updateVelocityMode(deltaTime);
+                        break;
+                    case UpdateMode.ACCELERATION:
+                        this.updateAccelerationMode(deltaTime);
+                        break;
+                }
             }
         },
 
@@ -133,7 +172,7 @@ define(function (require, exports, module) {
                 this.updateVelocityMode(deltaTime);
                 if (this.penPath.length > 2) {
                     this.penPoint = this.ladybug.get('position');
-                    this.appendCurrentPenPointToPath();
+                    this.recordCurrentPenPoint();
                     this.samplingMotionModel.addPointAndUpdate(this.getLastSamplePoint());
                 }
             }
@@ -191,12 +230,28 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Called when we're starting to add sample points.
+         *   Sets penDown to true.
+         */
+        startSampling: function() {
+            this.penDown = true;
+        },
+
+        /**
+         * Called when we're finished adding sample points.
+         *   Sets penDown to false.
+         */
+        stopSampling: function() {
+            this.penDown = false;
+        },
+
+        /**
          * Takes the current pen point, which is stored in
          *   the property this.penPoint, and creates a pen
          *   path entry out of it (attaching the current
          *   time) and then appends it to the pen path.
          */
-        appendCurrentPenPointToPath: function(time) {
+        recordCurrentPenPoint: function(time) {
             var pathEntry = penPathEntryPool.create();
             pathEntry.time = time;
             pathEntry.x = this.penPoint.x;
@@ -231,6 +286,14 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Keeps the pen path under a certain length
+         */
+        trimSampleHistory: function() {
+            while (this.penPath.length > 100)
+                this.shiftSampleHistory();
+        },
+
+        /**
          * Shifts the first sample off the front of the pen
          *   path array in a way that is safe for the object
          *   pool.
@@ -262,6 +325,13 @@ define(function (require, exports, module) {
          */
         resetSamplingMotionModel: function() {
             this.samplingMotionModel.reset(this.ladybug.get('position'));
+        },
+
+        /**
+         * Records the current state in the state history.
+         */
+        recordState: function() {
+
         },
 
         /**

@@ -12,7 +12,21 @@ define(function (require) {
      *************************************************************************/
 
     Constants.MIN_SCENE_DIAMETER = 5; // centimeters
-    Constants.ESTIMATION_SAMPLE_SIZE = 6;
+    Constants.ESTIMATION_SAMPLE_SIZE = 6; // number of samples
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             UPDATE MODES                            **
+     **                                                                     **
+     *************************************************************************/
+
+    Constants.UpdateMode = {
+    	POSITION:     0,
+    	VELOCITY:     1,
+    	ACCELERATION: 2
+    };
+
 
     /*************************************************************************
      **                                                                     **

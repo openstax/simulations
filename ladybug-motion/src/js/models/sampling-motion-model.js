@@ -43,6 +43,7 @@ define(function (require) {
 
             // Update averages array
             var averagesLength = this.lengthOfAveragesArray();
+            var halfWindowSize = this.halfWindowSize;
             for (var i = 0; i < averagesLength; i++) {
                 this.averages[i] = 0;
                 for (var j = -halfWindowSize; j <= halfWindowSize; j++)
@@ -106,8 +107,8 @@ define(function (require) {
      * Modeled after edu.colorado.phet.ladybugmotion2d.Motion2DModel
      */
     var SamplingMotionModel = function(halfWindowSize, numPointsAveraged, x0, y0) {
-        this.x = new Motion2DValue(3 * numPointsAveraged + 2 * halfWindowSize, numPointsAveraged, x0);
-        this.y = new Motion2DValue(3 * numPointsAveraged + 2 * halfWindowSize, numPointsAveraged, y0);
+        this.x = new SamplingMotionModelValue(3 * numPointsAveraged + 2 * halfWindowSize, halfWindowSize, numPointsAveraged, x0);
+        this.y = new SamplingMotionModelValue(3 * numPointsAveraged + 2 * halfWindowSize, halfWindowSize, numPointsAveraged, y0);
 
         this.velocity = new Vector2();
         this.acceleration = new Vector2();

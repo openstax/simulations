@@ -28,6 +28,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
             // Object caches
             this._dragOffset = new PIXI.Point();
@@ -89,23 +90,25 @@ define(function(require) {
         dragStart: function(data) {
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
+
+            this.simulation.startSampling();
         },
 
         drag: function(data) {
             if (this.dragging) {
                 var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
-                var dx = local.x - this.displayObject.x - this.dragOffset.x;
-                var dy = local.y - this.displayObject.y - this.dragOffset.y;
 
-                dx = this.mvt.viewToModelDeltaX(dx);
-                dy = this.mvt.viewToModelDeltaX(dy);
+                var x = this.mvt.viewToModelX(local.x);
+                var y = this.mvt.viewToModelY(local.y);
 
-                this.model.translate(dx, dy);
+                this.simulation.setSamplePoint(x, y);
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
+
+            this.simulation.stopSampling();
         },
 
         update: function(time, deltaTime, paused) {
