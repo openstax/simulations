@@ -31,7 +31,7 @@ define(function (require, exports, module) {
     });
 
     /**
-     * Wraps the update function in 
+     * The bulk of the logic for the simulation model resides here.
      */
     var LadybugMotionSimulation = Simulation.extend({
 
@@ -65,6 +65,13 @@ define(function (require, exports, module) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
         },
 
+        /**
+         * We store our derivative-estimation arrays and the
+         *   objects contained therein in order that we might
+         *   reuse them and not cause unnecessary waste each
+         *   frame.  This function sets it all up in the very
+         *   beginning.
+         */
         initEstimationObjects: function() {
             this.xTimeSeries = [];
             this.yTimeSeries = [];
@@ -82,10 +89,23 @@ define(function (require, exports, module) {
             
         },
 
+        /**
+         * Function called by Simulation.update only when the
+         *   simulation is not paused.  It's just an update
+         *   function that assumes not paused.
+         */
         _update: function(time, deltaTime) {
             
         },
 
+        /**
+         * The update function for when we are in position mode
+         *   (when the ladybug is driven by its position--or in
+         *   this case driven by the pen points that indirectly
+         *   determine position), this function updates all of
+         *   the ladybug's motion properties according to the
+         *   time (time between steps).
+         */
         updatePositionMode: function(deltaTime) {
             if (!this.penDown) {
                 this.updateVelocityMode(deltaTime);
@@ -118,6 +138,13 @@ define(function (require, exports, module) {
             }
         },
 
+        /**
+         * The update function for when we are in velocity mode
+         *   (when the ladybug is driven by its velocity), this
+         *   function updates all of the ladybug's motion
+         *   properties according to the delta time (time
+         *   between steps).
+         */
         updateVelocityMode: function(deltaTime) {
             if (this.penPath.length > 0)
                 this.samplingMotionModel.addPointAndUpdate(this.getLastSamplePoint());
@@ -128,12 +155,25 @@ define(function (require, exports, module) {
             this.pointInDirectionOfMotion();
         },
 
+        /**
+         * The update function for when we are in acceleration 
+         *   mode (when the ladybug is driven by its 
+         *   acceleration), this function updates all of the
+         *   ladybug's motion properties according to the
+         *   delta time (time between steps).
+         */
         updateAccelerationMode: function(deltaTime) {
             this.ladybug.updatePositionFromVelocity(deltaTime);
             this.ladybug.updateVelocity(deltaTime);
             this.pointInDirectionOfMotion();
         },
 
+        /**
+         * Takes the current pen point, which is stored in
+         *   the property this.penPoint, and creates a pen
+         *   path entry out of it (attaching the current
+         *   time) and then appends it to the pen path.
+         */
         appendCurrentPenPointToPath: function(time) {
             var pathEntry = penPathEntryPool.create();
             pathEntry.time = time;
@@ -142,6 +182,10 @@ define(function (require, exports, module) {
             this.penPath.push(pathEntry);
         },
 
+        /**
+         * Finds the last sample point (pen path entry) and
+         *   returns it as a Vector2.
+         */
         getLastSamplePoint: function() {
             return this._lastSamplePoint.set(
                 this.penPath[this.penPath.length - 1].x,
@@ -149,27 +193,46 @@ define(function (require, exports, module) {
             );
         },
 
+        /**
+         * Shifts the first sample off the front of the pen
+         *   path array in a way that is safe for the object
+         *   pool.
+         */
         shiftSampleHistory: function() {
             penPathEntryPool.remove(this.penPath.shift());
         },
 
+        /**
+         * Clears pen path (sample) history in a way that is
+         *   safe for the object pool.
+         */
         clearSampleHistory: function() {
             for (var i = 0; i < this.penPath.length; i++)
                 penPathEntryPool.remove(this.penPath[i]);
             this.penPath.splice(0, this.penPath.length);
         },
 
+        /**
+         * Clears state and sample history.
+         */
         clearHistory: function() {
             this.modelHistory.slice(0, this.modelHistory.length);
             this.clearSampleHistory();
         },
 
+        /**
+         * Rotates the ladybug model to the estimated direction
+         *   of motion only if it is moving.
+         */
         pointInDirectionOfMotion: function() {
-            
             if (this.estimateVelocity().length() > 1E-6)
                 this.ladybug.set('angle', this.estimateAngle());
         },
 
+        /**
+         * Returns an estimated angle in radians that is derived
+         *   from the estimated velocity vector.
+         */
         estimateAngle: function() {
             return this.estimateVelocity().angle();
         },
