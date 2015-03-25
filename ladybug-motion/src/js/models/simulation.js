@@ -40,6 +40,7 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            // The centerpiece
             this.ladybug = new Ladybug();
 
             // Stuff for directing the motion of the ladybug:
@@ -54,6 +55,9 @@ define(function (require, exports, module) {
 
             // State history
             this.modelHistory = [];
+
+            // For determining appropriate motion in motion presets
+            this.bounds = new Rectangle();
 
             // Object caches
             this._lastSamplePoint = new Vector2();
@@ -93,9 +97,27 @@ define(function (require, exports, module) {
          * Function called by Simulation.update only when the
          *   simulation is not paused.  It's just an update
          *   function that assumes not paused.
+         * Only runs if simulation isn't currently paused.
+         * If we're recording, it saves state
          */
         _update: function(time, deltaTime) {
-            
+            // For the time slider and anything else relying on time
+            this.set('time', time);
+
+            if (this.get('recording')) {
+                // Run update and then save state
+                this.movingMan.update(time, delta);
+                this.recordState();
+                this.set('furthestRecordedTime', time);
+            }
+            else {
+                // We're playing back, so apply a saved state instead of updating
+                this.applyPlaybackState();
+
+                // And if we've reached the end of what we've recorded, stop
+                if (time >= this.get('furthestRecordedTime'))
+                    this.pause();
+            }
         },
 
         /**
@@ -194,6 +216,21 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Sets the current sample point (this.penPoint) to
+         *   the specified x and y values.  Also takes a
+         *   single Vector2 object instead.
+         */
+        setSamplePoint: function(x, y) {
+            if (x instanceof Vector2) {
+                y = x.y;
+                x = x.x;
+            }
+
+            this.penPoint.x = x;
+            this.penPoint.y = y;
+        },
+
+        /**
          * Shifts the first sample off the front of the pen
          *   path array in a way that is safe for the object
          *   pool.
@@ -218,6 +255,13 @@ define(function (require, exports, module) {
         clearHistory: function() {
             this.modelHistory.slice(0, this.modelHistory.length);
             this.clearSampleHistory();
+        },
+
+        /**
+         * Resets the sampling motion model.
+         */
+        resetSamplingMotionModel: function() {
+            this.samplingMotionModel.reset(this.ladybug.get('position'));
         },
 
         /**
@@ -291,6 +335,25 @@ define(function (require, exports, module) {
             var ay = MotionMath.estimateDerivative(yTimeSeries);
 
             return this._acceleration.set(ax, ay);
+        },
+
+        /**
+         * Sets a bounding box around the scene from the min
+         *   and max x and y values.  It's easier to give
+         *   these values because one can simply reverse the
+         *   model-view-transform with screen coordinates.
+         */
+        setBounds: function(minX, minY, maxX, maxY) {
+            var width = maxX - minX;
+            var height = maxY - minY;
+            this.bounds.set(minX, minY, width, height);
+        },
+
+        /**
+         * Returns a bounding rectangle of the scene.
+         */
+        getBounds: function() {
+            return this.bounds;
         }
 
     });

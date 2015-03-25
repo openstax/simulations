@@ -38,6 +38,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:position',     this.updatePosition);
             this.listenTo(this.model, 'change:velocity',     this.velocityChanged);
             this.listenTo(this.model, 'change:acceleration', this.accelerationChanged);
+            this.listenTo(this.model, 'change:angle',        this.angleChanged);
         },
 
         initGraphics: function() {
@@ -66,7 +67,7 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
-        updatePosition: function(particle, position) {
+        updatePosition: function(model, position) {
             var viewPos = this.mvt.modelToView(position);
             this.displayObject.x = viewPos.x;
             this.displayObject.y = viewPos.y;
@@ -111,7 +112,7 @@ define(function(require) {
             
         },
 
-        velocityChanged: function(simulation, velocity) {
+        velocityChanged: function(model, velocity) {
             if (velocity.length() >= LadybugView.WING_OPEN_VELOCITY) {
                 this.idleWings.visible = false;
                 this.openWings.visible = true;
@@ -124,8 +125,12 @@ define(function(require) {
             // TODO: change the velocity vector arrow
         },
 
-        accelerationChanged: function(simulation, acceleration) {
+        accelerationChanged: function(model, acceleration) {
             // TODO: change the acceleration vector arrow
+        },
+
+        angleChanged: function(model, angle) {
+            this.ladybug.rotation = angle;
         }
 
     }, Constants.LadybugView);

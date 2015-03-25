@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('../math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     /**
      * Used internally in SamplingMotionModel to keep track
@@ -151,6 +151,11 @@ define(function (require) {
         },
 
         reset: function(x0, y0) {
+            if (x0 instanceof Vector2) {
+                y0 = x0.y;
+                x0 = x0.x;
+            }
+
             this.x.reset(x0);
             this.y.reset(y0);
         }
