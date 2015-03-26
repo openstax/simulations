@@ -1,0 +1,114 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.playback-controls-wrapper {
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    height: 62px;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    .playback-btn {
+        display: inline-blocsk;
+        background: @btn-bg;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.pause-btn {
+            display: none;
+        }
+
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+        .sim-view.playing &.play-btn {
+            display: none;
+        }
+
+        &.play-btn,
+        &.pause-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@link-color, @btn-bg, #fff, @link-color);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    .playback-center-buttons-wrapper {
+        width: 250px;
+        position: absolute;
+        left: 50%;
+        margin-left: -125px;
+        top: 0;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        top: 22px;
+        left: 170px;
+
+        & label {
+            margin-right: 16px;
+        }
+    }
+
+    .days-counter {
+        position: absolute;
+        top: 0;
+        height: 100%;
+        left: 110px;
+        padding: 10px 0;
+        line-height: 42px;
+        font-size: 16px;
+        font-weight: bold;
+
+        .days-value {
+            display: inline-block;
+            min-width: 36px;
+            text-align: right;
+        }
+    }
+}
+
+.clear-btn:hover ~ .days-counter {
+    color: #000;
+    //text-decoration: line-through;
+}
