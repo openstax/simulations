@@ -5,7 +5,11 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+
+    var LadybugView = require('views/ladybug');
 
     var Assets = require('assets');
 
@@ -34,6 +38,35 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            this.initMVT();
+            this.initLadybugView();
+        },
+
+        initMVT: function() {
+            // Use whichever dimension is smaller
+            var scale;
+            if (this.width < this.height)
+                scale = this.width / Constants.MIN_SCENE_DIAMETER;
+            else
+                scale = this.height / Constants.MIN_SCENE_DIAMETER;
+
+            this.viewOriginX = Math.round(this.width / 2);  // Center
+            this.viewOriginY = Math.round(this.height / 2); // Center
+
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                scale
+            );
+        },
+
+        initLadybugView: function() {
+            this.ladybugView = new LadybugView({
+                model: this.simulation.ladybug,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.ladybugView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
