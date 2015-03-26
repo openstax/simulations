@@ -47,14 +47,16 @@ define(function(require) {
 
         initMVT: function() {
             // Use whichever dimension is smaller
+            var usableWidth = this.width - RemoteControlView.PANEL_WIDTH - RemoteControlView.RIGHT;
+            var usableHeight = this.height - 62;
             var scale;
-            if (this.width < this.height)
-                scale = this.width / Constants.MIN_SCENE_DIAMETER;
+            if (usableWidth < usableHeight)
+                scale = usableWidth / Constants.MIN_SCENE_DIAMETER;
             else
-                scale = this.height / Constants.MIN_SCENE_DIAMETER;
+                scale = usableHeight / Constants.MIN_SCENE_DIAMETER;
 
-            this.viewOriginX = Math.round(this.width / 2);  // Center
-            this.viewOriginY = Math.round(this.height / 2); // Center
+            this.viewOriginX = Math.round(usableWidth / 2); // Center
+            this.viewOriginY = Math.round(usableHeight / 2); // Center
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
@@ -65,8 +67,8 @@ define(function(require) {
             this.simulation.setBounds(
                 this.mvt.viewToModelX(0), 
                 this.mvt.viewToModelY(0), 
-                this.mvt.viewToModelX(this.width), 
-                this.mvt.viewToModelY(this.height)
+                this.mvt.viewToModelX(usableWidth), 
+                this.mvt.viewToModelY(usableHeight)
             );
         },
 
