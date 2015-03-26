@@ -1,8 +1,19 @@
 <div class="playback-controls-wrapper">
-	<button class="btn btn-normal clear-btn" title="Clear history">Clear</button>
-	
+    <button class="btn btn-normal clear-btn" title="Clear history">Clear</button>
+
+
+
+    <div class="btn-group playback-mode-wrapper" data-toggle="buttons">
+        <label class="btn active">
+            <input type="radio" name="options" id="record-mode" autocomplete="off" checked> Record
+        </label>
+        <label class="btn">
+            <input type="radio" name="options" id="playback-mode" autocomplete="off"> Playback
+        </label>
+    </div>
+    
     <div class="playback-center-buttons-wrapper">
-    	<button class="playback-btn rewind-btn" title="Rewind to last change"><span class="fa fa-fast-backward"></span></button>
+        <button class="playback-btn rewind-btn" title="Rewind to last change"><span class="fa fa-fast-backward"></span></button>
         <button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
         <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
         <button class="playback-btn step-btn"   title="Step"><span class="fa fa-step-forward"></span></button>

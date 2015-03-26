@@ -69,6 +69,23 @@
         float: right;
     }
 
+    .playback-mode-wrapper {
+        position: absolute;
+        left: 170px;
+        top: 15px;
+
+        .btn {
+            .button-variant(@link-color, @btn-bg, #fff, @link-color);
+
+            &.active {
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                background: fadeout(@link-color, 30%);
+                color: #fff;
+            }
+        }
+    }
+
     .playback-center-buttons-wrapper {
         width: 250px;
         position: absolute;
@@ -80,35 +97,4 @@
         text-align: center;
     }
 
-    .playback-speed-wrapper {
-        position: absolute;
-        top: 22px;
-        left: 170px;
-
-        & label {
-            margin-right: 16px;
-        }
-    }
-
-    .days-counter {
-        position: absolute;
-        top: 0;
-        height: 100%;
-        left: 110px;
-        padding: 10px 0;
-        line-height: 42px;
-        font-size: 16px;
-        font-weight: bold;
-
-        .days-value {
-            display: inline-block;
-            min-width: 36px;
-            text-align: right;
-        }
-    }
-}
-
-.clear-btn:hover ~ .days-counter {
-    color: #000;
-    //text-decoration: line-through;
 }
