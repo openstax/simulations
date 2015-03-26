@@ -9,7 +9,8 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var LadybugView = require('views/ladybug');
+    var LadybugView       = require('views/ladybug');
+    var RemoteControlView = require('views/remote-control');
 
     var Assets = require('assets');
 
@@ -41,6 +42,7 @@ define(function(require) {
 
             this.initMVT();
             this.initLadybugView();
+            this.initRemoteControlView();
         },
 
         initMVT: function() {
@@ -76,6 +78,20 @@ define(function(require) {
             });
             this.stage.addChild(this.ladybugView.displayObject);
             this.$ui.append(this.ladybugView.el);
+        },
+
+        initRemoteControlView: function() {
+            this.remoteControlView = new RemoteControlView({
+                model: this.simulation.ladybug,
+                simulation: this.simulation
+            });
+            this.remoteControlView.displayObject.x = this.width  - RemoteControlView.RIGHT;
+            this.remoteControlView.displayObject.y = this.height - RemoteControlView.BOTTOM;
+            this.stage.addChild(this.remoteControlView.displayObject);
+            this.$ui.append(this.remoteControlView.el);
+            this.remoteControlView.$el.css({
+                'top': (this.height - RemoteControlView.BOTTOM - RemoteControlView.PANEL_HEIGHT) + 'px'
+            });
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
