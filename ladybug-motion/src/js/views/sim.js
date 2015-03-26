@@ -9,7 +9,9 @@ define(function (require) {
 
     var LadybugMotionSimulation = require('models/simulation');
     var LadybugMover            = require('models/ladybug-mover');
-    var LadybugMotionSceneView  = require('views/scene');
+
+    var LadybugMotionSceneView = require('views/scene');
+    var SeekBarView            = require('views/seek-bar');
 
     var Constants = require('constants');
 
@@ -48,6 +50,13 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .record-btn' : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            'click .rewind-btn' : 'rewind',
+            'click .reset-btn'  : 'reset',
+
             'change #record-mode'   : 'recordModeClicked',
             'change #playback-mode' : 'playbackModeClicked'
         },
@@ -66,6 +75,10 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initSeekBarView();
+
+            this.listenTo(this.simulation, 'change:paused',     this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -84,6 +97,12 @@ define(function (require) {
             });
         },
 
+        initSeekBarView: function() {
+            this.seekBarView = new SeekBarView({
+                model: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -92,6 +111,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderSeekBarView();
 
             return this;
         },
@@ -119,6 +139,11 @@ define(function (require) {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
             this.$el.append(this.sceneView.ui);
+        },
+
+        renderSeekBarView: function() {
+            this.seekBarView.render();
+            this.$('.playback-controls-wrapper').append(this.seekBarView.el);
         },
 
         /**
@@ -159,13 +184,29 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        /**
+         * Sets sim to record mode
+         */
         recordModeClicked: function() {
             this.$el.addClass('record-mode');
         },
 
+        /**
+         * Sets sim to playback mode
+         */
         playbackModeClicked: function() {
             this.$el.removeClass('record-mode');
-        }
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
 
     });
 

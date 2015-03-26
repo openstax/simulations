@@ -48,7 +48,7 @@ define(function(require) {
         initMVT: function() {
             // Use whichever dimension is smaller
             var usableWidth = this.width - RemoteControlView.PANEL_WIDTH - RemoteControlView.RIGHT;
-            var usableHeight = this.height - 62;
+            var usableHeight = this.height - 62 - 8;
             var scale;
             if (usableWidth < usableHeight)
                 scale = usableWidth / Constants.MIN_SCENE_DIAMETER;

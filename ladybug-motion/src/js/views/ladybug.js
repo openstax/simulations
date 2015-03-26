@@ -106,6 +106,9 @@ define(function(require) {
         },
 
         dragStart: function(data) {
+            if (this.simulation.get('paused'))
+                return;
+            
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
 

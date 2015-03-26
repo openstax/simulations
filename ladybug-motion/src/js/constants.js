@@ -74,7 +74,7 @@ define(function (require) {
     var RemoteControlView = {};
 
     RemoteControlView.RIGHT = 20;
-    RemoteControlView.BOTTOM = 82;
+    RemoteControlView.BOTTOM = 62 + 8 + 20;
     RemoteControlView.TAB_BG_COLOR = '#fff';
     RemoteControlView.TAB_BG_ALPHA = 0.2;
     RemoteControlView.TAB_ACTIVE_BG_COLOR = '#fff';
