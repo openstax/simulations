@@ -8,6 +8,7 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var LadybugMotionSimulation = require('models/simulation');
+    var LadybugMover            = require('models/ladybug-mover');
     var LadybugMotionSceneView  = require('views/scene');
 
     var Constants = require('constants');
@@ -101,7 +102,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                motions: _.keys(LadybugMover.MOTION_TYPES)
             };
             this.$el.html(this.template(data));
 
