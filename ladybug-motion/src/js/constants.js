@@ -44,7 +44,7 @@ define(function (require) {
 
     var LadybugView = {};
 
-    LadybugView.WING_OPEN_VELOCITY = 4; // centimeters per second
+    LadybugView.WING_OPEN_VELOCITY = 2; // centimeters per second
 
     Constants.LadybugView = LadybugView;
 

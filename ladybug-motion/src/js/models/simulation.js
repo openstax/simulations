@@ -251,9 +251,9 @@ define(function (require, exports, module) {
          *   path entry out of it (attaching the current
          *   time) and then appends it to the pen path.
          */
-        recordCurrentPenPoint: function(time) {
+        recordCurrentPenPoint: function() {
             var pathEntry = penPathEntryPool.create();
-            pathEntry.time = time;
+            pathEntry.time = this.get('time');
             pathEntry.x = this.penPoint.x;
             pathEntry.y = this.penPoint.y;
             this.penPath.push(pathEntry);

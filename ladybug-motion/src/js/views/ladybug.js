@@ -65,7 +65,6 @@ define(function(require) {
             var ladybugOpenWings = Assets.createSprite(Assets.Images.LADYBUG_OPEN_WINGS);
             ladybugOpenWings.anchor.x = 0.5;
             ladybugOpenWings.anchor.y = 0.5;
-            ladybugOpenWings.visible = false;
 
             this.ladybug = new PIXI.DisplayObjectContainer();
             this.idleWings = new PIXI.DisplayObjectContainer();
@@ -136,8 +135,8 @@ define(function(require) {
 
         velocityChanged: function(model, velocity) {
             if (velocity.length() >= LadybugView.WING_OPEN_VELOCITY) {
-                this.idleWings.visible = false;
                 this.openWings.visible = true;
+                this.idleWings.visible = false;
             }
             else {
                 this.idleWings.visible = true;
