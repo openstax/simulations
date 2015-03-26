@@ -27,6 +27,10 @@ define(function(require) {
             else
                 throw 'PixiSceneView requires a simulation model to render.';
 
+            // Add a separate, disconnected element for hybrid views
+            this.$ui = $('<div class="scene-view-ui">');
+            this.ui = this.$ui[0];
+
             // Bind events
             $(window).bind('resize', $.proxy(this.windowResized, this));
         },
