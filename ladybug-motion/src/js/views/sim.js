@@ -36,7 +36,7 @@ define(function (require) {
          * Root element properties
          */
         tagName:   'section',
-        className: 'sim-view',
+        className: 'sim-view record-mode',
 
         /**
          * Template for rendering the basic scaffolding
@@ -47,7 +47,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'change #record-mode'   : 'recordModeClicked',
+            'change #playback-mode' : 'playbackModeClicked'
         },
 
         /**
@@ -155,6 +156,14 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        recordModeClicked: function() {
+            this.$el.addClass('record-mode');
+        },
+
+        playbackModeClicked: function() {
+            this.$el.removeClass('record-mode');
+        }
 
     });
 

@@ -33,19 +33,25 @@
             color: #fff;
         }
 
+        &.play-btn,
+        &.record-btn,
         &.pause-btn {
             display: none;
         }
 
+        .sim-view:not(.record-mode):not(.playing) &.play-btn {
+            display: inline-block;
+        }
+        .sim-view.record-mode:not(.playing) &.record-btn  {
+            display: inline-block;
+        }
         .sim-view.playing &.pause-btn {
             display: inline-block;
         }
-        .sim-view.playing &.play-btn {
-            display: none;
-        }
 
         &.play-btn,
-        &.pause-btn {
+        &.pause-btn,
+        &.record-btn {
             width: 42px;
             height: 42px;
             font-size: 16px;
