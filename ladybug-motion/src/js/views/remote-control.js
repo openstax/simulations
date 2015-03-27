@@ -9,6 +9,7 @@ define(function(require) {
     var DraggableArrowView = require('common/pixi/view/arrow-draggable');
 
     var Constants = require('constants');
+    var UpdateMode = Constants.UpdateMode;
     var TAB_BG_COLOR        = Colors.parseHex(Constants.RemoteControlView.TAB_BG_COLOR);
     var TAB_ACTIVE_BG_COLOR = Colors.parseHex(Constants.RemoteControlView.TAB_ACTIVE_BG_COLOR);
     var ARROW_AREA_COLOR    = Colors.parseHex(Constants.RemoteControlView.ARROW_AREA_COLOR);
@@ -151,8 +152,8 @@ define(function(require) {
                 var arrowModel = new DraggableArrowView.ArrowViewModel({
                     originX: 0,
                     originY: 0,
-                    targetX: 40,
-                    targetY: 40,
+                    targetX: 0,
+                    targetY: 0,
                     minLength: null
                 });
 
@@ -174,6 +175,8 @@ define(function(require) {
             this.repositionArrows();
 
             // Listen for position changes
+            this.listenTo(views[0], 'drag-head-start', this.positionDragStart);
+            this.listenTo(views[0], 'drag-head-end',   this.positionDragEnd);
             this.listenTo(models[0], 'change:targetX change:targetY', this.positionChanged);
             this.listenTo(models[1], 'change:targetX change:targetY', this.velocityChanged);
             this.listenTo(models[2], 'change:targetX change:targetY', this.accelerationChanged);
@@ -197,8 +200,8 @@ define(function(require) {
             if (!maintainTargetPosition) {
                 // Position
                 var bounds = this.simulation.getBounds();
-                var xPercent = this.model.get('x') / bounds.w;
-                var yPercent = this.model.get('y') / bounds.h;
+                var xPercent = this.model.get('position').x / bounds.w;
+                var yPercent = this.model.get('position').y / bounds.h;
                 var x = xPercent * (RemoteControlView.AREA_WIDTH);
                 var y = yPercent * (RemoteControlView.AREA_HEIGHT);
                 models[0].set('targetX', models[0].get('originX') + x);
@@ -253,33 +256,43 @@ define(function(require) {
             this.panels.getChildAt(index).visible = true;
         },
 
+        positionDragStart: function() {
+            this.simulation.startSampling();
+        },
+
+        positionDragEnd: function() {
+            this.simulation.stopSampling();
+        },
+
         positionChanged: function(arrowModel) {
+            this.simulation.set('updateMode', UpdateMode.POSITION);
+
             var dx = arrowModel.get('targetX') - arrowModel.get('originX');
             var dy = arrowModel.get('targetY') - arrowModel.get('originY');
 
-            var x = (dx / Constants.AREA_WIDTH)  * (this.simulation.getBounds().w);
-            var y = (dy / Constants.AREA_HEIGHT) * (this.simulation.getBounds().h);
+            var smallestDimensionValue = Math.min(this.simulation.getBounds().w, this.simulation.getBounds().h);
+            var x = (dx / RemoteControlView.AREA_WIDTH)  * smallestDimensionValue;
+            var y = (dy / RemoteControlView.AREA_HEIGHT) * smallestDimensionValue;
 
-            this.model.set('x', x);
-            this.model.set('y', y);
+            this.simulation.setSamplePoint(x, y);
         },
 
         velocityChanged: function(arrowModel) {
-            // I am purposely dividing by the height both times so it's a 1:1 ratio
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / Constants.AREA_WIDTH;
-            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / Constants.AREA_HEIGHT;
+            this.simulation.set('updateMode', UpdateMode.VELOCITY);
 
-            this.model.set('vx', xPercent * 8);
-            this.model.set('vy', yPercent * 8);
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
+            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
+
+            this.model.setVelocity(xPercent, yPercent);
         },
 
         accelerationChanged: function(arrowModel) {
-            // I am purposely dividing by the height both times so it's a 1:1 ratio
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / Constants.AREA_WIDTH;
-            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / Constants.AREA_HEIGHT;
+            this.simulation.set('updateMode', UpdateMode.ACCELERATION);
 
-            this.model.set('ax', xPercent * 2);
-            this.model.set('ay', yPercent * 2);
+            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
+            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
+
+            this.model.setAcceleration(xPercent, yPercent);
         }
 
     }, Constants.RemoteControlView);
