@@ -5,13 +5,15 @@ define(function (require, exports, module) {
     var _ = require('underscore');
     var Pool = require('object-pool');
 
-    var Simulation = require('common/simulation/simulation');
-    var MotionMath = require('common/math/motion');
-    var Vector2    = require('common/math/vector2');
-    var Rectangle  = require('common/math/rectangle');
+    var Simulation   = require('common/simulation/simulation');
+    var MotionMath   = require('common/math/motion');
+    var Vector2      = require('common/math/vector2');
+    var Rectangle    = require('common/math/rectangle');
+    var binarySearch = require('common/binarysearch/binarysearch');
 
     var Ladybug             = require('models/ladybug');
     var LadybugMover        = require('models/ladybug-mover');
+    var LadybugStateRecord  = require('models/ladybug-state-record');
     var SamplingMotionModel = require('models/sampling-motion-model');
 
     /**
@@ -31,6 +33,12 @@ define(function (require, exports, module) {
             point.time = 0;
             point.x = 0;
             point.y = 0;
+        }
+    });
+
+    var ladybugStateRecordPool = Pool({
+        init: function() {
+            return new LadybugStateRecord();
         }
     });
 
@@ -63,7 +71,7 @@ define(function (require, exports, module) {
             this.ladybugMover = new LadybugMover(this);
 
             // State history
-            this.modelHistory = [];
+            this.stateHistory = [];
 
             // For determining appropriate motion in motion presets
             this.bounds = new Rectangle();
@@ -117,15 +125,14 @@ define(function (require, exports, module) {
                 // Run update and then save state
                 this.ladybugMover.update(deltaTime);
 
+                this.recordCurrentPenPoint();
+                this.trimSampleHistory();
+
                 if (this.ladybugMover.isInManualMode())
                     this.updateManualMovement(deltaTime);
 
                 this.recordState();
                 this.set('furthestRecordedTime', time);
-
-                this.recordCurrentPenPoint();
-                this.trimSampleHistory();
-
             }
             else {
                 // We're playing back, so apply a saved state instead of updating
@@ -319,7 +326,7 @@ define(function (require, exports, module) {
          * Clears state and sample history.
          */
         clearHistory: function() {
-            this.modelHistory.slice(0, this.modelHistory.length);
+            this.stateHistory.slice(0, this.stateHistory.length);
             this.clearSampleHistory();
         },
 
@@ -331,33 +338,45 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Records the current state in the state history.
+         * Records the current state in the model history.
          */
         recordState: function() {
-            // TODO: this is TEMPORARY
-            this.modelHistory.push({
-                time: this.get('time'),
-                state: {
-                    position: {
-                        x: this.ladybug.get('position').x,
-                        y: this.ladybug.get('position').y
-                    },
-                    velocity: {
-                        x: this.ladybug.get('velocity').x,
-                        y: this.ladybug.get('velocity').y
-                    }
-                }
-            });
+            var stateRecord = ladybugStateRecordPool.create();
+            stateRecord.recordState(this.get('time'), this.ladybug);
+            this.stateHistory.push(stateRecord);
         },
 
         /**
          * Applies the appropriate saved state for this moment
          *   in history.
          */
-        applyPlaybackState: function() {},
+        applyPlaybackState: function() {
+            var stateRecord = this.findStateWithClosestTime(this.time);
+            if (stateRecord)
+                stateRecord.applyState(this.ladybug);
+        },
 
         /**
-         *
+         * Performs a binary search to find the state whose time
+         *   is closest to the specified time.
+         */
+        findStateWithClosestTime: function(time) {
+            var stateIndex = binarySearch.closest(this._historyTimes, time);
+            return this.stateHistory[stateIndex];
+        },
+
+        /**
+         * We need to set up some stuff before we can play back.
+         */
+        play: function() {
+            if (!this.get('recording'))
+                this.prepareForPlayback();
+
+            Simulation.prototype.play.apply(this);
+        },
+
+        /**
+         * Rewinds to the beginning.
          */
         rewind: function() {
             this.time = 0;
@@ -375,6 +394,27 @@ define(function (require, exports, module) {
         setTime: function(time) {
             this.time = time;
             this.set('time', time);
+
+            this.prepareForPlayback();
+        },
+
+        /**
+         * Called before switching to playback (non-recording) mode
+         *   to get ready to read stored states in order. It sorts
+         *   the array of historical states by time and then plucks
+         *   just the times out into a separate array for faster 
+         *   random access.
+         */
+        prepareForPlayback: function() {
+            // Sort the historical states by time ascending
+            _.sortBy(this.stateHistory, function(state) {
+                return state.time;
+            });
+
+            /* Store just the times in a parallel array so we
+             *   can do a binary search.
+             */
+            this._historyTimes = _.pluck(this.stateHistory, 'time');
         },
 
         /**
@@ -407,13 +447,13 @@ define(function (require, exports, module) {
             var xTimeSeries = this.xTimeSeries;
             var yTimeSeries = this.yTimeSeries;
 
-            var historySample = this.modelHistory.slice(this.modelHistory.length - Constants.ESTIMATION_SAMPLE_SIZE, this.modelHistory.length);
+            var historySample = this.stateHistory.slice(this.stateHistory.length - Constants.ESTIMATION_SAMPLE_SIZE, this.stateHistory.length);
             for (var i = 0; i < historySample.length; i++) {
                 xTimeSeries[i].time  = historySample[i].time;
-                xTimeSeries[i].value = historySample[i].state.position.x;
+                xTimeSeries[i].value = historySample[i].position.x;
 
                 yTimeSeries[i].time  = historySample[i].time;
-                yTimeSeries[i].value = historySample[i].state.position.y;
+                yTimeSeries[i].value = historySample[i].position.y;
             }
 
             var vx = MotionMath.estimateDerivative(xTimeSeries);
@@ -435,13 +475,13 @@ define(function (require, exports, module) {
             var xTimeSeries = this.xTimeSeries;
             var yTimeSeries = this.yTimeSeries;
 
-            var historySample = this.modelHistory.slice(this.modelHistory.length - Constants.ESTIMATION_SAMPLE_SIZE, this.modelHistory.length);
+            var historySample = this.stateHistory.slice(this.stateHistory.length - Constants.ESTIMATION_SAMPLE_SIZE, this.stateHistory.length);
             for (var i = 0; i < historySample.length; i++) {
                 xTimeSeries[i].time  = historySample[i].time;
-                xTimeSeries[i].value = historySample[i].state.velocity.x;
+                xTimeSeries[i].value = historySample[i].velocity.x;
 
                 yTimeSeries[i].time  = historySample[i].time;
-                yTimeSeries[i].value = historySample[i].state.velocity.y;
+                yTimeSeries[i].value = historySample[i].velocity.y;
             }
 
             var ax = MotionMath.estimateDerivative(xTimeSeries);

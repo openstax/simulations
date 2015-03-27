@@ -119,7 +119,7 @@ define(function(require) {
         drag: function(data) {
             if (this.dragging) {
                 var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
-
+                
                 var x = this.mvt.viewToModelX(local.x);
                 var y = this.mvt.viewToModelY(local.y);
 
