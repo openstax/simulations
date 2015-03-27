@@ -153,6 +153,10 @@ define(function(require) {
                 var percent = 1 - (this.model.get('time')  / this.model.get('furthestRecordedTime'));
                 this.$overwritten.css('width', (percent * 100) + '%');
             }
+        },
+
+        update: function() {
+            this.setInitialOverwrittenWidth();
         }
 
     });

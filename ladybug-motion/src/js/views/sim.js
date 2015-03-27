@@ -177,6 +177,7 @@ define(function (require) {
         rewind: function() {
             this.pause();
             this.simulation.rewind();
+            this.seekBarView.update();
         },
 
         /**
