@@ -368,6 +368,16 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Sets the sim time to the specified second and does
+         *   all necessary setup for seeking to that playback
+         *   time.
+         */
+        setTime: function(time) {
+            this.time = time;
+            this.set('time', time);
+        },
+
+        /**
          * Rotates the ladybug model to the estimated direction
          *   of motion only if it is moving.
          */

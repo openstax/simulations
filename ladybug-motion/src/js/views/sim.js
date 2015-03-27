@@ -153,6 +153,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.seekBarView.postRender();
         },
 
         /**

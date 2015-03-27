@@ -6,6 +6,8 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
 
+    var defineInputUpdateLocks = require('common/locks/define-locks');
+
     require('less!styles/seek-bar');
 
     var html = require('text!templates/seek-bar.html');
@@ -53,22 +55,47 @@ define(function(require) {
             this.resize();
         },
 
+        resize: function() {
+            this.barOffset = this.$el.offset();
+            this.barWidth = this.$el.width();
+            this.handleWidth = this.$handle.width();
+        },
+
         dragStart: function(event) {
             if (event.currentTarget === this.$('.seek-bar-handle')[0]) {
                 event.preventDefault();
-
-                this.dragging = true;
-
                 this.fixTouchEvents(event);
 
-                this.dragX = event.pageX;
-                this.dragY = event.pageY;
+                this.draggingOffsetX = event.pageX - this.$handle.offset().left - this.handleWidth / 2;
+
+                this.dragging = true;
             }
         },
 
-        drag: function(event) {},
+        drag: function(event) {
+            if (this.dragging) {
+                this.fixTouchEvents(event);
 
-        dragEnd: function(event) {},
+                // The x location of the handle relative to the seek bar
+                var x = event.pageX - this.barOffset.left - this.draggingOffsetX;
+
+                // Keep it within bounds
+                var progressWidth = this.$progress.width();
+                x = Math.max(0, Math.min(progressWidth, x));
+
+                this.inputLock(function() {
+                    var percent = x / this.barWidth;
+                    this.model.setTime(percent * this.model.get('maxRecordingTime'));
+                });
+
+                var percent = x / progressWidth;
+                this.$handle.css('left', (percent * 100) + '%');
+            }
+        },
+
+        dragEnd: function(event) {
+            this.dragging = false;
+        },
 
         fixTouchEvents: function(event) {
             if (event.pageX === undefined) {
@@ -95,6 +122,10 @@ define(function(require) {
         }
 
     });
+
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(SeekBarView);
 
     return SeekBarView;
 });
