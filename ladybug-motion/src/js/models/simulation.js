@@ -41,7 +41,10 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             updateMode: UpdateMode.POSITION,
-            recording: true
+            recording: true,
+
+            furthestRecordedTime: 0, // Seconds
+            maxRecordingTime:    20  // Seconds
         }),
         
         initialize: function(attributes, options) {
@@ -346,6 +349,12 @@ define(function (require, exports, module) {
                 }
             });
         },
+
+        /**
+         * Applies the appropriate saved state for this moment
+         *   in history.
+         */
+        applyPlaybackState: function() {},
 
         /**
          * Rotates the ladybug model to the estimated direction

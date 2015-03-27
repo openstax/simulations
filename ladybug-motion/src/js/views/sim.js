@@ -77,7 +77,8 @@ define(function (require) {
             this.initSceneView();
             this.initSeekBarView();
 
-            this.listenTo(this.simulation, 'change:paused',     this.pausedChanged);
+            this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
+            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
@@ -188,14 +189,28 @@ define(function (require) {
          * Sets sim to record mode
          */
         recordModeClicked: function() {
-            this.$el.addClass('record-mode');
+            this.simulation.set('recording', true);
         },
 
         /**
          * Sets sim to playback mode
          */
         playbackModeClicked: function() {
-            this.$el.removeClass('record-mode');
+            this.simulation.set('recording', false);
+        },
+
+        /**
+         * The simulation changed its recording state.
+         */
+        recordingChanged: function() {
+            if (this.simulation.get('recording')) {
+                this.$el.addClass('record-mode');
+                this.$('#record-mode').prop('checked', true);
+            }
+            else {
+                this.$el.removeClass('record-mode');
+                this.$('#playback-mode').prop('checked', true);
+            }
         },
 
         /**
