@@ -29,9 +29,10 @@ define(function(require) {
                 .bind('mousemove touchmove', _.bind(this.drag,    this))
                 .bind('mouseup touchend',    _.bind(this.dragEnd, this));
 
-            this.listenTo(this.model, 'change:time', this.timeChanged);
+            this.listenTo(this.model, 'change:time',                 this.timeChanged);
             this.listenTo(this.model, 'change:furthestRecordedTime', this.furthestRecordedTimeChanged);
-            this.listenTo(this.model, 'change:paused change:recording', this.determineHandleVisibility);
+            this.listenTo(this.model, 'change:paused',               this.pausedChanged);
+            this.listenTo(this.model, 'change:recording',            this.recordingChanged);
         },
 
         /**
@@ -41,6 +42,7 @@ define(function(require) {
             this.$el.html(html);
             this.$progress = this.$('.seek-bar-progress');
             this.$handle   = this.$('.seek-bar-handle');
+            this.$overwritten = this.$('.seek-bar-overwritten');
 
             this.determineHandleVisibility();
 
@@ -90,6 +92,9 @@ define(function(require) {
 
                 var percent = x / progressWidth;
                 this.$handle.css('left', (percent * 100) + '%');
+
+                var overwrittenWidth = progressWidth - x;
+                this.$overwritten.width(overwrittenWidth);
             }
         },
 
@@ -114,11 +119,40 @@ define(function(require) {
             this.$progress.css('width', (percent * 100) + '%');
         },
 
+        pausedChanged: function(simulation, paused) {
+            if (!paused)
+                this.$overwritten.width(0).hide();
+            else
+                this.setInitialOverwrittenWidth();
+
+            this.determineHandleVisibility();
+            this.determineOverwrittenVisibility();
+        },
+
+        recordingChanged: function(simulation, recording) {
+            this.determineHandleVisibility();
+            this.determineOverwrittenVisibility();
+        },
+
         determineHandleVisibility: function() {
             if (this.model.get('paused') || !this.model.get('recording'))
                 this.$handle.show();
             else
                 this.$handle.hide();
+        },
+
+        determineOverwrittenVisibility: function() {
+            if (this.model.get('paused') && this.model.get('recording'))
+                this.$overwritten.show();
+            else
+                this.$overwritten.hide();
+        },
+
+        setInitialOverwrittenWidth: function() {
+            if (this.model.get('time') < this.model.get('furthestRecordedTime')) {
+                var percent = 1 - (this.model.get('time')  / this.model.get('furthestRecordedTime'));
+                this.$overwritten.css('width', (percent * 100) + '%');
+            }
         }
 
     });
