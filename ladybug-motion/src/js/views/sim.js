@@ -158,7 +158,7 @@ define(function (require) {
         /**
          * Overrides so that we don't rerender on a reset.
          */
-        rerender: function(event) {
+        rerender: function() {
             this.sceneView.reset();
         },
 
@@ -166,8 +166,16 @@ define(function (require) {
          * Overrides to remove the confirmation dialog because it's
          *   not important in this sim.
          */
-        reset: function(event) {
+        reset: function() {
             this.resetSimulation();
+        },
+
+        /**
+         * Rewinds the simulation.
+         */
+        rewind: function() {
+            this.pause();
+            this.simulation.rewind();
         },
 
         /**

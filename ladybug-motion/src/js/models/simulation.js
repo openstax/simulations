@@ -357,6 +357,17 @@ define(function (require, exports, module) {
         applyPlaybackState: function() {},
 
         /**
+         *
+         */
+        rewind: function() {
+            this.time = 0;
+            this.set('time', 0);
+
+            if (this.get('recording'))
+                this.clearHistory();
+        },
+
+        /**
          * Rotates the ladybug model to the estimated direction
          *   of motion only if it is moving.
          */
