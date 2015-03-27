@@ -64,6 +64,10 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            // Don't let the user drag the seek bar while it's recording
+            if (!this.model.get('paused') && this.model.get('recording'))
+                return;
+
             event.preventDefault();
             this.fixTouchEvents(event);
 
