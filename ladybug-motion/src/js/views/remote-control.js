@@ -265,6 +265,7 @@ define(function(require) {
         },
 
         positionChanged: function(arrowModel) {
+            this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.POSITION);
 
             var dx = arrowModel.get('targetX') - arrowModel.get('originX');
@@ -278,6 +279,7 @@ define(function(require) {
         },
 
         velocityChanged: function(arrowModel) {
+            this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.VELOCITY);
 
             var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
@@ -287,6 +289,7 @@ define(function(require) {
         },
 
         accelerationChanged: function(arrowModel) {
+            this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.ACCELERATION);
 
             var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
