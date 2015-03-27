@@ -84,6 +84,8 @@ define(function (require, exports, module) {
             this.initEstimationObjects();
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.on('change:recording', this.recordingModeChanged);
         },
 
         /**
@@ -376,6 +378,16 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Overrides the default pause so we can prepare for
+         *   playback.
+         */
+        pause: function() {
+            Simulation.prototype.pause.apply(this);
+
+            this.prepareForPlayback();
+        },
+
+        /**
          * Rewinds to the beginning.
          */
         rewind: function() {
@@ -387,15 +399,25 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Sets the sim time to the specified second and does
-         *   all necessary setup for seeking to that playback
-         *   time.
+         * Sets the sim time to the specified second and applies
+         *   the current playback state so the user can see
+         *   what happened at that point in time.
          */
         setTime: function(time) {
             this.time = time;
             this.set('time', time);
 
-            this.prepareForPlayback();
+            this.applyPlaybackState();
+        },
+
+        /**
+         * We need to prepare for playback before we can re-apply
+         *   any saved states, so we need to catch those cases
+         *   when we are in danger of applying a state.
+         */
+        recordingModeChanged: function(simulation, recording) {
+            if (!recording)
+                this.prepareForPlayback();
         },
 
         /**
