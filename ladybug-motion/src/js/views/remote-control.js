@@ -4,6 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    var defineInputUpdateLocks = require('common/locks/define-locks');
+
     var HybridView         = require('common/pixi/view/hybrid');
     var Colors             = require('common/colors/colors');
     var DraggableArrowView = require('common/pixi/view/arrow-draggable');
@@ -40,6 +42,10 @@ define(function(require) {
             this.initGraphics();
 
             this.$el.html('<h2>Remote Control</h2>');
+
+            this.listenTo(this.model, 'change:position',     this.updatePositionArrow);
+            this.listenTo(this.model, 'change:velocity',     this.updateVelocityArrow);
+            this.listenTo(this.model, 'change:acceleration', this.updateAccelerationArrow);
         },
 
         initGraphics: function() {
@@ -52,6 +58,7 @@ define(function(require) {
         initTabbedPanels: function() {
             this.tabs = new PIXI.DisplayObjectContainer();
             this.panels = new PIXI.DisplayObjectContainer();
+            this.areaMask = new PIXI.Graphics();
 
             // Create the objects necessary for each tabbed panel
             for (var i = 0; i < RemoteControlView.TABS.length; i++) {
@@ -96,6 +103,7 @@ define(function(require) {
             
             this.displayObject.addChild(this.tabs);
             this.displayObject.addChild(this.panels);
+            this.displayObject.addChild(this.areaMask);
         },
 
         drawTabbedPanels: function() {
@@ -142,6 +150,13 @@ define(function(require) {
                 tab.label.x = -10;
                 tab.label.y = Math.round(th / 2) + 3;
             }
+            
+            this.areaMask.clear();
+            this.areaMask.x = -RemoteControlView.AREA_WIDTH  - RemoteControlView.PANEL_PADDING;
+            this.areaMask.y = -RemoteControlView.AREA_HEIGHT - RemoteControlView.PANEL_PADDING;
+            this.areaMask.beginFill(0, 1);
+            this.areaMask.drawRect(0, 0, aw, ah);
+            this.areaMask.endFill();
         },
 
         initArrows: function() {
@@ -163,6 +178,7 @@ define(function(require) {
                     bodyDraggingEnabled: false,
                     useDotWhenSmall: true
                 });
+                arrowView.displayObject.mask = this.areaMask;
                 this.panels.getChildAt(i).addChild(arrowView.displayObject);
 
                 models.push(arrowModel);
@@ -183,38 +199,56 @@ define(function(require) {
         },
 
         repositionArrows: function(maintainTargetPosition) {
-            var models = this.arrowModels;
+            this.updateLock(function() {
+                var models = this.arrowModels;
 
-            for (var i = 0; i < RemoteControlView.TABS.length; i++) {
-                var dx = models[i].get('targetX') - models[i].get('originX');
-                var dy = models[i].get('targetY') - models[i].get('originY');
-
-                models[i].set('originX', -RemoteControlView.PANEL_WIDTH  / 2);
-                models[i].set('originY', -RemoteControlView.PANEL_HEIGHT / 2);
-                if (maintainTargetPosition) {
-                    models[i].set('targetX', models[i].get('originX') + dx);
-                    models[i].set('targetY', models[i].get('originY') + dy);
+                // Make sure origins are at center
+                for (var i = 0; i < RemoteControlView.TABS.length; i++) {
+                    models[i].set('originX', -RemoteControlView.PANEL_WIDTH  / 2);
+                    models[i].set('originY', -RemoteControlView.PANEL_HEIGHT / 2);
                 }
-            }
+            });
 
-            if (!maintainTargetPosition) {
-                // Position
+            this.updatePositionArrow();
+            this.updateVelocityArrow();
+            this.updateAccelerationArrow();
+        },
+
+        updatePositionArrow: function() {
+            if (this.dragging)
+                return;
+
+            this.updateLock(function() {
                 var bounds = this.simulation.getBounds();
                 var xPercent = this.model.get('position').x / bounds.w;
                 var yPercent = this.model.get('position').y / bounds.h;
                 var x = xPercent * (RemoteControlView.AREA_WIDTH);
                 var y = yPercent * (RemoteControlView.AREA_HEIGHT);
-                models[0].set('targetX', models[0].get('originX') + x);
-                models[0].set('targetY', models[0].get('originY') + y);
+                this.arrowModels[0].set('targetX', this.arrowModels[0].get('originX') + x);
+                this.arrowModels[0].set('targetY', this.arrowModels[0].get('originY') + y);
+            });
+        },
 
-                // Velocity
-                models[1].set('targetX', models[1].get('originX'));
-                models[1].set('targetY', models[1].get('originY'));
+        updateVelocityArrow: function() {
+            this.updateLock(function() {
+                var xPercent = this.model.get('velocity').x;
+                var yPercent = this.model.get('velocity').y;
+                var x = xPercent * (RemoteControlView.AREA_WIDTH);
+                var y = yPercent * (RemoteControlView.AREA_HEIGHT);
+                this.arrowModels[1].set('targetX', this.arrowModels[1].get('originX') + x);
+                this.arrowModels[1].set('targetY', this.arrowModels[1].get('originY') + y);
+            });
+        },
 
-                // Acceleration
-                models[2].set('targetX', models[2].get('originX'));
-                models[2].set('targetY', models[2].get('originY'));
-            }
+        updateAccelerationArrow: function() {
+            this.updateLock(function() {
+                var xPercent = this.model.get('acceleration').x;
+                var yPercent = this.model.get('acceleration').y;
+                var x = xPercent * (RemoteControlView.AREA_WIDTH);
+                var y = yPercent * (RemoteControlView.AREA_HEIGHT);
+                this.arrowModels[2].set('targetX', this.arrowModels[2].get('originX') + x);
+                this.arrowModels[2].set('targetY', this.arrowModels[2].get('originY') + y);
+            });
         },
 
         reset: function() {
@@ -257,51 +291,62 @@ define(function(require) {
         },
 
         positionDragStart: function() {
+            this.dragging = true;
             this.simulation.startSampling();
         },
 
         positionDragEnd: function() {
             this.simulation.stopSampling();
+            this.dragging = false;
         },
 
         positionChanged: function(arrowModel) {
-            this.simulation.set('recording', true);
-            this.simulation.play();
-            this.simulation.set('updateMode', UpdateMode.POSITION);
+            this.inputLock(function() {
+                this.simulation.set('recording', true);
+                this.simulation.set('updateMode', UpdateMode.POSITION);
+                this.simulation.play();
 
-            var dx = arrowModel.get('targetX') - arrowModel.get('originX');
-            var dy = arrowModel.get('targetY') - arrowModel.get('originY');
+                var dx = arrowModel.get('targetX') - arrowModel.get('originX');
+                var dy = arrowModel.get('targetY') - arrowModel.get('originY');
 
-            var smallestDimensionValue = Math.min(this.simulation.getBounds().w, this.simulation.getBounds().h);
-            var x = (dx / RemoteControlView.AREA_WIDTH)  * smallestDimensionValue;
-            var y = (dy / RemoteControlView.AREA_HEIGHT) * smallestDimensionValue;
+                var smallestDimensionValue = Math.min(this.simulation.getBounds().w, this.simulation.getBounds().h);
+                var x = (dx / RemoteControlView.AREA_WIDTH)  * smallestDimensionValue;
+                var y = (dy / RemoteControlView.AREA_HEIGHT) * smallestDimensionValue;
 
-            this.simulation.setSamplePoint(x, y);
+                this.simulation.setSamplePoint(x, y);
+            });
+            
         },
 
         velocityChanged: function(arrowModel) {
-            this.simulation.set('recording', true);
-            this.simulation.play();
-            this.simulation.set('updateMode', UpdateMode.VELOCITY);
+            this.inputLock(function(){
+                this.simulation.set('recording', true);
+                this.simulation.set('updateMode', UpdateMode.VELOCITY);
+                this.simulation.play();
 
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
-            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
+                var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
+                var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
 
-            this.model.setVelocity(xPercent, yPercent);
+                this.model.setVelocity(xPercent, yPercent);   
+            });
         },
 
         accelerationChanged: function(arrowModel) {
-            this.simulation.set('recording', true);
-            this.simulation.play();
-            this.simulation.set('updateMode', UpdateMode.ACCELERATION);
+            this.inputLock(function(){
+                this.simulation.set('recording', true);
+                this.simulation.set('updateMode', UpdateMode.ACCELERATION);
+                this.simulation.play();
 
-            var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
-            var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
+                var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
+                var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
 
-            this.model.setAcceleration(xPercent, yPercent);
+                this.model.setAcceleration(xPercent, yPercent);
+            });
         }
 
     }, Constants.RemoteControlView);
+
+    defineInputUpdateLocks(RemoteControlView);
 
     return RemoteControlView;
 });
