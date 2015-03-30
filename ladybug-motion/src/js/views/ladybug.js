@@ -106,6 +106,8 @@ define(function(require) {
         },
 
         dragStart: function(data) {
+            this.simulation.startSampling();
+
             if (!this.simulation.get('recording'))
                 this.simulation.set('recording', true);
 
@@ -114,8 +116,6 @@ define(function(require) {
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
-
-            this.simulation.startSampling();
         },
 
         drag: function(data) {

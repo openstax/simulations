@@ -86,6 +86,7 @@ define(function (require, exports, module) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:recording', this.recordingModeChanged);
+            this.on('change:paused',    this.pausedChanged);
         },
 
         /**
@@ -248,6 +249,14 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Returns whether or not we're taking input samples
+         *   (penDown is true).
+         */
+        sampling: function() {
+            return this.penDown;
+        },
+
+        /**
          * Takes the current pen point, which is stored in
          *   the property this.penPoint, and creates a pen
          *   path entry out of it (attaching the current
@@ -323,6 +332,35 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Clears all history after a specified time.
+         */
+        clearHistoryAfter: function(time) {
+            var entries = [];
+            for (var i = 0; i < this.stateHistory.length; i++) {
+                if (this.stateHistory[i].time < time)
+                    entries.push(this.stateHistory[i]);
+            }
+            this.stateHistory = entries;
+
+            this._historyTimes = null;
+
+            this.set('furthestRecordedTime', time);
+
+            /* If we were previously dragging the position of the ladybug
+             *   and we seek to a certain position in history and want to
+             *   write over it and we start dragging again, it will think
+             *   we're starting at the last dragged position instead of
+             *   at the desired position in history if we fail to clear
+             *   the sampling data, and it looks very unnatural when that
+             *   happens.
+             */
+            if (this.penDown) {
+                this.clearSampleHistory();
+                this.resetSamplingMotionModel();
+            }
+        },
+
+        /**
          * Resets the sampling motion model.
          */
         resetSamplingMotionModel: function() {
@@ -358,23 +396,21 @@ define(function (require, exports, module) {
         },
 
         /**
-         * We need to set up some stuff before we can play back.
+         * Listens for changes in the paused state of the sim.
+         *   We need to set up some stuff before we can play back,
+         *   and when we start recording at a new position, we
+         *   need to make sure we clear history beyond that point.
          */
-        play: function() {
-            if (!this.get('recording'))
+        pausedChanged: function(simulation, paused) {
+            if (paused) {
                 this.prepareForPlayback();
-
-            Simulation.prototype.play.apply(this);
-        },
-
-        /**
-         * Overrides the default pause so we can prepare for
-         *   playback.
-         */
-        pause: function() {
-            Simulation.prototype.pause.apply(this);
-
-            this.prepareForPlayback();
+            }
+            else {
+                if (!this.get('recording'))
+                    this.prepareForPlayback();
+                else
+                    this.clearHistoryAfter(this.get('time'));
+            }
         },
 
         /**
