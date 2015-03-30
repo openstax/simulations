@@ -3,26 +3,11 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-    var Pool = require('object-pool');
 
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
 
-    var LadybugMover = require('models/ladybug-mover');
-
-    var Assets = require('assets');
-
     var Constants = require('constants');
-    var UpdateMode = Constants.UpdateMode;
-
-    /**
-     * Object pooling
-     */
-    var pointPool = Pool({
-        init: function() {
-            return new PIXI.Point();
-        }
-    });
 
     /**
      * A view that represents the player particle
@@ -41,35 +26,48 @@ define(function(require) {
             this.dotsMode = false;
             this.points = [];
 
-            // Add the first point
-            this.appendTracePoint();
-
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'history-changed', this.historyChanged);
         },
 
         initGraphics: function() {
             this.graphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.graphics);
 
             this.updateMVT(this.mvt);
         },
 
-        appendTracePoint: function() {
-            var point = pointPool.create();
-            point.x = this.mvt.modelToViewX(this.model.get('x'));
-            point.y = this.mvt.modelToViewY(this.model.get('y'));
-
-            this.points.push(point);
-        },
-
         drawPoints: function() {
-            this.lines.moveTo(this.previousPoint.x, this.previousPoint.y);
-            this.lines.lineTo(x, y);
+            var graphics = this.graphics;
+            var history = this.model.stateHistory;
+            var start = (history.length > LadybugTraceView.LENGTH) ? history.length - LadybugTraceView.LENGTH : 0;
+            var end = history.length - 1;
+            var point;
 
-            this.dots.beginFill(this.color, 1);
-            this.dots.drawCircle(this.previousPoint.x, this.previousPoint.y, this.lineWidth);
-            this.dots.endFill();
+            graphics.clear();
+            if (history.length > 0) {
+                if (this.dotsMode) {
+                    for (var i = start; i <= end; i++) {
+                        point = this.mvt.modelToView(history[i].position);
+
+                        graphics.beginFill(this.color, 1);
+                        graphics.drawCircle(point.x, point.y, this.lineWidth);
+                        graphics.endFill();
+                    }
+                }
+                else {
+                    point = this.mvt.modelToView(history[start].position);
+                    graphics.moveTo(point.x, point.y);
+                    graphics.lineStyle(this.lineWidth, this.color, 1);
+
+                    for (var i = start; i <= end; i++) {
+                        point = this.mvt.modelToView(history[i].position);
+
+                        graphics.lineTo(point.x, point.y);
+                    }
+                }
+            }
         },
 
         updateMVT: function(mvt) {
@@ -79,13 +77,11 @@ define(function(require) {
                 this.drawPoints();
         },
 
-        update: function(time, deltaTime, paused, recording) {
-            if (!paused && recording) {
-                this.appendTracePoint();
+        update: function(time, deltaTime, paused) {},
 
-                if (this.displayObject.visible)
-                    this.drawPoints();
-            }
+        historyChanged: function() {
+            if (this.displayObject.visible)
+                this.drawPoints();
         },
 
         showDots: function() {
@@ -105,10 +101,10 @@ define(function(require) {
         },
 
         clearTraces: function() {
-            
+
         }
 
-    });
+    }, Constants.LadybugTraceView);
 
     return LadybugTraceView;
 });

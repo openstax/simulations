@@ -348,6 +348,7 @@ define(function (require, exports, module) {
         clearHistory: function() {
             this.stateHistory.slice(0, this.stateHistory.length);
             this.clearSampleHistory();
+            this.trigger('history-changed');
         },
 
         /**
@@ -377,6 +378,8 @@ define(function (require, exports, module) {
                 this.clearSampleHistory();
                 this.resetSamplingMotionModel();
             }
+
+            this.trigger('history-changed');
         },
 
         /**
@@ -393,6 +396,7 @@ define(function (require, exports, module) {
             var stateRecord = ladybugStateRecordPool.create();
             stateRecord.recordState(this.get('time'), this.ladybug);
             this.stateHistory.push(stateRecord);
+            this.trigger('history-changed');
         },
 
         /**
