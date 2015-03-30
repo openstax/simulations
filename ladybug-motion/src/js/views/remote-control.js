@@ -303,6 +303,7 @@ define(function(require) {
         positionChanged: function(arrowModel) {
             this.inputLock(function() {
                 this.simulation.set('recording', true);
+                this.simulation.set('motionType', 'Manual');
                 this.simulation.set('updateMode', UpdateMode.POSITION);
                 this.simulation.play();
 
@@ -321,6 +322,7 @@ define(function(require) {
         velocityChanged: function(arrowModel) {
             this.inputLock(function(){
                 this.simulation.set('recording', true);
+                this.simulation.set('motionType', 'Manual');
                 this.simulation.set('updateMode', UpdateMode.VELOCITY);
                 this.simulation.play();
 
@@ -334,6 +336,7 @@ define(function(require) {
         accelerationChanged: function(arrowModel) {
             this.inputLock(function(){
                 this.simulation.set('recording', true);
+                this.simulation.set('motionType', 'Manual');
                 this.simulation.set('updateMode', UpdateMode.ACCELERATION);
                 this.simulation.play();
 
