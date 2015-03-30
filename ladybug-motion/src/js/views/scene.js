@@ -9,7 +9,8 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var LadybugView = require('views/ladybug');
+    var LadybugView       = require('views/ladybug');
+    var RemoteControlView = require('views/remote-control');
 
     var Assets = require('assets');
 
@@ -41,18 +42,21 @@ define(function(require) {
 
             this.initMVT();
             this.initLadybugView();
+            this.initRemoteControlView();
         },
 
         initMVT: function() {
             // Use whichever dimension is smaller
+            var usableWidth = this.width - RemoteControlView.PANEL_WIDTH - RemoteControlView.RIGHT;
+            var usableHeight = this.height - 62 - 8;
             var scale;
-            if (this.width < this.height)
-                scale = this.width / Constants.MIN_SCENE_DIAMETER;
+            if (usableWidth < usableHeight)
+                scale = usableWidth / Constants.MIN_SCENE_DIAMETER;
             else
-                scale = this.height / Constants.MIN_SCENE_DIAMETER;
+                scale = usableHeight / Constants.MIN_SCENE_DIAMETER;
 
-            this.viewOriginX = Math.round(this.width / 2);  // Center
-            this.viewOriginY = Math.round(this.height / 2); // Center
+            this.viewOriginX = Math.round(usableWidth / 2); // Center
+            this.viewOriginY = Math.round(usableHeight / 2); // Center
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
@@ -63,8 +67,8 @@ define(function(require) {
             this.simulation.setBounds(
                 this.mvt.viewToModelX(0), 
                 this.mvt.viewToModelY(0), 
-                this.mvt.viewToModelX(this.width), 
-                this.mvt.viewToModelY(this.height)
+                this.mvt.viewToModelX(usableWidth), 
+                this.mvt.viewToModelY(usableHeight)
             );
         },
 
@@ -76,6 +80,20 @@ define(function(require) {
             });
             this.stage.addChild(this.ladybugView.displayObject);
             this.$ui.append(this.ladybugView.el);
+        },
+
+        initRemoteControlView: function() {
+            this.remoteControlView = new RemoteControlView({
+                model: this.simulation.ladybug,
+                simulation: this.simulation
+            });
+            this.remoteControlView.displayObject.x = this.width  - RemoteControlView.RIGHT;
+            this.remoteControlView.displayObject.y = this.height - RemoteControlView.BOTTOM;
+            this.stage.addChild(this.remoteControlView.displayObject);
+            this.$ui.append(this.remoteControlView.el);
+            this.remoteControlView.$el.css({
+                'top': (this.height - RemoteControlView.BOTTOM - RemoteControlView.PANEL_HEIGHT) + 'px'
+            });
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

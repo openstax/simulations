@@ -41,7 +41,10 @@ define(function (require, exports, module) {
 
         defaults: _.extend(Simulation.prototype.defaults, {
             updateMode: UpdateMode.POSITION,
-            recording: true
+            recording: true,
+
+            furthestRecordedTime: 0, // Seconds
+            maxRecordingTime:    20  // Seconds
         }),
         
         initialize: function(attributes, options) {
@@ -345,6 +348,33 @@ define(function (require, exports, module) {
                     }
                 }
             });
+        },
+
+        /**
+         * Applies the appropriate saved state for this moment
+         *   in history.
+         */
+        applyPlaybackState: function() {},
+
+        /**
+         *
+         */
+        rewind: function() {
+            this.time = 0;
+            this.set('time', 0);
+
+            if (this.get('recording'))
+                this.clearHistory();
+        },
+
+        /**
+         * Sets the sim time to the specified second and does
+         *   all necessary setup for seeking to that playback
+         *   time.
+         */
+        setTime: function(time) {
+            this.time = time;
+            this.set('time', time);
         },
 
         /**

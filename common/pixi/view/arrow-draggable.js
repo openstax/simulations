@@ -114,6 +114,8 @@ define(function(require) {
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.draggingBody = true;
+
+            this.trigger('drag-body-start');
         },
 
         dragBody: function(data) {
@@ -143,6 +145,7 @@ define(function(require) {
             this.draggingBody = false;
             this.setNormalFill();
             this.drawArrow();
+            this.trigger('drag-body-end');
         },
 
         dragHeadStart: function(data) {
@@ -158,6 +161,8 @@ define(function(require) {
 
             this.dragOffset = pointRelativeToArrowTip;
             this.draggingHead = true;
+
+            this.trigger('drag-head-start');
         },
 
         dragHead: function(data) {
@@ -214,6 +219,8 @@ define(function(require) {
             if (this.useDotWhenSmall && this.smallDotEnabled) {
                 this.smallDot.visible = true;
             }
+
+            this.trigger('drag-head-end');
         },
 
         setDraggingFill: function() {

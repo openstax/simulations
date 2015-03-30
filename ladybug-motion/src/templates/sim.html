@@ -1,2 +1,48 @@
 
 <span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-column">
+    <div class="sim-controls">
+        <h2>Vectors</h2>
+
+        <ul class="checkbox">
+            <li>
+                <input type="checkbox" id="show-velocity-check" checked="checked">
+                <label for="show-velocity-check">Show Velocity</label>
+            </li>
+            <li>
+                <input type="checkbox" id="show-acceleration-check" checked="checked">
+                <label for="show-acceleration-check">Show Acceleration</label>
+            </li>
+        </ul>
+
+        <h2>Motion</h2>
+
+        <ul class="radio">
+        <% _.each(motions, function(option, index){ %>
+            <li>
+                <input type="radio" name="motion" value="<%= option %>" id="motion-<%= index %>" <% if (index === 0) { %>checked<% } %>>
+                <label  for="motion-<%= index %>"><%= option %></label>
+            </li>
+        <% }); %>
+        </ul>
+
+        <h2>Trace</h2>
+
+        <ul class="radio">
+            <li>
+                <input type="radio" name="trace" value="line" id="trace-line" checked>
+                <label for="trace-line">Line</label>
+            </li>
+            <li>
+                <input type="radio" name="trace" value="dots" id="trace-dots">
+                <label for="trace-dots">Dots</label>
+            </li>
+            <li>
+                <input type="radio" name="trace" value="off" id="trace-off">
+                <label for="trace-off">Off</label>
+            </li>
+        </ul>
+        
+    </div>
+</div>

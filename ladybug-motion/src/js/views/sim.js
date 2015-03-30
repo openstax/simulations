@@ -8,7 +8,10 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var LadybugMotionSimulation = require('models/simulation');
-    var LadybugMotionSceneView  = require('views/scene');
+    var LadybugMover            = require('models/ladybug-mover');
+
+    var LadybugMotionSceneView = require('views/scene');
+    var SeekBarView            = require('views/seek-bar');
 
     var Constants = require('constants');
 
@@ -18,12 +21,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!templates/sim.html');
+    var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
      * A view that determines the contents of the one and only tab
@@ -34,7 +39,7 @@ define(function (require) {
          * Root element properties
          */
         tagName:   'section',
-        className: 'sim-view',
+        className: 'sim-view record-mode',
 
         /**
          * Template for rendering the basic scaffolding
@@ -45,7 +50,15 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .record-btn' : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            'click .rewind-btn' : 'rewind',
+            'click .reset-btn'  : 'reset',
 
+            'change #record-mode'   : 'recordModeClicked',
+            'change #playback-mode' : 'playbackModeClicked'
         },
 
         /**
@@ -62,6 +75,11 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initSeekBarView();
+
+            this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
+            this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -80,6 +98,12 @@ define(function (require) {
             });
         },
 
+        initSeekBarView: function() {
+            this.seekBarView = new SeekBarView({
+                model: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -88,6 +112,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderSeekBarView();
 
             return this;
         },
@@ -98,9 +123,13 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                motions: _.keys(LadybugMover.MOTION_TYPES)
             };
             this.$el.html(this.template(data));
+
+            this.$el.append(playbackControlsHtml);
+
             this.$('select').selectpicker();
         },
 
@@ -113,18 +142,24 @@ define(function (require) {
             this.$el.append(this.sceneView.ui);
         },
 
+        renderSeekBarView: function() {
+            this.seekBarView.render();
+            this.$('.playback-controls-wrapper').append(this.seekBarView.el);
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.seekBarView.postRender();
         },
 
         /**
          * Overrides so that we don't rerender on a reset.
          */
-        rerender: function(event) {
+        rerender: function() {
             this.sceneView.reset();
         },
 
@@ -132,8 +167,17 @@ define(function (require) {
          * Overrides to remove the confirmation dialog because it's
          *   not important in this sim.
          */
-        reset: function(event) {
+        reset: function() {
             this.resetSimulation();
+        },
+
+        /**
+         * Rewinds the simulation.
+         */
+        rewind: function() {
+            this.pause();
+            this.simulation.rewind();
+            this.seekBarView.update();
         },
 
         /**
@@ -149,6 +193,44 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        /**
+         * Sets sim to record mode
+         */
+        recordModeClicked: function() {
+            this.simulation.set('recording', true);
+        },
+
+        /**
+         * Sets sim to playback mode
+         */
+        playbackModeClicked: function() {
+            this.simulation.set('recording', false);
+        },
+
+        /**
+         * The simulation changed its recording state.
+         */
+        recordingChanged: function() {
+            if (this.simulation.get('recording')) {
+                this.$el.addClass('record-mode');
+                this.$('#record-mode').prop('checked', true);
+            }
+            else {
+                this.$el.removeClass('record-mode');
+                this.$('#playback-mode').prop('checked', true);
+            }
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
         },
 
     });
