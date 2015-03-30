@@ -180,35 +180,25 @@ define(function (require, exports, module) {
          *   time (time between steps).
          */
         updatePositionMode: function(deltaTime) {
-            if (!this.penDown) {
-                this.updateVelocityMode(deltaTime);
-                if (this.penPath.length > 2) {
-                    this.penPoint = this.ladybug.get('position');
-                    this.recordCurrentPenPoint();
-                    this.samplingMotionModel.addPointAndUpdate(this.getLastSamplePoint());
-                }
+            if (this.penPath.length > 2) {
+                this.samplingMotionModel.addPointAndUpdate(this.getLastSamplePoint());
+                this.ladybug.setPosition(this.samplingMotionModel.getAverageMid());
+
+                // PhET: added fudge factors for getting the scale right with 
+                //   current settings of [samplingMotionModel and] used 
+                //   spreadsheet to make sure model v and a are approximately 
+                //   correct.
+                var vscale = (1 / deltaTime) / 10;
+                var ascale = vscale * vscale * 3.835;
+                this.ladybug.setVelocity(this.samplingMotionModel.getVelocity().scale(vscale));
+                this.ladybug.setAcceleration(this.samplingMotionModel.getAcceleration().scale(ascale));
             }
             else {
-                if (this.penPath.length > 2) {
-                    this.samplingMotionModel.addPointAndUpdate(this.getLastSamplePoint());
-                    this.ladybug.setPosition(this.samplingMotionModel.getAverageMid());
-
-                    // PhET: added fudge factors for getting the scale right with 
-                    //   current settings of [samplingMotionModel and] used 
-                    //   spreadsheet to make sure model v and a are approximately 
-                    //   correct.
-                    var vscale = (1 / deltaTime) / 10;
-                    var ascale = vscale * vscale * 3.835;
-                    this.ladybug.setVelocity(this.samplingMotionModel.getVelocity().scale(vscale));
-                    this.ladybug.setAcceleration(this.samplingMotionModel.getAcceleration().scale(ascale));
-                }
-                else {
-                    this.ladybug.setVelocity(0, 0);
-                    this.ladybug.setAcceleration(0, 0);
-                }
-
-                this.pointInDirectionOfMotion();
+                this.ladybug.setVelocity(0, 0);
+                this.ladybug.setAcceleration(0, 0);
             }
+
+            this.pointInDirectionOfMotion();
         },
 
         /**
