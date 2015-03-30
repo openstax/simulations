@@ -9,6 +9,7 @@ define(function(require) {
     var Assets = require('assets');
 
     var Constants = require('constants');
+    var UpdateMode = Constants.UpdateMode;
 
     /**
      * A view that represents the player particle
@@ -113,6 +114,8 @@ define(function(require) {
 
             if (this.simulation.get('paused'))
                 this.simulation.play();
+
+            this.simulation.set('updateMode', UpdateMode.POSITION);
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;

@@ -303,8 +303,8 @@ define(function(require) {
         positionChanged: function(arrowModel) {
             this.inputLock(function() {
                 this.simulation.set('recording', true);
-                this.simulation.play();
                 this.simulation.set('updateMode', UpdateMode.POSITION);
+                this.simulation.play();
 
                 var dx = arrowModel.get('targetX') - arrowModel.get('originX');
                 var dy = arrowModel.get('targetY') - arrowModel.get('originY');
@@ -321,8 +321,8 @@ define(function(require) {
         velocityChanged: function(arrowModel) {
             this.inputLock(function(){
                 this.simulation.set('recording', true);
-                this.simulation.play();
                 this.simulation.set('updateMode', UpdateMode.VELOCITY);
+                this.simulation.play();
 
                 var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
                 var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;
@@ -334,8 +334,8 @@ define(function(require) {
         accelerationChanged: function(arrowModel) {
             this.inputLock(function(){
                 this.simulation.set('recording', true);
-                this.simulation.play();
                 this.simulation.set('updateMode', UpdateMode.ACCELERATION);
+                this.simulation.play();
 
                 var xPercent = (arrowModel.get('targetX') - arrowModel.get('originX')) / RemoteControlView.AREA_WIDTH;
                 var yPercent = (arrowModel.get('targetY') - arrowModel.get('originY')) / RemoteControlView.AREA_HEIGHT;

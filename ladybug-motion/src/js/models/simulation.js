@@ -85,8 +85,9 @@ define(function (require, exports, module) {
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:recording', this.recordingModeChanged);
-            this.on('change:paused',    this.pausedChanged);
+            this.on('change:recording',  this.recordingModeChanged);
+            this.on('change:paused',     this.pausedChanged);
+            this.on('change:updateMode', this.updateModeChanged);
         },
 
         /**
@@ -434,6 +435,13 @@ define(function (require, exports, module) {
             this.set('time', time);
 
             this.applyPlaybackState();
+        },
+
+        updateModeChanged: function(simulation, updateMode) {
+            if (updateMode === UpdateMode.POSITION) {
+                this.clearSampleHistory();
+                this.resetSamplingMotionModel();
+            }
         },
 
         /**
