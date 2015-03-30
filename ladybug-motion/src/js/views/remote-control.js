@@ -265,6 +265,7 @@ define(function(require) {
         },
 
         positionChanged: function(arrowModel) {
+            this.simulation.set('recording', true);
             this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.POSITION);
 
@@ -279,6 +280,7 @@ define(function(require) {
         },
 
         velocityChanged: function(arrowModel) {
+            this.simulation.set('recording', true);
             this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.VELOCITY);
 
@@ -289,6 +291,7 @@ define(function(require) {
         },
 
         accelerationChanged: function(arrowModel) {
+            this.simulation.set('recording', true);
             this.simulation.play();
             this.simulation.set('updateMode', UpdateMode.ACCELERATION);
 
