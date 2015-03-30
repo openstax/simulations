@@ -61,7 +61,7 @@ define(function (require) {
 
     LadybugMover.MOTION_TYPE_LINEAR = {
 
-        speed: 0.3 * 30 * 0.7 * 0.5,
+        speed: LadybugMover.LINEAR_SPEED,
 
         init: function(simulation) {
             var velocity = Vector2
@@ -135,30 +135,31 @@ define(function (require) {
             var speed = LadybugMover.CIRCLE_SPEED;
             var velocity;
 
-            if (distanceFromRing > speed + 1E-6) {
+            if (distanceFromRing > speed+ 1E-6) {
                 // We need to move toward the ring
                 var velocity = this._vel
-                    .set(1, 0)
+                    .set(speed, 0)
                     .rotate(ladybug.get('position').angle())
-                    .scale(this.speed)
                     .scale((dx < 0) ? -1 : 1);
 
-                simulation.penDown = true;
+                simulation.startSampling();
                 simulation.setSamplePoint(
-                    ladybug.get('position').x + velocity.x * deltaTime,
-                    ladybug.get('position').y + velocity.y * deltaTime
+                    ladybug.get('position').x + velocity.x / deltaTime,
+                    ladybug.get('position').y + velocity.y / deltaTime
                 );
                 simulation.updatePositionMode(deltaTime);
             }
             else {
                 // We are on the ring
                 var angle = ladybug.get('position').angle();
-                var r = distanceFromCenter;
+                var r = LadybugMover.CIRCLE_RADIUS;
 
                 // Approximate a delta theta
-                var deltaTheta = Math.PI / 64 * 1.3 * deltaTime * 30 * 0.7 * 2 * 0.85 * 0.5;
+                var deltaTheta = -Math.PI / 64 * 1.3 * deltaTime * 30 * 0.7 * 2 * 0.85 * 0.4;
                 var n = Math.floor(Math.PI * 2 / deltaTheta); // n * deltaTheta = 2 * PI
-                var newAngle = angle + (2 * PI) / n;
+                var newAngle = angle + (2 * Math.PI) / n;
+
+                simulation.stopSampling();
 
                 var position = this._pos
                     .set(1, 0)
@@ -202,7 +203,7 @@ define(function (require) {
             var a = LadybugMover.ELLIPSE_A;
             var b = LadybugMover.ELLIPSE_B;
 
-            var n = 79 * deltaTime / 0.015 * 0.7 * 2;
+            var n = 79 * deltaTime / 0.015 * 0.7 * 5;
             this.time += 2 * Math.PI / Math.floor(n);
             var t = this.time;
 

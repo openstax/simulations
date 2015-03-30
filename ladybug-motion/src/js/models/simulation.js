@@ -48,6 +48,7 @@ define(function (require, exports, module) {
     var LadybugMotionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
+            motionType: LadybugMover.MOTION_TYPES['Manual'],
             updateMode: UpdateMode.POSITION,
             recording: true,
 
@@ -88,6 +89,7 @@ define(function (require, exports, module) {
             this.on('change:recording',  this.recordingModeChanged);
             this.on('change:paused',     this.pausedChanged);
             this.on('change:updateMode', this.updateModeChanged);
+            this.on('change:motionType', this.motionTypeChanged);
         },
 
         /**
@@ -231,6 +233,22 @@ define(function (require, exports, module) {
             this.ladybug.updatePositionFromVelocity(deltaTime);
             this.ladybug.updateVelocity(deltaTime);
             this.pointInDirectionOfMotion();
+        },
+
+        /**
+         * Sets the motion type on the ladybug mover
+         */
+        motionTypeChanged: function(simulation, motionTypeKey) {
+            this.ladybugMover.setMotionType(LadybugMover.MOTION_TYPES[motionTypeKey]);
+        },
+
+        /**
+         * Called when we're entering manual mode and just
+         *   came from one of the automated motion types.
+         */
+        initManual: function() {
+            this.resetSamplingMotionModel();
+            this.clearSampleHistory();
         },
 
         /**
