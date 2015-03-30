@@ -79,6 +79,7 @@ define(function (require) {
             this.initSceneView();
             this.initSeekBarView();
 
+            this.listenTo(this.simulation, 'change:motionType', this.motionTypeChanged);
             this.listenTo(this.simulation, 'change:recording', this.recordingChanged);
             this.listenTo(this.simulation, 'change:paused',    this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
@@ -222,17 +223,13 @@ define(function (require) {
             if (this.simulation.get('recording')) {
                 this.$el.addClass('record-mode');
                 this.updateLock(function() {
-                    this.$('#record-mode').prop('checked', true);
-                    this.$('#record-mode').parent().addClass('active');
-                    this.$('#playback-mode').parent().removeClass('active');
+                    this.$('#record-mode').click();
                 });
             }
             else {
                 this.$el.removeClass('record-mode');
                 this.updateLock(function() {
-                    this.$('#playback-mode').prop('checked', true);
-                    this.$('#playback-mode').parent().addClass('active');
-                    this.$('#record-mode').parent().removeClass('active');
+                    this.$('#playback-mode').click();
                 });
             }
         },
@@ -247,9 +244,26 @@ define(function (require) {
                 this.$el.addClass('playing');
         },
 
+        /**
+         * Sets the simulation's automated motion type
+         */
         motionTypeClicked: function(event) {
             var key = $(event.target).val();
-            this.simulation.setMotionType(key);
+            this.inputLock(function() {
+                this.simulation.set('motionType', key);
+            });
+        },
+
+        /**
+         * Responds to changes in simulation's automated motion type
+         */
+        motionTypeChanged: function(simulation, motionTypeKey) {
+            this.updateLock(function() {
+                this.$('.motion-type').each(function() {
+                    if ($(this).val() === motionTypeKey)
+                        $(this).click();
+                })
+            });
         }
 
     });

@@ -48,6 +48,7 @@ define(function (require, exports, module) {
     var LadybugMotionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
+            motionType: LadybugMover.MOTION_TYPES['Manual'],
             updateMode: UpdateMode.POSITION,
             recording: true,
 
@@ -88,6 +89,7 @@ define(function (require, exports, module) {
             this.on('change:recording',  this.recordingModeChanged);
             this.on('change:paused',     this.pausedChanged);
             this.on('change:updateMode', this.updateModeChanged);
+            this.on('change:motionType', this.motionTypeChanged);
         },
 
         /**
@@ -236,7 +238,7 @@ define(function (require, exports, module) {
         /**
          * Sets the motion type on the ladybug mover
          */
-        setMotionType: function(motionTypeKey) {
+        motionTypeChanged: function(simulation, motionTypeKey) {
             this.ladybugMover.setMotionType(LadybugMover.MOTION_TYPES[motionTypeKey]);
         },
 

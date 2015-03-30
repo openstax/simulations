@@ -6,6 +6,8 @@ define(function(require) {
 
     var HybridView  = require('common/pixi/view/hybrid');
 
+    var LadybugMover = require('models/ladybug-mover');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -116,6 +118,7 @@ define(function(require) {
             if (this.simulation.get('paused'))
                 this.simulation.play();
 
+            this.simulation.set('motionType', 'Manual');
             this.simulation.set('updateMode', UpdateMode.POSITION);
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
