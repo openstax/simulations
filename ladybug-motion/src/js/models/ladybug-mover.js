@@ -61,7 +61,7 @@ define(function (require) {
 
     LadybugMover.MOTION_TYPE_LINEAR = {
 
-        speed: 0.3 * 30 * 0.7 * 0.5,
+        speed: LadybugMover.LINEAR_SPEED,
 
         init: function(simulation) {
             var velocity = Vector2

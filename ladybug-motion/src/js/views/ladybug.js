@@ -80,6 +80,7 @@ define(function(require) {
             this.displayObject.addChild(this.ladybug);
 
             this.updateMVT(this.mvt);
+            this.angleChanged(this.model, this.model.get('angle'));
         },
 
         updatePosition: function(model, position) {

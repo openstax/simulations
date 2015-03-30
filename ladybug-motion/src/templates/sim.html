@@ -21,7 +21,7 @@
         <ul class="radio">
         <% _.each(motions, function(option, index){ %>
             <li>
-                <input type="radio" name="motion" value="<%= option %>" id="motion-<%= index %>" <% if (index === 0) { %>checked<% } %>>
+                <input type="radio" name="motion" value="<%= option %>" class="motion-type" id="motion-<%= index %>" <% if (index === 0) { %>checked<% } %>>
                 <label  for="motion-<%= index %>"><%= option %></label>
             </li>
         <% }); %>

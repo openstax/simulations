@@ -37,6 +37,10 @@ define(function (require) {
                 this.get('width'),
                 this.get('length')
             );
+        },
+
+        pointInDirectionOfMotion: function() {
+            this.set('angle', this.get('velocity').angle());
         }
 
     }, Constants.Ladybug);

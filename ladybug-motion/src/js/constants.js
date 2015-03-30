@@ -57,10 +57,11 @@ define(function (require) {
 
     var LadybugMover = {};
 
+    LadybugMover.LINEAR_SPEED = 0.8; // centimeters per second
     LadybugMover.CIRCLE_RADIUS = 4; // centimeters
     LadybugMover.CIRCLE_SPEED = 0.12 * 0.7; // centimeters per second
-    LadybugMover.ELLIPSE_A = 3; // centimeters
-    LadybugMover.ELLIPSE_B = 5; // centimeters
+    LadybugMover.ELLIPSE_A = 2; // centimeters
+    LadybugMover.ELLIPSE_B = 1.4; // centimeters
 
     Constants.LadybugMover = LadybugMover;
 

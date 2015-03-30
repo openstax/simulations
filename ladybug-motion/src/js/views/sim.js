@@ -58,7 +58,9 @@ define(function (require) {
             'click .reset-btn'  : 'reset',
 
             'change #record-mode'   : 'recordModeClicked',
-            'change #playback-mode' : 'playbackModeClicked'
+            'change #playback-mode' : 'playbackModeClicked',
+
+            'click .motion-type' : 'motionTypeClicked'
         },
 
         /**
@@ -244,6 +246,11 @@ define(function (require) {
             else
                 this.$el.addClass('playing');
         },
+
+        motionTypeClicked: function(event) {
+            var key = $(event.target).val();
+            this.simulation.setMotionType(key);
+        }
 
     });
 

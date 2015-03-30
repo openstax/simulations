@@ -234,6 +234,22 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Sets the motion type on the ladybug mover
+         */
+        setMotionType: function(motionTypeKey) {
+            this.ladybugMover.setMotionType(LadybugMover.MOTION_TYPES[motionTypeKey]);
+        },
+
+        /**
+         * Called when we're entering manual mode and just
+         *   came from one of the automated motion types.
+         */
+        initManual: function() {
+            this.resetSamplingMotionModel();
+            this.clearSampleHistory();
+        },
+
+        /**
          * Called when we're starting to add sample points.
          *   Sets penDown to true.
          */
