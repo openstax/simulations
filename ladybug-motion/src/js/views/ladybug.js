@@ -106,9 +106,11 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            // TODO: make drag start set the sim to record mode and unpause it
+            if (!this.simulation.get('recording'))
+                this.simulation.set('recording', true);
+
             if (this.simulation.get('paused'))
-                return;
+                this.simulation.play();
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
@@ -119,7 +121,7 @@ define(function(require) {
         drag: function(data) {
             if (this.dragging) {
                 var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
-
+                
                 var x = this.mvt.viewToModelX(local.x);
                 var y = this.mvt.viewToModelY(local.y);
 

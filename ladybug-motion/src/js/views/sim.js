@@ -199,14 +199,18 @@ define(function (require) {
          * Sets sim to record mode
          */
         recordModeClicked: function() {
-            this.simulation.set('recording', true);
+            this.inputLock(function() {
+                this.simulation.set('recording', true);
+            });
         },
 
         /**
          * Sets sim to playback mode
          */
         playbackModeClicked: function() {
-            this.simulation.set('recording', false);
+            this.inputLock(function() {
+                this.simulation.set('recording', false);
+            });
         },
 
         /**
@@ -215,11 +219,19 @@ define(function (require) {
         recordingChanged: function() {
             if (this.simulation.get('recording')) {
                 this.$el.addClass('record-mode');
-                this.$('#record-mode').prop('checked', true);
+                this.updateLock(function() {
+                    this.$('#record-mode').prop('checked', true);
+                    this.$('#record-mode').parent().addClass('active');
+                    this.$('#playback-mode').parent().removeClass('active');
+                });
             }
             else {
                 this.$el.removeClass('record-mode');
-                this.$('#playback-mode').prop('checked', true);
+                this.updateLock(function() {
+                    this.$('#playback-mode').prop('checked', true);
+                    this.$('#playback-mode').parent().addClass('active');
+                    this.$('#record-mode').parent().removeClass('active');
+                });
             }
         },
 

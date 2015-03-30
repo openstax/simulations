@@ -20,8 +20,8 @@ define(function(require) {
         className: 'seek-bar-view',
 
         events: {
-            'mousedown  .seek-bar-handle' : 'dragStart',
-            'touchstart .seek-bar-handle' : 'dragStart'
+            'mousedown' : 'dragStart',
+            'touchstart' : 'dragStart',
         },
 
         initialize: function(options) {
@@ -64,13 +64,25 @@ define(function(require) {
         },
 
         dragStart: function(event) {
-            if (event.currentTarget === this.$('.seek-bar-handle')[0]) {
-                event.preventDefault();
-                this.fixTouchEvents(event);
+            // Don't let the user drag the seek bar while it's recording
+            if (!this.model.get('paused') && this.model.get('recording'))
+                return;
 
+            event.preventDefault();
+            this.fixTouchEvents(event);
+
+            if (event.currentTarget === this.$handle[0]) {
                 this.draggingOffsetX = event.pageX - this.$handle.offset().left - this.handleWidth / 2;
 
                 this.dragging = true;
+            }
+            else {
+                // They just clicked somewhere on the bar, so move the slider
+                this.draggingOffsetX = 0;
+                this.dragging = true;
+
+                var x = event.pageX - this.barOffset.left;
+                this.seekToX(x);
             }
         },
 
@@ -80,21 +92,7 @@ define(function(require) {
 
                 // The x location of the handle relative to the seek bar
                 var x = event.pageX - this.barOffset.left - this.draggingOffsetX;
-
-                // Keep it within bounds
-                var progressWidth = this.$progress.width();
-                x = Math.max(0, Math.min(progressWidth, x));
-
-                this.inputLock(function() {
-                    var percent = x / this.barWidth;
-                    this.model.setTime(percent * this.model.get('maxRecordingTime'));
-                });
-
-                var percent = x / progressWidth;
-                this.$handle.css('left', (percent * 100) + '%');
-
-                var overwrittenWidth = progressWidth - x;
-                this.$overwritten.width(overwrittenWidth);
+                this.seekToX(x);
             }
         },
 
@@ -107,6 +105,23 @@ define(function(require) {
                 event.pageX = event.originalEvent.touches[0].pageX;
                 event.pageY = event.originalEvent.touches[0].pageY;
             }
+        },
+
+        seekToX: function(x) {
+            // Keep it within bounds
+            var progressWidth = this.$progress.width();
+            x = Math.max(0, Math.min(progressWidth, x));
+
+            this.inputLock(function() {
+                var percent = x / this.barWidth;
+                this.model.setTime(percent * this.model.get('maxRecordingTime'));
+            });
+
+            var percent = x / progressWidth;
+            this.$handle.css('left', (percent * 100) + '%');
+
+            var overwrittenWidth = progressWidth - x;
+            this.$overwritten.width(overwrittenWidth);
         },
 
         timeChanged: function(simulation, time) {
