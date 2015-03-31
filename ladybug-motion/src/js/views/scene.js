@@ -42,8 +42,8 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
-            this.initLadybugView();
             this.initLadybugTraceView();
+            this.initLadybugView();
             this.initRemoteControlView();
         },
 

@@ -40,8 +40,9 @@ define(function(require) {
 
         drawPoints: function() {
             var graphics = this.graphics;
-            var history = this.model.stateHistory;
-            var start = (history.length > LadybugTraceView.LENGTH) ? history.length - LadybugTraceView.LENGTH : 0;
+            var time = this.model.get('time');
+            var history = this.model.culledStateHistory;
+            var start = 0;
             var end = history.length - 1;
             var point;
 
@@ -51,7 +52,7 @@ define(function(require) {
                     for (var i = start; i <= end; i++) {
                         point = this.mvt.modelToView(history[i].position);
 
-                        graphics.beginFill(this.color, 1);
+                        graphics.beginFill(this.color, this.calculateOpacityForState(time, history[i]));
                         graphics.drawCircle(point.x, point.y, this.lineWidth);
                         graphics.endFill();
                     }
@@ -59,15 +60,23 @@ define(function(require) {
                 else {
                     point = this.mvt.modelToView(history[start].position);
                     graphics.moveTo(point.x, point.y);
-                    graphics.lineStyle(this.lineWidth, this.color, 1);
 
                     for (var i = start; i <= end; i++) {
                         point = this.mvt.modelToView(history[i].position);
 
+                        graphics.lineStyle(this.lineWidth, this.color, this.calculateOpacityForState(time, history[i]));
                         graphics.lineTo(point.x, point.y);
                     }
                 }
             }
+        },
+
+        calculateOpacityForState: function(time, state) {
+            var age = time - state.time;
+            if (age >= LadybugTraceView.SECONDS_TO_BE_OLD)
+                return LadybugTraceView.OLD_OPACITY;
+            else
+                return LadybugTraceView.NEW_OPACITY_RANGE.lerp(age / LadybugTraceView.SECONDS_TO_BE_OLD);
         },
 
         updateMVT: function(mvt) {
