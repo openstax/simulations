@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var LadybugView       = require('views/ladybug');
+    var LadybugTraceView  = require('views/ladybug-trace');
     var RemoteControlView = require('views/remote-control');
 
     var Assets = require('assets');
@@ -41,6 +42,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initLadybugTraceView();
             this.initLadybugView();
             this.initRemoteControlView();
         },
@@ -80,6 +82,14 @@ define(function(require) {
             });
             this.stage.addChild(this.ladybugView.displayObject);
             this.$ui.append(this.ladybugView.el);
+        },
+
+        initLadybugTraceView: function() {
+            this.ladybugTraceView = new LadybugTraceView({
+                model: this.simulation,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.ladybugTraceView.displayObject);
         },
 
         initRemoteControlView: function() {

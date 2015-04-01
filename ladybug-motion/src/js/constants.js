@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var range = require('common/math/range');
 
     var Constants = {}; 
 
@@ -64,6 +65,25 @@ define(function (require) {
     LadybugMover.ELLIPSE_B = 1.4; // centimeters
 
     Constants.LadybugMover = LadybugMover;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                          LADYBUG TRACE VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var LadybugTraceView = {};
+
+    LadybugTraceView.NEW_OPACITY = 1;
+    LadybugTraceView.OLD_OPACITY = 0.15;
+    LadybugTraceView.SECONDS_TO_BE_OLD = 2; // seconds
+    LadybugTraceView.NEW_OPACITY_RANGE = range({ 
+        min: LadybugTraceView.NEW_OPACITY, 
+        max: LadybugTraceView.OLD_OPACITY 
+    });
+
+    Constants.LadybugTraceView = LadybugTraceView;
 
 
     /*************************************************************************

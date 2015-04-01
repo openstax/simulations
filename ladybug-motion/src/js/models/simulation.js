@@ -74,6 +74,11 @@ define(function (require, exports, module) {
             // State history
             this.stateHistory = [];
 
+            // This version of state history has references to records in
+            //   stateHistory but culls duplicate records in continuous
+            //   blocks of states with unchanged position.
+            this.culledStateHistory = [];
+
             // For determining appropriate motion in motion presets
             this.bounds = new Rectangle();
 
@@ -347,19 +352,25 @@ define(function (require, exports, module) {
          */
         clearHistory: function() {
             this.stateHistory.slice(0, this.stateHistory.length);
+            this.culledStateHistory.slice(0, this.culledStateHistory.length);
             this.clearSampleHistory();
+            this.trigger('history-removed');
         },
 
         /**
          * Clears all history after a specified time.
          */
         clearHistoryAfter: function(time) {
-            var entries = [];
-            for (var i = 0; i < this.stateHistory.length; i++) {
-                if (this.stateHistory[i].time < time)
-                    entries.push(this.stateHistory[i]);
+            // Remove records beyond a certain time
+            var i;
+            for (i = this.stateHistory.length - 1; i >= 0; i--) {
+                if (this.stateHistory[i].time >= time)
+                    this.stateHistory.splice(i, 1);
             }
-            this.stateHistory = entries;
+            for (i = this.culledStateHistory.length - 1; i >= 0; i--) {
+                if (this.culledStateHistory[i].time >= time)
+                    this.culledStateHistory.splice(i, 1);
+            }
 
             this._historyTimes = null;
 
@@ -377,6 +388,12 @@ define(function (require, exports, module) {
                 this.clearSampleHistory();
                 this.resetSamplingMotionModel();
             }
+
+            this.trigger('history-removed');
+        },
+
+        getCulledStateHistory: function() {
+            return this.culledStateHistory;
         },
 
         /**
@@ -392,7 +409,28 @@ define(function (require, exports, module) {
         recordState: function() {
             var stateRecord = ladybugStateRecordPool.create();
             stateRecord.recordState(this.get('time'), this.ladybug);
+        
+            // Check if we want to add it to the culled history
+            if (!this.stateMatchesPrevious(stateRecord))
+                this.culledStateHistory.push(stateRecord);
+
             this.stateHistory.push(stateRecord);
+
+            this.trigger('history-added');
+        },
+
+        /**
+         * Returns whether or not the given state matches the
+         *   previously recorded state.  If no previous state
+         *   exists, it returns false.
+         */
+        stateMatchesPrevious: function(state) {
+            if (this.stateHistory.length > 1 &&
+                this.stateHistory[this.stateHistory.length - 1].position.equals(state.position)) {
+                return true;
+            }
+
+            return false;
         },
 
         /**

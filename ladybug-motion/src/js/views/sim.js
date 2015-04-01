@@ -60,7 +60,11 @@ define(function (require) {
             'change #record-mode'   : 'recordModeClicked',
             'change #playback-mode' : 'playbackModeClicked',
 
-            'click .motion-type' : 'motionTypeClicked'
+            'click .motion-type' : 'motionTypeClicked',
+
+            'click #trace-line' : 'traceLineClicked',
+            'click #trace-dots' : 'traceDotsClicked',
+            'click #trace-off'  : 'traceOffClicked'
         },
 
         /**
@@ -264,6 +268,18 @@ define(function (require) {
                         $(this).click();
                 })
             });
+        },
+
+        traceLineClicked: function() {
+            this.sceneView.ladybugTraceView.showLines();
+        },
+
+        traceDotsClicked: function() {
+            this.sceneView.ladybugTraceView.showDots();
+        },
+
+        traceOffClicked: function() {
+            this.sceneView.ladybugTraceView.hide();
         }
 
     });
