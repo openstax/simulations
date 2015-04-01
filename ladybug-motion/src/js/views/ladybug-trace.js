@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
 
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
@@ -21,58 +22,83 @@ define(function(require) {
             }, options);
 
             this.lineWidth = options.lineWidth;
-            this.color = Colors.parseHex(options.color);
+            this.color = options.color;
+            this.colorHex = Colors.parseHex(options.color);
             this.mvt = options.mvt;
             this.dotsMode = false;
             this.points = [];
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'history-changed', this.historyChanged);
+            this.listenTo(this.model, 'history-added', this.historyAdded);
+            this.listenTo(this.model, 'history-removed', this.historyRemoved);
         },
 
         initGraphics: function() {
-            this.graphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.graphics);
+            this.lines = new PIXI.Graphics();
+            this.displayObject.addChild(this.lines);
+
+            this.dotTexture = PIXI.Texture.generateCircleTexture(this.lineWidth, this.color);
+            this.dots = new PIXI.SpriteBatch();
+            this.dots.visible = false;
+            this.displayObject.addChild(this.dots);
+            this.lastDotTime = 0;
 
             this.updateMVT(this.mvt);
         },
 
         drawPoints: function() {
-            var graphics = this.graphics;
             var time = this.model.get('time');
             var history = this.model.culledStateHistory;
             var start = 0;
             var end = history.length - 1;
             var point;
-
-            graphics.clear();
+            
             if (history.length > 0) {
                 if (this.dotsMode) {
-                    for (var i = start; i <= end; i++) {
-                        point = this.mvt.modelToView(history[i].position);
+                    var dots = this.dots;
+                    var dot;
+                    var dotTexture = this.dotTexture;
 
-                        graphics.beginFill(this.color, this.calculateOpacityForState(time, history[i]));
-                        graphics.drawCircle(point.x, point.y, this.lineWidth);
-                        graphics.endFill();
+                    // Add new dots
+                    for (var i = start; i <= end; i += 4) {
+                        if (history[i].time > this.lastDotTime) {
+                            this.lastDotTime = history[i].time;
+
+                            point = this.mvt.modelToView(history[i].position);
+                            dot = new PIXI.Sprite(dotTexture);
+                            dot.anchor.x = dot.anchor.y = 0.5;
+                            dot.x = point.x;
+                            dot.y = point.y;
+                            dot.time = history[i].time;
+                            dots.addChild(dot);
+                        }
+                    }
+
+                    // Update the alpha of each dot
+                    var children = dots.children;
+                    for (var c = 0; c < children.length; c++) {
+                        children[c].alpha = this.calculateOpacityForState(time, children[c].time);
                     }
                 }
                 else {
+                    var lines = this.lines;
+                    lines.clear();
                     point = this.mvt.modelToView(history[start].position);
-                    graphics.moveTo(point.x, point.y);
+                    lines.moveTo(point.x, point.y);
 
                     for (var i = start; i <= end; i++) {
                         point = this.mvt.modelToView(history[i].position);
 
-                        graphics.lineStyle(this.lineWidth, this.color, this.calculateOpacityForState(time, history[i]));
-                        graphics.lineTo(point.x, point.y);
+                        lines.lineStyle(this.lineWidth, this.colorHex, this.calculateOpacityForState(time, history[i].time));
+                        lines.lineTo(point.x, point.y);
                     }
                 }
             }
         },
 
-        calculateOpacityForState: function(time, state) {
-            var age = time - state.time;
+        calculateOpacityForState: function(time, stateTime) {
+            var age = time - stateTime;
             if (age >= LadybugTraceView.SECONDS_TO_BE_OLD)
                 return LadybugTraceView.OLD_OPACITY;
             else
@@ -88,29 +114,38 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {},
 
-        historyChanged: function() {
+        historyAdded: function() {
             if (this.displayObject.visible)
                 this.drawPoints();
         },
 
+        historyRemoved: function() {
+            this.clearTraces();
+            this.lastDotTime = 0;
+        },
+
         showDots: function() {
             this.dotsMode = true;
-            this.displayObject.visible = false;
+            this.dots.visible = true;
+            this.lines.visible = false;
             this.drawPoints();
         },
 
         showLines: function() {
             this.dotsMode = false;
-            this.displayObject.visible = false;
+            this.lines.visible = true;
+            this.dots.visible = false;
             this.drawPoints();
         },
 
         hide: function() {
-            this.displayObject.visible = true;
+            this.dots.visible = false;
+            this.lines.visible = false;
         },
 
         clearTraces: function() {
-
+            this.lines.clear();
+            this.dots.removeChildren();
         }
 
     }, Constants.LadybugTraceView);

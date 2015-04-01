@@ -354,7 +354,7 @@ define(function (require, exports, module) {
             this.stateHistory.slice(0, this.stateHistory.length);
             this.culledStateHistory.slice(0, this.culledStateHistory.length);
             this.clearSampleHistory();
-            this.trigger('history-changed');
+            this.trigger('history-removed');
         },
 
         /**
@@ -389,7 +389,7 @@ define(function (require, exports, module) {
                 this.resetSamplingMotionModel();
             }
 
-            this.trigger('history-changed');
+            this.trigger('history-removed');
         },
 
         getCulledStateHistory: function() {
@@ -416,7 +416,7 @@ define(function (require, exports, module) {
 
             this.stateHistory.push(stateRecord);
 
-            this.trigger('history-changed');
+            this.trigger('history-added');
         },
 
         /**
