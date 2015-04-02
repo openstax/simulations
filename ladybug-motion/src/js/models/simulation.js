@@ -48,9 +48,10 @@ define(function (require, exports, module) {
     var LadybugMotionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            motionType: LadybugMover.MOTION_TYPES['Manual'],
+            motionType: 'Manual',
             updateMode: UpdateMode.POSITION,
             recording: true,
+            paused: true,
 
             furthestRecordedTime: 0, // Seconds
             maxRecordingTime:    20  // Seconds
@@ -119,6 +120,20 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             
+        },
+
+        /**
+         * Overrides simulation's reset function
+         */
+        reset: function() {
+            this.time = 0;
+            this.set('time', 0);
+            this.set(this.startingAttributes);
+            this.clearHistory();
+            this.resetSamplingMotionModel();
+            this.penPoint.set(0, 0);
+            this.stopSampling();
+            this.ladybug.reset();
         },
 
         /**
@@ -345,14 +360,15 @@ define(function (require, exports, module) {
             for (var i = 0; i < this.penPath.length; i++)
                 penPathEntryPool.remove(this.penPath[i]);
             this.penPath.splice(0, this.penPath.length);
+            this.penPoint.set(0, 0);
         },
 
         /**
          * Clears state and sample history.
          */
         clearHistory: function() {
-            this.stateHistory.slice(0, this.stateHistory.length);
-            this.culledStateHistory.slice(0, this.culledStateHistory.length);
+            this.stateHistory.splice(0, this.stateHistory.length);
+            this.culledStateHistory.splice(0, this.culledStateHistory.length);
             this.clearSampleHistory();
             this.trigger('history-removed');
         },
@@ -471,11 +487,30 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Clears history without changing current state of the
+         *   ladybug.
+         */
+        clear: function() {
+            var paused = this.get('paused');
+            this.pause();
+
+            this.time = 0;
+            this.set('time', 0);
+            this.set('furthestRecordedTime', 0);
+            this.clearHistory();
+
+            if (!paused)
+                this.play();
+        },
+
+        /**
          * Rewinds to the beginning.
          */
         rewind: function() {
             this.time = 0;
             this.set('time', 0);
+
+            this.applyPlaybackState();
 
             if (this.get('recording'))
                 this.clearHistory();
@@ -560,12 +595,19 @@ define(function (require, exports, module) {
             var yTimeSeries = this.yTimeSeries;
 
             var historySample = this.stateHistory.slice(this.stateHistory.length - Constants.ESTIMATION_SAMPLE_SIZE, this.stateHistory.length);
+            var diff = Constants.ESTIMATION_SAMPLE_SIZE - historySample.length;
             for (var i = 0; i < historySample.length; i++) {
-                xTimeSeries[i].time  = historySample[i].time;
-                xTimeSeries[i].value = historySample[i].position.x;
+                xTimeSeries[i + diff].time  = historySample[i].time;
+                xTimeSeries[i + diff].value = historySample[i].position.x;
 
-                yTimeSeries[i].time  = historySample[i].time;
-                yTimeSeries[i].value = historySample[i].position.y;
+                yTimeSeries[i + diff].time  = historySample[i].time;
+                yTimeSeries[i + diff].value = historySample[i].position.y;
+            }
+            for (var j = 0; j < diff; j++) {
+                xTimeSeries[j].time  = 0;
+                xTimeSeries[j].value = 0;
+                yTimeSeries[j].time  = 0;
+                yTimeSeries[j].value = 0;
             }
 
             var vx = MotionMath.estimateDerivative(xTimeSeries);

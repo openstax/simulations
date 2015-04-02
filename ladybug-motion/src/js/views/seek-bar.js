@@ -45,6 +45,9 @@ define(function(require) {
             this.$overwritten = this.$('.seek-bar-overwritten');
 
             this.determineHandleVisibility();
+            this.timeChanged(this.model, this.model.get('time'));
+            this.furthestRecordedTimeChanged(this.model, this.model.get('furthestRecordedTime'));
+            this.setInitialOverwrittenWidth();
 
             return this;
         },

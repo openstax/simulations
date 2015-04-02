@@ -35,6 +35,8 @@ define(function (require) {
      */
     var LadybugMotionSimView = SimView.extend({
 
+        runUpdateOnReset: true,
+
         /**
          * Root element properties
          */
@@ -56,6 +58,7 @@ define(function (require) {
             'click .step-btn'   : 'step',
             'click .rewind-btn' : 'rewind',
             'click .reset-btn'  : 'reset',
+            'click .clear-btn'  : 'clear',
 
             'change #record-mode'   : 'recordModeClicked',
             'change #playback-mode' : 'playbackModeClicked',
@@ -176,6 +179,10 @@ define(function (require) {
          */
         reset: function() {
             this.resetSimulation();
+            this.simulation.pause();
+            this.$('#trace-line').click();
+            this.$('#show-velocity-check').prop('checked', true);
+            this.$('#show-acceleration-check').prop('checked', true);
         },
 
         /**
@@ -184,6 +191,14 @@ define(function (require) {
         rewind: function() {
             this.pause();
             this.simulation.rewind();
+            this.seekBarView.update();
+        },
+
+        /**
+         * Clears the sim's history.
+         */
+        clear: function() {
+            this.simulation.clear();
             this.seekBarView.update();
         },
 

@@ -268,13 +268,6 @@ define(function(require) {
         },
 
         selectTab: function(index) {
-            this.model.set({
-                vx: 0,
-                vy: 0,
-                ax: 0,
-                ay: 0,
-                mode: index
-            });
             this.repositionArrows();
 
             this.selectedIndex = index;
