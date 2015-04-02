@@ -28,6 +28,7 @@ define(function (require) {
             this.setPosition(0, 0);
             this.setVelocity(0, 0);
             this.setAcceleration(0, 0);
+            this.set('angle', 0);
         },
 
         getBounds: function() {

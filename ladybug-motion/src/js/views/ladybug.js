@@ -4,7 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var HybridView  = require('common/pixi/view/hybrid');
+    var HybridView = require('common/pixi/view/hybrid');
+    var ArrowView  = require('common/pixi/view/arrow');
 
     var LadybugMover = require('models/ladybug-mover');
 
@@ -183,6 +184,11 @@ define(function(require) {
                 this.$el.show();
                 this.returnButtonHidden = false;
             }
+        },
+
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.angleChanged(this.model, this.model.get('angle'));
         }
 
     }, Constants.LadybugView);

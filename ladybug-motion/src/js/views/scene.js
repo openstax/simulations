@@ -106,6 +106,11 @@ define(function(require) {
             });
         },
 
+        reset: function() {
+            this.ladybugTraceView.clearTraces();
+            this.ladybugView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
