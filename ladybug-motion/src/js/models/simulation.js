@@ -51,6 +51,7 @@ define(function (require, exports, module) {
             motionType: 'Manual',
             updateMode: UpdateMode.POSITION,
             recording: true,
+            paused: true,
 
             furthestRecordedTime: 0, // Seconds
             maxRecordingTime:    20  // Seconds
@@ -359,6 +360,7 @@ define(function (require, exports, module) {
             for (var i = 0; i < this.penPath.length; i++)
                 penPathEntryPool.remove(this.penPath[i]);
             this.penPath.splice(0, this.penPath.length);
+            this.penPoint.set(0, 0);
         },
 
         /**
