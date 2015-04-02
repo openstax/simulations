@@ -167,6 +167,8 @@ define(function (require) {
         postRender: function() {
             this.sceneView.postRender();
             this.seekBarView.postRender();
+            this.sceneView.ladybugView.hideVelocityArrow();
+            this.sceneView.ladybugView.hideAccelerationArrow();
         },
 
         /**
