@@ -90,7 +90,7 @@ define(function (require) {
         },
 
         getAcceleration: function() {
-            this.avgNow - 2 * this.avgMid + this.avgBefore;
+            return this.avgNow - 2 * this.avgMid + this.avgBefore;
         },
 
         getAverageMid: function() {

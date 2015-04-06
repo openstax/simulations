@@ -61,6 +61,14 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.initArrows();
+            this.initSprites();
+
+            this.updateMVT(this.mvt);
+            this.angleChanged(this.model, this.model.get('angle'));
+        },
+
+        initSprites: function() {
             var ladybug = Assets.createSprite(Assets.Images.LADYBUG);
             ladybug.anchor.x = 0.5;
             ladybug.anchor.y = 0.5;
@@ -81,9 +89,31 @@ define(function(require) {
             this.ladybug.addChild(this.idleWings);
             this.ladybug.addChild(this.openWings);
             this.displayObject.addChild(this.ladybug);
+        },
 
-            this.updateMVT(this.mvt);
-            this.angleChanged(this.model, this.model.get('angle'));
+        initArrows: function() {
+            this.velocityArrowModel = new ArrowView.ArrowViewModel({
+                targetX: 0,
+                targetY: 0
+            });
+
+            this.velocityArrowView = new ArrowView({
+                model: this.velocityArrowModel,
+                fillColor: Constants.VELOCITY_COLOR
+            });
+
+            this.accelerationArrowModel = new ArrowView.ArrowViewModel({
+                targetX: 0,
+                targetY: 0
+            });
+
+            this.accelerationArrowView = new ArrowView({
+                model: this.accelerationArrowModel,
+                fillColor: Constants.ACCELERATION_COLOR
+            });
+
+            this.displayObject.addChild(this.velocityArrowView.displayObject);
+            this.displayObject.addChild(this.accelerationArrowView.displayObject);
         },
 
         updatePosition: function(model, position) {
@@ -100,7 +130,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.displayObject.scale.x = this.displayObject.scale.y = this.calculateScale();
+            this.ladybug.scale.x = this.ladybug.scale.y = this.calculateScale();
 
             this.updatePosition(this.model, this.model.get('position'));
         },
@@ -157,11 +187,13 @@ define(function(require) {
                 this.openWings.visible = false;
             }
 
-            // TODO: change the velocity vector arrow
+            this.velocityArrowModel.set('targetX', this.mvt.modelToViewDeltaX(velocity.x));
+            this.velocityArrowModel.set('targetY', this.mvt.modelToViewDeltaY(velocity.y));
         },
 
         accelerationChanged: function(model, acceleration) {
-            // TODO: change the acceleration vector arrow
+            this.accelerationArrowModel.set('targetX', this.mvt.modelToViewDeltaX(acceleration.x));
+            this.accelerationArrowModel.set('targetY', this.mvt.modelToViewDeltaY(acceleration.y));
         },
 
         angleChanged: function(model, angle) {
@@ -189,6 +221,22 @@ define(function(require) {
         reset: function() {
             this.updateMVT(this.mvt);
             this.angleChanged(this.model, this.model.get('angle'));
+        },
+
+        showVelocityArrow: function() {
+            this.velocityArrowView.displayObject.visible = true;
+        },
+
+        hideVelocityArrow: function() {
+            this.velocityArrowView.displayObject.visible = false;
+        },
+
+        showAccelerationArrow: function() {
+            this.accelerationArrowView.displayObject.visible = true;
+        },
+
+        hideAccelerationArrow: function() {
+            this.accelerationArrowView.displayObject.visible = false;
         }
 
     }, Constants.LadybugView);

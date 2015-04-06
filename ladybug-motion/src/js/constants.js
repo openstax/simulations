@@ -28,6 +28,10 @@ define(function (require) {
     	ACCELERATION: 2
     };
 
+    Constants.POSITION_COLOR = '#2575BA';
+    Constants.VELOCITY_COLOR = '#CD2520';
+    Constants.ACCELERATION_COLOR = '#349E34';
+
 
     /*************************************************************************
      **                                                                     **
@@ -105,13 +109,13 @@ define(function (require) {
     RemoteControlView.TAB_HEIGHT = 36;
     RemoteControlView.TABS = [{
         label: 'Position',
-        color: '#2575BA',
+        color: Constants.POSITION_COLOR
     },{
         label: 'Velocity',
-        color: '#CD2520',
+        color: Constants.VELOCITY_COLOR
     },{
         label: 'Acceleration',
-        color: '#349E34',
+        color: Constants.ACCELERATION_COLOR
     }];
     RemoteControlView.PANEL_PADDING = 10;
     RemoteControlView.PANEL_WIDTH  = 186; // pixels

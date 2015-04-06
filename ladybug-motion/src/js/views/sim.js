@@ -67,7 +67,10 @@ define(function (require) {
 
             'click #trace-line' : 'traceLineClicked',
             'click #trace-dots' : 'traceDotsClicked',
-            'click #trace-off'  : 'traceOffClicked'
+            'click #trace-off'  : 'traceOffClicked',
+
+            'click #show-velocity-check'     : 'showVelocityClicked',
+            'click #show-acceleration-check' : 'showAccelerationClicked'
         },
 
         /**
@@ -164,6 +167,8 @@ define(function (require) {
         postRender: function() {
             this.sceneView.postRender();
             this.seekBarView.postRender();
+            this.sceneView.ladybugView.hideVelocityArrow();
+            this.sceneView.ladybugView.hideAccelerationArrow();
         },
 
         /**
@@ -295,6 +300,20 @@ define(function (require) {
 
         traceOffClicked: function() {
             this.sceneView.ladybugTraceView.hide();
+        },
+
+        showVelocityClicked: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.ladybugView.showVelocityArrow();
+            else
+                this.sceneView.ladybugView.hideVelocityArrow();
+        },
+
+        showAccelerationClicked: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.ladybugView.showAccelerationArrow();
+            else
+                this.sceneView.ladybugView.hideAccelerationArrow();
         }
 
     });
