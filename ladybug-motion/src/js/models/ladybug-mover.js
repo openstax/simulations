@@ -170,7 +170,7 @@ define(function (require) {
                 var velocity = this._vel
                     .set(1, 0)
                     .rotate(newAngle + Math.PI / 2)
-                    .scale((newAngle - angle) / (deltaTime * r));
+                    .scale((newAngle - angle) / deltaTime * r);
                 ladybug.setVelocity(velocity);
                 ladybug.set('angle', velocity.angle());
 
