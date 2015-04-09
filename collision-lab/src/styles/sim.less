@@ -67,7 +67,12 @@
     }
 
     h2:not(:first-child) {
-        margin-top: 14px;
+        margin-top: 18px;
+    }
+
+    h2.slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
     }
 
     ul.radio, ul.checkbox {
@@ -85,6 +90,37 @@
 
             label{
                 font-weight: bold;
+            }
+        }
+    }
+
+    .slider {
+        box-shadow: 0 0px 4px rgba(71, 64, 166, 0.08);
+    }
+
+    .elasticity {
+        float: right;
+    }
+
+    .elasticity-slider-wrapper {
+        position: relative;
+
+        .elasticity-slider {
+            margin-bottom: 20px;
+        }
+
+        label {
+            position: absolute;
+            top: 4px;
+            opacity: 0.6;
+            font-weight: normal;
+
+            &:first-child {
+                left: 0;
+            }
+
+            &:last-child {
+                right: 0;
             }
         }
     }
