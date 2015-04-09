@@ -1,12 +1,48 @@
 
 <span class="scene-view-placeholder"></span>
 
-<div class="sound-btn-wrapper">
-    <button class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
-    <button class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
-    <button class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
-</div>
+<div class="sim-controls-column">
+    <div class="sim-controls">
+        <h2>Vectors</h2>
 
-<div class="hello-world">
-	<img src="img/ladybug.png" style="width: 150px;">
+        <ul class="checkbox">
+            <li>
+                <input type="checkbox" id="show-velocity-check">
+                <label for="show-velocity-check">Show Velocity</label>
+            </li>
+            <li>
+                <input type="checkbox" id="show-acceleration-check">
+                <label for="show-acceleration-check">Show Acceleration</label>
+            </li>
+        </ul>
+
+        <h2>Motion</h2>
+
+        <ul class="radio">
+        <% _.each(motions, function(option, index){ %>
+            <li>
+                <input type="radio" name="motion" value="<%= option %>" class="motion-type" id="motion-<%= index %>" <% if (index === 0) { %>checked<% } %>>
+                <label  for="motion-<%= index %>"><%= option %></label>
+            </li>
+        <% }); %>
+        </ul>
+
+        <h2>Trace</h2>
+
+        <ul class="radio">
+            <li>
+                <input type="radio" name="trace" value="line" id="trace-line" checked>
+                <label for="trace-line">Line</label>
+            </li>
+            <li>
+                <input type="radio" name="trace" value="dots" id="trace-dots">
+                <label for="trace-dots">Dots</label>
+            </li>
+            <li>
+                <input type="radio" name="trace" value="off" id="trace-off">
+                <label for="trace-off">Off</label>
+            </li>
+        </ul>
+        
+    </div>
 </div>

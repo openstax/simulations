@@ -1,0 +1,112 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.playback-controls-wrapper {
+    position: absolute;
+    bottom: 6px;
+    width: 100%;
+    height: 62px;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    .playback-btn {
+        display: inline-blocsk;
+        background: @btn-bg;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.play-btn,
+        &.record-btn,
+        &.pause-btn {
+            display: none;
+        }
+
+        .sim-view:not(.record-mode):not(.playing) &.play-btn {
+            display: inline-block;
+        }
+        .sim-view.record-mode:not(.playing) &.record-btn  {
+            display: inline-block;
+        }
+        .sim-view.playing &.pause-btn {
+            display: inline-block;
+        }
+
+        &.play-btn,
+        &.pause-btn,
+        &.record-btn {
+            width: 42px;
+            height: 42px;
+            font-size: 16px;
+        }
+
+        &.play-btn {
+            padding-left: 10px;
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@link-color, @btn-bg, #fff, @link-color);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: left;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    .playback-mode-wrapper {
+        position: absolute;
+        left: 170px;
+        top: 15px;
+
+        .btn {
+            .button-variant(@link-color, @btn-bg, #fff, @link-color);
+
+            &.active {
+                -webkit-box-shadow: none;
+                box-shadow: none;
+                background: fadeout(@link-color, 30%);
+                color: #fff;
+            }
+        }
+    }
+
+    .playback-center-buttons-wrapper {
+        width: 250px;
+        position: absolute;
+        left: 50%;
+        margin-left: -125px;
+        top: 0;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+    }
+
+    .seek-bar-view {
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+    }
+
+}

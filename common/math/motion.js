@@ -20,6 +20,8 @@ define(function (require) {
          * Estimates a derivative using a series of points to 
          *   create a least-squares regression line to find a
          *   linear function from which it can take a derivative.
+         * Expects an array of objects that have a "time" and
+         *   a "value" property.
          */
         estimateDerivative: function(timeSeries) {
             var out = this.getLinearRegressionCoefficients(timeSeries);
