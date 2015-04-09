@@ -34,10 +34,58 @@
     }
 }
 
-.hello-world {
+.sim-controls {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    right: @panel-margin;
+    top: @panel-margin;
+    background: @panel-bg;
+    padding: 15px;
+    //width: @control-panel-width;
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 0.8);
+        margin-top: 0;
+        margin-bottom: 7px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+        margin-top: 14px;
+    }
+
+    ul.radio, ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        &:last-child {
+            margin-bottom: -2px;
+        }
+
+        li {
+            text-align: left;
+            list-style-image: none;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
 }

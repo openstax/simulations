@@ -25,14 +25,14 @@ define(function (require) {
 
     // HTML
     var simHtml              = require('text!templates/sim.html');
+    var simControlsHtml      = require('text!templates/sim-controls.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
-     * This is the umbrella view for everything in a simulation tab.
-     *   It will be extended by both the Intro module and the Charts
-     *   and contains all the common functionality between the two.
+     * SimView class containing shared functionality for
+     *   the two Collision Lab tabs
      */
-    var TemplateSimView = SimView.extend({
+    var CollisionLabSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -91,7 +91,10 @@ define(function (require) {
             this.$el.empty();
 
             this.renderScaffolding();
+            this.renderControls();
             this.renderSceneView();
+
+            
 
             return this;
         },
@@ -105,8 +108,34 @@ define(function (require) {
                 simulation: this.simulation
             };
             this.$el.html(this.template(data));
+        },
+
+        /**
+         * Renders playback and sim controls
+         */
+        renderControls: function() {
             this.$el.append(playbackControlsHtml);
+            this.$el.append(simControlsHtml);
+
             this.$('select').selectpicker();
+
+            this.$('.playback-speed').noUiSlider({
+                start: 7,
+                range: {
+                    'min': 0,
+                    'max': 10
+                }
+            });
+
+            this.$('.elasticity-slider').noUiSlider({
+                start: 100,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 100
+                }
+            });
+
         },
 
         /**
@@ -150,5 +179,5 @@ define(function (require) {
 
     });
 
-    return TemplateSimView;
+    return CollisionLabSimView;
 });
