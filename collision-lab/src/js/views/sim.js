@@ -9,6 +9,7 @@ define(function (require) {
 
     var TemplateSimulation = require('models/simulation');
     var TemplateSceneView  = require('views/scene');
+    var BallSettingsView = require('views/ball-settings');
 
     var Constants = require('constants');
 
@@ -19,6 +20,7 @@ define(function (require) {
     // CSS
     require('less!styles/sim');
     require('less!styles/playback-controls');
+    require('less!styles/ball-settings');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
@@ -27,6 +29,7 @@ define(function (require) {
     var simHtml              = require('text!templates/sim.html');
     var simControlsHtml      = require('text!templates/sim-controls.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var ballSettingsHtml     = require('text!templates/ball-settings-1d.html');
 
     /**
      * SimView class containing shared functionality for
@@ -49,7 +52,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .ball-settings-more-data' : 'showMoreData',
+            'click .ball-settings-less-data' : 'showLessData'
         },
 
         /**
@@ -93,8 +97,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderControls();
             this.renderSceneView();
-
-            
+            this.renderBallSettings();
 
             return this;
         },
@@ -139,6 +142,29 @@ define(function (require) {
         },
 
         /**
+         * Renders the ball settings tables
+         */
+        renderBallSettings: function() {
+            this.$el.append(ballSettingsHtml);
+            this.$ballSettingViews = this.$('.ball-setting-views');
+            this.$moreData = this.$('.more-data');
+            this.$lessData = this.$('.less-data');
+            this.$moreData.hide();
+
+            this.$moreDataButton = this.$('.ball-settings-more-data');
+            this.$lessDataButton = this.$('.ball-settings-less-data');
+
+            this.ballSettingViews = [];
+
+            this.simulation.balls.each(function(ball) {
+                var ballSettingsView = new BallSettingsView({ model: ball });
+                this.$ballSettingViews.append(ballSettingsView.el);
+                ballSettingsView.render();
+                this.ballSettingViews.push(ballSettingsView);
+            }, this);
+        },
+
+        /**
          * Renders the scene view
          */
         renderSceneView: function() {
@@ -176,6 +202,24 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        showMoreData: function() {
+            this.$lessData.hide();
+            this.$moreData.show();
+            for (var i = 0; i < this.ballSettingViews.length; i++)
+                this.ballSettingViews[i].showMoreData();
+            this.$moreDataButton.hide();
+            this.$lessDataButton.show();
+        },
+
+        showLessData: function() {
+            this.$moreData.hide();
+            this.$lessData.show();
+            for (var i = 0; i < this.ballSettingViews.length; i++)
+                this.ballSettingViews[i].showLessData();
+            this.$lessDataButton.hide();
+            this.$moreDataButton.show();
+        }
 
     });
 

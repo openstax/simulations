@@ -1,0 +1,152 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.ball-settings-wrapper {
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#000, 14%);
+    .user-select(none);
+
+    &.disabled {
+        opacity: 0.5;
+
+        &:after {
+            content: '';
+            display: block;
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 2px;
+        float: left;
+
+        th {
+            text-align: center;
+        }
+
+        thead tr:nth-child(2n) th {
+            font-weight: normal;
+        }
+
+        td:first-child {
+            padding-right: 6px;
+        }
+
+        .add-ball-row {
+            .user-select(none);
+        }
+
+        .add-ball-row > td {
+            text-align: center;
+        }
+
+        .remove-ball-btn,
+        .add-ball-btn {
+            background: transparent;
+            border: none;
+            opacity: 0.7;
+            padding: 0;
+            margin-left: 6px;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                color: inherit;
+            }
+
+            &:active {
+                //margin-top: 1px;
+            }
+        }
+
+        .remove-ball-btn {
+            > .button-text {
+                display: none;
+            }
+
+            &:hover > .button-text {
+                display: inline;
+            }
+        }
+
+        .mass-slider-column {
+            width: 160px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .slider {
+            box-shadow: 0 0px 4px rgba(71, 64, 166, 0.08);
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        td.momentum-column {
+            padding-right: 12px;
+            text-align: right;
+        }
+    }
+
+    input[type="number"]::-webkit-inner-spin-button, 
+    input[type="number"]::-webkit-outer-spin-button {
+        display: none;
+    }
+    
+    input[type="number"] {
+        -moz-appearance:textfield;
+    }
+
+    input {
+        height: auto;
+        padding: 0px 5px;
+        border: 1px solid rgba(0, 0, 0, 0.22);
+        background: fadeout(#fff, 30%);
+        color: #000;
+        text-align: right;
+
+        &.mass {
+            //width: 71px;
+        }
+    }
+
+    table.one-dimensional input {
+        width: 70px;
+    }
+
+    .ball-icon {
+        display: block;
+        border-radius: 50%;
+        width: 22px;
+        height: 22px;
+        color: #fff;
+        text-align: center;
+        padding-left: 1px;
+        line-height: 22px;
+    }
+
+}
+
+.btn.ball-settings-more-data,
+.btn.ball-settings-less-data {
+    float: right;
+    margin-left: 16px;
+    margin-top: 7px;
+    
+    .button-variant(#000, fadeout(#fff, 30%), #555, fadeout(#fff, 50%));
+}
+
+.btn.ball-settings-less-data {
+    display: none;
+}
