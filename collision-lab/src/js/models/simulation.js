@@ -20,7 +20,9 @@ define(function (require, exports, module) {
     var CollisionLabSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            oneDimensional: false
+            oneDimensional: false,
+
+            elasticity: 1
         }),
         
         initialize: function(attributes, options) {

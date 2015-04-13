@@ -55,7 +55,9 @@ define(function (require) {
          */
         events: {
             'click .ball-settings-more-data' : 'showMoreData',
-            'click .ball-settings-less-data' : 'showLessData'
+            'click .ball-settings-less-data' : 'showLessData',
+
+            'slide .elasticity-slider' : 'changeElasticity'
         },
 
         /**
@@ -131,7 +133,8 @@ define(function (require) {
                 }
             });
 
-            this.$('.elasticity-slider').noUiSlider({
+            this.$elasticitySlider = this.$('.elasticity-slider');
+            this.$elasticitySlider.noUiSlider({
                 start: 100,
                 connect: 'lower',
                 range: {
@@ -140,6 +143,7 @@ define(function (require) {
                 }
             });
 
+            this.$elasticity = this.$('.elasticity');
         },
 
         /**
@@ -227,6 +231,22 @@ define(function (require) {
                 this.ballSettingViews[i].showLessData();
             this.$lessDataButton.hide();
             this.$moreDataButton.show();
+        },
+
+        changeElasticity: function(event) {
+            var percentage = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$elasticity.text(percentage + '%');
+                this.simulation.set('elasticity', percentage / 100);
+            });
+        },
+
+        elasticityChanged: function(simulation, elasticity) {
+            var percentage = Math.round(elasticity * 100);
+            this.updateLock(function(){
+                this.$elasticity.text(percentage + '%');
+                this.$elasticitySlider.val(percentage);
+            });
         }
 
     });
