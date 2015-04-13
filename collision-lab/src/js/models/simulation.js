@@ -20,6 +20,7 @@ define(function (require, exports, module) {
     var CollisionLabSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
+            defaultBallSettings: Constants.DEFAULT_BALL_SETTINGS,
             oneDimensional: false,
 
             elasticity: 1
@@ -27,7 +28,6 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
-
 
             this.balls = new Backbone.Collection([],{
                 model: Ball
@@ -51,7 +51,11 @@ define(function (require, exports, module) {
         addBall: function() {
             this.balls.add(new Ball({
                 color: Constants.Ball.COLORS[this.balls.length], 
-                number: this.balls.length + 1
+                number: this.balls.length + 1,
+
+                mass:     this.get('defaultBallSettings')[this.balls.length].mass,
+                position: this.get('defaultBallSettings')[this.balls.length].position,
+                velocity: this.get('defaultBallSettings')[this.balls.length].velocity
             }));
         },
 
