@@ -74,7 +74,7 @@
 
     .playback-speed-wrapper {
         position: absolute;
-        left: 95px;
+        left: 80px;
         height: 100%;
         top: 0;
         padding-top: 18px;
@@ -94,7 +94,7 @@
         label {
             vertical-align: middle;
             margin: 0 8px;
-            color: fadeout(@link-color, 30%);
+            color: fadeout(@link-color, 10%);
         }
     }
 
@@ -109,10 +109,21 @@
         text-align: center;
     }
 
-    .seek-bar-view {
+    .playback-time-wrapper {
         position: absolute;
-        bottom: 100%;
-        left: 0;
+        top: 0;
+        right: 245px;
+        line-height: 62px;
+
+        label {
+            color: fadeout(@link-color, 10%);
+        }
+
+        #time {
+            width: 70px;
+            display: inline-block;
+            text-align: right;
+        }
     }
 
 }
