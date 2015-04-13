@@ -12,7 +12,8 @@ define(function (require) {
      *************************************************************************/
 
     //Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
-
+    Constants.MIN_NUM_BALLS = 2;
+    Constants.MAX_NUM_BALLS = 5;
 
     /*************************************************************************
      **                                                                     **

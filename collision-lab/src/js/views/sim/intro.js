@@ -28,6 +28,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Introduction',
                 name: 'intro-sim',
+                userCanAddRemoveBalls: false
             }, options);
 
             CollisionLabSimView.prototype.initialize.apply(this, [options]);

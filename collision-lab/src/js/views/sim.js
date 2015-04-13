@@ -66,9 +66,19 @@ define(function (require) {
          * @params options
          */
         initialize: function(options) {
+            options = _.extend({
+                userCanAddRemoveBalls: true
+            }, options);
+
+            this.userCanAddRemoveBalls = options.userCanAddRemoveBalls;
+
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation.balls, 'reset',  this.ballsReset);
+            this.listenTo(this.simulation.balls, 'add',    this.ballAdded);
+            this.listenTo(this.simulation.balls, 'remove', this.ballRemoved);
         },
 
         /**
@@ -161,12 +171,7 @@ define(function (require) {
 
             this.ballSettingViews = [];
 
-            this.simulation.balls.each(function(ball) {
-                var ballSettingsView = this.createBallSettingsView(ball);
-                this.$ballSettingViews.append(ballSettingsView.el);
-                ballSettingsView.render();
-                this.ballSettingViews.push(ballSettingsView);
-            }, this);
+            this.ballsReset(this.simulation.balls);
         },
 
         /**
@@ -247,6 +252,49 @@ define(function (require) {
                 this.$elasticity.text(percentage + '%');
                 this.$elasticitySlider.val(percentage);
             });
+        },
+
+        ballsReset: function(balls) {
+            // Remove old ball views
+            for (var i = this.ballSettingViews.length - 1; i >= 0; i--) {
+                this.$ballSettingViews.remove(this.ballSettingViews[i].el);
+                this.ballSettingViews.splice(i, 1);
+            }
+
+            // Add new ball views
+            balls.each(function(ball) {
+                var ballSettingsView = this.createBallSettingsView(ball);
+                this.$ballSettingViews.children().last().before(ballSettingsView.el);
+                ballSettingsView.render();
+                this.ballSettingViews.push(ballSettingsView);
+            }, this);
+
+            this.updateBallButtons();
+        },
+
+        ballAdded: function() {
+
+            this.updateBallButtons();
+        },
+
+        ballRemoved: function() {
+
+            this.updateBallButtons();
+        },
+
+        updateBallButtons: function() {
+            // Hide remove ball buttons
+            this.$('.remove-ball-btn').hide();
+
+            // Show last remove ball button if appropriate
+            if (this.simulation.balls.length > Constants.MIN_NUM_BALLS && this.userCanAddRemoveBalls) 
+                this.$('.remove-ball-btn').last().show();
+
+            // Hide or show the add ball button
+            if (this.simulation.balls.length < Constants.MAX_NUM_BALLS && this.userCanAddRemoveBalls)
+                this.$('.add-ball-row').show();
+            else
+                this.$('.add-ball-row').hide();
         }
 
     });
