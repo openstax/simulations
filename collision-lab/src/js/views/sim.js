@@ -47,6 +47,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        simControlsTemplate: _.template(simControlsHtml),
         ballSettingsHtml: '', // Overwritten by each tab
 
         /**
@@ -113,8 +114,12 @@ define(function (require) {
          * Renders playback and sim controls
          */
         renderControls: function() {
+            var data = {
+                name: this.name
+            };
+
             this.$el.append(playbackControlsHtml);
-            this.$el.append(simControlsHtml);
+            this.$el.append(this.simControlsTemplate(data));
 
             this.$('select').selectpicker();
 

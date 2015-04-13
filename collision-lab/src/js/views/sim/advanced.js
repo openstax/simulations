@@ -7,8 +7,8 @@ define(function (require) {
     var CollisionLabSimView   = require('views/sim');
 
     // HTML
-    var ballSettingsHtml = require('text!templates/ball-settings-2d.html');
-
+    var ballSettingsHtml       = require('text!templates/ball-settings-2d.html');
+    var advancedCheckboxesHtml = require('text!templates/advanced-checkboxes.html');
 
     /**
      * Advanced tab
@@ -16,6 +16,7 @@ define(function (require) {
     var AdvancedSimView = CollisionLabSimView.extend({
 
         ballSettingsHtml: ballSettingsHtml,
+        advancedCheckboxesTemplate: _.template(advancedCheckboxesHtml),
 
         /**
          * Inits simulation, views, and variables.
@@ -31,7 +32,20 @@ define(function (require) {
             CollisionLabSimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
-        }
+        },
+
+        /**
+         * Renders playback and sim controls
+         */
+        renderControls: function() {
+            CollisionLabSimView.prototype.renderControls.apply(this);
+
+            var data = {
+                name: this.name
+            };
+
+            this.$('.visibility-controls').append(this.advancedCheckboxesTemplate(data));
+        },
 
     });
 
