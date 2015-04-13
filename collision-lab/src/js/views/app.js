@@ -4,7 +4,8 @@ define(function(require) {
 
     var PixiAppView = require('common/pixi/view/app');
 
-    var TemplateSimView = require('views/sim');
+    var IntroSimView    = require('views/sim/intro');
+    var AdvancedSimView = require('views/sim/advanced');
 
     var Assets = require('assets');
 
@@ -15,7 +16,8 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            TemplateSimView
+            IntroSimView,
+            AdvancedSimView
         ]
 
     });

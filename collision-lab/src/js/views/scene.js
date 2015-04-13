@@ -18,13 +18,19 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var CollisionLabSceneView = PixiSceneView.extend({
 
         events: {
             
         },
 
         initialize: function(options) {
+            options = _.extend({
+                oneDimensional: false
+            }, options);
+
+            this.oneDimensional = options.oneDimensional;
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -42,5 +48,5 @@ define(function(require) {
 
     });
 
-    return TemplateSceneView;
+    return CollisionLabSceneView;
 });

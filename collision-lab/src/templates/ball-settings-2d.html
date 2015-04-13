@@ -1,7 +1,7 @@
 <div class="ball-settings-wrapper">
-    <table class="ball-settings-table two-dimensional more-data">
+    <table class="ball-settings-table two-dimensional">
         <thead>
-            <tr>
+            <tr class="more-data">
                 <th>Ball</th>
                 <th>Mass (kg)</th>
                 <th colspan="2">Position (m)</th>
@@ -9,7 +9,7 @@
                 <th colspan="2">Momentum (<sup>kg m</sup>/<sub>s</sub>)</th>
                 <td></td>
             </tr>
-            <tr>
+            <tr class="more-data">
                 <th></th>
                 <th></th>
                 <th>x</th>
@@ -20,12 +20,23 @@
                 <th>p<sub>y</sub></th>
                 <td></td>
             </tr>
+            <tr class="less-data">
+                <th>Ball</th>
+                <th>Mass</th>
+                <th class="mass-slider-column"></th>
+            </tr>
+            <tr class="less-data">
+                <th></th>
+                <th>kg</th>
+                <th class="mass-slider-column"></th>
+            </tr>
         </thead>
         <tbody class="ball-setting-views">
     
             <tr class="add-ball-row" style="display: none">
                 <td></td>
-                <td colspan="7"><button class="add-ball-btn"><span class="fa fa-plus-circle"></span> add ball</button></td>
+                <td colspan="7" class="more-data"><button class="add-ball-btn"><span class="fa fa-plus-circle"></span> add ball</button></td>
+                <td colspan="1" class="less-data"><button class="add-ball-btn"><span class="fa fa-plus-circle"></span> add ball</button></td>
                 <td></td>
             </tr>
         </tbody>

@@ -7,9 +7,10 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
-    var BallSettingsView = require('views/ball-settings');
+    var CollisionLabSimulation = require('models/simulation');
+
+    var CollisionLabSceneView = require('views/scene');
+    var BallSettingsView      = require('views/ball-settings');
 
     var Constants = require('constants');
 
@@ -29,7 +30,6 @@ define(function (require) {
     var simHtml              = require('text!templates/sim.html');
     var simControlsHtml      = require('text!templates/sim-controls.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
-    var ballSettingsHtml     = require('text!templates/ball-settings-1d.html');
 
     /**
      * SimView class containing shared functionality for
@@ -47,6 +47,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        ballSettingsHtml: '', // Overwritten by each tab
 
         /**
          * Dom event listeners
@@ -62,11 +63,6 @@ define(function (require) {
          * @params options
          */
         initialize: function(options) {
-            options = _.extend({
-                title: 'Template Sim',
-                name: 'template-sim',
-            }, options);
-
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
@@ -76,14 +72,14 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new CollisionLabSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new CollisionLabSceneView({
                 simulation: this.simulation
             });
         },
@@ -145,7 +141,7 @@ define(function (require) {
          * Renders the ball settings tables
          */
         renderBallSettings: function() {
-            this.$el.append(ballSettingsHtml);
+            this.$el.append(this.ballSettingsHtml);
             this.$ballSettingViews = this.$('.ball-setting-views');
             this.$moreData = this.$('.more-data');
             this.$lessData = this.$('.less-data');
@@ -157,11 +153,18 @@ define(function (require) {
             this.ballSettingViews = [];
 
             this.simulation.balls.each(function(ball) {
-                var ballSettingsView = new BallSettingsView({ model: ball });
+                var ballSettingsView = this.createBallSettingsView(ball);
                 this.$ballSettingViews.append(ballSettingsView.el);
                 ballSettingsView.render();
                 this.ballSettingViews.push(ballSettingsView);
             }, this);
+        },
+
+        /**
+         * Returns a new ball settings view
+         */
+        createBallSettingsView: function(ball) {
+            return new BallSettingsView({ model: ball });
         },
 
         /**
