@@ -29,12 +29,12 @@ define(function (require, exports, module) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
 
-            this.balls = new Backbone.Collection([
-                new Ball({ color: Constants.Ball.COLORS[0], number: 1 }),
-                new Ball({ color: Constants.Ball.COLORS[1], number: 2 })
-            ],{
+            this.balls = new Backbone.Collection([],{
                 model: Ball
             });
+
+            this.addBall();
+            this.addBall();
         },
 
         /**
@@ -46,6 +46,17 @@ define(function (require, exports, module) {
 
         _update: function(time, deltaTime) {
             
+        },
+
+        addBall: function() {
+            this.balls.add(new Ball({
+                color: Constants.Ball.COLORS[this.balls.length], 
+                number: this.balls.length + 1
+            }));
+        },
+
+        removeBall: function() {
+            this.balls.pop();
         }
 
     });

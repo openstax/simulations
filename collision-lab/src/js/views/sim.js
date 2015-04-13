@@ -57,7 +57,10 @@ define(function (require) {
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
 
-            'slide .elasticity-slider' : 'changeElasticity'
+            'slide .elasticity-slider' : 'changeElasticity',
+
+            'click .add-ball-btn'    : 'addBall',
+            'click .remove-ball-btn' : 'removeBall'
         },
 
         /**
@@ -178,7 +181,10 @@ define(function (require) {
          * Returns a new ball settings view
          */
         createBallSettingsView: function(ball) {
-            return new BallSettingsView({ model: ball });
+            return new BallSettingsView({ 
+                model: ball, 
+                showMoreData: this.moreDataMode 
+            });
         },
 
         /**
@@ -227,6 +233,7 @@ define(function (require) {
                 this.ballSettingViews[i].showMoreData();
             this.$moreDataButton.hide();
             this.$lessDataButton.show();
+            this.moreDataMode = true;
         },
 
         showLessData: function() {
@@ -236,6 +243,7 @@ define(function (require) {
                 this.ballSettingViews[i].showLessData();
             this.$lessDataButton.hide();
             this.$moreDataButton.show();
+            this.moreDataMode = false;
         },
 
         changeElasticity: function(event) {
@@ -254,30 +262,43 @@ define(function (require) {
             });
         },
 
+        appendBallSettingsView: function(ballSettingsView) {
+            this.$ballSettingViews.children().last().before(ballSettingsView.el);
+            ballSettingsView.render();
+            this.ballSettingViews.push(ballSettingsView);
+        },
+
         ballsReset: function(balls) {
             // Remove old ball views
             for (var i = this.ballSettingViews.length - 1; i >= 0; i--) {
-                this.$ballSettingViews.remove(this.ballSettingViews[i].el);
+                this.ballSettingViews[i].remove();
                 this.ballSettingViews.splice(i, 1);
             }
 
             // Add new ball views
             balls.each(function(ball) {
                 var ballSettingsView = this.createBallSettingsView(ball);
-                this.$ballSettingViews.children().last().before(ballSettingsView.el);
-                ballSettingsView.render();
-                this.ballSettingViews.push(ballSettingsView);
+                this.appendBallSettingsView(ballSettingsView);
             }, this);
 
             this.updateBallButtons();
         },
 
-        ballAdded: function() {
+        ballAdded: function(ball, balls) {
+            var ballSettingsView = this.createBallSettingsView(ball);
+            this.appendBallSettingsView(ballSettingsView);
 
             this.updateBallButtons();
         },
 
-        ballRemoved: function() {
+        ballRemoved: function(ball, balls) {
+            for (var i = this.ballSettingViews.length - 1; i >= 0; i--) {
+                if (this.ballSettingViews[i].model === ball) {
+                    this.ballSettingViews[i].remove();
+                    this.ballSettingViews.splice(i, 1);
+                    break;
+                }
+            }
 
             this.updateBallButtons();
         },
@@ -295,6 +316,14 @@ define(function (require) {
                 this.$('.add-ball-row').show();
             else
                 this.$('.add-ball-row').hide();
+        },
+
+        addBall: function() {
+            this.simulation.addBall();
+        },
+
+        removeBall: function() {
+            this.simulation.removeBall();
         }
 
     });

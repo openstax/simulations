@@ -26,9 +26,9 @@ define(function (require) {
     Ball.COLORS = [
         '#bece8b',
         '#a5aae2',
-        '#8977a4',
         '#f4c24b',
-        '#7ab0b3'
+        '#7ab0b3',
+        '#8977a4'
     ];
 
     Ball.DEFAULT_MASS = 1; // kg

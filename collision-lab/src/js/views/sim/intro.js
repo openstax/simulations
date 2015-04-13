@@ -52,7 +52,8 @@ define(function (require) {
         createBallSettingsView: function(ball) {
             return new BallSettingsView({ 
                 model: ball, 
-                oneDimensional: true 
+                oneDimensional: true, 
+                showMoreData: this.moreDataMode
             });
         }
 

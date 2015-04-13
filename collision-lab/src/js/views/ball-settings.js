@@ -32,11 +32,12 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                oneDimensional: false
+                oneDimensional: false,
+                showMoreData: false
             }, options);
 
             this.oneDimensional = options.oneDimensional;
-            this.moreDataMode = false;
+            this.moreDataMode = options.showMoreData;
 
             this.listenTo(this.model, 'change:mass', this.massChanged);
         },
@@ -65,7 +66,10 @@ define(function(require) {
                 }
             });
 
-            this.showLessData();
+            if (this.moreDataMode)
+                this.showMoreData();
+            else
+                this.showLessData();
 
             return this;
         },
