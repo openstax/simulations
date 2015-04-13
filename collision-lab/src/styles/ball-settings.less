@@ -41,6 +41,10 @@
             padding-right: 6px;
         }
 
+        td {
+            position: relative;
+        }
+
         .add-ball-row {
             .user-select(none);
         }
@@ -72,8 +76,18 @@
         }
 
         .remove-ball-btn {
+            position: absolute;
+            width: 94px;
+            top: 0;
+            text-align: left;
+
             > .button-text {
                 display: none;
+                // position: absolute;
+                // top: 0;
+                // left: 18px;
+                // width: 80px;
+                // text-align: left;
             }
 
             &:hover > .button-text {
