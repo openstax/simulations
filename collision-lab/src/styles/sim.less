@@ -1,0 +1,128 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sound-btn-wrapper {
+    position: absolute;
+    top: -36px;
+    right: 30px;
+
+    > .sound-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.sound-btn-mute,
+        &.sound-btn-low {
+            display: none;
+        }
+    }
+}
+
+.sim-controls {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+    background: @panel-bg;
+    padding: 15px;
+    //width: @control-panel-width;
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: 400;
+        color: rgba(51, 51, 51, 0.8);
+        margin-top: 0;
+        margin-bottom: 7px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+        margin-top: 18px;
+    }
+
+    h2.slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
+    }
+
+    ul.radio, ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        &:last-child {
+            margin-bottom: -2px;
+        }
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            padding-top: 2px;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
+
+    .slider {
+        box-shadow: 0 0px 4px rgba(71, 64, 166, 0.08);
+    }
+
+    .elasticity {
+        float: right;
+    }
+
+    .elasticity-slider-wrapper {
+        position: relative;
+
+        .elasticity-slider {
+            margin-bottom: 20px;
+        }
+
+        label {
+            position: absolute;
+            top: 4px;
+            opacity: 0.6;
+            font-weight: normal;
+
+            &:first-child {
+                left: 0;
+            }
+
+            &:last-child {
+                right: 0;
+            }
+        }
+    }
+}

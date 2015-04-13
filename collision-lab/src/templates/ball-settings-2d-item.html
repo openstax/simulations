@@ -1,0 +1,10 @@
+<td><span class="ball-icon" style="background: <%= color %>"><%= number %></span></td>
+<td><input type="number" class="form-control mass" value="<%= mass.toFixed(1) %>" /></td>
+<td class="less mass-slider-column" colspan="6"><div class="slider mass-slider"></div></td>
+<td class="more"><input type="number" class="form-control pos-x" value="<%= position.x.toFixed(2) %>" /></td>
+<td class="more"><input type="number" class="form-control pos-y" value="<%= position.y.toFixed(2) %>" /></td>
+<td class="more"><input type="number" class="form-control vel-x" value="<%= velocity.x.toFixed(2) %>" /></td>
+<td class="more"><input type="number" class="form-control vel-y" value="<%= velocity.y.toFixed(2) %>" /></td>
+<td class="more momentum-column"><span class="mom-x"><%= momentumX.toFixed(2) %></span></td>
+<td class="more momentum-column"><span class="mom-y"><%= momentumY.toFixed(2) %></span></td>
+<td class="button-column"><button class="remove-ball-btn" style="display: none"><span class="fa fa-minus-circle"></span> <span class="button-text">remove ball</span></button></td>
