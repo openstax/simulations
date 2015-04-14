@@ -54,10 +54,14 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
 
             'slide .elasticity-slider' : 'changeElasticity',
+            'slide .playback-speed'    : 'changeTimeScale',
 
             'click .add-ball-btn'    : 'addBall',
             'click .remove-ball-btn' : 'removeBall'
@@ -78,6 +82,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:time',   this.updateTime);
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
 
             this.listenTo(this.simulation.balls, 'reset',  this.ballsReset);
             this.listenTo(this.simulation.balls, 'add',    this.ballAdded);
@@ -139,10 +146,10 @@ define(function (require) {
             this.$('select').selectpicker();
 
             this.$('.playback-speed').noUiSlider({
-                start: 7,
+                start: 0.5,
                 range: {
-                    'min': 0,
-                    'max': 10
+                    'min': 0.01,
+                    'max': 1
                 }
             });
 
@@ -157,6 +164,7 @@ define(function (require) {
             });
 
             this.$elasticity = this.$('.elasticity');
+            this.$time = this.$('.time');
         },
 
         /**
@@ -246,6 +254,23 @@ define(function (require) {
             this.moreDataMode = false;
         },
 
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        /**
+         * Update the time counter label.
+         */
+        updateTime: function(simulation, time) {
+            this.$time.html(time.toFixed(2) + ' sec');
+        },
+
         changeElasticity: function(event) {
             var percentage = parseInt($(event.target).val());
             this.inputLock(function() {
@@ -259,6 +284,13 @@ define(function (require) {
             this.updateLock(function(){
                 this.$elasticity.text(percentage + '%');
                 this.$elasticitySlider.val(percentage);
+            });
+        },
+
+        changeTimeScale: function(event) {
+            var timeScale = $(event.target).val();
+            this.inputLock(function() {
+                this.simulation.set('timeScale', timeScale);
             });
         },
 

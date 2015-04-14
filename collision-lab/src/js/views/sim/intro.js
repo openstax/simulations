@@ -45,7 +45,7 @@ define(function (require) {
          */
         initSimulation: function() {
             this.simulation = new CollisionLabSimulation({
-                defaultBallSettings: Constants.INTRO_DEFAULT_BALL_SETTINGS,
+                defaultBallSettings: Constants.Simulation.INTRO_DEFAULT_BALL_SETTINGS,
                 oneDimensional: true
             });
         },

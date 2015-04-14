@@ -13,10 +13,23 @@ define(function (require) {
      *************************************************************************/
 
     //Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
-    Constants.MIN_NUM_BALLS = 2;
-    Constants.MAX_NUM_BALLS = 5;
 
-    Constants.DEFAULT_BALL_SETTINGS = [
+
+    /*************************************************************************
+     **                                                                     **
+     **                             SIMULATION                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Simulation = {};
+
+    Simulation.DEFAULT_TIMESCALE = 0.5; // multiplier for time steps
+    Simulation.STEP_DURATION = 0.01; // seconds
+
+    Simulation.MIN_NUM_BALLS = 2;
+    Simulation.MAX_NUM_BALLS = 5;
+
+    Simulation.DEFAULT_BALL_SETTINGS = [
         { mass: 0.5, position: new Vector2(1.0,  0.0), velocity: new Vector2( 1.0,  0.3)  },
         { mass: 1.5, position: new Vector2(2.0,  0.5), velocity: new Vector2(-0.5, -0.5)  },
         { mass: 1.0, position: new Vector2(1.0, -0.5), velocity: new Vector2(-0.5, -0.25) },
@@ -24,10 +37,12 @@ define(function (require) {
         { mass: 1.0, position: new Vector2(1.2,  0.8), velocity: new Vector2(-1.1,  0)    }
     ];
 
-    Constants.INTRO_DEFAULT_BALL_SETTINGS = [
+    Simulation.INTRO_DEFAULT_BALL_SETTINGS = [
         { mass: 0.5, position: new Vector2(1, 0), velocity: new Vector2(1, 0) },
         { mass: 1.5, position: new Vector2(2, 0), velocity: new Vector2(0, 0) }
     ];
+
+    Constants.Simulation = Simulation;
 
     /*************************************************************************
      **                                                                     **
