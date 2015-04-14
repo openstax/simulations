@@ -340,11 +340,11 @@ define(function (require) {
             this.$('.remove-ball-btn').hide();
 
             // Show last remove ball button if appropriate
-            if (this.simulation.balls.length > Constants.MIN_NUM_BALLS && this.userCanAddRemoveBalls) 
+            if (this.simulation.balls.length > Constants.Simulation.MIN_NUM_BALLS && this.userCanAddRemoveBalls) 
                 this.$('.remove-ball-btn').last().show();
 
             // Hide or show the add ball button
-            if (this.simulation.balls.length < Constants.MAX_NUM_BALLS && this.userCanAddRemoveBalls)
+            if (this.simulation.balls.length < Constants.Simulation.MAX_NUM_BALLS && this.userCanAddRemoveBalls)
                 this.$('.add-ball-row').show();
             else
                 this.$('.add-ball-row').hide();

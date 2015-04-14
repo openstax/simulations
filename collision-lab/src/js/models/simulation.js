@@ -271,7 +271,7 @@ define(function (require, exports, module) {
                 for (var i = 0; i < balls.length; i++) {
                     var iPos = balls.at(i).get('position');
                     this.checkWallCollisionAndSeparate(balls.at(i), iPos.x, iPos.y);
-                    
+
                     for (var j = i + 1; j < balls.length; j++) {
                         var jPos = balls.at(j).get('position');
                         var dist = iPos.distance(jPos);

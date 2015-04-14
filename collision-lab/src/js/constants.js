@@ -43,8 +43,8 @@ define(function (require) {
         { mass: 1.5, position: new Vector2(2, 0), velocity: new Vector2(0, 0) }
     ];
 
-    Simulation.BORDER_BOUNDS_1D = new Rectangle(0, -0.95, 3.2, 1.9);
-    Simulation.BORDER_BOUNDS_2D = new Rectangle(0, -0.4,  3.2, 0.8);
+    Simulation.BORDER_BOUNDS_1D = new Rectangle(0, -0.4,  3.2, 0.8);
+    Simulation.BORDER_BOUNDS_2D = new Rectangle(0, -0.95, 3.2, 1.9);
 
     Constants.Simulation = Simulation;
 
@@ -69,6 +69,29 @@ define(function (require) {
     Ball.MAX_MASS = 3.0; // kg
 
     Constants.Ball = Ball;
+
+
+    var BallView = {};
+
+    BallView.ARROW_TAIL_WIDTH  = 5;
+    BallView.ARROW_HEAD_WIDTH  = 17;
+    BallView.ARROW_HEAD_LENGTH = 17;
+    BallView.ARROW_COLOR = '#cd2520';
+    BallView.ARROW_ALPHA = 1;
+    BallView.VELOCITY_MARKER_COLOR = '#fff';
+    BallView.VELOCITY_MARKER_ALPHA = 0.5;
+    BallView.VELOCITY_MARKER_RADIUS = 20;
+    BallView.VELOCITY_MARKER_THICKNESS = 4;
+    BallView.VELOCITY_MARKER_FONT = '28px Arial';
+
+    Constants.BallView = BallView;
+
+
+    var BallTraceView = {};
+
+    BallTraceView.LINE_WIDTH = 3;
+
+    Constants.BallTraceView = BallTraceView;
 
 
     return Constants;
