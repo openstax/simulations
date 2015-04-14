@@ -24,6 +24,9 @@ define(function (require) {
         initialize: function(attributes, options) {
             MotionObject.prototype.initialize.apply(this, [attributes, options]);
 
+            this.lastX = this.get('position').x;
+            this.lastY = this.get('position').y;
+
             this.on('change:mass', this.updateRadius);
             this.on('change:mass change:velocity', this.updateMomentum);
 
@@ -45,6 +48,36 @@ define(function (require) {
         updateMomentum: function() {
             this.set('momentumX', this.get('mass') * this.get('velocity').x);
             this.set('momentumY', this.get('mass') * this.get('velocity').y);
+        },
+
+        setX: function() {
+            this.lastX = this.get('position').x;
+            MotionObject.prototype.initialize.apply(this, arguments);
+        },
+
+        setY: function(y) {
+            this.lastY = this.get('position').y;
+            MotionObject.prototype.initialize.apply(this, arguments);
+        },
+
+        translate: function(x, y) {
+            this.lastX = this.get('position').x;
+            this.lastY = this.get('position').y;
+            MotionObject.prototype.initialize.apply(this, arguments);
+        },
+
+        setPosition: function(x, y) {
+            this.lastX = this.get('position').x;
+            this.lastY = this.get('position').y;
+            MotionObject.prototype.initialize.apply(this, arguments);
+        },
+
+        getLastX: function() {
+            return this.lastX;
+        },
+
+        getLastY: function() {
+            return this.lastY;
         }
 
     }, Constants.Ball);

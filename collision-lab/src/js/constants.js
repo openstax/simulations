@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var Constants = {}; 
 
@@ -41,6 +42,9 @@ define(function (require) {
         { mass: 0.5, position: new Vector2(1, 0), velocity: new Vector2(1, 0) },
         { mass: 1.5, position: new Vector2(2, 0), velocity: new Vector2(0, 0) }
     ];
+
+    Simulation.BORDER_BOUNDS_1D = new Rectangle(0, -0.95, 3.2, 1.9);
+    Simulation.BORDER_BOUNDS_2D = new Rectangle(0, -0.4,  3.2, 0.8);
 
     Constants.Simulation = Simulation;
 

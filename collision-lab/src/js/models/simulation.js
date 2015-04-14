@@ -13,6 +13,12 @@ define(function (require, exports, module) {
      * Constants
      */
     var Constants = require('constants');
+    var WallCollisions = {
+        LEFT:   1,
+        RIGHT:  2,
+        TOP:    3,
+        BOTTOM: 4
+    };
 
     /**
      * Wraps the update function in 
@@ -22,6 +28,7 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
             defaultBallSettings: Constants.Simulation.DEFAULT_BALL_SETTINGS,
             oneDimensional: false,
+            borderOn: true,
 
             paused: true,
             timeScale: Constants.Simulation.DEFAULT_TIMESCALE,
@@ -36,6 +43,10 @@ define(function (require, exports, module) {
                 model: Ball
             });
 
+            this.bounds = this.get('oneDimensional') ? 
+                Constants.Simulation.BORDER_BOUNDS_1D : 
+                Constants.Simulation.BORDER_BOUNDS_2D;
+
             Simulation.prototype.initialize.apply(this, [attributes, options]);
         },
 
@@ -45,6 +56,27 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.addBall();
             this.addBall();
+        },
+
+        /**
+         * Adds a ball with appropriate default values
+         */
+        addBall: function() {
+            this.balls.add(new Ball({
+                color: Constants.Ball.COLORS[this.balls.length], 
+                number: this.balls.length + 1,
+
+                mass:     this.get('defaultBallSettings')[this.balls.length].mass,
+                position: this.get('defaultBallSettings')[this.balls.length].position,
+                velocity: this.get('defaultBallSettings')[this.balls.length].velocity
+            }));
+        },
+
+        /**
+         * Removes the last ball in the list of balls
+         */
+        removeBall: function() {
+            this.balls.pop();
         },
 
         /**
@@ -89,8 +121,10 @@ define(function (require, exports, module) {
             // Update ball positions
             for (var i = 0; i < this.balls.length; i++) {
                 this.balls.at(i).updatePositionFromVelocity(deltaTime);
-                // this.checkAndProcessWallCollision(i);
+                this.checkAndProcessWallCollisions(i);
             }
+            this.checkBallCollisions();
+            this.calculateCenterOfMass();
 
             if (this.reversing)
                 this.lastTime = this.time;
@@ -100,24 +134,199 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Adds a ball with appropriate default values
+         * If ball is beyond reflecting border, translate back to
+         *   the edge and reflect it.
          */
-        addBall: function() {
-            this.balls.add(new Ball({
-                color: Constants.Ball.COLORS[this.balls.length], 
-                number: this.balls.length + 1,
+        checkAndProcessWallCollisions: function(index) {
+            if (!this.get('borderOn'))
+                return;
 
-                mass:     this.get('defaultBallSettings')[this.balls.length].mass,
-                position: this.get('defaultBallSettings')[this.balls.length].position,
-                velocity: this.get('defaultBallSettings')[this.balls.length].velocity
-            }));
+            var wallOffsetX = 0;
+            var wallOffsetY = 0;
+            var wallHit = false;
+
+            var balls = this.balls;
+            var ball = balls.at(index);
+            var radius = ball.get('radius');
+            var x = ball.get('position').x;
+            var y = ball.get('position').y;
+            var vx = ball.get('velocity').x;
+            var vy = ball.get('velocity').y;
+            var onePlusEpsilon = 1.000001;
+
+            if ((x + radius) > this.bounds.right()) {
+                ball.setX(this.bounds.right() - onePlusEpsilon * radius);
+                ball.setVelocityX(this.get('elasticity') * -vx);
+                wallOffsetX = ball.get('position').x - x;
+                wallHit = true;
+            }
+            else if ((x - radius) < this.bounds.left()) {
+                ball.setX(this.bounds.left() + onePlusEpsilon * radius);
+                ball.setVelocityX(this.get('elasticity') * -vx);
+                wallOffsetX = ball.get('position').x - x;
+                wallHit = true;
+            }
+
+            if ((y + radius) > this.bounds.top()) {
+                ball.setY(this.bounds.top() - onePlusEpsilon * radius);
+                ball.setVelocityY(this.get('elasticity') * -vy);
+                wallOffsetY = ball.get('position').y - y;
+                wallHit = true;
+            }
+            else if ((y - radius) < this.bounds.bottom()) {
+                ball.setY(this.bounds.bottom() + onePlusEpsilon * radius);
+                ball.setVelocityY(this.get('elasticity') * -vy);
+                wallOffsetY = ball.get('position').y - y;
+                wallHit = true;
+            }
+
+            if (wallHit) {
+                this.collide();
+
+                // Check if overlapping any other ball and correct by
+                //   translating the other ball.
+                var xi = ball.get('position').x;
+                var yi = ball.get('position').y;
+                for (var j = 0; j < balls.length; j++) {
+                    if (j != index) {
+                        var xj = balls.at(j).get('position').x;
+                        var yj = balls.at(j).get('position').y;
+                        var dist = Math.sqrt((xj - xi) * (xj - xi) + (yj - yi) * (yj - yi));
+                        var distMin = radius + balls.at(j).get('radius');
+                        if (dist < distMin)
+                            balls.at(j).setPosition(xj + wallOffsetX, yj + wallOffsetY);
+                    }
+                }
+            }
         },
 
         /**
-         * Removes the last ball in the list of balls
+         * Handles everything necessary to flag a collision
          */
-        removeBall: function() {
-            this.balls.pop();
+        collide: function() {
+            this.colliding = true;
+            // Play a sound or something
+        },
+
+        /**
+         * Checks for collisions between balls
+         */
+        checkBallCollisions: function() {
+            var balls = this.balls;
+            for (var i = 0; i < balls.length; i++) {
+                for (var j = i + 1; j < balls.length; j++) {
+                    var dist = balls.at(i).get('position').distance(balls.at(j).get('position'));
+                    var distMin = balls.at(i).get('radius') + balls.at(j).get('radius');
+                    if (dist < distMin) {
+                        this.collideBalls(balls.at(i), balls.at(j));
+                        this.colliding = true;
+                    }
+                }
+            }
+        },
+
+        /**
+         * 
+         */
+        collideBalls: function(ball1, ball2) {
+            this.collide();
+
+            // Note: Function copied almost verbatim from the original.
+
+            // Balls have already overlapped, so they currently 
+            //   have incorrect positions
+            var contactTime = this.getContactTime(ball1, ball2);
+            var delTBefore = contactTime - this.lastTime;
+            var delTAfter = this.time - contactTime;
+            var v1x = ball1.get('velocity').x;
+            var v2x = ball2.get('velocity').x;
+            var v1y = ball1.get('velocity').y;
+            var v2y = ball2.get('velocity').y;
+
+            // Get positions at contact time:
+            var x1 = ball1.getLastX() + v1x * delTBefore;
+            var x2 = ball2.getLastX() + v2x * delTBefore;
+            var y1 = ball1.getLastY() + v1y * delTBefore;
+            var y2 = ball2.getLastY() + v2y * delTBefore;
+            var delX = x2 - x1;
+            var delY = y2 - y1;
+            var d = Math.sqrt(delX * delX + delY * delY);
+
+            // Normal and tangential components of initial velocities
+            var v1n = (1 / d) * (v1x * delX + v1y * delY);
+            var v2n = (1 / d) * (v2x * delX + v2y * delY);
+            var v1t = (1 / d) * (-v1x * delY + v1y * delX);
+            var v2t = (1 / d) * (-v2x * delY + v2y * delX);
+            var m1 = ball1.get('mass');
+            var m2 = ball2.get('mass');
+
+            // Normal components of velocities after collision (P for prime = after)
+            var elasticity = this.get('elasticity');
+            var v1nP = ((m1 - m2 * elasticity) * v1n + m2 * (1 + elasticity) * v2n) / (m1 + m2);
+            var v2nP = (elasticity + 0.000001) * (v1n - v2n) + v1nP;  //changed from 0.0000001
+            var v1xP = (1 / d) * (v1nP * delX - v1t * delY);
+            var v1yP = (1 / d) * (v1nP * delY + v1t * delX);
+            var v2xP = (1 / d) * (v2nP * delX - v2t * delY);
+            var v2yP = (1 / d) * (v2nP * delY + v2t * delX);
+
+            ball1.setVelocity(v1xP, v1yP);
+            ball2.setVelocity(v2xP, v2yP);
+
+            // Don't allow balls to rebound after collision during
+            //   timestep of collision this seems to improve stability
+            var newXi = x1 + v1xP * delTAfter;
+            var newYi = y1 + v1yP * delTAfter;
+            var newXj = x2 + v2xP * delTAfter;
+            var newYj = y2 + v2yP * delTAfter;
+
+            ball1.setPosition(newXi, newYi);
+            ball2.setPosition(newXj, newYj);
+        },
+
+        /**
+         * Returns the time at which two balls collided.
+         */
+        getContactTime: function(ball1, ball2) {
+            var contactTime;
+
+            // Note: Function copied almost verbatim from the original.
+
+            var x1 = ball1.getLastX();
+            var y1 = ball1.getLastY();
+            var x2 = ball2.getLastX();
+            var y2 = ball2.getLastY();
+            var v1x = ball1.get('velocity').x;
+            var v1y = ball1.get('velocity').y;
+            var v2x = ball2.get('velocity').x;
+            var v2y = ball2.get('velocity').y;
+            var delX = x2 - x1;
+            var delY = y2 - y1;
+            var delVx = v2x - v1x;
+            var delVy = v2y - v1y;
+            var delVSq = delVx * delVx + delVy * delVy;
+            var R1 = ball1.get('radius');
+            var R2 = ball2.get('radius');
+            var SSq = (R1 + R2) * (R1 + R2); // Square of center-to-center separation of balls at contact
+            var delRDotDelV = delX * delVx + delY * delVy;
+            var delRSq = delX * delX + delY * delY;
+            var underSqRoot = delRDotDelV * delRDotDelV - delVSq * (delRSq - SSq);
+
+            // If collision is superslow and tiny number precision causes 
+            //   number under square root to be negative, then set collision
+            //   time equal to the half-way point since last time step.
+            if (delVSq < 0.000000001 || underSqRoot < 0) {
+                contactTime = this.lastTime + 0.5 * (this.time - this.lastTime);
+            }
+            else { // Collision is normal
+                var delT;
+                if (this.reversing)
+                    delT = (-delRDotDelV + Math.sqrt(delRDotDelV * delRDotDelV - delVSq * (delRSq - SSq))) / delVSq;
+                else
+                    delT = (-delRDotDelV - Math.sqrt(delRDotDelV * delRDotDelV - delVSq * (delRSq - SSq))) / delVSq;
+                contactTime = this.lastTime + delT;
+            }
+
+            return contactTime;
         },
 
         /**
