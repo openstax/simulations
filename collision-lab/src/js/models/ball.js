@@ -78,6 +78,11 @@ define(function (require) {
 
         getLastY: function() {
             return this.lastY;
+        },
+
+        setLastPositionToCurrent: function() {
+            this.lastX = this.get('position').x;
+            this.lastY = this.get('position').y;
         }
 
     }, Constants.Ball);

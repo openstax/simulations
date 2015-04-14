@@ -201,13 +201,47 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Handles everything necessary to flag a collision
+         * Returns the first wall collision it detects as a member
+         *   of WallCollisions.
          */
-        collide: function() {
-            this.colliding = true;
-            // Play a sound or something
+        checkWallCollision: function(ball, x, y) {
+            if (this.get('borderOn')) {
+                var radius = ball.get('radius');
+
+                if ((x + radius) > this.bounds.right())
+                    return WallCollisions.RIGHT;
+                if ((x - radius) < this.bounds.left())
+                    return WallCollisions.LEFT;
+                if ((y + radius) > this.bounds.top())
+                    return WallCollisions.TOP;
+                if ((y - radius) < this.bounds.bottom())
+                    return WallCollisions.BOTTOM;
+            }
+
+            return false;
         },
 
+        /**
+         * If a ball is outside the border, move it back.
+         */
+        checkWallCollisionAndSeparate: function(ball, x, y) {
+            if (this.get('borderOn')) {
+                var radius = ball.get('radius');
+
+                // For some reason they use else ifs, but whatever.
+
+                if ((x + radius) > this.bounds.right())
+                    ball.setX(this.bounds.right() - 2 * radius);
+                else if ((x - radius) < this.bounds.left())
+                    ball.setX(this.bounds.left() + 2 * radius);
+                else if ((y + radius) > this.bounds.top())
+                    ball.setY(this.bounds.top() - 2 * radius);
+                else if ((y - radius) < this.bounds.bottom())
+                    ball.setY(this.bounds.bottom() + 2 * radius);
+                    
+            }
+        },
+        
         /**
          * Checks for collisions between balls
          */
@@ -223,6 +257,98 @@ define(function (require, exports, module) {
                     }
                 }
             }
+        },
+
+        /**
+         * Loops through all balls repeatedly until there's no
+         *   overlap between any pair.
+         */
+        separateAllBalls: function() {
+            var balls = this.balls;
+
+            var counter = 0;
+            while (counter <= 20) {
+                for (var i = 0; i < balls.length; i++) {
+                    var iPos = balls.at(i).get('position');
+                    this.checkWallCollisionAndSeparate(balls.at(i), iPos.x, iPos.y);
+                    
+                    for (var j = i + 1; j < balls.length; j++) {
+                        var jPos = balls.at(j).get('position');
+                        var dist = iPos.distance(jPos);
+                        var distMin = balls.at(i).get('radius') + balls.at(j).get('radius');
+                        if (dist <= distMin)
+                            this.separateBalls(balls.at(i), balls.at(j));
+                    }
+                }
+
+                counter++;
+            }
+        },
+
+        /**
+         * Check if balls overlap.  If they do, separate them
+         *   while keeping the center of mass fixed.
+         */
+        separateBalls: function(ball1, ball2) {
+            // Note: Function copied almost verbatim from the original.
+
+            var x1 = ball1.get('position').x;
+            var x2 = ball2.get('position').x;
+            var y1 = ball1.get('position').y;
+            var y2 = ball2.get('position').y;
+            var dx = x2 - x1; // Delta x
+            var dy = y2 - y1; // Delta y
+            var dr = Math.sqrt(dx * dx + dy * dy); // Delta radius
+            var r1 = ball1.get('radius');
+            var r2 = ball2.get('radius');
+            var overlap = (r1 + r2) - dr;
+            if (overlap > 0) {
+                var m1 = ball1.get('mass');
+                var m2 = ball2.get('mass');
+                var extraBit = 0.04 * (r1 + r2);
+                overlap = overlap + extraBit;
+
+                // Prevent dxBall or dyBall from becoming NaN
+                if (dr === 0) {
+                    dx = 1;
+                    dr = 1;
+                }
+
+                var dxBall1 = -m2 * overlap * dx / (dr * (m1 + m2));
+                var dyBall1 = -m2 * overlap * dy / (dr * (m1 + m2));
+                var dxBall2 = m1 * overlap * dx / (dr * (m1 + m2));
+                var dyBall2 = m1 * overlap * dy / (dr * (m1 + m2));
+                var ball1WallCollision = this.checkWallCollision(ball1, x1 + dxBall1, y1 + dyBall1);
+                var ball2WallCollision = this.checkWallCollision(ball2, x2 + dxBall2, y2 + dyBall2);
+                
+                var wallXOffset = 0;  // Translate both balls away from colliding wall
+                var wallYOffset = 0;
+                if (ball1WallCollision === WallCollisions.TOP || ball2WallCollision === WallCollisions.TOP)
+                    wallYOffset = -(r1 + r2);
+                else if (ball1WallCollision === WallCollisions.BOTTOM || ball2WallCollision === WallCollisions.BOTTOM)
+                    wallYOffset = r1 + r2;
+                if ( ball1WallCollision === WallCollisions.LEFT || ball2WallCollision === WallCollisions.LEFT)
+                    wallXOffset = r1 + r2;
+                else if ( ball1WallCollision === WallCollisions.RIGHT || ball2WallCollision === WallCollisions.RIGHT)
+                    wallXOffset = -(r1 + r2);
+
+                ball1.setPosition(x1 + dxBall1 + wallXOffset, y1 + dyBall1 + wallYOffset);
+                ball2.setPosition(x2 + dxBall2 + wallXOffset, y2 + dyBall2 + wallYOffset);
+
+                ball1.setLastPositionToCurrent();
+                ball2.setLastPositionToCurrent();
+
+                this.updateViews();
+            }
+        },
+
+        /**
+         * Handles everything necessary to flag a collision
+         */
+        collide: function() {
+            this.colliding = true;
+            // Play a sound or something
+            console.log('collision!');
         },
 
         /**
