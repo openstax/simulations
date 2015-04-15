@@ -78,10 +78,12 @@ define(function(require) {
             });
 
             this.initVelocityMarker();
+            this.initNumber();
             
-            this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.ball);
+            this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.arrowView.displayObject);
+            this.displayObject.addChild(this.number);
 
             this.updateMVT(this.mvt);
         },
@@ -109,6 +111,15 @@ define(function(require) {
             this.velocityMarker.addChild(label);
         },
 
+        initNumber: function() {
+            this.number = new PIXI.Text(this.model.get('number'), {
+                font: BallView.NUMBER_FONT,
+                fill: BallView.NUMBER_COLOR
+            });
+            this.number.anchor.x = 0.5;
+            this.number.anchor.y = 0.45;
+        },
+
         drawBall: function() {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
 
@@ -124,6 +135,7 @@ define(function(require) {
 
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
+            this.moveToTop();
         },
 
         drag: function(data) {
@@ -154,6 +166,7 @@ define(function(require) {
 
             this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
             this.draggingVelocity = true;
+            this.moveToTop();
         },
 
         dragVelocity: function(data) {
@@ -172,6 +185,11 @@ define(function(require) {
 
         dragVelocityEnd: function(data) {
             this.draggingVelocity = false;
+        },
+
+        moveToTop: function() {
+            var parent = this.displayObject.parent;
+            parent.setChildIndex(this.displayObject, parent.children.length - 1);
         },
 
         updateVelocity: function(model, velocity) {

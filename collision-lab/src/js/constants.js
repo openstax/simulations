@@ -76,13 +76,15 @@ define(function (require) {
     BallView.ARROW_TAIL_WIDTH  = 5;
     BallView.ARROW_HEAD_WIDTH  = 17;
     BallView.ARROW_HEAD_LENGTH = 17;
-    BallView.ARROW_COLOR = '#cd2520';
+    BallView.ARROW_COLOR = '#999';
     BallView.ARROW_ALPHA = 1;
-    BallView.VELOCITY_MARKER_COLOR = '#666';
-    BallView.VELOCITY_MARKER_ALPHA = 0.8;
+    BallView.VELOCITY_MARKER_COLOR = '#999';
+    BallView.VELOCITY_MARKER_ALPHA = 1;
     BallView.VELOCITY_MARKER_RADIUS = 20;
     BallView.VELOCITY_MARKER_THICKNESS = 4;
     BallView.VELOCITY_MARKER_FONT = '28px Arial';
+    BallView.NUMBER_FONT  = 'bold 24px Helvetica Neue';
+    BallView.NUMBER_COLOR = '#fff';
 
     Constants.BallView = BallView;
 
