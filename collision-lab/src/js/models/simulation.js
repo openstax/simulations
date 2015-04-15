@@ -31,6 +31,7 @@ define(function (require, exports, module) {
             borderOn: true,
 
             paused: true,
+            started: false,
             timeScale: Constants.Simulation.DEFAULT_TIMESCALE,
             elasticity: 1,
 
@@ -260,6 +261,46 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Returns whether or not a given ball would be
+         *   within bounds at a certain location.
+         */
+        withinBounds: function(ball, x, y) {
+            if (this.get('borderOn')) {
+                var radius = ball.get('radius');
+
+                if ((x + radius) > this.bounds.right())
+                    return false;
+                if ((x - radius) < this.bounds.left())
+                    return false;
+                if ((y + radius) > this.bounds.top())
+                    return false;
+                if ((y - radius) < this.bounds.bottom())
+                    return false;
+            }
+
+            return true;
+        },
+
+        /**
+         * Modifies the given position vector to keep
+         *   the specified ball within bounds.
+         */
+        keepWithinBounds: function(ball, position) {
+            if (this.get('borderOn')) {
+                var radius = ball.get('radius');
+
+                if ((position.x + radius) > this.bounds.right())
+                    position.x = this.bounds.right() - radius;
+                else if ((position.x - radius) < this.bounds.left())
+                    position.x = this.bounds.left() + radius;
+                if ((position.y + radius) > this.bounds.top())
+                    position.y = this.bounds.top() - radius;
+                else if ((position.y - radius) < this.bounds.bottom())
+                    position.y = this.bounds.bottom() + radius;
+            }
+        },
+
+        /**
          * Loops through all balls repeatedly until there's no
          *   overlap between any pair.
          */
@@ -473,6 +514,14 @@ define(function (require, exports, module) {
          
             this.set('xCenterOfMass', sumXiMi / totalMass);
             this.set('yCenterOfMass', sumYiMi / totalMass);       
+        },
+
+        /**
+         * Returns whether or not the simulation has left its
+         *   initial state--if time is not zero.
+         */
+        hasStarted: function() {
+            return this.get('started');
         }
 
     });

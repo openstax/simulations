@@ -7,7 +7,7 @@ define(function(require) {
     var PixiView  = require('common/pixi/view');
     var ArrowView = require('common/pixi/view/arrow');
     var Colors    = require('common/colors/colors');
-    //var Vector2  = require('common/math/vector2');
+    var Vector2  = require('common/math/vector2');
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
@@ -43,6 +43,7 @@ define(function(require) {
             this.color = Colors.parseHex(this.model.get('color'));
             this.interactionEnabled = options.interactionEnabled;
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
             this.arrowViewModel = new ArrowView.ArrowViewModel({
                 originX: 0,
@@ -51,6 +52,7 @@ define(function(require) {
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
+            this._viewPosition = new Vector2();
 
             this.initGraphics();
 
@@ -140,18 +142,20 @@ define(function(require) {
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                this._viewPosition.x = local.x - this.dragOffset.x;
+                this._viewPosition.y = local.y - this.dragOffset.y;
                 
-                this.displayObject.x += dx;
-                this.displayObject.y += dy;
+                var modelPosition = this.mvt.viewToModel(this._viewPosition);
+                this.simulation.keepWithinBounds(this.model, modelPosition);
 
-                var x = Math.round(this.mvt.viewToModelX(this.displayObject.x));
-                var y = Math.round(this.mvt.viewToModelY(this.displayObject.y));
+                var correctedViewPosition = this.mvt.modelToView(modelPosition);
+                this.displayObject.x = correctedViewPosition.x;
+                this.displayObject.y = correctedViewPosition.y;
 
                 this.inputLock(function() {
-                    this.model.set('initX', x);
-                    this.model.set('initY', y);
+                    //if (!this.simulation.hasStarted())
+                    this.model.setPosition(modelPosition.x, modelPosition.y);
                 });
             }
         },
@@ -171,9 +175,9 @@ define(function(require) {
 
         dragVelocity: function(data) {
             if (this.draggingVelocity) {
-                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
-                var x = local.x - this.dragOffset.x;
-                var y = local.y - this.dragOffset.y;
+                //var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var x = global.x - this.dragOffset.x;
+                var y = global.y - this.dragOffset.y;
                 
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;

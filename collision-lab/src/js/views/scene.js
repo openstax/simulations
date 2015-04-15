@@ -146,7 +146,8 @@ define(function(require) {
         createAndAddBallView: function(ball) {
             var ballView = new BallView({ 
                 model: ball,
-                mvt: this.mvt
+                mvt: this.mvt,
+                simulation: this.simulation
             });
             this.balls.addChild(ballView.displayObject);
             this.ballViews.push(ballView);
