@@ -7,6 +7,7 @@ define(function(require) {
     var Backbone = require('backbone'); Backbone.$ = $;
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
+    var Vector2 = require('common/math/vector2');
 
     var Constants = require('constants');
 
@@ -27,7 +28,12 @@ define(function(require) {
 
         events: {
             'keyup .mass' : 'changeMassFromText',
-            'slide .mass-slider': 'changeMassFromSlider'
+            'slide .mass-slider': 'changeMassFromSlider',
+
+            'change .pos-x' : 'changeX',
+            'change .pos-y' : 'changeY',
+            'change .vel-x' : 'changeVX',
+            'change .vel-y' : 'changeVY'
         },
 
         initialize: function(options) {
@@ -38,8 +44,15 @@ define(function(require) {
 
             this.oneDimensional = options.oneDimensional;
             this.moreDataMode = options.showMoreData;
+            this.simulation = options.simulation;
 
-            this.listenTo(this.model, 'change:mass', this.massChanged);
+            this._position = new Vector2();
+
+            this.listenTo(this.model, 'change:mass',     this.massChanged);
+            this.listenTo(this.model, 'change:position', this.positionChanged);
+            this.listenTo(this.model, 'change:velocity', this.velocityChanged);
+            this.listenTo(this.model, 'change:momentumX', this.momentumXChanged);
+            this.listenTo(this.model, 'change:momentumY', this.momentumYChanged);
         },
 
         /**
@@ -102,6 +115,102 @@ define(function(require) {
                 });
                 this.$('.mass').val(mass.toFixed(1));
             }
+        },
+
+        positionChanged: function(ball, position) {
+            this.updateLock(function() {
+                this.$('.pos-x').val(position.x.toFixed(2));
+                if (!this.oneDimensional)
+                    this.$('.pos-y').val(position.y.toFixed(2));
+            });
+        },
+
+        changeX: function(event) {
+            var x = parseFloat($(event.target).val());
+            if (!isNaN(x)) {
+                var position = this._position;
+                position.x = x;
+                position.y = this.model.get('position').y;
+
+                this.simulation.keepWithinBounds(this.model, position);
+
+                this.inputLock(function() {
+                    if (!this.simulation.hasStarted())
+                        this.model.setInitX(position.x);
+                    this.model.setX(position.x);
+                    this.simulation.separateAllBalls();
+
+                    // Update the text box with the correct position if it is different
+                    this.$('.pos-x').val(this.model.get('position').x.toFixed(2));
+                    if (!this.oneDimensional)
+                        this.$('.pos-y').val(this.model.get('position').y.toFixed(2));
+                });
+            }
+        },
+
+        changeY: function(event) {
+            var y = parseFloat($(event.target).val());
+            if (!isNaN(y)) {
+                var position = this._position;
+                position.x = this.model.get('position').x;
+                position.y = y;
+
+                this.simulation.keepWithinBounds(this.model, position);
+
+                this.inputLock(function() {
+                    if (!this.simulation.hasStarted())
+                        this.model.setInitY(position.y);
+                    this.model.setY(position.y);
+                    this.simulation.separateAllBalls();
+
+                    // Update the text box with the correct position if it is different
+                    this.$('.pos-x').val(this.model.get('position').x.toFixed(2));
+                    if (!this.oneDimensional)
+                        this.$('.pos-y').val(this.model.get('position').y.toFixed(2));
+                });
+            }
+        },
+
+        velocityChanged: function(ball, velocity) {
+            this.updateLock(function() {
+                this.$('.vel-x').val(velocity.x.toFixed(2));
+                if (!this.oneDimensional)
+                    this.$('.vel-y').val(velocity.y.toFixed(2));
+            });
+        },
+
+        changeVX: function(event) {
+            var vx = parseFloat($(event.target).val());
+            if (!isNaN(vx)) {
+                this.inputLock(function() {
+                    if (!this.simulation.hasStarted())
+                        this.model.setInitVX(vx);
+                    this.model.setVelocityX(vx);
+                });
+            }
+        },
+
+        changeVY: function(event) {
+            var vy = parseFloat($(event.target).val());
+            if (!isNaN(vy)) {
+                this.inputLock(function() {
+                    if (!this.simulation.hasStarted())
+                        this.model.setInitVY(vy);
+                    this.model.setVelocityY(vy);
+                });
+            }
+        },
+
+        momentumXChanged: function(ball, momentumX) {
+            this.updateLock(function() {
+                this.$('.mom-x').text(momentumX.toFixed(2));
+            });
+        },
+
+        momentumYChanged: function(ball, momentumY) {
+            this.updateLock(function() {
+                this.$('.mom-y').text(momentumY.toFixed(2));
+            });
         },
 
         showMoreData: function() {
