@@ -40,6 +40,11 @@ define(function (require) {
                 formats: ['ogg', 'mp3', 'wav']
             });
 
+            if (options.mute) {
+                this.bigBounceSound.mute();
+                this.smallBounceSound.mute();
+            }
+
             this.on('change:mass', this.updateRadius);
             this.on('change:mass change:velocity', this.updateMomentum);
 

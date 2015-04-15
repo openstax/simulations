@@ -4,6 +4,7 @@ define(function (require, exports, module) {
 
     var _        = require('underscore');
     var Backbone = require('backbone');
+    var buzz     = require('buzz');
 
     var Simulation = require('common/simulation/simulation');
 
@@ -70,6 +71,8 @@ define(function (require, exports, module) {
                 mass:     this.get('defaultBallSettings')[this.balls.length].mass,
                 position: this.get('defaultBallSettings')[this.balls.length].position,
                 velocity: this.get('defaultBallSettings')[this.balls.length].velocity
+            }, {
+                mute: this.muted
             }));
         },
 
@@ -523,6 +526,16 @@ define(function (require, exports, module) {
          */
         hasStarted: function() {
             return this.get('started');
+        },
+
+        mute: function() {
+            this.muted = true;
+            buzz.all().mute();
+        },
+
+        unmute: function() {
+            this.muted = false;
+            buzz.all().unmute();
         }
 
     });

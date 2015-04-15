@@ -356,6 +356,14 @@ define(function (require) {
 
         removeBall: function() {
             this.simulation.removeBall();
+        },
+
+        mute: function() {
+            this.simulation.mute();
+        },
+
+        unmute: function() {
+            this.simulation.unmute();
         }
 
     });
