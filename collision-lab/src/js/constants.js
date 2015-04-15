@@ -73,12 +73,12 @@ define(function (require) {
 
     var BallView = {};
 
-    BallView.ARROW_TAIL_WIDTH  = 5;
-    BallView.ARROW_HEAD_WIDTH  = 17;
+    BallView.ARROW_TAIL_WIDTH  = 7;
+    BallView.ARROW_HEAD_WIDTH  = 19;
     BallView.ARROW_HEAD_LENGTH = 17;
-    BallView.ARROW_COLOR = '#999';
+    BallView.ARROW_COLOR = '#cd2520';
     BallView.ARROW_ALPHA = 1;
-    BallView.VELOCITY_MARKER_COLOR = '#999';
+    BallView.VELOCITY_MARKER_COLOR = '#888';
     BallView.VELOCITY_MARKER_ALPHA = 1;
     BallView.VELOCITY_MARKER_RADIUS = 20;
     BallView.VELOCITY_MARKER_THICKNESS = 4;
