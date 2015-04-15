@@ -84,6 +84,19 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Rewinds back to the beginning, setting all the
+         *   balls to their initial states.
+         */
+        rewind: function() {
+            this.time = 0;
+            this.set('time', this.time);
+            this.set('started', false);
+
+            for (var i = 0; i < this.balls.length; i++)
+                this.balls.at(i).reset();
+        },
+
+        /**
          * Overrides Simulation.update because we update time and
          *   deltaTime differently
          */
@@ -100,16 +113,17 @@ define(function (require, exports, module) {
          */
         updateSingleStep: function(deltaTime) {
 
-            if (this.starting || this.colliding) {
+            if (!this.get('started') || this.colliding) {
                 // Use a fixed step duration for stability of the algorithm
                 deltaTime = Constants.Simulation.STEP_DURATION;
+
+                if (!this.get('started'))
+                    this.set('started', true);
+
+                if (this.colliding)
+                    this.colliding = false;
             }
-
-            if (this.colliding)
-                this.colliding = false;
-            if (this.starting)
-                this.starting = false;
-
+            
             // Multiply by our time scale
             deltaTime *= this.get('timeScale');
 

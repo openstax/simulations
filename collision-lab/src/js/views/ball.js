@@ -164,8 +164,10 @@ define(function(require) {
                 this.displayObject.y = correctedViewPosition.y;
 
                 this.inputLock(function() {
-                    //if (!this.simulation.hasStarted())
                     this.model.setPosition(modelX, modelY);
+
+                    if (!this.simulation.hasStarted())
+                        this.model.setInitPosition(modelX, modelY);
                 });
             }
         },

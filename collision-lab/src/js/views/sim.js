@@ -56,6 +56,7 @@ define(function (require) {
         events: {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
+            'click .rewind-btn' : 'rewind',
 
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
@@ -217,6 +218,13 @@ define(function (require) {
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
             this.initSceneView();
+        },
+
+        /**
+         * Rewinds back to the initial state.
+         */
+        rewind: function() {
+            this.simulation.rewind();
         },
 
         /**
