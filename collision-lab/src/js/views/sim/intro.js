@@ -36,8 +36,6 @@ define(function (require) {
             }, options);
 
             CollisionLabSimView.prototype.initialize.apply(this, [options]);
-
-            this.initSceneView();
         },
 
         /**

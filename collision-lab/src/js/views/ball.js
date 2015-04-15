@@ -54,12 +54,9 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:x', this.updateX);
-            this.listenTo(this.model, 'change:y', this.updateY);
+            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:velocity', this.updateVelocity);
             this.listenTo(this.model, 'change:radius', this.drawBall);
-
-            this.listenTo(this.model, 'change:initVX', this.updateVelocity);
-            this.listenTo(this.model, 'change:initVY', this.updateVelocity);
 
             this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.changeVelocity);
         },
@@ -177,15 +174,14 @@ define(function(require) {
             this.draggingVelocity = false;
         },
 
-        updateVelocity: function() {
+        updateVelocity: function(model, velocity) {
             this.updateLock(function() {
-                var x = this.mvt.modelToViewDeltaX(this.model.get('initVX'));
-                var y = this.mvt.modelToViewDeltaY(this.model.get('initVY'));
-                this.velocityMarker.x = x;
-                this.velocityMarker.y = y;
+                var viewVelocity = this.mvt.modelToViewDelta(velocity);
+                this.velocityMarker.x = viewVelocity.x;
+                this.velocityMarker.y = viewVelocity.y;
                 // We don't want it to draw twice, so make the first silent
-                this.arrowViewModel.set('targetX', x);
-                this.arrowViewModel.set('targetY', y);
+                this.arrowViewModel.set('targetX', viewVelocity.x);
+                this.arrowViewModel.set('targetY', viewVelocity.y);
             });
         },
 
@@ -196,15 +192,11 @@ define(function(require) {
             });
         },
 
-        updateX: function(model, x) {
+        updatePosition: function(model, position) {
             this.updateLock(function() {
-                this.displayObject.x = this.mvt.modelToViewX(x);
-            });
-        },
-
-        updateY: function(model, y) {
-            this.updateLock(function() {
-                this.displayObject.y = this.mvt.modelToViewY(y);
+                var viewPos = this.mvt.modelToView(position);
+                this.displayObject.x = viewPos.x;
+                this.displayObject.y = viewPos.y;
             });
         },
 
@@ -212,9 +204,8 @@ define(function(require) {
             this.mvt = mvt;
 
             this.drawBall();
-            this.updateX(this.model, this.model.get('x'));
-            this.updateY(this.model, this.model.get('y'));
-            this.updateVelocity();
+            this.updatePosition(this.model, this.model.get('position'));
+            this.updateVelocity(this.model, this.model.get('velocity'));
         },
 
         enableInteraction: function() {
