@@ -147,6 +147,9 @@ define(function(require) {
                 this._viewPosition.y = local.y - this.dragOffset.y;
                 
                 var modelPosition = this.mvt.viewToModel(this._viewPosition);
+                if (this.simulation.get('oneDimensional'))
+                    modelPosition.y = 0;
+
                 this.simulation.keepWithinBounds(this.model, modelPosition);
 
                 var correctedViewPosition = this.mvt.modelToView(modelPosition);
@@ -175,9 +178,12 @@ define(function(require) {
 
         dragVelocity: function(data) {
             if (this.draggingVelocity) {
-                //var local = data.getLocalPosition(this.displayObject, this._dragLocation);
-                var x = global.x - this.dragOffset.x;
-                var y = global.y - this.dragOffset.y;
+                var local = data.getLocalPosition(this.displayObject, this._dragLocation);
+                var x = local.x - this.dragOffset.x;
+                var y = local.y - this.dragOffset.y;
+
+                if (this.simulation.get('oneDimensional'))
+                    y = 0;
                 
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
