@@ -102,6 +102,7 @@ define(function(require) {
             if (!isNaN(mass)) {
                 this.inputLock(function() {
                     this.model.set('mass', mass);
+                    this.simulation.separateAllBalls();
                 });
                 this.$('.mass-slider').val(mass);
             }
@@ -112,6 +113,7 @@ define(function(require) {
             if (!isNaN(mass)) {
                 this.inputLock(function() {
                     this.model.set('mass', mass);
+                    this.simulation.separateAllBalls();
                 });
                 this.$('.mass').val(mass.toFixed(1));
             }
