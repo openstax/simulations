@@ -155,19 +155,24 @@ define(function(require) {
 
                 this.simulation.keepWithinBounds(this.model, modelPosition);
 
+                // The object that the MVT returned is about to get overwritten
+                var modelX = modelPosition.x;
+                var modelY = modelPosition.y;
+
                 var correctedViewPosition = this.mvt.modelToView(modelPosition);
                 this.displayObject.x = correctedViewPosition.x;
                 this.displayObject.y = correctedViewPosition.y;
 
                 this.inputLock(function() {
                     //if (!this.simulation.hasStarted())
-                    this.model.setPosition(modelPosition.x, modelPosition.y);
+                    this.model.setPosition(modelX, modelY);
                 });
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
+            this.simulation.separateAllBalls();
         },
 
         dragVelocityStart: function(data) {

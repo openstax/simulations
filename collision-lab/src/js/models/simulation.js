@@ -378,8 +378,6 @@ define(function (require, exports, module) {
 
                 ball1.setLastPositionToCurrent();
                 ball2.setLastPositionToCurrent();
-
-                this.updateViews();
             }
         },
 

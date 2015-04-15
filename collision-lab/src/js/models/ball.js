@@ -16,6 +16,11 @@ define(function (require) {
             radius: 0,
             momentumX: 0,
             momentumY: 0,
+
+            initX: 0,
+            initY: 0,
+            initVX: 0,
+            initVY: 0,
             
             color: '#000',
             number: 0
@@ -52,24 +57,24 @@ define(function (require) {
 
         setX: function() {
             this.lastX = this.get('position').x;
-            MotionObject.prototype.initialize.apply(this, arguments);
+            MotionObject.prototype.setX.apply(this, arguments);
         },
 
         setY: function(y) {
             this.lastY = this.get('position').y;
-            MotionObject.prototype.initialize.apply(this, arguments);
+            MotionObject.prototype.setY.apply(this, arguments);
         },
 
         translate: function(x, y) {
             this.lastX = this.get('position').x;
             this.lastY = this.get('position').y;
-            MotionObject.prototype.initialize.apply(this, arguments);
+            MotionObject.prototype.translate.apply(this, arguments);
         },
 
         setPosition: function(x, y) {
             this.lastX = this.get('position').x;
             this.lastY = this.get('position').y;
-            MotionObject.prototype.initialize.apply(this, arguments);
+            MotionObject.prototype.setPosition.apply(this, arguments);
         },
 
         getLastX: function() {
