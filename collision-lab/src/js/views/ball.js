@@ -225,11 +225,13 @@ define(function(require) {
 
         changeVelocity: function() {
             this.inputLock(function() {
-                //if (!this.simulation.hasStarted())
-                this.model.setVelocity(
-                    this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX')), 
-                    this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'))
-                );
+                var vx = this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'));
+                var vy = this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'));
+
+                if (!this.simulation.hasStarted())
+                    this.model.setInitVelocity(vx, vy);
+
+                this.model.setVelocity(vx, vy);
             });
         },
 
