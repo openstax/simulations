@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var buzz     = require('buzz');
 
     var MotionObject = require('common/models/motion-object');
     var Rectangle    = require('common/math/rectangle');
@@ -31,6 +32,13 @@ define(function (require) {
 
             this.lastX = this.get('position').x;
             this.lastY = this.get('position').y;
+
+            this.bigBounceSound = new buzz.sound('audio/bounce', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
+            this.smallBounceSound = new buzz.sound('audio/bounce-small', {
+                formats: ['ogg', 'mp3', 'wav']
+            });
 
             this.on('change:mass', this.updateRadius);
             this.on('change:mass change:velocity', this.updateMomentum);
@@ -88,6 +96,14 @@ define(function (require) {
         setLastPositionToCurrent: function() {
             this.lastX = this.get('position').x;
             this.lastY = this.get('position').y;
+        },
+
+        collideWithWall: function() {
+            this.smallBounceSound.stop().play();
+        },
+
+        collideWithBall: function() {
+            this.bigBounceSound.stop().play();
         }
 
     }, Constants.Ball);

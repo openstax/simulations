@@ -2,7 +2,7 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
     var Backbone = require('backbone');
 
     var Simulation = require('common/simulation/simulation');
@@ -183,6 +183,7 @@ define(function (require, exports, module) {
 
             if (wallHit) {
                 this.collide();
+                ball.collideWithWall();
 
                 // Check if overlapping any other ball and correct by
                 //   translating the other ball.
@@ -387,7 +388,7 @@ define(function (require, exports, module) {
         collide: function() {
             this.colliding = true;
             // Play a sound or something
-            console.log('collision!');
+            
         },
 
         /**
@@ -395,6 +396,8 @@ define(function (require, exports, module) {
          */
         collideBalls: function(ball1, ball2) {
             this.collide();
+            ball1.collideWithBall();
+            ball2.collideWithBall();
 
             // Note: Function copied almost verbatim from the original.
 
