@@ -61,6 +61,8 @@ define(function(require) {
             this.listenTo(this.model, 'change:radius', this.drawBall);
 
             this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.changeVelocity);
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedStateChanged);
         },
 
         initGraphics: function() {
@@ -88,6 +90,7 @@ define(function(require) {
             this.displayObject.addChild(this.number);
 
             this.updateMVT(this.mvt);
+            this.pausedStateChanged(this.simulation, this.simulation.get('paused'));
         },
 
         initVelocityMarker: function() {
@@ -234,6 +237,13 @@ define(function(require) {
             this.drawBall();
             this.updatePosition(this.model, this.model.get('position'));
             this.updateVelocity(this.model, this.model.get('velocity'));
+        },
+
+        pausedStateChanged: function(simulation, paused) {
+            if (paused)
+                this.enableInteraction();
+            else
+                this.disableInteraction();
         },
 
         enableInteraction: function() {
