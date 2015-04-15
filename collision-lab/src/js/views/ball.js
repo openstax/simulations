@@ -223,8 +223,11 @@ define(function(require) {
 
         changeVelocity: function() {
             this.inputLock(function() {
-                this.model.set('initVX', Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'))));
-                this.model.set('initVY', Math.round(this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'))));
+                //if (!this.simulation.hasStarted())
+                this.model.setVelocity(
+                    this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX')), 
+                    this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'))
+                );
             });
         },
 
