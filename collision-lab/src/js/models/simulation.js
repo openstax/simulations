@@ -97,6 +97,22 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Goes one step back
+         */
+        stepBack: function() {
+            this.reversing = true;
+            this.updateSingleStep();
+            this.reversing = false;
+        },
+
+        /**
+         * Goes forward one step
+         */
+        stepForward: function() {
+            this.updateSingleStep();
+        },
+
+        /**
          * Overrides Simulation.update because we update time and
          *   deltaTime differently
          */
@@ -113,7 +129,7 @@ define(function (require, exports, module) {
          */
         updateSingleStep: function(deltaTime) {
 
-            if (!this.get('started') || this.colliding) {
+            if (this.get('paused') || !this.get('started') || this.colliding) {
                 // Use a fixed step duration for stability of the algorithm
                 deltaTime = Constants.Simulation.STEP_DURATION;
 

@@ -57,6 +57,8 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .rewind-btn' : 'rewind',
+            'click .step-btn'   : 'stepForward',
+            'click .back-btn'   : 'stepBack',
 
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
@@ -225,6 +227,22 @@ define(function (require) {
          */
         rewind: function() {
             this.simulation.rewind();
+        },
+
+        /**
+         * Goes one step back
+         */
+        stepBack: function() {
+            this.pause();
+            this.simulation.stepBack();
+        },
+
+        /**
+         * Goes forward one step
+         */
+        stepForward: function() {
+            this.pause();
+            this.simulation.stepForward();
         },
 
         /**
