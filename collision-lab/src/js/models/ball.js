@@ -35,10 +35,12 @@ define(function (require) {
             this.lastY = this.get('position').y;
 
             this.bigBounceSound = new buzz.sound('audio/bounce', {
-                formats: ['ogg', 'mp3', 'wav']
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 50
             });
             this.smallBounceSound = new buzz.sound('audio/bounce-small', {
-                formats: ['ogg', 'mp3', 'wav']
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 60
             });
 
             if (options.mute) {
