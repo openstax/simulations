@@ -38,6 +38,8 @@ define(function(require) {
             }, options);
 
             this.oneDimensional = options.oneDimensional;
+            this.velocityArrowsVisible = true;
+            this.momentumArrowsVisible = false;
 
             this.ballViews = [];
 
@@ -145,7 +147,7 @@ define(function(require) {
             this.stage.addChild(marker);
 
             marker.visible = false;
-            
+
             this.xCenterOfMassChanged(this.simulation, this.simulation.get('xCenterOfMass'));
             this.yCenterOfMassChanged(this.simulation, this.simulation.get('yCenterOfMass'));
         },
@@ -264,6 +266,14 @@ define(function(require) {
 
         hideCenterOfMass: function() {
             this.centerOfMassMarker.visible = false;
+        },
+
+        showReflectingBorder: function() {
+            this.border.visible = true;
+        },
+
+        hideReflectingBorder: function() {
+            this.border.visible = false;
         }
 
     });

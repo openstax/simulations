@@ -69,10 +69,11 @@ define(function (require) {
             'click .add-ball-btn'    : 'addBall',
             'click .remove-ball-btn' : 'removeBall',
 
-            'click .velocity-vector-check' : 'toggleVelocityVectors',
-            'click .momentum-vector-check' : 'toggleMomentumVectors',
-            'click .kinetic-energy-check'  : 'toggleKineticEnergy',
-            'click .center-of-mass-check'  : 'toggleCenterOfMass'
+            'click .velocity-vector-check'   : 'toggleVelocityVectors',
+            'click .momentum-vector-check'   : 'toggleMomentumVectors',
+            'click .kinetic-energy-check'    : 'toggleKineticEnergy',
+            'click .center-of-mass-check'    : 'toggleCenterOfMass',
+            'click .reflecting-border-check' : 'toggleReflectingBorder'
         },
 
         /**
@@ -425,6 +426,17 @@ define(function (require) {
                 this.sceneView.showCenterOfMass();
             else
                 this.sceneView.hideCenterOfMass();
+        },
+
+        toggleReflectingBorder: function() {
+            if ($(event.target).is(':checked')) {
+                this.sceneView.showReflectingBorder();
+                this.simulation.set('borderOn', true);
+            }
+            else {
+                this.sceneView.hideReflectingBorder();
+                this.simulation.set('borderOn', false);
+            }
         }
 
     });
