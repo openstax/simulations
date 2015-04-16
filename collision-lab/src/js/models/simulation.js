@@ -368,6 +368,11 @@ define(function (require, exports, module) {
                 counter++;
             }
 
+            if (!this.get('started')) {
+                for (var i = 0; i < balls.length; i++)
+                    balls.at(i).setInitPosition(balls.at(i).get('position'))
+            }
+
             this.updateCalculatedVariables();
         },
 
