@@ -27,17 +27,21 @@ define(function (require, exports, module) {
     var CollisionLabSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
+            // Settings
             defaultBallSettings: Constants.Simulation.DEFAULT_BALL_SETTINGS,
             oneDimensional: false,
-            borderOn: true,
-
+            
+            // Attributes that affect the sim
             paused: true,
             started: false,
             timeScale: Constants.Simulation.DEFAULT_TIMESCALE,
             elasticity: 1,
+            borderOn: true,
 
+            // Information to show to the user
             xCenterOfMass: 0,
-            yCenterOfMass: 0
+            yCenterOfMass: 0,
+            kineticEnergy: 0
         }),
         
         initialize: function(attributes, options) {
@@ -58,6 +62,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.addBall();
             this.addBall();
+            this.calculateKineticEnergy();
+            this.calculateCenterOfMass();
         },
 
         /**
@@ -159,6 +165,7 @@ define(function (require, exports, module) {
             }
             this.checkBallCollisions();
             this.calculateCenterOfMass();
+            this.calculateKineticEnergy();
 
             if (this.reversing)
                 this.lastTime = this.time;
@@ -551,6 +558,26 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Calculates total kinetic energy in the system and
+         *   saves that value to the kineticEnergy attribute.
+         */
+        calculateKineticEnergy: function() {
+            var total = 0;
+            for (var i = 0; i < this.balls.length; i++) 
+                total += this.balls.at(i).getKineticEnergy();
+            this.set('kineticEnergy', total);
+        },
+
+        /**
+         * Keeps the calculated variables like kinetic energy
+         *   and center of mass up-to-date.
+         */
+        updateCalculatedVariables: function() {
+            this.calculateKineticEnergy();
+            this.calculateCenterOfMass();
+        },
+
+        /**
          * Returns whether or not the simulation has left its
          *   initial state--if time is not zero.
          */
@@ -558,11 +585,17 @@ define(function (require, exports, module) {
             return this.get('started');
         },
 
+        /**
+         * Mutes all sounds
+         */
         mute: function() {
             this.muted = true;
             buzz.all().mute();
         },
 
+        /**
+         * Unmutes all sounds
+         */
         unmute: function() {
             this.muted = false;
             buzz.all().unmute();

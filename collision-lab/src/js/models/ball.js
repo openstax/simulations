@@ -154,6 +154,11 @@ define(function (require) {
 
         collideWithBall: function() {
             this.bigBounceSound.stop().play();
+        },
+
+        getKineticEnergy: function() {
+            var speed = this.get('velocity').length();
+            return 0.5 * this.get('mass') * speed * speed;
         }
 
     }, Constants.Ball);

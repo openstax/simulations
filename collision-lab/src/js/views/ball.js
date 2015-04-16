@@ -261,6 +261,7 @@ define(function(require) {
                     this.model.setInitVelocity(vx, vy);
 
                 this.model.setVelocity(vx, vy);
+                this.simulation.updateCalculatedVariables();
             });
         },
 

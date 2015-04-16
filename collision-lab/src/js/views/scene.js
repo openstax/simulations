@@ -43,6 +43,8 @@ define(function(require) {
             this.listenTo(this.simulation.balls, 'reset',  this.ballsReset);
             this.listenTo(this.simulation.balls, 'add',    this.ballAdded);
             this.listenTo(this.simulation.balls, 'remove', this.ballRemoved);
+
+            this.listenTo(this.simulation, 'change:kineticEnergy', this.kineticEnergyChanged);
         },
 
         renderContent: function() {
@@ -54,6 +56,7 @@ define(function(require) {
 
             this.initMVT();
             this.initBorderGraphic();
+            this.initKineticEnergyLabel();
             this.initBalls();
         },
 
@@ -90,6 +93,18 @@ define(function(require) {
             this.stage.addChild(this.border);
 
             this.drawBorder();
+        },
+
+        initKineticEnergyLabel: function() {
+            this.$ui.append(
+                '<label class="kinetic-energy-label">' +
+                    'Kinetic Energy = <span class="kinetic-energy">0</span> J' + 
+                '</label>'
+            );
+            this.$kineticEnergy = this.$ui.find('.kinetic-energy');
+            this.$kineticEnergyLabel = this.$ui.find('.kinetic-energy-label');
+            this.$kineticEnergyLabel.hide();
+            this.kineticEnergyChanged(this.simulation, this.simulation.get('kineticEnergy'));
         },
 
         initBalls: function() {
@@ -163,6 +178,10 @@ define(function(require) {
                 ballView.hideMomentumArrow();
         },
 
+        kineticEnergyChanged: function(simulation, kineticEnergy) {
+            this.$kineticEnergy.text(kineticEnergy.toFixed(2));
+        },
+
         showVelocityArrows: function() {
             this.velocityArrowsVisible = true;
             for (var i = this.ballViews.length - 1; i >= 0; i--)
@@ -185,6 +204,14 @@ define(function(require) {
             this.momentumArrowsVisible = false;
             for (var i = this.ballViews.length - 1; i >= 0; i--)
                 this.ballViews[i].hideMomentumArrow();
+        },
+
+        showKineticEnergy: function() {
+            this.$kineticEnergyLabel.show();
+        },
+
+        hideKineticEnergy: function() {
+            this.$kineticEnergyLabel.hide();
         }
 
     });

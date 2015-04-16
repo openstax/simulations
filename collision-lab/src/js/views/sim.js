@@ -70,7 +70,9 @@ define(function (require) {
             'click .remove-ball-btn' : 'removeBall',
 
             'click .velocity-vector-check' : 'toggleVelocityVectors',
-            'click .momentum-vector-check' : 'toggleMomentumVectors'
+            'click .momentum-vector-check' : 'toggleMomentumVectors',
+
+            'click .kinetic-energy-check' : 'toggleKineticEnergy'
         },
 
         /**
@@ -208,6 +210,7 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.ui);
         },
 
         /**
@@ -408,6 +411,13 @@ define(function (require) {
                 this.sceneView.showMomentumArrows();
             else
                 this.sceneView.hideMomentumArrows();
+        },
+
+        toggleKineticEnergy: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showKineticEnergy();
+            else
+                this.sceneView.hideKineticEnergy();
         }
 
     });

@@ -188,6 +188,7 @@ define(function(require) {
                     if (!this.simulation.hasStarted())
                         this.model.setInitVX(vx);
                     this.model.setVelocityX(vx);
+                    this.simulation.updateCalculatedVariables();
                 });
             }
         },
@@ -199,6 +200,7 @@ define(function(require) {
                     if (!this.simulation.hasStarted())
                         this.model.setInitVY(vy);
                     this.model.setVelocityY(vy);
+                    this.simulation.updateCalculatedVariables();
                 });
             }
         },
