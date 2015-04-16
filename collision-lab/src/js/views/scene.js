@@ -142,9 +142,10 @@ define(function(require) {
             marker.lineTo( offset, -offset);
 
             this.centerOfMassMarker = marker;
-
             this.stage.addChild(marker);
 
+            marker.visible = false;
+            
             this.xCenterOfMassChanged(this.simulation, this.simulation.get('xCenterOfMass'));
             this.yCenterOfMassChanged(this.simulation, this.simulation.get('yCenterOfMass'));
         },
@@ -255,6 +256,14 @@ define(function(require) {
 
         hideKineticEnergy: function() {
             this.$kineticEnergyLabel.hide();
+        },
+
+        showCenterOfMass: function() {
+            this.centerOfMassMarker.visible = true;
+        },
+
+        hideCenterOfMass: function() {
+            this.centerOfMassMarker.visible = false;
         }
 
     });

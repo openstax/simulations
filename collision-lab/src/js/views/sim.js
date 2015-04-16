@@ -71,8 +71,8 @@ define(function (require) {
 
             'click .velocity-vector-check' : 'toggleVelocityVectors',
             'click .momentum-vector-check' : 'toggleMomentumVectors',
-
-            'click .kinetic-energy-check' : 'toggleKineticEnergy'
+            'click .kinetic-energy-check'  : 'toggleKineticEnergy',
+            'click .center-of-mass-check'  : 'toggleCenterOfMass'
         },
 
         /**
@@ -418,6 +418,13 @@ define(function (require) {
                 this.sceneView.showKineticEnergy();
             else
                 this.sceneView.hideKineticEnergy();
+        },
+
+        toggleCenterOfMass: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCenterOfMass();
+            else
+                this.sceneView.hideCenterOfMass();
         }
 
     });
