@@ -77,7 +77,7 @@ define(function(require) {
                 20,       // Left margin
                 20 + 185, // Top margin plus ball settings matrix
                 this.width - 20 - 20 - 190 - 20,
-                this.height - 20 - 185 - 65 - 20
+                this.height - 20 - 185 - 62 - 20
             );
 
             var boundsRatio = bounds.w / bounds.h;
