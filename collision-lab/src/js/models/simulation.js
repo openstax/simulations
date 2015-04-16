@@ -80,6 +80,8 @@ define(function (require, exports, module) {
             }, {
                 mute: this.muted
             }));
+
+            this.updateCalculatedVariables();
         },
 
         /**
@@ -273,13 +275,13 @@ define(function (require, exports, module) {
                 // For some reason they use else ifs, but whatever.
 
                 if ((x + radius) > this.bounds.right())
-                    ball.setX(this.bounds.right() - 2 * radius);
+                    ball.setX(this.bounds.right() - radius);
                 else if ((x - radius) < this.bounds.left())
-                    ball.setX(this.bounds.left() + 2 * radius);
+                    ball.setX(this.bounds.left() + radius);
                 else if ((y + radius) > this.bounds.top())
-                    ball.setY(this.bounds.top() - 2 * radius);
+                    ball.setY(this.bounds.top() - radius);
                 else if ((y - radius) < this.bounds.bottom())
-                    ball.setY(this.bounds.bottom() + 2 * radius);
+                    ball.setY(this.bounds.bottom() + radius);
                     
             }
         },

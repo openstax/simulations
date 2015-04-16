@@ -9,6 +9,7 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
+    var Colors             = require('common/colors/colors');
 
     var BallView = require('views/ball');
 
@@ -16,6 +17,8 @@ define(function(require) {
 
     // Constants
     var Constants = require('constants');
+    var CM_MARKER_FILL_COLOR = Colors.parseHex(Constants.SceneView.CM_MARKER_FILL_COLOR);
+    var CM_MARKER_LINE_COLOR = Colors.parseHex(Constants.SceneView.CM_MARKER_LINE_COLOR);
 
     // CSS
     require('less!styles/scene');
@@ -45,6 +48,8 @@ define(function(require) {
             this.listenTo(this.simulation.balls, 'remove', this.ballRemoved);
 
             this.listenTo(this.simulation, 'change:kineticEnergy', this.kineticEnergyChanged);
+            this.listenTo(this.simulation, 'change:xCenterOfMass', this.xCenterOfMassChanged);
+            this.listenTo(this.simulation, 'change:yCenterOfMass', this.yCenterOfMassChanged);
         },
 
         renderContent: function() {
@@ -58,6 +63,7 @@ define(function(require) {
             this.initBorderGraphic();
             this.initKineticEnergyLabel();
             this.initBalls();
+            this.initCenterOfMassMarker();
         },
 
         initMVT: function() {
@@ -112,6 +118,35 @@ define(function(require) {
             this.stage.addChild(this.balls);
 
             this.ballsReset(this.simulation.balls);
+        },
+
+        initCenterOfMassMarker: function() {
+            var thickness = Constants.SceneView.CM_MARKER_THICKNESS;
+            var lineWidth = Constants.SceneView.CM_MARKER_LINE_WIDTH;
+
+            var marker = new PIXI.Graphics();
+            marker.lineStyle(thickness, CM_MARKER_LINE_COLOR, Constants.SceneView.CM_MARKER_LINE_ALPHA);
+
+            var radius = Constants.SceneView.CM_MARKER_RADIUS;
+            var offset = Math.sqrt((radius * radius) / 2);
+            marker.moveTo(-offset, -offset);
+            marker.lineTo( offset,  offset);
+            marker.moveTo(-offset,  offset);
+            marker.lineTo( offset, -offset);
+
+            marker.lineStyle(thickness - (2 * lineWidth), CM_MARKER_FILL_COLOR, Constants.SceneView.CM_MARKER_FILL_ALPHA);
+            offset -= Math.sqrt((lineWidth * lineWidth) / 2);
+            marker.moveTo(-offset, -offset);
+            marker.lineTo( offset,  offset);
+            marker.moveTo(-offset,  offset);
+            marker.lineTo( offset, -offset);
+
+            this.centerOfMassMarker = marker;
+
+            this.stage.addChild(marker);
+
+            this.xCenterOfMassChanged(this.simulation, this.simulation.get('xCenterOfMass'));
+            this.yCenterOfMassChanged(this.simulation, this.simulation.get('yCenterOfMass'));
         },
 
         drawBorder: function() {
@@ -180,6 +215,14 @@ define(function(require) {
 
         kineticEnergyChanged: function(simulation, kineticEnergy) {
             this.$kineticEnergy.text(kineticEnergy.toFixed(2));
+        },
+
+        xCenterOfMassChanged: function(simulation, xCenterOfMass) {
+            this.centerOfMassMarker.x = this.mvt.modelToViewX(xCenterOfMass);
+        },
+
+        yCenterOfMassChanged: function(simulation, yCenterOfMass) {
+            this.centerOfMassMarker.y = this.mvt.modelToViewY(yCenterOfMass);
         },
 
         showVelocityArrows: function() {

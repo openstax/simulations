@@ -103,6 +103,7 @@ define(function(require) {
                 this.inputLock(function() {
                     this.model.set('mass', mass);
                     this.simulation.separateAllBalls();
+                    this.simulation.updateCalculatedVariables();
                 });
                 this.$('.mass-slider').val(mass);
             }
@@ -114,6 +115,7 @@ define(function(require) {
                 this.inputLock(function() {
                     this.model.set('mass', mass);
                     this.simulation.separateAllBalls();
+                    this.simulation.updateCalculatedVariables();
                 });
                 this.$('.mass').val(mass.toFixed(1));
             }

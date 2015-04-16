@@ -192,6 +192,8 @@ define(function(require) {
 
                     if (!this.simulation.hasStarted())
                         this.model.setInitPosition(modelX, modelY);
+
+                    this.simulation.updateCalculatedVariables();
                 });
             }
         },

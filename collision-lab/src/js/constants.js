@@ -50,6 +50,25 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                                SCENE                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.CM_MARKER_RADIUS = 14; // Pixels
+    SceneView.CM_MARKER_THICKNESS = 7;
+    SceneView.CM_MARKER_FILL_COLOR = '#fff';
+    SceneView.CM_MARKER_FILL_ALPHA = 1;
+    SceneView.CM_MARKER_LINE_COLOR = '#000';
+    SceneView.CM_MARKER_LINE_ALPHA = 0.5;
+    SceneView.CM_MARKER_LINE_WIDTH = 2;
+
+    Constants.SceneView = SceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                                BALL                                 **
      **                                                                     **
      *************************************************************************/
