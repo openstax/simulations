@@ -4,9 +4,13 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var CollisionLabSimulation = require('models/simulation');
+
     var CollisionLabSimView   = require('views/sim');
     var CollisionLabSceneView = require('views/scene');
     var BallSettingsView      = require('views/ball-settings');
+
+    var Constants = require('constants');
 
     // HTML
     var ballSettingsHtml = require('text!templates/ball-settings-1d.html');
@@ -32,8 +36,16 @@ define(function (require) {
             }, options);
 
             CollisionLabSimView.prototype.initialize.apply(this, [options]);
+        },
 
-            this.initSceneView();
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new CollisionLabSimulation({
+                defaultBallSettings: Constants.Simulation.INTRO_DEFAULT_BALL_SETTINGS,
+                oneDimensional: true
+            });
         },
 
         /**

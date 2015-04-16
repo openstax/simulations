@@ -54,10 +54,17 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .rewind-btn' : 'rewind',
+            'click .step-btn'   : 'stepForward',
+            'click .back-btn'   : 'stepBack',
+
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
 
             'slide .elasticity-slider' : 'changeElasticity',
+            'slide .playback-speed'    : 'changeTimeScale',
 
             'click .add-ball-btn'    : 'addBall',
             'click .remove-ball-btn' : 'removeBall'
@@ -78,6 +85,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:time',   this.updateTime);
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
 
             this.listenTo(this.simulation.balls, 'reset',  this.ballsReset);
             this.listenTo(this.simulation.balls, 'add',    this.ballAdded);
@@ -139,10 +149,10 @@ define(function (require) {
             this.$('select').selectpicker();
 
             this.$('.playback-speed').noUiSlider({
-                start: 7,
+                start: 0.5,
                 range: {
-                    'min': 0,
-                    'max': 10
+                    'min': 0.01,
+                    'max': 1
                 }
             });
 
@@ -157,6 +167,7 @@ define(function (require) {
             });
 
             this.$elasticity = this.$('.elasticity');
+            this.$time = this.$('.time');
         },
 
         /**
@@ -212,6 +223,29 @@ define(function (require) {
         },
 
         /**
+         * Rewinds back to the initial state.
+         */
+        rewind: function() {
+            this.simulation.rewind();
+        },
+
+        /**
+         * Goes one step back
+         */
+        stepBack: function() {
+            this.pause();
+            this.simulation.stepBack();
+        },
+
+        /**
+         * Goes forward one step
+         */
+        stepForward: function() {
+            this.pause();
+            this.simulation.stepForward();
+        },
+
+        /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */
@@ -246,6 +280,23 @@ define(function (require) {
             this.moreDataMode = false;
         },
 
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        /**
+         * Update the time counter label.
+         */
+        updateTime: function(simulation, time) {
+            this.$time.html(time.toFixed(2) + ' sec');
+        },
+
         changeElasticity: function(event) {
             var percentage = parseInt($(event.target).val());
             this.inputLock(function() {
@@ -259,6 +310,13 @@ define(function (require) {
             this.updateLock(function(){
                 this.$elasticity.text(percentage + '%');
                 this.$elasticitySlider.val(percentage);
+            });
+        },
+
+        changeTimeScale: function(event) {
+            var timeScale = $(event.target).val();
+            this.inputLock(function() {
+                this.simulation.set('timeScale', timeScale);
             });
         },
 
@@ -308,11 +366,11 @@ define(function (require) {
             this.$('.remove-ball-btn').hide();
 
             // Show last remove ball button if appropriate
-            if (this.simulation.balls.length > Constants.MIN_NUM_BALLS && this.userCanAddRemoveBalls) 
+            if (this.simulation.balls.length > Constants.Simulation.MIN_NUM_BALLS && this.userCanAddRemoveBalls) 
                 this.$('.remove-ball-btn').last().show();
 
             // Hide or show the add ball button
-            if (this.simulation.balls.length < Constants.MAX_NUM_BALLS && this.userCanAddRemoveBalls)
+            if (this.simulation.balls.length < Constants.Simulation.MAX_NUM_BALLS && this.userCanAddRemoveBalls)
                 this.$('.add-ball-row').show();
             else
                 this.$('.add-ball-row').hide();
@@ -324,6 +382,14 @@ define(function (require) {
 
         removeBall: function() {
             this.simulation.removeBall();
+        },
+
+        mute: function() {
+            this.simulation.mute();
+        },
+
+        unmute: function() {
+            this.simulation.unmute();
         }
 
     });

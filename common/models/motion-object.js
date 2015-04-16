@@ -113,6 +113,20 @@ define(function (require) {
         },
 
         /**
+         * Sets just the velocity in the x direction.
+         */
+        setVelocityX: function(x) {
+            this.setVelocity(x, this.get('velocity').y);
+        },
+
+        /**
+         * Sets just the velocity in the y direction.
+         */
+        setVelocityY: function(y) {
+            this.setVelocity(this.get('velocity').x, y);
+        },
+
+        /**
          * Kind of like translation but for velocity. Just adds the given
          *   vector to the current velocity.
          */
