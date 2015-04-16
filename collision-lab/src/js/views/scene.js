@@ -151,6 +151,40 @@ define(function(require) {
             });
             this.balls.addChild(ballView.displayObject);
             this.ballViews.push(ballView);
+
+            if (this.velocityArrowsVisible)
+                ballView.showVelocityArrow();
+            else
+                ballView.hideVelocityArrow();
+
+            if (this.momentumArrowsVisible)
+                ballView.showMomentumArrow();
+            else
+                ballView.hideMomentumArrow();
+        },
+
+        showVelocityArrows: function() {
+            this.velocityArrowsVisible = true;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].showVelocityArrow();
+        },
+
+        hideVelocityArrows: function() {
+            this.velocityArrowsVisible = false;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].hideVelocityArrow();
+        },
+
+        showMomentumArrows: function() {
+            this.momentumArrowsVisible = true;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].showMomentumArrow();
+        },
+
+        hideMomentumArrows: function() {
+            this.momentumArrowsVisible = false;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].hideMomentumArrow();
         }
 
     });

@@ -67,7 +67,10 @@ define(function (require) {
             'slide .playback-speed'    : 'changeTimeScale',
 
             'click .add-ball-btn'    : 'addBall',
-            'click .remove-ball-btn' : 'removeBall'
+            'click .remove-ball-btn' : 'removeBall',
+
+            'click .velocity-vector-check' : 'toggleVelocityVectors',
+            'click .momentum-vector-check' : 'toggleMomentumVectors'
         },
 
         /**
@@ -391,6 +394,20 @@ define(function (require) {
 
         unmute: function() {
             this.simulation.unmute();
+        },
+
+        toggleVelocityVectors: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityArrows();
+            else
+                this.sceneView.hideVelocityArrows();
+        },
+
+        toggleMomentumVectors: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showMomentumArrows();
+            else
+                this.sceneView.hideMomentumArrows();
         }
 
     });

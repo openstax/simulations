@@ -45,7 +45,11 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
-            this.arrowViewModel = new ArrowView.ArrowViewModel({
+            this.velocityArrowViewModel = new ArrowView.ArrowViewModel({
+                originX: 0,
+                originY: 0
+            });
+            this.momentumArrowViewModel = new ArrowView.ArrowViewModel({
                 originX: 0,
                 originY: 0
             });
@@ -56,11 +60,13 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
-            this.listenTo(this.model, 'change:velocity', this.updateVelocity);
-            this.listenTo(this.model, 'change:radius', this.drawBall);
+            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:velocity',  this.updateVelocity);
+            this.listenTo(this.model, 'change:momentumX', this.updateMomentumX);
+            this.listenTo(this.model, 'change:momentumY', this.updateMomentumY);
+            this.listenTo(this.model, 'change:radius',    this.drawBall);
 
-            this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.changeVelocity);
+            this.listenTo(this.velocityArrowViewModel, 'change:targetX change:targetY', this.changeVelocity);
 
             this.listenTo(this.simulation, 'change:paused', this.pausedStateChanged);
         },
@@ -70,8 +76,24 @@ define(function(require) {
             this.ball.buttonMode = true;
             this.ball.defaultCursor = 'move';
 
-            this.arrowView = new ArrowView({ 
-                model: this.arrowViewModel,
+            this.initVelocityArrow();
+            this.initVelocityMarker();
+            this.initNumber();
+            this.initMomentumArrow();
+            
+            this.displayObject.addChild(this.ball);
+            this.displayObject.addChild(this.velocityMarker);
+            this.displayObject.addChild(this.momentumArrowView.displayObject);
+            this.displayObject.addChild(this.velocityArrowView.displayObject);
+            this.displayObject.addChild(this.number);
+
+            this.updateMVT(this.mvt);
+            this.pausedStateChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        initVelocityArrow: function() {
+            this.velocityArrowView = new ArrowView({ 
+                model: this.velocityArrowViewModel,
 
                 tailWidth:  BallView.ARROW_TAIL_WIDTH,
                 headWidth:  BallView.ARROW_HEAD_WIDTH,
@@ -80,17 +102,6 @@ define(function(require) {
                 fillColor: BallView.ARROW_COLOR,
                 fillAlpha: BallView.ARROW_ALPHA
             });
-
-            this.initVelocityMarker();
-            this.initNumber();
-            
-            this.displayObject.addChild(this.ball);
-            this.displayObject.addChild(this.velocityMarker);
-            this.displayObject.addChild(this.arrowView.displayObject);
-            this.displayObject.addChild(this.number);
-
-            this.updateMVT(this.mvt);
-            this.pausedStateChanged(this.simulation, this.simulation.get('paused'));
         },
 
         initVelocityMarker: function() {
@@ -123,6 +134,19 @@ define(function(require) {
             });
             this.number.anchor.x = 0.5;
             this.number.anchor.y = 0.45;
+        },
+
+        initMomentumArrow: function() {
+            this.momentumArrowView = new ArrowView({ 
+                model: this.momentumArrowViewModel,
+
+                tailWidth:  BallView.MOMENTUM_ARROW_TAIL_WIDTH,
+                headWidth:  BallView.MOMENTUM_ARROW_HEAD_WIDTH,
+                headLength: BallView.MOMENTUM_ARROW_HEAD_LENGTH,
+
+                fillColor: BallView.MOMENTUM_ARROW_COLOR,
+                fillAlpha: BallView.MOMENTUM_ARROW_ALPHA
+            });
         },
 
         drawBall: function() {
@@ -198,8 +222,8 @@ define(function(require) {
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
 
-                this.arrowViewModel.set('targetX', this.velocityMarker.x);
-                this.arrowViewModel.set('targetY', this.velocityMarker.y);
+                this.velocityArrowViewModel.set('targetX', this.velocityMarker.x);
+                this.velocityArrowViewModel.set('targetY', this.velocityMarker.y);
             }
         },
 
@@ -215,18 +239,23 @@ define(function(require) {
         updateVelocity: function(model, velocity) {
             this.updateLock(function() {
                 var viewVelocity = this.mvt.modelToViewDelta(velocity);
+                viewVelocity.scale(BallView.VELOCITY_SCALE);
+
                 this.velocityMarker.x = viewVelocity.x;
                 this.velocityMarker.y = viewVelocity.y;
                 // We don't want it to draw twice, so make the first silent
-                this.arrowViewModel.set('targetX', viewVelocity.x);
-                this.arrowViewModel.set('targetY', viewVelocity.y);
+                this.velocityArrowViewModel.set('targetX', viewVelocity.x);
+                this.velocityArrowViewModel.set('targetY', viewVelocity.y);
             });
         },
 
         changeVelocity: function() {
             this.inputLock(function() {
-                var vx = this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'));
-                var vy = this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY'));
+                var vx = this.mvt.viewToModelDeltaX(this.velocityArrowViewModel.get('targetX'));
+                var vy = this.mvt.viewToModelDeltaY(this.velocityArrowViewModel.get('targetY'));
+
+                vx /= BallView.VELOCITY_SCALE;
+                vy /= BallView.VELOCITY_SCALE;
 
                 if (!this.simulation.hasStarted())
                     this.model.setInitVelocity(vx, vy);
@@ -243,12 +272,22 @@ define(function(require) {
             });
         },
 
+        updateMomentumX: function(model, momentumX) {
+            this.momentumArrowViewModel.set('targetX', this.mvt.modelToViewDeltaX(momentumX) * BallView.MOMENTUM_SCALE);
+        },
+
+        updateMomentumY: function(model, momentumY) {
+            this.momentumArrowViewModel.set('targetY', this.mvt.modelToViewDeltaY(momentumY) * BallView.MOMENTUM_SCALE);
+        },
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
             this.drawBall();
             this.updatePosition(this.model, this.model.get('position'));
             this.updateVelocity(this.model, this.model.get('velocity'));
+            this.updateMomentumX(this.model, this.model.get('momentumX'));
+            this.updateMomentumY(this.model, this.model.get('momentumY'));
         },
 
         pausedStateChanged: function(simulation, paused) {
@@ -261,15 +300,35 @@ define(function(require) {
         enableInteraction: function() {
             this.interactionEnabled = true;
             this.ball.buttonMode = true;
-            this.velocityMarker.visible = true;
-            this.arrowView.show();
+            if (this.velocityArrowVisible)
+                this.velocityMarker.visible = true;
         },
 
         disableInteraction: function() {
             this.interactionEnabled = false;
             this.ball.buttonMode = false;
             this.velocityMarker.visible = false;
-            this.arrowView.hide();
+        },
+
+        showVelocityArrow: function() {
+            this.velocityArrowVisible = true;
+            this.velocityArrowView.show();
+            if (this.interactionEnabled)
+                this.velocityMarker.visible = true;
+        },
+
+        hideVelocityArrow: function() {
+            this.velocityArrowVisible = false;
+            this.velocityArrowView.hide();
+            this.velocityMarker.visible = false;
+        },
+
+        showMomentumArrow: function() {
+            this.momentumArrowView.show();
+        },
+
+        hideMomentumArrow: function() {
+            this.momentumArrowView.hide();
         }
 
     }, Constants.BallView);
