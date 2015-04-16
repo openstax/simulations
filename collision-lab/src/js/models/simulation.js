@@ -367,6 +367,8 @@ define(function (require, exports, module) {
 
                 counter++;
             }
+
+            this.updateCalculatedVariables();
         },
 
         /**
@@ -400,8 +402,8 @@ define(function (require, exports, module) {
 
                 var dxBall1 = -m2 * overlap * dx / (dr * (m1 + m2));
                 var dyBall1 = -m2 * overlap * dy / (dr * (m1 + m2));
-                var dxBall2 = m1 * overlap * dx / (dr * (m1 + m2));
-                var dyBall2 = m1 * overlap * dy / (dr * (m1 + m2));
+                var dxBall2 =  m1 * overlap * dx / (dr * (m1 + m2));
+                var dyBall2 =  m1 * overlap * dy / (dr * (m1 + m2));
                 var ball1WallCollision = this.checkWallCollision(ball1, x1 + dxBall1, y1 + dyBall1);
                 var ball2WallCollision = this.checkWallCollision(ball2, x2 + dxBall2, y2 + dyBall2);
                 
