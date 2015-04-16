@@ -11,7 +11,8 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Colors             = require('common/colors/colors');
 
-    var BallView = require('views/ball');
+    var BallView      = require('views/ball');
+    var BallTraceView = require('views/ball-trace');
 
     var Assets = require('assets');
 
@@ -41,8 +42,6 @@ define(function(require) {
             this.velocityArrowsVisible = true;
             this.momentumArrowsVisible = false;
 
-            this.ballViews = [];
-
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.simulation.balls, 'reset',  this.ballsReset);
@@ -64,6 +63,7 @@ define(function(require) {
             this.initMVT();
             this.initBorderGraphic();
             this.initKineticEnergyLabel();
+            this.initBallTraceLayer();
             this.initBalls();
             this.initCenterOfMassMarker();
         },
@@ -95,6 +95,12 @@ define(function(require) {
             );
         },
 
+        initBallTraceLayer: function() {
+            this.ballTraceLayer = new PIXI.DisplayObjectContainer();
+            this.ballTraceLayer.visible = false;
+            this.stage.addChild(this.ballTraceLayer);
+        },
+
         initBorderGraphic: function() {
             this.border = new PIXI.Graphics();
             this.border.lineStyle(3, 0xFFFFFF, 1);
@@ -116,6 +122,9 @@ define(function(require) {
         },
 
         initBalls: function() {
+            this.ballViews = [];
+            this.ballTraceViews = [];
+
             this.balls = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.balls);
 
@@ -166,7 +175,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            for (var i = this.ballTraceViews.length - 1; i >= 0; i--)
+                this.ballTraceViews[i].update(time, deltaTime, paused);
         },
 
         ballsReset: function(balls) {
@@ -214,6 +224,14 @@ define(function(require) {
                 ballView.showMomentumArrow();
             else
                 ballView.hideMomentumArrow();
+
+            // Trace view
+            var ballTraceView = new BallTraceView({
+                model: ball,
+                mvt: this.mvt
+            });
+            this.ballTraceLayer.addChild(ballTraceView.displayObject);
+            this.ballTraceViews.push(ballTraceView);
         },
 
         kineticEnergyChanged: function(simulation, kineticEnergy) {
@@ -274,6 +292,16 @@ define(function(require) {
 
         hideReflectingBorder: function() {
             this.border.visible = false;
+        },
+
+        showTraces: function() {
+            for (var i = this.ballTraceViews.length - 1; i >= 0; i--)
+                this.ballTraceViews[i].clear();
+            this.ballTraceLayer.visible = true;
+        },
+
+        hideTraces: function() {
+            this.ballTraceLayer.visible = false;
         }
 
     });

@@ -73,7 +73,8 @@ define(function (require) {
             'click .momentum-vector-check'   : 'toggleMomentumVectors',
             'click .kinetic-energy-check'    : 'toggleKineticEnergy',
             'click .center-of-mass-check'    : 'toggleCenterOfMass',
-            'click .reflecting-border-check' : 'toggleReflectingBorder'
+            'click .reflecting-border-check' : 'toggleReflectingBorder',
+            'click .paths-check'             : 'toggleBallTraces'
         },
 
         /**
@@ -437,6 +438,13 @@ define(function (require) {
                 this.sceneView.hideReflectingBorder();
                 this.simulation.set('borderOn', false);
             }
+        },
+
+        toggleBallTraces: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
         }
 
     });

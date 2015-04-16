@@ -118,6 +118,8 @@ define(function (require) {
     var BallTraceView = {};
 
     BallTraceView.LINE_WIDTH = 3;
+    BallTraceView.LINE_COLOR = '#444';
+    BallTraceView.LINE_ALPHA = 1;
 
     Constants.BallTraceView = BallTraceView;
 
