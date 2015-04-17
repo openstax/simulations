@@ -12,6 +12,8 @@ define(function(require) {
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var Constants = require('constants');
+    var PANEL_LINE_COLOR = Colors.parseHex(Constants.BallView.PANEL_LINE_COLOR);
+    var PANEL_FILL_COLOR = Colors.parseHex(Constants.BallView.PANEL_FILL_COLOR);
 
     var BallView = PixiView.extend({
 
@@ -57,6 +59,7 @@ define(function(require) {
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
             this._viewPosition = new Vector2();
+            this._momentum     = new Vector2();
 
             this.initGraphics();
 
@@ -80,6 +83,7 @@ define(function(require) {
             this.initVelocityMarker();
             this.initNumber();
             this.initMomentumArrow();
+            this.initLabels();
             
             this.displayObject.addChild(this.ball);
             this.displayObject.addChild(this.velocityMarker);
@@ -89,6 +93,8 @@ define(function(require) {
 
             this.updateMVT(this.mvt);
             this.pausedStateChanged(this.simulation, this.simulation.get('paused'));
+            this.updateVelocity(this.model, this.model.get('velocity'));
+            this.updateMomentumLabel();
         },
 
         initVelocityArrow: function() {
@@ -147,6 +153,62 @@ define(function(require) {
                 fillColor: BallView.MOMENTUM_ARROW_COLOR,
                 fillAlpha: BallView.MOMENTUM_ARROW_ALPHA
             });
+        },
+
+        initLabels: function() {
+            this.velocityLabel = new PIXI.DisplayObjectContainer();
+            this.momentumLabel = new PIXI.DisplayObjectContainer();
+
+            var offset = 8 + this.mvt.modelToViewDeltaX(this.model.get('radius'));
+            var height = 44;
+            var velWidth = 100;
+            var momWidth = 158;
+            var padding = 3;
+
+            var velocityPanel = new PIXI.Graphics();
+            velocityPanel.lineStyle(BallView.PANEL_LINE_WIDTH, PANEL_LINE_COLOR, BallView.PANEL_LINE_ALPHA);
+            velocityPanel.beginFill(PANEL_FILL_COLOR, BallView.PANEL_FILL_ALPHA);
+            velocityPanel.drawRect(-velWidth / 2, -offset - height, velWidth, height);
+            velocityPanel.endFill();
+
+            var momentumPanel = new PIXI.Graphics();
+            momentumPanel.lineStyle(BallView.PANEL_LINE_WIDTH, PANEL_LINE_COLOR, BallView.PANEL_LINE_ALPHA);
+            momentumPanel.beginFill(PANEL_FILL_COLOR, BallView.PANEL_FILL_ALPHA);
+            momentumPanel.drawRect(-momWidth / 2, offset, momWidth, height);
+            momentumPanel.endFill();
+
+            var textSettings = {
+                font: BallView.LABEL_FONT,
+                fill: BallView.LABEL_TEXT_COLOR
+            };
+
+            var velocityLabelText = new PIXI.Text('Speed (m/s)', textSettings);
+            velocityLabelText.anchor.x = 0.5;
+            velocityLabelText.y = -offset - height + padding;
+            var velocityValueText = new PIXI.Text('| v | = 0.50', textSettings);
+            velocityValueText.anchor.x = 0.5;
+            velocityValueText.anchor.y = 0.85;
+            velocityValueText.y = -offset - padding;
+            this.velocityValueText = velocityValueText;
+
+            var momentumLabelText = new PIXI.Text('Momentum (kg ms/s)', textSettings);
+            momentumLabelText.anchor.x = 0.5;
+            momentumLabelText.y = offset + padding;
+            var momentumValueText = new PIXI.Text('| p | = 1.00', textSettings);
+            momentumValueText.anchor.x = 0.5;
+            momentumValueText.anchor.y = 0.85;
+            momentumValueText.y = offset + height - padding;
+            this.momentumValueText = momentumValueText;
+
+            this.velocityLabel.addChild(velocityPanel);
+            this.velocityLabel.addChild(velocityLabelText);
+            this.velocityLabel.addChild(velocityValueText);
+            this.momentumLabel.addChild(momentumPanel);
+            this.momentumLabel.addChild(momentumLabelText);
+            this.momentumLabel.addChild(momentumValueText);
+
+            this.displayObject.addChild(this.velocityLabel);
+            this.displayObject.addChild(this.momentumLabel);
         },
 
         drawBall: function() {
@@ -248,6 +310,8 @@ define(function(require) {
                 // We don't want it to draw twice, so make the first silent
                 this.velocityArrowViewModel.set('targetX', viewVelocity.x);
                 this.velocityArrowViewModel.set('targetY', viewVelocity.y);
+
+                this.velocityValueText.setText('| v | = ' + velocity.length().toFixed(2));
             });
         },
 
@@ -277,10 +341,22 @@ define(function(require) {
 
         updateMomentumX: function(model, momentumX) {
             this.momentumArrowViewModel.set('targetX', this.mvt.modelToViewDeltaX(momentumX) * BallView.MOMENTUM_SCALE);
+            this.updateMomentumLabel();
         },
 
         updateMomentumY: function(model, momentumY) {
             this.momentumArrowViewModel.set('targetY', this.mvt.modelToViewDeltaY(momentumY) * BallView.MOMENTUM_SCALE);
+            this.updateMomentumLabel();
+        },
+
+        updateMomentumLabel: function() {
+            var momentum = this._momentum
+                .set(
+                    this.model.get('momentumX'),
+                    this.model.get('momentumY')
+                )
+                .length();
+            this.momentumValueText.setText('| p | = ' + momentum.toFixed(2));
         },
 
         updateMVT: function(mvt) {

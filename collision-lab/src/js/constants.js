@@ -111,6 +111,13 @@ define(function (require) {
     BallView.MOMENTUM_ARROW_COLOR = '#FFD700';
     BallView.MOMENTUM_ARROW_ALPHA = 1;
     BallView.MOMENTUM_SCALE = BallView.VELOCITY_SCALE;
+    BallView.PANEL_LINE_COLOR = '#444';
+    BallView.PANEL_LINE_WIDTH = 1;
+    BallView.PANEL_LINE_ALPHA = 1;
+    BallView.PANEL_FILL_COLOR = '#fff';
+    BallView.PANEL_FILL_ALPHA = 1;
+    BallView.LABEL_FONT = '14px Helvetica Neue';
+    BallView.LABEL_TEXT_COLOR = '#444';
 
     Constants.BallView = BallView;
 
