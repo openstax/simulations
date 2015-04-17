@@ -408,6 +408,22 @@ define(function(require) {
 
         hideMomentumArrow: function() {
             this.momentumArrowView.hide();
+        },
+
+        showVelocityLabel: function() {
+            this.velocityLabel.visible = true;
+        },
+
+        hideVelocityLabel: function() {
+            this.velocityLabel.visible = false;
+        },
+
+        showMomentumLabel: function() {
+            this.momentumLabel.visible = true;
+        },
+
+        hideMomentumLabel: function() {
+            this.momentumLabel.visible = false;
         }
 
     }, Constants.BallView);

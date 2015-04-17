@@ -71,6 +71,8 @@ define(function (require) {
 
             'click .velocity-vector-check'   : 'toggleVelocityVectors',
             'click .momentum-vector-check'   : 'toggleMomentumVectors',
+            'click .velocity-check'          : 'toggleVelocityLabels',
+            'click .momentum-check'          : 'toggleMomentumLabels',
             'click .kinetic-energy-check'    : 'toggleKineticEnergy',
             'click .center-of-mass-check'    : 'toggleCenterOfMass',
             'click .reflecting-border-check' : 'toggleReflectingBorder',
@@ -413,6 +415,20 @@ define(function (require) {
                 this.sceneView.showMomentumArrows();
             else
                 this.sceneView.hideMomentumArrows();
+        },
+
+        toggleVelocityLabels: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityLabels();
+            else
+                this.sceneView.hideVelocityLabels();
+        },
+
+        toggleMomentumLabels: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showMomentumLabels();
+            else
+                this.sceneView.hideMomentumLabels();
         },
 
         toggleKineticEnergy: function() {

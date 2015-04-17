@@ -225,6 +225,16 @@ define(function(require) {
             else
                 ballView.hideMomentumArrow();
 
+            if (this.velocityLabelsVisible)
+                ballView.showVelocityLabel();
+            else
+                ballView.hideVelocityLabel();
+
+            if (this.momentumLabelsVisible)
+                ballView.showMomentumLabel();
+            else
+                ballView.hideMomentumLabel();
+
             // Trace view
             var ballTraceView = new BallTraceView({
                 model: ball,
@@ -268,6 +278,30 @@ define(function(require) {
             this.momentumArrowsVisible = false;
             for (var i = this.ballViews.length - 1; i >= 0; i--)
                 this.ballViews[i].hideMomentumArrow();
+        },
+
+        showVelocityLabels: function() {
+            this.velocityLabelsVisible = true;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].showVelocityLabel();
+        },
+
+        hideVelocityLabels: function() {
+            this.velocityLabelsVisible = false;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].hideVelocityLabel();
+        },
+
+        showMomentumLabels: function() {
+            this.momentumLabelsVisible = true;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].showMomentumLabel();
+        },
+
+        hideMomentumLabels: function() {
+            this.momentumLabelsVisible = false;
+            for (var i = this.ballViews.length - 1; i >= 0; i--)
+                this.ballViews[i].hideMomentumLabel();
         },
 
         showKineticEnergy: function() {
