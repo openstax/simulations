@@ -21,6 +21,26 @@ define(function(require) {
             minLength: 25,
             maxLength: null,
             length: 0
+        },
+
+        initialize: function() {
+            this._settings = {};
+        },
+
+        translate: function(x, y) {
+            this._settings.originX = this.get('originX') + x;
+            this._settings.originY = this.get('originY') + y;
+            this._settings.targetX = this.get('targetX') + x;
+            this._settings.targetY = this.get('targetY') + y;
+            this.set(this._settings);
+        },
+
+        moveTo: function(x, y) {
+            this._settings.originX = x;
+            this._settings.originY = y;
+            this._settings.targetX = x + (this.get('targetX') - this.get('originX'));
+            this._settings.targetY = y + (this.get('targetY') - this.get('originY'));
+            this.set(this._settings);
         }
     });
 
@@ -112,6 +132,10 @@ define(function(require) {
 
         hide: function() {
             this.displayObject.visible = false;
+        },
+
+        getRotation: function() {
+            return this.transformFrame.rotation;
         }
 
     }, {

@@ -11,13 +11,16 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Colors             = require('common/colors/colors');
 
-    var BallView      = require('views/ball');
-    var BallTraceView = require('views/ball-trace');
+    var BallView       = require('views/ball');
+    var BallTraceView  = require('views/ball-trace');
+    var MomentaDiagram = require('views/momenta-diagram');
 
     var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');
+    var BORDER_FILL_COLOR = Colors.parseHex(Constants.SceneView.BORDER_FILL_COLOR);
+    var BORDER_LINE_COLOR = Colors.parseHex(Constants.SceneView.BORDER_LINE_COLOR);
     var CM_MARKER_FILL_COLOR = Colors.parseHex(Constants.SceneView.CM_MARKER_FILL_COLOR);
     var CM_MARKER_LINE_COLOR = Colors.parseHex(Constants.SceneView.CM_MARKER_LINE_COLOR);
 
@@ -66,6 +69,7 @@ define(function(require) {
             this.initBallTraceLayer();
             this.initBalls();
             this.initCenterOfMassMarker();
+            this.initMomentaDiagram();
         },
 
         initMVT: function() {
@@ -76,7 +80,7 @@ define(function(require) {
             var usableScreenSpace = new Rectangle(
                 20,       // Left margin
                 20 + 185, // Top margin plus ball settings matrix
-                this.width - 20 - 20 - 190 - 20,
+                this.width - 20 - 20 - 200 - 20,
                 this.height - 20 - 185 - 62 - 20
             );
 
@@ -103,7 +107,7 @@ define(function(require) {
 
         initBorderGraphic: function() {
             this.border = new PIXI.Graphics();
-            this.border.lineStyle(3, 0xFFFFFF, 1);
+            this.border.lineStyle(3, BORDER_LINE_COLOR, Constants.SceneView.BORDER_LINE_ALPHA);
             this.stage.addChild(this.border);
 
             this.drawBorder();
@@ -161,9 +165,28 @@ define(function(require) {
             this.yCenterOfMassChanged(this.simulation, this.simulation.get('yCenterOfMass'));
         },
 
+        initMomentaDiagram: function() {
+            var $simView = this.$el.parents('.sim-view');
+            var $simControls = $simView.find('.sim-controls');
+            var y = $simControls.outerHeight() + 20 + 20;
+            var width = $simControls.outerWidth();
+            var height = this.height - y - $simView.find('.playback-controls-wrapper').outerHeight() - 20;
+            var x = this.width - width - 20;
+
+            this.momentaDiagram = new MomentaDiagram({
+                simulation: this.simulation,
+                width: width,
+                height: height,
+                x: x,
+                y: y
+            });
+            this.stage.addChild(this.momentaDiagram.displayObject);
+            this.$ui.append(this.momentaDiagram.el);
+        },
+
         drawBorder: function() {
             if (!this.oneDimensional) {
-                this.border.beginFill(0xFFFFFF, 0.25);
+                this.border.beginFill(BORDER_FILL_COLOR, Constants.SceneView.BORDER_FILL_ALPHA);
                 this.border.drawRect(
                     this.mvt.modelToViewX(this.simulation.bounds.x),
                     this.mvt.modelToViewY(this.simulation.bounds.y),

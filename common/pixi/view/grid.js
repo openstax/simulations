@@ -32,8 +32,8 @@ define(function(require) {
                 smallLineAlpha: 1
             }, options);
 
-            this.origin = options.origin;
-            this.bounds = options.bounds;
+            this.origin = new Vector2(options.origin);
+            this.bounds = new Rectangle(options.bounds);
             this.gridSize = options.gridSize;
             this.gridOffsetX = options.gridOffsetX;
             this.gridOffsetY = options.gridOffsetY;

@@ -8,8 +8,8 @@
     right: @panel-margin;
     top: @panel-margin;
     background: @panel-bg;
-    padding: 15px;
-    //width: @control-panel-width;
+    padding: @panel-padding;
+    width: @control-panel-width;
 
     input.form-control {
         background: rgba(255, 255, 255, 0.27);
@@ -26,11 +26,7 @@
     }
 
     h2 {
-        font-size: 18px;
-        font-weight: 400;
-        color: rgba(51, 51, 51, 0.8);
-        margin-top: 0;
-        margin-bottom: 7px;
+        .header();
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
     }

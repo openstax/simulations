@@ -208,15 +208,11 @@ define(function(require) {
         },
 
         momentumXChanged: function(ball, momentumX) {
-            this.updateLock(function() {
-                this.$('.mom-x').text(momentumX.toFixed(2));
-            });
+            this.$('.mom-x').text(momentumX.toFixed(2));
         },
 
         momentumYChanged: function(ball, momentumY) {
-            this.updateLock(function() {
-                this.$('.mom-y').text(momentumY.toFixed(2));
-            });
+            this.$('.mom-y').text(momentumY.toFixed(2));
         },
 
         showMoreData: function() {

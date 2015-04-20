@@ -25,3 +25,28 @@
 		text-align: right;
 	}
 }
+
+.momenta-diagram {
+	position: absolute;
+
+	.title {
+		.header();
+		position: absolute;
+		top: @panel-padding;
+		left: @panel-padding;
+		pointer-events: none;
+	}
+	
+	.checkbox-wrapper {
+		position: absolute;
+		margin-bottom: 2px;
+		margin-left:   5px;
+	}
+
+	.zoom-controls-wrapper { 
+		position: absolute;
+		right: @panel-padding;
+		padding-right: 2px;
+		.user-select(none);
+	}
+}
