@@ -38,7 +38,7 @@ define(function(require) {
             this.panelHeight = options.height;
             this.x = options.x;
             this.y = options.y;
-            this.scale = 20;
+            this.scale = 24;
 
             this.tipToTailMode = true;
 
@@ -92,7 +92,17 @@ define(function(require) {
         },
 
         initCheckbox: function() {
-            
+            var $checkbox = $(
+                '<div class="checkbox-wrapper">' +
+                    '<input type="checkbox" class="tip-to-tail-check" id="paths-check-' + this.simulation.cid + '" checked>' +
+                    '<label for="paths-check-' + this.simulation.cid + '">Tip-to-tail</label>' + 
+                '</div>'
+            );
+            $checkbox.css({
+                bottom: -(this.panelHeight - MomentaDiagram.PANEL_PADDING) + 'px',
+                left: MomentaDiagram.PANEL_PADDING + 'px'
+            });
+            this.$el.append($checkbox);
         },
 
         initPanel: function() {
@@ -147,6 +157,7 @@ define(function(require) {
                 color: MomentaDiagram.TOTAL_COLOR,
                 label: 'total'
             });
+            this.totalView.disableArrowMovement();
             this.arrowsLayer.addChild(this.totalView.displayObject);
 
             // Add all initial arrows
@@ -195,7 +206,7 @@ define(function(require) {
                 mvt: this.mvt,
                 label: ball.get('number')
             });
-            if (!this.tipToTailMode)
+            if (this.tipToTailMode)
                 view.disableArrowMovement();
 
             this.listenTo(ball, 'change:momentumX change:momentumY', this.momentumChanged);
@@ -230,19 +241,24 @@ define(function(require) {
         enableArrowMovement: function() {
             for (var i = 0; i < this.momentumViews.length; i++)
                 this.momentumViews[i].enableArrowMovement();
+            this.totalView.enableArrowMovement();
         },
 
         disableArrowMovement: function() {
             for (var i = 0; i < this.momentumViews.length; i++)
                 this.momentumViews[i].disableArrowMovement();
+            this.totalView.disableArrowMovement();
         },
 
         toggleTipToTailMode: function(event) {
             if ($(event.target).is(':checked')) {
                 this.tipToTailMode = true;
+                this.arrangeArrowsTipToTail();
+                this.disableArrowMovement();
             }
             else {
                 this.tipToTailMode = false;
+                this.enableArrowMovement();
             }
         }
 
