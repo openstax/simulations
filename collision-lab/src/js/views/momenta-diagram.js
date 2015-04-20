@@ -179,6 +179,9 @@ define(function(require) {
             balls.each(function(ball) {
                 this.createAndAddArrowView(ball);
             }, this);
+
+            if (this.tipToTailMode)
+                this.arrangeArrowsTipToTail();
         },
 
         ballAdded: function(ball, balls) {
@@ -222,7 +225,16 @@ define(function(require) {
 
         arrangeArrowsTipToTail: function() {
             if (this.simulation.get('oneDimensional')) {
-
+                var spacing = MomentaDiagram.ONE_DIMENSION_ARROW_SPACING;
+                var totalX = 0;
+                var y = ((this.momentumViews.length) * spacing) / 2;
+                for (var i = 0; i < this.momentumViews.length; i++) {
+                    this.momentumViews[i].moveTo(totalX, y);
+                    totalX += this.momentumViews[i].model.get('momentumX');
+                    y += -spacing;
+                }
+                this.totalView.moveTo(0, y);
+                this.totalViewModel.set('momentumX', totalX);
             }
             else {
                 var totalX = 0;

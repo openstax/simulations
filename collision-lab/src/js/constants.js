@@ -151,6 +151,7 @@ define(function (require) {
     MomentaDiagram.GRID_COLOR = '#000';
     MomentaDiagram.GRID_ALPHA = 0.1;
     MomentaDiagram.TOTAL_COLOR = '#FF7400';
+    MomentaDiagram.ONE_DIMENSION_ARROW_SPACING = 1;
 
     Constants.MomentaDiagram = MomentaDiagram;
 
