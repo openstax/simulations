@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
     var Backbone = require('backbone');
 
@@ -18,6 +19,8 @@ define(function(require) {
     var PANEL_COLOR = Colors.parseHex(Constants.MomentaDiagram.PANEL_COLOR);
     var GRID_COLOR  = Colors.parseHex(Constants.MomentaDiagram.GRID_COLOR);
 
+    var templateHtml = require('text!templates/momenta-diagram.html');
+
     /**
      * A view that represents the player particle
      */
@@ -27,9 +30,12 @@ define(function(require) {
 
         tagName: 'div',
         className: 'momenta-diagram',
+        template: _.template(templateHtml),
 
         htmlEvents: {
-            'click .tip-to-tail-check': 'toggleTipToTailMode'
+            'click .tip-to-tail-check': 'toggleTipToTailMode',
+            'click .btn-zoom-in'      : 'zoomIn',
+            'click .btn-zoom-out'     : 'zoomOut'
         },
 
         initialize: function(options) {
@@ -39,7 +45,7 @@ define(function(require) {
             this.panelHeight = options.height;
             this.x = options.x;
             this.y = options.y;
-            this.scale = 24;
+            this.scale = MomentaDiagram.DEFAULT_SCALE;
 
             this.tipToTailMode = true;
 
@@ -83,27 +89,18 @@ define(function(require) {
                 width: this.panelWidth
             });
 
-            this.initHeader();
-            this.initCheckbox();
-        },
+            this.$el.html(this.template({
+                unique: this.simulation.cid
+            }));
 
-        initHeader: function() {
-            var $header = $('<h2 class="title">Momenta</h2>');
-            this.$el.append($header);
-        },
-
-        initCheckbox: function() {
-            var $checkbox = $(
-                '<div class="checkbox-wrapper">' +
-                    '<input type="checkbox" class="tip-to-tail-check" id="paths-check-' + this.simulation.cid + '" checked>' +
-                    '<label for="paths-check-' + this.simulation.cid + '">Tip-to-tail</label>' + 
-                '</div>'
-            );
-            $checkbox.css({
-                bottom: -(this.panelHeight - MomentaDiagram.PANEL_PADDING) + 'px',
+            var bottom = -(this.panelHeight - MomentaDiagram.PANEL_PADDING);
+            this.$el.find('.checkbox-wrapper').css({
+                bottom: bottom + 'px',
                 left: MomentaDiagram.PANEL_PADDING + 'px'
             });
-            this.$el.append($checkbox);
+            this.$el.find('.zoom-controls-wrapper').css({
+                bottom: bottom + 'px',
+            });
         },
 
         initPanel: function() {
@@ -273,6 +270,37 @@ define(function(require) {
             else {
                 this.tipToTailMode = false;
                 this.enableArrowMovement();
+            }
+        },
+
+        updateMVT: function() {
+            // Initialize a new model-view-transform
+            this.initMVT();
+
+            // Update momentum views
+            for (var i = 0; i < this.momentumViews.length; i++)
+                this.momentumViews[i].updateMVT(this.mvt);
+            this.totalView.updateMVT(this.mvt);
+            if (this.tipToTailMode)
+                this.arrangeArrowsTipToTail();
+
+            // Update grid
+            this.gridView.setGridSize(this.mvt.modelToViewDeltaX(1));
+        },
+
+        zoomIn: function() {
+            var scale = this.scale + 4;
+            if (scale <= MomentaDiagram.MAX_SCALE) {
+                this.scale = scale;
+                this.updateMVT();
+            }
+        },
+
+        zoomOut: function() {
+            var scale = this.scale - 4;
+            if (scale >= MomentaDiagram.MIN_SCALE) {
+                this.scale = scale;
+                this.updateMVT();
             }
         }
 

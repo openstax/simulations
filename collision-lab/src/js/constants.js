@@ -152,6 +152,10 @@ define(function (require) {
     MomentaDiagram.GRID_ALPHA = 0.1;
     MomentaDiagram.TOTAL_COLOR = '#FF7400';
     MomentaDiagram.ONE_DIMENSION_ARROW_SPACING = 1;
+    MomentaDiagram.DEFAULT_SCALE = 24;
+    MomentaDiagram.MIN_SCALE = 16;
+    MomentaDiagram.MAX_SCALE = 52;
+    
 
     Constants.MomentaDiagram = MomentaDiagram;
 
