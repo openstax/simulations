@@ -144,7 +144,8 @@ define(function(require) {
             this.totalView = new MomentumView({
                 model: this.totalViewModel,
                 mvt: this.mvt,
-                color: MomentaDiagram.TOTAL_COLOR
+                color: MomentaDiagram.TOTAL_COLOR,
+                label: 'total'
             });
             this.arrowsLayer.addChild(this.totalView.displayObject);
 
@@ -191,7 +192,8 @@ define(function(require) {
         createAndAddArrowView: function(ball) {
             var view = new MomentumView({
                 model: ball,
-                mvt: this.mvt
+                mvt: this.mvt,
+                label: ball.get('number')
             });
             if (!this.tipToTailMode)
                 view.disableArrowMovement();
@@ -219,6 +221,7 @@ define(function(require) {
                     totalX += this.momentumViews[i].model.get('momentumX');
                     totalY += this.momentumViews[i].model.get('momentumY');
                 }
+                this.totalView.moveTo(0, 0);
                 this.totalViewModel.set('momentumX', totalX);
                 this.totalViewModel.set('momentumY', totalY);
             }

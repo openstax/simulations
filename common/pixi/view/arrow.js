@@ -132,6 +132,10 @@ define(function(require) {
 
         hide: function() {
             this.displayObject.visible = false;
+        },
+
+        getRotation: function() {
+            return this.transformFrame.rotation;
         }
 
     }, {

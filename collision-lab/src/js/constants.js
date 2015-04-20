@@ -150,7 +150,7 @@ define(function (require) {
     MomentaDiagram.BG_COLOR = '#fff';
     MomentaDiagram.GRID_COLOR = '#000';
     MomentaDiagram.GRID_ALPHA = 0.1;
-    MomentaDiagram.TOTAL_COLOR = '#21366b';
+    MomentaDiagram.TOTAL_COLOR = '#FF7400';
 
     Constants.MomentaDiagram = MomentaDiagram;
 
@@ -163,7 +163,7 @@ define(function (require) {
     MomentumView.ARROW_COLOR = BallView.MOMENTUM_ARROW_COLOR;
     MomentumView.ARROW_ALPHA = BallView.MOMENTUM_ARROW_ALPHA;
     MomentumView.LABEL_FONT  = 'bold 12px Helvetica Neue';
-    MomentumView.LABEL_COLOR = '#fff';
+    MomentumView.LABEL_COLOR = '#000';
 
     Constants.MomentumView = MomentumView;
 

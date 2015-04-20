@@ -57,15 +57,14 @@ define(function(require) {
         },
 
         initLabel: function() {
-            var label = new PIXI.Text(this.label, {
+            this.label = new PIXI.Text(this.label, {
                 font: MomentumView.LABEL_FONT,
                 fill: MomentumView.LABEL_COLOR
             });
-            label.anchor.x = 0.5;
-            label.anchor.y = 0;
-            label.y = 4;
+            this.label.anchor.x = 0.5;
+            this.label.anchor.y = 0;
 
-            this.arrowView.displayObject.addChild(label);
+            this.arrowView.displayObject.addChild(this.label);
         },
 
         updateMVT: function(mvt) {
@@ -74,8 +73,16 @@ define(function(require) {
         },
 
         updateMomentum: function() {
-            this.arrowViewModel.set('targetX', this.arrowViewModel.get('originX') + this.mvt.modelToViewDeltaX(this.model.get('momentumX')));
-            this.arrowViewModel.set('targetY', this.arrowViewModel.get('originY') + this.mvt.modelToViewDeltaY(this.model.get('momentumY')));
+            var xLength = this.mvt.modelToViewDeltaX(this.model.get('momentumX'));
+            var yLength = this.mvt.modelToViewDeltaY(this.model.get('momentumY'))
+            this.arrowViewModel.set('targetX', this.arrowViewModel.get('originX') + xLength);
+            this.arrowViewModel.set('targetY', this.arrowViewModel.get('originY') + yLength);
+            var rotation = this.arrowView.getRotation();
+            if (rotation > Math.PI / 2 && rotation < Math.PI * 1.5)
+                rotation += Math.PI;
+            this.label.rotation = rotation;
+            this.label.x = xLength / 2;
+            this.label.y = yLength / 2;
         },
 
         enableArrowMovement: function() {
