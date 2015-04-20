@@ -16,6 +16,7 @@ define(function(require) {
 
     var Constants = require('constants');
     var PANEL_COLOR = Colors.parseHex(Constants.MomentaDiagram.PANEL_COLOR);
+    var GRID_COLOR  = Colors.parseHex(Constants.MomentaDiagram.GRID_COLOR);
 
     /**
      * A view that represents the player particle
@@ -113,6 +114,7 @@ define(function(require) {
             this.displayObject.addChild(panel);
 
             var graphArea = new PIXI.Graphics();
+            graphArea.lineStyle(1, GRID_COLOR, MomentaDiagram.GRID_ALPHA);
             graphArea.beginFill(0xFFFFFF, 1);
             graphArea.drawRect(this.areaBounds.x, this.areaBounds.y, this.areaBounds.w, this.areaBounds.h);
             graphArea.endFill();
