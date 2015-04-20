@@ -67,7 +67,16 @@ define(function (require) {
             'slide .playback-speed'    : 'changeTimeScale',
 
             'click .add-ball-btn'    : 'addBall',
-            'click .remove-ball-btn' : 'removeBall'
+            'click .remove-ball-btn' : 'removeBall',
+
+            'click .velocity-vector-check'   : 'toggleVelocityVectors',
+            'click .momentum-vector-check'   : 'toggleMomentumVectors',
+            'click .velocity-check'          : 'toggleVelocityLabels',
+            'click .momentum-check'          : 'toggleMomentumLabels',
+            'click .kinetic-energy-check'    : 'toggleKineticEnergy',
+            'click .center-of-mass-check'    : 'toggleCenterOfMass',
+            'click .reflecting-border-check' : 'toggleReflectingBorder',
+            'click .paths-check'             : 'toggleBallTraces'
         },
 
         /**
@@ -194,7 +203,8 @@ define(function (require) {
         createBallSettingsView: function(ball) {
             return new BallSettingsView({ 
                 model: ball, 
-                showMoreData: this.moreDataMode 
+                simulation: this.simulation,
+                showMoreData: this.moreDataMode
             });
         },
 
@@ -204,6 +214,7 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.ui);
         },
 
         /**
@@ -390,6 +401,66 @@ define(function (require) {
 
         unmute: function() {
             this.simulation.unmute();
+        },
+
+        toggleVelocityVectors: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityArrows();
+            else
+                this.sceneView.hideVelocityArrows();
+        },
+
+        toggleMomentumVectors: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showMomentumArrows();
+            else
+                this.sceneView.hideMomentumArrows();
+        },
+
+        toggleVelocityLabels: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityLabels();
+            else
+                this.sceneView.hideVelocityLabels();
+        },
+
+        toggleMomentumLabels: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showMomentumLabels();
+            else
+                this.sceneView.hideMomentumLabels();
+        },
+
+        toggleKineticEnergy: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showKineticEnergy();
+            else
+                this.sceneView.hideKineticEnergy();
+        },
+
+        toggleCenterOfMass: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCenterOfMass();
+            else
+                this.sceneView.hideCenterOfMass();
+        },
+
+        toggleReflectingBorder: function() {
+            if ($(event.target).is(':checked')) {
+                this.sceneView.showReflectingBorder();
+                this.simulation.set('borderOn', true);
+            }
+            else {
+                this.sceneView.hideReflectingBorder();
+                this.simulation.set('borderOn', false);
+            }
+        },
+
+        toggleBallTraces: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
         }
 
     });

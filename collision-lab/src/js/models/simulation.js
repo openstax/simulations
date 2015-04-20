@@ -27,17 +27,21 @@ define(function (require, exports, module) {
     var CollisionLabSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
+            // Settings
             defaultBallSettings: Constants.Simulation.DEFAULT_BALL_SETTINGS,
             oneDimensional: false,
-            borderOn: true,
-
+            
+            // Attributes that affect the sim
             paused: true,
             started: false,
             timeScale: Constants.Simulation.DEFAULT_TIMESCALE,
             elasticity: 1,
+            borderOn: true,
 
+            // Information to show to the user
             xCenterOfMass: 0,
-            yCenterOfMass: 0
+            yCenterOfMass: 0,
+            kineticEnergy: 0
         }),
         
         initialize: function(attributes, options) {
@@ -58,6 +62,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.addBall();
             this.addBall();
+            this.calculateKineticEnergy();
+            this.calculateCenterOfMass();
         },
 
         /**
@@ -74,6 +80,8 @@ define(function (require, exports, module) {
             }, {
                 mute: this.muted
             }));
+
+            this.updateCalculatedVariables();
         },
 
         /**
@@ -159,6 +167,7 @@ define(function (require, exports, module) {
             }
             this.checkBallCollisions();
             this.calculateCenterOfMass();
+            this.calculateKineticEnergy();
 
             if (this.reversing)
                 this.lastTime = this.time;
@@ -266,13 +275,13 @@ define(function (require, exports, module) {
                 // For some reason they use else ifs, but whatever.
 
                 if ((x + radius) > this.bounds.right())
-                    ball.setX(this.bounds.right() - 2 * radius);
+                    ball.setX(this.bounds.right() - radius);
                 else if ((x - radius) < this.bounds.left())
-                    ball.setX(this.bounds.left() + 2 * radius);
+                    ball.setX(this.bounds.left() + radius);
                 else if ((y + radius) > this.bounds.top())
-                    ball.setY(this.bounds.top() - 2 * radius);
+                    ball.setY(this.bounds.top() - radius);
                 else if ((y - radius) < this.bounds.bottom())
-                    ball.setY(this.bounds.bottom() + 2 * radius);
+                    ball.setY(this.bounds.bottom() + radius);
                     
             }
         },
@@ -358,6 +367,13 @@ define(function (require, exports, module) {
 
                 counter++;
             }
+
+            if (!this.get('started')) {
+                for (var i = 0; i < balls.length; i++)
+                    balls.at(i).setInitPosition(balls.at(i).get('position'))
+            }
+
+            this.updateCalculatedVariables();
         },
 
         /**
@@ -391,8 +407,8 @@ define(function (require, exports, module) {
 
                 var dxBall1 = -m2 * overlap * dx / (dr * (m1 + m2));
                 var dyBall1 = -m2 * overlap * dy / (dr * (m1 + m2));
-                var dxBall2 = m1 * overlap * dx / (dr * (m1 + m2));
-                var dyBall2 = m1 * overlap * dy / (dr * (m1 + m2));
+                var dxBall2 =  m1 * overlap * dx / (dr * (m1 + m2));
+                var dyBall2 =  m1 * overlap * dy / (dr * (m1 + m2));
                 var ball1WallCollision = this.checkWallCollision(ball1, x1 + dxBall1, y1 + dyBall1);
                 var ball2WallCollision = this.checkWallCollision(ball2, x2 + dxBall2, y2 + dyBall2);
                 
@@ -551,6 +567,26 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Calculates total kinetic energy in the system and
+         *   saves that value to the kineticEnergy attribute.
+         */
+        calculateKineticEnergy: function() {
+            var total = 0;
+            for (var i = 0; i < this.balls.length; i++) 
+                total += this.balls.at(i).getKineticEnergy();
+            this.set('kineticEnergy', total);
+        },
+
+        /**
+         * Keeps the calculated variables like kinetic energy
+         *   and center of mass up-to-date.
+         */
+        updateCalculatedVariables: function() {
+            this.calculateKineticEnergy();
+            this.calculateCenterOfMass();
+        },
+
+        /**
          * Returns whether or not the simulation has left its
          *   initial state--if time is not zero.
          */
@@ -558,11 +594,17 @@ define(function (require, exports, module) {
             return this.get('started');
         },
 
+        /**
+         * Mutes all sounds
+         */
         mute: function() {
             this.muted = true;
             buzz.all().mute();
         },
 
+        /**
+         * Unmutes all sounds
+         */
         unmute: function() {
             this.muted = false;
             buzz.all().unmute();

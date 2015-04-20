@@ -1,8 +1,7 @@
-@import "../../node_modules/bootstrap/less/mixins/gradients.less";
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
-
+@import "variables.less";
+@import "mixins.less";
 
 .scene-view {
     width: 100%;
@@ -12,51 +11,17 @@
     background: url(../img/bg-pattern.png);
 }
 
-
-.ball-placeholder {
+.kinetic-energy-label {
 	position: absolute;
-	border-radius: 50%;
-	width: 50px;
-	height: 50px;
-	line-height: 50px;
-	text-align: center;
-	color: #fff;
-	font-weight: bold;
-	font-size: 20px;
+	padding: 5px 8px;
+	left: @panel-margin;
+	bottom: (@panel-margin + 62);
+	pointer-events: none;
+	color: fadeout(@link-color, 26%);
 
-	&.ball-1 {
-		background: #bece8b;
-		top: 300px;
-		left: 530px;
-		width: 64px;
-		height: 64px;
-		line-height: 64px;
-	}
-
-	&.ball-2 {
-		background: #a5aae2;
-		top: 290px;
-		left: 400px;
-		width: 80px;
-		height: 80px;
-		line-height: 80px;
-	}
-
-	&.ball-3 {
-		background: #8977a4;
-		top: 400px;
-		left: 460px;
-	}
-
-	&.ball-4 {
-		background: #f4c24b;
-		top: 360px;
-		left: 270px;
-	}
-
-	&.ball-5 {
-		background: #7ab0b3;
-		top: 180px;
-		left: 330px;
+	.kinetic-energy {
+		min-width: 36px;
+		display: inline-block;
+		text-align: right;
 	}
 }

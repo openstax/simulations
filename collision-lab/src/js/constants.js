@@ -50,6 +50,25 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                                SCENE                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.CM_MARKER_RADIUS = 14; // Pixels
+    SceneView.CM_MARKER_THICKNESS = 7;
+    SceneView.CM_MARKER_FILL_COLOR = '#fff';
+    SceneView.CM_MARKER_FILL_ALPHA = 1;
+    SceneView.CM_MARKER_LINE_COLOR = '#000';
+    SceneView.CM_MARKER_LINE_ALPHA = 0.5;
+    SceneView.CM_MARKER_LINE_WIDTH = 2;
+
+    Constants.SceneView = SceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                                BALL                                 **
      **                                                                     **
      *************************************************************************/
@@ -78,6 +97,7 @@ define(function (require) {
     BallView.ARROW_HEAD_LENGTH = 17;
     BallView.ARROW_COLOR = '#cd2520';
     BallView.ARROW_ALPHA = 1;
+    BallView.VELOCITY_SCALE = 0.5;
     BallView.VELOCITY_MARKER_COLOR = '#888';
     BallView.VELOCITY_MARKER_ALPHA = 1;
     BallView.VELOCITY_MARKER_RADIUS = 20;
@@ -85,6 +105,19 @@ define(function (require) {
     BallView.VELOCITY_MARKER_FONT = '28px Arial';
     BallView.NUMBER_FONT  = 'bold 24px Helvetica Neue';
     BallView.NUMBER_COLOR = '#fff';
+    BallView.MOMENTUM_ARROW_TAIL_WIDTH  = 11;
+    BallView.MOMENTUM_ARROW_HEAD_WIDTH  = 25;
+    BallView.MOMENTUM_ARROW_HEAD_LENGTH = 21;
+    BallView.MOMENTUM_ARROW_COLOR = '#FFD700';
+    BallView.MOMENTUM_ARROW_ALPHA = 1;
+    BallView.MOMENTUM_SCALE = BallView.VELOCITY_SCALE;
+    BallView.PANEL_LINE_COLOR = '#444';
+    BallView.PANEL_LINE_WIDTH = 1;
+    BallView.PANEL_LINE_ALPHA = 1;
+    BallView.PANEL_FILL_COLOR = '#fff';
+    BallView.PANEL_FILL_ALPHA = 1;
+    BallView.LABEL_FONT = '14px Helvetica Neue';
+    BallView.LABEL_TEXT_COLOR = '#444';
 
     Constants.BallView = BallView;
 
@@ -92,6 +125,8 @@ define(function (require) {
     var BallTraceView = {};
 
     BallTraceView.LINE_WIDTH = 3;
+    BallTraceView.LINE_COLOR = '#444';
+    BallTraceView.LINE_ALPHA = 1;
 
     Constants.BallTraceView = BallTraceView;
 

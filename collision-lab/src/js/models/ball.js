@@ -35,10 +35,12 @@ define(function (require) {
             this.lastY = this.get('position').y;
 
             this.bigBounceSound = new buzz.sound('audio/bounce', {
-                formats: ['ogg', 'mp3', 'wav']
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 50
             });
             this.smallBounceSound = new buzz.sound('audio/bounce-small', {
-                formats: ['ogg', 'mp3', 'wav']
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 60
             });
 
             if (options.mute) {
@@ -154,6 +156,11 @@ define(function (require) {
 
         collideWithBall: function() {
             this.bigBounceSound.stop().play();
+        },
+
+        getKineticEnergy: function() {
+            var speed = this.get('velocity').length();
+            return 0.5 * this.get('mass') * speed * speed;
         }
 
     }, Constants.Ball);
