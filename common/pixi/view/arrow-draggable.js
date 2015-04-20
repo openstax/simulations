@@ -247,6 +247,26 @@ define(function(require) {
             else {
                 this.smallDot.visible = false;
             }
+        },
+
+        disableBodyDragging: function() {
+            this.bodyDraggingEnabled = false;
+            this.tailGraphics.buttonMode = false;
+        },
+
+        enableBodyDragging: function() {
+            this.bodyDraggingEnabled = true;
+            this.tailGraphics.buttonMode = true;
+        },
+
+        disableHeadDragging: function() {
+            this.headDraggingEnabled = false;
+            this.headGraphics.buttonMode = false;
+        },
+
+        enableHeadDragging: function() {
+            this.headDraggingEnabled = true;
+            this.headGraphics.buttonMode = true;
         }
 
     });

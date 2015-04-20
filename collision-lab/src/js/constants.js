@@ -44,7 +44,7 @@ define(function (require) {
     ];
 
     Simulation.BORDER_BOUNDS_1D = new Rectangle(0, -0.4,  3.2, 0.8);
-    Simulation.BORDER_BOUNDS_2D = new Rectangle(0, -0.87, 3.2, 1.74); // original height was 1.9
+    Simulation.BORDER_BOUNDS_2D = new Rectangle(0, -0.89, 3.2, 1.78); // original height was 1.9
 
     Constants.Simulation = Simulation;
 
@@ -56,6 +56,10 @@ define(function (require) {
 
     var SceneView = {};
 
+    SceneView.BORDER_FILL_COLOR = '#fff';
+    SceneView.BORDER_FILL_ALPHA = 0.25;
+    SceneView.BORDER_LINE_COLOR = '#fff';
+    SceneView.BORDER_LINE_ALPHA = 1;
     SceneView.CM_MARKER_RADIUS = 14; // Pixels
     SceneView.CM_MARKER_THICKNESS = 7;
     SceneView.CM_MARKER_FILL_COLOR = '#fff';
@@ -129,6 +133,39 @@ define(function (require) {
     BallTraceView.LINE_ALPHA = 1;
 
     Constants.BallTraceView = BallTraceView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                           MOMENTA DIAGRAM                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var MomentaDiagram = {};
+
+    MomentaDiagram.PANEL_COLOR = '#fff';
+    MomentaDiagram.PANEL_ALPHA = 0.5;
+    MomentaDiagram.PANEL_PADDING = 15; // Pixels
+    MomentaDiagram.PANEL_PADDING_TOP = 40; // Pixels
+    MomentaDiagram.BG_COLOR = '#fff';
+    MomentaDiagram.GRID_COLOR = '#000';
+    MomentaDiagram.GRID_ALPHA = 0.1;
+    MomentaDiagram.TOTAL_COLOR = '#21366b';
+
+    Constants.MomentaDiagram = MomentaDiagram;
+
+
+    var MomentumView = {};
+
+    MomentumView.ARROW_TAIL_WIDTH  = 5;
+    MomentumView.ARROW_HEAD_WIDTH  = 15;
+    MomentumView.ARROW_HEAD_LENGTH = 13;
+    MomentumView.ARROW_COLOR = BallView.MOMENTUM_ARROW_COLOR;
+    MomentumView.ARROW_ALPHA = BallView.MOMENTUM_ARROW_ALPHA;
+    MomentumView.LABEL_FONT  = 'bold 12px Helvetica Neue';
+    MomentumView.LABEL_COLOR = '#fff';
+
+    Constants.MomentumView = MomentumView;
 
 
     return Constants;
