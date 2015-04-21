@@ -20,7 +20,7 @@ define(function(require) {
      */
     var BodySettingsView = Backbone.View.extend({
 
-        tagName: 'div',
+        tagName: 'tr',
         className: 'body-settings-view',
         template: _.template(templateHtml),
 
