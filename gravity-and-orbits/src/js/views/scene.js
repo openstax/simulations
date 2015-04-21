@@ -18,7 +18,7 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var GOSceneView = PixiSceneView.extend({
 
         events: {
             
@@ -58,5 +58,5 @@ define(function(require) {
 
     });
 
-    return TemplateSceneView;
+    return GOSceneView;
 });

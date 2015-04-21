@@ -7,8 +7,9 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var GOSimulation     = require('models/simulation');
+    var GOSceneView      = require('views/scene');
+    var BodySettingsView = require('views/body-settings');
 
     var Constants = require('constants');
 
@@ -67,23 +68,31 @@ define(function (require) {
                 link: 'gravity-and-orbits'
             }, options);
 
+            this.bodySettingViews = [];
+
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+
+            this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
+            this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
+            this.listenTo(this.simulation.bodies, 'remove', this.bodyRemoved);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new GOSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new GOSceneView({
                 simulation: this.simulation
             });
         },
@@ -113,6 +122,9 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.$bodySettingViews = this.$('.body-settings-container');
+            this.bodiesReset(this.simulation.bodies);
         },
 
         /**
@@ -191,6 +203,50 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        /**
+         * Returns a new body settings view
+         */
+        createBodySettingsView: function(body) {
+            return new BodySettingsView({ 
+                model: body
+            });
+        },
+
+        appendBodySettingsView: function(bodySettingsView) {
+            this.$bodySettingViews.append(bodySettingsView.el);
+            bodySettingsView.render();
+            this.bodySettingViews.push(bodySettingsView);
+        },
+
+        bodiesReset: function(bodies) {
+            // Remove old body views
+            for (var i = this.bodySettingViews.length - 1; i >= 0; i--) {
+                this.bodySettingViews[i].remove();
+                this.bodySettingViews.splice(i, 1);
+            }
+
+            // Add new ball views
+            bodies.each(function(body) {
+                this.appendBodySettingsView(this.createBodySettingsView(body));
+            }, this);
+        },
+
+        bodyAdded: function(body, bodies) {
+            this.appendBodySettingsView(this.createBodySettingsView(body));
+        },
+
+        bodyRemoved: function(body, bodies) {
+            for (var i = this.bodySettingViews.length - 1; i >= 0; i--) {
+                if (this.bodySettingViews[i].model === body) {
+                    this.bodySettingViews[i].remove();
+                    this.bodySettingViews.splice(i, 1);
+                    break;
+                }
+            }
+
+            this.updateBallButtons();
         },
 
     });

@@ -9,6 +9,52 @@
     left: @panel-margin;
     color: fadeout(#fff, 14%);
     .user-select(none);
+
+    .body-settings-view {
+        height: 36px;
+        margin-bottom: 8px;
+        clear: both;
+
+        &:last-child {
+            margin-bottom: 0;
+        }
+
+        .icon-wrapper {
+            float: left;
+        }
+
+        .body-name {
+            float: left;
+            width: 50px;
+            margin-left: 8px;
+            margin-right: 12px;
+            text-transform: capitalize;
+            line-height: 36px;
+        }
+
+        .mass-slider-wrapper {
+            float: left;
+            width: 100px;
+            padding-top: 5px;
+            height: 36px;
+
+            .mass-slider {
+                width: 140px;
+                display: inline-block;
+                vertical-align: middle;
+                background: @panel-slider-color;
+
+                &.slider .noUi-background {
+                    background: #575E6E;
+                }
+
+                &.slider .noUi-handle:after {
+                    background: #fff;
+                    border: 2px solid @panel-slider-color;
+                }
+            }
+        }
+    }
 }
 
 .body-configuration-wrapper {

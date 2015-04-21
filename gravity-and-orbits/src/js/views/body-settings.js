@@ -46,6 +46,7 @@ define(function(require) {
         render: function() {
             var data = this.model.toJSON();
             data.src = Assets.ImageFromModel(this.model);
+            data.Assets = Assets;
 
             this.$el.html(this.template(data));
 
@@ -53,8 +54,8 @@ define(function(require) {
                 start: this.model.get('mass'),
                 connect: 'lower',
                 range: {
-                    'min': Constants.Body.MIN_MASS,
-                    'max': Constants.Body.MAX_MASS
+                    'min': this.model.get('minMass'),
+                    'max': this.model.get('maxMass')
                 }
             });
 

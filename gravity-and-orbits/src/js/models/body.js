@@ -23,6 +23,8 @@ define(function (require) {
 
 			// Static physical properties
 			mass:     1,
+			minMass: 0.5,
+			maxMass: 2,
 			diameter: 1,
 			density:  1,
 			fixed:    false,
