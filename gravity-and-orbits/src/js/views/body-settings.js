@@ -2,14 +2,14 @@ define(function(require) {
 
     'use strict';
 
-    var $        = require('jquery');
     var _        = require('underscore');
-    var Backbone = require('backbone'); Backbone.$ = $;
+    var Backbone = require('backbone');
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
-    var Vector2 = require('common/math/vector2');
+    var Vector2                = require('common/math/vector2');
 
     var Constants = require('constants');
+    var Assets    = require('assets');
 
     require('nouislider');
 
@@ -45,7 +45,7 @@ define(function(require) {
          */
         render: function() {
             var data = this.model.toJSON();
-            _.extend(data, Constants.Body);
+            data.src = Assets.ImageFromModel(this.model);
 
             this.$el.html(this.template(data));
 

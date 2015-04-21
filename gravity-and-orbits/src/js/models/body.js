@@ -4,7 +4,6 @@ define(function (require) {
 
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	var glMatrix = require('glmatrix');
 
 	/**
 	 * 
@@ -55,10 +54,7 @@ define(function (require) {
 		initialize: function(attributes, options) {
 
 			// Create vectors
-			this.set('position',     glMatrix.vec2.create());
-			this.set('velocity',     glMatrix.vec2.create());
-			this.set('acceleration', glMatrix.vec2.create());
-			this.set('force',        glMatrix.vec2.create());
+			
 
 			// Derived properties
 			this.set('density', this.get('mass') / this.getVolume());
@@ -97,7 +93,7 @@ define(function (require) {
 		 *
 		 */
 		collidesWith: function(body) {
-			var distance = glMatrix.distance(this.get('position'), body.get('position'));
+			var distance = this.get('position').distance(body.get('position'));
 			var radiiSum = this.get('diameter') / 2 + body.get('diameter') / 2;
 			return distance < radiiSum;
 		},
