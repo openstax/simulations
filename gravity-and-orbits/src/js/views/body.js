@@ -20,19 +20,19 @@ define(function(require) {
 		 */
 		initialize: function(options) {
 
-			var haloTexture = this._generateHaloTexture(120, 32, '#fff');
-			var haloSprite = new PIXI.Sprite(haloTexture);
-			haloSprite.anchor.x = 0.5;
-			haloSprite.anchor.y = 0.5;
-			this.displayObject.addChild(haloSprite);
+			// var haloTexture = this._generateHaloTexture(120, 32, '#fff');
+			// var haloSprite = new PIXI.Sprite(haloTexture);
+			// haloSprite.anchor.x = 0.5;
+			// haloSprite.anchor.y = 0.5;
+			// this.displayObject.addChild(haloSprite);
 
 			var planetSprite = Assets.createSprite(Assets.Images.EARTH);
 			planetSprite.anchor.x = 0.5;
 			planetSprite.anchor.y = 0.5;
 			this.displayObject.addChild(planetSprite);
 
-			this.displayObject.position.x = 400;
-			this.displayObject.position.y = 200;
+			this.displayObject.position.x = 480;
+			this.displayObject.position.y = 300;
 		},
 
 		/**
@@ -61,7 +61,7 @@ define(function(require) {
 		},
 
 		update: function(time, delta) {
-			this.displayObject.rotation += delta * 0.0001;
+			//this.displayObject.rotation += delta * 0.05;
 		}
 
 	});

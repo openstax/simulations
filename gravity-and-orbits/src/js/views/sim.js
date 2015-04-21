@@ -64,8 +64,6 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Template Sim',
-                name: 'template-sim',
                 link: 'gravity-and-orbits'
             }, options);
 
@@ -110,7 +108,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                configurationKeys: ['Sun, planet', 'Sun, planet, moon']
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();

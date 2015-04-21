@@ -3,41 +3,51 @@
 @import "variables.less";
 @import "mixins.less";
 
-.sound-btn-wrapper {
+.body-settings-container {
     position: absolute;
-    top: -36px;
-    right: 30px;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#fff, 14%);
+    .user-select(none);
+}
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+.body-configuration-wrapper {
+    position: absolute;
+    left: 383px;
+    top: @panel-margin;
+    color: fadeout(#fff, 14%);
 
-        &:hover {
-            opacity: 0.9;
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 60%);
+            border-color: rgba(0, 0, 0, 0.1);
+            //color: #fff;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
         }
 
-        &:active {
-            background: @link-color;
-            color: #fff;
+        a {
+            //text-transform: capitalize;
         }
 
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
+        a:focus {
+            outline: none;
         }
     }
 }
 
-.hello-world {
+.zoom-controls {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    bottom: 82px;
+    right: 20px;
+    color: #fff;
 }

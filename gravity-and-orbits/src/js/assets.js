@@ -7,7 +7,9 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        EARTH: 'phet/earth-square.png'
+        EARTH: 'earth.png',
+        SUN: 'sun.png',
+        MOON: 'moon.png'
     };
 
     Assets.SpriteSheets = {};
