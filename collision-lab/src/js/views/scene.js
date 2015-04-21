@@ -182,6 +182,7 @@ define(function(require) {
             });
             this.stage.addChild(this.momentaDiagram.displayObject);
             this.$ui.append(this.momentaDiagram.el);
+            this.momentaDiagram.hide();
         },
 
         drawBorder: function() {
@@ -359,6 +360,14 @@ define(function(require) {
 
         hideTraces: function() {
             this.ballTraceLayer.visible = false;
+        },
+
+        showMomentaDiagram: function() {
+            this.momentaDiagram.show();
+        },
+
+        hideMomentaDiagram: function() {
+            this.momentaDiagram.hide();
         }
 
     });
