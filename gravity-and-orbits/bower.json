@@ -1,6 +1,6 @@
 {
-  "name": "gravity-and-orbits",
-  "version": "0.0.0",
+  "name": "template-sim",
+  "version": "1.0.0",
   "homepage": "https://github.com/Connexions/simulations",
   "private": true,
   "ignore": [
@@ -20,12 +20,11 @@
     "require-css": "~0.1.5",
     "require-less": "~0.1.2",
     "bootstrap": "~3.2.0",
-    "pixi": "~1.6.1",
     "sinonjs": "~1.10.2",
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
-    "gl-matrix": "~2.2.1",
-    "fparser": "~1.2.1"
+    "pixi": "~2.2.5",
+    "buzz": "~1.1.7"
   }
 }

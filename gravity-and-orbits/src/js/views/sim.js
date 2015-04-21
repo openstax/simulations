@@ -1,184 +1,200 @@
 define(function (require) {
 
-	'use strict';
+    'use strict';
 
-	var $ = require('jquery');
-	var _ = require('underscore');
+    var $ = require('jquery');
+    var _ = require('underscore');
 
-	var SimView      = require('common/app/sim');
-	var SceneView    = require('views/scene');
-	var GOSimulation = require('models/simulation');
+    var SimView = require('common/app/sim');
 
-	require('nouislider');
-	require('bootstrap');
+    var TemplateSimulation = require('models/simulation');
+    var TemplateSceneView  = require('views/scene');
 
-	// CSS
-	require('less!styles/sim');
-	require('less!styles/playback-controls');
-	require('less!common/styles/slider');
-	require('less!common/styles/radio');
+    var Constants = require('constants');
 
-	// HTML
-	var simHtml        = require('text!templates/sim.html');
-	var controlsHtml   = require('text!templates/playback-controls.html');
-	var propertiesHtml = require('text!templates/properties-panel.html');
+    require('nouislider');
+    require('bootstrap');
+    require('bootstrap-select');
 
-	/**
-	 *
-	 */
-	var GOSimView = SimView.extend({
+    // CSS
+    require('less!styles/sim');
+    require('less!styles/playback-controls');
+    require('less!common/styles/slider');
+    require('less!common/styles/radio');
+    require('less!bootstrap-select-less');
 
-		/**
-		 * Root element properties
-		 */
-		tagName:   'section',
-		className: 'sim-view',
+    // HTML
+    var simHtml        = require('text!templates/sim.html');
+    var controlsHtml   = require('text!templates/playback-controls.html');
+    var propertiesHtml = require('text!templates/properties-panel.html');
 
-		/**
-		 * Template for rendering the basic scaffolding
-		 */
-		template:                _.template(simHtml),
-		propertiesPanelTemplate: _.template(propertiesHtml),
+    /**
+     * This is the umbrella view for everything in a simulation tab.
+     *   It will be extended by both the Intro module and the Charts
+     *   and contains all the common functionality between the two.
+     */
+    var GOSimView = SimView.extend({
 
-		/**
-		 * Dom event listeners
-		 */
-		events: {
-			// Playback controls
-			'click .play-btn'   : 'play',
-			'click .pause-btn'  : 'pause',
-			'click .reset-btn'  : 'reset'
-		},
+        /**
+         * Root element properties
+         */
+        tagName:   'section',
+        className: 'sim-view',
 
-		/**
-		 * Inits simulation, views, and variables.
-		 *
-		 * @params options
-		 */
-		initialize: function(options) {
-			options = _.extend({
-					link: 'gravity-and-orbits',
-			}, options);
+        /**
+         * Template for rendering the basic scaffolding
+         */
+        template:                _.template(simHtml),
+        propertiesPanelTemplate: _.template(propertiesHtml),
 
-			SimView.prototype.initialize.apply(this, [options]);
+        /**
+         * Dom event listeners
+         */
+        events: {
+            // Playback controls
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .reset-btn'  : 'reset'
+        },
 
-			// Initialize the scene view
-			this.initSceneView();
-		},
+        /**
+         * Inits simulation, views, and variables.
+         *
+         * @params options
+         */
+        initialize: function(options) {
+            options = _.extend({
+                title: 'Template Sim',
+                name: 'template-sim',
+                link: 'gravity-and-orbits'
+            }, options);
 
-		/**
-		 * Initializes the Simulation.
-		 */
-		initSimulation: function() {
-			this.simulation = new GOSimulation();
-		},
+            SimView.prototype.initialize.apply(this, [options]);
 
-		/**
-		 * Initializes the Simulation.
-		 */
-		initSceneView: function() {
-			this.sceneView = new SceneView({
-				simulation: this.simulation
-			});
-		},
+            this.initSceneView();
+        },
 
-		/**
-		 * Renders everything
-		 */
-		render: function() {
-			this.$el.empty();
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new TemplateSimulation();
+        },
 
-			this.renderScaffolding();
-			this.renderSceneView();
-			this.renderPlaybackControls();
-			this.renderPropertiesPanel();
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new TemplateSceneView({
+                simulation: this.simulation
+            });
+        },
 
-			return this;
-		},
+        /**
+         * Renders everything
+         */
+        render: function() {
+            this.$el.empty();
 
-		/**
-		 *
-		 */
-		renderSceneView: function() {
-			this.sceneView.render();
-			this.$('.scene-view-placeholder').replaceWith(this.sceneView.$el);
-		},
+            this.renderScaffolding();
+            this.renderSceneView();
+            this.renderPlaybackControls();
+            this.renderPropertiesPanel();
 
-		/**
-		 * Renders page content. Should be overriden by child classes
-		 */
-		renderScaffolding: function() {
-			this.$el.html(this.template());
-		},
+            return this;
+        },
 
-		/**
-		 * Renders the playback controls at the bottom of the screen
-		 */
-		renderPlaybackControls: function() {
-			this.$controls = $(controlsHtml);
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
+        renderScaffolding: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation
+            };
+            this.$el.html(this.template(data));
+            this.$('select').selectpicker();
+        },
 
-			// Initialize speed slider
-			this.$controls.find('.playback-speed').noUiSlider({
-				start: 1,
-				range: {
-					'min': [ 0.2 ],
-					'50%': [ 1 ],
-					'max': [ 4 ]
-				}
-			});
+        /**
+         * Renders the scene view
+         */
+        renderSceneView: function() {
+            this.sceneView.render();
+            this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
 
-			this.$('.playback-controls-placeholder').replaceWith(this.$controls);
-		},
+        /**
+         * Renders the playback controls at the bottom of the screen
+         */
+        renderPlaybackControls: function() {
+            this.$controls = $(controlsHtml);
 
-		/**
-		 * Renders the playback controls at the bottom of the screen
-		 */
-		renderPropertiesPanel: function() {
-			this.$propertiesPanel = $(this.propertiesPanelTemplate({
-				unique: this.cid
-			}));
-			this.$('.properties-panel-placeholder').replaceWith(this.$propertiesPanel);
-		},
+            // Initialize speed slider
+            this.$controls.find('.playback-speed').noUiSlider({
+                start: 1,
+                range: {
+                    'min': [ 0.2 ],
+                    '50%': [ 1 ],
+                    'max': [ 4 ]
+                }
+            });
 
-		/**
-		 * Called after every component on the page has rendered to make sure
-		 *   things like widths and heights and offsets are correct.
-		 */
-		postRender: function() {
-			this.sceneView.postRender();
-		},
+            this.$('.playback-controls-placeholder').replaceWith(this.$controls);
+        },
 
-		/**
-		 *
-		 */
-		resetComponents: function() {
-			SimView.prototype.resetComponents.apply(this);
+        /**
+         * Renders the playback controls at the bottom of the screen
+         */
+        renderPropertiesPanel: function() {
+            this.$propertiesPanel = $(this.propertiesPanelTemplate({
+                unique: this.cid
+            }));
+            this.$('.properties-panel-placeholder').replaceWith(this.$propertiesPanel);
+        },
 
-		},
+        /**
+         * Called after every component on the page has rendered to make sure
+         *   things like widths and heights and offsets are correct.
+         */
+        postRender: function() {
+            this.sceneView.postRender();
+        },
 
-		/**
-		 * This is run every tick of the updater.  It updates the wave
-		 *   simulation and the views.
-		 */
-		update: function(time, delta) {
-			// Update the model
-			this.simulation.update(time, delta);
+        /**
+         * Resets all the components of the view.
+         */
+        resetComponents: function() {
+            SimView.prototype.resetComponents.apply(this);
+            this.initSceneView();
+        },
 
-			// Update the scene
-			this.sceneView.update(time, delta);
-		},
+        /**
+         * This is run every tick of the updater.  It updates the wave
+         *   simulation and the views.
+         */
+        update: function(time, deltaTime) {
+            // Update the model
+            this.simulation.update(time, deltaTime);
 
-		/**
-		 * The simulation changed its paused state.
-		 */
-		pausedChanged: function() {
-			if (this.simulation.get('paused'))
-				this.$el.removeClass('playing');
-			else
-				this.$el.addClass('playing');
-		},
+            var timeSeconds = time / 1000;
+            var dtSeconds   = deltaTime / 1000;
 
-	});
+            // Update the scene
+            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
 
-	return GOSimView;
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+    });
+
+    return GOSimView;
 });

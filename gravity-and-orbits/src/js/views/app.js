@@ -1,26 +1,26 @@
 define(function(require) {
-	
-	'use strict';
+    
+    'use strict';
 
-	var AppView = require('common/app/app');
+    var PixiAppView = require('common/pixi/view/app');
 
-	var FriendlyScaleSimView = require('views/sim/friendly-scale');
-	var ToScaleSimView       = require('views/sim/to-scale');
+    var FriendlyScaleSimView = require('views/sim/friendly-scale');
+    var ToScaleSimView       = require('views/sim/to-scale');
 
-	require('less!styles/font-awesome');
+    var Assets = require('assets');
 
-	var GOAppView = AppView.extend({
+    require('less!styles/font-awesome');
 
-		initialize: function() {
-			this.simViews = [
-				new FriendlyScaleSimView(),
-				new ToScaleSimView()
-			];
+    var GOAppView = PixiAppView.extend({
 
-			AppView.prototype.initialize.apply(this);
-		}
+        assets: Assets.getAssetList(),
 
-	});
+        simViewConstructors: [
+            FriendlyScaleSimView,
+            ToScaleSimView
+        ]
 
-	return GOAppView;
+    });
+
+    return GOAppView;
 });

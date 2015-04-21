@@ -1,28 +1,43 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
 
+.sound-btn-wrapper {
+    position: absolute;
+    top: -36px;
+    right: 30px;
 
+    > .sound-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
 
-.sim-content {
+        &:hover {
+            opacity: 0.9;
+        }
 
-	min-height: initial;
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
 
-	&:before {
-		content: '';
-		position: absolute;
-		bottom: 100%;
-		left: 0;
-		width: 100%;
-		height: 0;
-		box-shadow: 0px 0px 24px 17px #21366b;
-		clip: rect(0, auto, 70px, 0);
-	}
+        &.sound-btn-mute,
+        &.sound-btn-low {
+            display: none;
+        }
+    }
+}
 
-	.scene-view {
-		height: 580px;
-		width: 100%;
-		display: block;
-		background: #000;
-	}
+.hello-world {
+    position: absolute;
+    top: 44%;
+    width: 100%;
+    text-align: center;
+    font-size: 26px;
 }
