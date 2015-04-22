@@ -4,9 +4,9 @@
 
 <table class="body-settings-container"></table>
 
-<div class="body-configuration-wrapper">
+<div class="scenario-selection-wrapper">
     <label>Scenario:</label><br>
-    <select class="body-configuration form-control">
+    <select class="scenario-select form-control">
     <% _.each(scenarioNames, function(scenarioName, index) { %>
         <option value="<%= index %>" <% if (index === 0) { %>selected<% } %>><%= scenarioName %></option>
     <% }); %>

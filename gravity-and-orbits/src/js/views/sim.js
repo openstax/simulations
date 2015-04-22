@@ -56,7 +56,9 @@ define(function (require) {
             // Playback controls
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
-            'click .reset-btn'  : 'reset'
+            'click .reset-btn'  : 'reset',
+
+            'change .scenario-select' : 'changeScenario'
         },
 
         /**
@@ -256,6 +258,11 @@ define(function (require) {
 
         getScenarioNames: function() {
             return _.pluck(this.getScenarios(), 'name');
+        },
+
+        changeScenario: function(event) {
+            var index = parseInt($(event.target).val());
+            this.simulation.loadScenario(this.getScenarios()[index]);
         }
 
     });
