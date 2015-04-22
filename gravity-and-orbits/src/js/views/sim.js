@@ -262,7 +262,8 @@ define(function (require) {
 
         changeScenario: function(event) {
             var index = parseInt($(event.target).val());
-            this.simulation.loadScenario(this.getScenarios()[index]);
+            var scenario = this.getScenarios()[index];
+            this.simulation.set('scenario', scenario);
         }
 
     });

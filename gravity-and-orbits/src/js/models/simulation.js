@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     var GOSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            scenario: Scenarios.Friendly[0]
         }),
         
         /**
@@ -40,7 +40,9 @@ define(function (require, exports, module) {
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.loadScenario(Scenarios.Friendly[0]);
+            this.on('change:scenario', this.scenarioChanged);
+
+            this.scenarioChanged(this, this.get('scenario'));
         },
 
         /**
@@ -63,7 +65,7 @@ define(function (require, exports, module) {
          * Loads a scenario. Sets up the bodies, applies simulation
          *   attributes, and resets the simulation.
          */
-        loadScenario: function(scenario) {
+        scenarioChanged: function(simulation, scenario) {
             this.bodies.reset(_.map(scenario.bodies, function(body) {
                 return body.clone();
             }));
