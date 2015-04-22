@@ -14,68 +14,80 @@
     text-align: center;
     .user-select(none);
 
-    // Giving it a kind of glow effect like we're in the cockpit of a spaceship
-    box-shadow: 0 0 32px 8px #444;
-    clip: rect(-50px auto auto 0);
-
-    > .playback-btn {
-        display: inline-block;
-        background: @btn-bg;
-        color: @btn-fg;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
+    .playback-center-buttons-wrapper {
+        width: 150px;
+        position: absolute;
+        left: 50%;
+        margin-left: -75px;
+        top: 0;
+        height: 100%;
+        padding: 10px;
         text-align: center;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @btn-fg;
-            color: #fff;
-        }
-
-        &.pause-btn {
-            display: none;
-        }
-        .sim-view.playing &.pause-btn {
+        .playback-btn {
             display: inline-block;
-        }
-        .sim-view.playing &.play-btn {
-            display: none;
-        }
+            background: @panel-btn-bg;
+            color: @panel-btn-fg;
+            outline: none;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            text-align: center;
 
-        &.play-btn,
-        &.pause-btn {
-            width: 42px;
-            height: 42px;
-            font-size: 16px;
-        }
+            &:hover {
+                opacity: 0.9;
+            }
 
-        &.play-btn {
-            padding-left: 10px;
+            &:active {
+                background: @panel-btn-fg;
+                color: @panel-btn-bg;
+            }
+
+            &.pause-btn {
+                display: none;
+            }
+            .sim-view.playing &.pause-btn {
+                display: inline-block;
+            }
+            .sim-view.playing &.play-btn {
+                display: none;
+            }
+
+            &.play-btn,
+            &.pause-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            &.play-btn {
+                padding-left: 10px;
+            }
         }
     }
 
     .btn-normal {
-        .button-variant(@btn-fg, @btn-bg, #fff, @btn-fg);
+        .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
         margin: 5px 5px 0;
     }
 
     .clear-btn {
-        float: left;
+        float: right;
     }
 
     .reset-btn {
         float: right;
     }
 
+    label {
+        color: @panel-fg;
+        font-weight: normal;
+    }
+
     .playback-speed-wrapper {
         position: absolute;
-        right: 143px;
+        left: 100px;
         height: 100%;
         top: 0;
         padding-top: 18px;
@@ -84,18 +96,17 @@
             width: 140px;
             display: inline-block;
             vertical-align: middle;
-            background: #aaa;
+            background: @panel-slider-color;
 
             &.slider .noUi-handle:after {
-                background: #000;
+                background: #222;
+                border: 2px solid @panel-slider-color;
             }
         }
 
         label {
             vertical-align: middle;
             margin: 0 8px;
-            color: #aaa;
-            font-weight: normal;
         }
     }
 
@@ -103,11 +114,11 @@
         position: absolute;
         top: 0;
         height: 100%;
-        left: 110px;
+        right: 267px;
         padding: 10px 0;
         line-height: 42px;
         font-size: 16px;
-        font-weight: bold;
+        color: @panel-fg;
 
         .days-value {
             display: inline-block;
@@ -115,9 +126,16 @@
             text-align: right;
         }
     }
+
+    .clear-btn {
+        position: absolute;
+        right: 140px;
+    }
 }
 
+
+
 .clear-btn:hover ~ .days-counter {
-    color: #000;
+    color: darken(@panel-fg, 30%);
     //text-decoration: line-through;
 }

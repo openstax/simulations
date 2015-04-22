@@ -2,13 +2,19 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var Simulation = require('common/simulation/simulation');
+
+    var Body   = require('models/body');
+    var Moon   = require('models/body/moon');
+    var Planet = require('models/body/planet');
 
     /**
      * Constants
      */
+    var Constants = require('constants');
 
      /* PhET explanation: "
       *    Subdivide DT intervals by this factor to improve smoothing, 
@@ -30,9 +36,13 @@ define(function (require, exports, module) {
          *
          */
         initialize: function(attributes, options) {
+            this.bodies = new Backbone.Collection([],{
+                model: Body
+            });
+            this.bodies.add(new Planet());
+            this.bodies.add(new Moon());
+
             Simulation.prototype.initialize.apply(this, [attributes, options]);
-
-
         },
 
         /**

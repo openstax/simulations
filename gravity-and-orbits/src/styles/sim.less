@@ -3,41 +3,169 @@
 @import "variables.less";
 @import "mixins.less";
 
-.sound-btn-wrapper {
+@reference-mass-label-color: fadeout(#74C5FF, 40%);
+
+.body-settings-container {
     position: absolute;
-    top: -36px;
-    right: 30px;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#fff, 14%);
+    .user-select(none);
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+    .body-settings-view {
+        height: 36px;
+        margin-bottom: 8px;
 
-        &:hover {
-            opacity: 0.9;
+        &:last-child {
+            margin-bottom: 0;
         }
 
-        &:active {
-            background: @link-color;
-            color: #fff;
+        .icon-column {
+            
         }
 
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
+        .body-name-column {
+            padding-left: 8px;
+            padding-right: 12px;
+            text-transform: capitalize;
+            text-align: center;
+            line-height: 36px;
+        }
+
+        .mass-slider-column {
+            width: 100px;
+            padding-top: 5px;
+            height: 36px;
+            position: relative;
+
+            .mass-slider {
+                width: 140px;
+                display: inline-block;
+                vertical-align: middle;
+                background: @panel-slider-color;
+
+                &.slider .noUi-background {
+                    background: #575E6E;
+                }
+
+                &.slider .noUi-handle:after {
+                    background: #fff;
+                    border: 2px solid @panel-slider-color;
+                }
+            }
+
+            .reference-mass-label {
+                position: absolute;
+                top: 21px;
+                left: 33%;
+                font-size: 10px;
+                color: @reference-mass-label-color;
+
+                span {
+                    display: block;
+                    .transform(translateX(-50%));
+                    margin-top: 4px;
+                    text-transform: capitalize;
+                }
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -1px;
+                    width: 2px;
+                    height: 4px;
+                    background: @reference-mass-label-color;
+                }
+            }
         }
     }
 }
 
-.hello-world {
+.body-configuration-wrapper {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    left: 300px;
+    top: @panel-margin;
+    color: fadeout(#fff, 14%);
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 60%);
+            border-color: rgba(0, 0, 0, 0.1);
+            //color: #fff;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            //text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 82px;
+    right: 20px;
+    color: #fff;
+}
+
+.sim-controls {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+    padding: @panel-padding;
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+
+    input[type="radio"] + label:before, 
+    input[type="checkbox"] + label:before {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+    h2 {
+        font-size: 18px;
+        font-weight: 400;
+        color: fadeout(#222, 20%);
+        margin-top: 0;
+        margin-bottom: 7px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+        margin-top: 18px;
+    }
+
+    ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        &:last-child {
+            margin-bottom: -2px;
+        }
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            padding-top: 2px;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
 }

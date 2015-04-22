@@ -4,7 +4,6 @@ define(function (require) {
 
 	var _        = require('underscore');
 	var Backbone = require('backbone');
-	var glMatrix = require('glmatrix');
 
 	/**
 	 * 
@@ -14,6 +13,7 @@ define(function (require) {
 		defaults: {
 			// Aesthetic qualities and meta data
 			name:  'space debris',
+			
 			color: '#aaa',
 			bounds: {
 				width:  10,
@@ -24,6 +24,8 @@ define(function (require) {
 
 			// Static physical properties
 			mass:     1,
+			minMass: 0.5,
+			maxMass: 2,
 			diameter: 1,
 			density:  1,
 			fixed:    false,
@@ -45,20 +47,17 @@ define(function (require) {
 			/**
 			 * Though the user can change the mass of these bodies, they are by default set
 			 *   to a value that corresponds to an object that most users are familiar with.
-			 *   For example, the "planet" body would have a tickLabel of "Earth" and a
-			 *   tickMass of the earth's mass.
+			 *   For example, the "planet" body would have a referenceMassLabel of "Earth" 
+			 *   and a referenceMass of the earth's mass.
 			 */
-			tickMass: 1,
-			tickLabel: 1,
+			referenceMass: 1,
+			referenceMassLabel: 'a Model-T'
 		},
 		
 		initialize: function(attributes, options) {
 
 			// Create vectors
-			this.set('position',     glMatrix.vec2.create());
-			this.set('velocity',     glMatrix.vec2.create());
-			this.set('acceleration', glMatrix.vec2.create());
-			this.set('force',        glMatrix.vec2.create());
+			
 
 			// Derived properties
 			this.set('density', this.get('mass') / this.getVolume());
@@ -97,7 +96,7 @@ define(function (require) {
 		 *
 		 */
 		collidesWith: function(body) {
-			var distance = glMatrix.distance(this.get('position'), body.get('position'));
+			var distance = this.get('position').distance(body.get('position'));
 			var radiiSum = this.get('diameter') / 2 + body.get('diameter') / 2;
 			return distance < radiiSum;
 		},

@@ -1,3 +1,54 @@
 <span class="scene-view-placeholder"></span>
 <span class="properties-panel-placeholder"></span>
 <span class="playback-controls-placeholder"></span>
+
+<table class="body-settings-container"></table>
+
+<div class="body-configuration-wrapper">
+    <label>Scenario:</label><br>
+    <select id="body-configuration" class="form-control">
+        <option>Select scenario</option>
+    <% _.each(configurationKeys, function(configurationKey, index) { %>
+        <option value="<%= index %>"><%= configurationKey %></option>
+    <% }); %>
+    </select>
+</div>
+
+<div class="zoom-controls">
+    <button class="btn btn-zoom-in"><span class="fa fa-search"><span class="fa fa-plus"></span></span></button>
+    <button class="btn btn-zoom-out"><span class="fa fa-search"><span class="fa fa-minus"></span></span></button>
+</div>
+
+<div class="sim-controls">
+
+    <h2>Physics</h2>
+
+    <ul class="checkbox">
+        <li>
+            <input type="checkbox" class="gravity-check" id="gravity-check-<%= name %>" checked>
+            <label for="gravity-check-<%= name %>">Gravity</label>
+        </li>
+    </ul>
+
+    <h2>Visibility</h2>
+
+    <ul class="checkbox">
+        <li>
+            <input type="checkbox" class="gravity-vector-check" id="gravity-vector-check-<%= name %>">
+            <label for="gravity-vector-check-<%= name %>">Gravity Force</label>
+        </li>
+        <li>
+            <input type="checkbox" class="velocity-vector-check" id="velocity-vector-check-<%= name %>">
+            <label for="velocity-vector-check-<%= name %>">Velocity</label>
+        </li>
+        <li>
+            <input type="checkbox" class="path-check" id="path-check-<%= name %>">
+            <label for="path-check-<%= name %>">Path</label>
+        </li>
+        <li>
+            <input type="checkbox" class="grid-check" id="grid-check-<%= name %>">
+            <label for="grid-check-<%= name %>">Grid</label>
+        </li>
+    </ul>
+    
+</div>
