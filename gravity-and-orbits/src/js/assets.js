@@ -12,10 +12,11 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {
-        PLANET: 'planet.png',
-        EARTH:  'earth.png',
-        SUN:    'sun.png',
-        MOON:   'moon.png'
+        PLANET:       'planet.png',
+        EARTH:        'earth.png',
+        SUN:          'sun.png',
+        MOON:         'moon.png',
+        MOON_GENERIC: 'moon-generic.png'
     };
 
     Assets.SpriteSheets = {};
