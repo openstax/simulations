@@ -12,6 +12,7 @@ define(function (require) {
     var BodySettingsView = require('views/body-settings');
 
     var Constants = require('constants');
+    var Scenarios = require('scenarios');
 
     require('nouislider');
     require('bootstrap');
@@ -118,7 +119,7 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                configurationKeys: ['Sun, planet', 'Sun, planet, moon']
+                scenarioNames: this.getScenarioNames()
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -248,6 +249,14 @@ define(function (require) {
 
             this.updateBallButtons();
         },
+
+        getScenarios: function() {
+            return Scenarios.Friendly;
+        },
+
+        getScenarioNames: function() {
+            return _.pluck(this.getScenarios(), 'name');
+        }
 
     });
 

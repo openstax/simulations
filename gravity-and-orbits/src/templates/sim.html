@@ -6,10 +6,9 @@
 
 <div class="body-configuration-wrapper">
     <label>Scenario:</label><br>
-    <select id="body-configuration" class="form-control">
-        <option>Select scenario</option>
-    <% _.each(configurationKeys, function(configurationKey, index) { %>
-        <option value="<%= index %>"><%= configurationKey %></option>
+    <select class="body-configuration form-control">
+    <% _.each(scenarioNames, function(scenarioName, index) { %>
+        <option value="<%= index %>" <% if (index === 0) { %>selected<% } %>><%= scenarioName %></option>
     <% }); %>
     </select>
 </div>

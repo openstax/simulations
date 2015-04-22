@@ -11,10 +11,8 @@ define(function (require, exports, module) {
     var Moon   = require('models/body/moon');
     var Planet = require('models/body/planet');
 
-    /**
-     * Constants
-     */
     var Constants = require('constants');
+    var Scenarios = require('scenarios');
 
      /* PhET explanation: "
       *    Subdivide DT intervals by this factor to improve smoothing, 
@@ -36,13 +34,13 @@ define(function (require, exports, module) {
          *
          */
         initialize: function(attributes, options) {
-            this.bodies = new Backbone.Collection([],{
+            this.bodies = new Backbone.Collection([], {
                 model: Body
             });
-            this.bodies.add(new Planet());
-            this.bodies.add(new Moon());
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.loadScenario(Scenarios.Friendly[0]);
         },
 
         /**
@@ -59,6 +57,20 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             
+        },
+
+        /**
+         * Loads a scenario. Sets up the bodies, applies simulation
+         *   attributes, and resets the simulation.
+         */
+        loadScenario: function(scenario) {
+            this.bodies.reset(_.map(scenario.bodies, function(body) {
+                return body.clone();
+            }));
+
+            this.set(scenario.simulationAttributes);
+
+            //this.reset();
         },
 
         /**
