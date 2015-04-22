@@ -8,6 +8,8 @@ define(function(require) {
 	var PixiView = require('common/pixi/view');
 	var Colors   = require('common/colors/colors');
 
+	var Assets = require('assets');
+
 	/**
 	 * A view that represents a heavenly body.
 	 */
@@ -24,7 +26,7 @@ define(function(require) {
 			haloSprite.anchor.y = 0.5;
 			this.displayObject.addChild(haloSprite);
 
-			var planetSprite = PIXI.Sprite.fromImage('img/phet/earth-square.png');
+			var planetSprite = Assets.createSprite(Assets.Images.EARTH);
 			planetSprite.anchor.x = 0.5;
 			planetSprite.anchor.y = 0.5;
 			this.displayObject.addChild(planetSprite);
