@@ -13,6 +13,7 @@ define(function (require) {
 		defaults: {
 			// Aesthetic qualities and meta data
 			name:  'space debris',
+			
 			color: '#aaa',
 			bounds: {
 				width:  10,
@@ -46,11 +47,11 @@ define(function (require) {
 			/**
 			 * Though the user can change the mass of these bodies, they are by default set
 			 *   to a value that corresponds to an object that most users are familiar with.
-			 *   For example, the "planet" body would have a tickLabel of "Earth" and a
-			 *   tickMass of the earth's mass.
+			 *   For example, the "planet" body would have a referenceMassLabel of "Earth" 
+			 *   and a referenceMass of the earth's mass.
 			 */
-			tickMass: 1,
-			tickLabel: 1,
+			referenceMass: 1,
+			referenceMassLabel: 'a Model-T'
 		},
 		
 		initialize: function(attributes, options) {

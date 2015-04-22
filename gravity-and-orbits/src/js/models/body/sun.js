@@ -12,7 +12,8 @@ define(function (require) {
     var Sun = Body.extend({
 
         defaults: _.extend({}, Body.prototype.defaults, {
- 
+            name: 'sun',
+            referenceMassLabel: 'our sun'
         })
 
     });

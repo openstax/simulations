@@ -7,6 +7,7 @@ define(function(require) {
 
     var defineInputUpdateLocks = require('common/locks/define-locks');
     var Vector2                = require('common/math/vector2');
+    var range                  = require('common/math/range');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -50,13 +51,19 @@ define(function(require) {
 
             this.$el.html(this.template(data));
 
+            var massRange = range({ min: this.model.get('minMass'), max: this.model.get('maxMass') });
+            var referenceMassPercent = massRange.percent(this.model.get('referenceMass')) * 100 + '%';
+
+            var sliderRange = {
+                'min': this.model.get('minMass'),
+                'max': this.model.get('maxMass')
+            };
+            sliderRange[referenceMassPercent] = this.model.get('referenceMass');
+
             this.$('.mass-slider').noUiSlider({
                 start: this.model.get('mass'),
                 connect: 'lower',
-                range: {
-                    'min': this.model.get('minMass'),
-                    'max': this.model.get('maxMass')
-                }
+                range: sliderRange
             });
 
             return this;

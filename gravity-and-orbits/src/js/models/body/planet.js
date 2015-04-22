@@ -12,7 +12,8 @@ define(function (require) {
     var Planet = Body.extend({
 
         defaults: _.extend({}, Body.prototype.defaults, {
-            name: 'planet'
+            name: 'planet',
+            referenceMassLabel: 'Earth'
         })
 
     });

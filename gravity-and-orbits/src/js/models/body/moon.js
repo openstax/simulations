@@ -12,7 +12,8 @@ define(function (require) {
     var Moon = Body.extend({
 
         defaults: _.extend({}, Body.prototype.defaults, {
-            name: 'moon'
+            name: 'moon',
+            referenceMassLabel: 'our moon'
         })
 
     });

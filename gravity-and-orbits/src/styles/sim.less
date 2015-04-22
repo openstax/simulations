@@ -3,6 +3,8 @@
 @import "variables.less";
 @import "mixins.less";
 
+@reference-mass-label-color: fadeout(#74C5FF, 40%);
+
 .body-settings-container {
     position: absolute;
     top: @panel-margin;
@@ -34,6 +36,7 @@
             width: 100px;
             padding-top: 5px;
             height: 36px;
+            position: relative;
 
             .mass-slider {
                 width: 140px;
@@ -48,6 +51,31 @@
                 &.slider .noUi-handle:after {
                     background: #fff;
                     border: 2px solid @panel-slider-color;
+                }
+            }
+
+            .reference-mass-label {
+                position: absolute;
+                top: 21px;
+                left: 33%;
+                font-size: 10px;
+                color: @reference-mass-label-color;
+
+                span {
+                    display: block;
+                    .transform(translateX(-50%));
+                    margin-top: 4px;
+                    text-transform: capitalize;
+                }
+
+                &:after {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: -1px;
+                    width: 2px;
+                    height: 4px;
+                    background: @reference-mass-label-color;
                 }
             }
         }
