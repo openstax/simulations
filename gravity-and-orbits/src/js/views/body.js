@@ -19,7 +19,6 @@ define(function(require) {
 		 *
 		 */
 		initialize: function(options) {
-
 			var planetSprite = Assets.createSprite(Assets.ImageFromModel(this.model));
 			planetSprite.anchor.x = 0.5;
 			planetSprite.anchor.y = 0.5;
