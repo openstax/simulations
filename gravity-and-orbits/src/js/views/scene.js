@@ -67,7 +67,7 @@ define(function(require) {
 
         initMVT: function() {
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                new Vector2(0, 0),
+                new Vector2(this.modelOrigin.x, this.modelOrigin.y),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.zoom * Constants.SceneView.SCENE_SCALE
             );
@@ -183,6 +183,9 @@ define(function(require) {
             this.zoom = scenario.viewSettings.defaultZoom;
             this.maxZoom = this.zoom * 2;
             this.minZoom = this.zoom / 2;
+
+            // Update model origin
+            this.modelOrigin = scenario.viewSettings.origin;
 
             // bodies forceScale -> scenario.viewSettings.forceScale
         },

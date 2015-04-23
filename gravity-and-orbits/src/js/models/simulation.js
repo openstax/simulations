@@ -77,6 +77,8 @@ define(function (require, exports, module) {
          *   attributes, and resets the simulation.
          */
         scenarioChanged: function(simulation, scenario) {
+            this.pause();
+            
             this.bodies.reset(_.map(scenario.bodies, function(body) {
                 return body.clone();
             }));

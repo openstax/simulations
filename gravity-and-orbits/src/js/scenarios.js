@@ -65,7 +65,10 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
+                gridSpacing: EARTH_PERIHELION / 2,
+                gridOrigin: new Vector2(0, 0),
                 forceScale: FORCE_SCALE * 120
             }
         },
@@ -93,7 +96,10 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
+                gridSpacing: EARTH_PERIHELION / 2,
+                gridOrigin: new Vector2(0, 0),
                 forceScale: FORCE_SCALE * 120
             }
         },
@@ -116,7 +122,10 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(EARTH_PERIHELION, 0),
                 defaultZoom: 400,
+                gridSpacing: MOON_Y / 2,
+                gridOrigin: new Vector2(EARTH_PERIHELION, 0),
                 forceScale: FORCE_SCALE * 45
             }
         },
@@ -138,7 +147,10 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 21600,
+                gridSpacing: SPACE_STATION_PERIGEE + EARTH_RADIUS + SPACE_STATION_RADIUS,
+                gridOrigin: new Vector2(0, 0),
                 forceScale: FORCE_SCALE * 3E13
             }
         }
@@ -167,7 +179,10 @@ define(function (require) {
                 timeScale: 365 / 334
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
+                gridSpacing: 0,
+                gridOrigin: new Vector2(0, 0),
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
@@ -201,7 +216,10 @@ define(function (require) {
                 timeScale: 365 / 334
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
+                gridSpacing: 0,
+                gridOrigin: new Vector2(0, 0),
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
@@ -227,7 +245,10 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(EARTH_PERIHELION, 0),
                 defaultZoom: 400,
+                gridSpacing: 0,
+                gridOrigin: new Vector2(0, 0),
                 forceScale: FORCE_SCALE * 0.77 // So that default gravity force takes up 1/2 cell in grid
             }
         },
@@ -249,11 +270,36 @@ define(function (require) {
                 timeScale: 1
             },
             viewSettings: {
+                origin: new Vector2(0, 0),
                 defaultZoom: 21600,
+                gridSpacing: 0,
+                gridOrigin: new Vector2(0, 0),
                 forceScale: FORCE_SCALE * 3E13
             }
         },
     ];
+
+
+    // Center scenarios
+    var centerScenario = function(scenario) {
+        var totalMomentum = new Vector2();
+        var totalMass = 0;
+        for (var i = 0; i < scenario.bodies.length; i++) {
+            totalMomentum.add(
+                scenario.bodies[i].get('velocity').x * scenario.bodies[i].get('mass'),
+                scenario.bodies[i].get('velocity').y * scenario.bodies[i].get('mass')
+            );
+            totalMass += scenario.bodies[i].get('mass');
+        }
+
+        var deltaVelocity = totalMomentum.scale(-1.0 / totalMass);
+        for (var j = 0; j < scenario.bodies.length; j++)
+            scenario.bodies[j].addVelocity(deltaVelocity);
+    };
+
+    _.each(Scenarios.ToScale, centerScenario);
+    _.each(Scenarios.ToScale, centerScenario);
+
 
     return Scenarios;
 });
