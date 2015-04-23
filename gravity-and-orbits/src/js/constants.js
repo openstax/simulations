@@ -13,6 +13,33 @@ define(function (require) {
 
     Constants.G = 6.67428E-11;
 
+    /*************************************************************************
+     **                                                                     **
+     **                             SCENE VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.SCENE_SCALE = 1.5E-9;
+
+    Constants.SceneView = SceneView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              BODY VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var BodyView = {};
+
+    // The percent difference between reference mass and current mass at which
+    //   we switch to a generic body image.
+    BodyView.GENERIC_BODY_THRESHOLD = 0.01; 
+
+    Constants.BodyView = BodyView;
+
 
     return Constants;
 });

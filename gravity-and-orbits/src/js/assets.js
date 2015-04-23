@@ -23,15 +23,15 @@ define(function (require) {
     Assets.SpriteSheets = {};
 
     Assets.ImageFromModel = function(modelInstance) {
-    	if (modelInstance instanceof Sun)
-    	    return Assets.Images.SUN;
+        if (modelInstance instanceof Sun)
+            return Assets.Images.SUN;
         if (modelInstance instanceof Planet)
-    	    return Assets.Images.EARTH;
-    	if (modelInstance instanceof Moon)
-    	    return Assets.Images.MOON;
-    	if (modelInstance instanceof Satellite)
-    	    return Assets.Images.SATELLITE;
-    	return Assets.Images.EARTH;
+            return Assets.Images.EARTH;
+        if (modelInstance instanceof Moon)
+            return Assets.Images.MOON;
+        if (modelInstance instanceof Satellite)
+            return Assets.Images.SATELLITE;
+        return Assets.Images.EARTH;
     };
 
     return Assets;
