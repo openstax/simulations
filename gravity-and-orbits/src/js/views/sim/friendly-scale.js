@@ -1,32 +1,47 @@
 define(function(require) {
 
-	'use strict';
+    'use strict';
 
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
-	var GOSimulation = require('models/simulation');
-	var GOSimView    = require('views/sim');
+    var GOSimulation = require('models/simulation');
+    var GOSimView    = require('views/sim');
 
-	/**
-	 *
-	 */
-	var FriendlyScaleSimView = GOSimView.extend({
+    var Scenarios = require('scenarios');
 
-		events: _.extend(GOSimView.prototype.events, {
-			
-		}),
+    /**
+     *
+     */
+    var FriendlyScaleSimView = GOSimView.extend({
 
-		initialize: function(options) {
-			options = _.extend({
-				title: 'Friendly Scale',
-				name:  'friendly'
-			}, options);
-			
-			GOSimView.prototype.initialize.apply(this, [ options ]);
-		}
+        events: _.extend(GOSimView.prototype.events, {
+            
+        }),
 
-	});
+        initialize: function(options) {
+            options = _.extend({
+                title: 'Friendly Scale',
+                name:  'friendly'
+            }, options);
+            
+            GOSimView.prototype.initialize.apply(this, [ options ]);
+        },
 
-	return FriendlyScaleSimView;
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new GOSimulation({
+                scenario: Scenarios.Friendly[0]
+            });
+        },
+
+        getScenarios: function() {
+            return Scenarios.Friendly;
+        }
+
+    });
+
+    return FriendlyScaleSimView;
 });
