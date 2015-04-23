@@ -156,37 +156,15 @@ define(function (require) {
         }
     ];
 
-    // Function for cloning scenarios
-    var cloneScenario = function(scenario) {
-        return {
-            name: scenario.name,
-            bodies: _.map(scenario.bodies, function(body) {
-                return body.clone();
-            }),
-            simulationAttributes: scenario.simulationAttributes,
-            viewSettings: _.map(scenario.bodies, function(value) {
-                if (value instanceof Vector2)
-                    return value.clone();
-                else
-                    return value;
-            }),
-        };
-    };
-
     // Friendly-scale scenarios ("cartoon" in the original)
-    Scenarios.Friendly = _.map(Scenarios.ToScale, cloneScenario);
-
-    // 'Sun and Planet'
-    Scenarios.Friendly[0].bodies[0].set('radius', Scenarios.Friendly[0].bodies[0].get('radius') * 50);
-    Scenarios.Friendly[0].bodies[0].set('fixed', true); // Sun shouldn't move in friendly modes
-
+    Scenarios.Friendly = [
         {
             name: 'Sun and Planet',
             bodies: [
                 new Sun({
                     mass:   SUN_MASS,
                     radius: SUN_RADIUS * 50,
-                    fixed: true
+                    fixed: true // Sun shouldn't move in friendly modes
                 }),
                 new Planet({
                     mass:   EARTH_MASS * FRIENDLY_EARTH_MASS_SCALE, 
