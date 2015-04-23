@@ -6,10 +6,12 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
 
     var Simulation = require('common/simulation/simulation');
+    var Vector2    = require('common/math/vector2');
 
-    var Body   = require('models/body');
-    var Moon   = require('models/body/moon');
-    var Planet = require('models/body/planet');
+    var Body            = require('models/body');
+    var Moon            = require('models/body/moon');
+    var Planet          = require('models/body/planet');
+    var BodyStateRecord = require('models/body-state-record');
 
     var Constants = require('constants');
     var Scenarios = require('scenarios');
@@ -37,6 +39,12 @@ define(function (require, exports, module) {
             this.bodies = new Backbone.Collection([], {
                 model: Body
             });
+
+            this._pos = new Vector2();
+            this._vel = new Vector2();
+            this._acc = new Vector2();
+            this._force = new Vector2();
+            this._nextVelocityHalf = new Vector2();
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
@@ -76,6 +84,39 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Creates scratch states that are arrays of individual
+         *   body states to be written to during the execution
+         *   of a step (which has many sub-steps before a final
+         *   state is reached).
+         */
+        initScratchStates: function() {
+            this.scratchStates = [];
+
+            // Creates two states, which are arrays of BodyStateRecord
+            //   instances that will represent each body in the system.
+            for (var i = 0; i < 2; i++) {
+                var state = [];
+                for (var j = 0; j < this.bodies.length; j++)
+                    state.push(new BodyStateRecord());
+                this.scratchStates.push(state);
+            }
+
+            // Used to determine which scratch state will be used next
+            this.currentScratchStateIndex = 0;
+        },
+
+        /**
+         * Returns the next scratch state. Note that this assumes
+         *   we will ever only need two at a time.
+         */
+        getScratchState: function() {
+            this.currentScratchStateIndex++;
+            if (this.currentScratchStateIndex >= this.scratchStates.length)
+                this.currentScratchStateIndex = 0;
+            return this.scratchStates[this.currentScratchStateIndex];
+        },
+
+        /**
          *
          */
         reset: function() {
@@ -103,21 +144,86 @@ define(function (require, exports, module) {
          * Only runs if simulation isn't currently paused.
          * If we're recording, it saves state
          */
-        _update: function(time, delta) {
+        _update: function(time, deltaTime) {
             // For the time slider and anything else relying on time
             this.set('time', time);
 
             // Split up the delta time into steps to smooth out the orbit
-            delta /= SMOOTHING_STEPS;
+            deltaTime /= SMOOTHING_STEPS;
             for (var i = 0; i < SMOOTHING_STEPS; i++)
-                this.performSubstep(delta);
+                this.performSubstep(deltaTime);
         },
 
         /**
-         *
+         * Runs through the physics algorithms, updates the models,
+         *   and checks for collisions.  It actually loops through
+         *   even smaller sub-substeps while doing the main physics
+         *   calculations in order to smooth out the results even
+         *   further.
          */
-        performSubstep: function(delta) {
+        performSubstep: function(deltaTime) {
+            // Perform many tiny sub-substeps before doing any
+            //   collision detection or updating, because those
+            //   operations are expensive, and we've got too
+            //   much work to do in such little time.
+            var state = this.getScratchState();
+            for (var i = 0; i < state.length; i++)
+                state[i].saveState(this.bodies.at(i));
+
+            var subSubSteps = 400 / SMOOTHING_STEPS;
+            var dtPerSubSubstep = deltaTime / subSubSteps;
+
+            for (var s = 0; s < subSubSteps; s++)
+                state = this.performSubSubStep(dtPerSubSubstep, state);
+
+            // We've kept cheap copies of the real models for 
+            //   making quick calculations, so now we must
+            //   update those real models.
+            for (var i = 0; i < state.length; i++)
+                state[i].applyState(this.bodies.at(i));
             
+            // Check for collisions between bodies
+        },
+
+        /**
+         * Performs a sub-substep which is going from one
+         *   state to the next according to our physics
+         *   algorithms.
+         */
+        performSubSubStep: function(deltaTime, state) {
+            var nextState = this.getScratchState();
+
+            var pos   = this._pos;
+            var vel   = this._vel;
+            var acc   = this._acc;
+            var force = this._force;
+            var nextVelocityHalfStep = this._nextVelocityHalf;
+
+            nextState.position.set(
+                pos
+                    .set(state.position)
+                    .add(vel.set(state.velocity).scale(deltaTime))
+                    .add(acc.set(state.acceleration).scale(deltaTime * deltaTime / 2))
+            );
+            nextVelocityHalfStep.set(
+                vel
+                    .set(state.velocity)
+                    .add(acc.set(state.acceleration).scale(deltaTime / 2))
+            );
+            nextState.acceleration.set(
+                force
+                    .set(this.getForce(state, nextState.position))
+                    .scale(-1.0 / state.mass)
+            );
+            nextState.velocity.set(
+                nextVelocityHalfStep.add(
+                    acc
+                        .set(nextState.acceleration)
+                        .scale(deltaTime / 2)
+                )
+            );
+
+            return nextState;
         }
 
     });

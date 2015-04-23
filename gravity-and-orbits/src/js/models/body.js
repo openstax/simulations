@@ -6,6 +6,8 @@ define(function (require) {
 
     var ForceAndMotionObject = require('common/models/force-and-motion-object');
 
+    var BodyStateRecord = require('models/body-state-record');
+
     /**
      * 
      */
@@ -47,16 +49,20 @@ define(function (require) {
             this.set('maxMass', this.get('mass') * 2);
             this.set('density', this.get('mass') / this.getVolume());
 
+            // A temporary place to store the state of the model during updates
+            this.updateState = new BodyStateRecord();
+
             this.on('change:mass', this.massChanged);
         },
 
         /**
          * 
          */
-        update: function(time, delta) {
+        // update: function(time, delta) {
 
             
-        },
+        // },
+
 
         /**
          * Returns whether or not the given body is close

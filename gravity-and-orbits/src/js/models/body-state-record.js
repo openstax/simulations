@@ -26,6 +26,16 @@ define(function (require) {
      */
     _.extend(BodyStateRecord.prototype, {
 
+        /**
+         * For when we don't care about time
+         */
+        saveState: function(body) {
+            this.recordState(0, body);
+        },
+
+        /**
+         * Records the data from a given body
+         */
         recordState: function(time, body) {
             this.time = time;
 
@@ -36,6 +46,9 @@ define(function (require) {
             this.mass = body.get('mass');
         },
 
+        /**
+         * Applies the data stored in this state to the given body.
+         */
         applyState: function(body) {
             body.setPosition(this.position);
             body.setVelocity(this.velocity);
@@ -45,6 +58,9 @@ define(function (require) {
             body.set('mass', this.mass);
         },
 
+        /**
+         * Returns the time at which this state was recorded in seconds.
+         */
         getTime: function() {
             return this.time;
         }
