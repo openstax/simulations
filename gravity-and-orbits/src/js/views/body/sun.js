@@ -14,11 +14,7 @@ define(function(require) {
      */
     var SunView = BodyView.extend({
 
-        textureBodyWidthRatio: 0.78,
-
-        initialize: function(options) {
-            BodyView.prototype.initialize.apply(this, arguments);
-        }
+        textureBodyWidthRatio: 0.78
 
     });
 

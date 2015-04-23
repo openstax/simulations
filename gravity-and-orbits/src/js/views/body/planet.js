@@ -5,8 +5,6 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var range = require('common/math/range');
-
     var BodyView = require('views/body');
 
     var Assets = require('assets');
@@ -19,11 +17,8 @@ define(function(require) {
         textureBodyWidthRatio: 0.7,
 
         initialize: function(options) {
-            this.massRange = range({ 
-                min: this.model.get('minMass'), 
-                max: this.model.get('maxMass') 
-            });
-            this.referenceMassPercent = this.massRange.percent(this.model.get('referenceMass'));
+            this.lowMass  = this.model.get('referenceMass') * (1 - BodyView.GENERIC_BODY_THRESHOLD * 2);
+            this.highMass = this.model.get('referenceMass') * (1 + BodyView.GENERIC_BODY_THRESHOLD);
 
             BodyView.prototype.initialize.apply(this, arguments);
         },
@@ -39,8 +34,7 @@ define(function(require) {
         },
 
         updateMass: function(body, mass) {
-            var percent = this.massRange.percent(mass);
-            if (Math.abs(percent - this.referenceMassPercent) > BodyView.GENERIC_BODY_THRESHOLD) {
+            if (mass > this.highMass || mass < this.lowMass) {
                 this.genericPlanet.visible = true;
                 this.body.visible = false;
             }

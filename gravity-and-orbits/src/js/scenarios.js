@@ -106,7 +106,7 @@ define(function (require) {
                     position: new Vector2(EARTH_PERIHELION, 0)
                 }),
                 new Moon({
-                    mass: MOON_MASS,
+                    mass:   MOON_MASS,
                     radius: MOON_RADIUS,
                     position: new Vector2(MOON_X, MOON_Y),
                     velocity: new Vector2(MOON_SPEED, 0)

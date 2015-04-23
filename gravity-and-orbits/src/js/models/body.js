@@ -49,6 +49,7 @@ define(function (require) {
             this.set('minMass', this.get('mass') / 2);
             this.set('maxMass', this.get('mass') * 2);
             this.set('density', this.get('mass') / this.getVolume());
+            this.set('referenceMass', this.get('mass'));
 
             // A temporary place to store the state of the model during updates
             this.updateState = new BodyStateRecord();
@@ -95,7 +96,7 @@ define(function (require) {
         massChanged: function(body, mass) {
             // Derived from: density = mass/volume, and volume = 4/3 pi r r r
             var radius = Math.pow(
-                3 * mass / 4 / Math.PI / density, 
+                3 * mass / 4 / Math.PI / this.get('density'), 
                 1 / 3
             );
             this.set('radius', radius);
