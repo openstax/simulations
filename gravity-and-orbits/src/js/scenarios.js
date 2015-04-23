@@ -206,8 +206,8 @@ define(function (require) {
                 new Moon({
                     mass:   MOON_MASS,
                     radius: MOON_RADIUS * 800,
-                    position: new Vector2(MOON_X, MOON_Y),
-                    velocity: new Vector2(MOON_SPEED, EARTH_ORBITAL_SPEED_AT_PERIHELION)
+                    position: new Vector2(MOON_X, EARTH_RADIUS * 800 * 1.7),
+                    velocity: new Vector2(MOON_SPEED * 21, EARTH_ORBITAL_SPEED_AT_PERIHELION)
                 })
             ],
             simulationAttributes: {
