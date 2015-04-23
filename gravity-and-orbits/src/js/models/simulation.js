@@ -231,6 +231,8 @@ define(function (require, exports, module) {
                             .scale(deltaTime / 2)
                     )
                 );
+                nextBodyState.mass = bodyState.mass;
+                nextBodyState.exploded = bodyState.exploded;
             }
 
             return nextState;
