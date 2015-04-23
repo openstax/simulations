@@ -28,7 +28,7 @@ define(function (require) {
             
             // State properties
             userControlled: false, // Whether the user is currently controlling the position
-            collided:       false,
+            exploded:       false,
             clockTicksSinceExplosion: 0,
 
             // Associated Information
@@ -43,6 +43,7 @@ define(function (require) {
         }),
         
         initialize: function(attributes, options) {
+            ForceAndMotionObject.prototype.initialize.apply(this, arguments);
             
             // Derived properties
             this.set('minMass', this.get('mass') / 2);

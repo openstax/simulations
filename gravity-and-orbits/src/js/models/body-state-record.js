@@ -19,6 +19,7 @@ define(function (require) {
         this.acceleration = new Vector2();
 
         this.mass = 0;
+        this.exploded = false;
     };
 
     /**
@@ -44,6 +45,7 @@ define(function (require) {
             this.acceleration.set(body.get('acceleration'));
 
             this.mass = body.get('mass');
+            this.exploded = body.get('exploded');
         },
 
         /**
@@ -56,6 +58,7 @@ define(function (require) {
             body.updateForce();
 
             body.set('mass', this.mass);
+            body.set('exploded', this.exploded);
         },
 
         /**

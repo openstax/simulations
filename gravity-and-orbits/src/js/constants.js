@@ -11,7 +11,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    //Constants.GRAVITATIONAL_ACCELERATION = 9.8; // m/s^2
+    Constants.G = 6.67428E-11;
 
 
     return Constants;

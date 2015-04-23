@@ -29,7 +29,8 @@ define(function (require, exports, module) {
     var GOSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            scenario: Scenarios.Friendly[0]
+            scenario: Scenarios.Friendly[0],
+            gravityEnabled: true
         }),
         
         /**
@@ -40,10 +41,12 @@ define(function (require, exports, module) {
                 model: Body
             });
 
+            this._sum = new Vector2();
             this._pos = new Vector2();
             this._vel = new Vector2();
             this._acc = new Vector2();
             this._force = new Vector2();
+            this._sourceForce = new Vector2();
             this._nextVelocityHalf = new Vector2();
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
@@ -81,6 +84,7 @@ define(function (require, exports, module) {
             this.set(scenario.simulationAttributes);
 
             //this.reset();
+            this.initScratchStates();
         },
 
         /**
@@ -186,12 +190,13 @@ define(function (require, exports, module) {
         },
 
         /**
-         * Performs a sub-substep which is going from one
-         *   state to the next according to our physics
-         *   algorithms.
+         * Performs a sub-substep which is going from one state to
+         *   the next according to the velocity Verlet algorithm.
          */
         performSubSubStep: function(deltaTime, state) {
             var nextState = this.getScratchState();
+            var nextBodyState;
+            var bodyState;
 
             var pos   = this._pos;
             var vel   = this._vel;
@@ -199,31 +204,82 @@ define(function (require, exports, module) {
             var force = this._force;
             var nextVelocityHalfStep = this._nextVelocityHalf;
 
-            nextState.position.set(
-                pos
-                    .set(state.position)
-                    .add(vel.set(state.velocity).scale(deltaTime))
-                    .add(acc.set(state.acceleration).scale(deltaTime * deltaTime / 2))
-            );
-            nextVelocityHalfStep.set(
-                vel
-                    .set(state.velocity)
-                    .add(acc.set(state.acceleration).scale(deltaTime / 2))
-            );
-            nextState.acceleration.set(
-                force
-                    .set(this.getForce(state, nextState.position))
-                    .scale(-1.0 / state.mass)
-            );
-            nextState.velocity.set(
-                nextVelocityHalfStep.add(
-                    acc
-                        .set(nextState.acceleration)
-                        .scale(deltaTime / 2)
-                )
-            );
+            for (var i = 0; i < state.length; i++) {
+                bodyState     = state[i];
+                nextBodyState = nextState[i];
+
+                nextBodyState.position.set(
+                    pos
+                        .set(bodyState.position)
+                        .add(vel.set(bodyState.velocity).scale(deltaTime))
+                        .add(acc.set(bodyState.acceleration).scale(deltaTime * deltaTime / 2))
+                );
+                nextVelocityHalfStep.set(
+                    vel
+                        .set(bodyState.velocity)
+                        .add(acc.set(bodyState.acceleration).scale(deltaTime / 2))
+                );
+                nextBodyState.acceleration.set(
+                    force
+                        .set(this.getForce(bodyState, nextBodyState.position, state))
+                        .scale(-1.0 / bodyState.mass)
+                );
+                nextBodyState.velocity.set(
+                    nextVelocityHalfStep.add(
+                        acc
+                            .set(nextBodyState.acceleration)
+                            .scale(deltaTime / 2)
+                    )
+                );
+            }
 
             return nextState;
+        },
+
+        /**
+         * Returns the sum of all forces on body at its proposed
+         *   new position from all potential sources.
+         */
+        getForce: function(target, newTargetPosition, sources) {
+            var sum = this._sum.set(0, 0);
+
+            if (this.get('gravityEnabled')) {
+                for (var i = 0; i < sources.length; i++) {
+                    if (sources[i] !== target) {
+                        sum.add(
+                            this.getForceFromSource(target, newTargetPosition, sources[i])
+                        );
+                    }
+                }
+            }
+
+            return sum;
+        },
+
+        /**
+         * Returns the force on body at its proposed new position
+         *   from a single source.
+         */
+        getForceFromSource: function(target, newTargetPosition, source) {
+            if (source.position.equals(newTargetPosition)) {
+                // If they are on top of each other, force should be 
+                //   infinite, but ignore it since we want to have 
+                //   semi-realistic behavior.
+                return this._sourceForce.set(0, 0);
+            }
+            else if (source.exploded) {
+                // Ignore in the computation if that body has exploded
+                return this._sourceForce.set(0, 0);
+            }
+            else {
+                return this._sourceForce
+                    .set(newTargetPosition)
+                    .sub(source.position)
+                    .normalize()
+                    .scale(
+                        Constants.G * source.mass * target.mass / source.position.distanceSq(newTargetPosition)
+                    );
+            }
         }
 
     });
