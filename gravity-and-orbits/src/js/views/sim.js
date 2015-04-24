@@ -12,6 +12,7 @@ define(function (require) {
     var BodySettingsView = require('views/body-settings');
 
     var Constants = require('constants');
+    var Scenarios = require('scenarios');
 
     require('nouislider');
     require('bootstrap');
@@ -55,7 +56,12 @@ define(function (require) {
             // Playback controls
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
-            'click .reset-btn'  : 'reset'
+            'click .reset-btn'  : 'reset',
+            'click .clear-btn'  : 'clearSecondCounter',
+
+            'change .scenario-select' : 'changeScenario',
+
+            'click .gravity-check' : 'toggleGravity'
         },
 
         /**
@@ -74,7 +80,9 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
+            this.listenTo(this.simulation, 'change:secondCounter', this.secondCounterChanged);
+            this.listenTo(this.simulation, 'change:scenario',      this.scenarioChanged);
 
             this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
             this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
@@ -108,6 +116,8 @@ define(function (require) {
             this.renderPlaybackControls();
             this.renderPropertiesPanel();
 
+            this.scenarioChanged(this.simulation, this.simulation.get('scenario'));
+
             return this;
         },
 
@@ -118,7 +128,7 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                configurationKeys: ['Sun, planet', 'Sun, planet, moon']
+                scenarioNames: this.getScenarioNames()
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -152,6 +162,8 @@ define(function (require) {
             });
 
             this.$('.playback-controls-placeholder').replaceWith(this.$controls);
+
+            this.$time = this.$controls.find('.time-counter');
         },
 
         /**
@@ -248,6 +260,40 @@ define(function (require) {
 
             this.updateBallButtons();
         },
+
+        getScenarios: function() {
+            return Scenarios.Friendly;
+        },
+
+        getScenarioNames: function() {
+            return _.pluck(this.getScenarios(), 'name');
+        },
+
+        changeScenario: function(event) {
+            var index = parseInt($(event.target).val());
+            var scenario = this.getScenarios()[index];
+            this.simulation.set('scenario', scenario);
+        },
+
+        scenarioChanged: function(simulation, scenario) {
+            this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
+            this.secondCounterChanged(simulation, simulation.get('secondCounter'));
+        },
+
+        secondCounterChanged: function(simulation, secondCounter) {
+            this.$time.text(this.timeReadoutFunction(simulation, secondCounter));
+        },
+
+        clearSecondCounter: function() {
+            this.simulation.clearSecondCounter();
+        },
+
+        toggleGravity: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('gravityEnabled', true);
+            else
+                this.simulation.set('gravityEnabled', false);
+        }
 
     });
 

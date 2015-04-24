@@ -6,6 +6,8 @@ define(function (require) {
 
     var Body = require('models/body');
 
+    var Constants = require('constants');
+
     /**
      * 
      */
@@ -13,7 +15,8 @@ define(function (require) {
 
         defaults: _.extend({}, Body.prototype.defaults, {
             name: 'sun',
-            referenceMassLabel: 'our sun'
+            referenceMassLabel: 'our sun',
+            color: Constants.SUN_COLOR
         })
 
     });

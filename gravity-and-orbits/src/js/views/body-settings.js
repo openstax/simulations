@@ -26,7 +26,7 @@ define(function(require) {
         template: _.template(templateHtml),
 
         events: {
-            'slide .mass-slider': 'changeMassFromSlider',
+            'slide .mass-slider': 'changeMass',
         },
 
         initialize: function(options) {

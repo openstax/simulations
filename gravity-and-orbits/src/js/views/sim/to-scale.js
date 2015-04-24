@@ -1,32 +1,47 @@
 define(function(require) {
 
-	'use strict';
+    'use strict';
 
-	var _        = require('underscore');
-	var Backbone = require('backbone');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
-	var GOSimulation = require('models/simulation');
-	var GOSimView    = require('views/sim');
+    var GOSimulation = require('models/simulation');
+    var GOSimView    = require('views/sim');
 
-	/**
-	 *
-	 */
-	var ToScaleSimView = GOSimView.extend({
+    var Scenarios = require('scenarios');
 
-		events: _.extend(GOSimView.prototype.events, {
-			
-		}),
+    /**
+     *
+     */
+    var ToScaleSimView = GOSimView.extend({
 
-		initialize: function(options) {
-			options = _.extend({
-				title: 'Actual Scale',
-				name:  'to-scale'
-			}, options);
-			
-			GOSimView.prototype.initialize.apply(this, [ options ]);
-		}
+        events: _.extend(GOSimView.prototype.events, {
+            
+        }),
 
-	});
+        initialize: function(options) {
+            options = _.extend({
+                title: 'Actual Scale',
+                name:  'to-scale'
+            }, options);
+            
+            GOSimView.prototype.initialize.apply(this, [ options ]);
+        },
 
-	return ToScaleSimView;
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new GOSimulation({
+                scenario: Scenarios.ToScale[0]
+            });
+        },
+
+        getScenarios: function() {
+            return Scenarios.ToScale;
+        }
+
+    });
+
+    return ToScaleSimView;
 });
