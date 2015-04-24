@@ -277,6 +277,7 @@ define(function (require) {
 
         scenarioChanged: function(simulation, scenario) {
             this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
+            this.secondCounterChanged(simulation, simulation.get('secondCounter'));
         },
 
         secondCounterChanged: function(simulation, secondCounter) {
