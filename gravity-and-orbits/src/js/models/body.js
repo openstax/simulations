@@ -77,6 +77,20 @@ define(function (require) {
         },
 
         /**
+         * Sets the exploded attribute to true
+         */
+        explode: function() {
+            this.set('exploded', true);
+        },
+
+        /**
+         * Sets the exploded attribute to false
+         */
+        unexplode: function() {
+            this.set('exploded', false);
+        },
+
+        /**
          * Returns the body's volume.
          */
         getVolume: function() {

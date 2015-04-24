@@ -192,27 +192,36 @@ define(function (require, exports, module) {
          *   further.
          */
         performSubstep: function(deltaTime) {
+            var i, j, s;
+
             // Perform many tiny sub-substeps before doing any
             //   collision detection or updating, because those
             //   operations are expensive, and we've got too
             //   much work to do in such little time.
             var state = this.getScratchState();
-            for (var i = 0; i < state.length; i++)
+            for (i = 0; i < state.length; i++)
                 state[i].saveState(this.bodies.at(i));
 
             var subSubSteps = 400 / SMOOTHING_STEPS;
             var dtPerSubSubstep = deltaTime / subSubSteps;
 
-            for (var s = 0; s < subSubSteps; s++)
+            for (s = 0; s < subSubSteps; s++)
                 state = this.performSubSubStep(dtPerSubSubstep, state);
 
             // We've kept cheap copies of the real models for 
             //   making quick calculations, so now we must
             //   update those real models.
-            for (var i = 0; i < state.length; i++)
+            for (i = 0; i < state.length; i++)
                 state[i].applyState(this.bodies.at(i));
             
             // Check for collisions between bodies
+            for (var i = 0; i < this.bodies.length; i++) {
+                for (var j = i + 1; j < this.bodies.length; j++) {
+                    if (this.bodies.at(i).collidesWith(this.bodies.at(j))) {
+                        this.smallerBody(this.bodies.at(i), this.bodies.at(j)).explode();
+                    }
+                }
+            }
         },
 
         /**
@@ -308,6 +317,13 @@ define(function (require, exports, module) {
                         Constants.G * source.mass * target.mass / source.position.distanceSq(newTargetPosition)
                     );
             }
+        },
+
+        smallerBody: function(body1, body2) {
+            if (body1.get('mass') < body2.get('mass'))
+                return body1;
+            else
+                return body2;
         }
 
     });

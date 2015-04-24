@@ -30,6 +30,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.listenTo(this.model, 'change:mass',     this.updateMass);
             this.listenTo(this.model, 'change:radius',   this.updateRadius);
+            this.listenTo(this.model, 'change:exploded', this.updateExploded);
         },
 
         initGraphics: function() {
@@ -58,6 +59,10 @@ define(function(require) {
 
         updateRadius: function(body, radius) {
             this.bodyContainer.scale.x = this.bodyContainer.scale.y = this.getBodyScale(radius);
+        },
+
+        updateExploded: function(body, exploded) {
+            this.bodyContainer.visible = !exploded;
         },
 
         update: function(time, delta) {
