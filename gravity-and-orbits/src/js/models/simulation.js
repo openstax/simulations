@@ -221,7 +221,7 @@ define(function (require, exports, module) {
                         var smaller = this.smallerBody(this.bodies.at(i), this.bodies.at(j));
                         if (!smaller.get('exploded')) {
                             smaller.explode();
-                            this.trigger('collision', this, smaller);
+                            this.trigger('collision', this, smaller, this.largerBody(this.bodies.at(i), this.bodies.at(j)));
                         }
                     }
                 }
@@ -325,6 +325,13 @@ define(function (require, exports, module) {
 
         smallerBody: function(body1, body2) {
             if (body1.get('mass') < body2.get('mass'))
+                return body1;
+            else
+                return body2;
+        },
+
+        largerBody: function(body1, body2) {
+            if (body1.get('mass') > body2.get('mass'))
                 return body1;
             else
                 return body2;

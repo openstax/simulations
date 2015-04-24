@@ -23,6 +23,12 @@ define(function (require) {
     // One quarter of the way up between min and max time scales
     Constants.DEFAULT_SPEED_SCALE = (Constants.MIN_SPEED_SCALE + Constants.MAX_SPEED_SCALE) / 4;
 
+    // Colors
+    Constants.SUN_COLOR       = '#E8561E';
+    Constants.PLANET_COLOR    = '#3AD3FD';
+    Constants.MOON_COLOR      = '#C5C6C5';
+    Constants.SATELLITE_COLOR = '#B08F60';
+
     /*************************************************************************
      **                                                                     **
      **                             SCENE VIEW                              **

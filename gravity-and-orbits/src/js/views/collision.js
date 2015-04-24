@@ -15,13 +15,25 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.position = new Vector2(options.body.get('position'));
+            this.position = new Vector2(options.smallerBody.get('position'));
 
-            var diameter = options.body.getDiameter();
+            var diameter = options.smallerBody.getDiameter();
             this.diameterRange = range({
                 min: diameter * 1,
                 max: diameter * 1.8
             });
+
+            /*
+             * TODO: This would look much better as a particle system. The
+             *   particles would be the color of the body (a model attribute)
+             *   and would be shot out in a fan shape perpendicular to the
+             *   surface of the larger body at the time of collision (or the
+             *   direction of the vector going from the center of the larger
+             *   one to the center of the smaller one).  All the particles
+             *   would also have a portion of the larger body's velocity
+             *   added to the particles' initial velocity so that they kind
+             *   of move with the large body but are independent.
+             */
 
             this.animationFinished = false;
 

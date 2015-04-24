@@ -104,9 +104,10 @@ define(function(require) {
             this.stage.addChild(this.collisionLayer);
         },
 
-        showCollision: function(simulation, body) {
+        showCollision: function(simulation, smallerBody, largerBody) {
             var collisionView = new CollisionView({
-                body: body,
+                smallerBody: smallerBody,
+                largerBody: largerBody,
                 mvt: this.mvt
             });
             this.collisionLayer.addChild(collisionView.displayObject);
