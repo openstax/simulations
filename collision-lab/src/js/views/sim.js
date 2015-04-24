@@ -73,6 +73,7 @@ define(function (require) {
             'click .momentum-vector-check'   : 'toggleMomentumVectors',
             'click .velocity-check'          : 'toggleVelocityLabels',
             'click .momentum-check'          : 'toggleMomentumLabels',
+            'click .momenta-diagram-check'   : 'toggleMomentaDiagram',
             'click .kinetic-energy-check'    : 'toggleKineticEnergy',
             'click .center-of-mass-check'    : 'toggleCenterOfMass',
             'click .reflecting-border-check' : 'toggleReflectingBorder',
@@ -403,49 +404,49 @@ define(function (require) {
             this.simulation.unmute();
         },
 
-        toggleVelocityVectors: function() {
+        toggleVelocityVectors: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showVelocityArrows();
             else
                 this.sceneView.hideVelocityArrows();
         },
 
-        toggleMomentumVectors: function() {
+        toggleMomentumVectors: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showMomentumArrows();
             else
                 this.sceneView.hideMomentumArrows();
         },
 
-        toggleVelocityLabels: function() {
+        toggleVelocityLabels: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showVelocityLabels();
             else
                 this.sceneView.hideVelocityLabels();
         },
 
-        toggleMomentumLabels: function() {
+        toggleMomentumLabels: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showMomentumLabels();
             else
                 this.sceneView.hideMomentumLabels();
         },
 
-        toggleKineticEnergy: function() {
+        toggleKineticEnergy: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showKineticEnergy();
             else
                 this.sceneView.hideKineticEnergy();
         },
 
-        toggleCenterOfMass: function() {
+        toggleCenterOfMass: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showCenterOfMass();
             else
                 this.sceneView.hideCenterOfMass();
         },
 
-        toggleReflectingBorder: function() {
+        toggleReflectingBorder: function(event) {
             if ($(event.target).is(':checked')) {
                 this.sceneView.showReflectingBorder();
                 this.simulation.set('borderOn', true);
@@ -456,11 +457,18 @@ define(function (require) {
             }
         },
 
-        toggleBallTraces: function() {
+        toggleBallTraces: function(event) {
             if ($(event.target).is(':checked'))
                 this.sceneView.showTraces();
             else
                 this.sceneView.hideTraces();
+        },
+
+        toggleMomentaDiagram: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showMomentaDiagram();
+            else
+                this.sceneView.hideMomentaDiagram();
         }
 
     });

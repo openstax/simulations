@@ -302,7 +302,17 @@ define(function(require) {
                 this.scale = scale;
                 this.updateMVT();
             }
-        }
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+            this.$el.show();
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
+            this.$el.hide();
+        },
 
     }, Constants.MomentaDiagram);
 
