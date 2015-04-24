@@ -57,6 +57,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
+            'click .clear-btn'  : 'clearSecondCounter',
 
             'change .scenario-select' : 'changeScenario'
         },
@@ -77,9 +78,9 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused',   this.pausedChanged);
-            this.listenTo(this.simulation, 'change:seconds',  this.secondsChanged);
-            this.listenTo(this.simulation, 'change:scenario', this.scenarioChanged);
+            this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
+            this.listenTo(this.simulation, 'change:secondCounter', this.secondCounterChanged);
+            this.listenTo(this.simulation, 'change:scenario',      this.scenarioChanged);
 
             this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
             this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
@@ -276,8 +277,12 @@ define(function (require) {
             this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
         },
 
-        secondsChanged: function(simulation, seconds) {
-            this.$time.text(this.timeReadoutFunction(simulation, seconds));
+        secondCounterChanged: function(simulation, secondCounter) {
+            this.$time.text(this.timeReadoutFunction(simulation, secondCounter));
+        },
+
+        clearSecondCounter: function() {
+            this.simulation.clearSecondCounter();
         }
 
     });

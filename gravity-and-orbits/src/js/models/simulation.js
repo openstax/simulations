@@ -31,7 +31,7 @@ define(function (require, exports, module) {
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             scenario: Scenarios.Friendly[0],
             gravityEnabled: true,
-            seconds: 0,
+            secondCounter: 0,
             speedScale: Constants.DEFAULT_SPEED_SCALE, 
             deltaTimePerStep: Constants.DT_PER_TICK
         }),
@@ -103,7 +103,7 @@ define(function (require, exports, module) {
         resetScenario: function() {
             this.time = 0;
             this.set({
-                seconds: 0
+                secondCounter: 0
             });
         },
 
@@ -164,6 +164,13 @@ define(function (require, exports, module) {
         },
 
         /**
+         *
+         */
+        clearSecondCounter: function() {
+            this.set('secondCounter', 0);
+        },
+
+        /**
          * Only runs if simulation isn't currently paused.
          * If we're recording, it saves state
          */
@@ -174,7 +181,7 @@ define(function (require, exports, module) {
             for (var i = 0; i < SMOOTHING_STEPS; i++)
                 this.performSubstep(deltaTime / SMOOTHING_STEPS);
 
-            this.set('seconds', this.get('seconds') + deltaTime);
+            this.set('secondCounter', this.get('secondCounter') + deltaTime);
         },
 
         /**
