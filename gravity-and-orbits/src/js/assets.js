@@ -17,7 +17,8 @@ define(function (require) {
         SUN:          'sun.png',
         MOON:         'moon.png',
         MOON_GENERIC: 'moon-generic.png',
-        SATELLITE:    'phet/space-station.png'
+        SATELLITE:    'phet/space-station.png',
+        EXPLOSION:    'explosion.png'
     };
 
     Assets.SpriteSheets = {};

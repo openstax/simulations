@@ -20,6 +20,7 @@ define(function(require) {
     var PlanetView    = require('views/body/planet');
     var MoonView      = require('views/body/moon');
     var SatelliteView = require('views/body/satellite');
+    var CollisionView = require('views/collision');
 
     // Constants
     var Constants = require('constants');
@@ -48,6 +49,7 @@ define(function(require) {
             this.listenTo(this.simulation.bodies, 'remove', this.bodyRemoved);
 
             this.listenTo(this.simulation, 'change:scenario', this.scenarioChanged);
+            this.listenTo(this.simulation, 'collision',       this.showCollision);
         },
 
         renderContent: function() {
@@ -63,6 +65,7 @@ define(function(require) {
             this.initMVT();
             this.initBodies();
             this.initGridView();
+            this.initCollisions();
         },
 
         initMVT: function() {
@@ -95,10 +98,47 @@ define(function(require) {
             // this.stage.addChild(this.gridView.displayObject);
         },
 
+        initCollisions: function() {
+            this.collisionViews = [];
+            this.collisionLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.collisionLayer);
+        },
+
+        showCollision: function(simulation, body) {
+            var collisionView = new CollisionView({
+                body: body,
+                mvt: this.mvt
+            });
+            this.collisionLayer.addChild(collisionView.displayObject);
+            this.collisionViews.push(collisionView);
+        },
+
+        reset: function() {
+            // Remove collision views
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                this.collisionViews[i].removeFrom(this.collisionLayer);
+                this.collisionViews.slice(i, 1);
+            }
+
+            // Make new body views and trace views
+            this.initBodyViews(this.simulation, this.simulation.bodies);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             if (!paused) {
-                // Update particles to match new lattice
+                this.updateCollisions(time, deltaTime);
                 this.updateBodies(time, deltaTime);
+            }
+        },
+
+        updateCollisions: function(time, deltaTime) {
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                this.collisionViews[i].update(time, deltaTime);
+
+                if (this.collisionViews[i].finished()) {
+                    this.collisionViews[i].removeFrom(this.collisionLayer);
+                    this.collisionViews.slice(i, 1);
+                }
             }
         },
 

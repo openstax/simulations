@@ -218,7 +218,11 @@ define(function (require, exports, module) {
             for (var i = 0; i < this.bodies.length; i++) {
                 for (var j = i + 1; j < this.bodies.length; j++) {
                     if (this.bodies.at(i).collidesWith(this.bodies.at(j))) {
-                        this.smallerBody(this.bodies.at(i), this.bodies.at(j)).explode();
+                        var smaller = this.smallerBody(this.bodies.at(i), this.bodies.at(j));
+                        if (!smaller.get('exploded')) {
+                            smaller.explode();
+                            this.trigger('collision', this, smaller);
+                        }
                     }
                 }
             }

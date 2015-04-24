@@ -17,7 +17,7 @@ define(function (require) {
     Constants.DAYS_PER_TICK = 1;
     Constants.SECONDS_PER_DAY = 86400;
     Constants.DT_PER_TICK = Constants.DAYS_PER_TICK * Constants.SECONDS_PER_DAY;
-    
+
     Constants.MIN_SPEED_SCALE = 0.1;
     Constants.MAX_SPEED_SCALE = 2.0;
     // One quarter of the way up between min and max time scales
@@ -49,6 +49,21 @@ define(function (require) {
     BodyView.GENERIC_BODY_THRESHOLD = 0.05; 
 
     Constants.BodyView = BodyView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                           COLLISION VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var CollisionView = {};
+
+    CollisionView.ANIMATION_DURATION = 1; // Seconds
+    CollisionView.ANIMATION_MIDPOINT = 0.65;
+    CollisionView.ANIMATION_ROTATION = Math.PI / 2;
+
+    Constants.CollisionView = CollisionView;
 
 
     return Constants;
