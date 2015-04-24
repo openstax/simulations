@@ -43,7 +43,20 @@ define(function (require) {
     var SUN_MODES_VELOCITY_SCALE = 4.48E6;
     var SEC_PER_YEAR = 365 * 24 * 60 * 60;
     var SEC_PER_MOON_ORBIT = 28 * 24 * 60 * 60;
+    var SECONDS_PER_MINUTE = 60;
 
+    // Functions for time readouts
+    var formatScaledDays = function(simulation, seconds) {
+        var value = Math.floor(seconds / Constants.SECONDS_PER_DAY);
+        var units = (value === 1) ? 'earth day' : 'earth days';
+        return value + ' ' + units;
+    };
+
+    var formatMinutes = function(simulation, seconds) {
+        var value = Math.floor(seconds / SECONDS_PER_MINUTE);
+        var units = (value === 1) ? 'earth minute' : 'earth minutes';
+        return value + ' ' + units;
+    };
 
     // There are two classes of scenarios
     var Scenarios = {};
@@ -74,7 +87,8 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
-                forceScale: FORCE_SCALE * 120
+                forceScale: FORCE_SCALE * 120,
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -107,7 +121,8 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
-                forceScale: FORCE_SCALE * 120
+                forceScale: FORCE_SCALE * 120,
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -136,7 +151,8 @@ define(function (require) {
                 gridOrigin: new Vector2(EARTH_PERIHELION, 0),
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
-                forceScale: FORCE_SCALE * 45
+                forceScale: FORCE_SCALE * 45,
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -164,7 +180,8 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: 5400,
                 velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
-                forceScale: FORCE_SCALE * 3E13
+                forceScale: FORCE_SCALE * 3E13,
+                timeReadoutFunction: formatMinutes
             }
         }
     ];
@@ -201,7 +218,8 @@ define(function (require) {
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
-                forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE)
+                forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE),
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -240,7 +258,8 @@ define(function (require) {
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
-                forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE)
+                forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE),
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -269,7 +288,8 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
-                forceScale: FORCE_SCALE * 0.77 // So that default gravity force takes up 1/2 cell in grid
+                forceScale: FORCE_SCALE * 0.77, // So that default gravity force takes up 1/2 cell in grid
+                timeReadoutFunction: formatScaledDays
             }
         },
         {
@@ -297,7 +317,8 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: 5400,
                 velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
-                forceScale: FORCE_SCALE * 3E13
+                forceScale: FORCE_SCALE * 3E13,
+                timeReadoutFunction: formatMinutes
             }
         },
     ];

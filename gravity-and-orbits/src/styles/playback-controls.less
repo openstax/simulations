@@ -110,7 +110,7 @@
         }
     }
 
-    .days-counter {
+    .time-counter {
         position: absolute;
         top: 0;
         height: 100%;
@@ -119,12 +119,8 @@
         line-height: 42px;
         font-size: 16px;
         color: @panel-fg;
-
-        .days-value {
-            display: inline-block;
-            min-width: 36px;
-            text-align: right;
-        }
+        text-align: right;
+        text-transform: capitalize;
     }
 
     .clear-btn {
@@ -135,7 +131,7 @@
 
 
 
-.clear-btn:hover ~ .days-counter {
+.clear-btn:hover ~ .time-counter {
     color: darken(@panel-fg, 30%);
     //text-decoration: line-through;
 }

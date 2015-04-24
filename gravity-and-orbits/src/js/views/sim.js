@@ -77,7 +77,9 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused',   this.pausedChanged);
+            this.listenTo(this.simulation, 'change:seconds',  this.secondsChanged);
+            this.listenTo(this.simulation, 'change:scenario', this.scenarioChanged);
 
             this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
             this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
@@ -110,6 +112,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderPlaybackControls();
             this.renderPropertiesPanel();
+
+            this.scenarioChanged(this.simulation, this.simulation.get('scenario'));
 
             return this;
         },
@@ -155,6 +159,8 @@ define(function (require) {
             });
 
             this.$('.playback-controls-placeholder').replaceWith(this.$controls);
+
+            this.$time = this.$controls.find('.time-counter');
         },
 
         /**
@@ -264,6 +270,14 @@ define(function (require) {
             var index = parseInt($(event.target).val());
             var scenario = this.getScenarios()[index];
             this.simulation.set('scenario', scenario);
+        },
+
+        scenarioChanged: function(simulation, scenario) {
+            this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
+        },
+
+        secondsChanged: function(simulation, seconds) {
+            this.$time.text(this.timeReadoutFunction(simulation, seconds));
         }
 
     });
