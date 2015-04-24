@@ -59,7 +59,9 @@ define(function (require) {
             'click .reset-btn'  : 'reset',
             'click .clear-btn'  : 'clearSecondCounter',
 
-            'change .scenario-select' : 'changeScenario'
+            'change .scenario-select' : 'changeScenario',
+
+            'click .gravity-check' : 'toggleGravity'
         },
 
         /**
@@ -283,6 +285,13 @@ define(function (require) {
 
         clearSecondCounter: function() {
             this.simulation.clearSecondCounter();
+        },
+
+        toggleGravity: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('gravityEnabled', true);
+            else
+                this.simulation.set('gravityEnabled', false);
         }
 
     });
