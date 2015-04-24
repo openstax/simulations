@@ -13,6 +13,11 @@ define(function (require) {
 
     Constants.G = 6.67428E-11;
 
+    Constants.FRAME_RATE = 25;
+    Constants.DAYS_PER_TICK = 1;
+    Constants.SECONDS_PER_DAY = 86400;
+    Constants.DT_PER_TICK = Constants.DAYS_PER_TICK * Constants.SECONDS_PER_DAY;
+
     /*************************************************************************
      **                                                                     **
      **                             SCENE VIEW                              **

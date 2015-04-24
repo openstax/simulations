@@ -52,8 +52,10 @@ define(function (require) {
          * Applies the data stored in this state to the given body.
          */
         applyState: function(body) {
-            body.setPosition(this.position);
-            body.setVelocity(this.velocity);
+            if (!body.get('fixed')) {
+                body.setPosition(this.position);
+                body.setVelocity(this.velocity);
+            }
             body.setAcceleration(this.acceleration);
             body.updateForce();
 

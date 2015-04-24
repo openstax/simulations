@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
     var Vector2    = require('common/math/vector2');
 
     var Body            = require('models/body');
@@ -26,9 +26,9 @@ define(function (require, exports, module) {
     /**
      * 
      */
-    var GOSimulation = Simulation.extend({
+    var GOSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             scenario: Scenarios.Friendly[0],
             gravityEnabled: true
         }),
@@ -37,6 +37,10 @@ define(function (require, exports, module) {
          *
          */
         initialize: function(attributes, options) {
+            options = _.extend({
+                framesPerSecond: Constants.FRAME_RATE
+            }, options);
+
             this.bodies = new Backbone.Collection([], {
                 model: Body
             });
@@ -49,7 +53,7 @@ define(function (require, exports, module) {
             this._sourceForce = new Vector2();
             this._nextVelocityHalf = new Vector2();
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:scenario', this.scenarioChanged);
 
@@ -60,7 +64,7 @@ define(function (require, exports, module) {
          *
          */
         applyOptions: function(options) {
-            Simulation.prototype.applyOptions.apply(this, [options]);
+            FixedIntervalSimulation.prototype.applyOptions.apply(this, [options]);
 
             
         },
@@ -126,7 +130,7 @@ define(function (require, exports, module) {
          *
          */
         reset: function() {
-            Simulation.prototype.reset.apply(this);
+            FixedIntervalSimulation.prototype.reset.apply(this);
 
         },
 
@@ -136,7 +140,7 @@ define(function (require, exports, module) {
         play: function() {
             // May need to save the current state here for the rewind button
 
-            Simulation.prototype.play.apply(this);
+            FixedIntervalSimulation.prototype.play.apply(this);
         },
 
         /**
@@ -151,10 +155,8 @@ define(function (require, exports, module) {
          * If we're recording, it saves state
          */
         _update: function(time, deltaTime) {
-            // For the time slider and anything else relying on time
-            this.set('time', time);
-
             // Split up the delta time into steps to smooth out the orbit
+            deltaTime = Constants.DT_PER_TICK;
             deltaTime /= SMOOTHING_STEPS;
             for (var i = 0; i < SMOOTHING_STEPS; i++)
                 this.performSubstep(deltaTime);
