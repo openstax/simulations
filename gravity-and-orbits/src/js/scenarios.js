@@ -126,7 +126,8 @@ define(function (require) {
                 })
             ],
             simulationAttributes: {
-                timeScale: 1
+                timeScale: 1,
+                deltaTimePerStep: Constants.DT_PER_TICK / 3
             },
             viewSettings: {
                 origin: new Vector2(EARTH_PERIHELION, 0),
@@ -153,7 +154,8 @@ define(function (require) {
                 })
             ],
             simulationAttributes: {
-                timeScale: 1
+                timeScale: 1,
+                deltaTimePerStep: Constants.DT_PER_TICK * 9E-4
             },
             viewSettings: {
                 origin: new Vector2(0, 0),
@@ -257,7 +259,8 @@ define(function (require) {
                 })
             ],
             simulationAttributes: {
-                timeScale: 1
+                timeScale: 1,
+                deltaTimePerStep: Constants.DT_PER_TICK / 3
             },
             viewSettings: {
                 origin: new Vector2(EARTH_PERIHELION, 0),
@@ -284,7 +287,8 @@ define(function (require) {
                 })
             ],
             simulationAttributes: {
-                timeScale: 1
+                timeScale: 1,
+                deltaTimePerStep: Constants.DT_PER_TICK * 9E-4
             },
             viewSettings: {
                 origin: new Vector2(0, 0),

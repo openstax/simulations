@@ -17,6 +17,8 @@ define(function (require) {
     Constants.DAYS_PER_TICK = 1;
     Constants.SECONDS_PER_DAY = 86400;
     Constants.DT_PER_TICK = Constants.DAYS_PER_TICK * Constants.SECONDS_PER_DAY;
+    Constants.MIN_TIME_SCALE = 0.1;
+    Constants.MAX_TIME_SCALE = 2.0;
 
     /*************************************************************************
      **                                                                     **

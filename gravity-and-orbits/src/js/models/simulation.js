@@ -30,7 +30,11 @@ define(function (require, exports, module) {
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             scenario: Scenarios.Friendly[0],
-            gravityEnabled: true
+            gravityEnabled: true,
+
+            // One quarter of the way up between min and max time scales
+            speedScale: (Constants.MIN_TIME_SCALE + Constants.MAX_TIME_SCALE) / 4, 
+            deltaTimePerStep: Constants.DT_PER_TICK
         }),
         
         /**
@@ -156,7 +160,8 @@ define(function (require, exports, module) {
          */
         _update: function(time, deltaTime) {
             // Split up the delta time into steps to smooth out the orbit
-            deltaTime = Constants.DT_PER_TICK;
+            deltaTime  = this.get('deltaTimePerStep');
+            deltaTime *= this.get('speedScale');
             deltaTime /= SMOOTHING_STEPS;
             for (var i = 0; i < SMOOTHING_STEPS; i++)
                 this.performSubstep(deltaTime);
