@@ -59,6 +59,8 @@ define(function (require) {
             'click .reset-btn'  : 'reset',
             'click .clear-btn'  : 'clearSecondCounter',
 
+            'slide .playback-speed' : 'changeSpeed',
+
             'change .scenario-select' : 'changeScenario',
 
             'click .gravity-check' : 'toggleGravity'
@@ -153,11 +155,11 @@ define(function (require) {
 
             // Initialize speed slider
             this.$controls.find('.playback-speed').noUiSlider({
-                start: 1,
+                start: this.simulation.get('speedScale'),
                 range: {
-                    'min': [ 0.2 ],
-                    '50%': [ 1 ],
-                    'max': [ 4 ]
+                    'min': [ Constants.MIN_SPEED_SCALE ],
+                    //'50%': [ 1 ],
+                    'max': [ Constants.MAX_SPEED_SCALE ]
                 }
             });
 
@@ -293,6 +295,13 @@ define(function (require) {
                 this.simulation.set('gravityEnabled', true);
             else
                 this.simulation.set('gravityEnabled', false);
+        },
+
+        changeSpeed: function(event) {
+            var speedScale = $(event.target).val();
+            this.inputLock(function() {
+                this.simulation.set('speedScale', speedScale);
+            });
         }
 
     });
