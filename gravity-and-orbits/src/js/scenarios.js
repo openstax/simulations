@@ -40,6 +40,9 @@ define(function (require) {
 
     // View constants
     var FORCE_SCALE = 76.0 / 5.179E15;
+    var SUN_MODES_VELOCITY_SCALE = 4.48E6;
+    var SEC_PER_YEAR = 365 * 24 * 60 * 60;
+    var SEC_PER_MOON_ORBIT = 28 * 24 * 60 * 60;
 
 
     // There are two classes of scenarios
@@ -69,6 +72,8 @@ define(function (require) {
                 defaultZoom: 1.25,
                 gridSpacing: EARTH_PERIHELION / 2,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: SEC_PER_YEAR,
+                velocityScale: SUN_MODES_VELOCITY_SCALE,
                 forceScale: FORCE_SCALE * 120
             }
         },
@@ -100,6 +105,8 @@ define(function (require) {
                 defaultZoom: 1.25,
                 gridSpacing: EARTH_PERIHELION / 2,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: SEC_PER_YEAR,
+                velocityScale: SUN_MODES_VELOCITY_SCALE,
                 forceScale: FORCE_SCALE * 120
             }
         },
@@ -126,6 +133,8 @@ define(function (require) {
                 defaultZoom: 400,
                 gridSpacing: MOON_Y / 2,
                 gridOrigin: new Vector2(EARTH_PERIHELION, 0),
+                defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
+                velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
                 forceScale: FORCE_SCALE * 45
             }
         },
@@ -151,6 +160,8 @@ define(function (require) {
                 defaultZoom: 21600,
                 gridSpacing: SPACE_STATION_PERIGEE + EARTH_RADIUS + SPACE_STATION_RADIUS,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: 5400,
+                velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
                 forceScale: FORCE_SCALE * 3E13
             }
         }
@@ -183,6 +194,8 @@ define(function (require) {
                 defaultZoom: 1.25,
                 gridSpacing: 0,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: SEC_PER_YEAR,
+                velocityScale: SUN_MODES_VELOCITY_SCALE,
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
@@ -220,6 +233,8 @@ define(function (require) {
                 defaultZoom: 1.25,
                 gridSpacing: 0,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: SEC_PER_YEAR,
+                velocityScale: SUN_MODES_VELOCITY_SCALE,
                 // To balance increased mass and so that forces are 1/2 grid cell in default 
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
@@ -249,6 +264,8 @@ define(function (require) {
                 defaultZoom: 400,
                 gridSpacing: 0,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
+                velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
                 forceScale: FORCE_SCALE * 0.77 // So that default gravity force takes up 1/2 cell in grid
             }
         },
@@ -274,6 +291,8 @@ define(function (require) {
                 defaultZoom: 21600,
                 gridSpacing: 0,
                 gridOrigin: new Vector2(0, 0),
+                defaultOrbitalPeriod: 5400,
+                velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
                 forceScale: FORCE_SCALE * 3E13
             }
         },
