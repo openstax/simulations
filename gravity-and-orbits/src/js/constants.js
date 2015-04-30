@@ -55,18 +55,25 @@ define(function (require) {
     // The percent difference between reference mass and current mass at which
     //   we switch to a generic body image.
     BodyView.GENERIC_BODY_THRESHOLD = 0.05; 
+    BodyView.MIN_DIAMETER = 2;
+
     BodyView.ARROW_TAIL_WIDTH  = 5;
     BodyView.ARROW_HEAD_WIDTH  = 17;
     BodyView.ARROW_HEAD_LENGTH = 17;
     BodyView.ARROW_COLOR = '#cd2520';
     BodyView.ARROW_ALPHA = 1;
+
     BodyView.GRAVITY_ARROW_COLOR = '#8942ca';
     BodyView.GRAVITY_ARROW_ALPHA = 1;
+
     BodyView.VELOCITY_MARKER_COLOR = '#fff';
     BodyView.VELOCITY_MARKER_ALPHA = 0.5;
     BodyView.VELOCITY_MARKER_RADIUS = 20;
     BodyView.VELOCITY_MARKER_THICKNESS = 4;
     BodyView.VELOCITY_MARKER_FONT = '28px Arial';
+
+    BodyView.LABEL_FONT = '18px Arial';
+    BodyView.LABEL_COLOR = '#fff';
 
     Constants.BodyView = BodyView;
 

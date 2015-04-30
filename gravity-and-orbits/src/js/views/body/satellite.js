@@ -19,7 +19,8 @@ define(function(require) {
          *   mode, so we need to blow the sprite way up.
          */
         getBodyScale: function(radius) {
-            return BodyView.prototype.getBodyScale.apply(this, arguments) * 1000;
+            var targetSpriteWidth = this.mvt.modelToViewDeltaX(radius * 2); // In pixels
+            return ((targetSpriteWidth / this.body.width) / this.textureBodyWidthRatio) * 1000;
         }
 
     });

@@ -25,6 +25,12 @@ define(function(require) {
          */
         textureBodyWidthRatio: 1,
 
+        /**
+         * The offset of the body label in pixels
+         */
+        bodyLabelOffsetX:  40,
+        bodyLabelOffsetY: -40,
+
         events: {
             'touchstart      .body': 'dragStart',
             'mousedown       .body': 'dragStart',
@@ -77,18 +83,15 @@ define(function(require) {
         initGraphics: function() {
             this.bodyContainer = new PIXI.DisplayObjectContainer();
 
-            this.body = Assets.createSprite(Assets.ImageFromModel(this.model));
-            this.body.anchor.x = 0.5;
-            this.body.anchor.y = 0.5;
-            this.body.buttonMode = true;
-            this.body.defaultCursor = 'move';
-            this.bodyContainer.addChild(this.body);
-
+            this.initBody();
+            this.initLabels();
             this.initGravityArrowView();
             this.initVelocityArrowView();
             this.initVelocityMarker();
             
             this.displayObject.addChild(this.bodyContainer);
+            this.displayObject.addChild(this.bodyLabel);
+            //this.displayObject.addChild(this.massLabel);
             this.displayObject.addChild(this.gravityArrowView.displayObject);
             this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.velocityArrowView.displayObject);
@@ -100,6 +103,43 @@ define(function(require) {
                 this.hideVelocityArrow();
 
             this.updateMVT(this.mvt);
+        },
+
+        initBody: function() {
+            this.body = Assets.createSprite(Assets.ImageFromModel(this.model));
+            this.body.anchor.x = 0.5;
+            this.body.anchor.y = 0.5;
+            this.body.buttonMode = true;
+            this.body.defaultCursor = 'move';
+            this.bodyContainer.addChild(this.body);
+        },
+
+        initLabels: function() {
+            // Capitalize the first letter of each word in the name
+            var name = this.model.get('name').replace( /\b\w/g, function (m) {
+                return m.toUpperCase();
+            });
+
+            var bodyLabelText = new PIXI.Text(name, {
+                font: BodyView.LABEL_FONT,
+                fill: BodyView.LABEL_COLOR
+            });
+            bodyLabelText.anchor.x = 0.5;
+            bodyLabelText.anchor.y = 0.6;
+            bodyLabelText.x = this.bodyLabelOffsetX;
+            bodyLabelText.y = this.bodyLabelOffsetY;
+
+            var linePercentPadding = 0.2;
+            var bodyLabelLine = new PIXI.Graphics();
+            bodyLabelLine.lineStyle(2, 0xFFFFFF, 0.7);
+            bodyLabelLine.moveTo(0, 0);
+            bodyLabelLine.lineTo(this.bodyLabelOffsetX * (1 - 2 * linePercentPadding), this.bodyLabelOffsetY * (1 - 2 * linePercentPadding));
+            bodyLabelLine.x = this.bodyLabelOffsetX * linePercentPadding;
+            bodyLabelLine.y = this.bodyLabelOffsetY * linePercentPadding;
+
+            this.bodyLabel = new PIXI.DisplayObjectContainer();
+            this.bodyLabel.addChild(bodyLabelText);
+            this.bodyLabel.addChild(bodyLabelLine);
         },
 
         initGravityArrowView: function() {
@@ -167,6 +207,14 @@ define(function(require) {
             this.displayObject.visible = !exploded;
         },
 
+        updateBodyLabelVisibility: function() {
+            var targetSpriteWidth = this.mvt.modelToViewDeltaX(this.model.get('radius') * 2);
+            if (targetSpriteWidth < 9)
+                this.bodyLabel.visible = true;
+            else
+                this.bodyLabel.visible = false;
+        },
+
         update: function(time, delta) {
             
         },
@@ -178,11 +226,15 @@ define(function(require) {
             this.updatePosition(this.model, this.model.get('position'));
             this.updateVelocity();
             this.updateGravity();
+            this.updateBodyLabelVisibility();
         },
 
         getBodyScale: function(radius) {
             var targetSpriteWidth = this.mvt.modelToViewDeltaX(radius * 2); // In pixels
-            return (targetSpriteWidth / this.body.width) / this.textureBodyWidthRatio;
+            if (targetSpriteWidth < BodyView.MIN_DIAMETER)
+                return (BodyView.MIN_DIAMETER / this.body.width) / this.textureBodyWidthRatio;
+            else
+                return (targetSpriteWidth / this.body.width) / this.textureBodyWidthRatio;
         },
 
         dragStart: function(data) {
