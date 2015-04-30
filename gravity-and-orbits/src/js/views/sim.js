@@ -56,6 +56,8 @@ define(function (require) {
             // Playback controls
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            'click .rewind-btn' : 'rewind',
             'click .reset-btn'  : 'reset',
             'click .clear-btn'  : 'clearSecondCounter',
 
@@ -200,6 +202,14 @@ define(function (require) {
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
             this.initSceneView();
+        },
+
+        /**
+         * Overrides step to make sure we calculate the right step time.
+         */
+        step: function() {
+            this.play();
+            setTimeout(this._stepFinished, this.simulation.frameDuration * 1000 / this.simulation.get('timeScale'));
         },
 
         /**
