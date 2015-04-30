@@ -94,6 +94,9 @@ define(function(require) {
             this.displayObject.position.x = 480;
             this.displayObject.position.y = 300;
 
+            if (this.model.get('fixed'))
+                this.hideVelocityArrow();
+
             this.updateMVT(this.mvt);
         },
 
