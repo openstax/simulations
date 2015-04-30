@@ -251,8 +251,8 @@ define(function(require) {
             this.inputLock(function() {
                 var velocityScale = this.simulation.get('scenario').viewSettings.velocityScale;
                 this.model.setVelocity(
-                    Math.round(this.mvt.viewToModelDeltaX(this.velocityViewModel.get('targetX')) / this.velocityScale),
-                    Math.round(this.mvt.viewToModelDeltaY(this.velocityViewModel.get('targetY')) / this.velocityScale)
+                    Math.round(this.mvt.viewToModelDeltaX(this.velocityViewModel.get('targetX')) / velocityScale),
+                    Math.round(this.mvt.viewToModelDeltaY(this.velocityViewModel.get('targetY')) / velocityScale)
                 );
             });
         },
