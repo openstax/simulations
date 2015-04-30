@@ -132,7 +132,7 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation,
+                name: this.name,
                 scenarioNames: this.getScenarioNames()
             };
             this.$el.html(this.template(data));
