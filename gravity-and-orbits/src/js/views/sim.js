@@ -213,6 +213,13 @@ define(function (require) {
         },
 
         /**
+         * Rewinds the sim to the last time it was paused and changed
+         */
+        rewind: function() {
+            this.simulation.rewind();
+        },
+
+        /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */

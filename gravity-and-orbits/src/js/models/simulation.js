@@ -90,6 +90,7 @@ define(function (require, exports, module) {
                 return body.clone();
             }));
 
+            this.initSavedState();
             this.initScratchStates();
             this.resetScenario();
             this.set(scenario.simulationAttributes);
@@ -105,6 +106,17 @@ define(function (require, exports, module) {
             this.set({
                 secondCounter: 0
             });
+        },
+
+        /**
+         * Creates an array of individual body state records
+         *   under the property "savedState" to use when saving
+         *   and applying states later on a rewind.
+         */
+        initSavedState: function() {
+            this.savedState = [];
+            for (var j = 0; j < this.bodies.length; j++)
+                this.savedState.push(new BodyStateRecord());
         },
 
         /**
@@ -151,7 +163,9 @@ define(function (require, exports, module) {
          *
          */
         play: function() {
-            // May need to save the current state here for the rewind button
+            // Save the current state to apply later with the rewind button
+            for (i = 0; i < this.savedState.length; i++)
+                this.savedState[i].saveState(this.bodies.at(i));
 
             FixedIntervalSimulation.prototype.play.apply(this);
         },
@@ -161,6 +175,8 @@ define(function (require, exports, module) {
          */
         rewind: function() {
             // Apply the saved state
+            for (i = 0; i < this.savedState.length; i++)
+                this.savedState[i].applyState(this.bodies.at(i));
         },
 
         /**
