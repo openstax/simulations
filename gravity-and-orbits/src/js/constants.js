@@ -38,6 +38,8 @@ define(function (require) {
     var SceneView = {};
 
     SceneView.SCENE_SCALE = 1.5E-9;
+    SceneView.MIN_SCALE = 0.6;
+    SceneView.MAX_SCALE = 2;
 
     Constants.SceneView = SceneView;
 

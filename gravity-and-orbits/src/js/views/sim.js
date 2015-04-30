@@ -67,7 +67,10 @@ define(function (require) {
 
             'click .gravity-vector-check'  : 'toggleGravityArrows',
             'click .velocity-vector-check' : 'toggleVelocityArrows',
-            'click .grid-check'            : 'toggleGrid'
+            'click .grid-check'            : 'toggleGrid',
+
+            'click .btn-zoom-in':  'zoomIn',
+            'click .btn-zoom-out': 'zoomOut'
         },
 
         /**
@@ -328,6 +331,14 @@ define(function (require) {
                 this.sceneView.showGrid();
             else
                 this.sceneView.hideGrid();
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
         }
 
     });

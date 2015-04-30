@@ -283,7 +283,23 @@ define(function(require) {
 
         getViewSettings: function() {
             return this.simulation.get('scenario').viewSettings;
-        }
+        },
+
+        zoomIn: function() {
+            var zoom = this.zoom + 0.2;
+            if (zoom <= Constants.SceneView.MAX_SCALE) {
+                this.zoom = zoom;
+                this.updateMVT();
+            }
+        },
+
+        zoomOut: function() {
+            var zoom = this.zoom - 0.2;
+            if (zoom >= Constants.SceneView.MIN_SCALE) {
+                this.zoom = zoom;
+                this.updateMVT();
+            }
+        },
 
     });
 
