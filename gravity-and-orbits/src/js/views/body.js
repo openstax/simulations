@@ -48,6 +48,8 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.velocityScale = options.velocityScale;
+            this.forceScale = options.forceScale;
 
             this.arrowViewModel = new ArrowView.ArrowViewModel({
                 originX: 0,
@@ -60,6 +62,7 @@ define(function(require) {
             this.initGraphics();
             
             this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:velocity', this.updateVelocity);
             this.listenTo(this.model, 'change:mass',     this.updateMass);
             this.listenTo(this.model, 'change:radius',   this.updateRadius);
             this.listenTo(this.model, 'change:exploded', this.updateExploded);
@@ -146,6 +149,7 @@ define(function(require) {
 
             this.updateRadius(this.model, this.model.get('radius'));
             this.updatePosition(this.model, this.model.get('position'));
+            this.updateVelocity();
         },
 
         getBodyScale: function(radius) {
@@ -182,9 +186,6 @@ define(function(require) {
         },
 
         dragVelocityStart: function(data) {
-            if (!this.interactionEnabled)
-                return;
-
             this.dragOffset = data.getLocalPosition(this.velocityMarker, this._dragOffset);
             this.draggingVelocity = true;
         },
@@ -209,8 +210,8 @@ define(function(require) {
 
         updateVelocity: function() {
             this.updateLock(function() {
-                var x = this.mvt.modelToViewDeltaX(this.model.get('initVX'));
-                var y = this.mvt.modelToViewDeltaY(this.model.get('initVY'));
+                var x = this.mvt.modelToViewDeltaX(this.model.get('velocity').x * this.velocityScale);
+                var y = this.mvt.modelToViewDeltaY(this.model.get('velocity').y * this.velocityScale);
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
                 // We don't want it to draw twice, so make the first silent
@@ -222,8 +223,8 @@ define(function(require) {
         changeVelocity: function() {
             this.inputLock(function() {
                 this.model.setVelocity(
-                    Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX'))),
-                    Math.round(this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY')))
+                    Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX')) / this.velocityScale),
+                    Math.round(this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY')) / this.velocityScale)
                 );
             });
         },

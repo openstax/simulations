@@ -200,7 +200,9 @@ define(function(require) {
             var bodyView = new constructor({ 
                 model: body,
                 mvt: this.mvt,
-                simulation: this.simulation
+                simulation: this.simulation,
+                velocityScale: this.velocityScale,
+                forceScale: this.forceScale
             });
             this.bodies.addChild(bodyView.displayObject);
             this.bodyViews.push(bodyView);
@@ -239,6 +241,8 @@ define(function(require) {
             this.modelOrigin = scenario.viewSettings.origin;
 
             // bodies forceScale -> scenario.viewSettings.forceScale
+            this.velocityScale = scenario.viewSettings.velocityScale;
+            this.forceScale    = scenario.viewSettings.forceScale;
         },
 
         updateMVT: function() {
