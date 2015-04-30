@@ -50,7 +50,8 @@ define(function (require) {
 				viewToModelDeltaX: function() { return 1; },
 				viewToModelDeltaY: function() { return 1; },
 				units: 'm',
-				decimalPlaces: 2
+				decimalPlaces: 2,
+				format: undefined // specify a function(distance)
 			}, options);
 
 			Draggable.prototype.initialize.apply(this, [options]);
@@ -60,6 +61,7 @@ define(function (require) {
 
 			this.units = options.units;
 			this.decimalPlaces = options.decimalPlaces;
+			this.format = options.format;
 
 			this.viewToModelDeltaX = options.viewToModelDeltaX;
 			this.viewToModelDeltaY = options.viewToModelDeltaY;
@@ -232,7 +234,15 @@ define(function (require) {
 				Math.pow(this.viewToModelDeltaY(this.end.y - this.start.y), 2)
 			);
 
-			this.$label.html(modelLineLength.toFixed(this.decimalPlaces) + ' ' + this.units);
+			this.updateLabel(modelLineLength);
+			
+		},
+
+		updateLabel: function(distance) {
+			if (!this.format || !_.isFunction(this.format))
+				this.$label.html(modelLineLength.toFixed(this.decimalPlaces) + ' ' + this.units);
+			else
+				this.$label.html(this.format(distance));
 		},
 
 		show: function() {

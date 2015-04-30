@@ -278,6 +278,8 @@ define(function(require) {
 
             for (var i = this.collisionViews.length - 1; i >= 0; i--) 
                 this.collisionViews[i].updateMVT(this.mvt);
+
+            this.trigger('change:mvt', this, this.mvt);
         },
 
         showVelocityArrows: function() {

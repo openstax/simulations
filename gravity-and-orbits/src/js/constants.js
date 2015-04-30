@@ -13,6 +13,8 @@ define(function (require) {
 
     Constants.G = 6.67428E-11;
 
+    Constants.METERS_PER_MILE = 0.000621371192;
+
     Constants.FRAME_RATE = 25;
     Constants.DAYS_PER_TICK = 1;
     Constants.SECONDS_PER_DAY = 86400;
