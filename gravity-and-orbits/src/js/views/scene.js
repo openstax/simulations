@@ -116,10 +116,7 @@ define(function(require) {
 
         reset: function() {
             // Remove collision views
-            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
-                this.collisionViews[i].removeFrom(this.collisionLayer);
-                this.collisionViews.slice(i, 1);
-            }
+            this.clearCollisionViews();
 
             // Make new body views and trace views
             this.initBodyViews(this.simulation, this.simulation.bodies);
@@ -143,11 +140,24 @@ define(function(require) {
             }
         },
 
+        clearCollisionViews: function() {
+            // Remove collision views
+            if (this.collisionViews) {
+                for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                    this.collisionViews[i].removeFrom(this.collisionLayer);
+                    this.collisionViews.slice(i, 1);
+                }
+            }
+        },
+
         updateBodies: function(time, deltaTime) {
             
         },
 
         bodiesReset: function(bodies) {
+            // Remove old collision views
+            this.clearCollisionViews();
+
             // Remove old body views
             for (var i = this.bodyViews.length - 1; i >= 0; i--) {
                 this.bodyViews[i].removeFrom(this.bodies);

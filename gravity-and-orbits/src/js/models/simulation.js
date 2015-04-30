@@ -171,6 +171,14 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Updates initial force vectors so the body views can show
+         *   something for force before the simulation starts.
+         */
+        updateForceVectors: function() {
+            this.performSubstep(0);
+        },
+
+        /**
          * Only runs if simulation isn't currently paused.
          * If we're recording, it saves state
          */

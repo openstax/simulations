@@ -8,6 +8,8 @@ define(function(require) {
     var Vector2  = require('common/math/vector2');
     var range    = require('common/math/range');
 
+    var Satellite = require('models/body/satellite');
+
     var Assets    = require('assets');
     var Constants = require('constants');
 
@@ -22,6 +24,12 @@ define(function(require) {
                 min: diameter * 1,
                 max: diameter * 1.8
             });
+
+            // Special case for the Satellite
+            if (options.smallerBody instanceof Satellite) {
+                this.diameterRange.min *= 1000;
+                this.diameterRange.max *= 1000;
+            }
 
             /*
              * TODO: This would look much better as a particle system. The

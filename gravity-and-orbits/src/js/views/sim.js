@@ -224,7 +224,8 @@ define(function (require) {
          */
         createBodySettingsView: function(body) {
             return new BodySettingsView({ 
-                model: body
+                model: body,
+                simulation: this.simulation
             });
         },
 
