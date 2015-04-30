@@ -221,6 +221,7 @@ define(function (require) {
          */
         rewind: function() {
             this.simulation.rewind();
+            this.sceneView.clearTraces();
         },
 
         /**

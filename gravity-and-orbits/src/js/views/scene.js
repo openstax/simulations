@@ -328,13 +328,17 @@ define(function(require) {
         },
 
         showTraces: function() {
-            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
-                this.bodyTraceViews[i].clear();
+            this.clearTraces();
             this.bodyTraceLayer.visible = true;
         },
 
         hideTraces: function() {
             this.bodyTraceLayer.visible = false;
+        },
+
+        clearTraces: function() {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].clear();
         }
 
     });
