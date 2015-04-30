@@ -80,6 +80,8 @@ define(function(require) {
             this.body = Assets.createSprite(Assets.ImageFromModel(this.model));
             this.body.anchor.x = 0.5;
             this.body.anchor.y = 0.5;
+            this.body.buttonMode = true;
+            this.body.defaultCursor = 'move';
             this.bodyContainer.addChild(this.body);
 
             this.initGravityArrowView();
