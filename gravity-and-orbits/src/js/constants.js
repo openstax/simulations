@@ -46,7 +46,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                              BODY VIEW                              **
+     **                                BODY                                 **
      **                                                                     **
      *************************************************************************/
 
@@ -69,6 +69,13 @@ define(function (require) {
     BodyView.VELOCITY_MARKER_FONT = '28px Arial';
 
     Constants.BodyView = BodyView;
+
+
+    var BodyTraceView = {};
+
+    BodyTraceView.LINE_WIDTH = 3;
+
+    Constants.BodyTraceView = BodyTraceView;
 
 
     /*************************************************************************

@@ -21,6 +21,7 @@ define(function(require) {
     var PlanetView    = require('views/body/planet');
     var MoonView      = require('views/body/moon');
     var SatelliteView = require('views/body/satellite');
+    var BodyTraceView = require('views/body-trace');
     var CollisionView = require('views/collision');
 
     // Constants
@@ -64,6 +65,7 @@ define(function(require) {
             this.viewOriginY = Math.round(this.height / 2);
 
             this.initMVT();
+            this.initBodyTraceLayer();
             this.initBodies();
             this.initGridView();
             this.initCollisions();
@@ -85,6 +87,12 @@ define(function(require) {
             this.stage.addChild(this.bodies);
 
             this.bodiesReset(this.simulation.bodies);
+        },
+
+        initBodyTraceLayer: function() {
+            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.bodyTraceLayer.visible = false;
+            this.stage.addChild(this.bodyTraceLayer);
         },
 
         initGridView: function() {
@@ -115,6 +123,16 @@ define(function(require) {
             this.collisionViews.push(collisionView);
         },
 
+        clearCollisionViews: function() {
+            // Remove collision views
+            if (this.collisionViews) {
+                for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                    this.collisionViews[i].removeFrom(this.collisionLayer);
+                    this.collisionViews.slice(i, 1);
+                }
+            }
+        },
+
         reset: function() {
             // Remove collision views
             this.clearCollisionViews();
@@ -126,7 +144,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             if (!paused) {
                 this.updateCollisions(time, deltaTime);
-                this.updateBodies(time, deltaTime);
+                this.updateBodies(time, deltaTime, paused);
             }
         },
 
@@ -141,18 +159,9 @@ define(function(require) {
             }
         },
 
-        clearCollisionViews: function() {
-            // Remove collision views
-            if (this.collisionViews) {
-                for (var i = this.collisionViews.length - 1; i >= 0; i--) {
-                    this.collisionViews[i].removeFrom(this.collisionLayer);
-                    this.collisionViews.slice(i, 1);
-                }
-            }
-        },
-
-        updateBodies: function(time, deltaTime) {
-            
+        updateBodies: function(time, deltaTime, paused) {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].update(time, deltaTime, paused);
         },
 
         bodiesReset: function(bodies) {
@@ -217,12 +226,12 @@ define(function(require) {
                 bodyView.hideGravityArrow();
 
             // Trace view
-            // var bodyTraceView = new BodyTraceView({
-            //     model: body,
-            //     mvt: this.mvt
-            // });
-            // this.bodyTraceLayer.addChild(bodyTraceView.displayObject);
-            // this.bodyTraceViews.push(bodyTraceView);
+            var bodyTraceView = new BodyTraceView({
+                model: body,
+                mvt: this.mvt
+            });
+            this.bodyTraceLayer.addChild(bodyTraceView.displayObject);
+            this.bodyTraceViews.push(bodyTraceView);
         },
 
         scenarioChanged: function(simulation, scenario) {
@@ -247,6 +256,12 @@ define(function(require) {
 
             for (var i = 0; i < this.bodyViews.length; i++)
                 this.bodyViews[i].updateMVT(this.mvt);
+
+            for (var j = this.bodyTraceViews.length - 1; j >= 0; j--)
+                this.bodyTraceViews[j].updateMVT(this.mvt);
+
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) 
+                this.collisionViews[i].updateMVT(this.mvt);
         },
 
         showVelocityArrows: function() {
@@ -300,6 +315,16 @@ define(function(require) {
                 this.updateMVT();
             }
         },
+
+        showTraces: function() {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].clear();
+            this.bodyTraceLayer.visible = true;
+        },
+
+        hideTraces: function() {
+            this.bodyTraceLayer.visible = false;
+        }
 
     });
 

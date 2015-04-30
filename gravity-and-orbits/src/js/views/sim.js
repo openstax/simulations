@@ -68,6 +68,7 @@ define(function (require) {
             'click .gravity-vector-check'  : 'toggleGravityArrows',
             'click .velocity-vector-check' : 'toggleVelocityArrows',
             'click .grid-check'            : 'toggleGrid',
+            'click .path-check'            : 'togglePaths',
 
             'click .btn-zoom-in':  'zoomIn',
             'click .btn-zoom-out': 'zoomOut'
@@ -331,6 +332,13 @@ define(function (require) {
                 this.sceneView.showGrid();
             else
                 this.sceneView.hideGrid();
+        },
+
+        togglePaths: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
         },
 
         zoomIn: function() {
