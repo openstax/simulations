@@ -65,7 +65,6 @@ define(function(require) {
             this.viewOriginY = Math.round(this.height / 2);
 
             this.initMVT();
-            this.initBodyTraceLayer();
             this.initBodies();
             this.initGridView();
             this.initCollisions();
@@ -83,16 +82,14 @@ define(function(require) {
             this.bodyViews = [];
             this.bodyTraceViews = [];
 
+            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.bodyTraceLayer.visible = false;
+            this.stage.addChild(this.bodyTraceLayer);
+
             this.bodies = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.bodies);
 
             this.bodiesReset(this.simulation.bodies);
-        },
-
-        initBodyTraceLayer: function() {
-            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
-            this.bodyTraceLayer.visible = false;
-            this.stage.addChild(this.bodyTraceLayer);
         },
 
         initGridView: function() {
@@ -134,11 +131,17 @@ define(function(require) {
         },
 
         reset: function() {
+            // Reset visibility options
+            this.velocityArrowsVisible = false;
+            this.gravityArrowsVisible = false;
+            this.gridView.hide();
+            this.bodyTraceLayer.visible = false;
+
             // Remove collision views
             this.clearCollisionViews();
 
             // Make new body views and trace views
-            this.initBodyViews(this.simulation, this.simulation.bodies);
+            this.bodiesReset(this.simulation.bodies);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -168,6 +171,12 @@ define(function(require) {
             // Remove old collision views
             this.clearCollisionViews();
 
+            // Remove old body trace views
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--) {
+                this.bodyTraceViews[i].removeFrom(this.bodyTraceLayer);
+                this.bodyTraceViews.splice(i, 1);
+            }
+
             // Remove old body views
             for (var i = this.bodyViews.length - 1; i >= 0; i--) {
                 this.bodyViews[i].removeFrom(this.bodies);
@@ -189,6 +198,8 @@ define(function(require) {
                 if (this.bodyViews[i].model === body) {
                     this.bodyViews[i].removeFrom(this.bodies);
                     this.bodyViews.splice(i, 1);
+                    this.bodyTraceViews[i].removeFrom(this.bodyTraceLayer);
+                    this.bodyTraceViews.splice(i, 1);
                     break;
                 }
             }

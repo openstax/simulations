@@ -62,23 +62,7 @@ define(function (require, exports, module) {
 
             this.scenarioChanged(this, this.get('scenario'));
         },
-
-        /**
-         *
-         */
-        applyOptions: function(options) {
-            FixedIntervalSimulation.prototype.applyOptions.apply(this, [options]);
-
-            
-        },
-
-        /**
-         *
-         */
-        initComponents: function() {
-            
-        },
-
+        
         /**
          * Loads a scenario. Sets up the bodies, applies simulation
          *   attributes, and resets the simulation.
@@ -156,7 +140,7 @@ define(function (require, exports, module) {
          *
          */
         reset: function() {
-            
+            this.scenarioChanged(this, this.get('scenario'));
         },
 
         /**

@@ -197,11 +197,15 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the sim and options
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        reset: function() {
+            this.simulation.reset();
+            this.sceneView.reset();
+            this.$('.gravity-vector-check').prop('checked', false);
+            this.$('.velocity-vector-check').prop('checked', false);
+            this.$('.grid-check').prop('checked', false);
+            this.$('.path-check').prop('checked', false);
         },
 
         /**
