@@ -76,6 +76,13 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.zoom * Constants.SceneView.SCENE_SCALE
             );
+
+            this.simulation.setBounds(
+                this.mvt.viewToModelX(0), 
+                this.mvt.viewToModelY(this.height), 
+                this.mvt.viewToModelX(this.width), 
+                this.mvt.viewToModelY(0)
+            );
         },
 
         initBodies: function() {

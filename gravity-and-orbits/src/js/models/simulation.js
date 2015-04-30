@@ -7,6 +7,7 @@ define(function (require, exports, module) {
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
     var Vector2    = require('common/math/vector2');
+    var Rectangle  = require('common/math/rectangle');
 
     var Body            = require('models/body');
     var Moon            = require('models/body/moon');
@@ -47,6 +48,8 @@ define(function (require, exports, module) {
             this.bodies = new Backbone.Collection([], {
                 model: Body
             });
+
+            this.bounds = new Rectangle();
 
             this._sum = new Vector2();
             this._pos = new Vector2();
@@ -234,6 +237,9 @@ define(function (require, exports, module) {
                     }
                 }
             }
+
+            // Check for out-of-bounds bodies
+            this.detectOutOfBoundsBodies();
         },
 
         /**
@@ -331,6 +337,9 @@ define(function (require, exports, module) {
             }
         },
 
+        /**
+         * Returns the smaller of two bodies.
+         */
         smallerBody: function(body1, body2) {
             if (body1.get('mass') < body2.get('mass'))
                 return body1;
@@ -338,11 +347,72 @@ define(function (require, exports, module) {
                 return body2;
         },
 
+        /**
+         * Returns the larger of two bodies.
+         */
         largerBody: function(body1, body2) {
             if (body1.get('mass') > body2.get('mass'))
                 return body1;
             else
                 return body2;
+        },
+
+        /**
+         * Returns every body that is out of bounds to its last
+         *   saved state.
+         */
+        returnAllOutOfBoundsBodies: function() {
+            for (var i = 0; i < this.bodies.length; i++) {
+                if (this.bodyOutOfBounds(this.bodies.at(i)))
+                    this.returnBody(this.bodies.at(i));
+            }
+        },
+
+        /**
+         * Returns an out-of-bounds body to its last saved state.
+         */
+        returnBody: function(body) {
+            var bodyIndex = this.bodies.indexOf(body);
+            this.savedState[bodyIndex].applyState(this.bodies.at(bodyIndex));
+        },
+
+        /**
+         * Returns whether or not a body is out of bounds.
+         */
+        bodyOutOfBounds: function(body) {
+            return !this.bounds.contains(body.get('position'));
+        },
+
+        /**
+         * Looks for out-of-bounds bodies and triggers an event
+         *   if there is one.
+         */
+        detectOutOfBoundsBodies: function() {
+            for (var i = 0; i < this.bodies.length; i++) {
+                if (this.bodyOutOfBounds(this.bodies.at(i))) {
+                    this.trigger('body-out-of-bounds');
+                    return;
+                }
+            }
+        },
+
+        /**
+         * Sets a bounding box around the scene from the min
+         *   and max x and y values.  It's easier to give
+         *   these values because one can simply reverse the
+         *   model-view-transform with screen coordinates.
+         */
+        setBounds: function(minX, minY, maxX, maxY) {
+            var width = maxX - minX;
+            var height = maxY - minY;
+            this.bounds.set(minX, minY, width, height);
+        },
+
+        /**
+         * Returns a bounding rectangle of the scene.
+         */
+        getBounds: function() {
+            return this.bounds;
         }
 
     });

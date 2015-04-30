@@ -73,7 +73,9 @@ define(function (require) {
             'click .path-check'            : 'togglePaths',
 
             'click .btn-zoom-in':  'zoomIn',
-            'click .btn-zoom-out': 'zoomOut'
+            'click .btn-zoom-out': 'zoomOut',
+
+            'click .return-bodies' : 'returnBodies'
         },
 
         /**
@@ -95,6 +97,7 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
             this.listenTo(this.simulation, 'change:secondCounter', this.secondCounterChanged);
             this.listenTo(this.simulation, 'change:scenario',      this.scenarioChanged);
+            this.listenTo(this.simulation, 'body-out-of-bounds',   this.bodyOutOfBounds);
 
             this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
             this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
@@ -147,6 +150,8 @@ define(function (require) {
 
             this.$bodySettingViews = this.$('.body-settings-container');
             this.bodiesReset(this.simulation.bodies);
+
+            this.$returnBodiesButton = this.$('.return-bodies');
         },
 
         /**
@@ -206,6 +211,7 @@ define(function (require) {
             this.$('.velocity-vector-check').prop('checked', false);
             this.$('.grid-check').prop('checked', false);
             this.$('.path-check').prop('checked', false);
+            this.$returnBodiesButton.hide();
         },
 
         /**
@@ -222,6 +228,7 @@ define(function (require) {
         rewind: function() {
             this.simulation.rewind();
             this.sceneView.clearTraces();
+            this.$returnBodiesButton.hide();
         },
 
         /**
@@ -311,6 +318,7 @@ define(function (require) {
         scenarioChanged: function(simulation, scenario) {
             this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
             this.secondCounterChanged(simulation, simulation.get('secondCounter'));
+            this.$returnBodiesButton.hide();
         },
 
         secondCounterChanged: function(simulation, secondCounter) {
@@ -369,6 +377,15 @@ define(function (require) {
 
         zoomOut: function() {
             this.sceneView.zoomOut();
+        },
+
+        bodyOutOfBounds: function() {
+            this.$returnBodiesButton.show();
+        },
+
+        returnBodies: function() {
+            this.simulation.returnAllOutOfBoundsBodies();
+            this.$returnBodiesButton.hide();
         }
 
     });
