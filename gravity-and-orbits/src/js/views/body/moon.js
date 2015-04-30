@@ -17,6 +17,7 @@ define(function(require) {
         textureBodyWidthRatio: 0.571,
 
         bodyLabelOffsetX: BodyView.prototype.bodyLabelOffsetX * -1,
+        massLabelOffsetY: BodyView.prototype.massLabelOffsetY * -1,
 
         initialize: function(options) {
             this.lowMass  = this.model.get('referenceMass') * (1 - BodyView.GENERIC_BODY_THRESHOLD * 2);
@@ -36,6 +37,8 @@ define(function(require) {
         },
 
         updateMass: function(body, mass) {
+            BodyView.prototype.updateMass.apply(this, arguments);
+            
             if (mass > this.highMass || mass < this.lowMass) {
                 this.genericMoon.visible = true;
                 this.body.visible = false;

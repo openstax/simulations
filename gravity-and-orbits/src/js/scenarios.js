@@ -58,6 +58,55 @@ define(function (require) {
         return value + ' ' + units;
     };
 
+    var massInEarths = function(mass) {
+        var earthMasses = mass / EARTH_MASS;
+
+        //Show the value in terms of earth masses (or thousands of earth masses)
+        var value, units;
+        if (earthMasses > 1E3) {
+            value = Math.round(earthMasses / 1E3) + ',000';
+            units = 'Earth masses';
+        }
+        else if (Math.abs(earthMasses - 1) < 1E-2) {
+            value = '1';
+            units = 'Earth mass';
+        }
+        else if (earthMasses < 1) {
+            value = earthMasses.toFixed(2);
+            units = 'Earth masses';
+        }
+        else {
+            //Handle showing exactly "1 earth mass" instead of "1 earth masses"
+            value = earthMasses.toFixed();
+            units = (earthMasses == 1.0) ? 'Earth mass' : 'Earth masses';
+        }
+
+        return value + ' ' + units;
+    };
+
+    var massInSpaceStations = function(mass) {
+        var spaceStationMasses = mass / SPACE_STATION_MASS;
+
+        //Show the readout in terms of space station masses (or billions of billions of space station masses)
+        var value;
+        var units = 'space station mass';
+        if (spaceStationMasses > 1E18) {
+            value = Math.round(spaceStationMasses / 1E18);
+            units = 'billion billion space station masses';
+        }
+        else if (Math.abs(spaceStationMasses - 1) < 1E-2) {
+            value = '1';
+        }
+        else if (spaceStationMasses < 1) {
+            value = spaceStationMasses.toFixed(3);
+        }
+        else {
+            value = spaceStationMasses.toFixed(2);
+        }
+
+        return value + ' ' + units;
+    };
+
     // There are two classes of scenarios
     var Scenarios = {};
 
@@ -88,7 +137,8 @@ define(function (require) {
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
                 forceScale: FORCE_SCALE * 120,
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -122,7 +172,8 @@ define(function (require) {
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
                 forceScale: FORCE_SCALE * 120,
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -152,7 +203,8 @@ define(function (require) {
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
                 forceScale: FORCE_SCALE * 45,
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -181,7 +233,8 @@ define(function (require) {
                 defaultOrbitalPeriod: 5400,
                 velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
                 forceScale: FORCE_SCALE * 3E13,
-                timeReadoutFunction: formatMinutes
+                timeReadoutFunction: formatMinutes,
+                massReadoutFunction: massInSpaceStations
             }
         }
     ];
@@ -219,7 +272,8 @@ define(function (require) {
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
                 forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE),
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -259,7 +313,8 @@ define(function (require) {
                 //   conditions, hand tuned by checking that reducing the distance by a 
                 //   factor of 2 increases the force arrow by a factor of 4
                 forceScale: FORCE_SCALE * 120 * (0.573 / FRIENDLY_EARTH_MASS_SCALE),
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -289,7 +344,8 @@ define(function (require) {
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
                 forceScale: FORCE_SCALE * 45 * 0.77, // So that default gravity force takes up 1/2 cell in grid
-                timeReadoutFunction: formatScaledDays
+                timeReadoutFunction: formatScaledDays,
+                massReadoutFunction: massInEarths
             }
         },
         {
@@ -318,7 +374,8 @@ define(function (require) {
                 defaultOrbitalPeriod: 5400,
                 velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,
                 forceScale: FORCE_SCALE * 3E13,
-                timeReadoutFunction: formatMinutes
+                timeReadoutFunction: formatMinutes,
+                massReadoutFunction: massInSpaceStations
             }
         },
     ];

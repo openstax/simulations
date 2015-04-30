@@ -236,6 +236,11 @@ define(function(require) {
             else
                 bodyView.hideGravityArrow();
 
+            if (this.massLabelsVisible)
+                bodyView.showMassLabel();
+            else
+                bodyView.hideMassLabel();
+
             // Trace view
             var bodyTraceView = new BodyTraceView({
                 model: body,
@@ -297,6 +302,18 @@ define(function(require) {
             this.gravityArrowsVisible = false;
             for (var i = this.bodyViews.length - 1; i >= 0; i--)
                 this.bodyViews[i].hideGravityArrow();
+        },
+
+        showMassLabels: function() {
+            this.massLabelsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showMassLabel();
+        },
+
+        hideMassLabels: function() {
+            this.massLabelsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideMassLabel();
         },
 
         showGrid: function() {

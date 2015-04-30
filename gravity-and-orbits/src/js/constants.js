@@ -74,6 +74,8 @@ define(function (require) {
 
     BodyView.LABEL_FONT = '18px Arial';
     BodyView.LABEL_COLOR = '#fff';
+    BodyView.LABEL_LINE_COLOR = '#fff';
+    BodyView.LABEL_LINE_ALPHA = 0.4;
 
     Constants.BodyView = BodyView;
 

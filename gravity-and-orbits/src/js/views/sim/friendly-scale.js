@@ -15,10 +15,6 @@ define(function(require) {
      */
     var FriendlyScaleSimView = GOSimView.extend({
 
-        events: _.extend(GOSimView.prototype.events, {
-            
-        }),
-
         initialize: function(options) {
             options = _.extend({
                 title: 'Friendly Scale',

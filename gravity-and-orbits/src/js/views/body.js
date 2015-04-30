@@ -31,6 +31,12 @@ define(function(require) {
         bodyLabelOffsetX:  40,
         bodyLabelOffsetY: -40,
 
+        /**
+         * The offset of the mass label in pixels from the edge
+         *   of the body to the center of the text
+         */
+        massLabelOffsetY: 16,
+
         events: {
             'touchstart      .body': 'dragStart',
             'mousedown       .body': 'dragStart',
@@ -69,6 +75,8 @@ define(function(require) {
             this._dragLocation = new PIXI.Point();
 
             this.initGraphics();
+
+            this.updateMass(this.model, this.model.get('mass'));
             
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.listenTo(this.model, 'change:velocity', this.updateVelocity);
@@ -91,7 +99,7 @@ define(function(require) {
             
             this.displayObject.addChild(this.bodyContainer);
             this.displayObject.addChild(this.bodyLabel);
-            //this.displayObject.addChild(this.massLabel);
+            this.displayObject.addChild(this.massLabel);
             this.displayObject.addChild(this.gravityArrowView.displayObject);
             this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.velocityArrowView.displayObject);
@@ -120,10 +128,12 @@ define(function(require) {
                 return m.toUpperCase();
             });
 
-            var bodyLabelText = new PIXI.Text(name, {
+            var textSettings = {
                 font: BodyView.LABEL_FONT,
                 fill: BodyView.LABEL_COLOR
-            });
+            };
+
+            var bodyLabelText = new PIXI.Text(name, textSettings);
             bodyLabelText.anchor.x = 0.5;
             bodyLabelText.anchor.y = 0.6;
             bodyLabelText.x = this.bodyLabelOffsetX;
@@ -131,7 +141,7 @@ define(function(require) {
 
             var linePercentPadding = 0.2;
             var bodyLabelLine = new PIXI.Graphics();
-            bodyLabelLine.lineStyle(2, 0xFFFFFF, 0.7);
+            bodyLabelLine.lineStyle(2, Colors.parseHex(BodyView.LABEL_LINE_COLOR), BodyView.LABEL_LINE_ALPHA);
             bodyLabelLine.moveTo(0, 0);
             bodyLabelLine.lineTo(this.bodyLabelOffsetX * (1 - 2 * linePercentPadding), this.bodyLabelOffsetY * (1 - 2 * linePercentPadding));
             bodyLabelLine.x = this.bodyLabelOffsetX * linePercentPadding;
@@ -140,6 +150,11 @@ define(function(require) {
             this.bodyLabel = new PIXI.DisplayObjectContainer();
             this.bodyLabel.addChild(bodyLabelText);
             this.bodyLabel.addChild(bodyLabelLine);
+
+            this.massLabel = new PIXI.Text('', textSettings);
+            this.massLabel.anchor.x = 0.5;
+            this.massLabel.anchor.y = 0.4;
+            this.massLabel.visible = false;
         },
 
         initGravityArrowView: function() {
@@ -197,10 +212,18 @@ define(function(require) {
             this.displayObject.y = viewPosition.y;
         },
 
-        updateMass: function(body, mass) {},
+        updateMass: function(body, mass) {
+            this.massLabel.setText(this.simulation.get('scenario').viewSettings.massReadoutFunction(mass));
+        },
 
         updateRadius: function(body, radius) {
             this.bodyContainer.scale.x = this.bodyContainer.scale.y = this.getBodyScale(radius);
+
+            var bodyRadius = this.mvt.modelToViewDeltaX(radius);
+            if (this.massLabelOffsetY > 0)
+                this.massLabel.y =  bodyRadius + this.massLabelOffsetY;
+            else
+                this.massLabel.y = -bodyRadius + this.massLabelOffsetY;
         },
 
         updateExploded: function(body, exploded) {
@@ -337,6 +360,14 @@ define(function(require) {
 
         hideGravityArrow: function() {
             this.gravityArrowView.hide();
+        },
+
+        showMassLabel: function() {
+            this.massLabel.visible = true;
+        },
+
+        hideMassLabel: function() {
+            this.massLabel.visible = false;
         }
 
     }, Constants.BodyView);
