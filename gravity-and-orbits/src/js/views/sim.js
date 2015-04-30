@@ -63,7 +63,10 @@ define(function (require) {
 
             'change .scenario-select' : 'changeScenario',
 
-            'click .gravity-check' : 'toggleGravity'
+            'click .gravity-check' : 'toggleGravity',
+
+            'click .gravity-vector-check'  : 'toggleGravityArrows',
+            'click .velocity-vector-check' : 'toggleVelocityArrows'
         },
 
         /**
@@ -303,6 +306,20 @@ define(function (require) {
             this.inputLock(function() {
                 this.simulation.set('speedScale', speedScale);
             });
+        },
+
+        toggleGravityArrows: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGravityArrows();
+            else
+                this.sceneView.hideGravityArrows();
+        },
+
+        toggleVelocityArrows: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityArrows();
+            else
+                this.sceneView.hideVelocityArrows();
         }
 
     });

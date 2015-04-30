@@ -39,6 +39,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.zoom = 1;
+            this.velocityArrowsVisible = true;
 
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
@@ -207,15 +208,15 @@ define(function(require) {
             this.bodies.addChild(bodyView.displayObject);
             this.bodyViews.push(bodyView);
 
-            // if (this.velocityArrowsVisible)
-            //     bodyView.showVelocityArrow();
-            // else
-            //     bodyView.hideVelocityArrow();
+            if (this.velocityArrowsVisible)
+                bodyView.showVelocityArrow();
+            else
+                bodyView.hideVelocityArrow();
 
-            // if (this.momentumArrowsVisible)
-            //     bodyView.showMomentumArrow();
-            // else
-            //     bodyView.hideMomentumArrow();
+            if (this.gravityArrowsVisible)
+                bodyView.showGravityArrow();
+            else
+                bodyView.hideGravityArrow();
 
             // Trace view
             // var bodyTraceView = new BodyTraceView({
@@ -250,6 +251,30 @@ define(function(require) {
 
             for (var i = 0; i < this.bodyViews.length; i++)
                 this.bodyViews[i].updateMVT(this.mvt);
+        },
+
+        showVelocityArrows: function() {
+            this.velocityArrowsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showVelocityArrow();
+        },
+
+        hideVelocityArrows: function() {
+            this.velocityArrowsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideVelocityArrow();
+        },
+
+        showGravityArrows: function() {
+            this.gravityArrowsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showGravityArrow();
+        },
+
+        hideGravityArrows: function() {
+            this.gravityArrowsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideGravityArrow();
         }
 
     });

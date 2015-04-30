@@ -78,7 +78,21 @@ define(function(require) {
             this.body.anchor.y = 0.5;
             this.bodyContainer.addChild(this.body);
 
-            this.arrowView = new ArrowView({ 
+            this.initVelocityArrowView();
+            this.initVelocityMarker();
+            
+            this.displayObject.addChild(this.velocityMarker);
+            this.displayObject.addChild(this.velocityArrowView.displayObject);
+            this.displayObject.addChild(this.bodyContainer);
+
+            this.displayObject.position.x = 480;
+            this.displayObject.position.y = 300;
+
+            this.updateMVT(this.mvt);
+        },
+
+        initVelocityArrowView: function() {
+            this.velocityArrowView = new ArrowView({ 
                 model: this.arrowViewModel,
 
                 tailWidth:  BodyView.ARROW_TAIL_WIDTH,
@@ -88,17 +102,6 @@ define(function(require) {
                 fillColor: BodyView.ARROW_COLOR,
                 fillAlpha: BodyView.ARROW_ALPHA
             });
-
-            this.initVelocityMarker();
-            
-            this.displayObject.addChild(this.velocityMarker);
-            this.displayObject.addChild(this.arrowView.displayObject);
-            this.displayObject.addChild(this.bodyContainer);
-
-            this.displayObject.position.x = 480;
-            this.displayObject.position.y = 300;
-
-            this.updateMVT(this.mvt);
         },
 
         initVelocityMarker: function() {
@@ -228,6 +231,24 @@ define(function(require) {
                 );
             });
         },
+
+        showVelocityArrow: function() {
+            this.velocityMarker.visible = true;
+            this.velocityArrowView.show();
+        },
+
+        hideVelocityArrow: function() {
+            this.velocityMarker.visible = false;
+            this.velocityArrowView.hide();
+        },
+
+        showGravityArrow: function() {
+
+        },
+
+        hideGravityArrow: function() {
+            
+        }
 
     }, Constants.BodyView);
 
