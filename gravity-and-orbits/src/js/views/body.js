@@ -48,8 +48,6 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
-            this.velocityScale = options.velocityScale;
-            this.forceScale = options.forceScale;
 
             this.velocityViewModel = new ArrowView.ArrowViewModel({
                 originX: 0,
@@ -235,8 +233,9 @@ define(function(require) {
 
         updateVelocity: function() {
             this.updateLock(function() {
-                var x = this.mvt.modelToViewDeltaX(this.model.get('velocity').x * this.velocityScale);
-                var y = this.mvt.modelToViewDeltaY(this.model.get('velocity').y * this.velocityScale);
+                var velocityScale = this.simulation.get('scenario').viewSettings.velocityScale;
+                var x = this.mvt.modelToViewDeltaX(this.model.get('velocity').x * velocityScale);
+                var y = this.mvt.modelToViewDeltaY(this.model.get('velocity').y * velocityScale);
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
                 // We don't want it to draw twice, so make the first silent
@@ -247,6 +246,7 @@ define(function(require) {
 
         changeVelocity: function() {
             this.inputLock(function() {
+                var velocityScale = this.simulation.get('scenario').viewSettings.velocityScale;
                 this.model.setVelocity(
                     Math.round(this.mvt.viewToModelDeltaX(this.velocityViewModel.get('targetX')) / this.velocityScale),
                     Math.round(this.mvt.viewToModelDeltaY(this.velocityViewModel.get('targetY')) / this.velocityScale)
@@ -255,8 +255,9 @@ define(function(require) {
         },
 
         updateGravity: function() {
-            var x = this.mvt.modelToViewDeltaX(this.model.get('force').x * this.forceScale);
-            var y = this.mvt.modelToViewDeltaY(this.model.get('force').y * this.forceScale);
+            var forceScale = this.simulation.get('scenario').viewSettings.forceScale;
+            var x = this.mvt.modelToViewDeltaX(this.model.get('force').x * forceScale);
+            var y = this.mvt.modelToViewDeltaY(this.model.get('force').y * forceScale);
             this.gravityViewModel.set('targetX', x);
             this.gravityViewModel.set('targetY', y);
         },

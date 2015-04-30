@@ -288,7 +288,7 @@ define(function (require) {
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
-                forceScale: FORCE_SCALE * 0.77, // So that default gravity force takes up 1/2 cell in grid
+                forceScale: FORCE_SCALE * 45 * 0.77, // So that default gravity force takes up 1/2 cell in grid
                 timeReadoutFunction: formatScaledDays
             }
         },
