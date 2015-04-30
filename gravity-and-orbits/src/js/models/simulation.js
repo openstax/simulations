@@ -90,10 +90,10 @@ define(function (require, exports, module) {
                 return body.clone();
             }));
 
+            this.initScratchStates();
+
             this.resetScenario();
             this.set(scenario.simulationAttributes);
-            
-            this.initScratchStates();
         },
 
         /**
@@ -105,6 +105,7 @@ define(function (require, exports, module) {
             this.set({
                 secondCounter: 0
             });
+            this.updateForceVectors();
         },
 
         /**

@@ -51,7 +51,12 @@ define(function(require) {
             this.velocityScale = options.velocityScale;
             this.forceScale = options.forceScale;
 
-            this.arrowViewModel = new ArrowView.ArrowViewModel({
+            this.velocityViewModel = new ArrowView.ArrowViewModel({
+                originX: 0,
+                originY: 0
+            });
+
+            this.gravityViewModel = new ArrowView.ArrowViewModel({
                 originX: 0,
                 originY: 0
             });
@@ -63,11 +68,12 @@ define(function(require) {
             
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.listenTo(this.model, 'change:velocity', this.updateVelocity);
+            this.listenTo(this.model, 'change:force',    this.updateGravity);
             this.listenTo(this.model, 'change:mass',     this.updateMass);
             this.listenTo(this.model, 'change:radius',   this.updateRadius);
             this.listenTo(this.model, 'change:exploded', this.updateExploded);
 
-            this.listenTo(this.arrowViewModel, 'change:targetX change:targetY', this.changeVelocity);
+            this.listenTo(this.velocityViewModel, 'change:targetX change:targetY', this.changeVelocity);
         },
 
         initGraphics: function() {
@@ -78,12 +84,14 @@ define(function(require) {
             this.body.anchor.y = 0.5;
             this.bodyContainer.addChild(this.body);
 
+            this.initGravityArrowView();
             this.initVelocityArrowView();
             this.initVelocityMarker();
             
+            this.displayObject.addChild(this.bodyContainer);
+            this.displayObject.addChild(this.gravityArrowView.displayObject);
             this.displayObject.addChild(this.velocityMarker);
             this.displayObject.addChild(this.velocityArrowView.displayObject);
-            this.displayObject.addChild(this.bodyContainer);
 
             this.displayObject.position.x = 480;
             this.displayObject.position.y = 300;
@@ -91,9 +99,22 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
+        initGravityArrowView: function() {
+            this.gravityArrowView = new ArrowView({ 
+                model: this.gravityViewModel,
+
+                tailWidth:  BodyView.ARROW_TAIL_WIDTH,
+                headWidth:  BodyView.ARROW_HEAD_WIDTH,
+                headLength: BodyView.ARROW_HEAD_LENGTH,
+
+                fillColor: BodyView.GRAVITY_ARROW_COLOR,
+                fillAlpha: BodyView.GRAVITY_ARROW_ALPHA
+            });
+        },
+
         initVelocityArrowView: function() {
             this.velocityArrowView = new ArrowView({ 
-                model: this.arrowViewModel,
+                model: this.velocityViewModel,
 
                 tailWidth:  BodyView.ARROW_TAIL_WIDTH,
                 headWidth:  BodyView.ARROW_HEAD_WIDTH,
@@ -153,6 +174,7 @@ define(function(require) {
             this.updateRadius(this.model, this.model.get('radius'));
             this.updatePosition(this.model, this.model.get('position'));
             this.updateVelocity();
+            this.updateGravity();
         },
 
         getBodyScale: function(radius) {
@@ -202,8 +224,8 @@ define(function(require) {
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
 
-                this.arrowViewModel.set('targetX', this.velocityMarker.x);
-                this.arrowViewModel.set('targetY', this.velocityMarker.y);
+                this.velocityViewModel.set('targetX', this.velocityMarker.x);
+                this.velocityViewModel.set('targetY', this.velocityMarker.y);
             }
         },
 
@@ -218,23 +240,32 @@ define(function(require) {
                 this.velocityMarker.x = x;
                 this.velocityMarker.y = y;
                 // We don't want it to draw twice, so make the first silent
-                this.arrowViewModel.set('targetX', x);
-                this.arrowViewModel.set('targetY', y);
+                this.velocityViewModel.set('targetX', x);
+                this.velocityViewModel.set('targetY', y);
             });
         },
 
         changeVelocity: function() {
             this.inputLock(function() {
                 this.model.setVelocity(
-                    Math.round(this.mvt.viewToModelDeltaX(this.arrowViewModel.get('targetX')) / this.velocityScale),
-                    Math.round(this.mvt.viewToModelDeltaY(this.arrowViewModel.get('targetY')) / this.velocityScale)
+                    Math.round(this.mvt.viewToModelDeltaX(this.velocityViewModel.get('targetX')) / this.velocityScale),
+                    Math.round(this.mvt.viewToModelDeltaY(this.velocityViewModel.get('targetY')) / this.velocityScale)
                 );
             });
         },
 
+        updateGravity: function() {
+            var x = this.mvt.modelToViewDeltaX(this.model.get('force').x * this.forceScale);
+            var y = this.mvt.modelToViewDeltaY(this.model.get('force').y * this.forceScale);
+            this.gravityViewModel.set('targetX', x);
+            this.gravityViewModel.set('targetY', y);
+        },
+
         showVelocityArrow: function() {
-            this.velocityMarker.visible = true;
-            this.velocityArrowView.show();
+            if (!this.model.get('fixed')) {
+                this.velocityMarker.visible = true;
+                this.velocityArrowView.show();
+            }
         },
 
         hideVelocityArrow: function() {
@@ -243,11 +274,11 @@ define(function(require) {
         },
 
         showGravityArrow: function() {
-
+            this.gravityArrowView.show();
         },
 
         hideGravityArrow: function() {
-            
+            this.gravityArrowView.hide();
         }
 
     }, Constants.BodyView);

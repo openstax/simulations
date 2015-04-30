@@ -58,6 +58,8 @@ define(function (require) {
     BodyView.ARROW_HEAD_LENGTH = 17;
     BodyView.ARROW_COLOR = '#cd2520';
     BodyView.ARROW_ALPHA = 1;
+    BodyView.GRAVITY_ARROW_COLOR = '#8942ca';
+    BodyView.GRAVITY_ARROW_ALPHA = 1;
     BodyView.VELOCITY_MARKER_COLOR = '#fff';
     BodyView.VELOCITY_MARKER_ALPHA = 0.5;
     BodyView.VELOCITY_MARKER_RADIUS = 20;
