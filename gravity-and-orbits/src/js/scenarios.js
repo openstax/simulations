@@ -211,7 +211,7 @@ define(function (require) {
             viewSettings: {
                 origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
-                gridSpacing: 0,
+                gridSpacing: EARTH_PERIHELION / 2,
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
@@ -251,7 +251,7 @@ define(function (require) {
             viewSettings: {
                 origin: new Vector2(0, 0),
                 defaultZoom: 1.25,
-                gridSpacing: 0,
+                gridSpacing: EARTH_PERIHELION / 2,
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_YEAR,
                 velocityScale: SUN_MODES_VELOCITY_SCALE,
@@ -284,7 +284,7 @@ define(function (require) {
             viewSettings: {
                 origin: new Vector2(EARTH_PERIHELION, 0),
                 defaultZoom: 400,
-                gridSpacing: 0,
+                gridSpacing: MOON_Y / 2,
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: SEC_PER_MOON_ORBIT,
                 velocityScale: SUN_MODES_VELOCITY_SCALE * 0.06,
@@ -313,7 +313,7 @@ define(function (require) {
             viewSettings: {
                 origin: new Vector2(0, 0),
                 defaultZoom: 21600,
-                gridSpacing: 0,
+                gridSpacing: SPACE_STATION_PERIGEE + EARTH_RADIUS + SPACE_STATION_RADIUS,
                 gridOrigin: new Vector2(0, 0),
                 defaultOrbitalPeriod: 5400,
                 velocityScale: SUN_MODES_VELOCITY_SCALE / 10000,

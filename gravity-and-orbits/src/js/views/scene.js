@@ -9,6 +9,7 @@ define(function(require) {
     var GridView           = require('common/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
 
     var Sun       = require('models/body/sun');
     var Planet    = require('models/body/planet');
@@ -87,15 +88,15 @@ define(function(require) {
         },
 
         initGridView: function() {
-            // this.gridView = new GridView({
-            //     origin: new Vector2(this.width / 2, this.height / 2),
-            //     bounds: new Rectangle(0, 0, this.width, this.height),
-            //     gridSize: this.mvt.modelToViewDeltaX(Constants.SceneView.GRID_SIZE),
-            //     lineColor: '#fff',
-            //     lineAlpha: 0.1
-            // });
-            // this.gridView.hide();
-            // this.stage.addChild(this.gridView.displayObject);
+            this.gridView = new GridView({
+                origin: new Vector2(this.width / 2, this.height / 2),
+                bounds: new Rectangle(0, 0, this.width, this.height),
+                gridSize: this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing),
+                lineColor: '#fff',
+                lineAlpha: 0.15
+            });
+            this.gridView.hide();
+            this.stage.addChild(this.gridView.displayObject);
         },
 
         initCollisions: function() {
@@ -242,6 +243,8 @@ define(function(require) {
         updateMVT: function() {
             this.initMVT();
 
+            this.gridView.setGridSize(this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing));
+
             for (var i = 0; i < this.bodyViews.length; i++)
                 this.bodyViews[i].updateMVT(this.mvt);
         },
@@ -268,6 +271,18 @@ define(function(require) {
             this.gravityArrowsVisible = false;
             for (var i = this.bodyViews.length - 1; i >= 0; i--)
                 this.bodyViews[i].hideGravityArrow();
+        },
+
+        showGrid: function() {
+            this.gridView.show();
+        },
+
+        hideGrid: function() {
+            this.gridView.hide();
+        },
+
+        getViewSettings: function() {
+            return this.simulation.get('scenario').viewSettings;
         }
 
     });

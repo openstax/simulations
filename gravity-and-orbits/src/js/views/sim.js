@@ -66,7 +66,8 @@ define(function (require) {
             'click .gravity-check' : 'toggleGravity',
 
             'click .gravity-vector-check'  : 'toggleGravityArrows',
-            'click .velocity-vector-check' : 'toggleVelocityArrows'
+            'click .velocity-vector-check' : 'toggleVelocityArrows',
+            'click .grid-check'            : 'toggleGrid'
         },
 
         /**
@@ -320,6 +321,13 @@ define(function (require) {
                 this.sceneView.showVelocityArrows();
             else
                 this.sceneView.hideVelocityArrows();
+        },
+
+        toggleGrid: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGrid();
+            else
+                this.sceneView.hideGrid();
         }
 
     });
