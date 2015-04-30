@@ -39,7 +39,6 @@ define(function(require) {
 
         initialize: function(options) {
             this.zoom = 1;
-            this.velocityArrowsVisible = true;
 
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
