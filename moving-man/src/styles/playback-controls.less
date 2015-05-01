@@ -12,6 +12,11 @@
     text-align: center;
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        margin-top: 0;
+        border-top: 2px solid #fff;
+    }
+
     > .playback-btn {
         display: inline-block;
         background: @btn-bg;

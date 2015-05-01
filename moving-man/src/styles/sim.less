@@ -2,9 +2,17 @@
 @import "../../../common/styles/variables.less";
 @import "mixins.less";
 
+.sim-content {
+    min-height: initial;
+}
+
 .sim-controls {
     background: @gray-lightest;
     padding-bottom: 20px;
+
+    @media screen and (max-height: @short-window) {
+        padding-bottom: 8px;
+    }
 
     .variable-row {
         position: relative;
