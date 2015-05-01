@@ -170,3 +170,34 @@
         }
     }
 }
+
+#sim-to-scale .measuring-tape-view {
+
+    > .measuring-tape {
+        border-color: @gray-lightest;
+
+        > .measuring-tape-handle {
+
+            &:before {
+                border-color: @gray-lightest;
+            }
+
+            &:after {
+                border-color: @gray-lightest;
+            }
+        }
+    }
+
+    > .measuring-tape-label {
+        .animation-name(none);
+    }
+    
+}
+
+.return-bodies {
+    .button-variant(#fff, @brand-secondary, #fff, darken(@brand-secondary, 10%));
+    position: absolute;
+    top: 50%;
+    margin-top: -16px;
+    right: 75%;
+}

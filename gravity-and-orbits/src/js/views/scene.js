@@ -9,6 +9,7 @@ define(function(require) {
     var GridView           = require('common/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
 
     var Sun       = require('models/body/sun');
     var Planet    = require('models/body/planet');
@@ -20,6 +21,7 @@ define(function(require) {
     var PlanetView    = require('views/body/planet');
     var MoonView      = require('views/body/moon');
     var SatelliteView = require('views/body/satellite');
+    var BodyTraceView = require('views/body-trace');
     var CollisionView = require('views/collision');
 
     // Constants
@@ -74,11 +76,22 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.zoom * Constants.SceneView.SCENE_SCALE
             );
+
+            this.simulation.setBounds(
+                this.mvt.viewToModelX(0), 
+                this.mvt.viewToModelY(this.height), 
+                this.mvt.viewToModelX(this.width), 
+                this.mvt.viewToModelY(0)
+            );
         },
 
         initBodies: function() {
             this.bodyViews = [];
             this.bodyTraceViews = [];
+
+            this.bodyTraceLayer = new PIXI.DisplayObjectContainer();
+            this.bodyTraceLayer.visible = false;
+            this.stage.addChild(this.bodyTraceLayer);
 
             this.bodies = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.bodies);
@@ -87,15 +100,15 @@ define(function(require) {
         },
 
         initGridView: function() {
-            // this.gridView = new GridView({
-            //     origin: new Vector2(this.width / 2, this.height / 2),
-            //     bounds: new Rectangle(0, 0, this.width, this.height),
-            //     gridSize: this.mvt.modelToViewDeltaX(Constants.SceneView.GRID_SIZE),
-            //     lineColor: '#fff',
-            //     lineAlpha: 0.1
-            // });
-            // this.gridView.hide();
-            // this.stage.addChild(this.gridView.displayObject);
+            this.gridView = new GridView({
+                origin: new Vector2(this.width / 2, this.height / 2),
+                bounds: new Rectangle(0, 0, this.width, this.height),
+                gridSize: this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing),
+                lineColor: '#fff',
+                lineAlpha: 0.15
+            });
+            this.gridView.hide();
+            this.stage.addChild(this.gridView.displayObject);
         },
 
         initCollisions: function() {
@@ -114,21 +127,34 @@ define(function(require) {
             this.collisionViews.push(collisionView);
         },
 
-        reset: function() {
+        clearCollisionViews: function() {
             // Remove collision views
-            for (var i = this.collisionViews.length - 1; i >= 0; i--) {
-                this.collisionViews[i].removeFrom(this.collisionLayer);
-                this.collisionViews.slice(i, 1);
+            if (this.collisionViews) {
+                for (var i = this.collisionViews.length - 1; i >= 0; i--) {
+                    this.collisionViews[i].removeFrom(this.collisionLayer);
+                    this.collisionViews.slice(i, 1);
+                }
             }
+        },
+
+        reset: function() {
+            // Reset visibility options
+            this.velocityArrowsVisible = false;
+            this.gravityArrowsVisible = false;
+            this.gridView.hide();
+            this.bodyTraceLayer.visible = false;
+
+            // Remove collision views
+            this.clearCollisionViews();
 
             // Make new body views and trace views
-            this.initBodyViews(this.simulation, this.simulation.bodies);
+            this.bodiesReset(this.simulation.bodies);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (!paused) {
                 this.updateCollisions(time, deltaTime);
-                this.updateBodies(time, deltaTime);
+                this.updateBodies(time, deltaTime, paused);
             }
         },
 
@@ -143,11 +169,21 @@ define(function(require) {
             }
         },
 
-        updateBodies: function(time, deltaTime) {
-            
+        updateBodies: function(time, deltaTime, paused) {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].update(time, deltaTime, paused);
         },
 
         bodiesReset: function(bodies) {
+            // Remove old collision views
+            this.clearCollisionViews();
+
+            // Remove old body trace views
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--) {
+                this.bodyTraceViews[i].removeFrom(this.bodyTraceLayer);
+                this.bodyTraceViews.splice(i, 1);
+            }
+
             // Remove old body views
             for (var i = this.bodyViews.length - 1; i >= 0; i--) {
                 this.bodyViews[i].removeFrom(this.bodies);
@@ -169,6 +205,8 @@ define(function(require) {
                 if (this.bodyViews[i].model === body) {
                     this.bodyViews[i].removeFrom(this.bodies);
                     this.bodyViews.splice(i, 1);
+                    this.bodyTraceViews[i].removeFrom(this.bodyTraceLayer);
+                    this.bodyTraceViews.splice(i, 1);
                     break;
                 }
             }
@@ -195,23 +233,28 @@ define(function(require) {
             this.bodies.addChild(bodyView.displayObject);
             this.bodyViews.push(bodyView);
 
-            // if (this.velocityArrowsVisible)
-            //     bodyView.showVelocityArrow();
-            // else
-            //     bodyView.hideVelocityArrow();
+            if (this.velocityArrowsVisible)
+                bodyView.showVelocityArrow();
+            else
+                bodyView.hideVelocityArrow();
 
-            // if (this.momentumArrowsVisible)
-            //     bodyView.showMomentumArrow();
-            // else
-            //     bodyView.hideMomentumArrow();
+            if (this.gravityArrowsVisible)
+                bodyView.showGravityArrow();
+            else
+                bodyView.hideGravityArrow();
+
+            if (this.massLabelsVisible)
+                bodyView.showMassLabel();
+            else
+                bodyView.hideMassLabel();
 
             // Trace view
-            // var bodyTraceView = new BodyTraceView({
-            //     model: body,
-            //     mvt: this.mvt
-            // });
-            // this.bodyTraceLayer.addChild(bodyTraceView.displayObject);
-            // this.bodyTraceViews.push(bodyTraceView);
+            var bodyTraceView = new BodyTraceView({
+                model: body,
+                mvt: this.mvt
+            });
+            this.bodyTraceLayer.addChild(bodyTraceView.displayObject);
+            this.bodyTraceViews.push(bodyTraceView);
         },
 
         scenarioChanged: function(simulation, scenario) {
@@ -227,15 +270,101 @@ define(function(require) {
 
             // Update model origin
             this.modelOrigin = scenario.viewSettings.origin;
-
-            // bodies forceScale -> scenario.viewSettings.forceScale
         },
 
         updateMVT: function() {
             this.initMVT();
 
+            this.gridView.setGridSize(this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing));
+
             for (var i = 0; i < this.bodyViews.length; i++)
                 this.bodyViews[i].updateMVT(this.mvt);
+
+            for (var j = this.bodyTraceViews.length - 1; j >= 0; j--)
+                this.bodyTraceViews[j].updateMVT(this.mvt);
+
+            for (var i = this.collisionViews.length - 1; i >= 0; i--) 
+                this.collisionViews[i].updateMVT(this.mvt);
+
+            this.trigger('change:mvt', this, this.mvt);
+        },
+
+        showVelocityArrows: function() {
+            this.velocityArrowsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showVelocityArrow();
+        },
+
+        hideVelocityArrows: function() {
+            this.velocityArrowsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideVelocityArrow();
+        },
+
+        showGravityArrows: function() {
+            this.gravityArrowsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showGravityArrow();
+        },
+
+        hideGravityArrows: function() {
+            this.gravityArrowsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideGravityArrow();
+        },
+
+        showMassLabels: function() {
+            this.massLabelsVisible = true;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].showMassLabel();
+        },
+
+        hideMassLabels: function() {
+            this.massLabelsVisible = false;
+            for (var i = this.bodyViews.length - 1; i >= 0; i--)
+                this.bodyViews[i].hideMassLabel();
+        },
+
+        showGrid: function() {
+            this.gridView.show();
+        },
+
+        hideGrid: function() {
+            this.gridView.hide();
+        },
+
+        getViewSettings: function() {
+            return this.simulation.get('scenario').viewSettings;
+        },
+
+        zoomIn: function() {
+            var zoom = this.zoom + 0.2;
+            if (zoom <= Constants.SceneView.MAX_SCALE) {
+                this.zoom = zoom;
+                this.updateMVT();
+            }
+        },
+
+        zoomOut: function() {
+            var zoom = this.zoom - 0.2;
+            if (zoom >= Constants.SceneView.MIN_SCALE) {
+                this.zoom = zoom;
+                this.updateMVT();
+            }
+        },
+
+        showTraces: function() {
+            this.clearTraces();
+            this.bodyTraceLayer.visible = true;
+        },
+
+        hideTraces: function() {
+            this.bodyTraceLayer.visible = false;
+        },
+
+        clearTraces: function() {
+            for (var i = this.bodyTraceViews.length - 1; i >= 0; i--)
+                this.bodyTraceViews[i].clear();
         }
 
     });

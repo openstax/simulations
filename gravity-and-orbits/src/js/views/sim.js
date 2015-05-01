@@ -56,12 +56,26 @@ define(function (require) {
             // Playback controls
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            'click .rewind-btn' : 'rewind',
             'click .reset-btn'  : 'reset',
             'click .clear-btn'  : 'clearSecondCounter',
 
+            'slide .playback-speed' : 'changeSpeed',
+
             'change .scenario-select' : 'changeScenario',
 
-            'click .gravity-check' : 'toggleGravity'
+            'click .gravity-check' : 'toggleGravity',
+
+            'click .gravity-vector-check'  : 'toggleGravityArrows',
+            'click .velocity-vector-check' : 'toggleVelocityArrows',
+            'click .grid-check'            : 'toggleGrid',
+            'click .path-check'            : 'togglePaths',
+
+            'click .btn-zoom-in':  'zoomIn',
+            'click .btn-zoom-out': 'zoomOut',
+
+            'click .return-bodies' : 'returnBodies'
         },
 
         /**
@@ -83,6 +97,7 @@ define(function (require) {
             this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
             this.listenTo(this.simulation, 'change:secondCounter', this.secondCounterChanged);
             this.listenTo(this.simulation, 'change:scenario',      this.scenarioChanged);
+            this.listenTo(this.simulation, 'body-out-of-bounds',   this.bodyOutOfBounds);
 
             this.listenTo(this.simulation.bodies, 'reset',  this.bodiesReset);
             this.listenTo(this.simulation.bodies, 'add',    this.bodyAdded);
@@ -127,7 +142,7 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation,
+                name: this.name,
                 scenarioNames: this.getScenarioNames()
             };
             this.$el.html(this.template(data));
@@ -135,6 +150,8 @@ define(function (require) {
 
             this.$bodySettingViews = this.$('.body-settings-container');
             this.bodiesReset(this.simulation.bodies);
+
+            this.$returnBodiesButton = this.$('.return-bodies');
         },
 
         /**
@@ -153,11 +170,11 @@ define(function (require) {
 
             // Initialize speed slider
             this.$controls.find('.playback-speed').noUiSlider({
-                start: 1,
+                start: this.simulation.get('speedScale'),
                 range: {
-                    'min': [ 0.2 ],
-                    '50%': [ 1 ],
-                    'max': [ 4 ]
+                    'min': [ Constants.MIN_SPEED_SCALE ],
+                    //'50%': [ 1 ],
+                    'max': [ Constants.MAX_SPEED_SCALE ]
                 }
             });
 
@@ -185,11 +202,33 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the sim and options
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        reset: function() {
+            this.simulation.reset();
+            this.sceneView.reset();
+            this.$('.gravity-vector-check').prop('checked', false);
+            this.$('.velocity-vector-check').prop('checked', false);
+            this.$('.grid-check').prop('checked', false);
+            this.$('.path-check').prop('checked', false);
+            this.$returnBodiesButton.hide();
+        },
+
+        /**
+         * Overrides step to make sure we calculate the right step time.
+         */
+        step: function() {
+            this.play();
+            setTimeout(this._stepFinished, this.simulation.frameDuration * 1000 / this.simulation.get('timeScale'));
+        },
+
+        /**
+         * Rewinds the sim to the last time it was paused and changed
+         */
+        rewind: function() {
+            this.simulation.rewind();
+            this.sceneView.clearTraces();
+            this.$returnBodiesButton.hide();
         },
 
         /**
@@ -222,7 +261,8 @@ define(function (require) {
          */
         createBodySettingsView: function(body) {
             return new BodySettingsView({ 
-                model: body
+                model: body,
+                simulation: this.simulation
             });
         },
 
@@ -278,6 +318,7 @@ define(function (require) {
         scenarioChanged: function(simulation, scenario) {
             this.timeReadoutFunction = scenario.viewSettings.timeReadoutFunction;
             this.secondCounterChanged(simulation, simulation.get('secondCounter'));
+            this.$returnBodiesButton.hide();
         },
 
         secondCounterChanged: function(simulation, secondCounter) {
@@ -293,6 +334,58 @@ define(function (require) {
                 this.simulation.set('gravityEnabled', true);
             else
                 this.simulation.set('gravityEnabled', false);
+        },
+
+        changeSpeed: function(event) {
+            var speedScale = $(event.target).val();
+            this.inputLock(function() {
+                this.simulation.set('speedScale', speedScale);
+            });
+        },
+
+        toggleGravityArrows: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGravityArrows();
+            else
+                this.sceneView.hideGravityArrows();
+        },
+
+        toggleVelocityArrows: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVelocityArrows();
+            else
+                this.sceneView.hideVelocityArrows();
+        },
+
+        toggleGrid: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGrid();
+            else
+                this.sceneView.hideGrid();
+        },
+
+        togglePaths: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showTraces();
+            else
+                this.sceneView.hideTraces();
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
+        },
+
+        bodyOutOfBounds: function() {
+            this.$returnBodiesButton.show();
+        },
+
+        returnBodies: function() {
+            this.simulation.returnAllOutOfBoundsBodies();
+            this.$returnBodiesButton.hide();
         }
 
     });

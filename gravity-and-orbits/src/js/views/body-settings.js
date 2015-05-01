@@ -30,10 +30,6 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            options = _.extend({
-
-            }, options);
-
             this.simulation = options.simulation;
 
             this._position = new Vector2();
@@ -84,6 +80,8 @@ define(function(require) {
             if (!isNaN(mass)) {
                 this.inputLock(function() {
                     this.model.set('mass', mass);
+                    if (this.simulation.get('paused'))
+                        this.simulation.updateForceVectors();
                 });
             }
         }

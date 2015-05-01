@@ -7,6 +7,7 @@ define(function (require, exports, module) {
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
     var Vector2    = require('common/math/vector2');
+    var Rectangle  = require('common/math/rectangle');
 
     var Body            = require('models/body');
     var Moon            = require('models/body/moon');
@@ -48,6 +49,8 @@ define(function (require, exports, module) {
                 model: Body
             });
 
+            this.bounds = new Rectangle();
+
             this._sum = new Vector2();
             this._pos = new Vector2();
             this._vel = new Vector2();
@@ -62,23 +65,7 @@ define(function (require, exports, module) {
 
             this.scenarioChanged(this, this.get('scenario'));
         },
-
-        /**
-         *
-         */
-        applyOptions: function(options) {
-            FixedIntervalSimulation.prototype.applyOptions.apply(this, [options]);
-
-            
-        },
-
-        /**
-         *
-         */
-        initComponents: function() {
-            
-        },
-
+        
         /**
          * Loads a scenario. Sets up the bodies, applies simulation
          *   attributes, and resets the simulation.
@@ -90,10 +77,11 @@ define(function (require, exports, module) {
                 return body.clone();
             }));
 
+            this.initSavedState();
+            this.initScratchStates();
             this.resetScenario();
             this.set(scenario.simulationAttributes);
-            
-            this.initScratchStates();
+            this.updateForceVectors();
         },
 
         /**
@@ -105,6 +93,17 @@ define(function (require, exports, module) {
             this.set({
                 secondCounter: 0
             });
+        },
+
+        /**
+         * Creates an array of individual body state records
+         *   under the property "savedState" to use when saving
+         *   and applying states later on a rewind.
+         */
+        initSavedState: function() {
+            this.savedState = [];
+            for (var j = 0; j < this.bodies.length; j++)
+                this.savedState.push(new BodyStateRecord());
         },
 
         /**
@@ -144,14 +143,16 @@ define(function (require, exports, module) {
          *
          */
         reset: function() {
-            
+            this.scenarioChanged(this, this.get('scenario'));
         },
 
         /**
          *
          */
         play: function() {
-            // May need to save the current state here for the rewind button
+            // Save the current state to apply later with the rewind button
+            for (i = 0; i < this.savedState.length; i++)
+                this.savedState[i].saveState(this.bodies.at(i));
 
             FixedIntervalSimulation.prototype.play.apply(this);
         },
@@ -161,6 +162,8 @@ define(function (require, exports, module) {
          */
         rewind: function() {
             // Apply the saved state
+            for (i = 0; i < this.savedState.length; i++)
+                this.savedState[i].applyState(this.bodies.at(i));
         },
 
         /**
@@ -168,6 +171,14 @@ define(function (require, exports, module) {
          */
         clearSecondCounter: function() {
             this.set('secondCounter', 0);
+        },
+
+        /**
+         * Updates initial force vectors so the body views can show
+         *   something for force before the simulation starts.
+         */
+        updateForceVectors: function() {
+            this.performSubstep(0);
         },
 
         /**
@@ -226,6 +237,9 @@ define(function (require, exports, module) {
                     }
                 }
             }
+
+            // Check for out-of-bounds bodies
+            this.detectOutOfBoundsBodies();
         },
 
         /**
@@ -323,6 +337,9 @@ define(function (require, exports, module) {
             }
         },
 
+        /**
+         * Returns the smaller of two bodies.
+         */
         smallerBody: function(body1, body2) {
             if (body1.get('mass') < body2.get('mass'))
                 return body1;
@@ -330,11 +347,72 @@ define(function (require, exports, module) {
                 return body2;
         },
 
+        /**
+         * Returns the larger of two bodies.
+         */
         largerBody: function(body1, body2) {
             if (body1.get('mass') > body2.get('mass'))
                 return body1;
             else
                 return body2;
+        },
+
+        /**
+         * Returns every body that is out of bounds to its last
+         *   saved state.
+         */
+        returnAllOutOfBoundsBodies: function() {
+            for (var i = 0; i < this.bodies.length; i++) {
+                if (this.bodyOutOfBounds(this.bodies.at(i)))
+                    this.returnBody(this.bodies.at(i));
+            }
+        },
+
+        /**
+         * Returns an out-of-bounds body to its last saved state.
+         */
+        returnBody: function(body) {
+            var bodyIndex = this.bodies.indexOf(body);
+            this.savedState[bodyIndex].applyState(this.bodies.at(bodyIndex));
+        },
+
+        /**
+         * Returns whether or not a body is out of bounds.
+         */
+        bodyOutOfBounds: function(body) {
+            return !this.bounds.contains(body.get('position'));
+        },
+
+        /**
+         * Looks for out-of-bounds bodies and triggers an event
+         *   if there is one.
+         */
+        detectOutOfBoundsBodies: function() {
+            for (var i = 0; i < this.bodies.length; i++) {
+                if (this.bodyOutOfBounds(this.bodies.at(i))) {
+                    this.trigger('body-out-of-bounds');
+                    return;
+                }
+            }
+        },
+
+        /**
+         * Sets a bounding box around the scene from the min
+         *   and max x and y values.  It's easier to give
+         *   these values because one can simply reverse the
+         *   model-view-transform with screen coordinates.
+         */
+        setBounds: function(minX, minY, maxX, maxY) {
+            var width = maxX - minX;
+            var height = maxY - minY;
+            this.bounds.set(minX, minY, width, height);
+        },
+
+        /**
+         * Returns a bounding rectangle of the scene.
+         */
+        getBounds: function() {
+            return this.bounds;
         }
 
     });
