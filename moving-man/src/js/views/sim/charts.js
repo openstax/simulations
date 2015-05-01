@@ -351,7 +351,7 @@ define(function(require) {
          */
         _layoutRows: function() {
             // Get the total height we have to work with
-            var height = $(window).height() > 500 ? 480 : 310;
+            var height = $(window).height() > 500 ? 480 : 330;
 
             // Clear previously set heights
             this.$('.variable-row').each(function(){
@@ -368,7 +368,7 @@ define(function(require) {
 
             // Apply that height to each of the visible rows
             $visibleRows.each(function(){
-                $(this).height(visibleRowHeight);
+                $(this).innerHeight(visibleRowHeight);
             });
 
             // Resize the graphs
