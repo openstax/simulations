@@ -113,9 +113,18 @@ define(function(require) {
          * Renders the graphs
          */
         renderGraphs: function() {
+            var xInfo = {
+                start: 0,
+                end:  20,
+                step:  2,
+                decimalPlaces: 1,
+                label: 'time (sec)',
+                showNumbers: true
+            };
+
             this.positionGraphView = new MovingManGraphView({
                 title: '',
-                x: null,
+                x: xInfo,
                 y: {
                     start: -10,
                     end:    10,
@@ -124,6 +133,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
+                hideXAxisLabels: true,
                 lineColor: '#2575BA',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -133,7 +143,7 @@ define(function(require) {
 
             this.velocityGraphView = new MovingManGraphView({
                 title: '',
-                x: null,
+                x: xInfo,
                 y: {
                     start: -12,
                     end:    12,
@@ -142,6 +152,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
+                hideXAxisLabels: true,
                 lineColor: '#CD2520',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -151,14 +162,7 @@ define(function(require) {
 
             this.accelerationGraphView = new MovingManGraphView({
                 title: '',
-                x: {
-                    start: 0,
-                    end:  20,
-                    step:  2,
-                    decimalPlaces: 1,
-                    label: 'time (sec)',
-                    showNumbers: true
-                },
+                x: xInfo,
                 y: {
                     start: -60,
                     end:    60,

@@ -55,6 +55,8 @@ define(function(require) {
             this.timeSpan  = this.maxTimeSpan;
             this.valueSpan = this.maxValueSpan;
 
+            this.hideXAxisLabels = options.hideXAxisLabels;
+
             GraphView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.simulation.movingMan, 'history-cleared', function() {
@@ -92,8 +94,15 @@ define(function(require) {
 
             this.$('.graph-view-graph-wrapper').append(this.$slider);
 
-            if (this.graphInfo.x)
-                this.$('.graph-view-graph-wrapper').append(xAxisButtonsHtml);
+            if (this.graphInfo.x) {
+                this.$xAxisLabels = $(xAxisButtonsHtml);
+                this.$('.graph-view-graph-wrapper').append(this.$xAxisLabels);
+                this.$xAxisLabels = this.$xAxisLabels.add(this.$('.graph-x'));
+
+                if (this.hideXAxisLabels)
+                    this.$xAxisLabels.hide();
+            }
+            
             if (this.graphInfo.y)
                 this.$('.graph-view-graph-wrapper').append(yAxisButtonsHtml);
         },
@@ -295,6 +304,22 @@ define(function(require) {
                 this.valueSpan = this.maxValueSpan;
             
             this.trigger('zoom-y', this.valueSpan);
+        },
+
+        /**
+         * Shows the numbers and buttons on the x-axis
+         */
+        showXAxisLabels: function() {
+            if (this.$xAxisLabels)
+                this.$xAxisLabels.show();
+        },
+
+        /**
+         * Hides the numbers and buttons on the x-axis
+         */
+        hideXAxisLabels: function() {
+            if (this.$xAxisLabels)
+                this.$xAxisLabels.hide();
         }
 
     });
