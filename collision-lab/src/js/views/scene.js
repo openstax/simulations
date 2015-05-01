@@ -56,8 +56,18 @@ define(function(require) {
             this.listenTo(this.simulation, 'change:yCenterOfMass', this.yCenterOfMassChanged);
         },
 
-        renderContent: function() {
-            
+        reset: function() {
+            this.showVelocityArrows();
+            if (!this.oneDimensional)
+                this.showReflectingBorder();
+
+            this.hideMomentumArrows();
+            this.hideVelocityLabels();
+            this.hideMomentumLabels();
+            this.hideKineticEnergy();
+            this.hideCenterOfMass();
+            this.hideMomentaDiagram();
+            this.hideTraces();
         },
 
         initGraphics: function() {
