@@ -350,17 +350,26 @@ define(function(require) {
          * Applies special classes to rows after one was hidden/shown.
          */
         _layoutRows: function() {
-            // Clear height override classes
-            this.$('.variable-row')
-                .removeClass('one-row')
-                .removeClass('two-rows');
+            // Get the total height we have to work with
+            var height = $(window).height() > 500 ? 480 : 310;
 
-            // Check how many rows are visible and apply appropriate classes
-            var $visibleRows = this.$('.variable-row').not('.collapsed');
-            if ($visibleRows.length === 1)
-                $visibleRows.addClass('one-row');
-            else if ($visibleRows.length === 2)
-                $visibleRows.addClass('two-rows');
+            // Clear previously set heights
+            this.$('.variable-row').each(function(){
+                $(this).css('height', '');
+            });
+
+            // Get lists of each kind of row
+            var $visibleRows   = this.$('.variable-row').not('.collapsed');
+            var $collapsedRows = this.$('.variable-row.collapsed');
+
+            // Calculate the height of each visible row
+            var totalCollapsedHeight = $collapsedRows.length * $collapsedRows.outerHeight();
+            var visibleRowHeight = (height - totalCollapsedHeight) / $visibleRows.length;
+
+            // Apply that height to each of the visible rows
+            $visibleRows.each(function(){
+                $(this).height(visibleRowHeight);
+            });
 
             // Resize the graphs
             this.positionGraphView.resize();
