@@ -59,6 +59,7 @@ define(function (require) {
             'click .rewind-btn' : 'rewind',
             'click .step-btn'   : 'stepForward',
             'click .back-btn'   : 'stepBack',
+            'click .reset-btn'  : 'reset',
 
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
@@ -227,11 +228,28 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        reset: function() {
+            this.pause();
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('.velocity-vector-check').prop('checked', true);
+            this.$('.momentum-vector-check').prop('checked', false);
+            this.$('.velocity-check').prop('checked', false);
+            this.$('.momentum-check').prop('checked', false);
+            this.$('.momenta-diagram-check').prop('checked', false);
+            this.$('.kinetic-energy-check').prop('checked', false);
+            this.$('.center-of-mass-check').prop('checked', false);
+            this.$('.reflecting-border-check').prop('checked', true);
+            this.$('.paths-check').prop('checked', false);
+
+            this.elasticityChanged(this.simulation, this.simulation.get('elasticity'));
+            this.$('.playback-speed').val(0.5);
+
+            this.updateTime(this.simulation, this.simulation.get('time'));
+            this.showLessData();
         },
 
         /**

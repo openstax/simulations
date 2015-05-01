@@ -67,6 +67,20 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Resets components
+         */
+        resetComponents: function() {
+            while (this.balls.length > 0)
+                this.balls.pop();
+
+            this.time = 0;
+            this.set('time', this.time);
+            this.set('started', false);
+            
+            this.initComponents();
+        },
+
+        /**
          * Adds a ball with appropriate default values
          */
         addBall: function() {
