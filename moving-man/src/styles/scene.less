@@ -24,8 +24,16 @@
     &.compact {
         height: 174px;
 
+        @media screen and (max-height: @short-window) {
+            height: 154px;
+        }
+
         & .scene {
             height: 140px;
+
+            @media screen and (max-height: @short-window) {
+                height: 120px;
+            }
         }
 
         & .clouds {
@@ -250,6 +258,11 @@
     font-size: 18px;
     color: #004B79;
     display: none;
+
+    @media screen and (max-height: @short-window) {
+        left: 39px;
+        top: 1px;
+    }
 
     > .time {
         display: inline-block;
