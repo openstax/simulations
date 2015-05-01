@@ -8,7 +8,8 @@
  *   modified and adapted for LESS
  */ 
 
-@short-scene-height: 187px;
+@short-scene-view-height: 187px;
+@short-scene-height: (@short-scene-view-height - 34);
 
 .scene-view {
     width: 100%;
@@ -17,7 +18,7 @@
     overflow: hidden;
 
     @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
+        height: @short-scene-view-height;
     }
 
     &.compact {
@@ -50,27 +51,34 @@
     #gradient.vertical(#81C8FF; #fff; 0%; 100%);
 
     @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
-        #gradient.vertical(#81C8FF; #F5FBFF; 0%; 100%);
+        &,
+        .scene-view.compact & {
+            position: absolute;
+            bottom: 0;
+            height: @short-scene-height;
+            #gradient.vertical(#81C8FF; #F5FBFF; 0%; 100%);
 
-        .cloud.cloud-1 {
-            top: 0px;
-        }
+            .cloud.cloud-1 {
+                top: 0px;
+            }
 
-        .cloud.cloud-2 {
-            top: 1px;
-        }
+            .cloud.cloud-2 {
+                top: 1px;
+                margin-left: 125px;
+            }
 
-        .cloud.cloud-3 {
-            top: -25px;
-        }
+            .cloud.cloud-3 {
+                top: -32px;
+                margin-left: -40px;
+            }
 
-        .cloud.cloud-4 {
-            top: -19px;
-        }
+            .cloud.cloud-4 {
+                top: -19px;
+            }
 
-        .cloud.cloud-5 {
-            top: -20px;
+            .cloud.cloud-5 {
+                top: -20px;
+            }
         }
     }
 
@@ -230,7 +238,7 @@
     margin-left: -(@max-viewport-width / 2);
 
     @media screen and (max-height: @short-window) {
-        height: (@short-scene-height - 34);
+        height: @short-scene-height;
     }
 }
 
