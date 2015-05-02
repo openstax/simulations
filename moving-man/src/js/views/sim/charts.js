@@ -351,7 +351,7 @@ define(function(require) {
          */
         _layoutRows: function() {
             // Get the total height we have to work with
-            var height = $(window).height() > 500 ? 480 : 330;
+            var height = $(window).height() > 500 ? 480 : 340;
 
             // Clear previously set heights
             this.$('.variable-row').each(function(){
