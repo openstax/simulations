@@ -1,5 +1,6 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
 
 .sim-content {
@@ -29,7 +30,8 @@
 }
 
 #sim-intro .row-hide,
-#sim-intro .row-show {
+#sim-intro .row-show,
+#sim-intro .hidden-title {
     display: none;
 }
 
@@ -61,6 +63,32 @@
         & .row-hide {
             display: none;
         }
+
+        & .hidden-title {
+            display: block;
+        }
+    }
+
+    .hidden-title {
+        position: absolute;
+        left: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        opacity: 0.5;
+
+        display: none;
+    }
+
+    &.position-row .hidden-title {
+        color: @position-color;
+    }
+
+    &.velocity-row .hidden-title {
+        color: @velocity-color;
+    }
+
+    &.acceleration-row .hidden-title {
+        color: @acceleration-color;
     }
 
     // &.two-rows {
