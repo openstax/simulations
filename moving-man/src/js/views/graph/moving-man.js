@@ -55,7 +55,7 @@ define(function(require) {
             this.timeSpan  = this.maxTimeSpan;
             this.valueSpan = this.maxValueSpan;
 
-            this.hideXAxisLabels = options.hideXAxisLabels;
+            this.hideXAxisLabelsByDefault = options.hideXAxisLabelsByDefault;
 
             GraphView.prototype.initialize.apply(this, [options]);
 
@@ -99,7 +99,7 @@ define(function(require) {
                 this.$('.graph-view-graph-wrapper').append(this.$xAxisLabels);
                 this.$xAxisLabels = this.$xAxisLabels.add(this.$('.graph-x'));
 
-                if (this.hideXAxisLabels)
+                if (this.hideXAxisLabelsByDefault)
                     this.$xAxisLabels.hide();
             }
             

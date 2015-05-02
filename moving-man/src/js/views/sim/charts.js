@@ -133,7 +133,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
-                hideXAxisLabels: true,
+                hideXAxisLabelsByDefault: true,
                 lineColor: '#2575BA',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -152,7 +152,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
-                hideXAxisLabels: true,
+                hideXAxisLabelsByDefault: true,
                 lineColor: '#CD2520',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -350,8 +350,10 @@ define(function(require) {
          * Applies special classes to rows after one was hidden/shown.
          */
         _layoutRows: function() {
+            var shortScreen = $(window).height() <= 500;
+
             // Get the total height we have to work with
-            var height = $(window).height() > 500 ? 480 : 340;
+            var height = shortScreen ? 340 : 480;
 
             // Clear previously set heights
             this.$('.variable-row').each(function(){
@@ -361,6 +363,21 @@ define(function(require) {
             // Get lists of each kind of row
             var $visibleRows   = this.$('.variable-row').not('.collapsed');
             var $collapsedRows = this.$('.variable-row.collapsed');
+
+            // If we are dealingn with a short screen, we need to constrain it
+            //   to only let two be open at a time because we're tight on space
+            if (shortScreen && $visibleRows.length > 2) {
+
+            }
+
+            // Make sure the last graph shows the x-axis labels below it
+            var lastOpenIndex = $visibleRows.last().index();
+            for (var i = 0; i < this.graphViews.length; i++) {
+                if (i === lastOpenIndex)
+                    this.graphViews[i].showXAxisLabels();
+                else
+                    this.graphViews[i].hideXAxisLabels();
+            }
 
             // Calculate the height of each visible row
             var totalCollapsedHeight = $collapsedRows.length * $collapsedRows.outerHeight();
