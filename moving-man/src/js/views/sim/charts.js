@@ -260,6 +260,8 @@ define(function(require) {
             this.positionGraphView.postRender();
             this.velocityGraphView.postRender();
             this.accelerationGraphView.postRender();
+
+            this._layoutRows();
         },
 
         /**
@@ -341,9 +343,13 @@ define(function(require) {
          * Shows whichever variable row the user wanted to show.
          */
         showRow: function(event) {
-            $(event.target).parents('.variable-row').removeClass('collapsed');
+            var $row = $(event.target).parents('.variable-row');
+            $row.removeClass('collapsed');
+            this.rowBeingOpened = $row[0];
             
             this._layoutRows();
+
+            this.lastRowOpened = $row[0];
         },
 
         /**
@@ -367,7 +373,18 @@ define(function(require) {
             // If we are dealingn with a short screen, we need to constrain it
             //   to only let two be open at a time because we're tight on space
             if (shortScreen && $visibleRows.length > 2) {
+                var $rowToClose;
+                var rowBeingOpened = this.rowBeingOpened;
+                var lastRowOpened  = this.lastRowOpened;
+                $visibleRows.each(function() {
+                    if (this !== rowBeingOpened && this !== lastRowOpened)
+                        $rowToClose = $(this);
+                });
+                
+                $rowToClose.addClass('collapsed');
 
+                $visibleRows   = this.$('.variable-row').not('.collapsed');
+                $collapsedRows = this.$('.variable-row.collapsed');
             }
 
             // Make sure the last graph shows the x-axis labels below it
