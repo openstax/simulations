@@ -1,6 +1,6 @@
 @import "../../../common/styles/mixins/vendor-prefixes.less";
 @import "../../../common/styles/mixins/buttons.less";
-@import "../../../common/styles/variables.less";
+@import "variables.less";
 
 @btn-bg: #ccc;
 
@@ -15,6 +15,7 @@
     @media screen and (max-height: @short-window) {
         margin-top: 0;
         border-top: 2px solid #fff;
+        padding: 4px 10px;
     }
 
     > .playback-btn {
@@ -86,6 +87,10 @@
         top: 0;
         padding-top: 18px;
 
+        @media screen and (max-height: @short-window) {
+            padding-top: 12px;
+        }
+
         .playback-speed {
             width: 140px;
             display: inline-block;
@@ -109,6 +114,10 @@
         position: absolute;
         top: 22px;
         left: 170px;
+
+        @media screen and (max-height: @short-window) {
+            top: 16px;
+        }
 
         & label {
             margin-right: 16px;

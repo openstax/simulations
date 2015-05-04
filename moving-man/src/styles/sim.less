@@ -1,5 +1,5 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
+@import "variables.less";
 @import "mixins.less";
 
 .sim-content {
@@ -12,6 +12,10 @@
 
     @media screen and (max-height: @short-window) {
         padding-bottom: 8px;
+
+        #sim-charts & {
+            padding-bottom: 20px;
+        }
     }
 
     .variable-row {
@@ -25,7 +29,8 @@
 }
 
 #sim-intro .row-hide,
-#sim-intro .row-show {
+#sim-intro .row-show,
+#sim-intro .hidden-title {
     display: none;
 }
 
@@ -57,15 +62,41 @@
         & .row-hide {
             display: none;
         }
+
+        & .hidden-title {
+            display: block;
+        }
     }
 
-    &.two-rows {
-        height: @normal-height + ((@normal-height - @collapsed-height) / 2);
+    .hidden-title {
+        position: absolute;
+        left: 30px;
+        font-size: 16px;
+        font-weight: bold;
+        opacity: 0.5;
+
+        display: none;
     }
 
-    &.one-row {
-        height: @normal-height + ((@normal-height - @collapsed-height) * 2);
+    &.position-row .hidden-title {
+        color: @position-color;
     }
+
+    &.velocity-row .hidden-title {
+        color: @velocity-color;
+    }
+
+    &.acceleration-row .hidden-title {
+        color: @acceleration-color;
+    }
+
+    // &.two-rows {
+    //     height: @normal-height + ((@normal-height - @collapsed-height) / 2);
+    // }
+
+    // &.one-row {
+    //     height: @normal-height + ((@normal-height - @collapsed-height) * 2);
+    // }
 
     .row-show,
     .row-hide {
@@ -75,6 +106,7 @@
         margin-left: -26px;
         font-size: 16px;
         color: #888;
+        z-index: 50;
         .text-button();
     }
 

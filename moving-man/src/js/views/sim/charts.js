@@ -113,9 +113,18 @@ define(function(require) {
          * Renders the graphs
          */
         renderGraphs: function() {
+            var xInfo = {
+                start: 0,
+                end:  20,
+                step:  2,
+                decimalPlaces: 1,
+                label: 'time (sec)',
+                showNumbers: true
+            };
+
             this.positionGraphView = new MovingManGraphView({
                 title: '',
-                x: null,
+                x: xInfo,
                 y: {
                     start: -10,
                     end:    10,
@@ -124,6 +133,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
+                hideXAxisLabelsByDefault: true,
                 lineColor: '#2575BA',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -133,7 +143,7 @@ define(function(require) {
 
             this.velocityGraphView = new MovingManGraphView({
                 title: '',
-                x: null,
+                x: xInfo,
                 y: {
                     start: -12,
                     end:    12,
@@ -142,6 +152,7 @@ define(function(require) {
                     label:  '',
                     showNumbers: true
                 },
+                hideXAxisLabelsByDefault: true,
                 lineColor: '#CD2520',
                 latitudinalGridLines: 3,
                 longitudinalGridLines: 9,
@@ -151,14 +162,7 @@ define(function(require) {
 
             this.accelerationGraphView = new MovingManGraphView({
                 title: '',
-                x: {
-                    start: 0,
-                    end:  20,
-                    step:  2,
-                    decimalPlaces: 1,
-                    label: 'time (sec)',
-                    showNumbers: true
-                },
+                x: xInfo,
                 y: {
                     start: -60,
                     end:    60,
@@ -256,6 +260,8 @@ define(function(require) {
             this.positionGraphView.postRender();
             this.velocityGraphView.postRender();
             this.accelerationGraphView.postRender();
+
+            this._layoutRows();
         },
 
         /**
@@ -337,26 +343,67 @@ define(function(require) {
          * Shows whichever variable row the user wanted to show.
          */
         showRow: function(event) {
-            $(event.target).parents('.variable-row').removeClass('collapsed');
+            var $row = $(event.target).parents('.variable-row');
+            $row.removeClass('collapsed');
+            this.rowBeingOpened = $row[0];
             
             this._layoutRows();
+
+            this.lastRowOpened = $row[0];
         },
 
         /**
          * Applies special classes to rows after one was hidden/shown.
          */
         _layoutRows: function() {
-            // Clear height override classes
-            this.$('.variable-row')
-                .removeClass('one-row')
-                .removeClass('two-rows');
+            var shortScreen = $(window).height() <= 500;
 
-            // Check how many rows are visible and apply appropriate classes
-            var $visibleRows = this.$('.variable-row').not('.collapsed');
-            if ($visibleRows.length === 1)
-                $visibleRows.addClass('one-row');
-            else if ($visibleRows.length === 2)
-                $visibleRows.addClass('two-rows');
+            // Get the total height we have to work with
+            var height = shortScreen ? 340 : 480;
+
+            // Clear previously set heights
+            this.$('.variable-row').each(function(){
+                $(this).css('height', '');
+            });
+
+            // Get lists of each kind of row
+            var $visibleRows   = this.$('.variable-row').not('.collapsed');
+            var $collapsedRows = this.$('.variable-row.collapsed');
+
+            // If we are dealingn with a short screen, we need to constrain it
+            //   to only let two be open at a time because we're tight on space
+            if (shortScreen && $visibleRows.length > 2) {
+                var $rowToClose;
+                var rowBeingOpened = this.rowBeingOpened;
+                var lastRowOpened  = this.lastRowOpened;
+                $visibleRows.each(function() {
+                    if (this !== rowBeingOpened && this !== lastRowOpened)
+                        $rowToClose = $(this);
+                });
+                
+                $rowToClose.addClass('collapsed');
+
+                $visibleRows   = this.$('.variable-row').not('.collapsed');
+                $collapsedRows = this.$('.variable-row.collapsed');
+            }
+
+            // Make sure the last graph shows the x-axis labels below it
+            var lastOpenIndex = $visibleRows.last().index();
+            for (var i = 0; i < this.graphViews.length; i++) {
+                if (i === lastOpenIndex)
+                    this.graphViews[i].showXAxisLabels();
+                else
+                    this.graphViews[i].hideXAxisLabels();
+            }
+
+            // Calculate the height of each visible row
+            var totalCollapsedHeight = $collapsedRows.length * $collapsedRows.outerHeight();
+            var visibleRowHeight = (height - totalCollapsedHeight) / $visibleRows.length;
+
+            // Apply that height to each of the visible rows
+            $visibleRows.each(function(){
+                $(this).innerHeight(visibleRowHeight);
+            });
 
             // Resize the graphs
             this.positionGraphView.resize();

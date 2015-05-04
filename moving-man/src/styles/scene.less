@@ -1,14 +1,13 @@
 @import "../../node_modules/bootstrap/less/mixins/gradients.less";
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
 
 /*
  * Clouds CSS from http://thecodeplayer.com/walkthrough/pure-css3-animated-clouds-background,
  *   modified and adapted for LESS
  */ 
 
-@short-scene-view-height: 187px;
+@short-scene-view-height: 199px;
 @short-scene-height: (@short-scene-view-height - 34);
 
 .scene-view {
@@ -25,14 +24,14 @@
         height: 174px;
 
         @media screen and (max-height: @short-window) {
-            height: 154px;
+            height: 155px;
         }
 
         & .scene {
             height: 140px;
 
             @media screen and (max-height: @short-window) {
-                height: 120px;
+                height: 121px;
             }
         }
 
