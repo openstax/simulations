@@ -122,6 +122,9 @@ define(function(require) {
             // Render basic page structure
             this.$el.append(this.template(this.getRenderData()));
 
+            // Set all the sim content containers to rendering mode
+            this.$('.sim-content').addClass('rendering');
+
             // Then render views for each sim
             _.each(this.simViews, this.renderSimView, this);
 
@@ -147,6 +150,9 @@ define(function(require) {
             _.each(this.simViews, function(simView) {
                 simView.postRender();
             });
+
+            // Take all the sim content containers out of rendering mode
+            this.$('.sim-content').removeClass('rendering');
 
             // Only hide the other tabs after they've all been rendered visibly
             this.$('.sim-tab').first().click();
