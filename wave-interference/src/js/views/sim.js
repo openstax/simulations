@@ -348,12 +348,13 @@ define(function (require) {
 				}
 			});
 
+			var simWidth = this.waveSimulation.get('dimensions').width
 			$controlPanel.find('.barrier-location').noUiSlider({
 				start: this.waveSimulation.get('barrierX'),
 				connect: 'lower',
 				range: {
 					min: 0,
-					max: this.waveSimulation.get('dimensions').width
+					max: simWidth - (2.5 * simWidth / this.waveSimulation.get('latticeSize').width)
 				}
 			});
 
