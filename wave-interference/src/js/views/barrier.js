@@ -138,7 +138,6 @@ define(function (require) {
 					if (this.waveSimulation.isValidPoint(topBox.x + dx + 1, 30, 1)) {
 
 						x = topBox.x + dx;
-						console.log(x);
 
 						this.waveSimulation.set('barrierX', x / this.waveSimulation.widthRatio);
 					}
