@@ -9,6 +9,11 @@
     padding: 12px 0 4px;
     position: relative;
 
+    @media screen and (max-height: @short-window) {
+        padding-top: 8px;
+        padding-bottom: 0;
+    }
+
     &.position {
         color: @position-color;
 

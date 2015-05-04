@@ -19,6 +19,10 @@ body {
     max-width: @max-viewport-width;
     width: 100%;
 
+    @media screen and (max-height: @short-window) {
+        margin-top: 0;
+    }
+
     .loading-screen {
         position: fixed;
         z-index: 1200;

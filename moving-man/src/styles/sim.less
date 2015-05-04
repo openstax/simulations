@@ -2,13 +2,26 @@
 @import "../../../common/styles/variables.less";
 @import "mixins.less";
 
+.sim-content {
+    min-height: initial;
+}
+
 .sim-controls {
     background: @gray-lightest;
     padding-bottom: 20px;
 
+    @media screen and (max-height: @short-window) {
+        padding-bottom: 8px;
+    }
+
     .variable-row {
         position: relative;
     }
+}
+
+.modal-backdrop {
+    bottom: 0;
+    z-index: 1020;
 }
 
 #sim-intro .row-hide,
@@ -76,7 +89,7 @@
 
 .sound-btn-wrapper {
     position: absolute;
-    top: -36px;
+    top: -34px;
     right: 30px;
 
     > .sound-btn {

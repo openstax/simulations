@@ -8,17 +8,32 @@
  *   modified and adapted for LESS
  */ 
 
+@short-scene-view-height: 187px;
+@short-scene-height: (@short-scene-view-height - 34);
+
 .scene-view {
     width: 100%;
     height: 334px;
     position: relative;
     overflow: hidden;
 
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-view-height;
+    }
+
     &.compact {
         height: 174px;
 
+        @media screen and (max-height: @short-window) {
+            height: 154px;
+        }
+
         & .scene {
             height: 140px;
+
+            @media screen and (max-height: @short-window) {
+                height: 120px;
+            }
         }
 
         & .clouds {
@@ -42,6 +57,38 @@
     overflow: hidden;
     background: #c9dbe9;
     #gradient.vertical(#81C8FF; #fff; 0%; 100%);
+
+    @media screen and (max-height: @short-window) {
+        &,
+        .scene-view.compact & {
+            position: absolute;
+            bottom: 0;
+            height: @short-scene-height;
+            #gradient.vertical(#81C8FF; #F5FBFF; 0%; 100%);
+
+            .cloud.cloud-1 {
+                top: 0px;
+            }
+
+            .cloud.cloud-2 {
+                top: 1px;
+                margin-left: 125px;
+            }
+
+            .cloud.cloud-3 {
+                top: -32px;
+                margin-left: -40px;
+            }
+
+            .cloud.cloud-4 {
+                top: -19px;
+            }
+
+            .cloud.cloud-5 {
+                top: -20px;
+            }
+        }
+    }
 
     &.moving {
         > .cloud-1 {
@@ -197,6 +244,10 @@
     top: 0;
     left: 50%;
     margin-left: -(@max-viewport-width / 2);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
 }
 
 .clock {
@@ -207,6 +258,11 @@
     font-size: 18px;
     color: #004B79;
     display: none;
+
+    @media screen and (max-height: @short-window) {
+        left: 39px;
+        top: 1px;
+    }
 
     > .time {
         display: inline-block;
@@ -245,6 +301,10 @@
 
     #sim-intro & {
         top: 100px;
+
+        @media screen and (max-height: @short-window) {
+            top: 13px;
+        }
     }
 }
 
