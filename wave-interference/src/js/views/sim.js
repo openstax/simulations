@@ -138,6 +138,9 @@ define(function (require) {
 			// Detector views to update
 			this.detectorViews = [];
 
+			// Stepping
+			this._stepFinished = _.bind(this._stepFinished, this);
+
 			// Updater stuff
 			this.update = _.bind(this.update, this);
 
@@ -446,12 +449,20 @@ define(function (require) {
 		step: function(event) {
 			var milliseconds = 50;
 
+			this.play();
+
 			// Set the UI to pause mode
-			this.pause();
+			this.$el.removeClass('playing');
 
 			// Play until a certain number of milliseconds has elapsed.
-			this.updater.play();
-			setTimeout(_.bind(this.updater.pause, this.updater), milliseconds);
+			setTimeout(this._stepFinished, milliseconds);
+		},
+
+		/**
+		 * Called after a step through is finished
+		 */
+		_stepFinished: function() {
+			this.pause();
 		},
 
 		/**
