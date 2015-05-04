@@ -66,8 +66,6 @@ define(function (require) {
             'change .velocity     .vector-check' : 'changeVelocityVectorVisibility',
             'change .acceleration .vector-check' : 'changeAccelerationVectorVisibility',
 
-            'click .sound-btn' : 'changeVolume',
-
             'keyup .position .expression-text' : 'changeExpression'
         },
 
@@ -417,29 +415,6 @@ define(function (require) {
                 this.sceneView.movingManView.showAccelerationVector();
             else
                 this.sceneView.movingManView.hideAccelerationVector();
-        },
-
-        /**
-         * Steps between the different discrete volume values and updates
-         *   the button's icon.
-         */
-        changeVolume: function(event) {
-            var $btn = $(event.target).closest('.sound-btn');
-
-            $btn.hide();
-
-            if ($btn.hasClass('sound-btn-mute')) {
-                this.$('.sound-btn-low').show();
-                this.sceneView.movingManView.lowVolume();
-            }
-            else if ($btn.hasClass('sound-btn-low')) {
-                this.$('.sound-btn-high').show();
-                this.sceneView.movingManView.highVolume();
-            }
-            else if ($btn.hasClass('sound-btn-high')) {
-                this.$('.sound-btn-mute').show();
-                this.sceneView.movingManView.muteVolume();
-            }
         },
 
         /**
