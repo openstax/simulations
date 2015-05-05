@@ -3,9 +3,16 @@
 @import "variables.less";
 @import "mixins.less";
 
+.sim-view {
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        max-height: @short-scene-height;
+    }
+}
+
 .sound-btn-wrapper {
     position: absolute;
-    top: -36px;
+    top: -34px;
     right: 30px;
 
     > .sound-btn {
@@ -42,6 +49,13 @@
     background: @gray-lightest;
     text-align: center;
     .user-select(none);
+
+    @media screen and (max-height: @short-window) {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: @short-control-bar-width;
+    }
 
     > .playback-buttons-wrapper {
         width: 200px;
