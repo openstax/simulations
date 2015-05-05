@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    //var $        = require('jquery');
+    var $        = require('jquery');
     var _         = require('underscore');
     var PIXI      = require('pixi');
     var Vector2   = require('common/math/vector2');
@@ -77,12 +77,8 @@ define(function(require) {
 
             this.viewOriginX = Math.round(this.width  * Constants.SceneView.ORIGIN_X_PERCENT);
             this.viewOriginY = Math.round(this.height * Constants.SceneView.ORIGIN_Y_PERCENT);
-            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                new Vector2(0, 0),
-                new Vector2(this.viewOriginX, this.viewOriginY),
-                this.zoomScale // Scale, meters to pixels
-            );
 
+            this.initMVT();
             this.initLayers();
             this.initBackground();
             this.initCannon();
@@ -90,6 +86,16 @@ define(function(require) {
             this.initProjectiles();
             this.initTarget();
             this.initDavid();
+        },
+
+        initMVT: function() {
+            var additionalScale = $(window).height() > 500 ? 1 : 0.7;
+
+            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                this.zoomScale * additionalScale // Scale, meters to pixels
+            );
         },
 
         initLayers: function() {
@@ -196,11 +202,7 @@ define(function(require) {
             var zoom = this.zoomScale * 1.5;
             if (zoom < Constants.SceneView.MAX_SCALE) {
                 this.zoomScale = zoom;
-                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                    new Vector2(0, 0),
-                    new Vector2(this.viewOriginX, this.viewOriginY),
-                    this.zoomScale // Scale, meters to pixels
-                );
+                this.initMVT();
                 this.updateMVTs();
             }
         },
@@ -209,11 +211,7 @@ define(function(require) {
             var zoom = this.zoomScale / 1.5;
             if (zoom > Constants.SceneView.MIN_SCALE) {
                 this.zoomScale = zoom;
-                this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                    new Vector2(0, 0),
-                    new Vector2(this.viewOriginX, this.viewOriginY),
-                    this.zoomScale // Scale, meters to pixels
-                );
+                this.initMVT();
                 this.updateMVTs();
             }
         },
