@@ -1,5 +1,7 @@
-Empty Simulation Template
+The Greenhouse Effect
 ===========
+
+I keep going to XKCD and finding that the subject matter of the day is related to the sim I'm currently working on: [http://xkcd.com/1519/](http://xkcd.com/1519/).
 
 ## Installing
 
