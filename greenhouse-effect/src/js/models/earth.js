@@ -14,9 +14,7 @@ define(function (require) {
 
             emissivity:      Constants.Earth.DEFAULT_EMISSIVITY,
             temperature:     Constants.Earth.BASE_TEMPERATURE,
-            baseTemperature: Constants.Earth.BASE_TEMPERATURE,
-
-            reflectivityAssessor: null
+            baseTemperature: Constants.Earth.BASE_TEMPERATURE
         }),
 
         initialize: function(attributes, options) {
@@ -27,6 +25,7 @@ define(function (require) {
 
             this.photonSource = null; // new CircularPhotonEmitter(center, radius, )
             this.photonAbsorber = null; // new BasicPhotonAbsorber();
+            this.reflectivityAssessor = null;
 
             this.temperatureHistoryLength = 200;
             this.temperatureHistory = [];
@@ -94,13 +93,80 @@ define(function (require) {
          */
 
         /**
+         * Makes the photon absorber absorb a photon and increases
+         *   the earth's net energy by the photon's energy.
+         */
+        absorbPhoton: function(photon) {
+            this.photonAbsorber.absorbPhoton(photon);
+            this.netEnergy += photon.get('energy');
+        },
+
+        /**
+         * Makes the photon source emit a photon.
+         */
+        emitPhoton: function() {
+            this.photonSource.emitPhoton();
+        },
+
+        /**
+         * Changes the earth's net energy to account for the release
+         *   of a given photon.
+         */
+        photonEmitted: function(photon) {
+            this.netEnergy = Math.max(0, netEnergy - photon.get('energy'));
+        },
+
+        /**
+         * Sets the earth object's ReflectivityAssessor object.
+         */
+        setReflectivityAssessor: function(reflectivityAssessor) {
+
+            /******************************** TODO *********************************
+             *
+             * I've been thinking about this reflectivity assessor object a lot, and
+             *   I think I've come to a decision.  In the original simulation, they
+             *   make the EarthGraphic (view for the Earth model) and implement this
+             *   ReflectivityAssessor interface on it so it can grab pixel data from
+             *   the scene and use it to determine the reflectivity of the Earth's
+             *   surface at the current position of the photon.  While I initially
+             *   objected to this as a violation between the separation of the model
+             *   and the view, I eventually settled on the fact that it's much
+             *   simpler and more sustainable (more flexible if we want to change
+             *   the graphics in the future) if we just do it that way.  Because it
+             *   doesn't need to be used by the simulation right away--because 
+             *   photons starting at the top are in no danger of getting to a
+             *   potentially reflective surface at the moment of their birth--we can
+             *   create an object that waits patiently until the assets have been
+             *   loaded and then switches from default reflectivity behavior to an
+             *   image-data-informed reflectivity decision.
+             *
+             ***********************************************************************/
+
+            this.reflectivityAssessor = reflectivityAssessor;
+        },
+
+        /**
          * Returns the reflectivity for a specific photon.
          */
         getReflectivity: function(photon) {
-            if (this.get('reflectivityAssessor'))
-                return this.get('reflectivityAssessor').getReflectivity(photon);
+            if (this.reflectivityAssessor)
+                return this.reflectivityAssessor.getReflectivity(photon);
             else
                 return 0;
+        },
+
+        /**
+         * 
+         */
+        setProductionRate: function(productionRate) {
+            this.photonSource.set('productionRate', productionRate);
+        },
+
+        /**
+         * 
+         */
+        getProductionRate: function() {
+            return this.photonSource.get('productionRate');
         }
 
     }, Constants.Earth);
