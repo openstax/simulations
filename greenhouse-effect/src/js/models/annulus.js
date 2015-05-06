@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector-2');
+    var Vector2 = require('common/math/vector2');
 
     var Body = require('models/body');
 

@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector-2');
-
     var Annulus        = require('models/annulus');
     var BandpassFilter = require('models/filter/bandpass');
 
