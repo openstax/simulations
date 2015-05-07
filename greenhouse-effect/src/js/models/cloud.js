@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Rectangle = require('common/math/rectangle');
 
     var Body = require('models/body');

@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var PositionableObject = require('common/models/positionable-object');
 
     /**
@@ -21,7 +23,7 @@ define(function (require) {
         initialize: function(attributes, options) {
             this.body = options.body;
 
-            this.listenTo(body, 'change:temperature', this.bodyTemperatureChanged);
+            this.listenTo(this.body, 'change:temperature', this.bodyTemperatureChanged);
         },
 
         bodyTemperatureChanged: function(body, temperature) {

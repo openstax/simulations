@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    
     var Body = require('models/body');
 
     var Disk = Body.extend({

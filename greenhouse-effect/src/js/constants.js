@@ -39,7 +39,7 @@ define(function (require) {
     Earth.DIAMETER = Earth.RADIUS * 2;
     Earth.BASE_TEMPERATURE = 251;
     Earth.MAX_EMISSIVITY = 10;
-    Earth.DEFAULT_EMISSIVITY = maxEarthEmissivity / 2;
+    Earth.DEFAULT_EMISSIVITY = Earth.MAX_EMISSIVITY / 2;
 
     Constants.Earth = Earth;
 
@@ -55,6 +55,7 @@ define(function (require) {
     Sun.DIAMETER = Earth.DIAMETER * 5;
     Sun.RADIUS = Sun.DIAMETER / 2;
     Sun.DISTANCE_FROM_EARTH = Sun.DIAMETER * 5;
+    Sun.DEFAULT_PRODUCTION_RATE = 0.034;
 
     Constants.Sun = Sun;
 

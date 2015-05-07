@@ -2,7 +2,8 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var Simulation = require('common/simulation/simulation');
     var Rectangle  = require('common/math/rectangle');
@@ -11,10 +12,11 @@ define(function (require, exports, module) {
     var Atmosphere     = require('models/atmosphere');
     var Earth          = require('models/earth');
     var BlackHole      = require('models/black-hole');
-    var Star           = require('models/star');
-    var PhotonAbsorber = require('models/photon-absorber');
-    var PhotonEmitter  = require('models/photon-emitter');
+    var Sun            = require('models/sun');
+    var Photon         = require('models/photon');
     var Thermometer    = require('models/thermometer');
+    var PhotonEarthCollisionModel = require('models/collision-model/photon-earth');
+    var PhotonCloudCollisionModel = require('models/collision-model/photon-cloud');
 
     /**
      * Constants
@@ -33,6 +35,9 @@ define(function (require, exports, module) {
 
         }),
         
+        /**
+         * 
+         */
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
@@ -42,6 +47,7 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
+            this.initPhotons();
             this.initBounds();
             this.initEarth();
             this.initAtmosphere();
@@ -50,6 +56,16 @@ define(function (require, exports, module) {
             this.initThermometer();
         },
 
+        /**
+         * Initializes the photon collection
+         */
+        initPhotons: function() {
+            this.photons = new Backbone.Collection([], { model: Photon });
+        },
+
+        /**
+         * Calculates the simulation bounds and initializes the rectangle
+         */
         initBounds: function() {
             var modelHeight = this.exposedEarth + Atmosphere.TROPOSPHERE_THICKNESS;
 
@@ -61,6 +77,9 @@ define(function (require, exports, module) {
             );
         },
 
+        /**
+         * Initializes the earth model
+         */
         initEarth: function() {
             var gamma = Math.atan2(this.bounds.w / 2, Earth.RADIUS);
 
@@ -74,28 +93,41 @@ define(function (require, exports, module) {
             this.earth.setProductionRate(1E-2);
         },
 
+        /**
+         * Initializes the atmosphere model
+         */
         initAtmosphere: function() {
             this.atmosphere = new Atmosphere({}, {
                 earth: this.earth
             });
         },
 
+        /**
+         * Initializes the sun model
+         */
         initSun: function() {
-            this.sun = new Star({
+            this.sun = new Sun({
                 radius: Sun.DIAMETER,
                 position: new Vector2(0, Earth.DIAMETER + Sun.DISTANCE_FROM_EARTH + Sun.RADIUS),
                 bounds: new Rectangle(this.bounds.x, this.bounds.y + this.bounds.h, this.bounds.w / 1, 1)
             });
 
-            this.sun.setProductionRate(0);
+            // this.sun.setProductionRate(0); it's set to zero until the view has loaded, but I don't know if this will be necessary in mine
+            this.sun.setProductionRate(Sun.DEFAULT_PRODUCTION_RATE);
         },
 
+        /**
+         * Initializes the black hole model
+         */
         initBlackHole: function() {
             this.blackHole = new BlackHole({}, {
                 simulation: this
             });
         },
 
+        /**
+         * Initializes the thermometer model
+         */
         initThermometer: function() {
             this.thermometer = new Thermometer({
                 position: new Vector2(this.bounds.x + 2, 0.5)
@@ -104,12 +136,72 @@ define(function (require, exports, module) {
             });
         },
 
-        _update: function(time, deltaTime) {
-            
+        /**
+         * Resets all component models
+         */
+        resetComponents: function() {
+            // Reset photons
+            this.photons.reset();
+
+            // Reset earth
+            this.earth.setProductionRate(1E-2);
+            this.earth.reset();
+
+            // Reset sun
+            this.sun.setProductionRate(Sun.DEFAULT_PRODUCTION_RATE);
         },
 
+        /**
+         * Updates models and handles interactions between photons
+         *   and other objects.
+         */
+        _update: function(time, deltaTime) {
+            var i;
+
+            // Update all the photons
+            for (i = this.photons.length - 1; i >= 0; i--)
+                this.photons.at(i).update(deltaTime);
+
+            this.earth.update(deltaTime);
+            this.atmosphere.update(deltaTime);
+            this.sun.update(deltaTime);
+
+            // Make the photons interact with other objects
+            var photon;
+            for (i = this.photons.length - 1; i >= 0; i--) {
+                photon = this.photons.at(i);
+
+                // Check for collisions with earth
+                PhotonEarthCollisionModel.handle(photon, this.earth);
+
+                // Check for collisions with clouds
+
+                // Check for collisions with glass panes
+
+                // Interact with the atmosphere
+                this.atmosphere.interactWithPhoton(photon);
+            }
+        },
+
+        /**
+         * 
+         */
         setEarthReflectivityAssessor: function(reflectivityAssessor) {
             this.earth.setReflectivityAssessor(reflectivityAssessor);
+        },
+
+        /**
+         * 
+         */
+        absorbPhoton: function(photon) {
+            this.photons.remove(photon);
+        },
+
+        /**
+         * 
+         */
+        photonEmitted: function(photon) {
+            this.photons.add(photon);
         }
 
     });

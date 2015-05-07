@@ -2,7 +2,11 @@ define(function (require) {
 
     'use strict';
 
-    var Disk = require('models/disk');
+    var _ = require('underscore');
+
+    var Disk                  = require('models/disk');
+    var CircularPhotonEmitter = require('models/photon-emitter/circular');
+    var PhotonAbsorber        = require('models/photon-absorber');
 
     var Constants = require('constants');
 
@@ -36,8 +40,8 @@ define(function (require) {
                 wavelength: Constants.IR_WAVELENGTH,
                 alpha: options.alpha,
                 beta:  options.beta
-            })
-            this.photonAbsorber = new BasicPhotonAbsorber();
+            });
+            this.photonAbsorber = new PhotonAbsorber();
             this.reflectivityAssessor = null;
 
             this.temperatureHistoryLength = 200;
@@ -126,7 +130,7 @@ define(function (require) {
          *   of a given photon.
          */
         photonEmitted: function(photon) {
-            this.netEnergy = Math.max(0, netEnergy - photon.get('energy'));
+            this.netEnergy = Math.max(0, this.netEnergy - photon.get('energy'));
         },
 
         /**

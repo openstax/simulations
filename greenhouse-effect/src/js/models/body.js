@@ -2,13 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var MotionObject = require('common/models/motion-object');
-    var Rectangle    = require('common/math/rectangle');
-    var Vector2      = require('common/math/vector2');
-
-    var Constants = require('constants');
 
     var Body = MotionObject.extend({
 
@@ -42,8 +38,7 @@ define(function (require) {
          * Calculates and returns the body's kinetic energy.
          */
         getKineticEnergy: function() {
-            return 
-                (this.get('mass') * this.get('velocity').lengthSq() / 2) + 
+            return (this.get('mass') * this.get('velocity').lengthSq() / 2) + 
                 (this.getMomentOfInertia() * this.get('omega') * this.get('omega') / 2);
         }
 

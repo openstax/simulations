@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Disk = require('models/disk');
 
     var Constants = require('constants');

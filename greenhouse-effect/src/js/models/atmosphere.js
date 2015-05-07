@@ -2,8 +2,12 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Annulus        = require('models/annulus');
     var BandpassFilter = require('models/filter/bandpass');
+
+    var Constants = require('constants');
 
     /**
      * Model representation of an atmosphere.
@@ -11,7 +15,7 @@ define(function (require) {
     var Atmosphere = Annulus.extend({
 
         defaults: _.extend({}, Annulus.prototype.defaults, {
-            greenhouseGasConcentration: Atmosphere.DEFAULT_GREENHOUSE_GAS_CONCENTRATION
+            greenhouseGasConcentration: Constants.Atmosphere.DEFAULT_GREENHOUSE_GAS_CONCENTRATION
         }),
 
         /**
@@ -32,6 +36,11 @@ define(function (require) {
                 Constants.IR_WAVELENGTH
             );
         },
+
+        /**
+         * We can just clear this out because the atmosphere doesn't move.
+         */
+        update: function(deltaTime) {},
 
         /**
          * Scatters a photon or lets it pass depending on its

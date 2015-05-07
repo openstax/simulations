@@ -14,8 +14,6 @@ define(function (require) {
         [1000, 1400]
     ]);
 
-    var Constants = require('constants');
-
     var GlassLayersEarth = Earth.extend({
 
         /**
