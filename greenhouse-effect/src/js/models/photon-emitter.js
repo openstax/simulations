@@ -7,7 +7,7 @@ define(function (require) {
     /**
      * 
      */
-    var AbstractPhotonEmitter = Backbone.Model.extend({
+    var PhotonEmitter = Backbone.Model.extend({
 
         defaults: {
             productionRate: 0
@@ -34,5 +34,5 @@ define(function (require) {
 
     });
 
-    return AbstractPhotonEmitter;
+    return PhotonEmitter;
 });

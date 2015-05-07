@@ -4,21 +4,21 @@ define(function (require) {
 
     var Rectangle = require('common/math/rectangle');
 
-    var AbstractPhotonEmitter = require('models/photon-emitter');
-    var Photon                = require('models/photon');
+    var PhotonEmitter = require('models/photon-emitter');
+    var Photon        = require('models/photon');
 
     /**
      * 
      */
-    var HorizontalPhotonEmitter = AbstractPhotonEmitter.extend({
+    var HorizontalPhotonEmitter = PhotonEmitter.extend({
 
-        defaults: _.extend({}, AbstractPhotonEmitter.prototype.defaults, {
+        defaults: _.extend({}, PhotonEmitter.prototype.defaults, {
             bounds: null,
             wavelength: 0,
         }),
 
         initialize: function(attributes, options) {
-            AbstractPhotonEmitter.prototype.initialize.apply(this, [attributes, options]);
+            PhotonEmitter.prototype.initialize.apply(this, [attributes, options]);
 
             this.set('bounds', new Rectangle(this.get('bounds')));
         },

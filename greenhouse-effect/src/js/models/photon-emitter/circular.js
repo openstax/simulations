@@ -4,15 +4,15 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var AbstractPhotonEmitter = require('models/photon-emitter');
-    var Photon                = require('models/photon');
+    var PhotonEmitter = require('models/photon-emitter');
+    var Photon        = require('models/photon');
 
     /**
      * 
      */
-    var CircularPhotonEmitter = AbstractPhotonEmitter.extend({
+    var CircularPhotonEmitter = PhotonEmitter.extend({
 
-        defaults: _.extend({}, AbstractPhotonEmitter.prototype.defaults, {
+        defaults: _.extend({}, PhotonEmitter.prototype.defaults, {
             center: null,
             radius: 0,
             wavelength: 0,
@@ -21,7 +21,7 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            AbstractPhotonEmitter.prototype.initialize.apply(this, [attributes, options]);
+            PhotonEmitter.prototype.initialize.apply(this, [attributes, options]);
 
             this.set('center', new Vector2(this.get('center')));
         },
