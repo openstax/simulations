@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var AbstractPhotonEmitter = require('models/photon-emitter');
     var Photon                = require('models/photon');
@@ -10,36 +10,31 @@ define(function (require) {
     /**
      * 
      */
-    var CircularPhotonEmitter = AbstractPhotonEmitter.extend({
+    var HorizontalPhotonEmitter = AbstractPhotonEmitter.extend({
 
         defaults: _.extend({}, AbstractPhotonEmitter.prototype.defaults, {
-            center: null,
-            radius: 0,
+            bounds: null,
             wavelength: 0,
-            alpha: 0,
-            beta:  Math.PI * 2
         }),
 
         initialize: function(attributes, options) {
             AbstractPhotonEmitter.prototype.initialize.apply(this, [attributes, options]);
 
-            this.set('center', new Vector2(this.get('center')));
+            this.set('bounds', new Rectangle(this.get('bounds')));
         },
 
         /**
          * Returns a new photon.
          */
         emitPhoton: function() {
-            var theta = Math.random() * (this.get('beta') - this.get('alpha')) + this.get('alpha');
-
             var photon = new Photon({
                 wavelength: this.get('wavelength'),
                 source: this
             });
-            photon.setDirection(theta);
+            photon.setDirection(3 * Math.PI / 2);
             photon.setPosition(
-                this.get('center').x + this.get('radius') * Math.cos(theta),
-                this.get('center').y + this.get('radius') * Math.sin(theta)
+                this.get('bounds').x + this.get('bounds').w * Math.random(),
+                this.get('bounds').y + this.get('bounds').h * Math.random()
             );
 
             return photon;
@@ -47,5 +42,5 @@ define(function (require) {
 
     });
 
-    return CircularPhotonEmitter;
+    return HorizontalPhotonEmitter;
 });
