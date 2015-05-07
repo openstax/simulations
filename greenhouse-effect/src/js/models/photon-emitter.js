@@ -30,7 +30,11 @@ define(function (require) {
             }
         },
 
-        emitPhoton: function() {}
+        emitPhoton: function() {},
+
+        setProductionRate: function(productionRate) {
+            this.set('productionRate', productionRate);
+        }
 
     });
 

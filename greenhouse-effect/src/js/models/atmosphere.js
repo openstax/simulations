@@ -21,9 +21,6 @@ define(function (require) {
         initialize: function(attributes, options) {
             Annulus.prototype.initialize.apply(this, [attributes, options]);
 
-            // this.troposphereThickness  = Atmosphere.TROPOSPHERE_THICKNESS;
-            // this.stratosphereThickness = Atmosphere.STRATOSPHERE_THICKNESS;
-
             this.troposphere = new Annulus({
                 center: options.earth.get('position'),
                 innerDiameter: 2 *  options.earth.get('radius'),

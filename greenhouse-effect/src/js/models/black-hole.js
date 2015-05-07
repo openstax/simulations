@@ -12,12 +12,17 @@ define(function (require) {
     var BlackHole = PhotonAbsorber.extend({
 
         defaults: _.extend({}, PhotonAbsorber.prototype.defaults, {
-            model: null,
             eventHorizon: null
         }),
 
+        /**
+         * Requires a simulation model instance to be specified in
+         *   the options as 'simulation'.
+         */
         initialize: function(attributes, options) {
             PhotonAbsorber.prototype.initialize.apply(this, arguments);
+
+            this.simulation = options.simulation;
 
             this.set('eventHorizon', new Rectangle(this.get('eventHorizon')));
         },
@@ -25,14 +30,14 @@ define(function (require) {
         update: function(deltaTime) {
             var eventHorizon = this.get('eventHorizon');
             eventHorizon.set(
-                this.get('model').bounds().x - 10,
-                this.get('model').bounds().y - 10,
-                this.get('model').bounds().w + 20,
-                this.get('model').bounds().h + 20
+                this.simulation.bounds().x - 10,
+                this.simulation.bounds().y - 10,
+                this.simulation.bounds().w + 20,
+                this.simulation.bounds().h + 20
             );
 
             // If photon is way outside the view, delete it
-            var photons = this.get('model').photons;
+            var photons = this.simulation.photons;
             var photon;
             while (photon = photons.first()) {
                 if (!eventHorizon.contains(photon.get('position'))) 

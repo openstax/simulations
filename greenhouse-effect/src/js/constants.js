@@ -29,6 +29,38 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                                EARTH                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var Earth = {};
+
+    Earth.RADIUS = 6370;
+    Earth.DIAMETER = Earth.RADIUS * 2;
+    Earth.BASE_TEMPERATURE = 251;
+    Earth.MAX_EMISSIVITY = 10;
+    Earth.DEFAULT_EMISSIVITY = maxEarthEmissivity / 2;
+
+    Constants.Earth = Earth;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                                 SUN                                 **
+     **                                                                     **
+     *************************************************************************/
+
+    var Sun = {};
+
+    Sun.DIAMETER = Earth.DIAMETER * 5;
+    Sun.RADIUS = Sun.DIAMETER / 2;
+    Sun.DISTANCE_FROM_EARTH = Sun.DIAMETER * 5;
+
+    Constants.Sun = Sun;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                             ATMOSPHERE                              **
      **                                                                     **
      *************************************************************************/

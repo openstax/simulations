@@ -10,21 +10,34 @@ define(function (require) {
 
         defaults: _.extend({}, Disk.prototype.defaults, {
             mass:   Number.MAX_VALUE, 
-            radius: 6370,
+            radius: Constants.Earth.RADIUS,
 
             emissivity:      Constants.Earth.DEFAULT_EMISSIVITY,
             temperature:     Constants.Earth.BASE_TEMPERATURE,
             baseTemperature: Constants.Earth.BASE_TEMPERATURE
         }),
 
+        /**
+         * Initializes the model instance. Requires 'alpha' and
+         *   'beta' values to be specified in the options.
+         */
         initialize: function(attributes, options) {
             Disk.prototype.initialize.apply(this, [attributes, options]);
 
             this.timeSinceEmission = 0;
             this.netEnergy = 0;
 
-            this.photonSource = null; // new CircularPhotonEmitter(center, radius, )
-            this.photonAbsorber = null; // new BasicPhotonAbsorber();
+            if (options === undefined || options.alpha === undefined || options.beta === undefined)
+                throw 'Earth constructor requires options for alpha and beta values';
+
+            this.photonSource = new CircularPhotonEmitter({
+                center: this.get('position'),
+                radius: this.get('radius'),
+                wavelength: Constants.IR_WAVELENGTH,
+                alpha: options.alpha,
+                beta:  options.beta
+            })
+            this.photonAbsorber = new BasicPhotonAbsorber();
             this.reflectivityAssessor = null;
 
             this.temperatureHistoryLength = 200;
