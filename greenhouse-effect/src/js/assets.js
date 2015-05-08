@@ -7,7 +7,8 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        PHOTON_SUNLIGHT: 'phet/thin2.png',
+        PHOTON_INFRARED: 'phet/photon-660.png'
     };
 
     Assets.SpriteSheets = {};
