@@ -53,6 +53,8 @@ define(function(require) {
          * Initializes the new PhotonView.
          */
         initialize: function(options) {
+            this.listenTo(this.model, 'change:position', this.updatePosition);
+            
             this.updateMVT(options.mvt);
         },
 

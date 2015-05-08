@@ -13,10 +13,6 @@ define(function (require) {
      */
     var BlackHole = PhotonAbsorber.extend({
 
-        defaults: _.extend({}, PhotonAbsorber.prototype.defaults, {
-            eventHorizon: null
-        }),
-
         /**
          * Requires a simulation model instance to be specified in
          *   the options as 'simulation'.
@@ -26,24 +22,20 @@ define(function (require) {
 
             this.simulation = options.simulation;
 
-            this.set('eventHorizon', new Rectangle(this.get('eventHorizon')));
+            this.eventHorizon = new Rectangle(
+                this.simulation.bounds.x - 10,
+                this.simulation.bounds.y - 10,
+                this.simulation.bounds.w + 20,
+                this.simulation.bounds.h + 20
+            );
         },
 
         update: function(deltaTime) {
-            var eventHorizon = this.get('eventHorizon');
-            eventHorizon.set(
-                this.simulation.bounds().x - 10,
-                this.simulation.bounds().y - 10,
-                this.simulation.bounds().w + 20,
-                this.simulation.bounds().h + 20
-            );
-
             // If photon is way outside the view, delete it
             var photons = this.simulation.photons;
-            var photon;
-            while (photon = photons.first()) {
-                if (!eventHorizon.contains(photon.get('position'))) 
-                    photon.destroy();
+            for (var i = photons.length - 1; i >= 0; i--) {
+                if (!this.eventHorizon.contains(photons.at(i).get('position'))) 
+                    photons.at(i).destroy();
             }
         }
 

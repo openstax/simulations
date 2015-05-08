@@ -168,6 +168,7 @@ define(function (require, exports, module) {
             this.earth.update(deltaTime);
             this.atmosphere.update(deltaTime);
             this.sun.update(deltaTime);
+            this.blackHole.update(deltaTime);
 
             // Make the photons interact with other objects
             var photon;
