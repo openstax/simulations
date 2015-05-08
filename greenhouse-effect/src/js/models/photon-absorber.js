@@ -11,7 +11,9 @@ define(function (require) {
 
         update: function(deltaTime) {},
 
-        absorbPhoton: function() {}
+        absorbPhoton: function(photon) {
+            this.trigger('photon-absorbed', photon);
+        }
 
     });
 

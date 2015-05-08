@@ -43,7 +43,6 @@ define(function (require) {
             });
             this.listenTo(this.photonSource, 'photon-emitted', this.photonEmitted);
 
-            this.photonAbsorber = new PhotonAbsorber();
             this.reflectivityAssessor = null;
 
             this.temperatureHistoryLength = 200;
@@ -116,8 +115,8 @@ define(function (require) {
          *   the earth's net energy by the photon's energy.
          */
         absorbPhoton: function(photon) {
-            this.photonAbsorber.absorbPhoton(photon);
             this.netEnergy += photon.get('energy');
+            this.trigger('photon-absorbed', photon);
         },
 
         /**

@@ -184,6 +184,8 @@ define(function (require, exports, module) {
                 // Interact with the atmosphere
                 this.atmosphere.interactWithPhoton(photon);
             }
+
+            //console.log(this.photons.length)
         },
 
         /**
@@ -194,18 +196,30 @@ define(function (require, exports, module) {
         },
 
         /**
-         * 
+         * Listens for any absorption events in the system
+         *   and removes the photon that was absorbed by
+         *   something from the master list.  If a photon
+         *   is absorbed by an object in the system, it is
+         *   destroyed forever; the energy of the photon
+         *   is added to that object, and the object may
+         *   emit a new photon later with some of that
+         *   energy.
          */
-        absorbPhoton: function(photon) {
+        photonAbsorbed: function(photon) {
             this.photons.remove(photon);
-            //console.log('photon absorbed');
         },
 
         /**
-         * 
+         * Listens for any emission events in the system
+         *   and adds the photon that was emitted to the
+         *   master photon collection.  Photons in this 
+         *   list will be rendered on the screen.  Any
+         *   photon that is not in this list will not be
+         *   rendered to the screen, so every photon
+         *   emission that occurs needs to trigger this
+         *   function.
          */
         photonEmitted: function(photon) {
-            //console.log('photon added');
             this.photons.add(photon);
         }
 

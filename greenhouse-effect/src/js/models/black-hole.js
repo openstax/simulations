@@ -45,9 +45,7 @@ define(function (require) {
                 if (!eventHorizon.contains(photon.get('position'))) 
                     photon.destroy();
             }
-        },
-
-        absorbPhoton: function() {}
+        }
 
     });
 
