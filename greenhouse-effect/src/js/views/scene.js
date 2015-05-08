@@ -34,11 +34,7 @@ define(function(require) {
 
             this.listenTo(this.simulation.photons, 'reset',          this.photonsReset);
             this.listenTo(this.simulation.photons, 'add',            this.photonAdded);
-            this.listenTo(this.simulation.photons, 'remove', this.photonRemoved);
-            this.listenTo(this.simulation.photons, 'destroy', function(collection, photon) {
-                this.photonRemoved(collection, photon);
-                console.log('destroying');
-            });
+            this.listenTo(this.simulation.photons, 'remove destroy', this.photonRemoved);
         },
 
         renderContent: function() {

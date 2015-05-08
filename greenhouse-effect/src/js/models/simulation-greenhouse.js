@@ -186,7 +186,7 @@ define(function (require, exports, module) {
                 this.atmosphere.interactWithPhoton(photon);
             }
 
-            //console.log(this.photons.length)
+            console.log(this.photons.length)
         },
 
         /**

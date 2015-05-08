@@ -59,7 +59,7 @@ define(function (require) {
     Sun.DIAMETER = Earth.DIAMETER * 5;
     Sun.RADIUS = Sun.DIAMETER / 2;
     Sun.DISTANCE_FROM_EARTH = Sun.DIAMETER * 5;
-    Sun.DEFAULT_PRODUCTION_RATE = 0.034 * 100;
+    Sun.DEFAULT_PRODUCTION_RATE = 0.034 * 1000;
 
     Constants.Sun = Sun;
 
