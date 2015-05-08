@@ -16,7 +16,6 @@ define(function (require, exports, module) {
     var Photon         = require('models/photon');
     var Thermometer    = require('models/thermometer');
     var PhotonEarthCollisionModel = require('models/collision-model/photon-earth');
-    var PhotonCloudCollisionModel = require('models/collision-model/photon-cloud');
 
     /**
      * Constants
@@ -27,7 +26,7 @@ define(function (require, exports, module) {
      * The base simulation model for the "Greenhouse Effect" and 
      *   "Glass Layers" tabs.
      */
-    var GreenhouseSimulation = Simulation.extend({
+    var BaseGreenhouseSimulation = Simulation.extend({
 
         exposedEarth: 1,
 
@@ -175,22 +174,21 @@ define(function (require, exports, module) {
             this.blackHole.update(deltaTime);
 
             // Make the photons interact with other objects
-            var photon;
-            for (i = this.photons.length - 1; i >= 0; i--) {
-                photon = this.photons.at(i);
-
-                // Check for collisions with earth
-                PhotonEarthCollisionModel.handle(photon, this.earth);
-
-                // Check for collisions with clouds
-
-                // Check for collisions with glass panes
-
-                // Interact with the atmosphere
-                this.atmosphere.interactWithPhoton(photon);
-            }
+            for (i = this.photons.length - 1; i >= 0; i--)
+                this.handlePhotonInteractions(this.photons.at(i));
 
             //console.log(this.photons.length)
+        },
+
+        /**
+         * Make the photon interact with the objects in the sim.
+         */
+        handlePhotonInteractions: function(photon) {
+            // Check for collisions with earth
+            PhotonEarthCollisionModel.handle(photon, this.earth);
+
+            // Interact with the atmosphere
+            this.atmosphere.interactWithPhoton(photon);
         },
 
         /**
@@ -230,5 +228,5 @@ define(function (require, exports, module) {
 
     });
 
-    return GreenhouseSimulation;
+    return BaseGreenhouseSimulation;
 });

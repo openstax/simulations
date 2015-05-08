@@ -45,6 +45,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initBackground();
             this.initPhotons();
         },
 
@@ -68,6 +69,18 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+        },
+
+        initBackground: function() {
+            // var background = Assets.createSprite(Assets.Images.SCENE_BG);
+
+            // var targetSpriteWidth = this.width; // In pixels
+            // var scale = targetSpriteWidth / background.width;
+
+            // background.scale.x = scale;
+            // background.scale.y = scale;
+
+            //this.stage.addChild(background);
         },
 
         initPhotons: function() {

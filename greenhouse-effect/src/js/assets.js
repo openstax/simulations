@@ -6,7 +6,7 @@ define(function (require) {
 
     Assets.Path = 'img/';
 
-    Assets.Images = {   
+    Assets.Images = {
         PHOTON_SUNLIGHT: 'phet/thin2.png',
         PHOTON_INFRARED: 'phet/photon-660.png'
     };

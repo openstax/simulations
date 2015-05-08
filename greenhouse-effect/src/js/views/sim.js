@@ -7,7 +7,7 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var GreenhouseSimulation = require('models/simulation-greenhouse');
+    var GreenhouseEffectSimulation = require('models/simulation/greenhouse-effect');
     var TemplateSceneView  = require('views/scene');
 
     var Constants = require('constants');
@@ -68,7 +68,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new GreenhouseSimulation();
+            this.simulation = new GreenhouseEffectSimulation();
         },
 
         /**
