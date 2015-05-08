@@ -54,6 +54,7 @@ define(function (require) {
                 var probability = (Atmosphere.TROPOSPHERE_THICKNESS - altitude) * this.get('greenhouseGasConcentration');
                 if (Math.random() <= probability) {
                     // Scatter the photon in a random direction.
+                    console.log('scattering');
                     var dispersionAngle = Math.PI / 4;
                     var theta = Math.random() * dispersionAngle + (Math.PI * 3 / 2) - (dispersionAngle / 2);
                     theta += Math.random() < 0.5 ? 0 : Math.PI;

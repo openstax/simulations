@@ -32,7 +32,7 @@ define(function (require, exports, module) {
         exposedEarth: 1,
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            timeScale: 0.5
         }),
         
         /**
@@ -54,6 +54,10 @@ define(function (require, exports, module) {
             this.initSun();
             this.initBlackHole();
             this.initThermometer();
+
+
+            // TODO: This is just testing code
+            this.atmosphere.set('greenhouseGasConcentration', Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
         },
 
         /**
@@ -186,7 +190,7 @@ define(function (require, exports, module) {
                 this.atmosphere.interactWithPhoton(photon);
             }
 
-            console.log(this.photons.length)
+            //console.log(this.photons.length)
         },
 
         /**

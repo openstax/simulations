@@ -85,5 +85,19 @@ define(function (require) {
     Constants.Atmosphere = Atmosphere;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                               PHOTON                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhotonView = {};
+
+    PhotonView.MODEL_DIAMETER = 0.46; // Meters, model space
+
+    Constants.PhotonView = PhotonView;
+
+
+
     return Constants;
 });

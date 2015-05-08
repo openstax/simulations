@@ -60,8 +60,8 @@ define(function(require) {
             
             var scale = (screenRatio > boundsRatio) ? usableScreenSpace.h / bounds.h : usableScreenSpace.w / bounds.w;
             
-            this.viewOriginX = Math.round(usableScreenSpace.x);
-            this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h / 2);
+            this.viewOriginX = Math.round(usableScreenSpace.x + usableScreenSpace.w / 2);
+            this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h);
 
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),

@@ -8,7 +8,8 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
 
-    var Assets = require('assets');
+    var Assets    = require('assets');
+    var Constants = require('constants');
 
     /*
      * Storing shared (static) textures in an object called
@@ -54,7 +55,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.listenTo(this.model, 'change:position', this.updatePosition);
-            
+
             this.updateMVT(options.mvt);
         },
 
@@ -64,6 +65,10 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            var targetSpriteWidth = this.mvt.modelToViewDeltaX(PhotonView.MODEL_DIAMETER); // In pixels
+            var scale = targetSpriteWidth / this.displayObject.width;
+            this.displayObject.scale.x = this.displayObject.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
         },
@@ -77,7 +82,7 @@ define(function(require) {
             this.displayObject.y = viewPos.y;
         }
 
-    });
+    }, Constants.PhotonView);
 
     return PhotonView;
 });
