@@ -41,6 +41,8 @@ define(function (require) {
                 alpha: options.alpha,
                 beta:  options.beta
             });
+            this.listenTo(this.photonSource, 'photon-emitted', this.photonEmitted);
+
             this.photonAbsorber = new PhotonAbsorber();
             this.reflectivityAssessor = null;
 
@@ -131,6 +133,7 @@ define(function (require) {
          */
         photonEmitted: function(photon) {
             this.netEnergy = Math.max(0, this.netEnergy - photon.get('energy'));
+            this.trigger('photon-emitted', photon);
         },
 
         /**

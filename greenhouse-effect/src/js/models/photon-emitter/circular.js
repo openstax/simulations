@@ -44,6 +44,8 @@ define(function (require) {
                 this.get('center').y + this.get('radius') * Math.sin(theta)
             );
 
+            this.trigger('photon-emitted', photon);
+
             return photon;
         },
 

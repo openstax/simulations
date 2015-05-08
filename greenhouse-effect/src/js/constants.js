@@ -11,7 +11,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    Constants.SPEED_OF_LIGHT = 0.01; 
+    Constants.SPEED_OF_LIGHT = 0.01 * 1000; 
 
     // Plank's constant
     Constants.h = 6.6310E-34;
@@ -25,6 +25,9 @@ define(function (require) {
     Constants.IR_WAVELENGTH       = 850E-9;
     Constants.VISIBLE_WAVELENGTH  = 580E-9;
     Constants.UV_WAVELENGTH       = 100E-9;
+
+    Constants.DEFAULT_TIME_DELTA_PER_TICK = 1 / 10;
+    Constants.DEFAULT_DELAY_BETWEEN_TICKS = 1 / 30;
 
 
     /*************************************************************************
@@ -40,6 +43,7 @@ define(function (require) {
     Earth.BASE_TEMPERATURE = 251;
     Earth.MAX_EMISSIVITY = 10;
     Earth.DEFAULT_EMISSIVITY = Earth.MAX_EMISSIVITY / 2;
+    Earth.PHOTON_EMISSION_TIME = Constants.DEFAULT_TIME_DELTA_PER_TICK;
 
     Constants.Earth = Earth;
 
@@ -55,7 +59,7 @@ define(function (require) {
     Sun.DIAMETER = Earth.DIAMETER * 5;
     Sun.RADIUS = Sun.DIAMETER / 2;
     Sun.DISTANCE_FROM_EARTH = Sun.DIAMETER * 5;
-    Sun.DEFAULT_PRODUCTION_RATE = 0.034;
+    Sun.DEFAULT_PRODUCTION_RATE = 0.034 * 100;
 
     Constants.Sun = Sun;
 

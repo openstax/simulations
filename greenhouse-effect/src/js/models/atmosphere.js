@@ -50,7 +50,7 @@ define(function (require) {
             // Is the photon of a wavelength that is affected by greenhouse gasses?
             if (this.greenhouseGasFilter.passes(photon.get('wavelength'))) {
                 // The likelihood of being scattered is dependent on the altitude
-                var altitude = this.troposphere.distanceFromInnerDiameter(photon.getPosition());
+                var altitude = this.troposphere.distanceFromInnerDiameter(photon.get('position'));
                 var probability = (Atmosphere.TROPOSPHERE_THICKNESS - altitude) * this.get('greenhouseGasConcentration');
                 if (Math.random() <= probability) {
                     // Scatter the photon in a random direction.

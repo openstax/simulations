@@ -25,7 +25,8 @@ define(function (require) {
         },
 
         /**
-         * Points the velocity by the angle theta.
+         * Points the velocity towards the angle theta with
+         *   a magnitude of the speed of light.
          */
         setDirection: function(theta) {
             this.setVelocity(

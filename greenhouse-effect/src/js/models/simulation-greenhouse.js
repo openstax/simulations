@@ -91,6 +91,8 @@ define(function (require, exports, module) {
             });
 
             this.earth.setProductionRate(1E-2);
+            this.listenTo(this.earth, 'photon-emitted',  this.photonEmitted);
+            this.listenTo(this.earth, 'photon-absorbed', this.photonAbsorbed);
         },
 
         /**
@@ -114,6 +116,7 @@ define(function (require, exports, module) {
 
             // this.sun.setProductionRate(0); it's set to zero until the view has loaded, but I don't know if this will be necessary in mine
             this.sun.setProductionRate(Sun.DEFAULT_PRODUCTION_RATE);
+            this.listenTo(this.sun, 'photon-emitted', this.photonEmitted);
         },
 
         /**
@@ -195,12 +198,14 @@ define(function (require, exports, module) {
          */
         absorbPhoton: function(photon) {
             this.photons.remove(photon);
+            //console.log('photon absorbed');
         },
 
         /**
          * 
          */
         photonEmitted: function(photon) {
+            //console.log('photon added');
             this.photons.add(photon);
         }
 

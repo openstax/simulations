@@ -39,6 +39,8 @@ define(function (require) {
                 this.get('bounds').y + this.get('bounds').h * Math.random()
             );
 
+            this.trigger('photon-emitted', photon);
+
             return photon;
         },
 
