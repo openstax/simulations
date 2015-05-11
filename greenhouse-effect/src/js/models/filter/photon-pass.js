@@ -5,7 +5,7 @@ define(function (require) {
     var _ = require('underscore');
 
     var Filter = require('models/filter');
-    var ProbabilisticPassFilter = require('models/probabilistic-pass');
+    var ProbabilisticPassFilter = require('models/filter/probabilistic-pass');
 
     /**
      * A filter model for the clouds likelihood of reflecting light of a specified wavelength

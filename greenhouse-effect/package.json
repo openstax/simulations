@@ -4,7 +4,7 @@
   "description": "A simulation to show effects of greenhouse gasses in the atmosphere on the surface temperature of the planet.",
   "main": "main.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed; r.js -convert node_modules/eitrium-vec3 node_modules/vec3-shimmed",
+    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed",
     "prepublish": "bower install",
     "test": "grunt test"
   },
@@ -26,7 +26,6 @@
     "bootstrap-select": "^1.6.3",
     "bower": "^1.3.9",
     "csso": "^1.3.11",
-    "eitrium-vec3": "0.0.1",
     "font-awesome": "^4.2.0",
     "grunt": "^0.4.5",
     "grunt-contrib-clean": "^0.6.0",
