@@ -5,7 +5,7 @@ define(function (require) {
     var _ = require('underscore');
 
     var Annulus        = require('models/annulus');
-    var BandpassFilter = require('models/filter/bandpass');
+    var BandPassFilter = require('models/filter/band-pass');
 
     var Constants = require('constants');
 
@@ -31,7 +31,7 @@ define(function (require) {
                 outerDiameter: 2 * (options.earth.get('radius') + Atmosphere.TROPOSPHERE_THICKNESS)
             });
 
-            this.greenhouseGasFilter = new BandpassFilter(
+            this.greenhouseGasFilter = new BandPassFilter(
                 Constants.IR_WAVELENGTH,
                 Constants.IR_WAVELENGTH
             );

@@ -11,7 +11,7 @@ define(function (require) {
      * A filter model for the clouds likelihood of reflecting light of a specified wavelength
      * If the filter *passes* the wavelength, that means the cloud will reflect the photon
      */
-    var PhotonPassFilter = function(probability) {
+    var PhotonPassFilter = function() {
         Filter.apply(this, arguments);
 
         this.visibleLightFilter = new ProbabilisticPassFilter(0.4);

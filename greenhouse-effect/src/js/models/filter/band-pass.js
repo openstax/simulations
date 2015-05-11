@@ -9,7 +9,7 @@ define(function (require) {
     /**
      * 
      */
-    var BandpassFilter = function(low, high) {
+    var BandPassFilter = function(low, high) {
         Filter.apply(this, arguments);
 
         this.low  = low;
@@ -19,7 +19,7 @@ define(function (require) {
     /**
      * Instance functions/properties
      */
-    _.extend(BandpassFilter.prototype, Filter.prototype, {
+    _.extend(BandPassFilter.prototype, Filter.prototype, {
 
         /**
          * Returns whether or not a certain value passes
@@ -31,5 +31,5 @@ define(function (require) {
 
     });
 
-    return BandpassFilter;
+    return BandPassFilter;
 });
