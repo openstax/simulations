@@ -83,7 +83,7 @@ define(function (require) {
                 // Set up some 3D vectors for calculations
                 r1_3D.set(r1.x, r1.y, 0);
                 photonVel_3D.set(photon.get('velocity').x, photon.get('velocity').y, 0);
-                normal_3D.set(normal.x, normal.y);
+                normal_3D.set(normal.x, normal.y, 0);
                 omega.set(0, 0, photon.get('omega'));
                 
                 // Get the magnitude along the line of action of the bodies'
@@ -92,13 +92,14 @@ define(function (require) {
                     .cross(r1_3D)
                     .add(photonVel_3D)
                     .dot(normal_3D);
+                //console.log(vr);
 
                 // Assume the coefficient of restitution is 1
                 var e = 1;
 
                 // Compute the impulse (j)
                 var numerator = -vr * (1 + e);
-                t1 = vec3
+                t1
                     .set(r1_3D)
                     .cross(normal_3D)
                     .scale(1 / photon.getMomentOfInertia());
@@ -116,17 +117,21 @@ define(function (require) {
                 var j = numerator / denominator;
 
                 // Compute the new linear and angular velocities, based on the impulse
+                //console.log(photon.cid + ': ' + photon.get('velocity').toString());
                 photon.addVelocity(
                     vec2
                         .set(normal)
                         .scale(j / photon.get('mass'))
                 );
+                //console.log(vec2.toString());
+                //console.log(photon.cid + ': ' + photon.get('velocity').toString());
 
                 // Determine what the photon's new omega value will be
                 nj.set(normal.x, normal.y, 0).scale(j);
                 var omegaB = photon.get('omega') + (
                     vec3.set(r1_3D).cross(nj).z / photon.getMomentOfInertia()
                 );
+                console.log(omegaB)
                 photon.set('omega', omegaB);
             }
         },

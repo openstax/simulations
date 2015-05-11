@@ -11,7 +11,8 @@ define(function (require) {
     var Photon = Disk.extend({
 
         defaults: _.extend({}, Disk.prototype.defaults, {
-            mass: 1, // Mass of photons always 1
+            mass:   Constants.Photon.MASS,
+            radius: Constants.Photon.RADIUS,
 
             wavelength: 1,
             energy:     0, // Calculated from the wavelength on initialization
@@ -35,7 +36,7 @@ define(function (require) {
             );
         }
 
-    });
+    }, Constants.Photon);
 
     return Photon;
 });

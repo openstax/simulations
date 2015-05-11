@@ -91,6 +91,14 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
+    var Photon = {};
+
+    Photon.RADIUS = 0.1;
+    Photon.MASS = 1;
+
+    Constants.Photon = Photon;
+
+
     var PhotonView = {};
 
     PhotonView.MODEL_DIAMETER = 0.46; // Meters, model space

@@ -42,8 +42,8 @@ define(function(require) {
         initializeDisplayObject: function() {
             initTextures();
 
-            if (this.model.get('wavelength') > 6E-7)
-                this.displayObject = new PIXI.Sprite(Textures.INFRARED);
+            if (this.model.get('wavelength') > 6E-7){
+                this.displayObject = new PIXI.Sprite(Textures.INFRARED);this.displayObject.visible =false;}
             else
                 this.displayObject = new PIXI.Sprite(Textures.SUNLIGHT);
 
