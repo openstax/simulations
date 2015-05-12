@@ -25,7 +25,6 @@ define(function (require) {
     var photonVel_3D = new Vector3();
     var t1           = new Vector3();
     var vec3         = new Vector3();
-    var vec3b = new Vector3();
     
     var filter             = new PhotonPassFilter();
     var visibleLightFilter = new BandPassFilter(300E-9, 700E-9);
@@ -98,16 +97,15 @@ define(function (require) {
 
                 // Compute the impulse (j)
                 var numerator = -vr * (1 + e);
-                t1
-                    .set(r1_3D)
-                    .cross(normal_3D)
-                    .scale(1 / photon.getMomentOfInertia());
                 var denominator = (1 / photon.get('mass')) + 
                     vec3
                         .set(normal_3D)
                         .dot(
-                            // We can mutate this one now because we are done with it
-                            vec3b.set(t1).cross(r1_3D)
+                            t1
+                                .set(r1_3D)
+                                .cross(normal_3D)
+                                .scale(1 / photon.getMomentOfInertia())
+                                .cross(r1_3D)
                         );
                 var j = numerator / denominator;
 

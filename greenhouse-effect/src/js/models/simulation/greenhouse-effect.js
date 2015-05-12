@@ -49,12 +49,13 @@ define(function (require, exports, module) {
          */
         initClouds: function() {
             this.clouds = new Backbone.Collection([], { model: Cloud });
+            this.availableClouds = [];
 
             var earthPos = this.earth.get('position');
 
-            this.clouds.add(this.createCloud(earthPos.x + 1,   earthPos.y + Earth.RADIUS + 7.5, 3, 0.3));
-            this.clouds.add(this.createCloud(earthPos.x - 5,   earthPos.y + Earth.RADIUS + 5,   5, 0.5));
-            this.clouds.add(this.createCloud(earthPos.x + 5.5, earthPos.y + Earth.RADIUS + 5.8, 6, 0.4));
+            this.availableClouds.push(this.createCloud(earthPos.x + 1,   earthPos.y + Earth.RADIUS + 7.5, 3, 0.3));
+            this.availableClouds.push(this.createCloud(earthPos.x - 5,   earthPos.y + Earth.RADIUS + 5,   5, 0.5));
+            this.availableClouds.push(this.createCloud(earthPos.x + 5.5, earthPos.y + Earth.RADIUS + 5.8, 6, 0.4));
         },
 
         createCloud: function(x, y, width, height) {
@@ -88,6 +89,21 @@ define(function (require, exports, module) {
                 PhotonCloudCollisionModel.handle(photon, this.clouds.at(i));
         },
         
+        /**
+         * If there are any available clouds to add, adds a
+         *   cloud to the model.
+         */
+        addCloud: function() {
+            if (this.clouds.length < this.availableClouds.length)
+                this.clouds.add(this.availableClouds[this.clouds.length]);
+        },
+
+        /**
+         * Removes a cloud from the model
+         */
+        removeCloud: function() {
+            this.clouds.pop();
+        }
 
     });
 

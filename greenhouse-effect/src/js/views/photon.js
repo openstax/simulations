@@ -42,9 +42,8 @@ define(function(require) {
         initializeDisplayObject: function() {
             initTextures();
 
-            if (this.model.get('wavelength') > 6E-7){
-                this.displayObject = new PIXI.Sprite(Textures.INFRARED); this.displayObject.visible =false;
-            }
+            if (this.model.get('wavelength') > 6E-7)
+                this.displayObject = new PIXI.Sprite(Textures.INFRARED); 
             else
                 this.displayObject = new PIXI.Sprite(Textures.SUNLIGHT);
 
@@ -56,9 +55,9 @@ define(function(require) {
          */
         initialize: function(options) {
             this.listenTo(this.model, 'change:position', this.updatePosition);
-            this.listenTo(this.model, 'reflect', function() {
-                this.displayObject.scale.x = this.displayObject.scale.y = 2;
-            });
+            // this.listenTo(this.model, 'reflect', function() {
+            //     this.displayObject.scale.x = this.displayObject.scale.y = 2;
+            // });
 
             this.updateMVT(options.mvt);
         },
