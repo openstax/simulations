@@ -86,7 +86,8 @@ define(function (require) {
     p.cross = function(o, i) {
     	var a = this.y * (o.z||0) - this.z * o.y;
         var b = this.z * o.x - this.x * (o.z||0);
-        var c = this.y * this.x - this.x * o.y;
+        //var c = this.y * this.x - this.x * o.y;
+        var c = this.x * o.y - this.y * o.x;
      	return this.set(a, b, c);
     };
 
@@ -100,6 +101,7 @@ define(function (require) {
     p.length   = p.mag;
     p.lengthSq = p.sqmag;
     p.normal   = p.norm;
+    p.toArray  = p.toArr;
 
 
     return Vector3;

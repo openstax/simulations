@@ -514,3 +514,37 @@ describe('ModelViewTransform', function(){
 	});
 
 });
+
+
+describe('Vector3', function(){
+
+	var Vector3;
+
+	before(function(done) {
+		require(['math/vector3'], function(vec3) {
+			Vector3 = vec3;
+			done();
+		});
+	});
+
+	it('calculate cross product', function() {
+		var a = new Vector3( 1, 2,  3);
+		var b = new Vector3( 4, 5,  6);
+		var c = new Vector3(-3, 6, -3);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
+
+		a = new Vector3( 1,  0, 2);
+		b = new Vector3(-3,  2, 1);
+		c = new Vector3(-4, -7, 2);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
+
+		a = new Vector3(-30,   0,   24);
+		b = new Vector3( 44,   0.5, -7);
+		c = new Vector3(-12, 846,  -15);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
+	});
+
+});

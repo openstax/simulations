@@ -41,11 +41,11 @@ define(function (require) {
 			// Do bounding box check
             var boundingBoxesOverlap = cloud.get('bounds').contains(photon.get('position'));
             if (boundingBoxesOverlap && filter.passes(photon.get('wavelength'))) {
-                if (visibleLightFilter.passes(photon.get('wavelength'))) {
-                    
+                // For photons coming from the sun
+                if (visibleLightFilter.passes(photon.get('wavelength')))
                     this.doCollision(photon, cloud, photon.get('location'));
-                }
                 
+                // For infrared photons
                 if (irFilter.absorbs(photon.get('wavelength')))
                     this.doScatter(photon);
             }
@@ -92,7 +92,6 @@ define(function (require) {
                     .cross(r1_3D)
                     .add(photonVel_3D)
                     .dot(normal_3D);
-                //console.log(vr);
 
                 // Assume the coefficient of restitution is 1
                 var e = 1;
@@ -117,22 +116,18 @@ define(function (require) {
                 var j = numerator / denominator;
 
                 // Compute the new linear and angular velocities, based on the impulse
-                //console.log(photon.cid + ': ' + photon.get('velocity').toString());
                 photon.addVelocity(
                     vec2
                         .set(normal)
                         .scale(j / photon.get('mass'))
                 );
-                //console.log(vec2.toString());
-                //console.log(photon.cid + ': ' + photon.get('velocity').toString());
+                photon.trigger('reflect');
 
                 // Determine what the photon's new omega value will be
                 nj.set(normal.x, normal.y, 0).scale(j);
                 var omegaB = photon.get('omega') + (
                     vec3.set(r1_3D).cross(nj).z / photon.getMomentOfInertia()
                 );
-                console.log(omegaB)
-                photon.set('omega', omegaB);
             }
         },
 

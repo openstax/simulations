@@ -18,12 +18,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim-greenhouse.html');
+    var simHtml              = require('text!templates/sim-greenhouse.html');
+    var playbackControlsHtml = require('text!templates/playback-controls-greenhouse.html');
 
     /**
      * SimView for the Greenhouse Effects tab
@@ -45,6 +47,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .reset-btn'  : 'reset'
+
 
         },
 
@@ -62,6 +68,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -88,6 +97,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
         },
@@ -110,6 +120,21 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+        },
+
+        /**
+         * Renders playback controls
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
+
+            this.$('.playback-speed').noUiSlider({
+                start: 0.5,
+                range: {
+                    'min': 0.01,
+                    'max': 1
+                }
+            });
         },
 
         /**
@@ -142,6 +167,16 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        }
 
     });
 
