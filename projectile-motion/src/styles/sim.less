@@ -6,6 +6,17 @@
 @control-panel-expanded-width: 220px;
 @control-panel-collapsed-width: 60px;
 
+#sim-projectile-motion.sim-content {
+    min-height: initial;
+}
+
+#sim-projectile-motion.sim-view {
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        height: @short-scene-height;
+    }
+}
+
 .trajectory-stats,
 .sim-controls {
     h2 {
