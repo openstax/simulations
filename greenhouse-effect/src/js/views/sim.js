@@ -51,7 +51,7 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset'
 
-
+            'click .all-photons-check' : 'toggleAllPhotons'
         },
 
         /**
@@ -176,7 +176,18 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
-        }
+        },
+
+        /**
+         * Toggles between showing all photons and only
+         *   some of the photons.
+         */
+        toggleAllPhotons: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showAllPhotons();
+            else
+                this.sceneView.showFewerPhotons();
+        },
 
     });
 

@@ -26,6 +26,8 @@ define(function(require) {
      */
     var GreenhouseSceneView = PixiSceneView.extend({
 
+        visiblePhotonProportion: 0.1,
+
         events: {
             
         },
@@ -141,7 +143,8 @@ define(function(require) {
         createAndAddPhotonView: function(photon) {
             var photonView = new PhotonView({ 
                 model: photon,
-                mvt: this.mvt
+                mvt: this.mvt,
+                visibleProportion: this.visiblePhotonProportion
             });
             this.photons.addChild(photonView.displayObject);
             this.photonViews.push(photonView);
@@ -181,6 +184,20 @@ define(function(require) {
             });
             this.clouds.addChild(cloudView.displayObject);
             this.cloudViews.push(cloudView);
+        },
+
+        setVisiblePhotonProportion: function(visiblePhotonProportion) {
+            this.visiblePhotonProportion = visiblePhotonProportion;
+            for (var i = 0; i < this.photonViews.length; i++)
+                this.photonViews[i].updateVisibility(visiblePhotonProportion);
+        },
+
+        showAllPhotons: function() {
+            this.setVisiblePhotonProportion(1);
+        },
+
+        showFewerPhotons: function() {
+            this.setVisiblePhotonProportion(0.1);
         }
 
     });

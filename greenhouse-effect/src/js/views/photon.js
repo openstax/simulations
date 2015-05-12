@@ -54,6 +54,8 @@ define(function(require) {
          * Initializes the new PhotonView.
          */
         initialize: function(options) {
+            this.determineVisibility(options.visibleProportion);
+
             this.listenTo(this.model, 'change:position', this.updatePosition);
             // this.listenTo(this.model, 'reflect', function() {
             //     this.displayObject.scale.x = this.displayObject.scale.y = 2;
@@ -83,6 +85,21 @@ define(function(require) {
             var viewPos = this.mvt.modelToView(position);
             this.displayObject.x = viewPos.x;
             this.displayObject.y = viewPos.y;
+        },
+
+        /**
+         * Determines if the photon should be visible based
+         *   on a probability.
+         */
+        determineVisibility: function(visibleProportion) {
+            this.displayObject.visible = Math.random() <= visibleProportion;
+        },
+
+        /**
+         * Updates whether or not the photon is visible based on the probability.
+         */
+        updateVisibility: function(visibleProportion) {
+            this.determineVisibility(visibleProportion);
         }
 
     }, Constants.PhotonView);
