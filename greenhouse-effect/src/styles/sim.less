@@ -2,3 +2,89 @@
 @import "variables.less";
 @import "mixins.less";
 
+.sims .sim-content {
+	min-height: initial;
+}
+
+.sim-controls {
+    h2 {
+        font-size: 20px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+    }
+
+    label {
+        color: #222;
+    }
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+
+        // Just for Chrome--they're too far left by default
+        &::-webkit-inner-spin-button, 
+        &::-webkit-outer-spin-button {
+            right: 4px;
+            margin-top: 2px;
+            position: absolute;
+        }
+    }
+}
+
+.sim-controls {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    padding: 15px;
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        margin-bottom: 15px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+    	margin-top: 14px;
+    }
+
+    ul.radio, ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        &:last-child {
+            margin-bottom: -2px;
+        }
+
+        li {
+            text-align: left;
+            list-style-image: none;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
+
+    .control-group {
+        margin-top: 10px;
+
+        label {
+            float: left;
+            width: 68%;
+            padding-right: 6px;
+            line-height: 34px;
+            text-align: right;
+        }
+        .input-wrapper {
+            float: left;
+            width: 32%;
+            padding-right: 0;
+        }
+    }
+
+}

@@ -49,7 +49,7 @@ define(function (require) {
         events: {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
-            'click .reset-btn'  : 'reset'
+            'click .reset-btn'  : 'reset',
 
             'click .all-photons-check' : 'toggleAllPhotons'
         },
@@ -108,7 +108,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                unique: this.cid
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();

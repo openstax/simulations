@@ -8,6 +8,17 @@
         <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
         <button class="playback-btn step-btn"   title="Step forward"><span class="fa fa-step-forward"></span></button>
     </div>
+
+    <div class="thermometer-wrapper">
+	    <input type="checkbox" id="thermometer-check-<%= unique %>" class="thermometer-check" checked>
+	    <label for="thermometer-check-<%= unique %>" class="thermometer-check-label">Thermometer</label>
+
+	    <input type="radio" name="degrees" value="degrees-fahrenheit" id="degrees-fahrenheit-<%= unique %>" class="degrees" checked>
+	    <label for="degrees-fahrenheit-<%= unique %>" class="degrees-label">&deg;F</label>
+
+	    <input type="radio" name="degrees" value="degrees-celsius" id="degrees-celsius-<%= unique %>" class="degrees">
+	    <label for="degrees-celsius-<%= unique %>" class="degrees-label">&deg;C</label>
+	</div>
     
     <button class="btn btn-normal reset-btn" title="Reset All">Reset All</button>
 </div>
