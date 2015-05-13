@@ -79,6 +79,8 @@ define(function (require) {
 
             this.initSceneView();
 
+            this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updateConcentrationSlider);
+
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
@@ -128,7 +130,7 @@ define(function (require) {
             this.$el.html(this.template(data));
             
             var scale = Constants.Atmosphere.CONCENTRATION_RESOLUTION;
-            this.$('.concentration-slider').noUiSlider({
+            this.$concentrationSlider = this.$('.concentration-slider').noUiSlider({
                 connect: 'lower',
                 start: this.simulation.atmosphere.get('greenhouseGasConcentration') * scale,
                 range: {
@@ -231,27 +233,34 @@ define(function (require) {
          * Sets the atmosphere to today's
          */
         setAtmosphereToday: function() {
+            this.customAtmosphereSelected = false;
             this.sceneView.showTodayScene();
+            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
         },
 
         /**
          * Sets the atmosphere to 1750's
          */
         setAtmosphere1750: function() {
+            this.customAtmosphereSelected = false;
             this.sceneView.show1750Scene();
+            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_1750);
         },
 
         /**
          * Sets the atmosphere to an ice age's
          */
         setAtmosphereIceAge: function() {
+            this.customAtmosphereSelected = false;
             this.sceneView.showIceAgeScene();
+            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_ICE_AGE);
         },
 
         /**
          * Sets the atmosphere to custom
          */
         setAtmosphereCustom: function() {
+            this.customAtmosphereSelected = true;
             this.sceneView.showTodayScene();
         },
 
@@ -261,8 +270,20 @@ define(function (require) {
          */
         changeConcentration: function(event) {
             var concentration = parseFloat($(event.target).val()) / Constants.Atmosphere.CONCENTRATION_RESOLUTION;
-            this.simulation.atmosphere.set('greenhouseGasConcentration', concentration);
-            this.sceneView.showTodayScene();
+            this.inputLock(function() {
+                this.simulation.atmosphere.set('greenhouseGasConcentration', concentration);
+            });
+            if (!this.customAtmosphereSelected)
+                this.$('#atmosphere-type-custom').click();
+        },
+
+        /**
+         * Updates the greenhouse gas concentration slider value.
+         */
+        updateConcentrationSlider: function(atmosphere, concentration) {
+            this.updateLock(function() {
+                this.$concentrationSlider.val(concentration * Constants.Atmosphere.CONCENTRATION_RESOLUTION);
+            });
         }
 
     });
