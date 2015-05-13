@@ -86,15 +86,18 @@ define(function(require) {
         },
 
         initBackground: function() {
-            // var background = Assets.createSprite(Assets.Images.SCENE_BG);
+            var targetSceneWidth = this.width; // In pixels
 
-            // var targetSpriteWidth = this.width; // In pixels
-            // var scale = targetSpriteWidth / background.width;
+            this.bg1750 = Assets.createSprite(Assets.Images.SCENE_1750);
+            this.bg1750.scale.x = targetSceneWidth / this.bg1750.width;
+            this.bg1750.scale.y = targetSceneWidth / this.bg1750.width;
+            this.bg1750.anchor.y = 1;
+            this.bg1750.y = this.height;
+            this.stage.addChild(this.bg1750);
 
-            // background.scale.x = scale;
-            // background.scale.y = scale;
-
-            //this.stage.addChild(background);
+            if ($(window).height() <= 500) {
+                this.bg1750.y += 50;
+            }
         },
 
         initPhotons: function() {
