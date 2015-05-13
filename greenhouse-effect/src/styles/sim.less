@@ -6,21 +6,46 @@
     min-height: initial;
 }
 
-.sim-controls {
-    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
-    padding: 15px;
+.sim-controls-wrapper {
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
-    width: @sim-controls-panel-width;
 
     @media screen and (max-height: @short-window) {
         right: (@short-screen-panel-margin + 1);
         top: @short-screen-panel-margin;
     }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
 
     h2 {
-        font-size: 20px;
+        font-size: 16px;
         font-weight: 400;
         color: fadeout(#222, 35%);
         margin-top: 0;
@@ -133,6 +158,19 @@
         .btn-group {
             float: right;
             margin-top: -4px;
+        }
+    }
+
+    .thermometer-wrapper {
+
+        .degrees-wrapper {
+            padding-left: 27px;
+            margin-top: -4px;
+
+            .degrees-label {
+                margin-right: 12px;
+                padding-left: 22px;
+            }
         }
     }
 

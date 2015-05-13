@@ -62,7 +62,13 @@ define(function(require) {
             var bounds = this.simulation.bounds;
 
             // ...to the usable screen space that we have
-            var usableScreenSpace = new Rectangle(0, 0, this.width - 210, this.height);
+            var controlsWidth = 210;
+            var usableScreenSpace = new Rectangle(0, 0, this.width - controlsWidth, this.height);
+
+            if ($(window).height() <= 500) {
+                usableScreenSpace.x += controlsWidth;
+                usableScreenSpace.w -= controlsWidth;
+            }
 
             var boundsRatio = bounds.w / bounds.h;
             var screenRatio = usableScreenSpace.w / usableScreenSpace.h;
