@@ -86,18 +86,33 @@ define(function(require) {
         },
 
         initBackground: function() {
-            var targetSceneWidth = this.width; // In pixels
-
-            this.bg1750 = Assets.createSprite(Assets.Images.SCENE_1750);
-            this.bg1750.scale.x = targetSceneWidth / this.bg1750.width;
-            this.bg1750.scale.y = targetSceneWidth / this.bg1750.width;
-            this.bg1750.anchor.y = 1;
-            this.bg1750.y = this.height;
-            this.stage.addChild(this.bg1750);
+            this.bgIceAge = this.createScene(Assets.Images.SCENE_ICE_AGE);
+            this.bg1750   = this.createScene(Assets.Images.SCENE_1750);
+            this.bgToday  = this.createScene(Assets.Images.SCENE_TODAY);
 
             if ($(window).height() <= 500) {
-                this.bg1750.y += 50;
+                this.bgToday.y += 20;
+                this.bg1750.y += 20;
             }
+
+            this.stage.addChild(this.bgIceAge);
+            this.stage.addChild(this.bg1750);
+            this.stage.addChild(this.bgToday);
+
+            this.bgToday.visible = true;
+        },
+
+        createScene: function(image) {
+            var targetSceneWidth = this.width; // In pixels
+
+            var scene = Assets.createSprite(image);
+            scene.scale.x = targetSceneWidth / scene.width;
+            scene.scale.y = targetSceneWidth / scene.width;
+            scene.anchor.y = 1;
+            scene.y = this.height;
+            scene.visible = false;
+
+            return scene;
         },
 
         initPhotons: function() {
@@ -207,6 +222,24 @@ define(function(require) {
 
         showFewerPhotons: function() {
             this.setVisiblePhotonProportion(0.1);
+        },
+
+        showTodayScene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = true;
+        },
+
+        show1750Scene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = true;
+            this.bgToday.visible  = false;
+        },
+
+        showIceAgeScene: function() {
+            this.bgIceAge.visible = true;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = false;
         }
 
     });

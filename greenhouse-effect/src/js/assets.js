@@ -10,7 +10,9 @@ define(function (require) {
         PHOTON_SUNLIGHT: 'phet/thin2.png',
         PHOTON_INFRARED: 'phet/photon-660.png',
 
-        SCENE_1750 : 'scene-1750.png'
+        SCENE_ICE_AGE: 'scene-ice-age.png',
+        SCENE_1750:    'scene-1750.png',
+        SCENE_TODAY:   'scene-today.png'
     };
 
     Assets.SpriteSheets = {};

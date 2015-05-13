@@ -53,8 +53,13 @@ define(function (require) {
             'click .reset-btn'  : 'reset',
 
             'click .all-photons-check' : 'toggleAllPhotons',
-            'click .add-cloud-btn'    : 'addCloud',
-            'click .remove-cloud-btn' : 'removeCloud'
+            'click .add-cloud-btn'     : 'addCloud',
+            'click .remove-cloud-btn'  : 'removeCloud',
+
+            'click #atmosphere-type-today'          : 'setAtmosphereToday',
+            'click #atmosphere-type-seventeen-fifty': 'setAtmosphere1750',
+            'click #atmosphere-type-ice-age'        : 'setAtmosphereIceAge',
+            'click #atmosphere-type-custom'         : 'setAtmosphereCustom'
         },
 
         /**
@@ -217,7 +222,35 @@ define(function (require) {
          */
         removeCloud: function() {
             this.simulation.removeCloud();
-        }
+        },
+
+        /**
+         * Sets the atmosphere to today's
+         */
+        setAtmosphereToday: function() {
+            this.sceneView.showTodayScene();
+        },
+
+        /**
+         * Sets the atmosphere to 1750's
+         */
+        setAtmosphere1750: function() {
+            this.sceneView.show1750Scene();
+        },
+
+        /**
+         * Sets the atmosphere to an ice age's
+         */
+        setAtmosphereIceAge: function() {
+            this.sceneView.showIceAgeScene();
+        },
+
+        /**
+         * Sets the atmosphere to custom
+         */
+        setAtmosphereCustom: function() {
+            this.sceneView.showTodayScene();
+        },
 
     });
 
