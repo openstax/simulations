@@ -11,6 +11,7 @@ define(function (require) {
     var TemplateSceneView  = require('views/scene');
 
     var Constants = require('constants');
+    var Assets    = require('assets');
 
     require('nouislider');
     require('bootstrap');
@@ -109,10 +110,22 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                unique: this.cid
+                unique: this.cid,
+                iconSize: 18,
+                sunlightPhotonSrc: Assets.Images.PHOTON_SUNLIGHT,
+                infraredPhotonSrc: Assets.Images.PHOTON_INFRARED,
+                Assets: Assets
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
+            
+            this.$('.concentration-slider').noUiSlider({
+                connect: 'lower',
+                start: this.simulation.atmosphere.get('greenhouseGasConcentration'),
+                range: {
+                    'min': Constants.Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION,
+                    'max': Constants.Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION
+                }
+            });
         },
 
         /**

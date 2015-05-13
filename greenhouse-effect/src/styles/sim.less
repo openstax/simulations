@@ -3,34 +3,7 @@
 @import "mixins.less";
 
 .sims .sim-content {
-	min-height: initial;
-}
-
-.sim-controls {
-    h2 {
-        font-size: 20px;
-        font-weight: 400;
-        color: fadeout(#222, 35%);
-        margin-top: 0;
-    }
-
-    label {
-        color: #222;
-    }
-
-    input.form-control {
-        background: rgba(255, 255, 255, 0.27);
-        border-color: rgba(0, 0, 0, 0.1);
-        position: relative;
-
-        // Just for Chrome--they're too far left by default
-        &::-webkit-inner-spin-button, 
-        &::-webkit-outer-spin-button {
-            right: 4px;
-            margin-top: 2px;
-            position: absolute;
-        }
-    }
+    min-height: initial;
 }
 
 .sim-controls {
@@ -41,14 +14,36 @@
     top: @panel-margin;
     width: @sim-controls-panel-width;
 
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+
     h2 {
-        margin-bottom: 15px;
+        font-size: 20px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
     }
 
     h2:not(:first-child) {
-    	margin-top: 14px;
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: #222;
     }
 
     ul.radio, ul.checkbox {
@@ -70,20 +65,74 @@
         }
     }
 
-    .control-group {
-        margin-top: 10px;
+    .legend-symbol {
+        margin-bottom: 4px;
+
+        .symbol-icon {
+            float: left;
+            margin-right: 8px;
+        }
+    }
+
+    ul.radio.atmosphere-options {
+        margin-bottom: 10px;
+    }
+
+    .concentration-slider-wrapper {
+        position: relative;
+        margin-top: -6px;
+        margin-bottom: 34px;
 
         label {
-            float: left;
-            width: 68%;
-            padding-right: 6px;
-            line-height: 34px;
-            text-align: right;
+            position: absolute;
+            top: 6px;
+            font-weight: 400;
+            font-size: 12px;
+
+            &:first-child {
+                left: 0;
+            }
+
+            &:last-child {
+                right: 0;
+            }
         }
-        .input-wrapper {
-            float: left;
-            width: 32%;
-            padding-right: 0;
+    }
+
+    .clouds-wrapper {
+        .clouds-label {
+            margin-right: 6px;
+        }
+
+        .btn {
+            padding: 3px 11px;
+            background: fadeout(#fff, 33%);
+            border: 1px solid fadeout(#fff, 15%);
+
+            // background: transparent;
+            // border: none;
+            // padding: 0;
+            opacity: 0.7;
+            
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                color: inherit;
+            }
+
+            &:active {
+                box-shadow: none;
+                opacity: 0.5;
+            }
+        }
+
+        .btn-group {
+            float: right;
+            margin-top: -4px;
         }
     }
 

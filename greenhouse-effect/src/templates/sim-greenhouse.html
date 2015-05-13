@@ -5,12 +5,13 @@
 
     <h2>Legend</h2>
 
-
+    <div class="legend-symbol"><%= Assets.createIcon(sunlightPhotonSrc, { 'class': 'symbol-icon' }, iconSize) %> Sunlight photon</div>
+    <div class="legend-symbol"><%= Assets.createIcon(infraredPhotonSrc, { 'class': 'symbol-icon' }, iconSize) %> Infrared photon</div>
 
     <h2>Options</h2>
 
     <label>Atmosphere of...</label>
-    <ul class="radio">
+    <ul class="radio atmosphere-options">
         <li>
             <input type="radio" name="atmosphere-type" value="today" id="atmosphere-type-today" checked>
             <label for="atmosphere-type-today">Today</label>
@@ -28,18 +29,18 @@
             <label for="atmosphere-type-custom">Custom</label>
         </li>
     </ul>
-    <br>
 
     <label for="concentration-slider-<%= unique %>" class="slider-label">Greenhouse Gas Concentration</label>
     <div class="concentration-slider-wrapper">
-        <label>None</label><div id="concentration-slider--<%= unique %>" class="slider concentration-slider"></div><label>Lots</label>
+        <label>None</label><div id="concentration-slider-<%= unique %>" class="slider concentration-slider"></div><label>Lots</label>
     </div>
-    <br>
 
     <div class="clouds-wrapper">
-        <label>Clouds</label>
-        <button class="add-cloud-btn"><span class="fa fa-plus-circle"></span></button>
-        <button class="remove-cloud-btn"><span class="fa fa-minus-circle"></span></button>
+        <label class="clouds-label">Clouds</label>
+        <div class="btn-group" role="group">
+            <button class="btn add-cloud-btn"><span class="fa fa-plus"></span></button>
+            <button class="btn remove-cloud-btn"><span class="fa fa-minus"></span></button>
+        </div>
     </div>
 
 </div>
