@@ -52,7 +52,9 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
 
-            'click .all-photons-check' : 'toggleAllPhotons'
+            'click .all-photons-check' : 'toggleAllPhotons',
+            'click .add-cloud-btn'    : 'addCloud',
+            'click .remove-cloud-btn' : 'removeCloud'
         },
 
         /**
@@ -202,6 +204,20 @@ define(function (require) {
             else
                 this.sceneView.showFewerPhotons();
         },
+
+        /**
+         * Adds a cloud to the sim.
+         */
+        addCloud: function() {
+            this.simulation.addCloud();
+        },
+
+        /**
+         * Removes a cloud from the sim.
+         */
+        removeCloud: function() {
+            this.simulation.removeCloud();
+        }
 
     });
 
