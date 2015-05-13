@@ -81,6 +81,10 @@ define(function (require) {
     Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION     = 0.009;
     Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION     = 0.00001;
     Atmosphere.DEFAULT_GREENHOUSE_GAS_CONCENTRATION = Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION;
+    Atmosphere.CONCENTRATION_RESOLUTION = 100000;
+
+    Atmosphere.POLLUTION_TOP_COLOR = '#555554';
+    Atmosphere.POLLUTION_BOTTOM_COLOR = '#fffc86';
 
     Constants.Atmosphere = Atmosphere;
 
