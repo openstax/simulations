@@ -7,9 +7,6 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var GreenhouseEffectSimulation = require('models/simulation/greenhouse-effect');
-    var TemplateSceneView  = require('views/scene');
-
     var Constants = require('constants');
     var Assets    = require('assets');
 
@@ -29,15 +26,9 @@ define(function (require) {
     var playbackControlsHtml = require('text!templates/playback-controls-greenhouse.html');
 
     /**
-     * SimView for the Greenhouse Effects tab
+     * Base SimView for the Greenhouse Effects and Glass Layers tabs
      */
-    var GreenhouseSimView = SimView.extend({
-
-        /**
-         * Root element properties
-         */
-        tagName:   'section',
-        className: 'sim-view',
+    var BaseGreenhouseSimView = SimView.extend({
 
         /**
          * Template for rendering the basic scaffolding
@@ -53,15 +44,8 @@ define(function (require) {
             'click .reset-btn'  : 'reset',
 
             'click .all-photons-check' : 'toggleAllPhotons',
-            'click .add-cloud-btn'     : 'addCloud',
-            'click .remove-cloud-btn'  : 'removeCloud',
 
-            'click #atmosphere-type-today'          : 'setAtmosphereToday',
-            'click #atmosphere-type-seventeen-fifty': 'setAtmosphere1750',
-            'click #atmosphere-type-ice-age'        : 'setAtmosphereIceAge',
-            'click #atmosphere-type-custom'         : 'setAtmosphereCustom',
-
-            'slide .concentration-slider': 'changeConcentration'
+            'slide .playback-speed' : 'changePlaybackSpeed'
         },
 
         /**
@@ -71,15 +55,13 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Greenhouse Effect',
-                name: 'greenhouse-effect',
+                title: 'Base Greenhouse',
+                name: 'base-greenhouse',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
-
-            this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updateConcentrationSlider);
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
@@ -88,18 +70,12 @@ define(function (require) {
         /**
          * Initializes the Simulation.
          */
-        initSimulation: function() {
-            this.simulation = new GreenhouseEffectSimulation();
-        },
+        initSimulation: function() {},
 
         /**
          * Initializes the SceneView.
          */
-        initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
-                simulation: this.simulation
-            });
-        },
+        initSceneView: function() {},
 
         /**
          * Renders everything
@@ -128,16 +104,6 @@ define(function (require) {
                 Assets: Assets
             };
             this.$el.html(this.template(data));
-            
-            var scale = Constants.Atmosphere.CONCENTRATION_RESOLUTION;
-            this.$concentrationSlider = this.$('.concentration-slider').noUiSlider({
-                connect: 'lower',
-                start: this.simulation.atmosphere.get('greenhouseGasConcentration') * scale,
-                range: {
-                    'min': Constants.Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION * scale,
-                    'max': Constants.Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION * scale
-                }
-            });
         },
 
         /**
@@ -216,77 +182,14 @@ define(function (require) {
         },
 
         /**
-         * Adds a cloud to the sim.
+         * Changes the simulation speed.
          */
-        addCloud: function() {
-            this.simulation.addCloud();
-        },
-
-        /**
-         * Removes a cloud from the sim.
-         */
-        removeCloud: function() {
-            this.simulation.removeCloud();
-        },
-
-        /**
-         * Sets the atmosphere to today's
-         */
-        setAtmosphereToday: function() {
-            this.customAtmosphereSelected = false;
-            this.sceneView.showTodayScene();
-            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
-        },
-
-        /**
-         * Sets the atmosphere to 1750's
-         */
-        setAtmosphere1750: function() {
-            this.customAtmosphereSelected = false;
-            this.sceneView.show1750Scene();
-            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_1750);
-        },
-
-        /**
-         * Sets the atmosphere to an ice age's
-         */
-        setAtmosphereIceAge: function() {
-            this.customAtmosphereSelected = false;
-            this.sceneView.showIceAgeScene();
-            this.simulation.atmosphere.set('greenhouseGasConcentration', Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_ICE_AGE);
-        },
-
-        /**
-         * Sets the atmosphere to custom
-         */
-        setAtmosphereCustom: function() {
-            this.customAtmosphereSelected = true;
-            this.sceneView.showTodayScene();
-        },
-
-        /**
-         * Changes the greenhouse gas concentration and makes
-         *   sure we're on custom atmosphere mode.
-         */
-        changeConcentration: function(event) {
-            var concentration = parseFloat($(event.target).val()) / Constants.Atmosphere.CONCENTRATION_RESOLUTION;
-            this.inputLock(function() {
-                this.simulation.atmosphere.set('greenhouseGasConcentration', concentration);
-            });
-            if (!this.customAtmosphereSelected)
-                this.$('#atmosphere-type-custom').click();
-        },
-
-        /**
-         * Updates the greenhouse gas concentration slider value.
-         */
-        updateConcentrationSlider: function(atmosphere, concentration) {
-            this.updateLock(function() {
-                this.$concentrationSlider.val(concentration * Constants.Atmosphere.CONCENTRATION_RESOLUTION);
-            });
+        changePlaybackSpeed: function(event) {
+            var speed = parseFloat($(event.target).val());
+            
         }
 
     });
 
-    return GreenhouseSimView;
+    return BaseGreenhouseSimView;
 });

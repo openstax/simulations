@@ -25,13 +25,9 @@ define(function(require) {
     /**
      *
      */
-    var GreenhouseSceneView = PixiSceneView.extend({
+    var BaseGreenhouseSceneView = PixiSceneView.extend({
 
         visiblePhotonProportion: 0.1,
-
-        events: {
-            
-        },
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
@@ -39,10 +35,6 @@ define(function(require) {
             this.listenTo(this.simulation.photons, 'reset',          this.photonsReset);
             this.listenTo(this.simulation.photons, 'add',            this.photonAdded);
             this.listenTo(this.simulation.photons, 'remove destroy', this.photonRemoved);
-
-            this.listenTo(this.simulation.clouds, 'reset',          this.cloudsReset);
-            this.listenTo(this.simulation.clouds, 'add',            this.cloudAdded);
-            this.listenTo(this.simulation.clouds, 'remove destroy', this.cloudRemoved);
 
             this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updatePollution);
         },
@@ -54,10 +46,15 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.backgroundLayer = new PIXI.DisplayObjectContainer();
+            this.foregroundLayer = new PIXI.DisplayObjectContainer();
+
+            this.stage.addChild(this.backgroundLayer);
+            this.stage.addChild(this.foregroundLayer);
+
             this.initMVT();
             this.initBackground();
             this.initPhotons();
-            this.initClouds();
             this.initPolution();
 
             this.initialized = true;
@@ -101,9 +98,9 @@ define(function(require) {
                 this.bg1750.y += 20;
             }
 
-            this.stage.addChild(this.bgIceAge);
-            this.stage.addChild(this.bg1750);
-            this.stage.addChild(this.bgToday);
+            this.backgroundLayer.addChild(this.bgIceAge);
+            this.backgroundLayer.addChild(this.bg1750);
+            this.backgroundLayer.addChild(this.bgToday);
 
             this.bgToday.visible = true;
         },
@@ -128,23 +125,14 @@ define(function(require) {
             this.photonViews = [];
 
             this.photons = new PIXI.SpriteBatch();
-            this.stage.addChild(this.photons);
+            this.backgroundLayer.addChild(this.photons);
 
             this.photonsReset(this.simulation.photons);
         },
 
-        initClouds: function() {
-            this.cloudViews = [];
-
-            this.clouds = new PIXI.DisplayObjectContainer();
-            this.stage.addChild(this.clouds);
-
-            this.cloudsReset(this.simulation.clouds);
-        },
-
         initPolution: function() {
             if (this.pollution)
-                this.stage.removeChild(this.pollution);
+                this.foregroundLayer.removeChild(this.pollution);
 
             var canvas = document.createElement('canvas');
             canvas.width  = this.width;
@@ -159,7 +147,7 @@ define(function(require) {
             ctx.fillRect(0, 0, this.width, this.height);
 
             this.pollution = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
-            this.stage.addChild(this.pollution);
+            this.foregroundLayer.addChild(this.pollution);
 
             this.pollutionRange = range({
                 min: Constants.Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION,
@@ -225,42 +213,6 @@ define(function(require) {
             this.photonViews.push(photonView);
         },
 
-        cloudsReset: function(clouds) {
-            // Remove old photon views
-            for (var i = this.cloudViews.length - 1; i >= 0; i--) {
-                this.cloudViews[i].removeFrom(this.clouds);
-                this.cloudViews.splice(i, 1);
-            }
-
-            // Add new photon views
-            clouds.each(function(cloud) {
-                this.createAndAddCloudView(cloud);
-            }, this);
-        },
-
-        cloudAdded: function(cloud, clouds) {
-            this.createAndAddCloudView(cloud);
-        },
-
-        cloudRemoved: function(cloud, clouds) {
-            for (var i = this.cloudViews.length - 1; i >= 0; i--) {
-                if (this.cloudViews[i].model === cloud) {
-                    this.cloudViews[i].removeFrom(this.clouds);
-                    this.cloudViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        createAndAddCloudView: function(cloud) {
-            var cloudView = new CloudView({ 
-                model: cloud,
-                mvt: this.mvt
-            });
-            this.clouds.addChild(cloudView.displayObject);
-            this.cloudViews.push(cloudView);
-        },
-
         setVisiblePhotonProportion: function(visiblePhotonProportion) {
             this.visiblePhotonProportion = visiblePhotonProportion;
             for (var i = 0; i < this.photonViews.length; i++)
@@ -295,5 +247,5 @@ define(function(require) {
 
     });
 
-    return GreenhouseSceneView;
+    return BaseGreenhouseSceneView;
 });

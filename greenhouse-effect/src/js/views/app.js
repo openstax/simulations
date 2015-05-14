@@ -4,21 +4,21 @@ define(function(require) {
 
     var PixiAppView = require('common/pixi/view/app');
 
-    var GreenhouseSimView = require('views/sim');
+    var GreenhouseHouseSimView = require('views/sim/greenhouse-effect');
 
     var Assets = require('assets');
 
     require('less!styles/font-awesome');
 
-    var TemplateAppView = PixiAppView.extend({
+    var GreenhouseEffectAppView = PixiAppView.extend({
 
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            GreenhouseSimView
+            GreenhouseHouseSimView
         ]
 
     });
 
-    return TemplateAppView;
+    return GreenhouseEffectAppView;
 });
