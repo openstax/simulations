@@ -30,6 +30,23 @@ define(function(require) {
             this.initClouds();
         },
 
+        initBackground: function() {
+            this.bgIceAge = this.createScene(Assets.Images.SCENE_ICE_AGE);
+            this.bg1750   = this.createScene(Assets.Images.SCENE_1750);
+            this.bgToday  = this.createScene(Assets.Images.SCENE_TODAY);
+
+            if ($(window).height() <= 500) {
+                this.bgToday.y += 20;
+                this.bg1750.y += 20;
+            }
+
+            this.backgroundLayer.addChild(this.bgIceAge);
+            this.backgroundLayer.addChild(this.bg1750);
+            this.backgroundLayer.addChild(this.bgToday);
+
+            this.bgToday.visible = true;
+        },
+
         initClouds: function() {
             this.cloudViews = [];
 
@@ -73,6 +90,24 @@ define(function(require) {
             });
             this.clouds.addChild(cloudView.displayObject);
             this.cloudViews.push(cloudView);
+        },
+
+        showTodayScene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = true;
+        },
+
+        show1750Scene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = true;
+            this.bgToday.visible  = false;
+        },
+
+        showIceAgeScene: function() {
+            this.bgIceAge.visible = true;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = false;
         }
 
     });
