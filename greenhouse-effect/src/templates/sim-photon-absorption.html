@@ -1,0 +1,24 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+
+    </div>
+
+    <div class="sim-controls-right">
+        <div class="sim-controls atmospheric-gases-panel">
+            <h2>Atmospheric Gases</h2>
+
+            <ul class="radio gas-options">
+                <% _.each(gases, function(gas, key) { %>
+                <li>
+                    <input type="radio" name="atmospheric-gas" value="<%= key %>" id="atmospheric-gas-<%= key %>" checked>
+                    <label for="atmospheric-gas-<%= key %>"><%= gas.label %></label>
+                    <%= ''/*Assets.createIcon(gas.src, { 'class': 'gas-icon' }, iconSize)*/ %>
+                </li>
+                <% }); %>
+            </ul>
+        </div>
+    </div>
+</div>
