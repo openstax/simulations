@@ -6,10 +6,9 @@ define(function (require) {
     var _ = require('underscore');
 
     var SimView = require('common/app/sim');
-    var PixiSceneView = require('common/pixi/view/scene');
-    var Simulation = require('common/simulation/simulation');
 
     var PhotonAbsorptionSimulation = require('models/simulation/photon-absorption');
+    var PhotonAbsorptionSceneView  = require('views/scene/photon-absorption');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -78,7 +77,7 @@ define(function (require) {
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new PixiSceneView({
+            this.sceneView = new PhotonAbsorptionSceneView({
                 simulation: this.simulation
             });
         },
