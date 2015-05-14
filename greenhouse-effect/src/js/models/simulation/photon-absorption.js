@@ -9,6 +9,9 @@ define(function (require, exports, module) {
     var Rectangle  = require('common/math/rectangle');
     var Vector2    = require('common/math/vector2');
 
+    var Photon         = require('models/photon');
+    var Molecule       = require('models/molecule');
+
     /**
      * Constants
      */
@@ -16,6 +19,19 @@ define(function (require, exports, module) {
 
     /**
      * The base simulation model for the "Photon Absorption" tab
+     *
+     * Original description from PhET:
+     *
+     *   Primary model for the Photon Absorption tab.  This models photons being
+     *   absorbed (or often NOT absorbed) by various molecules.  The scale for this
+     *   model is picometers (10E-12 meters).
+     *   
+     *   The basic idea for this model is that there is some sort of photon emitter
+     *   that emits photons, and some sort of photon target that could potentially
+     *   some of the emitted photons and react in some way.  In many cases, the
+     *   photon target can re-emit one or more photons after absorption.
+     *  
+     *                                               - John Blanco
      */
     var PhotonAbsorptionSimulation = Simulation.extend({
 
@@ -35,7 +51,22 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            this.initPhotons();
+            this.initMolecules();
+        },
+
+        /**
+         * Initializes the photon collection
+         */
+        initPhotons: function() {
+            this.photons = new Backbone.Collection([], { model: Photon });
+        },
+
+        /**
+         * Initializes the photon collection
+         */
+        initMolecules: function() {
+            this.molecules = new Backbone.Collection([], { model: Molecule });
         },
 
         /**
@@ -52,7 +83,7 @@ define(function (require, exports, module) {
             
         }
 
-    });
+    }, Constants.PhotonAbsorptionSimulation);
 
     return PhotonAbsorptionSimulation;
 });

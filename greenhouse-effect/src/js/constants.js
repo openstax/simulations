@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var Constants = {}; 
 
@@ -111,6 +113,95 @@ define(function (require) {
 
     Constants.PhotonView = PhotonView;
 
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                    PHOTON ABSORPTION SIMULATION                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var PhotonAbsorptionSimulation = {};
+
+    // Constants that controls where and how photons are emitted.
+    PhotonAbsorptionSimulation.PHOTON_EMISSION_LOCATION = new Vector2(-1400, 0);
+    PhotonAbsorptionSimulation.PHOTON_EMISSION_ANGLE_RANGE = Math.PI / 2;
+
+    // Location used when a single molecule is sitting in the area where the
+    //   photons pass through.
+    PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION = new Vector2(0, 0);
+
+    // Velocity of emitted photons.  Since they are emitted horizontally, only
+    //   one value is needed.
+    PhotonAbsorptionSimulation.PHOTON_VELOCITY = 2;
+
+    // Distance for a photon to travel before being removed from the model.
+    //   This value is essentially arbitrary, and needs to be set such that the
+    //   photons only disappear after they have traveled beyond the bounds of
+    //   the play area.
+    PhotonAbsorptionSimulation.MAX_PHOTON_DISTANCE = 4500;
+
+    // Constants that define the size of the containment area, which is the
+    //   rectangle that surrounds the molecule(s).
+    PhotonAbsorptionSimulation.CONTAINMENT_AREA_WIDTH  = 3100; // In picometers.
+    PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT = 3000; // In picometers.
+    PhotonAbsorptionSimulation.CONTAINMENT_AREA_CENTER = new Vector2(0, 0);
+    PhotonAbsorptionSimulation.CONTAINMENT_AREA_RECT = new Rectangle(
+        PhotonAbsorptionSimulation.CONTAINMENT_AREA_CENTER.x - PhotonAbsorptionSimulation.CONTAINMENT_AREA_WIDTH / 2,
+        PhotonAbsorptionSimulation.CONTAINMENT_AREA_CENTER.y - PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT / 2,
+        PhotonAbsorptionSimulation.CONTAINMENT_AREA_WIDTH,
+        PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT
+    );
+
+    // Choices of targets for the photons.
+    var PhotonTarget = {
+        SINGLE_CO_MOLECULE:      0, 
+        SINGLE_CO2_MOLECULE:     1, 
+        SINGLE_H2O_MOLECULE:     2, 
+        SINGLE_CH4_MOLECULE:     3,
+        SINGLE_N2O_MOLECULE:     4, 
+        SINGLE_N2_MOLECULE:      5, 
+        SINGLE_NO2_MOLECULE:     6, 
+        SINGLE_O2_MOLECULE:      7, 
+        SINGLE_O3_MOLECULE:      8,
+        CONFIGURABLE_ATMOSPHERE: 9
+    };
+    PhotonAbsorptionSimulation.PhotonTarget = PhotonTarget;
+
+    // Minimum and defaults for photon emission periods.  Note that the max is
+    // assumed to be infinity.
+    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_SINGLE_TARGET = 400;
+    PhotonAbsorptionSimulation.DEFAULT_PHOTON_EMISSION_PERIOD = Number.POSITIVE_INFINITY; // Milliseconds of sim time.
+    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_MULTIPLE_TARGET = 100;
+
+    // Default values for various parameters that weren't already covered.
+    PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET = PhotonTarget.SINGLE_CH4_MOLECULE;
+    PhotonAbsorptionSimulation.DEFAULT_EMITTED_PHOTON_WAVELENGTH = Constants.IR_WAVELENGTH;
+    PhotonAbsorptionSimulation.INITIAL_COUNTDOWN_WHEN_EMISSION_ENABLED = 300;
+
+    Constants.PhotonAbsorptionSimulation = PhotonAbsorptionSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                               MOLECULE                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Molecule = {};
+
+    Molecule.PHOTON_EMISSION_SPEED = 2; // Picometers per second.
+    Molecule.PHOTON_ABSORPTION_DISTANCE = 100;
+    Molecule.VIBRATION_FREQUENCY = 5;  // Cycles per second of sim time.
+    Molecule.ROTATION_RATE = 1.1;  // Revolutions per second of sim time.
+    Molecule.ABSORPTION_HYSTERESIS_TIME = 200; // Milliseconds of sim time.
+
+    // Scaler quantity representing the speed at which the constituent particles
+    //   move away from each other.  Note that this is a relative speed, not one
+    //   that is absolute in model space.
+    Molecule.BREAK_APART_VELOCITY = 3.0;
+
+    Constants.Molecule = Molecule;
 
 
     return Constants;
