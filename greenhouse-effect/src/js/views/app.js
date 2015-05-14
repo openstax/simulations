@@ -4,7 +4,8 @@ define(function(require) {
 
     var PixiAppView = require('common/pixi/view/app');
 
-    var GreenhouseHouseSimView = require('views/sim/greenhouse-effect');
+    var GreenhouseEffectSimView = require('views/sim/greenhouse-effect');
+    var GlassLayersSimView     = require('views/sim/glass-layers');
 
     var Assets = require('assets');
 
@@ -15,7 +16,8 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            GreenhouseHouseSimView
+            GreenhouseEffectSimView,
+            GlassLayersSimView
         ]
 
     });

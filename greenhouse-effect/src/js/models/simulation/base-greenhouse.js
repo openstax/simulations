@@ -86,7 +86,7 @@ define(function (require, exports, module) {
         initEarth: function() {
             var gamma = Math.atan2(this.bounds.w / 2, Earth.RADIUS);
 
-            this.earth = new Earth({
+            this.earth = this.createEarth({
                 position: new Vector2(0, -Earth.RADIUS + this.exposedEarth)
             }, {
                 alpha: Math.PI / 2 - gamma,
@@ -96,6 +96,14 @@ define(function (require, exports, module) {
             this.earth.setProductionRate(1E-2);
             this.listenTo(this.earth, 'photon-emitted',  this.photonEmitted);
             this.listenTo(this.earth, 'photon-absorbed', this.photonAbsorbed);
+        },
+
+        /**
+         * Returns a new Earth instance.  Separating this out
+         *   so it can be overridden.
+         */
+        createEarth: function(attributes, options) {
+            return new Earth(attributes, options);
         },
 
         /**

@@ -13,10 +13,10 @@ define(function(require) {
     /**
      * A view that represents a photon
      */
-    var CloudView = PixiView.extend({
+    var GlassPaneView = PixiView.extend({
 
         /**
-         * Initializes the new CloudView.
+         * Initializes the new GlassPaneView.
          */
         initialize: function(options) {
             this.initGraphics();
@@ -24,20 +24,20 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.cloud = new PIXI.Graphics();
-            this.displayObject.addChild(this.cloud);
+            this.glassPane = new PIXI.Graphics();
+            this.displayObject.addChild(this.glassPane);
         },
 
-        drawCloud: function() {
+        drawGlassPane: function() {
             var bounds = this.model.get('bounds');
-            this.cloud.beginFill(0xFFFFFF, 0.5);
-            this.cloud.drawRect(
+            this.glassPane.beginFill(0xFFFFFF, 0.5);
+            this.glassPane.drawRect(
                 this.mvt.modelToViewX(bounds.x), 
                 this.mvt.modelToViewY(bounds.y), 
                 this.mvt.modelToViewDeltaX(bounds.w), 
                 Math.abs(this.mvt.modelToViewDeltaY(bounds.h))
             );
-            this.cloud.endFill();
+            this.glassPane.endFill();
         },
 
         /**
@@ -47,10 +47,10 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.drawCloud();
+            this.drawGlassPane();
         }
 
     });
 
-    return CloudView;
+    return GlassPaneView;
 });

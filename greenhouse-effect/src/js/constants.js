@@ -29,6 +29,8 @@ define(function (require) {
     Constants.DEFAULT_TIME_DELTA_PER_TICK = 1 / 10;
     Constants.DEFAULT_DELAY_BETWEEN_TICKS = 1 / 30;
 
+    Constants.MAX_GLASS_PANES = 3;
+
 
     /*************************************************************************
      **                                                                     **
