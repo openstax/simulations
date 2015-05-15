@@ -194,7 +194,8 @@ define(function (require) {
     Molecule.PHOTON_ABSORPTION_DISTANCE = 100;
     Molecule.VIBRATION_FREQUENCY = 5;  // Cycles per second of sim time.
     Molecule.ROTATION_RATE = 1.1;  // Revolutions per second of sim time.
-    Molecule.ABSORPTION_HYSTERESIS_TIME = 200; // Milliseconds of sim time.
+    Molecule.ABSORPTION_HYSTERESIS_TIME = 0.2; // Seconds of sim time.
+    Molecule.PASS_THROUGH_PHOTON_LIST_SIZE = 10;
 
     // Scaler quantity representing the speed at which the constituent particles
     //   move away from each other.  Note that this is a relative speed, not one

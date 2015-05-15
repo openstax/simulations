@@ -19,7 +19,7 @@ define(function (require) {
         /**
          * Dom event listeners
          */
-        events: _.extend(BaseGreenhouseSimView.prototype.events, {
+        events: _.extend({}, BaseGreenhouseSimView.prototype.events, {
             'click .add-cloud-btn'     : 'addCloud',
             'click .remove-cloud-btn'  : 'removeCloud',
 

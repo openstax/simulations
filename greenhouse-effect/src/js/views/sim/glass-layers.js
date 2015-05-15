@@ -27,7 +27,7 @@ define(function (require) {
         /**
          * Dom event listeners
          */
-        events: _.extend(BaseGreenhouseSimView.prototype.events, {
+        events: _.extend({}, BaseGreenhouseSimView.prototype.events, {
             'click .add-glass-pane-btn'     : 'addGlassPane',
             'click .remove-glass-pane-btn'  : 'removeGlassPane'
         }),
