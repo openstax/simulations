@@ -17,6 +17,11 @@ define(function (require) {
      */
     var Molecule = MotionObject.extend({
 
+        /**
+         * A map of wavelengths to absorption strategies
+         */
+        wavelengthToAbsorptionStrategy: {},
+
         defaults: _.extend({}, MotionObject.prototype.defaults, {
             vibrating: false, // Whether or not the molecule is vibrating
             rotating: false,  // Whether or not the molecule is rotating
@@ -43,7 +48,7 @@ define(function (require) {
             this.activePhotonAbsorptionStrategy = null;
 
             // Prevents reabsorption for a while after emitting a photon.
-            this.absorbtionHysteresisCountdownTime = 0;
+            this.absorptionHysteresisCountdownTime = 0;
 
             // The "pass through photon list" keeps track of photons that were not
             //   absorbed due to random probability (essentially a simulation of
@@ -69,6 +74,8 @@ define(function (require) {
 
             // Cached objects for internal use
             this._offset = new Vector2();
+            this._rect = new Rectangle();
+            this._nullPhotonAbsorptionStrategy = new NullPhotonAbsorptionStrategy(this);
 
             // Whenever the position (center of gravity) is updated, we must also
             //   update the 
@@ -102,6 +109,13 @@ define(function (require) {
             if (atomIndex === -1)
                 throw 'Specified atom was not found in this molecule.';
             return atomIndex;
+        },
+
+        /**
+         * Returns an array of the molecule's atoms
+         */
+        getAtoms: function() {
+            return this.atoms;
         },
 
         /**
@@ -146,6 +160,13 @@ define(function (require) {
         },
 
         /**
+         * Returns an array of the molecule's atomic bonds.
+         */
+        getAtomicBonds: function() {
+            return this.atomicBonds;
+        },
+
+        /**
          * Adds a "constituent molecule" to this molecule's list.  Constituent
          *   molecules are what this molecule will break into if it breaks apart.
          *   Note that this does NOT check for any sort of conservation of atoms,
@@ -161,8 +182,8 @@ define(function (require) {
         update: function(deltaTime) {
             this.activePhotonAbsorptionStrategy.update(deltaTime);
 
-            if (this.absorbtionHysteresisCountdownTime >= 0)
-                this.absorbtionHysteresisCountdownTime -= deltaTime;
+            if (this.absorptionHysteresisCountdownTime >= 0)
+                this.absorptionHysteresisCountdownTime -= deltaTime;
 
             if (this.get('vibrating'))
                 this.advanceVibration(deltaTime * Molecule.VIBRATION_FREQUENCY * 2 * Math.PI);
@@ -251,6 +272,108 @@ define(function (require) {
          */
         isPhotonMarkedForPassThrough: function(photon) {
             return (_.indexOf(this.passThroughPhotonList, photon) !== -1);
+        },
+
+        /**
+         * Returns whether or not the molecule should absorb the offered
+         *   photon.  If the photon is absorbed, the matching absorption 
+         *   strategy is set so that it can control the molecule's post-
+         *   absorption behavior.
+         */
+        shouldAbsorbPhoton: function(photon) {
+            var absorbPhoton = false;
+
+            if (!this.isPhotonAbsorbed() && 
+                !this.isPhotonMarkedForPassThrough(photon) &&
+                this.absorptionHysteresisCountdownTime <= 0 &&
+                photon.get('position').distance(this.get('position')) < Molecule.PHOTON_ABSORPTION_DISTANCE) {
+
+                // The circumstances for absorption are correct, but do we have
+                //   an absorption strategy for this photon's wavelength?
+                var candidateAbsorptionStrategy = this.wavelengthToAbsorptionStrategy(photon.get('wavelength'));
+                if (candidateAbsorptionStrategy !== null) {
+                    // Yes, there is a strategy available for this wavelength.
+                    //   Ask it if it wants the photon.
+                    if (candidateAbsorptionStrategy.shouldAbsorbPhoton(photon)) {
+                        // We do want it, so consider the photon absorbed.
+                        this.absorbPhoton = true;
+                        this.activePhotonAbsorptionStrategy = candidateAbsorptionStrategy;
+                        this.activePhotonAbsorptionStrategy.absorbPhoton(photon);
+                    }
+                    else {
+                        // We don't want to waste time asking again
+                        this.markPhotonForPassThrough(photon);
+                    }
+                }
+            }
+
+            return absorbPhoton;
+        },
+
+        /**
+         * Returns whether a photon has been absorbed.
+         */
+        isPhotonAbsorbed: function() {
+            // If there is an active non-null photon absorption strategy, 
+            //   it indicates that a photon has been absorbed.
+            return !(this.activePhotonAbsorptionStrategy instanceof PhotonAbsorptionStrategy.NullPhotonAbsorptionStrategy);
+        },
+
+        /**
+         * Resets the photon absorption strategy to the null one
+         */
+        resetPhotonAbsorptionStrategy: function() {
+            this.activePhotonAbsorptionStrategy = this._nullPhotonAbsorptionStrategy;
+        },
+
+        /**
+         * Emits in a random direction either the given photon or
+         *   a new photon of the specified wavelength.  Parameter
+         *   is either a photon or a wavelength.
+         */
+        emitPhoton: function(photonToEmit) {
+            // Optionally the wavelength could be passed in
+            if (_.isNumber(photonToEmit)) {
+                photonToEmit = new Photon({
+                    wavelength: photonToEmit
+                });
+            }
+
+            var emissionAngle = Math.random() * Math.PI * 2;
+            photonToEmit.setVelocity(
+                Molecule.PHOTON_EMISSION_SPEED * Math.cos(emissionAngle),
+                Molecule.PHOTON_EMISSION_SPEED * Math.sin(emissionAngle)
+            );
+            photonToEmit.setPosition(this.get('position'));
+
+            this.trigger('photon-emitted', photonToEmit);
+            this.absorptionHysteresisCountdownTime = Molecule.ABSORPTION_HYSTERESIS_TIME;
+        },
+
+        /**
+         * Returns an enclosing rectangle for this molecule. This
+         *   was created to support searching for open locations
+         *   for new molecules.
+         */
+        getBoundingRect: function() {
+            var minX = Number.POSITIVE_INFINITY;
+            var minY = Number.POSITIVE_INFINITY;
+            var maxX = Number.NEGATIVE_INFINITY;
+            var maxY = Number.NEGATIVE_INFINITY;
+
+            for (var i = 0; i < this.atoms.length; i++) {
+                minX = Math.min(minX, this.atoms[i].getBoundingRect().left());
+                minY = Math.min(minY, this.atoms[i].getBoundingRect().bottom());
+                maxX = Math.max(maxX, this.atoms[i].getBoundingRect().right());
+                maxY = Math.max(maxY, this.atoms[i].getBoundingRect().top());
+            }
+
+            return this._rect.set(
+                minX,
+                minY,
+                maxX - minX,
+                maxY - minY
+            );
         }
 
     }, Constants.Molecule);
