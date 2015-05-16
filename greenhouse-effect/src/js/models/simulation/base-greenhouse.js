@@ -17,10 +17,6 @@ define(function (require, exports, module) {
     var Thermometer    = require('models/thermometer');
     var PhotonEarthCollisionModel = require('models/collision-model/photon-earth');
 
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * The base simulation model for the "Greenhouse Effect" and 

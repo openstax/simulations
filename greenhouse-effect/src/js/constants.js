@@ -205,5 +205,48 @@ define(function (require) {
     Constants.Molecule = Molecule;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                ATOMS                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var CarbonAtom = {};
+
+    CarbonAtom.COLOR = '#808080';
+    CarbonAtom.MASS = 12.011; // In atomic mass units (AMU)
+    CarbonAtom.RADIUS = 77;   // In picometers
+
+    Constants.CarbonAtom = CarbonAtom;
+
+
+    var HydrogenAtom = {};
+
+    HydrogenAtom.COLOR = '#fff';
+    HydrogenAtom.MASS = 1;    // In atomic mass units (AMU)
+    HydrogenAtom.RADIUS = 37; // In picometers
+
+    Constants.HydrogenAtom = HydrogenAtom;
+
+
+    var NitrogenAtom = {};
+
+    NitrogenAtom.COLOR = '#7ED738';
+    NitrogenAtom.MASS = 14.00674;  // In atomic mass units (AMU)
+    NitrogenAtom.RADIUS = 75;      // In picometers
+
+    Constants.NitrogenAtom = NitrogenAtom;
+
+
+    var OxygenAtom = {};
+
+    OxygenAtom.COLOR = '#FF430B';
+    OxygenAtom.MASS = 12.011; // In atomic mass units (AMU)
+    OxygenAtom.RADIUS = 73;   // In picometers
+
+    Constants.OxygenAtom = OxygenAtom;
+
+
+
     return Constants;
 });

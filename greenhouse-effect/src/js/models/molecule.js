@@ -8,6 +8,9 @@ define(function (require) {
     var Rectangle    = require('common/math/rectangle');
     var Vector2      = require('common/math/vector2');
 
+    var PhotonAbsorptionStrategy = require('models/photon-absorption-strategy');
+    var Photon                   = require('models/photon');
+
     var Constants = require('constants');
 
     /**
@@ -17,19 +20,17 @@ define(function (require) {
      */
     var Molecule = MotionObject.extend({
 
-        /**
-         * A map of wavelengths to absorption strategies
-         */
-        wavelengthToAbsorptionStrategy: {},
-
         defaults: _.extend({}, MotionObject.prototype.defaults, {
             vibrating: false, // Whether or not the molecule is vibrating
             rotating: false,  // Whether or not the molecule is rotating
             rotationDirectionClockwise: true, // The direction of rotation
-            rotation: 0                       // Rotation in radians
+            rotation: 0,                      // Rotation in radians
+            highElectronicEnergyState: false  // Tracks if molecule is higher energy than its ground state.
         }),
 
         initialize: function(attributes, options) {
+            MotionObject.prototype.initialize.apply(this, arguments);
+
             // Atoms and bonds that comprise this molecule.
             this.atoms = [];
             this.atomicBonds = [];
@@ -42,6 +43,12 @@ define(function (require) {
             // Vibration offsets - these represent the amount of deviation from
             //   the initial (a.k.a relaxed) configuration for each molecule.
             this.vibrationAtomOffsets = [];
+
+            // Map that matches photon wavelengths to photon absorption strategies.
+            //   The strategies contained in this structure define whether the
+            //   molecule can absorb a given photon and, if it does absorb it, how
+            //   it will react.
+            this.wavelengthToAbsorptionStrategy = {};
 
             // Currently active photon absorption strategy, active because a
             //   photon was absorbed that activated it.
@@ -65,9 +72,6 @@ define(function (require) {
             //   is relative to its original, non-rotated state.
             this.currentRotationRadians = 0;
 
-            // Tracks if molecule is higher energy than its ground state.
-            this.highElectronicEnergyState = false;
-
             // List of constituent molecules. This comes into play only when the
             //   molecule breaks apart, which many of the molecules never do.
             this.constituentMolecules = [];
@@ -75,7 +79,7 @@ define(function (require) {
             // Cached objects for internal use
             this._offset = new Vector2();
             this._rect = new Rectangle();
-            this._nullPhotonAbsorptionStrategy = new NullPhotonAbsorptionStrategy(this);
+            this._nullPhotonAbsorptionStrategy = new PhotonAbsorptionStrategy.NullPhotonAbsorptionStrategy(this);
 
             // Whenever the position (center of gravity) is updated, we must also
             //   update the 
@@ -127,7 +131,7 @@ define(function (require) {
         setInitialAtomCogOffset: function(atomIndex, offset) {
             if (!_.isNumber(atomIndex))
                 atomIndex = this.getAtomIndex(atomIndex);
-            this.initialAtomCogOffsets[atomIndex] = offset;
+            this.initialAtomCogOffsets[atomIndex].set(offset);
         },
 
         /**
@@ -139,6 +143,17 @@ define(function (require) {
             if (!_.isNumber(atomIndex))
                 atomIndex = this.getAtomIndex(atomIndex);
             return this.initialAtomCogOffsets[atomIndex];
+        },
+
+        /**
+         * Set the current vibration offset from the molecule's center of
+         *   gravity (COG) for the specified molecule. Parameter can either
+         *   be the index of the atom in the atom array or the atom object.
+         */
+        setVibrationAtomOffset: function(atomIndex, offset) {
+            if (!_.isNumber(atomIndex))
+                atomIndex = this.getAtomIndex(atomIndex);
+            this.vibrationAtomOffsets[atomIndex].set(offset);
         },
 
         /**
@@ -324,6 +339,13 @@ define(function (require) {
          */
         resetPhotonAbsorptionStrategy: function() {
             this.activePhotonAbsorptionStrategy = this._nullPhotonAbsorptionStrategy;
+        },
+
+        /**
+         * 
+         */
+        addPhotonAbsorptionStrategy: function(wavelength, strategy) {
+            this.wavelengthToAbsorptionStrategy[wavelength] = strategy;
         },
 
         /**

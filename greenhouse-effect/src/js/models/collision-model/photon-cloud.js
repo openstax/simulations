@@ -122,6 +122,7 @@ define(function (require) {
                 var omegaB = photon.get('omega') + (
                     vec3.set(r1_3D).cross(nj).z / photon.getMomentOfInertia()
                 );
+                photon.set('omega', omegaB);
             }
         },
 

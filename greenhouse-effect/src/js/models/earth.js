@@ -6,7 +6,6 @@ define(function (require) {
 
     var Disk                  = require('models/disk');
     var CircularPhotonEmitter = require('models/photon-emitter/circular');
-    var PhotonAbsorber        = require('models/photon-absorber');
 
     var Constants = require('constants');
 
