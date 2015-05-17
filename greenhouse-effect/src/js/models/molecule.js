@@ -290,12 +290,12 @@ define(function (require) {
         },
 
         /**
-         * Returns whether or not the molecule should absorb the offered
+         * Decides whether or not the molecule should absorb the offered
          *   photon.  If the photon is absorbed, the matching absorption 
          *   strategy is set so that it can control the molecule's post-
-         *   absorption behavior.
+         *   absorption behavior. Returns whether photon was absorbed.
          */
-        shouldAbsorbPhoton: function(photon) {
+        queryAbsorbPhoton: function(photon) {
             var absorbPhoton = false;
 
             if (!this.isPhotonAbsorbed() && 

@@ -154,7 +154,7 @@ define(function (require) {
     );
 
     // Choices of targets for the photons.
-    var PhotonTarget = {
+    var PhotonTargets = {
         SINGLE_CO_MOLECULE:      0, 
         SINGLE_CO2_MOLECULE:     1, 
         SINGLE_H2O_MOLECULE:     2, 
@@ -166,7 +166,7 @@ define(function (require) {
         SINGLE_O3_MOLECULE:      8,
         CONFIGURABLE_ATMOSPHERE: 9
     };
-    PhotonAbsorptionSimulation.PhotonTarget = PhotonTarget;
+    PhotonAbsorptionSimulation.PhotonTargets = PhotonTargets;
 
     // Minimum and defaults for photon emission periods.  Note that the max is
     // assumed to be infinity.
@@ -175,7 +175,7 @@ define(function (require) {
     PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_MULTIPLE_TARGET = 100;
 
     // Default values for various parameters that weren't already covered.
-    PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET = PhotonTarget.SINGLE_CH4_MOLECULE;
+    PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET = PhotonTargets.SINGLE_CH4_MOLECULE;
     PhotonAbsorptionSimulation.DEFAULT_EMITTED_PHOTON_WAVELENGTH = Constants.IR_WAVELENGTH;
     PhotonAbsorptionSimulation.INITIAL_COUNTDOWN_WHEN_EMISSION_ENABLED = 300;
 
