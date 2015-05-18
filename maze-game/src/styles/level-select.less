@@ -11,6 +11,12 @@
 	.user-select(none);
 	background-color: #ccc;
 
+	@media screen and (max-height: @short-window) {
+	    left: 0;
+	    bottom: 72px;
+	    clip: rect(-30px, 300px, 300px, 0);
+	}
+
 	h2 {
 	    font-size: 18px;
 	    font-weight: 400;

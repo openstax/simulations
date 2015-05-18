@@ -51,10 +51,12 @@ define(function(require) {
             var levelWidth  = Level.WIDTH  * Constants.TILE_SIZE;
             var levelHeight = Level.HEIGHT * Constants.TILE_SIZE;
 
-            var sceneRatio = this.width / this.height;
+            var sceneHeight = $(window).height() > 500 ? this.height : this.height - 190;
+
+            var sceneRatio = this.width / sceneHeight;
             var levelRatio = levelWidth / levelHeight;
             
-            var scale = (sceneRatio > levelRatio) ? this.height / levelHeight : this.width / levelWidth;
+            var scale = (sceneRatio > levelRatio) ? sceneHeight / levelHeight : this.width / levelWidth;
 
             this.viewOriginX = Math.round(this.width / 2);            // Center
             this.viewOriginY = Math.round((levelHeight * scale) / 2); // Top
@@ -87,8 +89,10 @@ define(function(require) {
                 areaHeight: controlAreaHeight
             });
 
-            this.particleControlView.displayObject.x = this.width - 15;
-            this.particleControlView.displayObject.y = this.height - 15;
+            var margin = $(window).height() > 500 ? 15 : 0;
+
+            this.particleControlView.displayObject.x = this.width  - margin;
+            this.particleControlView.displayObject.y = this.height - margin;
 
             this.stage.addChild(this.particleControlView.displayObject);
         },
@@ -96,7 +100,11 @@ define(function(require) {
         calculateControlAreaHeight: function() {
             var tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
             var availableHeight = this.height - (tileSize * Level.HEIGHT);
-            return availableHeight - 50;
+            if ($(window).height() > 500)
+                availableHeight -= 50;
+            else
+                availableHeight -= 30;
+            return availableHeight;
         },
 
         reset: function() {
