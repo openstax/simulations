@@ -48,6 +48,13 @@ define(function(require) {
             this.glassPanesReset(this.simulation.glassPanes);
         },
 
+        resize: function() {
+            BaseGreenhouseSceneView.prototype.resize.apply(this, arguments);
+
+            if (this.initialized)
+                this.setSceneScale(this.bgGlass);
+        },
+
         glassPanesReset: function(glassPanes) {
             // Remove old photon views
             for (var i = this.glassPaneViews.length - 1; i >= 0; i--) {

@@ -5,6 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var range = require('common/math/range');
+
     var BaseGreenhouseSceneView = require('views/scene/base-greenhouse');
     var CloudView               = require('views/cloud');
 
@@ -22,12 +24,15 @@ define(function(require) {
             this.listenTo(this.simulation.clouds, 'reset',          this.cloudsReset);
             this.listenTo(this.simulation.clouds, 'add',            this.cloudAdded);
             this.listenTo(this.simulation.clouds, 'remove destroy', this.cloudRemoved);
+
+            this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updatePollution);
         },
         
         initGraphics: function() {
             BaseGreenhouseSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initClouds();
+            this.initPolution();
         },
 
         initBackground: function() {
@@ -56,14 +61,52 @@ define(function(require) {
             this.cloudsReset(this.simulation.clouds);
         },
 
+        initPolution: function() {
+            if (this.pollution)
+                this.foregroundLayer.removeChild(this.pollution);
+
+            var canvas = document.createElement('canvas');
+            canvas.width  = this.width;
+            canvas.height = this.height;
+
+            var ctx = canvas.getContext('2d');
+
+            var gradient = ctx.createLinearGradient(0, 0, 0, this.height);
+            gradient.addColorStop(0, Constants.Atmosphere.POLLUTION_TOP_COLOR);
+            gradient.addColorStop(1, Constants.Atmosphere.POLLUTION_BOTTOM_COLOR);
+            ctx.fillStyle = gradient;
+            ctx.fillRect(0, 0, this.width, this.height);
+
+            this.pollution = new PIXI.Sprite(PIXI.Texture.fromCanvas(canvas));
+            this.foregroundLayer.addChild(this.pollution);
+
+            this.pollutionRange = range({
+                min: Constants.Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION,
+                max: Constants.Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION
+            });
+
+            this.updatePollution(this.simulation.atmosphere, this.simulation.atmosphere.get('greenhouseGasConcentration'));
+        },
+
+        resize: function() {
+            BaseGreenhouseSceneView.prototype.resize.apply(this, arguments);
+
+            if (this.initialized) {
+                this.setSceneScale(this.bgToday);
+                this.setSceneScale(this.bg1750);
+                this.setSceneScale(this.bgIceAge);
+                this.initPolution();
+            }
+        },
+
         cloudsReset: function(clouds) {
-            // Remove old photon views
+            // Remove old cloud views
             for (var i = this.cloudViews.length - 1; i >= 0; i--) {
                 this.cloudViews[i].removeFrom(this.clouds);
                 this.cloudViews.splice(i, 1);
             }
 
-            // Add new photon views
+            // Add new cloud views
             clouds.each(function(cloud) {
                 this.createAndAddCloudView(cloud);
             }, this);
@@ -90,6 +133,10 @@ define(function(require) {
             });
             this.clouds.addChild(cloudView.displayObject);
             this.cloudViews.push(cloudView);
+        },
+
+        updatePollution: function(atmosphere, concentration) {
+            this.pollution.alpha = 0.2 * this.pollutionRange.percent(concentration);
         },
 
         showTodayScene: function() {
