@@ -22,6 +22,13 @@ define(function (require) {
 
 		handle: function(photon, glassPane, deltaTime) {
 			if (infraredFilter.absorbs(photon.get('wavelength'))) {
+                // p0.set(photon.get('position'));
+
+                // p1.set(
+                //     photon.get('position').x + photon.get('velocity').x * deltaTime,
+                //     photon.get('position').y + photon.get('velocity').y * deltaTime
+                // );
+                
                 p0.set(
                     photon.get('position').x - photon.get('velocity').x * deltaTime,
                     photon.get('position').y - photon.get('velocity').y * deltaTime

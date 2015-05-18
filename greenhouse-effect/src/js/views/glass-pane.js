@@ -33,12 +33,14 @@ define(function(require) {
 
         drawGlassPane: function() {
             var bounds = this.model.get('bounds');
+            var viewRect = this.mvt.modelToView(bounds);
+
             this.glassPane.beginFill(FILL_COLOR, FILL_ALPHA);
             this.glassPane.drawRect(
-                this.mvt.modelToViewX(bounds.x), 
-                this.mvt.modelToViewY(bounds.y), 
-                this.mvt.modelToViewDeltaX(bounds.w), 
-                Math.abs(this.mvt.modelToViewDeltaY(bounds.h))
+                viewRect.x,
+                viewRect.y,
+                viewRect.w,
+                viewRect.h
             );
             this.glassPane.endFill();
         },

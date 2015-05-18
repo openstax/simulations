@@ -187,7 +187,7 @@ define(function (require, exports, module) {
         /**
          * Make the photon interact with the objects in the sim.
          */
-        handlePhotonInteractions: function(photon) {
+        handlePhotonInteractions: function(photon, deltaTime) {
             // Check for collisions with earth
             PhotonEarthCollisionModel.handle(photon, this.earth);
 

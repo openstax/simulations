@@ -10,6 +10,8 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
 
+    var InfraredFilter = require('models/filter/infrared');
+
     var PhotonView = require('views/photon');
     var CloudView  = require('views/cloud');
 
@@ -105,8 +107,15 @@ define(function(require) {
         initPhotons: function() {
             this.photonViews = [];
 
-            this.photons = new PIXI.SpriteBatch();
-            this.backgroundLayer.addChild(this.photons);
+            this.sunlightPhotons = new PIXI.SpriteBatch();
+            this.infraredPhotons = new PIXI.SpriteBatch();
+
+            // Sunlight goes on top because it goes over the glass
+            this.backgroundLayer.addChild(this.infraredPhotons);
+            this.backgroundLayer.addChild(this.sunlightPhotons);
+            
+
+            this.irFilter = new InfraredFilter();
 
             this.photonsReset(this.simulation.photons);
         },
@@ -122,7 +131,7 @@ define(function(require) {
         photonRemoved: function(photon, photons) {
             for (var i = this.photonViews.length - 1; i >= 0; i--) {
                 if (this.photonViews[i].model === photon) {
-                    this.photonViews[i].removeFrom(this.photons);
+                    this.photonViews[i].removeFrom(this.photonViews[i].displayObject.parent);
                     this.photonViews.splice(i, 1);
                     break;
                 }
@@ -132,7 +141,7 @@ define(function(require) {
         photonsReset: function(photons) {
             // Remove old photon views
             for (var i = this.photonViews.length - 1; i >= 0; i--) {
-                this.photonViews[i].removeFrom(this.photons);
+                this.photonViews[i].removeFrom(this.photonViews[i].displayObject.parent);
                 this.photonViews.splice(i, 1);
             }
 
@@ -148,7 +157,13 @@ define(function(require) {
                 mvt: this.mvt,
                 visibleProportion: this.visiblePhotonProportion
             });
-            this.photons.addChild(photonView.displayObject);
+
+            // Add them to the right layer based on wavelength
+            if (this.irFilter.absorbs(photon.get('wavelength')))
+                this.infraredPhotons.addChild(photonView.displayObject);
+            else
+                this.sunlightPhotons.addChild(photonView.displayObject);
+
             this.photonViews.push(photonView);
         },
 

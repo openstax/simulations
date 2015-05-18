@@ -43,7 +43,8 @@ define(function(require) {
             this.glassPaneViews = [];
 
             this.glassPanes = new PIXI.DisplayObjectContainer();
-            this.backgroundLayer.addChild(this.glassPanes);
+            // Add it right before the sunlight photons layer
+            this.backgroundLayer.addChildAt(this.glassPanes, this.backgroundLayer.getChildIndex(this.sunlightPhotons));
 
             this.glassPanesReset(this.simulation.glassPanes);
         },
