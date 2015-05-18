@@ -5,9 +5,9 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Simulation = require('common/simulation/simulation');
-    var Rectangle  = require('common/math/rectangle');
-    var Vector2    = require('common/math/vector2');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Rectangle               = require('common/math/rectangle');
+    var Vector2                 = require('common/math/vector2');
 
     var Atmosphere     = require('models/atmosphere');
     var Earth          = require('models/earth');
@@ -22,19 +22,19 @@ define(function (require, exports, module) {
      * The base simulation model for the "Greenhouse Effect" and 
      *   "Glass Layers" tabs.
      */
-    var BaseGreenhouseSimulation = Simulation.extend({
+    var BaseGreenhouseSimulation = FixedIntervalSimulation.extend({
 
         exposedEarth: 1,
-
-        defaults: _.extend(Simulation.prototype.defaults, {
-            timeScale: 0.5
-        }),
         
         /**
          * 
          */
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            options = _.extend({
+                deltaTimePerFrame: 1 / 100
+            }, options);
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
         },
 
@@ -167,8 +167,6 @@ define(function (require, exports, module) {
          */
         _update: function(time, deltaTime) {
             var i;
-
-            deltaTime *= this.get('timeScale');
 
             // Update all the photons
             for (i = this.photons.length - 1; i >= 0; i--)

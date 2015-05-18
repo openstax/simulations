@@ -121,9 +121,9 @@ define(function (require) {
             this.$el.append(playbackControlsHtml);
 
             this.$('.playback-speed').noUiSlider({
-                start: 0.5,
+                start: 1,
                 range: {
-                    'min': 0.01,
+                    'min': 0.2,
                     'max': 1
                 }
             });
@@ -186,7 +186,7 @@ define(function (require) {
          */
         changePlaybackSpeed: function(event) {
             var speed = parseFloat($(event.target).val());
-            
+            this.simulation.set('timeScale', speed);
         }
 
     });
