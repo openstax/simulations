@@ -18,15 +18,19 @@ define(function (require, exports, module) {
     var Constants = require('constants');
     var PhotonTargets = Constants.PhotonTargets;
 
-    var PHOTON_EMISSION_LOCATION = PhotonAbsorptionSimulation.PHOTON_EMISSION_LOCATION;
-    var PHOTON_EMISSION_ANGLE_RANGE = PhotonAbsorptionSimulation.PHOTON_EMISSION_ANGLE_RANGE;
-    var SINGLE_MOLECULE_LOCATION = PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION;
-    var PHOTON_VELOCITY  = PhotonAbsorptionSimulation.PHOTON_VELOCITY;
-    var MAX_PHOTON_DISTANCE = PhotonAbsorptionSimulation.MAX_PHOTON_DISTANCE;
-    var CONTAINMENT_AREA_WIDTH = PhotonAbsorptionSimulation.CONTAINMENT_AREA_WIDTH;
-    var CONTAINMENT_AREA_HEIGHT = PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT;
-    var CONTAINMENT_AREA_CENTER = PhotonAbsorptionSimulation.CONTAINMENT_AREA_CENTER;
-    var CONTAINMENT_AREA_RECT = PhotonAbsorptionSimulation.CONTAINMENT_AREA_RECT;
+    var PHOTON_EMISSION_LOCATION    = Constants.PhotonAbsorptionSimulation.PHOTON_EMISSION_LOCATION;
+    var PHOTON_EMISSION_ANGLE_RANGE = Constants.PhotonAbsorptionSimulation.PHOTON_EMISSION_ANGLE_RANGE;
+    var SINGLE_MOLECULE_LOCATION    = Constants.PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION;
+    var PHOTON_VELOCITY             = Constants.PhotonAbsorptionSimulation.PHOTON_VELOCITY;
+    var MAX_PHOTON_DISTANCE         = Constants.PhotonAbsorptionSimulation.MAX_PHOTON_DISTANCE;
+    var CONTAINMENT_AREA_WIDTH      = Constants.PhotonAbsorptionSimulation.CONTAINMENT_AREA_WIDTH;
+    var CONTAINMENT_AREA_HEIGHT     = Constants.PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT;
+    var CONTAINMENT_AREA_CENTER     = Constants.PhotonAbsorptionSimulation.CONTAINMENT_AREA_CENTER;
+    var CONTAINMENT_AREA_RECT       = Constants.PhotonAbsorptionSimulation.CONTAINMENT_AREA_RECT;
+    var MIN_DIST_FROM_WALL_X        = Constants.PhotonAbsorptionSimulation.MIN_DIST_FROM_WALL_X = 20;
+    var MIN_DIST_FROM_WALL_Y        = Constants.PhotonAbsorptionSimulation.MIN_DIST_FROM_WALL_Y = 20;
+    var EMITTER_AVOIDANCE_COMP_X    = Constants.PhotonAbsorptionSimulation.EMITTER_AVOIDANCE_COMP_X = 300;
+    var EMITTER_AVOIDANCE_COMP_Y    = Constants.PhotonAbsorptionSimulation.EMITTER_AVOIDANCE_COMP_Y = 800;
 
     /**
      * The base simulation model for the "Photon Absorption" tab
@@ -115,7 +119,7 @@ define(function (require, exports, module) {
          */
         _update: function(time, deltaTime) {
             // Check if it is time to emit any photons
-            if (this.photonEmissionCountdownTimer != Double.POSITIVE_INFINITY) {
+            if (this.photonEmissionCountdownTimer != Number.POSITIVE_INFINITY) {
                 this.photonEmissionCountdownTimer -= deltaTime;
                 if (this.photonEmissionCountdownTimer <= 0) {
                     // Time to emit
@@ -465,7 +469,7 @@ define(function (require, exports, module) {
             // Add any to the active molecules that aren't there already
             for (i = 0; i < this.configurableAtmosphereMolecules.length; i++) {
                 if (!this.molecules.contains(this.configurableAtmosphereMolecules[i])) 
-                    this.molecules.add(this.configurableAtmosphereMolecules[i]));
+                    this.molecules.add(this.configurableAtmosphereMolecules[i]);
             }
 
             // Remove from the active molecules any that shouldn't be there
