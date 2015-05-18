@@ -38,7 +38,7 @@ define(function(require) {
             this.glassPane.beginFill(FILL_COLOR, FILL_ALPHA);
             this.glassPane.drawRect(
                 viewRect.x,
-                viewRect.y,
+                viewRect.y - viewRect.h, // This is wrong, but for some reason it's necessary
                 viewRect.w,
                 viewRect.h
             );

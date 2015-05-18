@@ -168,6 +168,8 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             var i;
 
+            deltaTime *= this.get('timeScale');
+
             // Update all the photons
             for (i = this.photons.length - 1; i >= 0; i--)
                 this.photons.at(i).update(deltaTime);
@@ -180,8 +182,6 @@ define(function (require, exports, module) {
             // Make the photons interact with other objects
             for (i = this.photons.length - 1; i >= 0; i--)
                 this.handlePhotonInteractions(this.photons.at(i), deltaTime);
-
-            //console.log(this.photons.length)
         },
 
         /**
