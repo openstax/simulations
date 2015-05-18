@@ -153,6 +153,12 @@ define(function (require) {
         PhotonAbsorptionSimulation.CONTAINMENT_AREA_HEIGHT
     );
 
+    // Constants used when trying to find an open location in the atmosphere.
+    PhotonAbsorptionSimulation.MIN_DIST_FROM_WALL_X = 20; // In picometers.
+    PhotonAbsorptionSimulation.MIN_DIST_FROM_WALL_Y = 20; // In picometers.
+    PhotonAbsorptionSimulation.EMITTER_AVOIDANCE_COMP_X = 300;
+    PhotonAbsorptionSimulation.EMITTER_AVOIDANCE_COMP_Y = 800;
+
     // Choices of targets for the photons.
     var PhotonTargets = {
         SINGLE_CO_MOLECULE:      0, 

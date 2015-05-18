@@ -47,7 +47,9 @@ define(function (require, exports, module) {
     var PhotonAbsorptionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            
+            photonWavelength: Constants.VISIBLE_WAVELENGTH,
+            photonEmissionPeriod: Constants.PhotonAbsorptionSimulation.DEFAULT_PHOTON_EMISSION_PERIOD,
+            photonTarget: Constants.PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET
         }),
         
         /**
@@ -56,21 +58,26 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.photonWavelength = Constants.VISIBLE_WAVELENGTH;
+            this.photonWavelength = this.get('photonWavelength');
             this.initialPhotonTarget = null;
 
             // The photon target is the thing that the photons are shot at, and based
             // on its particular nature, it may or may not absorb some of the photons.
-            this.photonTarget = DEFAULT_PHOTON_TARGET;
+            this.photonTarget = this.get('photonTarget');
 
             // Variables that control periodic photon emission.
-            this.photonEmissionCountdownTimer = Double.POSITIVE_INFINITY;
-            this.photonEmissionPeriodTarget = DEFAULT_PHOTON_EMISSION_PERIOD;
+            this.photonEmissionCountdownTimer = Number.POSITIVE_INFINITY;
+            this.photonEmissionPeriodTarget = this.get('photonEmissionPeriod');
             this.previousEmissionAngle = 0;
 
             // Collection that contains the molecules that comprise the configurable
             //   atmosphere
             this.configurableAtmosphereMolecules = [];
+
+            // Listen for property change events
+            this.on('change:photonWavelength',     this.emittedPhotonWavelengthChanged);
+            this.on('change:photonEmissionPeriod', this.photonEmissionPeriodChanged);
+            this.on('change:photonTarget',         this.photonTargetChanged);
         },
 
         /**
@@ -93,6 +100,7 @@ define(function (require, exports, module) {
          */
         initMolecules: function() {
             this.molecules = new Backbone.Collection([], { model: Molecule });
+            this.listenTo(this.molecules, 'photon-emitted', this.photonEmitted);
         },
 
         /**
@@ -142,6 +150,13 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Removes all photons
+         */
+        removeAllPhotons: function() {
+            this.photons.reset();
+        },
+
+        /**
          * Cause a photon to be emitted from the emission point. Emitted
          *   photons will travel toward the photon target, which will
          *   decide whether a given photon should be absorbed.
@@ -171,12 +186,114 @@ define(function (require, exports, module) {
         /**
          * Sets the wavelength for the next emitted photon.
          */
-        setEmittedPhotonWavelength: function(frequency) {
+        emittedPhotonWavelengthChanged: function(simulation, frequency) {
             if (this.photonWavelength != frequency) {
                 // Set the new value and send out notification of
                 //   change to listeners.
                 this.photonWavelength = frequency;
             }
+        },
+
+        /**
+         * Set the emission period, i.e. the time between photons.
+         */
+        photonEmissionPeriodChanged: function(simulation, photonEmissionPeriod) {
+            if (photonEmissionPeriod >= 0)
+                throw 'Photon emission period cannot be less than zero';
+
+            if (this.photonEmissionPeriodTarget !== photonEmissionPeriod) {
+                // If we are transitioning from off to on, set the countdown timer
+                //   such that a photon will be emitted right away so that the user
+                //   doesn't have to wait too long in order to see something come
+                //   out.
+                if (this.photonEmissionPeriodTarget === Number.POSITIVE_INFINITY && 
+                    photonEmissionPeriod            !== Number.POSITIVE_INFINITY) {
+                    this.photonEmissionCountdownTimer = PhotonAbsorptionSimulation.INITIAL_COUNTDOWN_WHEN_EMISSION_ENABLED;
+                }
+
+                // Handle the case where the new value is smaller than the current
+                //   countdown value.
+                else if (photonEmissionPeriod < this.photonEmissionCountdownTimer) {
+                    this.photonEmissionCountdownTimer = photonEmissionPeriod;
+                }
+                // If the new value is infinity, it means that emissions are being
+                //   turned off, so set the period to infinity right away.
+                else if (photonEmissionPeriod === Number.POSITIVE_INFINITY) {
+                    this.photonEmissionCountdownTimer = photonEmissionPeriod; // Turn off emissions.
+                }
+
+                this.photonEmissionPeriodTarget = photonEmissionPeriod;
+            }
+        },
+
+        /**
+         *
+         */
+        photonTargetChanged: function(simulation, photonTarget) {
+            if (this.photonTarget === photonTarget)
+                return;
+
+            // If switching to the configurable atmosphere, photon emission
+            //   is turned off (if it is happening).  This is done because it
+            //   just looks better.
+            if (photonTarget      === PhotonTarget.CONFIGURABLE_ATMOSPHERE || 
+                this.photonTarget === PhotonTarget.CONFIGURABLE_ATMOSPHERE) {
+                this.set('photonEmissionPeriod', Number.POSITIVE_INFINITY);
+                this.removeAllPhotons();
+            }
+
+            // Update to the new value.
+            this.photonTarget = photonTarget;
+
+            // Remove the old photon target(s).
+            this.removeOldTarget();
+
+            // Add the new photon target(s).
+            var newMolecule;
+            switch(photonTarget) {
+                case PhotonTargets.SINGLE_CO_MOLECULE:
+                    newMolecule = new CO({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_CO2_MOLECULE:
+                    newMolecule = new CO2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_H2O_MOLECULE:
+                    newMolecule = new H2O({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_CH4_MOLECULE:
+                    newMolecule = new CH4({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_N2_MOLECULE:
+                    newMolecule = new N2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_O2_MOLECULE:
+                    newMolecule = new O2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_O3_MOLECULE:
+                    newMolecule = new O3({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.SINGLE_NO2_MOLECULE:
+                    newMolecule = new NO2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
+                    break;
+                case PhotonTargets.CONFIGURABLE_ATMOSPHERE:
+                    // Add references for all the molecules in the configurable
+                    //   atmosphere to the "active molecules" list.
+                    newMolecule = this.configurableAtmosphereMolecules;
+                    break;
+                default:
+                    console.error('Unhandled photon target.');
+                    break;
+            }
+
+            if (newMolecule)
+                this.molecules.add(newMolecule);
+        },
+
+        /**
+         * Removes the old target(s) for photons, which is a molecule or molecules.
+         */
+        removeOldTarget: function() {
+            this.molecules.reset();
         },
 
         /**
@@ -201,7 +318,6 @@ define(function (require, exports, module) {
                 for (i = 0; i < numMoleculesToAdd; i++) {
                     var molecule = new moleculeClass();
                     molecule.setPosition(this.findEmptyMoleculePosition(molecule));
-                    // TODO: listen to molecule photon emissions molecule. !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                     this.configurableAtmosphereMolecules.push(moleclue);
                 }
             }
@@ -225,7 +341,7 @@ define(function (require, exports, module) {
             //   target, then these changes must be synchronized with
             //   the active molecules.
             if (this.photonTarget === PhotonTargets.CONFIGURABLE_ATMOSPHERE)
-                this.syncConfigAtmosphereToActiveMolecules();
+                this.syncAtmosphereConfigToActiveMolecules();
         },
 
         /**
@@ -331,6 +447,40 @@ define(function (require, exports, module) {
                     minDistance = molecule.get('position').distance(point);
             }
             return minDistance;
+        },
+
+        /**
+         * Set the active molecules to match the list of molecules in the
+         *   configurable atmosphere list.  This is generally done when 
+         *   switching the photon target to be the atmosphere or when the
+         *   concentration of the gases in the atmosphere changes while
+         *   the configurable atmosphere is the selected photon target.
+         * 
+         * The direction of data flow is from the config atmosphere to the
+         *   active molecules, not the reverse.
+         */
+        syncAtmosphereConfigToActiveMolecules: function() {
+            var i;
+
+            // Add any to the active molecules that aren't there already
+            for (i = 0; i < this.configurableAtmosphereMolecules.length; i++) {
+                if (!this.molecules.contains(this.configurableAtmosphereMolecules[i])) 
+                    this.molecules.add(this.configurableAtmosphereMolecules[i]));
+            }
+
+            // Remove from the active molecules any that shouldn't be there
+            for (i = this.molecules.length - 1; i >= 0; i--) {
+                if (!_.contains(this.configurableAtmosphereMolecules, this.molecules.at(i)))
+                    this.molecules.remove(this.molecules.at(i));
+            }
+        },
+
+        /**
+         * Listens to photon-emission events in the molecules and adds
+         *   any emitted photons to our sim master list of photons.
+         */
+        photonEmitted: function(photon) {
+            this.photons.add(photon);
         }
 
     }, Constants.PhotonAbsorptionSimulation);
