@@ -34,13 +34,12 @@ define(function(require) {
         },
 
         initGraphics: function() {
-        	var graphics = new PIXI.Graphics();
-        	graphics.beginFill(0xFF0000, 1);
-        	graphics.drawCircle(0, 0, 20);
-        	graphics.endFill();
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFF0000, 1);
+            graphics.drawCircle(0, 0, 20);
+            graphics.endFill();
 
-        	var data = PixiToImage.displayObjectToDataURI(graphics);
-        	console.log(data);
+            var data = PixiToImage.displayObjectToDataURI(graphics);
 
             this.initMVT();
 

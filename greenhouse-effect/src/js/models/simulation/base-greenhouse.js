@@ -179,7 +179,7 @@ define(function (require, exports, module) {
 
             // Make the photons interact with other objects
             for (i = this.photons.length - 1; i >= 0; i--)
-                this.handlePhotonInteractions(this.photons.at(i));
+                this.handlePhotonInteractions(this.photons.at(i), deltaTime);
 
             //console.log(this.photons.length)
         },

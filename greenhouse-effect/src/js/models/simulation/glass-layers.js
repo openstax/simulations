@@ -86,12 +86,12 @@ define(function (require, exports, module) {
         /**
          * Overrides base to add glassPane interactions.
          */
-        handlePhotonInteractions: function(photon) {
+        handlePhotonInteractions: function(photon, deltaTime) {
             BaseGreenhouseSimulation.prototype.handlePhotonInteractions.apply(this, arguments);
 
             // Check for collisions with glassPanes
             for (var i = 0; i < this.glassPanes.length; i++)
-                PhotonGlassPaneCollisionModel.handle(photon, this.glassPanes.at(i));
+                PhotonGlassPaneCollisionModel.handle(photon, this.glassPanes.at(i), deltaTime);
         },
         
         /**

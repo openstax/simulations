@@ -14,6 +14,13 @@ define(function (require) {
 
     var LineIntersection = {
 
+        /**
+         * Returns the point at which two lines intersect or a string
+         *   describing the relationship between the lines if they do
+         *   not intersect. The 1st through 4th parameters define the
+         *   first line.  The 5th through 8th parameters define the
+         *   second line.
+         */
         lineIntersection: function(x1, y1, x2, y2, x3, y3, x4, y4) {
             var denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
             var numeA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
@@ -38,6 +45,11 @@ define(function (require) {
             return 'none';
         },
 
+        /**
+         * Returns whether or not two lines intersect. The 1st through
+         *   4th parameters define the first line. The 5th through 8th
+         *   parameters define the second line.
+         */
         linesIntersect: function(x1, y1, x2, y2, x3, y3, x4, y4) {
             if (LineIntersection.lineIntersection(x1, y1, x2, y2, x3, y3, x4, y4) instanceof Vector2)
                 return true;
