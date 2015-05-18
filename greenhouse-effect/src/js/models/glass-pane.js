@@ -11,14 +11,28 @@ define(function (require) {
      */
     var GlassPane = Backbone.Model.extend({
 
+        paneThickness: 0.6,
+
         defaults: {
             productionRate: 0,
-            bounds: null,
-            thickness: 0
+            bounds: null
         },
 
         initialize: function(attributes, options) {
-            this.set('bounds', new Rectangle(this.get('bounds')));
+            var bounds = new Rectangle(0, 0, 0, this.paneThickness);
+
+            if (this.get('bounds'))
+                bounds.set(this.get('bounds'));
+            if (options.x !== undefined)
+                bounds.x = options.x;
+            if (options.altitude !== undefined)
+                bounds.y = options.altitude;
+            if (options.width !== undefined)
+                bounds.w = options.width;
+            if (options.height !== undefined)
+                bounds.h = options.height;
+
+            this.set('bounds', bounds);
         },
 
         width: function() {
@@ -27,6 +41,14 @@ define(function (require) {
 
         height: function() {
             return this.get('bounds').h;
+        },
+
+        emitPhoton: function(photon) {
+            this.trigger('photon-emitted', photon);
+        },
+
+        absorbPhoton: function(photon) {
+            this.trigger('photon-absorbed', photon);
         }
 
     });

@@ -7,8 +7,11 @@ define(function(require) {
     require('common/pixi/extensions');
     
     var PixiView = require('common/pixi/view');
+    var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
+    var FILL_COLOR = Colors.parseHex(Constants.GlassPaneView.FILL_COLOR);
+    var FILL_ALPHA = Constants.GlassPaneView.FILL_ALPHA;
 
     /**
      * A view that represents a photon
@@ -30,7 +33,7 @@ define(function(require) {
 
         drawGlassPane: function() {
             var bounds = this.model.get('bounds');
-            this.glassPane.beginFill(0xFFFFFF, 0.5);
+            this.glassPane.beginFill(FILL_COLOR, FILL_ALPHA);
             this.glassPane.drawRect(
                 this.mvt.modelToViewX(bounds.x), 
                 this.mvt.modelToViewY(bounds.y), 

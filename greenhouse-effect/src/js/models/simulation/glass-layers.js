@@ -34,7 +34,6 @@ define(function (require, exports, module) {
          */
         initialize: function(attributes, options) {
             BaseGreenhouseSimulation.prototype.initialize.apply(this, [attributes, options]);
-
         },
 
         /**
@@ -44,6 +43,8 @@ define(function (require, exports, module) {
             BaseGreenhouseSimulation.prototype.initComponents.apply(this, arguments);
 
             this.initGlassPanes();
+
+            this.atmosphere.set('greenhouseGasConcentration', 0);
         },
 
         /**
@@ -54,8 +55,15 @@ define(function (require, exports, module) {
             this.availableGlassPanes = [];
 
             for (var i = 0; i < this.numGlassPanes; i++) {
-
+                this.availableGlassPanes.push(new GlassPane({}, {
+                    x: this.bounds.left(),
+                    altitude: 5 + i * 2,
+                    width: this.bounds.w,
+                }));
             }
+
+            this.listenTo(this.glassPanes, 'photon-emitted',  this.photonEmitted);
+            this.listenTo(this.glassPanes, 'photon-absorbed', this.photonAbsorbed);
         },
 
         /**
