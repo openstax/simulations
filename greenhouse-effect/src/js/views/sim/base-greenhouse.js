@@ -68,6 +68,10 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+
+            // For debugging
+            // this.$length = $('<div>');
+            // this.$length.appendTo('body');
         },
 
         /**
@@ -161,6 +165,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            //this.$length.html(this.simulation.photons.length);
         },
 
         /**

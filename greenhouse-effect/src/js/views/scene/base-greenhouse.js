@@ -124,9 +124,25 @@ define(function(require) {
             this.thermometerView = new GreenhouseThermometerView({
                 model: this.simulation.thermometer
             });
-            this.thermometerView.displayObject.x = 50;
             this.thermometerView.displayObject.y = this.height - 50;
+            this.positionThermometerView();
             this.backgroundLayer.addChild(this.thermometerView.displayObject);
+        },
+
+        resize: function() {
+            PixiSceneView.prototype.resize.apply(this, arguments);
+
+            if (this.initialized) {
+                this.initMVT();
+                this.positionThermometerView();
+            }
+        },
+
+        positionThermometerView: function() {
+            if ($(window).height() <= 500)
+                this.thermometerView.displayObject.x = this.mvt.modelToViewX(this.simulation.bounds.x) + 30;
+            else
+                this.thermometerView.displayObject.x = 50;
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
