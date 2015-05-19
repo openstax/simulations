@@ -19,6 +19,7 @@ define(function(require) {
                 tubeHeight:   64,
 
                 numberOfTicks: 7,
+                minorTicksPerTick: 0,
 
                 lineColor: '#555',
                 lineWidth: 1,
@@ -28,6 +29,7 @@ define(function(require) {
                 fillAlpha: 0.3,
 
                 liquidColor: '#ff3c00',
+                liquidPadding: 2,
 
                 tickColor: '#555',
                 tickWidth: 1
@@ -38,6 +40,7 @@ define(function(require) {
             this.tubeHeight = options.tubeHeight;
 
             this.numberOfTicks = options.numberOfTicks;
+            this.minorTicksPerTick = options.minorTicksPerTick;
 
             this.lineColor = Colors.parseHex(options.lineColor);
             this.lineWidth = options.lineWidth;
@@ -53,8 +56,8 @@ define(function(require) {
 
             this.value = 0;
 
-            this.padding = 2;
-            this.outlineFix = 0.5;
+            this.padding = options.liquidPadding;
+            this.outlineFix = (this.padding <= 2) ? 0.5 : 0;
 
             this.initGraphics();
         },
@@ -144,6 +147,10 @@ define(function(require) {
             var radius = Math.floor(this.bulbDiameter / 2);
             var halfWidth = Math.floor(this.tubeWidth / 2);
             var tickLength = Math.floor(this.tubeWidth * 0.4);
+            var minorTickLength = Math.floor(this.tubeWidth * 0.2);
+            var minorTickSpacing;
+            if (this.minorTicksPerTick)
+                minorTickSpacing = ySpacing / (this.minorTicksPerTick + 1);
 
             ticks.lineStyle(this.tickWidth, this.tickColor, 1);
 
@@ -151,6 +158,15 @@ define(function(require) {
                 var y = Math.floor(-radius - ySpacing * (i + 0.5));
                 ticks.moveTo(-halfWidth, y);
                 ticks.lineTo(-halfWidth + tickLength, y);
+
+                // Draw minor ticks if appropriate
+                if (i !== 0) {
+                    for (var j = 0; j < this.minorTicksPerTick; j++) {
+                        var ym = y + (minorTickSpacing * (j + 1));
+                        ticks.moveTo(-halfWidth, ym);
+                        ticks.lineTo(-halfWidth + minorTickLength, ym);
+                    } 
+                }
             }
 
             this.displayObject.addChild(ticks);

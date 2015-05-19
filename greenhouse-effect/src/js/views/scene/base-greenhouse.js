@@ -12,8 +12,9 @@ define(function(require) {
 
     var InfraredFilter = require('models/filter/infrared');
 
-    var PhotonView = require('views/photon');
-    var CloudView  = require('views/cloud');
+    var PhotonView                = require('views/photon');
+    var CloudView                 = require('views/cloud');
+    var GreenhouseThermometerView = require('views/thermometer');
 
     var Assets = require('assets');
 
@@ -54,6 +55,7 @@ define(function(require) {
             this.initMVT();
             this.initBackground();
             this.initPhotons();
+            this.initThermometer();
 
             this.initialized = true;
         },
@@ -116,6 +118,15 @@ define(function(require) {
             this.irFilter = new InfraredFilter();
 
             this.photonsReset(this.simulation.photons);
+        },
+
+        initThermometer: function() {
+            this.thermometerView = new GreenhouseThermometerView({
+                model: this.simulation.thermometer
+            });
+            this.thermometerView.displayObject.x = 50;
+            this.thermometerView.displayObject.y = this.height - 50;
+            this.backgroundLayer.addChild(this.thermometerView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
