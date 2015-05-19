@@ -9,14 +9,21 @@ define(function (require, exports, module) {
     var Rectangle  = require('common/math/rectangle');
     var Vector2    = require('common/math/vector2');
 
-    var Photon         = require('models/photon');
-    var Molecule       = require('models/molecule');
+    var Photon   = require('models/photon');
+    var Molecule = require('models/molecule');
+    var CH4      = require('models/molecule/ch4');
+    var CO       = require('models/molecule/co');
+    var CO2      = require('models/molecule/co2');
+    var H2O      = require('models/molecule/h2o');
+    var N2       = require('models/molecule/n2');
+    var O2       = require('models/molecule/o2');
 
     /**
      * Constants
      */
     var Constants = require('constants');
-    var PhotonTargets = Constants.PhotonTargets;
+
+    var PhotonTargets = Constants.PhotonAbsorptionSimulation.PhotonTargets;
 
     var PHOTON_EMISSION_LOCATION    = Constants.PhotonAbsorptionSimulation.PHOTON_EMISSION_LOCATION;
     var PHOTON_EMISSION_ANGLE_RANGE = Constants.PhotonAbsorptionSimulation.PHOTON_EMISSION_ANGLE_RANGE;
@@ -63,11 +70,11 @@ define(function (require, exports, module) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.photonWavelength = this.get('photonWavelength');
-            this.initialPhotonTarget = null;
 
             // The photon target is the thing that the photons are shot at, and based
             // on its particular nature, it may or may not absorb some of the photons.
             this.photonTarget = this.get('photonTarget');
+            this.initialPhotonTarget = this.photonTarget;
 
             // Variables that control periodic photon emission.
             this.photonEmissionCountdownTimer = Number.POSITIVE_INFINITY;
@@ -90,6 +97,8 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.initPhotons();
             this.initMolecules();
+
+            this.photonTargetChanged(this, this.get('photonTarget'));
         },
 
         /**
@@ -240,8 +249,8 @@ define(function (require, exports, module) {
             // If switching to the configurable atmosphere, photon emission
             //   is turned off (if it is happening).  This is done because it
             //   just looks better.
-            if (photonTarget      === PhotonTarget.CONFIGURABLE_ATMOSPHERE || 
-                this.photonTarget === PhotonTarget.CONFIGURABLE_ATMOSPHERE) {
+            if (photonTarget      === PhotonTargets.CONFIGURABLE_ATMOSPHERE || 
+                this.photonTarget === PhotonTargets.CONFIGURABLE_ATMOSPHERE) {
                 this.set('photonEmissionPeriod', Number.POSITIVE_INFINITY);
                 this.removeAllPhotons();
             }

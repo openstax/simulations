@@ -12,7 +12,7 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents a photon
+     * A view that represents a thermometer
      */
     var GreenhouseThermometerView = ThermometerView.extend({
 

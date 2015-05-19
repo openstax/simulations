@@ -14,7 +14,7 @@ define(function(require) {
     var FILL_ALPHA = Constants.GlassPaneView.FILL_ALPHA;
 
     /**
-     * A view that represents a photon
+     * A view that represents a glass pane
      */
     var GlassPaneView = PixiView.extend({
 

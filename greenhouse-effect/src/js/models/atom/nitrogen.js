@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Atom = require('common/models/atom');
+    var Atom = require('models/atom');
 
     var Constants = require('constants');
 

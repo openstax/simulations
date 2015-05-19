@@ -11,7 +11,7 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents a photon
+     * A view that represents a cloud
      */
     var CloudView = PixiView.extend({
 

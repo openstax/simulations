@@ -31,6 +31,11 @@ define(function (require) {
         initialize: function(attributes, options) {
             MotionObject.prototype.initialize.apply(this, arguments);
 
+            // Cached objects for internal use
+            this._offset = new Vector2();
+            this._rect = new Rectangle();
+            this._nullPhotonAbsorptionStrategy = new PhotonAbsorptionStrategy.NullPhotonAbsorptionStrategy(this);
+
             // Atoms and bonds that comprise this molecule.
             this.atoms = [];
             this.atomicBonds = [];
@@ -52,7 +57,7 @@ define(function (require) {
 
             // Currently active photon absorption strategy, active because a
             //   photon was absorbed that activated it.
-            this.activePhotonAbsorptionStrategy = null;
+            this.activePhotonAbsorptionStrategy = this._nullPhotonAbsorptionStrategy;
 
             // Prevents reabsorption for a while after emitting a photon.
             this.absorptionHysteresisCountdownTime = 0;
@@ -75,11 +80,6 @@ define(function (require) {
             // List of constituent molecules. This comes into play only when the
             //   molecule breaks apart, which many of the molecules never do.
             this.constituentMolecules = [];
-
-            // Cached objects for internal use
-            this._offset = new Vector2();
-            this._rect = new Rectangle();
-            this._nullPhotonAbsorptionStrategy = new PhotonAbsorptionStrategy.NullPhotonAbsorptionStrategy(this);
 
             // Whenever the position (center of gravity) is updated, we must also
             //   update the 
@@ -171,7 +171,7 @@ define(function (require) {
          * Adds an atomic bond
          */
         addAtomicBond: function(atomicBond) {
-            this.atomicBond.push(atomicBond);
+            this.atomicBonds.push(atomicBond);
         },
 
         /**

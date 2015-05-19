@@ -11,6 +11,8 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
 
+    var MoleculeView = require('views/molecule');
+
     var Assets = require('assets');
 
     // Constants
@@ -106,7 +108,7 @@ define(function(require) {
         initMolecules: function() {
             this.moleculeViews = [];
 
-            this.molecules = new PIXI.SpriteBatch();
+            this.molecules = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.molecules);
 
             this.moleculesReset(this.simulation.molecules);

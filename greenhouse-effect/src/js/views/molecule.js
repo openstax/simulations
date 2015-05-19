@@ -4,34 +4,26 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
     
     var PixiView = require('common/pixi/view');
 
     var Constants = require('constants');
 
     /**
-     * A view that represents an atom
+     * A view that represents a molecule
      */
-    var AtomView = PixiView.extend({
+    var MoleculeView = PixiView.extend({
 
         /**
-         * Overrides PixiView's initializeDisplayObject function
-         */
-        initializeDisplayObject: function() {
-            this.displayObject = new PIXI.Graphics();
-        },
-
-        /**
-         * Initializes the new AtomView.
+         * Initializes the new MoleculeView.
          */
         initialize: function(options) {
+            this.initGraphics();
             this.updateMVT(options.mvt);
         },
 
-        /**
-         * Draws the atom
-         */
-        drawAtom: function() {
+        initGraphics: function() {
             
         },
 
@@ -41,11 +33,9 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            this.drawAtom();
         }
 
     });
 
-    return AtomView;
+    return MoleculeView;
 });
