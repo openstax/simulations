@@ -188,6 +188,22 @@ define(function(require) {
 
         showFewerPhotons: function() {
             this.setVisiblePhotonProportion(0.1);
+        },
+
+        showThermometer: function() {
+            this.thermometerView.show();
+        },
+
+        hideThermometer: function() {
+            this.thermometerView.hide();
+        },
+
+        showCelsius: function() {
+            this.thermometerView.showCelsius();
+        },
+
+        showFahrenheit: function() {
+            this.thermometerView.showFahrenheit();
         }
 
     });

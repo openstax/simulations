@@ -43,7 +43,10 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
 
-            'click .all-photons-check' : 'toggleAllPhotons',
+            'click .all-photons-check'  : 'toggleAllPhotons',
+            'click .thermometer-check'  : 'toggleThermometer',
+            'click .degrees-fahrenheit' : 'showFahrenheit',
+            'click .degrees-celsius'    : 'showCelsius',
 
             'slide .playback-speed' : 'changePlaybackSpeed'
         },
@@ -179,6 +182,30 @@ define(function (require) {
                 this.sceneView.showAllPhotons();
             else
                 this.sceneView.showFewerPhotons();
+        },
+
+        /**
+         * Toggles thermometer visibility
+         */
+        toggleThermometer: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showThermometer();
+            else
+                this.sceneView.hideThermometer();
+        },
+
+        /**
+         * Sets the thermometer readout to Fahrenheit.
+         */
+        showFahrenheit: function() {
+            this.sceneView.showFahrenheit();
+        },
+
+        /**
+         * Sets the thermometer readout to Celsius.
+         */
+        showCelsius: function() {
+            this.sceneView.showCelsius();
         },
 
         /**
