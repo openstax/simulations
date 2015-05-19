@@ -460,6 +460,38 @@ describe('ModelViewTransform', function(){
 		chai.expect(rectA.h).to.almost.equal(rectB.h);
 	});
 
+	it('should transform a rectangle with inverted y', function(){
+		var scale = 10; // scale
+		var screenW = 200;
+		var screenH = 200;
+		var mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+			new Vector2(0, 0), 
+			new Vector2(screenW / 2, screenH / 2), 
+			scale
+		);
+		var w = 5;
+		var h = 5;
+		var rectA = new Rectangle(0, 10, w, h);
+		var rectB = new Rectangle(screenW / 2, 0, w * scale, h * scale);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
+
+		var rectA = new Rectangle(0, -10, w, h);
+		var rectB = new Rectangle(screenW / 2, screenH, w * scale, h * scale);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
+	});
+
 	it('should transform a curve', function() {
 		var s = 5;   // scale
 		var ox = 10; // x offset

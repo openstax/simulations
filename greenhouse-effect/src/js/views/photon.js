@@ -54,12 +54,13 @@ define(function(require) {
          * Initializes the new PhotonView.
          */
         initialize: function(options) {
+            options = _.extend({
+                visibleProportion: 1
+            }, options);
+
             this.determineVisibility(options.visibleProportion);
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
-            // this.listenTo(this.model, 'reflect', function() {
-            //     this.displayObject.scale.x = this.displayObject.scale.y = 2;
-            // });
 
             this.updateMVT(options.mvt);
         },
