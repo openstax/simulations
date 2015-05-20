@@ -13,7 +13,7 @@
             <ul class="radio gas-options">
                 <% _.each(gases, function(gas, key) { %>
                 <li>
-                    <input type="radio" name="atmospheric-gas" value="<%= key %>" id="atmospheric-gas-<%= key %>" checked>
+                    <input type="radio" name="atmospheric-gas" value="<%= key %>" id="atmospheric-gas-<%= key %>" class="atmospheric-gas" checked>
                     <label for="atmospheric-gas-<%= key %>"><%= gas.label %></label>
                     <span class="gas-icon-wrapper"><img src="<%= gas.src %>" class="gas-icon"></span>
                 </li>

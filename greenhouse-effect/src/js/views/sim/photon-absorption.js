@@ -22,6 +22,8 @@ define(function (require) {
     var O2  = require('models/molecule/o2');
 
     var Constants = require('constants');
+    var PhotonTargets = Constants.PhotonAbsorptionSimulation.PhotonTargets;
+
     var Assets    = require('assets');
 
     require('nouislider');
@@ -55,7 +57,9 @@ define(function (require) {
         events: {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
-            'click .reset-btn'  : 'reset'
+            'click .reset-btn'  : 'reset',
+
+            'click .atmospheric-gas' : 'changeAtmosphericGas'
         },
 
         /**
@@ -123,38 +127,39 @@ define(function (require) {
             var N2View  = new MoleculeView({ model: new N2(),  mvt: iconMVT });
             var O2View  = new MoleculeView({ model: new O2(),  mvt: iconMVT });
 
+            var gases = {};
+            gases[PhotonTargets.SINGLE_CH4_MOLECULE] = {
+                src: PixiToImage.displayObjectToDataURI(CH4View.displayObject),
+                label: 'CH<sub>4</sub>'
+            };
+            gases[PhotonTargets.SINGLE_CO2_MOLECULE] = {
+                src: PixiToImage.displayObjectToDataURI(CO2View.displayObject),
+                label: 'CO<sub>2</sub>'
+            };
+            gases[PhotonTargets.SINGLE_H2O_MOLECULE] = {
+                src: PixiToImage.displayObjectToDataURI(H2OView.displayObject),
+                label: 'H<sub>2</sub>O'
+            };
+            gases[PhotonTargets.SINGLE_N2_MOLECULE] = {
+                src: PixiToImage.displayObjectToDataURI(N2View.displayObject),
+                label: 'N<sub>2</sub>'
+            };
+            gases[PhotonTargets.SINGLE_O2_MOLECULE] = {
+                src: PixiToImage.displayObjectToDataURI(O2View.displayObject),
+                label: 'O<sub>2</sub>'
+            };
+            gases[PhotonTargets.CONFIGURABLE_ATMOSPHERE] = {
+                src: '',
+                label: 'Build atmosphere'
+            };
+
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
                 unique: this.cid,
                 iconSize: iconSize,
                 Assets: Assets,
-                gases: {
-                    methane: {
-                        src: PixiToImage.displayObjectToDataURI(CH4View.displayObject),
-                        label: 'CH<sub>4</sub>'
-                    },
-                    carbonDioxide: {
-                        src: PixiToImage.displayObjectToDataURI(CO2View.displayObject),
-                        label: 'CO<sub>2</sub>'
-                    },
-                    water: {
-                        src: PixiToImage.displayObjectToDataURI(H2OView.displayObject),
-                        label: 'H<sub>2</sub>O'
-                    },
-                    nitrogen: {
-                        src: PixiToImage.displayObjectToDataURI(N2View.displayObject),
-                        label: 'N<sub>2</sub>'
-                    },
-                    oxygen: {
-                        src: PixiToImage.displayObjectToDataURI(O2View.displayObject),
-                        label: 'O<sub>2</sub>'
-                    },
-                    custom: {
-                        src: '',
-                        label: 'Build atmosphere'
-                    }
-                }
+                gases: gases
             };
             this.$el.html(this.template(data));
         },
@@ -213,6 +218,11 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        changeAtmosphericGas: function(event) {
+            var photonTarget = this.$('.atmospheric-gas:checked').val();
+            this.simulation.set('photonTarget', parseInt(photonTarget));
         }
 
     });
