@@ -6,7 +6,6 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
-    var PixiToImage        = require('common/pixi/pixi-to-image');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -43,13 +42,6 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 1);
-            graphics.drawCircle(0, 0, 20);
-            graphics.endFill();
-
-            var data = PixiToImage.displayObjectToDataURI(graphics);
-
             this.initMVT();
             this.initContainmentBox();
             this.initMolecules();

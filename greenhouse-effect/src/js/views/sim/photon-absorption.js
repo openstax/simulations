@@ -5,10 +5,21 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView            = require('common/app/sim');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+    var PixiToImage        = require('common/pixi/pixi-to-image');
 
     var PhotonAbsorptionSimulation = require('models/simulation/photon-absorption');
     var PhotonAbsorptionSceneView  = require('views/scene/photon-absorption');
+    var MoleculeView               = require('views/molecule');
+
+    var CH4 = require('models/molecule/ch4');
+    var CO  = require('models/molecule/co');
+    var CO2 = require('models/molecule/co2');
+    var H2O = require('models/molecule/h2o');
+    var N2  = require('models/molecule/n2');
+    var O2  = require('models/molecule/o2');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -99,35 +110,48 @@ define(function (require) {
          * Renders page content. Should be overriden by child classes
          */
         renderScaffolding: function() {
+            var iconSize = 24;
+            var iconMVT = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                new Vector2(0, 0),
+                new Vector2(iconSize / 2, iconSize / 2),
+                0.1
+            );
+
+            var CH4View = new MoleculeView({ model: new CH4(), mvt: iconMVT });
+            var CO2View = new MoleculeView({ model: new CO2(), mvt: iconMVT });
+            var H2OView = new MoleculeView({ model: new H2O(), mvt: iconMVT });
+            var N2View  = new MoleculeView({ model: new N2(),  mvt: iconMVT });
+            var O2View  = new MoleculeView({ model: new O2(),  mvt: iconMVT });
+
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
                 unique: this.cid,
-                iconSize: 18,
+                iconSize: iconSize,
                 Assets: Assets,
                 gases: {
                     methane: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: PixiToImage.displayObjectToDataURI(CH4View.displayObject),
                         label: 'CH<sub>4</sub>'
                     },
                     carbonDioxide: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: PixiToImage.displayObjectToDataURI(CO2View.displayObject),
                         label: 'CO<sub>2</sub>'
                     },
                     water: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: PixiToImage.displayObjectToDataURI(H2OView.displayObject),
                         label: 'H<sub>2</sub>O'
                     },
                     nitrogen: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: PixiToImage.displayObjectToDataURI(N2View.displayObject),
                         label: 'N<sub>2</sub>'
                     },
                     oxygen: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: PixiToImage.displayObjectToDataURI(O2View.displayObject),
                         label: 'O<sub>2</sub>'
                     },
                     custom: {
-                        src: Assets.Images.MOLECULE_METHANE,
+                        src: '',
                         label: 'Build atmosphere'
                     }
                 }
