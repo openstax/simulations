@@ -10,8 +10,9 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
 
-    var MoleculeView = require('views/molecule');
-    var PhotonView   = require('views/photon');
+    var MoleculeView      = require('views/molecule');
+    var PhotonView        = require('views/photon');
+    var PhotonEmitterView = require('views/photon-emitter');
 
     var Assets = require('assets');
 
@@ -47,6 +48,7 @@ define(function(require) {
             this.initContainmentBox();
             this.initMolecules();
             this.initPhotons();
+            this.initPhotonEmitter();
         },
 
         initMVT: function() {
@@ -114,6 +116,14 @@ define(function(require) {
             this.stage.addChild(this.photons);
 
             this.photonsReset(this.simulation.photons);
+        },
+
+        initPhotonEmitter: function() {
+            this.photonEmitterView = new PhotonEmitterView({
+                model: this.simulation,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.photonEmitterView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
