@@ -305,15 +305,16 @@ define(function (require) {
 
                 // The circumstances for absorption are correct, but do we have
                 //   an absorption strategy for this photon's wavelength?
-                var candidateAbsorptionStrategy = this.wavelengthToAbsorptionStrategy(photon.get('wavelength'));
-                if (candidateAbsorptionStrategy !== null) {
+                var candidateAbsorptionStrategy = this.wavelengthToAbsorptionStrategy[photon.get('wavelength')];
+                if (candidateAbsorptionStrategy) {
                     // Yes, there is a strategy available for this wavelength.
                     //   Ask it if it wants the photon.
                     if (candidateAbsorptionStrategy.shouldAbsorbPhoton(photon)) {
                         // We do want it, so consider the photon absorbed.
-                        this.absorbPhoton = true;
+                        absorbPhoton = true;
                         this.activePhotonAbsorptionStrategy = candidateAbsorptionStrategy;
                         this.activePhotonAbsorptionStrategy.absorbPhoton(photon);
+                        this.trigger('photon-absorbed', photon);
                     }
                     else {
                         // We don't want to waste time asking again
@@ -382,12 +383,14 @@ define(function (require) {
             var minY = Number.POSITIVE_INFINITY;
             var maxX = Number.NEGATIVE_INFINITY;
             var maxY = Number.NEGATIVE_INFINITY;
+            var bounds;
 
             for (var i = 0; i < this.atoms.length; i++) {
-                minX = Math.min(minX, this.atoms[i].getBoundingRect().left());
-                minY = Math.min(minY, this.atoms[i].getBoundingRect().bottom());
-                maxX = Math.max(maxX, this.atoms[i].getBoundingRect().right());
-                maxY = Math.max(maxY, this.atoms[i].getBoundingRect().top());
+                bounds = this.atoms[i].getBoundingRect();
+                minX = Math.min(minX, bounds.left());
+                minY = Math.min(minY, bounds.bottom());
+                maxX = Math.max(maxX, bounds.right());
+                maxY = Math.max(maxY, bounds.top());
             }
 
             return this._rect.set(

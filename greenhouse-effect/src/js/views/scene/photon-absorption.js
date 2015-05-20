@@ -11,6 +11,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var MoleculeView = require('views/molecule');
+    var PhotonView   = require('views/photon');
 
     var Assets = require('assets');
 
@@ -185,7 +186,8 @@ define(function(require) {
         createAndAddPhotonView: function(photon) {
             var photonView = new PhotonView({ 
                 model: photon,
-                mvt: this.mvt
+                mvt: this.mvt,
+                modelDiameter: 100
             });
             this.photons.addChild(photonView.displayObject);
             this.photonViews.push(photonView);

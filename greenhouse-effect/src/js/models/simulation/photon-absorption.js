@@ -89,6 +89,9 @@ define(function (require, exports, module) {
             this.on('change:photonWavelength',     this.emittedPhotonWavelengthChanged);
             this.on('change:photonEmissionPeriod', this.photonEmissionPeriodChanged);
             this.on('change:photonTarget',         this.photonTargetChanged);
+
+            this.set('photonWavelength', Constants.IR_WAVELENGTH);
+            this.set('photonEmissionPeriod', 0.5);
         },
 
         /**
@@ -113,7 +116,8 @@ define(function (require, exports, module) {
          */
         initMolecules: function() {
             this.molecules = new Backbone.Collection([], { model: Molecule });
-            this.listenTo(this.molecules, 'photon-emitted', this.photonEmitted);
+            this.listenTo(this.molecules, 'photon-emitted',  this.photonEmitted);
+            this.listenTo(this.molecules, 'photon-absorbed', this.photonAbsorbed);
         },
 
         /**
@@ -145,10 +149,8 @@ define(function (require, exports, module) {
                 photon.update(deltaTime);
                 if (photon.get('position').x - PHOTON_EMISSION_LOCATION.x <= MAX_PHOTON_DISTANCE) {
                     // See if any of the molecules wish to absorb this photon.
-                    for (var j = 0; j < this.molecules.length; j++) {
-                        if (this.molecules.at(j).queryAbsorbPhoton(photon))
-                            this.photons.remove(photon);
-                    }
+                    for (var j = 0; j < this.molecules.length; j++)
+                        this.molecules.at(j).queryAbsorbPhoton(photon);
                 }
                 else {
                     // The photon has moved beyond our simulation bounds,
@@ -175,7 +177,7 @@ define(function (require, exports, module) {
          *   decide whether a given photon should be absorbed.
          */
         emitPhoton: function() {
-            var Photon = new Photon({
+            var photon = new Photon({
                 wavelength: this.photonWavelength,
                 position: PHOTON_EMISSION_LOCATION
             });
@@ -211,7 +213,7 @@ define(function (require, exports, module) {
          * Set the emission period, i.e. the time between photons.
          */
         photonEmissionPeriodChanged: function(simulation, photonEmissionPeriod) {
-            if (photonEmissionPeriod >= 0)
+            if (photonEmissionPeriod <= 0)
                 throw 'Photon emission period cannot be less than zero';
 
             if (this.photonEmissionPeriodTarget !== photonEmissionPeriod) {
@@ -338,7 +340,7 @@ define(function (require, exports, module) {
                 }
             }
             else if (targetQuantity !== 0) {
-                console.error('Warning: Ignoring call to set molecule levels to current level.');
+                // Ignoring because quantity is already the same
             }
 
             // If the configurable atmosphere is the currently selected
@@ -390,9 +392,10 @@ define(function (require, exports, module) {
 
             // Figure out which point would position the molecule such that it had
             //   the least overlap with other molecules.
-            possibleLocations.sort(_.bind(function(p1, p2) {
-                return this.getOverlapWithOtherMolecules(p1, width, height) - this.getOverlapWithOtherMolecules(p2, width, height);
-            }, this));
+            var self = this;
+            possibleLocations.sort(function(p1, p2) {
+                return self.getOverlapWithOtherMolecules(p1, width, height) - self.getOverlapWithOtherMolecules(p2, width, height);
+            });
 
             var point = possibleLocations[0];
             if (point.x + width / 2 > CONTAINMENT_AREA_RECT.right())
@@ -485,6 +488,14 @@ define(function (require, exports, module) {
          */
         photonEmitted: function(photon) {
             this.photons.add(photon);
+        },
+
+        /**
+         * Listens to photon-absorption events in the molecules and removes
+         *   any absorbed photons from our sim master list of photons.
+         */
+        photonAbsorbed: function(photon) {
+            this.photons.remove(photon);
         }
 
     }, Constants.PhotonAbsorptionSimulation);

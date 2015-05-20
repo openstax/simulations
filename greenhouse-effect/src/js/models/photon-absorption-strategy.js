@@ -51,7 +51,7 @@ define(function (require) {
          */
         reset: function() {
             this.absorbedPhoton = null;
-            this.photonAbsorbed = false;
+            this.photonJustAbsorbed = false;
             this.photonHoldCountdownTime = 0;
         },
 
@@ -65,14 +65,14 @@ define(function (require) {
             //   so now we decide probabilistically whether or not
             //   to actually do it.  This essentially simulates the
             //   quantum nature of the absorption.
-            return (!this.photonAbsorbed && Math.random() < this.photonAbsorptionProbability);
+            return (!this.photonJustAbsorbed && Math.random() < this.photonAbsorptionProbability);
         },
 
         /**
          * Absorbs a given photon.
          */
         absorbPhoton: function(photon) {
-            this.photonAbsorbed = true;
+            this.photonJustAbsorbed = true;
             this.photonHoldCountdownTime = MIN_PHOTON_HOLD_TIME + Math.random() * (MAX_PHOTON_HOLD_TIME - MIN_PHOTON_HOLD_TIME);
         },
 
@@ -80,7 +80,7 @@ define(function (require) {
          * Returns whether or not a photon has been absorbed.
          */
         isPhotonAbsorbed: function() {
-            return this.photonAbsorbed;
+            return this.photonJustAbsorbed;
         }
 
     });
@@ -113,7 +113,7 @@ define(function (require) {
         reemitPhoton: function() {
             this.molecule.emitPhoton(this.absorbedWavelength);
             this.molecule.resetPhotonAbsorptionStrategy();
-            this.photonAbsorbed = false;
+            this.photonJustAbsorbed = false;
         },
 
         /**

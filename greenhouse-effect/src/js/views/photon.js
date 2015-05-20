@@ -55,10 +55,12 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
-                visibleProportion: 1
+                visibleProportion: 1,
+                modelDiameter: PhotonView.MODEL_DIAMETER
             }, options);
 
             this.determineVisibility(options.visibleProportion);
+            this.modelDiameter = options.modelDiameter;
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
 
@@ -72,7 +74,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            var targetSpriteWidth = this.mvt.modelToViewDeltaX(PhotonView.MODEL_DIAMETER); // In pixels
+            var targetSpriteWidth = this.mvt.modelToViewDeltaX(this.modelDiameter); // In pixels
             var scale = targetSpriteWidth / this.displayObject.width;
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
 

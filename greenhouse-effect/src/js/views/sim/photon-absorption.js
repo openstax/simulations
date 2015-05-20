@@ -171,6 +171,7 @@ define(function (require) {
 
             this.$('.molecule-count-slider').noUiSlider({
                 start: 0,
+                step: 1,
                 connect: 'lower',
                 range: {
                     'min': 0,

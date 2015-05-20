@@ -146,8 +146,8 @@ define(function (require) {
     PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION = new Vector2(0, 0);
 
     // Velocity of emitted photons.  Since they are emitted horizontally, only
-    //   one value is needed.
-    PhotonAbsorptionSimulation.PHOTON_VELOCITY = 2;
+    //   one value is needed.  Velocity given in picometers per second.
+    PhotonAbsorptionSimulation.PHOTON_VELOCITY = 2000;
 
     // Distance for a photon to travel before being removed from the model.
     //   This value is essentially arbitrary, and needs to be set such that the
@@ -192,14 +192,14 @@ define(function (require) {
 
     // Minimum and defaults for photon emission periods.  Note that the max is
     // assumed to be infinity.
-    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_SINGLE_TARGET = 400;
+    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_SINGLE_TARGET = 0.4;
     PhotonAbsorptionSimulation.DEFAULT_PHOTON_EMISSION_PERIOD = Number.POSITIVE_INFINITY; // Milliseconds of sim time.
-    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_MULTIPLE_TARGET = 100;
+    PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_MULTIPLE_TARGET = 0.1;
 
     // Default values for various parameters that weren't already covered.
     PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET = PhotonTargets.SINGLE_CH4_MOLECULE;
     PhotonAbsorptionSimulation.DEFAULT_EMITTED_PHOTON_WAVELENGTH = Constants.IR_WAVELENGTH;
-    PhotonAbsorptionSimulation.INITIAL_COUNTDOWN_WHEN_EMISSION_ENABLED = 300;
+    PhotonAbsorptionSimulation.INITIAL_COUNTDOWN_WHEN_EMISSION_ENABLED = 0.3;
 
     Constants.PhotonAbsorptionSimulation = PhotonAbsorptionSimulation;
 
@@ -212,7 +212,7 @@ define(function (require) {
 
     var Molecule = {};
 
-    Molecule.PHOTON_EMISSION_SPEED = 2; // Picometers per second.
+    Molecule.PHOTON_EMISSION_SPEED = 2000; // Picometers per second.
     Molecule.PHOTON_ABSORPTION_DISTANCE = 100;
     Molecule.VIBRATION_FREQUENCY = 5;  // Cycles per second of sim time.
     Molecule.ROTATION_RATE = 1.1;  // Revolutions per second of sim time.
@@ -262,7 +262,7 @@ define(function (require) {
 
     var OxygenAtom = {};
 
-    OxygenAtom.COLOR = '#7B00FF';//'#FF430B';
+    OxygenAtom.COLOR = '#FF430B';//'#7B00FF';
     OxygenAtom.MASS = 12.011; // In atomic mass units (AMU)
     OxygenAtom.RADIUS = 73;   // In picometers
 

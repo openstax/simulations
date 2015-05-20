@@ -2,10 +2,6 @@
 <span class="scene-view-placeholder"></span>
 
 <div class="sim-controls-wrapper">
-    <div class="sim-controls-left">
-
-    </div>
-
     <div class="sim-controls-right">
         <div class="sim-controls atmospheric-gases-panel">
             <h2>Atmospheric Gases</h2>
@@ -19,8 +15,13 @@
                 </li>
                 <% }); %>
             </ul>
+        </div>
+    </div>
 
-            <div class="custom-atmosphere-controls">
+    <div class="sim-controls-left">
+        <div class="sim-controls custom-atmosphere-controls">
+            <h2>Molecules</h2>
+
             <% _.each(gases, function(gas, key) { %>
                 <% if (key != Constants.PhotonAbsorptionSimulation.PhotonTargets.CONFIGURABLE_ATMOSPHERE) { %>
                 <div>
@@ -32,7 +33,6 @@
                 </div>
                 <% } %>
             <% }); %>
-            </div>
         </div>
     </div>
 </div>
