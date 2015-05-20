@@ -21,7 +21,7 @@ define(function (require) {
             this.nitrogenAtom2 = this.addAtom(new NitrogenAtom());
 
             // Create and add bonds
-            this.addAtomicBond(new AtomicBond(this.nitrogenAtom1, this.nitrogenAtom2, 3));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.nitrogenAtom1], this.atoms[this.nitrogenAtom2], 3));
 
             // Set the initial offsets.
             this.initAtomOffsets();

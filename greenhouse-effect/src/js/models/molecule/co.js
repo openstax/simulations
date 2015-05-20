@@ -26,7 +26,7 @@ define(function (require) {
             this.oxygenAtom = this.addAtom(new OxygenAtom());
 
             // Create and add bonds
-            this.addAtomicBond(new AtomicBond(this.carbonAtom, this.oxygenAtom, 3));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.carbonAtom], this.atoms[this.oxygenAtom], 3));
 
             // Set up the photon wavelengths to absorb.
             this.addPhotonAbsorptionStrategy(Constants.MICRO_WAVELENGTH, new PhotonAbsorptionStrategy.RotationStrategy(this));

@@ -267,6 +267,22 @@ define(function (require) {
     Constants.OxygenAtom = OxygenAtom;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                             ATOMIC BOND                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var AtomicBondView = {};
+
+    AtomicBondView.COLOR = '#aaa';
+    AtomicBondView.BOND_WIDTH_PROPORTION_SINGLE = 0.45;
+    AtomicBondView.BOND_WIDTH_PROPORTION_DOUBLE = 0.28;
+    AtomicBondView.BOND_WIDTH_PROPORTION_TRIPLE = 0.24;
+
+    Constants.AtomicBondView = AtomicBondView;
+
+
 
     return Constants;
 });

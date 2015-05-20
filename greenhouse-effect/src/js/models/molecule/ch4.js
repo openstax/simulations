@@ -34,10 +34,10 @@ define(function (require) {
             this.hydrogenAtom4 = this.addAtom(new HydrogenAtom());
 
             // Create and add bonds
-            this.addAtomicBond(new AtomicBond(this.carbonAtom, this.hydrogenAtom1, 1));
-            this.addAtomicBond(new AtomicBond(this.carbonAtom, this.hydrogenAtom2, 1));
-            this.addAtomicBond(new AtomicBond(this.carbonAtom, this.hydrogenAtom3, 1));
-            this.addAtomicBond(new AtomicBond(this.carbonAtom, this.hydrogenAtom4, 1));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.carbonAtom], this.atoms[this.hydrogenAtom1], 1));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.carbonAtom], this.atoms[this.hydrogenAtom2], 1));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.carbonAtom], this.atoms[this.hydrogenAtom3], 1));
+            this.addAtomicBond(new AtomicBond(this.atoms[this.carbonAtom], this.atoms[this.hydrogenAtom4], 1));
 
             // Set up the photon wavelengths to absorb.
             this.addPhotonAbsorptionStrategy(Constants.IR_WAVELENGTH, new PhotonAbsorptionStrategy.VibrationStrategy(this));
