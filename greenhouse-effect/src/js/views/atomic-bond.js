@@ -45,7 +45,6 @@ define(function(require) {
          * Draws the bond
          */
         drawBond: function() {
-            var graphics = this.displayObject;
             var bond = this.model;
 
             var averageAtomRadius = this.mvt.modelToViewDeltaX(
@@ -60,9 +59,7 @@ define(function(require) {
                     var point2 = this._point2.set(this.mvt.modelToView(bond.getAtom2().get('position')));
                     var bondWidth = AtomicBondView.BOND_WIDTH_PROPORTION_SINGLE * averageAtomRadius;
 
-                    graphics.lineStyle(bondWidth, this.color, 1);
-                    graphics.moveTo(point1.x, point1.y);
-                    graphics.lineTo(point2.x, point2.y);
+                    this.drawSingleBond(this.color, point1, point2, bondWidth);
 
                     break;
 
@@ -85,15 +82,7 @@ define(function(require) {
 
                     // Draw the bonds.
                     var bondWidth = AtomicBondView.BOND_WIDTH_PROPORTION_DOUBLE * averageAtomRadius;
-                    graphics.lineStyle(bondWidth, this.color, 1);
-
-                    graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
-                    graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
-
-                    offsetVector.rotate(Math.PI);
-
-                    graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
-                    graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
+                    this.drawDoubleBond(this.color, point1, point2, bondWidth, offsetVector);
 
                     break;
 
@@ -116,21 +105,46 @@ define(function(require) {
 
                     // Draw the bonds.
                     var bondWidth = AtomicBondView.BOND_WIDTH_PROPORTION_TRIPLE * averageAtomRadius;
-                    graphics.lineStyle(bondWidth, this.color, 1);
-
-                    graphics.moveTo(point1.x, point1.y);
-                    graphics.lineTo(point2.x, point2.y);
-
-                    graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
-                    graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
-
-                    offsetVector.rotate(Math.PI);
-
-                    graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
-                    graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
+                    this.drawTripleBond(this.color, point1, point2, bondWidth, offsetVector);
 
                     break;
             }
+        },
+
+        drawSingleBond: function(color, point1, point2, bondWidth) {
+            var graphics = this.displayObject;
+            graphics.lineStyle(bondWidth, color, 1);
+            graphics.moveTo(point1.x, point1.y);
+            graphics.lineTo(point2.x, point2.y);
+        },
+
+        drawDoubleBond: function(color, point1, point2, bondWidth, offsetVector) {
+            var graphics = this.displayObject;
+            graphics.lineStyle(bondWidth, color, 1);
+
+            graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
+            graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
+
+            offsetVector.rotate(Math.PI);
+
+            graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
+            graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
+        },
+
+        drawTripleBond: function(color, point1, point2, bondWidth, offsetVector) {
+            var graphics = this.displayObject;
+            graphics.lineStyle(bondWidth, color, 1);
+
+            graphics.moveTo(point1.x, point1.y);
+            graphics.lineTo(point2.x, point2.y);
+
+            graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
+            graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
+
+            offsetVector.rotate(Math.PI);
+
+            graphics.moveTo(point1.x + offsetVector.x, point1.y - offsetVector.y);
+            graphics.lineTo(point2.x + offsetVector.x, point2.y - offsetVector.y);
         },
 
         /**

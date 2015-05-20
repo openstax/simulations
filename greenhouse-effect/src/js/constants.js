@@ -233,7 +233,7 @@ define(function (require) {
 
     var CarbonAtom = {};
 
-    CarbonAtom.COLOR = '#808080';
+    CarbonAtom.COLOR = '#606060';
     CarbonAtom.MASS = 12.011; // In atomic mass units (AMU)
     CarbonAtom.RADIUS = 77;   // In picometers
 
@@ -251,7 +251,7 @@ define(function (require) {
 
     var NitrogenAtom = {};
 
-    NitrogenAtom.COLOR = '#7ED738';
+    NitrogenAtom.COLOR = '#7B00FF';//'#7ED738';
     NitrogenAtom.MASS = 14.00674;  // In atomic mass units (AMU)
     NitrogenAtom.RADIUS = 75;      // In picometers
 
@@ -260,7 +260,7 @@ define(function (require) {
 
     var OxygenAtom = {};
 
-    OxygenAtom.COLOR = '#FF430B';
+    OxygenAtom.COLOR = '#7ED738';//'#FF430B';
     OxygenAtom.MASS = 12.011; // In atomic mass units (AMU)
     OxygenAtom.RADIUS = 73;   // In picometers
 
@@ -275,7 +275,7 @@ define(function (require) {
 
     var AtomicBondView = {};
 
-    AtomicBondView.COLOR = '#0ac400';
+    AtomicBondView.COLOR = '#0488D3';//'#aaa';
     AtomicBondView.BOND_WIDTH_PROPORTION_SINGLE = 0.45;
     AtomicBondView.BOND_WIDTH_PROPORTION_DOUBLE = 0.28;
     AtomicBondView.BOND_WIDTH_PROPORTION_TRIPLE = 0.24;
