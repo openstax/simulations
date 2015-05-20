@@ -147,7 +147,7 @@ define(function (require, exports, module) {
             for (var i = this.photons.length - 1; i >= 0; i--) {
                 photon = this.photons.at(i);
                 photon.update(deltaTime);
-                if (photon.get('position').x - PHOTON_EMISSION_LOCATION.x <= MAX_PHOTON_DISTANCE) {
+                if (photon.get('position').distance(PHOTON_EMISSION_LOCATION) <= MAX_PHOTON_DISTANCE) {
                     // See if any of the molecules wish to absorb this photon.
                     for (var j = 0; j < this.molecules.length; j++)
                         this.molecules.at(j).queryAbsorbPhoton(photon);
