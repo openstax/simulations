@@ -264,9 +264,6 @@ define(function (require, exports, module) {
             // Add the new photon target(s).
             var newMolecule;
             switch(photonTarget) {
-                case PhotonTargets.SINGLE_CO_MOLECULE:
-                    newMolecule = new CO({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
-                    break;
                 case PhotonTargets.SINGLE_CO2_MOLECULE:
                     newMolecule = new CO2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
                     break;
@@ -281,12 +278,6 @@ define(function (require, exports, module) {
                     break;
                 case PhotonTargets.SINGLE_O2_MOLECULE:
                     newMolecule = new O2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
-                    break;
-                case PhotonTargets.SINGLE_O3_MOLECULE:
-                    newMolecule = new O3({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
-                    break;
-                case PhotonTargets.SINGLE_NO2_MOLECULE:
-                    newMolecule = new NO2({ position: PhotonAbsorptionSimulation.SINGLE_MOLECULE_LOCATION });
                     break;
                 case PhotonTargets.CONFIGURABLE_ATMOSPHERE:
                     // Add references for all the molecules in the configurable
@@ -331,7 +322,7 @@ define(function (require, exports, module) {
                 for (i = 0; i < numMoleculesToAdd; i++) {
                     var molecule = new moleculeClass();
                     molecule.setPosition(this.findEmptyMoleculePosition(molecule));
-                    this.configurableAtmosphereMolecules.push(moleclue);
+                    this.configurableAtmosphereMolecules.push(molecule);
                 }
             }
             else if (numMoleculesToAdd < 0) {
@@ -399,9 +390,9 @@ define(function (require, exports, module) {
 
             // Figure out which point would position the molecule such that it had
             //   the least overlap with other molecules.
-            possibleLocations.sort(function(p1, p2) {
+            possibleLocations.sort(_.bind(function(p1, p2) {
                 return this.getOverlapWithOtherMolecules(p1, width, height) - this.getOverlapWithOtherMolecules(p2, width, height);
-            });
+            }, this));
 
             var point = possibleLocations[0];
             if (point.x + width / 2 > CONTAINMENT_AREA_RECT.right())

@@ -59,7 +59,9 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
 
-            'click .atmospheric-gas' : 'changeAtmosphericGas'
+            'click .atmospheric-gas' : 'changeAtmosphericGas',
+
+            'slide .molecule-count-slider' : 'changeMoleculeCount'
         },
 
         /**
@@ -130,7 +132,8 @@ define(function (require) {
             var gases = {};
             gases[PhotonTargets.SINGLE_CH4_MOLECULE] = {
                 src: PixiToImage.displayObjectToDataURI(CH4View.displayObject),
-                label: 'CH<sub>4</sub>'
+                label: 'CH<sub>4</sub>',
+                selected: true
             };
             gases[PhotonTargets.SINGLE_CO2_MOLECULE] = {
                 src: PixiToImage.displayObjectToDataURI(CO2View.displayObject),
@@ -162,6 +165,18 @@ define(function (require) {
                 gases: gases
             };
             this.$el.html(this.template(data));
+
+            this.$customAtmosphereControls = this.$('.custom-atmosphere-controls');
+            this.$customAtmosphereControls.hide();
+
+            this.$('.molecule-count-slider').noUiSlider({
+                start: 0,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': Constants.PhotonAbsorptionSimulation.MAX_NUMBER_OF_MOLECULES
+                }
+            });
         },
 
         /**
@@ -221,8 +236,41 @@ define(function (require) {
         },
 
         changeAtmosphericGas: function(event) {
-            var photonTarget = this.$('.atmospheric-gas:checked').val();
-            this.simulation.set('photonTarget', parseInt(photonTarget));
+            var photonTarget = parseInt(this.$('.atmospheric-gas:checked').val());
+            this.simulation.set('photonTarget', photonTarget);
+
+            if (photonTarget == PhotonTargets.CONFIGURABLE_ATMOSPHERE)
+                this.$customAtmosphereControls.show();
+            else
+                this.$customAtmosphereControls.hide();
+        },
+
+        changeMoleculeCount: function(event) {
+            var num = parseInt($(event.target).val());
+            var key = parseInt($(event.target).data('key'));
+
+            this.$('#molecule-count-' + key).text(num + ' ' + (num === 1 ? 'molecule' : 'molecules'));
+
+            var moleculeClass;
+            switch(key) {
+                case PhotonTargets.SINGLE_CO2_MOLECULE:
+                    moleculeClass = CO2;
+                    break;
+                case PhotonTargets.SINGLE_H2O_MOLECULE:
+                    moleculeClass = H2O;
+                    break;
+                case PhotonTargets.SINGLE_CH4_MOLECULE:
+                    moleculeClass = CH4;
+                    break;
+                case PhotonTargets.SINGLE_N2_MOLECULE:
+                    moleculeClass = N2;
+                    break;
+                case PhotonTargets.SINGLE_O2_MOLECULE:
+                    moleculeClass = O2;
+                    break;
+            }
+
+            this.simulation.setAtmosphericGasLevel(moleculeClass, num);
         }
 
     });

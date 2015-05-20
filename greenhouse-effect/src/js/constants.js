@@ -188,6 +188,8 @@ define(function (require) {
     };
     PhotonAbsorptionSimulation.PhotonTargets = PhotonTargets;
 
+    PhotonAbsorptionSimulation.MAX_NUMBER_OF_MOLECULES = 15;
+
     // Minimum and defaults for photon emission periods.  Note that the max is
     // assumed to be infinity.
     PhotonAbsorptionSimulation.MIN_PHOTON_EMISSION_PERIOD_SINGLE_TARGET = 400;

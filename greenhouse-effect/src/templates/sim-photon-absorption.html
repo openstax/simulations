@@ -13,12 +13,26 @@
             <ul class="radio gas-options">
                 <% _.each(gases, function(gas, key) { %>
                 <li>
-                    <input type="radio" name="atmospheric-gas" value="<%= key %>" id="atmospheric-gas-<%= key %>" class="atmospheric-gas" checked>
+                    <input type="radio" name="atmospheric-gas" value="<%= key %>" id="atmospheric-gas-<%= key %>" class="atmospheric-gas" <%= gas.selected ? 'checked' : '' %>>
                     <label for="atmospheric-gas-<%= key %>"><%= gas.label %></label>
                     <span class="gas-icon-wrapper"><img src="<%= gas.src %>" class="gas-icon"></span>
                 </li>
                 <% }); %>
             </ul>
+
+            <div class="custom-atmosphere-controls">
+            <% _.each(gases, function(gas, key) { %>
+                <% if (key != Constants.PhotonAbsorptionSimulation.PhotonTargets.CONFIGURABLE_ATMOSPHERE) { %>
+                <div>
+                    <div class="molecule-count-slider-header">
+                        <label><%= gas.label %></label>
+                        <span class="molecule-count-slider-value" id="molecule-count-<%= key %>">0 molecules</span>
+                    </div>
+                    <div class="slider molecule-count-slider" data-key="<%= key %>"></div>
+                </div>
+                <% } %>
+            <% }); %>
+            </div>
         </div>
     </div>
 </div>
