@@ -275,7 +275,7 @@ define(function (require) {
 
     var AtomicBondView = {};
 
-    AtomicBondView.COLOR = '#aaa';
+    AtomicBondView.COLOR = '#0ac400';
     AtomicBondView.BOND_WIDTH_PROPORTION_SINGLE = 0.45;
     AtomicBondView.BOND_WIDTH_PROPORTION_DOUBLE = 0.28;
     AtomicBondView.BOND_WIDTH_PROPORTION_TRIPLE = 0.24;
