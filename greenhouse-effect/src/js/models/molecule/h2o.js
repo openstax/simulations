@@ -32,9 +32,9 @@ define(function (require) {
             Molecule.prototype.initialize.apply(this, arguments);
 
             // Create and add atoms
-            this.oxygenAtom  = this.addAtom(new HydrogenAtom());
-            this.hydrogenAtom1 = this.addAtom(new OxygenAtom());
-            this.hydrogenAtom2 = this.addAtom(new OxygenAtom());
+            this.oxygenAtom  = this.addAtom(new OxygenAtom());
+            this.hydrogenAtom1 = this.addAtom(new HydrogenAtom());
+            this.hydrogenAtom2 = this.addAtom(new HydrogenAtom());
 
             // Create and add bonds
             this.addAtomicBond(new AtomicBond(this.atoms[this.oxygenAtom], this.atoms[this.hydrogenAtom1], 1));
