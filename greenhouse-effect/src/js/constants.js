@@ -251,7 +251,7 @@ define(function (require) {
 
     var NitrogenAtom = {};
 
-    NitrogenAtom.COLOR = '#7B00FF';//'#7ED738';
+    NitrogenAtom.COLOR = '#7ED738';//'#7ED738';
     NitrogenAtom.MASS = 14.00674;  // In atomic mass units (AMU)
     NitrogenAtom.RADIUS = 75;      // In picometers
 
@@ -260,7 +260,7 @@ define(function (require) {
 
     var OxygenAtom = {};
 
-    OxygenAtom.COLOR = '#7ED738';//'#FF430B';
+    OxygenAtom.COLOR = '#7B00FF';//'#FF430B';
     OxygenAtom.MASS = 12.011; // In atomic mass units (AMU)
     OxygenAtom.RADIUS = 73;   // In picometers
 
