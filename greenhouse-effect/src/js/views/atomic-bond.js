@@ -45,6 +45,8 @@ define(function(require) {
          * Draws the bond
          */
         drawBond: function() {
+            this.displayObject.clear();
+            
             var bond = this.model;
 
             var averageAtomRadius = this.mvt.modelToViewDeltaX(

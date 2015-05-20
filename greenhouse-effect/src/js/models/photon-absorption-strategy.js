@@ -7,8 +7,8 @@ define(function (require) {
     /**
      * Constants
      */
-    var MIN_PHOTON_HOLD_TIME = 600;  // Milliseconds of sim time.
-    var MAX_PHOTON_HOLD_TIME = 1200; // Milliseconds of sim time.
+    var MIN_PHOTON_HOLD_TIME = 0.6;  // Milliseconds of sim time.
+    var MAX_PHOTON_HOLD_TIME = 1.2; // Milliseconds of sim time.
 
     /**
      * This is the base class for the strategies that define how a molecule
@@ -120,6 +120,7 @@ define(function (require) {
          * Absorbs a given photon.
          */
         absorbPhoton: function(photon) {
+            PhotonAbsorptionStrategy.prototype.absorbPhoton.apply(this, arguments);
             this.absorbedWavelength = photon.get('wavelength');
             this.photonAbsorbed();
         },

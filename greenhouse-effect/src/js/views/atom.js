@@ -27,6 +27,9 @@ define(function(require) {
          */
         initialize: function(options) {
             this.color = Colors.parseHex(this.model.get('color'));
+
+            this.listenTo(this.model, 'change:position', this.drawAtom);
+
             this.updateMVT(options.mvt);
         },
 
@@ -35,6 +38,7 @@ define(function(require) {
          */
         drawAtom: function() {
             var graphics = this.displayObject;
+            graphics.clear();
             graphics.beginFill(this.color, 1);
             graphics.drawCircle(
                 this.mvt.modelToViewX(this.model.get('position').x),
