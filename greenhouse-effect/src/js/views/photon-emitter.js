@@ -30,6 +30,8 @@ define(function(require) {
 
             this.infraredMode();
 
+            this.listenTo(this.model, 'change:photonTarget', this.photonTargetChanged);
+
             this.updateMVT(options.mvt);
         },
 
@@ -123,6 +125,8 @@ define(function(require) {
                 
                 this.model.set('photonEmissionPeriod', emissionPeriod);
             });
+
+            this.sliderView = sliderView;
         },
 
         /**
@@ -240,11 +244,24 @@ define(function(require) {
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
         },
 
+        photonTargetChanged: function(simulation, photonTarget) {
+            if ((
+                photonTarget === PhotonTargets.CONFIGURABLE_ATMOSPHERE && 
+                simulation.previous('photonTarget') !== PhotonTargets.CONFIGURABLE_ATMOSPHERE
+            ) || (
+                photonTarget !== PhotonTargets.CONFIGURABLE_ATMOSPHERE && 
+                simulation.previous('photonTarget') === PhotonTargets.CONFIGURABLE_ATMOSPHERE
+            )) {
+                this.sliderView.val(1);
+            }
+        },
+
         infraredMode: function() {
             this.infraredBackground.visible = true;
             this.sunlightBackground.visible = false;
             this.infraredEmitter.visible = true;
             this.sunlightEmitter.visible = false;
+            this.model.set('photonWavelength', Constants.IR_WAVELENGTH);
         },
 
         sunlightMode: function() {
@@ -252,6 +269,7 @@ define(function(require) {
             this.sunlightBackground.visible = true;
             this.infraredEmitter.visible = false;
             this.sunlightEmitter.visible = true;
+            this.model.set('photonWavelength', Constants.SUNLIGHT_WAVELENGTH);
         }
 
     });
