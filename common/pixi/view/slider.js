@@ -227,6 +227,10 @@ define(function(require) {
         },
 
         backgroundTouchEnd: function(data) {
+            if (!this.dragging) {
+                this.trigger('set',    this.value, this.previousValue);
+                this.trigger('change', this.value, this.previousValue);
+            }
             this.dragEnd();
         },
 

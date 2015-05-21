@@ -139,6 +139,17 @@ define(function(require) {
             panelBg.endFill();
             panel.addChild(panelBg);
 
+            // Clickable areas
+            var clickTop = new PIXI.Graphics();
+            clickTop.hitArea = new PIXI.Rectangle(0, 0, width, height / 2);
+            clickTop.interactive = true;
+            var clickBottom = new PIXI.Graphics();
+            clickBottom.hitArea = new PIXI.Rectangle(0, height / 2, width, height / 2);
+            clickBottom.interactive = true;
+            panel.addChild(clickTop);
+            panel.addChild(clickBottom);
+
+            // Labels
             var options = {
                 font: '20px Arial',
                 fill: '#fff'
@@ -158,6 +169,7 @@ define(function(require) {
             panel.addChild(infraredLabel);
             panel.addChild(sunlightLabel);
 
+            // Slider
             var sliderBackground = new PIXI.Sprite(
                 PIXI.Texture.generateVerticalGradientTexture(6, 36, Constants.INFRARED_COLOR, Constants.SUNLIGHT_COLOR)
             );
@@ -172,14 +184,7 @@ define(function(require) {
                 orientation: 'vertical',
                 direction: 'rtl',
 
-                width: 36,
-                backgroundHeight: 6,
-                backgroundColor: '#fff',
-                backgroundAlpha: 1,
-                backgroundLineColor: '#fff',
-                backgroundLineWidth: 1,
-                backgroundLineAlpha: 1,
-                //background: sliderBackground,
+                background: sliderBackground,
 
                 handleSize: 16,
                 handleColor: '#eee',
@@ -190,6 +195,31 @@ define(function(require) {
             sliderView.displayObject.x = 22;
             sliderView.displayObject.y = 27;
             panel.addChild(sliderView.displayObject);
+
+            this.listenTo(sliderView, 'change', function(value, prev) {
+                if (value === 1) {
+
+                }
+                else {
+
+                }
+            });
+
+            this.listenTo(sliderView, 'drag-end', function() {
+                var value = sliderView.val();
+                if (value > 0.5)
+                    sliderView.val(1);
+                else
+                    sliderView.val(0);
+            });   
+
+            clickTop.click = function() {
+                sliderView.val(1);
+            };
+
+            clickBottom.click = function() {
+                sliderView.val(0);
+            };
         },
 
         /**
