@@ -43,7 +43,11 @@ define(function(require) {
             this.sunlightEmitter.anchor.x = this.infraredEmitter.anchor.x = 1;
             this.sunlightEmitter.anchor.y = this.infraredEmitter.anchor.y = 0.5;
 
+            // The sunlight graphic is slightly larger than the infrared, so fix that.
+            this.sunlightEmitter.scale.x = this.sunlightEmitter.scale.y = 0.83;
+
             this.displayObject.addChild(this.infraredEmitter);
+            this.displayObject.addChild(this.sunlightEmitter);
 
             this.initSlider();
             this.initPhotonTypeControls();
@@ -176,7 +180,7 @@ define(function(require) {
             sliderBackground.anchor.x = 0.5;
 
             var sliderView = new SliderView({
-                start: 0,
+                start: 1,
                 range: {
                     min: 0,
                     max: 1
@@ -196,13 +200,11 @@ define(function(require) {
             sliderView.displayObject.y = 27;
             panel.addChild(sliderView.displayObject);
 
-            this.listenTo(sliderView, 'change', function(value, prev) {
-                if (value === 1) {
-
-                }
-                else {
-
-                }
+            this.listenTo(sliderView, 'set', function(value, prev) {
+                if (value === 1)
+                    this.infraredMode();
+                else
+                    this.sunlightMode();
             });
 
             this.listenTo(sliderView, 'drag-end', function() {
