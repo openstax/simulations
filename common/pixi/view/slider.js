@@ -56,6 +56,7 @@ define(function(require) {
                 backgroundLineAlpha: 1,
                 handleSize: 10,
                 handleColor: '#21366B',
+                handleAlpha: 1,
                 handleLineColor: '#000',
                 handleLineWidth: 0,
 
@@ -78,7 +79,7 @@ define(function(require) {
 
             if (options.handle === undefined) {
                 options.handle = new PIXI.Graphics();
-                options.handle.beginFill(options.handleColor, 1);
+                options.handle.beginFill(options.handleColor, options.handleAlpha);
                 options.handle.lineStyle(options.handleLineWidth, options.handleLineColor, 1);
                 options.handle.drawCircle(0, 0, options.handleSize * 0.8);
                 options.handle.scale.x = options.handle.scale.y = 0.8;
