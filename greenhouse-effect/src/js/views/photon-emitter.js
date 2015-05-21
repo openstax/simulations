@@ -103,6 +103,7 @@ define(function(require) {
                 backgroundLineWidth: 1,
                 backgroundLineAlpha: 1,
 
+                handleSize: 14,
                 handleColor: '#eee',
                 handleAlpha: 1,
                 handleLineColor: '#fff',
