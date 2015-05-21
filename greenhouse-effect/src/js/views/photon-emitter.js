@@ -15,7 +15,7 @@ define(function(require) {
     var Constants = require('constants');
     var PhotonTargets = PhotonAbsorptionSimulation.PhotonTargets;
 
-    var Assets    = require('assets');
+    var Assets = require('assets');
 
     /**
      * A view that represents an atom
@@ -27,6 +27,8 @@ define(function(require) {
          */
         initialize: function(options) {
             this.initGraphics();
+
+            this.infraredMode();
 
             this.updateMVT(options.mvt);
         },
@@ -44,22 +46,26 @@ define(function(require) {
             this.displayObject.addChild(this.infraredEmitter);
 
             this.initSlider();
+            this.initPhotonTypeControls();
         },
 
+        /**
+         * Initializes the emission rate slider
+         */
         initSlider: function() {
             // Create the background gradients for the slider
             var bgHeight = this.infraredEmitter.height * 0.23;
             var bgWidth  = this.infraredEmitter.width  * 0.36;
 
-            var infraredTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', '#DF2F00');
+            var infraredTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', Constants.INFRARED_COLOR);
             var infraredBackground = new PIXI.Sprite(infraredTexture);
             this.infraredBackground = infraredBackground;
             this.displayObject.addChild(infraredBackground);
 
-            var sunlightTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', '#ffff00');
+            var sunlightTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', Constants.SUNLIGHT_COLOR);
             var sunlightBackground = new PIXI.Sprite(sunlightTexture);
             this.sunlightBackground = sunlightBackground;
-            //this.displayObject.addChild(sunlightBackground);
+            this.displayObject.addChild(sunlightBackground);
 
             var bgX = -bgWidth - this.infraredEmitter.width * 0.33;
             var bgY = -bgHeight / 2;
@@ -116,6 +122,77 @@ define(function(require) {
         },
 
         /**
+         * Initializes the controls for changing the photon type.
+         */
+        initPhotonTypeControls: function() {
+            var width  = 135;
+            var height =  90;
+
+            var panel = new PIXI.DisplayObjectContainer();
+            panel.x = -206;
+            panel.y = 80;
+            this.displayObject.addChild(panel);
+
+            var panelBg = new PIXI.Graphics();
+            panelBg.beginFill(0x929091, 0.5);
+            panelBg.drawRect(0, 0, width, height);
+            panelBg.endFill();
+            panel.addChild(panelBg);
+
+            var options = {
+                font: '20px Arial',
+                fill: '#fff'
+            };
+
+            var infraredLabel = new PIXI.Text('Infrared', options);
+            var sunlightLabel = new PIXI.Text('Sunlight', options);
+
+            infraredLabel.anchor.x = 1;
+            sunlightLabel.anchor.x = 1;
+
+            infraredLabel.x = width - 15;
+            sunlightLabel.x = width - 15;
+            infraredLabel.y = 15;
+            sunlightLabel.y = 50;
+
+            panel.addChild(infraredLabel);
+            panel.addChild(sunlightLabel);
+
+            var sliderBackground = new PIXI.Sprite(
+                PIXI.Texture.generateVerticalGradientTexture(6, 36, Constants.INFRARED_COLOR, Constants.SUNLIGHT_COLOR)
+            );
+            sliderBackground.anchor.x = 0.5;
+
+            var sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: 1
+                },
+                orientation: 'vertical',
+                direction: 'rtl',
+
+                width: 36,
+                backgroundHeight: 6,
+                backgroundColor: '#fff',
+                backgroundAlpha: 1,
+                backgroundLineColor: '#fff',
+                backgroundLineWidth: 1,
+                backgroundLineAlpha: 1,
+                //background: sliderBackground,
+
+                handleSize: 16,
+                handleColor: '#eee',
+                handleAlpha: 1,
+                handleLineColor: '#fff',
+                handleLineWidth: 2
+            });
+            sliderView.displayObject.x = 22;
+            sliderView.displayObject.y = 27;
+            panel.addChild(sliderView.displayObject);
+        },
+
+        /**
          * Updates the model-view-transform and anything that
          *   relies on it.
          */
@@ -127,8 +204,22 @@ define(function(require) {
             this.displayObject.y = this.mvt.modelToViewY(0);
 
             var targetSpriteHeight = this.mvt.modelToViewDeltaX(bounds.h * 0.25); // In pixels
-            var scale = targetSpriteHeight / this.displayObject.height;
+            var scale = targetSpriteHeight / this.infraredEmitter.height;
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
+        },
+
+        infraredMode: function() {
+            this.infraredBackground.visible = true;
+            this.sunlightBackground.visible = false;
+            this.infraredEmitter.visible = true;
+            this.sunlightEmitter.visible = false;
+        },
+
+        sunlightMode: function() {
+            this.infraredBackground.visible = false;
+            this.sunlightBackground.visible = true;
+            this.infraredEmitter.visible = false;
+            this.sunlightEmitter.visible = true;
         }
 
     });
