@@ -13,6 +13,8 @@ define(function(require) {
     var Assets    = require('assets');
     var Constants = require('constants');
 
+    var greenhouseGasCompositionHtml = require('text!templates/greenhouse-gas-compositions.html');
+
     /**
      * Scene view fro the Greenhouse Effect tab
      */
@@ -27,12 +29,23 @@ define(function(require) {
 
             this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updatePollution);
         },
+
+        renderContent: function() {
+            this.$ui.html(greenhouseGasCompositionHtml);
+
+            this.$compositions      = this.$ui.find('.greenhouse-gas-composition-wrapper').children();
+            this.$compositionToday  = this.$ui.find('#composition-summary-today');
+            this.$composition1750   = this.$ui.find('#composition-summary-1750');
+            this.$compositionIceAge = this.$ui.find('#composition-summary-ice-age');
+        },
         
         initGraphics: function() {
             BaseGreenhouseSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initClouds();
             this.initPolution();
+
+            this.showTodayScene();
         },
 
         initBackground: function() {
@@ -143,18 +156,31 @@ define(function(require) {
             this.bgIceAge.visible = false;
             this.bg1750.visible   = false;
             this.bgToday.visible  = true;
+            this.$compositions.hide();
+            this.$compositionToday.show();
         },
 
         show1750Scene: function() {
             this.bgIceAge.visible = false;
             this.bg1750.visible   = true;
             this.bgToday.visible  = false;
+            this.$compositions.hide();
+            this.$composition1750.show();
         },
 
         showIceAgeScene: function() {
             this.bgIceAge.visible = true;
             this.bg1750.visible   = false;
             this.bgToday.visible  = false;
+            this.$compositions.hide();
+            this.$compositionIceAge.show();
+        },
+
+        showCustomScene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = true;
+            this.$compositions.hide();
         }
 
     });

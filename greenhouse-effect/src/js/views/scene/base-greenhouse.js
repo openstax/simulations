@@ -39,10 +39,6 @@ define(function(require) {
             this.listenTo(this.simulation.photons, 'remove destroy', this.photonRemoved);
         },
 
-        renderContent: function() {
-            
-        },
-
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
