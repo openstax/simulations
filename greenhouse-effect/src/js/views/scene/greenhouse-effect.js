@@ -44,6 +44,7 @@ define(function(require) {
 
             this.initClouds();
             this.initPolution();
+            this.initReflectivityAssessment();
 
             this.showTodayScene();
         },
@@ -94,6 +95,28 @@ define(function(require) {
             });
 
             this.updatePollution(this.simulation.atmosphere, this.simulation.atmosphere.get('greenhouseGasConcentration'));
+        },
+
+        initReflectivityAssessment: function() {
+            
+            // Create a hidden canvas that looks the same
+            var canvas = document.createElement('canvas');
+            canvas.width  = this.width;
+            canvas.height = this.height;
+            var ctx = canvas.getContext('2d');
+
+            // Draw the image onto the canvas
+            //var sceneWidth = ($(window).height() <= 500) ? this.width : this.bgIceAge.texture.width;
+            var iceAgeImage = this.bgIceAge.texture.baseTexture.source;
+            var x = this.width / 2 - this.bgIceAge.width / 2;
+            var y = this.height - this.bgIceAge.height;
+            
+            ctx.drawImage(iceAgeImage, x, y, this.bgIceAge.width, this.bgIceAge.height);
+
+            this.reflectivityContext = ctx;
+
+            // Make it live
+            this.simulation.setEarthReflectivityAssessor(this);
         },
 
         resize: function() {
@@ -176,6 +199,25 @@ define(function(require) {
             this.bg1750.visible   = false;
             this.bgToday.visible  = true;
             this.$compositions.hide();
+        },
+
+        /**
+         *
+         */
+        getReflectivity: function(photon) {
+            var reflectivity = 0;
+
+            if (this.bgIceAge.visible && 
+                photon.get('velocity').y < 0 &&
+                photon.get('wavelength') === Constants.SUNLIGHT_WAVELENGTH
+            ) {
+                var point = this.mvt.modelToView(photon.get('position'));
+                var color = this.reflectivityContext.getImageData(point.x, point.y, 1, 1).data;
+                if (color[0] + color[1] + color[2] > 240 + 240 + 240)
+                    reflectivity = 0.6;
+            }
+
+            return reflectivity;
         }
 
     });

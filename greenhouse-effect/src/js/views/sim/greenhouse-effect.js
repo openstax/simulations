@@ -91,8 +91,8 @@ define(function (require) {
             var percentIceAge = concentrationRange.percent(Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_ICE_AGE);
 
             var $ticks = $('<div class="ticks">');
-            $('<div class="tick value-today">'  ).css('left', percentToday * 100 + '%').appendTo($ticks);
-            $('<div class="tick value-1750">'   ).css('left', percent1750 * 100 + '%').appendTo($ticks);
+            $('<div class="tick value-today">'  ).css('left', percentToday  * 100 + '%').appendTo($ticks);
+            $('<div class="tick value-1750">'   ).css('left', percent1750   * 100 + '%').appendTo($ticks);
             $('<div class="tick value-ice-age">').css('left', percentIceAge * 100 + '%').appendTo($ticks);
 
             this.$concentrationSlider.parent().append($ticks);
@@ -167,7 +167,7 @@ define(function (require) {
             this.updateLock(function() {
                 this.$concentrationSlider.val(concentration * Constants.Atmosphere.CONCENTRATION_RESOLUTION);
             });
-        }
+        },
 
     });
 
