@@ -23,7 +23,7 @@ define(function(require) {
             options = _.extend({
                 bulbDiameter: 70,
                 tubeWidth:    32,
-                tubeHeight:   200,
+                tubeHeight:   180,
 
                 numberOfTicks: 9,
                 minorTicksPerTick: 1,
