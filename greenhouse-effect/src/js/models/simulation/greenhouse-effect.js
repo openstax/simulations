@@ -53,9 +53,9 @@ define(function (require, exports, module) {
 
             var earthPos = this.earth.get('position');
 
-            this.availableClouds.push(this.createCloud(earthPos.x + 1,   earthPos.y + Earth.RADIUS + 8.5, 3, 0.3));
-            this.availableClouds.push(this.createCloud(earthPos.x - 5,   earthPos.y + Earth.RADIUS + 6,   5, 0.5));
-            this.availableClouds.push(this.createCloud(earthPos.x + 5.5, earthPos.y + Earth.RADIUS + 6.8, 6, 0.4));
+            this.availableClouds.push(this.createCloud(earthPos.x + 1,   earthPos.y + Earth.RADIUS + 7.5, 3, 0.3));
+            this.availableClouds.push(this.createCloud(earthPos.x - 5,   earthPos.y + Earth.RADIUS + 5,   5, 0.5));
+            this.availableClouds.push(this.createCloud(earthPos.x + 5.5, earthPos.y + Earth.RADIUS + 5.8, 6, 0.4));
         },
 
         createCloud: function(x, y, width, height) {

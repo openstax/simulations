@@ -165,7 +165,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
-            //this.$length.html(this.simulation.photons.length);
+            // this.$length.html(this.simulation.photons.length + ', ' + this.sceneView.photonViews.length);
         },
 
         /**

@@ -17,6 +17,7 @@ define(function (require, exports, module) {
     var Thermometer    = require('models/thermometer');
     var PhotonEarthCollisionModel = require('models/collision-model/photon-earth');
 
+    var Constants = require('constants');
 
     /**
      * The base simulation model for the "Greenhouse Effect" and 
@@ -31,7 +32,8 @@ define(function (require, exports, module) {
          */
         initialize: function(attributes, options) {
             options = _.extend({
-                deltaTimePerFrame: 1 / 100
+                framesPerSecond: Constants.FRAMES_PER_SECOND,
+                deltaTimePerFrame: Constants.DELTA_TIME_PER_FRAME
             }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
