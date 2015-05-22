@@ -53,11 +53,6 @@ define(function(require) {
             this.bg1750   = this.createScene(Assets.Images.SCENE_1750);
             this.bgToday  = this.createScene(Assets.Images.SCENE_TODAY);
 
-            if ($(window).height() <= 500) {
-                this.bgToday.y += 20;
-                this.bg1750.y += 20;
-            }
-
             this.backgroundLayer.addChild(this.bgIceAge);
             this.backgroundLayer.addChild(this.bg1750);
             this.backgroundLayer.addChild(this.bgToday);

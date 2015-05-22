@@ -87,7 +87,9 @@ define(function(require) {
         createScene: function(image) {
             var scene = Assets.createSprite(image);
             scene.anchor.y = 1;
+            scene.anchor.x = 0.5;
             scene.y = this.height;
+            scene.x = this.width / 2;
             scene.visible = false;
             this.setSceneScale(scene);
 
@@ -95,9 +97,10 @@ define(function(require) {
         },
 
         setSceneScale: function(scene) {
-            var targetSceneWidth = this.width; // In pixels
-            scene.scale.x = targetSceneWidth / scene.width;
-            scene.scale.y = targetSceneWidth / scene.width;
+            var targetSceneWidth = ($(window).height() <= 500) ? this.width : scene.width; // In pixels
+            var scale = targetSceneWidth / scene.width
+            scene.scale.x = scale;
+            scene.scale.y = scale;
         },
 
         initPhotons: function() {
