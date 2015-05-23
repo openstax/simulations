@@ -12,7 +12,7 @@ define(function(require) {
 
     var InfraredFilter = require('models/filter/infrared');
 
-    var PhotonView                = require('views/photon');
+    var PhotonView                = require('views/photon-basic');
     var CloudView                 = require('views/cloud');
     var GreenhouseThermometerView = require('views/thermometer');
 
@@ -34,9 +34,10 @@ define(function(require) {
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.photons, 'reset',          this.photonsReset);
-            this.listenTo(this.simulation.photons, 'add',            this.photonAdded);
-            this.listenTo(this.simulation.photons, 'remove destroy', this.photonRemoved);
+
+            this.listenTo(this.simulation, 'photons-reset',  this.photonsReset);
+            this.listenTo(this.simulation, 'photon-added',   this.photonAdded);
+            this.listenTo(this.simulation, 'photon-removed', this.photonRemoved);
         },
 
         initGraphics: function() {
@@ -145,7 +146,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            for (var i = 0; i < this.photonViews.length; i++)
+                this.photonViews[i].update(deltaTime);
         },
 
         photonAdded: function(photon, photons) {
@@ -168,11 +170,6 @@ define(function(require) {
                 this.photonViews[i].removeFrom(this.photonViews[i].displayObject.parent);
                 this.photonViews.splice(i, 1);
             }
-
-            // Add new photon views
-            photons.each(function(photon) {
-                this.createAndAddPhotonView(photon);
-            }, this);
         },
 
         createAndAddPhotonView: function(photon) {

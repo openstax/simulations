@@ -7,7 +7,7 @@ define(function (require) {
     var Rectangle = require('common/math/rectangle');
 
     var PhotonEmitter = require('models/photon-emitter');
-    var Photon        = require('models/photon');
+    var Photon        = require('models/photon-basic');
 
     /**
      * 

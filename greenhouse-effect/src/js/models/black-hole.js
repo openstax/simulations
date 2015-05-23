@@ -31,9 +31,11 @@ define(function (require) {
         update: function(deltaTime) {
             // If photon is way outside the view, delete it
             var photons = this.simulation.photons;
+            var photon;
             for (var i = photons.length - 1; i >= 0; i--) {
-                if (!this.eventHorizon.contains(photons.at(i).get('position'))) 
-                    photons.at(i).destroy();
+                photon = photons[i];
+                if (!this.eventHorizon.contains(photon.get('position')))
+                    this.simulation.removePhoton(i);
             }
         }
 

@@ -7,7 +7,7 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
 
     var PhotonEmitter = require('models/photon-emitter');
-    var Photon        = require('models/photon');
+    var Photon        = require('models/photon-basic');
 
     /**
      * 

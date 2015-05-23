@@ -13,7 +13,7 @@ define(function (require, exports, module) {
     var Earth          = require('models/earth');
     var BlackHole      = require('models/black-hole');
     var Sun            = require('models/sun');
-    var Photon         = require('models/photon');
+    var Photon         = require('models/photon-basic');
     var Thermometer    = require('models/thermometer');
     var PhotonEarthCollisionModel = require('models/collision-model/photon-earth');
 
@@ -61,7 +61,7 @@ define(function (require, exports, module) {
          * Initializes the photon collection
          */
         initPhotons: function() {
-            this.photons = new Backbone.Collection([], { model: Photon });
+            this.photons = [];
         },
 
         /**
@@ -153,7 +153,7 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             // Reset photons
-            this.photons.reset();
+            this.resetPhotons();
 
             // Reset earth
             this.earth.setProductionRate(1E-2);
@@ -161,6 +161,14 @@ define(function (require, exports, module) {
 
             // Reset sun
             this.sun.setProductionRate(Sun.DEFAULT_PRODUCTION_RATE);
+        },
+
+        /**
+         * Reset photons and trigger a reset event
+         */
+        resetPhotons: function() {
+            this.photons = [];
+            this.trigger('photons-reset');
         },
 
         /**
@@ -172,7 +180,7 @@ define(function (require, exports, module) {
 
             // Update all the photons
             for (i = this.photons.length - 1; i >= 0; i--)
-                this.photons.at(i).update(deltaTime);
+                this.photons[i].update(deltaTime);
 
             this.earth.update(deltaTime);
             this.atmosphere.update(deltaTime);
@@ -181,7 +189,7 @@ define(function (require, exports, module) {
 
             // Make the photons interact with other objects
             for (i = this.photons.length - 1; i >= 0; i--)
-                this.handlePhotonInteractions(this.photons.at(i), deltaTime);
+                this.handlePhotonInteractions(this.photons[i], deltaTime);
         },
 
         /**
@@ -213,7 +221,7 @@ define(function (require, exports, module) {
          *   energy.
          */
         photonAbsorbed: function(photon) {
-            this.photons.remove(photon);
+            this.removePhoton(photon);
         },
 
         /**
@@ -227,7 +235,22 @@ define(function (require, exports, module) {
          *   function.
          */
         photonEmitted: function(photon) {
-            this.photons.add(photon);
+            this.photons.push(photon);
+            this.trigger('photon-added', photon);
+        },
+
+        removePhoton: function(photon) {
+            var index;
+            if (_.isNumber(photon)) {
+                index = photon;
+            }
+            else {
+                var index = _.indexOf(this.photons, photon);
+                if (index === -1)
+                    return;
+            }
+            this.photons.splice(index, 1);
+            this.trigger('photon-removed', photon);
         }
 
     });
