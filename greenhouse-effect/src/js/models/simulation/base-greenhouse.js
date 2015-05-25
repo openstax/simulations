@@ -51,10 +51,6 @@ define(function (require, exports, module) {
             this.initSun();
             this.initBlackHole();
             this.initThermometer();
-
-
-            // TODO: This is just testing code
-            this.atmosphere.set('greenhouseGasConcentration', Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
         },
 
         /**

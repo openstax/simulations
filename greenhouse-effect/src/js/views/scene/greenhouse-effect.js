@@ -119,6 +119,12 @@ define(function(require) {
             this.simulation.setEarthReflectivityAssessor(this);
         },
 
+        reset: function() {
+            BaseGreenhouseSceneView.prototype.reset.apply(this, arguments);
+
+            this.showTodayScene();
+        },
+
         resize: function() {
             BaseGreenhouseSceneView.prototype.resize.apply(this, arguments);
 

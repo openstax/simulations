@@ -75,6 +75,12 @@ define(function(require) {
             this.displayObject.addChild(degreesLabel);
         },
 
+        reset: function() {
+            this.showFahrenheit();
+            this.updateTemperature(this.model, this.model.get('temperature'));
+            this.show();
+        },
+
         updateTemperature: function(thermometer, temperature) {
             this.kelvinLabel.setText(Math.round(temperature) + 'K');
 

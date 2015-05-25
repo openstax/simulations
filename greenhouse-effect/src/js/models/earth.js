@@ -54,6 +54,7 @@ define(function (require) {
         reset: function() {
             this.resetTemperatureHistory();
             this.netEnergy = 0;
+            this.set('temperature', this.get('baseTemperature'));
         },
 
         /**

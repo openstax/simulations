@@ -146,11 +146,18 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets
          */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+        reset: function() {
+            this.pause();
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('.all-photons-check').prop('checked', false);
+            this.$('.thermometer-check').prop('checked', true);
+            this.$('.degrees-fahrenheit').click();
+
+            this.$('.playback-speed').val(this.simulation.get('timeScale'));
         },
 
         /**
