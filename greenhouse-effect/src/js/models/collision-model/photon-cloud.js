@@ -115,7 +115,6 @@ define(function (require) {
                         .set(normal)
                         .scale(j / photon.get('mass'))
                 );
-                photon.trigger('reflect');
 
                 // Determine what the photon's new omega value will be
                 nj.set(normal.x, normal.y, 0).scale(j);
