@@ -146,7 +146,8 @@ define(function (require) {
             if (y < b) 
                 xt *= -1;
 
-            return result.set(xt, yt);
+            // The vector normal to (xt, yt) is (yt, -xt).
+            return result.set(yt, -xt);
         }
 
     };
