@@ -77,6 +77,10 @@ define(function (require) {
             this.velocity.set(vx, vy);
         },
 
+        addVelocity: function(dvx, dvy) {
+            this.velocity.add(dvx, dvy);
+        },
+
         /**
          * Points the velocity towards the angle theta with
          *   a magnitude of the speed of light.
