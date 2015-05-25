@@ -87,7 +87,7 @@ define(function(require) {
             // Create the slider view
             var sliderWidth = 80;
             var sliderView = new SliderView({
-                start: 0,
+                start: 1,
                 range: {
                     min: 0,
                     max: 1
@@ -204,6 +204,7 @@ define(function(require) {
             sliderView.displayObject.x = 22;
             sliderView.displayObject.y = 27;
             panel.addChild(sliderView.displayObject);
+            this.photonTypeSliderView = sliderView;
 
             this.listenTo(sliderView, 'set', function(value, prev) {
                 if (value === 1)
@@ -227,6 +228,12 @@ define(function(require) {
             clickBottom.click = function() {
                 sliderView.val(0);
             };
+        },
+
+        reset: function() {
+            this.infraredMode();
+            this.photonTypeSliderView.val(1);
+            this.sliderView.val(1);
         },
 
         /**

@@ -204,11 +204,24 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the simulation and all settings
+         */
+        resetSimulation: function() {
+            this.pause();
+            this.resetComponents();
+            this.play();
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        /**
+         * Performs the actual resetting on everything
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('#atmospheric-gas-' + PhotonTargets.SINGLE_CH4_MOLECULE).prop('checked', true);
+            this.$customAtmosphereControls.hide();
         },
 
         /**

@@ -58,7 +58,7 @@ define(function (require, exports, module) {
     var PhotonAbsorptionSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            photonWavelength: Constants.VISIBLE_WAVELENGTH,
+            photonWavelength: Constants.IR_WAVELENGTH,
             photonEmissionPeriod: Constants.PhotonAbsorptionSimulation.DEFAULT_PHOTON_EMISSION_PERIOD,
             photonTarget: Constants.PhotonAbsorptionSimulation.DEFAULT_PHOTON_TARGET
         }),
@@ -89,9 +89,6 @@ define(function (require, exports, module) {
             this.on('change:photonWavelength',     this.emittedPhotonWavelengthChanged);
             this.on('change:photonEmissionPeriod', this.photonEmissionPeriodChanged);
             this.on('change:photonTarget',         this.photonTargetChanged);
-
-            this.set('photonWavelength', Constants.IR_WAVELENGTH);
-            this.set('photonEmissionPeriod', 0.5);
         },
 
         /**
@@ -121,10 +118,25 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Overrides reset so that resetting with starting
+         *   attributes is not a silent operation.
+         */
+        reset: function() {
+            this.time = 0;
+            this.set('timeScale', 1);
+            this.resetComponents();
+        },
+
+        /**
          * Resets all component models
          */
         resetComponents: function() {
-            
+            this.photons.reset();
+            this.molecules.reset();
+            this.configurableAtmosphereMolecules = [];
+
+            this.photonTarget = -1;
+            this.set(this.startingAttributes);
         },
 
         /**
