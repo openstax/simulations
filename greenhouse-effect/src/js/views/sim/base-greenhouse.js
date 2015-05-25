@@ -42,6 +42,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
+            'click .step-btn'   : 'step',
 
             'click .all-photons-check'  : 'toggleAllPhotons',
             'click .thermometer-check'  : 'toggleThermometer',
@@ -60,6 +61,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Base Greenhouse',
                 name: 'base-greenhouse',
+                stepDuration: 1000 / Constants.FRAMES_PER_SECOND // milliseconds
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

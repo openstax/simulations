@@ -58,6 +58,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
+            'click .step-btn'   : 'step',
 
             'click .atmospheric-gas' : 'changeAtmosphericGas',
 
@@ -73,6 +74,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Photon Absorption',
                 name: 'photon-absorption',
+                stepDuration: 1000 / Constants.FRAMES_PER_SECOND // milliseconds
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
