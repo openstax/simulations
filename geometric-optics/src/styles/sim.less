@@ -1,34 +1,17 @@
 @import "variables.less";
 @import "mixins.less";
 
-.sound-btn-wrapper {
-    position: absolute;
-    top: -36px;
-    right: 30px;
+.sims .sim-content {
+    min-height: initial;
+}
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+.sim-content > .sim-view {
+    background: url(http://subtlepatterns.com/patterns/dark_embroidery.png);
+    border-top: 1px solid darken(@link-color, 15%);
+    height: (@scene-height + 1);
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
-        }
+    @media screen and (max-height: @short-window) {
+        height: (@short-scene-height + 1);
     }
 }
 
@@ -38,4 +21,5 @@
     width: 100%;
     text-align: center;
     font-size: 26px;
+    color: white;
 }
