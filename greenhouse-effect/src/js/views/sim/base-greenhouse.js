@@ -146,10 +146,19 @@ define(function (require) {
         },
 
         /**
-         * Resets
+         * Resets the simulation and all settings
          */
-        reset: function() {
+        resetSimulation: function() {
             this.pause();
+            this.resetComponents();
+            this.play();
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        /**
+         * Performs the actual resetting on everything
+         */
+        resetComponents: function() {
             this.simulation.reset();
             this.sceneView.reset();
 

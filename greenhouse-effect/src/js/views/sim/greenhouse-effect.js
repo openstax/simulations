@@ -101,8 +101,8 @@ define(function (require) {
         /**
          * Resets
          */
-        reset: function() {
-            BaseGreenhouseSimView.prototype.reset.apply(this, arguments);
+        resetComponents: function() {
+            BaseGreenhouseSimView.prototype.resetComponents.apply(this, arguments);
 
             this.$('#atmosphere-type-today').click();
 
