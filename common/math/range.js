@@ -21,6 +21,10 @@ define(function (require) {
             return (x - this.min) / this.length();
         };
 
+        rangeObject.constrainedPercent = function(x) {
+            return this.percent(Math.max(this.min, Math.min(this.max, x)));
+        };
+
         rangeObject.contains = function(x) {
             return x <= this.max && x >= this.min;
         };

@@ -1,5 +1,7 @@
-Empty Simulation Template
+States of Matter
 ===========
+
+I went to XKCD on one of the days I was working on the models for this sim and found that day's comic strangely appropriate: [http://xkcd.com/1489/](http://xkcd.com/1489/).
 
 ## Installing
 

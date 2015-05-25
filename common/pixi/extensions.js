@@ -368,6 +368,81 @@ define(function(require) {
         return new PIXI.Texture.fromCanvas(canvas);
     };
 
+    /**
+     * Creates a texture that is a rectangle with the specified 
+     *   width and height, filled with a gradient in the direction
+     *   of (x0, y0) to (x1, y1). Color stops are specified as an
+     *   array of arrays, where each stop is an array with the
+     *   first element the offset and the second the color as a
+     *   string, like so:
+     *
+     *   colorStops = [
+     *       [ 0, '#000000' ],
+     *       [ 1, '#ffffff' ]
+     *   ]
+     */
+    PIXI.Texture.generateRectangularGradientTexture = function(width, height, x0, y0, x1, y1, colorStops) {
+        var canvas = document.createElement('canvas');
+        canvas.width  = width;
+        canvas.height = height;
+        var ctx = canvas.getContext('2d');
+
+        var gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+        for (var i = 0; i < colorStops.length; i++)
+            gradient.addColorStop(colorStops[i][0], colorStops[i][1]);
+        
+        ctx.fillStyle = gradient;
+        ctx.rect(0, 0, width, height);
+        ctx.fill();
+
+        return PIXI.Texture.fromCanvas(canvas);
+    };
+
+    var _colorStops = [[],[]];
+
+    /**
+     * Creates a texture that is a rectangle with the specified
+     *   width and height, filled with a vertical gradient. The
+     *   offsets are optional.
+     */
+    PIXI.Texture.generateVerticalGradientTexture = function(width, height, topColor, topColorOffset, bottomColor, bottomColorOffset) {
+        if (bottomColor === undefined) {
+            // We allow only the colors to be specified instead of the offsets,
+            //   so remap everything in this case.
+            bottomColor = topColorOffset;
+            topColorOffset = 0;
+            bottomColorOffset = 1;
+        }
+
+        _colorStops[0][0] = topColorOffset;
+        _colorStops[0][1] = topColor;
+        _colorStops[1][0] = bottomColorOffset;
+        _colorStops[1][1] = bottomColor;
+
+        return PIXI.Texture.generateRectangularGradientTexture(width, height, 0, 0, 0, height, _colorStops);
+    };
+
+    /**
+     * Creates a texture that is a rectangle with the specified
+     *   width and height, filled with a horizontal gradient.
+     *   The offsets are optional.
+     */
+    PIXI.Texture.generateHoriztonalGradientTexture = function(width, height, leftColor, leftColorOffset, rightColor, rightColorOffset) {
+        if (rightColor === undefined) {
+            // We allow only the colors to be specified instead of the offsets,
+            //   so remap everything in this case.
+            rightColor = leftColorOffset;
+            leftColorOffset = 0;
+            rightColorOffset = 1;
+        }
+
+        _colorStops[0][0] = leftColorOffset;
+        _colorStops[0][1] = leftColor;
+        _colorStops[1][0] = rightColorOffset;
+        _colorStops[1][1] = rightColor;
+
+        return PIXI.Texture.generateRectangularGradientTexture(width, height, 0, 0, width, 0, _colorStops);
+    };
 
     return PIXI;
 });

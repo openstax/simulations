@@ -1,0 +1,18 @@
+@import "../../node_modules/bootstrap/less/mixins/gradients.less";
+@import "mixins.less";
+@import "variables.less";
+
+
+.scene-view {
+    width: 100%;
+    height: 604px;
+    #gradient.vertical(@link-color; #1aa7f7; 0%; 100%);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
+}
+
+#sim-photon-absorption .scene-view {
+	#gradient.vertical(@link-color; #131D35; 0%; 30%);
+}

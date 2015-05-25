@@ -1,0 +1,199 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: initial;
+}
+
+.sim-controls-wrapper {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: #222;
+    }
+
+    ul.radio, ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-bottom: -12px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
+
+    .legend-symbol {
+        margin-bottom: 4px;
+
+        .symbol-icon {
+            float: left;
+            margin-right: 8px;
+        }
+    }
+
+    ul.radio.atmosphere-options {
+        margin-bottom: 10px;
+    }
+
+    .molecule-count-slider-header {
+        margin-top: 18px;
+        margin-bottom: -10px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        .molecule-count-slider-value {
+            float: right;
+        }
+    }
+
+    .concentration-slider-wrapper {
+        position: relative;
+        margin-top: -6px;
+        margin-bottom: 34px;
+
+        label {
+            position: absolute;
+            top: 6px;
+            font-weight: 400;
+            font-size: 12px;
+
+            &:first-child {
+                left: 0;
+            }
+
+            &:last-child {
+                right: 0;
+            }
+        }
+    }
+
+    .counter-wrapper {
+        &.glass-panes-counter-wrapper {
+            margin-top: 14px;
+        }
+
+        .counter-label {
+            margin-right: 6px;
+        }
+
+        .btn {
+            padding: 3px 9px;
+            background: fadeout(#fff, 33%);
+            border: 1px solid fadeout(#fff, 15%);
+            opacity: 0.7;
+
+            &:hover {
+                opacity: 1;
+            }
+
+            &:focus {
+                outline: none;
+                color: inherit;
+            }
+
+            &:active {
+                box-shadow: none;
+                opacity: 0.5;
+            }
+        }
+
+        .btn-group {
+            float: right;
+            margin-top: -4px;
+        }
+    }
+
+    .thermometer-wrapper {
+
+        .degrees-wrapper {
+            padding-left: 27px;
+            margin-top: -4px;
+
+            .degrees-label {
+                margin-right: 12px;
+                margin-bottom: 0;
+                padding-left: 22px;
+            }
+        }
+    }
+
+    .gas-icon-wrapper {
+        display: inline-block;
+        position: relative;
+        float: right;
+        width: 60px;
+        text-align: center;
+
+        .gas-icon {
+
+        }
+    }
+
+}

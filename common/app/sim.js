@@ -16,6 +16,12 @@ define(function (require) {
     var SimView = Backbone.View.extend({
 
         /**
+         * Root element properties
+         */
+        tagName:   'section',
+        className: 'sim-view',
+
+        /**
          * Sets basic properties and initializes updater and simulation model.
          */
         initialize: function(options) {

@@ -460,6 +460,38 @@ describe('ModelViewTransform', function(){
 		chai.expect(rectA.h).to.almost.equal(rectB.h);
 	});
 
+	it('should transform a rectangle with inverted y', function(){
+		var scale = 10; // scale
+		var screenW = 200;
+		var screenH = 200;
+		var mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+			new Vector2(0, 0), 
+			new Vector2(screenW / 2, screenH / 2), 
+			scale
+		);
+		var w = 5;
+		var h = 5;
+		var rectA = new Rectangle(0, 10, w, h);
+		var rectB = new Rectangle(screenW / 2, 0, w * scale, h * scale);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
+
+		var rectA = new Rectangle(0, -10, w, h);
+		var rectB = new Rectangle(screenW / 2, screenH, w * scale, h * scale);
+
+		rectA = mvt.modelToView(rectA);
+
+		chai.expect(rectA.x).to.almost.equal(rectB.x);
+		chai.expect(rectA.y).to.almost.equal(rectB.y);
+		chai.expect(rectA.w).to.almost.equal(rectB.w);
+		chai.expect(rectA.h).to.almost.equal(rectB.h);
+	});
+
 	it('should transform a curve', function() {
 		var s = 5;   // scale
 		var ox = 10; // x offset
@@ -511,6 +543,40 @@ describe('ModelViewTransform', function(){
 		chai.expect(rectA.y).to.almost.equal(rectB.y);
 		chai.expect(rectA.w).to.almost.equal(rectB.w);
 		chai.expect(rectA.h).to.almost.equal(rectB.h);
+	});
+
+});
+
+
+describe('Vector3', function(){
+
+	var Vector3;
+
+	before(function(done) {
+		require(['math/vector3'], function(vec3) {
+			Vector3 = vec3;
+			done();
+		});
+	});
+
+	it('calculate cross product', function() {
+		var a = new Vector3( 1, 2,  3);
+		var b = new Vector3( 4, 5,  6);
+		var c = new Vector3(-3, 6, -3);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
+
+		a = new Vector3( 1,  0, 2);
+		b = new Vector3(-3,  2, 1);
+		c = new Vector3(-4, -7, 2);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
+
+		a = new Vector3(-30,   0,   24);
+		b = new Vector3( 44,   0.5, -7);
+		c = new Vector3(-12, 846,  -15);
+
+		chai.expect(a.cross(b).toArray()).to.almost.eql(c.toArray());
 	});
 
 });
