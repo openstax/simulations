@@ -15,7 +15,6 @@ define(function (require) {
             mass:   Number.MAX_VALUE, 
             radius: Constants.Earth.RADIUS,
 
-            emissivity:      Constants.Earth.DEFAULT_EMISSIVITY,
             temperature:     Constants.Earth.BASE_TEMPERATURE,
             baseTemperature: Constants.Earth.BASE_TEMPERATURE
         }),

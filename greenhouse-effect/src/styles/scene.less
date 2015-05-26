@@ -14,5 +14,29 @@
 }
 
 #sim-photon-absorption .scene-view {
-	#gradient.vertical(@link-color; #131D35; 0%; 30%);
+    #gradient.vertical(@link-color; #131D35; 0%; 30%);
+}
+
+.greenhouse-gas-composition-wrapper {
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+    color: fadeout(#fff, 50%);
+    font-size: 12px;
+
+    @media screen and (max-height: @short-window) {
+        top: 15px;
+        left: (@panel-margin + @sim-controls-panel-width + @panel-margin - 10);
+    }
+
+    h1 {
+        margin-top: 0;
+        font-size: 16px;
+        color: fadeout(#fff, 30%);
+    }
+
+    label {
+        padding-right: 8px;
+    }
+
 }

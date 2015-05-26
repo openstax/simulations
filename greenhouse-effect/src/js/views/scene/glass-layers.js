@@ -34,9 +34,6 @@ define(function(require) {
             this.bgGlass = this.createScene(Assets.Images.SCENE_GLASS);
             this.bgGlass.visible = true;
             this.backgroundLayer.addChild(this.bgGlass);
-
-            if ($(window).height() <= 500)
-                this.bgGlass.y += 20;
         },
 
         initGlassPanes: function() {

@@ -5,6 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var range = require('common/math/range');
+
     var GreenhouseEffectSimulation = require('models/simulation/greenhouse-effect');
     var GreenhouseEffectSceneView  = require('views/scene/greenhouse-effect');
     var BaseGreenhouseSimView      = require('views/sim/base-greenhouse');
@@ -78,6 +80,22 @@ define(function (require) {
                     'max': Constants.Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION * scale
                 }
             });
+
+            var concentrationRange = range({
+                min: Constants.Atmosphere.MIN_GREENHOUSE_GAS_CONCENTRATION,
+                max: Constants.Atmosphere.MAX_GREENHOUSE_GAS_CONCENTRATION
+            });
+
+            var percentToday  = concentrationRange.percent(Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
+            var percent1750   = concentrationRange.percent(Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_1750);
+            var percentIceAge = concentrationRange.percent(Constants.Atmosphere.GREENHOUSE_GAS_CONCENTRATION_ICE_AGE);
+
+            var $ticks = $('<div class="ticks">');
+            $('<div class="tick value-today">'  ).css('left', percentToday  * 100 + '%').appendTo($ticks);
+            $('<div class="tick value-1750">'   ).css('left', percent1750   * 100 + '%').appendTo($ticks);
+            $('<div class="tick value-ice-age">').css('left', percentIceAge * 100 + '%').appendTo($ticks);
+
+            this.$concentrationSlider.parent().append($ticks);
         },
 
         /**
@@ -126,7 +144,7 @@ define(function (require) {
          */
         setAtmosphereCustom: function() {
             this.customAtmosphereSelected = true;
-            this.sceneView.showTodayScene();
+            this.sceneView.showCustomScene();
         },
 
         /**
@@ -149,7 +167,7 @@ define(function (require) {
             this.updateLock(function() {
                 this.$concentrationSlider.val(concentration * Constants.Atmosphere.CONCENTRATION_RESOLUTION);
             });
-        }
+        },
 
     });
 

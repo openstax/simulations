@@ -98,6 +98,10 @@
 
     ul.radio.atmosphere-options {
         margin-bottom: 10px;
+
+        #atmosphere-type-today           + label { color: @atmosphere-today-color;   }
+        #atmosphere-type-seventeen-fifty + label { color: @atmosphere-1750-color;    }
+        #atmosphere-type-ice-age         + label { color: @atmosphere-ice-age-color; }
     }
 
     .molecule-count-slider-header {
@@ -124,12 +128,31 @@
             font-weight: 400;
             font-size: 12px;
 
-            &:first-child {
+            &.left {
                 left: 0;
             }
 
-            &:last-child {
+            &.right {
                 right: 0;
+            }
+        }
+
+        .ticks {
+            position: absolute;
+            top: 8px;
+            left: 0;
+            right: 0;
+
+            .tick {
+                position: absolute;
+                top: 0;
+                width: 2px;
+                //margin-left: -1px;
+                height: 12px;
+
+                &.value-today   { background: @atmosphere-today-color;   }
+                &.value-1750    { background: @atmosphere-1750-color;    }
+                &.value-ice-age { background: @atmosphere-ice-age-color; }
             }
         }
     }

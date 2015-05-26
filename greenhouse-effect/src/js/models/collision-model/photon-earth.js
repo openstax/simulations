@@ -10,7 +10,7 @@ define(function (require) {
     var PhotonEarthCollisionModel = {
 
 		handle: function(photon, earth) {
-			var separation = Math.abs(photon.get('position').distance(earth.get('position')));
+			var separation = photon.get('position').distance(earth.get('position'));
 			if (separation <= Earth.RADIUS)
 				earth.absorbPhoton(photon);
 

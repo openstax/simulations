@@ -13,6 +13,8 @@ define(function(require) {
     var Assets    = require('assets');
     var Constants = require('constants');
 
+    var greenhouseGasCompositionHtml = require('text!templates/greenhouse-gas-compositions.html');
+
     /**
      * Scene view fro the Greenhouse Effect tab
      */
@@ -27,23 +29,30 @@ define(function(require) {
 
             this.listenTo(this.simulation.atmosphere, 'change:greenhouseGasConcentration', this.updatePollution);
         },
+
+        renderContent: function() {
+            this.$ui.html(greenhouseGasCompositionHtml);
+
+            this.$compositions      = this.$ui.find('.greenhouse-gas-composition-wrapper').children();
+            this.$compositionToday  = this.$ui.find('#composition-summary-today');
+            this.$composition1750   = this.$ui.find('#composition-summary-1750');
+            this.$compositionIceAge = this.$ui.find('#composition-summary-ice-age');
+        },
         
         initGraphics: function() {
             BaseGreenhouseSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initClouds();
             this.initPolution();
+            this.initReflectivityAssessment();
+
+            this.showTodayScene();
         },
 
         initBackground: function() {
             this.bgIceAge = this.createScene(Assets.Images.SCENE_ICE_AGE);
             this.bg1750   = this.createScene(Assets.Images.SCENE_1750);
             this.bgToday  = this.createScene(Assets.Images.SCENE_TODAY);
-
-            if ($(window).height() <= 500) {
-                this.bgToday.y += 20;
-                this.bg1750.y += 20;
-            }
 
             this.backgroundLayer.addChild(this.bgIceAge);
             this.backgroundLayer.addChild(this.bg1750);
@@ -86,6 +95,28 @@ define(function(require) {
             });
 
             this.updatePollution(this.simulation.atmosphere, this.simulation.atmosphere.get('greenhouseGasConcentration'));
+        },
+
+        initReflectivityAssessment: function() {
+            
+            // Create a hidden canvas that looks the same
+            var canvas = document.createElement('canvas');
+            canvas.width  = this.width;
+            canvas.height = this.height;
+            var ctx = canvas.getContext('2d');
+
+            // Draw the image onto the canvas
+            //var sceneWidth = ($(window).height() <= 500) ? this.width : this.bgIceAge.texture.width;
+            var iceAgeImage = this.bgIceAge.texture.baseTexture.source;
+            var x = this.width / 2 - this.bgIceAge.width / 2;
+            var y = this.height - this.bgIceAge.height;
+            
+            ctx.drawImage(iceAgeImage, x, y, this.bgIceAge.width, this.bgIceAge.height);
+
+            this.reflectivityContext = ctx;
+
+            // Make it live
+            this.simulation.setEarthReflectivityAssessor(this);
         },
 
         resize: function() {
@@ -143,18 +174,50 @@ define(function(require) {
             this.bgIceAge.visible = false;
             this.bg1750.visible   = false;
             this.bgToday.visible  = true;
+            this.$compositions.hide();
+            this.$compositionToday.show();
         },
 
         show1750Scene: function() {
             this.bgIceAge.visible = false;
             this.bg1750.visible   = true;
             this.bgToday.visible  = false;
+            this.$compositions.hide();
+            this.$composition1750.show();
         },
 
         showIceAgeScene: function() {
             this.bgIceAge.visible = true;
             this.bg1750.visible   = false;
             this.bgToday.visible  = false;
+            this.$compositions.hide();
+            this.$compositionIceAge.show();
+        },
+
+        showCustomScene: function() {
+            this.bgIceAge.visible = false;
+            this.bg1750.visible   = false;
+            this.bgToday.visible  = true;
+            this.$compositions.hide();
+        },
+
+        /**
+         *
+         */
+        getReflectivity: function(photon) {
+            var reflectivity = 0;
+
+            if (this.bgIceAge.visible && 
+                photon.get('velocity').y < 0 &&
+                photon.get('wavelength') === Constants.SUNLIGHT_WAVELENGTH
+            ) {
+                var point = this.mvt.modelToView(photon.get('position'));
+                var color = this.reflectivityContext.getImageData(point.x, point.y, 1, 1).data;
+                if (color[0] + color[1] + color[2] > 240 + 240 + 240)
+                    reflectivity = 0.6;
+            }
+
+            return reflectivity;
         }
 
     });

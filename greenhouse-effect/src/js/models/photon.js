@@ -21,7 +21,7 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             Disk.prototype.initialize.apply(this, [attributes, options]);
-
+            
             this.set('energy', Constants.h * Constants.C / this.get('wavelength'));
         },
 

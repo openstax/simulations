@@ -31,8 +31,8 @@ define(function (require) {
     Constants.INFRARED_COLOR = '#DF2F00';
     Constants.SUNLIGHT_COLOR = '#ffff00';
 
-    Constants.DEFAULT_TIME_DELTA_PER_TICK = 1 / 10;
-    Constants.DEFAULT_DELAY_BETWEEN_TICKS = 1 / 30;
+    Constants.DELTA_TIME_PER_FRAME = 1 / 100; // 10 milliseconds
+    Constants.FRAMES_PER_SECOND = 30;
 
     Constants.MAX_GLASS_PANES = 3;
 
@@ -48,9 +48,7 @@ define(function (require) {
     Earth.RADIUS = 6370;
     Earth.DIAMETER = Earth.RADIUS * 2;
     Earth.BASE_TEMPERATURE = 251;
-    Earth.MAX_EMISSIVITY = 10;
-    Earth.DEFAULT_EMISSIVITY = Earth.MAX_EMISSIVITY / 2;
-    Earth.PHOTON_EMISSION_TIME = Constants.DEFAULT_TIME_DELTA_PER_TICK;
+    Earth.PHOTON_EMISSION_TIME = Constants.DELTA_TIME_PER_FRAME;
 
     Constants.Earth = Earth;
 

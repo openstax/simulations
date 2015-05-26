@@ -40,8 +40,8 @@ define(function (require) {
             });
             photon.setDirection(theta);
             photon.setPosition(
-                this.get('center').x + this.get('radius') * Math.cos(theta),
-                this.get('center').y + this.get('radius') * Math.sin(theta)
+                this.get('center').x + (this.get('radius') + 0.01) * Math.cos(theta),
+                this.get('center').y + (this.get('radius') + 0.01) * Math.sin(theta)
             );
 
             this.trigger('photon-emitted', photon);
