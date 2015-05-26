@@ -15,11 +15,124 @@
     }
 }
 
-.hello-world {
+.sim-controls {
+    .white-panel();
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: #222;
+    }
+
+    ul.radio, ul.checkbox {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-top: 12px;
+        margin-bottom: 10px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+
+            label{
+                font-weight: bold;
+            }
+        }
+    }
+
+    .slider-header {
+        margin-top: 18px;
+        margin-bottom: -10px;
+
+        &:first-child {
+            margin-top: 0;
+        }
+
+        .slider-value {
+            float: right;
+        }
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            .sim-controls-button();
+        }
+
+        &.open > .dropdown-toggle.btn-default {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
+    }
+
+    .btn {
+        .sim-controls-button();
+
+        &:hover {
+            background: fadeout(#fff, 60%);
+            border-color: fadeout(#fff, 80%);
+        }
+
+        &:active {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+    }
+
+    input[type="radio"] + label:before, 
+    input[type="checkbox"] + label:before {
+        background: rgba(255, 255, 255, 0.18);
+    }
+
+}
+
+.sim-controls.visual-options {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
-    color: white;
+    left: @panel-margin;
+    top: @panel-margin;
+}
+
+.sim-controls.lens-properties {
+    position: absolute;
+    left: 50%;
+    top: @panel-margin;
 }
