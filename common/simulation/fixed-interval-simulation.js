@@ -20,7 +20,8 @@ define(function (require) {
             options = options || {};
             var fps = options.framesPerSecond || 30;
 
-            this.frameDuration = 1 / fps; // milliseconds, from PhET's WaveInterferenceClock
+            this.frameDuration = options.frameDuration || (1 / fps); // Seconds
+            this.deltaTimePerFrame = options.deltaTimePerFrame || this.frameDuration; // Seconds
             this.frameAccumulator = 0;
         },
 
@@ -43,7 +44,7 @@ define(function (require) {
                 while (this.frameAccumulator >= this.frameDuration) {
                     this.time += this.frameDuration;
 
-                    this._update(this.time, this.frameDuration);
+                    this._update(this.time, this.deltaTimePerFrame);
                     
                     this.frameAccumulator -= this.frameDuration;
                 }    

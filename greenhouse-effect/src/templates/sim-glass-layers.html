@@ -1,0 +1,47 @@
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+        <div class="sim-controls legend-panel">
+            <h2>Legend</h2>
+
+            <div class="legend-symbol"><%= Assets.createIcon(sunlightPhotonSrc, { 'class': 'symbol-icon' }, iconSize) %> Sunlight photon</div>
+            <div class="legend-symbol"><%= Assets.createIcon(infraredPhotonSrc, { 'class': 'symbol-icon' }, iconSize) %> Infrared photon</div>
+        </div>
+
+        <div class="sim-controls viewing-options-panel">
+            <h2>Viewing Options</h2>
+
+            <input type="checkbox" id="all-photons-check-<%= unique %>" class="all-photons-check">
+            <label for="all-photons-check-<%= unique %>" class="all-photons-check-label">Show all photons</label>
+
+            <div class="thermometer-wrapper">
+                <input type="checkbox" id="thermometer-check-<%= unique %>" class="thermometer-check" checked>
+                <label for="thermometer-check-<%= unique %>">Thermometer</label>
+
+                <div class="degrees-wrapper">
+                    <input type="radio" name="degrees-<%= unique %>" value="degrees-fahrenheit" id="degrees-fahrenheit-<%= unique %>" class="degrees" checked>
+                    <label for="degrees-fahrenheit-<%= unique %>" class="degrees-label">&deg;F</label>
+
+                    <input type="radio" name="degrees-<%= unique %>" value="degrees-celsius" id="degrees-celsius-<%= unique %>" class="degrees">
+                    <label for="degrees-celsius-<%= unique %>" class="degrees-label">&deg;C</label>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sim-controls-right">
+        <div class="sim-controls sim-settings-panel">
+            <h2>Simulation Settings</h2>
+
+            <div class="counter-wrapper glass-panes-counter-wrapper">
+                <label class="counter-label">Glass Panes</label>
+                <div class="btn-group" role="group">
+                    <button class="btn add-glass-pane-btn"><span class="fa fa-plus"></span></button>
+                    <button class="btn remove-glass-pane-btn"><span class="fa fa-minus"></span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
