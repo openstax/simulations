@@ -6,7 +6,7 @@
 }
 
 .sim-content > .sim-view {
-    background: url(http://subtlepatterns.com/patterns/dark_embroidery.png);
+    background: url(../img/dark-embroidery.png);
     border-top: 1px solid darken(@link-color, 15%);
     height: (@scene-height + 1);
 
@@ -189,6 +189,41 @@
             label {
                 font-size: 12px;
             }
+        }
+    }
+}
+
+.help-btn-wrapper {
+    position: absolute;
+    top: -36px;
+    right: 30px;
+    .user-select(none);
+
+    > .help-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:active, &:active:hover, &.active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.active:hover{
+            background: fade(@link-color, 75%);
+        }
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        .fa-question {
+            padding-right: 2px;
         }
     }
 }

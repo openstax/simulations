@@ -47,7 +47,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .help-btn' : 'toggleHelp'
         },
 
         /**
@@ -153,6 +153,13 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * Responds to help button click and toggles showing help labels.
+         */
+        toggleHelp: function() {
+            this.$('.help-btn').toggleClass('active');
+        }
 
     });
 
