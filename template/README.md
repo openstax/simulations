@@ -34,7 +34,7 @@ To host a development server for this project, follow the instructions found in 
 
 ### Updating
 
-From the root `moving-man` directory, run `npm run-script upgrade`, which executes the following commands:
+From the root `template` directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`
