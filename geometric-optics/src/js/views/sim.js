@@ -104,6 +104,15 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.$('.slider'/*'#curvature-radius-slider'*/).noUiSlider({
+                connect: 'lower',
+                start: 0.8,
+                range: {
+                    'min': 0.3,
+                    'max': 1.3
+                }
+            });
         },
 
         /**

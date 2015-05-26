@@ -17,7 +17,7 @@
 
 .sim-controls {
     .white-panel();
-    padding: 15px;
+    padding: @panel-padding;
     position: relative;
     margin-bottom: 12px;
 
@@ -52,8 +52,8 @@
         list-style: none;
         padding: 0;
         margin: 0;
-        margin-top: 12px;
-        margin-bottom: 10px;
+        margin-top: 8px;
+        margin-bottom: 6px;
 
         li {
             text-align: left;
@@ -118,6 +118,10 @@
         }
     }
 
+    .change-object-btn {
+        width: 100%;
+    }
+
     input[type="radio"] + label:before, 
     input[type="checkbox"] + label:before {
         background: rgba(255, 255, 255, 0.18);
@@ -125,14 +129,66 @@
 
 }
 
+.sim-controls-wrapper {
+    @media screen and (max-height: @short-window) {
+        position: absolute;
+        right: @panel-margin;
+        top: @panel-margin;
+    }
+}
+
 .sim-controls.visual-options {
+    width: @visual-options-width;
     position: absolute;
-    left: @panel-margin;
+    right: @panel-margin;
     top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        width: @short-screen-panel-width;
+        position: relative;
+        top: auto;
+        right: auto;
+    }
 }
 
 .sim-controls.lens-properties {
     position: absolute;
-    left: 50%;
     top: @panel-margin;
+    right: (@visual-options-width + @panel-margin * 2);
+    width: @lens-properties-panel-width;
+
+    @media screen and (max-height: @short-window) {
+        width: @short-screen-panel-width;
+        position: relative;
+        margin-top: @panel-margin;
+        top: auto;
+        right: auto;
+    }
+
+    .slider-wrapper {
+        float: left;
+        width: ((@lens-properties-panel-width - @panel-padding * 2 - @lens-slider-spacing * 2) / 3);
+        margin-right: @lens-slider-spacing;
+        margin-top: 2px;
+        margin-bottom: -8px;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        @media screen and (max-height: @short-window) {
+            float: none;
+            margin-right: 0;
+            margin-bottom: 16px;
+            width: auto;
+
+            &:last-child {
+                margin-bottom: -8px;
+            }
+
+            label {
+                font-size: 12px;
+            }
+        }
+    }
 }
