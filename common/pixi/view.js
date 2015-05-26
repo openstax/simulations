@@ -52,8 +52,7 @@ define(function(require) {
 
         /**
          * Makes sure there's a displayObject specified.  If there
-         *   isn't, it creates a new DisplayObjectContainer, which
-         *   should be nice for general purposes.
+         *   is no displayObject instance given, it creates one.
          */
         _ensureDisplayObject: function() {
             if (!this.displayObject) {
@@ -64,8 +63,16 @@ define(function(require) {
                  *   constructors and stuff.  But it could be an
                  *   option in the future.
                  */
-                this.displayObject = new PIXI.DisplayObjectContainer();
+                this.initializeDisplayObject();
             }
+        },
+
+        /**
+         * Initializes a new DisplayObjectContainer as the view's
+         *   displayObject, which should work for general purposes.
+         */
+        initializeDisplayObject: function() {
+            this.displayObject = new PIXI.DisplayObjectContainer();
         },
 
         /**
