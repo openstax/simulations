@@ -6,7 +6,7 @@ define(function (require) {
     var LineIntersection = require('common/math/line-intersection');
 
     var InfraredFilter = require('models/filter/infrared');
-    var Photon = require('models/photon');
+    var Photon = require('models/photon-basic');
 
     /**
      * Shared, cached local variables
