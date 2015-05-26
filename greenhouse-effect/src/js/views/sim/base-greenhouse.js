@@ -42,6 +42,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .reset-btn'  : 'reset',
+            'click .step-btn'   : 'step',
 
             'click .all-photons-check'  : 'toggleAllPhotons',
             'click .thermometer-check'  : 'toggleThermometer',
@@ -60,6 +61,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Base Greenhouse',
                 name: 'base-greenhouse',
+                stepDuration: 1000 / Constants.FRAMES_PER_SECOND // milliseconds
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
@@ -146,11 +148,27 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the simulation and all settings
+         */
+        resetSimulation: function() {
+            this.pause();
+            this.resetComponents();
+            this.play();
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        /**
+         * Performs the actual resetting on everything
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('.all-photons-check').prop('checked', false);
+            this.$('.thermometer-check').prop('checked', true);
+            this.$('.degrees-fahrenheit').click();
+
+            this.$('.playback-speed').val(this.simulation.get('timeScale'));
         },
 
         /**

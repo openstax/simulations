@@ -99,6 +99,18 @@ define(function (require) {
         },
 
         /**
+         * Resets
+         */
+        resetComponents: function() {
+            BaseGreenhouseSimView.prototype.resetComponents.apply(this, arguments);
+
+            this.$('#atmosphere-type-today').click();
+
+            var concentration = this.simulation.atmosphere.get('greenhouseGasConcentration') * Constants.Atmosphere.CONCENTRATION_RESOLUTION;
+            this.$concentrationSlider.val(concentration);
+        },
+
+        /**
          * Adds a cloud to the sim.
          */
         addCloud: function() {

@@ -126,6 +126,10 @@ define(function(require) {
             this.stage.addChild(this.photonEmitterView.displayObject);
         },
 
+        reset: function() {
+            this.photonEmitterView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },

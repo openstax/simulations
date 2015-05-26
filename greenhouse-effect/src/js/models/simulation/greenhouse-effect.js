@@ -11,6 +11,7 @@ define(function (require, exports, module) {
     var BaseGreenhouseSimulation  = require('models/simulation/base-greenhouse');
     var Earth                     = require('models/earth');
     var Cloud                     = require('models/cloud');
+    var Atmosphere                = require('models/atmosphere');
     var PhotonCloudCollisionModel = require('models/collision-model/photon-cloud');
 
     /**
@@ -42,6 +43,8 @@ define(function (require, exports, module) {
             BaseGreenhouseSimulation.prototype.initComponents.apply(this, arguments);
 
             this.initClouds();
+
+            this.atmosphere.set('greenhouseGasConcentration', Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
         },
 
         /**
@@ -74,8 +77,9 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             BaseGreenhouseSimulation.prototype.resetComponents.apply(this, arguments);
-
-
+            
+            this.atmosphere.set('greenhouseGasConcentration', Atmosphere.GREENHOUSE_GAS_CONCENTRATION_TODAY);
+            this.clouds.reset();
         },
 
         /**

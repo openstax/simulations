@@ -80,7 +80,7 @@ define(function (require, exports, module) {
         resetComponents: function() {
             BaseGreenhouseSimulation.prototype.resetComponents.apply(this, arguments);
 
-
+            this.glassPanes.reset();
         },
 
         /**

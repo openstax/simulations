@@ -29,11 +29,12 @@ define(function(require) {
      */
     var BaseGreenhouseSceneView = PixiSceneView.extend({
 
-        visiblePhotonProportion: 0.1,
+        defaultVisiblePhotonProportion: 0.1,
 
         initialize: function(options) {
-            PixiSceneView.prototype.initialize.apply(this, arguments);
+            this.visiblePhotonProportion = this.defaultVisiblePhotonProportion;
 
+            PixiSceneView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.simulation, 'photons-reset',  this.photonsReset);
             this.listenTo(this.simulation, 'photon-added',   this.photonAdded);
@@ -127,6 +128,12 @@ define(function(require) {
             this.thermometerView.displayObject.y = this.height - 50;
             this.positionThermometerView();
             this.backgroundLayer.addChild(this.thermometerView.displayObject);
+        },
+
+        reset: function() {
+            this.setVisiblePhotonProportion(this.defaultVisiblePhotonProportion);
+            this.photonsReset();
+            this.thermometerView.reset();
         },
 
         resize: function() {
