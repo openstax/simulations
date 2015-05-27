@@ -36,8 +36,7 @@ define(function (require) {
     var SourceObject = PositionableObject.extend({
 
         defaults: _.extend({}, PositionableObject.prototype.defaults, {
-            height: 0,     // Meters
-            upright: true, // Whether or not the object is right-side-up
+            height: 0, // Meters
 
             // TODO: In view, if type === Types.LIGHT, remove point2's x constraint.
             type: Constants.SourceObject.DEFAULT_TYPE,
