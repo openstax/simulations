@@ -48,7 +48,9 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .help-btn' : 'toggleHelp'
+            'click .help-btn' : 'toggleHelp',
+
+            'click #ruler-check' : 'toggleRuler'
         },
 
         /**
@@ -133,12 +135,26 @@ define(function (require) {
                 dragFrame: this.el,
                 position : {
                     x : 20,
-                    y : 100
+                    y : 130
                 },
                 orientation : 'horizontal',
+                pxPerUnit: 3,
+                rulerWidth: 12,
+                rulerMeasureUnits : 200,
+                ticks : [{
+                    type: 'full',
+                    at : 20
+                },{
+                    type: 'mid',
+                    at : 10
+                },{
+                    type: 'unit',
+                    at : 1
+                }]
             });
 
             this.rulerView.render();
+            this.rulerView.hide();
 
             this.$el.append(this.rulerView.el);
         },
@@ -183,6 +199,16 @@ define(function (require) {
          */
         toggleHelp: function() {
             this.$('.help-btn').toggleClass('active');
+        },
+
+        /**
+         * Responds to ruler checkbox and shows/hides ruler
+         */
+        toggleRuler: function() {
+            if ($(event.target).is(':checked'))
+                this.rulerView.show();
+            else
+                this.rulerView.hide();
         }
 
     });
