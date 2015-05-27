@@ -177,18 +177,14 @@ define(function (require) {
         },
 
         /**
-         * This is run every tick of the updater.  It updates the wave
-         *   simulation and the views.
+         * This is run every tick of the updater.  It updates the views.
          */
         update: function(time, deltaTime) {
-            // Update the model
-            this.simulation.update(time, deltaTime);
-
             var timeSeconds = time / 1000;
             var dtSeconds   = deltaTime / 1000;
 
             // Update the scene
-            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.sceneView.update(timeSeconds, dtSeconds);
 
             // Update the ruler view
             this.rulerView.update();
