@@ -5,6 +5,8 @@ define(function(require) {
     var _ = require('underscore');
     var $ = require('jquery');
 
+    var AppView = require('common/app/app');
+
     var MovingManSimulation = require('models/moving-man-simulation');
     var MovingManSimView    = require('views/sim');
     var SceneView           = require('views/scene');
@@ -356,7 +358,7 @@ define(function(require) {
          * Applies special classes to rows after one was hidden/shown.
          */
         _layoutRows: function() {
-            var shortScreen = $(window).height() <= 500;
+            var shortScreen = AppView.windowIsShort();
 
             // Get the total height we have to work with
             var height = shortScreen ? 340 : 480;

@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView            = require('common/app/app');
     var PixiSceneView      = require('common/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
@@ -65,7 +66,7 @@ define(function(require) {
             // ...to the usable screen space that we have
             var controlsWidth = 180;
             var margin = 20;
-            var leftMargin = ($(window).height() <= 500) ? margin + controlsWidth + margin : margin;
+            var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + margin : margin;
             var rightMargin = margin + controlsWidth + margin;
             var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
 
@@ -99,7 +100,7 @@ define(function(require) {
         },
 
         setSceneScale: function(scene) {
-            var targetSceneWidth = ($(window).height() <= 500) ? this.width : scene.width; // In pixels
+            var targetSceneWidth = AppView.windowIsShort() ? this.width : scene.width; // In pixels
             var scale = targetSceneWidth / scene.width
             scene.scale.x = scale;
             scene.scale.y = scale;
@@ -146,7 +147,7 @@ define(function(require) {
         },
 
         positionThermometerView: function() {
-            if ($(window).height() <= 500)
+            if (AppView.windowIsShort())
                 this.thermometerView.displayObject.x = this.mvt.modelToViewX(this.simulation.bounds.x) + 30;
             else
                 this.thermometerView.displayObject.x = 50;

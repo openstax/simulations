@@ -201,6 +201,21 @@ define(function(require) {
             }, this);
         }
 
+    }, {
+
+        /**
+         * The threshold for determining if the we're in short sim mode
+         */
+        shortWindowHeight: 560,
+
+        /**
+         * Returns whether or not we are working in a "short" window
+         *   (based on the shortWindowHeight threshold).
+         */
+        windowIsShort: function() {
+            return $(window).height() <= AppView.shortWindowHeight;
+        }
+
     });
 
     return AppView;

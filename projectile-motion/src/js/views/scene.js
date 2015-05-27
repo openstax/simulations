@@ -11,6 +11,7 @@ define(function(require) {
 
     var ModelViewTransform = require('common/math/model-view-transform');
     var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
 
     var CannonView      = require('views/cannon');
     var TargetView      = require('views/target');
@@ -89,7 +90,7 @@ define(function(require) {
         },
 
         initMVT: function() {
-            var additionalScale = $(window).height() > 500 ? 1 : 0.7;
+            var additionalScale = !AppView.windowIsShort() ? 1 : 0.7;
 
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
