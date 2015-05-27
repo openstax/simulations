@@ -42,12 +42,13 @@ define(function (require) {
     var SourceObject = {};
 
     SourceObject.Types = {};
-    Types.PICTURE_A = 1;
-    Types.PICTURE_B = 2;
-    Types.PICTURE_C = 3;
-    Types.PICTURE_D = 4;
-    Types.LIGHT     = 5;
-    SourceObject.DEFAULT_TYPE = Types.PICTURE_A;
+    SourceObject.Types.PICTURE_A = 1;
+    SourceObject.Types.PICTURE_B = 2;
+    SourceObject.Types.PICTURE_C = 3;
+    SourceObject.Types.PICTURE_D = 4;
+    SourceObject.Types.LIGHT     = 5;
+
+    SourceObject.DEFAULT_TYPE = SourceObject.Types.PICTURE_A;
 
     Constants.SourceObject = SourceObject;
 

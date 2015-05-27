@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Pool = require('object-pool');
+
     var PositionableObject = require('common/models/positionable-object');
     var Vector2            = require('common/math/vector2');
 
@@ -53,7 +55,7 @@ define(function (require) {
          * Function that facilitates setting secondPoint while still
          *   triggering a change event.
          */
-        setPoint1: function(x, y, options) {
+        setSecondPoint: function(x, y, options) {
             var oldPoint = this.get('secondPoint');
             
             if (x instanceof Vector2)

@@ -79,6 +79,7 @@
     }
 
     .bootstrap-select {
+        margin-top: 2px;
         background-color: transparent;
         border-color: transparent;
 
@@ -136,8 +137,8 @@
 .sim-controls-wrapper {
     @media screen and (max-height: @short-window) {
         position: absolute;
-        right: @panel-margin;
-        top: @panel-margin;
+        right: @short-screen-panel-margin;
+        top: @short-screen-panel-margin;
     }
 }
 
@@ -164,7 +165,7 @@
     @media screen and (max-height: @short-window) {
         width: @short-screen-panel-width;
         position: relative;
-        margin-top: @panel-margin;
+        margin-top: @short-screen-panel-margin;
         top: auto;
         right: auto;
     }
