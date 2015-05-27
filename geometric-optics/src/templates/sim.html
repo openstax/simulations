@@ -1,0 +1,70 @@
+<div class="help-btn-wrapper">
+    <button class="help-btn" title="Toggle Help"><span class="fa fa-question"></span></button>
+</div>
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls visual-options">
+        <h2>Visual Options</h2>
+
+        <div class="rays-wrapper">
+            <select class="form-control" id="rays">
+                <option>No rays</option>
+                <option>Marginal rays</option>
+                <option>Principal rays</option>
+                <option>Many rays</option>
+            </select>
+        </div>
+        
+        <ul class="checkbox">
+            <li>
+                <input type="checkbox" class="show-guides-check" id="show-guides-check">
+                <label for="show-guides-check">Show Guides</label>
+            </li>
+            <li>
+                <input type="checkbox" class="screen-check" id="screen-check">
+                <label for="screen-check">Screen</label>
+            </li>
+            <li>
+                <input type="checkbox" class="second-point-check" id="second-point-check">
+                <label for="second-point-check">2<sup>nd</sup> Point</label>
+            </li>
+            <li>
+                <input type="checkbox" class="ruler-check" id="ruler-check">
+                <label for="ruler-check">Screen</label>
+            </li>
+        </ul>
+
+        <button class="btn change-object-btn"><span class="fa fa-picture-o"></span>&nbsp; Change Object</button>
+    </div>
+
+    <div class="sim-controls lens-properties">
+        <h2>Lens Properties</h2>
+
+        <div class="lens-sliders-wrapper">
+            <div class="slider-wrapper">
+                <div class="slider-header">
+                    <label>Curvature radius (m)</label>
+                    <span class="slider-value" id="curvature-radius-label">0.55</span>
+                </div>
+                <div class="slider" id="curvature-radius-slider"></div>
+            </div>
+            <div class="slider-wrapper">
+                <div class="slider-header">
+                    <label>Refractive index (m)</label>
+                    <span class="slider-value" id="refractive-index-label">0.55</span>
+                </div>
+                <div class="slider" id="refractive-index-slider"></div>
+            </div>
+            <div class="slider-wrapper">
+                <div class="slider-header">
+                    <label>Diameter (m)</label>
+                    <span class="slider-value" id="diameter-label">0.55</span>
+                </div>
+                <div class="slider" id="diameter-slider"></div>
+            </div>
+        </div>
+
+    </div>
+</div>
