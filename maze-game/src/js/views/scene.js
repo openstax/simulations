@@ -52,7 +52,7 @@ define(function(require) {
             var levelWidth  = Level.WIDTH  * Constants.TILE_SIZE;
             var levelHeight = Level.HEIGHT * Constants.TILE_SIZE;
 
-            var sceneHeight = AppView.windowIsShort() > 500 ? this.height : this.height - 190;
+            var sceneHeight = !AppView.windowIsShort() ? this.height : this.height - 190;
 
             var sceneRatio = this.width / sceneHeight;
             var levelRatio = levelWidth / levelHeight;
@@ -90,7 +90,7 @@ define(function(require) {
                 areaHeight: controlAreaHeight
             });
 
-            var margin = AppView.windowIsShort() > 500 ? 15 : 0;
+            var margin = !AppView.windowIsShort() ? 15 : 0;
 
             this.particleControlView.displayObject.x = this.width  - margin;
             this.particleControlView.displayObject.y = this.height - margin;
