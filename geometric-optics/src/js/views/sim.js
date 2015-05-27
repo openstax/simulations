@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView   = require('common/app/sim');
+    var RulerView = require('common/tools/ruler');
 
     var TemplateSimulation = require('models/simulation');
     var TemplateSceneView  = require('views/scene');
@@ -90,6 +91,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderRulerView();
 
             return this;
         },
@@ -124,11 +126,30 @@ define(function (require) {
         },
 
         /**
+         * Renders the ruler view
+         */
+        renderRulerView: function() {
+            this.rulerView = new RulerView({
+                dragFrame: this.el,
+                position : {
+                    x : 20,
+                    y : 100
+                },
+                orientation : 'horizontal',
+            });
+
+            this.rulerView.render();
+
+            this.$el.append(this.rulerView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.rulerView.postRender();
         },
 
         /**
@@ -152,6 +173,9 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+
+            // Update the ruler view
+            this.rulerView.update();
         },
 
         /**

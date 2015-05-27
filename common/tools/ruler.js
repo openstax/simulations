@@ -109,7 +109,7 @@ define(function (require) {
 			this.viewModel.ticks = [];
 
 			// counting by one up to the full ruler length...
-			for(var iter = 1; iter < this.rulerMeasureUnits; iter++){
+			for (var iter = 1; iter < this.rulerMeasureUnits; iter++){
 
 				// find out the kind of tick that is at this iteration
 				var tickIter = _.find(this.ticks, function(tick){
@@ -118,7 +118,7 @@ define(function (require) {
 
 				// if a tick type does not make, go on to the next iteration
 				// without adding a tick for this iteration
-				if(_.isUndefined(tickIter)){
+				if (_.isUndefined(tickIter)){
 					continue;
 				}
 
@@ -152,7 +152,7 @@ define(function (require) {
 			}];
 
 			// tricky css stuff for when the ruler is vertical
-			if(this.orientation === 'vertical'){
+			if (this.orientation === 'vertical') {
 				this.viewModel.viewCSS = {
 					width : this.rulerWidth * this.pxPerUnit + 'px',
 					height: (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px'
@@ -161,8 +161,21 @@ define(function (require) {
 					selector : '.ruler',
 					rule : {
 						marginTop : -1 * this.rulerWidth * this.pxPerUnit + 'px',
-						width : (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px',
-						height : this.rulerWidth * this.pxPerUnit + 'px',
+						width: (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px',
+						height: this.rulerWidth * this.pxPerUnit + 'px',
+					}
+				});
+			}
+			else if (this.orientation === 'horizontal') {
+				this.viewModel.viewCSS = {
+					height: this.rulerWidth * this.pxPerUnit + 'px',
+					width: (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px'
+				};
+				this.viewModel.css.push({
+					selector: '.ruler',
+					rule: {
+						width: (this.rulerMeasureUnits * this.pxPerUnit + 2) + 'px',
+						height: this.rulerWidth * this.pxPerUnit + 'px',
 					}
 				});
 			}
