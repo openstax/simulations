@@ -19,7 +19,7 @@ module.exports = function(grunt) {
 			images: {
 				expand: true, // required when using cwd
 				cwd: 'src/img/',
-				src: '**',
+				src: ['**', '!**/*.blend', '!**/*.blend1'],
 				dest: 'dist/img/'
 			},
 			audio: {
