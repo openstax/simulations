@@ -36,9 +36,8 @@ define(function (require, exports, module) {
             this.lens = new Lens();
 
             this.sourceObject = new SourceObject({ 
-                position: Constants.DEFAULT_SOURCE_POINT_1,
-                point1:   Constants.DEFAULT_SOURCE_POINT_1,
-                point2:   Constants.DEFAULT_SOURCE_POINT_2
+                position:    Constants.DEFAULT_SOURCE_POINT_1,
+                secondPoint: Constants.DEFAULT_SOURCE_POINT_2
             });
 
             this.targetImage = new TargetImage({}, {

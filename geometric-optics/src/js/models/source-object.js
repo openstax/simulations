@@ -40,44 +40,26 @@ define(function (require) {
             // TODO: In view, if type === Types.LIGHT, remove point2's x constraint.
             type: Constants.SourceObject.DEFAULT_TYPE,
 
-            point1: null,
-            point2: null
+            secondPoint: null,
         }),
 
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
-            this.set('point1', vectorPool.create().set(this.get('point1')));
-            this.set('point2', vectorPool.create().set(this.get('point2')));
+            this.set('secondPoint', vectorPool.create().set(this.get('secondPoint')));
         },
 
         /**
-         * Function that facilitates setting point1 while still
+         * Function that facilitates setting secondPoint while still
          *   triggering a change event.
          */
         setPoint1: function(x, y, options) {
-            var oldPoint = this.get('point1');
+            var oldPoint = this.get('secondPoint');
             
             if (x instanceof Vector2)
-                this.set('point1', vectorPool.create().set(x), y);
+                this.set('secondPoint', vectorPool.create().set(x), y);
             else
-                this.set('point1', vectorPool.create().set(x, y), options);
-
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldPoint);
-        },
-
-        /**
-         * Function that facilitates setting point2 while still
-         *   triggering a change event.
-         */
-        setPoint1: function(x, y, options) {
-            var oldPoint = this.get('point2');
-            
-            if (x instanceof Vector2)
-                this.set('point2', vectorPool.create().set(x), y);
-            else
-                this.set('point2', vectorPool.create().set(x, y), options);
+                this.set('secondPoint', vectorPool.create().set(x, y), options);
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPoint);
@@ -88,8 +70,7 @@ define(function (require) {
          */
         destroy: function(options) {
             PositionableObject.prototype.destroy.apply(this, [options]);
-            vectorPool.remove(this.get('point1'));
-            vectorPool.remove(this.get('point2'));
+            vectorPool.remove(this.get('secondPoint'));
         }
 
     });

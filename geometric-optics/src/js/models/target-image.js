@@ -36,8 +36,8 @@ define(function (require) {
             this._point = new Vector2();
 
             // Listen for changes in the sourceObject
-            this.listenTo(this.sourceObject, 'change:point1', this.updatePoint1);
-            this.listenTo(this.sourceObject, 'change:point2', this.updatePoint2);
+            this.listenTo(this.sourceObject, 'change:position',    this.updatePosition);
+            this.listenTo(this.sourceObject, 'change:secondPoint', this.updateSecondPoint);
             this.listenTo(this.lens, 'change:focalLength', this.updatePoints);
 
             // Set up initial point values
@@ -45,20 +45,20 @@ define(function (require) {
         },
 
         updatePoints: function() {
-            this.updatePoint1(this.sourceObject, this.sourceObject.get('point1'));
-            this.updatePoint2(this.sourceObject, this.sourceObject.get('point2'));
+            this.updatePosition(this.sourceObject, this.sourceObject.get('position'));
+            this.updateSecondPoint(this.sourceObject, this.sourceObject.get('secondPoint'));
         },
 
-        updatePoint1: function(sourceObject, point1) {
-            this.set('point1', this.getTargetPoint(point1));
+        updatePosition: function(sourceObject, position) {
+            this.set('position', this.getTargetPoint(position));
         },
 
-        updatePoint2: function(sourceObject, point2) {
-            this.set('point2', this.getTargetPoint(point2));
+        updateSecondPoint: function(sourceObject, secondPoint) {
+            this.set('secondPoint', this.getTargetPoint(secondPoint));
         },
 
         getTargetPoint: function(sourcePoint) {
-            
+
             return this._point;
         }
 
