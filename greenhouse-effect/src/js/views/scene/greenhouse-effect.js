@@ -106,7 +106,6 @@ define(function(require) {
             var ctx = canvas.getContext('2d');
 
             // Draw the image onto the canvas
-            //var sceneWidth = ($(window).height() <= 500) ? this.width : this.bgIceAge.texture.width;
             var iceAgeImage = this.bgIceAge.texture.baseTexture.source;
             var x = this.width / 2 - this.bgIceAge.width / 2;
             var y = this.height - this.bgIceAge.height;

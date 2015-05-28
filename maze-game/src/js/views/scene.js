@@ -5,6 +5,7 @@ define(function(require) {
     // Third-party dependencies
 
     // Common dependencies
+    var AppView            = require('common/app/app');
     var PixiSceneView      = require('common/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
@@ -51,7 +52,7 @@ define(function(require) {
             var levelWidth  = Level.WIDTH  * Constants.TILE_SIZE;
             var levelHeight = Level.HEIGHT * Constants.TILE_SIZE;
 
-            var sceneHeight = $(window).height() > 500 ? this.height : this.height - 190;
+            var sceneHeight = !AppView.windowIsShort() ? this.height : this.height - 190;
 
             var sceneRatio = this.width / sceneHeight;
             var levelRatio = levelWidth / levelHeight;
@@ -89,7 +90,7 @@ define(function(require) {
                 areaHeight: controlAreaHeight
             });
 
-            var margin = $(window).height() > 500 ? 15 : 0;
+            var margin = !AppView.windowIsShort() ? 15 : 0;
 
             this.particleControlView.displayObject.x = this.width  - margin;
             this.particleControlView.displayObject.y = this.height - margin;
@@ -100,7 +101,7 @@ define(function(require) {
         calculateControlAreaHeight: function() {
             var tileSize = this.mvt.modelToViewDeltaX(Constants.TILE_SIZE);
             var availableHeight = this.height - (tileSize * Level.HEIGHT);
-            if ($(window).height() > 500)
+            if (!AppView.windowIsShort())
                 availableHeight -= 50;
             else
                 availableHeight -= 30;
