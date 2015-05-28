@@ -31,7 +31,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var TemplateSimView = SimView.extend({
+    var GeometricOpticsSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -209,5 +209,5 @@ define(function (require) {
 
     });
 
-    return TemplateSimView;
+    return GeometricOpticsSimView;
 });

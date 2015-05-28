@@ -26,8 +26,8 @@ define(function (require) {
 
     var Lens = {};
 
-    Lens.DEFAULT_INDEX_OF_REFRACTION = 1.5;
-    Lens.DEFAULT_RADIUS_OF_CURVATURE = 1.5;
+    Lens.DEFAULT_INDEX_OF_REFRACTION = 1.53;
+    Lens.DEFAULT_RADIUS_OF_CURVATURE = 0.8;
 
     Constants.Lens = Lens;
 

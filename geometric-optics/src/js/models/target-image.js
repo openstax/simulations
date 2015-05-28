@@ -19,7 +19,7 @@ define(function (require) {
      */
     var TargetImage = SourceObject.extend({
 
-        defaults: _.extend({}, PositionableObject.prototype.defaults, {
+        defaults: _.extend({}, SourceObject.prototype.defaults, {
             scale: 0,
             upright: false // Whether or not the object is right-side-up
         }),
@@ -57,16 +57,19 @@ define(function (require) {
         },
 
         updatePosition: function(sourceObject, position) {
-            this.set('position', this.getTargetPoint(position));
+            this.setPosition(this.getTargetPoint(position));
         },
 
         updateSecondPoint: function(sourceObject, secondPoint) {
-            this.set('secondPoint', this.getTargetPoint(secondPoint));
+            this.setSecondPoint(this.getTargetPoint(secondPoint));
         },
 
         updateScale: function() {
             var focalLength = this.getFocalLength();
-            this.set('scale', 100 * focalLength / (this.getObjectLensDistance() - focalLength));
+            var scale = focalLength / (this.getObjectLensDistance() - focalLength);
+            // if (scale === Infinity) Not sure if infinity is going to throw errors yet
+            //     scale = 1000;
+            this.set('scale', scale);
         },
 
         updateOrientation: function() {
@@ -84,7 +87,7 @@ define(function (require) {
         },
 
         getObjectLensDistance: function() {
-            return this.lens.get('position').x - sourcePoint.x;
+            return this.lens.get('position').x - this.sourceObject.get('position').x;
         },
 
         getFocalLength: function() {
@@ -92,7 +95,7 @@ define(function (require) {
         },
 
         isVirtualImage: function() {
-            return this.getObjectLensDistance() < this.focalLength();
+            return this.getObjectLensDistance() < this.getFocalLength();
         }
 
     });
