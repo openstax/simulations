@@ -21,6 +21,7 @@ define(function (require) {
 
         defaults: _.extend({}, SourceObject.prototype.defaults, {
             scale: 0,
+            strength: 1, // 1 is the strongest image and 0 is the weakest (invisible)
             upright: false // Whether or not the object is right-side-up
         }),
 
@@ -43,10 +44,13 @@ define(function (require) {
             // Listen for changes in the sourceObject
             this.listenTo(this.sourceObject, 'change:position',    this.update);
             this.listenTo(this.sourceObject, 'change:secondPoint', this.updateSecondPoint);
+
             this.listenTo(this.lens, 'change:focalLength', this.update);
+            this.listenTo(this.lens, 'change:diameter',    this.updateStrength);
 
             // Set up initial point values
             this.update();
+
         },
 
         update: function() {
@@ -54,6 +58,7 @@ define(function (require) {
             this.updateSecondPoint(this.sourceObject, this.sourceObject.get('secondPoint'));
             this.updateScale();
             this.updateOrientation();
+            this.updateStrength(this.lens, this.lens.get('diameter'));
         },
 
         updatePosition: function(sourceObject, position) {
@@ -77,6 +82,10 @@ define(function (require) {
                 this.set('upright', true);
             else
                 this.set('upright', false);
+        },
+
+        updateStrength: function(lens, diameter) {
+            this.set('strength', 0.2 + (diameter / 1.3));
         },
 
         getTargetPoint: function(sourcePoint) {

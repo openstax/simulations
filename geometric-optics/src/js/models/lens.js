@@ -12,6 +12,7 @@ define(function (require) {
         defaults: _.extend({}, PositionableObject.prototype.defaults, {
             indexOfRefraction: Constants.Lens.DEFAULT_INDEX_OF_REFRACTION,
             radiusOfCurvature: Constants.Lens.DEFAULT_RADIUS_OF_CURVATURE,
+            diameter:          Constants.Lens.DEFAULT_DIAMETER,
             focalLength: 0
         }),
 
