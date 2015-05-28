@@ -13,7 +13,8 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    Constants.MIN_STAGE_WIDTH = 3.8; // Meters
+    Constants.MIN_SCENE_WIDTH  = 3.8; // Meters
+    Constants.MIN_SCENE_HEIGHT = 2.3; // Meters
 
     Constants.DEFAULT_SOURCE_POINT_1 = new Vector2(-1.5,  0.0);
 	Constants.DEFAULT_SOURCE_POINT_2 = new Vector2(-1.5, -0.1);
