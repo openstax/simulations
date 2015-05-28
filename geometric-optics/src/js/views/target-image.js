@@ -7,6 +7,11 @@ define(function(require) {
     
     var ObjectView = require('views/object');
 
+    var Constants = require('constants');
+    var Types = Constants.SourceObject.Types;
+
+    var Assets = require('assets');
+
     /**
      * This is the view for a TargetObject model. It can be represented
      *   as either a projected image of the original object or as a
@@ -22,29 +27,35 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:scale',    this.updateScale);
             this.listenTo(this.model, 'change:strength', this.updateStrength);
-            this.listenTo(this.model, 'change:reversed',  this.updateReversed);
-
-            this.updateReversed(this.model, this.model.get('reversed'));
         },
 
         initGraphics: function() {
             ObjectView.prototype.initGraphics.apply(this, arguments);
 
-            // Put two more transform frames inside the picture container
-            //   around its contents.
-            this.pictureRotationFrame = new PIXI.DisplayObjectContainer();
-            this.pictureScaleFrame    = new PIXI.DisplayObjectContainer();
+            // Put an extra transform frame inside the picture container
+            this.pictureScaleFrame = new PIXI.DisplayObjectContainer();
 
             while (this.pictureContainer.children.length > 0) {
-                // Move the original contents of the picture container from
-                //   the top level into the bottom level transform frame
+                // Move the original contents of the picture container into
+                //   the transform frame that is going to go inside it.
                 var child = this.pictureContainer.getChildAt(0);
                 this.pictureContainer.removeChild(child);
                 this.pictureScaleFrame.addChild(child);
             }
 
-            this.pictureRotationFrame.addChild(this.pictureScaleFrame);
-            this.pictureContainer.addChild(this.pictureRotationFrame);
+            this.pictureContainer.addChild(this.pictureScaleFrame);
+
+            // Use reversed versions of the picture images
+            this.pictureSprites[Types.PICTURE_A].setTexture(Assets.Texture(Assets.Images.PICTURE_A_REVERSED));
+            this.pictureSprites[Types.PICTURE_B].setTexture(Assets.Texture(Assets.Images.PICTURE_B_REVERSED));
+            this.pictureSprites[Types.PICTURE_C].setTexture(Assets.Texture(Assets.Images.PICTURE_C_REVERSED));
+            this.pictureSprites[Types.PICTURE_D].setTexture(Assets.Texture(Assets.Images.PICTURE_D_REVERSED));
+
+            // Change the anchors for the reversing effect
+            for (var key in this.pictureSprites) {
+                this.pictureSprites[key].anchor.x = 1 - this.pictureSprites[key].anchor.x;
+                this.pictureSprites[key].anchor.y = 1 - this.pictureSprites[key].anchor.y;
+            }
         },
 
         /**
@@ -63,11 +74,6 @@ define(function(require) {
 
         updateStrength: function(targetImage, strength) {
             this.pictureContainer.alpha = strength;
-        },
-
-        updateReversed: function(targetImage, reversed) {
-            var rotation = reversed ? Math.PI : 0;
-            this.pictureRotationFrame.rotation = rotation;
         }
 
     });

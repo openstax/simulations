@@ -21,8 +21,7 @@ define(function (require) {
 
         defaults: _.extend({}, SourceObject.prototype.defaults, {
             scale: 0,
-            strength: 1,  // 1 is the strongest image and 0 is the weakest (invisible)
-            reversed: true // Whether or not the object is reversed (upside-down and laterally reversed)
+            strength: 1 // 1 is the strongest image and 0 is the weakest (invisible)
         }),
 
         initialize: function(attributes, options) {
@@ -58,7 +57,6 @@ define(function (require) {
             this.updatePosition(this.sourceObject, this.sourceObject.get('position'));
             this.updateSecondPoint(this.sourceObject, this.sourceObject.get('secondPoint'));
             this.updateScale();
-            this.updateFlipped();
             this.updateStrength(this.lens, this.lens.get('diameter'));
         },
 
@@ -82,16 +80,10 @@ define(function (require) {
             this.set('scale', scale);
         },
 
-        updateFlipped: function() {
-            if (!this.isVirtualImage())
-                this.set('reversed', true);
-            else
-                this.set('reversed', false);
-        },
-
         updateStrength: function(lens, diameter) {
             this.set('strength', 0.2 + (diameter / 1.3));
         },
+
         getTargetPoint: function(sourcePoint) {
             return this._point.set(
                 this.lens.get('position').x - sourcePoint.x,

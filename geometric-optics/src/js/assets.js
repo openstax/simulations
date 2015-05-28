@@ -11,7 +11,11 @@ define(function (require) {
         PICTURE_B: 'picture-b-3d.png',
         PICTURE_C: 'picture-c-3d.png',
         PICTURE_D: 'picture-d-3d.png',
-        SCREEN:    'screen-3d.png'
+        PICTURE_A_REVERSED: 'picture-a-3d-reversed.png',
+        PICTURE_B_REVERSED: 'picture-b-3d-reversed.png',
+        PICTURE_C_REVERSED: 'picture-c-3d-reversed.png',
+        PICTURE_D_REVERSED: 'picture-d-3d-reversed.png',
+        SCREEN: 'screen-3d.png'
     };
 
     Assets.SpriteSheets = {};
