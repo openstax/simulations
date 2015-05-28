@@ -42,7 +42,6 @@ define(function (require) {
     Constants.Lens = Lens;
 
 
-
     /*************************************************************************
      **                                                                     **
      **                            SOURCE OBJECT                            **
@@ -63,6 +62,17 @@ define(function (require) {
     Constants.SourceObject = SourceObject;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                             OBJECT VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var ObjectView = {};
+
+    ObjectView.PICTURE_A_HEIGHT_IN_METERS = 0.7;
+
+    Constants.ObjectView = ObjectView;
 
 
     return Constants;

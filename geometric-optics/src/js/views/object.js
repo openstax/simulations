@@ -95,10 +95,13 @@ define(function(require) {
         },
 
         getPictureContainerScale: function() {
-            return 1;
+            // Get the height we want in pixels to compare to the height of the texture
+            var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ObjectView.PICTURE_A_HEIGHT_IN_METERS));
+            var scale = targetSpriteHeight / this.pictureSprites[Types.PICTURE_A].texture.height;
+            return scale;
         }
 
-    });
+    }, Constants.ObjectView);
 
     return ObjectView;
 });
