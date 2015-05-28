@@ -11,6 +11,9 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
 
+    var SourceObjectView = require('views/source-object');
+    var TargetImageView  = require('views/target-image');
+
     var Assets = require('assets');
 
     // Constants
@@ -22,7 +25,7 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var GeometricOpticsSceneView = PixiSceneView.extend({
 
         events: {
             
@@ -40,18 +43,19 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initObjects();
 
-            var graphics = new PIXI.Graphics();
-            graphics.lineStyle(2, 0x000000, 1);
-            graphics.beginFill(0xFF0000, 0.5);
-            graphics.drawRect(
-                this.mvt.modelToViewX(-Constants.MIN_SCENE_WIDTH / 2),
-                this.mvt.modelToViewY(-Constants.MIN_SCENE_HEIGHT / 2),
-                this.mvt.modelToViewDeltaX(Constants.MIN_SCENE_WIDTH),
-                this.mvt.modelToViewDeltaY(Constants.MIN_SCENE_HEIGHT)
-            );
-            graphics.endFill();
-            this.stage.addChild(graphics);
+            // var graphics = new PIXI.Graphics();
+            // graphics.lineStyle(2, 0x000000, 1);
+            // graphics.beginFill(0xFF0000, 0.5);
+            // graphics.drawRect(
+            //     this.mvt.modelToViewX(-Constants.MIN_SCENE_WIDTH / 2),
+            //     this.mvt.modelToViewY(-Constants.MIN_SCENE_HEIGHT / 2),
+            //     this.mvt.modelToViewDeltaX(Constants.MIN_SCENE_WIDTH),
+            //     this.mvt.modelToViewDeltaY(Constants.MIN_SCENE_HEIGHT)
+            // );
+            // graphics.endFill();
+            // this.stage.addChild(graphics);
         },
 
         initMVT: function() {
@@ -81,11 +85,25 @@ define(function(require) {
             );
         },
 
+        initObjects: function() {
+            this.sourceObjectView = new SourceObjectView({
+                model: this.simulation.sourceObject,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.sourceObjectView.displayObject);
+
+            this.targetImageView = new TargetImageView({
+                model: this.simulation.targetImage,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.targetImageView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
 
     });
 
-    return TemplateSceneView;
+    return GeometricOpticsSceneView;
 });

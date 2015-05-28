@@ -21,8 +21,8 @@ define(function (require) {
 
         defaults: _.extend({}, SourceObject.prototype.defaults, {
             scale: 0,
-            strength: 1, // 1 is the strongest image and 0 is the weakest (invisible)
-            upright: false // Whether or not the object is right-side-up
+            strength: 1,  // 1 is the strongest image and 0 is the weakest (invisible)
+            reversed: true // Whether or not the object is reversed (upside-down and laterally reversed)
         }),
 
         initialize: function(attributes, options) {
@@ -44,6 +44,7 @@ define(function (require) {
             // Listen for changes in the sourceObject
             this.listenTo(this.sourceObject, 'change:position',    this.update);
             this.listenTo(this.sourceObject, 'change:secondPoint', this.updateSecondPoint);
+            this.listenTo(this.sourceObject, 'change:type',        this.updateType);
 
             this.listenTo(this.lens, 'change:focalLength', this.update);
             this.listenTo(this.lens, 'change:diameter',    this.updateStrength);
@@ -57,7 +58,7 @@ define(function (require) {
             this.updatePosition(this.sourceObject, this.sourceObject.get('position'));
             this.updateSecondPoint(this.sourceObject, this.sourceObject.get('secondPoint'));
             this.updateScale();
-            this.updateOrientation();
+            this.updateFlipped();
             this.updateStrength(this.lens, this.lens.get('diameter'));
         },
 
@@ -69,6 +70,10 @@ define(function (require) {
             this.setSecondPoint(this.getTargetPoint(secondPoint));
         },
 
+        updateType: function(sourceObject, type) {
+            this.set('type', type);
+        },
+
         updateScale: function() {
             var focalLength = this.getFocalLength();
             var scale = focalLength / (this.getObjectLensDistance() - focalLength);
@@ -77,17 +82,16 @@ define(function (require) {
             this.set('scale', scale);
         },
 
-        updateOrientation: function() {
-            if (this.isVirtualImage())
-                this.set('upright', true);
+        updateFlipped: function() {
+            if (!this.isVirtualImage())
+                this.set('reversed', true);
             else
-                this.set('upright', false);
+                this.set('reversed', false);
         },
 
         updateStrength: function(lens, diameter) {
             this.set('strength', 0.2 + (diameter / 1.3));
         },
-
         getTargetPoint: function(sourcePoint) {
             return this._point.set(
                 this.lens.get('position').x - sourcePoint.x,

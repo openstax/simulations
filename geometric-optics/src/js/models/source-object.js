@@ -72,9 +72,27 @@ define(function (require) {
         destroy: function(options) {
             PositionableObject.prototype.destroy.apply(this, [options]);
             vectorPool.remove(this.get('secondPoint'));
+        },
+
+        /**
+         * Changes to the next picture type.
+         */
+        nextPictureType: function() {
+            var type = this.get('type');
+
+            // Assumes that the picture type values are consecutive
+            if (type >= SourceObject.Types.PICTURE_A && type <= SourceObject.Types.PICTURE_D) {
+                type += 1;
+                if (type > SourceObject.Types.PICTURE_D)
+                    type = SourceObject.Types.PICTURE_A;
+            }
+            else
+                type = SourceObject.Types.PICTURE_A;
+
+            this.set('type', type);
         }
 
-    });
+    }, Constants.SourceObject);
 
     return SourceObject;
 });

@@ -8,8 +8,8 @@ define(function (require) {
     var SimView   = require('common/app/sim');
     var RulerView = require('common/tools/ruler');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var GeometricOpticsSimulation = require('models/simulation');
+    var GeometricOpticsSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -50,7 +50,9 @@ define(function (require) {
         events: {
             'click .help-btn' : 'toggleHelp',
 
-            'click #ruler-check' : 'toggleRuler'
+            'click #ruler-check' : 'toggleRuler',
+
+            'click .change-object-btn' : 'changeObjectType'
         },
 
         /**
@@ -73,14 +75,14 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new GeometricOpticsSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new GeometricOpticsSceneView({
                 simulation: this.simulation
             });
         },
@@ -205,6 +207,13 @@ define(function (require) {
                 this.rulerView.show();
             else
                 this.rulerView.hide();
+        },
+
+        /**
+         * Cycles through the source object's different pictures
+         */
+        changeObjectType: function() {
+            this.simulation.sourceObject.nextPictureType();
         }
 
     });
