@@ -56,6 +56,8 @@ define(function(require) {
                 this.pictureSprites[key].anchor.x = 1 - this.pictureSprites[key].anchor.x;
                 this.pictureSprites[key].anchor.y = 1 - this.pictureSprites[key].anchor.y;
             }
+
+            this.updateStrength(this.model, this.model.get('strength'));
         },
 
         /**
@@ -73,7 +75,7 @@ define(function(require) {
         },
 
         updateStrength: function(targetImage, strength) {
-            this.pictureContainer.alpha = strength;
+            this.pictureContainer.alpha = Math.min(strength, 1);
         }
 
     });

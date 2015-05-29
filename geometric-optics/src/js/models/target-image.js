@@ -85,10 +85,17 @@ define(function (require) {
         },
 
         getTargetPoint: function(sourcePoint) {
-            return this._point.set(
-                this.lens.get('position').x - sourcePoint.x,
-                this.lens.get('position').y - sourcePoint.y
-            );
+            var focalLength = this.getFocalLength();
+
+            var dx = this.lens.get('position').x - sourcePoint.x;
+            var dy = this.lens.get('position').y - sourcePoint.y;
+            
+            return this._point
+                .set(this.lens.get('position'))
+                .add(
+                    dx * focalLength / (dx - focalLength),
+                    dy * focalLength / (dx - focalLength)
+                );
         },
 
         getObjectLensDistance: function() {

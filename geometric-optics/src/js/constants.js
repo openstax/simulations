@@ -17,7 +17,7 @@ define(function (require) {
     Constants.MIN_SCENE_HEIGHT = 2.3; // Meters
 
     Constants.DEFAULT_SOURCE_POINT_1 = new Vector2(-1.5,  0.0);
-	Constants.DEFAULT_SOURCE_POINT_2 = new Vector2(-1.5, -0.1);
+    Constants.DEFAULT_SOURCE_POINT_2 = new Vector2(-1.5, -0.1);
 
     /*************************************************************************
      **                                                                     **
@@ -36,8 +36,8 @@ define(function (require) {
     Lens.DEFAULT_RADIUS_OF_CURVATURE = 0.8;
 
     Lens.MIN_DIAMETER = 0.3;
-	Lens.MAX_DIAMETER = 1.3;
-	Lens.DEFAULT_DIAMETER = 0.8;
+    Lens.MAX_DIAMETER = 1.3;
+    Lens.DEFAULT_DIAMETER = 0.8;
 
     Constants.Lens = Lens;
 

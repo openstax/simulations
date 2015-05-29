@@ -52,7 +52,11 @@ define(function (require) {
 
             'click #ruler-check' : 'toggleRuler',
 
-            'click .change-object-btn' : 'changeObjectType'
+            'click .change-object-btn' : 'changeObjectType',
+
+            'slide #curvature-radius-slider' : 'changeRadiusOfCurvature',
+            'slide #refractive-index-slider' : 'changeIndexOfRefraction',
+            'slide #diameter-slider'         : 'changeDiameter'
         },
 
         /**
@@ -69,6 +73,10 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation.lens, 'change:radiusOfCurvature', this.updateRadiusOfCurvature);
+            this.listenTo(this.simulation.lens, 'change:indexOfRefraction', this.updateIndexOfRefraction);
+            this.listenTo(this.simulation.lens, 'change:diameter',          this.updateDiameter);
         },
 
         /**
@@ -111,14 +119,40 @@ define(function (require) {
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
 
-            this.$('.slider'/*'#curvature-radius-slider'*/).noUiSlider({
+            this.$('#curvature-radius-slider').noUiSlider({
                 connect: 'lower',
-                start: 0.8,
+                start: Constants.Lens.DEFAULT_RADIUS_OF_CURVATURE,
                 range: {
-                    'min': 0.3,
-                    'max': 1.3
+                    'min': Constants.Lens.MIN_RADIUS_OF_CURVATURE,
+                    'max': Constants.Lens.MAX_RADIUS_OF_CURVATURE
                 }
             });
+
+            this.$('#refractive-index-slider').noUiSlider({
+                connect: 'lower',
+                start: Constants.Lens.DEFAULT_INDEX_OF_REFRACTION,
+                range: {
+                    'min': Constants.Lens.MIN_INDEX_OF_REFRACTION,
+                    'max': Constants.Lens.MAX_INDEX_OF_REFRACTION
+                }
+            });
+
+            this.$('#diameter-slider').noUiSlider({
+                connect: 'lower',
+                start: Constants.Lens.DEFAULT_DIAMETER,
+                range: {
+                    'min': Constants.Lens.MIN_DIAMETER,
+                    'max': Constants.Lens.MAX_DIAMETER
+                }
+            });
+
+            this.$radiusOfCurvature = this.$('#curvature-radius-label');
+            this.$indexOfRefraction = this.$('#refractive-index-label');
+            this.$diameter          = this.$('#diameter-label');
+
+            this.updateRadiusOfCurvature(this.simulation.lens, this.simulation.lens.get('radiusOfCurvature'));
+            this.updateIndexOfRefraction(this.simulation.lens, this.simulation.lens.get('indexOfRefraction'));
+            this.updateDiameter(this.simulation.lens, this.simulation.lens.get('diameter'));
         },
 
         /**
@@ -214,6 +248,39 @@ define(function (require) {
          */
         changeObjectType: function() {
             this.simulation.sourceObject.nextPictureType();
+        },
+
+        changeIndexOfRefraction: function(event) {
+            var index = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('indexOfRefraction', index);
+            });
+        },
+
+        changeRadiusOfCurvature: function(event) {
+            var radius = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('radiusOfCurvature', radius);
+            });
+        },
+
+        changeDiameter: function(event) {
+            var diameter = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('diameter', diameter);
+            });
+        },
+
+        updateIndexOfRefraction: function(lens, indexOfRefraction) {
+            this.$indexOfRefraction.text(indexOfRefraction.toFixed(2) + 'm');
+        },
+
+        updateRadiusOfCurvature: function(lens, radiusOfCurvature) {
+            this.$radiusOfCurvature.text(radiusOfCurvature.toFixed(2) + 'm');
+        },
+
+        updateDiameter: function(lens, diameter) {
+            this.$diameter.text(diameter.toFixed(2) + 'm');
         }
 
     });
