@@ -42,8 +42,9 @@ define(function(require) {
 
             'change .playback-mode' : 'changePlaybackMode',
 
-            'click .row-hide': 'hideRow',
-            'click .row-show': 'showRow'
+            'click .row-hide'     : 'hideRow',
+            'click .row-show'     : 'showRow',
+            'click .hidden-title' : 'showRow'
         }),
 
         initialize: function(options) {
