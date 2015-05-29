@@ -9,6 +9,7 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
+    var FOCUS_POINT_COLOR = Colors.parseHex(Constants.LensView.FOCUS_POINT_COLOR);
 
     var Assets = require('assets');
 
@@ -29,6 +30,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:indexOfRefraction', this.updateIndexOfRefraction);
             this.listenTo(this.model, 'change:radiusOfCurvature', this.updateRadiusOfCurvature);
             this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:focalLength', this.updateFocusPoints);
         },
 
         /**
@@ -36,7 +38,7 @@ define(function(require) {
          */
         initGraphics: function() {
             this.initLens();
-            this.initFocalPoints();
+            this.initFocusPoints();
 
             this.updateMVT(this.mvt);
         },
@@ -58,8 +60,27 @@ define(function(require) {
             this.updateDiameter(this.model, this.model.get('diameter'));
         },
 
-        initFocalPoints: function() {
+        initFocusPoints: function() {
+            this.focusPoint1 = this.createFocusPoint();
+            this.focusPoint2 = this.createFocusPoint();
 
+            this.displayObject.addChild(this.focusPoint1);
+            this.displayObject.addChild(this.focusPoint2);
+
+            this.updateFocusPoints(this.model, this.model.get('focalLength'));
+        },
+
+        createFocusPoint: function() {
+            var focusPoint = new PIXI.Graphics();
+            focusPoint.lineStyle(LensView.FOCUS_POINT_LINE_WIDTH, FOCUS_POINT_COLOR, LensView.FOCUS_POINT_ALPHA);
+
+            var halfWidth = LensView.FOCUS_POINT_SIZE / 2;
+            focusPoint.moveTo(-halfWidth, -halfWidth);
+            focusPoint.lineTo( halfWidth,  halfWidth);
+            focusPoint.moveTo( halfWidth, -halfWidth);
+            focusPoint.lineTo(-halfWidth,  halfWidth);
+
+            return focusPoint;
         },
 
         /**
@@ -93,6 +114,12 @@ define(function(require) {
         updateDiameter: function(lens, diameter) {
             var diameterInPixels = Math.abs(this.mvt.modelToViewDeltaY(diameter));
             this.lens.scale.y = diameterInPixels / this.lensFill.texture.height;
+        },
+
+        updateFocusPoints: function(lens, focalLength) {
+            this.focusPoint1.x = -this.mvt.modelToViewDeltaX(focalLength);
+            this.focusPoint2.x =  this.mvt.modelToViewDeltaX(focalLength);
+            console.log(focalLength, this.mvt.modelToViewDeltaX(focalLength));
         }
 
     }, Constants.LensView);

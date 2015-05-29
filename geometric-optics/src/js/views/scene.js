@@ -7,6 +7,7 @@ define(function(require) {
 
     var PixiSceneView      = require('common/pixi/view/scene');
     var AppView            = require('common/app/app');
+    var Colors             = require('common/colors/colors');
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -19,6 +20,7 @@ define(function(require) {
 
     // Constants
     var Constants = require('constants');
+    var AXIS_COLOR = Colors.parseHex(Constants.SceneView.AXIS_COLOR);
 
     // CSS
     require('less!styles/scene');
@@ -45,6 +47,7 @@ define(function(require) {
 
             this.initMVT();
             this.initObjects();
+            this.initAxis();
 
             // var graphics = new PIXI.Graphics();
             // graphics.lineStyle(2, 0x000000, 1);
@@ -106,11 +109,24 @@ define(function(require) {
             this.stage.addChild(this.lensView.displayObject);
         },
 
+        initAxis: function() {
+            this.axis = new PIXI.Graphics();
+            this.stage.addChild(this.axis);
+            this.drawAxis();
+        },
+
+        drawAxis: function() {
+            this.axis.clear();
+            this.axis.lineStyle(GeometricOpticsSceneView.AXIS_WIDTH, AXIS_COLOR, GeometricOpticsSceneView.AXIS_ALPHA);
+            this.axis.moveTo(0,          this.mvt.modelToViewY(0));
+            this.axis.lineTo(this.width, this.mvt.modelToViewY(0));
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
 
-    });
+    }, Constants.SceneView);
 
     return GeometricOpticsSceneView;
 });

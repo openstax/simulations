@@ -56,6 +56,11 @@ define(function (require) {
         return LensView.WIDTH_AT_LARGEST_RADIUS * widthPercent;
     };
 
+    LensView.FOCUS_POINT_COLOR = '#fff';
+    LensView.FOCUS_POINT_ALPHA = 0.7;
+    LensView.FOCUS_POINT_LINE_WIDTH = 2;
+    LensView.FOCUS_POINT_SIZE = 16;
+
     Constants.LensView = LensView;
 
 
@@ -90,6 +95,21 @@ define(function (require) {
     ObjectView.PICTURE_A_HEIGHT_IN_METERS = 0.7;
 
     Constants.ObjectView = ObjectView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             SCENE VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.AXIS_COLOR = '#000';
+    SceneView.AXIS_ALPHA = 0.3;
+    SceneView.AXIS_WIDTH = 2;
+
+    Constants.SceneView = SceneView;
 
 
     return Constants;
