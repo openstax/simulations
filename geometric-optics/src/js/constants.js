@@ -43,6 +43,12 @@ define(function (require) {
     Constants.Lens = Lens;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              LENS VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
     var LensView = {};
 
     LensView.INDEX_OF_REFRACTION_RANGE = range({ min: Lens.MIN_INDEX_OF_REFRACTION, max: Lens.MAX_INDEX_OF_REFRACTION });

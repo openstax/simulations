@@ -119,7 +119,6 @@ define(function(require) {
         updateFocusPoints: function(lens, focalLength) {
             this.focusPoint1.x = -this.mvt.modelToViewDeltaX(focalLength);
             this.focusPoint2.x =  this.mvt.modelToViewDeltaX(focalLength);
-            console.log(focalLength, this.mvt.modelToViewDeltaX(focalLength));
         }
 
     }, Constants.LensView);

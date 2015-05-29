@@ -62,12 +62,16 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.updatePictureContainerScale();
+            this.updatePictureScales();
             this.updatePosition(this.model, this.model.get('position'));
         },
 
-        updatePictureContainerScale: function() {
-            this.pictureContainer.scale.x = this.pictureContainer.scale.y = this.getPictureContainerScale();
+        updatePictureScales: function() {
+            var scale = this.getPictureScale();
+            for (var key in this.pictureSprites) {
+                this.pictureSprites[key].scale.x = scale;
+                this.pictureSprites[key].scale.y = scale;
+            }
         },
 
         updatePosition: function(object, position) {
@@ -94,7 +98,7 @@ define(function(require) {
                 this.pictureSprites[key].visible = false;
         },
 
-        getPictureContainerScale: function() {
+        getPictureScale: function() {
             // Get the height we want in pixels to compare to the height of the texture
             var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ObjectView.PICTURE_A_HEIGHT_IN_METERS));
             var scale = targetSpriteHeight / this.pictureSprites[Types.PICTURE_A].texture.height;

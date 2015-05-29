@@ -66,6 +66,23 @@ define(function (require) {
             vectorPool.remove(oldPoint);
         },
 
+        /**
+         * Function that facilitates translating secondPoint while
+         *   still triggering a change event.
+         */
+        translateSecondPoint: function(x, y) {
+            var oldPoint = this.get('secondPoint');
+            var newPoint = vectorPool.create().set(this.get('secondPoint'));
+
+            if (x instanceof Vector2)
+                this.set('secondPoint', newPoint.add(x));
+            else
+                this.set('secondPoint', newPoint.add(x, y));
+            
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldPoint);
+        },
+
         /** 
          * Avoid memory leaks from the pool.
          */
