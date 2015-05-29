@@ -99,7 +99,7 @@ define(function (require) {
     var ObjectView = {};
 
     ObjectView.PICTURE_A_HEIGHT_IN_METERS = 0.73;
-    ObjectView.PICTURE_X_ANCHOR = 0.6;
+    ObjectView.PICTURE_X_ANCHOR = 0.57;
     ObjectView.PICTURE_Y_ANCHOR = 0.2;
     ObjectView.SECOND_POINT_Y_SPAN_IN_METERS = 0.32;//ObjectView.PICTURE_A_HEIGHT_IN_METERS * (1 - ObjectView.PICTURE_Y_ANCHOR * 2);
 
