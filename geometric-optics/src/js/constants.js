@@ -18,7 +18,7 @@ define(function (require) {
     Constants.MIN_SCENE_HEIGHT = 2.3; // Meters
 
     Constants.DEFAULT_SOURCE_POINT_1 = new Vector2(-1.5,  0.0);
-    Constants.DEFAULT_SOURCE_POINT_2 = new Vector2(-1.5, -0.1);
+    Constants.DEFAULT_SOURCE_POINT_2 = new Vector2(-1.5, -0.2);
 
     /*************************************************************************
      **                                                                     **
@@ -98,9 +98,21 @@ define(function (require) {
 
     var ObjectView = {};
 
-    ObjectView.PICTURE_A_HEIGHT_IN_METERS = 0.7;
+    ObjectView.PICTURE_A_HEIGHT_IN_METERS = 0.73;
+    ObjectView.PICTURE_X_ANCHOR = 0.6;
+    ObjectView.PICTURE_Y_ANCHOR = 0.2;
+    ObjectView.SECOND_POINT_Y_SPAN_IN_METERS = 0.32;//ObjectView.PICTURE_A_HEIGHT_IN_METERS * (1 - ObjectView.PICTURE_Y_ANCHOR * 2);
 
     Constants.ObjectView = ObjectView;
+
+
+    var SourceObjectView = {};
+
+    SourceObjectView.SECOND_POINT_COLOR = '#FF0000';
+    SourceObjectView.SECOND_POINT_ALPHA = 1;
+    SourceObjectView.SECOND_POINT_SIZE  = 12;
+
+    Constants.SourceObjectView = SourceObjectView;
 
 
     /*************************************************************************

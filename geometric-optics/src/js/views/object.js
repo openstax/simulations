@@ -48,8 +48,8 @@ define(function(require) {
             for (var key in this.pictureSprites) {
                 this.pictureContainer.addChild(this.pictureSprites[key]);
                 this.pictureSprites[key].visible = false;
-                this.pictureSprites[key].anchor.x = 0.6;
-                this.pictureSprites[key].anchor.y = 0.2;
+                this.pictureSprites[key].anchor.x = ObjectView.PICTURE_X_ANCHOR;
+                this.pictureSprites[key].anchor.y = ObjectView.PICTURE_Y_ANCHOR;
             }
 
             this.updateType(this.model, this.model.get('type'));

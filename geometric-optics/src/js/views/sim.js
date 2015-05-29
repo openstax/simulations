@@ -50,7 +50,8 @@ define(function (require) {
         events: {
             'click .help-btn' : 'toggleHelp',
 
-            'click #ruler-check' : 'toggleRuler',
+            'click #second-point-check' : 'toggleSecondPoint',
+            'click #ruler-check'        : 'toggleRuler',
 
             'click .change-object-btn' : 'changeObjectType',
 
@@ -231,6 +232,16 @@ define(function (require) {
          */
         toggleHelp: function() {
             this.$('.help-btn').toggleClass('active');
+        },
+
+        /**
+         * Responds to ruler checkbox and shows/hides ruler
+         */
+        toggleSecondPoint: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showSecondPoint();
+            else
+                this.sceneView.hideSecondPoint();
         },
 
         /**

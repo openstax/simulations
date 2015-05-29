@@ -126,6 +126,14 @@ define(function(require) {
             
         },
 
+        showSecondPoint: function() {
+            this.sourceObjectView.showSecondPoint();
+        },
+
+        hideSecondPoint: function() {
+            this.sourceObjectView.hideSecondPoint();
+        }
+
     }, Constants.SceneView);
 
     return GeometricOpticsSceneView;
