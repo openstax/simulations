@@ -13,6 +13,7 @@ define(function(require) {
 
     var SourceObjectView = require('views/source-object');
     var TargetImageView  = require('views/target-image');
+    var LensView         = require('views/lens');
 
     var Assets = require('assets');
 
@@ -97,6 +98,12 @@ define(function(require) {
                 mvt: this.mvt
             });
             this.stage.addChild(this.targetImageView.displayObject);
+
+            this.lensView = new LensView({
+                model: this.simulation.lens,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.lensView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Vector2 = require('common/math/vector2');
+    var range   = require('common/math/range');
 
 
     var Constants = {}; 
@@ -40,6 +41,22 @@ define(function (require) {
     Lens.DEFAULT_DIAMETER = 0.8;
 
     Constants.Lens = Lens;
+
+
+    var LensView = {};
+
+    LensView.INDEX_OF_REFRACTION_RANGE = range({ min: Lens.MIN_INDEX_OF_REFRACTION, max: Lens.MAX_INDEX_OF_REFRACTION });
+    LensView.RADIUS_OF_CURVATURE_RANGE = range({ min: Lens.MIN_RADIUS_OF_CURVATURE, max: Lens.MAX_RADIUS_OF_CURVATURE });
+
+    // The largest diameter possible times the ratio of the image's width to height
+    LensView.WIDTH_AT_LARGEST_RADIUS = Lens.MAX_DIAMETER * (100 / 496);
+    LensView.radiusToWidth = function(radiusOfCurvature) {
+        var rangePercent = LensView.RADIUS_OF_CURVATURE_RANGE.percent(radiusOfCurvature);
+        var widthPercent = Math.min(1, 0.1 + (1 - rangePercent));
+        return LensView.WIDTH_AT_LARGEST_RADIUS * widthPercent;
+    };
+
+    Constants.LensView = LensView;
 
 
     /*************************************************************************
