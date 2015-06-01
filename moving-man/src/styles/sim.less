@@ -74,8 +74,15 @@
         font-size: 16px;
         font-weight: bold;
         opacity: 0.5;
+        cursor: pointer;
+        z-index: 50;
+        .user-select(none);
 
         display: none;
+
+        &:hover {
+            opacity: 0.7;
+        }
     }
 
     &.position-row .hidden-title {
@@ -101,7 +108,7 @@
     .row-show,
     .row-hide {
         position: absolute;
-        top: 8px;
+        top: 14px;
         left: 100%;
         margin-left: -26px;
         font-size: 16px;
