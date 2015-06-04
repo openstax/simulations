@@ -89,7 +89,7 @@ define(function(require) {
 
             // But then whenever the source object is to the right of
             //   the lens, we don't show the target image no matter what.
-            if (this.model.sourceObject.get('position').x > 0)
+            if (this.model.sourceObject.get('position').x > this.model.lens.get('position').x)
                 this.pictureContainer.visible = false;
         },
 
