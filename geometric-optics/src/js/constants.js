@@ -130,5 +130,28 @@ define(function (require) {
     Constants.SceneView = SceneView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              RAYS VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var RaysView = {};
+
+    RaysView.NO_RAYS = 0;
+    RaysView.MARGINAL_RAYS = 1;
+    RaysView.PRINCIPAL_RAYS = 2;
+    RaysView.MANY_RAYS = 3;
+
+    RaysView.LINE_WIDTH = 2;
+    RaysView.LINE_ALPHA = 1;
+
+    RaysView.VIRTUAL_RAY_COLOR = '#00ff00';
+    RaysView.POINT_1_COLOR = '#fff';
+    RaysView.POINT_2_COLOR = '#ffff00';
+
+    Constants.RaysView = RaysView;
+
+
     return Constants;
 });

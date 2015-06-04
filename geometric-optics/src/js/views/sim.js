@@ -50,6 +50,8 @@ define(function (require) {
         events: {
             'click .help-btn' : 'toggleHelp',
 
+            'change #rays' : 'changeRaysMode',
+
             'click #second-point-check' : 'toggleSecondPoint',
             'click #ruler-check'        : 'toggleRuler',
 
@@ -292,6 +294,11 @@ define(function (require) {
 
         updateDiameter: function(lens, diameter) {
             this.$diameter.text(diameter.toFixed(2) + 'm');
+        },
+
+        changeRaysMode: function(event) {
+            var mode = parseInt($(event.target).val());
+            this.sceneView.setRaysMode(mode);
         }
 
     });

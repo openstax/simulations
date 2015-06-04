@@ -15,6 +15,7 @@ define(function(require) {
     var SourceObjectView = require('views/source-object');
     var TargetImageView  = require('views/target-image');
     var LensView         = require('views/lens');
+    var RaysView         = require('views/rays');
 
     var Assets = require('assets');
 
@@ -47,6 +48,7 @@ define(function(require) {
 
             this.initMVT();
             this.initObjects();
+            this.initRays();
             this.initAxis();
 
             // var graphics = new PIXI.Graphics();
@@ -122,16 +124,31 @@ define(function(require) {
             this.axis.lineTo(this.width, this.mvt.modelToViewY(0));
         },
 
+        initRays: function() {
+            this.raysView = new RaysView({
+                model: this.simulation,
+                mvt: this.mvt,
+                lensView: this.lensView
+            });
+            this.stage.addChild(this.raysView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
 
         showSecondPoint: function() {
             this.sourceObjectView.showSecondPoint();
+            this.raysView.showSecondPoint();
         },
 
         hideSecondPoint: function() {
             this.sourceObjectView.hideSecondPoint();
+            this.raysView.hideSecondPoint();
+        },
+
+        setRaysMode: function(mode) {
+            this.raysView.setMode(mode);
         }
 
     }, Constants.SceneView);
