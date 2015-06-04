@@ -70,8 +70,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Template Sim',
-                name: 'template-sim',
+                title: 'Geometric Optics',
+                name: 'geometric-optics',
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
