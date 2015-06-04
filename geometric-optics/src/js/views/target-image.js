@@ -23,10 +23,13 @@ define(function(require) {
          * Initializes the new ObjectView.
          */
         initialize: function(options) {
+            this.virtualImageVisible = false;
+
             ObjectView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.model, 'change:scale',    this.updateScale);
             this.listenTo(this.model, 'change:strength', this.updateStrength);
+            this.listenTo(this.model, 'change:position', this.checkVirtualImage);
         },
 
         initGraphics: function() {
@@ -76,8 +79,29 @@ define(function(require) {
 
         updateStrength: function(targetImage, strength) {
             this.pictureContainer.alpha = Math.min(strength, 1);
-        }
+        },
 
+        checkVirtualImage: function() {
+            if (!this.model.isVirtualImage() || this.virtualImageVisible)
+                this.pictureContainer.visible = true;
+            else
+                this.pictureContainer.visible = false;
+
+            // But then whenever the source object is to the right of
+            //   the lens, we don't show the target image no matter what.
+            if (this.model.sourceObject.get('position').x > 0)
+                this.pictureContainer.visible = false;
+        },
+
+        showVirtualImage: function() {
+            this.virtualImageVisible = true;
+            this.checkVirtualImage();
+        },
+
+        hideVirtualImage: function() {
+            this.virtualImageVisible = false;
+            this.checkVirtualImage();
+        }
     });
 
     return TargetImageView;

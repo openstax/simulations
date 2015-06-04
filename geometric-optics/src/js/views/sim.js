@@ -54,6 +54,7 @@ define(function (require) {
 
             'click #second-point-check' : 'toggleSecondPoint',
             'click #ruler-check'        : 'toggleRuler',
+            'click #virtual-image-check': 'toggleVirtualImage',
 
             'click .change-object-btn' : 'changeObjectType',
 
@@ -254,6 +255,16 @@ define(function (require) {
                 this.rulerView.show();
             else
                 this.rulerView.hide();
+        },
+
+        /**
+         * Shows/hides virtual image stuff
+         */
+        toggleVirtualImage: function() {
+            if ($(event.target).is(':checked')) 
+                this.sceneView.showVirtualImage();
+            else
+                this.sceneView.hideVirtualImage();
         },
 
         /**

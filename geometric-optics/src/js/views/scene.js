@@ -149,6 +149,16 @@ define(function(require) {
 
         setRaysMode: function(mode) {
             this.raysView.setMode(mode);
+        },
+
+        showVirtualImage: function() {
+            this.raysView.showVirtualImage();
+            this.targetImageView.showVirtualImage();
+        },
+
+        hideVirtualImage: function() {
+            this.raysView.hideVirtualImage();
+            this.targetImageView.hideVirtualImage();
         }
 
     }, Constants.SceneView);

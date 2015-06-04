@@ -277,6 +277,16 @@ define(function(require) {
         hideSecondPoint: function() {
             this.secondPointVisible = false;
             this.drawPoint2Rays();
+        },
+
+        showVirtualImage: function() {
+            this.virtualImageVisible = true;
+            this.drawAllRays();
+        },
+
+        hideVirtualImage: function() {
+            this.virtualImageVisible = false;
+            this.drawAllRays();
         }
 
     }, Constants.RaysView);
