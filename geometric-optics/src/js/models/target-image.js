@@ -45,6 +45,7 @@ define(function (require) {
             this.listenTo(this.sourceObject, 'change:secondPoint', this.updateSecondPoint);
             this.listenTo(this.sourceObject, 'change:type',        this.updateType);
 
+            this.listenTo(this.lens, 'change:position',    this.update);
             this.listenTo(this.lens, 'change:focalLength', this.update);
             this.listenTo(this.lens, 'change:diameter',    this.updateStrength);
 

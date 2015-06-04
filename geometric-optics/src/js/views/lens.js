@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
+    var defineInputUpdateLocks = require('common/locks/define-locks');
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
 
@@ -18,11 +19,25 @@ define(function(require) {
      */
     var LensView = PixiView.extend({
 
+        events: {
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
+        },
+
         /**
          * Initializes the new LensView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+
+            // Cached objects
+            this._dragOffset = new PIXI.Point();
 
             this.initGraphics();
 
@@ -39,6 +54,8 @@ define(function(require) {
         initGraphics: function() {
             this.initLens();
             this.initFocusPoints();
+
+            this.displayObject.buttonMode = true;
 
             this.updateMVT(this.mvt);
         },
@@ -96,9 +113,11 @@ define(function(require) {
         },
 
         updatePosition: function(lens, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+            this.updateLock(function() {
+                var viewPosition = this.mvt.modelToView(position);
+                this.displayObject.x = viewPosition.x;
+                this.displayObject.y = viewPosition.y;
+            });
         },
 
         updateIndexOfRefraction: function(lens, indexOfRefraction) {
@@ -119,9 +138,40 @@ define(function(require) {
         updateFocusPoints: function(lens, focalLength) {
             this.focusPoint1.x = -this.mvt.modelToViewDeltaX(focalLength);
             this.focusPoint2.x =  this.mvt.modelToViewDeltaX(focalLength);
-        }
+        },
+
+        dragStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+        },
+
+        drag: function(data) {
+            if (this.dragging) {
+                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                
+                this.displayObject.x += dx;
+                this.displayObject.y += dy;
+
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                this.inputLock(function() {
+                    this.model.translate(mdx, mdy);
+                });
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
+        },
 
     }, Constants.LensView);
+
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(LensView);
+
 
     return LensView;
 });

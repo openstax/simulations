@@ -37,6 +37,8 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.lens, 'change:position', this.drawAxis);
         },
 
         renderContent: function() {
@@ -50,18 +52,6 @@ define(function(require) {
             this.initObjects();
             this.initRays();
             this.initAxis();
-
-            // var graphics = new PIXI.Graphics();
-            // graphics.lineStyle(2, 0x000000, 1);
-            // graphics.beginFill(0xFF0000, 0.5);
-            // graphics.drawRect(
-            //     this.mvt.modelToViewX(-Constants.MIN_SCENE_WIDTH / 2),
-            //     this.mvt.modelToViewY(-Constants.MIN_SCENE_HEIGHT / 2),
-            //     this.mvt.modelToViewDeltaX(Constants.MIN_SCENE_WIDTH),
-            //     this.mvt.modelToViewDeltaY(Constants.MIN_SCENE_HEIGHT)
-            // );
-            // graphics.endFill();
-            // this.stage.addChild(graphics);
         },
 
         initMVT: function() {
@@ -120,8 +110,8 @@ define(function(require) {
         drawAxis: function() {
             this.axis.clear();
             this.axis.lineStyle(GeometricOpticsSceneView.AXIS_WIDTH, AXIS_COLOR, GeometricOpticsSceneView.AXIS_ALPHA);
-            this.axis.moveTo(0,          this.mvt.modelToViewY(0));
-            this.axis.lineTo(this.width, this.mvt.modelToViewY(0));
+            this.axis.moveTo(0,          this.mvt.modelToViewY(this.simulation.lens.get('position').y));
+            this.axis.lineTo(this.width, this.mvt.modelToViewY(this.simulation.lens.get('position').y));
         },
 
         initRays: function() {
