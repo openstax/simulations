@@ -27,6 +27,7 @@ define(function(require) {
 
             this.initGraphics();
             this.updateMVT(this.mvt);
+            this.updateType(this.model, this.model.get('type'));
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
             this.listenTo(this.model, 'change:type',     this.updateType);
@@ -36,8 +37,11 @@ define(function(require) {
          * Initializes all the graphics
          */
         initGraphics: function() {
+            this.objectContainer = new PIXI.DisplayObjectContainer();
+            this.displayObject.addChild(this.objectContainer);
+
             this.pictureContainer = new PIXI.DisplayObjectContainer();
-            this.displayObject.addChild(this.pictureContainer);
+            this.objectContainer.addChild(this.pictureContainer);
 
             this.pictureSprites = [];
             this.pictureSprites[Types.PICTURE_A] = Assets.createSprite(Assets.Images.PICTURE_A);
@@ -51,8 +55,6 @@ define(function(require) {
                 this.pictureSprites[key].anchor.x = ObjectView.PICTURE_X_ANCHOR;
                 this.pictureSprites[key].anchor.y = ObjectView.PICTURE_Y_ANCHOR;
             }
-
-            this.updateType(this.model, this.model.get('type'));
         },
 
         /**
@@ -76,8 +78,8 @@ define(function(require) {
 
         updatePosition: function(object, position) {
             var viewPosition = this.mvt.modelToView(position);
-            this.pictureContainer.x = viewPosition.x;
-            this.pictureContainer.y = viewPosition.y;
+            this.objectContainer.x = viewPosition.x;
+            this.objectContainer.y = viewPosition.y;
         },
 
         updateType: function(object, type) {

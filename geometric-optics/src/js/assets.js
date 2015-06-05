@@ -17,7 +17,9 @@ define(function (require) {
         PICTURE_D_REVERSED: 'picture-d-3d-reversed.png',
         SCREEN:             'screen-3d.png',
         LENS_FILL:          'lens-fill.png',
-        LENS_OUTLINE:       'lens-outline.png'
+        LENS_OUTLINE:       'lens-outline.png',
+        LAMP_RED:           'lamp-red.png',
+        LAMP_BLUE:          'lamp-blue.png'
     };
 
     Assets.SpriteSheets = {};
