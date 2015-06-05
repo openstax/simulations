@@ -10,6 +10,8 @@ define(function(require) {
     var Vector2  = require('common/math/vector2');
 
     var Constants = require('constants');
+    var GUIDE_FILL_COLOR = Colors.parseHex(Constants.RaysView.GUIDE_FILL_COLOR);
+    var GUIDE_LINE_COLOR = Colors.parseHex(Constants.RaysView.GUIDE_LINE_COLOR);
 
     var Assets = require('assets');
 
@@ -52,6 +54,7 @@ define(function(require) {
             this.listenTo(this.simulation.lens, 'change:position',    this.drawAllRays);
             this.listenTo(this.simulation.lens, 'change:focalLength', this.drawAllRays);
             this.listenTo(this.simulation.lens, 'change:diameter',    this.drawAllRays);
+            this.listenTo(this.simulation.lens, 'change:diameter change:position', this.updateGuidePositions);
         },
 
         /**
@@ -60,9 +63,23 @@ define(function(require) {
         initGraphics: function() {
             this.sourcePointRays = new PIXI.Graphics();
             this.targetPointRays = new PIXI.Graphics();
+            this.topGuide        = new PIXI.DisplayObjectContainer();
+            this.bottomGuide     = new PIXI.DisplayObjectContainer();
 
             this.displayObject.addChild(this.sourcePointRays);
             this.displayObject.addChild(this.targetPointRays);
+            this.displayObject.addChild(this.topGuide);
+            this.displayObject.addChild(this.bottomGuide);
+
+            this.topGuide.leftGuide     = new PIXI.Graphics();
+            this.topGuide.rightGuide    = new PIXI.Graphics();
+            this.bottomGuide.leftGuide  = new PIXI.Graphics();
+            this.bottomGuide.rightGuide = new PIXI.Graphics();
+
+            this.topGuide.addChild(this.topGuide.leftGuide);
+            this.topGuide.addChild(this.topGuide.rightGuide);
+            this.bottomGuide.addChild(this.bottomGuide.leftGuide);
+            this.bottomGuide.addChild(this.bottomGuide.rightGuide);
         },
 
         /**
@@ -116,13 +133,16 @@ define(function(require) {
             var Cy = targetPoint.y;
 
             // Radius of lens minus a bit so marginal ray hits inside lens
-            var h = this.lensView.displayObject.height / 2 - 5;
+            var h = this.lensView.displayObject.height / 2 - RaysView.LENS_TIP_OFFSET;
 
             // Length of the ray (enough to go off the screen)
             var R = 1000;
 
-            var topGuideTheta    = Math.atan((Ay - By - h) / (Bx - Ax)) * 180 / Math.PI;
-            var bottomGuideTheta = Math.atan((Ay - By + h) / (Bx - Ax)) * 180 / Math.PI;
+            // Rotate the guides
+            var topGuideTheta    = Math.atan((Ay - By + h) / (Bx - Ax));
+            var bottomGuideTheta = Math.atan((Ay - By - h) / (Bx - Ax));
+            this.topGuide.rotation = -topGuideTheta;
+            this.bottomGuide.rotation = -bottomGuideTheta;
 
             // Used to store slope of line towards C
             var m, m1, m2;
@@ -244,6 +264,38 @@ define(function(require) {
             }
         },
 
+        /**
+         * Draws the guides in their unrotated state
+         */
+        drawGuides: function() {
+            this.drawGuide(this.topGuide,     RaysView.GUIDE_ANGLE);
+            this.drawGuide(this.bottomGuide, -RaysView.GUIDE_ANGLE);
+        },
+
+        drawGuide: function(guide, angle) {
+            var width  = this.mvt.modelToViewDeltaX(RaysView.GUIDE_WIDTH);
+            var height = this.mvt.modelToViewDeltaX(RaysView.GUIDE_HEIGHT);
+
+            guide.leftGuide.clear();
+            guide.leftGuide.lineStyle(RaysView.GUIDE_LINE_WIDTH, GUIDE_LINE_COLOR, RaysView.GUIDE_LINE_ALPHA);
+            guide.leftGuide.beginFill(GUIDE_FILL_COLOR, RaysView.GUIDE_FILL_ALPHA);
+            guide.leftGuide.drawRect(0, -height / 2, width, height);
+            guide.leftGuide.endFill();
+            guide.leftGuide.rotation = Math.PI;
+
+            guide.rightGuide.clear();
+            guide.rightGuide.lineStyle(RaysView.GUIDE_LINE_WIDTH, GUIDE_LINE_COLOR, RaysView.GUIDE_LINE_ALPHA);
+            guide.rightGuide.beginFill(GUIDE_FILL_COLOR, RaysView.GUIDE_FILL_ALPHA);
+            guide.rightGuide.drawRect(0, -height / 2, width, height);
+            guide.rightGuide.endFill();
+
+            guide.rightGuide.beginFill(GUIDE_FILL_COLOR, RaysView.GUIDE_FILL_ALPHA);
+            guide.rightGuide.drawCircle(0, 0, height * 0.7);
+            guide.rightGuide.endFill();
+
+            guide.rightGuide.rotation = Math.PI - angle;
+        },
+
         getObjectLensDistance: function() {
             return this.simulation.lens.get('position').x - this.simulation.sourceObject.get('position').x;
         },
@@ -255,7 +307,24 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.drawGuides();
             this.drawAllRays();
+            this.updateGuidePositions();
+        },
+
+        /**
+         * Makes sure the guides stay on either end of the lens.
+         */
+        updateGuidePositions: function() {
+            var lensX = this.mvt.modelToViewX(this.simulation.lens.get('position').x);
+            var lensY = this.mvt.modelToViewY(this.simulation.lens.get('position').y);
+            var lensDiameter = this.mvt.modelToViewDeltaX(this.simulation.lens.get('diameter'));
+            
+            this.topGuide.x = lensX;
+            this.topGuide.y = lensY - lensDiameter / 2 + RaysView.LENS_TIP_OFFSET;
+
+            this.bottomGuide.x = lensX;
+            this.bottomGuide.y = lensY + lensDiameter / 2 - RaysView.LENS_TIP_OFFSET;
         },
 
         /**

@@ -143,12 +143,23 @@ define(function (require) {
     RaysView.PRINCIPAL_RAYS = 2;
     RaysView.MANY_RAYS = 3;
 
+    RaysView.LENS_TIP_OFFSET = 5; // Pixels
+
     RaysView.LINE_WIDTH = 2;
     RaysView.LINE_ALPHA = 1;
 
     RaysView.VIRTUAL_RAY_COLOR = '#00ff00';
     RaysView.POINT_1_COLOR = '#fff';
     RaysView.POINT_2_COLOR = '#ffff00';
+
+    RaysView.GUIDE_ANGLE = Math.PI - 0.48; // Radians
+    RaysView.GUIDE_FILL_COLOR = '#fd8606';
+    RaysView.GUIDE_FILL_ALPHA = 1;
+    RaysView.GUIDE_LINE_COLOR = '#dd6207';
+    RaysView.GUIDE_LINE_ALPHA = 1;
+    RaysView.GUIDE_LINE_WIDTH = 1;
+    RaysView.GUIDE_WIDTH  = 0.48; // Meters
+    RaysView.GUIDE_HEIGHT = 0.03; // Meters
 
     Constants.RaysView = RaysView;
 
