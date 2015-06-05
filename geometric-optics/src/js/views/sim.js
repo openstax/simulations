@@ -56,6 +56,7 @@ define(function (require) {
             'click #second-point-check' : 'toggleSecondPoint',
             'click #ruler-check'        : 'toggleRuler',
             'click #virtual-image-check': 'toggleVirtualImage',
+            'click #screen-check'       : 'toggleScreen',
 
             'click .change-object-btn' : 'changeObjectType',
 
@@ -276,6 +277,16 @@ define(function (require) {
                 this.sceneView.showVirtualImage();
             else
                 this.sceneView.hideVirtualImage();
+        },
+
+        /**
+         * Switches between screen mode and picture mode
+         */
+        toggleScreen: function() {
+            if ($(event.target).is(':checked')) 
+                this.simulation.sourceObject.lightMode();
+            else
+                this.simulation.sourceObject.nextPictureType();
         },
 
         /**

@@ -30,6 +30,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:scale',    this.updateScale);
             this.listenTo(this.model, 'change:strength', this.updateStrength);
             this.listenTo(this.model, 'change:position', this.checkVirtualImage);
+            this.listenTo(this.model, 'change:type',     this.typeChanged);
         },
 
         initGraphics: function() {
@@ -79,6 +80,13 @@ define(function(require) {
 
         updateStrength: function(targetImage, strength) {
             this.pictureContainer.alpha = Math.min(strength, 1);
+        },
+
+        typeChanged: function(targetImage, type) {
+            if (type !== Types.LIGHT)
+                this.displayObject.visible = true;
+            else
+                this.displayObject.visible = false;
         },
 
         checkVirtualImage: function() {

@@ -16,6 +16,7 @@ define(function(require) {
     var TargetImageView  = require('views/target-image');
     var LensView         = require('views/lens');
     var RaysView         = require('views/rays');
+    var ScreenView       = require('views/screen');
 
     var Assets = require('assets');
 
@@ -48,10 +49,23 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.backLayer   = new PIXI.DisplayObjectContainer();
+            this.objectsLayer = new PIXI.DisplayObjectContainer();
+            this.raysLayer   = new PIXI.DisplayObjectContainer();
+            this.axisLayer   = new PIXI.DisplayObjectContainer();
+            this.frontLayer  = new PIXI.DisplayObjectContainer();
+
+            this.stage.addChild(this.backLayer);
+            this.stage.addChild(this.objectsLayer);
+            this.stage.addChild(this.raysLayer);
+            this.stage.addChild(this.axisLayer);
+            this.stage.addChild(this.frontLayer);
+
             this.initMVT();
             this.initObjects();
             this.initRays();
             this.initAxis();
+            this.initScreen();
         },
 
         initMVT: function() {
@@ -86,24 +100,24 @@ define(function(require) {
                 model: this.simulation.sourceObject,
                 mvt: this.mvt
             });
-            this.stage.addChild(this.sourceObjectView.displayObject);
+            this.objectsLayer.addChild(this.sourceObjectView.displayObject);
 
             this.targetImageView = new TargetImageView({
                 model: this.simulation.targetImage,
                 mvt: this.mvt
             });
-            this.stage.addChild(this.targetImageView.displayObject);
+            this.objectsLayer.addChild(this.targetImageView.displayObject);
 
             this.lensView = new LensView({
                 model: this.simulation.lens,
                 mvt: this.mvt
             });
-            this.stage.addChild(this.lensView.displayObject);
+            this.objectsLayer.addChild(this.lensView.displayObject);
         },
 
         initAxis: function() {
             this.axis = new PIXI.Graphics();
-            this.stage.addChild(this.axis);
+            this.axisLayer.addChild(this.axis);
             this.drawAxis();
         },
 
@@ -120,7 +134,20 @@ define(function(require) {
                 mvt: this.mvt,
                 lensView: this.lensView
             });
-            this.stage.addChild(this.raysView.displayObject);
+            this.raysLayer.addChild(this.raysView.displayObject);
+        },
+
+        initScreen: function() {
+            this.screenView = new ScreenView({
+                model: this.simulation.targetImage,
+                mvt: this.mvt
+            });
+
+            this.backLayer.addChild(this.screenView.backLayer);
+            this.frontLayer.addChild(this.screenView.frontLayer);
+
+            this.screenView.backLayer.x = this.screenView.frontLayer.x = this.mvt.modelToViewX(Constants.MIN_SCENE_WIDTH * 0.32);
+            this.screenView.backLayer.y = this.screenView.frontLayer.y = this.mvt.modelToViewY(0);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

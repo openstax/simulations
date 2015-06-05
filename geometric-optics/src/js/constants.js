@@ -164,5 +164,18 @@ define(function (require) {
     Constants.RaysView = RaysView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                             SCREEN VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var ScreenView = {};
+
+    ScreenView.SCREEN_HEIGHT_IN_METERS = 1.5;
+
+    Constants.ScreenView = ScreenView;
+
+
     return Constants;
 });

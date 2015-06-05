@@ -107,6 +107,13 @@ define(function (require) {
                 type = SourceObject.Types.PICTURE_A;
 
             this.set('type', type);
+        },
+
+        /**
+         * Changes type to light mode
+         */
+        lightMode: function() {
+            this.set('type', SourceObject.Types.LIGHT);
         }
 
     }, Constants.SourceObject);
