@@ -62,6 +62,7 @@ define(function(require) {
             this.initLightSpots();
 
             this.hide();
+            this.hideSecondPoint();
         },
 
         initTextures: function() {
@@ -260,6 +261,16 @@ define(function(require) {
         hide: function() {
             this.backLayer.visible = false;
             this.frontLayer.visible = false;
+        },
+
+        showSecondPoint: function() {
+            this.spot2Back.visible = true;
+            this.spot2Front.visible = true;
+        },
+
+        hideSecondPoint: function() {
+            this.spot2Back.visible = false;
+            this.spot2Front.visible = false;
         },
 
         setPosition: function(x, y) {

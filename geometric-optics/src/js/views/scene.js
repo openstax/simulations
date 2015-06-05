@@ -160,11 +160,13 @@ define(function(require) {
         showSecondPoint: function() {
             this.sourceObjectView.showSecondPoint();
             this.raysView.showSecondPoint();
+            this.screenView.showSecondPoint();
         },
 
         hideSecondPoint: function() {
             this.sourceObjectView.hideSecondPoint();
             this.raysView.hideSecondPoint();
+            this.screenView.hideSecondPoint();
         },
 
         setRaysMode: function(mode) {
