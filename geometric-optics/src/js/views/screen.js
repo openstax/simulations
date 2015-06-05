@@ -48,9 +48,13 @@ define(function(require) {
 
             this.lastPosition = new PIXI.Point();
 
+            // Listen for changes in the target image
             this.listenTo(this.model, 'change:type',        this.typeChanged);
             this.listenTo(this.model, 'change:position',    this.updatePosition);
             this.listenTo(this.model, 'change:secondPoint', this.updateSecondPoint);
+
+            // Listen for changes in the lens
+            this.listenTo(this.model.lens, 'change:diameter', this.drawLightSpots);
         },
 
         /**
