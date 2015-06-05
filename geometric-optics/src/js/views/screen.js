@@ -178,15 +178,15 @@ define(function(require) {
 
             var height = h * Math.abs((Sx - Cx) / (Cx - Bx)) + 4;
             var width = 0.3 * height;
-            var alpha = Math.min(0, 4000/height);
+            var alpha = Math.min(1, Math.max(0, this.fullBrightSpotHeight / height));
 
             backGraphics.clear();
-            backGraphics.beginFill(0xFFFFFF, 0.5);
+            backGraphics.beginFill(0xFFFFFF, alpha);
             backGraphics.drawEllipse(Sx, y, width / 2, height / 2);
             backGraphics.endFill();
 
             frontGraphics.clear();
-            frontGraphics.beginFill(0xFFFFFF, 0.5);
+            frontGraphics.beginFill(0xFFFFFF, alpha);
             frontGraphics.drawEllipse(Sx, y, width / 2, height / 2);
             frontGraphics.endFill();
         },
@@ -231,6 +231,8 @@ define(function(require) {
             this.backMask.scale.y = scale;
             this.frontMask.scale.x = scale;
             this.frontMask.scale.y = scale;
+
+            this.fullBrightSpotHeight = this.mvt.modelToViewDeltaX(ScreenView.FULL_BRIGHT_SPOT_HEIGHT);
 
             this.updatePosition(this.model, this.model.get('position'));
         },

@@ -179,6 +179,8 @@ define(function (require) {
     ScreenView.MASK_BR_CORNER = new Vector2(220, 642);
     ScreenView.MASK_TR_CORNER = new Vector2(220,  35);
 
+    ScreenView.FULL_BRIGHT_SPOT_HEIGHT = 0.07; // Meters
+
     Constants.ScreenView = ScreenView;
 
 
