@@ -174,6 +174,11 @@ define(function (require) {
 
     ScreenView.SCREEN_HEIGHT_IN_METERS = 1.5;
 
+    ScreenView.MASK_TL_CORNER = new Vector2( 11, 168);
+    ScreenView.MASK_BL_CORNER = new Vector2( 11, 523);
+    ScreenView.MASK_BR_CORNER = new Vector2(220, 642);
+    ScreenView.MASK_TR_CORNER = new Vector2(220,  35);
+
     Constants.ScreenView = ScreenView;
 
 

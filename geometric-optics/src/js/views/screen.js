@@ -38,6 +38,10 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.lensView = options.lensView;
+
+            if (options.lensView === undefined)
+                throw 'lensView is a required option for ScreenView.';
 
             this.initGraphics();
             this.updateMVT(this.mvt);
@@ -100,24 +104,90 @@ define(function(require) {
         },
 
         initLightSpots: function() {
-            var backMask = new PIXI.Sprite(this.leftTexture);
-            var frontMask = new PIXI.Sprite(this.rightTexture);
+            // Create masks
+            this.backMask = new PIXI.Graphics();
+            this.frontMask = new PIXI.Graphics();
 
+            // ScreenView.MASK_TL_CORNER
+            // ScreenView.MASK_BL_CORNER
+            // ScreenView.MASK_BR_CORNER
+            // ScreenView.MASK_TR_CORNER
+
+            var anchorX = this.screenBack.anchor.x;
+            var anchorY = this.screenBack.anchor.y;
+
+            var xOffset = this.screenBack.texture.width * anchorX;
+            var yOffset = this.screenBack.texture.height * anchorY;
+
+            var centerPercent = (xOffset - ScreenView.MASK_TL_CORNER.x) / (ScreenView.MASK_TR_CORNER.x - ScreenView.MASK_TL_CORNER.x);
+            var topCenter    = ScreenView.MASK_TL_CORNER.y * (1 - centerPercent) + ScreenView.MASK_TR_CORNER.y * centerPercent;
+            var bottomCenter = ScreenView.MASK_BL_CORNER.y * (1 - centerPercent) + ScreenView.MASK_BR_CORNER.y * centerPercent;
+            
+            this.backMask.beginFill(0xFF0000, 0.8);
+            this.backMask.moveTo(ScreenView.MASK_TL_CORNER.x - xOffset, ScreenView.MASK_TL_CORNER.y - yOffset);
+            this.backMask.lineTo(0, topCenter - yOffset);
+            this.backMask.lineTo(0, bottomCenter - yOffset);
+            this.backMask.lineTo(ScreenView.MASK_BL_CORNER.x - xOffset, ScreenView.MASK_BL_CORNER.y - yOffset);
+            this.backMask.endFill();
+
+            this.frontMask.beginFill(0xFFFF00, 0.8);
+            this.frontMask.moveTo(ScreenView.MASK_TR_CORNER.x - xOffset, ScreenView.MASK_TR_CORNER.y - yOffset);
+            this.frontMask.lineTo(0, topCenter - yOffset);
+            this.frontMask.lineTo(0, bottomCenter - yOffset);
+            this.frontMask.lineTo(ScreenView.MASK_BR_CORNER.x - xOffset, ScreenView.MASK_BR_CORNER.y - yOffset);
+            this.frontMask.endFill();
+
+
+            this.backLayer.addChild(this.backMask);
+            this.frontLayer.addChild(this.frontMask);
+
+            // Create lights
             this.spot1Back  = new PIXI.Graphics();
             this.spot1Front = new PIXI.Graphics();
 
-            // this.spot1Back.mask = backMask;
-            // this.spot1Front.mask = frontMask;
+            // this.spot1Back.mask = this.backMask;
+            // this.spot1Front.mask = this.frontMask;
 
             this.backLayer.addChild(this.spot1Back);
             this.frontLayer.addChild(this.spot1Front);
         },
 
         /**
+         * Draws both light spots
+         */
+        drawLightSpots: function() {
+            this.drawLightSpot(this.spot1Back, this.spot1Front, this.model.get('position'));
+        },
+
+        /**
          * Draws a single light spot
          */
         drawLightSpot: function(backGraphics, frontGraphics, targetPoint) {
+            var Bx = this.mvt.modelToViewX(this.model.lens.get('position').x);
+            var By = this.mvt.modelToViewY(this.model.lens.get('position').y);
 
+            var Cx = this.mvt.modelToViewX(targetPoint.x);
+            var Cy = this.mvt.modelToViewY(targetPoint.y);
+
+            var Sx = this.screenBack.x;
+
+            var h = this.lensView.displayObject.height;
+
+            var y = Cy + ((Cy - By) / (Cx - Bx)) * (Sx - Cx);
+
+            var height = h * Math.abs((Sx - Cx) / (Cx - Bx)) + 4;
+            var width = 0.3 * height;
+            var alpha = Math.min(0, 4000/height);
+
+            backGraphics.clear();
+            backGraphics.beginFill(0xFFFFFF, 0.5);
+            backGraphics.drawEllipse(Sx, y, width / 2, height / 2);
+            backGraphics.endFill();
+
+            frontGraphics.clear();
+            frontGraphics.beginFill(0xFFFFFF, 0.5);
+            frontGraphics.drawEllipse(Sx, y, width / 2, height / 2);
+            frontGraphics.endFill();
         },
 
         dragStart: function(data) {
@@ -156,13 +226,16 @@ define(function(require) {
             this.screenBack.scale.y = scale;
             this.screenFront.scale.x = scale;
             this.screenFront.scale.y = scale;
+            this.backMask.scale.x = scale;
+            this.backMask.scale.y = scale;
+            this.frontMask.scale.x = scale;
+            this.frontMask.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
         },
 
         updatePosition: function(targetImage, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            // Calculate the position of the first light spot
+            this.drawLightSpot(this.spot1Back, this.spot1Front, position);
         },
 
         updateSecondPoint: function(targetImage, secondPoint) {
@@ -191,6 +264,12 @@ define(function(require) {
             this.screenBack.y = y;
             this.screenFront.x = x;
             this.screenFront.y = y;
+            this.backMask.x = x;
+            this.backMask.y = y;
+            this.frontMask.x = x;
+            this.frontMask.y = y;
+
+            this.drawLightSpots();
         },
 
         translate: function(dx, dy) {
@@ -198,6 +277,12 @@ define(function(require) {
             this.screenBack.y += dy;
             this.screenFront.x += dx;
             this.screenFront.y += dy;
+            this.backMask.x += dx;
+            this.backMask.y += dy;
+            this.frontMask.x += dx;
+            this.frontMask.y += dy;
+
+            this.drawLightSpots();
         },
 
     }, Constants.ScreenView);

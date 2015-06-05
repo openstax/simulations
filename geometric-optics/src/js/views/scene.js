@@ -140,7 +140,8 @@ define(function(require) {
         initScreen: function() {
             this.screenView = new ScreenView({
                 model: this.simulation.targetImage,
-                mvt: this.mvt
+                mvt: this.mvt,
+                lensView: this.lensView
             });
 
             this.backLayer.addChild(this.screenView.backLayer);
