@@ -149,6 +149,14 @@ define(function(require) {
         hideVirtualImage: function() {
             this.raysView.hideVirtualImage();
             this.targetImageView.hideVirtualImage();
+        },
+
+        showGuides: function() {
+            this.raysView.showGuides();
+        },
+
+        hideGuides: function() {
+            this.raysView.hideGuides();
         }
 
     }, Constants.SceneView);

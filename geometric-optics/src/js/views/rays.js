@@ -80,6 +80,8 @@ define(function(require) {
             this.topGuide.addChild(this.topGuide.rightGuide);
             this.bottomGuide.addChild(this.bottomGuide.leftGuide);
             this.bottomGuide.addChild(this.bottomGuide.rightGuide);
+
+            this.hideGuides();
         },
 
         /**
@@ -340,12 +342,12 @@ define(function(require) {
          */
         showSecondPoint: function() {
             this.secondPointVisible = true;
-            this.drawPoint2Rays();
+            this.drawAllRays();
         },
 
         hideSecondPoint: function() {
             this.secondPointVisible = false;
-            this.drawPoint2Rays();
+            this.drawAllRays();
         },
 
         showVirtualImage: function() {
@@ -356,6 +358,16 @@ define(function(require) {
         hideVirtualImage: function() {
             this.virtualImageVisible = false;
             this.drawAllRays();
+        },
+
+        showGuides: function() {
+            this.topGuide.visible = true;
+            this.bottomGuide.visible = true;
+        },
+
+        hideGuides: function() {
+            this.topGuide.visible = false;
+            this.bottomGuide.visible = false;
         }
 
     }, Constants.RaysView);

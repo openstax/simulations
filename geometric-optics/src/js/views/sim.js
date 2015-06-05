@@ -52,6 +52,7 @@ define(function (require) {
 
             'change #rays' : 'changeRaysMode',
 
+            'click #show-guides-check'  : 'toggleGuides',
             'click #second-point-check' : 'toggleSecondPoint',
             'click #ruler-check'        : 'toggleRuler',
             'click #virtual-image-check': 'toggleVirtualImage',
@@ -235,6 +236,16 @@ define(function (require) {
          */
         toggleHelp: function() {
             this.$('.help-btn').toggleClass('active');
+        },
+
+        /**
+         * Shows/hides guides
+         */
+        toggleGuides: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGuides();
+            else
+                this.sceneView.hideGuides();
         },
 
         /**
