@@ -108,11 +108,6 @@ define(function(require) {
             this.backMask = new PIXI.Graphics();
             this.frontMask = new PIXI.Graphics();
 
-            // ScreenView.MASK_TL_CORNER
-            // ScreenView.MASK_BL_CORNER
-            // ScreenView.MASK_BR_CORNER
-            // ScreenView.MASK_TR_CORNER
-
             var anchorX = this.screenBack.anchor.x;
             var anchorY = this.screenBack.anchor.y;
 
@@ -137,19 +132,24 @@ define(function(require) {
             this.frontMask.lineTo(ScreenView.MASK_BR_CORNER.x - xOffset, ScreenView.MASK_BR_CORNER.y - yOffset);
             this.frontMask.endFill();
 
-
             this.backLayer.addChild(this.backMask);
             this.frontLayer.addChild(this.frontMask);
 
             // Create lights
             this.spot1Back  = new PIXI.Graphics();
             this.spot1Front = new PIXI.Graphics();
+            this.spot2Back  = new PIXI.Graphics();
+            this.spot2Front = new PIXI.Graphics();
 
-            // this.spot1Back.mask = this.backMask;
-            // this.spot1Front.mask = this.frontMask;
+            this.spot1Back.mask = this.backMask;
+            this.spot1Front.mask = this.frontMask;
+            this.spot2Back.mask = this.backMask;
+            this.spot2Front.mask = this.frontMask;
 
             this.backLayer.addChild(this.spot1Back);
             this.frontLayer.addChild(this.spot1Front);
+            this.backLayer.addChild(this.spot2Back);
+            this.frontLayer.addChild(this.spot2Front);
         },
 
         /**
@@ -157,6 +157,7 @@ define(function(require) {
          */
         drawLightSpots: function() {
             this.drawLightSpot(this.spot1Back, this.spot1Front, this.model.get('position'));
+            this.drawLightSpot(this.spot2Back, this.spot2Front, this.model.get('secondPoint'));
         },
 
         /**
@@ -239,7 +240,7 @@ define(function(require) {
         },
 
         updateSecondPoint: function(targetImage, secondPoint) {
-            // Calculate the position of the second light spot
+            this.drawLightSpot(this.spot2Back, this.spot2Front, secondPoint);
         },
 
         typeChanged: function(targetImage, type) {
