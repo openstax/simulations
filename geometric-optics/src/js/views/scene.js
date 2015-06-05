@@ -146,8 +146,10 @@ define(function(require) {
             this.backLayer.addChild(this.screenView.backLayer);
             this.frontLayer.addChild(this.screenView.frontLayer);
 
-            this.screenView.backLayer.x = this.screenView.frontLayer.x = this.mvt.modelToViewX(Constants.MIN_SCENE_WIDTH * 0.32);
-            this.screenView.backLayer.y = this.screenView.frontLayer.y = this.mvt.modelToViewY(0);
+            this.screenView.setPosition(
+                this.mvt.modelToViewX(Constants.MIN_SCENE_WIDTH * 0.32),
+                this.mvt.modelToViewY(0)
+            );
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

@@ -23,14 +23,14 @@ define(function(require) {
     var ScreenView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd',
+            'touchstart      .screenBack': 'dragStart',
+            'mousedown       .screenBack': 'dragStart',
+            'touchmove       .screenBack': 'drag',
+            'mousemove       .screenBack': 'drag',
+            'touchend        .screenBack': 'dragEnd',
+            'mouseup         .screenBack': 'dragEnd',
+            'touchendoutside .screenBack': 'dragEnd',
+            'mouseupoutside  .screenBack': 'dragEnd'
         },
 
         /**
@@ -41,6 +41,8 @@ define(function(require) {
 
             this.initGraphics();
             this.updateMVT(this.mvt);
+
+            this.lastPosition = new PIXI.Point();
 
             this.listenTo(this.model, 'change:type',        this.typeChanged);
             this.listenTo(this.model, 'change:position',    this.updatePosition);
@@ -73,6 +75,7 @@ define(function(require) {
             var screenBack  = new PIXI.Sprite(Assets.Texture(Assets.Images.SCREEN));
             var screenFront = new PIXI.Sprite(this.rightTexture);
 
+            // Center it vertically on the screen part of the graphic
             screenBack.anchor.y = screenFront.anchor.y = 0.52;
 
             // The back texture is the full texture but centered on the
@@ -82,6 +85,9 @@ define(function(require) {
             //   through it.
             screenBack.anchor.x = (this.rightTexture.baseTexture.width - this.rightTexture.width) / this.rightTexture.baseTexture.width;
             screenFront.alpha = 0.9;
+
+            // Pointer cursor
+            screenBack.buttonMode = true;
 
             this.backLayer  = new PIXI.DisplayObjectContainer();
             this.frontLayer = new PIXI.DisplayObjectContainer();
@@ -115,19 +121,21 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.screenBack, this._dragOffset);
+            this.lastPosition.x = data.global.x;
+            this.lastPosition.y = data.global.y;
+
             this.dragging = true;
         },
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.screenBack.x - this.dragOffset.x;
-                var dy = data.global.y - this.screenBack.y - this.dragOffset.y;
-                
-                this.screenBack.x += dx;
-                this.screenBack.y += dy;
-                this.screenFront.x += dx;
-                this.screenFront.y += dy;
+                var dx = data.global.x - this.lastPosition.x;
+                var dy = data.global.y - this.lastPosition.y;
+
+                this.translate(dx, dy);
+
+                this.lastPosition.x = data.global.x;
+                this.lastPosition.y = data.global.y;
             }
         },
 
@@ -176,7 +184,21 @@ define(function(require) {
         hide: function() {
             this.backLayer.visible = false;
             this.frontLayer.visible = false;
-        }
+        },
+
+        setPosition: function(x, y) {
+            this.screenBack.x = x;
+            this.screenBack.y = y;
+            this.screenFront.x = x;
+            this.screenFront.y = y;
+        },
+
+        translate: function(dx, dy) {
+            this.screenBack.x += dx;
+            this.screenBack.y += dy;
+            this.screenFront.x += dx;
+            this.screenFront.y += dy;
+        },
 
     }, Constants.ScreenView);
 
