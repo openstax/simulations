@@ -283,10 +283,14 @@ define(function (require) {
          * Switches between screen mode and picture mode
          */
         toggleScreen: function() {
-            if ($(event.target).is(':checked')) 
+            if ($(event.target).is(':checked')) {
                 this.simulation.sourceObject.lightMode();
-            else
+                this.$('.change-object-btn').hide();
+            }
+            else {
                 this.simulation.sourceObject.nextPictureType();
+                this.$('.change-object-btn').show();
+            }
         },
 
         /**
