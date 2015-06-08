@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
+    var RulerView          = require('common/pixi/view/ruler');
     var AppView            = require('common/app/app');
     var Colors             = require('common/colors/colors');
     var Vector2            = require('common/math/vector2');
@@ -66,6 +67,7 @@ define(function(require) {
             this.initRays();
             this.initAxis();
             this.initScreen();
+            this.initRuler();
         },
 
         initMVT: function() {
@@ -153,6 +155,37 @@ define(function(require) {
             );
         },
 
+        initRuler: function() {
+            this.rulerView = new RulerView({
+                orientation : 'horizontal',
+                pxPerUnit: this.mvt.modelToViewDeltaX(0.01),
+                rulerWidth: 15,
+                rulerMeasureUnits : 200,
+
+                ticks : [{
+                    size: 8,
+                    at: 10,
+                    color: '#5A3D01'
+                },{
+                    size: 4,
+                    at: 2,
+                    color: '#5A3D01'
+                }],
+
+                labels: [{
+                    font: '14px Arial',
+                    at: 20
+                }]
+            });
+
+            this.backLayer.addChildAt(this.rulerView.displayObject, 0);
+
+            if (AppView.windowIsShort())
+                this.rulerView.setPosition(15, 15);
+            else
+                this.rulerView.setPosition(20, 136);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
@@ -189,6 +222,14 @@ define(function(require) {
 
         hideGuides: function() {
             this.raysView.hideGuides();
+        },
+
+        showRuler: function() {
+            this.rulerView.show();
+        },
+
+        hideRuler: function() {
+            this.rulerView.hide();
         }
 
     }, Constants.SceneView);

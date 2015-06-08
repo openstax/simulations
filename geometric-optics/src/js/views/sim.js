@@ -5,8 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView   = require('common/app/sim');
-    var RulerView = require('common/tools/ruler');
+    var SimView = require('common/app/sim');
 
     var GeometricOpticsSimulation = require('models/simulation');
     var GeometricOpticsSceneView  = require('views/scene');
@@ -109,7 +108,6 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
-            this.renderRulerView();
 
             return this;
         },
@@ -170,44 +168,11 @@ define(function (require) {
         },
 
         /**
-         * Renders the ruler view
-         */
-        renderRulerView: function() {
-            this.rulerView = new RulerView({
-                dragFrame: this.el,
-                position : {
-                    x : 20,
-                    y : 130
-                },
-                orientation : 'horizontal',
-                pxPerUnit: 3,
-                rulerWidth: 12,
-                rulerMeasureUnits : 200,
-                ticks : [{
-                    type: 'full',
-                    at : 20
-                },{
-                    type: 'mid',
-                    at : 10
-                },{
-                    type: 'unit',
-                    at : 1
-                }]
-            });
-
-            this.rulerView.render();
-            this.rulerView.hide();
-
-            this.$el.append(this.rulerView.el);
-        },
-
-        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
-            this.rulerView.postRender();
         },
 
         /**
@@ -227,9 +192,6 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds);
-
-            // Update the ruler view
-            this.rulerView.update();
         },
 
         /**
@@ -264,9 +226,9 @@ define(function (require) {
          */
         toggleRuler: function() {
             if ($(event.target).is(':checked'))
-                this.rulerView.show();
+                this.sceneView.showRuler();
             else
-                this.rulerView.hide();
+                this.sceneView.hideRuler();
         },
 
         /**
