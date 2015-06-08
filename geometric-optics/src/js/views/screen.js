@@ -38,10 +38,6 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.lensView = options.lensView;
-
-            if (options.lensView === undefined)
-                throw 'lensView is a required option for ScreenView.';
 
             this.initGraphics();
             this.updateMVT(this.mvt);
@@ -177,7 +173,7 @@ define(function(require) {
 
             var Sx = this.screenBack.x;
 
-            var h = this.lensView.displayObject.height;
+            var h = Math.abs(this.mvt.modelToViewDeltaY(this.model.lens.get('diameter')));
 
             var y = Cy + ((Cy - By) / (Cx - Bx)) * (Sx - Cx);
 

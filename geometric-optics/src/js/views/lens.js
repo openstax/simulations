@@ -88,14 +88,18 @@ define(function(require) {
         },
 
         createFocusPoint: function() {
-            var focusPoint = new PIXI.Graphics();
-            focusPoint.lineStyle(LensView.FOCUS_POINT_LINE_WIDTH, FOCUS_POINT_COLOR, LensView.FOCUS_POINT_ALPHA);
+            var focusPoint = new PIXI.DisplayObjectContainer();
+
+            var marker = new PIXI.Graphics();
+            marker.lineStyle(LensView.FOCUS_POINT_LINE_WIDTH, FOCUS_POINT_COLOR, LensView.FOCUS_POINT_ALPHA);
 
             var halfWidth = LensView.FOCUS_POINT_SIZE / 2;
-            focusPoint.moveTo(-halfWidth, -halfWidth);
-            focusPoint.lineTo( halfWidth,  halfWidth);
-            focusPoint.moveTo( halfWidth, -halfWidth);
-            focusPoint.lineTo(-halfWidth,  halfWidth);
+            marker.moveTo(-halfWidth, -halfWidth);
+            marker.lineTo( halfWidth,  halfWidth);
+            marker.moveTo( halfWidth, -halfWidth);
+            marker.lineTo(-halfWidth,  halfWidth);
+
+            focusPoint.addChild(marker);
 
             return focusPoint;
         },

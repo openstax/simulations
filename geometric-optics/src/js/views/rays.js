@@ -27,7 +27,6 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = this.model;
-            this.lensView = options.lensView;
             this.mode = RaysView.MARGINAL_RAYS
             this.virtualImageVisible = false;
             this.secondPointVisible = false;
@@ -35,9 +34,6 @@ define(function(require) {
             this.virtualRayColor = Colors.parseHex(RaysView.VIRTUAL_RAY_COLOR);
             this.sourcePointColor     = Colors.parseHex(RaysView.POINT_1_COLOR);
             this.targetPointColor     = Colors.parseHex(RaysView.POINT_2_COLOR);
-
-            if (options.lensView === undefined)
-                throw 'lensView is a required option for RaysView.';
 
             // Cached objects
             this._sourcePoint = new Vector2();
@@ -135,7 +131,7 @@ define(function(require) {
             var Cy = targetPoint.y;
 
             // Radius of lens minus a bit so marginal ray hits inside lens
-            var h = this.lensView.displayObject.height / 2 - RaysView.LENS_TIP_OFFSET;
+            var h = Math.abs(this.mvt.modelToViewDeltaY(this.simulation.lens.get('diameter'))) / 2 - RaysView.LENS_TIP_OFFSET;
 
             // Length of the ray (enough to go off the screen)
             var R = 1000;

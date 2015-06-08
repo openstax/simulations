@@ -199,6 +199,11 @@ define(function (require) {
          */
         toggleHelp: function() {
             this.$('.help-btn').toggleClass('active');
+            
+            if (this.$('.help-btn').hasClass('active'))
+                this.sceneView.showHelpLabels();
+            else
+                this.sceneView.hideHelpLabels();
         },
 
         /**

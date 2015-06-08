@@ -12,6 +12,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
+    var HelpLabelView      = require('common/help-label/index');
 
     var SourceObjectView = require('views/source-object');
     var TargetImageView  = require('views/target-image');
@@ -68,6 +69,7 @@ define(function(require) {
             this.initAxis();
             this.initScreen();
             this.initRuler();
+            this.initHelpLabels();
         },
 
         initMVT: function() {
@@ -133,8 +135,7 @@ define(function(require) {
         initRays: function() {
             this.raysView = new RaysView({
                 model: this.simulation,
-                mvt: this.mvt,
-                lensView: this.lensView
+                mvt: this.mvt
             });
             this.raysLayer.addChild(this.raysView.displayObject);
         },
@@ -142,8 +143,7 @@ define(function(require) {
         initScreen: function() {
             this.screenView = new ScreenView({
                 model: this.simulation.targetImage,
-                mvt: this.mvt,
-                lensView: this.lensView
+                mvt: this.mvt
             });
 
             this.backLayer.addChild(this.screenView.backLayer);
@@ -186,6 +186,68 @@ define(function(require) {
                 this.rulerView.setPosition(20, 136);
 
             this.rulerView.hide();
+        },
+
+        initHelpLabels: function() {
+            this.helpLabels = [];
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.rulerView,
+                title: 'Draggable Ruler',
+                color: '#fff',
+                font: '11pt Helvetica Neue'
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.lensView,
+                title: 'Draggable Lens',
+                color: '#fff',
+                font: '11pt Helvetica Neue',
+                anchor: {
+                    x: 0.5,
+                    y: 0
+                },
+                position : {
+                    x: 0,
+                    y: 114
+                },
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.lensView.focusPoint2,
+                title: 'Focal Point',
+                color: '#fff',
+                font: '11pt Helvetica Neue',
+                anchor: {
+                    x: 0.5,
+                    y: 0
+                }
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.screenView.screenBack,
+                title: 'Draggable Screen',
+                color: '#fff',
+                font: '22pt Helvetica Neue',
+                anchor: {
+                    x: 0.5,
+                    y: 0
+                }
+            }));
+
+            // this.helpLabels.push(new HelpLabelView({
+            //     attachTo: this.sceneView.toolsLayer,
+            //     position : {
+            //         x : 140,
+            //         y : 300
+            //     },
+            //     width : '300px',
+            //     title : 'Pull mass sideways to detach from spring'
+            // }));
+
+            _.each(this.helpLabels, function(helpLabel){
+                helpLabel.render();
+            }, this);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -232,6 +294,16 @@ define(function(require) {
 
         hideRuler: function() {
             this.rulerView.hide();
+        },
+
+        showHelpLabels: function() {
+            for (var i = 0; i < this.helpLabels.length; i++)
+                this.helpLabels[i].show();
+        },
+
+        hideHelpLabels: function() {
+            for (var i = 0; i < this.helpLabels.length; i++)
+                this.helpLabels[i].hide();
         }
 
     }, Constants.SceneView);

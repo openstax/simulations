@@ -18,8 +18,14 @@ define(function(require) {
                     y: 0
                 },
                 width: 'inherit',
-                style : 'default',
+                color: '#000',
+                font: 'bold 11pt Helvetica Neue',
+                style: 'default',
                 orientation : 'bottom left',
+                anchor: {
+                    x: 0,
+                    y: 0
+                },
                 attachTo : false,
                 title : '',
                 content : ''
@@ -31,8 +37,11 @@ define(function(require) {
 
             this.labelModel = {};
 
-            this.labelModel.style = options.style; // not fully implemented
+            this.labelModel.color = options.color;
+            this.labelModel.font = options.font;
+            this.labelModel.style = options.style;
             this.labelModel.orientation = options.orientation; // not fully implemented
+            this.labelModel.anchor = options.anchor;
             this.labelModel.title = options.title;
             this.labelModel.content = options.content; // not fully implemented
         },
@@ -43,14 +52,21 @@ define(function(require) {
             this.hide();
         },
 
-        renderHelpLabel: function(){
-            // this.$el.html(this.template(this.labelModel));
-            this.labelText = new PIXI.Text(this.labelModel.title, {
-                font : 'bold 11pt Helvetica Neue'
-            });
+        renderHelpLabel: function() {
+            var style = {
+                font: this.labelModel.font,
+                fill: this.labelModel.color
+            };
+
+            if (_.isObject(this.labelModel.style))
+                style = _.extend(style, this.labelModel.style);
+
+            this.labelText = new PIXI.Text(this.labelModel.title, style);
+            this.labelText.anchor.x = this.labelModel.anchor.x;
+            this.labelText.anchor.y = this.labelModel.anchor.y;
+
             this.displayObject.addChild(this.labelText);
             this.resize();
-
         },
 
         show: function(){
