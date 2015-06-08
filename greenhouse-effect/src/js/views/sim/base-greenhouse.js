@@ -61,7 +61,8 @@ define(function (require) {
             options = _.extend({
                 title: 'Base Greenhouse',
                 name: 'base-greenhouse',
-                stepDuration: 1000 / Constants.FRAMES_PER_SECOND // milliseconds
+                stepDuration: 1000 / Constants.FRAMES_PER_SECOND, // milliseconds
+                link: 'greenhouse'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

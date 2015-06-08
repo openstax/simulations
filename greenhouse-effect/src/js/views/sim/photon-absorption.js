@@ -74,7 +74,8 @@ define(function (require) {
             options = _.extend({
                 title: 'Photon Absorption',
                 name: 'photon-absorption',
-                stepDuration: 1000 / Constants.FRAMES_PER_SECOND // milliseconds
+                stepDuration: 1000 / Constants.FRAMES_PER_SECOND, // milliseconds
+                link: 'greenhouse'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
