@@ -178,12 +178,14 @@ define(function(require) {
                 }]
             });
 
-            this.backLayer.addChildAt(this.rulerView.displayObject, 0);
+            this.frontLayer.addChild(this.rulerView.displayObject);
 
             if (AppView.windowIsShort())
                 this.rulerView.setPosition(15, 15);
             else
                 this.rulerView.setPosition(20, 136);
+
+            this.rulerView.hide();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
