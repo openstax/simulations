@@ -73,6 +73,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Geometric Optics',
                 name: 'geometric-optics',
+                link: 'geometric-optics'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
