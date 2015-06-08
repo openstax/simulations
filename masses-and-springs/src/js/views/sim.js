@@ -70,6 +70,7 @@ define(function (require) {
             // settings
             'click .sound-btn' : 'changeVolume',
             'click .help-btn' : 'updateShowHideHelp',
+            'click .reset-btn' : 'reset',
 
             // tools
             'change .stopwatch-check'      : 'toggleStopwatch',
@@ -262,8 +263,8 @@ define(function (require) {
                 dragFrame: this.el,
                 units : this.simulation.get('units').time,
                 position: {
-                    x : 525,
-                    y : 625 
+                    x : 468,
+                    y : 630 
                 }
             });
 
