@@ -25,28 +25,34 @@ define(function(require) {
 
     trashCan: function() {
       this.canContainer = new PIXI.DisplayObjectContainer();
-      var can = Assets.createSprite(Assets.Images.Trash_Can),
-       can_open = Assets.createSprite(Assets.Images.Trash_Can_Open),
-       canvas = $('.scene-view');
+      var can      = Assets.createSprite(Assets.Images.TRASH_CAN);
+      var can_open = Assets.createSprite(Assets.Images.TRASH_CAN_OPEN);
+      var canvas = $('.scene-view');
 
       this.canContainer.buttonMode = true;
       this.canContainer.addChild(can);
       this.can = can;
 
-      this.can.position.x = 0.88 * canvas.width();
-      this.can.position.y = 0.70 * canvas.height();
+      var targetSpriteWidth = 126; // in pixels
+      var scale = targetSpriteWidth / this.can.texture.width;
+
+      this.can.scale.x = this.can.scale.y = scale;
+
+      this.can.x = canvas.width() - this.can.width - 20;
+      this.can.y = 0.70 * canvas.height();
 
       this.canContainer.addChild(can_open);
       this.can_open = can_open;
-      this.can_open.position.x = 0.88 * canvas.width();
-      this.can_open.position.y = 0.70 * canvas.height();
+      this.can_open.x = this.can.x;
+      this.can_open.y = 0.70 * canvas.height();
+      this.can_open.scale.x = this.can_open.scale.y = scale;
 
       this.displayObject.addChild(this.canContainer);
 
       this.can_open.alpha = 0;
 
-      this.model.set('trashCanPositionX', this.can.position.x);
-      this.model.set('trashCanPositionY', this.can.position.y);
+      this.model.set('trashCanPositionX', this.can.x);
+      this.model.set('trashCanPositionY', this.can.y);
       this.model.set('trashCanWidth', this.can.width);
       this.model.set('trashCanHeight', this.can.height);
     },

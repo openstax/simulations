@@ -7,9 +7,9 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {
-        Vector_Bin:   'vector_bin.png',
-        Trash_Can:    'trash_can.png',
-        Trash_Can_Open: 'trash_can_open.png'
+        VECTOR_BOX:     'vector-box.png',
+        TRASH_CAN:      'garbage-bin.png',
+        TRASH_CAN_OPEN: 'garbage-bin-open.png'
     };
 
     return Assets;
