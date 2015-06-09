@@ -6,6 +6,10 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var Lens         = require('models/lens');
+    var SourceObject = require('models/source-object');
+    var TargetImage  = require('models/target-image');
+
     /**
      * Constants
      */
@@ -14,7 +18,7 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var TemplateSimulation = Simulation.extend({
+    var GeometricOpticsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
 
@@ -29,14 +33,20 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
-        },
+            this.lens = new Lens();
 
-        _update: function(time, deltaTime) {
-            
+            this.sourceObject = new SourceObject({ 
+                position:    Constants.DEFAULT_SOURCE_POINT_1,
+                secondPoint: Constants.DEFAULT_SOURCE_POINT_2
+            });
+
+            this.targetImage = new TargetImage({}, {
+                lens:         this.lens,
+                sourceObject: this.sourceObject
+            });
         }
 
     });
 
-    return TemplateSimulation;
+    return GeometricOpticsSimulation;
 });

@@ -7,8 +7,8 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var GeometricOpticsSimulation = require('models/simulation');
+    var GeometricOpticsSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -30,7 +30,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var TemplateSimView = SimView.extend({
+    var GeometricOpticsSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -47,7 +47,21 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .help-btn' : 'toggleHelp'
+            'click .help-btn' : 'toggleHelp',
+
+            'change #rays' : 'changeRaysMode',
+
+            'click #show-guides-check'  : 'toggleGuides',
+            'click #second-point-check' : 'toggleSecondPoint',
+            'click #ruler-check'        : 'toggleRuler',
+            'click #virtual-image-check': 'toggleVirtualImage',
+            'click #screen-check'       : 'toggleScreen',
+
+            'click .change-object-btn' : 'changeObjectType',
+
+            'slide #curvature-radius-slider' : 'changeRadiusOfCurvature',
+            'slide #refractive-index-slider' : 'changeIndexOfRefraction',
+            'slide #diameter-slider'         : 'changeDiameter'
         },
 
         /**
@@ -57,27 +71,32 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Template Sim',
-                name: 'template-sim',
+                title: 'Geometric Optics',
+                name: 'geometric-optics',
+                link: 'geometric-optics'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation.lens, 'change:radiusOfCurvature', this.updateRadiusOfCurvature);
+            this.listenTo(this.simulation.lens, 'change:indexOfRefraction', this.updateIndexOfRefraction);
+            this.listenTo(this.simulation.lens, 'change:diameter',          this.updateDiameter);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new GeometricOpticsSimulation();
         },
 
         /**
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new GeometricOpticsSceneView({
                 simulation: this.simulation
             });
         },
@@ -105,14 +124,40 @@ define(function (require) {
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
 
-            this.$('.slider'/*'#curvature-radius-slider'*/).noUiSlider({
+            this.$('#curvature-radius-slider').noUiSlider({
                 connect: 'lower',
-                start: 0.8,
+                start: Constants.Lens.DEFAULT_RADIUS_OF_CURVATURE,
                 range: {
-                    'min': 0.3,
-                    'max': 1.3
+                    'min': Constants.Lens.MIN_RADIUS_OF_CURVATURE,
+                    'max': Constants.Lens.MAX_RADIUS_OF_CURVATURE
                 }
             });
+
+            this.$('#refractive-index-slider').noUiSlider({
+                connect: 'lower',
+                start: Constants.Lens.DEFAULT_INDEX_OF_REFRACTION,
+                range: {
+                    'min': Constants.Lens.MIN_INDEX_OF_REFRACTION,
+                    'max': Constants.Lens.MAX_INDEX_OF_REFRACTION
+                }
+            });
+
+            this.$('#diameter-slider').noUiSlider({
+                connect: 'lower',
+                start: Constants.Lens.DEFAULT_DIAMETER,
+                range: {
+                    'min': Constants.Lens.MIN_DIAMETER,
+                    'max': Constants.Lens.MAX_DIAMETER
+                }
+            });
+
+            this.$radiusOfCurvature = this.$('#curvature-radius-label');
+            this.$indexOfRefraction = this.$('#refractive-index-label');
+            this.$diameter          = this.$('#diameter-label');
+
+            this.updateRadiusOfCurvature(this.simulation.lens, this.simulation.lens.get('radiusOfCurvature'));
+            this.updateIndexOfRefraction(this.simulation.lens, this.simulation.lens.get('indexOfRefraction'));
+            this.updateDiameter(this.simulation.lens, this.simulation.lens.get('diameter'));
         },
 
         /**
@@ -140,18 +185,14 @@ define(function (require) {
         },
 
         /**
-         * This is run every tick of the updater.  It updates the wave
-         *   simulation and the views.
+         * This is run every tick of the updater.  It updates the views.
          */
         update: function(time, deltaTime) {
-            // Update the model
-            this.simulation.update(time, deltaTime);
-
             var timeSeconds = time / 1000;
             var dtSeconds   = deltaTime / 1000;
 
             // Update the scene
-            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.sceneView.update(timeSeconds, dtSeconds);
         },
 
         /**
@@ -159,9 +200,113 @@ define(function (require) {
          */
         toggleHelp: function() {
             this.$('.help-btn').toggleClass('active');
+            
+            if (this.$('.help-btn').hasClass('active'))
+                this.sceneView.showHelpLabels();
+            else
+                this.sceneView.hideHelpLabels();
+        },
+
+        /**
+         * Shows/hides guides
+         */
+        toggleGuides: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGuides();
+            else
+                this.sceneView.hideGuides();
+        },
+
+        /**
+         * Responds to ruler checkbox and shows/hides ruler
+         */
+        toggleSecondPoint: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showSecondPoint();
+            else
+                this.sceneView.hideSecondPoint();
+        },
+
+        /**
+         * Responds to ruler checkbox and shows/hides ruler
+         */
+        toggleRuler: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showRuler();
+            else
+                this.sceneView.hideRuler();
+        },
+
+        /**
+         * Shows/hides virtual image stuff
+         */
+        toggleVirtualImage: function() {
+            if ($(event.target).is(':checked')) 
+                this.sceneView.showVirtualImage();
+            else
+                this.sceneView.hideVirtualImage();
+        },
+
+        /**
+         * Switches between screen mode and picture mode
+         */
+        toggleScreen: function() {
+            if ($(event.target).is(':checked')) {
+                this.simulation.sourceObject.lightMode();
+                this.$('.change-object-btn').hide();
+            }
+            else {
+                this.simulation.sourceObject.nextPictureType();
+                this.$('.change-object-btn').show();
+            }
+        },
+
+        /**
+         * Cycles through the source object's different pictures
+         */
+        changeObjectType: function() {
+            this.simulation.sourceObject.nextPictureType();
+        },
+
+        changeIndexOfRefraction: function(event) {
+            var index = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('indexOfRefraction', index);
+            });
+        },
+
+        changeRadiusOfCurvature: function(event) {
+            var radius = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('radiusOfCurvature', radius);
+            });
+        },
+
+        changeDiameter: function(event) {
+            var diameter = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.lens.set('diameter', diameter);
+            });
+        },
+
+        updateIndexOfRefraction: function(lens, indexOfRefraction) {
+            this.$indexOfRefraction.text(indexOfRefraction.toFixed(2) + 'm');
+        },
+
+        updateRadiusOfCurvature: function(lens, radiusOfCurvature) {
+            this.$radiusOfCurvature.text(radiusOfCurvature.toFixed(2) + 'm');
+        },
+
+        updateDiameter: function(lens, diameter) {
+            this.$diameter.text(diameter.toFixed(2) + 'm');
+        },
+
+        changeRaysMode: function(event) {
+            var mode = parseInt($(event.target).val());
+            this.sceneView.setRaysMode(mode);
         }
 
     });
 
-    return TemplateSimView;
+    return GeometricOpticsSimView;
 });
