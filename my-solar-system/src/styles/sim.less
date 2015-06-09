@@ -44,4 +44,17 @@
     right: 20px;
 
     color: #fff;
+
+    @media screen and (max-height: @short-window) {
+        left: 20px;
+        right: initial;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .controls-wrapper {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
 }

@@ -5,4 +5,10 @@
     right: @panel-margin;
     padding: 15px;
     .user-select(none);
+
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        right: initial;
+        top: initial;
+    }
 }

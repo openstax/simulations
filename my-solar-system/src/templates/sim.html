@@ -21,66 +21,68 @@
     
 </div>
 
-<div class="view-options">
+<div class="controls-wrapper">
+    <div class="view-options">
 
-    <input type="checkbox" id="system-centered-check" checked="checked">
-    <label for="system-centered-check">System Centered</label><br>
+        <input type="checkbox" id="system-centered-check" checked="checked">
+        <label for="system-centered-check">System Centered</label><br>
 
-    <input type="checkbox" id="show-traces-check" checked="checked">
-    <label for="show-traces-check">Show Traces</label><br>
+        <input type="checkbox" id="show-traces-check" checked="checked">
+        <label for="show-traces-check">Show Traces</label><br>
 
-    <input type="checkbox" id="show-grid-check">
-    <label for="show-grid-check">Show Grid</label><br>
+        <input type="checkbox" id="show-grid-check">
+        <label for="show-grid-check">Show Grid</label><br>
 
-    <input type="checkbox" id="tape-measure-check">
-    <label for="tape-measure-check">Tape Measure</label>
+        <input type="checkbox" id="tape-measure-check">
+        <label for="tape-measure-check">Tape Measure</label>
 
-</div>
-
-<div class="initial-settings">
-    <div>
-        <table id="body-settings-table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th>mass</th>
-                    <th>x</th>
-                    <th>y</th>
-                    <th>v<sub>x</sub></th>
-                    <th>v<sub>y</sub></th>
-                    <td></td>
-                </tr>
-            </thead>
-            <tbody>
-            <% _.each(Constants.BODY_COLORS, function(color, index) { %>
-                <tr>
-                    <td>Body <%= index + 1 %></td>
-                    <td><input type="number" class="form-control mass"  style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control pos-x" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control pos-y" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control vel-x" style="background-color: <%= color %>" /></td>
-                    <td><input type="number" class="form-control vel-y" style="background-color: <%= color %>" /></td>
-                    <td class="remove-body-column"><button class="remove-body-btn" style="display: none"><span class="fa fa-minus-circle"></span> <span class="button-text">remove body</span></button></td>
-                </tr>
-            <% }); %>
-                <tr class="add-body-row" style="display: none">
-                    <td></td>
-                    <td colspan="5"><button class="add-body-btn"><span class="fa fa-plus-circle"></span> add body</button></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-</div>
 
-<div class="preset-wrapper">
-    <label>Preset:</label><br>
-    <select id="preset" class="form-control">
-        <option>Select preset</option>
-    <% _.each(presetNames, function(presetName, index) { %>
-        <option value="<%= index %>"><%= presetName %></option>
-    <% }); %>
-    </select>
+    <div class="preset-wrapper">
+        <label>Preset:</label><br>
+        <select id="preset" class="form-control">
+            <option>Select preset</option>
+        <% _.each(presetNames, function(presetName, index) { %>
+            <option value="<%= index %>"><%= presetName %></option>
+        <% }); %>
+        </select>
+    </div>
+
+    <div class="initial-settings">
+        <div>
+            <table id="body-settings-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>mass</th>
+                        <th>x</th>
+                        <th>y</th>
+                        <th>v<sub>x</sub></th>
+                        <th>v<sub>y</sub></th>
+                        <td></td>
+                    </tr>
+                </thead>
+                <tbody>
+                <% _.each(Constants.BODY_COLORS, function(color, index) { %>
+                    <tr>
+                        <td>Body <%= index + 1 %></td>
+                        <td><input type="number" class="form-control mass"  style="background-color: <%= color %>" /></td>
+                        <td><input type="number" class="form-control pos-x" style="background-color: <%= color %>" /></td>
+                        <td><input type="number" class="form-control pos-y" style="background-color: <%= color %>" /></td>
+                        <td><input type="number" class="form-control vel-x" style="background-color: <%= color %>" /></td>
+                        <td><input type="number" class="form-control vel-y" style="background-color: <%= color %>" /></td>
+                        <td class="remove-body-column"><button class="remove-body-btn" style="display: none"><span class="fa fa-minus-circle"></span> <span class="button-text">remove body</span></button></td>
+                    </tr>
+                <% }); %>
+                    <tr class="add-body-row" style="display: none">
+                        <td></td>
+                        <td colspan="5"><button class="add-body-btn"><span class="fa fa-plus-circle"></span> add body</button></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
 <div class="zoom-controls">
