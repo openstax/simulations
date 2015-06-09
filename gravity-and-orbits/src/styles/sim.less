@@ -1,7 +1,10 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
+
+.sims .sim-content {
+    min-height: initial;
+}
 
 @reference-mass-label-color: fadeout(#74C5FF, 40%);
 
@@ -15,6 +18,15 @@
     .body-settings-view {
         height: 36px;
         margin-bottom: 8px;
+
+        @media screen and (max-height: @short-window) {
+            display: none;
+
+            // Only the first two body settings views are visible
+            &:nth-child(-n+2) {
+                display: inherit;
+            }
+        }
 
         &:last-child {
             margin-bottom: 0;
@@ -122,6 +134,11 @@
     bottom: 82px;
     right: 20px;
     color: #fff;
+
+    @media screen and (max-height: @short-window) {
+        left: 20px;
+        right: initial;
+    }
 }
 
 .sim-controls {
