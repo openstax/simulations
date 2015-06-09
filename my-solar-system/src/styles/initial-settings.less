@@ -37,6 +37,36 @@
 
         .add-body-row > td {
             text-align: center;
+
+            @media screen and (max-height: @short-window) {
+                text-align: left;
+            }
+        }
+
+        .remove-body-column {
+            @media screen and (max-height: @short-window) {
+                position: relative;
+
+                .remove-body-btn {
+                    position: absolute;
+                    right: 10px;
+                    top: 24px;
+                    width: 110px;
+
+                    span {
+                        float: right;
+                    }
+
+                    .button-text {
+                        display: inline;
+                    }
+
+                    .fa {
+                        margin-top: 3px;
+                        margin-left: 6px;
+                    }
+                }
+            }
         }
 
         .remove-body-btn,
