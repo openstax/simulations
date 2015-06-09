@@ -3,8 +3,12 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
+
   var PixiView = require('common/pixi/view');
+  var AppView  = require('common/app/app');
+
   var VectorView = require('views/vectors');
+
   var Assets = require('assets');
   var Constants = require('constants');
 
@@ -33,14 +37,22 @@ define(function(require) {
 
     bin: function() {
       this.binContainer = new PIXI.DisplayObjectContainer();
-      var bin = Assets.createSprite(Assets.Images.Vector_Bin);
+      var bin = Assets.createSprite(Assets.Images.VECTOR_BOX);
 
-      var x = 0.87 * $('.scene-view').width();
-      var y = 0.02 * $('.scene-view').height();
+      var targetSpriteWidth = 140; // in pixels
+      var scale = targetSpriteWidth / bin.texture.width;
+
+      bin.scale.x = bin.scale.y = scale;
+      bin.x = $('.scene-view').width() - bin.width - 27;
+      bin.y = 20;
       bin.buttonMode = true;
       this.binContainer.addChild(bin);
       this.bin = bin;
-      this.bin.position = new PIXI.Point(x, y);
+
+      if (AppView.windowIsShort()) {
+        bin.x = $('.scene-view').width()  - bin.width - 12 *  Constants.GRID_SIZE;
+        bin.y = $('.scene-view').height() - bin.height - 5 * Constants.GRID_SIZE;
+      }
 
       this.displayObject.addChild(this.binContainer);
     },

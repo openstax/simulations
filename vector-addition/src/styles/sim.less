@@ -1,4 +1,9 @@
-@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: initial;
+}
 
 .content-area {
   position: relative;
@@ -11,16 +16,13 @@
   .sim-controls {
     background: @gray-lightest;
     position: absolute;
-    float: right;
     width: 164px;
     top: 196px;
-    right: 0;
-    padding: 10px;
+    right: 15px;
+    padding: @panel-padding;
 
-    .row {
-      margin: 0 0 5px 0;
-      padding: 3px;
-      border-bottom: 1px solid #CFCFCF;
+    @media screen and (max-height: @short-window) {
+      top: 13px;
     }
 
     p {
@@ -50,12 +52,41 @@
     }
 
     .show-sum-checkbox-wrapper {
-      margin-top: 3px;
+      margin-top: 10px;
+      margin-bottom: 0;
     }
 
     .show-grid-checkbox-wrapper {
-      margin-top: 12px;
-      margin-bottom: 16px;
+      margin-top: 5px;
+      margin-bottom: 0px;
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+        width: 100% !important;
+
+        > .btn {
+            .sim-controls-button();
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        &.open > .dropdown-toggle.btn-default {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
     }
   }
 
@@ -65,13 +96,34 @@
     width: 674px;
     height: 59px;
     float: left;
-    top: 31px;
-    left: 106px;
+    top: 16px;
+    left: 91px;
     padding: 12px;
+
+    @media screen and (max-height: @short-window) {
+      top: 13px;
+      left: 76px;
+    }
+
+    .variable-wrapper {
+      float: left;
+      width: 25%;
+
+      padding-left: 15px;
+      padding-right: 15px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
 
     input[type="text"] {
       float: right;
-      width: 70%;
+      width: 77%;
     }
 
     label {
