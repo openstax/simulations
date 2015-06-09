@@ -17,6 +17,10 @@
     right: 15px;
     padding: @panel-padding;
 
+    @media screen and (max-height: @short-window) {
+      top: 13px;
+    }
+
     p {
       text-align: center;
     }
@@ -91,6 +95,11 @@
     top: 16px;
     left: 91px;
     padding: 12px;
+
+    @media screen and (max-height: @short-window) {
+      top: 13px;
+      left: 76px;
+    }
 
     input[type="text"] {
       float: right;

@@ -11,7 +11,6 @@ define(function(require) {
   var Rectangle     = require('common/math/rectangle');
   
   var VectorBinView = require('views/vector-bin');
-  //var GridView = require('views/grid');
   var TrashCanView  = require('views/trash-can');
   var SumVectorView = require('views/sum-vector');
 
@@ -34,8 +33,8 @@ define(function(require) {
       var origin = new Vector2();
 
       if (AppView.windowIsShort()) {
-        origin.x = Constants.SHORT_GRID_ORIGIN_X * Constants.GRID_SIZE - 1;
-        origin.y = this.height - Constants.SHORT_GRID_ORIGIN_Y * Constants.GRID_SIZE;
+        origin.x = Constants.SHORT_GRID_ORIGIN_X * Constants.GRID_SIZE;
+        origin.y = this.height - Constants.SHORT_GRID_ORIGIN_Y * Constants.GRID_SIZE - 1;
       }
       else {
         origin.x = Constants.GRID_ORIGIN_X * Constants.GRID_SIZE;
@@ -73,7 +72,11 @@ define(function(require) {
 
       textY.anchor.x = 1;
       textY.x = origin.x - 8;
-      textY.y = 5 * Constants.GRID_SIZE + 2;
+      textY.y = 2 * Constants.GRID_SIZE + 2;
+
+      if (AppView.windowIsShort()) {
+        textX.x = 8 * 5 * Constants.GRID_SIZE - 8;
+      }
 
       this.stage.addChild(textX);
       this.stage.addChild(textY);

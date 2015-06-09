@@ -3,8 +3,12 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
+
   var PixiView = require('common/pixi/view');
+  var AppView  = require('common/app/app');
+
   var VectorView = require('views/vectors');
+
   var Assets = require('assets');
   var Constants = require('constants');
 
@@ -44,6 +48,11 @@ define(function(require) {
       bin.buttonMode = true;
       this.binContainer.addChild(bin);
       this.bin = bin;
+
+      if (AppView.windowIsShort()) {
+        bin.x = $('.scene-view').width()  - bin.width - 12 *  Constants.GRID_SIZE;
+        bin.y = $('.scene-view').height() - bin.height - 5 * Constants.GRID_SIZE;
+      }
 
       this.displayObject.addChild(this.binContainer);
     },

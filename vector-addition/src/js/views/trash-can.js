@@ -3,7 +3,10 @@ define(function(require) {
   'use strict';
 
   var PIXI = require('pixi');
+
   var PixiView = require('common/pixi/view');
+  var AppView  = require('common/app/app');
+
   var Assets = require('assets');
   var Constants = require('constants');
 
@@ -46,6 +49,11 @@ define(function(require) {
       this.can_open.x = this.can.x;
       this.can_open.y = 0.70 * canvas.height();
       this.can_open.scale.x = this.can_open.scale.y = scale;
+
+      if (AppView.windowIsShort()) {
+        this.can.y      = canvas.height() - this.can.height      - 5 * Constants.GRID_SIZE;
+        this.can_open.y = canvas.height() - this.can_open.height - 5 * Constants.GRID_SIZE;
+      }
 
       this.displayObject.addChild(this.canContainer);
 
