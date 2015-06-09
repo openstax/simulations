@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
     var GridView           = require('common/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
@@ -61,8 +62,15 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = Math.round(this.width  / 2);
-            this.viewOriginY = Math.round(this.height / 2);
+            if (AppView.windowIsShort()) {
+                this.viewOriginX = Math.round((this.width - 216) / 2);
+                this.viewOriginY = Math.round((this.height - 62) / 2);
+                this.zoom = 0.8;
+            }
+            else {
+                this.viewOriginX = Math.round(this.width  / 2);
+                this.viewOriginY = Math.round(this.height / 2);    
+            }
 
             this.initMVT();
             this.initBodies();
@@ -101,7 +109,7 @@ define(function(require) {
 
         initGridView: function() {
             this.gridView = new GridView({
-                origin: new Vector2(this.width / 2, this.height / 2),
+                origin: new Vector2(this.viewOriginX, this.viewOriginY),
                 bounds: new Rectangle(0, 0, this.width, this.height),
                 gridSize: this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing),
                 lineColor: '#fff',
