@@ -15,6 +15,13 @@
     color: fadeout(#fff, 14%);
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        margin-top: 15px;
+        left: initial;
+        top: initial;
+    }
+
     .body-settings-view {
         height: 36px;
         margin-bottom: 8px;
@@ -43,6 +50,11 @@
             text-transform: capitalize;
             text-align: center;
             line-height: 36px;
+
+            @media screen and (max-height: @short-window) {
+                min-width: 66px;
+                padding-right: 8px;
+            }
         }
 
         .mass-slider-column {
@@ -56,6 +68,10 @@
                 display: inline-block;
                 vertical-align: middle;
                 background: @panel-slider-color;
+
+                @media screen and (max-height: @short-window) {
+                    width: 100px;
+                }
 
                 &.slider .noUi-background {
                     background: #575E6E;
@@ -101,6 +117,13 @@
     top: @panel-margin;
     color: fadeout(#fff, 14%);
 
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        margin-top: @short-screen-panel-margin;
+        left: initial;
+        top: initial;
+    }
+
     .bootstrap-select {
         background-color: transparent;
         border-color: transparent;
@@ -141,12 +164,27 @@
     }
 }
 
+@media screen and (max-height: @short-window) {
+    .controls-wrapper {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
+}
+
 .sim-controls {
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
     padding: @panel-padding;
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+
+    @media screen and (max-height: @short-window) {
+        width: 100%;
+        right: initial;
+        top: initial;
+        position: relative;
+    }
 
     input[type="radio"] + label:before, 
     input[type="checkbox"] + label:before {
@@ -161,6 +199,10 @@
         margin-bottom: 7px;
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            display: none;
+        }
     }
 
     h2:not(:first-child) {
