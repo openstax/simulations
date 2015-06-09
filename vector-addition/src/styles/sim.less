@@ -1,6 +1,10 @@
 @import "variables.less";
 @import "mixins.less";
 
+.sims .sim-content {
+    min-height: initial;
+}
+
 .content-area {
   position: relative;
 
@@ -101,9 +105,25 @@
       left: 76px;
     }
 
+    .variable-wrapper {
+      float: left;
+      width: 25%;
+
+      padding-left: 15px;
+      padding-right: 15px;
+
+      &:first-child {
+        padding-left: 0;
+      }
+
+      &:last-child {
+        padding-right: 0;
+      }
+    }
+
     input[type="text"] {
       float: right;
-      width: 70%;
+      width: 77%;
     }
 
     label {
