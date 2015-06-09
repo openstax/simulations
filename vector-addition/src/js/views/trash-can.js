@@ -42,12 +42,12 @@ define(function(require) {
       this.can.scale.x = this.can.scale.y = scale;
 
       this.can.x = canvas.width() - this.can.width - 35;
-      this.can.y = 0.70 * canvas.height();
+      this.can.y = canvas.height() - this.can.height - 1 * Constants.GRID_SIZE;
 
       this.canContainer.addChild(can_open);
       this.can_open = can_open;
       this.can_open.x = this.can.x;
-      this.can_open.y = 0.70 * canvas.height();
+      this.can_open.y = this.can.y;
       this.can_open.scale.x = this.can_open.scale.y = scale;
 
       if (AppView.windowIsShort()) {
