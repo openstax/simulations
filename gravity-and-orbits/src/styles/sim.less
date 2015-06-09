@@ -17,7 +17,7 @@
 
     @media screen and (max-height: @short-window) {
         position: relative;
-        margin-top: 15px;
+        margin-top: 7px;
         left: initial;
         top: initial;
     }
@@ -200,13 +200,21 @@
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 
-        @media screen and (max-height: @short-window) {
-            display: none;
+        &:not(:first-child) {
+            margin-top: 18px;
         }
-    }
 
-    h2:not(:first-child) {
-        margin-top: 18px;
+        @media screen and (max-height: @short-window) {
+            margin-bottom: 2px;
+            padding-bottom: 0;
+            font-size: 10px;
+            text-transform: uppercase;
+
+            &:not(:first-child) {
+                margin-top: 6px;
+            }
+        }
+        
     }
 
     ul.checkbox {
