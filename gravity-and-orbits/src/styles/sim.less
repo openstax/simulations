@@ -1,7 +1,10 @@
 @import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
+
+.sims .sim-content {
+    min-height: initial;
+}
 
 @reference-mass-label-color: fadeout(#74C5FF, 40%);
 
@@ -12,9 +15,25 @@
     color: fadeout(#fff, 14%);
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        margin-top: 7px;
+        left: initial;
+        top: initial;
+    }
+
     .body-settings-view {
         height: 36px;
         margin-bottom: 8px;
+
+        @media screen and (max-height: @short-window) {
+            display: none;
+
+            // Only the first two body settings views are visible
+            &:nth-child(-n+2) {
+                display: inherit;
+            }
+        }
 
         &:last-child {
             margin-bottom: 0;
@@ -31,6 +50,11 @@
             text-transform: capitalize;
             text-align: center;
             line-height: 36px;
+
+            @media screen and (max-height: @short-window) {
+                min-width: 66px;
+                padding-right: 8px;
+            }
         }
 
         .mass-slider-column {
@@ -44,6 +68,10 @@
                 display: inline-block;
                 vertical-align: middle;
                 background: @panel-slider-color;
+
+                @media screen and (max-height: @short-window) {
+                    width: 100px;
+                }
 
                 &.slider .noUi-background {
                     background: #575E6E;
@@ -89,6 +117,13 @@
     top: @panel-margin;
     color: fadeout(#fff, 14%);
 
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        margin-top: @short-screen-panel-margin;
+        left: initial;
+        top: initial;
+    }
+
     .bootstrap-select {
         background-color: transparent;
         border-color: transparent;
@@ -122,6 +157,19 @@
     bottom: 82px;
     right: 20px;
     color: #fff;
+
+    @media screen and (max-height: @short-window) {
+        left: 20px;
+        right: initial;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .controls-wrapper {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
 }
 
 .sim-controls {
@@ -130,6 +178,13 @@
     top: @panel-margin;
     padding: @panel-padding;
     .white-panel(@shadow-alpha: 0.13, @background-fade-percent: 60%);
+
+    @media screen and (max-height: @short-window) {
+        width: 100%;
+        right: initial;
+        top: initial;
+        position: relative;
+    }
 
     input[type="radio"] + label:before, 
     input[type="checkbox"] + label:before {
@@ -144,10 +199,22 @@
         margin-bottom: 7px;
         padding-bottom: 4px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
-    }
 
-    h2:not(:first-child) {
-        margin-top: 18px;
+        &:not(:first-child) {
+            margin-top: 18px;
+        }
+
+        @media screen and (max-height: @short-window) {
+            margin-bottom: 2px;
+            padding-bottom: 0;
+            font-size: 10px;
+            text-transform: uppercase;
+
+            &:not(:first-child) {
+                margin-top: 6px;
+            }
+        }
+        
     }
 
     ul.checkbox {

@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
     var GridView           = require('common/pixi/view/grid');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
@@ -61,8 +62,15 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = Math.round(this.width  / 2);
-            this.viewOriginY = Math.round(this.height / 2);
+            if (AppView.windowIsShort()) {
+                this.viewOriginX = Math.round((this.width - 216) / 2);
+                this.viewOriginY = Math.round((this.height - 62) / 2);
+                this.zoom = Constants.SceneView.SHORT_SCREEN_SCALE_MODIFIER;
+            }
+            else {
+                this.viewOriginX = Math.round(this.width  / 2);
+                this.viewOriginY = Math.round(this.height / 2);    
+            }
 
             this.initMVT();
             this.initBodies();
@@ -101,7 +109,7 @@ define(function(require) {
 
         initGridView: function() {
             this.gridView = new GridView({
-                origin: new Vector2(this.width / 2, this.height / 2),
+                origin: new Vector2(this.viewOriginX, this.viewOriginY),
                 bounds: new Rectangle(0, 0, this.width, this.height),
                 gridSize: this.mvt.modelToViewDeltaX(this.getViewSettings().gridSpacing),
                 lineColor: '#fff',
@@ -265,6 +273,8 @@ define(function(require) {
         loadScenario: function(scenario) {
             // Update zoom
             this.zoom = scenario.viewSettings.defaultZoom;
+            if (AppView.windowIsShort())
+                this.zoom *= Constants.SceneView.SHORT_SCREEN_SCALE_MODIFIER;
             this.maxZoom = this.zoom * 2;
             this.minZoom = this.zoom / 2;
 
