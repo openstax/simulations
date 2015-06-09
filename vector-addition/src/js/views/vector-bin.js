@@ -39,7 +39,7 @@ define(function(require) {
       var scale = targetSpriteWidth / bin.texture.width;
 
       bin.scale.x = bin.scale.y = scale;
-      bin.x = $('.scene-view').width() - bin.width - 12;
+      bin.x = $('.scene-view').width() - bin.width - 27;
       bin.y = 20;
       bin.buttonMode = true;
       this.binContainer.addChild(bin);

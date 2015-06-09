@@ -38,7 +38,7 @@ define(function(require) {
 
       this.can.scale.x = this.can.scale.y = scale;
 
-      this.can.x = canvas.width() - this.can.width - 20;
+      this.can.x = canvas.width() - this.can.width - 35;
       this.can.y = 0.70 * canvas.height();
 
       this.canContainer.addChild(can_open);

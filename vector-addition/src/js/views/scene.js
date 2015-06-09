@@ -67,12 +67,13 @@ define(function(require) {
       var textX = new PIXI.Text('x', textStyles);
       var textY = new PIXI.Text('y', textStyles);
 
-      textX.x = 0.8 * this.width;
-      textX.y = origin.y;
+      textX.anchor.x = 1;
+      textX.x = 10 * 5 * Constants.GRID_SIZE - 8;
+      textX.y = origin.y + 3;
 
       textY.anchor.x = 1;
-      textY.x = origin.x;
-      textY.y = 5 * Constants.GRID_SIZE;
+      textY.x = origin.x - 8;
+      textY.y = 5 * Constants.GRID_SIZE + 2;
 
       this.stage.addChild(textX);
       this.stage.addChild(textY);
@@ -94,6 +95,7 @@ define(function(require) {
           smallLineWidth: 1,
           smallLineAlpha: 1
       });
+      this.gridView.hide();
 
       this.stage.addChild(this.gridView.displayObject);
     },

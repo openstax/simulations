@@ -1,4 +1,5 @@
-@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
 
 .content-area {
   position: relative;
@@ -11,17 +12,10 @@
   .sim-controls {
     background: @gray-lightest;
     position: absolute;
-    float: right;
     width: 164px;
     top: 196px;
-    right: 0;
-    padding: 10px;
-
-    .row {
-      margin: 0 0 5px 0;
-      padding: 3px;
-      border-bottom: 1px solid #CFCFCF;
-    }
+    right: 15px;
+    padding: @panel-padding;
 
     p {
       text-align: center;
@@ -50,12 +44,41 @@
     }
 
     .show-sum-checkbox-wrapper {
-      margin-top: 3px;
+      margin-top: 10px;
+      margin-bottom: 0;
     }
 
     .show-grid-checkbox-wrapper {
-      margin-top: 12px;
-      margin-bottom: 16px;
+      margin-top: 5px;
+      margin-bottom: 0px;
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+        width: 100% !important;
+
+        > .btn {
+            .sim-controls-button();
+            background: rgba(255, 255, 255, 0.6);
+        }
+
+        &.open > .dropdown-toggle.btn-default {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
     }
   }
 
@@ -65,8 +88,8 @@
     width: 674px;
     height: 59px;
     float: left;
-    top: 31px;
-    left: 106px;
+    top: 16px;
+    left: 91px;
     padding: 12px;
 
     input[type="text"] {

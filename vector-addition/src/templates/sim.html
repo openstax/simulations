@@ -1,47 +1,40 @@
-
 <div class="content-area">
-    <span class="scene-view-placeholder"></span>
-    <div class="sim-values">
-      <div class="col-md-3">
-       <label class="<%= labelColor %>">|R|</label>
-       <input type="text" class="form-control rText" readonly value=" <%= rText %>"/>
-      </div>
-      <div class="col-md-3">
-        <label class="<%= labelColor %>">&theta;</label>
-        <input type="text" class="form-control thetaText" readonly value=" <%= thetaText %>"/>
-      </div>
-      <div class="col-md-3">
-        <label class="<%= labelColor %>">R<sub>x</sub></label>
-        <input type="text" class="form-control rXText" readonly value="<%= rXText %>"/>
-      </div>
-      <div class="col-md-3">
-        <label class="<%= labelColor %>">R<sub>y</sub></label>
-        <input type="text" class="form-control rYText" readonly value="<%= rYText %>"/>
+  <span class="scene-view-placeholder"></span>
+  <div class="sim-values">
+    <div class="col-md-3">
+      <label class="<%= labelColor %>">|R|</label>
+      <input type="text" class="form-control rText" readonly value=" <%= rText %>"/>
+    </div>
+    <div class="col-md-3">
+      <label class="<%= labelColor %>">&theta;</label>
+      <input type="text" class="form-control thetaText" readonly value=" <%= thetaText %>"/>
+    </div>
+    <div class="col-md-3">
+      <label class="<%= labelColor %>">R<sub>x</sub></label>
+      <input type="text" class="form-control rXText" readonly value="<%= rXText %>"/>
+    </div>
+    <div class="col-md-3">
+      <label class="<%= labelColor %>">R<sub>y</sub></label>
+      <input type="text" class="form-control rYText" readonly value="<%= rYText %>"/>
+    </div>
+  </div>
+  <div class="sim-controls">
+    <label for="component-style">Component Display</label>
+    <select id="component-style">
+      <option value="0" select>None</option>
+      <option value="1">Style 1</option>
+      <option value="2">Style 2</option>
+      <option value="3">Style 3</option>
+    </select>
+    <div class="checkbox show-sum-checkbox-wrapper">
+      <input type="checkbox" id="show-sum">
+      <label for="show-sum">Show Sum</label>
+      <% if (sumVectorVisible) { %> checked = "checked" <% } %>
+    </div>
+    <div class="checkbox show-grid-checkbox-wrapper">
+      <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
       </div>
     </div>
-    <div class="sim-controls">
-      <div class="row">
-        <div class="checkbox show-sum-checkbox-wrapper">
-          <input type="checkbox" id="show-sum">
-          <label for="show-sum">Show Sum</label>
-          <% if (sumVectorVisible) { %> checked = "checked" <% } %>
-        </div>
-      </div>
-      <div class="row">
-        <h5>Component Display</h5>
-        <div class="checkbox">
-        <ul>
-          <li><input type="radio" id="0" name="components" checked><label for="0">None</label></li>
-          <li><input type="radio" id="1" name="components"><label for="1">Style 1</label></li>
-          <li><input type="radio" id="2" name="components"><label for="2">Style 2</label></li>
-          <li><input type="radio" id="3" name="components"><label for="3">Style 3</label></li>
-        </ul>
-      </div>
-    </div>
-      <div class="checkbox show-grid-checkbox-wrapper">
-        <div class="checkbox"><input type="checkbox" id="show-grid"><label for="show-grid">Show Grid</label>
-        </div>
-    </div>
-<input type="submit" class="btn" value="Clear All"/>
-</div>
+    <input type="submit" class="btn" value="Clear All"/>
+  </div>
 </div>
