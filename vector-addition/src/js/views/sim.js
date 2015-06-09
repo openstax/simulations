@@ -27,9 +27,9 @@ define(function (require) {
 
         events: {
           'change #show-grid' : 'showGrid',
-          'click .btn': 'clearArrows',
+          'click .btn-clear': 'clearArrows',
           'change #show-sum': 'showSum',
-          'change input[name="components"]': 'componentStyles'
+          'change #component-style': 'componentStyles'
         },
 
         initialize: function(options) {
@@ -145,19 +145,9 @@ define(function (require) {
           }
         },
 
-        componentStyles: function() {
-          if ($('#0').is(':checked')) {
-            this.simulation.set('componentStyles', 0);
-          }
-          else if ($('#1').is(':checked')) {
-            this.simulation.set('componentStyles', 1);
-          }
-          else if ($('#2').is(':checked')) {
-            this.simulation.set('componentStyles', 2);
-          }
-          else if ($('#3').is(':checked')) {
-            this.simulation.set('componentStyles', 3);
-          }
+        componentStyles: function(event) {
+          var style = parseInt($(event.target).val());
+          this.simulation.set('componentStyles', style);
         }
     });
 
