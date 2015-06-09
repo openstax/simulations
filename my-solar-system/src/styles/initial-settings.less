@@ -5,6 +5,13 @@
     color: fadeout(#fff, 14%);
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        left: initial;
+        top: initial;
+        margin-top: @short-screen-panel-margin;
+    }
+
     &.disabled {
         opacity: 0.5;
 
@@ -37,6 +44,36 @@
 
         .add-body-row > td {
             text-align: center;
+
+            @media screen and (max-height: @short-window) {
+                text-align: left;
+            }
+        }
+
+        .remove-body-column {
+            @media screen and (max-height: @short-window) {
+                position: relative;
+
+                .remove-body-btn {
+                    position: absolute;
+                    right: 10px;
+                    top: 22px;
+                    width: 110px;
+
+                    span {
+                        float: right;
+                    }
+
+                    .button-text {
+                        display: inline;
+                    }
+
+                    .fa {
+                        margin-top: 3px;
+                        margin-left: 6px;
+                    }
+                }
+            }
         }
 
         .remove-body-btn,
@@ -89,8 +126,18 @@
         color: #000;
         text-align: right;
 
+        @media screen and (max-height: @short-window) {
+            font-size: 13px;
+            width: 36px;
+            padding: 0px 3px;
+        }
+
         &.mass {
             width: 71px;
+
+            @media screen and (max-height: @short-window) {
+                width: 64px;
+            }
         }
     }
 }
@@ -100,6 +147,13 @@
     left: 383px;
     top: @panel-margin;
     color: fadeout(#fff, 14%);
+
+    @media screen and (max-height: @short-window) {
+        position: relative;
+        left: initial;
+        top: initial;
+        margin-top: @short-screen-panel-margin;
+    }
 
     .bootstrap-select {
         background-color: transparent;

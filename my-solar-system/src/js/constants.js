@@ -58,6 +58,7 @@ define(function (require) {
     SceneView.GRID_SIZE = 100;
     SceneView.MIN_SCALE = 0.3;
     SceneView.MAX_SCALE = 2.0;
+    SceneView.SHORT_SCREEN_SCALE_MODIFIER = 0.8;
 
     Constants.SceneView = SceneView;
 

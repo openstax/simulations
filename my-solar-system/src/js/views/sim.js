@@ -6,6 +6,7 @@ define(function (require) {
     var _ = require('underscore');
 
     var SimView           = require('common/app/sim');
+    var AppView           = require('common/app/app');
     var MeasuringTapeView = require('common/tools/measuring-tape');
 
     var Presets       = require('models/presets');
@@ -219,6 +220,12 @@ define(function (require) {
             this.measuringTapeView.setStart(this.sceneView.width * 0.20,  this.sceneView.height * 0.58);
             this.measuringTapeView.setEnd(  this.sceneView.width * 0.464, this.sceneView.height * 0.58);
             this.measuringTapeView.hide();
+
+            if (AppView.windowIsShort()) {
+                this.$('#body-settings-table tr td:first-child').each(function() {
+                    $(this).html($(this).text().substr(4));
+                })
+            }
         },
 
         /**
