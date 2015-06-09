@@ -65,7 +65,7 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 216) / 2);
                 this.viewOriginY = Math.round((this.height - 62) / 2);
-                this.zoom = 0.8;
+                this.zoom = Constants.SceneView.SHORT_SCREEN_SCALE_MODIFIER;
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
@@ -273,6 +273,8 @@ define(function(require) {
         loadScenario: function(scenario) {
             // Update zoom
             this.zoom = scenario.viewSettings.defaultZoom;
+            if (AppView.windowIsShort())
+                this.zoom *= Constants.SceneView.SHORT_SCREEN_SCALE_MODIFIER;
             this.maxZoom = this.zoom * 2;
             this.minZoom = this.zoom / 2;
 
