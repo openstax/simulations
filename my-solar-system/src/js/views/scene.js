@@ -51,7 +51,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             if (AppView.windowIsShort()) {
-                this.viewOriginX = Math.round((this.width - 216) / 2);
+                this.viewOriginX = Math.round((this.width - 253) / 2);
                 this.viewOriginY = Math.round((this.height - 62) / 2);
                 this.zoomScale = Constants.SceneView.SHORT_SCREEN_SCALE_MODIFIER;
             }
