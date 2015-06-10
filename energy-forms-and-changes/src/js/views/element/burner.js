@@ -234,7 +234,7 @@ define(function(require) {
             
             if (this.coolingEnabled) {
                 var cool = new PIXI.Text('Cool', textStyle);
-                cool.anchor.y = 1;
+                cool.anchor.y = 0.82;
                 cool.x = textOffset;
                 cool.y = this.sliderView.displayObject.y + bgHeight;
                 this.frontLayer.addChild(cool);

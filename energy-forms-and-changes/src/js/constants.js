@@ -118,6 +118,7 @@ define(function (require) {
     var IntroElementView = {};
 
     IntroElementView.TEXT_FONT = '32px Arial';
+    IntroElementView.SMALL_TEXT_FONT = '22px Arial';
 
     Constants.IntroElementView = IntroElementView;
 
@@ -230,6 +231,7 @@ define(function (require) {
     BurnerView.COLD_COLOR = '#0000f0';
     BurnerView.TEXT_FONT  = 'bold 17px Arial';
     BurnerView.TEXT_COLOR = '#000';
+    BurnerView.SMALL_TEXT_FONT  = 'bold 12px Arial';
 
     Constants.BurnerView = BurnerView;
 

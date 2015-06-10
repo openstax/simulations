@@ -145,14 +145,26 @@ define(function(require) {
                 return this.simulation.validatePosition(model, newPosition);
             }, this);
 
+            var lineWidth;
+            var font;
+            if (this.mvt.getXScale() > 1600) {
+                lineWidth = Constants.BlockView.LINE_WIDTH;
+                font = Constants.IntroElementView.TEXT_FONT
+            }
+            else {
+                lineWidth = Math.round(Constants.BlockView.LINE_WIDTH * (this.mvt.getXScale() / 2000));
+                font = Constants.IntroElementView.SMALL_TEXT_FONT;
+            } 
+
             this.brickView = new BrickView({ 
                 model: this.simulation.brick,
                 mvt: this.mvt,
                 simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
-                lineWidth: Constants.BlockView.LINE_WIDTH,
+                lineWidth: lineWidth,
                 textColor: Constants.BrickView.TEXT_COLOR,
+                textFont: font,
                 labelText: 'Brick'
             });
             this.brickLayer = new PIXI.DisplayObjectContainer();
@@ -167,9 +179,10 @@ define(function(require) {
                 simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
-                lineWidth: Constants.BlockView.LINE_WIDTH,
+                lineWidth: lineWidth,
                 fillColor: Constants.IronBlockView.FILL_COLOR,
                 textColor: Constants.IronBlockView.TEXT_COLOR,
+                textFont: font,
                 labelText: 'Iron'
             });
             this.ironBlockLayer = new PIXI.DisplayObjectContainer();
@@ -206,13 +219,20 @@ define(function(require) {
                 return this.simulation.validatePosition(model, newPosition);
             }, this);
 
+            var lineWidth;
+            if (this.mvt.getXScale() > 1600)
+                lineWidth = Constants.BlockView.LINE_WIDTH;
+            else
+                lineWidth = Math.round(Constants.BlockView.LINE_WIDTH * (this.mvt.getXScale() / 2000));
+
             this.beakerView = new BeakerView({
                 model: this.simulation.beaker,
                 mvt: this.mvt,
                 simulation: this.simulation,
                 movable: true,
                 movementConstraint: movementConstraint,
-                movementConstraintBounds: movementConstraintBounds
+                movementConstraintBounds: movementConstraintBounds,
+                lineWidth: lineWidth
             });
             this.views.push(this.beakerView);
 
@@ -311,6 +331,8 @@ define(function(require) {
                 projectedEdgeLength: burnerProjectionAmount
             });
 
+            var font = (this.mvt.getXScale() > 1600) ? BurnerView.TEXT_FONT : BurnerView.SMALL_TEXT_FONT;
+
             var leftBurnerView = new BurnerView({
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
@@ -318,6 +340,7 @@ define(function(require) {
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight,
+                textFont: font,
                 energyChunkCollection: this.simulation.leftBurner.energyChunkList
             });
 
@@ -328,6 +351,7 @@ define(function(require) {
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight,
+                textFont: font,
                 energyChunkCollection: this.simulation.rightBurner.energyChunkList
             });
 
