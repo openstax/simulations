@@ -42,6 +42,14 @@ define(function(require) {
             var back  = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_BACK);
             var front = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_FRONT);
 
+            
+            var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ThermometerView.HEIGHT_IN_METERS)); // in pixels
+            var scale = targetSpriteHeight / back.texture.height;
+            console.log(targetSpriteHeight)
+
+            back.scale.x = back.scale.y = scale;
+            front.scale.x = front.scale.y = scale;
+
             this.backLayer  = back;
             this.frontLayer = front;
 
