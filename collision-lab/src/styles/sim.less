@@ -15,6 +15,11 @@
     padding: @panel-padding;
     width: @control-panel-width;
 
+    @media screen and (max-height: @short-window) {
+        right: @short-screen-panel-margin;
+        top: @short-screen-panel-margin;
+    }
+
     input.form-control {
         background: rgba(255, 255, 255, 0.27);
         border-color: rgba(0, 0, 0, 0.1);

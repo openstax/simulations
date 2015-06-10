@@ -89,29 +89,36 @@ define(function(require) {
 
             // ...to the usable screen space that we have
             var usableScreenSpace;
+            var m; // Panel margin
+            var scpw = 200; // Sim-controls panel width
 
             if (AppView.windowIsShort()) {
+                m = Constants.SceneView.SHORT_SCREEN_PANEL_MARGIN;
+                var sbw = 40; // Ball settings toggle button width
+
                 usableScreenSpace = new Rectangle(
-                    20, // Left margin
-                    20, // Top margin
-                    this.width - 20 - 20 - 200 - 20,
-                    this.height - 20 - 62 - 20
+                    m + sbw + m, // Left margin and ball-settings button width
+                    m, // Top margin
+                    this.width - m - sbw - m - m - scpw - m,
+                    this.height - m - 62 - m
                 );
 
                 if (this.momentaDiagram && this.momentaDiagram.isVisible())
-                    usableScreenSpace.w -= 200 + 20;
+                    usableScreenSpace.w -= scpw;
 
                 if (this.oneDimensional) {
-                    usableScreenSpace.y += 112;
-                    usableScreenSpace.h -= 112;
+                    usableScreenSpace.y += 92 + m;
+                    usableScreenSpace.h -= 92 + m;
                 }
             }
             else {
+                m = Constants.SceneView.PANEL_MARGIN;
+
                 usableScreenSpace = new Rectangle(
-                    20,       // Left margin
-                    20 + 185, // Top margin plus ball settings matrix
-                    this.width - 20 - 20 - 200 - 20,
-                    this.height - 20 - 185 - 62 - 20
+                    m,       // Left margin
+                    m + 185, // Top margin plus ball settings matrix
+                    this.width - m - m - scpw - m,
+                    this.height - m - 185 - 62 - m
                 ); 
 
                 if (this.oneDimensional) {
