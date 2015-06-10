@@ -104,7 +104,7 @@ define(function(require) {
                 );
 
                 if (this.momentaDiagram && this.momentaDiagram.isVisible())
-                    usableScreenSpace.w -= scpw;
+                    usableScreenSpace.w -= scpw + m;
 
                 if (this.oneDimensional) {
                     usableScreenSpace.y += 92 + m;
@@ -132,8 +132,14 @@ define(function(require) {
             
             var scale = (screenRatio > boundsRatio) ? usableScreenSpace.h / bounds.h : usableScreenSpace.w / bounds.w;
             
-            this.viewOriginX = Math.round(usableScreenSpace.x);
-            this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h / 2);
+            if (AppView.windowIsShort() && !this.oneDimensional) {
+                this.viewOriginX = Math.round(usableScreenSpace.x);
+                this.viewOriginY = Math.round(usableScreenSpace.y + scale * bounds.h / 2);
+            }
+            else {
+                this.viewOriginX = Math.round(usableScreenSpace.x);
+                this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h / 2);
+            }
 
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
@@ -150,7 +156,6 @@ define(function(require) {
 
         initBorderGraphic: function() {
             this.border = new PIXI.Graphics();
-            this.border.lineStyle(3, BORDER_LINE_COLOR, Constants.SceneView.BORDER_LINE_ALPHA);
             this.stage.addChild(this.border);
 
             this.drawBorder();
@@ -216,6 +221,12 @@ define(function(require) {
             var height = this.height - y - $simView.find('.playback-controls-wrapper').outerHeight() - 20;
             var x = this.width - width - 20;
 
+            if (AppView.windowIsShort()) {
+                y = 13;
+                x = this.width - width - 13 - $simControls.outerWidth() - 13;
+                height = 258;
+            }
+
             this.momentaDiagram = new MomentaDiagram({
                 simulation: this.simulation,
                 width: width,
@@ -229,7 +240,10 @@ define(function(require) {
         },
 
         drawBorder: function() {
+            this.border.clear();
+
             if (!this.oneDimensional) {
+                this.border.lineStyle(3, BORDER_LINE_COLOR, Constants.SceneView.BORDER_LINE_ALPHA);
                 this.border.beginFill(BORDER_FILL_COLOR, Constants.SceneView.BORDER_FILL_ALPHA);
                 this.border.drawRect(
                     this.mvt.modelToViewX(this.simulation.bounds.x),
@@ -247,7 +261,18 @@ define(function(require) {
         },
 
         updateMVT: function() {
+            this.initMVT();
 
+            this.drawBorder();
+
+            for (var i = 0; i < this.ballViews.length; i++)
+                this.ballViews[i].updateMVT(this.mvt);
+
+            for (var i = 0; i < this.ballTraceViews.length; i++)
+                this.ballTraceViews[i].updateMVT(this.mvt);
+
+            this.xCenterOfMassChanged(this.simulation, this.simulation.get('xCenterOfMass'));
+            this.yCenterOfMassChanged(this.simulation, this.simulation.get('yCenterOfMass'));
         },
 
         ballsReset: function(balls) {
@@ -411,12 +436,14 @@ define(function(require) {
 
         showMomentaDiagram: function() {
             this.momentaDiagram.show();
-            this.updateMVT();
+            if (AppView.windowIsShort())
+                this.updateMVT();
         },
 
         hideMomentaDiagram: function() {
             this.momentaDiagram.hide();
-            this.updateMVT();
+            if (AppView.windowIsShort())
+                this.updateMVT();
         }
 
     });
