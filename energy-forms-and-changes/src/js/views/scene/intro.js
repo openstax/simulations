@@ -269,10 +269,9 @@ define(function(require) {
 
             // Thermometer clips
             var thermometerClips = new ThermometerClipsView({
-                x: 15,
-                y: 15,
-                width: 230,
-                height: 180,
+                mvt: this.mvt,
+                x: Math.round(this.mvt.modelToViewDeltaX(0.01779)),
+                y: Math.round(Math.abs(this.mvt.modelToViewDeltaY(0.0150))),
                 numThermometerSpots: thermometerViews.length
             });
             this.thermometerClips = thermometerClips;

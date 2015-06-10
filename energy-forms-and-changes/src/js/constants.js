@@ -315,6 +315,13 @@ define(function (require) {
     Constants.ThermometerView = ThermometerView;
 
 
+    var ThermometerClipsView = {};
+
+    ThermometerClipsView.BASE_WIDTH = 0.118; // Meters
+
+    Constants.ThermometerClipsView = ThermometerClipsView;
+
+
     /*************************************************************************
      **                                                                     **
      **                                 AIR                                 **

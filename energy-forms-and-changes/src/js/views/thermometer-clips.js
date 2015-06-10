@@ -4,11 +4,14 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    var Vector2 = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
 
-    var PixiView = require('common/pixi/view');
-    var Assets   = require('assets');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
+    var PixiView  = require('common/pixi/view');
+
+    var Assets = require('assets');
+
+    var Constants = require('constants');
 
     /**
      * A view that represents the air model
@@ -21,15 +24,12 @@ define(function(require) {
         initialize: function(options) {
             options = options || {};
 
+            this.mvt = options.mvt;
             this.x = options.x || 0;
             this.y = options.y || 0;
-            this.width  = options.width || 20;
-            this.height = options.height || 20;
             this.numThermometerSpots = options.numThermometerSpots || 3;
 
             this.anchors = [];
-
-            this.rect = new Rectangle(this.x, this.y, this.width, this.height * 0.6);
 
             this.initGraphics();
         },
@@ -37,8 +37,19 @@ define(function(require) {
         initGraphics: function() {
             this.displayObject.x = this.x;
             this.displayObject.y = this.y;
+
+            var woodXOffsetPercent = 13 / 270; // Percent of total texture width
+            var woodYOffsetPercent = 19 / 139; // Percent of total texture width
+            var woodWidthPercent  = 236 / 270; // Percent of total texture width
             
             var base = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_BASE);
+            var targetSpriteWidth = this.mvt.modelToViewDeltaX(ThermometerClipsView.BASE_WIDTH / woodWidthPercent); // in pixels
+            var scale = targetSpriteWidth / base.texture.width;
+            base.scale.x = scale;
+            base.scale.y = scale;
+            base.anchor.x = woodXOffsetPercent;
+            base.anchor.y = woodYOffsetPercent;
+
             this.backLayer        = new PIXI.DisplayObjectContainer();
             this.thermometerLayer = new PIXI.DisplayObjectContainer();
             this.frontLayer       = new PIXI.DisplayObjectContainer();
@@ -48,17 +59,20 @@ define(function(require) {
             this.displayObject.addChild(this.thermometerLayer);
             this.displayObject.addChild(this.frontLayer);
             
-            var spacing = this.width / (this.numThermometerSpots + 1);
+            var width = this.mvt.modelToViewDeltaX(ThermometerClipsView.BASE_WIDTH);
+            var height = width * (108 / 236);
+            var spacing = width / (this.numThermometerSpots + 1);
             var point;
             var backClip;
             var frontClip;
 
-            base.x = 9;
-            base.y = -6;
-
             for (var i = 0; i < this.numThermometerSpots; i++) {
-                point = new PIXI.Point(this.x + spacing / 2 + i * spacing, this.y + this.height / 2);
+                point = new PIXI.Point(
+                    this.x + i * spacing, 
+                    this.y + height / 2
+                );
 
+                // TODO: make these scale
                 backClip  = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_BACK);
                 frontClip = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_FRONT);
 
@@ -82,6 +96,8 @@ define(function(require) {
                 // origin.endFill();
                 // this.frontLayer.addChild(origin);
             }
+
+            this.rect = new Rectangle(this.x, this.y, this.displayObject.width, this.displayObject.height * 0.6);
         },
 
         /**
@@ -181,7 +197,7 @@ define(function(require) {
             this.thermometerLayer.removeChildren();
         }
 
-    });
+    }, Constants.ThermometerClipsView);
 
     return ThermometerClipsView;
 });
