@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
@@ -87,12 +88,37 @@ define(function(require) {
             var bounds = this.simulation.bounds;
 
             // ...to the usable screen space that we have
-            var usableScreenSpace = new Rectangle(
-                20,       // Left margin
-                20 + 185, // Top margin plus ball settings matrix
-                this.width - 20 - 20 - 200 - 20,
-                this.height - 20 - 185 - 62 - 20
-            );
+            var usableScreenSpace;
+
+            if (AppView.windowIsShort()) {
+                usableScreenSpace = new Rectangle(
+                    20, // Left margin
+                    20, // Top margin
+                    this.width - 20 - 20 - 200 - 20,
+                    this.height - 20 - 62 - 20
+                );
+
+                if (this.momentaDiagram && this.momentaDiagram.isVisible())
+                    usableScreenSpace.w -= 200 + 20;
+
+                if (this.oneDimensional) {
+                    usableScreenSpace.y += 112;
+                    usableScreenSpace.h -= 112;
+                }
+            }
+            else {
+                usableScreenSpace = new Rectangle(
+                    20,       // Left margin
+                    20 + 185, // Top margin plus ball settings matrix
+                    this.width - 20 - 20 - 200 - 20,
+                    this.height - 20 - 185 - 62 - 20
+                ); 
+
+                if (this.oneDimensional) {
+                    usableScreenSpace.y -= 88;
+                    usableScreenSpace.h += 88;
+                }
+            }
 
             var boundsRatio = bounds.w / bounds.h;
             var screenRatio = usableScreenSpace.w / usableScreenSpace.h;
@@ -211,6 +237,10 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             for (var i = this.ballTraceViews.length - 1; i >= 0; i--)
                 this.ballTraceViews[i].update(time, deltaTime, paused);
+        },
+
+        updateMVT: function() {
+
         },
 
         ballsReset: function(balls) {
@@ -374,10 +404,12 @@ define(function(require) {
 
         showMomentaDiagram: function() {
             this.momentaDiagram.show();
+            this.updateMVT();
         },
 
         hideMomentaDiagram: function() {
             this.momentaDiagram.hide();
+            this.updateMVT();
         }
 
     });
