@@ -13,16 +13,16 @@
     background: @link-color;
     cursor: pointer;
     overflow: hidden;
+    .user-select(none);
     .transition(~"width 80ms");
 
     @media screen and (max-height: @short-window) {
         display: block;
-        
     }
 
     &:hover {
         box-shadow: 0 0 11px rgba(0, 0, 0, 0.35);
-        opacity: 0.8;
+        background: #495A87;
         width: @ball-settings-toggle-open-width;
     }
 
