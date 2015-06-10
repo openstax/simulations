@@ -8,8 +8,10 @@ define(function(require) {
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
-    var ModelViewTransform   = require('common/math/model-view-transform');
-    var PixiSceneView        = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
+
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
     var ThermometerClipsView = require('views/thermometer-clips');
@@ -51,12 +53,19 @@ define(function(require) {
 
             var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
 
+            var scale;
+            if (AppView.windowIsShort())
+                scale = 1400;
+            else
+                scale = 2000;
+
             this.viewOriginX = Math.round(this.width / 2);
             this.viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
+            
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                2000 // Scale
+                scale
             );
 
             this.initLayers();
@@ -125,11 +134,12 @@ define(function(require) {
         },
 
         initBlocks: function() {
+            var freeAreaAbove = 500;
             var movementConstraintBounds = new Rectangle(
                 0, 
-                0, 
+                0 - freeAreaAbove, 
                 this.width, 
-                this.viewOriginY
+                this.viewOriginY + freeAreaAbove
             );
             var movementConstraint = _.bind(function(model, newPosition) {
                 return this.simulation.validatePosition(model, newPosition);
@@ -185,11 +195,12 @@ define(function(require) {
         },
 
         initBeaker: function() {
+            var freeAreaAbove = 500;
             var movementConstraintBounds = new Rectangle(
                 0, 
-                0, 
+                0 - freeAreaAbove, 
                 this.width, 
-                this.viewOriginY
+                this.viewOriginY + freeAreaAbove
             );
             var movementConstraint = _.bind(function(model, newPosition) {
                 return this.simulation.validatePosition(model, newPosition);
