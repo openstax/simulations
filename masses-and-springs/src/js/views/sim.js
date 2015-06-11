@@ -7,13 +7,13 @@ define(function (require) {
     var underscoreDeepExtend = require('underscoreDeepExtend');
     _.mixin({deepExtend: underscoreDeepExtend(_)});
 
-    var SimView = require('common/app/sim');
-    var StopwatchView = require('common/tools/stopwatch');
-    var RulerView = require('common/tools/ruler');
+    var AppView           = require('common/app/app');
+    var SimView           = require('common/app/sim');
+    var StopwatchView     = require('common/tools/stopwatch');
+    var RulerView         = require('common/tools/ruler');
     var ReferenceLineView = require('common/tools/reference-line');
-    var HelpLabelView = require('common/help-label/index');
-    var BarGraphView = require('common/bar-graph/bar-graph');
-
+    var HelpLabelView     = require('common/help-label/index');
+    var BarGraphView      = require('common/bar-graph/bar-graph');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -268,12 +268,15 @@ define(function (require) {
                 }
             });
 
+            var pxPerMeter = !AppView.windowIsShort() ? Constants.Scene.PX_PER_METER : Constants.Scene.SHORT_SCREEN_PX_PER_METER;
+
             this.rulerView = new RulerView({
                 dragFrame: this.el,
                 position : {
                     x : 20,
                     y : Initials.SpringsY1 * Constants.Scene.PX_PER_METER
-                }
+                },
+                pxPerUnit: pxPerMeter / 100
             });
 
             this.referenceLineView = new ReferenceLineView({

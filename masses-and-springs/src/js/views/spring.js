@@ -27,6 +27,7 @@ define(function(require) {
 
             this.label = this.model.label;
             this.labelOptions = options.labelOptions;
+            this.mvt = options.mvt;
 
             this.initGraphics();
             this.initSound();
@@ -66,17 +67,17 @@ define(function(require) {
             this.viewModel = {};
 
             this.viewModel.color = Colors.parseHex(Spring.COLOR);
-            this.viewModel.ringRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER;
+            this.viewModel.ringRadius = this.mvt.modelToViewDeltaX(Spring.RING_RADIUS);
             this.viewModel.ringOffset = 2 * this.viewModel.ringRadius;
-            this.viewModel.coilRadius = (Spring.WIDTH * Constants.Scene.PX_PER_METER)/2;
+            this.viewModel.coilRadius = this.mvt.modelToViewDeltaX(Spring.WIDTH)/2;
 
-            this.viewModel.x = this.model.x * Constants.Scene.PX_PER_METER;
-            this.viewModel.y1 = this.model.y1 * Constants.Scene.PX_PER_METER;
-            this.viewModel.restL = this.model.restL * Constants.Scene.PX_PER_METER;
+            this.viewModel.x = this.mvt.modelToViewDeltaX(this.model.x);
+            this.viewModel.y1 = this.mvt.modelToViewDeltaY(this.model.y1);
+            this.viewModel.restL = this.mvt.modelToViewDeltaX(this.model.restL);
             this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
 
             this.viewModel.pegColor = Colors.parseHex(Spring.PEG_COLOR);
-            this.viewModel.pegRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER * 0.65;
+            this.viewModel.pegRadius = this.mvt.modelToViewDeltaX(Spring.RING_RADIUS) * 0.65;
 
             this.viewModel.numberOfCoils = Spring.COILS;
             this.viewModel.coilHeightMin = 0.75;
@@ -86,7 +87,7 @@ define(function(require) {
 
         _updateSpringViewModel: function(){
             // Things that will change and need to update
-            this.viewModel.y2 = this.model.y2 * Constants.Scene.PX_PER_METER;
+            this.viewModel.y2 = this.mvt.modelToViewDeltaY(this.model.y2);
             this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1;
             this.viewModel.coilHeight = this.viewModel.coilsLength / this.viewModel.numberOfCoils;
 
@@ -105,7 +106,7 @@ define(function(require) {
 
         _updateThickness: function(){
             this.viewModel.thickness = Spring.K_TO_THICKNESS(this.model.k);
-            this.viewModel.ringRadius = Spring.RING_RADIUS * Constants.Scene.PX_PER_METER + 0.5 * this.viewModel.thickness;
+            this.viewModel.ringRadius = this.mvt.modelToViewDeltaX(Spring.RING_RADIUS) + 0.5 * this.viewModel.thickness;
         },
 
         updateSnaggedState: function(){

@@ -39,6 +39,7 @@ define(function(require) {
 
             this.label = this.model.label;
             this.labelOptions = options.labelOptions;
+            this.mvt = options.mvt;
 
             this.initGraphics();
             this.initSound();
@@ -73,8 +74,8 @@ define(function(require) {
 
         updateBodyViewModel: function(){
 
-            this.viewModel.left = this.model.x * Constants.Scene.PX_PER_METER;
-            this.viewModel.bottom = this.model.y * Constants.Scene.PX_PER_METER;
+            this.viewModel.left = this.mvt.modelToViewDeltaX(this.model.x);
+            this.viewModel.bottom = this.mvt.modelToViewDeltaY(this.model.y);
 
             this.viewModel.top = this.viewModel.bottom - this.viewModel.height;
             this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
@@ -83,15 +84,15 @@ define(function(require) {
         initializeBodyViewModel: function(){
             this.viewModel = {};
 
-            this.viewModel.width = Body.MASS_TO_WIDTH(this.model.mass) * Constants.Scene.PX_PER_METER;
-            this.viewModel.height = Body.MASS_TO_HEIGHT(this.model.mass) * Constants.Scene.PX_PER_METER;
+            this.viewModel.width = this.mvt.modelToViewDeltaX(Body.MASS_TO_WIDTH(this.model.mass));
+            this.viewModel.height = this.mvt.modelToViewDeltaY(Body.MASS_TO_HEIGHT(this.model.mass));
             this.viewModel.radius = this.viewModel.width / 2;
 
             this.viewModel.color = Colors.parseHex(this.model.color);
             this.viewModel.borderColor = Colors.parseHex(Colors.darkenHex(this.model.color, 0.1));
 
             this.viewModel.hookThickness = 3;
-            this.viewModel.hookRadius = Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width) * Constants.Scene.PX_PER_METER;
+            this.viewModel.hookRadius = this.mvt.modelToViewDeltaX(Body.WIDTH_TO_HOOK_RADIUS(this.viewModel.width));
             this.viewModel.hookHeight = 2.75 * this.viewModel.hookRadius;
 
             this.viewModel.hookLeftOffset = this.viewModel.width/2 - this.viewModel.hookRadius;
@@ -294,23 +295,23 @@ define(function(require) {
         },
 
         _calcXFromLeftDrag: function(dx){
-            return this.displayObject.x/Constants.Scene.PX_PER_METER;
+            return this.mvt.viewToModelDeltaX(this.displayObject.x);
         },
 
         _calcYFromBottomDrag: function(dy){
-            return (this.displayObject.y + this.viewModel.height)/Constants.Scene.PX_PER_METER;
+            return this.mvt.viewToModelDeltaY(this.displayObject.y + this.viewModel.height);
         },
 
         _calcYFromSpringY2: function(springY2){
-            return springY2 + this.viewModel.totalHeight/Constants.Scene.PX_PER_METER;
+            return springY2 + this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
         },
 
         _calcSpringY2FromY: function(){
-            return this.model.y - this.viewModel.totalHeight/Constants.Scene.PX_PER_METER;
+            return this.model.y - this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
         },
 
         _calcXFromViewCenter: function(center){
-            return center - this.viewModel.radius / Constants.Scene.PX_PER_METER;
+            return center - this.mvt.viewToModelDeltaX(this.viewModel.radius);
         },
 
         dropBody: function(){

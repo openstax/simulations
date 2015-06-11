@@ -2,8 +2,11 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
 
     var Constants = {}; 
+
     var ColorConstants = {
         'cool-gray' : '#6a7686',
         'dark-gray' : '#2d3239',
@@ -16,7 +19,6 @@ define(function (require) {
         'pale-blue' : '#549be1',
         'pale-aqua' : '#54e19b'
     };
-
 
     Constants.ColorConstants = ColorConstants;
 
@@ -40,6 +42,7 @@ define(function (require) {
      Scene.DTT = 0.01;  //target time increment in seconds (independent of frame rate)
      Scene.RATE = 1;    //overall time rate: 1 = normal, 0.5 = halfspeed, 0.25 = quarter speed
      Scene.PX_PER_METER = 500;  //scale factor f=500  pixels per meter
+     Scene.SHORT_SCREEN_PX_PER_METER = 300;
      Scene.FPS = 20;    //frames per second of movie
      Scene.FDT = 1/Scene.FPS;   //time increment for free-falling mass
      Scene.SOUNDS_ENABLED = 'high';   //true if sounds enabled; allows user to turn off sounds
