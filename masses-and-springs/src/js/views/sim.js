@@ -164,10 +164,13 @@ define(function (require) {
             this.energyGraphs = [];
             this.$zoom = this.$el.find('.zoom');
 
+            var graphHeight = AppView.windowIsShort() ? 225 : 440;
+
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
-                    title : 'Energy of ' + (iter + 1)
+                    title : 'Energy of ' + (iter + 1),
+                    graphHeight: graphHeight
                 });
 
                 barGraph.render();
