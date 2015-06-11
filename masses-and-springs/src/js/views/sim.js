@@ -284,10 +284,6 @@ define(function (require) {
 
             this.referenceLineView = new ReferenceLineView({
                 dragFrame: this.el,
-                position: {
-                    x : (Initials.Springs[0].x - 0.75 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER,
-                    y : (Initials.SpringsY1 + Constants.SpringDefaults.REST_L) * Constants.Scene.PX_PER_METER
-                },
                 width: (Initials.Springs[Initials.Springs.length - 1].x - Initials.Springs[0].x + 1.5 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER
             });
 
@@ -386,13 +382,20 @@ define(function (require) {
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
+            this.sceneView.postRender();
 
             // tools
             this.stopwatchView.postRender();
             this.rulerView.postRender();
 
             this.referenceLineView.postRender();
-            this.sceneView.postRender();
+            this.referenceLineView.position = {
+                x : this.sceneView.mvt.modelToViewX(Initials.Springs[1].x) - this.referenceLineView.width / 2,
+                y : this.sceneView.mvt.modelToViewY(Initials.SpringsY1 + Constants.SpringDefaults.REST_L)
+            };
+            this.referenceLineView.updatePosition();
+
+            
             this.sceneView.initTools([this.referenceLineView]);
 
             this.stopwatchView.hide();
@@ -426,7 +429,7 @@ define(function (require) {
                 attachTo: this.sceneView.toolsLayer,
                 position : {
                     x : 140,
-                    y : 300
+                    y : AppView.windowIsShort() ? 200 : 300
                 },
                 width : '300px',
                 title : 'Pull mass sideways to detach from spring'
