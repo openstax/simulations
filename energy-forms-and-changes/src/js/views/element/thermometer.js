@@ -45,13 +45,15 @@ define(function(require) {
             
             var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ThermometerView.HEIGHT_IN_METERS)); // in pixels
             var scale = targetSpriteHeight / back.texture.height;
-            console.log(targetSpriteHeight)
 
             back.scale.x = back.scale.y = scale;
             front.scale.x = front.scale.y = scale;
 
-            this.backLayer  = back;
-            this.frontLayer = front;
+            this.backLayer  = new PIXI.DisplayObjectContainer;
+            this.frontLayer = new PIXI.DisplayObjectContainer;
+
+            this.backLayer.addChild(back);
+            this.frontLayer.addChild(front);
 
             // back.anchor.x = front.anchor.x = 0.5;
             back.anchor.y = front.anchor.y = 1;
@@ -68,11 +70,13 @@ define(function(require) {
             var freezingY = bottomTickY + tickSpacing; // second tick mark from bottom
             var boilingY  = topTickY    - tickSpacing; // second tick mark from top
 
-            this.displayObject.addChild(back);
+            this.displayObject.addChild(this.backLayer);
+
             this.initLiquid(back.width, back.height, freezingY, boilingY, centerOfBulb);
             this.initMarker(halfWidth);
             this.initTickMarks(back.width, bottomTickY, topTickY, tickSpacing);
-            this.displayObject.addChild(front);
+
+            this.displayObject.addChild(this.frontLayer);
 
             // var origin = new PIXI.Graphics();
             // origin.beginFill(0x0000FF, 1);
