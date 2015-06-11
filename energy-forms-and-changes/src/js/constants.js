@@ -319,6 +319,7 @@ define(function (require) {
     var ThermometerClipsView = {};
 
     ThermometerClipsView.BASE_WIDTH = 0.118; // Meters
+    ThermometerClipsView.CLIP_WIDTH = 0.038; // Meters tall
 
     Constants.ThermometerClipsView = ThermometerClipsView;
 

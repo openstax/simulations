@@ -65,22 +65,30 @@ define(function(require) {
             var point;
             var backClip;
             var frontClip;
+            var targetClipWidth = this.mvt.modelToViewDeltaX(ThermometerClipsView.CLIP_WIDTH); // In pixels
+            var clipXAnchor = 0.40;
+            var clipYAnchor = 0.56;
+            var clipScale;
+            console.log(spacing)
 
             for (var i = 0; i < this.numThermometerSpots; i++) {
-                point = new PIXI.Point(
-                    this.x + i * spacing, 
-                    this.y + height / 2
-                );
-
-                // TODO: make these scale
                 backClip  = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_BACK);
                 frontClip = Assets.createSprite(Assets.Images.THERMOMETER_CLIP_FRONT);
 
+                backClip.anchor.x = frontClip.anchor.x = clipXAnchor;
+                backClip.anchor.y = frontClip.anchor.y = clipYAnchor;
+
+                clipScale = targetClipWidth / backClip.texture.width;
+                backClip.scale.x = frontClip.scale.x = clipScale;
+                backClip.scale.y = frontClip.scale.y = clipScale;
+
+                point = new PIXI.Point(
+                    this.x + spacing / 2 + i * spacing - backClip.width * (1 - clipXAnchor), 
+                    this.y + height / 2
+                );
+
                 backClip.position  = point;
                 frontClip.position = point;
-
-                backClip.anchor.x = frontClip.anchor.x = 0.40;
-                backClip.anchor.y = frontClip.anchor.y = 0.60;
 
                 this.backLayer.addChild(backClip);
                 this.frontLayer.addChild(frontClip);
