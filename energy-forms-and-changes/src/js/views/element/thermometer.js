@@ -42,6 +42,8 @@ define(function(require) {
             var back  = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_BACK);
             var front = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_FRONT);
 
+            this.back = back;
+            this.front = front;
             
             var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ThermometerView.HEIGHT_IN_METERS)); // in pixels
             var scale = targetSpriteHeight / back.texture.height;
@@ -94,7 +96,8 @@ define(function(require) {
             var longTickWidth  = shortTickWidth * 2;
 
             var ticks = new PIXI.Graphics();
-            ticks.lineStyle(ThermometerView.TICK_MARK_THICKNESS, 0x000000, 1);
+            var thickness = Math.max(1, Math.round(ThermometerView.TICK_MARK_THICKNESS * this.back.scale.x));
+            ticks.lineStyle(thickness, 0x000000, 1);
             var y = 0;
             for (var i = 0; i < ThermometerView.NUM_TICK_MARKS; i++) {
                 y = Math.floor(topTickY - i * tickSpacing);
