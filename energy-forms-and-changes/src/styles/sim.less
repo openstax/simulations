@@ -34,11 +34,17 @@
 
 .energy-symbols-checkbox-panel {
     position: absolute;
-    right: 15px;
-    top: 15px;
+    right: @panel-margin;
+    top: @panel-margin;
     padding: @side-panels-padding;
+    width: @element-symbols-checkbox-panel-width;
     color: #000;
     .gray-panel();
+
+    @media screen and (max-height: @short-window) {
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
 
     .energy-symbols-checkbox + label {
         opacity: 0.6;
@@ -52,7 +58,7 @@
         float: right;
         margin-top: -4px;
         margin-bottom: -2px;
-        margin-left: 6px;
+        margin-left: 13px;
     }
 }
 

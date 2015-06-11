@@ -5,12 +5,12 @@ define(function(require) {
     var $       = require('jquery');
     var PIXI    = require('pixi');
     var Vector2 = require('common/math/vector2');
-    // var Rectangle = require('common/math/rectangle');
 
-    var ModelViewTransform   = require('common/math/model-view-transform');
-    var PixiSceneView        = require('common/pixi/view/scene');
-    var AirView              = require('views/air');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
 
+    var AirView    = require('views/air');
     var FaucetView = require('views/energy-source/faucet');
     var SunView    = require('views/energy-source/sun');
     var TeapotView = require('views/energy-source/teapot');
@@ -56,12 +56,21 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = Math.round(this.width / 2);
-            this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
+            var scale = EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
+            if (AppView.windowIsShort()) {
+                scale *= 0.7;
+                this.viewOriginX = Math.round((this.width - (13 + 180 + 13)) / 2);
+                this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
+            }
+            else {
+                this.viewOriginX = Math.round(this.width / 2);
+                this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
+            }
+
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR
+                scale
             );
 
             this.initLayers();
