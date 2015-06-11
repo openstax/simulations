@@ -1,5 +1,3 @@
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
 
@@ -7,10 +5,19 @@ body {
     .user-select(none);
 }
 
+.sims .sim-content {
+    min-height: initial;
+}
+
 .sim-controls-column {
 	position: absolute;
 	right: @panel-margin;
 	top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        left: @panel-margin;
+        right: initial;
+    }
 }
 
 .sim-controls {
