@@ -913,6 +913,8 @@ define(function (require) {
     BikerView.PANEL_OFFSET = new Vector2(-BikerView.PANEL_WIDTH / 2, -BikerView.PANEL_HEIGHT - 0.018);
     BikerView.LABEL_COLOR = '#000';
     BikerView.LABEL_FONT  = '16px Arial';
+    BikerView.LABEL_FONT_FAMILY = 'Arial';
+    BikerView.LABEL_FONT_SIZE = 16;
 
     Constants.BikerView = BikerView;
 

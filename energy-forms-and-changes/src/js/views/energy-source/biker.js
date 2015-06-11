@@ -119,6 +119,9 @@ define(function(require) {
             backLeg.anchor.x = frontLeg.anchor.x = 0.5;
             backLeg.anchor.y = frontLeg.anchor.y = 0.5;
 
+            backLeg.scale.x = frontLeg.scale.x = this.getImageScale();
+            backLeg.scale.y = frontLeg.scale.y = this.getImageScale();
+
             var frame      = this.createSpriteWithOffset(Assets.Images.BICYCLE_FRAME_3,     Biker.FRAME_CENTER_OFFSET);
             var spokes     = this.createSpriteWithOffset(Assets.Images.BICYCLE_SPOKES,      new Vector2( 0.035, -0.020 ).add(Biker.FRAME_CENTER_OFFSET), 0.5);
             var rider      = this.createSpriteWithOffset(Assets.Images.BICYCLE_RIDER,       new Vector2(-0.0025, 0.0620).add(Biker.FRAME_CENTER_OFFSET));
@@ -171,15 +174,15 @@ define(function(require) {
                     max: Constants.Biker.MAX_ANGULAR_VELOCITY_OF_CRANK
                 },
 
-                width: panelWidth * 0.4,
+                width: panelWidth * 0.39,
                 backgroundHeight: 3,
                 backgroundAlpha: 0.5,
                 handleSize: 12,
             });
 
             // Position it
-            sliderView.displayObject.x = (panelWidth - sliderView.displayObject.width) / 2;
-            sliderView.displayObject.y = (panelHeight - 4) / 2;
+            sliderView.displayObject.x = (panelWidth - sliderView.background.width) / 2;
+            sliderView.displayObject.y = panelHeight / 2;
 
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
@@ -195,20 +198,20 @@ define(function(require) {
 
             // Create labels
             var textStyle = {
-                font: BikerView.LABEL_FONT,
+                font: Math.round(BikerView.LABEL_FONT_SIZE * this.getImageScale()) + 'px ' + BikerView.LABEL_FONT_FAMILY,
                 fill: BikerView.LABEL_COLOR
             };
 
             var slow = new PIXI.Text('Slow', textStyle);
             slow.anchor.y = 0.5;
-            slow.x = 15;
+            slow.x = 15 * this.getImageScale();
             slow.y = panelHeight * 0.5;
             panel.addChild(slow);
 
             var fast = new PIXI.Text('Fast', textStyle);
             fast.anchor.x = 1;
             fast.anchor.y = 0.5;
-            fast.x = panelWidth - 15;
+            fast.x = panelWidth - 15 * this.getImageScale();
             fast.y = panelHeight * 0.5;
             panel.addChild(fast);
 
