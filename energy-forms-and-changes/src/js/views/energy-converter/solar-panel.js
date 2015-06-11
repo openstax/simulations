@@ -33,7 +33,9 @@ define(function(require) {
             var connector  = this.createSpriteWithOffset(Assets.Images.CONNECTOR,          SolarPanel.CONNECTOR_OFFSET);
 
             // Scaling
-            solarPanel.scale.x = solarPanel.scale.y = this.mvt.modelToViewDeltaX(SolarPanel.PANEL_IMAGE_WIDTH) / solarPanel.width;
+            var scale = (this.mvt.modelToViewDeltaX(SolarPanel.PANEL_IMAGE_WIDTH) / solarPanel.width) * this.getImageScale();
+            solarPanel.scale.x = scale;
+            solarPanel.scale.y = scale;
 
             // Need to fudge the position a little...
             curvedWire.x += 2;
