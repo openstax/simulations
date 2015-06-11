@@ -44,10 +44,12 @@ define(function(require) {
         },
 
         initLightRays: function() {
+            var imageScale = this.getImageScale();
+
             var raySource = new LightRaySourceView({
-                center: this.lightRayCenter,           // Origin of rays in pixels
-                innerRadius: this.lightRayInnerRadius, // Distance from center to start the rays
-                outerRadius: 400,                      // Furthest reach of the rays (making them technically segments)
+                center: this.lightRayCenter.clone().scale(imageScale), // Origin of rays in pixels
+                innerRadius: this.lightRayInnerRadius * imageScale,    // Distance from center to start the rays
+                outerRadius: 400 * imageScale,                         // Furthest reach of the rays (making them technically segments)
                 numRays: 20,                           // The number of rays if none were clipped
                 clippingWedgeAngle: Math.PI / 4,       // Angle of area that won't emit rays
                 color: this.lightRayColor              // Ray color
