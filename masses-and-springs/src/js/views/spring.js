@@ -71,9 +71,9 @@ define(function(require) {
             this.viewModel.ringOffset = 2 * this.viewModel.ringRadius;
             this.viewModel.coilRadius = this.mvt.modelToViewDeltaX(Spring.WIDTH)/2;
 
-            this.viewModel.x = this.mvt.modelToViewDeltaX(this.model.x);
-            this.viewModel.y1 = this.mvt.modelToViewDeltaY(this.model.y1);
-            this.viewModel.restL = this.mvt.modelToViewDeltaX(this.model.restL);
+            this.viewModel.x = this.mvt.modelToViewX(this.model.x);
+            this.viewModel.y1 = this.mvt.modelToViewY(this.model.y1);
+            this.viewModel.restL = this.mvt.modelToViewDeltaY(this.model.restL);
             this.viewModel.coilLeft = this.viewModel.x - this.viewModel.coilRadius;
 
             this.viewModel.pegColor = Colors.parseHex(Spring.PEG_COLOR);
@@ -87,7 +87,7 @@ define(function(require) {
 
         _updateSpringViewModel: function(){
             // Things that will change and need to update
-            this.viewModel.y2 = this.mvt.modelToViewDeltaY(this.model.y2);
+            this.viewModel.y2 = this.mvt.modelToViewY(this.model.y2);
             this.viewModel.coilsLength = this.viewModel.y2 - this.viewModel.y1;
             this.viewModel.coilHeight = this.viewModel.coilsLength / this.viewModel.numberOfCoils;
 

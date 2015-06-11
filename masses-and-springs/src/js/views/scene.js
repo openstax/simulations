@@ -41,14 +41,18 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = 0; //Math.round(this.width  / 2);
-            this.viewOriginY = 0; //Math.round(this.height / 2);
 
             var scale;
-            if (AppView.windowIsShort())
+            if (AppView.windowIsShort()) {
                 scale = Constants.Scene.SHORT_SCREEN_PX_PER_METER;
-            else
+                this.viewOriginX = 100;
+                this.viewOriginY = 15;
+            }
+            else {
                 scale = Constants.Scene.PX_PER_METER;
+                this.viewOriginX = 0;
+                this.viewOriginY = 0;
+            }
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),

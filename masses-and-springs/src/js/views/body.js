@@ -74,8 +74,8 @@ define(function(require) {
 
         updateBodyViewModel: function(){
 
-            this.viewModel.left = this.mvt.modelToViewDeltaX(this.model.x);
-            this.viewModel.bottom = this.mvt.modelToViewDeltaY(this.model.y);
+            this.viewModel.left = this.mvt.modelToViewX(this.model.x);
+            this.viewModel.bottom = this.mvt.modelToViewY(this.model.y);
 
             this.viewModel.top = this.viewModel.bottom - this.viewModel.height;
             this.viewModel.center = this.viewModel.left + this.viewModel.width / 2;
@@ -295,19 +295,19 @@ define(function(require) {
         },
 
         _calcXFromLeftDrag: function(dx){
-            return this.mvt.viewToModelDeltaX(this.displayObject.x);
+            return this.mvt.viewToModelX(this.displayObject.x);
         },
 
         _calcYFromBottomDrag: function(dy){
-            return this.mvt.viewToModelDeltaY(this.displayObject.y + this.viewModel.height);
+            return this.mvt.viewToModelY(this.displayObject.y + this.viewModel.height);
         },
 
         _calcYFromSpringY2: function(springY2){
-            return springY2 + this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
+            return springY2 + this.mvt.viewToModelY(this.viewModel.totalHeight);
         },
 
         _calcSpringY2FromY: function(){
-            return this.model.y - this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
+            return this.model.y - this.mvt.viewToModelY(this.viewModel.totalHeight);
         },
 
         _calcXFromViewCenter: function(center){
