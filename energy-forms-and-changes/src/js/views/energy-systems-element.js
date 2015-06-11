@@ -9,6 +9,8 @@ define(function(require) {
 
     var Assets = require('assets');
 
+    var Constants = require('constants');
+
     /**
      * A view that represents an element model
      */
@@ -79,6 +81,10 @@ define(function(require) {
         createSpriteWithOffset: function(image, offset, anchorX, anchorY) {
             var sprite = (image instanceof PIXI.Texture) ? new PIXI.Sprite(image) : Assets.createSprite(image);
 
+            var imageScale = this.getImageScale();
+            sprite.scale.x = imageScale;
+            sprite.scale.y = imageScale;
+
             if (anchorX === undefined)
                 anchorX = 0;
             if (anchorY === undefined)
@@ -120,6 +126,17 @@ define(function(require) {
 
         updateOpacity: function(model, opacity) {
             this.displayObject.alpha = opacity;
+        },
+
+        /**
+         * The images were originally meant to be rendered at their
+         *   natural size when the MVT is at its default zoom level,
+         *   so we need to find out the ratio of the current zoom
+         *   level to the default one and scale all our graphics
+         *   accordingly.
+         */
+        getImageScale: function() {
+            return this.mvt.getXScale() / Constants.EnergySystemsSimulationView.DEFAULT_MVT_SCALE;
         }
 
     });

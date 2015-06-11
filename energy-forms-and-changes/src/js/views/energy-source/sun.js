@@ -160,7 +160,7 @@ define(function(require) {
                 lightAbsorptionCoefficient: 0.3
             }));
 
-            var bgHeight = panelHeight * 0.6;
+            var bgHeight = panelHeight * 0.55;
             var bgWidth  = SunView.SLIDER_WIDTH;
 
             var canvas = document.createElement('canvas');
@@ -218,7 +218,7 @@ define(function(require) {
 
             // Create labels
             var textStyle = {
-                font: SunView.LABEL_FONT,
+                font: Math.round(SunView.LABEL_FONT_SIZE * this.getImageScale()) + 'px ' + SunView.FONT_FAMILY,
                 fill: SunView.LABEL_COLOR
             };
 
@@ -231,11 +231,11 @@ define(function(require) {
             var none = new PIXI.Text('- None', textStyle);
             none.anchor.y = 0.5;
             none.x = panelWidth * 0.4;
-            none.y = panelHeight * 0.9;
+            none.y = panelHeight * 0.85;
             panel.addChild(none);
 
             var title = new PIXI.Text('Clouds', {
-                font: SunView.LABEL_TITLE_FONT,
+                font: Math.round(SunView.TITLE_FONT_SIZE * this.getImageScale()) + 'px ' + SunView.FONT_FAMILY,
                 fill: SunView.LABEL_COLOR
             });
             title.anchor.y = 0;
@@ -245,7 +245,7 @@ define(function(require) {
             
             // Create little cloud icon
             var cloudIcon = Assets.createSprite(Assets.Images.CLOUD_1);
-            cloudIcon.scale.x = cloudIcon.scale.y = SunView.CLOUD_ICON_WIDTH / cloudIcon.width;
+            cloudIcon.scale.x = cloudIcon.scale.y = (SunView.CLOUD_ICON_WIDTH / cloudIcon.width) * this.getImageScale();
             cloudIcon.anchor.x = cloudIcon.anchor.y = 0.5;
             cloudIcon.x = panelWidth - (panelWidth - (title.y + title.width)) / 2;
             cloudIcon.y = title.y + title.height / 2 - 2;

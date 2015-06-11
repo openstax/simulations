@@ -1,5 +1,3 @@
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
 
@@ -9,24 +7,46 @@
 	bottom: 77px;
 	.user-select(none);
 
+	@media screen and (max-height: @short-window) {
+	    right: @short-screen-panel-margin;
+	    bottom: (62 + @short-screen-panel-margin - @element-row-margin);
+	    width: auto;
+	}
+
 	.energy-system-elements-panel-wrapper {
 		float: left;
 		text-align: center;
+
+		@media screen and (max-height: @short-window) {
+			float: none;
+			display: inline;
+		}
 
 		.energy-system-elements-panel {
 			display: inline-block;
 			padding: 10px 4px 6px;
 			.gray-panel(0.12);
 
+			@media screen and (max-height: @short-window) {
+				display: block;
+				margin-bottom: @element-row-margin;
+				padding: 5px 4px 2px;
+			}
+
 			.element-icon {
 				display: inline-block;
 				.box-sizing(content-box);
 				margin: 0 6px;
-				padding: 8px;
+				padding: 6px;
 				background-color: #fff;
 				border: 4px solid #cdcdcd;
 				border-radius: 50%;
 				cursor: pointer;
+
+				@media screen and (max-height: @short-window) {
+					border-width: 3px;
+					margin: 0 1px;
+				}
 
 				&:hover {
 					border-color: #bbb;
@@ -48,12 +68,18 @@
 .energy-symbols-legend {
 	//width: @side-panels-width;
 	position: absolute;
-	right: 15px;
+	right: @panel-margin;
 	top: 184px;
 	padding: (@side-panels-padding - 8) @side-panels-padding;
 	opacity: 0;
 	.transition(~'opacity 100ms');
 	.gray-panel();
+
+	@media screen and (max-height: @short-window) {
+		top: 74px;
+		right: @short-screen-panel-margin;
+		//width: @element-symbols-checkbox-panel-width;
+	}
 
 	&.visible {
 		opacity: 1;
@@ -63,10 +89,23 @@
 		display: block;
 		margin: 8px 0;
 
+		@media screen and (max-height: @short-window) {
+			margin: 1px 0;
+		}
+
 		.energy-symbol {
 		    float: left;
 		    margin-right: 10px;
 		    margin-top: -1px;
+
+		    @media screen and (max-height: @short-window) {
+		    	margin-top: 0;
+
+		    	&:after {
+		    		font-size: 11px;
+		    		line-height: 18px;
+		    	}
+		    }
 		}
 	}
 }

@@ -5,9 +5,11 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var SimView = require('common/app/sim');
+    var AppView = require('common/app/app');
+
     var EnergySystemsSimulation = require('models/simulation/energy-systems');
 
-    var SimView                = require('common/app/sim');
     var EnergySystemsSceneView = require('views/scene/energy-systems');
 
     var Assets = require('assets'); window.Assets = Assets;
@@ -191,7 +193,9 @@ define(function (require) {
 
             this.$el.html(this.template({
                 elementGroups: elements,
-                energySymbols: energySymbols
+                elementIconSize: !AppView.windowIsShort() ? 36 : 24,
+                energySymbols: energySymbols,
+                energySymbolsSize: !AppView.windowIsShort() ? 23 : 18
             }));
 
             this.elementSelected(null, this.simulation.get('source'));

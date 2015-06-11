@@ -42,8 +42,20 @@ define(function(require) {
             var back  = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_BACK);
             var front = Assets.createSprite(Assets.Images.THERMOMETER_MEDIUM_FRONT);
 
-            this.backLayer  = back;
-            this.frontLayer = front;
+            this.back = back;
+            this.front = front;
+            
+            var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ThermometerView.HEIGHT_IN_METERS)); // in pixels
+            var scale = targetSpriteHeight / back.texture.height;
+
+            back.scale.x = back.scale.y = scale;
+            front.scale.x = front.scale.y = scale;
+
+            this.backLayer  = new PIXI.DisplayObjectContainer;
+            this.frontLayer = new PIXI.DisplayObjectContainer;
+
+            this.backLayer.addChild(back);
+            this.frontLayer.addChild(front);
 
             // back.anchor.x = front.anchor.x = 0.5;
             back.anchor.y = front.anchor.y = 1;
@@ -60,11 +72,13 @@ define(function(require) {
             var freezingY = bottomTickY + tickSpacing; // second tick mark from bottom
             var boilingY  = topTickY    - tickSpacing; // second tick mark from top
 
-            this.displayObject.addChild(back);
+            this.displayObject.addChild(this.backLayer);
+
             this.initLiquid(back.width, back.height, freezingY, boilingY, centerOfBulb);
             this.initMarker(halfWidth);
             this.initTickMarks(back.width, bottomTickY, topTickY, tickSpacing);
-            this.displayObject.addChild(front);
+
+            this.displayObject.addChild(this.frontLayer);
 
             // var origin = new PIXI.Graphics();
             // origin.beginFill(0x0000FF, 1);
@@ -82,7 +96,8 @@ define(function(require) {
             var longTickWidth  = shortTickWidth * 2;
 
             var ticks = new PIXI.Graphics();
-            ticks.lineStyle(ThermometerView.TICK_MARK_THICKNESS, 0x000000, 1);
+            var thickness = Math.max(1, Math.round(ThermometerView.TICK_MARK_THICKNESS * this.back.scale.x));
+            ticks.lineStyle(thickness, 0x000000, 1);
             var y = 0;
             for (var i = 0; i < ThermometerView.NUM_TICK_MARKS; i++) {
                 y = Math.floor(topTickY - i * tickSpacing);
