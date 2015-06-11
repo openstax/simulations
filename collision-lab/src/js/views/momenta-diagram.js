@@ -314,6 +314,10 @@ define(function(require) {
             this.$el.hide();
         },
 
+        isVisible: function() {
+            return this.displayObject.visible;
+        }
+
     }, Constants.MomentaDiagram);
 
     return MomentaDiagram;

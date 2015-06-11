@@ -68,6 +68,10 @@ define(function (require) {
     SceneView.CM_MARKER_LINE_ALPHA = 0.5;
     SceneView.CM_MARKER_LINE_WIDTH = 2;
 
+    SceneView.PANEL_MARGIN = 20;
+    SceneView.SHORT_SCREEN_PANEL_MARGIN = 13;
+
+
     Constants.SceneView = SceneView;
 
 

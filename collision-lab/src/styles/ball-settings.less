@@ -1,7 +1,80 @@
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
+
+@ball-settings-toggle-open-width: 60px;
+
+.ball-settings-toggle {
+    display: none;
+    position: absolute;
+    top: @short-screen-panel-margin;
+    left: @short-screen-panel-margin;
+    width: 40px;
+    height: 200px;
+    background: @link-color;
+    cursor: pointer;
+    overflow: hidden;
+    .user-select(none);
+    .transition(~"width 80ms");
+
+    @media screen and (max-height: @short-window) {
+        display: block;
+    }
+
+    &:hover {
+        box-shadow: 0 0 11px rgba(0, 0, 0, 0.35);
+        background: #495A87;
+        width: @ball-settings-toggle-open-width;
+    }
+
+    &.open {
+        width: @ball-settings-toggle-open-width;
+        box-shadow: 0 0 11px rgba(0, 0, 0, 0.35);
+        clip: rect(-20px, @ball-settings-toggle-open-width, 400px, -20px);
+
+        .ball-settings-open-text  { display: none;  }
+        .ball-settings-close-text { display: block; }
+        .open-icon  { display: none;  }
+        .close-icon { display: block; }
+    }
+
+    .ball-settings-open-text ,
+    .ball-settings-close-text {
+        position: absolute;
+        top: -65px;
+        bottom: 0;
+        height: 15px;
+        width: 190px;
+        line-height: 40px;
+        font-weight: normal;
+        padding: 0;
+        color: #fff;
+        border-radius: 0;
+        margin-top: auto;
+        margin-bottom: auto;
+        .transform(~"rotate(-90deg) translateY(-87px)");
+        .transform-origin(center center);
+    }
+
+    .ball-settings-close-text {
+        display: none;
+        top: -64px;
+    }
+
+    .open-icon,
+    .close-icon {
+        position: absolute;
+        left: 40px;
+        top: 50%;
+        margin-top: -10px;
+        font-size: 20px;
+        color: #fff;
+    }
+
+    .close-icon {
+        display: none;
+        left: 38px;
+    }
+}
 
 .ball-settings-wrapper {
     position: absolute;
@@ -9,6 +82,24 @@
     left: @panel-margin;
     color: fadeout(#000, 14%);
     .user-select(none);
+
+    #sim-advanced-sim & {
+        @media screen and (max-height: @short-window) {
+            top: @short-screen-panel-margin;
+            left: (@short-screen-panel-margin + @ball-settings-toggle-open-width);
+            background: rgba(234, 235, 245, 0.79);
+            border: 4px solid @link-color;
+            padding: 13px;
+            height: 200px;
+            box-shadow: 0 0 11px rgba(0, 0, 0, 0.35);
+            display: none;
+
+            &.open {
+                display: block;
+            }
+        }
+    }
+    
 
     &.disabled {
         opacity: 0.5;
