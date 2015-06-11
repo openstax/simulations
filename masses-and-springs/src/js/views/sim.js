@@ -267,7 +267,7 @@ define(function (require) {
                 units : this.simulation.get('units').time,
                 position: {
                     x : 468,
-                    y : 630 
+                    y : AppView.windowIsShort() ? 396 : 630 
                 }
             });
 
