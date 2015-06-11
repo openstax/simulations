@@ -34,13 +34,15 @@ define(function(require) {
             var faucetPipe  = Assets.createSprite(Assets.Images.FAUCET_PIPE);
 
             faucetPipe.anchor.x = 1;
-            faucetPipe.scale.x = 100; // Make it go off the screen and disappear
+            faucetPipe.scale.x = 200; // Make it go off the screen and disappear
             faucetPipe.y = 32; // Line it up with the faucet front graphic
 
             var faucet = new PIXI.DisplayObjectContainer();
             faucet.addChild(faucetFront);
             faucet.addChild(faucetPipe);
             this.displayObject.addChild(faucet);
+
+            var imageScale = this.getImageScale();
 
             /* 
              * The original simulation uses an instance of FaucetNode
@@ -54,12 +56,12 @@ define(function(require) {
              *   image--as can be seen below--the faucet seems to be
              *   lined up correctly with the water coming out.
              */
-            var offsetX = -(faucetFront.width / 2) - 18;
-            var offsetY = -faucetFront.height + 18;
+            var offsetX = (-(faucetFront.width / 2) - 18) * imageScale;
+            var offsetY = (-faucetFront.height + 18) * imageScale;
             faucet.x = offsetX + this.mvt.modelToViewDeltaX(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.x);
             faucet.y = offsetY + this.mvt.modelToViewDeltaY(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.y);
 
-            var imageScale = 1;//this.getImageScale();
+            
             faucet.scale.x = faucet.scale.y = imageScale * 0.9;
             
             var handle = new PIXI.Graphics();

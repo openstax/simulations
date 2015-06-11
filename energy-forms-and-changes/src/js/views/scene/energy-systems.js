@@ -60,7 +60,7 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 scale = EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE;
                 this.viewOriginX = Math.round((this.width - (13 + 180 + 13)) / 2);
-                this.viewOriginY = Math.round(this.height * 0.560); // PhET's is 0.475, but I changed it because we've got a differently shaped view
+                this.viewOriginY = Math.round(this.height * 0.580); // PhET's is 0.475, but I changed it because we've got a differently shaped view
             }
             else {
                 scale = EnergySystemsSimulationView.DEFAULT_MVT_SCALE;

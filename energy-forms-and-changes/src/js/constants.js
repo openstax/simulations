@@ -539,7 +539,7 @@ define(function (require) {
     var EnergySystemsSimulationView = {};
 
     EnergySystemsSimulationView.DEFAULT_MVT_SCALE = Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
-    EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE = EnergySystemsSimulationView.DEFAULT_MVT_SCALE * 0.55;
+    EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE = EnergySystemsSimulationView.DEFAULT_MVT_SCALE * 0.74;
 
     Constants.EnergySystemsSimulationView = EnergySystemsSimulationView;
 
