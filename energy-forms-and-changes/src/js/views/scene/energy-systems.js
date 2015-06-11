@@ -56,13 +56,14 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var scale = EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
+            var scale;
             if (AppView.windowIsShort()) {
-                scale *= 0.7;
+                scale = EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE;
                 this.viewOriginX = Math.round((this.width - (13 + 180 + 13)) / 2);
-                this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
+                this.viewOriginY = Math.round(this.height * 0.560); // PhET's is 0.475, but I changed it because we've got a differently shaped view
             }
             else {
+                scale = EnergySystemsSimulationView.DEFAULT_MVT_SCALE;
                 this.viewOriginX = Math.round(this.width / 2);
                 this.viewOriginY = Math.round(this.height * 0.525); // PhET's is 0.475, but I changed it because we've got a differently shaped view
             }

@@ -40,6 +40,8 @@ define(function(require) {
             var faucet = new PIXI.DisplayObjectContainer();
             faucet.addChild(faucetFront);
             faucet.addChild(faucetPipe);
+            this.displayObject.addChild(faucet);
+
             /* 
              * The original simulation uses an instance of FaucetNode
              *   (from phet.common.piccolophet.nodes.faucet.FaucetNode)
@@ -56,13 +58,14 @@ define(function(require) {
             var offsetY = -faucetFront.height + 18;
             faucet.x = offsetX + this.mvt.modelToViewDeltaX(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.x);
             faucet.y = offsetY + this.mvt.modelToViewDeltaY(Constants.Faucet.OFFSET_FROM_CENTER_TO_WATER_ORIGIN.y);
-            faucet.scale.x = faucet.scale.y = 0.9;
-            this.displayObject.addChild(faucet);
 
+            var imageScale = 1;//this.getImageScale();
+            faucet.scale.x = faucet.scale.y = imageScale * 0.9;
+            
             var handle = new PIXI.Graphics();
             handle.beginFill(Colors.parseHex(Constants.WATER_FILL_COLOR), 1);
             handle.lineStyle(1, 0x333333, 1);
-            handle.drawRect(-5, -10, 10, 20);
+            handle.drawRect(-5 * (1 / imageScale), -10 * (1 / imageScale), 10 * (1 / imageScale), 20 * (1 / imageScale));
             handle.endFill();
 
             this.sliderView = new SliderView({

@@ -529,7 +529,7 @@ define(function (require) {
     EnergySystemsSimulation.OFFSET_BETWEEN_ELEMENTS   = new Vector2(0,     -0.4);
     EnergySystemsSimulation.ENERGY_SOURCE_POSITION    = new Vector2(-0.15,  0);
     EnergySystemsSimulation.ENERGY_CONVERTER_POSITION = new Vector2(-0.025, 0);
-    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector2( 0.09,  0);
+    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector2( 0.089,  0);
 
     EnergySystemsSimulation.TRANSITION_DURATION = 0.5;
 
@@ -538,7 +538,8 @@ define(function (require) {
 
     var EnergySystemsSimulationView = {};
 
-    EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR = 2200;
+    EnergySystemsSimulationView.DEFAULT_MVT_SCALE = Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
+    EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE = EnergySystemsSimulationView.DEFAULT_MVT_SCALE * 0.55;
 
     Constants.EnergySystemsSimulationView = EnergySystemsSimulationView;
 
