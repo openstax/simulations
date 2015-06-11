@@ -689,8 +689,8 @@ define(function (require) {
     SunView.RAY_DISTANCE = 1000;
 
     SunView.PANEL_WIDTH  = 0.065;
-    SunView.PANEL_HEIGHT = 0.085;
-    SunView.PANEL_OFFSET = new Vector2(-0.05, SunView.PANEL_HEIGHT / 2);
+    SunView.PANEL_HEIGHT = 0.088;
+    SunView.PANEL_OFFSET = new Vector2(-0.05, 0.035);
     
     SunView.SLIDER_WIDTH = 8;
     SunView.SLIDER_BG_FILL_TOP = '#444';
@@ -702,6 +702,9 @@ define(function (require) {
     SunView.LABEL_COLOR = '#000';
     SunView.LABEL_FONT = '16px Arial';
     SunView.LABEL_TITLE_FONT = '20px Arial';
+    SunView.FONT_FAMILY = 'Arial';
+    SunView.LABEL_FONT_SIZE = 16;
+    SunView.TITLE_FONT_SIZE = 20;
 
     SunView.CLOUD_ICON_WIDTH = 50;
 
