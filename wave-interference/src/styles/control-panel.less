@@ -2,17 +2,17 @@
 .control-panel {
 	z-index: @above-canvas;
 	
-	padding: 20px;
-	width: 100%;
+	width: @control-panel-width;
+	position: absolute;
+	right: 0;
+	top: 20px;
+	margin: 0;
+	padding: 0;
 
-	@media (min-width: @screen-sm-min) {
-		width: @control-panel-width;
-		position: absolute;
-		right: 0;
-		top: 20px;
-		margin: 0;
-		padding: 0;
-	}
+	@media screen and (max-height: @short-window) {
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
 
 	> .control-panel-tabs {
 		width: 100%;
@@ -70,21 +70,26 @@
 }
 
 .wave-properties {
+	position: absolute;
+	top: 480px;
+	left: 0px;
 	width: auto;
-	min-width: 160px;
-	margin-left: 20px;
-	margin-right: 20px;
-	margin-bottom: 20px;
 	padding: 16px;
+	min-width: 160px;
+	margin: 0;
 
-	@media (min-width: @screen-sm-min) {
-		width: auto;
-		min-width: 160px;
-		position: absolute;
-		top: 480px;
-		left: 0px;
-		margin: 0;
-	}
+	@media screen and (max-height: @short-window) {
+        top: 290px;
+        left: @short-screen-panel-margin;
+        
+        .slider {
+        	margin-top: 2;
+
+        	&:last-child {
+        		margin-bottom: 2px;
+        	}
+        }
+    }
 }
 
 // For the tools/properties panel
