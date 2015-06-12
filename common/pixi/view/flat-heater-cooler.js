@@ -12,9 +12,12 @@ define(function(require) {
 
     var Assets = require('assets');
 
-    var HOT_COLOR     = Colors.parseHex('#ff4500');
-    var COLD_COLOR    = Colors.parseHex('#0000f0');
-    var NEUTRAL_COLOR = Colors.parseHex('#333');
+    var HOT_SLIDER_COLOR  = '#ff4500';
+    var COLD_SLIDER_COLOR = '#0000f0';
+
+    var HOT_COLOR     = '#FF6B00';
+    var COLD_COLOR    = '#3F87C3';
+    var NEUTRAL_COLOR = '#555';
 
     var HeaterCoolerViewModel = Backbone.Model.extend({
         defaults: {
@@ -35,14 +38,17 @@ define(function(require) {
             options = _.extend({
                 width:  100,
                 height: 100,
-                elementThickness: 4,
+                filletRadius: 3,
+                elementThickness: 10,
+                elementWidthPercent: 0.9, 
+                elementFilletRadius: 3,
 
                 textFont: 'bold 17px Arial',
                 textColor: '#000',
 
-                fillColor: '#555',
-                lineWidth: 2,
-                lineColor: '#444',
+                fillColor: '#bbb',
+                lineWidth: 1,
+                lineColor: '#888',
 
                 heatingEnabled: true,
                 coolingEnabled: true,
@@ -51,14 +57,23 @@ define(function(require) {
 
             this.width = options.width;
             this.height = options.height;
+            this.filletRadius = options.filletRadius;
             this.elementThickness = options.elementThickness;
+            this.elementWidthPercent = options.elementWidthPercent;
+            this.elementWidth = this.width * this.elementWidthPercent;
+            this.elementFilletRadius = options.elementFilletRadius;
 
             this.textFont  = options.textFont;
             this.textColor = options.textColor;
 
             this.fillColor = Colors.parseHex(options.fillColor);
+            this.handleColor = Colors.lightenHex(options.fillColor, 0.15);
             this.lineWidth = options.lineWidth;
             this.lineColor = Colors.parseHex(options.lineColor);
+
+            this.hotColor     = Colors.parseHex(HOT_COLOR);
+            this.coldColor    = Colors.parseHex(COLD_COLOR);
+            this.neutralColor = Colors.parseHex(NEUTRAL_COLOR);
 
             this.heatingEnabled = options.heatingEnabled;
             this.coolingEnabled = options.coolingEnabled;
@@ -76,34 +91,46 @@ define(function(require) {
             var width = this.width;
             var height = this.height;
             var elementThickness = this.elementThickness;
+            var elementWidth = this.elementWidth;
+            var elementFilletRadius = this.elementFilletRadius;
             var baseHeight = height - elementThickness;
 
             var base = new PIXI.Graphics();
             base.lineStyle(this.lineWidth, this.lineColor, 1);
             base.beginFill(this.fillColor, 1);
-            base.drawRect(-width / 2, -baseHeight, width, baseHeight);
+            base.drawRoundedRect(-width / 2, -baseHeight, width, baseHeight, this.filletRadius);
             base.endFill();
-            this.displayObject.addChild(base);
+            
+
+            
+            var elementHeight = elementThickness * 2;
+            var x = -elementWidth / 2;
+            var y = -height;
 
             this.hotElement = new PIXI.Graphics();
             this.coldElement = new PIXI.Graphics();
             this.neutralElement = new PIXI.Graphics();
 
-            this.hotElement.beginFill(HOT_COLOR, 1);
-            this.hotElement.drawRect(-width / 2, -height, width, elementThickness);
+            this.hotElement.beginFill(this.hotColor, 1);
+            this.hotElement.drawRoundedRect(x, y, elementWidth, elementHeight, elementFilletRadius);
             this.hotElement.endFill();
 
-            this.coldElement.beginFill(COLD_COLOR, 1);
-            this.coldElement.drawRect(-width / 2, -height, width, elementThickness);
+            this.coldElement.beginFill(this.coldColor, 1);
+            this.coldElement.drawRoundedRect(x, y, elementWidth, elementHeight, elementFilletRadius);
             this.coldElement.endFill();
 
-            this.neutralElement.beginFill(NEUTRAL_COLOR, 1);
-            this.neutralElement.drawRect(-width / 2, -height, width, elementThickness);
+            this.neutralElement.beginFill(this.neutralColor, 1);
+            this.neutralElement.drawRoundedRect(x, y, elementWidth, elementHeight, elementFilletRadius);
             this.neutralElement.endFill();
 
             this.displayObject.addChild(this.neutralElement);
             this.displayObject.addChild(this.hotElement);
             this.displayObject.addChild(this.coldElement);
+            this.displayObject.addChild(base);
+
+            // Default is neutral
+            this.hotElement.alpha = 0;
+            this.coldElement.alpha = 0;
         },
 
         initSlider: function() {
@@ -119,8 +146,8 @@ define(function(require) {
             var ctx = canvas.getContext('2d');
 
             var gradient = ctx.createLinearGradient(0, 0, bgWidth, 0);
-            gradient.addColorStop(0, HOT_COLOR);
-            gradient.addColorStop(1, COLD_COLOR);
+            gradient.addColorStop(0, COLD_SLIDER_COLOR);
+            gradient.addColorStop(1, HOT_SLIDER_COLOR);
             
             ctx.fillStyle = gradient;
             ctx.lineWidth   = 1;
@@ -140,16 +167,16 @@ define(function(require) {
                     max: this.heatingEnabled ?  1 : 0
                 },
                 orientation: 'horizontal',
-                direction: 'rtl',
+                direction: 'ltr',
 
                 background: sliderBackground,
-                handleColor: '#ced9e5',
-                handleLineColor: '#444',
+                handleColor: this.handleColor,
+                handleLineColor: Colors.darkenHex(this.handleColor, 0.6),
                 handleLineWidth: 2
             });
-            this.sliderView.displayObject.x = 0;
+            this.sliderView.displayObject.x = -bgWidth / 2;
             this.sliderView.displayObject.y = -(this.height - this.elementThickness) / 2;
-            this.frontLayer.addChild(this.sliderView.displayObject);
+            this.displayObject.addChild(this.sliderView.displayObject);
 
             // Bind events
             this.listenTo(this.sliderView, 'slide', function(value, prev) {
@@ -168,37 +195,37 @@ define(function(require) {
             if (this.sliderReturnsToCenter) {
                 this.listenTo(this.sliderView, 'drag-end', function() {
                     this.sliderView.val(0);
-                    this.fire.alpha = 0;
-                    this.ice.alpha = 0;
+                    this.hotElement.alpha = 0;
+                    this.coldElement.alpha = 0;
                     this.model.set('heatCoolLevel', 0);
                 });    
             }
 
             // Labels
-            var textStyle = {
-                font: this.textFont,
-                fill: this.textColor,
-                dropShadowColor: '#ced9e5',
-                dropShadow: true,
-                dropShadowAngle: 2 * Math.PI,
-                dropShadowDistance: 1
-            };
+            // var textStyle = {
+            //     font: this.textFont,
+            //     fill: this.textColor,
+            //     dropShadowColor: '#ced9e5',
+            //     dropShadow: true,
+            //     dropShadowAngle: 2 * Math.PI,
+            //     dropShadowDistance: 1
+            // };
 
-            if (this.heatingEnabled) {
-                var heat = new PIXI.Text('Heat', textStyle);
-                heat.anchor.y = 0.1;
-                heat.x = textOffset;
-                heat.y = this.sliderView.displayObject.y;
-                this.frontLayer.addChild(heat);    
-            }
+            // if (this.heatingEnabled) {
+            //     var heat = new PIXI.Text('Heat', textStyle);
+            //     heat.anchor.y = 0.1;
+            //     heat.x = textOffset;
+            //     heat.y = this.sliderView.displayObject.y;
+            //     this.displayObject.addChild(heat);    
+            // }
             
-            if (this.coolingEnabled) {
-                var cool = new PIXI.Text('Cool', textStyle);
-                cool.anchor.y = 0.64;
-                cool.x = textOffset;
-                cool.y = this.sliderView.displayObject.y + this.sliderView.displayObject.height;
-                this.frontLayer.addChild(cool);
-            }
+            // if (this.coolingEnabled) {
+            //     var cool = new PIXI.Text('Cool', textStyle);
+            //     cool.anchor.y = 0.64;
+            //     cool.x = textOffset;
+            //     cool.y = this.sliderView.displayObject.y + this.sliderView.displayObject.height;
+            //     this.displayObject.addChild(cool);
+            // }
         },
 
     }, {

@@ -2,9 +2,11 @@ define(function(require) {
 
     'use strict';
 
-    var PixiSceneView    = require('common/pixi/view/scene');
-    var HeaterCoolerView = require('common/pixi/view/heater-cooler');
-    var Vector2          = require('common/math/vector2');
+    var AppView              = require('common/app/app');
+    var PixiSceneView        = require('common/pixi/view/scene');
+    var HeaterCoolerView     = require('common/pixi/view/heater-cooler');
+    var FlatHeaterCoolerView = require('common/pixi/view/flat-heater-cooler');
+    var Vector2              = require('common/math/vector2');
 
     var ParticleTankView = require('views/particle-tank');
 
@@ -49,16 +51,26 @@ define(function(require) {
                 this.simulation.set('heatingCoolingAmount', heatCoolLevel);
             });
 
-            this.heaterCoolerView = new HeaterCoolerView({
-                model: viewModel,
-                width: 100,
-                height: 76,
-                openingHeight: 0, // Make it look flat
-                lineWidth: 0,
-                lineColor: '#999',
-                iceAssetReference:  Assets.Images.ICE,
-                fireAssetReference: Assets.Images.FLAME
-            });
+            if (AppView.windowIsShort()) {
+                this.heaterCoolerView = new FlatHeaterCoolerView({
+                    model: viewModel,
+                    width: 320,
+                    height: 50
+                });
+            }
+            else {
+                this.heaterCoolerView = new HeaterCoolerView({
+                    model: viewModel,
+                    width: 100,
+                    height: 76,
+                    openingHeight: 0, // Make it look flat
+                    lineWidth: 0,
+                    lineColor: '#999',
+                    iceAssetReference:  Assets.Images.ICE,
+                    fireAssetReference: Assets.Images.FLAME
+                });
+            }
+            
             this.heaterCoolerView.displayObject.x = Math.floor(this.width  * this.heaterCoolerPosition.x);
             this.heaterCoolerView.displayObject.y = Math.floor(this.height * this.heaterCoolerPosition.y);
             this.stage.addChild(this.heaterCoolerView.displayObject);
