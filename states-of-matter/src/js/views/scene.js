@@ -70,7 +70,7 @@ define(function(require) {
                 lidDraggable: this.particleTankInteractive,
                 showFinger: this.particleTankInteractive
             });
-
+            console.log(this.particleTankPosition)
             this.particleTankView.displayObject.x = Math.floor(this.width  * this.particleTankPosition.x);
             this.particleTankView.displayObject.y = Math.floor(this.height * this.particleTankPosition.y);
             this.particleTankView.positionButton();

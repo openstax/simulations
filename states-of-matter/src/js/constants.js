@@ -297,6 +297,9 @@ define(function (require) {
     SolidLiquidGasSceneView.TANK_POSITION          = new Vector2(0.39, 0.76);
     SolidLiquidGasSceneView.HEATER_COOLER_POSITION = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.98);
 
+    SolidLiquidGasSceneView.SHORT_SCREEN_TANK_POSITION          = new Vector2(0.39, 0.82);
+    SolidLiquidGasSceneView.SHORT_SCREEN_HEATER_COOLER_POSITION = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.98);
+
     Constants.SolidLiquidGasSceneView = SolidLiquidGasSceneView;
 
 
