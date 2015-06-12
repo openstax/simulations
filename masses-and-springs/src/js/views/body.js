@@ -303,11 +303,11 @@ define(function(require) {
         },
 
         _calcYFromSpringY2: function(springY2){
-            return springY2 + this.mvt.viewToModelY(this.viewModel.totalHeight);
+            return springY2 + this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
         },
 
         _calcSpringY2FromY: function(){
-            return this.model.y - this.mvt.viewToModelY(this.viewModel.totalHeight);
+            return this.model.y - this.mvt.viewToModelDeltaY(this.viewModel.totalHeight);
         },
 
         _calcXFromViewCenter: function(center){
