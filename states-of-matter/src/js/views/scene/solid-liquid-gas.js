@@ -11,11 +11,11 @@ define(function (require) {
 
     var SolidLiquidGasSceneView = SOMSceneView.extend({
 
-    	heaterCoolerPosition: AppView.windowIsShort() ? 
+        heaterCoolerPosition: AppView.windowIsShort() ? 
             Constants.SolidLiquidGasSceneView.SHORT_SCREEN_HEATER_COOLER_POSITION : 
             Constants.SolidLiquidGasSceneView.HEATER_COOLER_POSITION,
             
-    	particleTankPosition: AppView.windowIsShort() ? 
+        particleTankPosition: AppView.windowIsShort() ? 
             Constants.SolidLiquidGasSceneView.SHORT_SCREEN_TANK_POSITION :
             Constants.SolidLiquidGasSceneView.TANK_POSITION,
 

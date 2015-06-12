@@ -43,7 +43,7 @@ define(function(require) {
                 elementWidthPercent: 0.9, 
                 elementFilletRadius: 3,
 
-                textFont: 'bold 17px Arial',
+                textFont: 'bold 16px Arial',
                 textColor: '#000',
 
                 fillColor: '#bbb',
@@ -134,6 +134,8 @@ define(function(require) {
         },
 
         initSlider: function() {
+            var baseCenterY = -(this.height - this.elementThickness) / 2;
+
             // Slider background (hot to cold)
             var bgHeight = 6;
             var bgWidth = this.width - 60 - 60;
@@ -175,7 +177,7 @@ define(function(require) {
                 handleLineWidth: 2
             });
             this.sliderView.displayObject.x = -bgWidth / 2;
-            this.sliderView.displayObject.y = -(this.height - this.elementThickness) / 2;
+            this.sliderView.displayObject.y = baseCenterY;
             this.displayObject.addChild(this.sliderView.displayObject);
 
             // Bind events
@@ -202,30 +204,34 @@ define(function(require) {
             }
 
             // Labels
-            // var textStyle = {
-            //     font: this.textFont,
-            //     fill: this.textColor,
-            //     dropShadowColor: '#ced9e5',
-            //     dropShadow: true,
-            //     dropShadowAngle: 2 * Math.PI,
-            //     dropShadowDistance: 1
-            // };
+            var textStyle = {
+                font: this.textFont,
+                fill: this.textColor,
+                dropShadowColor: '#ced9e5',
+                dropShadow: true,
+                dropShadowAngle: 2 * Math.PI,
+                dropShadowDistance: 1
+            };
 
-            // if (this.heatingEnabled) {
-            //     var heat = new PIXI.Text('Heat', textStyle);
-            //     heat.anchor.y = 0.1;
-            //     heat.x = textOffset;
-            //     heat.y = this.sliderView.displayObject.y;
-            //     this.displayObject.addChild(heat);    
-            // }
+            var sideMargin = 10;
+
+            if (this.heatingEnabled) {
+                var heat = new PIXI.Text('Heat', textStyle);
+                heat.anchor.x = 1;
+                heat.anchor.y = 0.39;
+                heat.x = this.width / 2 - sideMargin;
+                heat.y = baseCenterY;
+                this.displayObject.addChild(heat);    
+            }
             
-            // if (this.coolingEnabled) {
-            //     var cool = new PIXI.Text('Cool', textStyle);
-            //     cool.anchor.y = 0.64;
-            //     cool.x = textOffset;
-            //     cool.y = this.sliderView.displayObject.y + this.sliderView.displayObject.height;
-            //     this.displayObject.addChild(cool);
-            // }
+            if (this.coolingEnabled) {
+                var cool = new PIXI.Text('Cool', textStyle);
+                cool.anchor.x = 0;
+                cool.anchor.y = 0.39;
+                cool.x = -this.width / 2 + sideMargin;
+                cool.y = baseCenterY;
+                this.displayObject.addChild(cool);
+            }
         },
 
     }, {

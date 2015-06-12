@@ -54,7 +54,7 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.heaterCoolerView = new FlatHeaterCoolerView({
                     model: viewModel,
-                    width: 320,
+                    width: 310,
                     height: 50
                 });
             }
