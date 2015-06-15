@@ -96,8 +96,8 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				segment = this.segment;
 
@@ -123,8 +123,8 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				segment = this.segment;
 
@@ -174,8 +174,8 @@ define(function (require) {
 
 			height = this.waveSimulation.lattice.height;
 
-			xSpacing = this.heatmapView.xSpacing / this.zoom;
-			ySpacing = this.heatmapView.ySpacing / this.zoom;
+			xSpacing = this.heatmapView.xSpacing;
+			ySpacing = this.heatmapView.ySpacing;
 			halfYSpacing = ySpacing / 2.0;
 			halfXSpacing = xSpacing / 2.0;
 

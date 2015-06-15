@@ -248,8 +248,8 @@ define(function(require) {
 				}
 			}
 
-			this.xSpacing = xSpacing * this.zoom;
-			this.ySpacing = ySpacing * this.zoom;
+			this.xSpacing = xSpacing;
+			this.ySpacing = ySpacing;
 		},
 
 		generateParticleTexture: function(radius) {
@@ -485,11 +485,11 @@ define(function(require) {
 		},
 
 		heatmapToLatticeXCoordinates: function(x) {
-			return x / this.xSpacing;
+			return x / (this.xSpacing * this.zoom);
 		},
 
 		heatmapToLatticeYCoordinates: function(y) {
-			return this.waveSimulation.lattice.height - (y / this.ySpacing);
+			return this.waveSimulation.lattice.height - (y / (this.ySpacing * this.zoom));
 		}
 
 	});

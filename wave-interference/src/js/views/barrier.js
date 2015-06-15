@@ -103,7 +103,7 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				if (this.draggingTopHandle)
 					dy *= -1;
@@ -128,7 +128,7 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
 
 				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
 					topBox    = this.barrier.topBox;
@@ -175,8 +175,8 @@ define(function (require) {
 				middleBox = this.barrier.middleBox;
 				bottomBox = this.barrier.bottomBox;
 
-				xSpacing = this.heatmapView.xSpacing / this.zoom;
-				ySpacing = this.heatmapView.ySpacing / this.zoom;
+				xSpacing = this.heatmapView.xSpacing;
+				ySpacing = this.heatmapView.ySpacing;
 				halfXSpacing = xSpacing / 2.0;
 				halfYSpacing = ySpacing / 2.0;
 
