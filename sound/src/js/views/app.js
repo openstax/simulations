@@ -15,8 +15,6 @@ define(function(require) {
     require('less!styles/font-awesome');
     require('less!styles/app');
 
-    var universalControlsHtml = require('text!templates/universal-controls.html');
-
     var SoundAppView = PixiAppView.extend({
 
         assets: Assets.getAssetList(),
@@ -36,8 +34,6 @@ define(function(require) {
 
         render: function() {
             PixiAppView.prototype.render.apply(this);
-
-            this.$el.append(universalControlsHtml);
 
             this.$mute   = this.$('.sound-btn-mute');
             this.$unmute = this.$('.sound-btn-unmute');
