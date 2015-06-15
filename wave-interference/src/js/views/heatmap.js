@@ -248,8 +248,8 @@ define(function(require) {
 				}
 			}
 
-			this.xSpacing = xSpacing;
-			this.ySpacing = ySpacing;
+			this.xSpacing = xSpacing * this.zoom;
+			this.ySpacing = ySpacing * this.zoom;
 		},
 
 		generateParticleTexture: function(radius) {
@@ -323,13 +323,15 @@ define(function(require) {
 			// var height = this.$canvas.height();
 			this.width  = width;
 			this.height = height;
+
+			this.offset = this.$canvas.offset();
+			this.zoom = parseFloat($('.heatmap-column').css('zoom'));
+
 			if (override || width != this.renderer.width || height != this.renderer.height) {
 				this.resizeGraphics();
 				this.trigger('resized');
 			}
 			this.resizeOnNextUpdate = false;
-
-			this.offset = this.$canvas.offset();
 		},
 
 		resizeGraphics: function() {
@@ -461,8 +463,8 @@ define(function(require) {
 		 *   bounds.
 		 */
 		offsetToPoint: function(top, left) {
-			var x = this.heatmapToLatticeXCoordinates(left - this.offset.left);
-			var y = this.heatmapToLatticeYCoordinates(top  - this.offset.top);
+			var x = this.heatmapToLatticeXCoordinates(left - this.offset.left * this.zoom);
+			var y = this.heatmapToLatticeYCoordinates(top  - this.offset.top  * this.zoom);
 			
 			if (this.isVisiblePoint(x, y)) {
 				x = Math.round(x);
