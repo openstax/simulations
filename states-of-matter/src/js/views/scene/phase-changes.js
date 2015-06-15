@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var AppView = require('common/app/app');
+
     var SOMSceneView      = require('views/scene');
     var PressureGaugeView = require('views/pressure-gauge');
     var HoseView          = require('views/hose');
@@ -12,8 +14,14 @@ define(function (require) {
 
     var PhaseChangesSceneView = SOMSceneView.extend({
 
-        heaterCoolerPosition: Constants.PhaseChangesSceneView.HEATER_COOLER_POSITION,
-        particleTankPosition: Constants.PhaseChangesSceneView.TANK_POSITION,
+        heaterCoolerPosition: AppView.windowIsShort() ? 
+            Constants.PhaseChangesSceneView.SHORT_SCREEN_HEATER_COOLER_POSITION : 
+            Constants.PhaseChangesSceneView.HEATER_COOLER_POSITION,
+            
+        particleTankPosition: AppView.windowIsShort() ? 
+            Constants.PhaseChangesSceneView.SHORT_SCREEN_TANK_POSITION :
+            Constants.PhaseChangesSceneView.TANK_POSITION,
+
         particleTankInteractive: true,
 
         initialize: function(options) {
@@ -41,8 +49,13 @@ define(function (require) {
             this.pumpView = new PumpView({
                 simulation: this.simulation
             });
-            this.pumpView.displayObject.x = Math.floor(this.width  * PhaseChangesSceneView.PUMP_POSITION.x);
-            this.pumpView.displayObject.y = Math.floor(this.height * PhaseChangesSceneView.PUMP_POSITION.y);
+
+            var pumpPosition = AppView.windowIsShort() ? 
+                PhaseChangesSceneView.SHORT_SCREEN_PUMP_POSITION : 
+                PhaseChangesSceneView.PUMP_POSITION;
+
+            this.pumpView.displayObject.x = Math.floor(this.width  * pumpPosition.x);
+            this.pumpView.displayObject.y = Math.floor(this.height * pumpPosition.y);
 
             this.stage.addChild(this.pumpView.displayObject);
         },

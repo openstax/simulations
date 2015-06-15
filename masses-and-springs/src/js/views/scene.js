@@ -4,16 +4,14 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-    var Vector2   = require('common/math/vector2');
-    // var Rectangle = require('common/math/rectangle');
-    // var Colors    = require('common/colors/colors');
-
 
     var ModelViewTransform = require('common/math/model-view-transform');
-    var PixiSceneView = require('common/pixi/view/scene');
+    var Vector2            = require('common/math/vector2');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
 
     var SpringView = require('views/spring');
-    var BodyView = require('views/body');
+    var BodyView   = require('views/body');
 
     var Assets = require('assets');
 
@@ -34,8 +32,6 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
-
-            this.zoomScale = 1;
         },
 
         renderContent: function() {
@@ -45,12 +41,23 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.viewOriginX = Math.round(this.width  / 2);
-            this.viewOriginY = Math.round(this.height / 2);
-            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+
+            var scale;
+            if (AppView.windowIsShort()) {
+                scale = Constants.Scene.SHORT_SCREEN_PX_PER_METER;
+                this.viewOriginX = 100;
+                this.viewOriginY = 15;
+            }
+            else {
+                scale = Constants.Scene.PX_PER_METER;
+                this.viewOriginX = 0;
+                this.viewOriginY = 0;
+            }
+
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                this.zoomScale
+                scale
             );
 
             this.initLayers();
@@ -62,9 +69,9 @@ define(function(require) {
 
         initLayers: function() {
 
-            this.toolsLayer    =   new PIXI.DisplayObjectContainer();
-            this.bodyLayer    =   new PIXI.DisplayObjectContainer();
-            this.springLayer    =   new PIXI.DisplayObjectContainer();
+            this.toolsLayer  = new PIXI.DisplayObjectContainer();
+            this.bodyLayer   = new PIXI.DisplayObjectContainer();
+            this.springLayer = new PIXI.DisplayObjectContainer();
 
             this.stage.addChild(this.toolsLayer);
             this.stage.addChild(this.bodyLayer);
@@ -78,7 +85,8 @@ define(function(require) {
 
             springs.each(function(spring, iter){
                 var springView = new SpringView({
-                    model: spring
+                    model: spring,
+                    mvt: this.mvt
                 });
                 this.springLayer.addChild(springView.displayObject);
                 this.springViews.push(springView);
@@ -92,7 +100,8 @@ define(function(require) {
 
             bodies.each(function(body, iter){
                 var bodyView = new BodyView({
-                    model: body
+                    model: body,
+                    mvt: this.mvt
                 });
                 this.bodyLayer.addChild(bodyView.displayObject);
                 this.bodyViews.push(bodyView);

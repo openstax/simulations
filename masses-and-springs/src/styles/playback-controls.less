@@ -6,6 +6,10 @@
     text-align: center;
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        margin-top: -5px;
+    }
+
     > .playback-btn {
         display: inline-block;
         background: @btn-bg;
@@ -110,7 +114,7 @@
         padding-right: 30px;
     }
 
-    .stopwatch{
+    .stopwatch {
         cursor: pointer;
         position: absolute;
         top: 22px;

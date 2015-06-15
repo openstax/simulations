@@ -7,13 +7,13 @@ define(function (require) {
     var underscoreDeepExtend = require('underscoreDeepExtend');
     _.mixin({deepExtend: underscoreDeepExtend(_)});
 
-    var SimView = require('common/app/sim');
-    var StopwatchView = require('common/tools/stopwatch');
-    var RulerView = require('common/tools/ruler');
+    var AppView           = require('common/app/app');
+    var SimView           = require('common/app/sim');
+    var StopwatchView     = require('common/tools/stopwatch');
+    var RulerView         = require('common/tools/ruler');
     var ReferenceLineView = require('common/tools/reference-line');
-    var HelpLabelView = require('common/help-label/index');
-    var BarGraphView = require('common/bar-graph/bar-graph');
-
+    var HelpLabelView     = require('common/help-label/index');
+    var BarGraphView      = require('common/bar-graph/bar-graph');
 
     var MassesAndSpringsSimulation = require('models/simulation');
     var MassesAndSpringsSceneView  = require('views/scene');
@@ -164,10 +164,13 @@ define(function (require) {
             this.energyGraphs = [];
             this.$zoom = this.$el.find('.zoom');
 
+            var graphHeight = AppView.windowIsShort() ? 225 : 440;
+
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
-                    title : 'Energy of ' + (iter + 1)
+                    title : 'Energy of ' + (iter + 1),
+                    graphHeight: graphHeight
                 });
 
                 barGraph.render();
@@ -264,24 +267,23 @@ define(function (require) {
                 units : this.simulation.get('units').time,
                 position: {
                     x : 468,
-                    y : 630 
+                    y : AppView.windowIsShort() ? 396 : 630 
                 }
             });
+
+            var pxPerMeter = !AppView.windowIsShort() ? Constants.Scene.PX_PER_METER : Constants.Scene.SHORT_SCREEN_PX_PER_METER;
 
             this.rulerView = new RulerView({
                 dragFrame: this.el,
                 position : {
                     x : 20,
                     y : Initials.SpringsY1 * Constants.Scene.PX_PER_METER
-                }
+                },
+                pxPerUnit: pxPerMeter / 100
             });
 
             this.referenceLineView = new ReferenceLineView({
                 dragFrame: this.el,
-                position: {
-                    x : (Initials.Springs[0].x - 0.75 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER,
-                    y : (Initials.SpringsY1 + Constants.SpringDefaults.REST_L) * Constants.Scene.PX_PER_METER
-                },
                 width: (Initials.Springs[Initials.Springs.length - 1].x - Initials.Springs[0].x + 1.5 * Constants.SpringDefaults.WIDTH) * Constants.Scene.PX_PER_METER
             });
 
@@ -380,13 +382,20 @@ define(function (require) {
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
+            this.sceneView.postRender();
 
             // tools
             this.stopwatchView.postRender();
             this.rulerView.postRender();
 
             this.referenceLineView.postRender();
-            this.sceneView.postRender();
+            this.referenceLineView.position = {
+                x : this.sceneView.mvt.modelToViewX(Initials.Springs[1].x) - this.referenceLineView.width / 2,
+                y : this.sceneView.mvt.modelToViewY(Initials.SpringsY1 + Constants.SpringDefaults.REST_L)
+            };
+            this.referenceLineView.updatePosition();
+
+            
             this.sceneView.initTools([this.referenceLineView]);
 
             this.stopwatchView.hide();
@@ -420,7 +429,7 @@ define(function (require) {
                 attachTo: this.sceneView.toolsLayer,
                 position : {
                     x : 140,
-                    y : 300
+                    y : AppView.windowIsShort() ? 200 : 300
                 },
                 width : '300px',
                 title : 'Pull mass sideways to detach from spring'

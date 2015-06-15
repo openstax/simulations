@@ -297,6 +297,9 @@ define(function (require) {
     SolidLiquidGasSceneView.TANK_POSITION          = new Vector2(0.39, 0.76);
     SolidLiquidGasSceneView.HEATER_COOLER_POSITION = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.98);
 
+    SolidLiquidGasSceneView.SHORT_SCREEN_TANK_POSITION          = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.84);
+    SolidLiquidGasSceneView.SHORT_SCREEN_HEATER_COOLER_POSITION = new Vector2(SolidLiquidGasSceneView.TANK_POSITION.x, 0.948);
+
     Constants.SolidLiquidGasSceneView = SolidLiquidGasSceneView;
 
 
@@ -312,6 +315,10 @@ define(function (require) {
     PhaseChangesSceneView.TANK_POSITION          = new Vector2(0.25, 0.76);
     PhaseChangesSceneView.PUMP_POSITION          = new Vector2(0.65, PhaseChangesSceneView.TANK_POSITION.y);
     PhaseChangesSceneView.HEATER_COOLER_POSITION = new Vector2(PhaseChangesSceneView.TANK_POSITION.x, 0.98);
+
+    PhaseChangesSceneView.SHORT_SCREEN_TANK_POSITION          = new Vector2(PhaseChangesSceneView.TANK_POSITION.x, 0.84);
+    PhaseChangesSceneView.SHORT_SCREEN_HEATER_COOLER_POSITION = new Vector2(PhaseChangesSceneView.TANK_POSITION.x, 0.948);
+    PhaseChangesSceneView.SHORT_SCREEN_PUMP_POSITION          = new Vector2(PhaseChangesSceneView.PUMP_POSITION.x, PhaseChangesSceneView.SHORT_SCREEN_TANK_POSITION.y);
 
     Constants.PhaseChangesSceneView = PhaseChangesSceneView;
 
