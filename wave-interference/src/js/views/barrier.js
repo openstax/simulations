@@ -175,8 +175,8 @@ define(function (require) {
 				middleBox = this.barrier.middleBox;
 				bottomBox = this.barrier.bottomBox;
 
-				xSpacing = this.heatmapView.xSpacing;
-				ySpacing = this.heatmapView.ySpacing;
+				xSpacing = this.heatmapView.xSpacing / this.zoom;
+				ySpacing = this.heatmapView.ySpacing / this.zoom;
 				halfXSpacing = xSpacing / 2.0;
 				halfYSpacing = ySpacing / 2.0;
 
