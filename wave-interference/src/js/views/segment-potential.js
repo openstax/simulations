@@ -106,7 +106,7 @@ define(function (require) {
 						segment.start.x += dx;
 						segment.start.y += dy;
 					}
-					if (this.draggingEnd && this.heatmapView.isVisiblePoint(segment.end.x   + dx, segment.end.y   + dy)) {
+					if (this.draggingEnd && this.heatmapView.isVisiblePoint(segment.end.x + dx, segment.end.y + dy)) {
 						segment.end.x += dx;
 						segment.end.y += dy;
 					}
@@ -174,8 +174,8 @@ define(function (require) {
 
 			height = this.waveSimulation.lattice.height;
 
-			xSpacing = this.heatmapView.xSpacing;
-			ySpacing = this.heatmapView.ySpacing;
+			xSpacing = this.heatmapView.xSpacing / this.zoom;
+			ySpacing = this.heatmapView.ySpacing / this.zoom;
 			halfYSpacing = ySpacing / 2.0;
 			halfXSpacing = xSpacing / 2.0;
 
