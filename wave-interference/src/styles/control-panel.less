@@ -63,6 +63,36 @@
 	margin-top: 2px;
 	padding: 14px 16px;
 	.user-select(none);
+
+	@media screen and (max-height: @short-window) {
+		.properties-panel & {
+			width: @short-screen-control-panel-width;
+			float: right;
+		}
+
+		&.barrier-controls {
+			position: absolute;
+			top: 35px;
+			right: (@short-screen-control-panel-width + 2);
+		}
+
+		&.btn.add-segment-potential {
+			position: absolute;
+			top: 260px;
+			right: (@short-screen-control-panel-width + 2);
+		}
+
+		.slider.slider.noUi-horizontal {
+			margin-top: 4px;
+		}
+
+		input[type="radio"] + label, 
+		input[type="checkbox"] + label {
+			margin-bottom: 8px;
+		}
+	}
+
+
 }
 
 .panel-btn {
@@ -78,18 +108,29 @@
 	min-width: 160px;
 	margin: 0;
 
-	@media screen and (max-height: @short-window) {
-        top: 290px;
-        left: @short-screen-panel-margin;
-        
-        .slider {
-        	margin-top: 2;
+	.panel-content-wrapper & {
+		position: relative;
+		top: inherit;
+		left: inherit;
+		padding: 14px 16px;
+		width: @short-screen-control-panel-width;
+	}
 
-        	&:last-child {
-        		margin-bottom: 2px;
-        	}
-        }
-    }
+	// @media screen and (max-height: @short-window) {
+ //        top: 47px;
+ //        left: inherit;
+ //        right: @short-screen-panel-margin;
+ //        width: @control-panel-width;
+        
+ //        & .slider.frequency,
+ //        & .slider.amplitude {
+ //        	margin-top: 2px;
+
+ //        	&:last-child {
+ //        		margin-bottom: 2px;
+ //        	}
+ //        }
+ //    }
 }
 
 // For the tools/properties panel
