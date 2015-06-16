@@ -2,17 +2,17 @@
 .control-panel {
 	z-index: @above-canvas;
 	
-	padding: 20px;
-	width: 100%;
+	width: @control-panel-width;
+	position: absolute;
+	right: 0;
+	top: 20px;
+	margin: 0;
+	padding: 0;
 
-	@media (min-width: @screen-sm-min) {
-		width: @control-panel-width;
-		position: absolute;
-		right: 0;
-		top: 20px;
-		margin: 0;
-		padding: 0;
-	}
+	@media screen and (max-height: @short-window) {
+        top: @short-screen-panel-margin;
+        right: @short-screen-panel-margin;
+    }
 
 	> .control-panel-tabs {
 		width: 100%;
@@ -63,6 +63,36 @@
 	margin-top: 2px;
 	padding: 14px 16px;
 	.user-select(none);
+
+	@media screen and (max-height: @short-window) {
+		.properties-panel & {
+			width: @short-screen-control-panel-width;
+			float: right;
+		}
+
+		&.barrier-controls {
+			position: absolute;
+			top: 35px;
+			right: (@short-screen-control-panel-width + 2);
+		}
+
+		&.btn.add-segment-potential {
+			position: absolute;
+			top: 260px;
+			right: (@short-screen-control-panel-width + 2);
+		}
+
+		.slider.slider.noUi-horizontal {
+			margin-top: 4px;
+		}
+
+		input[type="radio"] + label, 
+		input[type="checkbox"] + label {
+			margin-bottom: 8px;
+		}
+	}
+
+
 }
 
 .panel-btn {
@@ -70,21 +100,37 @@
 }
 
 .wave-properties {
+	position: absolute;
+	top: 480px;
+	left: 0px;
 	width: auto;
-	min-width: 160px;
-	margin-left: 20px;
-	margin-right: 20px;
-	margin-bottom: 20px;
 	padding: 16px;
+	min-width: 160px;
+	margin: 0;
 
-	@media (min-width: @screen-sm-min) {
-		width: auto;
-		min-width: 160px;
-		position: absolute;
-		top: 480px;
-		left: 0px;
-		margin: 0;
+	.panel-content-wrapper & {
+		position: relative;
+		top: inherit;
+		left: inherit;
+		padding: 14px 16px;
+		width: @short-screen-control-panel-width;
 	}
+
+	// @media screen and (max-height: @short-window) {
+ //        top: 47px;
+ //        left: inherit;
+ //        right: @short-screen-panel-margin;
+ //        width: @control-panel-width;
+        
+ //        & .slider.frequency,
+ //        & .slider.amplitude {
+ //        	margin-top: 2px;
+
+ //        	&:last-child {
+ //        		margin-bottom: 2px;
+ //        	}
+ //        }
+ //    }
 }
 
 // For the tools/properties panel

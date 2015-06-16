@@ -3,8 +3,12 @@
 
 @import "control-panel.less";
 
+.sims .sim-content {
+    min-height: initial;
+}
+
 .sim-view {
-	height: 100%;
+	height: @scene-height;
 	width: 100%;
 
 	&.rendering {
@@ -12,6 +16,10 @@
 		left: 0;
 		top: 0;
 	}
+
+	@media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
 }
 
 @btn-bg: #ccc;
@@ -27,6 +35,12 @@
 	padding: 10px;
 	text-align: center;
 	background: @panel-bg;
+
+	@media screen and (max-height: @short-window) {
+        top: initial;
+        bottom: @short-screen-panel-margin;
+        left: @short-screen-panel-margin;
+    }
 
 	> .playback-btn {
 		display: inline-block;
@@ -72,18 +86,12 @@
 .heatmap-column {
 	position: relative;
 	padding: @panel-margin;
+	margin-left: 160px;
+	margin-right: @control-panel-width;
 
-	@media (min-width: @max-viewport-width) {
-		height: 680px;
-		margin: 0 auto;
-	}
-
-	@media (min-width: @screen-sm-min) {
-		margin-left: 160px;
-		margin-right: @control-panel-width;
-	}
-
-	// @media (min-width: @screen-sm-min) {
-	// 	width: 100%;
-	// }
+	@media screen and (max-height: @short-window) {
+        zoom: @short-screen-zoom;
+        margin-left: (round(160px / @short-screen-zoom) + @short-screen-panel-margin);
+        padding-top: 15px;
+    }
 }

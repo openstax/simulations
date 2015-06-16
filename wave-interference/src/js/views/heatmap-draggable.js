@@ -37,16 +37,24 @@ define(function (require) {
 		resize: function(){
 			this.updateOnNextFrame = true;
 
+			this.zoom = parseFloat($('.heatmap-column').css('zoom'));
+
 			this.outerDragOffset = this.$outerDragFrame.offset();
+			this.outerDragOffset.top  *= this.zoom;
+			this.outerDragOffset.left *= this.zoom;
+
 			this.outerDragBounds = {
-				width:  this.$outerDragFrame.width(),
-				height: this.$outerDragFrame.height() 
+				width:  this.$outerDragFrame.width()  * this.zoom,
+				height: this.$outerDragFrame.height() * this.zoom 
 			};
 
 			this.dragOffset = this.$dragFrame.offset();
+			this.dragOffset.top  *= this.zoom;
+			this.dragOffset.left *= this.zoom;
+
 			this.dragBounds = {
-				width:  this.$dragFrame.width(),
-				height: this.$dragFrame.height()
+				width:  this.$dragFrame.width()  * this.zoom,
+				height: this.$dragFrame.height() * this.zoom
 			};
 		},
 

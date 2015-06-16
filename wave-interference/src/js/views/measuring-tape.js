@@ -83,6 +83,8 @@ define(function (require) {
 				this.end.x = offset.left + width * 0.67 - this.dragOffset.left;
 				this.end.y = offset.top + width / 2 - this.dragOffset.top;
 			}
+
+			this.heatmapZoom = parseFloat($('.heatmap-column').css('zoom'));
 		},
 
 		handleDown: function(event) {
@@ -222,7 +224,7 @@ define(function (require) {
 				'transform': rotate,
 			});
 
-			this.$label.html(this.toSimXScale(lineLength).toFixed(2) + ' ' + this.units);
+			this.$label.html(this.toSimXScale(lineLength / this.heatmapZoom).toFixed(2) + ' ' + this.units);
 		}
 	});
 
