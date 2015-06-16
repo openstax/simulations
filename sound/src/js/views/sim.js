@@ -30,7 +30,7 @@ define(function (require) {
      *   It will be extended by both the Intro module and the Charts
      *   and contains all the common functionality between the two.
      */
-    var TemplateSimView = SimView.extend({
+    var SoundSimView = SimView.extend({
 
         /**
          * Root element properties
@@ -47,7 +47,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'slide .frequency-slider' : 'changeFrequency',
+            'slide .amplitude-slider' : 'changeAmplitude'
         },
 
         /**
@@ -100,10 +101,32 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                unique: this.cid
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+
+            this.$('.frequency-slider').noUiSlider({
+                start: 500,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 1000
+                }
+            });
+
+            this.$('.amplitude-slider').noUiSlider({
+                start: 0.5,
+                connect: 'lower',
+                range: {
+                    'min': 0,
+                    'max': 1
+                }
+            });
+
+            this.$frequency = this.$('.frequency-value');
+            this.$amplitude = this.$('.amplitude-value');
         },
 
         /**
@@ -145,7 +168,29 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        /**
+         *
+         */
+        changeFrequency: function(event) {
+            var frequency = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$frequency.text(frequency + ' Hz');
+                this.simulation.set('frequency', frequency);
+            });
+        },
+
+        /**
+         *
+         */
+        changeAmplitude: function(event) {
+            var amplitude = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$amplitude.text(amplitude.toFixed(2));
+                this.simulation.set('amplitude', amplitude);
+            });
+        }
+
     });
 
-    return TemplateSimView;
+    return SoundSimView;
 });

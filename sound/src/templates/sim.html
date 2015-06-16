@@ -1,2 +1,32 @@
 
 <span class="scene-view-placeholder"></span>
+
+<img src="img/girl.png" class="listener-placeholder">
+
+<div class="sim-controls-column">
+    <div class="sim-controls">
+        <h2 class="slider-header">Frequency <span class="slider-value frequency-value">500 Hz</span></h2>
+        <div class="slider frequency-slider"></div>
+
+        <h2 class="slider-header">Amplitude <span class="slider-value amplitude-value">0.50</span></h2>
+        <div class="slider amplitude-slider"></div>
+
+        <h2>Audio</h2>
+
+        <div class="audio-enabled-check-wrapper">
+            <input type="checkbox" name="trace" value="line" id="audio-enabled-check-<%= unique %>" class="audio-enabled-check">
+            <label for="audio-enabled-check-<%= unique %>">Audio Enabled</label>
+        </div>
+        <ul class="radio">
+            <li>
+                <input type="radio" name="audio-<%= unique %>" value="speaker" id="audio-speaker-<%= unique %>" class="audio-speaker" checked>
+                <label for="audio-speaker-<%= unique %>">Speaker</label>
+            </li>
+            <li>
+                <input type="radio" name="audio-<%= unique %>" value="listener" id="audio-listener-<%= unique %>" class="audio-listener">
+                <label for="audio-listener-<%= unique %>">Listener</label>
+            </li>
+        </ul>
+        
+    </div>
+</div>
