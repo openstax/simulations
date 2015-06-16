@@ -7,7 +7,7 @@ define(function (require) {
 
     var SimView = require('common/app/sim');
 
-    var TemplateSimulation = require('models/simulation');
+    var SoundSimulation = require('models/simulation');
     var TemplateSceneView  = require('views/scene');
 
     var Constants = require('constants');
@@ -73,7 +73,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new TemplateSimulation();
+            this.simulation = new SoundSimulation();
         },
 
         /**
