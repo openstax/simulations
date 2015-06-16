@@ -18,12 +18,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
     var simHtml = require('text!templates/sim.html');
+    var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -105,6 +107,8 @@ define(function (require) {
                 unique: this.cid
             };
             this.$el.html(this.template(data));
+            this.$el.append(playbackControlsHtml);
+            
             this.$('select').selectpicker();
 
             this.$('.frequency-slider').noUiSlider({
