@@ -26,7 +26,11 @@ define(function(require) {
          * Initializes the new WaveMediumView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex('#ff00ff');
+            this.color = Colors.parseHex('#888888');
+            this.colors = [];
+            for (var i = 0; i < 255; i++) {
+                this.colors.push(Colors.rgbToHexInteger(i, i, i));
+            }
 
             this.updateMVT(options.mvt);
         },
@@ -41,11 +45,14 @@ define(function(require) {
             graphics.clear();
 
             var maxX = this.model.getMaxX();
-
+            var amplitude;
             for (var i = 0; i < maxX; i++) {
-                var color = parseInt(this.color * this.model.getAmplitudeAt(i));
-                graphics.lineStyle(2, color, 1);
-                graphics.arc(25, 300, i, 0, 2 * Math.PI);
+                amplitude = this.model.getAmplitudeAt(i);
+                // var colorIndex = Math.min(Math.floor(amplitude * 128) + 128, this.colors.length - 1);
+                // graphics.lineStyle(3, this.colors[colorIndex], Math.abs(amplitude));
+                graphics.lineStyle(3, this.color, Math.min(amplitude + 0.5, 1));
+                graphics.moveTo(0, 0);
+                graphics.arc(0, 0, i * 3, -Math.PI / 4, Math.PI / 4);
             }
         },
 

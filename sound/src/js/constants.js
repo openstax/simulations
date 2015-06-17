@@ -14,8 +14,8 @@ define(function (require) {
     // Physical constants
     // The time step is set so that the waves look reasonable on the screen. It is NOT set so that
     // the simulation clock bears any certain relationship to the speed of sound
-    Constants.TIME_STEP = 5;
-    Constants.WAIT_TIME = 50;
+    Constants.TIME_STEP = 5 / 1000;
+    Constants.WAIT_TIME = 50 / 1000;
 
     // The number of pixels a wavefront moves in a time step
     Constants.PROPOGATION_SPEED = 3;
@@ -39,7 +39,7 @@ define(function (require) {
     // This parameter defines how tightly spaced the waves are on the screen. If it is too small,
     //   the displayed wavelength will not get monotonically shorter as the frequency is raised.
     //   Note that the best value for this is dependent on the clock's dt.
-    Constants.FREQUENCY_DISPLAY_FACTOR = 4000;
+    Constants.FREQUENCY_DISPLAY_FACTOR = 40;
 
     return Constants;
 });

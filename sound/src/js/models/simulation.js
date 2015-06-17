@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     var Wavefront           = require('models/wavefront');
     var WaveMedium          = require('models/wave-medium');
@@ -20,17 +20,23 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var SoundSimulation = Simulation.extend({
+    var SoundSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
             propagationSpeed: null,
-            audioEnabled: false
+            audioEnabled: false,
+            //timeScale: Constants.CLOCK_SCALE_FACTOR
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            // options = _.extend({
+            //     frameDuration: Constants.WAIT_TIME,
+            //     deltaTimePerFrame: Constants.TIME_STEP
+            // }, options);
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:frequency',        this.frequencyChanged);
             this.on('change:amplitude',        this.amplitudeChanged);
