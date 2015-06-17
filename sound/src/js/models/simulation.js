@@ -66,6 +66,10 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
+            this.waveMedium.update(time, deltaTime);
+
+            this.soundListener.update(time, deltaTime);
+
             // Update oscillators
             this.primaryOscillator.update(time, deltaTime);
             this.octaveOscillator.update(time, deltaTime);

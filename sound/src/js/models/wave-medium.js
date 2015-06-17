@@ -85,9 +85,9 @@ define(function (require) {
         /**
          * Updates all of this wave medium's wavefronts.
          */
-        update: function(deltaTime) {
+        update: function(time, deltaTime) {
             for (var i = 0; i < this.wavefronts.length; i++)
-                this.wavefronts[i].update(deltaTime, this.attenuationFunction);
+                this.wavefronts[i].update(time, deltaTime, this.attenuationFunction);
         }
 
     });

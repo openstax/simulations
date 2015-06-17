@@ -52,8 +52,8 @@ define(function (require) {
         update: function(time, deltaTime) {
             var listener = this.get('listener');
             this.referencePoint.set(listener.get('position'));
-            var frequency = listener.get('frequencyHeard') * this.get('harmonicFactor');
-            var amplitude = listener.get('amplitudeHeard');
+            var frequency = listener.getFrequencyHeard() * this.get('harmonicFactor');
+            var amplitude = listener.getAmplitudeHeard();
 
             if (amplitude < -1)
                 throw 'amplitude < -1';
@@ -83,7 +83,6 @@ define(function (require) {
         },
 
         amplitudeChanged: function(model, amplitude) {
-            console.log(amplitude)
             if (this.get('enabled'))
                 this.sound.set({ mul: amplitude });
             else

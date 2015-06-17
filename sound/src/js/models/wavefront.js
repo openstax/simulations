@@ -21,8 +21,8 @@ define(function (require) {
     var Wavefront = Backbone.Model.extend({
 
         defaults: {
-            maxAmplitude: 0.5,
-            frequency: 25.0,
+            maxAmplitude: Constants.DEFAULT_AMPLITUDE,
+            frequency: Constants.DEFAULT_FREQUENCY / Constants.FREQUENCY_DISPLAY_FACTOR,
             propagationSpeed: 1,
 
             originX: 0,
@@ -43,6 +43,10 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             this.time = 0;
+
+            // We store amplitudes as an array, where each index corresponds to
+            //   a specific distance from the source.  The higher the index, the
+            //   farther away from the source we are when we calculate amplitude.
             this.amplitude = [];
 
             // Tracks the frequency and max amplitude at which each entry
@@ -74,7 +78,7 @@ define(function (require) {
          */
         getFrequencyAtTime: function(frequencyIndex) {
             frequencyIndex = Math.max(0, Math.min(S_LENGTH - 1, frequencyIndex));
-            return frequencyAtTime[frequencyIndex];
+            return this.frequencyAtTime[frequencyIndex];
         },
 
         getMaxAmplitudeAtTime: function(maxAmplitudeIndex) {
@@ -89,45 +93,47 @@ define(function (require) {
             return lambda * 6.2;
         },
 
-        update: function(deltaTime, attenuationFunction) {
+        update: function(time, deltaTime, attenuationFunction) {
             this.time += deltaTime;
             var stepSize = this.get('propagationSpeed');
+            var amplitude;
+            var attenuation;
 
             // Move the existing elements of the wavefront up in the array of amplitudes
             for (var i = S_LENGTH - 1; i > stepSize - 1; i--) {
 
                 // Has the amplitude changed for the listener since the last time step?
-                if ((i - stepSize) === this.get('listenerX') && this.maxAmplitudeAtTime[i] !== this.prevMaxAmplitudeAtTime[i]) {
-                    // Trigger some sort of event
-                }
+                // if ((i - stepSize) === this.get('listenerX') && this.maxAmplitudeAtTime[i] !== this.prevMaxAmplitudeAtTime[i]) {
+                //     // Trigger some sort of event
+                // }
 
                 this.prevMaxAmplitudeAtTime[i] = this.maxAmplitudeAtTime[i];
                 this.amplitude[i] = this.amplitude[i - stepSize];
 
                 // Amplitude must be adjusted for distance from source, and attenuation
                 //   due to the density of the wave medium
-                var amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.amplitude[i], i);
-                var attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
+                amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.amplitude[i], i);
+                attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
                 this.amplitude[i] = amplitude * attenuation;
 
                 // Has the frequency changed for the listener since the last time step?
-                if ((i - stepSize) === this.get('listenerX') && this.frequencyAtTime[i] !== this.prevFrequencyAtTime[i]) {
-                    // Trigger some sort of event
-                }
+                // if ((i - stepSize) === this.get('listenerX') && this.frequencyAtTime[i] !== this.prevFrequencyAtTime[i]) {
+                //     // Trigger some sort of event
+                // }
 
                 this.prevFrequencyAtTime[i] = this.frequencyAtTime[i];
                 this.frequencyAtTime[i] = this.frequencyAtTime[i - stepSize];
 
-                var amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.maxAmplitudeAtTime[i - stepSize], i);
-                var attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
-                this.maxAmplitudeAtTime[i] = this.amplitude[i - stepSize];
+                amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.maxAmplitudeAtTime[i - stepSize], i);
+                attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
+                this.maxAmplitudeAtTime[i] = amplitude * attenuation;
 
                 if (this.maxAmplitudeAtTime[i] < 0)
                     throw 'Negative amplitude';
             }
 
             // Generate the new element(s) of the wavefront
-            var a = this.get('waveFunction')(time);
+            var a = this.get('waveFunction')(this.time);
             for (var j = 0; j < stepSize; j++) {
                 this.amplitude[j] = a;
                 if (this.frequencyAtTime[j] !== this.get('frequency'))

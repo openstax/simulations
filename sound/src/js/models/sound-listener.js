@@ -43,6 +43,10 @@ define(function (require) {
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
+            this.frequencyHeard = 0;
+            this.amplitudeHeard = 0;
+            this.octaveAmplitudeHeard = 0;
+
             this.set('origin', vectorPool.create().set(this.get('origin')));
         },
 
@@ -79,9 +83,21 @@ define(function (require) {
             var currentAmplitude = this.get('model').primaryWavefront.getMaxAmplitudeAtTime(distFromSource);
             var currentOctaveAmplitude = this.get('model').octaveWavefront.getMaxAmplitudeAtTime(distFromSource);
 
-            this.set('frequencyHeard', currentFrequency);
-            this.set('amplitudeHeard', currentAmplitude);
-            this.set('octaveAmplitudeHeard', currentOctaveAmplitude);
+            this.frequencyHeard = currentFrequency;
+            this.amplitudeHeard = currentAmplitude;
+            this.octaveAmplitudeHeard = currentOctaveAmplitude;
+        },
+
+        getFrequencyHeard: function() {
+            return this.frequencyHeard;
+        },
+
+        getAmplitudeHeard: function() {
+            return this.amplitudeHeard;
+        },
+
+        getOctaveAmplitudeHeard: function() {
+            return this.octaveAmplitudeHeard;
         }
 
     });
