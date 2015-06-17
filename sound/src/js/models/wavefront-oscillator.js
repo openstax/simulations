@@ -2,7 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    //var _        = require('underscore');
+    // This bower module doesn't satisfy AMD, so I'm just trying to satisfy the linter
+    require('timbre'); var T = window.T;
+
     var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
@@ -16,13 +18,13 @@ define(function (require) {
     var S_LENGTH = 400;
 
     /**
-     * A movable target object that detects collisions with projectiles
+     * TODO: Make it actually play sounds like the original
      */
-    var Oscillator = Backbone.Model.extend({
+    var WavefrontOscillator = Backbone.Model.extend({
 
         defaults: {
-            frequency: 0,
-            amplitude: 1,
+            frequency: null,
+            amplitude: null,
             harmonicFactor: 1,
 
             enabled: false,
@@ -34,6 +36,17 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             this.referencePoint = new Vector2();
+
+            this.sound = T('sin');
+            this.sound.set({
+                frequency: Constants.DEFAULT_FREQUENCY,
+                mul: 0
+            });
+            this.sound.play();
+
+            this.on('change:frequency', this.frequencyChanged);
+            this.on('change:amplitude', this.amplitudeChanged);
+            this.on('change:enabled',   this.enabledChanged);
         },
 
         update: function(time, deltaTime) {
@@ -55,9 +68,33 @@ define(function (require) {
             frequency = (frequency === 0) ? 0.1 : frequency * Constants.FREQUENCY_DISPLAY_FACTOR;
             this.set('frequency', frequency);
             this.set('amplitude', amplitude);
+        },
+
+        play: function() {
+            this.sound.play();
+        },
+
+        pause: function() {
+            this.sound.pause();
+        },
+
+        frequencyChanged: function(model, frequency) {
+            this.sound.set({ freq: frequency });
+        },
+
+        amplitudeChanged: function(model, amplitude) {
+            console.log(amplitude)
+            if (this.get('enabled'))
+                this.sound.set({ mul: amplitude });
+            else
+                this.sound.set({ mul: 0 });
+        },
+
+        enabledChanged: function(model, enabled) {
+            this.amplitudeChanged(this, this.get('amplitude'));
         }
 
     });
 
-    return Oscillator;
+    return WavefrontOscillator;
 });

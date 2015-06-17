@@ -50,7 +50,9 @@ define(function (require) {
          */
         events: {
             'slide .frequency-slider' : 'changeFrequency',
-            'slide .amplitude-slider' : 'changeAmplitude'
+            'slide .amplitude-slider' : 'changeAmplitude',
+
+            'click .audio-enabled-check' : 'toggleAudioEnabled'
         },
 
         /**
@@ -108,7 +110,7 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$el.append(playbackControlsHtml);
-            
+
             this.$('select').selectpicker();
 
             this.$('.frequency-slider').noUiSlider({
@@ -192,6 +194,16 @@ define(function (require) {
                 this.$amplitude.text(amplitude.toFixed(2));
                 this.simulation.set('amplitude', amplitude);
             });
+        },
+
+        /**
+         *
+         */
+        toggleAudioEnabled: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('audioEnabled', true);
+            else
+                this.simulation.set('audioEnabled', false);
         }
 
     });

@@ -6,11 +6,11 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
-    var Wavefront     = require('models/wavefront');
-    var WaveMedium    = require('models/wave-medium');
-    var WaveFunction  = require('models/wave-function');
-    var Oscillator    = require('models/oscillator');
-    var SoundListener = require('models/sound-listener');
+    var Wavefront           = require('models/wavefront');
+    var WaveMedium          = require('models/wave-medium');
+    var WaveFunction        = require('models/wave-function');
+    var WavefrontOscillator = require('models/wavefront-oscillator');
+    var SoundListener       = require('models/sound-listener');
 
     /**
      * Constants
@@ -25,7 +25,8 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
-            propagationSpeed: null
+            propagationSpeed: null,
+            audioEnabled: false
         }),
         
         initialize: function(attributes, options) {
@@ -34,6 +35,8 @@ define(function (require, exports, module) {
             this.on('change:frequency',        this.frequencyChanged);
             this.on('change:amplitude',        this.amplitudeChanged);
             this.on('change:propagationSpeed', this.propagationSpeedChanged);
+            this.on('change:paused',           this.pausedChanged);
+            this.on('change:audioEnabled',     this.audioEnabledChanged);
         },
 
         /**
@@ -52,8 +55,8 @@ define(function (require, exports, module) {
             this.octaveWavefront.set('enabled', false);
             this.waveMedium.addWavefront(this.octaveWavefront);
 
-            this.primaryOscillator = new Oscillator();
-            this.octaveOscillator = new Oscillator();
+            this.primaryOscillator = new WavefrontOscillator();
+            this.octaveOscillator = new WavefrontOscillator();
 
             this.soundListener = new SoundListener({ model: this });
             this.primaryOscillator.set('listener', this.soundListener);
@@ -80,6 +83,17 @@ define(function (require, exports, module) {
         propagationSpeedChanged: function(simulation, propagationSpeed) {
             for (var i = 0; i < this.wavefronts.length; i++)
                 this.wavefronts[i].set('propagationSpeed', propagationSpeed);
+        },
+
+        pausedChanged: function(simulation, paused) {
+            if (paused)
+                this.primaryOscillator.pause();
+            else
+                this.primaryOscillator.play();
+        },
+
+        audioEnabledChanged: function(simulation, audioEnabled) {
+            this.primaryOscillator.set('enabled', audioEnabled);
         }
 
     });
