@@ -8,7 +8,7 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var SoundSimulation = require('models/simulation');
-    var TemplateSceneView  = require('views/scene');
+    var SoundSceneView  = require('views/scene');
 
     var Constants = require('constants');
 
@@ -82,7 +82,7 @@ define(function (require) {
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new TemplateSceneView({
+            this.sceneView = new SoundSceneView({
                 simulation: this.simulation
             });
         },

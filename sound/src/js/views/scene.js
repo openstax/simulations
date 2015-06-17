@@ -7,6 +7,8 @@ define(function(require) {
 
     var PixiSceneView = require('common/pixi/view/scene');
 
+    var WaveMediumView = require('views/wave-medium');
+
     var Assets = require('assets');
 
     // Constants
@@ -18,7 +20,7 @@ define(function(require) {
     /**
      *
      */
-    var TemplateSceneView = PixiSceneView.extend({
+    var SoundSceneView = PixiSceneView.extend({
 
         events: {
             
@@ -34,13 +36,18 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            this.waveMediumView = new WaveMediumView({
+                model: this.simulation.waveMedium
+            });
+            this.stage.addChild(this.waveMediumView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.waveMediumView.update(time, deltaTime, paused);
         },
 
     });
 
-    return TemplateSceneView;
+    return SoundSceneView;
 });
