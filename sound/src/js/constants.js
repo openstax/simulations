@@ -64,5 +64,18 @@ define(function (require) {
     Constants.SpeakerView = SpeakerView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            LISTENER VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var ListenerView = {};
+
+    ListenerView.HEIGHT_IN_METERS = 3;  // Meters
+
+    Constants.ListenerView = ListenerView;
+
+
     return Constants;
 });

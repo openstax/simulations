@@ -9,7 +9,9 @@ define(function (require) {
     Assets.Images = {   
         SPEAKER_MAGNET:   'speaker-magnet.png',
         SPEAKER_CONE:     'speaker-cone.png',
-        SPEAKER_SURROUND: 'speaker-surround.png'
+        SPEAKER_SURROUND: 'speaker-surround.png',
+        LISTENER_MALE:    'boy.png',
+        LISTENER_FEMALE:  'girl.png'
     };
 
     Assets.SpriteSheets = {};

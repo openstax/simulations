@@ -11,6 +11,7 @@ define(function(require) {
 
     var WaveMediumView = require('views/wave-medium');
     var SpeakerView    = require('views/speaker');
+    var ListenerView   = require('views/listener');
 
     var Assets = require('assets');
 
@@ -43,6 +44,7 @@ define(function(require) {
             this.initMVT();
             this.initWaveMediumView();
             this.initSpeakerView();
+            this.initListenerView();
 
             // Factor to apply to time reported by the simulation clock to get seconds.
             //   This gives results that correspond to the speed of sound
@@ -90,6 +92,15 @@ define(function(require) {
 
             this.speakerView.displayObject.x = this.mvt.modelToViewX(0);
             this.speakerView.displayObject.y = this.mvt.modelToViewY(0);
+        },
+
+        initListenerView: function() {
+            this.listenerView = new ListenerView({
+                model: this.simulation.soundListener,
+                mvt: this.mvt
+            });
+
+            this.stage.addChild(this.listenerView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
