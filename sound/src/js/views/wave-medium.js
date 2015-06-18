@@ -44,15 +44,16 @@ define(function(require) {
             var graphics = this.displayObject;
             graphics.clear();
 
+            var lineWidth = this.lineWidth;
             var maxX = this.model.getMaxX();
             var amplitude;
             for (var i = 0; i < maxX; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
                 // var colorIndex = Math.min(Math.floor(amplitude * 128) + 128, this.colors.length - 1);
-                // graphics.lineStyle(3, this.colors[colorIndex], Math.abs(amplitude));
-                graphics.lineStyle(3, this.color, Math.min(amplitude + 0.5, 1));
+                // graphics.lineStyle(lineWidth, this.colors[colorIndex], Math.abs(amplitude));
+                graphics.lineStyle(lineWidth, this.color, Math.min(amplitude + 0.5, 1));
                 graphics.moveTo(0, 0);
-                graphics.arc(0, 0, i * 3, -Math.PI / 4, Math.PI / 4);
+                graphics.arc(0, 0, i * lineWidth, -Math.PI / 4, Math.PI / 4);
             }
         },
 
@@ -62,6 +63,8 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
         },
 
         /**

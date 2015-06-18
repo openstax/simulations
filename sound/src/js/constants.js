@@ -15,21 +15,12 @@ define(function (require) {
     // The time step is set so that the waves look reasonable on the screen. It is NOT set so that
     // the simulation clock bears any certain relationship to the speed of sound
     Constants.TIME_STEP = 5 / 1000;
-    Constants.WAIT_TIME = 50 / 1000;
+    Constants.WAIT_TIME = 1 / 30;
 
     // The number of pixels a wavefront moves in a time step
-    Constants.PROPOGATION_SPEED = 3;
-    // Conversion factor needed to scale the clock for measurements. This
-    // is based on the propogation speed, the clock's time step, and the
-    // size of the ruler graphic that is used to measure waves
-    Constants.METERS_PER_PIXEL = 5.0 / 222.0;        // the 5 meter stick is 222 pixels long
+    Constants.PIXELS_PER_TIMESTEP = 3;
     // Speed of sound at room temperature at sea level
     Constants.SPEED_OF_SOUND = 335;
-    // Factor to apply to time reported by the simulation clock to get seconds. This gives results
-    // that correspond to the speed of sound
-    Constants.CLOCK_SCALE_FACTOR = 
-        Constants.PROPOGATION_SPEED * (1 / Constants.TIME_STEP) * 
-        Constants.METERS_PER_PIXEL  * (1 / Constants.SPEED_OF_SOUND);
 
     Constants.MAX_FREQUENCY = 1000;
     Constants.DEFAULT_FREQUENCY = 500;
@@ -39,7 +30,24 @@ define(function (require) {
     // This parameter defines how tightly spaced the waves are on the screen. If it is too small,
     //   the displayed wavelength will not get monotonically shorter as the frequency is raised.
     //   Note that the best value for this is dependent on the clock's dt.
-    Constants.FREQUENCY_DISPLAY_FACTOR = 40;
+    Constants.FREQUENCY_DISPLAY_FACTOR = 4;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              WAVEFRONT                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Wavefront = {};
+
+    // Number of sample values we keep track of
+    Wavefront.SAMPLE_LENGTH = 400; 
+    // The length in meters that the sample values span
+    Wavefront.LENGTH_IN_METERS = 12;
+
+    Constants.Wavefront = Wavefront;
+
 
     return Constants;
 });

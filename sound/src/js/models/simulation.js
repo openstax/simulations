@@ -31,10 +31,10 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            // options = _.extend({
-            //     frameDuration: Constants.WAIT_TIME,
-            //     deltaTimePerFrame: Constants.TIME_STEP
-            // }, options);
+            options = _.extend({
+                frameDuration: Constants.WAIT_TIME,
+                deltaTimePerFrame: Constants.TIME_STEP
+            }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
