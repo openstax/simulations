@@ -39,7 +39,7 @@ define(function(require) {
 
         drawMask: function() {
             var length = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS);
-            var startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
+            var startX = this.startX;
 
             var mask = this.mask;
             mask.clear();
@@ -68,6 +68,8 @@ define(function(require) {
             var amplitude;
             var alphaMultiplier = 1.5;
 
+            var startRadius = this.startX;
+
             for (var i = 0; i < maxX; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
 
@@ -77,7 +79,7 @@ define(function(require) {
                     graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
 
                 // We alternate the direction so we don't get lines on one edge
-                graphics.arc(0, 0, i * lineWidth, -angle * (counterclockwise ? -1 : 1), angle * (counterclockwise ? -1 : 1), counterclockwise);
+                graphics.arc(0, 0, startRadius + i * lineWidth, -angle * (counterclockwise ? -1 : 1), angle * (counterclockwise ? -1 : 1), counterclockwise);
                 counterclockwise = !counterclockwise;
             }
         },
@@ -91,6 +93,7 @@ define(function(require) {
 
             this.drawMask();
             this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
+            this.startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
         },
 
         /**
