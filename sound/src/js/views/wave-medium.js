@@ -44,16 +44,28 @@ define(function(require) {
             var graphics = this.displayObject;
             graphics.clear();
 
+            var counterclockwise = false;
+            var angle = Math.PI / 4;
             var lineWidth = this.lineWidth;
+
             var maxX = this.model.getMaxX();
             var amplitude;
+            var alphaMultiplier = 1.5;
+
             for (var i = 0; i < maxX; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
-                // var colorIndex = Math.min(Math.floor(amplitude * 128) + 128, this.colors.length - 1);
-                // graphics.lineStyle(lineWidth, this.colors[colorIndex], Math.abs(amplitude));
-                graphics.lineStyle(lineWidth, this.color, Math.min(amplitude + 0.5, 1));
-                graphics.moveTo(0, 0);
-                graphics.arc(0, 0, i * lineWidth, -Math.PI / 4, Math.PI / 4);
+                // var colorIndex = Math.min(Math.floor(amplitude * 128) + 226, this.colors.length - 1);
+                // var alpha = Math.min(1, Math.pow(100, Math.abs(20 * amplitude)) - 1);
+                // graphics.lineStyle(lineWidth, this.colors[colorIndex], 1);
+                //graphics.lineStyle(lineWidth, this.color, Math.min(amplitude + 0.5, 1));
+                if (amplitude >= 0)
+                    graphics.lineStyle(lineWidth, 0xFFFFFF, Math.min(1, amplitude * alphaMultiplier));
+                else
+                    graphics.lineStyle(lineWidth, 0x333333, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+                //graphics.moveTo(0, 0);
+                // We alternate the direction so we don't get lines on one edge
+                graphics.arc(0, 0, i * lineWidth, -angle * (counterclockwise ? -1 : 1), angle * (counterclockwise ? -1 : 1), counterclockwise);
+                counterclockwise = !counterclockwise;
             }
         },
 
