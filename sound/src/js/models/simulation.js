@@ -25,7 +25,7 @@ define(function (require, exports, module) {
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
-            propagationSpeed: null,
+            propagationSpeed: Constants.PROPAGATION_SPEED,
             audioEnabled: false,
             //timeScale: Constants.CLOCK_SCALE_FACTOR
         }),
@@ -51,11 +51,11 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.waveMedium = new WaveMedium();
 
-            this.primaryWavefront = new Wavefront();
+            this.primaryWavefront = new Wavefront({ propagationSpeed: this.get('propagationSpeed') });
             this.primaryWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.primaryWavefront));
             this.waveMedium.addWavefront(this.primaryWavefront);
 
-            this.octaveWavefront = new Wavefront();
+            this.octaveWavefront = new Wavefront({ propagationSpeed: this.get('propagationSpeed') });
             this.octaveWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.octaveWavefront));
             this.octaveWavefront.set('maxAmplitude', 0);
             this.octaveWavefront.set('enabled', false);

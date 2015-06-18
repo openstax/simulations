@@ -18,7 +18,7 @@ define(function (require) {
     Constants.WAIT_TIME = 1 / 30;
 
     // The number of pixels a wavefront moves in a time step
-    Constants.PIXELS_PER_TIMESTEP = 3;
+    Constants.PROPAGATION_SPEED = 2;
     // Speed of sound at room temperature at sea level
     Constants.SPEED_OF_SOUND = 335;
 
@@ -30,7 +30,7 @@ define(function (require) {
     // This parameter defines how tightly spaced the waves are on the screen. If it is too small,
     //   the displayed wavelength will not get monotonically shorter as the frequency is raised.
     //   Note that the best value for this is dependent on the clock's dt.
-    Constants.FREQUENCY_DISPLAY_FACTOR = 4;
+    Constants.FREQUENCY_DISPLAY_FACTOR = 7;
 
 
     /*************************************************************************
@@ -47,6 +47,21 @@ define(function (require) {
     Wavefront.LENGTH_IN_METERS = 12;
 
     Constants.Wavefront = Wavefront;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            SPEAKER VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var SpeakerView = {};
+
+    SpeakerView.HEIGHT_IN_METERS = 4.5;  // Meters
+    SpeakerView.WIDTH_IN_METERS  = 1.95; // Meters
+    SpeakerView.CONE_MAX_OFFSET_IN_METERS = 0.07; // Meters
+
+    Constants.SpeakerView = SpeakerView;
 
 
     return Constants;

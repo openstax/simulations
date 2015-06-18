@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var WaveMediumView = require('views/wave-medium');
+    var SpeakerView    = require('views/speaker');
 
     var Assets = require('assets');
 
@@ -41,15 +42,16 @@ define(function(require) {
 
             this.initMVT();
             this.initWaveMediumView();
+            this.initSpeakerView();
 
             // Factor to apply to time reported by the simulation clock to get seconds.
             //   This gives results that correspond to the speed of sound
             var metersPerPixel = this.mvt.viewToModelDeltaX(1);
-            var clockScale = 
-                Constants.PIXELS_PER_TIMESTEP * 
-                (1 / Constants.TIME_STEP) * 
-                metersPerPixel * 
-                (1 / Constants.SPEED_OF_SOUND);
+            // var clockScale = 
+            //     Constants.PIXELS_PER_TIMESTEP * 
+            //     (1 / Constants.TIME_STEP) * 
+            //     metersPerPixel * 
+            //     (1 / Constants.SPEED_OF_SOUND);
         },
 
         initMVT: function() {
@@ -78,8 +80,21 @@ define(function(require) {
             this.waveMediumView.displayObject.y = this.mvt.modelToViewY(0);
         },
 
+        initSpeakerView: function() {
+            this.speakerView = new SpeakerView({
+                model: this.simulation.waveMedium,
+                mvt: this.mvt
+            });
+
+            this.stage.addChild(this.speakerView.displayObject);
+
+            this.speakerView.displayObject.x = this.mvt.modelToViewX(0);
+            this.speakerView.displayObject.y = this.mvt.modelToViewY(0);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             this.waveMediumView.update(time, deltaTime, paused);
+            this.speakerView.update(time, deltaTime, paused);
         },
 
     });

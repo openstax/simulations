@@ -16,23 +16,36 @@ define(function(require) {
     var WaveMediumView = PixiView.extend({
 
         /**
-         * Overrides PixiView's initializeDisplayObject function
-         */
-        initializeDisplayObject: function() {
-            this.displayObject = new PIXI.Graphics();
-        },
-
-        /**
          * Initializes the new WaveMediumView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex('#888888');
-            this.colors = [];
-            for (var i = 0; i < 255; i++) {
-                this.colors.push(Colors.rgbToHexInteger(i, i, i));
-            }
+            this.darkColor  = Colors.parseHex('#333333');
+            this.lightColor = Colors.parseHex('#ffffff');
+
+            this.initGraphics();
 
             this.updateMVT(options.mvt);
+        },
+
+        initGraphics: function() {
+            this.graphics = new PIXI.Graphics();
+            this.mask = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.graphics);
+            this.displayObject.addChild(this.mask);
+
+            this.graphics.mask = this.mask;
+        },
+
+        drawMask: function() {
+            var length = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS);
+            var startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
+
+            var mask = this.mask;
+            mask.clear();
+            mask.beginFill(0x000000, 1);
+            mask.drawRect(startX, -length / 2, length, length);
+            mask.endFill();
         },
 
         /**
@@ -41,12 +54,15 @@ define(function(require) {
          *   amplitudes.
          */
         drawAmplitudes: function() {
-            var graphics = this.displayObject;
+            var graphics = this.graphics;
             graphics.clear();
 
             var counterclockwise = false;
             var angle = Math.PI / 4;
             var lineWidth = this.lineWidth;
+
+            var lightColor = this.lightColor;
+            var darkColor = this.darkColor;
 
             var maxX = this.model.getMaxX();
             var amplitude;
@@ -54,15 +70,12 @@ define(function(require) {
 
             for (var i = 0; i < maxX; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
-                // var colorIndex = Math.min(Math.floor(amplitude * 128) + 226, this.colors.length - 1);
-                // var alpha = Math.min(1, Math.pow(100, Math.abs(20 * amplitude)) - 1);
-                // graphics.lineStyle(lineWidth, this.colors[colorIndex], 1);
-                //graphics.lineStyle(lineWidth, this.color, Math.min(amplitude + 0.5, 1));
+
                 if (amplitude >= 0)
-                    graphics.lineStyle(lineWidth, 0xFFFFFF, Math.min(1, amplitude * alphaMultiplier));
+                    graphics.lineStyle(lineWidth, lightColor, Math.min(1, amplitude * alphaMultiplier));
                 else
-                    graphics.lineStyle(lineWidth, 0x333333, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
-                //graphics.moveTo(0, 0);
+                    graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+
                 // We alternate the direction so we don't get lines on one edge
                 graphics.arc(0, 0, i * lineWidth, -angle * (counterclockwise ? -1 : 1), angle * (counterclockwise ? -1 : 1), counterclockwise);
                 counterclockwise = !counterclockwise;
@@ -76,6 +89,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.drawMask();
             this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
         },
 
