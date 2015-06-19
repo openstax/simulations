@@ -26,10 +26,6 @@ define(function(require) {
      */
     var SoundSceneView = PixiSceneView.extend({
 
-        events: {
-            
-        },
-
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
@@ -44,7 +40,6 @@ define(function(require) {
             this.initMVT();
             this.initWaveMediumView();
             this.initSpeakerView();
-            this.initListenerView();
 
             // Factor to apply to time reported by the simulation clock to get seconds.
             //   This gives results that correspond to the speed of sound
