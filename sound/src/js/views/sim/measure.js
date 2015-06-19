@@ -3,7 +3,8 @@ define(function (require) {
     'use strict';
 
 
-    var SoundSimView = require('views/sim');
+    var SoundSimView     = require('views/sim');
+    var MeasureSceneView = require('views/scene/measure');
 
     var Constants = require('constants');
 
@@ -24,7 +25,16 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
-        }
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new MeasureSceneView({
+                simulation: this.simulation
+            });
+        },
 
     });
 

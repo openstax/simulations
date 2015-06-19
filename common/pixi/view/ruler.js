@@ -43,6 +43,7 @@ define(function(require) {
                 orientation: 'vertical',
                 rulerWidth: 10,
                 rulerMeasureUnits : 100,
+                unitsFont: undefined,
 
                 ticks : [{
                     size: 10,
@@ -78,6 +79,7 @@ define(function(require) {
             this.rulerWidth = options.rulerWidth;
             this.units = options.units;
             this.rulerMeasureUnits = options.rulerMeasureUnits;
+            this.unitsFont = options.unitsFont;
 
             // Sort the ticks from smallest to largest so that draw
             //   over the smaller ones with larger ones instead of
@@ -238,6 +240,12 @@ define(function(require) {
                     }
                 }
             }
+
+            if (this.unitsFont)
+                style = {
+                    font: this.unitsFont,
+                    fill: style.fill
+                };
 
             label = new PIXI.Text(this.units, style);
             label.anchor.x = 1;
