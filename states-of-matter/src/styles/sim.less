@@ -1,13 +1,20 @@
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
 @import "variables.less";
 @import "mixins.less";
 @import "playback-controls.less";
+
+.sims .sim-content {
+    min-height: initial;
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
+}
 
 .side-panel {
 	position: absolute;
 	top: @panel-margin;
 	right: @panel-margin;
+	width: @panel-width;
 	
 	.settings {
 		padding: 15px;

@@ -96,8 +96,8 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				segment = this.segment;
 
@@ -106,7 +106,7 @@ define(function (require) {
 						segment.start.x += dx;
 						segment.start.y += dy;
 					}
-					if (this.draggingEnd && this.heatmapView.isVisiblePoint(segment.end.x   + dx, segment.end.y   + dy)) {
+					if (this.draggingEnd && this.heatmapView.isVisiblePoint(segment.end.x + dx, segment.end.y + dy)) {
 						segment.end.x += dx;
 						segment.end.y += dy;
 					}
@@ -123,8 +123,8 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				segment = this.segment;
 

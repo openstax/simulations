@@ -59,9 +59,9 @@ define(function(require) {
             var burnerView = new BurnerView({
                 model: this.model,
                 mvt: this.mvt,
-                width:  TeapotView.BURNER_WIDTH,
-                height: TeapotView.BURNER_HEIGHT,
-                openingHeight: TeapotView.BURNER_OPENING_HEIGHT,
+                width:  TeapotView.BURNER_WIDTH * this.getImageScale(),
+                height: TeapotView.BURNER_HEIGHT * this.getImageScale(),
+                openingHeight: TeapotView.BURNER_OPENING_HEIGHT * this.getImageScale(),
                 energyChunkCollection: this.model.energyChunks,
                 coolingEnabled: false,
                 sliderReturnsToCenter: false

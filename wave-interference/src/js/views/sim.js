@@ -6,6 +6,8 @@ define(function (require) {
 	var _                     = require('underscore');
 	var Backbone              = require('backbone'); Backbone.$ = $;
 
+	var AppView = require('common/app/app');
+
 	var WaveSimulation        = require('../models/wave-sim');
 	var Updater               = require('../utils/updater');
 
@@ -426,6 +428,9 @@ define(function (require) {
 
 			this.measuringTapeView.hide();
 			this.stopwatchView.hide();
+
+			if (AppView.windowIsShort())
+				this.$('.wave-properties').detach().prependTo(this.$('.properties-panel'));
 		},
 
 		/**

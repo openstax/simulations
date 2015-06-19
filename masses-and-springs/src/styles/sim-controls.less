@@ -2,6 +2,11 @@
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: @short-screen-panel-margin;
+        top: @short-screen-panel-margin;
+    }
 }
 
 

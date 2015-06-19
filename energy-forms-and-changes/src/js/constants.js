@@ -118,6 +118,7 @@ define(function (require) {
     var IntroElementView = {};
 
     IntroElementView.TEXT_FONT = '32px Arial';
+    IntroElementView.SMALL_TEXT_FONT = '22px Arial';
 
     Constants.IntroElementView = IntroElementView;
 
@@ -230,6 +231,7 @@ define(function (require) {
     BurnerView.COLD_COLOR = '#0000f0';
     BurnerView.TEXT_FONT  = 'bold 17px Arial';
     BurnerView.TEXT_COLOR = '#000';
+    BurnerView.SMALL_TEXT_FONT  = 'bold 12px Arial';
 
     Constants.BurnerView = BurnerView;
 
@@ -309,8 +311,17 @@ define(function (require) {
     ThermometerView.NUM_TICK_MARKS = 13;
     ThermometerView.TICK_MARK_THICKNESS = 2; // pixels
     ThermometerView.LIQUID_COLOR = '#ed1c24';
+    ThermometerView.HEIGHT_IN_METERS = 0.081;
 
     Constants.ThermometerView = ThermometerView;
+
+
+    var ThermometerClipsView = {};
+
+    ThermometerClipsView.BASE_WIDTH = 0.118; // Meters
+    ThermometerClipsView.CLIP_WIDTH = 0.038; // Meters tall
+
+    Constants.ThermometerClipsView = ThermometerClipsView;
 
 
     /*************************************************************************
@@ -518,7 +529,7 @@ define(function (require) {
     EnergySystemsSimulation.OFFSET_BETWEEN_ELEMENTS   = new Vector2(0,     -0.4);
     EnergySystemsSimulation.ENERGY_SOURCE_POSITION    = new Vector2(-0.15,  0);
     EnergySystemsSimulation.ENERGY_CONVERTER_POSITION = new Vector2(-0.025, 0);
-    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector2( 0.09,  0);
+    EnergySystemsSimulation.ENERGY_USER_POSITION      = new Vector2( 0.089,  0);
 
     EnergySystemsSimulation.TRANSITION_DURATION = 0.5;
 
@@ -527,7 +538,8 @@ define(function (require) {
 
     var EnergySystemsSimulationView = {};
 
-    EnergySystemsSimulationView.ENERGY_SYSTEMS_MVT_SCALE_FACTOR = 2200;
+    EnergySystemsSimulationView.DEFAULT_MVT_SCALE = Constants.ENERGY_SYSTEMS_MVT_SCALE_FACTOR;
+    EnergySystemsSimulationView.SHORT_SCREEN_MVT_SCALE = EnergySystemsSimulationView.DEFAULT_MVT_SCALE * 0.74;
 
     Constants.EnergySystemsSimulationView = EnergySystemsSimulationView;
 
@@ -677,8 +689,8 @@ define(function (require) {
     SunView.RAY_DISTANCE = 1000;
 
     SunView.PANEL_WIDTH  = 0.065;
-    SunView.PANEL_HEIGHT = 0.085;
-    SunView.PANEL_OFFSET = new Vector2(-0.05, SunView.PANEL_HEIGHT / 2);
+    SunView.PANEL_HEIGHT = 0.088;
+    SunView.PANEL_OFFSET = new Vector2(-0.05, 0.035);
     
     SunView.SLIDER_WIDTH = 8;
     SunView.SLIDER_BG_FILL_TOP = '#444';
@@ -690,6 +702,9 @@ define(function (require) {
     SunView.LABEL_COLOR = '#000';
     SunView.LABEL_FONT = '16px Arial';
     SunView.LABEL_TITLE_FONT = '20px Arial';
+    SunView.FONT_FAMILY = 'Arial';
+    SunView.LABEL_FONT_SIZE = 16;
+    SunView.TITLE_FONT_SIZE = 20;
 
     SunView.CLOUD_ICON_WIDTH = 50;
 
@@ -898,6 +913,8 @@ define(function (require) {
     BikerView.PANEL_OFFSET = new Vector2(-BikerView.PANEL_WIDTH / 2, -BikerView.PANEL_HEIGHT - 0.018);
     BikerView.LABEL_COLOR = '#000';
     BikerView.LABEL_FONT  = '16px Arial';
+    BikerView.LABEL_FONT_FAMILY = 'Arial';
+    BikerView.LABEL_FONT_SIZE = 16;
 
     Constants.BikerView = BikerView;
 

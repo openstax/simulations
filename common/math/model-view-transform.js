@@ -344,6 +344,14 @@ define(function (require) {
                 return this.transformMatrix[4];
             else 
                 this.scale(this.scaleX(), scaleY);
+        },
+
+        getXScale: function() {
+            return this.transformMatrix[0];
+        },
+
+        getYScale: function() {
+            return this.transformMatrix[4];
         }
 
     });

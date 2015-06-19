@@ -3,6 +3,10 @@
 @import "variables.less";
 @import "mixins.less";
 
+.sims .sim-content {
+    min-height: initial;
+}
+
 .sim-controls {
     position: absolute;
     right: @panel-margin;
@@ -10,6 +14,11 @@
     background: @panel-bg;
     padding: @panel-padding;
     width: @control-panel-width;
+
+    @media screen and (max-height: @short-window) {
+        right: @short-screen-panel-margin;
+        top: @short-screen-panel-margin;
+    }
 
     input.form-control {
         background: rgba(255, 255, 255, 0.27);

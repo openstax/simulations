@@ -61,6 +61,8 @@ define(function (require) {
             'click .back-btn'   : 'stepBack',
             'click .reset-btn'  : 'reset',
 
+            'click .ball-settings-toggle' : 'toggleBallSettings',
+
             'click .ball-settings-more-data' : 'showMoreData',
             'click .ball-settings-less-data' : 'showLessData',
 
@@ -487,6 +489,14 @@ define(function (require) {
                 this.sceneView.showMomentaDiagram();
             else
                 this.sceneView.hideMomentaDiagram();
+        },
+
+        toggleBallSettings: function(event) {
+            this.$('.ball-settings-wrapper')
+                .toggle()
+                .toggleClass('open');
+            this.$('.ball-settings-toggle')
+                .toggleClass('open');
         }
 
     });

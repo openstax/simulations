@@ -28,6 +28,10 @@
 
 	&.landscape {
 		height: @heatmap-container-padding;
+
+		@media screen and (max-height: @short-window) {
+	        height: @short-screen-cross-section-graph-button-height;
+	    }
 	}
 
 	&.open {
@@ -58,6 +62,12 @@
 		color: @link-color;
 		border-radius: 0;
 		z-index: 50;
+
+		@media screen and (max-height: @short-window) {
+	        height: @short-screen-cross-section-graph-button-height;
+	        line-height: @short-screen-cross-section-graph-button-height;
+	        font-size: 20px;
+	    }
 
 		&:hover {
 			color: fadeout(@link-color, 15%);
@@ -92,6 +102,12 @@
 		color: #888;
 		display: none;
 		z-index: 50;
+
+		@media screen and (max-height: @short-window) {
+	        font-size: 20px;
+	        top: 2px;
+	        left: 0px;
+	    }
 
 		&:hover {
 			color: #555;

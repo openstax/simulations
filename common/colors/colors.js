@@ -134,6 +134,14 @@ define(function (require) {
 			var rgba = this.toRgba(colorString, true);
 			this.darkenRgba(rgba, percent);
 			return this.rgbToHex(rgba.r, rgba.g, rgba.b);
+		},
+
+		lightenRgba: function(rgba, percent) {
+			return this.darkenRgba(rgba, -percent);
+		},
+
+		lightenHex: function(colorString, percent) {
+			return this.darkenHex(colorString, -percent);
 		}
 	};
 

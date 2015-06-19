@@ -1,5 +1,4 @@
 @import "../../node_modules/bootstrap/less/mixins/gradients.less";
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
 @import "variables.less";
 @import "mixins.less";
 
@@ -10,6 +9,10 @@
     max-height: 682px;
     
     background: url(../img/symphony-green.png);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
 }
 
 .scene-view-ui {

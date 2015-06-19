@@ -103,7 +103,7 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dy = this.toLatticeYScale(event.pageY - this.dragY);
+				dy = this.toLatticeYScale(event.pageY - this.dragY) / this.zoom;
 
 				if (this.draggingTopHandle)
 					dy *= -1;
@@ -128,7 +128,7 @@ define(function (require) {
 
 				this.fixTouchEvents(event);
 
-				dx = this.toLatticeXScale(event.pageX - this.dragX);
+				dx = this.toLatticeXScale(event.pageX - this.dragX) / this.zoom;
 
 				if (!this.wayOutOfBounds(event.pageX, event.pageY)) {
 					topBox    = this.barrier.topBox;

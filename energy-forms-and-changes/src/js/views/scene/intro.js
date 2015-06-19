@@ -8,8 +8,10 @@ define(function(require) {
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
-    var ModelViewTransform   = require('common/math/model-view-transform');
-    var PixiSceneView        = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var AppView            = require('common/app/app');
+
     var AirView              = require('views/air');
     var ThermometerView      = require('views/element/thermometer');
     var ThermometerClipsView = require('views/thermometer-clips');
@@ -51,12 +53,19 @@ define(function(require) {
 
             var labBenchSurfaceTexture = Assets.Texture(Assets.Images.SHELF_LONG);
 
+            var scale;
+            if (AppView.windowIsShort())
+                scale = 1400;
+            else
+                scale = 2000;
+
             this.viewOriginX = Math.round(this.width / 2);
             this.viewOriginY = Math.round(this.height - labBenchSurfaceTexture.height * 0.64); //Math.round(this.height * 0.85);//my failed attempt at making it less magic and more data-based
+            
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                2000 // Scale
+                scale
             );
 
             this.initLayers();
@@ -125,15 +134,27 @@ define(function(require) {
         },
 
         initBlocks: function() {
+            var freeAreaAbove = 500;
             var movementConstraintBounds = new Rectangle(
                 0, 
-                0, 
+                0 - freeAreaAbove, 
                 this.width, 
-                this.viewOriginY
+                this.viewOriginY + freeAreaAbove
             );
             var movementConstraint = _.bind(function(model, newPosition) {
                 return this.simulation.validatePosition(model, newPosition);
             }, this);
+
+            var lineWidth;
+            var font;
+            if (this.mvt.getXScale() > 1600) {
+                lineWidth = Constants.BlockView.LINE_WIDTH;
+                font = Constants.IntroElementView.TEXT_FONT
+            }
+            else {
+                lineWidth = Math.round(Constants.BlockView.LINE_WIDTH * (this.mvt.getXScale() / 2000));
+                font = Constants.IntroElementView.SMALL_TEXT_FONT;
+            } 
 
             this.brickView = new BrickView({ 
                 model: this.simulation.brick,
@@ -141,8 +162,9 @@ define(function(require) {
                 simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
-                lineWidth: Constants.BlockView.LINE_WIDTH,
+                lineWidth: lineWidth,
                 textColor: Constants.BrickView.TEXT_COLOR,
+                textFont: font,
                 labelText: 'Brick'
             });
             this.brickLayer = new PIXI.DisplayObjectContainer();
@@ -157,9 +179,10 @@ define(function(require) {
                 simulation: this.simulation,
                 movementConstraintBounds: movementConstraintBounds,
                 movementConstraint: movementConstraint,
-                lineWidth: Constants.BlockView.LINE_WIDTH,
+                lineWidth: lineWidth,
                 fillColor: Constants.IronBlockView.FILL_COLOR,
                 textColor: Constants.IronBlockView.TEXT_COLOR,
+                textFont: font,
                 labelText: 'Iron'
             });
             this.ironBlockLayer = new PIXI.DisplayObjectContainer();
@@ -185,15 +208,22 @@ define(function(require) {
         },
 
         initBeaker: function() {
+            var freeAreaAbove = 500;
             var movementConstraintBounds = new Rectangle(
                 0, 
-                0, 
+                0 - freeAreaAbove, 
                 this.width, 
-                this.viewOriginY
+                this.viewOriginY + freeAreaAbove
             );
             var movementConstraint = _.bind(function(model, newPosition) {
                 return this.simulation.validatePosition(model, newPosition);
             }, this);
+
+            var lineWidth;
+            if (this.mvt.getXScale() > 1600)
+                lineWidth = Constants.BlockView.LINE_WIDTH;
+            else
+                lineWidth = Math.round(Constants.BlockView.LINE_WIDTH * (this.mvt.getXScale() / 2000));
 
             this.beakerView = new BeakerView({
                 model: this.simulation.beaker,
@@ -201,7 +231,8 @@ define(function(require) {
                 simulation: this.simulation,
                 movable: true,
                 movementConstraint: movementConstraint,
-                movementConstraintBounds: movementConstraintBounds
+                movementConstraintBounds: movementConstraintBounds,
+                lineWidth: lineWidth
             });
             this.views.push(this.beakerView);
 
@@ -238,10 +269,9 @@ define(function(require) {
 
             // Thermometer clips
             var thermometerClips = new ThermometerClipsView({
-                x: 15,
-                y: 15,
-                width: 230,
-                height: 180,
+                mvt: this.mvt,
+                x: Math.round(this.mvt.modelToViewDeltaX(0.01779)),
+                y: Math.round(Math.abs(this.mvt.modelToViewDeltaY(0.0150))),
                 numThermometerSpots: thermometerViews.length
             });
             this.thermometerClips = thermometerClips;
@@ -300,6 +330,8 @@ define(function(require) {
                 projectedEdgeLength: burnerProjectionAmount
             });
 
+            var font = (this.mvt.getXScale() > 1600) ? BurnerView.TEXT_FONT : BurnerView.SMALL_TEXT_FONT;
+
             var leftBurnerView = new BurnerView({
                 model: this.simulation.leftBurner,
                 mvt: this.mvt,
@@ -307,6 +339,7 @@ define(function(require) {
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight,
+                textFont: font,
                 energyChunkCollection: this.simulation.leftBurner.energyChunkList
             });
 
@@ -317,6 +350,7 @@ define(function(require) {
                 width: burnerWidth,
                 height: burnerHeight,
                 openingHeight: burnerOpeningHeight,
+                textFont: font,
                 energyChunkCollection: this.simulation.rightBurner.energyChunkList
             });
 

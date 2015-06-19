@@ -1,13 +1,12 @@
-@import "../../node_modules/bootstrap/less/mixins/gradients.less";
-@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
-@import "../../../common/styles/mixins/vendor-prefixes.less";
-@import "../../../common/styles/variables.less";
-
+@import "variables.less";
+@import "mixins.less";
 
 .scene-view {
     width: 100%;
-    height: 100%;
-    max-height: 620px;
-
+    height: @scene-height;
     #gradient.vertical(#ccc; #fafafa; 0%; 85%);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
 }

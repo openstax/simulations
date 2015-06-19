@@ -13,7 +13,7 @@
     <% _.each(energySymbols, function(energySymbol) { %>
         <label class="energy-symbols-legend-label">
             <%= energySymbol.label %>
-            <%= Assets.createIcon(energySymbol.src, { 'class': 'energy-symbol' }, 23) %>
+            <%= Assets.createIcon(energySymbol.src, { 'class': 'energy-symbol' }, energySymbolsSize) %>
         </label>
     <% }); %>
 </div>
@@ -28,7 +28,7 @@
                     'class': 'element-icon', 
                     'data-cid': element.cid, 
                     'data-type': element.type 
-                }, 36) %>
+                }, elementIconSize) %>
         <% }); %>
         </div>
     </div>
