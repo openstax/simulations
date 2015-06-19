@@ -32,6 +32,9 @@ define(function (require) {
     //   Note that the best value for this is dependent on the clock's dt.
     Constants.FREQUENCY_DISPLAY_FACTOR = 7;
 
+    Constants.DEFAULT_LISTENER_X = 5.9; // Meters
+    Constants.DEFAULT_LISTENER_Y = 0;   // Meters
+
 
     /*************************************************************************
      **                                                                     **
@@ -72,7 +75,9 @@ define(function (require) {
 
     var ListenerView = {};
 
-    ListenerView.HEIGHT_IN_METERS = 3;  // Meters
+    ListenerView.HEIGHT_IN_METERS = 3;   // Meters
+    ListenerView.MIN_X_IN_METERS  = 2.5; // Meters
+    ListenerView.MAX_X_IN_METERS = 10;   // Meters
 
     Constants.ListenerView = ListenerView;
 

@@ -65,6 +65,7 @@ define(function (require, exports, module) {
             this.octaveOscillator = new WavefrontOscillator();
 
             this.soundListener = new SoundListener({ model: this });
+            this.soundListener.setPosition(Constants.DEFAULT_LISTENER_X, Constants.DEFAULT_LISTENER_Y);
             this.primaryOscillator.set('listener', this.soundListener);
             this.octaveOscillator.set('listener', this.soundListener);
 

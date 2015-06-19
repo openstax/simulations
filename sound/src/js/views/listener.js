@@ -4,16 +4,28 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView   = require('common/pixi/view');
+    var PixiView               = require('common/pixi/view');
+    var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var Constants = require('constants');
 
     var Assets = require('assets');
 
     /**
-     * A view that represents an oscillating speaker
+     * A view that represents a person who listens
      */
     var ListenerView = PixiView.extend({
+
+        events: {
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
+        },
 
         /**
          * Initializes the new ListenerView.
@@ -22,6 +34,8 @@ define(function(require) {
             this.initGraphics();
 
             this.updateMVT(options.mvt);
+
+            this.listenTo(this.model, 'change:position', this.updatePosition);
         },
 
         /**
@@ -30,16 +44,18 @@ define(function(require) {
         initGraphics: function() {
             if (Math.random() < 0.5) {
                 this.person = Assets.createSprite(Assets.Images.LISTENER_FEMALE);
+                this.person.anchor.x = 0.1;
                 this.person.anchor.y = 0.408;
             }
             else {
                 this.person = Assets.createSprite(Assets.Images.LISTENER_MALE);
+                this.person.anchor.x = 0.1;
                 this.person.anchor.y = 0.415;
             }
 
-            this.person.anchor.x = 0.5;
-
             this.displayObject.addChild(this.person);
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = 'ew-resize';
         },
 
         /**
@@ -60,16 +76,60 @@ define(function(require) {
             var scale = targetSpriteHeight / this.person.texture.height;
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
 
-            this.updatePosition();
+            this.updatePosition(this.model, this.model.get('position'));
         },
 
-        updatePosition: function() {
-            var viewPosition = this.mvt.modelToView(this.model.get('position'));
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
-        }
+        updatePosition: function(body, position) {
+            this.updateLock(function() {
+                var viewPosition = this.mvt.modelToView(position);
+                this.displayObject.x = viewPosition.x;
+                this.displayObject.y = viewPosition.y;
+            });
+        },
+
+        dragStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+        },
+
+        /**
+         * Handles drag events to move the listener.  The original PhET source
+         *   claims to be changing the pitch (frequency) of the sound according
+         *   to the Doippler Effect, but the changes are either imperceptible
+         *   or the code is not actually used.
+         */
+        drag: function(data) {
+            if (this.dragging) {
+                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+
+                var x = this.mvt.viewToModelX(this.displayObject.x + dx);
+                var y = this.mvt.viewToModelY(this.displayObject.y + dy);
+
+                if (x < ListenerView.MIN_X_IN_METERS)
+                    x = ListenerView.MIN_X_IN_METERS;
+                else if (x > ListenerView.MAX_X_IN_METERS)
+                    x = ListenerView.MAX_X_IN_METERS;
+
+                this.displayObject.x = this.mvt.modelToViewX(x);
+                //this.displayObject.y = this.mvt.modelToViewY(y);
+
+                this.inputLock(function() {
+                    this.model.setX(x, y);
+                });
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
+        },
 
     }, Constants.ListenerView);
+
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(ListenerView);
+
 
     return ListenerView;
 });
