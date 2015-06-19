@@ -10,6 +10,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var clearBtnHtml = require('text!templates/clear-btn.html');
+
     /**
      * 
      */
@@ -49,13 +51,15 @@ define(function (require) {
                 units : 'sec',
                 position: {
                     x : 642,
-                    y : AppView.windowIsShort() ? 288 : 360 
+                    y : AppView.windowIsShort() ? 256 : 328 
                 }
             });
 
             this.stopwatchView.render();
 
             this.$el.append(this.stopwatchView.el);
+
+            this.$('.sim-controls-column').append(clearBtnHtml);
         },
 
         /**

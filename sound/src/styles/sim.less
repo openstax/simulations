@@ -15,7 +15,7 @@
     .white-panel();
     padding: 15px;
     position: relative;
-    margin-bottom: 12px;
+    margin-bottom: 0;
     width: @control-panel-width;
 
     input.form-control {
@@ -100,5 +100,31 @@
             box-shadow: none;
             background: #eee;
         }
+    }
+}
+
+.panel-btn {
+    .white-panel();
+    margin-top: 4px;
+    margin-bottom: 0;
+    padding: 8px 0;
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    font-weight: bold;
+    color: @link-color;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:hover {
+        background: fadeout(#fff, 20%);
+    }
+
+    &:active {
+        margin-top: 5px;
+        margin-bottom: -1px;
+        box-shadow: 0 -1px 11px rgba(0, 0, 0, 0.13);
     }
 }

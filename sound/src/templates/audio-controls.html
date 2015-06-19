@@ -1,0 +1,16 @@
+<h2>Audio</h2>
+
+<div class="audio-enabled-check-wrapper">
+    <input type="checkbox" name="trace" value="line" id="audio-enabled-check-<%= unique %>" class="audio-enabled-check">
+    <label for="audio-enabled-check-<%= unique %>">Audio Enabled</label>
+</div>
+<ul class="radio">
+    <li>
+        <input type="radio" name="audio-<%= unique %>" value="speaker" id="audio-speaker-<%= unique %>" class="audio-speaker" checked>
+        <label for="audio-speaker-<%= unique %>">Speaker</label>
+    </li>
+    <li>
+        <input type="radio" name="audio-<%= unique %>" value="listener" id="audio-listener-<%= unique %>" class="audio-listener">
+        <label for="audio-listener-<%= unique %>">Listener</label>
+    </li>
+</ul>

@@ -2,16 +2,21 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
 
     var SoundSimView          = require('views/sim');
     var SingleSourceSceneView = require('views/scene/single-source');
 
     var Constants = require('constants');
 
+    var audioControlsHtml = require('text!templates/audio-controls.html');
+
     /**
      * 
      */
     var SingleSourceSimView = SoundSimView.extend({
+
+        audioControlsTemplate: _.template(audioControlsHtml),
 
         /**
          * Inits simulation, views, and variables.
@@ -34,7 +39,21 @@ define(function (require) {
             this.sceneView = new SingleSourceSceneView({
                 simulation: this.simulation
             });
-        }
+        },
+
+        /**
+         * Renders everything
+         */
+        render: function() {
+            SoundSimView.prototype.render.apply(this, arguments);
+
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                unique: this.cid
+            };
+            this.$('.sim-controls').append(this.audioControlsTemplate(data))
+        },
 
     });
 
