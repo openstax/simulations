@@ -35,7 +35,6 @@ define(function(require) {
                 rulerWidth: 1,
                 rulerMeasureUnits : 10,
                 units: 'meters',
-                unitsFont: '12px Arial',
 
                 ticks : [{
                     size: 8,
@@ -49,7 +48,8 @@ define(function(require) {
 
                 labels: [{
                     font: '16px Arial',
-                    at: 1
+                    at: 1,
+                    endAt: 8
                 }]
             });
 

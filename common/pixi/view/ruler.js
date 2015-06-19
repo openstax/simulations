@@ -220,23 +220,27 @@ define(function(require) {
 
                 if (this.vertical) {
                     for (var d = this.labels[i].at; d < this.rulerMeasureUnits; d += this.labels[i].at) {
-                        label = new PIXI.Text(d, style);
-                        label.anchor.x = xAnchor;
-                        label.anchor.y = yAnchor;
-                        label.x = outlineRect.x + outlineRect.width / 2;
-                        label.y = outlineRect.y + d * pxPerUnit;
-                        label.rotation = Math.PI / 2;
-                        this.labelsContainer.addChild(label);
+                        if (this.labels[i].endAt === undefined || d <= this.labels[i].endAt) {
+                            label = new PIXI.Text(d, style);
+                            label.anchor.x = xAnchor;
+                            label.anchor.y = yAnchor;
+                            label.x = outlineRect.x + outlineRect.width / 2;
+                            label.y = outlineRect.y + d * pxPerUnit;
+                            label.rotation = Math.PI / 2;
+                            this.labelsContainer.addChild(label);
+                        }
                     }
                 }
                 else {
                     for (var d = this.labels[i].at; d < this.rulerMeasureUnits; d += this.labels[i].at) {
-                        label = new PIXI.Text(d, style);
-                        label.anchor.x = xAnchor;
-                        label.anchor.y = yAnchor;
-                        label.x = outlineRect.x + d * pxPerUnit;
-                        label.y = outlineRect.y + outlineRect.height / 2;
-                        this.labelsContainer.addChild(label);
+                        if (this.labels[i].endAt === undefined || d <= this.labels[i].endAt) {
+                            label = new PIXI.Text(d, style);
+                            label.anchor.x = xAnchor;
+                            label.anchor.y = yAnchor;
+                            label.x = outlineRect.x + d * pxPerUnit;
+                            label.y = outlineRect.y + outlineRect.height / 2;
+                            this.labelsContainer.addChild(label);
+                        }
                     }
                 }
             }
