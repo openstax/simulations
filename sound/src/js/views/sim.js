@@ -177,8 +177,15 @@ define(function (require) {
             var timeSeconds = time / 1000;
             var dtSeconds   = deltaTime / 1000;
 
+            this._update(timeSeconds, dtSeconds, this.simulation.get('paused'))
+        },
+
+        /**
+         * Called with time and deltaTime converted to seconds
+         */
+        _update: function(time, deltaTime, paused) {
             // Update the scene
-            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.sceneView.update(time, deltaTime, paused);
         },
 
         /**
