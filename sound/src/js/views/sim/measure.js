@@ -93,6 +93,7 @@ define(function (require) {
          */
         clearWave: function() {
             this.simulation.clearWave();
+            this.sceneView.clearWave();
         }
 
     });

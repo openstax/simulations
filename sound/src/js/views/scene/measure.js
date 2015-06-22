@@ -123,6 +123,10 @@ define(function(require) {
         hideHelpLabels: function() {
             for (var i = 0; i < this.helpLabels.length; i++)
                 this.helpLabels[i].hide();
+        },
+
+        clearWave: function() {
+            this.waveMediumView.update();
         }
 
     });
