@@ -103,7 +103,7 @@ define(function(require) {
                 position : {
                     x: 100,
                     y: this.height - 120
-                },
+                }
             }));
 
             _.each(this.helpLabels, function(helpLabel){

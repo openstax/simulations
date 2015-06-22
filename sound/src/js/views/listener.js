@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
     
     var PixiView               = require('common/pixi/view');
@@ -31,6 +32,12 @@ define(function(require) {
          * Initializes the new ListenerView.
          */
         initialize: function(options) {
+            options = _.extend({
+                disableYMovement: true
+            }, options);
+
+            this.disableYMovement = options.disableYMovement;
+
             this.initGraphics();
 
             this.updateMVT(options.mvt);
@@ -112,10 +119,13 @@ define(function(require) {
                     x = ListenerView.MAX_X_IN_METERS;
 
                 this.displayObject.x = this.mvt.modelToViewX(x);
-                //this.displayObject.y = this.mvt.modelToViewY(y);
+                if (!this.disableYMovement)
+                    this.displayObject.y = this.mvt.modelToViewY(y);
 
                 this.inputLock(function() {
-                    this.model.setX(x, y);
+                    this.model.setX(x);
+                    if (!this.disableYMovement)
+                        this.model.setY(y);
                 });
             }
         },

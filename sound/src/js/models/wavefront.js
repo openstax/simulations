@@ -70,6 +70,18 @@ define(function (require) {
             this.time = 0;
         },
 
+        /**
+         * X values in the wavefront are unitless and correspond to an index in
+         *   the sample arrays.  This function converts an x position in meters
+         *   to an index and returns it.
+         */
+        getIndexFromMeters: function(xInMeters) {
+            if (xInMeters > 0)
+                return Math.ceil((xInMeters / Wavefront.LENGTH_IN_METERS) * Wavefront.SAMPLE_LENGTH) - 1;
+            else
+                return 0;
+        },
+
         getAmplitude: function() {
             return this.amplitude;
         },

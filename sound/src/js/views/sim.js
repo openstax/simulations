@@ -58,7 +58,9 @@ define(function (require) {
             'slide .frequency-slider' : 'changeFrequency',
             'slide .amplitude-slider' : 'changeAmplitude',
 
-            'click .audio-enabled-check' : 'toggleAudioEnabled'
+            'click .audio-enabled-check' : 'toggleAudioEnabled',
+            'click .audio-speaker'       : 'audioSpeakerClicked',
+            'click .audio-listener'      : 'audioListenerClicked'
         },
 
         /**
@@ -244,6 +246,14 @@ define(function (require) {
                 this.sceneView.showHelpLabels();
                 $(event.target).addClass('toggled-on');
             }
+        },
+
+        audioSpeakerClicked: function() {
+            this.simulation.setListenerToSpeaker();
+        },
+
+        audioListenerClicked: function() {
+            this.simulation.setListenerToPerson();
         }
 
     });

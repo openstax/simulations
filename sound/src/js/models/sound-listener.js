@@ -78,11 +78,13 @@ define(function (require) {
          *
          */
         update: function(deltaTime) {
-            var distFromSource = parseInt(this.get('position').distance(this.get('origin')));
-            var currentFrequency = this.get('model').primaryWavefront.getFrequencyAtTime(distFromSource);
-            var currentAmplitude = this.get('model').primaryWavefront.getMaxAmplitudeAtTime(distFromSource);
-            var currentOctaveAmplitude = this.get('model').octaveWavefront.getMaxAmplitudeAtTime(distFromSource);
-
+            var primaryWavefront = this.get('model').primaryWavefront
+            var meterDistFromSource = this.get('position').distance(this.get('origin'));
+            var wavefrontDist = primaryWavefront.getIndexFromMeters(meterDistFromSource);
+            var currentFrequency = primaryWavefront.getFrequencyAtTime(wavefrontDist);
+            var currentAmplitude = primaryWavefront.getMaxAmplitudeAtTime(wavefrontDist);
+            var currentOctaveAmplitude = this.get('model').octaveWavefront.getMaxAmplitudeAtTime(wavefrontDist);
+            
             this.frequencyHeard = currentFrequency;
             this.amplitudeHeard = currentAmplitude;
             this.octaveAmplitudeHeard = currentOctaveAmplitude;

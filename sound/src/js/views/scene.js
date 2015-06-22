@@ -91,7 +91,7 @@ define(function(require) {
 
         initListenerView: function() {
             this.listenerView = new ListenerView({
-                model: this.simulation.soundListener,
+                model: this.simulation.personListener,
                 mvt: this.mvt
             });
 
