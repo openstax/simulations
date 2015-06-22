@@ -62,7 +62,10 @@ define(function(require) {
 
             this.displayObject.addChild(this.person);
             this.person.buttonMode = true;
-            this.person.defaultCursor = 'ew-resize';
+            if (this.disableYMovement)
+                this.person.defaultCursor = 'ew-resize';
+            else
+                this.person.defaultCursor = 'move';
         },
 
         /**

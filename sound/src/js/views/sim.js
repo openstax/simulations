@@ -24,8 +24,9 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var audioControlsHtml    = require('text!templates/audio-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -44,6 +45,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        audioControlsTemplate: _.template(audioControlsHtml),
 
         /**
          * Dom event listeners
@@ -111,7 +113,7 @@ define(function (require) {
         },
 
         /**
-         * Renders page content. Should be overriden by child classes
+         * Renders page content
          */
         renderScaffolding: function() {
             var data = {
@@ -144,6 +146,18 @@ define(function (require) {
 
             this.$frequency = this.$('.frequency-value');
             this.$amplitude = this.$('.amplitude-value');
+        },
+
+        /**
+         * Appends audio controls to the sim controls panel
+         */
+        renderAudioControls: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                unique: this.cid
+            };
+            this.$('.sim-controls').append(this.audioControlsTemplate(data));
         },
 
         /**

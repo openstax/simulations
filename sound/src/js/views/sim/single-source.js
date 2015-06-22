@@ -9,14 +9,10 @@ define(function (require) {
 
     var Constants = require('constants');
 
-    var audioControlsHtml = require('text!templates/audio-controls.html');
-
     /**
      * 
      */
     var SingleSourceSimView = SoundSimView.extend({
-
-        audioControlsTemplate: _.template(audioControlsHtml),
 
         /**
          * Inits simulation, views, and variables.
@@ -42,17 +38,12 @@ define(function (require) {
         },
 
         /**
-         * Renders everything
+         * Renders page content
          */
-        render: function() {
-            SoundSimView.prototype.render.apply(this, arguments);
+        renderScaffolding: function() {
+            SoundSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            var data = {
-                Constants: Constants,
-                simulation: this.simulation,
-                unique: this.cid
-            };
-            this.$('.sim-controls').append(this.audioControlsTemplate(data))
+            this.renderAudioControls();
         },
 
     });
