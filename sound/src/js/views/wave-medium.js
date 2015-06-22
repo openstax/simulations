@@ -44,7 +44,7 @@ define(function(require) {
             var mask = this.mask;
             mask.clear();
             mask.beginFill(0x000000, 1);
-            mask.drawRect(startX, -length / 2, length, length);
+            mask.drawRect(startX, -length / 2, length * 2, length);
             mask.endFill();
         },
 
