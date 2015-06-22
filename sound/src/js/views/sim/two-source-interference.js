@@ -26,6 +26,9 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
+
+            // TODO: move this
+            this.simulation.setListenerToPerson();
         },
 
         /**
@@ -43,7 +46,7 @@ define(function (require) {
         renderScaffolding: function() {
             SoundSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            this.renderAudioControls();
+            this.renderSimpleAudioControls();
         },
 
     });

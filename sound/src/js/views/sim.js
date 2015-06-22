@@ -155,7 +155,21 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                unique: this.cid
+                unique: this.cid,
+                listenerOptions: true
+            };
+            this.$('.sim-controls').append(this.audioControlsTemplate(data));
+        },
+
+        /**
+         * Appends audio controls to the sim controls panel
+         */
+        renderSimpleAudioControls: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                unique: this.cid,
+                listenerOptions: false
             };
             this.$('.sim-controls').append(this.audioControlsTemplate(data));
         },

@@ -4,7 +4,8 @@
     <input type="checkbox" name="trace" value="line" id="audio-enabled-check-<%= unique %>" class="audio-enabled-check">
     <label for="audio-enabled-check-<%= unique %>">Audio Enabled</label>
 </div>
-<ul class="radio">
+<% if (listenerOptions) { %>
+<ul class="radio listener-options">
     <li>
         <input type="radio" name="audio-<%= unique %>" value="speaker" id="audio-speaker-<%= unique %>" class="audio-speaker" checked>
         <label for="audio-speaker-<%= unique %>">Speaker</label>
@@ -14,3 +15,4 @@
         <label for="audio-listener-<%= unique %>">Listener</label>
     </li>
 </ul>
+<% } %>
