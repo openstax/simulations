@@ -17,14 +17,14 @@ define(function(require) {
     var ListenerView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd',
+            'touchstart      .person': 'dragStart',
+            'mousedown       .person': 'dragStart',
+            'touchmove       .person': 'drag',
+            'mousemove       .person': 'drag',
+            'touchend        .person': 'dragEnd',
+            'mouseup         .person': 'dragEnd',
+            'touchendoutside .person': 'dragEnd',
+            'mouseupoutside  .person': 'dragEnd',
         },
 
         /**
@@ -54,8 +54,8 @@ define(function(require) {
             }
 
             this.displayObject.addChild(this.person);
-            this.displayObject.buttonMode = true;
-            this.displayObject.defaultCursor = 'ew-resize';
+            this.person.buttonMode = true;
+            this.person.defaultCursor = 'ew-resize';
         },
 
         /**
@@ -74,7 +74,7 @@ define(function(require) {
 
             var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ListenerView.HEIGHT_IN_METERS)); // In pixels
             var scale = targetSpriteHeight / this.person.texture.height;
-            this.displayObject.scale.x = this.displayObject.scale.y = scale;
+            this.person.scale.x = this.person.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
         },

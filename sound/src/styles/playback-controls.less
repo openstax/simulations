@@ -68,6 +68,15 @@
 
     .help-btn {
         float: right;
+
+        &.toggled-on {
+            background: @btn-fg;
+            color: #fff;
+
+            &:before {
+                content: 'Hide ';
+            }
+        }
     }
 
     .playback-center-buttons-wrapper {

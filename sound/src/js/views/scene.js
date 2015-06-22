@@ -103,6 +103,10 @@ define(function(require) {
             this.speakerView.update(time, deltaTime, paused);
         },
 
+        showHelpLabels: function() {},
+
+        hideHelpLabels: function() {}
+
     });
 
     return SoundSceneView;

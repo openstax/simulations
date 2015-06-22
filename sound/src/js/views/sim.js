@@ -53,6 +53,8 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
 
+            'click .help-btn'   : 'toggleHelp',
+
             'slide .frequency-slider' : 'changeFrequency',
             'slide .amplitude-slider' : 'changeAmplitude',
 
@@ -199,7 +201,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Responds to changes in the frequency slider
          */
         changeFrequency: function(event) {
             var frequency = parseInt($(event.target).val());
@@ -210,7 +212,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Responds to changes in the amplitude slider
          */
         changeAmplitude: function(event) {
             var amplitude = parseFloat($(event.target).val());
@@ -221,13 +223,27 @@ define(function (require) {
         },
 
         /**
-         *
+         * Toggles sounds
          */
         toggleAudioEnabled: function(event) {
             if ($(event.target).is(':checked'))
                 this.simulation.set('audioEnabled', true);
             else
                 this.simulation.set('audioEnabled', false);
+        },
+
+        /**
+         * Toggles the help labels
+         */
+        toggleHelp: function(event) {
+            if ($(event.target).hasClass('toggled-on')) {
+                this.sceneView.hideHelpLabels();
+                $(event.target).removeClass('toggled-on');
+            }
+            else {
+                this.sceneView.showHelpLabels();
+                $(event.target).addClass('toggled-on');
+            }
         }
 
     });

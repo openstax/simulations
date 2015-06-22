@@ -4,7 +4,8 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var RulerView = require('common/pixi/view/ruler');
+    var RulerView     = require('common/pixi/view/ruler');
+    var HelpLabelView = require('common/help-label/index');
 
     var SoundSceneView    = require('views/scene');
     var ReferenceLineView = require('views/reference-line');
@@ -26,6 +27,7 @@ define(function(require) {
 
             this.initRuler();
             this.initReferenceLines();
+            this.initHelpLabels();
         },
 
         initRuler: function() {
@@ -79,11 +81,49 @@ define(function(require) {
             this.stage.addChild(this.referenceLine2.displayObject);
         },
 
+        initHelpLabels: function() {
+            this.helpLabels = [];
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.rulerView,
+                title: 'Use meter stick to measure waves',
+                color: '#222',
+                font: '12pt Helvetica Neue',
+                position: {
+                    x: 0,
+                    y: 64
+                }
+            }));
+
+            this.helpLabels.push(new HelpLabelView({
+                attachTo: this.stage,
+                title: 'Dotted lines can be moved left and right to\nhelp mark measurement points on waves',
+                color: '#222',
+                font: '12pt Helvetica Neue',
+                position : {
+                    x: 100,
+                    y: this.height - 120
+                },
+            }));
+
+            _.each(this.helpLabels, function(helpLabel){
+                helpLabel.render();
+            }, this);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             SoundSceneView.prototype._update.apply(this, arguments);
-
-
         },
+
+        showHelpLabels: function() {
+            for (var i = 0; i < this.helpLabels.length; i++)
+                this.helpLabels[i].show();
+        },
+
+        hideHelpLabels: function() {
+            for (var i = 0; i < this.helpLabels.length; i++)
+                this.helpLabels[i].hide();
+        }
 
     });
 
