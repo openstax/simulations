@@ -62,6 +62,14 @@ define(function (require) {
             this.clear();
         },
 
+        /**
+         *
+         */
+        reset: function() {
+            this.clear();
+            this.time = 0;
+        },
+
         getAmplitude: function() {
             return this.amplitude;
         },

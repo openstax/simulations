@@ -105,6 +105,10 @@ define(function (require, exports, module) {
 
         audioEnabledChanged: function(simulation, audioEnabled) {
             this.primaryOscillator.set('enabled', audioEnabled);
+        },
+
+        clearWave: function() {
+            this.waveMedium.clear();
         }
 
     });

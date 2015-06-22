@@ -18,6 +18,13 @@ define(function (require) {
     var MeasureSimView = SoundSimView.extend({
 
         /**
+         * Dom event listeners
+         */
+        events: _.extend({}, SoundSimView.prototype.events, {
+            'click .btn-clear' : 'clearWave'
+        }),
+
+        /**
          * Inits simulation, views, and variables.
          *
          * @params options
@@ -79,6 +86,13 @@ define(function (require) {
             SoundSimView.prototype._update.apply(this, arguments);
 
             this.stopwatchView.update(time, deltaTime, paused);
+        },
+
+        /**
+         * Resets the wavefront in the sim.
+         */
+        clearWave: function() {
+            this.simulation.clearWave();
         }
 
     });
