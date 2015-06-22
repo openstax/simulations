@@ -24,7 +24,23 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
-        }
+        },
+
+        reset: function() {
+            SoundSimView.prototype.reset.apply(this, arguments);
+
+            this.$('.audio-listener').click();
+        },
+
+        /**
+         * Renders page content
+         */
+        renderScaffolding: function() {
+            SoundSimView.prototype.renderScaffolding.apply(this, arguments);
+
+            this.renderAudioControls();
+            this.$('.audio-listener').click();
+        },
 
     });
 
