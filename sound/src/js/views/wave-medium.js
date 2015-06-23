@@ -102,6 +102,14 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             if (!paused)
                 this.drawAmplitudes();
+        },
+
+        /**
+         * Sets the position of the root display object in pixels.
+         */
+        setPosition: function(x, y) {
+            this.displayObject.x = x;
+            this.displayObject.y = y;
         }
 
     });

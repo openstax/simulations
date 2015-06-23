@@ -19,9 +19,20 @@ define(function(require) {
          * Initializes the new SpeakerView.
          */
         initialize: function(options) {
+            this.bindToSecondOrigin = options.bindToSecondOrigin;
+
+            this.simulation = this.model;
+            this.waveMedium = this.simulation.waveMedium;
+            this.personListener = this.simulation.personListener;
+
             this.initGraphics();
 
             this.updateMVT(options.mvt);
+
+            if (this.bindToSecondOrigin)
+                this.listenTo(this.personListener, 'change:origin2', this.updatePostion);
+            else
+                this.listenTo(this.personListener, 'change:origin', this.updatePostion);
         },
 
         /**
@@ -67,6 +78,21 @@ define(function(require) {
             this.displayObject.scale.x = this.displayObject.scale.y = scale;
 
             this.maxConeOffset = this.mvt.modelToViewDeltaX(SpeakerView.CONE_MAX_OFFSET_IN_METERS);
+
+            if (this.bindToSecondOrigin)
+                this.updatePostion(this.personListener, this.personListener.get('origin2'));
+            else
+                this.updatePostion(this.personListener, this.personListener.get('origin'));
+        },
+
+        /**
+         * Sets the position of the display object based on the listener's
+         *   origin property, which is the location of the speaker.
+         */
+        updatePostion: function(personListener, origin) {
+            var viewPosition = this.mvt.modelToView(origin);
+            this.displayObject.x = viewPosition.x;
+            this.displayObject.y = viewPosition.y;
         },
 
         /**
@@ -74,7 +100,7 @@ define(function(require) {
          */
         update: function(time, deltaTime, paused) {
             if (!paused) {
-                this.cone.x = this.model.getAmplitudeAt(0) / Constants.MAX_AMPLITUDE * this.maxConeOffset;
+                this.cone.x = this.waveMedium.getAmplitudeAt(0) / Constants.MAX_AMPLITUDE * this.maxConeOffset;
             }
         }
 

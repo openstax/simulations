@@ -16,6 +16,9 @@ define(function(require) {
 
         initialize: function(options) {
             SoundSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.personListener, 'change:origin',  this.speaker1Moved);
+            this.listenTo(this.simulation.personListener, 'change:origin2', this.speaker2Moved);
         },
 
         initGraphics: function() {
@@ -23,6 +26,9 @@ define(function(require) {
 
             this.initListenerView();
             this.initHelpLabels();
+
+            this.speaker1Moved(this.simulation.personListener, this.simulation.personListener.get('origin'));
+            this.speaker2Moved(this.simulation.personListener, this.simulation.personListener.get('origin2'));
         },
 
         initHelpLabels: function() {
@@ -66,6 +72,16 @@ define(function(require) {
             SoundSceneView.prototype._update.apply(this, arguments);
 
 
+        },
+
+        speaker1Moved: function(personListener, origin) {
+            var viewPosition = this.mvt.modelToView(origin);
+            this.waveMediumView.setPosition(viewPosition.x, viewPosition.y);
+        },
+
+        speaker2Moved: function(personListener, origin2) {
+            // var viewPosition = this.mvt.modelToView(origin2);
+            // this.waveMediumView2.setPosition(viewPosition.x, viewPosition.y);
         },
 
         showHelpLabels: function() {

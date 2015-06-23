@@ -64,14 +64,22 @@ define(function (require, exports, module) {
             this.primaryOscillator = new WavefrontOscillator();
             this.octaveOscillator = new WavefrontOscillator();
 
-            this.speakerListener = new SoundListener({ model: this });
+            this.speakerListener = new SoundListener({ simulation: this });
 
-            this.personListener = new SoundListener({ model: this });
+            this.personListener = this.createPersonListener();
             this.personListener.setPosition(Constants.DEFAULT_LISTENER_X, Constants.DEFAULT_LISTENER_Y);
             
             this.setListenerToSpeaker();
 
             //this.octaveOscillator.setHarmonicFactor(2);
+        },
+
+        /**
+         * Returns a new instance of SoundListener to be used as the person
+         *   listener.  The intent is to override this in child classes.
+         */
+        createPersonListener: function() {
+            return new SoundListener({ simulation: this });
         },
 
         _update: function(time, deltaTime) {

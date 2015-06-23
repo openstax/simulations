@@ -73,20 +73,16 @@ define(function(require) {
             });
             this.stage.addChild(this.waveMediumView.displayObject);
 
-            this.waveMediumView.displayObject.x = this.mvt.modelToViewX(0);
-            this.waveMediumView.displayObject.y = this.mvt.modelToViewY(0);
+            this.waveMediumView.setPosition(this.mvt.modelToViewX(0), this.mvt.modelToViewY(0));
         },
 
         initSpeakerView: function() {
             this.speakerView = new SpeakerView({
-                model: this.simulation.waveMedium,
+                model: this.simulation,
                 mvt: this.mvt
             });
 
             this.stage.addChild(this.speakerView.displayObject);
-
-            this.speakerView.displayObject.x = this.mvt.modelToViewX(0);
-            this.speakerView.displayObject.y = this.mvt.modelToViewY(0);
         },
 
         initListenerView: function() {

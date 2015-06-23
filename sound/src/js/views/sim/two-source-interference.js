@@ -4,6 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var TwoSourceInterferenceSimulation = require('models/simulation/two-source-interference');
+
     var SoundSimView                   = require('views/sim');
     var TwoSourceInterferenceSceneView = require('views/scene/two-source-interference');
 
@@ -26,9 +28,13 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
+        },
 
-            // TODO: move this
-            this.simulation.setListenerToPerson();
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new TwoSourceInterferenceSimulation();
         },
 
         /**
