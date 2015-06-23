@@ -23,7 +23,11 @@ define(function (require) {
          */
         events: _.extend({}, SoundSimView.prototype.events, {
             'slide .wall-angle'    : 'changeWallAngle',
-            'slide .wall-position' : 'changeWallPosition'
+            'slide .wall-position' : 'changeWallPosition',
+
+            'click .mode-continuous' : 'changeModeContinuous',
+            'click .mode-pulse'      : 'changeModePulse',
+            'click .btn-pulse'       : 'pulse'
         }),
 
         /**
@@ -75,6 +79,14 @@ define(function (require) {
                 }
             });
         },
+
+        changeModePulse: function() {
+            this.$('.btn-pulse').removeAttr('disabled');
+        },
+
+        changeModeContinuous: function() {
+            this.$('.btn-pulse').prop('disabled', true);
+        }
 
     });
 
