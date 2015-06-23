@@ -78,6 +78,9 @@ define(function (require) {
                     'max': Constants.MAX_WALL_POSITION
                 }
             });
+
+            this.$wallAngle    = this.$('.wall-angle-value');
+            this.$wallPosition = this.$('.wall-position-value');
         },
 
         changeModePulse: function() {
@@ -86,6 +89,22 @@ define(function (require) {
 
         changeModeContinuous: function() {
             this.$('.btn-pulse').prop('disabled', true);
+        },
+
+        changeWallAngle: function(event) {
+            var angle = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$wallAngle.html(angle + '&deg;');
+                //this.simulation.set('angle', angle);
+            });
+        },
+
+        changeWallPosition: function(event) {
+            var position = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$wallPosition.html(position.toFixed(1) + 'm');
+                //this.simulation.set('position', position);
+            });
         }
 
     });

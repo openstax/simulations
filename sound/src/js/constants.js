@@ -22,8 +22,8 @@ define(function (require) {
     // Speed of sound at room temperature at sea level
     Constants.SPEED_OF_SOUND = 335;
 
-    Constants.MAX_FREQUENCY = 1000;
-    Constants.DEFAULT_FREQUENCY = 500;
+    Constants.MAX_FREQUENCY = 1000;    // Herz
+    Constants.DEFAULT_FREQUENCY = 500; // Herz
     Constants.MAX_AMPLITUDE = 1;
     Constants.DEFAULT_AMPLITUDE = 0.5;
 
