@@ -1,0 +1,14 @@
+<h2>Mode</h2>
+
+<ul class="radio mode-options">
+    <li>
+        <input type="radio" name="mode-<%= unique %>" value="continuous" id="mode-continuous-<%= unique %>" class="mode-continuous" checked>
+        <label for="mode-continuous-<%= unique %>">Continuous</label>
+    </li>
+    <li>
+        <input type="radio" name="mode-<%= unique %>" value="pulse" id="mode-pulse-<%= unique %>" class="mode-pulse">
+        <label for="mode-pulse-<%= unique %>">Pulse</label>
+    </li>
+</ul>
+
+<button class="btn btn-pulse"><span class="fa fa-wifi"></span>&nbsp; Fire Pulse</button>

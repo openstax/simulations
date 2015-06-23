@@ -8,6 +8,7 @@ define(function (require) {
     var Constants = require('constants');
 
     var wallControlsHtml = require('text!templates/wall-controls.html');
+    var modeControlsHtml = require('text!templates/mode-controls.html');
 
     /**
      * 
@@ -15,6 +16,7 @@ define(function (require) {
     var ReflectionInterferenceSimView = SoundSimView.extend({
 
         wallControlsTemplate: _.template(wallControlsHtml),
+        modeControlsTemplate: _.template(modeControlsHtml),
 
         /**
          * Dom event listeners
@@ -48,7 +50,12 @@ define(function (require) {
                 Constants: Constants,
                 unique: this.cid
             };
-            this.$('.sim-controls').append(this.wallControlsTemplate(data));
+
+            // Sound mode controls
+            this.$('.sim-controls').append(this.modeControlsTemplate(data));
+
+            // Wall property controls
+            this.$('.sim-controls-column').append(this.wallControlsTemplate(data));
 
             this.$('.sim-controls .wall-angle').noUiSlider({
                 start: Constants.DEFAULT_WALL_ANGLE,

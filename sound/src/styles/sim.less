@@ -18,6 +18,10 @@
     margin-bottom: 0;
     width: @control-panel-width;
 
+    &:not(:first-child) {
+        margin-top: 4px;
+    }
+
     input.form-control {
         background: rgba(255, 255, 255, 0.27);
         border-color: rgba(0, 0, 0, 0.1);
@@ -80,6 +84,27 @@
             label{
                 font-weight: bold;
             }
+        }
+    }
+
+    .btn-pulse {
+        .sim-controls-button();
+        margin-top: 4px;
+        color: @link-color;
+
+        &:hover {
+            border-color: fadeout(#000, 90%);
+            color: fadeout(@link-color, 20%);
+        }
+
+        &:active {
+            background: @link-color;
+            border-color: @link-color;
+            color: #fff;
+        }
+
+        .fa-wifi {
+            .transform(rotate(90deg));
         }
     }
 }
