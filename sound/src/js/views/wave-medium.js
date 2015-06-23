@@ -7,6 +7,7 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var Constants = require('constants');
 
@@ -35,6 +36,12 @@ define(function(require) {
             this.displayObject.addChild(this.mask);
 
             this.graphics.mask = this.mask;
+
+            this.arcCenters = [];
+            for (var i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++)
+                this.arcCenters.push(new Vector2());
+
+            this.origin = new Vector2();
         },
 
         drawMask: function() {
@@ -44,7 +51,7 @@ define(function(require) {
             var mask = this.mask;
             mask.clear();
             mask.beginFill(0x000000, 1);
-            mask.drawRect(startX, -length, length * 2, length * 2);
+            mask.drawRect(startX, -length * 2, length * 2, length * 4);
             mask.endFill();
         },
 
@@ -60,17 +67,28 @@ define(function(require) {
             var counterclockwise = false;
             var angle = Math.PI / 4;
             var lineWidth = this.lineWidth;
+            var startAngle;
+            var endAngle;
+            var i;
 
             var lightColor = this.lightColor;
             var darkColor = this.darkColor;
 
-            var maxX = this.model.getMaxX();
             var amplitude;
             var alphaMultiplier = 1.5;
 
             var startRadius = this.startX;
 
-            for (var i = 0; i < maxX; i++) {
+            // Advance the centers of the arcs forward
+            var arcCenters = this.arcCenters;
+            var arcCenter;
+            for (i = arcCenters.length - 1; i > Constants.PROPAGATION_SPEED; i--)
+                arcCenters[i].set(arcCenters[i - Constants.PROPAGATION_SPEED]);
+            for (i = 0; i < 50; i++)
+                arcCenters[i].set(this.origin.x, this.origin.y);
+
+            // Draw arcs representing the indexed amplitude values
+            for (i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
 
                 if (amplitude >= 0)
@@ -79,7 +97,10 @@ define(function(require) {
                     graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
 
                 // We alternate the direction so we don't get lines on one edge
-                graphics.arc(0, 0, startRadius + i * lineWidth, -angle * (counterclockwise ? -1 : 1), angle * (counterclockwise ? -1 : 1), counterclockwise);
+                startAngle = -angle * (counterclockwise ? -1 : 1);
+                endAngle = angle * (counterclockwise ? -1 : 1);
+                arcCenter = arcCenters[i];
+                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle, endAngle, counterclockwise);
                 counterclockwise = !counterclockwise;
             }
         },
@@ -108,8 +129,8 @@ define(function(require) {
          * Sets the position of the root display object in pixels.
          */
         setPosition: function(x, y) {
-            this.displayObject.x = x;
-            this.displayObject.y = y;
+            this.origin.x = x;
+            this.origin.y = y;
         }
 
     });
