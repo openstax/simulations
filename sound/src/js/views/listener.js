@@ -82,9 +82,10 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ListenerView.HEIGHT_IN_METERS)); // In pixels
-            var scale = targetSpriteHeight / this.person.texture.height;
-            this.person.scale.x = this.person.scale.y = scale;
+            // var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(ListenerView.HEIGHT_IN_METERS)); // In pixels
+            // var scale = targetSpriteHeight / this.person.texture.height;
+            // this.person.scale.x = this.person.scale.y = scale;
+            this.person.scale.x = this.person.scale.y = 0.65;
 
             this.updatePosition(this.model, this.model.get('position'));
         },
