@@ -26,6 +26,8 @@ define(function(require) {
      */
     var SoundSceneView = PixiSceneView.extend({
 
+        minSceneHeightInMeters: 12,
+
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
@@ -52,11 +54,11 @@ define(function(require) {
         },
 
         initMVT: function() {
-            var minimumHeight = 12; // Meters
+            var minimumHeight = this.minSceneHeightInMeters;
             var usableHeight = this.height;
             var scale = usableHeight / minimumHeight;
             
-            this.viewOriginX = 120;
+            this.viewOriginX = Math.round(this.width / 2 - (scale * (Constants.DEFAULT_LISTENER_X + 0.95)));
             this.viewOriginY = Math.round(usableHeight / 2);
 
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(

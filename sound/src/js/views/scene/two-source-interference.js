@@ -14,6 +14,8 @@ define(function(require) {
      */
     var TwoSourceInterferenceSceneView = SoundSceneView.extend({
 
+        minSceneHeightInMeters: 16,
+
         initialize: function(options) {
             SoundSceneView.prototype.initialize.apply(this, arguments);
 
