@@ -24,6 +24,8 @@ define(function(require) {
         initGraphics: function() {
             SoundSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initSecondWaveMediumView();
+            this.initSecondSpeakerView();
             this.initListenerView();
             this.initHelpLabels();
 
@@ -58,6 +60,25 @@ define(function(require) {
             }, this);
         },
 
+        initSecondWaveMediumView: function() {
+            this.waveMedium2View = new WaveMediumView({
+                model: this.simulation.waveMedium,
+                mvt: this.mvt
+            });
+
+            this.stage.addChild(this.waveMedium2View.displayObject);
+        },
+
+        initSecondSpeakerView: function() {
+            this.speaker2View = new SpeakerView({
+                model: this.simulation,
+                mvt: this.mvt,
+                bindToSecondOrigin: true
+            });
+
+            this.stage.addChild(this.speaker2View.displayObject);
+        },
+
         initListenerView: function() {
             this.listenerView = new ListenerView({
                 model: this.simulation.personListener,
@@ -71,7 +92,8 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             SoundSceneView.prototype._update.apply(this, arguments);
 
-
+            this.waveMedium2View.update(time, deltaTime, paused);
+            this.speaker2View.update(time, deltaTime, paused);
         },
 
         speaker1Moved: function(personListener, origin) {
@@ -80,8 +102,8 @@ define(function(require) {
         },
 
         speaker2Moved: function(personListener, origin2) {
-            // var viewPosition = this.mvt.modelToView(origin2);
-            // this.waveMediumView2.setPosition(viewPosition.x, viewPosition.y);
+            var viewPosition = this.mvt.modelToView(origin2);
+            this.waveMedium2View.setPosition(viewPosition.x, viewPosition.y);
         },
 
         showHelpLabels: function() {
