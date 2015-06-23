@@ -89,7 +89,7 @@ define(function(require) {
             this.updatePosition(this.model, this.model.get('position'));
         },
 
-        updatePosition: function(body, position) {
+        updatePosition: function(speaker, position) {
             this.updateLock(function() {
                 var viewPosition = this.mvt.modelToView(position);
                 this.displayObject.x = viewPosition.x;

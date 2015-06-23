@@ -4,7 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView   = require('common/pixi/view');
+    var PixiView               = require('common/pixi/view');
+    var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var Constants = require('constants');
 
@@ -14,6 +15,17 @@ define(function(require) {
      * A view that represents an oscillating speaker
      */
     var SpeakerView = PixiView.extend({
+
+        events: {
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
+        },
 
         /**
          * Initializes the new SpeakerView.
@@ -57,6 +69,11 @@ define(function(require) {
             this.displayObject.addChild(this.magnet);
             this.displayObject.addChild(this.cone);
             this.displayObject.addChild(this.surround);
+
+            if (this.bindToSecondOrigin) {
+                this.displayObject.buttonMode = true;
+                this.displayObject.defaultCursor = 'ns-resize';
+            }
         },
 
         /**
@@ -80,19 +97,21 @@ define(function(require) {
             this.maxConeOffset = this.mvt.modelToViewDeltaX(SpeakerView.CONE_MAX_OFFSET_IN_METERS);
 
             if (this.bindToSecondOrigin)
-                this.updatePostion(this.personListener, this.personListener.get('origin2'));
+                this.updatePosition(this.personListener, this.personListener.get('origin2'));
             else
-                this.updatePostion(this.personListener, this.personListener.get('origin'));
+                this.updatePosition(this.personListener, this.personListener.get('origin'));
         },
 
         /**
          * Sets the position of the display object based on the listener's
          *   origin property, which is the location of the speaker.
          */
-        updatePostion: function(personListener, origin) {
-            var viewPosition = this.mvt.modelToView(origin);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+        updatePosition: function(personListener, origin) {
+            this.updateLock(function() {
+                var viewPosition = this.mvt.modelToView(origin);
+                this.displayObject.x = viewPosition.x;
+                this.displayObject.y = viewPosition.y;
+            });
         },
 
         /**
@@ -102,9 +121,55 @@ define(function(require) {
             if (!paused) {
                 this.cone.x = this.waveMedium.getAmplitudeAt(0) / Constants.MAX_AMPLITUDE * this.maxConeOffset;
             }
-        }
+        },
+
+        /**
+         *
+         */
+        dragStart: function(data) {
+            if (!this.bindToSecondOrigin)
+                return;
+
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+        },
+
+        /**
+         * Handles drag events to move the listener.  The original PhET source
+         *   claims to be changing the pitch (frequency) of the sound according
+         *   to the Doippler Effect, but the changes are either imperceptible
+         *   or the code is not actually used.
+         */
+        drag: function(data) {
+            if (!this.bindToSecondOrigin)
+                return;
+
+            if (this.dragging) {
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+
+                var y = this.mvt.viewToModelY(this.displayObject.y + dy);
+
+                this.displayObject.y = this.mvt.modelToViewY(y);
+
+                this.inputLock(function() {
+                    this.personListener.setOrigin2(this.personListener.get('origin2').x, y);
+                });
+            }
+        },
+
+        dragEnd: function(data) {
+            if (!this.bindToSecondOrigin)
+                return;
+
+            this.dragging = false;
+        },
 
     }, Constants.SpeakerView);
+
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(SpeakerView);
+
 
     return SpeakerView;
 });
