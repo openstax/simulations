@@ -131,6 +131,27 @@ define(function(require) {
         setPosition: function(x, y) {
             this.origin.x = x;
             this.origin.y = y;
+        },
+
+        /**
+         * Just a (pseudo) alias for setPosition.
+         */
+        setOrigin: function(x, y) {
+            this.setPosition(x, y);
+        },
+
+        /**
+         * Returns the origin in screen space
+         */
+        getOrigin: function() {
+            return this.origin;
+        },
+
+        /**
+         *
+         */
+        clear: function() {
+            this.update();
         }
 
     });

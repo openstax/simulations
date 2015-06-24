@@ -126,7 +126,7 @@ define(function(require) {
         },
 
         clearWave: function() {
-            this.waveMediumView.update();
+            this.waveMediumView.clear();
         }
 
     });

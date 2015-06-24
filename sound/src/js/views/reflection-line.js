@@ -76,6 +76,10 @@ define(function(require) {
                 bounds.x + bounds.width  / 2,
                 bounds.y + bounds.height / 2
             );
+        },
+
+        getAngle: function() {
+            return this.displayObject.rotation;
         }
 
     });

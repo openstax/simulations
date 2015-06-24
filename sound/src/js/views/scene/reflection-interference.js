@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var HelpLabelView = require('common/help-label/index');
+    var Reflection    = require('common/math/reflection');
 
     var SoundSceneView = require('views/scene');
     var WaveMediumView = require('views/wave-medium');
@@ -27,7 +28,7 @@ define(function(require) {
         initGraphics: function() {
             SoundSceneView.prototype.initGraphics.apply(this, arguments);
 
-            //this.initReflectedWaveMediumView();
+            this.initReflectedWaveMediumView();
             this.initReflectionLine();
         },
 
@@ -56,17 +57,42 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             SoundSceneView.prototype._update.apply(this, arguments);
 
-            //this.reflectedWaveMediumView.update(time, deltaTime, paused);
+            this.reflectedWaveMediumView.update(time, deltaTime, paused);
         },
 
         setReflectionLinePosition: function(x) {
             this.reflectionLine.setX(this.mvt.modelToViewX(x));
-            // change the reflected wave medium view
+            this.positionReflectedWaveMediumView();
         },
 
         setReflectionLineAngle: function(angle) {
             this.reflectionLine.setAngle(angle);
-            // change the reflected wave medium view
+            this.positionReflectedWaveMediumView();
+        },
+
+        positionReflectedWaveMediumView: function() {
+            // Set up the wavefront graphic for the reflected wave front. We make set its origin to be the apparent
+            // position of the real wavefront source's reflection in the wall. Note that the angle must be set negative
+            // because of the direction of the y axis in AWT.
+
+            // To set up the reflected medium view, we take the origin of
+            //   the real one and reflect it across the reflection line.
+            //   Note that this means the reflected medium view's origin
+            //   will be on the other side of the "wall", but the waves
+            //   coming out of it will not be visible until after they
+            //   cross the line of reflection, making it look like the
+            //   waves that are hitting the reflection line are bouncing
+            //   off.
+            var realOrigin = this.waveMediumView.getOrigin();
+            var reflectedOrigin = Reflection.reflectPointAcrossLine(
+                realOrigin, 
+                this.reflectionLine.getMidPoint(), 
+                this.reflectionLine.getAngle()
+            );
+console.log(reflectedOrigin)
+            this.reflectedWaveMediumView.clear();
+            this.reflectedWaveMediumView.setOrigin(reflectedOrigin);
+            this.reflectedWaveMediumView.displayObject.rotation = -this.reflectionLine.getAngle() * 2;
         }
 
     });
