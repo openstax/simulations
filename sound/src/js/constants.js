@@ -27,12 +27,12 @@ define(function (require) {
     Constants.MAX_AMPLITUDE = 1;
     Constants.DEFAULT_AMPLITUDE = 0.5;
 
-    Constants.MIN_WALL_ANGLE = 0;      // Degrees
+    Constants.MIN_WALL_ANGLE = 10;     // Degrees
     Constants.MAX_WALL_ANGLE = 90;     // Degrees
     Constants.DEFAULT_WALL_ANGLE = 60; // Degrees
 
     Constants.MIN_WALL_POSITION = 0;     // Meters
-    Constants.MAX_WALL_POSITION = 9;     // Meters
+    Constants.MAX_WALL_POSITION = 9.9;    // Meters
     Constants.DEFAULT_WALL_POSITION = 4; // Meters
 
     // This parameter defines how tightly spaced the waves are on the screen. If it is too small,

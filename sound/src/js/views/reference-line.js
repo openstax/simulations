@@ -12,7 +12,8 @@ define(function(require) {
 
 
     /**
-     * A view that represents a movable target model
+     * A view that draws a vertical line for the user to use as visual
+     *   reference for measurements.
      */
     var ReferenceLine = PixiView.extend({
 

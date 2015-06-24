@@ -3,7 +3,8 @@ define(function (require) {
     'use strict';
 
 
-    var SoundSimView = require('views/sim');
+    var SoundSimView                    = require('views/sim');
+    var ReflectionInterferenceSceneView = require('views/scene/reflection-interference');
 
     var Constants = require('constants');
 
@@ -42,6 +43,15 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new ReflectionInterferenceSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**
@@ -95,7 +105,7 @@ define(function (require) {
             var angle = parseInt($(event.target).val());
             this.inputLock(function() {
                 this.$wallAngle.html(angle + '&deg;');
-                //this.simulation.set('angle', angle);
+                this.sceneView.setReflectionLineAngle(angle);
             });
         },
 
@@ -103,7 +113,7 @@ define(function (require) {
             var position = parseFloat($(event.target).val());
             this.inputLock(function() {
                 this.$wallPosition.html(position.toFixed(1) + 'm');
-                //this.simulation.set('position', position);
+                this.sceneView.setReflectionLinePosition(position);
             });
         }
 
