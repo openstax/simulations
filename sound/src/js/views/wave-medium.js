@@ -162,6 +162,13 @@ define(function(require) {
             for (i = 0; i < this.arcCenters.length; i++)
                 this.arcCenters[i].set(this.origin.x, this.origin.y);
             this.update();
+        },
+
+        /**
+         *
+         */
+        setMask: function(mask) {
+            this.displayObject.mask = mask;
         }
 
     });

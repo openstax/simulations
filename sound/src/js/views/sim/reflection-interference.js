@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var ReflectionInterferenceSimulation = require('models/simulation/reflection-interference');
 
     var SoundSimView                    = require('views/sim');
     var ReflectionInterferenceSceneView = require('views/scene/reflection-interference');
@@ -43,6 +44,13 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new ReflectionInterferenceSimulation();
         },
 
         /**

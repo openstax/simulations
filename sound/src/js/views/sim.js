@@ -127,20 +127,20 @@ define(function (require) {
             this.$('select').selectpicker();
 
             this.$('.frequency-slider').noUiSlider({
-                start: 500,
+                start: this.simulation.get('frequency'),
                 connect: 'lower',
                 range: {
-                    'min': 0,
-                    'max': 1000
+                    'min': Constants.MIN_FREQUENCY,
+                    'max': Constants.MAX_FREQUENCY
                 }
             });
 
             this.$('.amplitude-slider').noUiSlider({
-                start: 0.5,
+                start: this.simulation.get('amplitude'),
                 connect: 'lower',
                 range: {
-                    'min': 0,
-                    'max': 1
+                    'min': Constants.MIN_AMPLITUDE,
+                    'max': Constants.MAX_AMPLITUDE
                 }
             });
 

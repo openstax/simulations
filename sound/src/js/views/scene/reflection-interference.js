@@ -32,9 +32,9 @@ define(function(require) {
 
             this.initReflectedWaveMediumView();
             this.initReflectionLine();
+            this.initMasks();
 
-            this.point = new PIXI.Graphics();
-            this.stage.addChild(this.point);
+            this.updateReflection();
         },
 
         initReflectedWaveMediumView: function() {
@@ -59,6 +59,13 @@ define(function(require) {
             this.stage.addChild(this.reflectionLine.displayObject);
         },
 
+        initMasks: function() {
+            this.leftMask = new PIXI.Graphics();
+            this.stage.addChild(this.leftMask);
+            this.waveMediumView.setMask(this.leftMask);
+            this.reflectedWaveMediumView.setMask(this.leftMask);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             SoundSceneView.prototype._update.apply(this, arguments);
 
@@ -67,15 +74,20 @@ define(function(require) {
 
         setReflectionLinePosition: function(x) {
             this.reflectionLine.setX(this.mvt.modelToViewX(x));
-            this.positionReflectedWaveMediumView();
+            this.updateReflection();
         },
 
         setReflectionLineAngle: function(angle) {
             this.reflectionLine.setAngle(angle);
-            this.positionReflectedWaveMediumView();
+            this.updateReflection();
         },
 
-        positionReflectedWaveMediumView: function() {
+        updateReflection: function() {
+            this.updateReflectedWaveMediumView();
+            this.updateMasks();
+        },
+
+        updateReflectedWaveMediumView: function() {
             // To set up the reflected medium view, we take the origin of
             //   the real one and reflect it across the reflection line.
             //   Note that this means the reflected medium view's origin
@@ -91,14 +103,14 @@ define(function(require) {
                 this.reflectionLine.getAngle()
             );
 
-            this.point.clear();
-            this.point.beginFill(0xFF00FF, 1);
-            this.point.drawCircle(reflectedOrigin.x, reflectedOrigin.y, 3);
-            this.point.endFill();
-
             this.reflectedWaveMediumView.clear();
             this.reflectedWaveMediumView.setOrigin(reflectedOrigin);
             this.reflectedWaveMediumView.setAngle(this.reflectionLine.getAngle() * 2);
+        },
+
+        updateMasks: function() {
+            var minX = this.waveMediumView.getOrigin().x + this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
+            this.reflectionLine.paintLeftSideMask(this.leftMask, minX, this.width, this.height);
         }
 
     });

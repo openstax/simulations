@@ -51,11 +51,17 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.waveMedium = new WaveMedium();
 
-            this.primaryWavefront = new Wavefront({ propagationSpeed: this.get('propagationSpeed') });
+            this.primaryWavefront = new Wavefront({ 
+                maxAmplitude: this.get('amplitude'), 
+                propagationSpeed: this.get('propagationSpeed') 
+            });
             this.primaryWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.primaryWavefront));
             this.waveMedium.addWavefront(this.primaryWavefront);
 
-            this.octaveWavefront = new Wavefront({ propagationSpeed: this.get('propagationSpeed') });
+            this.octaveWavefront = new Wavefront({ 
+                maxAmplitude: this.get('amplitude'), 
+                propagationSpeed: this.get('propagationSpeed') 
+            });
             this.octaveWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.octaveWavefront));
             this.octaveWavefront.set('maxAmplitude', 0);
             this.octaveWavefront.set('enabled', false);
