@@ -42,6 +42,7 @@ define(function(require) {
                 this.arcCenters.push(new Vector2());
 
             this.origin = new Vector2();
+            this.angle = 0;
         },
 
         drawMask: function() {
@@ -100,7 +101,7 @@ define(function(require) {
                 startAngle = -angle * (counterclockwise ? -1 : 1);
                 endAngle = angle * (counterclockwise ? -1 : 1);
                 arcCenter = arcCenters[i];
-                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle, endAngle, counterclockwise);
+                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle + this.angle, endAngle + this.angle, counterclockwise);
                 counterclockwise = !counterclockwise;
             }
         },
@@ -148,9 +149,18 @@ define(function(require) {
         },
 
         /**
+         * Sets the angle at which the waves emanate from the origin
+         */
+        setAngle: function(angle) {
+            this.angle = angle;
+        },
+
+        /**
          *
          */
         clear: function() {
+            for (i = 0; i < this.arcCenters.length; i++)
+                this.arcCenters[i].set(this.origin.x, this.origin.y);
             this.update();
         }
 

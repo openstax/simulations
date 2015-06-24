@@ -76,10 +76,6 @@ define(function(require) {
         },
 
         positionReflectedWaveMediumView: function() {
-            // Set up the wavefront graphic for the reflected wave front. We make set its origin to be the apparent
-            // position of the real wavefront source's reflection in the wall. Note that the angle must be set negative
-            // because of the direction of the y axis in AWT.
-
             // To set up the reflected medium view, we take the origin of
             //   the real one and reflect it across the reflection line.
             //   Note that this means the reflected medium view's origin
@@ -102,7 +98,7 @@ define(function(require) {
 
             this.reflectedWaveMediumView.clear();
             this.reflectedWaveMediumView.setOrigin(reflectedOrigin);
-            this.reflectedWaveMediumView.displayObject.rotation = -this.reflectionLine.getAngle() * 2;
+            this.reflectedWaveMediumView.setAngle(this.reflectionLine.getAngle() * 2);
         }
 
     });
