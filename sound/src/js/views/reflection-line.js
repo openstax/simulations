@@ -24,8 +24,8 @@ define(function(require) {
                     x: 200,
                     y: 400
                 },
-                height: 400,
-                width: 6,
+                length: 400,
+                thickness: 6,
                 color: '#21366b',
                 angle: 45
             }, options);
@@ -33,8 +33,8 @@ define(function(require) {
             this.displayObject.x = options.position.x;
             this.displayObject.y = options.position.y;
 
-            this.height = options.height;
-            this.width = options.width;
+            this.length = options.length;
+            this.thickness = options.thickness;
             this.color = Colors.parseHex(options.color);
 
             this._midpoint = new Vector2();
@@ -57,9 +57,9 @@ define(function(require) {
             this.line.clear();
 
             // Draw a line going horizontally to the right.
-            this.line.lineStyle(this.width, this.color, 1);
+            this.line.lineStyle(this.thickness, this.color, 1);
             this.line.moveTo(0, 0);
-            this.line.lineTo(this.height, 0);
+            this.line.lineTo(this.length, 0);
         },
 
         setX: function(x) {
@@ -71,10 +71,9 @@ define(function(require) {
         },
 
         getMidPoint: function() {
-            var bounds = this.displayObject.getBounds();
             return this._midpoint.set(
-                bounds.x + bounds.width  / 2,
-                bounds.y + bounds.height / 2
+                this.displayObject.x + Math.cos(this.displayObject.rotation) * this.length / 2,
+                this.displayObject.y + Math.sin(this.displayObject.rotation) * this.length / 2
             );
         },
 

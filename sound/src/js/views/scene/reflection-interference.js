@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var PIXI = require('pixi');
+
     var HelpLabelView = require('common/help-label/index');
     var Reflection    = require('common/math/reflection');
 
@@ -30,6 +32,9 @@ define(function(require) {
 
             this.initReflectedWaveMediumView();
             this.initReflectionLine();
+
+            this.point = new PIXI.Graphics();
+            this.stage.addChild(this.point);
         },
 
         initReflectedWaveMediumView: function() {
@@ -47,7 +52,7 @@ define(function(require) {
                     x: this.mvt.modelToViewX(Constants.DEFAULT_WALL_POSITION),
                     y: this.height + 10
                 },
-                height: Math.sqrt(this.height * this.height + this.width * this.width) + 20,
+                length: Math.sqrt(this.height * this.height + this.width * this.width) + 20,
                 angle: Constants.DEFAULT_WALL_ANGLE
             });
 
@@ -89,7 +94,12 @@ define(function(require) {
                 this.reflectionLine.getMidPoint(), 
                 this.reflectionLine.getAngle()
             );
-console.log(reflectedOrigin)
+
+            this.point.clear();
+            this.point.beginFill(0xFF00FF, 1);
+            this.point.drawCircle(reflectedOrigin.x, reflectedOrigin.y, 3);
+            this.point.endFill();
+
             this.reflectedWaveMediumView.clear();
             this.reflectedWaveMediumView.setOrigin(reflectedOrigin);
             this.reflectedWaveMediumView.displayObject.rotation = -this.reflectionLine.getAngle() * 2;
