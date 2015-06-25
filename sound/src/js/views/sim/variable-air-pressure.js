@@ -3,7 +3,8 @@ define(function (require) {
     'use strict';
 
 
-    var SoundSimView = require('views/sim');
+    var SoundSimView                 = require('views/sim');
+    var VariableAirPressureSceneView = require('views/scene/variable-air-pressure');
 
     var Constants = require('constants');
 
@@ -34,6 +35,15 @@ define(function (require) {
             SoundSimView.prototype.reset.apply(this, arguments);
 
             this.$('.audio-listener').click();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new VariableAirPressureSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**
