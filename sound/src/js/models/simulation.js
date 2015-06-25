@@ -88,6 +88,32 @@ define(function (require, exports, module) {
             return new SoundListener({ simulation: this });
         },
 
+        setContinuousMode: function() {
+            this.pulseMode = false;
+            this.amplitudeChanged(this, this.get('amplitude'));
+        },
+
+        setPulseMode: function() {
+            this.pulseMode = true;
+            this.amplitudeChanged(this, 0);
+        },
+
+        /**
+         * Fires a pulse, where the wave is only oscillating for a single
+         *   cycle (a single period).
+         */
+        pulse: function() {
+            var wavefront = this.primaryWavefront;
+            var periodInSimTime = (6 * 1 / wavefront.get('frequency')) * 1000;
+            var simSecondsPerRealSecond = (1 / Constants.WAIT_TIME) * Constants.TIME_STEP;
+            var periodInRealTime = periodInSimTime / simSecondsPerRealSecond;
+
+            wavefront.set('maxAmplitude', this.get('amplitude'));
+            setTimeout(function() {
+                wavefront.set('maxAmplitude', 0);
+            }, periodInRealTime);
+        },
+
         _update: function(time, deltaTime) {
             this.waveMedium.update(time, deltaTime);
 
@@ -101,11 +127,14 @@ define(function (require, exports, module) {
 
         frequencyChanged: function(simulation, frequency) {
             this.primaryWavefront.set('frequency', frequency / Constants.FREQUENCY_DISPLAY_FACTOR);
-            this.octaveWavefront.set('frequency', 2 * frequency / Constants.FREQUENCY_DISPLAY_FACTOR);
+            this.octaveWavefront.set('frequency', 2 * frequency / Constants.FREQUENCY_DISPLAY_FACTOR);    
         },
 
         amplitudeChanged: function(simulation, amplitude) {
-            this.primaryWavefront.set('maxAmplitude', amplitude);
+            if (!this.pulseMode)
+                this.primaryWavefront.set('maxAmplitude', amplitude);
+            else
+                this.primaryWavefront.set('maxAmplitude', 0);
         },
 
         propagationSpeedChanged: function(simulation, propagationSpeed) {

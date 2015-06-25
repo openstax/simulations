@@ -102,11 +102,17 @@ define(function (require) {
         },
 
         changeModePulse: function() {
+            this.simulation.setPulseMode();
             this.$('.btn-pulse').removeAttr('disabled');
         },
 
         changeModeContinuous: function() {
+            this.simulation.setContinuousMode();
             this.$('.btn-pulse').prop('disabled', true);
+        },
+
+        pulse: function() {
+            this.simulation.pulse();
         },
 
         changeWallAngle: function(event) {
