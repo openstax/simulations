@@ -57,7 +57,7 @@ define(function (require) {
                 dragFrame: this.el,
                 units : 'sec',
                 position: {
-                    x : 642,
+                    x : AppView.windowIsShort() ? 648 : 642,
                     y : AppView.windowIsShort() ? 256 : 328 
                 }
             });

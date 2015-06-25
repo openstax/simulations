@@ -9,6 +9,11 @@
     position: absolute;
     right: @panel-margin;
     top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: @short-screen-panel-margin;
+        top: @short-screen-panel-margin;
+    }
 }
 
 .sim-controls {
@@ -75,6 +80,7 @@
 
         &.listener-options {
             margin-top: 8px;
+            margin-left: 24px;
         }
 
         li {
@@ -87,7 +93,7 @@
         }
     }
 
-    .btn-pulse {
+    .btn-default {
         .sim-controls-button();
         margin-top: 4px;
         color: @link-color;

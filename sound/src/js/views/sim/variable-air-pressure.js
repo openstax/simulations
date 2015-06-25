@@ -7,6 +7,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var airDensityControlsHtml = require('text!templates/air-density-controls.html');
+        
     /**
      * 
      */
@@ -42,6 +44,9 @@ define(function (require) {
 
             this.renderAudioControls();
             this.$('.audio-listener').click();
+
+            // Air density controls
+            this.$('.sim-controls-column').append(airDensityControlsHtml);
         },
 
     });
