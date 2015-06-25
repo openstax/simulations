@@ -12,6 +12,8 @@ define(function (require) {
      */
     var VariableAirPressureSimView = SoundSimView.extend({
 
+        showHelpBtn: false,
+
         /**
          * Inits simulation, views, and variables.
          *

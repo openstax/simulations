@@ -20,6 +20,8 @@ define(function (require) {
         wallControlsTemplate: _.template(wallControlsHtml),
         modeControlsTemplate: _.template(modeControlsHtml),
 
+        showHelpBtn: false,
+
         /**
          * Dom event listeners
          */
