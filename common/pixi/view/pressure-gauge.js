@@ -207,29 +207,20 @@ define(function(require) {
         },
 
         initReadout: function() {
-            var yOffset = 15;
-            var bgWidth = 28;
-            var bgHeight = 12;
-
-            var background = new PIXI.Graphics();
-            background.beginFill(0xDDDDDD, 1);
-            background.drawRect(this.gaugeCenter.x - bgWidth / 2, this.gaugeCenter.y + yOffset, bgWidth, bgHeight);
-            background.endFill();
-            //this.displayObject.addChild(background);
-
             this.readout = new PIXI.Text(this.value, {
                 font: this.readoutFont
             });
             this.readout.x = this.gaugeCenter.x;
-            this.readout.y = this.gaugeCenter.y + 8 + 2;
+            this.readout.y = this.gaugeCenter.y + this.radius - this.readout.height * 0.9;
             this.readout.anchor.x = 0.5;
+            this.readout.anchor.y = 0.7;
             this.displayObject.addChild(this.readout);
 
             this.units = new PIXI.Text(this.units, {
                 font: this.unitsFont
             });
             this.units.x = this.readout.x;
-            this.units.y = this.readout.y + 12;
+            this.units.y = this.readout.y;
             this.units.anchor.x = 0.5;
             this.displayObject.addChild(this.units);
 
@@ -238,8 +229,9 @@ define(function(require) {
                 fill: this.overloadColor
             });
             this.overload.x = this.readout.x;
-            this.overload.y = this.readout.y + 4;
+            this.overload.y = this.readout.y;
             this.overload.anchor.x = 0.5;
+            this.overload.anchor.y = 0.25;
             this.displayObject.addChild(this.overload);
         },
 
