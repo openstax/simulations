@@ -36,7 +36,8 @@ define(function(require) {
 
         initBoxView: function() {
             this.boxView = new BoxView({
-                model: this.simulation
+                model: this.simulation,
+                mvt: this.mvt
             });
 
             this.boxView.displayObject.x = this.speakerView.displayObject.x;
