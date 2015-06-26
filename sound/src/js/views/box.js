@@ -11,6 +11,7 @@ define(function(require) {
     var Vector2           = require('common/math/vector2');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     /**
      * A box that surrounds the speaker that we can drain air
@@ -41,10 +42,12 @@ define(function(require) {
         },
 
         initBox: function() {
-            this.boxFill    = new PIXI.Graphics();
-            this.boxOutline = new PIXI.Graphics();
+            this.boxFill    = Assets.createSprite(Assets.Images.BOX_FILL);
+            this.boxOutline = Assets.createSprite(Assets.Images.BOX_OUTLINE);
 
-            this.boxFill.alpha = 0.2;
+            this.boxFill.anchor.x = this.boxOutline.anchor.x = 0.1798;
+            this.boxFill.anchor.y = this.boxOutline.anchor.y = 0.5;
+            this.boxFill.alpha = 0;
 
             this.displayObject.addChild(this.boxFill);
             this.displayObject.addChild(this.boxOutline);
@@ -73,37 +76,6 @@ define(function(require) {
             this.displayObject.addChild(this.pressureGaugeView.displayObject);
         },
 
-        drawBox: function() {
-            this.boxFill.clear();
-            this.boxFill.beginFill(0x000000);
-            this.drawBoxShape(this.boxFill);
-            this.boxFill.endFill();
-
-            this.boxOutline.clear();
-            this.boxOutline.lineStyle(this.thickness, this.color, 1);
-            this.drawBoxShape(this.boxOutline);
-        },
-
-        drawBoxShape: function(graphics) {
-            var height     = Math.abs(this.mvt.modelToViewDeltaY(BoxView.HEIGHT_IN_METERS));
-            var width      = this.mvt.modelToViewDeltaX(BoxView.WIDTH_IN_METERS);
-            var leftOffset = this.mvt.modelToViewDeltaX(BoxView.LEFT_OFFSET_IN_METERS);
-            var rightOffset = width + leftOffset;
-
-            var startAngleXOffset = rightOffset;
-            var startAngleYOffset = -height / 2;
-            var radius = Math.sqrt(Math.pow(startAngleXOffset, 2) + Math.pow(startAngleYOffset, 2));
-            var startAngle = Math.atan2( startAngleYOffset, startAngleXOffset) - 0.005;
-            var endAngle   = Math.atan2(-startAngleYOffset, startAngleXOffset) + 0.01;
-
-            graphics.moveTo(rightOffset,  height / 2);
-            graphics.lineTo(leftOffset,   height / 2);
-            graphics.lineTo(leftOffset,  -height / 2);
-            graphics.lineTo(rightOffset, -height / 2);
-            //graphics.lineTo(rightOffset,  height / 2);
-            graphics.arc(0, 0, radius, startAngle, endAngle);
-        },
-
         /**
          * 
          */
@@ -116,7 +88,13 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.drawBox();
+            var targetSpriteHeight = Math.abs(this.mvt.modelToViewDeltaY(BoxView.HEIGHT_IN_METERS));
+            var scale = targetSpriteHeight / this.boxFill.texture.height;
+            this.boxFill.scale.x = scale;
+            this.boxFill.scale.y = scale;
+            this.boxOutline.scale.x = scale;
+            this.boxOutline.scale.y = scale;
+            
             this.positionPressureGauge();
         },
 
@@ -126,7 +104,7 @@ define(function(require) {
             var leftOffset = this.mvt.modelToViewDeltaX(BoxView.LEFT_OFFSET_IN_METERS);
 
             this.pressureGaugeView.displayObject.x = leftOffset + width / 2;
-            this.pressureGaugeView.displayObject.y = Math.round(-height / 2);
+            this.pressureGaugeView.displayObject.y = Math.round(-height / 2) + this.thickness / 2;
         }
 
     }, Constants.BoxView);
