@@ -25,6 +25,7 @@ define(function(require) {
             }, options);
 
             this.thickness = options.thickness;
+            this.colorString = options.color;
             this.color = Colors.parseHex(options.color);
 
             this.initGraphics();
@@ -44,7 +45,25 @@ define(function(require) {
         },
 
         initPressureGauge: function() {
-            this.pressureGaugeView = new PressureGaugeView();
+            this.pressureGaugeView = new PressureGaugeView({
+                value: 1,
+                readoutFont: '11px Arial',
+                unitsFont:   'bold 8px Arial',
+
+                allowOverload: false,
+
+                radius: 48,
+                outlineColor: this.colorString,
+                outlineThickness: 5,
+
+                tickMargin: 9,
+
+                connectorLength: 12,
+                connectorWidth:  24,
+                connectorColor1: '#000',
+                connectorColor2: this.colorString
+            });
+            this.pressureGaugeView.displayObject.y = -100;
             this.displayObject.addChild(this.pressureGaugeView.displayObject);
         },
 

@@ -40,7 +40,7 @@ define(function(require) {
             });
 
             this.boxView.displayObject.x = this.speakerView.displayObject.x;
-            this.boxView.displayObject.y = this.speakerView.displayObject.y - 200;
+            this.boxView.displayObject.y = this.speakerView.displayObject.y;
             this.stage.addChild(this.boxView.displayObject);
         },
 
