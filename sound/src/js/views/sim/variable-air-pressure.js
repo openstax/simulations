@@ -39,6 +39,8 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.simulation, 'change:airDensityPercent', this.airDensityChanged);
         },
 
         reset: function() {
@@ -74,18 +76,40 @@ define(function (require) {
 
             // Air density controls
             this.$('.sim-controls-column').append(airDensityControlsHtml);
+
+            this.$addAirBtn    = this.$('.btn-add-air');
+            this.$removeAirBtn = this.$('.btn-remove-air');
+            this.$resetBoxBtn  = this.$('.btn-reset-box');
         },
 
         addAirToBox: function() {
             this.sceneView.addAirToBox();
+            this.$addAirBtn.prop('disabled', true);
         },
 
         removeAirFromBox: function() {
             this.sceneView.removeAirFromBox();
+            this.$removeAirBtn.prop('disabled', true);
         },
 
         resetBox: function() {
             this.sceneView.resetBox();
+            this.$addAirBtn.hide();
+            this.$removeAirBtn.show();
+            this.$removeAirBtn.removeAttr('disabled');
+        },
+
+        airDensityChanged: function(simulation, airDensityPercent) {
+            if (airDensityPercent === 1) {
+                this.$addAirBtn.hide();
+                this.$removeAirBtn.show();
+                this.$removeAirBtn.removeAttr('disabled');
+            }
+            else if (airDensityPercent === 0) {
+                this.$removeAirBtn.hide();
+                this.$addAirBtn.show();
+                this.$addAirBtn.removeAttr('disabled');
+            }
         }
 
     });

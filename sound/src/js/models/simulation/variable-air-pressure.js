@@ -15,7 +15,7 @@ define(function (require, exports, module) {
     var VariableAirPressureSimulation = SoundSimulation.extend({
 
         defaults: _.extend({}, SoundSimulation.prototype.defaults, {
-            densityPercent: 1
+            airDensityPercent: 1
         }),
 
         /**
@@ -24,7 +24,7 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             SoundSimulation.prototype.initialize.apply(this, arguments);
 
-            this.on('change:densityPercent', this.densityPercentChanged);
+            this.on('change:airDensityPercent', this.densityPercentChanged);
         },
 
         /**
@@ -52,8 +52,8 @@ define(function (require, exports, module) {
             this.waveMedium.attenuationFunction.insideRadiusAttenuation = attenuation;
         },
 
-        densityPercentChanged: function(simulation, densityPercent) {
-            this.setInsideRadiusAttenuation(densityPercent);
+        densityPercentChanged: function(simulation, airDensityPercent) {
+            this.setInsideRadiusAttenuation(airDensityPercent);
         }
 
     });

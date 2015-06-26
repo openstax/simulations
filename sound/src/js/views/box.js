@@ -97,8 +97,8 @@ define(function(require) {
                 else if (this.addingAir) {
                     this.densityPercent += BoxView.DENSITY_CHANGE_PER_SECOND * deltaTime;
 
-                    if (this.densityPercent < 0) {
-                        this.densityPercent = 0;
+                    if (this.densityPercent > 1) {
+                        this.densityPercent = 1;
                         this.addingAir = false;
                     }
 
@@ -110,7 +110,7 @@ define(function(require) {
         densityPercentChanged: function() {
             this.pressureGaugeView.val(this.densityPercent);
             this.boxFill.alpha = 1 - this.densityPercent;
-            this.simulation.set('densityPercent', this.densityPercent);
+            this.simulation.set('airDensityPercent', this.densityPercent);
         },
 
         updateMVT: function(mvt) {
@@ -141,6 +141,13 @@ define(function(require) {
 
         removeAir: function() {
             this.removingAir = true;
+        },
+
+        resetAir: function() {
+            this.addingAir = false;
+            this.removingAir = false;
+            this.densityPercent = 1;
+            this.densityPercentChanged();
         }
 
     }, Constants.BoxView);
