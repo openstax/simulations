@@ -104,7 +104,6 @@ define(function (require) {
     BoxView.HEIGHT_IN_METERS = 7; // Meters
     BoxView.WIDTH_IN_METERS  = 4; // Meters
     BoxView.LEFT_OFFSET_IN_METERS = -1; // Meters
-    BoxView.ARC_RADIUS_IN_METERS = 5;   // Meters
 
     Constants.BoxView = BoxView;
 

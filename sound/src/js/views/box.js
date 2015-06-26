@@ -88,19 +88,20 @@ define(function(require) {
             var height     = Math.abs(this.mvt.modelToViewDeltaY(BoxView.HEIGHT_IN_METERS));
             var width      = this.mvt.modelToViewDeltaX(BoxView.WIDTH_IN_METERS);
             var leftOffset = this.mvt.modelToViewDeltaX(BoxView.LEFT_OFFSET_IN_METERS);
-            var arcRadius  = this.mvt.modelToViewDeltaX(BoxView.ARC_RADIUS_IN_METERS);
             var rightOffset = width + leftOffset;
+
+            var startAngleXOffset = rightOffset;
+            var startAngleYOffset = -height / 2;
+            var radius = Math.sqrt(Math.pow(startAngleXOffset, 2) + Math.pow(startAngleYOffset, 2));
+            var startAngle = Math.atan2( startAngleYOffset, startAngleXOffset) - 0.005;
+            var endAngle   = Math.atan2(-startAngleYOffset, startAngleXOffset) + 0.01;
 
             graphics.moveTo(rightOffset,  height / 2);
             graphics.lineTo(leftOffset,   height / 2);
             graphics.lineTo(leftOffset,  -height / 2);
             graphics.lineTo(rightOffset, -height / 2);
-            graphics.lineTo(rightOffset,  height / 2);
-            // graphics.arcTo(
-            //     rightOffset, -height / 2,
-            //     rightOffset,  height / 2,
-            //     arcRadius
-            // );
+            //graphics.lineTo(rightOffset,  height / 2);
+            graphics.arc(0, 0, radius, startAngle, endAngle);
         },
 
         /**
