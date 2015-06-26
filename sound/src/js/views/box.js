@@ -30,6 +30,8 @@ define(function(require) {
             this.color = Colors.parseHex(options.color);
 
             this.mvt = options.mvt;
+            this.simulation = this.model;
+            this.densityPercent = 1;
 
             this.initGraphics();
         },
@@ -58,6 +60,7 @@ define(function(require) {
                 value: 1,
                 readoutFont: '11px Arial',
                 unitsFont:   'bold 8px Arial',
+                decimals: 2,
 
                 allowOverload: false,
 
@@ -81,8 +84,33 @@ define(function(require) {
          */
         update: function(time, deltaTime, paused) {
             if (!paused) {
-                
+                if (this.removingAir) {
+                    this.densityPercent -= BoxView.DENSITY_CHANGE_PER_SECOND * deltaTime;
+
+                    if (this.densityPercent < 0) {
+                        this.densityPercent = 0;
+                        this.removingAir = false;
+                    }
+
+                    this.densityPercentChanged();
+                }
+                else if (this.addingAir) {
+                    this.densityPercent += BoxView.DENSITY_CHANGE_PER_SECOND * deltaTime;
+
+                    if (this.densityPercent < 0) {
+                        this.densityPercent = 0;
+                        this.addingAir = false;
+                    }
+
+                    this.densityPercentChanged();
+                }
             }
+        },
+
+        densityPercentChanged: function() {
+            this.pressureGaugeView.val(this.densityPercent);
+            this.boxFill.alpha = 1 - this.densityPercent;
+            this.simulation.set('densityPercent', this.densityPercent);
         },
 
         updateMVT: function(mvt) {
@@ -105,6 +133,14 @@ define(function(require) {
 
             this.pressureGaugeView.displayObject.x = leftOffset + width / 2;
             this.pressureGaugeView.displayObject.y = Math.round(-height / 2) + this.thickness / 2;
+        },
+
+        addAir: function() {
+            this.addingAir = true;
+        },
+
+        removeAir: function() {
+            this.removingAir = true;
         }
 
     }, Constants.BoxView);

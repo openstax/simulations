@@ -101,9 +101,18 @@ define(function (require) {
 
     var BoxView = {};
 
-    BoxView.HEIGHT_IN_METERS = 7; // Meters
+    BoxView.HEIGHT_IN_METERS = 7.161290322580646; // Meters
     BoxView.WIDTH_IN_METERS  = 4; // Meters
     BoxView.LEFT_OFFSET_IN_METERS = -1; // Meters
+
+    var rightOffset = BoxView.WIDTH_IN_METERS + BoxView.LEFT_OFFSET_IN_METERS;
+    var startAngleXOffset = rightOffset;
+    var startAngleYOffset = -BoxView.HEIGHT_IN_METERS / 2;
+    var radius = Math.sqrt(Math.pow(startAngleXOffset, 2) + Math.pow(startAngleYOffset, 2));
+    BoxView.RADIUS_IN_METERS = radius; // Meters
+
+    BoxView.TRANSITION_TIME = 20; // Seconds
+    BoxView.DENSITY_CHANGE_PER_SECOND = 1 / BoxView.TRANSITION_TIME;
 
     Constants.BoxView = BoxView;
 

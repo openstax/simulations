@@ -42,13 +42,28 @@ define(function(require) {
 
             this.boxView.displayObject.x = this.speakerView.displayObject.x;
             this.boxView.displayObject.y = this.speakerView.displayObject.y;
-            this.stage.addChild(this.boxView.displayObject);
+
+            // Add it under the speaker view so the speaker renders on top
+            var speakerIndex = this.stage.getChildIndex(this.speakerView.displayObject);
+            this.stage.addChildAt(this.boxView.displayObject, speakerIndex);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             SoundSceneView.prototype._update.apply(this, arguments);
 
-            // TODO: update box view
+            this.boxView.update(time, deltaTime, paused);
+        },
+
+        removeAirFromBox: function() {
+            this.boxView.removeAir();
+        },
+
+        addAirToBox: function() {
+            this.boxView.addAir();
+        },
+
+        resetBox: function() {
+            this.boxView.resetAir();
         }
 
     });
