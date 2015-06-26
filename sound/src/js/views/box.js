@@ -45,7 +45,7 @@ define(function(require) {
 
         initPressureGauge: function() {
             this.pressureGaugeView = new PressureGaugeView();
-            this.displayObject.addChild(this.pressureGaugeView);
+            this.displayObject.addChild(this.pressureGaugeView.displayObject);
         },
 
         drawBox: function() {

@@ -39,6 +39,8 @@ define(function(require) {
                 model: this.simulation
             });
 
+            this.boxView.displayObject.x = this.speakerView.displayObject.x;
+            this.boxView.displayObject.y = this.speakerView.displayObject.y - 200;
             this.stage.addChild(this.boxView.displayObject);
         },
 
