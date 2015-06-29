@@ -5,20 +5,20 @@ Empty Simulation Template
 
 1. If necessary, install [Node.js](http://nodejs.org) and npm (included with Node.js).
 2. Run `npm install -g grunt-cli` in the command line to install [grunt-cli](https://github.com/gruntjs/grunt-cli).
-3. From the root `template` directory, run `npm install` in the command line to install test and build dependencies.
+3. From the root `charges-and-fields` directory, run `npm install` in the command line to install test and build dependencies.
   * `npm install` fetches npm dependencies found in package.json and runs `bower install` as well which fetches front-end dependencies.
 
 ## Building & Testing
 
 ### Building
 
-From the root `template` directory, run `grunt dist`.
+From the root `charges-and-fields` directory, run `grunt dist`.
 
-The `dist` directory containing the built site will be added to the root `template` directory.
+The `dist` directory containing the built site will be added to the root `charges-and-fields` directory.
 
 ### Testing
 
-To run command-line tests, run `grunt test` from the root `template` directory.
+To run command-line tests, run `grunt test` from the root `charges-and-fields` directory.
 
 To view tests in a browser, you first need to
 
@@ -34,7 +34,7 @@ To host a development server for this project, follow the instructions found in 
 
 ### Updating
 
-From the root `template` directory, run `npm run-script upgrade`, which executes the following commands:
+From the root `charges-and-fields` directory, run `npm run-script upgrade`, which executes the following commands:
 
 1. `npm update`
 2. `bower update`
