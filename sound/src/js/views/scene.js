@@ -48,7 +48,7 @@ define(function(require) {
             var metersPerPixel = this.mvt.viewToModelDeltaX(1);
             // var clockScale = 
             //     Constants.PIXELS_PER_TIMESTEP * 
-            //     (1 / Constants.TIME_STEP) * 
+            //     (1 / Constants.DT_PER_FRAME) * 
             //     metersPerPixel * 
             //     (1 / Constants.SPEED_OF_SOUND);
         },

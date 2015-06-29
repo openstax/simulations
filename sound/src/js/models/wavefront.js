@@ -106,7 +106,7 @@ define(function (require) {
         },
 
         getWavelengthAtTime: function(time) {
-            var lambda = this.get('propagationSpeed') / (Constants.TIME_STEP * this.getFrequencyAtTime(time));
+            var lambda = this.get('propagationSpeed') / (Constants.DT_PER_FRAME * this.getFrequencyAtTime(time));
             // Note from PhET: I'm sorry to say I'm not sure just why 6.2 is the
             //   right factor here, but it works.
             return lambda * 6.2;
