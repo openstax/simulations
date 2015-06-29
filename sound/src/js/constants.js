@@ -95,7 +95,7 @@ define(function (require) {
     //   If it is too small, the displayed wavelength will not get monotonic-
     //   ally shorter as the frequency is raised. Note that the best value for
     //   this is dependent on the clock's dt.
-    Constants.FREQUENCY_DISPLAY_FACTOR = 7;
+    Constants.FREQUENCY_DISPLAY_FACTOR = 4.5;
 
     Constants.DEFAULT_LISTENER_X = 5.9; // Meters
     Constants.DEFAULT_LISTENER_Y = 0;   // Meters

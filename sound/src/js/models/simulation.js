@@ -26,8 +26,7 @@ define(function (require, exports, module) {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
             propagationSpeed: Constants.PROPAGATION_SPEED,
-            audioEnabled: false,
-            //timeScale: Constants.CLOCK_SCALE_FACTOR
+            audioEnabled: false
         }),
         
         initialize: function(attributes, options) {

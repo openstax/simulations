@@ -203,6 +203,14 @@ define(function (require) {
         },
 
         /**
+         * Overrides step to make sure we calculate the right step time.
+         */
+        step: function() {
+            this.play();
+            setTimeout(this._stepFinished, this.simulation.frameDuration * 1000);
+        },
+
+        /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */

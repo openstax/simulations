@@ -42,15 +42,6 @@ define(function(require) {
             this.initMVT();
             this.initWaveMediumView();
             this.initSpeakerView();
-
-            // Factor to apply to time reported by the simulation clock to get seconds.
-            //   This gives results that correspond to the speed of sound
-            var metersPerPixel = this.mvt.viewToModelDeltaX(1);
-            // var clockScale = 
-            //     Constants.PIXELS_PER_TIMESTEP * 
-            //     (1 / Constants.DT_PER_FRAME) * 
-            //     metersPerPixel * 
-            //     (1 / Constants.SPEED_OF_SOUND);
         },
 
         initMVT: function() {

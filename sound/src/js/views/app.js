@@ -22,7 +22,7 @@ define(function(require) {
         simViewConstructors: [
             SingleSourceSimView,
             MeasureSimView,
-            //TwoSourceInterferenceSimView,
+            TwoSourceInterferenceSimView,
             ReflectionInterferenceSimView,
             VariableAirPressureSimView
         ],
