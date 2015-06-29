@@ -53,7 +53,8 @@ define(function (require, exports, module) {
         },
 
         densityPercentChanged: function(simulation, airDensityPercent) {
-            this.setInsideRadiusAttenuation(airDensityPercent);
+            var attenuation = Math.sqrt(1 - (airDensityPercent - 1) * (airDensityPercent - 1));
+            this.setInsideRadiusAttenuation(attenuation);
         }
 
     });
