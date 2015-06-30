@@ -156,10 +156,12 @@ define(function (require) {
          */
         toggleEField: function() {
             if ($(event.target).is(':checked')) {
-                $('.e-field-additional-options').show();
+                this.$('.e-field-additional-options').removeClass('disabled');
+                this.$('#direction-only-check').removeAttr('disabled');
             }
             else {
-                $('.e-field-additional-options').hide();
+                this.$('.e-field-additional-options').addClass('disabled');
+                this.$('#direction-only-check').prop('disabled', true);
             }
         },
 
