@@ -47,8 +47,19 @@ define(function(require) {
 
         initMVT: function() {
             var heightInMeters = Constants.SIM_HEIGHT_IN_METERS;
-            var scale = this.height / heightInMeters;
-            var widthInMeters = Math.ceil(this.width / scale);
+            var widthInMeters;
+            var scale;
+
+
+            if (AppView.windowIsShort()) {
+                scale = Math.ceil(this.height / heightInMeters);
+                heightInMeters = this.height * scale;
+                widthInMeters = this.width * scale;
+            }
+            else {
+                scale = this.height / heightInMeters;
+                widthInMeters = Math.ceil(this.width / scale);
+            }
             
             this.viewOriginX = Math.round(this.width / 2 - (widthInMeters / 2) * scale);
             this.viewOriginY = 0;
