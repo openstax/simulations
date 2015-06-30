@@ -8,6 +8,9 @@ define(function(require) {
     var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
 
+    var Charge = require('models/charge');
+    var ReservoirObjectView = require('views/reservoir-object');
+
     var Constants = require('constants');
 
     /**
@@ -55,6 +58,7 @@ define(function(require) {
 
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.dummyLayer = options.dummyLayer;
 
             this.width = options.width;
             this.height = options.height;
@@ -76,9 +80,6 @@ define(function(require) {
             this.bottomAlpha  = options.bottomAlpha;
 
             this.showDepth = options.showDepth;
-
-            this._dragOffset   = new PIXI.Point();
-            this._dragLocation = new PIXI.Point();
 
             this.initGraphics();
         },
@@ -150,6 +151,8 @@ define(function(require) {
                 bg.endFill();
             }
 
+            bg.buttonMode = true;
+
             // Add it to the display object
             this.displayObject.addChild(bg);
             this.background = bg;
@@ -179,7 +182,12 @@ define(function(require) {
         },
 
         createDummyObject: function() {
-
+            var model = new Charge();
+            var view = new ReservoirObjectView({
+                model: model,
+                mvt: this.mvt
+            });
+            return view;
         },
 
         /**
@@ -187,7 +195,16 @@ define(function(require) {
          *   and returns it so it can be added to the model.
          */
         createObject: function(object) {
+            var model = new Charge();
+            var view = new ReservoirObjectView({
+                model: model,
+                mvt: this.mvt
+            });
+            return view;
+        },
 
+        destroyObject: function(object) {
+            object.destroy();
         },
 
         updateMVT: function(mvt) {
@@ -197,21 +214,32 @@ define(function(require) {
         },
 
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
+
+            this.dummyObject = this.createObject();
+            this.dummyLayer.addChild(this.dummyObject.displayObject);
         },
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
-                
-                
+                this.dummyObject.setPosition(
+                    data.global.x,
+                    data.global.y
+                );
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
+
+            if (this.dummyObject) {
+                this.dummyObject.removeFrom(this.dummyLayer);
+                this.dummyObject.model.destroy();
+                this.dummyObject = null;
+
+                // if (not within the bounds of this reservoir)
+                // Create a real object and add it to the sim
+            }
         }
 
     });

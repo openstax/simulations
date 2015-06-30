@@ -18,7 +18,7 @@ define(function (require) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
             this.on('change:q', this.chargeChanged);
-        }
+        },
 
         setCharge: function(q) {
             this.set('q', q);

@@ -36,10 +36,10 @@ define(function(require) {
             options = _.extend({
                 radius: 10,
 
-                fillColor: '#555',
+                fillColor: '#777',
                 fillAlpha: 1,
-                outlineColor: '#777',
-                outlineWidth: 1,
+                outlineColor: '#555',
+                outlineWidth: 2,
                 outlineAlpha: 1,
 
                 labelText: '',
@@ -64,6 +64,7 @@ define(function(require) {
             // Cached objects
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
+            this._position = new Vector2();
 
             // Initialize graphics
             this.initGraphics();
@@ -124,7 +125,7 @@ define(function(require) {
         },
 
         setPosition: function(x, y) {
-            var modelPosition = this.mvt.viewToModel(x, y);
+            var modelPosition = this.mvt.viewToModel(this._position.set(x, y));
             this.model.setPosition(modelPosition);
         },
 

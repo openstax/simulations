@@ -97,6 +97,7 @@ define(function(require) {
 
         initReservoirs: function() {
             var minusChargeReservoir = new ObjectReservoir({
+                dummyLayer: this.stage,
                 simulation: this.simulation,
                 mvt: this.mvt,
                 labelText: '1 nC'
@@ -110,6 +111,7 @@ define(function(require) {
             minusChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
 
             var plusChargeReservoir = new ObjectReservoir({
+                dummyLayer: this.stage,
                 simulation: this.simulation,
                 mvt: this.mvt,
                 labelText: '1 nC'
@@ -119,6 +121,7 @@ define(function(require) {
             plusChargeReservoir.displayObject.y = minusChargeReservoir.displayObject.y + minusChargeReservoir.displayObject.height + 4;
 
             var sensorReservoir = new ObjectReservoir({
+                dummyLayer: this.stage,
                 simulation: this.simulation,
                 mvt: this.mvt,
                 labelText: 'E-Field Sensors'
