@@ -48,6 +48,7 @@ define(function (require) {
          */
         events: {
             'click #e-field-check'        : 'toggleEField',
+            'click #voltage-check'        : 'toggleVoltageMosaic',
             'click #direction-only-check' : 'toggleDirectionOnly',
             'click #grid-check'           : 'toggleGrid',
             'click #numbers-check'        : 'toggleNumbers',
@@ -170,6 +171,15 @@ define(function (require) {
                 
             // else
                 
+        },
+
+        /**
+         * Shows/hides voltage mosaic
+         */
+        toggleVoltageMosaic: function() {
+            // if ($(event.target).is(':checked'))
+                
+            // else
         },
 
         /**

@@ -33,7 +33,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 width: 179,
-                height: 110,
+                height: 100,
                 thickness: 4,
                 depth: 16,
 
@@ -144,7 +144,7 @@ define(function(require) {
                 bg.endFill();
             }
             else {
-                // Draw bottom of the box
+                // Fill in the center
                 bg.beginFill(this.fillColor, this.fillAlpha);
                 bg.drawRect(m, m, w - m * 2, h - m * 2);
                 bg.endFill();

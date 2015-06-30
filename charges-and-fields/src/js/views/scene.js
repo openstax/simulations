@@ -96,19 +96,40 @@ define(function(require) {
         },
 
         initReservoirs: function() {
-            var test = new ObjectReservoir({
+            var minusChargeReservoir = new ObjectReservoir({
                 simulation: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                labelText: '1 nC'
             });
 
             var $lastChild = $('.sim-controls-wrapper').children().last();
             var childOffset = $lastChild.offset();
             var sceneOffset = this.$el.offset();
 
-            test.displayObject.x = childOffset.left - sceneOffset.left;
-            test.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
+            minusChargeReservoir.displayObject.x = childOffset.left - sceneOffset.left;
+            minusChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
 
-            this.stage.addChild(test.displayObject);
+            var plusChargeReservoir = new ObjectReservoir({
+                simulation: this.simulation,
+                mvt: this.mvt,
+                labelText: '1 nC'
+            });
+
+            plusChargeReservoir.displayObject.x = minusChargeReservoir.displayObject.x;
+            plusChargeReservoir.displayObject.y = minusChargeReservoir.displayObject.y + minusChargeReservoir.displayObject.height + 4;
+
+            var sensorReservoir = new ObjectReservoir({
+                simulation: this.simulation,
+                mvt: this.mvt,
+                labelText: 'E-Field Sensors'
+            });
+
+            sensorReservoir.displayObject.x = plusChargeReservoir.displayObject.x;
+            sensorReservoir.displayObject.y = plusChargeReservoir.displayObject.y + plusChargeReservoir.displayObject.height + 4;
+
+            this.stage.addChild(minusChargeReservoir.displayObject);
+            this.stage.addChild(plusChargeReservoir.displayObject);
+            this.stage.addChild(sensorReservoir.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
