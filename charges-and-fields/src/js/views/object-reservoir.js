@@ -44,7 +44,7 @@ define(function(require) {
                 insideColor: '#f2f2f2',
                 insideAlpha: 0.8,
                 bottomColor: '#f0f0f0',
-                bottomAlpha: 0.5
+                bottomAlpha: 0.6
             }, options);
 
             this.mvt = options.mvt;
@@ -60,6 +60,7 @@ define(function(require) {
             this.outlineColor = Colors.parseHex(options.outlineColor);
             this.outlineAlpha = options.outlineAlpha;
             this.insideColor  = Colors.parseHex(options.insideColor);
+            this.insideShadowColor = Colors.parseHex(Colors.darkenHex(options.insideColor, 0.12));
             this.insideAlpha  = options.insideAlpha;
             this.bottomColor  = Colors.parseHex(options.bottomColor);
             this.bottomAlpha  = options.bottomAlpha;
@@ -83,6 +84,7 @@ define(function(require) {
             var w = this.width;
             var h = this.height;
             var m = this.thickness;
+            var d = this.depth;
 
             // Draw outline
             bg.beginFill(this.outlineColor, this.outlineAlpha);
@@ -92,8 +94,45 @@ define(function(require) {
             bg.drawRect(w - m, m, m, h - m - m); // Right piece
             bg.endFill();
 
-            this.background = bg;
+            // Draw inside walls of the box
+            // Top side (will be a little darker to simulate shadow)
+            bg.beginFill(this.insideShadowColor, this.insideAlpha);
+            bg.moveTo(m, m);
+            bg.lineTo(w - m, m);
+            bg.lineTo(w - m - d, m + d);
+            bg.lineTo(m + d, m + d);
+            bg.endFill();
+
+            // Side sides
+            bg.beginFill(this.insideColor, this.insideAlpha);
+            bg.moveTo(w - m, m);
+            bg.lineTo(w - m, h - m);
+            bg.lineTo(w - m - d, h - m - d);
+            bg.lineTo(w - m - d, m + d);
+            bg.endFill();
+            bg.beginFill(this.insideColor, this.insideAlpha);
+            bg.moveTo(m, m);
+            bg.lineTo(m + d, m + d);
+            bg.lineTo(m + d, h - m - d);
+            bg.lineTo(m, h - m);
+            bg.endFill();
+
+            // Bottom side (will be a bit less transparent to simulate light hiting it)
+            bg.beginFill(this.insideColor, this.insideAlpha * 1.3);
+            bg.moveTo(m, h - m);
+            bg.lineTo(m + d, h - m - d);
+            bg.lineTo(w - m - d, h - m - d);
+            bg.lineTo(w - m, h - m);
+            bg.endFill();
+
+            // Draw bottom of the box
+            bg.beginFill(this.bottomColor, this.bottomAlpha);
+            bg.drawRect(m + d, m + d, w - m * 2 - d * 2, h - m * 2 - d * 2);
+            bg.endFill();
+
+            // Add it to the display object
             this.displayObject.addChild(bg);
+            this.background = bg;
         },
 
         initDummyObjects: function() {
