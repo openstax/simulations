@@ -47,10 +47,10 @@ define(function(require) {
 
         initMVT: function() {
             var heightInMeters = Constants.SIM_HEIGHT_IN_METERS;
-            var scale = (this.height - 2) / heightInMeters;
+            var scale = this.height / heightInMeters;
             var widthInMeters = Math.ceil(this.width / scale);
             
-            this.viewOriginX = -(widthInMeters / 2) * scale;
+            this.viewOriginX = Math.round(this.width / 2 - (widthInMeters / 2) * scale);
             this.viewOriginY = 0;
 
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
@@ -71,11 +71,11 @@ define(function(require) {
 
                 lineWidth: 2,
                 lineColor: SceneView.GRID_COLOR,
-                lineAlpha: SceneView.GRID_ALPHA,
+                lineAlpha: 0.5,
 
                 smallLineColor: SceneView.GRID_COLOR,
                 smallLineWidth: 1,
-                smallLineAlpha: SceneView.GRID_ALPHA
+                smallLineAlpha: 0.2
             });
             //this.gridView.hide();
             this.stage.addChild(this.gridView.displayObject);

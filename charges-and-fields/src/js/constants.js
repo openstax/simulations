@@ -11,7 +11,7 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    Constants.SIM_HEIGHT_IN_METERS = 4.5; // Meters
+    Constants.SIM_HEIGHT_IN_METERS = 6; // Meters
 
 
 
@@ -28,7 +28,6 @@ define(function (require) {
     SceneView.SHORT_SCREEN_PANEL_MARGIN = 13;
 
     SceneView.GRID_COLOR = '#000';
-    SceneView.GRID_ALPHA = 0.15;
     SceneView.GRID_MAJOR_SIZE_IN_METERS = 0.5;
     SceneView.GRID_MINOR_SIZE_IN_METERS = 0.1;
 
