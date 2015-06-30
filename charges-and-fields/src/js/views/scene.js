@@ -71,18 +71,26 @@ define(function(require) {
 
                 lineWidth: 2,
                 lineColor: SceneView.GRID_COLOR,
-                lineAlpha: 0.5,
+                lineAlpha: 0.4,
 
                 smallLineColor: SceneView.GRID_COLOR,
                 smallLineWidth: 1,
-                smallLineAlpha: 0.2
+                smallLineAlpha: 0.15
             });
-            //this.gridView.hide();
+            this.gridView.hide();
             this.stage.addChild(this.gridView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             
+        },
+
+        showGrid: function() {
+            this.gridView.show();
+        },
+
+        hideGrid: function() {
+            this.gridView.hide();
         },
 
     });

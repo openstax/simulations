@@ -176,10 +176,10 @@ define(function (require) {
          * Shows/hides grid
          */
         toggleGrid: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGrid();
+            else
+                this.sceneView.hideGrid();
         },
 
         /**
