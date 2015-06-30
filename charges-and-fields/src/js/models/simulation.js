@@ -33,7 +33,6 @@ define(function (require, exports, module) {
             // Collections
             this.charges = new Backbone.Collection([], { model: Charge });
 
-
             // Object caches
             this._efieldVec  = new Vector2();
             this._voltageLoc = new Vector2();
