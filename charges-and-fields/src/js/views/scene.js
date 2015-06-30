@@ -12,6 +12,8 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
+    var ObjectReservoir = require('views/object-reservoir');
+
     var Assets = require('assets');
 
     // Constants
@@ -43,6 +45,7 @@ define(function(require) {
 
             this.initMVT();
             this.initGrid();
+            this.initReservoirs();
         },
 
         initMVT: function() {
@@ -90,6 +93,22 @@ define(function(require) {
             });
             this.gridView.hide();
             this.stage.addChild(this.gridView.displayObject);
+        },
+
+        initReservoirs: function() {
+            var test = new ObjectReservoir({
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+
+            var $lastChild = $('.sim-controls-wrapper').children().last();
+            var childOffset = $lastChild.offset();
+            var sceneOffset = this.$el.offset();
+
+            test.displayObject.x = childOffset.left - sceneOffset.left;
+            test.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
+
+            this.stage.addChild(test.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
