@@ -38,13 +38,19 @@ define(function(require) {
                 depth: 16,
 
                 labelText: 'E-Field Sensors',
+                labelFont: 'bold 12pt Helvetica Neue',
+                labelColor: '#444',
 
                 outlineColor: '#f0f0f0',
                 outlineAlpha: 0.8,
+                fillColor: '#fafafa', // Only used if showDepth is false
+                fillAlpha: 0.6,       // Only used if showDepth is false
                 insideColor: '#f2f2f2',
                 insideAlpha: 0.8,
                 bottomColor: '#f0f0f0',
-                bottomAlpha: 0.6
+                bottomAlpha: 0.6,
+
+                showDepth: false
             }, options);
 
             this.mvt = options.mvt;
@@ -56,14 +62,20 @@ define(function(require) {
             this.depth = options.depth;
 
             this.labelText = options.labelText;
+            this.labelFont = options.labelFont;
+            this.labelColor = options.labelColor;
 
             this.outlineColor = Colors.parseHex(options.outlineColor);
             this.outlineAlpha = options.outlineAlpha;
+            this.fillColor = Colors.parseHex(options.fillColor);
+            this.fillAlpha = options.fillAlpha;
             this.insideColor  = Colors.parseHex(options.insideColor);
             this.insideShadowColor = Colors.parseHex(Colors.darkenHex(options.insideColor, 0.12));
             this.insideAlpha  = options.insideAlpha;
             this.bottomColor  = Colors.parseHex(options.bottomColor);
             this.bottomAlpha  = options.bottomAlpha;
+
+            this.showDepth = options.showDepth;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -94,41 +106,49 @@ define(function(require) {
             bg.drawRect(w - m, m, m, h - m - m); // Right piece
             bg.endFill();
 
-            // Draw inside walls of the box
-            // Top side (will be a little darker to simulate shadow)
-            bg.beginFill(this.insideShadowColor, this.insideAlpha);
-            bg.moveTo(m, m);
-            bg.lineTo(w - m, m);
-            bg.lineTo(w - m - d, m + d);
-            bg.lineTo(m + d, m + d);
-            bg.endFill();
+            if (this.showDepth) {
+                // Draw inside walls of the box
+                // Top side (will be a little darker to simulate shadow)
+                bg.beginFill(this.insideShadowColor, this.insideAlpha);
+                bg.moveTo(m, m);
+                bg.lineTo(w - m, m);
+                bg.lineTo(w - m - d, m + d);
+                bg.lineTo(m + d, m + d);
+                bg.endFill();
 
-            // Side sides
-            bg.beginFill(this.insideColor, this.insideAlpha);
-            bg.moveTo(w - m, m);
-            bg.lineTo(w - m, h - m);
-            bg.lineTo(w - m - d, h - m - d);
-            bg.lineTo(w - m - d, m + d);
-            bg.endFill();
-            bg.beginFill(this.insideColor, this.insideAlpha);
-            bg.moveTo(m, m);
-            bg.lineTo(m + d, m + d);
-            bg.lineTo(m + d, h - m - d);
-            bg.lineTo(m, h - m);
-            bg.endFill();
+                // Side sides
+                bg.beginFill(this.insideColor, this.insideAlpha);
+                bg.moveTo(w - m, m);
+                bg.lineTo(w - m, h - m);
+                bg.lineTo(w - m - d, h - m - d);
+                bg.lineTo(w - m - d, m + d);
+                bg.endFill();
+                bg.beginFill(this.insideColor, this.insideAlpha);
+                bg.moveTo(m, m);
+                bg.lineTo(m + d, m + d);
+                bg.lineTo(m + d, h - m - d);
+                bg.lineTo(m, h - m);
+                bg.endFill();
 
-            // Bottom side (will be a bit less transparent to simulate light hiting it)
-            bg.beginFill(this.insideColor, this.insideAlpha * 1.3);
-            bg.moveTo(m, h - m);
-            bg.lineTo(m + d, h - m - d);
-            bg.lineTo(w - m - d, h - m - d);
-            bg.lineTo(w - m, h - m);
-            bg.endFill();
+                // Bottom side (will be a bit less transparent to simulate light hiting it)
+                bg.beginFill(this.insideColor, this.insideAlpha * 1.3);
+                bg.moveTo(m, h - m);
+                bg.lineTo(m + d, h - m - d);
+                bg.lineTo(w - m - d, h - m - d);
+                bg.lineTo(w - m, h - m);
+                bg.endFill();
 
-            // Draw bottom of the box
-            bg.beginFill(this.bottomColor, this.bottomAlpha);
-            bg.drawRect(m + d, m + d, w - m * 2 - d * 2, h - m * 2 - d * 2);
-            bg.endFill();
+                // Draw bottom of the box
+                bg.beginFill(this.bottomColor, this.bottomAlpha);
+                bg.drawRect(m + d, m + d, w - m * 2 - d * 2, h - m * 2 - d * 2);
+                bg.endFill();
+            }
+            else {
+                // Draw bottom of the box
+                bg.beginFill(this.fillColor, this.fillAlpha);
+                bg.drawRect(m, m, w - m * 2, h - m * 2);
+                bg.endFill();
+            }
 
             // Add it to the display object
             this.displayObject.addChild(bg);
@@ -147,9 +167,9 @@ define(function(require) {
 
             var label = new PIXI.Text(this.labelText, textSettings);
             label.anchor.x = 0.5;
-            label.anchor.y = 0.6;
-            label.x = this.bodyLabelOffsetX;
-            label.y = this.bodyLabelOffsetY;
+            label.anchor.y = 0.45;
+            label.x = this.width / 2;
+            label.y = this.height / 2;
 
             this.displayObject.addChild(label);
         },
