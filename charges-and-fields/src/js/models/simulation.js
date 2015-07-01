@@ -9,6 +9,7 @@ define(function (require, exports, module) {
     var Vector2    = require('common/math/vector2');
 
     var Charge = require('models/charge');
+    var Sensor = require('models/sensor');
 
     /**
      * Constants
@@ -32,6 +33,7 @@ define(function (require, exports, module) {
 
             // Collections
             this.charges = new Backbone.Collection([], { model: Charge });
+            this.sensors = new Backbone.Collection([], { model: Sensor });
 
             // Object caches
             this._efieldVec  = new Vector2();
@@ -71,6 +73,20 @@ define(function (require, exports, module) {
          */
         hasCharges: function() {
             return this.charges.length !== 0;
+        },
+
+        /**
+         * Adds a sensor to the simulation
+         */
+        addSensor: function(sensor) {
+            this.sensors.add(sensor);
+        },
+
+        /**
+         * Removes a sensor from the simulation
+         */
+        removeSensor: function(sensor) {
+            this.sensors.remove(sensor);
         },
 
         /**

@@ -17,6 +17,7 @@ define(function(require) {
     var PositiveChargeReservoir = require('views/positive-charge-reservoir');
     var PositiveChargeView      = require('views/positive-charge');
     var NegativeChargeView      = require('views/negative-charge');
+    var SensorView              = require('views/sensor');
 
     var Assets = require('assets');
 
@@ -42,6 +43,10 @@ define(function(require) {
             this.listenTo(this.simulation.charges, 'reset',  this.chargesReset);
             this.listenTo(this.simulation.charges, 'add',    this.chargeAdded);
             this.listenTo(this.simulation.charges, 'remove', this.chargeRemoved);
+
+            this.listenTo(this.simulation.sensors, 'reset',  this.sensorsReset);
+            this.listenTo(this.simulation.sensors, 'add',    this.sensorAdded);
+            this.listenTo(this.simulation.sensors, 'remove', this.sensorRemoved);
         },
 
         renderContent: function() {
@@ -54,6 +59,7 @@ define(function(require) {
             this.initMVT();
             this.initGrid();
             this.initCharges();
+            this.initSensors();
             this.initReservoirs();
         },
 
@@ -109,6 +115,13 @@ define(function(require) {
 
             this.charges = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.charges);
+        },
+
+        initSensors: function() {
+            this.sensorViews = [];
+
+            this.sensors = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.sensors);
         },
 
         initReservoirs: function() {
@@ -194,6 +207,42 @@ define(function(require) {
 
             this.charges.addChild(chargeView.displayObject);
             this.chargeViews.push(chargeView);
+        },
+
+        sensorsReset: function(sensors) {
+            // Remove old sensor views
+            for (var i = this.sensorViews.length - 1; i >= 0; i--) {
+                this.sensorViews[i].removeFrom(this.sensors);
+                this.sensorViews.splice(i, 1);
+            }
+
+            // Add new sensor views
+            sensors.each(function(sensor) {
+                this.createAndAddSensorView(sensor);
+            }, this);
+        },
+
+        sensorAdded: function(sensor, sensors) {
+            this.createAndAddSensorView(sensor);
+        },
+
+        sensorRemoved: function(sensor, sensors) {
+            for (var i = this.sensorViews.length - 1; i >= 0; i--) {
+                if (this.sensorViews[i].model === sensor) {
+                    this.sensorViews[i].removeFrom(this.sensors);
+                    this.sensorViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        createAndAddSensorView: function(sensor) {
+            var sensorView = new SensorView({ 
+                model: sensor,
+                mvt: this.mvt
+            });
+            this.sensors.addChild(sensorView.displayObject);
+            this.sensorViews.push(sensorView);
         },
 
         showGrid: function() {

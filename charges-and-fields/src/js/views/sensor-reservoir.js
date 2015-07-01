@@ -48,11 +48,10 @@ define(function(require) {
          *   dummy object and adds it to the simulation/scene.
          */
         createAndAddObject: function(dummyObject) {
-            // var charge = new Charge({
-            //     position: dummyObject.get('position'),
-            //     q: Constants.NEGATIVE_CHARGE_VALUE
-            // });
-            // this.simulation.addCharge(charge);
+            var sensor = new Sensor({
+                position: dummyObject.get('position')
+            });
+            this.simulation.addSensor(sensor);
         }
 
     });
