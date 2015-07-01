@@ -23,6 +23,8 @@ define(function(require) {
      */
     var ObjectReservoir = PixiView.extend({
 
+        numDecorationAttempts: 180,
+
         events: {
             'touchstart      .background': 'dragStart',
             'mousedown       .background': 'dragStart',
@@ -199,7 +201,7 @@ define(function(require) {
                 return y > fx;
             };
 
-            for (var n = 0; n < 180; n++) {
+            for (var n = 0; n < this.numDecorationAttempts; n++) {
                 x = Math.random() * width;
                 y = Math.random() * height;
                 if (isAboveCurve(x, y)) {

@@ -12,7 +12,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
-    var ObjectReservoir         = require('views/object-reservoir');
+    var SensorReservoir         = require('views/sensor-reservoir');
     var NegativeChargeReservoir = require('views/negative-charge-reservoir');
     var PositiveChargeReservoir = require('views/positive-charge-reservoir');
     var PositiveChargeView      = require('views/positive-charge');
@@ -134,7 +134,7 @@ define(function(require) {
             positiveChargeReservoir.displayObject.x = negativeChargeReservoir.getBounds().x;
             positiveChargeReservoir.displayObject.y = negativeChargeReservoir.getBounds().y + negativeChargeReservoir.getBounds().h + 4;
 
-            var sensorReservoir = new ObjectReservoir({
+            var sensorReservoir = new SensorReservoir({
                 dummyLayer: this.stage,
                 simulation: this.simulation,
                 mvt: this.mvt,
