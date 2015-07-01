@@ -52,7 +52,9 @@ define(function (require) {
             'click #direction-only-check' : 'toggleDirectionOnly',
             'click #grid-check'           : 'toggleGrid',
             'click #numbers-check'        : 'toggleNumbers',
-            'click #tape-measure-check'   : 'toggleTapeMeasure'
+            'click #tape-measure-check'   : 'toggleTapeMeasure',
+
+            'click .btn-clear' : 'clearEverything'
         },
 
         /**
@@ -213,6 +215,15 @@ define(function (require) {
             // else
                 
         },
+
+        /**
+         * Clears all the things
+         */
+        clearEverything: function() {
+            this.simulation.charges.reset();
+            // Clear sensors
+            // Clear voltage plots
+        }
 
     });
 
