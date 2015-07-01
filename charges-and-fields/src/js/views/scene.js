@@ -18,6 +18,7 @@ define(function(require) {
     var PositiveChargeView      = require('views/positive-charge');
     var NegativeChargeView      = require('views/negative-charge');
     var SensorView              = require('views/sensor');
+    var VoltageMosaic           = require('views/voltage-mosaic');
 
     var Assets = require('assets');
 
@@ -57,6 +58,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initVoltageMosaic();
             this.initGrid();
             this.initCharges();
             this.initSensors();
@@ -78,15 +80,27 @@ define(function(require) {
                 scale = this.height / heightInMeters;
                 widthInMeters = Math.ceil(this.width / scale);
             }
+
+            this.simulation.setBoundsDimensions(widthInMeters, heightInMeters);
             
             this.viewOriginX = Math.round(this.width / 2 - (widthInMeters / 2) * scale);
             this.viewOriginY = 0;
 
-            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+        },
+
+        initVoltageMosaic: function() {
+            this.voltageMosaic = new VoltageMosaic({
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+            this.voltageMosaic.displayObject.x = this.mvt.modelToViewX(0);
+            this.voltageMosaic.displayObject.y = this.mvt.modelToViewY(0);
+            this.stage.addChild(this.voltageMosaic.displayObject);
         },
 
         initGrid: function() {
@@ -167,7 +181,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.voltageMosaic.update();
         },
 
         chargesReset: function(charges) {

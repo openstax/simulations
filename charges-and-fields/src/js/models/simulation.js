@@ -24,8 +24,10 @@ define(function (require, exports, module) {
     var ChargesAndFieldsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            k: 0.5 * 1E6,     // Prefactor in E-field equation: E= k*Q/r^2
-            maxVoltage: 20000 // Voltage at which we would show total color saturation
+            k: 0.5 * 1E6,      // Prefactor in E-field equation: E= k*Q/r^2
+            maxVoltage: 20000, // Voltage at which we would show total color saturation
+            width:  100,
+            height: 100
         }),
         
         initialize: function(attributes, options) {
@@ -45,6 +47,14 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             
+        },
+
+        /**
+         * Sets the simulation bounds' dimensions.
+         */
+        setBoundsDimensions: function(width, height) {
+            this.set('width', width);
+            this.set('height', height);
         },
 
         /**
