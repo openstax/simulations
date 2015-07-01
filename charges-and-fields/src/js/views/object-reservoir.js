@@ -43,7 +43,7 @@ define(function(require) {
 
                 labelText: 'E-Field Sensors',
                 labelFont: 'bold 12pt Helvetica Neue',
-                labelColor: '#444',
+                labelColor: '#fff',
 
                 outlineColor: '#f0f0f0',
                 outlineAlpha: 0.8,
@@ -90,8 +90,8 @@ define(function(require) {
 
         initGraphics: function() {
             this.initBackground();
+            this.initDecorativeDummyObjects();
             this.initLabel();
-            this.initDummyObjects();
 
             this.updateMVT(this.mvt);
         },
@@ -162,14 +162,21 @@ define(function(require) {
             this.background = bg;
         },
 
-        initDummyObjects: function() {
+        initDecorativeDummyObjects: function() {
+            this.decorativeDummyObjectsMask = new PIXI.Graphics();
+            this.displayObject.addChild(this.decorativeDummyObjectsMask);
 
+            this.decorativeDummyObjects = new PIXI.DisplayObjectContainer();
+            this.decorativeDummyObjects.mask = this.decorativeDummyObjectsMask;
+            this.displayObject.addChild(this.decorativeDummyObjects);
         },
 
         initLabel: function() {
             var textSettings = {
                 font: this.labelFont,
-                fill: this.labelColor
+                fill: this.labelColor,
+                // stroke: '#000',
+                // strokeThickness: 2
             };
 
             var label = new PIXI.Text(this.labelText, textSettings);
@@ -178,11 +185,52 @@ define(function(require) {
             label.x = this.width / 2;
             label.y = this.height / 2;
 
+            
+
+            var shadowTextSettings = {
+                font: this.labelFont,
+                fill: '#000'
+            };
+
+            var shadow = new PIXI.Text(this.labelText, shadowTextSettings);
+            shadow.anchor.x = label.anchor.x;
+            shadow.anchor.y = label.anchor.y;
+            shadow.x = label.x;
+            shadow.y = label.y;
+            shadow.filters = [ new PIXI.BlurFilter() ];
+
+            this.displayObject.addChild(shadow);
             this.displayObject.addChild(label);
         },
 
         drawDecorativeDummyObjects: function() {
+            var m = this.thickness;
+            var width = this.width - m * 2;
+            var height = this.height - m * 2;
+            var dummy;
+            var dummies = this.decorativeDummyObjects;
+            var x, y;
 
+            var isAboveCurve = function(x, y) {
+                var fx = (-0.004 * Math.pow(x - width / 2, 2)) + (height * 0.4);
+                return y > fx;
+            };
+
+            for (var n = 0; n < 180; n++) {
+                x = Math.random() * width;
+                y = Math.random() * height;
+                if (isAboveCurve(x, y)) {
+                    dummy = this.createDummyObject();
+                    dummy.setPosition(x + m, y + m);
+                    dummies.addChild(dummy.displayObject);
+                }
+            }
+
+            var mask = this.decorativeDummyObjectsMask;
+            mask.clear();
+            mask.beginFill(0x000000, 1);
+            mask.drawRect(m, m, width, height);
+            mask.endFill();
         },
 
         /**
@@ -196,7 +244,8 @@ define(function(require) {
             var model = new Charge();
             var view = new ReservoirObjectView({
                 model: model,
-                mvt: this.mvt
+                mvt: this.mvt,
+                interactive: false
             });
             return view;
         },
@@ -255,8 +304,8 @@ define(function(require) {
             return this._bounds.set(
                 this.displayObject.x,
                 this.displayObject.y,
-                this.displayObject.width,
-                this.displayObject.height
+                this.width,
+                this.height
             );
         },
 

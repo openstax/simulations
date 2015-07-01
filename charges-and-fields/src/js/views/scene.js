@@ -131,8 +131,8 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            positiveChargeReservoir.displayObject.x = negativeChargeReservoir.displayObject.x;
-            positiveChargeReservoir.displayObject.y = negativeChargeReservoir.displayObject.y + negativeChargeReservoir.displayObject.height + 4;
+            positiveChargeReservoir.displayObject.x = negativeChargeReservoir.getBounds().x;
+            positiveChargeReservoir.displayObject.y = negativeChargeReservoir.getBounds().y + negativeChargeReservoir.getBounds().h + 4;
 
             var sensorReservoir = new ObjectReservoir({
                 dummyLayer: this.stage,
@@ -141,8 +141,8 @@ define(function(require) {
                 labelText: 'E-Field Sensors'
             });
 
-            sensorReservoir.displayObject.x = positiveChargeReservoir.displayObject.x;
-            sensorReservoir.displayObject.y = positiveChargeReservoir.displayObject.y + positiveChargeReservoir.displayObject.height + 4;
+            sensorReservoir.displayObject.x = positiveChargeReservoir.getBounds().x;
+            sensorReservoir.displayObject.y = positiveChargeReservoir.getBounds().y + positiveChargeReservoir.getBounds().h + 4;
 
             this.stage.addChild(negativeChargeReservoir.displayObject);
             this.stage.addChild(positiveChargeReservoir.displayObject);
@@ -185,7 +185,7 @@ define(function(require) {
                 model: charge,
                 mvt: this.mvt
             };
-            
+
             var chargeView;
             if (charge.get('sign') > 0)
                 chargeView = new PositiveChargeView(options);

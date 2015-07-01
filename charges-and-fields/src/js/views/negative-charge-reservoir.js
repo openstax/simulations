@@ -19,6 +19,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 labelText: '1 nC',
+                labelFont: 'bold 24px Helvetica Neue'
             }, options);
 
             ObjectReservoir.prototype.initialize.apply(this, [options]);
@@ -35,7 +36,8 @@ define(function(require) {
             var model = new Charge();
             var view = new NegativeChargeView({
                 model: model,
-                mvt: this.mvt
+                mvt: this.mvt,
+                interactive: false
             });
             return view;
         },

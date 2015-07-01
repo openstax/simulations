@@ -19,17 +19,6 @@ define(function(require) {
      */
     var ReservoirObjectView = PixiView.extend({
 
-        events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd'
-        },
-
         initialize: function(options) {
             options = _.extend({
                 radius: 10,
@@ -43,7 +32,9 @@ define(function(require) {
                 labelText: '',
                 labelFont: 'bold 21px Helvetica Neue',
                 labelColor: '#fff',
-                labelAlpha: 1
+                labelAlpha: 1,
+
+                interactive: true
             }, options);
 
             this.mvt = options.mvt;
@@ -71,12 +62,26 @@ define(function(require) {
 
             // Listen for model events
             this.listenTo(this.model, 'change:position',  this.updatePosition);
+
+            // Optionally bind events
+            if (options.interactive) {
+                this.delegateEvents({
+                    'touchstart      .displayObject': 'dragStart',
+                    'mousedown       .displayObject': 'dragStart',
+                    'touchmove       .displayObject': 'drag',
+                    'mousemove       .displayObject': 'drag',
+                    'touchend        .displayObject': 'dragEnd',
+                    'mouseup         .displayObject': 'dragEnd',
+                    'touchendoutside .displayObject': 'dragEnd',
+                    'mouseupoutside  .displayObject': 'dragEnd'
+                });
+            }
         },
 
         initGraphics: function() {
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
-            
+
             this.background = new PIXI.Graphics();
             this.displayObject.addChild(this.background);
 
