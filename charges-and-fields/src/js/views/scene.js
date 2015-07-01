@@ -101,6 +101,8 @@ define(function(require) {
             this.voltageMosaic.displayObject.x = this.mvt.modelToViewX(0);
             this.voltageMosaic.displayObject.y = this.mvt.modelToViewY(0);
             this.stage.addChild(this.voltageMosaic.displayObject);
+
+            this.hideVoltageMosaic();
         },
 
         initGrid: function() {
@@ -276,6 +278,14 @@ define(function(require) {
         hideGrid: function() {
             this.gridView.hide();
         },
+
+        showVoltageMosaic: function() {
+            this.voltageMosaic.show();
+        },
+
+        hideVoltageMosaic: function() {
+            this.voltageMosaic.hide();
+        }
 
     });
 

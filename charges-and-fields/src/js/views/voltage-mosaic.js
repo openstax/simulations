@@ -100,6 +100,14 @@ define(function(require) {
 
         chargesChanged: function() {
             this.redrawOnNextFrame = true;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     });

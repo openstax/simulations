@@ -181,9 +181,10 @@ define(function (require) {
          * Shows/hides voltage mosaic
          */
         toggleVoltageMosaic: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltageMosaic();
+            else
+                this.sceneView.hideVoltageMosaic();
         },
 
         /**
