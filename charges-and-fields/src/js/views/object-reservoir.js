@@ -42,8 +42,8 @@ define(function(require) {
                 depth: 16,
 
                 labelText: 'E-Field Sensors',
-                labelFont: 'bold 12pt Helvetica Neue',
-                labelColor: '#fff',
+                labelFont: 'bold 16px Helvetica Neue',
+                labelColor: '#444',
 
                 outlineColor: '#f0f0f0',
                 outlineAlpha: 0.8,
@@ -174,32 +174,15 @@ define(function(require) {
         initLabel: function() {
             var textSettings = {
                 font: this.labelFont,
-                fill: this.labelColor,
-                // stroke: '#000',
-                // strokeThickness: 2
+                fill: this.labelColor
             };
 
             var label = new PIXI.Text(this.labelText, textSettings);
             label.anchor.x = 0.5;
-            label.anchor.y = 0.45;
+            label.anchor.y = -0.11;
             label.x = this.width / 2;
-            label.y = this.height / 2;
+            label.y = this.thickness;
 
-            
-
-            var shadowTextSettings = {
-                font: this.labelFont,
-                fill: '#000'
-            };
-
-            var shadow = new PIXI.Text(this.labelText, shadowTextSettings);
-            shadow.anchor.x = label.anchor.x;
-            shadow.anchor.y = label.anchor.y;
-            shadow.x = label.x;
-            shadow.y = label.y;
-            shadow.filters = [ new PIXI.BlurFilter() ];
-
-            this.displayObject.addChild(shadow);
             this.displayObject.addChild(label);
         },
 
@@ -212,7 +195,7 @@ define(function(require) {
             var x, y;
 
             var isAboveCurve = function(x, y) {
-                var fx = (-0.004 * Math.pow(x - width / 2, 2)) + (height * 0.4);
+                var fx = (-0.004 * Math.pow(x - width / 2, 2)) + (height * 0.5);
                 return y > fx;
             };
 

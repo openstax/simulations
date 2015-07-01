@@ -18,8 +18,7 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                labelText: '1 nC',
-                labelFont: 'bold 24px Helvetica Neue'
+                labelText: '1 nC'
             }, options);
 
             ObjectReservoir.prototype.initialize.apply(this, [options]);
