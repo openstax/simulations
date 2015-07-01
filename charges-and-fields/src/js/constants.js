@@ -23,6 +23,11 @@ define(function (require) {
     Constants.NEGATIVE_CHARGE_VALUE = -1;
 
 
+    // Found these in the flash project; they might come in handy
+    Constants.EFAC = 0.2046;   //E-field conversion factor: E_true = E_model*EFAC
+    Constants.VFAC = 1.917E-3; //Voltage conversion factor: V_true = V_model*VFAC
+
+
     /*************************************************************************
      **                                                                     **
      **                                SCENE                                **

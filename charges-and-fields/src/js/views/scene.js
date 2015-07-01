@@ -19,6 +19,7 @@ define(function(require) {
     var NegativeChargeView      = require('views/negative-charge');
     var SensorView              = require('views/sensor');
     var VoltageMosaic           = require('views/voltage-mosaic');
+    var VoltageTool             = require('views/voltage-tool');
 
     var Assets = require('assets');
 
@@ -62,6 +63,7 @@ define(function(require) {
             this.initGrid();
             this.initCharges();
             this.initSensors();
+            this.initVoltageTool();
             this.initReservoirs();
         },
 
@@ -138,6 +140,16 @@ define(function(require) {
 
             this.sensors = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.sensors);
+        },
+
+        initVoltageTool: function() {
+            this.voltageTool = new VoltageTool({
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+            this.voltageTool.displayObject.x = 400;
+            this.voltageTool.displayObject.y = 400;
+            this.stage.addChild(this.voltageTool.displayObject);
         },
 
         initReservoirs: function() {
