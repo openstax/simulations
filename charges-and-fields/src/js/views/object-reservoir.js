@@ -7,6 +7,7 @@ define(function(require) {
 
     var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
+    var Rectangle = require('common/math/rectangle');
 
     var Charge = require('models/charge');
     var ReservoirObjectView = require('views/reservoir-object');
@@ -80,6 +81,9 @@ define(function(require) {
             this.bottomAlpha  = options.bottomAlpha;
 
             this.showDepth = options.showDepth;
+
+            // Cached objects
+            this._bounds = new Rectangle();
 
             this.initGraphics();
         },
@@ -177,7 +181,7 @@ define(function(require) {
             this.displayObject.addChild(label);
         },
 
-        drawDummyObjects: function() {
+        drawDecorativeDummyObjects: function() {
 
         },
 
@@ -210,7 +214,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.drawDummyObjects();
+            this.drawDecorativeDummyObjects();
         },
 
         dragStart: function(data) {
@@ -233,14 +237,43 @@ define(function(require) {
             this.dragging = false;
 
             if (this.dummyObject) {
-                // if (not within the bounds of this reservoir)
-                // Create a real object and add it to the sim
+                var x = this.dummyObject.displayObject.x;
+                var y = this.dummyObject.displayObject.y;
 
+                if (!this.contains(x, y)) {
+                    // Create a real object and add it to the sim
+                    this.createAndAddObject(this.dummyObject.model);
+                }
 
                 this.dummyObject.removeFrom(this.dummyLayer);
                 this.dummyObject.model.destroy();
                 this.dummyObject = null;
             }
+        },
+
+        getBounds: function() {
+            return this._bounds.set(
+                this.displayObject.x,
+                this.displayObject.y,
+                this.displayObject.width,
+                this.displayObject.height
+            );
+        },
+
+        /**
+         * Returns whether or not a circle on the screen at point (x, y)
+         *   with the given radius would overlap with the reservoir.
+         */
+        overlapsCircle: function(x, y, radius) {
+            return this.getBounds().overlapsCircle(x, y, radius);
+        },
+
+        /**
+         * Returns whether or not a point on the screen lies inside the
+         *   reservoir's bounds.
+         */
+        contains: function(x, y) {
+            return this.getBounds().contains(x, y);
         }
 
     });
