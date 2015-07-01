@@ -17,11 +17,11 @@ define(function(require) {
 
                 fillColor: '#0060FF',
                 fillAlpha: 1,
-                outlineColor: '#0047c2',
+                outlineColor: '#004FD8',
                 outlineWidth: 2,
                 outlineAlpha: 1,
 
-                labelText: '-'
+                labelText: '–' // Note that this character is a dash, not a hyphen
             }, options);
 
             ReservoirObjectView.prototype.initialize.apply(this, [options]);

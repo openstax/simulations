@@ -41,7 +41,7 @@ define(function(require) {
                 outlineAlpha: 1,
 
                 labelText: '',
-                labelFont: 'bold 20px Helvetica Neue',
+                labelFont: 'bold 21px Helvetica Neue',
                 labelColor: '#fff',
                 labelAlpha: 1
             }, options);
@@ -74,9 +74,10 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = 'move';
+            
             this.background = new PIXI.Graphics();
-            this.background.buttonMode = true;
-            this.background.defaultCursor = 'move';
             this.displayObject.addChild(this.background);
 
             this.initLabel();
@@ -92,7 +93,7 @@ define(function(require) {
 
             var label = new PIXI.Text(this.labelText, textSettings);
             label.anchor.x = 0.5;
-            label.anchor.y = 0.48;
+            label.anchor.y = 0.47;
             label.x = 0;
             label.y = 0;
 

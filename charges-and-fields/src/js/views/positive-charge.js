@@ -17,7 +17,7 @@ define(function(require) {
 
                 fillColor: '#ff3029',
                 fillAlpha: 1,
-                outlineColor: '#b31e18',
+                outlineColor: '#CF2019',
                 outlineWidth: 2,
                 outlineAlpha: 1,
 
