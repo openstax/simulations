@@ -181,20 +181,14 @@ define(function(require) {
 
         },
 
-        createDummyObject: function() {
-            var model = new Charge();
-            var view = new ReservoirObjectView({
-                model: model,
-                mvt: this.mvt
-            });
-            return view;
-        },
-
         /**
          * Creates a new object (of whatever this reservoir contains)
-         *   and returns it so it can be added to the model.
+         *   and returns it so it can be added to the scene as a
+         *   dummy object.  Note the dummy object will not be added
+         *   to the simulation until it gets turned into a real
+         *   object after the user drops it.
          */
-        createObject: function(object) {
+        createDummyObject: function() {
             var model = new Charge();
             var view = new ReservoirObjectView({
                 model: model,
@@ -207,6 +201,12 @@ define(function(require) {
             object.destroy();
         },
 
+        /**
+         * Creates the actual object based off of the position of the
+         *   dummy object and adds it to the simulation/scene.
+         */
+        createAndAddObject: function(dummyObject) {},
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
@@ -216,7 +216,7 @@ define(function(require) {
         dragStart: function(data) {
             this.dragging = true;
 
-            this.dummyObject = this.createObject();
+            this.dummyObject = this.createDummyObject();
             this.dummyLayer.addChild(this.dummyObject.displayObject);
         },
 
@@ -233,12 +233,13 @@ define(function(require) {
             this.dragging = false;
 
             if (this.dummyObject) {
+                // if (not within the bounds of this reservoir)
+                // Create a real object and add it to the sim
+
+
                 this.dummyObject.removeFrom(this.dummyLayer);
                 this.dummyObject.model.destroy();
                 this.dummyObject = null;
-
-                // if (not within the bounds of this reservoir)
-                // Create a real object and add it to the sim
             }
         }
 

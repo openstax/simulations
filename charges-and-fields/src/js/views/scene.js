@@ -12,7 +12,11 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
-    var ObjectReservoir = require('views/object-reservoir');
+    var ObjectReservoir         = require('views/object-reservoir');
+    var NegativeChargeReservoir = require('views/negative-charge-reservoir');
+    var PositiveChargeReservoir = require('views/positive-charge-reservoir');
+    var PositiveChargeView      = require('views/positive-charge');
+    var NegativeChargeView      = require('views/negative-charge');
 
     var Assets = require('assets');
 
@@ -34,6 +38,10 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.charges, 'reset',  this.chargesReset);
+            this.listenTo(this.simulation.charges, 'add',    this.chargeAdded);
+            this.listenTo(this.simulation.charges, 'remove', this.chargeRemoved);
         },
 
         renderContent: function() {
@@ -45,6 +53,7 @@ define(function(require) {
 
             this.initMVT();
             this.initGrid();
+            this.initCharges();
             this.initReservoirs();
         },
 
@@ -95,30 +104,35 @@ define(function(require) {
             this.stage.addChild(this.gridView.displayObject);
         },
 
+        initCharges: function() {
+            this.chargeViews = [];
+
+            this.charges = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.charges);
+        },
+
         initReservoirs: function() {
-            var minusChargeReservoir = new ObjectReservoir({
+            var negativeChargeReservoir = new NegativeChargeReservoir({
                 dummyLayer: this.stage,
                 simulation: this.simulation,
-                mvt: this.mvt,
-                labelText: '1 nC'
+                mvt: this.mvt
             });
 
             var $lastChild = $('.sim-controls-wrapper').children().last();
             var childOffset = $lastChild.offset();
             var sceneOffset = this.$el.offset();
 
-            minusChargeReservoir.displayObject.x = childOffset.left - sceneOffset.left;
-            minusChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
+            negativeChargeReservoir.displayObject.x = childOffset.left - sceneOffset.left;
+            negativeChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
 
-            var plusChargeReservoir = new ObjectReservoir({
+            var positiveChargeReservoir = new PositiveChargeReservoir({
                 dummyLayer: this.stage,
                 simulation: this.simulation,
-                mvt: this.mvt,
-                labelText: '1 nC'
+                mvt: this.mvt
             });
 
-            plusChargeReservoir.displayObject.x = minusChargeReservoir.displayObject.x;
-            plusChargeReservoir.displayObject.y = minusChargeReservoir.displayObject.y + minusChargeReservoir.displayObject.height + 4;
+            positiveChargeReservoir.displayObject.x = negativeChargeReservoir.displayObject.x;
+            positiveChargeReservoir.displayObject.y = negativeChargeReservoir.displayObject.y + negativeChargeReservoir.displayObject.height + 4;
 
             var sensorReservoir = new ObjectReservoir({
                 dummyLayer: this.stage,
@@ -127,16 +141,59 @@ define(function(require) {
                 labelText: 'E-Field Sensors'
             });
 
-            sensorReservoir.displayObject.x = plusChargeReservoir.displayObject.x;
-            sensorReservoir.displayObject.y = plusChargeReservoir.displayObject.y + plusChargeReservoir.displayObject.height + 4;
+            sensorReservoir.displayObject.x = positiveChargeReservoir.displayObject.x;
+            sensorReservoir.displayObject.y = positiveChargeReservoir.displayObject.y + positiveChargeReservoir.displayObject.height + 4;
 
-            this.stage.addChild(minusChargeReservoir.displayObject);
-            this.stage.addChild(plusChargeReservoir.displayObject);
+            this.stage.addChild(negativeChargeReservoir.displayObject);
+            this.stage.addChild(positiveChargeReservoir.displayObject);
             this.stage.addChild(sensorReservoir.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             
+        },
+
+        chargesReset: function(charges) {
+            // Remove old charge views
+            for (var i = this.chargeViews.length - 1; i >= 0; i--) {
+                this.chargeViews[i].removeFrom(this.charges);
+                this.chargeViews.splice(i, 1);
+            }
+
+            // Add new charge views
+            charges.each(function(charge) {
+                this.createAndAddChargeView(charge);
+            }, this);
+        },
+
+        chargeAdded: function(charge, charges) {
+            this.createAndAddChargeView(charge);
+        },
+
+        chargeRemoved: function(charge, charges) {
+            for (var i = this.chargeViews.length - 1; i >= 0; i--) {
+                if (this.chargeViews[i].model === charge) {
+                    this.chargeViews[i].removeFrom(this.charges);
+                    this.chargeViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        createAndAddChargeView: function(charge) {
+            var options = { 
+                model: charge,
+                mvt: this.mvt
+            };
+            
+            var chargeView;
+            if (charge.get('sign') > 0)
+                chargeView = new PositiveChargeView(options);
+            else
+                chargeView = new NegativeChargeView(options);
+
+            this.charges.addChild(chargeView.displayObject);
+            this.chargeViews.push(chargeView);
         },
 
         showGrid: function() {

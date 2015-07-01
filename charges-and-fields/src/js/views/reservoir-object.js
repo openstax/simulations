@@ -8,8 +8,6 @@ define(function(require) {
     var Colors    = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
-    var defineInputUpdateLocks = require('common/locks/define-locks');
-
     var Constants = require('constants');
 
     /**
@@ -43,6 +41,7 @@ define(function(require) {
                 outlineAlpha: 1,
 
                 labelText: '',
+                labelFont: 'bold 20px Helvetica Neue',
                 labelColor: '#fff',
                 labelAlpha: 1
             }, options);
@@ -58,7 +57,8 @@ define(function(require) {
             this.outlineAlpha = options.outlineAlpha;
 
             this.labelText = options.labelText;
-            this.labelColor = Colors.parseHex(options.labelColor);
+            this.labelFont = options.labelFont;
+            this.labelColor = options.labelColor;
             this.labelAlpha = options.labelAlpha;
 
             // Cached objects
@@ -85,7 +85,18 @@ define(function(require) {
         },
 
         initLabel: function() {
-            
+            var textSettings = {
+                font: this.labelFont,
+                fill: this.labelColor
+            };
+
+            var label = new PIXI.Text(this.labelText, textSettings);
+            label.anchor.x = 0.5;
+            label.anchor.y = 0.48;
+            label.x = 0;
+            label.y = 0;
+
+            this.displayObject.addChild(label);
         },
 
         drawBackground: function() {
@@ -143,11 +154,6 @@ define(function(require) {
         }
 
     });
-
-
-    // Add input/update locking functionality to the prototype
-    defineInputUpdateLocks(ReservoirObjectView);
-
 
     return ReservoirObjectView;
 });

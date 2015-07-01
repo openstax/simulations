@@ -13,6 +13,8 @@ define(function (require) {
 
     Constants.SIM_HEIGHT_IN_METERS = 6; // Meters
 
+    Constants.POSITIVE_CHARGE_VALUE =  1;
+    Constants.NEGATIVE_CHARGE_VALUE = -1;
 
 
     /*************************************************************************
