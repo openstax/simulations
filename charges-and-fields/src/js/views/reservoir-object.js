@@ -38,6 +38,7 @@ define(function(require) {
             }, options);
 
             this.mvt = options.mvt;
+            this.reservoir = options.reservoir;
 
             this.radius = options.radius;
 
@@ -127,13 +128,37 @@ define(function(require) {
                     local.x - this.dragOffset.x, 
                     local.y - this.dragOffset.y
                 );
+
+                if (this.reservoir) {
+                    var x = this.displayObject.x;
+                    var y = this.displayObject.y;
+
+                    // If it's over its home reservoir, highlight the reservoir
+                    if (this.reservoir.contains(x, y)) {
+                        this.reservoir.showDestroyHighlight();
+                        this.displayObject.visible = false;
+                    }
+                    else {
+                        this.reservoir.hideDestroyHighlight();
+                        this.displayObject.visible = true;
+                    }
+                }
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
 
-            // TODO: check to see if it's on its home reservoir, and if it is, destroy it
+            if (this.reservoir) {
+                var x = this.displayObject.x;
+                var y = this.displayObject.y;
+
+                // If it's over its home reservoir, destroy it
+                if (this.reservoir.contains(x, y))
+                    this.reservoir.destroyObject(this.model);
+                
+                this.reservoir.hideDestroyHighlight();
+            }
         },
 
         moveToTop: function() {

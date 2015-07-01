@@ -160,6 +160,10 @@ define(function(require) {
             this.stage.addChild(negativeChargeReservoir.displayObject);
             this.stage.addChild(positiveChargeReservoir.displayObject);
             this.stage.addChild(sensorReservoir.displayObject);
+
+            this.sensorReservoir = sensorReservoir;
+            this.negativeChargeReservoir = negativeChargeReservoir;
+            this.positiveChargeReservoir = positiveChargeReservoir;
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -194,16 +198,21 @@ define(function(require) {
         },
 
         createAndAddChargeView: function(charge) {
-            var options = { 
-                model: charge,
-                mvt: this.mvt
-            };
-
             var chargeView;
-            if (charge.get('sign') > 0)
-                chargeView = new PositiveChargeView(options);
-            else
-                chargeView = new NegativeChargeView(options);
+            if (charge.get('sign') > 0) {
+                chargeView = new PositiveChargeView({ 
+                    model: charge,
+                    mvt: this.mvt,
+                    reservoir: this.positiveChargeReservoir
+                });
+            }
+            else {
+                chargeView = new NegativeChargeView({ 
+                    model: charge,
+                    mvt: this.mvt,
+                    reservoir: this.negativeChargeReservoir
+                });
+            }
 
             this.charges.addChild(chargeView.displayObject);
             this.chargeViews.push(chargeView);
@@ -239,7 +248,8 @@ define(function(require) {
         createAndAddSensorView: function(sensor) {
             var sensorView = new SensorView({ 
                 model: sensor,
-                mvt: this.mvt
+                mvt: this.mvt,
+                reservoir: this.sensorReservoir
             });
             this.sensors.addChild(sensorView.displayObject);
             this.sensorViews.push(sensorView);

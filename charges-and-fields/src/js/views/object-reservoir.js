@@ -56,6 +56,11 @@ define(function(require) {
                 bottomColor: '#f0f0f0',
                 bottomAlpha: 0.6,
 
+                destroyHighlightOutlineColor: '#21366b',
+                destroyHighlightOutlineAlpha: 1,
+                destroyHighlightFillColor: '#21366b',
+                destroyHighlightFillAlpha: 0.3,
+
                 showDepth: false
             }, options);
 
@@ -82,6 +87,11 @@ define(function(require) {
             this.bottomColor  = Colors.parseHex(options.bottomColor);
             this.bottomAlpha  = options.bottomAlpha;
 
+            this.destroyHighlightOutlineColor = Colors.parseHex(options.destroyHighlightOutlineColor);
+            this.destroyHighlightOutlineAlpha = options.destroyHighlightOutlineAlpha;
+            this.destroyHighlightFillColor = Colors.parseHex(options.destroyHighlightFillColor);
+            this.destroyHighlightFillAlpha = options.destroyHighlightFillAlpha;
+
             this.showDepth = options.showDepth;
 
             // Cached objects
@@ -94,6 +104,7 @@ define(function(require) {
             this.initBackground();
             this.initDecorativeDummyObjects();
             this.initLabel();
+            this.initDestroyHighlight();
 
             this.updateMVT(this.mvt);
         },
@@ -186,6 +197,34 @@ define(function(require) {
             label.y = this.thickness;
 
             this.displayObject.addChild(label);
+        },
+
+        initDestroyHighlight: function() {
+            var graphics = new PIXI.Graphics();
+            var w = this.width;
+            var h = this.height;
+            var m = this.thickness;
+            var d = this.depth;
+
+            // Draw outline
+            graphics.beginFill(this.destroyHighlightOutlineColor, this.destroyHighlightOutlineAlpha);
+            graphics.drawRect(0, 0, w, m);             // Top piece
+            graphics.drawRect(0, h - m, w, m);         // Bottom piece
+            graphics.drawRect(0, m, m, h - m - m);     // Left piece
+            graphics.drawRect(w - m, m, m, h - m - m); // Right piece
+            graphics.endFill();
+
+            // Fill in center
+            graphics.beginFill(this.destroyHighlightFillColor, this.destroyHighlightFillAlpha);
+            graphics.drawRect(m, m, w - m * 2, h - m * 2);
+            graphics.endFill();
+
+            // Hide it by default
+            graphics.visible = false;
+
+            // Add it to the display object
+            this.displayObject.addChild(graphics);
+            this.destroyHighlight = graphics;
         },
 
         drawDecorativeDummyObjects: function() {
@@ -308,6 +347,14 @@ define(function(require) {
          */
         contains: function(x, y) {
             return this.getBounds().contains(x, y);
+        },
+
+        showDestroyHighlight: function() {
+            this.destroyHighlight.visible = true;
+        },
+
+        hideDestroyHighlight: function() {
+            this.destroyHighlight.visible = false;
         }
 
     });
