@@ -24,7 +24,7 @@ define(function (require, exports, module) {
     var ChargesAndFieldsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            k: 0.5 * 1E6,      // Prefactor in E-field equation: E= k*Q/r^2
+            k: 0.5e4,//8.987552e9, //0.5 * 1E6,      // Prefactor in E-field equation: E= k*Q/r^2
             maxVoltage: 20000, // Voltage at which we would show total color saturation
             width:  100,
             height: 100

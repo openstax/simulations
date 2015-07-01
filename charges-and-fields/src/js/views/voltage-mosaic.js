@@ -33,6 +33,8 @@ define(function(require) {
             // Set the initial MVT and draw
             this.updateMVT(options.mvt);
 
+            //this.displayObject.filters = [ new PIXI.BlurFilter() ];
+
             // Listen for changes in charges
             this.listenTo(this.simulation.charges, 'change add remove reset',  this.chargesChanged);
         },
@@ -51,6 +53,7 @@ define(function(require) {
 
             var tileSizeInMeters = this.tileSizeInMeters;
             var tileSize = this.mvt.modelToViewDeltaX(tileSizeInMeters);
+            var halfTileSizeInMeters = tileSizeInMeters / 2;
             var numXTiles = Math.ceil(width  / tileSize);
             var numYTiles = Math.ceil(height / tileSize);
             var voltage;
@@ -58,7 +61,7 @@ define(function(require) {
 
             for (var x = 0; x < numXTiles; x++) {
                 for (var y = 0; y < numYTiles; y++) {
-                    voltage = simulation.getV(x * tileSizeInMeters, y * tileSizeInMeters);
+                    voltage = simulation.getV(x * tileSizeInMeters + halfTileSizeInMeters, y * tileSizeInMeters + halfTileSizeInMeters);
                     color = this.colorFromVoltage(voltage);
                     graphics.beginFill(color, 1);
                     graphics.drawRect(x * tileSize, y * tileSize, tileSize, tileSize);
