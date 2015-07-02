@@ -61,5 +61,23 @@ define(function (require) {
 
     Constants.SceneView = SceneView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                         E-FIELD VANE MATRIX                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var EFieldVaneMatrix = {};
+
+    EFieldVaneMatrix.ARROW_LENGTH      = 0.28; // Meters
+    EFieldVaneMatrix.ARROW_WIDTH       = 0.06; // Meters
+    EFieldVaneMatrix.ARROW_HEAD_WIDTH  = 0.12; // Meters
+    EFieldVaneMatrix.ARROW_HEAD_LENGTH = 0.10; // Meters
+    EFieldVaneMatrix.SPACING           = SceneView.GRID_MAJOR_SIZE_IN_METERS; // Meters
+
+    Constants.EFieldVaneMatrix = EFieldVaneMatrix;
+
+
     return Constants;
 });

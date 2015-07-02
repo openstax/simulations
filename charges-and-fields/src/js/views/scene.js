@@ -20,6 +20,7 @@ define(function(require) {
     var SensorView              = require('views/sensor');
     var VoltageMosaic           = require('views/voltage-mosaic');
     var VoltageTool             = require('views/voltage-tool');
+    var EFieldVaneMatrix        = require('views/efield-vane-matrix');
 
     var Assets = require('assets');
 
@@ -61,6 +62,7 @@ define(function(require) {
             this.initMVT();
             this.initVoltageMosaic();
             this.initGrid();
+            this.initEFieldVaneMatrix();
             this.initEquipotentialPlots();
             this.initCharges();
             this.initSensors();
@@ -127,6 +129,14 @@ define(function(require) {
             });
             this.gridView.hide();
             this.stage.addChild(this.gridView.displayObject);
+        },
+
+        initEFieldVaneMatrix: function() {
+            this.efieldVaneMatrix = new EFieldVaneMatrix({
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.efieldVaneMatrix.displayObject);
         },
 
         initEquipotentialPlots: function() {
