@@ -61,6 +61,7 @@ define(function(require) {
             this.initMVT();
             this.initVoltageMosaic();
             this.initGrid();
+            this.initEquipotentialPlots();
             this.initCharges();
             this.initSensors();
             this.initVoltageTool();
@@ -128,6 +129,11 @@ define(function(require) {
             this.stage.addChild(this.gridView.displayObject);
         },
 
+        initEquipotentialPlots: function() {
+            this.equipotentialPlots = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.equipotentialPlots);
+        },
+
         initCharges: function() {
             this.chargeViews = [];
 
@@ -145,7 +151,8 @@ define(function(require) {
         initVoltageTool: function() {
             this.voltageTool = new VoltageTool({
                 simulation: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                equipotentialPlotLayer: this.equipotentialPlots
             });
             this.voltageTool.displayObject.x = 400;
             this.voltageTool.displayObject.y = 400;

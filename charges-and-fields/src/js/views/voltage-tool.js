@@ -10,6 +10,8 @@ define(function(require) {
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
+    var EquipotentialPlot = require('views/equipotential-plot');
+
     var Constants = require('constants');
 
     var Assets = require('assets');
@@ -53,10 +55,13 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.equipotentialPlotLayer = options.equipotentialPlotLayer;
 
             this.panelColor = Colors.parseHex(Constants.SceneView.PANEL_BG);
             this.plotBtnColor = Colors.parseHex('#21366b');
             this.clearBtnColor = Colors.parseHex('#bbb');
+
+            this.plotViews = [];
 
             // Cached objects
             this._dragOffset = new PIXI.Point();
@@ -64,6 +69,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.simulation.charges, 'change add remove reset',  this.detectVoltage);
+            this.listenTo(this.simulation.charges, 'change add remove reset',  this.clearPlot);
         },
 
         /**
@@ -331,7 +337,18 @@ define(function(require) {
             this.plotBtnHover();
             this.plotBtn.y = this.height - this.btnHeight;
 
+            if (this.simulation.hasCharges()) {
+                // We can only create equipotential plots if there are charges.
+                var plotView = new EquipotentialPlot({
+                    x: this.displayObject.x,
+                    y: this.displayObject.y,
+                    mvt: this.mvt,
+                    simulation: this.simulation
+                });
 
+                this.equipotentialPlotLayer.addChild(plotView.displayObject);
+                this.plotViews.push(plotView);
+            }
         },
 
         clearPlot: function() {

@@ -40,6 +40,7 @@ define(function (require, exports, module) {
             // Object caches
             this._efieldVec  = new Vector2();
             this._voltageLoc = new Vector2();
+            this._nextPoint  = new Vector2();
         },
 
         /**
@@ -144,6 +145,26 @@ define(function (require, exports, module) {
 
             return sumV;
         },
+
+        /**
+         * Starting at the given (x, y), move along the equipotential curve
+         *   as far as the given displacement.
+         */
+        getNextEqualVoltagePoint: function(voltage, startX, startY, displacement) {
+            var eVec = this.getE(startX, startY); // E-field vector
+            var eMag = eVec.length();             // Magnitude of the e-field vector
+            var xMid = startX - displacement * eVec.x / eMag;
+            var yMid = startY - displacement * eVec.y / eMag;
+
+            var eMidVec = this.getE(xMid, yMid);
+            var vMid = this.getV(xMid, yMid);
+            
+            var dx = (vMid - voltage) * eMidVec.x / eMidVec.lengthSq();
+            var xFinal = xMid + dx;
+            var yFinal = yMid + dx * eMidVec.y / eMidVec.x;
+
+            return this._nextPoint.set(xFinal, yFinal);
+        }
 
     });
 
