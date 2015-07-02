@@ -27,6 +27,21 @@ define(function (require) {
     Constants.EFAC = 0.2046;   //E-field conversion factor: E_true = E_model*EFAC
     Constants.VFAC = 1.917E-3; //Voltage conversion factor: V_true = V_model*VFAC
 
+    Constants.colorFromVoltage = function(voltage) {
+        if (voltage > 0) {
+            // saturates at 20000
+            //            green = blue = Math.max( 0, (1 - (voltage / 20000)) * 255 );
+            var bright = Math.max(0, 255 - voltage * 0.01275);
+            return 16711680 | (bright << 8) | bright; // 255,bright,bright color
+        }
+        else {
+            // saturates at 20000
+            //            red = green = Math.max( 0, (1 - (-voltage / 20000)) * 255 );
+            var bright =  Math.max(0, 255 + voltage * 0.01275);
+            return (bright << 16) | (bright << 8) | 255; // bright,bright,255 color
+        }
+    };
+
 
     /*************************************************************************
      **                                                                     **

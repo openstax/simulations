@@ -23,7 +23,7 @@ define(function(require) {
         height: 120,
         margin: 15,
         sensorOuterRadius: 25,
-        sensorInnerRadius: 20,
+        sensorInnerRadius: 17,
 
         events: {
             'touchstart      .displayObject': 'dragStart',
@@ -41,6 +41,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
             this.panelColor = Colors.parseHex(Constants.SceneView.PANEL_BG);
 
@@ -48,6 +49,8 @@ define(function(require) {
             this._dragOffset = new PIXI.Point();
 
             this.initGraphics();
+
+            this.listenTo(this.simulation.charges, 'change add remove reset',  this.detectVoltage);
         },
 
         /**
@@ -55,6 +58,7 @@ define(function(require) {
          */
         initGraphics: function() {
             this.initPanel();
+            this.initSensor();
 
             this.displayObject.buttonMode = true;
 
@@ -108,12 +112,66 @@ define(function(require) {
             this.displayObject.addChild(graphics);
         },
 
+        initSensor: function() {
+            this.sensor = new PIXI.Graphics();
+            this.sensorMinus = new PIXI.Graphics();
+            this.sensorPlus = new PIXI.Graphics();
+
+            var lineThickness = 4;
+            var lineLength = this.sensorInnerRadius - 3;
+
+            this.sensorMinus.beginFill(0xFFFFFF, 1);
+            this.sensorMinus.drawRect(-lineLength / 2, -lineThickness / 2, lineLength, lineThickness);
+            this.sensorMinus.endFill();
+            this.sensorMinus.visible = false;
+
+            this.sensorPlus.beginFill(0xFFFFFF, 1);
+            this.sensorPlus.drawRect(-lineLength / 2, -lineThickness / 2, lineLength, lineThickness);
+            this.sensorPlus.drawRect(-lineThickness / 2, -lineLength / 2, lineThickness, lineLength);
+            this.sensorPlus.endFill();
+            this.sensorMinus.visible = true;
+
+            this.displayObject.addChild(this.sensor);
+            this.displayObject.addChild(this.sensorMinus);
+            this.displayObject.addChild(this.sensorPlus);
+        },
+
+        drawSensor: function(voltage) {
+            var color = Constants.colorFromVoltage(voltage);
+            this.sensor.clear();
+            this.sensor.beginFill(0xD7D7D7, 1);
+            this.sensor.drawCircle(0, 0, this.sensorInnerRadius + 2);
+            this.sensor.endFill();
+            this.sensor.beginFill(color, 1);
+            this.sensor.drawCircle(0, 0, this.sensorInnerRadius);
+            this.sensor.endFill();
+
+            if (voltage > 0) {
+                this.sensorMinus.visible = false;
+                this.sensorPlus.visible = true;
+            }
+            else if (voltage < 0) {
+                this.sensorMinus.visible = true;
+                this.sensorPlus.visible = false;
+            }
+            else {
+                this.sensorMinus.visible = false;
+                this.sensorPlus.visible = false;
+            }
+        },
+
+        updateReadout: function(voltage) {
+
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.detectVoltage();
         },
 
         dragStart: function(data) {
@@ -129,18 +187,21 @@ define(function(require) {
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
 
-                var mdx = this.mvt.viewToModelDeltaX(dx);
-                var mdy = this.mvt.viewToModelDeltaY(dy);
-
-                this.inputLock(function() {
-                    this.model.translate(mdx, mdy);
-                });
+                this.detectVoltage();
             }
         },
 
         dragEnd: function(data) {
             this.dragging = false;
         },
+
+        detectVoltage: function() {
+            var x = this.mvt.viewToModelX(this.displayObject.x);
+            var y = this.mvt.viewToModelY(this.displayObject.y);
+            var voltage = this.simulation.getV(x, y);
+            this.drawSensor(voltage);
+            this.updateReadout(voltage);
+        }
 
     });
 
