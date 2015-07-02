@@ -114,6 +114,8 @@ define(function(require) {
                     efieldVec = this.simulation.getE(xOffset + c * spacing, yOffset + r * spacing);
                     arrowContainer = this.arrowContainers[r * cols + c];
                     arrowContainer.rotation = efieldVec.angle();
+                    if (!this.directionOnly)
+                        arrowContainer.alpha = EFieldVaneMatrix.eFieldVecLengthToAlpha(efieldVec.length());
                 }
             }
         },

@@ -76,6 +76,11 @@ define(function (require) {
     EFieldVaneMatrix.ARROW_HEAD_LENGTH = 0.10; // Meters
     EFieldVaneMatrix.SPACING           = SceneView.GRID_MAJOR_SIZE_IN_METERS; // Meters
 
+    var flashToMetersRatio = (6 / 640);
+    EFieldVaneMatrix.eFieldVecLengthToAlpha = function(length) {
+        return Math.min(1, (length * flashToMetersRatio) / 100);
+    };
+
     Constants.EFieldVaneMatrix = EFieldVaneMatrix;
 
 
