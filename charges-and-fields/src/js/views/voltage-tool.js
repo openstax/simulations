@@ -20,7 +20,7 @@ define(function(require) {
     var VoltageTool = PixiView.extend({
 
         width: 200,
-        height: 120,
+        height: 116,
         margin: 15,
         sensorOuterRadius: 25,
         sensorInnerRadius: 17,
@@ -73,7 +73,8 @@ define(function(require) {
             this.initPanel();
             this.initSensor();
             this.initButtons();
-            this.initText();
+            this.initReadoutText();
+            this.initEquipotentialLabel();
 
             this.displayObject.buttonMode = true;
 
@@ -228,7 +229,7 @@ define(function(require) {
             this.displayObject.addChild(this.clearBtn);
         },
 
-        initText: function() {
+        initReadoutText: function() {
             var w = this.width;
             var m = this.margin;
 
@@ -250,6 +251,37 @@ define(function(require) {
             this.displayObject.addChild(readout);
 
             this.readout = readout;
+        },
+
+        initEquipotentialLabel: function() {
+            var h = this.height;
+            var m = this.margin;
+
+            var settings = {
+                font: '14px Helvetica Neue',
+                fill: '#888'
+            };
+
+            var label = new PIXI.Text('EQUIPOTENTIAL', settings);
+            label.anchor.x = 0.5;
+            label.x = 0;
+            label.y = h - this.btnHeight - 24;
+
+            this.displayObject.addChild(label);
+
+            var graphics = new PIXI.Graphics();
+            graphics.lineStyle(1, 0xD1D1D1, 1);
+            graphics.moveTo(-label.width / 2 - 6, label.y + 6);
+            graphics.lineTo(-this.width / 2 + m, label.y + 6);
+            graphics.moveTo(-label.width / 2 - 6, label.y + 10);
+            graphics.lineTo(-this.width / 2 + m, label.y + 10);
+
+            graphics.moveTo(label.width / 2 + 6, label.y + 6);
+            graphics.lineTo(this.width / 2 - m, label.y + 6);
+            graphics.moveTo(label.width / 2 + 6, label.y + 10);
+            graphics.lineTo(this.width / 2 - m, label.y + 10);
+
+            this.displayObject.addChild(graphics);
         },
 
         updateReadout: function(voltage) {
