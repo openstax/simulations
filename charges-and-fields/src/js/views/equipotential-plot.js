@@ -64,8 +64,8 @@ define(function(require) {
 
             graphics.lineStyle(1, 0x000000, 1);
 
-            var delSA = 0.1;          // Step length along equipotential in meters
-            var delSB = 0.1;
+            var delSA = 0.05;          // Step length along equipotential in meters
+            var delSB = 0.05;
             var VFAC = Constants.VFAC; // Voltage conversion factor
             var tic = 0;
 
@@ -121,7 +121,7 @@ define(function(require) {
                 currYA = nextYA;
                 currXB = nextXB;
                 currYB = nextYB;
-
+                
                 console.log(currXA, currYA);
                 tic++;
             }

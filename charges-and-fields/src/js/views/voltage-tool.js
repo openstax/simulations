@@ -355,7 +355,10 @@ define(function(require) {
             this.clearBtnHover();
             this.clearBtn.y = this.height - this.btnHeight;
 
-
+            for (var i = this.plotViews.length - 1; i >= 0; i--) {
+                this.plotViews[i].removeFrom(this.equipotentialPlotLayer);
+                this.plotViews.splice(i, 1);
+            }
         },
 
         plotBtnHover: function() {
