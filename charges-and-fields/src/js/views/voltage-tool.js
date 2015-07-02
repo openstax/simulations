@@ -229,11 +229,31 @@ define(function(require) {
         },
 
         initText: function() {
+            var w = this.width;
+            var m = this.margin;
 
+            var readoutTextSettings = {
+                font: '16px Helvetica Neue',
+                fill: '#555'
+            };
+
+            var voltage = new PIXI.Text('Voltage:', readoutTextSettings);
+            voltage.x = -w / 2 + m;
+            voltage.y = m;
+
+            var readout = new PIXI.Text('40.9 V', readoutTextSettings);
+            readout.x = w / 2 - m;
+            readout.y = m;
+            readout.anchor.x = 1;
+
+            this.displayObject.addChild(voltage);
+            this.displayObject.addChild(readout);
+
+            this.readout = readout;
         },
 
         updateReadout: function(voltage) {
-
+            this.readout.setText((voltage * Constants.VFAC).toFixed(1) + ' V');
         },
 
         /**
@@ -278,11 +298,15 @@ define(function(require) {
         plot: function() {
             this.plotBtnHover();
             this.plotBtn.y = this.height - this.btnHeight;
+
+
         },
 
         clearPlot: function() {
             this.clearBtnHover();
             this.clearBtn.y = this.height - this.btnHeight;
+
+
         },
 
         plotBtnHover: function() {
