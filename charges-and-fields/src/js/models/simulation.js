@@ -154,7 +154,7 @@ define(function (require, exports, module) {
             var eVec = this.getE(startX, startY); // E-field vector
             var eMag = eVec.length();             // Magnitude of the e-field vector
             var xMid = startX - displacement * eVec.x / eMag;
-            var yMid = startY - displacement * eVec.y / eMag;
+            var yMid = startY + displacement * eVec.y / eMag;
 
             var eMidVec = this.getE(xMid, yMid);
             var vMid = this.getV(xMid, yMid);

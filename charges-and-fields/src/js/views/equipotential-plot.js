@@ -75,6 +75,7 @@ define(function(require) {
             var currYB = my;
 
             var distSq = 0;
+            var stoppingDistance = (delSA * delSA + delSB * delSB) / 4;
 
             var nextA;
             var nextB;
@@ -86,11 +87,11 @@ define(function(require) {
             var readyToBreak = false;
 
 
-            while (tic < 500 && 
+            while (tic < 500 /*&& 
                 Math.abs(currXA) < 1000 && 
                 Math.abs(currYA) < 1000 && 
                 Math.abs(currXB) < 1000 && 
-                Math.abs(currYB) < 1000
+                Math.abs(currYB) < 1000*/
             ) {
                 // Get the next points in both directions
                 nextA = simulation.getNextEqualVoltagePoint(voltage, currXA, currYA,  delSA);
@@ -114,15 +115,15 @@ define(function(require) {
                 distSq = (nextXA - nextXB) * (nextXA - nextXB) + (nextYA - nextYB) * (nextYA - nextYB);
 
                 // If A and B lines meet up, make one more pass through drawing loop to close up curve
-                // if (distSq < (delSA * delSA + delSB * delSB) / 3)
-                //     readyToBreak = true; 
+                if (distSq < stoppingDistance)
+                    readyToBreak = true; 
 
                 currXA = nextXA;
                 currYA = nextYA;
                 currXB = nextXB;
                 currYB = nextYB;
                 
-                console.log(currXA, currYA);
+                console.log(currXA.toFixed(3), currYA.toFixed(3));
                 tic++;
             }
         },
