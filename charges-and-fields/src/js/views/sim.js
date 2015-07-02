@@ -160,10 +160,12 @@ define(function (require) {
             if ($(event.target).is(':checked')) {
                 this.$('.e-field-additional-options').removeClass('disabled');
                 this.$('#direction-only-check').removeAttr('disabled');
+                this.sceneView.showEFieldVaneMatrix();
             }
             else {
                 this.$('.e-field-additional-options').addClass('disabled');
                 this.$('#direction-only-check').prop('disabled', true);
+                this.sceneView.hideEFieldVaneMatrix();
             }
         },
 

@@ -132,11 +132,12 @@ define(function(require) {
         },
 
         initEFieldVaneMatrix: function() {
-            this.efieldVaneMatrix = new EFieldVaneMatrix({
+            this.eFieldVaneMatrix = new EFieldVaneMatrix({
                 simulation: this.simulation,
                 mvt: this.mvt
             });
-            this.stage.addChild(this.efieldVaneMatrix.displayObject);
+            this.eFieldVaneMatrix.hide();
+            this.stage.addChild(this.eFieldVaneMatrix.displayObject);
         },
 
         initEquipotentialPlots: function() {
@@ -213,6 +214,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.voltageMosaic.update();
+            this.eFieldVaneMatrix.update();
         },
 
         chargesReset: function(charges) {
@@ -314,6 +316,14 @@ define(function(require) {
 
         hideVoltageMosaic: function() {
             this.voltageMosaic.hide();
+        },
+
+        showEFieldVaneMatrix: function() {
+            this.eFieldVaneMatrix.show();
+        },
+
+        hideEFieldVaneMatrix: function() {
+            this.eFieldVaneMatrix.hide();
         }
 
     });

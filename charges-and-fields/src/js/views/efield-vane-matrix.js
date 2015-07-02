@@ -20,8 +20,12 @@ define(function(require) {
             // }, options);
 
             this.simulation = options.simulation;
+            this.visible = true;
+            this.displayObject.visible = false;
 
             this.updateMVT(options.mvt);
+
+            this.listenTo(this.simulation.charges, 'change add remove reset',  this.chargesChanged);
         },
 
         initArrows: function() {
@@ -70,6 +74,9 @@ define(function(require) {
                     this.arrowContainers[r * cols + c] = arrowContainer;
                 }
             }
+
+            this.cols = cols;
+            this.rows = rows;
         },
 
         updateMVT: function(mvt) {
@@ -79,18 +86,54 @@ define(function(require) {
         },
 
         update: function() {
-            if (this.redrawOnNextFrame) {
-                this.redrawOnNextFrame = false;
-                this.draw();
+            if (this.updateOnNextFrame) {
+                this.updateOnNextFrame = false;
+
+                if (this.visible && this.simulation.hasCharges()) {
+                    this.updateArrows();
+                    this.displayObject.visible = true;
+                }
+                else {
+                    this.displayObject.visible = false;
+                }
             }
         },
 
+        updateArrows: function() {
+            var efieldVec;
+            var spacing = EFieldVaneMatrix.SPACING;
+            var xOffset = spacing / 2;
+            var yOffset = spacing / 2;
+
+            var cols = this.cols;
+            var rows = this.rows;
+            var arrowContainer;
+
+            for (var r = 0; r < rows; r++) {
+                for (var c = 0; c < cols; c++) {
+                    efieldVec = this.simulation.getE(xOffset + c * spacing, yOffset + r * spacing);
+                    arrowContainer = this.arrowContainers[r * cols + c];
+                    arrowContainer.rotation = efieldVec.angle();
+                }
+            }
+        },
+
+        chargesChanged: function() {
+            this.updateOnNextFrame = true;
+        },
+
         show: function() {
-            this.displayObject.visible = true;
+            this.visible = true;
+            this.updateOnNextFrame = true;
         },
 
         hide: function() {
-            this.displayObject.visible = false;
+            this.visible = false;
+            this.updateOnNextFrame = true;
+        },
+
+        setDirectionOnly: function(directionOnly) {
+            this.directionOnly = directionOnly;
         },
 
         clearArrows: function() {
