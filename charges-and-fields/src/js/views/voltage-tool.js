@@ -24,6 +24,7 @@ define(function(require) {
         margin: 15,
         sensorOuterRadius: 25,
         sensorInnerRadius: 17,
+        btnHeight: 36,
 
         events: {
             'touchstart      .displayObject': 'dragStart',
@@ -34,6 +35,16 @@ define(function(require) {
             'mouseup         .displayObject': 'dragEnd',
             'touchendoutside .displayObject': 'dragEnd',
             'mouseupoutside  .displayObject': 'dragEnd',
+
+            'click .plotBtn'  : 'plot',
+            'click .clearBtn' : 'clearPlot',
+
+            'mouseover .plotBtn'  : 'plotBtnHover',
+            'mouseout  .plotBtn'  : 'plotBtnUnhover',
+            'mousedown .plotBtn'  : 'plotBtnDown',
+            'mouseover .clearBtn' : 'clearBtnHover',
+            'mouseout  .clearBtn' : 'clearBtnUnhover',
+            'mousedown .clearBtn' : 'clearBtnDown',
         },
 
         /**
@@ -44,6 +55,8 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.panelColor = Colors.parseHex(Constants.SceneView.PANEL_BG);
+            this.plotBtnColor = Colors.parseHex('#21366b');
+            this.clearBtnColor = Colors.parseHex('#bbb');
 
             // Cached objects
             this._dragOffset = new PIXI.Point();
@@ -59,6 +72,8 @@ define(function(require) {
         initGraphics: function() {
             this.initPanel();
             this.initSensor();
+            this.initButtons();
+            this.initText();
 
             this.displayObject.buttonMode = true;
 
@@ -160,6 +175,63 @@ define(function(require) {
             }
         },
 
+        initButtons: function() {
+            var w = this.width;
+            var h = this.height;
+            var m = this.margin;
+            var btnWidth = (w - m * 2 - 4) / 2;
+            var btnHeight = this.btnHeight;
+
+            var textSettings = {
+                font: '17px Helvetica Neue',
+                fill: '#fff'
+            };
+
+            // Plot button
+            var plotBtnBg = new PIXI.Graphics();
+            plotBtnBg.beginFill(this.plotBtnColor, 1);
+            plotBtnBg.drawRect(0, 0, btnWidth, btnHeight);
+            plotBtnBg.endFill();
+
+            var plotBtnText = new PIXI.Text('Plot', textSettings);
+            plotBtnText.anchor.x = 0.49;
+            plotBtnText.anchor.y = 0.391;
+            plotBtnText.x = btnWidth / 2;
+            plotBtnText.y = btnHeight / 2;
+
+            this.plotBtn = new PIXI.DisplayObjectContainer();
+            this.plotBtn.x = -w / 2 + m;
+            this.plotBtn.y = h - btnHeight;
+            this.plotBtn.addChild(plotBtnBg);
+            this.plotBtn.addChild(plotBtnText);
+
+            // Clear button
+            var clearBtnBg = new PIXI.Graphics();
+            clearBtnBg.beginFill(this.clearBtnColor, 1);
+            clearBtnBg.drawRect(0, 0, btnWidth, btnHeight);
+            clearBtnBg.endFill();
+
+            var clearBtnText = new PIXI.Text('Clear', textSettings);
+            clearBtnText.anchor.x = 0.492;
+            clearBtnText.anchor.y = 0.391;
+            clearBtnText.x = btnWidth / 2;
+            clearBtnText.y = btnHeight / 2;
+
+            this.clearBtn = new PIXI.DisplayObjectContainer();
+            this.clearBtn.x = 2;
+            this.clearBtn.y = h - btnHeight;
+            this.clearBtn.addChild(clearBtnBg);
+            this.clearBtn.addChild(clearBtnText);
+
+            // Add them
+            this.displayObject.addChild(this.plotBtn);
+            this.displayObject.addChild(this.clearBtn);
+        },
+
+        initText: function() {
+
+        },
+
         updateReadout: function(voltage) {
 
         },
@@ -201,6 +273,42 @@ define(function(require) {
             var voltage = this.simulation.getV(x, y);
             this.drawSensor(voltage);
             this.updateReadout(voltage);
+        },
+
+        plot: function() {
+            this.plotBtnHover();
+            this.plotBtn.y = this.height - this.btnHeight;
+        },
+
+        clearPlot: function() {
+            this.clearBtnHover();
+            this.clearBtn.y = this.height - this.btnHeight;
+        },
+
+        plotBtnHover: function() {
+            this.plotBtn.alpha = 0.9;
+        },
+
+        plotBtnUnhover: function() {
+            this.plotBtn.alpha = 1;
+        },
+
+        plotBtnDown: function() {
+            this.plotBtnUnhover();
+            this.plotBtn.y = this.height - this.btnHeight + 1;
+        },
+
+        clearBtnHover: function() {
+            this.clearBtn.alpha = 0.9;
+        },
+
+        clearBtnUnhover: function() {
+            this.clearBtn.alpha = 1;
+        },
+
+        clearBtnDown: function() {
+            this.clearBtnUnhover();
+            this.clearBtn.y = this.height - this.btnHeight + 1;
         }
 
     });
