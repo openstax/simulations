@@ -173,10 +173,10 @@ define(function (require) {
          * Sets whether E-Field shows direction
          */
         toggleDirectionOnly: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked'))
+                this.sceneView.setEFieldVaneMatrixDirectionOnly(true);
+            else
+                this.sceneView.setEFieldVaneMatrixDirectionOnly(false);
         },
 
         /**

@@ -116,6 +116,8 @@ define(function(require) {
                     arrowContainer.rotation = efieldVec.angle();
                     if (!this.directionOnly)
                         arrowContainer.alpha = EFieldVaneMatrix.eFieldVecLengthToAlpha(efieldVec.length());
+                    else
+                        arrowContainer.alpha = 1;
                 }
             }
         },
@@ -136,6 +138,7 @@ define(function(require) {
 
         setDirectionOnly: function(directionOnly) {
             this.directionOnly = directionOnly;
+            this.updateOnNextFrame = true;
         },
 
         clearArrows: function() {

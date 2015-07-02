@@ -324,6 +324,10 @@ define(function(require) {
 
         hideEFieldVaneMatrix: function() {
             this.eFieldVaneMatrix.hide();
+        },
+
+        setEFieldVaneMatrixDirectionOnly: function(directionOnly) {
+            this.eFieldVaneMatrix.setDirectionOnly(directionOnly);
         }
 
     });
