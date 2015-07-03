@@ -165,8 +165,16 @@ define(function(require) {
                 mvt: this.mvt,
                 equipotentialPlotLayer: this.equipotentialPlots
             });
-            this.voltageTool.displayObject.x = this.voltageTool.width / 2 + 10;
-            this.voltageTool.displayObject.y = this.height - this.voltageTool.height - 10;
+            
+            if (AppView.windowIsShort()) {
+                this.voltageTool.displayObject.x = this.width - this.voltageTool.width / 2 - 16;
+                this.voltageTool.displayObject.y = this.height - this.voltageTool.height - 30;
+            }
+            else {
+                this.voltageTool.displayObject.x = this.voltageTool.width / 2 + 10;
+                this.voltageTool.displayObject.y = this.height - this.voltageTool.height - 10;
+            }
+
             this.stage.addChild(this.voltageTool.displayObject);
         },
 
@@ -177,12 +185,18 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            var $lastChild = $('.sim-controls-wrapper').children().last();
-            var childOffset = $lastChild.offset();
-            var sceneOffset = this.$el.offset();
+            if (AppView.windowIsShort()) {
+                negativeChargeReservoir.displayObject.x = 16;
+                negativeChargeReservoir.displayObject.y = 16;
+            }
+            else {
+                var $lastChild = $('.sim-controls-wrapper').children().last();
+                var childOffset = $lastChild.offset();
+                var sceneOffset = this.$el.offset();
 
-            negativeChargeReservoir.displayObject.x = childOffset.left - sceneOffset.left;
-            negativeChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
+                negativeChargeReservoir.displayObject.x = childOffset.left - sceneOffset.left;
+                negativeChargeReservoir.displayObject.y = childOffset.top - sceneOffset.top + $lastChild.outerHeight() + 4;
+            }
 
             var positiveChargeReservoir = new PositiveChargeReservoir({
                 dummyLayer: this.stage,

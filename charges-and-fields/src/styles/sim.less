@@ -11,6 +11,11 @@
     right: @panel-side-margin;
     width: @panel-width;
 
+    @media screen and (max-height: @short-window) {
+        top: 16px;
+        right: 16px;
+    }
+
     .sim-controls {
         padding: 15px;
         background: @panel-bg;
