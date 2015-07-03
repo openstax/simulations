@@ -28,6 +28,8 @@ define(function(require) {
             if (this.interactive) {
                 this.listenTo(this.simulation.charges, 'change add remove reset',  this.chargesChanged);
                 this.listenTo(this.model, 'change:position', this.updateInfo);
+
+                this.updateInfo();
             }
         },
 
@@ -36,7 +38,10 @@ define(function(require) {
                 // Add arrow
                 this.arrowViewModel = new ArrowView.ArrowViewModel();
                 this.arrowView = new ArrowView({
-                    model: this.arrowViewModel
+                    model: this.arrowViewModel,
+                    tailWidth:  6,
+                    headWidth:  18,
+                    headLength: 18
                 });
                 this.displayObject.addChild(this.arrowView.displayObject);    
 
