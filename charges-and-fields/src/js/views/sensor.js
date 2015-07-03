@@ -54,6 +54,7 @@ define(function(require) {
                 this.text = new PIXI.Text('', textSettings);
                 this.text.anchor.x = 0.5;
                 this.text.anchor.y = -0.4;
+                this.text.visible = false;
                 this.displayObject.addChild(this.text);
             }
 
@@ -81,6 +82,14 @@ define(function(require) {
 
         chargesChanged: function() {
             this.updateInfo();
+        },
+
+        showNumbers: function() {
+            this.text.visible = true;
+        },
+
+        hideNumbers: function() {
+            this.text.visible = false;
         }
 
     }, Constants.SensorView);

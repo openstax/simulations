@@ -313,6 +313,10 @@ define(function(require) {
                 mvt: this.mvt,
                 reservoir: this.sensorReservoir
             });
+
+            if (this.showingNumbers)
+                sensorView.showNumbers();
+
             this.sensors.addChild(sensorView.displayObject);
             this.sensorViews.push(sensorView);
         },
@@ -343,6 +347,18 @@ define(function(require) {
 
         setEFieldVaneMatrixDirectionOnly: function(directionOnly) {
             this.eFieldVaneMatrix.setDirectionOnly(directionOnly);
+        },
+
+        showNumbers: function() {
+            this.showingNumbers = true;
+            for (var i = 0; i < this.sensorViews.length; i++)
+                this.sensorViews[i].showNumbers();
+        },
+
+        hideNumbers: function() {
+            this.showingNumbers = false;
+            for (var i = 0; i < this.sensorViews.length; i++)
+                this.sensorViews[i].hideNumbers();
         }
 
     });

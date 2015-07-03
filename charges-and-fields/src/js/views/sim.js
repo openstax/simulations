@@ -203,10 +203,10 @@ define(function (require) {
          * Shows/hides numbers
          */
         toggleNumbers: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked')) 
+                this.sceneView.showNumbers();
+            else
+                this.sceneView.hideNumbers();
         },
 
         /**
@@ -224,7 +224,7 @@ define(function (require) {
          */
         clearEverything: function() {
             this.simulation.charges.reset();
-            // Clear sensors
+            this.simulation.sensors.reset();
             // Clear voltage plots
         }
 
