@@ -17,7 +17,8 @@ define(function (require) {
     //   flash screen units, so we're scaling it by the factor that would have 
     //   converted their screen units to their meters according to the legend
     //   on their grid.
-    Constants.K = 0.5e6 * (6 / 640);
+    var flashToMetersRatio = (6 / 640);
+    Constants.K = 0.5e6 * flashToMetersRatio;
 
     Constants.POSITIVE_CHARGE_VALUE =  1;
     Constants.NEGATIVE_CHARGE_VALUE = -1;
@@ -76,12 +77,24 @@ define(function (require) {
     EFieldVaneMatrix.ARROW_HEAD_LENGTH = 0.10; // Meters
     EFieldVaneMatrix.SPACING           = SceneView.GRID_MAJOR_SIZE_IN_METERS; // Meters
 
-    var flashToMetersRatio = (6 / 640);
     EFieldVaneMatrix.eFieldVecLengthToAlpha = function(length) {
         return Math.min(1, (length * flashToMetersRatio) / 100);
     };
 
     Constants.EFieldVaneMatrix = EFieldVaneMatrix;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             SENSOR VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var SensorView = {};
+
+    SensorView.E_VECTOR_SCALE_FACTOR = flashToMetersRatio;
+
+    Constants.SensorView = SensorView;
 
 
     return Constants;

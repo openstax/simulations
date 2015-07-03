@@ -77,13 +77,15 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.draw();
+            if (this.displayObject.visible)
+                this.draw();
         },
 
         update: function() {
             if (this.redrawOnNextFrame) {
                 this.redrawOnNextFrame = false;
-                this.draw();
+                if (this.displayObject.visible)
+                    this.draw();
             }
         },
 
@@ -93,10 +95,12 @@ define(function(require) {
 
         show: function() {
             this.displayObject.visible = true;
+            this.redrawOnNextFrame = true;
         },
 
         hide: function() {
             this.displayObject.visible = false;
+            this.redrawOnNextFrame = true;
         }
 
     });

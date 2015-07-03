@@ -36,6 +36,7 @@ define(function(require) {
         createDummyObject: function() {
             var model = new Sensor();
             var view = new SensorView({
+                simulation: this.simulation,
                 model: model,
                 mvt: this.mvt,
                 interactive: false

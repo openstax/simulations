@@ -39,6 +39,7 @@ define(function(require) {
 
             this.mvt = options.mvt;
             this.reservoir = options.reservoir;
+            this.interactive = options.interactive;
 
             this.radius = options.radius;
 

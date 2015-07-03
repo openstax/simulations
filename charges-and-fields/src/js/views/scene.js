@@ -78,8 +78,8 @@ define(function(require) {
 
             if (AppView.windowIsShort()) {
                 scale = Math.ceil(this.height / heightInMeters);
-                heightInMeters = this.height * scale;
-                widthInMeters = this.width * scale;
+                heightInMeters = this.height / scale;
+                widthInMeters = this.width / scale;
             }
             else {
                 scale = this.height / heightInMeters;
@@ -165,8 +165,8 @@ define(function(require) {
                 mvt: this.mvt,
                 equipotentialPlotLayer: this.equipotentialPlots
             });
-            this.voltageTool.displayObject.x = 400;
-            this.voltageTool.displayObject.y = 400;
+            this.voltageTool.displayObject.x = this.voltageTool.width / 2 + 10;
+            this.voltageTool.displayObject.y = this.height - this.voltageTool.height - 10;
             this.stage.addChild(this.voltageTool.displayObject);
         },
 
@@ -294,6 +294,7 @@ define(function(require) {
 
         createAndAddSensorView: function(sensor) {
             var sensorView = new SensorView({ 
+                simulation: this.simulation,
                 model: sensor,
                 mvt: this.mvt,
                 reservoir: this.sensorReservoir
