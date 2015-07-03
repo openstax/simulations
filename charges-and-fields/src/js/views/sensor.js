@@ -71,9 +71,11 @@ define(function(require) {
             this.arrowViewModel.set('targetY', this.mvt.modelToViewDeltaX(efield.y * SensorView.E_VECTOR_SCALE_FACTOR) * 0.01);
 
             // Update text
+            var magnitude = efield.length() * Constants.EFAC * 0.01;
+            var angle = (Math.atan2(-efield.y, efield.x) * RAD_TO_DEG);
             this.text.setText(
-                (efield.length() * Constants.EFAC * 0.01).toFixed(1) + ' V/m' + '\n' + 
-                (efield.angle() * RAD_TO_DEG).toFixed(1) + ' deg'
+                magnitude.toFixed(1) + ' V/m' + '\n' + 
+                angle.toFixed(1) + ' deg'
             );
         },
 
