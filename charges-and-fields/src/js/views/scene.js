@@ -155,7 +155,11 @@ define(function(require) {
 
         initEquipotentialPlots: function() {
             this.equipotentialPlots = new PIXI.DisplayObjectContainer();
+            this.equipotentialLabels = new PIXI.DisplayObjectContainer();
             this.stage.addChild(this.equipotentialPlots);
+            this.stage.addChild(this.equipotentialLabels);
+
+            this.equipotentialLabels.visible = false;
         },
 
         initCharges: function() {
@@ -176,7 +180,8 @@ define(function(require) {
             this.voltageTool = new VoltageTool({
                 simulation: this.simulation,
                 mvt: this.mvt,
-                equipotentialPlotLayer: this.equipotentialPlots
+                equipotentialPlotLayer: this.equipotentialPlots,
+                equipotentialLabelLayer: this.equipotentialLabels
             });
             
             if (AppView.windowIsShort()) {
@@ -367,6 +372,7 @@ define(function(require) {
             for (var i = 0; i < this.sensorViews.length; i++)
                 this.sensorViews[i].showNumbers();
             this.scaleLegend.show();
+            this.equipotentialLabels.visible = true;
         },
 
         hideNumbers: function() {
@@ -374,6 +380,7 @@ define(function(require) {
             for (var i = 0; i < this.sensorViews.length; i++)
                 this.sensorViews[i].hideNumbers();
             this.scaleLegend.hide();
+            this.equipotentialLabels.visible = false;
         }
 
     });

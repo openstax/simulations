@@ -87,12 +87,7 @@ define(function(require) {
             var readyToBreak = false;
 
 
-            while (tic < 500 /*&& 
-                Math.abs(currXA) < 1000 && 
-                Math.abs(currYA) < 1000 && 
-                Math.abs(currXB) < 1000 && 
-                Math.abs(currYB) < 1000*/
-            ) {
+            while (tic < 500) {
                 // Get the next points in both directions
                 nextA = simulation.getNextEqualVoltagePoint(voltage, currXA, currYA,  delSA);
                 nextXA = nextA.x;
@@ -123,9 +118,35 @@ define(function(require) {
                 currXB = nextXB;
                 currYB = nextYB;
                 
-                console.log(currXA.toFixed(3), currYA.toFixed(3));
                 tic++;
             }
+
+            // Draw label
+            var labelText = new PIXI.Text(voltage.toFixed(1) + ' V', {
+                font: '14px Helvetica Neue',
+                fill: '#000'
+            });
+            labelText.anchor.x = 0.5;
+            labelText.anchor.y = 0.551;
+
+            var labelBackground = new PIXI.Graphics();
+            labelBackground.beginFill(0xFFFFFF, 1);
+            labelBackground.drawRect(
+                -labelText.width / 2 - 6,
+                -labelText.height / 2 - 6,
+                labelText.width + 12,
+                labelText.height + 6
+            );
+            labelBackground.endFill();
+            console.log(labelText.height)
+
+            var label = new PIXI.DisplayObjectContainer();
+            label.addChild(labelBackground);
+            label.addChild(labelText);
+            label.x = this.x;
+            label.y = this.y;
+
+            this.label = label;
         },
 
         updateMVT: function(mvt) {

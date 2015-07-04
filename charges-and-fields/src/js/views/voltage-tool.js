@@ -56,6 +56,7 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
             this.equipotentialPlotLayer = options.equipotentialPlotLayer;
+            this.equipotentialLabelLayer = options.equipotentialLabelLayer;
 
             this.panelColor = Colors.parseHex(Constants.SceneView.PANEL_BG);
             this.plotBtnColor = Colors.parseHex('#21366b');
@@ -347,6 +348,7 @@ define(function(require) {
                 });
 
                 this.equipotentialPlotLayer.addChild(plotView.displayObject);
+                this.equipotentialLabelLayer.addChild(plotView.label);
                 this.plotViews.push(plotView);
             }
         },
@@ -359,6 +361,8 @@ define(function(require) {
                 this.plotViews[i].removeFrom(this.equipotentialPlotLayer);
                 this.plotViews.splice(i, 1);
             }
+
+            this.equipotentialLabelLayer.removeChildren();
         },
 
         plotBtnHover: function() {
