@@ -149,7 +149,10 @@ define(function(require) {
             this.scaleLegend = new ScaleLegend({
                 mvt: this.mvt
             });
-            this.scaleLegend.setPosition(this.mvt.modelToViewX(6), this.mvt.modelToViewY(5.75));
+            if (AppView.windowIsShort())
+                this.scaleLegend.setPosition(this.mvt.modelToViewX(1.5), this.mvt.modelToViewY(5.5));
+            else
+                this.scaleLegend.setPosition(this.mvt.modelToViewX(6), this.mvt.modelToViewY(5.75));
             this.gridLayer.addChild(this.scaleLegend.displayObject);
         },
 
