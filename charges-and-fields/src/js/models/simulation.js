@@ -153,8 +153,8 @@ define(function (require, exports, module) {
         getNextEqualVoltagePoint: function(voltage, startX, startY, displacement) {
             var eVec = this.getE(startX, startY); // E-field vector
             var eMag = eVec.length();             // Magnitude of the e-field vector
-            var xMid = startX - displacement * eVec.x / eMag;
-            var yMid = startY + displacement * eVec.y / eMag;
+            var xMid = startX - displacement * eVec.y / eMag; // eVec.y is not a mistake
+            var yMid = startY + displacement * eVec.x / eMag;
 
             var eMidVec = this.getE(xMid, yMid);
             var vMid = this.getV(xMid, yMid);
