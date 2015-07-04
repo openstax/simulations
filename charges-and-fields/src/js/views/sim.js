@@ -203,10 +203,16 @@ define(function (require) {
          * Shows/hides numbers
          */
         toggleNumbers: function() {
-            if ($(event.target).is(':checked')) 
+            if ($(event.target).is(':checked')) {
+                this.$('.numbers-additional-options').removeClass('disabled');
+                this.$('#tape-measure-check').removeAttr('disabled');
                 this.sceneView.showNumbers();
-            else
+            }
+            else {
+                this.$('.numbers-additional-options').addClass('disabled');
+                this.$('#tape-measure-check').prop('disabled', true);
                 this.sceneView.hideNumbers();
+            }
         },
 
         /**
