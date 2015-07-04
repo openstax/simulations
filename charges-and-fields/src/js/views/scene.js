@@ -21,6 +21,7 @@ define(function(require) {
     var VoltageMosaic           = require('views/voltage-mosaic');
     var VoltageTool             = require('views/voltage-tool');
     var EFieldVaneMatrix        = require('views/efield-vane-matrix');
+    var ScaleLegend             = require('views/scale-legend');
 
     var Assets = require('assets');
 
@@ -63,6 +64,7 @@ define(function(require) {
             this.initVoltageMosaic();
             this.initGrid();
             this.initEFieldVaneMatrix();
+            this.initScaleLegend();
             this.initEquipotentialPlots();
             this.initCharges();
             this.initSensors();
@@ -127,8 +129,11 @@ define(function(require) {
                 smallLineWidth: 1,
                 smallLineAlpha: 0.15
             });
-            this.gridView.hide();
-            this.stage.addChild(this.gridView.displayObject);
+
+            this.gridLayer = new PIXI.DisplayObjectContainer();
+            this.gridLayer.addChild(this.gridView.displayObject);
+            this.gridLayer.visible = false;
+            this.stage.addChild(this.gridLayer);
         },
 
         initEFieldVaneMatrix: function() {
@@ -138,6 +143,14 @@ define(function(require) {
             });
             this.eFieldVaneMatrix.hide();
             this.stage.addChild(this.eFieldVaneMatrix.displayObject);
+        },
+
+        initScaleLegend: function() {
+            this.scaleLegend = new ScaleLegend({
+                mvt: this.mvt
+            });
+            this.scaleLegend.setPosition(this.mvt.modelToViewX(6), this.mvt.modelToViewY(5.75));
+            this.gridLayer.addChild(this.scaleLegend.displayObject);
         },
 
         initEquipotentialPlots: function() {
@@ -322,11 +335,11 @@ define(function(require) {
         },
 
         showGrid: function() {
-            this.gridView.show();
+            this.gridLayer.visible = true;
         },
 
         hideGrid: function() {
-            this.gridView.hide();
+            this.gridLayer.visible = false;
         },
 
         showVoltageMosaic: function() {
@@ -353,12 +366,14 @@ define(function(require) {
             this.showingNumbers = true;
             for (var i = 0; i < this.sensorViews.length; i++)
                 this.sensorViews[i].showNumbers();
+            this.scaleLegend.show();
         },
 
         hideNumbers: function() {
             this.showingNumbers = false;
             for (var i = 0; i < this.sensorViews.length; i++)
                 this.sensorViews[i].hideNumbers();
+            this.scaleLegend.hide();
         }
 
     });
