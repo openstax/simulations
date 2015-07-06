@@ -26,14 +26,13 @@ define(function (require, exports, module) {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
             propagationSpeed: Constants.PROPAGATION_SPEED,
-            audioEnabled: false,
-            //timeScale: Constants.CLOCK_SCALE_FACTOR
+            audioEnabled: false
         }),
         
         initialize: function(attributes, options) {
             options = _.extend({
-                frameDuration: Constants.WAIT_TIME,
-                deltaTimePerFrame: Constants.TIME_STEP
+                frameDuration: Constants.FRAME_DURATION,
+                deltaTimePerFrame: Constants.DT_PER_FRAME
             }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
@@ -105,7 +104,7 @@ define(function (require, exports, module) {
         pulse: function() {
             var wavefront = this.primaryWavefront;
             var periodInSimTime = (6 * 1 / wavefront.get('frequency')) * 1000;
-            var simSecondsPerRealSecond = (1 / Constants.WAIT_TIME) * Constants.TIME_STEP;
+            var simSecondsPerRealSecond = (1 / Constants.FRAME_DURATION) * Constants.DT_PER_FRAME;
             var periodInRealTime = periodInSimTime / simSecondsPerRealSecond;
 
             wavefront.set('maxAmplitude', this.get('amplitude'));

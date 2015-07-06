@@ -56,6 +56,8 @@ define(function (require) {
             this.stopwatchView = new StopwatchView({
                 dragFrame: this.el,
                 units : 'sec',
+                unitRatio: Constants.TIME_REPORTING_SCALE,
+                decimals: 4,
                 position: {
                     x : AppView.windowIsShort() ? 648 : 642,
                     y : AppView.windowIsShort() ? 256 : 328 

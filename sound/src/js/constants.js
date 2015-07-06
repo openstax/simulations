@@ -5,22 +5,75 @@ define(function (require) {
 
     var Constants = {}; 
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                              WAVEFRONT                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Wavefront = {};
+
+    // Number of sample values we keep track of
+    Wavefront.SAMPLE_LENGTH = 400; 
+    // The length in meters that the sample values span
+    Wavefront.LENGTH_IN_METERS = 12;
+
+    Constants.Wavefront = Wavefront;
+
+
     /*************************************************************************
      **                                                                     **
      **                         UNIVERSAL CONSTANTS                         **
      **                                                                     **
      *************************************************************************/
 
-    // Physical constants
-    // The time step is set so that the waves look reasonable on the screen. It is NOT set so that
-    // the simulation clock bears any certain relationship to the speed of sound
-    Constants.TIME_STEP = 5 / 1000;
-    Constants.WAIT_TIME = 1 / 30;
-
-    // The number of pixels a wavefront moves in a time step
-    Constants.PROPAGATION_SPEED = 2;
+    // The number of steps a wavefront moves in a simulation time step
+    Constants.PROPAGATION_SPEED = 2; // Wavefront units per step
+    // The length in meters of every step in a wavefront
+    Constants.METERS_PER_SAMPLE_UNIT = Wavefront.LENGTH_IN_METERS / Wavefront.SAMPLE_LENGTH;
     // Speed of sound at room temperature at sea level
     Constants.SPEED_OF_SOUND = 335;
+
+    // The delta time per step is set so that the waves look reasonable on the
+    //   screen. It is NOT set so that the simulation clock bears any certain
+    //   relationship to the speed of sound - PhET
+    Constants.DT_PER_FRAME = 5 / 1000;
+    Constants.FRAME_DURATION = 1 / 30;
+
+    // I've decided to calculate this a different way, since our scale of px per
+    //   meters is different depending on the window size.  Because the desired
+    //   end result is to have a propagation speed that matches the speed of
+    //   sound (the actual speed of propagation, which would be in meters per
+    //   second, vs our PROPAGATION_SPEED, which is in units per step), we need
+    //   to find a scale factor that reconciles those terms.  The resulting scale
+    //   factor, then, will actually be in sim seconds, which is different from
+    //   real seconds, since we use a fixed delta time that doesn't have to
+    //   match real seconds based on the frame duration.  We use this equation
+    //   to find that scale:
+    //
+    //   (Note that a unit is relative to the wavefront.)
+    //   (Units are given in []; for example [m] is meters.)
+    //
+    //   let P  = propagation speed in wavefront units per step
+    //   let M  = meters per wavefront unit
+    //   let c  = speed of sound in meters per second
+    //   let dt = delta time per step
+    //   find Scale
+    //
+    //    c[m] =   P[u]  *  M[m]  *  1 [step]  * Scale
+    //   ------   ------   ------   ----------
+    //     [s]    [step]     [u]      dt [s]
+    //
+    //   You can see that the units all match up.
+    //   We then rearrange that to solve for Scale.
+    //
+    //                                                               - Patrick
+    //
+    var SIM_TIME_REPORTING_SCALE = Constants.PROPAGATION_SPEED * Constants.METERS_PER_SAMPLE_UNIT * (1 / Constants.DT_PER_FRAME) * (1 / Constants.SPEED_OF_SOUND);
+    var FRAMES_PER_SECOND = 1 / Constants.FRAME_DURATION;
+    var SIM_SECONDS_PER_SECOND = Constants.DT_PER_FRAME * FRAMES_PER_SECOND;
+    Constants.TIME_REPORTING_SCALE = SIM_TIME_REPORTING_SCALE * SIM_SECONDS_PER_SECOND;
 
     Constants.MIN_FREQUENCY =    0;    // Herz 
     Constants.MAX_FREQUENCY = 1000;    // Herz
@@ -38,29 +91,14 @@ define(function (require) {
     Constants.MAX_WALL_POSITION = 9.9;   // Meters
     Constants.DEFAULT_WALL_POSITION = 4; // Meters
 
-    // This parameter defines how tightly spaced the waves are on the screen. If it is too small,
-    //   the displayed wavelength will not get monotonically shorter as the frequency is raised.
-    //   Note that the best value for this is dependent on the clock's dt.
-    Constants.FREQUENCY_DISPLAY_FACTOR = 7;
+    // This parameter defines how tightly spaced the waves are on the screen.
+    //   If it is too small, the displayed wavelength will not get monotonic-
+    //   ally shorter as the frequency is raised. Note that the best value for
+    //   this is dependent on the clock's dt.
+    Constants.FREQUENCY_DISPLAY_FACTOR = 4.5;
 
     Constants.DEFAULT_LISTENER_X = 5.9; // Meters
     Constants.DEFAULT_LISTENER_Y = 0;   // Meters
-
-
-    /*************************************************************************
-     **                                                                     **
-     **                              WAVEFRONT                              **
-     **                                                                     **
-     *************************************************************************/
-
-    var Wavefront = {};
-
-    // Number of sample values we keep track of
-    Wavefront.SAMPLE_LENGTH = 400; 
-    // The length in meters that the sample values span
-    Wavefront.LENGTH_IN_METERS = 12;
-
-    Constants.Wavefront = Wavefront;
 
 
     /*************************************************************************

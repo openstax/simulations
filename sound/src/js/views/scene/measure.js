@@ -39,8 +39,12 @@ define(function(require) {
                 units: 'meters',
 
                 ticks : [{
-                    size: 8,
+                    size: 10,
                     at: 1,
+                    color: '#5A3D01'
+                },{
+                    size: 6,
+                    at: 0.5,
                     color: '#5A3D01'
                 },{
                     size: 4,

@@ -106,10 +106,12 @@ define(function (require) {
         },
 
         getWavelengthAtTime: function(time) {
-            var lambda = this.get('propagationSpeed') / (Constants.TIME_STEP * this.getFrequencyAtTime(time));
-            // Note from PhET: I'm sorry to say I'm not sure just why 6.2 is the
-            //   right factor here, but it works.
-            return lambda * 6.2;
+            var lambda = this.get('propagationSpeed') / (Constants.DT_PER_FRAME * this.getFrequencyAtTime(time));
+            // The original code had the following return statement:
+            //   return lambda * 6.2;
+            // And this comment went along with it: "I'm sorry to say I'm not 
+            //   sure just why 6.2 is the right factor here, but it works.
+            return lambda;
         },
 
         update: function(time, deltaTime, attenuationFunction) {
@@ -124,11 +126,6 @@ define(function (require) {
                 // Convert from our relative index to meters to use in attenuation functions
                 xInMeters = (i / (Wavefront.SAMPLE_LENGTH - 1)) * Wavefront.LENGTH_IN_METERS;
 
-                // Has the amplitude changed for the listener since the last time step?
-                // if ((i - stepSize) === this.get('listenerX') && this.maxAmplitudeAtTime[i] !== this.prevMaxAmplitudeAtTime[i]) {
-                //     // Trigger some sort of event
-                // }
-
                 this.prevMaxAmplitudeAtTime[i] = this.maxAmplitudeAtTime[i];
                 this.amplitude[i] = this.amplitude[i - stepSize];
 
@@ -137,11 +134,6 @@ define(function (require) {
                 amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.amplitude[i], i);
                 attenuation = attenuationFunction(xInMeters, 0);
                 this.amplitude[i] = amplitude * attenuation;
-
-                // Has the frequency changed for the listener since the last time step?
-                // if ((i - stepSize) === this.get('listenerX') && this.frequencyAtTime[i] !== this.prevFrequencyAtTime[i]) {
-                //     // Trigger some sort of event
-                // }
 
                 this.prevFrequencyAtTime[i] = this.frequencyAtTime[i];
                 this.frequencyAtTime[i] = this.frequencyAtTime[i - stepSize];
