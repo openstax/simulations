@@ -63,12 +63,12 @@ define(function(require) {
             var bgHeight = this.infraredEmitter.height * 0.23;
             var bgWidth  = this.infraredEmitter.width  * 0.36;
 
-            var infraredTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', Constants.INFRARED_COLOR);
+            var infraredTexture = PIXI.Texture.generateHorizontalGradientTexture(bgWidth, bgHeight, '#000', Constants.INFRARED_COLOR);
             var infraredBackground = new PIXI.Sprite(infraredTexture);
             this.infraredBackground = infraredBackground;
             this.displayObject.addChild(infraredBackground);
 
-            var sunlightTexture = PIXI.Texture.generateHoriztonalGradientTexture(bgWidth, bgHeight, '#000', Constants.SUNLIGHT_COLOR);
+            var sunlightTexture = PIXI.Texture.generateHorizontalGradientTexture(bgWidth, bgHeight, '#000', Constants.SUNLIGHT_COLOR);
             var sunlightBackground = new PIXI.Sprite(sunlightTexture);
             this.sunlightBackground = sunlightBackground;
             this.displayObject.addChild(sunlightBackground);
