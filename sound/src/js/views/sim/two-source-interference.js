@@ -2,8 +2,12 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
 
-    var SoundSimView = require('views/sim');
+    var TwoSourceInterferenceSimulation = require('models/simulation/two-source-interference');
+
+    var SoundSimView                   = require('views/sim');
+    var TwoSourceInterferenceSceneView = require('views/scene/two-source-interference');
 
     var Constants = require('constants');
 
@@ -24,7 +28,32 @@ define(function (require) {
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
-        }
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new TwoSourceInterferenceSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new TwoSourceInterferenceSceneView({
+                simulation: this.simulation
+            });
+        },
+
+        /**
+         * Renders page content
+         */
+        renderScaffolding: function() {
+            SoundSimView.prototype.renderScaffolding.apply(this, arguments);
+
+            this.renderSimpleAudioControls();
+        },
 
     });
 

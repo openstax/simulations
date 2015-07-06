@@ -17,6 +17,14 @@ define(function (require) {
     _.extend(WaveMedium.prototype, {
 
         /**
+         * Clears all wavefronts
+         */
+        clear: function() {
+            for (var i = 0; i < this.wavefronts.length; i++)
+                this.wavefronts[i].clear();
+        },
+
+        /**
          * Adds a wavefront to the medium.
          */
         addWavefront: function(wavefront) {

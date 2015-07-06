@@ -24,8 +24,9 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var audioControlsHtml    = require('text!templates/audio-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -44,15 +45,24 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        audioControlsTemplate: _.template(audioControlsHtml),
 
         /**
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+
+            'click .help-btn'   : 'toggleHelp',
+
             'slide .frequency-slider' : 'changeFrequency',
             'slide .amplitude-slider' : 'changeAmplitude',
 
-            'click .audio-enabled-check' : 'toggleAudioEnabled'
+            'click .audio-enabled-check' : 'toggleAudioEnabled',
+            'click .audio-speaker'       : 'audioSpeakerClicked',
+            'click .audio-listener'      : 'audioListenerClicked'
         },
 
         /**
@@ -69,6 +79,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -100,7 +113,7 @@ define(function (require) {
         },
 
         /**
-         * Renders page content. Should be overriden by child classes
+         * Renders page content
          */
         renderScaffolding: function() {
             var data = {
@@ -114,25 +127,51 @@ define(function (require) {
             this.$('select').selectpicker();
 
             this.$('.frequency-slider').noUiSlider({
-                start: 500,
+                start: this.simulation.get('frequency'),
                 connect: 'lower',
                 range: {
-                    'min': 0,
-                    'max': 1000
+                    'min': Constants.MIN_FREQUENCY,
+                    'max': Constants.MAX_FREQUENCY
                 }
             });
 
             this.$('.amplitude-slider').noUiSlider({
-                start: 0.5,
+                start: this.simulation.get('amplitude'),
                 connect: 'lower',
                 range: {
-                    'min': 0,
-                    'max': 1
+                    'min': Constants.MIN_AMPLITUDE,
+                    'max': Constants.MAX_AMPLITUDE
                 }
             });
 
             this.$frequency = this.$('.frequency-value');
             this.$amplitude = this.$('.amplitude-value');
+        },
+
+        /**
+         * Appends audio controls to the sim controls panel
+         */
+        renderAudioControls: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                unique: this.cid,
+                listenerOptions: true
+            };
+            this.$('.sim-controls').append(this.audioControlsTemplate(data));
+        },
+
+        /**
+         * Appends audio controls to the sim controls panel
+         */
+        renderSimpleAudioControls: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                unique: this.cid,
+                listenerOptions: false
+            };
+            this.$('.sim-controls').append(this.audioControlsTemplate(data));
         },
 
         /**
@@ -170,12 +209,29 @@ define(function (require) {
             var timeSeconds = time / 1000;
             var dtSeconds   = deltaTime / 1000;
 
-            // Update the scene
-            this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this._update(timeSeconds, dtSeconds, this.simulation.get('paused'))
         },
 
         /**
-         *
+         * Called with time and deltaTime converted to seconds
+         */
+        _update: function(time, deltaTime, paused) {
+            // Update the scene
+            this.sceneView.update(time, deltaTime, paused);
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        /**
+         * Responds to changes in the frequency slider
          */
         changeFrequency: function(event) {
             var frequency = parseInt($(event.target).val());
@@ -186,7 +242,7 @@ define(function (require) {
         },
 
         /**
-         *
+         * Responds to changes in the amplitude slider
          */
         changeAmplitude: function(event) {
             var amplitude = parseFloat($(event.target).val());
@@ -197,13 +253,35 @@ define(function (require) {
         },
 
         /**
-         *
+         * Toggles sounds
          */
         toggleAudioEnabled: function(event) {
             if ($(event.target).is(':checked'))
                 this.simulation.set('audioEnabled', true);
             else
                 this.simulation.set('audioEnabled', false);
+        },
+
+        /**
+         * Toggles the help labels
+         */
+        toggleHelp: function(event) {
+            if ($(event.target).hasClass('toggled-on')) {
+                this.sceneView.hideHelpLabels();
+                $(event.target).removeClass('toggled-on');
+            }
+            else {
+                this.sceneView.showHelpLabels();
+                $(event.target).addClass('toggled-on');
+            }
+        },
+
+        audioSpeakerClicked: function() {
+            this.simulation.setListenerToSpeaker();
+        },
+
+        audioListenerClicked: function() {
+            this.simulation.setListenerToPerson();
         }
 
     });

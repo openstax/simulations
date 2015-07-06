@@ -13,7 +13,6 @@ define(function (require) {
      * Constants
      */
     var Constants = require('constants');
-    var S_LENGTH = 400;
 
     /**
      * A movable target object that detects collisions with projectiles
@@ -63,6 +62,26 @@ define(function (require) {
             this.clear();
         },
 
+        /**
+         *
+         */
+        reset: function() {
+            this.clear();
+            this.time = 0;
+        },
+
+        /**
+         * X values in the wavefront are unitless and correspond to an index in
+         *   the sample arrays.  This function converts an x position in meters
+         *   to an index and returns it.
+         */
+        getIndexFromMeters: function(xInMeters) {
+            if (xInMeters > 0)
+                return Math.ceil((xInMeters / Wavefront.LENGTH_IN_METERS) * Wavefront.SAMPLE_LENGTH) - 1;
+            else
+                return 0;
+        },
+
         getAmplitude: function() {
             return this.amplitude;
         },
@@ -77,12 +96,12 @@ define(function (require) {
          *   point in the wave train other than what is being generated right now.
          */
         getFrequencyAtTime: function(frequencyIndex) {
-            frequencyIndex = Math.max(0, Math.min(S_LENGTH - 1, frequencyIndex));
+            frequencyIndex = Math.max(0, Math.min(Wavefront.SAMPLE_LENGTH - 1, frequencyIndex));
             return this.frequencyAtTime[frequencyIndex];
         },
 
         getMaxAmplitudeAtTime: function(maxAmplitudeIndex) {
-            maxAmplitudeIndex = Math.max(0, Math.min(S_LENGTH - 1, maxAmplitudeIndex));
+            maxAmplitudeIndex = Math.max(0, Math.min(Wavefront.SAMPLE_LENGTH - 1, maxAmplitudeIndex));
             return this.maxAmplitudeAtTime[maxAmplitudeIndex];
         },
 
@@ -100,7 +119,7 @@ define(function (require) {
             var attenuation;
 
             // Move the existing elements of the wavefront up in the array of amplitudes
-            for (var i = S_LENGTH - 1; i > stepSize - 1; i--) {
+            for (var i = Wavefront.SAMPLE_LENGTH - 1; i > stepSize - 1; i--) {
 
                 // Has the amplitude changed for the listener since the last time step?
                 // if ((i - stepSize) === this.get('listenerX') && this.maxAmplitudeAtTime[i] !== this.prevMaxAmplitudeAtTime[i]) {
@@ -144,14 +163,14 @@ define(function (require) {
         },
 
         clear: function() {
-            for (var i = 0; i < S_LENGTH; i++) {
+            for (var i = 0; i < Wavefront.SAMPLE_LENGTH; i++) {
                 this.amplitude[i] = 0;
                 this.frequencyAtTime[i] = 0;
                 this.maxAmplitudeAtTime[i] = 0;
             }
         }
 
-    });
+    }, Constants.Wavefront);
 
     return Wavefront;
 });

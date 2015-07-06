@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     var Wavefront           = require('models/wavefront');
     var WaveMedium          = require('models/wave-medium');
@@ -20,17 +20,23 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var SoundSimulation = Simulation.extend({
+    var SoundSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             frequency: Constants.DEFAULT_FREQUENCY,
             amplitude: Constants.DEFAULT_AMPLITUDE,
-            propagationSpeed: null,
-            audioEnabled: false
+            propagationSpeed: Constants.PROPAGATION_SPEED,
+            audioEnabled: false,
+            //timeScale: Constants.CLOCK_SCALE_FACTOR
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            options = _.extend({
+                frameDuration: Constants.WAIT_TIME,
+                deltaTimePerFrame: Constants.TIME_STEP
+            }, options);
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:frequency',        this.frequencyChanged);
             this.on('change:amplitude',        this.amplitudeChanged);
@@ -45,11 +51,17 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.waveMedium = new WaveMedium();
 
-            this.primaryWavefront = new Wavefront();
+            this.primaryWavefront = new Wavefront({ 
+                maxAmplitude: this.get('amplitude'), 
+                propagationSpeed: this.get('propagationSpeed') 
+            });
             this.primaryWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.primaryWavefront));
             this.waveMedium.addWavefront(this.primaryWavefront);
 
-            this.octaveWavefront = new Wavefront();
+            this.octaveWavefront = new Wavefront({ 
+                maxAmplitude: this.get('amplitude'), 
+                propagationSpeed: this.get('propagationSpeed') 
+            });
             this.octaveWavefront.set('waveFunction', WaveFunction.SineWaveFunction(this.octaveWavefront));
             this.octaveWavefront.set('maxAmplitude', 0);
             this.octaveWavefront.set('enabled', false);
@@ -58,17 +70,55 @@ define(function (require, exports, module) {
             this.primaryOscillator = new WavefrontOscillator();
             this.octaveOscillator = new WavefrontOscillator();
 
-            this.soundListener = new SoundListener({ model: this });
-            this.primaryOscillator.set('listener', this.soundListener);
-            this.octaveOscillator.set('listener', this.soundListener);
+            this.speakerListener = new SoundListener({ simulation: this });
+
+            this.personListener = this.createPersonListener();
+            this.personListener.setPosition(Constants.DEFAULT_LISTENER_X, Constants.DEFAULT_LISTENER_Y);
+            
+            this.setListenerToSpeaker();
 
             //this.octaveOscillator.setHarmonicFactor(2);
+        },
+
+        /**
+         * Returns a new instance of SoundListener to be used as the person
+         *   listener.  The intent is to override this in child classes.
+         */
+        createPersonListener: function() {
+            return new SoundListener({ simulation: this });
+        },
+
+        setContinuousMode: function() {
+            this.pulseMode = false;
+            this.amplitudeChanged(this, this.get('amplitude'));
+        },
+
+        setPulseMode: function() {
+            this.pulseMode = true;
+            this.amplitudeChanged(this, 0);
+        },
+
+        /**
+         * Fires a pulse, where the wave is only oscillating for a single
+         *   cycle (a single period).
+         */
+        pulse: function() {
+            var wavefront = this.primaryWavefront;
+            var periodInSimTime = (6 * 1 / wavefront.get('frequency')) * 1000;
+            var simSecondsPerRealSecond = (1 / Constants.WAIT_TIME) * Constants.TIME_STEP;
+            var periodInRealTime = periodInSimTime / simSecondsPerRealSecond;
+
+            wavefront.set('maxAmplitude', this.get('amplitude'));
+            setTimeout(function() {
+                wavefront.set('maxAmplitude', 0);
+            }, periodInRealTime);
         },
 
         _update: function(time, deltaTime) {
             this.waveMedium.update(time, deltaTime);
 
-            this.soundListener.update(time, deltaTime);
+            this.speakerListener.update(time, deltaTime);
+            this.personListener.update(time, deltaTime);
 
             // Update oscillators
             this.primaryOscillator.update(time, deltaTime);
@@ -77,11 +127,14 @@ define(function (require, exports, module) {
 
         frequencyChanged: function(simulation, frequency) {
             this.primaryWavefront.set('frequency', frequency / Constants.FREQUENCY_DISPLAY_FACTOR);
-            this.octaveWavefront.set('frequency', 2 * frequency / Constants.FREQUENCY_DISPLAY_FACTOR);
+            this.octaveWavefront.set('frequency', 2 * frequency / Constants.FREQUENCY_DISPLAY_FACTOR);    
         },
 
         amplitudeChanged: function(simulation, amplitude) {
-            this.primaryWavefront.set('maxAmplitude', amplitude);
+            if (!this.pulseMode)
+                this.primaryWavefront.set('maxAmplitude', amplitude);
+            else
+                this.primaryWavefront.set('maxAmplitude', 0);
         },
 
         propagationSpeedChanged: function(simulation, propagationSpeed) {
@@ -98,6 +151,20 @@ define(function (require, exports, module) {
 
         audioEnabledChanged: function(simulation, audioEnabled) {
             this.primaryOscillator.set('enabled', audioEnabled);
+        },
+
+        clearWave: function() {
+            this.waveMedium.clear();
+        },
+
+        setListenerToSpeaker: function() {
+            this.primaryOscillator.set('listener', this.speakerListener);
+            this.octaveOscillator.set('listener', this.speakerListener);
+        },
+
+        setListenerToPerson: function() {
+            this.primaryOscillator.set('listener', this.personListener);
+            this.octaveOscillator.set('listener', this.personListener);
         }
 
     });

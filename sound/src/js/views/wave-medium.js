@@ -7,6 +7,7 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var Constants = require('constants');
 
@@ -16,19 +17,43 @@ define(function(require) {
     var WaveMediumView = PixiView.extend({
 
         /**
-         * Overrides PixiView's initializeDisplayObject function
-         */
-        initializeDisplayObject: function() {
-            this.displayObject = new PIXI.Graphics();
-        },
-
-        /**
          * Initializes the new WaveMediumView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex('#ff00ff');
+            this.darkColor  = Colors.parseHex('#333333');
+            this.lightColor = Colors.parseHex('#ffffff');
+
+            this.initGraphics();
 
             this.updateMVT(options.mvt);
+        },
+
+        initGraphics: function() {
+            this.graphics = new PIXI.Graphics();
+            this.mask = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.graphics);
+            this.displayObject.addChild(this.mask);
+
+            this.graphics.mask = this.mask;
+
+            this.arcCenters = [];
+            for (var i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++)
+                this.arcCenters.push(new Vector2());
+
+            this.origin = new Vector2();
+            this.angle = 0;
+        },
+
+        drawMask: function() {
+            var length = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS);
+            var startX = this.startX;
+
+            var mask = this.mask;
+            mask.clear();
+            mask.beginFill(0x000000, 1);
+            mask.drawRect(startX, -length * 2, length * 2, length * 4);
+            mask.endFill();
         },
 
         /**
@@ -37,15 +62,47 @@ define(function(require) {
          *   amplitudes.
          */
         drawAmplitudes: function() {
-            var graphics = this.displayObject;
+            var graphics = this.graphics;
             graphics.clear();
 
-            var maxX = this.model.getMaxX();
+            var counterclockwise = false;
+            var angle = Math.PI / 4;
+            var lineWidth = this.lineWidth;
+            var startAngle;
+            var endAngle;
+            var i;
 
-            for (var i = 0; i < maxX; i++) {
-                var color = parseInt(this.color * this.model.getAmplitudeAt(i));
-                graphics.lineStyle(2, color, 1);
-                graphics.arc(25, 300, i, 0, 2 * Math.PI);
+            var lightColor = this.lightColor;
+            var darkColor = this.darkColor;
+
+            var amplitude;
+            var alphaMultiplier = 1.5;
+
+            var startRadius = this.startX;
+
+            // Advance the centers of the arcs forward
+            var arcCenters = this.arcCenters;
+            var arcCenter;
+            for (i = arcCenters.length - 1; i > Constants.PROPAGATION_SPEED; i--)
+                arcCenters[i].set(arcCenters[i - Constants.PROPAGATION_SPEED]);
+            for (i = 0; i < 50; i++)
+                arcCenters[i].set(this.origin.x, this.origin.y);
+
+            // Draw arcs representing the indexed amplitude values
+            for (i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++) {
+                amplitude = this.model.getAmplitudeAt(i);
+
+                if (amplitude >= 0)
+                    graphics.lineStyle(lineWidth, lightColor, Math.min(1, amplitude * alphaMultiplier));
+                else
+                    graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+
+                // We alternate the direction so we don't get lines on one edge
+                startAngle = -angle * (counterclockwise ? -1 : 1);
+                endAngle = angle * (counterclockwise ? -1 : 1);
+                arcCenter = arcCenters[i];
+                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle + this.angle, endAngle + this.angle, counterclockwise);
+                counterclockwise = !counterclockwise;
             }
         },
 
@@ -55,6 +112,10 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.drawMask();
+            this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
+            this.startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
         },
 
         /**
@@ -63,6 +124,51 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             if (!paused)
                 this.drawAmplitudes();
+        },
+
+        /**
+         * Sets the position of the root display object in pixels.
+         */
+        setPosition: function(x, y) {
+            this.origin.x = x;
+            this.origin.y = y;
+        },
+
+        /**
+         * Just a (pseudo) alias for setPosition.
+         */
+        setOrigin: function(x, y) {
+            this.setPosition(x, y);
+        },
+
+        /**
+         * Returns the origin in screen space
+         */
+        getOrigin: function() {
+            return this.origin;
+        },
+
+        /**
+         * Sets the angle at which the waves emanate from the origin
+         */
+        setAngle: function(angle) {
+            this.angle = angle;
+        },
+
+        /**
+         *
+         */
+        clear: function() {
+            for (i = 0; i < this.arcCenters.length; i++)
+                this.arcCenters[i].set(this.origin.x, this.origin.y);
+            this.update();
+        },
+
+        /**
+         *
+         */
+        setMask: function(mask) {
+            this.displayObject.mask = mask;
         }
 
     });

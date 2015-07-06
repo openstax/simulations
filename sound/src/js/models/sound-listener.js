@@ -28,16 +28,16 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     * 
+     * SoundListener is a model for the listener person graphic that keeps
+     *   track of the speaker's location in model space and upon update
+     *   uses its relative position to the sound's origin (the speaker) to
+     *   calculate the amplitude and frequency that the listener hears.
      */
     var SoundListener = PositionableObject.extend({
 
         defaults: _.extend({}, PositionableObject.prototype.defaults, {
-            origin: null,
-            model: null,
-            frequencyHeard: 0,
-            amplitudeHeard: 0,
-            octaveAmplitudeHeard: 0
+            origin: null,    // The location of the speaker
+            simulation: null // The simulation model
         }),
 
         initialize: function(attributes, options) {
@@ -78,11 +78,13 @@ define(function (require) {
          *
          */
         update: function(deltaTime) {
-            var distFromSource = parseInt(this.get('position').distance(this.get('origin')));
-            var currentFrequency = this.get('model').primaryWavefront.getFrequencyAtTime(distFromSource);
-            var currentAmplitude = this.get('model').primaryWavefront.getMaxAmplitudeAtTime(distFromSource);
-            var currentOctaveAmplitude = this.get('model').octaveWavefront.getMaxAmplitudeAtTime(distFromSource);
-
+            var primaryWavefront = this.get('simulation').primaryWavefront
+            var meterDistFromSource = this.get('position').distance(this.get('origin'));
+            var wavefrontDist = primaryWavefront.getIndexFromMeters(meterDistFromSource);
+            var currentFrequency = primaryWavefront.getFrequencyAtTime(wavefrontDist);
+            var currentAmplitude = primaryWavefront.getMaxAmplitudeAtTime(wavefrontDist);
+            var currentOctaveAmplitude = this.get('simulation').octaveWavefront.getMaxAmplitudeAtTime(wavefrontDist);
+            
             this.frequencyHeard = currentFrequency;
             this.amplitudeHeard = currentAmplitude;
             this.octaveAmplitudeHeard = currentOctaveAmplitude;
