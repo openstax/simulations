@@ -117,9 +117,12 @@ define(function (require) {
             var stepSize = this.get('propagationSpeed');
             var amplitude;
             var attenuation;
+            var xInMeters;
 
             // Move the existing elements of the wavefront up in the array of amplitudes
             for (var i = Wavefront.SAMPLE_LENGTH - 1; i > stepSize - 1; i--) {
+                // Convert from our relative index to meters to use in attenuation functions
+                xInMeters = (i / (Wavefront.SAMPLE_LENGTH - 1)) * Wavefront.LENGTH_IN_METERS;
 
                 // Has the amplitude changed for the listener since the last time step?
                 // if ((i - stepSize) === this.get('listenerX') && this.maxAmplitudeAtTime[i] !== this.prevMaxAmplitudeAtTime[i]) {
@@ -132,7 +135,7 @@ define(function (require) {
                 // Amplitude must be adjusted for distance from source, and attenuation
                 //   due to the density of the wave medium
                 amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.amplitude[i], i);
-                attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
+                attenuation = attenuationFunction(xInMeters, 0);
                 this.amplitude[i] = amplitude * attenuation;
 
                 // Has the frequency changed for the listener since the last time step?
@@ -144,7 +147,7 @@ define(function (require) {
                 this.frequencyAtTime[i] = this.frequencyAtTime[i - stepSize];
 
                 amplitude = this.get('wavefrontType').computeAmplitudeAtDistance(this, this.maxAmplitudeAtTime[i - stepSize], i);
-                attenuation = attenuationFunction(i * this.get('propagationSpeed'), 0);
+                attenuation = attenuationFunction(xInMeters, 0);
                 this.maxAmplitudeAtTime[i] = amplitude * attenuation;
 
                 if (this.maxAmplitudeAtTime[i] < 0)

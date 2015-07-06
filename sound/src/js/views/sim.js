@@ -45,7 +45,10 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        playbackControlsTemplate: _.template(playbackControlsHtml),
         audioControlsTemplate: _.template(audioControlsHtml),
+
+        showHelpBtn: true,
 
         /**
          * Dom event listeners
@@ -119,10 +122,11 @@ define(function (require) {
             var data = {
                 Constants: Constants,
                 simulation: this.simulation,
-                unique: this.cid
+                unique: this.cid,
+                showHelpBtn: this.showHelpBtn
             };
             this.$el.html(this.template(data));
-            this.$el.append(playbackControlsHtml);
+            this.$el.append(this.playbackControlsTemplate(data));
 
             this.$('select').selectpicker();
 

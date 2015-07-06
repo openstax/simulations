@@ -33,9 +33,11 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
+                disableMovement: false,
                 disableYMovement: true
             }, options);
 
+            this.disableMovement = options.disableMovement;
             this.disableYMovement = options.disableYMovement;
 
             this.initGraphics();
@@ -61,11 +63,14 @@ define(function(require) {
             }
 
             this.displayObject.addChild(this.person);
-            this.person.buttonMode = true;
-            if (this.disableYMovement)
-                this.person.defaultCursor = 'ew-resize';
-            else
-                this.person.defaultCursor = 'move';
+
+            if (!this.disableMovement) {
+                this.person.buttonMode = true;
+                if (this.disableYMovement)
+                    this.person.defaultCursor = 'ew-resize';
+                else
+                    this.person.defaultCursor = 'move';    
+            }
         },
 
         /**
@@ -99,6 +104,9 @@ define(function(require) {
         },
 
         dragStart: function(data) {
+            if (this.disableMovement)
+                return;
+            
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
