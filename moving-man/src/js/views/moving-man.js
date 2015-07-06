@@ -51,15 +51,24 @@ define(function (require, exports, module) {
             this.velocityVectorVisible = false;
 
             this.accelerationVectorEnabled = false;
-            this.accelerationVectorVisible = false;    
+            this.accelerationVectorVisible = false;
 
-            this.crashSound = new buzz.sound('audio/phet/crash', {
-                formats: ['ogg', 'mp3', 'wav']
-            });
+            var formats = ['ogg', 'mp3', 'wav'];
 
-            this.listenTo(this.movingMan, 'collide', function(){
-                this.crashSound.play();
-            });
+            this.crashSound = new buzz.sound('audio/thud', { formats: formats });
+
+            this.gruntSounds = [
+                new buzz.sound('audio/grunt01', { formats: formats }),
+                new buzz.sound('audio/grunt02', { formats: formats }),
+                new buzz.sound('audio/grunt03', { formats: formats }),
+                new buzz.sound('audio/grunt04', { formats: formats })
+            ];
+
+            this.gruntSoundGroup = new buzz.group(this.gruntSounds);
+
+            this.lowVolume();
+
+            this.listenTo(this.movingMan, 'collide', this.collide);
         },
 
         render: function() {
@@ -283,14 +292,26 @@ define(function (require, exports, module) {
 
         muteVolume: function() {
             this.crashSound.setVolume(0);
+            this.gruntSoundGroup.setVolume(0);
         },
 
         lowVolume: function() {
             this.crashSound.setVolume(20);
+            this.gruntSoundGroup.setVolume(20);
         },
 
         highVolume: function() {
             this.crashSound.setVolume(80);
+            this.gruntSoundGroup.setVolume(80);
+        },
+
+        collide: function() {
+            // Stop previous sounds
+            this.crashSound.stop();
+            this.gruntSoundGroup.stop();
+
+            this.crashSound.play();
+            _.sample(this.gruntSounds).play();
         }
 
     });
