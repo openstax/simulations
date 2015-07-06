@@ -140,6 +140,7 @@ define(function (require) {
             // Reset tools
             this.$('#stopwatch').prop('checked', false);
             this.stopwatchView.hide();
+            this.stopwatchView.stop();
             this.stopwatchView.reset();
             this.stopwatchView.setPosition(468, AppView.windowIsShort() ? 396 : 630 );
 
@@ -151,6 +152,10 @@ define(function (require) {
             );
 
             // Reset graph
+            this.$('.energy-graph-placeholder').empty();
+            this.$('.energy-graphs .sim-tabs').replaceWith('<div class="energy-graph-tabs"></div>');
+            this.renderEnergyGraphs();
+            this.showEnergyGraph(this.simulation.systems.first());
         },
 
         /**
@@ -191,7 +196,7 @@ define(function (require) {
         },
 
 
-        renderEnergyGraphs: function(system){
+        renderEnergyGraphs: function(){
 
             this.energyGraphs = [];
             this.$zoom = this.$el.find('.zoom');
@@ -201,7 +206,7 @@ define(function (require) {
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
-                    title : 'Energy of ' + (iter + 1),
+                    title : 'Energy of Spring ' + (iter + 1),
                     graphHeight: graphHeight
                 });
 
