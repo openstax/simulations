@@ -128,15 +128,29 @@ define(function (require) {
             this.simulation.reset();
             this.sceneView.reset();
 
+            // Reset settings
             this.$('#gravity-setting-Earth').click();
-            this.$('#playback-speed-Normal-1').click();
+            this.$('#playback-speed-Normal').click();
 
             var $friction = this.$('.friction-settings-placeholder');
             var $softness = this.$('.softness3-settings-placeholder');
             $friction.val($friction.noUiSlider('options').start);
             $softness.val($softness.noUiSlider('options').start);
 
+            // Reset tools
             this.$('#stopwatch').prop('checked', false);
+            this.stopwatchView.hide();
+            this.stopwatchView.reset();
+            this.stopwatchView.setPosition(468, AppView.windowIsShort() ? 396 : 630 );
+
+            this.rulerView.setPosition(20, Initials.SpringsY1 * Constants.Scene.PX_PER_METER);
+
+            this.referenceLineView.setPosition(
+                this.sceneView.mvt.modelToViewX(Initials.Springs[1].x) - this.referenceLineView.width / 2,
+                this.sceneView.mvt.modelToViewY(Initials.SpringsY1 + Constants.SpringDefaults.REST_L)
+            );
+
+            // Reset graph
         },
 
         /**
