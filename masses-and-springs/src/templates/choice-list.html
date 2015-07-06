@@ -1,8 +1,8 @@
 <ul class="<%= displayAs %>">
     <% _.each(choices, function(choice){ %>
         <li>
-            <input type="<%= displayAs %>" name="<%= inputName %>" value="<%= choice.value %>" id="<%= inputName + '-' + choice.label + '-' + choice.value %>" <% if (choice.isDefault) { %>checked="checked"<% } %> >
-            <label  for="<%= inputName + '-' + choice.label + '-' + choice.value %>"><%= choice.label %></label>
+            <input type="<%= displayAs %>" name="<%= inputName %>" value="<%= choice.value %>" id="<%= inputName + '-' + choice.label %>" <% if (choice.isDefault) { %>checked="checked"<% } %> >
+            <label  for="<%= inputName + '-' + choice.label %>"><%= choice.label %></label>
         </li>
     <% }); %>
 </ul>

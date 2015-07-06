@@ -57,6 +57,12 @@ define(function (require, exports, module) {
 
         },
 
+        resetComponents: function() {
+            this.springs.reset(Initials.Springs);
+            this.bodies.reset(Initials.Bodies);
+            this.systems.reset(this.getSystemsModels());
+        },
+
         initSprings: function(){
             this.springs = new Springs(Initials.Springs);
         },
@@ -66,8 +72,13 @@ define(function (require, exports, module) {
         },
 
         initSystems: function(){
+            var springs = this.getSystemsModels();
 
-            var springs = this.springs.map(function(spring){
+            this.systems = new Systems(springs);
+        },
+
+        getSystemsModels: function() {
+            return this.springs.map(function(spring){
                 return {
                     spring: spring,
                     // TODO should update and read from UI input.  temporary defaults
@@ -75,8 +86,6 @@ define(function (require, exports, module) {
                     b: this.get('friction')
                 };
             }, this);
-
-            this.systems = new Systems(springs);
         },
 
         updateGravity: function(model, gravity){

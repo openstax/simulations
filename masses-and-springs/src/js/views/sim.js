@@ -122,6 +122,24 @@ define(function (require) {
         },
 
         /**
+         * Resets the sim and options
+         */
+        reset: function() {
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('#gravity-setting-Earth').click();
+            this.$('#playback-speed-Normal-1').click();
+
+            var $friction = this.$('.friction-settings-placeholder');
+            var $softness = this.$('.softness3-settings-placeholder');
+            $friction.val($friction.noUiSlider('options').start);
+            $softness.val($softness.noUiSlider('options').start);
+
+            this.$('#stopwatch').prop('checked', false);
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
