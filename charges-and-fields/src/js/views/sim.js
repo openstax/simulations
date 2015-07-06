@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView           = require('common/app/sim');
+    var MeasuringTapeView = require('common/tools/measuring-tape');
 
     var ChargesAndFieldsSimulation = require('models/simulation');
     var ChargesAndFieldsSceneView  = require('views/scene');
@@ -52,7 +53,9 @@ define(function (require) {
             'click #direction-only-check' : 'toggleDirectionOnly',
             'click #grid-check'           : 'toggleGrid',
             'click #numbers-check'        : 'toggleNumbers',
-            'click #tape-measure-check'   : 'toggleTapeMeasure'
+            'click #tape-measure-check'   : 'toggleTapeMeasure',
+
+            'click .btn-clear' : 'clearEverything'
         },
 
         /**
@@ -62,7 +65,7 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'ChargesAndFields Sim',
+                title: 'Charges and Fields',
                 name: 'charges-and-fields',
                 link: 'charges-and-fields'
             }, options);
@@ -70,6 +73,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initMeasuringTapeView();
         },
 
         /**
@@ -89,6 +93,24 @@ define(function (require) {
         },
 
         /**
+         * Initializes the MeasuringTapeView.
+         */
+        initMeasuringTapeView: function() {
+            this.measuringTapeView = new MeasuringTapeView({
+                dragFrame: this.el,
+                viewToModelDeltaX: _.bind(function(dx){
+                    return this.sceneView.mvt.viewToModelDeltaX(dx);
+                }, this),
+                viewToModelDeltaY: _.bind(function(dy){
+                    return this.sceneView.mvt.viewToModelDeltaY(dy);
+                }, this)
+            });
+            this.listenTo(this.sceneView, 'change:mvt', function() {
+                this.measuringTapeView.updateOnNextFrame = true;
+            });
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
@@ -96,6 +118,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderMeasuringTape();
 
             return this;
         },
@@ -121,11 +144,24 @@ define(function (require) {
         },
 
         /**
+         * Renders the measuring tape view
+         */
+        renderMeasuringTape: function() {
+            this.measuringTapeView.render();
+            this.$el.append(this.measuringTapeView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.measuringTapeView.postRender();
+            this.measuringTapeView.setStart(this.sceneView.mvt.modelToViewX(4), this.sceneView.mvt.modelToViewY(5.1));
+            this.measuringTapeView.setEnd(  this.sceneView.mvt.modelToViewX(7), this.sceneView.mvt.modelToViewY(5.1));
+            this.measuringTapeView.hide();
         },
 
         /**
@@ -149,6 +185,9 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+
+            // Update the measuring tape view
+            this.measuringTapeView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         /**
@@ -156,10 +195,14 @@ define(function (require) {
          */
         toggleEField: function() {
             if ($(event.target).is(':checked')) {
-                $('.e-field-additional-options').show();
+                this.$('.e-field-additional-options').removeClass('disabled');
+                this.$('#direction-only-check').removeAttr('disabled');
+                this.sceneView.showEFieldVaneMatrix();
             }
             else {
-                $('.e-field-additional-options').hide();
+                this.$('.e-field-additional-options').addClass('disabled');
+                this.$('#direction-only-check').prop('disabled', true);
+                this.sceneView.hideEFieldVaneMatrix();
             }
         },
 
@@ -167,19 +210,20 @@ define(function (require) {
          * Sets whether E-Field shows direction
          */
         toggleDirectionOnly: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked'))
+                this.sceneView.setEFieldVaneMatrixDirectionOnly(true);
+            else
+                this.sceneView.setEFieldVaneMatrixDirectionOnly(false);
         },
 
         /**
          * Shows/hides voltage mosaic
          */
         toggleVoltageMosaic: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltageMosaic();
+            else
+                this.sceneView.hideVoltageMosaic();
         },
 
         /**
@@ -196,21 +240,39 @@ define(function (require) {
          * Shows/hides numbers
          */
         toggleNumbers: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked')) {
+                this.$('.numbers-additional-options').removeClass('disabled');
+                this.$('#tape-measure-check').removeAttr('disabled');
+                if (this.$('#tape-measure-check').is(':checked'))
+                    this.measuringTapeView.show();
+                this.sceneView.showNumbers();
+            }
+            else {
+                this.$('.numbers-additional-options').addClass('disabled');
+                this.$('#tape-measure-check').prop('disabled', true);
+                this.measuringTapeView.hide();
+                this.sceneView.hideNumbers();
+            }
         },
 
         /**
          * Shows/hides tape measure
          */
         toggleTapeMeasure: function() {
-            // if ($(event.target).is(':checked'))
-                
-            // else
-                
+            if ($(event.target).is(':checked'))
+                this.measuringTapeView.show();
+            else
+                this.measuringTapeView.hide();
         },
+
+        /**
+         * Clears all the things
+         */
+        clearEverything: function() {
+            this.simulation.charges.reset();
+            this.simulation.sensors.reset();
+            // Clear voltage plots
+        }
 
     });
 

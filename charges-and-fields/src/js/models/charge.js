@@ -9,7 +9,7 @@ define(function (require) {
     var Charge = PositionableObject.extend({
 
         defaults: _.extend({}, PositionableObject.prototype.defaults, {
-            q: 0,         // Value of charge
+            q: 1,         // Value of charge
             magnitude: 1, // Magnitude of charge
             sign: 1       // Sign is +1 (positive) or -1 (negative)
         }),
@@ -18,7 +18,9 @@ define(function (require) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
             this.on('change:q', this.chargeChanged);
-        }
+            
+            this.chargeChanged(this, this.get('q'));
+        },
 
         setCharge: function(q) {
             this.set('q', q);

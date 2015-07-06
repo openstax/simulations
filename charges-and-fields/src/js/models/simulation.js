@@ -9,6 +9,7 @@ define(function (require, exports, module) {
     var Vector2    = require('common/math/vector2');
 
     var Charge = require('models/charge');
+    var Sensor = require('models/sensor');
 
     /**
      * Constants
@@ -23,8 +24,10 @@ define(function (require, exports, module) {
     var ChargesAndFieldsSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            k: 0.5 * 1E6,     // Prefactor in E-field equation: E= k*Q/r^2
-            maxVoltage: 20000 // Voltage at which we would show total color saturation
+            k: Constants.K,    // To be used in E-field equation: E = k*Q/r^2
+            maxVoltage: 20000, // Voltage at which we would show total color saturation
+            width:  100,
+            height: 100
         }),
         
         initialize: function(attributes, options) {
@@ -32,11 +35,12 @@ define(function (require, exports, module) {
 
             // Collections
             this.charges = new Backbone.Collection([], { model: Charge });
-
+            this.sensors = new Backbone.Collection([], { model: Sensor });
 
             // Object caches
             this._efieldVec  = new Vector2();
             this._voltageLoc = new Vector2();
+            this._nextPoint  = new Vector2();
         },
 
         /**
@@ -44,6 +48,14 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             
+        },
+
+        /**
+         * Sets the simulation bounds' dimensions.
+         */
+        setBoundsDimensions: function(width, height) {
+            this.set('width', width);
+            this.set('height', height);
         },
 
         /**
@@ -72,6 +84,20 @@ define(function (require, exports, module) {
          */
         hasCharges: function() {
             return this.charges.length !== 0;
+        },
+
+        /**
+         * Adds a sensor to the simulation
+         */
+        addSensor: function(sensor) {
+            this.sensors.add(sensor);
+        },
+
+        /**
+         * Removes a sensor from the simulation
+         */
+        removeSensor: function(sensor) {
+            this.sensors.remove(sensor);
         },
 
         /**
@@ -119,6 +145,26 @@ define(function (require, exports, module) {
 
             return sumV;
         },
+
+        /**
+         * Starting at the given (x, y), move along the equipotential curve
+         *   as far as the given displacement.
+         */
+        getNextEqualVoltagePoint: function(voltage, startX, startY, displacement) {
+            var eVec = this.getE(startX, startY); // E-field vector
+            var eMag = eVec.length();             // Magnitude of the e-field vector
+            var xMid = startX - displacement * eVec.y / eMag; // eVec.y is not a mistake
+            var yMid = startY + displacement * eVec.x / eMag;
+
+            var eMidVec = this.getE(xMid, yMid);
+            var vMid = this.getV(xMid, yMid);
+            
+            var dx = (vMid - voltage) * eMidVec.x / eMidVec.lengthSq();
+            var xFinal = xMid + dx;
+            var yFinal = yMid + dx * eMidVec.y / eMidVec.x;
+
+            return this._nextPoint.set(xFinal, yFinal);
+        }
 
     });
 

@@ -11,6 +11,11 @@
     right: @panel-side-margin;
     width: @panel-width;
 
+    @media screen and (max-height: @short-window) {
+        top: 16px;
+        right: 16px;
+    }
+
     .sim-controls {
         padding: 15px;
         background: @panel-bg;
@@ -20,7 +25,7 @@
             font-weight: 400;
             color: rgba(51, 51, 51, 0.5);
             margin-top: 0;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             padding-bottom: 4px;
             border-bottom: 1px solid rgba(0, 0, 0, 0.09);
         }
@@ -33,13 +38,11 @@
             list-style: none;
             padding: 0;
             margin: 0;
-            margin-top: 8px;
-            margin-bottom: 6px;
 
             li {
                 text-align: left;
                 list-style-image: none;
-                margin-top: 6px;
+                margin-top: 4px;
 
                 label{
                     font-weight: bold;
@@ -48,10 +51,13 @@
             }
         }
 
-        .e-field-additional-options {
+        .sub-options {
             margin-left: 25px;
-            margin-top: 6px;
-            display: none;
+            margin-top: 4px;
+
+            &.disabled {
+                opacity: 0.5;
+            }
         }
     }
 
