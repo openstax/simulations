@@ -47,7 +47,12 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click #e-field-check'        : 'toggleEField',
+            'click #voltage-check'        : 'toggleVoltageMosaic',
+            'click #direction-only-check' : 'toggleDirectionOnly',
+            'click #grid-check'           : 'toggleGrid',
+            'click #numbers-check'        : 'toggleNumbers',
+            'click #tape-measure-check'   : 'toggleTapeMeasure'
         },
 
         /**
@@ -144,6 +149,67 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        /**
+         * Shows/hides E-Field
+         */
+        toggleEField: function() {
+            if ($(event.target).is(':checked')) {
+                $('.e-field-additional-options').show();
+            }
+            else {
+                $('.e-field-additional-options').hide();
+            }
+        },
+
+        /**
+         * Sets whether E-Field shows direction
+         */
+        toggleDirectionOnly: function() {
+            // if ($(event.target).is(':checked'))
+                
+            // else
+                
+        },
+
+        /**
+         * Shows/hides voltage mosaic
+         */
+        toggleVoltageMosaic: function() {
+            // if ($(event.target).is(':checked'))
+                
+            // else
+        },
+
+        /**
+         * Shows/hides grid
+         */
+        toggleGrid: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showGrid();
+            else
+                this.sceneView.hideGrid();
+        },
+
+        /**
+         * Shows/hides numbers
+         */
+        toggleNumbers: function() {
+            // if ($(event.target).is(':checked'))
+                
+            // else
+                
+        },
+
+        /**
+         * Shows/hides tape measure
+         */
+        toggleTapeMeasure: function() {
+            // if ($(event.target).is(':checked'))
+                
+            // else
+                
         },
 
     });

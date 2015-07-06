@@ -5,3 +5,84 @@
     min-height: initial;
 }
 
+.sim-controls-wrapper {
+    position: absolute;
+    top: @panel-top-margin;
+    right: @panel-side-margin;
+    width: @panel-width;
+
+    .sim-controls {
+        padding: 15px;
+        background: @panel-bg;
+        
+        h2 {
+            font-size: 18px;
+            font-weight: 400;
+            color: rgba(51, 51, 51, 0.5);
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 4px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+        }
+
+        label {
+            color: #555;
+        }
+
+        ul.checkboxes {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            margin-top: 8px;
+            margin-bottom: 6px;
+
+            li {
+                text-align: left;
+                list-style-image: none;
+                margin-top: 6px;
+
+                label{
+                    font-weight: bold;
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .e-field-additional-options {
+            margin-left: 25px;
+            margin-top: 6px;
+            display: none;
+        }
+    }
+
+    .btn {
+        position: relative;
+        display: block;
+        margin-top: 4px;
+        padding: 10px 10px;
+        width: 100%;
+        color: @link-color;
+        background: @panel-bg;
+        border-radius: 0;
+
+        font-weight: bold;
+
+        &:focus,
+        &.focus {
+            outline: none;
+            color: @link-color;
+        }
+
+        &:hover {
+            opacity: 0.8;
+            color: @link-color;
+        }
+
+        &:active {
+            box-shadow: none;
+            background: @link-color;
+            color: #fff;
+            opacity: 1;
+        }
+    }
+}
