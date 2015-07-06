@@ -136,6 +136,16 @@ define(function (require) {
 			this.$labelValue.text(this.time.toFixed(this.decimals));
 		},
 
+		stop: function() {
+			this.timing = false;
+		},
+
+		setPosition: function(x, y) {
+			this.position.x = x;
+			this.position.y = y;
+			this.updateOnNextFrame = true;
+		},
+
 		update: function(time, delta, paused, timeScale) {
 
 			timeScale = timeScale || 1;

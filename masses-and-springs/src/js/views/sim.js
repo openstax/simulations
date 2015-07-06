@@ -122,6 +122,43 @@ define(function (require) {
         },
 
         /**
+         * Resets the sim and options
+         */
+        reset: function() {
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            // Reset settings
+            this.$('#gravity-setting-Earth').click();
+            this.$('#playback-speed-Normal').click();
+
+            var $friction = this.$('.friction-settings-placeholder');
+            var $softness = this.$('.softness3-settings-placeholder');
+            $friction.val($friction.noUiSlider('options').start);
+            $softness.val($softness.noUiSlider('options').start);
+
+            // Reset tools
+            this.$('#stopwatch').prop('checked', false);
+            this.stopwatchView.hide();
+            this.stopwatchView.stop();
+            this.stopwatchView.reset();
+            this.stopwatchView.setPosition(468, AppView.windowIsShort() ? 396 : 630 );
+
+            this.rulerView.setPosition(20, Initials.SpringsY1 * Constants.Scene.PX_PER_METER);
+
+            this.referenceLineView.setPosition(
+                this.sceneView.mvt.modelToViewX(Initials.Springs[1].x) - this.referenceLineView.width / 2,
+                this.sceneView.mvt.modelToViewY(Initials.SpringsY1 + Constants.SpringDefaults.REST_L)
+            );
+
+            // Reset graph
+            this.$('.energy-graph-placeholder').empty();
+            this.$('.energy-graphs .sim-tabs').replaceWith('<div class="energy-graph-tabs"></div>');
+            this.renderEnergyGraphs();
+            this.showEnergyGraph(this.simulation.systems.first());
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
@@ -159,7 +196,7 @@ define(function (require) {
         },
 
 
-        renderEnergyGraphs: function(system){
+        renderEnergyGraphs: function(){
 
             this.energyGraphs = [];
             this.$zoom = this.$el.find('.zoom');
@@ -169,7 +206,7 @@ define(function (require) {
             this.simulation.systems.each(function(system, iter){
                 var barGraph = new BarGraphView({
                     model : system,
-                    title : 'Energy of ' + (iter + 1),
+                    title : 'Energy of Spring ' + (iter + 1),
                     graphHeight: graphHeight
                 });
 

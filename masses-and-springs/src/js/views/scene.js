@@ -114,6 +114,26 @@ define(function(require) {
             }, this);
         },
 
+        reset: function() {
+            var i;
+
+            // Clear body views
+            for (i = this.bodyViews.length - 1; i >= 0; i--) {
+                this.bodyViews[i].removeFrom(this.bodyViews[i].displayObject.parent);
+                this.bodyViews.slice(i, 1);
+            }
+
+            // Clear spring views
+            for (i = this.springViews.length - 1; i >= 0; i--) {
+                this.springViews[i].removeFrom(this.springLayer);
+                this.springViews.slice(i, 1);
+            }
+
+            // Add new ones
+            this.initSprings(this.simulation, this.simulation.springs);
+            this.initBodies(this.simulation, this.simulation.bodies);
+        },
+
         checkIntersect: function(body){
 
             var systemsToCheck = this.simulation.systems.reject(function(system){

@@ -224,6 +224,12 @@ define(function (require) {
 			}
 		},
 
+		setPosition: function(x, y) {
+			this.position.x = x;
+			this.position.y = y;
+			this.updateOnNextFrame = true;
+		},
+
 		update: function(time, delta, paused, timeScale) {
 
 			// If there aren't any changes, don't do anything.
