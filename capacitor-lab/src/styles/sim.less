@@ -93,6 +93,54 @@
         }
     }
 
+    .dielectric-material-wrapper {
+        margin-bottom: 10px;
+
+        label {
+            margin-top: 7px;
+        }
+
+        .dielectric-material.bootstrap-select {
+            width: 120px !important;
+            float: right;
+        }
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: fadeout(#fff, 50%);
+            border-color: fadeout(#000, 80%);
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        &.open > .dropdown-toggle.btn-default {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
+    }
+
 }
 
 .btn.panel-btn,

@@ -110,9 +110,6 @@ define(function (require) {
 
             // Meters control panel
             this.$('.sim-controls-group-1').append(this.metersTemplate(data));
-
-            // Turn all selects into nice ones
-            this.$('select').selectpicker();
         },
 
         /**

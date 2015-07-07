@@ -1,6 +1,15 @@
 <div class="sim-controls dielectric-options">
     <h2>Dielectric</h2>
 
+    <div class="dielectric-material-wrapper">
+        <label>Material</label>
+        <select class="dielectric-material">
+        <% _.each(materials, function(material, i){ %>
+            <option value="<%= i %>"><%= material.label %></option>
+        <% }); %>
+        </select>
+    </div>
+
     <ul class="radios dielectric-charge-options">
         <li>
             <input type="radio" name="dielectric-charge" value="hide" class="hide-all-charges" id="hide-all-charges-<%= unique %>">

@@ -45,12 +45,30 @@ define(function (require) {
         renderScaffolding: function() {
             CapacitorLabSimView.prototype.renderScaffolding.apply(this, arguments);
 
+            var tempMaterialsList = [{
+                label: 'Custom',
+                config: {}
+            }, {
+                label: 'Teflon (2.1)',
+                config: {}
+            }, {
+                label: 'Paper (3.5)',
+                config: {}
+            }, {
+                label: 'Glass (4.7)',
+                config: {}
+            }];
+
             var data = {
                 Constants: Constants,
-                unique: this.cid
+                unique: this.cid,
+                materials: tempMaterialsList
             };
 
             this.$('.sim-controls-group-2').append(this.dielectricTemplate(data));
+
+            // Turn basic select into a nice one
+            this.$('select').selectpicker();
         }
 
     });
