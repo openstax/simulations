@@ -4,7 +4,9 @@ define(function(require) {
 
     var PixiAppView = require('common/pixi/view/app');
 
-    var CapacitorLabSimView = require('views/sim');
+    var IntroSimView              = require('views/sim/intro');
+    var DielectricSimView         = require('views/sim/dielectric');
+    var MultipleCapacitorsSimView = require('views/sim/multiple-capacitors');
 
     var Assets = require('assets');
 
@@ -15,7 +17,9 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            CapacitorLabSimView
+            IntroSimView,
+            DielectricSimView,
+            MultipleCapacitorsSimView
         ]
 
     });

@@ -4,3 +4,128 @@
 .sims .sim-content {
     min-height: initial;
 }
+
+.sim-controls-wrapper {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    // Group 1 will be on the right
+    .sim-controls-group-1 {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+
+    // Group 2 will be on the left
+    .sim-controls-group-2 {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        //margin-bottom: -12px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 2px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+}
+
+.btn.panel-btn,
+.panel-btn {
+    .panel();
+    margin-top: 0;
+    margin-bottom: 0;
+    padding: 8px 0;
+    display: block;
+    width: 100%;
+    border-radius: 0;
+    font-weight: bold;
+    color: @link-color;
+
+    &:focus {
+        outline: none;
+        color: @link-color;
+    }
+
+    &:hover {
+        background: fadeout(#fff, 20%);
+    }
+
+    &:active {
+        margin-top: 1px;
+        margin-bottom: -1px;
+        box-shadow: 0 -1px 11px rgba(0, 0, 0, 0.13);
+        color: @link-color;
+    }
+}
+
+.reset-btn {
+    position: absolute;
+    top: 100%;
+    left: 0;
+}

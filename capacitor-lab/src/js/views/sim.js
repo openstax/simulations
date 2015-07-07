@@ -23,7 +23,8 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml    = require('text!templates/sim.html');
+    var metersHtml = require('text!templates/meters.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -39,9 +40,10 @@ define(function (require) {
         className: 'sim-view',
 
         /**
-         * CapacitorLab for rendering the basic scaffolding
+         * Templates for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template:       _.template(simHtml),
+        metersTemplate: _.template(metersHtml),
 
         /**
          * Dom event listeners
@@ -57,8 +59,7 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Capacitor Lab',
-                name: 'capacitor-lab',
+                link: 'capacitor-lab'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
@@ -100,9 +101,17 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                unique: this.cid
             };
+
+            // Basic sim scaffolding
             this.$el.html(this.template(data));
+
+            // Meters control panel
+            this.$('.sim-controls-group-1').append(this.metersTemplate(data));
+
+            // Turn all selects into nice ones
             this.$('select').selectpicker();
         },
 
