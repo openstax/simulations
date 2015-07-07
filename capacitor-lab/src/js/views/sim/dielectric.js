@@ -22,7 +22,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
-
+            'slide .dielectric-constant-slider' : 'changeDielectricConstant',
         }),
 
         /**
@@ -69,6 +69,25 @@ define(function (require) {
 
             // Turn basic select into a nice one
             this.$('select').selectpicker();
+
+            this.$('.dielectric-constant-slider').noUiSlider({
+                start: 5,
+                connect: 'lower',
+                range: {
+                    'min': 1,
+                    'max': 5
+                }
+            });
+
+            this.$dielectricConstant = this.$('.dielectric-constant-value');
+        },
+
+        changeDielectricConstant: function(event) {
+            var dielectricConstant = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$dielectricConstant.text(dielectricConstant.toFixed(2));
+                this.simulation.set('dielectricConstant', dielectricConstant);
+            });
         }
 
     });
