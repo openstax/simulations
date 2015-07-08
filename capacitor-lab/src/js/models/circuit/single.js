@@ -42,10 +42,17 @@ define(function (require) {
 
             // Bind event listeners
             this.on('change:batteryConnected', function() {
-                this.updatePlateVoltage();
+                this.updatePlateVoltages();
                 this.disconnectedPlateCharge = this.getTotalCharge();
                 this.trigger('circuit-changed');
             });
+
+            this.on('change:disconnectedPlateCharge', function() {
+                if (!this.batteryIsConnected()) {
+                    this.updatePlateVoltages();
+                    this.trigger('circuit-change');
+                }
+            })
         },
 
         /**
@@ -97,9 +104,20 @@ define(function (require) {
                 voltage = ParallelCircuit.prototype.getVoltageAt.apply(this, arguments);
             }
             else {
-                if ()
+                if (this.intersectsSomeTopPlate(shape))
+                    voltage = this.getTotalVoltage();
+                else if (this.intersectsSomeBottomPlate(shape))
+                    voltage = 0;
             }
-        }
+            return voltage;
+        },
+
+        /**
+         * Gets the total charge in the circuit.  Overrides AbstractCircuit's
+         */
+        getTotalCharge: function() {
+            return this.capacitor.getTotalPlateCharge();
+        },
 
     });
 
