@@ -29,7 +29,9 @@ define(function (require) {
             dielectricMaterial: null, // Insulator between plates
             dielectricOffset: 0,      // The x offset of the dielectric's center, relative to the capacitor's origin
 
-            platesVoltage: 0 // Voltage across the plates in Volts
+            platesVoltage: 0, // Voltage across the plates in Volts
+
+            mvt: null // Model-view transform
         },
 
         initialize: function(attributes, options) {
@@ -38,6 +40,7 @@ define(function (require) {
             this._bottomCenter = new Vector3();
 
             this.on('change:plateWidth', this.plateWidthChanged);
+            this.on('change:mvt',        this.mvtChanged);
 
             this.plateWidthChanged(this, this.get('plateWidth'));
         },
@@ -56,6 +59,17 @@ define(function (require) {
         update: function(time, deltaTime) {
             
         },
+
+        /**
+         * Updates everything dependent on the mvt
+         */
+        mvtChanged: function(capacitor, mvt) {
+
+        },
+
+        //----------------------------------------------------------------------------------
+        // Plate separation (d)
+        //----------------------------------------------------------------------------------
 
         /**
          * Always keep the plate depth the same as width because it's supposed
@@ -96,6 +110,10 @@ define(function (require) {
             );
         },
 
+        //----------------------------------------------------------------------------------
+        // Dielectric
+        //----------------------------------------------------------------------------------
+
         /**
          * Convenience method for getting the dielectric constant of the current
          *   dielectric material.
@@ -135,6 +153,10 @@ define(function (require) {
                 area = 0;
             return area;
         },
+
+        //----------------------------------------------------------------------------------
+        // Capacitance (C)
+        //----------------------------------------------------------------------------------
 
         /**
          * In the "Multiple Capacitors" module, the user has direct control
@@ -194,7 +216,7 @@ define(function (require) {
          */
         isBetweenPlates: function(p) {
             return (this.isInsideDielectricBetweenPlates(p) || this.isInsideAirBetweenPlates(p));
-        }
+        },
 
         /**
          * Returns whether a point is inside the Shape that is the 2D
@@ -211,9 +233,98 @@ define(function (require) {
          */
         isInsideAirBetweenPlates(p) {
             return shapeCreator.createAirBetweenPlatesShapeOccluded().contains( mvt.modelToView( p ) );
+        },
+
+        //----------------------------------------------------------------------------------
+        // Plate Voltage (V)
+        //----------------------------------------------------------------------------------
+
+        setPlatesVoltage: function(voltage) {
+            this.set('platesVoltage', voltage);
+        },
+
+        getPlatesVoltage: function() {
+            return this.get('platesVoltage');
+        },
+
+        //----------------------------------------------------------------------------------
+        // Plate Charge (Q)
+        //----------------------------------------------------------------------------------
+
+        /**
+         * Gets the charge for the portion of the top plate contacting the air.
+         */
+        getAirPlateCharge: function() {
+            return this.getAirCapacitance() * this.get('platesVoltage');
+        },
+
+         /**
+         * Gets the charge for the portion of the top plate contacting the dielectric.
+         */
+        getDielectricPlateCharge: function() {
+            return this.getDielectricCapacitance() * this.getPlatesVoltage();
+        },
+
+        /**
+         * Gets the total charge on the top plate.
+         */
+        getTotalPlateCharge: function() {
+            return this.getDielectricPlateCharge() + this.getAirPlateCharge();
+        },
+
+        /**
+         * Gets the excess plate charge due to plates contacting air.
+         */
+        getExcessAirPlateCharge: function() {
+            return Capacitor.calculateExcessPlateCharge(Constants.EPSILON_AIR, this.getAirCapacitance(), this.getPlatesVoltage());
+        },
+
+        /**
+         * Gets the excess plate charge due to plates contacting the dielectric.
+         */
+        getExcessDielectricPlateCharge: function() {
+            return Capacitor.calculateExcessPlateCharge(this.getDielectricConstant(), this.getDielectricCapacitance(), this.getPlatesVoltage());
+        },
+
+        //----------------------------------------------------------------------------------
+        // E-Field (E)
+        //----------------------------------------------------------------------------------
+
+        /**
+         * Gets the effective (net) field between the plates.
+         *   This is uniform everywhere between the plates.
+         */
+        getEffectiveEField: function() {
+            return this.getPlatesVoltage() / this.getPlateSeparation();
+        },
+
+        /**
+         * Gets the field due to the plates in the capacitor volume that contains air.
+         */
+        getPlatesAirEField: function() {
+            return Capacitor.calculatePlatesEField(Constants.EPSILON_AIR, this.getPlatesVoltage(), this.getPlateSeparation());
+        },
+
+        /**
+         * Gets the field due to the plates in the capacitor volume that contains the dielectric.
+         */
+        getPlatesDielectricEField: function() {
+            return Capacitor.calculatePlatesEField(this.getDielectricConstant(), this.getPlatesVoltage(), this.getPlateSeparation());
+        },
+
+        /**
+         * Gets the field due to air polarization.
+         */
+        getAirEField: function() {
+            return this.getPlatesAirEField() - this.getEffectiveEField();
         }
 
-// NOT FINISHED
+        /**
+         * Gets the field due to dielectric polarization.
+         */
+        getDielectricEField: function() {
+            return this.getPlatesDielectricEField() - this.getEffectiveEField();
+        }
 
     }, 
 
@@ -229,7 +340,7 @@ define(function (require) {
          *   plate width, and capacitance.
          */
         calculatePlateSeparation: function(dielectricConstant, plateWidth, capacitance) {
-            return dielectricConstant * CLConstants.EPSILON_0 * plateWidth * plateWidth / capacitance;
+            return dielectricConstant * Constants.EPSILON_0 * plateWidth * plateWidth / capacitance;
         },
 
         /**
@@ -237,7 +348,28 @@ define(function (require) {
          */
         getCapacitance: function(epsilon, A, d) {
             return epsilon * Constants.EPSILON_0 * A / d;
+        },
+
+        /**
+         * General solution for excess plate charge
+         */
+        calculateExcessPlateCharge: function(dielectricConstant, capacitance, platesVoltage) {
+            if (dielectricConstant <= 0)
+                throw 'Capacitor.calculateExcessPlateCharge requires dielectric constant greater than zero.';
+
+            return ((dielectricConstant - Constants.EPSILON_VACUUM) / dielectricConstant) * capacitance * platesVoltage;
+        },
+
+        /**
+         * General solution for the E-field due to some dielectric.
+         */
+        calculatePlatesEField: function(dielectricConstant, platesVoltage, plateSeparation) {
+            if (plateSeparation <= 0)
+                throw 'Plate separation must be greater than zero to calculate plates\' E-field.';
+
+            return dielectricConstant * platesVoltage / plateSeparation;
         }
+
 
     });
 
