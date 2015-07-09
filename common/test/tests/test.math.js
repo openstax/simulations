@@ -76,6 +76,29 @@ describe('PiecewiseCurve', function(){
 		chai.expect(curve.subcurve).to.equal(0);
 	});
 
+	it('appends other PiecewiseCurve through #add', function(){
+		var curve = new PiecewiseCurve()
+			.moveTo(0, 0)
+			.lineTo(0, 1)
+			.lineTo(1, 1)
+			.lineTo(1, 0)
+			.close();
+
+		var otherCurve = new PiecewiseCurve()
+			.moveTo(2, 2)
+			.lineTo(4, 2)
+			.curveTo(4, 4, 2, 4, 2, 2)
+			.close();
+
+		var finalCurve = curve.add(otherCurve, true);
+
+		chai.expect(finalCurve.xPoints).to.deep.equal([0, 0, 1, 1, 0, 2, 4, 4, 2, 2, 2]);
+		chai.expect(finalCurve.yPoints).to.deep.equal([0, 1, 1, 0, 0, 2, 2, 4, 4, 2, 2]);
+
+		chai.expect(finalCurve.index).to.equal(11);
+		chai.expect(finalCurve.subcurve).to.equal(5);
+	});
+
 	it('#translate should translate points', function(){
 		var curve = new PiecewiseCurve();
 		curve.moveTo(2, 2);

@@ -125,6 +125,36 @@ define(function (require) {
         },
 
         /**
+         * Simply appends another curve to this one. Note that
+         *   this is not the same as a union operation.
+         */
+        add: function(otherCurve, returnNew) {
+            var curve = this;
+            if (returnNew) {
+                curve = new PiecewiseCurve();
+                curve.add(this);
+            }
+
+            // The current subcurve index is whatever the subcurve
+            //   index of the other curve was but offset by the
+            //   length of this one (before adding the other curve)
+            curve.subcurve = curve.index + otherCurve.subcurve;
+
+            // Copy all the information stored in arrays
+            for (var t = 0; t < otherCurve.types.length; t++) {
+                curve.types.push(otherCurve.types[t]);
+            }
+            for (var i = 0; i < otherCurve.xPoints.length; i++) {
+                curve.xPoints.push(otherCurve.xPoints[i]);
+                curve.yPoints.push(otherCurve.yPoints[i]);
+            }
+
+            curve.index += otherCurve.index;
+
+            return curve;
+        },
+
+        /**
          * This deviates from the GeneralPath code in that our
          *   transformMatrix goes down the rows instead of the
          *   columns because that seems to be the more popular
