@@ -30,7 +30,7 @@ define(function (require) {
      *   for changing a position vector in a way that leverages Backbone's
      *   event system.
      */
-    var ThreeDPositionableObject = Backbone.Model.extend({
+    var PositionableObject3D = Backbone.Model.extend({
 
         defaults: {
             position: null
@@ -98,5 +98,5 @@ define(function (require) {
 
     });
 
-    return ThreeDPositionableObject;
+    return PositionableObject3D;
 });

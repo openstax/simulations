@@ -2,8 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var range = require('common/math/range');
+    var range   = require('common/math/range');
+    var Vector2 = require('common/math/vector2');
 
+    var DEG_TO_RAD = Math.PI / 180;
 
     var Constants = {}; 
 
@@ -72,8 +74,8 @@ define(function (require) {
 
     // model-view transform
     Constants.MVT_SCALE = 15000; // scale factor when going from model to view
-    Constants.MVT_YAW = Math.toRadians( -45 ); // rotation about the vertical axis, right-hand rule determines sign
-    Constants.MVT_PITCH = Math.toRadians( 30 ); // rotation about the horizontal axis, right-hand rule determines sign
+    Constants.MVT_YAW   = -45 * DEG_TO_RAD; // rotation about the vertical axis, right-hand rule determines sign
+    Constants.MVT_PITCH =  30 * DEG_TO_RAD; // rotation about the horizontal axis, right-hand rule determines sign
 
     Constants.DRAG_HANDLE_ARROW_LENGTH = 35; // pixels
 

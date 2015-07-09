@@ -39,14 +39,16 @@ define(function (require) {
         this.pitch = pitch;
         this.yaw = yaw;
 
-        this.modelOrigin = this.modelToView(0, 0, 0).clone();
-        this.viewOrigin  = this.viewToModel(0, 0).clone();
-
         // Cached objects for recycling
         this._modelToViewPoint2D = new Vector2();
         this._deltaPoint2D = new Vector2();
         this._point3D = new Vector3();
+        this._viewToModel2D = new Vector2();
         this._viewToModel3D = new Vector3();
+
+        // Origins of model and view for making delta calculations
+        this.modelOrigin = this.modelToView(0, 0, 0).clone();
+        this.viewOrigin  = this.viewToModel(0, 0).clone();
     };
 
     /**
@@ -115,14 +117,14 @@ define(function (require) {
             else {
                 // Points we do want to project in the z dimension
 
-                if (x instanceof Vector3 || ('x' in x && 'y' in x && 'z' in x)) {
+                if (x instanceof Vector3 || (_.isObject(x) && 'x' in x && 'y' in x && 'z' in x)) {
                     z = x.z;
                     y = x.y;
                     x = x.x;
                 }
 
-                this._modelToViewPoint2D.x = x + (z * Math.sin(pitch) * Math.cos(yaw));
-                this._modelToViewPoint2D.y = y + (z * Math.sin(pitch) * Math.sin(yaw));
+                this._modelToViewPoint2D.x = x + (z * Math.sin(this.pitch) * Math.cos(this.yaw));
+                this._modelToViewPoint2D.y = y + (z * Math.sin(this.pitch) * Math.sin(this.yaw));
 
                 return this.mvt2D.modelToView(this._modelToViewPoint2D);
             }
@@ -133,7 +135,7 @@ define(function (require) {
          *   Valid parameters are (x, y, z) values or a Vector3.
          */
         modelToViewDelta: function(coordinates) {
-            if (x instanceof Rectangle || x instanceof PiecewiseCurve)
+            if (coordinates instanceof Rectangle || coordinates instanceof PiecewiseCurve)
                 throw 'modelToViewDelta cannot convert shapes.';
 
             var viewPoint = this.modelToView(coordinates);
@@ -185,16 +187,21 @@ define(function (require) {
           * Maps a point from 2D view coordinates to 3D model coordinates.
           *   The z coordinate will be zero.
           */
-        viewToModel: function(coordinates) {
-            if (coordinates instanceof Rectangle || coordinates instanceof PiecewiseCurve) {
+        viewToModel: function(x, y) {
+            if (x instanceof Rectangle || x instanceof PiecewiseCurve) {
                 // These shapes are supposed to be 2D anyway, so we don't 
                 //   need to do any special mapping to 3D space.
-                return this.mvt2D.viewToModel(coordinates);
+                return this.mvt2D.viewToModel(x);
             }
             else {
                 // If it's a point, we do want to map it into 3D space,
                 //   but to do this we're simply making z equal 0.
-                var modelPoint = this.mvt2D.viewToModel(coordinates);
+                if (_.isNumber(x))
+                    this._viewToModel2D.set(x, y)
+                else
+                    this._viewToModel2D.set(x);
+                
+                var modelPoint = this.mvt2D.viewToModel(this._viewToModel2D);
                 return this._viewToModel3D.set(modelPoint.x, modelPoint.y, 0);
             }
         },

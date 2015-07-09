@@ -20,6 +20,7 @@
             models:     '../js/models',
             assets:     '../js/assets',
             constants:  '../js/constants',
+            'shape-creators': '../js/shape-creators',
             templates:  '../templates',
             styles:     '../styles',
             common:     '../../../common'

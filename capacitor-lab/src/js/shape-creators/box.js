@@ -2,12 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var _         = require('underscore');
-    var Rectangle = require('./rectangle');
-    var Vector2   = require('./vector2');
-    var Vector3   = require('./vector3');
-    var ModelViewTransform   = require('./model-view-transform');
-    var PiecewiseCurve = require('./piecewise-curve');
+    var _ = require('underscore');
+    
+    var Rectangle      = require('common/math/rectangle');
+    var Vector2        = require('common/math/vector2');
+    var Vector3        = require('common/math/vector3');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     /**
      * Creates 2D projections of shapes that are related to the 3D boxes.

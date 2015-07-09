@@ -39,6 +39,8 @@ define(function (require) {
 
     p.set = function(x, y, z){
         if (typeof x==='object') {
+            if (x === null)
+                return this;
             z = x.z;
             y = x.y;
             x = x.x;

@@ -2,12 +2,14 @@ define(function (require) {
 
     'use strict';
 
-    var _         = require('underscore');
-    var Rectangle = require('./rectangle');
-    var Vector2   = require('./vector2');
-    var Vector3   = require('./vector3');
-    var ModelViewTransform   = require('./model-view-transform');
-    var PiecewiseCurve = require('./piecewise-curve');
+    var _ = require('underscore');
+
+    var Rectangle      = require('common/math/rectangle');
+    var Vector2        = require('common/math/vector2');
+    var Vector3        = require('common/math/vector3');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
+
+    var BoxShapeCreator = require('shape-creators/box');
 
     var deprecationMessage = 'You don\'t need this. Find a better way of doing what you\'re trying to do.';
 
@@ -55,7 +57,7 @@ define(function (require) {
 
         createTopPlateShape: function() {
             var pos = this.capacitor.get('position');
-            this.createBoxShape(
+            return this.createBoxShape(
                 pos.x, 
                 this.capacitor.getTopPlateCenter().y, 
                 pos.z, 
@@ -67,9 +69,9 @@ define(function (require) {
 
         createBottomPlateShape: function() {
             var pos = this.capacitor.get('position');
-            this.createBoxShape(
+            return this.createBoxShape(
                 pos.x, 
-                pos.y + this.capacitor.get('plateSeparation') / 2, 
+                this.capacitor.getBottomPlateCenter().y, 
                 pos.z, 
                 this.capacitor.get('plateWidth'), 
                 this.capacitor.get('plateHeight'), 
@@ -79,7 +81,7 @@ define(function (require) {
 
         createDielectricShape: function() {
             var pos = this.capacitor.get('position');
-            this.createBoxShape(
+            return this.createBoxShape(
                 pos.x + this.capacitor.get('dielectricOffset'), 
                 pos.y - this.capacitor.getDielectricHeight() / 2, 
                 pos.z, 
@@ -94,7 +96,7 @@ define(function (require) {
             var plateWidth = this.capacitor.get('plateWidth');
             var airWidth   = this.capacitor.get('dielectricOffset');
 
-            this.createBoxShape(
+            return this.createBoxShape(
                 pos.x - (plateWidth / 2) + (airWidth / 2), 
                 pos.y - this.capacitor.getDielectricHeight() / 2, 
                 pos.z, 
@@ -207,8 +209,8 @@ define(function (require) {
             var m4 = this._m4;
             var m5 = this._m5;
 
-            m0.set(x + (plateWidth / 2),    y + plateHeight,        z + (plateDepth / 2)));
-            m1.set(x + (plateWidth / 2),    y + plateHeight,        z - (plateDepth / 2)));
+            m0.set(x + (plateWidth / 2),    y + plateHeight,        z + (plateDepth / 2));
+            m1.set(x + (plateWidth / 2),    y + plateHeight,        z - (plateDepth / 2));
             m2.set(m1.x,                    m1.y + plateSeparation, m1.z);
             m3.set(m2.x,                    m2.y,                   m0.z);
             m4.set(m3.x - distanceFromEdge, m3.y,                   m3.z);
@@ -225,6 +227,6 @@ define(function (require) {
 
     });
 
-    return BoxShapeCreator;
+    return CapacitorShapeCreator;
 });
 

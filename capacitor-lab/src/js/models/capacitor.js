@@ -5,10 +5,10 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var ThreeDPositionableObject = require('common/models/positionable-object-3d');
-    var Vector3                  = require('common/math/vector3');
-    var Vector2                  = require('common/math/vector2');
-    var Rectangle                = require('common/math/rectangle');
+    var PositionableObject3D = require('common/models/positionable-object-3d');
+    var Vector3              = require('common/math/vector3');
+    var Vector2              = require('common/math/vector2');
+    var Rectangle            = require('common/math/rectangle');
 
     /**
      * Constants
@@ -18,9 +18,9 @@ define(function (require) {
     /**
      * 
      */
-    var Capacitor = ThreeDPositionableObject.extend({
+    var Capacitor = PositionableObject3D.extend({
 
-        defaults: {
+        defaults: _.extend({}, PositionableObject3D.prototype.defaults, {
             plateWidth: 0,      // Width of the plate in meters
             plateHeight: 0,     // Height of the plate in meters
             plateDepth: 0,      // Depth of plate in meters
@@ -32,7 +32,7 @@ define(function (require) {
             platesVoltage: 0, // Voltage across the plates in Volts
 
             mvt: null // Model-view transform
-        },
+        }),
 
         initialize: function(attributes, options) {
             // Object caches
@@ -41,6 +41,8 @@ define(function (require) {
             this._topPlate2D        = new Rectangle();
             this._bottomPlate2D     = new Rectangle();
             this._betweenPlatesArea = new Rectangle();
+
+            PositionableObject3D.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:plateWidth', this.plateWidthChanged);
             this.on('change:mvt',        this.mvtChanged);
@@ -105,10 +107,10 @@ define(function (require) {
          * Convenience method for determining the outside center of the bottom plate.
          *   This is used for a wire attachment point.
          */
-        getTopPlateCenter: function() {
+        getBottomPlateCenter: function() {
             return this._bottomCenter.set(
                 this.get('position').x,
-                this.get('position').y + (this.get('plateSeparation') / 2) - this.get('plateHeight'),
+                this.get('position').y + (this.get('plateSeparation') / 2) + this.get('plateHeight'),
                 this.get('position').z
             );
         },
@@ -194,7 +196,7 @@ define(function (require) {
         setTotalCapacitance: function(capacitance) {
             this.set('plateSeparation', Capacitor.calculatePlateSeparation(
                 this.get('dielectricConstant'), this.get('plateWidth'), capacitance
-            );
+            ));
         },
 
         /**
@@ -273,7 +275,8 @@ define(function (require) {
          *   the plates.
          */
         isInsideDielectricBetweenPlates: function(p) {
-            return this.shapeCreator.createDielectricBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
+            //return this.shapeCreator.createDielectricBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
+            throw 'not yet implemented';
         },
 
         /**
@@ -281,7 +284,8 @@ define(function (require) {
          *   projection of air between the plates
          */
         isInsideAirBetweenPlates(p) {
-            return this.shapeCreator.createAirBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
+            //return this.shapeCreator.createAirBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
+            throw 'not yet implemented';
         },
 
         //----------------------------------------------------------------------------------
@@ -366,7 +370,7 @@ define(function (require) {
          */
         getAirEField: function() {
             return this.getPlatesAirEField() - this.getEffectiveEField();
-        }
+        },
 
         /**
          * Gets the field due to dielectric polarization.

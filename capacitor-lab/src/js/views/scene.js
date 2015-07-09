@@ -4,8 +4,11 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    require('common/pixi/extensions');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView        = require('common/pixi/view/scene');
+    var ModelViewTransform3D = require('common/math/model-view-transform-3d');
+    var Vector2              = require('common/math/vector2');
 
     var Assets = require('assets');
 
@@ -34,6 +37,41 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            this.initMVT();
+        },
+
+        initMVT: function() {
+            // Map the simulation bounds...
+            // var bounds = this.simulation.bounds;
+
+            // // ...to the usable screen space that we have
+            // var controlsWidth = 180;
+            // var margin = 20;
+            // var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + margin : margin;
+            // var rightMargin = margin + controlsWidth + margin;
+            // var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
+
+            // var boundsRatio = bounds.w / bounds.h;
+            // var screenRatio = usableScreenSpace.w / usableScreenSpace.h;
+            
+            // var scale = (screenRatio > boundsRatio) ? usableScreenSpace.h / bounds.h : usableScreenSpace.w / bounds.w;
+            
+            // this.viewOriginX = Math.round(usableScreenSpace.x + usableScreenSpace.w / 2);
+            // this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h);
+
+            this.viewOriginX = 200;
+            this.viewOriginY = this.height / 2;
+            var scale = 2400;
+
+            this.mvt = ModelViewTransform3D.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                scale,
+                scale,
+                Constants.MVT_PITCH,
+                Constants.MVT_YAW
+            );
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
