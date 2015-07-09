@@ -17,16 +17,12 @@ define(function (require) {
      */
     var BoxShapeCreator = function(mvt) {
         this.mvt = mvt;
+
+        this._p0 = new Vector2();
+        this._p1 = new Vector2();
+        this._p2 = new Vector2();
+        this._p3 = new Vector2();
     };
-
-    /**
-     * Static functions
-     */
-    _.extend(BoxShapeCreator, {
-
-
-
-    });
 
     /**
      * Instance functions
@@ -35,11 +31,6 @@ define(function (require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            this._p0 = new Vector2();
-            this._p1 = new Vector2();
-            this._p2 = new Vector2();
-            this._p3 = new Vector2();
         },
 
         /**
@@ -142,6 +133,21 @@ define(function (require) {
             topCurve.add(frontCurve);
             topCurve.add(sideCurve);
             return topCurve;
+        },
+
+        /**
+         * Returns a PiecewiseCurve object representing the face
+         *   created by connecting the four points.
+         */
+        createFace: function(p0, p1, p2, p3) {
+            var curve = new PiecewiseCurve();
+            curve
+                .moveTo(p0)
+                .lineTo(p1)
+                .lineTo(p2)
+                .lineTo(p3)
+                .close();
+            return curve;
         }
 
     });
