@@ -6,9 +6,9 @@ define(function (require) {
     var Backbone = require('backbone');
 
     var ThreeDPositionableObject = require('common/models/positionable-object-3d');
-
-    var Vector3 = require('common/math/vector3');
-    var Vector2 = require('common/math/vector2');
+    var Vector3                  = require('common/math/vector3');
+    var Vector2                  = require('common/math/vector2');
+    var Rectangle                = require('common/math/rectangle');
 
     /**
      * Constants
@@ -36,8 +36,11 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             // Object caches
-            this._topCenter = new Vector3();
+            this._topCenter    = new Vector3();
             this._bottomCenter = new Vector3();
+            this._topPlate2D        = new Rectangle();
+            this._bottomPlate2D     = new Rectangle();
+            this._betweenPlatesArea = new Rectangle();
 
             this.on('change:plateWidth', this.plateWidthChanged);
             this.on('change:mvt',        this.mvtChanged);
@@ -68,7 +71,7 @@ define(function (require) {
         },
 
         //----------------------------------------------------------------------------------
-        // Plate separation (d)
+        // Shape of the Capacitor Components
         //----------------------------------------------------------------------------------
 
         /**
@@ -107,6 +110,30 @@ define(function (require) {
                 this.get('position').x,
                 this.get('position').y + (this.get('plateSeparation') / 2) - this.get('plateHeight'),
                 this.get('position').z
+            );
+        },
+
+        /**
+         * Returns a 2D representation of the top plate.
+         */
+        getTopPlateRect: function() {
+            return this._topPlate2D.set(
+                this.get('position').x - this.get('plateWidth') / 2, 
+                this.get('position').y - (this.get('plateSeparation') / 2) - this.get('plateHeight'), 
+                this.get('plateWidth'), 
+                this.get('plateHeight')
+            );
+        },
+
+        /**
+         * Returns a 2D representation of the bottom plate.
+         */
+        getBottomPlateRect: function() {
+            return this._bottomPlate2D.set(
+                this.get('position').x - this.get('plateWidth') / 2, 
+                this.get('position').y + (this.get('plateSeparation') / 2), 
+                this.get('plateWidth'), 
+                this.get('plateHeight')
             );
         },
 
@@ -200,14 +227,36 @@ define(function (require) {
          * Returns whether a shape intersects the top plate shape.
          */
         intersectsTopPlate: function(shape) {
-            return ShapeUtils.intersects(shape, this.shapeCreator.createTopPlateShapeOccluded());
+            throw 'Capacitor.intersectsTopPlate is deprecated. Use Capacitor.touchesTopPlate instead.';
         },
 
         /**
          * Returns whether a shape intersects the bottom plate shape.
          */
         intersectsBottomPlate: function(shape) {
-            return ShapeUtils.intersects(shape, this.shapeCreator.createBottomPlateShapeOccluded());
+            throw 'Capacitor.intersectsBottomPlate is deprecated. Use Capacitor.touchesBottomPlate instead.';
+        },
+
+        /**
+         * Returns whether a circle (defined by a point and radius) is
+         *   touching (on the edge of) the top plate.  It could also be
+         *   thought of as whether a point is within a certain distance
+         *   of the top plate.  This is a replacement for
+         *   intersectsTopPlate.
+         */
+        touchesTopPlate: function(point, radius) {
+            return this.getTopPlateRect().overlapsCircle(point.x, point.y, radius);
+        },
+
+        /**
+         * Returns whether a circle (defined by a point and radius) is
+         *   touching (on the edge of) the bottom plate.  It could also
+         *   be thought of as whether a point is within a certain
+         *   distance of the bottom plate.  This is a replacement for
+         *   intersectsBottomPlate.
+         */
+        touchesBottomPlate: function(point, radius) {
+            return this.getBottomPlateRect().overlapsCircle(point.x, point.y, radius);
         },
 
         /**

@@ -9,6 +9,8 @@ define(function (require) {
     var ModelViewTransform   = require('./model-view-transform');
     var PiecewiseCurve = require('./piecewise-curve');
 
+    var deprecationMessage = 'You don\'t need this. Find a better way of doing what you\'re trying to do.';
+
     /**
      * Creates 2D projections of shapes that are related to the 3D capacitor
      *   model. Shapes are in the global view coordinate frame.  It creates
@@ -54,7 +56,9 @@ define(function (require) {
         createTopPlateShape: function() {
             var pos = this.capacitor.get('position');
             this.createBoxShape(
-                pos.x, pos.y, pos.z, 
+                pos.x, 
+                this.capacitor.getTopPlateCenter().y, 
+                pos.z, 
                 this.capacitor.get('plateWidth'), 
                 this.capacitor.get('plateHeight'), 
                 this.capacitor.get('plateDepth')
@@ -83,7 +87,22 @@ define(function (require) {
                 this.capacitor.getDielectricHeight(), 
                 this.capacitor.getDielectricDepth()
             );
-        }
+        },
+
+        createAirBetweenPlateShape: function() {
+            var pos        = this.capacitor.get('position');
+            var plateWidth = this.capacitor.get('plateWidth');
+            var airWidth   = this.capacitor.get('dielectricOffset');
+
+            this.createBoxShape(
+                pos.x - (plateWidth / 2) + (airWidth / 2), 
+                pos.y - this.capacitor.getDielectricHeight() / 2, 
+                pos.z, 
+                airWidth, 
+                this.capacitor.getDielectricHeight(), 
+                this.capacitor.get('plateDepth')
+            );
+        },
 
         //----------------------------------------------------------------------------------------
         // Occluded shapes
@@ -103,12 +122,12 @@ define(function (require) {
          */
         createBottomPlateShapeOccluded: function() {
             //return ShapeUtils.subtract( createBottomPlateShape(), createTopPlateShape() );
-            throw 'You don\'t need this. Find a better way of doing what you\'re trying to do.';
+            throw deprecationMessage;
         },
 
         /**
-         * Creates the visible portion of the dielectric between the plates.
-         *   May be partially occluded by the top plate. If it's not between
+         * Creates the visible portion of the dielectric between the plates,
+         *   which is partially occluded by the top plate. If it's not between
          *   the plates at all, it will return an empty PiecewiseCurve.
          *    
          *             p1
@@ -125,14 +144,7 @@ define(function (require) {
          *
          */
         createDielectricBetweenPlatesShapeOccluded: function() {
-            //return ShapeUtils.subtract( createDielectricBetweenPlatesShape(), createTopPlateShape() );
-            var x = this.capacitor.get('position').x;
-            var y = this.capacitor.get('position').y;
-            var z = this.capacitor.get('position').z;
             var plateWidth  = this.capacitor.get('plateWidth');
-            var plateHeight = this.capacitor.get('plateHeight');
-            var plateDepth  = this.capacitor.get('plateDepth');
-            var plateSeparation = this.capacitor.get('plateSeparation');
             var dielectricOffset = this.capacitor.get('dielectricOffset');
             var dielectricOverlap = plateWidth - dielectricOffset;
 
@@ -140,6 +152,52 @@ define(function (require) {
             //   return an empty curve.
             if (dielectricOverlap <= 0)
                 return new PiecewiseCurve();
+
+            return this.createSpaceBetweenPlatesShapeOccluded(dielectricOverlap)
+        },
+
+
+        /**
+         * I've deprecated this function.  Anything we're trying to do with
+         *   this function we should be able to do with the non-occluded
+         *   version, which is much simpler.  Right now it's only being used
+         *   for hit detection (finding out if the meter probe is in this
+         *   area).  Instead of making a complicated shape where the top
+         *   plate occludes it, we can just detect a hit on the top plate
+         *   first and don't let it go down to the air gap if the point lies
+         *   within the top plate's area.
+         */
+        createAirBetweenPlatesShapeOccluded: function() {
+            throw deprecationMessage;
+        },
+
+        /**
+         * Creates the visible space between between the plates, occluded by
+         *   the top plate.  The distanceFromEdge parameter is how far in
+         *   from the right edge we are drawing, according to the following
+         *   diagram where [w] is the distanceFromEdge.
+         *    
+         *               p1
+         *              /|
+         *             / |
+         *            /  |
+         *           /   |
+         *      w   /    p2
+         *  p5-----p0   /
+         *  |          /
+         *  |         /
+         *  |   w    /
+         *  p4-----p3
+         *
+         */
+        createSpaceBetweenPlatesShapeOccluded: function(distanceFromEdge) {
+            var x = this.capacitor.get('position').x;
+            var y = this.capacitor.get('position').y;
+            var z = this.capacitor.get('position').z;
+            var plateWidth  = this.capacitor.get('plateWidth');
+            var plateHeight = this.capacitor.get('plateHeight');
+            var plateDepth  = this.capacitor.get('plateDepth');
+            var plateSeparation = this.capacitor.get('plateSeparation');
 
             // 3D model-space points (before MVT)
             var m0 = this._m0;
@@ -149,12 +207,12 @@ define(function (require) {
             var m4 = this._m4;
             var m5 = this._m5;
 
-            m0.set(x + (plateWidth / 2),     y + plateHeight,        z + (plateDepth / 2)));
-            m1.set(x + (plateWidth / 2),     y + plateHeight,        z - (plateDepth / 2)));
-            m2.set(m1.x,                     m1.y + plateSeparation, m1.z);
-            m3.set(m2.x,                     m2.y,                   m0.z);
-            m4.set(m3.x - dielectricOverlap, m3.y,                   m3.z);
-            m5.set(m0.x - dielectricOverlap, m0.y,                   m0.z);
+            m0.set(x + (plateWidth / 2),    y + plateHeight,        z + (plateDepth / 2)));
+            m1.set(x + (plateWidth / 2),    y + plateHeight,        z - (plateDepth / 2)));
+            m2.set(m1.x,                    m1.y + plateSeparation, m1.z);
+            m3.set(m2.x,                    m2.y,                   m0.z);
+            m4.set(m3.x - distanceFromEdge, m3.y,                   m3.z);
+            m5.set(m0.x - distanceFromEdge, m0.y,                   m0.z);
 
             // 2D view points (after MVT)
             var p0 = this._p0.set(this.mvt.modelToView(m0));
@@ -163,7 +221,7 @@ define(function (require) {
             var p3 = this._p3.set(this.mvt.modelToView(m3));
             var p4 = this._p4.set(this.mvt.modelToView(m4));
             var p5 = this._p5.set(this.mvt.modelToView(m5));
-        },
+        }
 
     });
 
