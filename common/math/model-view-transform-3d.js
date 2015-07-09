@@ -132,7 +132,7 @@ define(function (require) {
 
         /**
          * Maps relative distances (delta) from 3D model space to 2D view space.
-         *   Valid parameters are (x, y, z) values or a Vector3.
+         *   Takes a Vector3 object.
          */
         modelToViewDelta: function(coordinates) {
             if (coordinates instanceof Rectangle || coordinates instanceof PiecewiseCurve)

@@ -38,23 +38,6 @@ define(function(require) {
         drawPiecewiseCurve(this, curve, xShift, yShift, false, false, doNothing, doNothing, doNothing);
     };
 
-    PIXI.Graphics.prototype.fillPiecewiseCurve = function(curve, xShift, yShift, color, alpha) {
-        if (xShift === undefined)
-            xShift = 0;
-        if (yShift === undefined)
-            yShift = 0;
-        drawPiecewiseCurve(
-            this, curve, xShift, yShift, false, false, 
-            function(graphics) {
-                this.beginFill(color, alpha);
-            }, 
-            doNothing, 
-            function(graphics) {
-                this.endFill();
-            }
-        );
-    };
-
     var drawPiecewiseCurve = function(graphics, curve, xShift, yShift, fill, stroke, beginPath, strokeAndFill, closePath) {
         var x, y;
         var cp1x, cp1y;
