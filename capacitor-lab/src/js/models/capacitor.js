@@ -69,7 +69,8 @@ define(function (require) {
          * Updates everything dependent on the mvt
          */
         mvtChanged: function(capacitor, mvt) {
-
+            // TODO: Delete all the references to MVT on the model side if indeed
+            //   I decide that I can do without it.
         },
 
         //----------------------------------------------------------------------------------
