@@ -200,14 +200,14 @@ define(function (require) {
          * Returns whether a shape intersects the top plate shape.
          */
         intersectsTopPlate: function(shape) {
-            return ShapeUtils.intersects( shape, shapeCreator.createTopPlateShapeOccluded() );
+            return ShapeUtils.intersects(shape, this.shapeCreator.createTopPlateShapeOccluded());
         },
 
         /**
          * Returns whether a shape intersects the bottom plate shape.
          */
         intersectsBottomPlate: function(shape) {
-            return ShapeUtils.intersects( shape, shapeCreator.createBottomPlateShapeOccluded() );
+            return ShapeUtils.intersects(shape, this.shapeCreator.createBottomPlateShapeOccluded());
         },
 
         /**
@@ -224,7 +224,7 @@ define(function (require) {
          *   the plates.
          */
         isInsideDielectricBetweenPlates: function(p) {
-            return shapeCreator.createDielectricBetweenPlatesShapeOccluded().contains( mvt.modelToView( p ) );
+            return this.shapeCreator.createDielectricBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
         },
 
         /**
@@ -232,7 +232,7 @@ define(function (require) {
          *   projection of air between the plates
          */
         isInsideAirBetweenPlates(p) {
-            return shapeCreator.createAirBetweenPlatesShapeOccluded().contains( mvt.modelToView( p ) );
+            return this.shapeCreator.createAirBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
         },
 
         //----------------------------------------------------------------------------------

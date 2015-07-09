@@ -1,0 +1,172 @@
+define(function (require) {
+
+    'use strict';
+
+    var _         = require('underscore');
+    var Rectangle = require('./rectangle');
+    var Vector2   = require('./vector2');
+    var Vector3   = require('./vector3');
+    var ModelViewTransform   = require('./model-view-transform');
+    var PiecewiseCurve = require('./piecewise-curve');
+
+    /**
+     * Creates 2D projections of shapes that are related to the 3D capacitor
+     *   model. Shapes are in the global view coordinate frame.  It creates
+     *   the unoccluded shapes that are drawn in the scene, but it also needs
+     *   to create occluded shapes like the original PhET version to be used
+     *   in detecting which object a 2D point lies in (for determining where
+     *   the tip of a probe is for the meter tools).  
+     *
+     *  Note: Instead of using Java's Constructive Area Geometry to determine
+     *   these occluded shapes by area subtraction, I will just use arithmetic
+     *   to find the points in the polygon of the occluded shape and create
+     *   the polygon (PiecewiseCurve) by hand.  This is not as intuitive to
+     *   read, but it will be runtime efficient and not require me to recreate
+     *   a huge Java library in JavaScript.
+     *                                                      - Patrick Wolfert
+     */
+    var CapacitorShapeCreator = function(capacitor, mvt) {
+        BoxShapeCreator.apply(this, [mvt]);
+
+        this.capacitor = capacitor;
+
+        // Points before transforming to view
+        this._m0 = new Vector3();
+        this._m1 = new Vector3();
+        this._m2 = new Vector3();
+        this._m3 = new Vector3();
+        this._m4 = new Vector3();
+        this._m5 = new Vector3();
+
+        this._p4 = new Vector2();
+        this._p5 = new Vector2();
+    };
+
+    /**
+     * Instance functions
+     */
+    _.extend(CapacitorShapeCreator.prototype, BoxShapeCreator.prototype, {
+
+        //----------------------------------------------------------------------------------------
+        // Unoccluded shapes
+        //----------------------------------------------------------------------------------------
+
+        createTopPlateShape: function() {
+            var pos = this.capacitor.get('position');
+            this.createBoxShape(
+                pos.x, pos.y, pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        createBottomPlateShape: function() {
+            var pos = this.capacitor.get('position');
+            this.createBoxShape(
+                pos.x, 
+                pos.y + this.capacitor.get('plateSeparation') / 2, 
+                pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        createDielectricShape: function() {
+            var pos = this.capacitor.get('position');
+            this.createBoxShape(
+                pos.x + this.capacitor.get('dielectricOffset'), 
+                pos.y - this.capacitor.getDielectricHeight() / 2, 
+                pos.z, 
+                this.capacitor.getDielectricWidth(), 
+                this.capacitor.getDielectricHeight(), 
+                this.capacitor.getDielectricDepth()
+            );
+        }
+
+        //----------------------------------------------------------------------------------------
+        // Occluded shapes
+        //----------------------------------------------------------------------------------------
+
+        /**
+         * Creates the visible portion of the top plate.  Nothing actually
+         *   occludes the top plate.
+         */
+        createTopPlateShapeOccluded: function() {
+            return this.createTopPlateShape();
+        },
+
+        /**
+         * Creates the visible portion of the bottom plate.  This may be
+         *   partially occluded by the top plate.
+         */
+        createBottomPlateShapeOccluded: function() {
+            //return ShapeUtils.subtract( createBottomPlateShape(), createTopPlateShape() );
+            throw 'You don\'t need this. Find a better way of doing what you\'re trying to do.';
+        },
+
+        /**
+         * Creates the visible portion of the dielectric between the plates.
+         *   May be partially occluded by the top plate. If it's not between
+         *   the plates at all, it will return an empty PiecewiseCurve.
+         *    
+         *             p1
+         *            /|
+         *           / |
+         *          /  |
+         *         /   |
+         *        /    p2
+         *  p5---p0   /
+         *  |        /
+         *  |       /
+         *  |      /
+         *  p4---p3
+         *
+         */
+        createDielectricBetweenPlatesShapeOccluded: function() {
+            //return ShapeUtils.subtract( createDielectricBetweenPlatesShape(), createTopPlateShape() );
+            var x = this.capacitor.get('position').x;
+            var y = this.capacitor.get('position').y;
+            var z = this.capacitor.get('position').z;
+            var plateWidth  = this.capacitor.get('plateWidth');
+            var plateHeight = this.capacitor.get('plateHeight');
+            var plateDepth  = this.capacitor.get('plateDepth');
+            var plateSeparation = this.capacitor.get('plateSeparation');
+            var dielectricOffset = this.capacitor.get('dielectricOffset');
+            var dielectricOverlap = plateWidth - dielectricOffset;
+
+            // If the dielectric isn't between the plates at all, just
+            //   return an empty curve.
+            if (dielectricOverlap <= 0)
+                return new PiecewiseCurve();
+
+            // 3D model-space points (before MVT)
+            var m0 = this._m0;
+            var m1 = this._m1;
+            var m2 = this._m2;
+            var m3 = this._m3;
+            var m4 = this._m4;
+            var m5 = this._m5;
+
+            m0.set(x + (plateWidth / 2),     y + plateHeight,        z + (plateDepth / 2)));
+            m1.set(x + (plateWidth / 2),     y + plateHeight,        z - (plateDepth / 2)));
+            m2.set(m1.x,                     m1.y + plateSeparation, m1.z);
+            m3.set(m2.x,                     m2.y,                   m0.z);
+            m4.set(m3.x - dielectricOverlap, m3.y,                   m3.z);
+            m5.set(m0.x - dielectricOverlap, m0.y,                   m0.z);
+
+            // 2D view points (after MVT)
+            var p0 = this._p0.set(this.mvt.modelToView(m0));
+            var p1 = this._p1.set(this.mvt.modelToView(m1));
+            var p2 = this._p2.set(this.mvt.modelToView(m2));
+            var p3 = this._p3.set(this.mvt.modelToView(m3));
+            var p4 = this._p4.set(this.mvt.modelToView(m4));
+            var p5 = this._p5.set(this.mvt.modelToView(m5));
+        },
+
+    });
+
+    return BoxShapeCreator;
+});
+
