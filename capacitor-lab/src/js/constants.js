@@ -102,6 +102,57 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                        DIELECTRIC SIMULATION                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var DielectricSimulation = {};
+
+    // Circuit
+    DielectricSimulation.BATTERY_LOCATION = new Vector3(0.005, 0.034, 0); // meters
+    DielectricSimulation.BATTERY_CONNECTED = true;
+    DielectricSimulation.CAPACITOR_X_SPACING = 0.025; // meters
+    DielectricSimulation.CAPACITOR_Y_SPACING = 0; // meters
+    DielectricSimulation.PLATE_WIDTH = Constants.PLATE_WIDTH_RANGE.defaultValue;
+    DielectricSimulation.PLATE_SEPARATION = Constants.PLATE_SEPARATION_RANGE.defaultValue;
+    DielectricSimulation.WIRE_THICKNESS = Constants.WIRE_THICKNESS;
+    DielectricSimulation.WIRE_EXTENT = 0.016; // how far the wire extends above or below the capacitor (meters)
+
+    // Capacitance meter
+    DielectricSimulation.CAPACITANCE_METER_LOCATION = new Vector3(0.038, 0.0017, 0);
+    DielectricSimulation.CAPACITANCE_METER_VISIBLE = false;
+
+    // Plate Charge meter
+    DielectricSimulation.PLATE_CHARGE_METER_LOCATION = new Vector3(0.049, 0.0017, 0);
+    DielectricSimulation.PLATE_CHARGE_METER_VISIBLE = false;
+
+    // Stored Energy meter
+    DielectricSimulation.STORED_ENERGY_METER_LOCATION = new Vector3(0.06, 0.0017, 0);
+    DielectricSimulation.STORED_ENERGY_METER_VISIBLE = false;
+
+    // E-Field Detector
+    DielectricSimulation.EFIELD_DETECTOR_BODY_LOCATION = new Vector3(0.043, 0.041, 0);
+    DielectricSimulation.EFIELD_DETECTOR_PROBE_LOCATION = DielectricSimulation.BATTERY_LOCATION;
+    DielectricSimulation.EFIELD_DETECTOR_VISIBLE = false;
+    DielectricSimulation.EFIELD_PLATE_VECTOR_VISIBLE = true;
+    DielectricSimulation.EFIELD_DIELECTRIC_VECTOR_VISIBLE = true;
+    DielectricSimulation.EFIELD_SUM_VECTOR_VISIBLE = true;
+    DielectricSimulation.EFIELD_VALUES_VISIBLE = true;
+
+    // Voltmeter
+    var batteryLoc = DielectricSimulation.BATTERY_LOCATION;
+    var positiveProbeLocation = new Vector3(batteryLoc.x + 0.015, batteryLoc.y, batteryLoc.z);
+    var negativeProbeLocation = new Vector3(negativeProbeLocation.x + 0.005, negativeProbeLocation.y, negativeProbeLocation.z);
+    DielectricSimulation.VOLTMETER_BODY_LOCATION = new Vector3(0.057, 0.023, 0);
+    DielectricSimulation.VOLTMETER_POSITIVE_PROBE_LOCATION = positiveProbeLocation;
+    DielectricSimulation.VOLTMETER_NEGATIVE_PROBE_LOCATION = negativeProbeLocation;
+    DielectricSimulation.VOLTMETER_VISIBLE = false;
+
+    Constants.DielectricSimulation = DielectricSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                               BATTERY                               **
      **                                                                     **
      *************************************************************************/
@@ -146,6 +197,23 @@ define(function (require) {
         TOP: 1,
         BOTTOM: 2
     };
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         DIELECTRIC MATERIAL                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var DielectricMaterial = {};
+
+    DielectricMaterial.TEFLON_COLOR = '#00ffff';
+    DielectricMaterial.GLASS_COLOR  = '#555555';
+    DielectricMaterial.GLASS_ALPHA  = 0.16;
+    DielectricMaterial.PAPER_COLOR  = '#ffffe0';
+    DielectricMaterial.CUSTOM_COLOR = '#ffc601';
+
+    Constants.DielectricMaterial = DielectricMaterial;
 
 
     return Constants;
