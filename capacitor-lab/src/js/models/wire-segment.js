@@ -131,7 +131,7 @@ define(function (require) {
      *   plate of another capacitor. Adjusts the start and end points when the
      *   plate separations change.
      */
-    WireSegment.CapacitorWireSegment = WireSegment.extend({
+    WireSegment.CapacitorToCapacitorWireSegment = WireSegment.extend({
 
         defaults: _.extend({}, WireSegment.prototype.defaults, {
             topCapacitor: null,
