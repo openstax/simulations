@@ -98,7 +98,7 @@ define(function (require) {
             return Battery.POSITIVE_TERMINAL_ELLIPSE_SIZE;
         },
 
-        getNegativeTerminalSizeReference: function() {
+        getNegativeTerminalSize: function() {
             return Battery.NEGATIVE_TERMINAL_ELLIPSE_SIZE;
         },
 

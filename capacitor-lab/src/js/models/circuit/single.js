@@ -15,7 +15,18 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     * Base class for all circuits
+     * Model of a circuit with a battery (B) connected to a single capacitor (C1).
+     *   This is treated as a special case of a parallel circuit, with some added
+     *   features that are specific to "Dielectric" module.
+     * 
+     *   |-----|
+     *   |     |
+     *   B    C1
+     *   |     |
+     *   |-----|
+     * 
+     * Unlike other circuits in this simulation, the battery can be disconnected.
+     * When the battery is disconnected, plate charge can be controlled directly.
      */
     var SingleCircuit = ParallelCircuit.extend({
 

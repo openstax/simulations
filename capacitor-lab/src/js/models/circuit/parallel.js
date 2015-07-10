@@ -2,9 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
-
     var Vector2 = require('common/math/vector2');
     var Vector3 = require('common/math/vector3');
 
@@ -29,15 +26,7 @@ define(function (require) {
      */
     var ParallelCircuit = AbstractCircuit.extend({
 
-        defaults: _.extend({}, AbstractCircuit.prototype.defaults, {
-            
-        }),
-
         initialize: function(attributes, options) {
-            options = _.extend({
-                
-            }, options);
-
             AbstractCircuit.prototype.initialize.apply(this, [attributes, options]);
 
             this.updatePlateVoltages();
