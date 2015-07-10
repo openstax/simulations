@@ -19,7 +19,7 @@ define(function (require, exports, module) {
     var DielectricSimulation = CapacitorLabSimulation.extend({
 
         defaults: _.extend(CapacitorLabSimulation.prototype.defaults, {
-            startingDielectricOffset: Constants.DielectricSimulation.DIELECTRIC_OFFSET_RANGE.defaultValue
+            startingDielectricOffset: Constants.DIELECTRIC_OFFSET_RANGE.defaultValue
         }),
         
         initialize: function(attributes, options) {
@@ -89,7 +89,7 @@ define(function (require, exports, module) {
          */
         getCapacitorWithMaxCharge: function() {
             var material = new DielectricMaterial.Custom({ 
-                dielectricConstant: DielectricSimulation.DIELECTRIC_CONSTANT_RANGE.max
+                dielectricConstant: Constants.DIELECTRIC_CONSTANT_RANGE.max
             });
 
             var capacitor = new Capacitor({
@@ -112,7 +112,7 @@ define(function (require, exports, module) {
          */
         getMaxDielectricEField: function() {
             var material = new DielectricMaterial.Custom({ 
-                dielectricConstant: DielectricSimulation.DIELECTRIC_CONSTANT_RANGE.max
+                dielectricConstant: Constants.DIELECTRIC_CONSTANT_RANGE.max
             });
 
             var circuitConfig = {
@@ -122,7 +122,7 @@ define(function (require, exports, module) {
                 plateWidth:         DielectricSimulation.PLATE_WIDTH_RANGE.min,
                 plateSeparation:    DielectricSimulation.PLATE_SEPARATION_RANGE.min,
                 dielectricMaterial: material,
-                dielectricOffset:   DielectricSimulation.DIELECTRIC_OFFSET_RANGE.min,
+                dielectricOffset:   Constant.DIELECTRIC_OFFSET_RANGE.min,
                 wireThickness:      DielectricSimulation.WIRE_THICKNESS,
                 wireExten:          DielectricSimulation.WIRE_EXTENT
             };
@@ -140,14 +140,14 @@ define(function (require, exports, module) {
          */
         getEFieldReferenceMagnitude: function() {
             var material = new DielectricMaterial.Custom({ 
-                dielectricConstant: DielectricSimulation.DIELECTRIC_CONSTANT_RANGE.defaultValue
+                dielectricConstant: Constants.DIELECTRIC_CONSTANT_RANGE.defaultValue
             });
 
             var capacitor = new Capacitor({
                 plateWidth:         DielectricSimulation.PLATE_WIDTH_RANGE.defaultValue,
                 plateSeparation:    DielectricSimulation.PLATE_SEPARATION_RANGE.defaultValue,
                 dielectricMaterial: material,
-                dielectricOffset:   DielectricSimulation.DIELECTRIC_OFFSET_RANGE.defaultValue,
+                dielectricOffset:   Constant.DIELECTRIC_OFFSET_RANGE.defaultValue,
                 platesVoltage:      DielectricSimulation.BATTERY_VOLTAGE_RANGE.max
             });
 

@@ -7,6 +7,8 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
+    var Battery = require('models/battery');
+
     /**
      * Constants
      */
@@ -34,10 +36,10 @@ define(function (require) {
 
             this.previousTotalCharge = -1; // No value
 
-            this.battery = new Battery({ position: config.batteryLocation });
+            this.battery = new Battery({ position: options.config.batteryLocation });
 
-            this.capacitors = [];
-            this.wires = [];
+            this.capacitors = new Backbone.Collection();
+            this.wires = new Backbone.Collection();
 
             this.initCapacitors(options.config, options.numberOfCapacitors);
             this.initWires(options.config, options.numberOfCapacitors);
@@ -97,9 +99,9 @@ define(function (require) {
         mvtChanged: function(capacitor, mvt) {
             var i;
             for (i = 0; i < this.capacitors.length; i++)
-                this.capacitors[i].set('mvt', mvt);
+                this.capacitors.at(i).set('mvt', mvt);
             for (i = 0; i < this.wires.length; i++)
-                this.wires[i].set('mvt', mvt);
+                this.wires.at(i).set('mvt', mvt);
             this.battery.set('mvt', mvt);
         },
 
@@ -124,14 +126,14 @@ define(function (require) {
          * Gets the wire connected to the battery's top terminal
          */
         getTopWire: function() {
-            return this.wires[0];
+            return this.wires.first();
         },
 
         /**
          * Gets the wire connected to the battery's bottom terminal
          */
         getBottomWire: function() {
-            return this.wires[this.wires.length - 1];
+            return this.wires.last();
         },
 
         /**
@@ -183,9 +185,9 @@ define(function (require) {
          */
         getEffectiveEFieldAt: function(location) {
             var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++)
-                if (this.capacitors[i].isBetweenPlates(location)) {
-                    eField = this.capacitors[i].getEffectiveEField();
+            for (var i = 0; i < this.capacitors.length; i++) {
+                if (this.capacitors.at(i).isBetweenPlates(location)) {
+                    eField = this.capacitors.at(i).getEffectiveEField();
                     break;
                 }
             }
@@ -200,13 +202,13 @@ define(function (require) {
          */
         getPlatesDielectricEFieldAt: function(location) {
             var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++)
-                if (this.capacitors[i].isInsideDielectricBetweenPlates(location)) {
-                    eField = this.capacitors[i].getPlatesDielectricEField();
+            for (var i = 0; i < this.capacitors.length; i++) {
+                if (this.capacitors.at(i).isInsideDielectricBetweenPlates(location)) {
+                    eField = this.capacitors.at(i).getPlatesDielectricEField();
                     break;
                 }
-                else if (this.capacitors[i].isInsideAirBetweenPlates(location)) {
-                    eField = this.capacitors[i].getPlatesAirEField();
+                else if (this.capacitors.at(i).isInsideAirBetweenPlates(location)) {
+                    eField = this.capacitors.at(i).getPlatesAirEField();
                     break;
                 }
             }
@@ -221,13 +223,13 @@ define(function (require) {
          */
         getDielectricEFieldAt: function(location) {
             var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++)
-                if (this.capacitors[i].isInsideDielectricBetweenPlates(location)) {
-                    eField = this.capacitors[i].getDielectricEField();
+            for (var i = 0; i < this.capacitors.length; i++) {
+                if (this.capacitors.at(i).isInsideDielectricBetweenPlates(location)) {
+                    eField = this.capacitors.at(i).getDielectricEField();
                     break;
                 }
-                else if (this.capacitors[i].isInsideAirBetweenPlates(location)) {
-                    eField = this.capacitors[i].getAirEField();
+                else if (this.capacitors.at(i).isInsideAirBetweenPlates(location)) {
+                    eField = this.capacitors.at(i).getAirEField();
                     break;
                 }
             }

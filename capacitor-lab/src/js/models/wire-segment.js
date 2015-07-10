@@ -55,7 +55,7 @@ define(function (require) {
      * Wire segment whose start point is connected to the top terminal of a
      *   battery. Adjusts the start point when the battery's polarity changes.
      */
-    WireSegment.BatteryTopWireSegment = BatteryWireSegment.extend({
+    WireSegment.BatteryTopWireSegment = WireSegment.BatteryWireSegment.extend({
 
         update: function() {
             this.set('startX', this.get('battery').getX());
@@ -73,7 +73,7 @@ define(function (require) {
      *   a battery.  Adjusts the start point when the battery's polarity
      *   changes.
      */
-    WireSegment.BatteryBottomWireSegment = BatteryWireSegment.extend({
+    WireSegment.BatteryBottomWireSegment = WireSegment.BatteryWireSegment.extend({
 
         update: function() {
             this.set('startX', this.get('battery').getX());
@@ -108,7 +108,7 @@ define(function (require) {
      * Wire segment whose start point is connected to the top plate of a
      *   capacitor. Adjusts the start point when the plate separation changes.
      */
-    WireSegment.CapacitorTopWireSegment = CapacitorWireSegment.extend({
+    WireSegment.CapacitorTopWireSegment = WireSegment.CapacitorWireSegment.extend({
 
         update: function() {
             this.set('startX', this.get('capacitor').getTopPlateCenter().x);
@@ -121,7 +121,7 @@ define(function (require) {
      * Wire segment whose start point is connected to the bottom plate of a
      *   capacitor. Adjusts the start point when the plate separation changes.
      */
-    WireSegment.CapacitorBottomWireSegment = CapacitorWireSegment.extend({
+    WireSegment.CapacitorBottomWireSegment = WireSegment.CapacitorWireSegment.extend({
 
         update: function() {
             this.set('startX', this.get('capacitor').getBottomPlateCenter().x);

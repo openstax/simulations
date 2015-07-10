@@ -59,7 +59,7 @@ define(function (require) {
                     dielectricOffset: config.dielectricOffset
                 });
 
-                this.capacitors.push(capacitor);
+                this.capacitors.add(capacitor);
 
                 y += config.capacitorYSpacing;
             }
@@ -101,9 +101,9 @@ define(function (require) {
         updatePlateVoltages: function() {
             var Q_total = this.getTotalCharge();
             for (var i = 0; i < this.capacitors.length; i++) {
-                var Ci = this.capacitors[i].getTotalCapacitance();
+                var Ci = this.capacitors.at(i).getTotalCapacitance();
                 var Vi = Q_total / Ci;
-                this.capacitors[i].set('platesVoltage', Vi);
+                this.capacitors.at(i).set('platesVoltage', Vi);
             }
         },
 
@@ -114,7 +114,7 @@ define(function (require) {
         getTotalCapacitance: function() {
             var sum = 0;
             for (var i = 0; i < this.capacitors.length; i++)
-                sum += 1 / this.capacitors[i].getTotalCapacitance();
+                sum += 1 / this.capacitors.at(i).getTotalCapacitance();
             return 1 / sum;
         },
 
@@ -135,7 +135,7 @@ define(function (require) {
                 // Check the plates and wires
                 var capacitor;
                 for (var i = 0; i < this.capacitors.length; i++) {
-                    capacitor = this.capacitors[i];
+                    capacitor = this.capacitors.at(i);
 
                     var topWire    = this.wires.at(i);
                     var bottomWire = this.wires.at(i + 1);
@@ -163,7 +163,7 @@ define(function (require) {
         sumPlateVoltages: function(topPlateIndex) {
             var voltage = 0;
             for (var i = topPlateIndex; i < this.capacitors.length; i++)
-                voltage += this.capacitors[i].get('platesVoltage');
+                voltage += this.capacitors.at(i).get('platesVoltage');
             return voltage;
         }
 

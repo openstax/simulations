@@ -51,7 +51,7 @@ define(function (require) {
                     dielectricOffset: config.dielectricOffset
                 });
 
-                this.capacitors.push(capacitor);
+                this.capacitors.add(capacitor);
 
                 x += config.capacitorXSpacing;
             }
@@ -70,8 +70,8 @@ define(function (require) {
                 capacitors: this.capacitors
             };
 
-            this.wires.push(new BatteryToCapacitorsTopWire(attrs, opts));
-            this.wires.push(new BatteryToCapacitorsBottomWire(attrs, opts));
+            this.wires.add(new BatteryToCapacitorsTopWire(attrs, opts));
+            this.wires.add(new BatteryToCapacitorsBottomWire(attrs, opts));
         },
 
         /**

@@ -4,6 +4,7 @@ define(function (require) {
 
     var range   = require('common/math/range');
     var Vector2 = require('common/math/vector2');
+    var Vector3 = require('common/math/vector3');
 
     var DEG_TO_RAD = Math.PI / 180;
 
@@ -142,7 +143,7 @@ define(function (require) {
     // Voltmeter
     var batteryLoc = DielectricSimulation.BATTERY_LOCATION;
     var positiveProbeLocation = new Vector3(batteryLoc.x + 0.015, batteryLoc.y, batteryLoc.z);
-    var negativeProbeLocation = new Vector3(negativeProbeLocation.x + 0.005, negativeProbeLocation.y, negativeProbeLocation.z);
+    var negativeProbeLocation = new Vector3(positiveProbeLocation.x + 0.005, positiveProbeLocation.y, positiveProbeLocation.z);
     DielectricSimulation.VOLTMETER_BODY_LOCATION = new Vector3(0.057, 0.023, 0);
     DielectricSimulation.VOLTMETER_POSITIVE_PROBE_LOCATION = positiveProbeLocation;
     DielectricSimulation.VOLTMETER_NEGATIVE_PROBE_LOCATION = negativeProbeLocation;
@@ -169,7 +170,7 @@ define(function (require) {
      */
     Battery.POSITIVE_TERMINAL_ELLIPSE_SIZE = new Vector2(0.0025, 0.0005);
     Battery.POSITIVE_TERMINAL_CYLINDER_HEIGHT = 0.0009;
-    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.getHeight() / 2) + 0.000505;
+    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.y / 2) + 0.000505;
 
     /*
      * Negative terminal is part of the image file.
@@ -177,7 +178,7 @@ define(function (require) {
      * The origin of the terminal is at the center of the ellipse.
      */
     Battery.NEGATIVE_TERMINAL_ELLIPSE_SIZE = new Vector2(0.0035, 0.0009); // dimension of the ellipse that defines the negative terminal
-    Battery.NEGATIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.getHeight() / 2) + 0.00105; // center of the negative terminal, when it's the top terminal
+    Battery.NEGATIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.y / 2) + 0.00105; // center of the negative terminal, when it's the top terminal
 
     Constants.Battery = Battery;
 

@@ -39,9 +39,9 @@ define(function (require) {
         initialize: function(attributes, options) {
             AbstractCircuit.prototype.initialize.apply(this, [attributes, options]);
 
-            this.c1 = this.capacitors[0];
-            this.c2 = this.capacitors[1];
-            this.c3 = this.capacitors[2];
+            this.c1 = this.capacitors.at(0);
+            this.c2 = this.capacitors.at(1);
+            this.c3 = this.capacitors.at(2);
 
             this.updatePlateVoltages();
         },
@@ -84,18 +84,18 @@ define(function (require) {
                 dielectricOffset: config.dielectricOffset
             });
 
-            this.capacitors.push(c1);
-            this.capacitors.push(c2);
-            this.capacitors.push(c3);
+            this.capacitors.add(c1);
+            this.capacitors.add(c2);
+            this.capacitors.add(c3);
         },
 
         /**
          * Creates wires as shown in the diagram at the top of this file.
          */
         initWires: function(config, numberOfCapacitors) {
-            var c1 = this.capacitors[0];
-            var c2 = this.capacitors[1];
-            var c3 = this.capacitors[2];
+            var c1 = this.capacitors.at(0);
+            var c2 = this.capacitors.at(1);
+            var c3 = this.capacitors.at(2);
 
             this.wires.add(new BatteryToCapacitorsTopWire({
                 battery: this.battery,

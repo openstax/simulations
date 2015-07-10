@@ -7,7 +7,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var ParallelCircuit = require('models/circuit/abstract');
+    var ParallelCircuit = require('models/circuit/parallel');
 
     /**
      * Constants
@@ -45,12 +45,12 @@ define(function (require) {
 
             ParallelCircuit.prototype.initialize.apply(this, [attributes, options]);
 
+            // Save a reference to the first and only capacitor for convenience
+            this.capacitor = this.capacitors.first();
+
             // Set default disconnected plate charge
             this.set('disconnectedPlateCharge', this.getTotalCharge());
-
-            // Save a reference to the first and only capacitor for convenience
-            this.capacitor = this.capacitors[0];
-
+            
             // Bind event listeners
             this.on('change:batteryConnected', function() {
                 this.updatePlateVoltages();
@@ -83,14 +83,14 @@ define(function (require) {
          *   constructor.
          */
         updatePlateVoltages: function() {
-            var v = this.battery.getVoltage();
+            var v = this.battery.get('voltage');
 
             if (!this.batteryIsConnected()) {
                 // V = Q / C
                 v = this.disconnectedPlateCharge / this.capacitor.getTotalCapacitance();
             }
 
-            this.capacitor.setPlatesVoltage(v);
+            this.capacitor.set('platesVoltage', v);
         },
 
         /*
@@ -102,7 +102,7 @@ define(function (require) {
             if (this.batteryIsConnected())
                 return ParallelCircuit.prototype.getTotalVoltage.apply(this, arguments);
             else
-                return this.capacitor.getPlatesVoltage();
+                return this.capacitor.get('platesVoltage');
         },
 
         /**

@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var CapacitorLabSimView = require('views/sim');
+    var DielectricSimulation = require('models/simulation/dielectric');
 
     var Constants = require('constants');
 
@@ -40,29 +41,40 @@ define(function (require) {
         },
 
         /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new DielectricSimulation();
+        },
+
+        /**
          * Renders page content
          */
         renderScaffolding: function() {
             CapacitorLabSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            var tempMaterialsList = [{
-                label: 'Custom',
-                config: {}
-            }, {
-                label: 'Teflon (2.1)',
-                config: {}
-            }, {
-                label: 'Paper (3.5)',
-                config: {}
-            }, {
-                label: 'Glass (4.7)',
-                config: {}
-            }];
+            // var tempMaterialsList = [{
+            //     label: 'Custom',
+            //     config: {}
+            // }, {
+            //     label: 'Teflon (2.1)',
+            //     config: {}
+            // }, {
+            //     label: 'Paper (3.5)',
+            //     config: {}
+            // }, {
+            //     label: 'Glass (4.7)',
+            //     config: {}
+            // }];
+
+            var materials = _.map(this.simulation.dielectricMaterials, function(material) {
+                return material.get('name') + ' (' + material.get('dielectricConstant').toFixed(1) + ')';
+            });
 
             var data = {
                 Constants: Constants,
                 unique: this.cid,
-                materials: tempMaterialsList
+                materials: materials
             };
 
             this.$('.sim-controls-group-2').append(this.dielectricTemplate(data));
