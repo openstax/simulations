@@ -133,13 +133,18 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                               POLARITY                              **
+     **                             ENUMERATIONS                            **
      **                                                                     **
      *************************************************************************/
 
     Constants.Polarity = {
     	POSITIVE:  1,
     	NEGATIVE: -1
+    };
+
+    Constants.ConnectionPoint = {
+        TOP: 1,
+        BOTTOM: 2
     };
 
 

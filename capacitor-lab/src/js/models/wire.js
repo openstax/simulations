@@ -38,7 +38,15 @@ define(function (require) {
         },
 
         intersects: function() {
-            throw 'Can we do this another way?';
+            throw 'Wire.intersects is deprecated. Please use Wire.touches instead.';
+        },
+
+        touches: function(point, radius) {
+            for (var i = 0; i < this.segments.length; i++) {
+                if (this.segments.at(i).touches(point, radius))
+                    return true;
+            }
+            return false;
         }
 
     });

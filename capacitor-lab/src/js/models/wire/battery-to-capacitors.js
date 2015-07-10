@@ -14,10 +14,7 @@ define(function (require) {
      * Constants
      */
     var Constants = require('constants');
-    var ConnectionPoint = {
-        TOP: 1,
-        BOTTOM: 2
-    };
+    var ConnectionPoint = Constants.ConnectionPoint;
 
     /**
      * Base class for any wire that connects a battery (B) to one of more capacitors (C1...Cn).
@@ -139,43 +136,6 @@ define(function (require) {
         }
 
     });
-
-    /**
-     * Connects the top of the battery (B) to the tops of N capacitors (C1...Cn).
-     *   Constructor args are described in superclass constructor.
-     */
-    BatteryToCapacitorsWire.WireBatteryToCapacitorsTop = BatteryToCapacitorsWire.extend({
-
-        initialize: function(attributes, options) {
-            options.connectionPoint = ConnectionPoint.TOP;
-
-        	BatteryToCapacitorsWire.prototype.initialize.apply(this, [attributes, options]);
-        }
-
-    });
-
-    /*
-     * Connects the bottom of the battery (B) to the bottoms of N capacitors (C1...Cn).
-     *   Constructor args are described in superclass constructor.
-     */
-    BatteryToCapacitorsWire.WireBatteryToCapacitorsBottom = BatteryToCapacitorsWire.extend({
-
-        initialize: function(attributes, options) {
-            options.connectionPoint = ConnectionPoint.BOTTOM;
-
-            BatteryToCapacitorsWire.prototype.initialize.apply(this, [attributes, options]);
-
-            /* Note: there was additional functionality in the original where it listened
-             *   for changes in the capacitor plate size and recalculated the shape of
-             *   the wire segment, but because I'm not using the projected shapes in the
-             *   model, I'm omitting it.  They wanted to make the wire shape smaller
-             *   because of occlusion of the bottom plate, but I don't care about that
-             *   because I will just layer the bottom plate over it in the view.
-             */ 
-        }
-
-    });
-
 
     return BatteryToCapacitorsWire;
 });

@@ -24,6 +24,10 @@ define(function (require) {
             startY: 0,
             endX: 0,
             endY: 0
+        },
+
+        touches: function(point, radius) {
+            throw 'Not yet implemented.';
         }
 
     });
