@@ -49,6 +49,42 @@ define(function (require) {
                     return true;
             }
             return false;
+        },
+
+        /**
+         * Returns the average y for all segment endpoints.
+         */
+        getAverageY: function() {
+            var ySum = 0;
+            this.segments.each(function(segment) {
+                ySum += segment.get('startY');
+                ySum += segment.get('endY');
+            });
+            var averageY = ySum /= (this.segments.length * 2);
+        },
+
+        /**
+         * Returns the maximum y for all segment endpoints.
+         */
+        getMaxY: function() {
+            var maxY = Numbers.NEGATIVE_INFINITY;
+            this.segments.each(function(segment) {
+                maxY = Math.max(maxY, segment.get('startY'));
+                maxY = Math.max(maxY, segment.get('endY'));
+            });
+            return maxY;
+        },
+
+        /**
+         * Returns the minimum y for all segment endpoints.
+         */
+        getMinY: function() {
+            var minY = Numbers.POSITIVE_INFINITY;
+            this.segments.each(function(segment) {
+                minY = Math.min(minY, segment.get('startY'));
+                minY = Math.min(minY, segment.get('endY'));
+            });
+            return minY;
         }
 
     });
