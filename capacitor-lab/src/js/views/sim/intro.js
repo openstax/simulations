@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var DielectricSimulation = require('models/simulation/dielectric');
+
     var CapacitorLabSimView = require('views/sim');
     var IntroSceneView = require('views/scene/intro');
 
@@ -24,6 +26,13 @@ define(function (require) {
             }, options);
 
             CapacitorLabSimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new DielectricSimulation();
         },
 
         /**

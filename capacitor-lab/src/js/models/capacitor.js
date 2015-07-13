@@ -196,7 +196,7 @@ define(function (require) {
          */
         setTotalCapacitance: function(capacitance) {
             this.set('plateSeparation', Capacitor.calculatePlateSeparation(
-                this.get('dielectricConstant'), this.get('plateWidth'), capacitance
+                this.getDielectricConstant(), this.get('plateWidth'), capacitance
             ));
         },
 
@@ -223,7 +223,7 @@ define(function (require) {
          *   contacting the dielectric.
          */
         getDielectricCapacitance: function() {
-            return Capacitor.getCapacitance(this.get('dielectricConstant'), this.getDielectricContactArea(), this.get('plateSeparation'));
+            return Capacitor.getCapacitance(this.getDielectricConstant(), this.getDielectricContactArea(), this.get('plateSeparation'));
         },
 
         /**

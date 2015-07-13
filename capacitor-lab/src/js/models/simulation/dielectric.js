@@ -65,7 +65,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.circuit.getTotalCapacitance();
         },
 
         /**
