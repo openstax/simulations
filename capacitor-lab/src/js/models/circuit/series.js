@@ -6,6 +6,7 @@ define(function (require) {
     var Vector3 = require('common/math/vector3');
 
     var AbstractCircuit               = require('models/circuit');
+    var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
 
@@ -73,15 +74,15 @@ define(function (require) {
 
             this.wires.add(new BatteryToCapacitorsTopWire({
                 battery: this.battery,
-                capacitors: [ capacitors[0] ],
+                capacitors: [ capacitors.at(0) ],
                 wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
 
             for (var i = 0; i < capacitors.length - 1; i++) {
                 this.wires.add(new CapacitorToCapacitorsWire({
-                    topCapacitor: capacitors[i],
-                    bottomCapacitors: [ capacitors[i + 1] ],
+                    topCapacitor: capacitors.at(i),
+                    bottomCapacitors: [ capacitors.at(i + 1) ],
                     wireThickness: config.wireThickness,
                     wireExtent: config.wireExtent
                 }));
@@ -89,7 +90,7 @@ define(function (require) {
 
             this.wires.add(new BatteryToCapacitorsBottomWire({
                 battery: this.battery,
-                capacitors: [ capacitors[0] ],
+                capacitors: [ capacitors.at(0) ],
                 wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));

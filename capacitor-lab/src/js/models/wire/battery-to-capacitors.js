@@ -54,7 +54,7 @@ define(function (require) {
             var capacitors      = options.capacitors;
 
             // Y coordinates of the horizontal wire
-            var horizontalY = BatteryToCapacitorsWire.getHorizontalY(connectionPoint, wireExtent, battery, capacitors);
+            var horizontalY = BatteryToCapacitorsWire.getHorizontalY(connectionPoint, capacitors, wireExtent);
 
             // Horizontal segment connecting battery (B) to the rightmost capacitor (Cn)
             var rightmostCapacitor = capacitors[capacitors.length - 1];

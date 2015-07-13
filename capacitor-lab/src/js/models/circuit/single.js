@@ -67,22 +67,15 @@ define(function (require) {
         },
 
         /**
-         * Creates all the capacitors.  Should be overridden by child classes.
-         */
-        initCapacitors: function(config, numberOfCapacitors) {},
-
-        /**
-         * Creates all the wires.  Should be overridden by child classes.
-         */
-        initWires: function(config, numberOfCapacitors) {},
-
-        /**
          * Updates the plate voltage, depending on whether the battery is connected.
          *   Null check required because superclass calls this method from its
          *   constructor.  Remember to call this method at the end of this class'
          *   constructor.
          */
         updatePlateVoltages: function() {
+            if (!this.capacitor)
+                return;
+
             var v = this.battery.get('voltage');
 
             if (!this.batteryIsConnected()) {

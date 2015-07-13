@@ -43,6 +43,18 @@ define(function (require) {
             this._offsetPosition = new Vector3();
         },
 
+        getX: function(x) {
+            return this.get('position').x;
+        },
+
+        getY: function(y) {
+            return this.get('position').y;
+        },
+
+        getZ: function(z) {
+            return this.get('position').z;
+        },
+
         setX: function(x) {
             this.setPosition(x, this.get('position').y, this.get('position').z);
         },

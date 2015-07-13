@@ -6,6 +6,7 @@ define(function (require) {
     var Vector3 = require('common/math/vector3');
 
     var AbstractCircuit               = require('models/circuit');
+    var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
 

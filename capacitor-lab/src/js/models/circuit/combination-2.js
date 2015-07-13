@@ -6,6 +6,7 @@ define(function (require) {
     var Vector3 = require('common/math/vector3');
 
     var AbstractCircuit               = require('models/circuit');
+    var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
 
@@ -38,9 +39,9 @@ define(function (require) {
         initialize: function(attributes, options) {
             AbstractCircuit.prototype.initialize.apply(this, [attributes, options]);
 
-            this.c1 = this.capacitors[0];
-            this.c2 = this.capacitors[1];
-            this.c3 = this.capacitors[2];
+            this.c1 = this.capacitors.at(0);
+            this.c2 = this.capacitors.at(1);
+            this.c3 = this.capacitors.at(2);
 
             this.updatePlateVoltages();
         },
@@ -91,9 +92,9 @@ define(function (require) {
          * Creates wires as shown in the diagram at the top of this file.
          */
         initWires: function(config, numberOfCapacitors) {
-            var c1 = this.capacitors[0];
-            var c2 = this.capacitors[1];
-            var c3 = this.capacitors[2];
+            var c1 = this.capacitors.at(0);
+            var c2 = this.capacitors.at(1);
+            var c3 = this.capacitors.at(2);
 
             this.wires.add(new BatteryToCapacitorsTopWire({
                 battery: this.battery,

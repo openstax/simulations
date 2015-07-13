@@ -44,7 +44,7 @@ define(function (require, exports, module) {
         },
 
         initCircuit: function() {
-            var circuitConfig = {
+            var config = {
                 batteryLocation:    DielectricSimulation.BATTERY_LOCATION,
                 capacitorXSpacing:  DielectricSimulation.CAPACITOR_X_SPACING,
                 capacitorYSpacing:  DielectricSimulation.CAPACITOR_Y_SPACING,
@@ -53,10 +53,10 @@ define(function (require, exports, module) {
                 dielectricMaterial: this.dielectricMaterials[0],
                 dielectricOffset:   this.get('startingDielectricOffset'),
                 wireThickness:      DielectricSimulation.WIRE_THICKNESS,
-                wireExten:          DielectricSimulation.WIRE_EXTENT
+                wireExtent:         DielectricSimulation.WIRE_EXTENT
             };
 
-            this.circuit = new SingleCircuit({ batteryConnected: DielectricSimulation.BATTERY_CONNECTED }, { options: circuitConfig });
+            this.circuit = new SingleCircuit({ batteryConnected: DielectricSimulation.BATTERY_CONNECTED }, { config: config });
         },
 
         resetComponents: function() {
@@ -124,10 +124,10 @@ define(function (require, exports, module) {
                 dielectricMaterial: material,
                 dielectricOffset:   Constant.DIELECTRIC_OFFSET_RANGE.min,
                 wireThickness:      DielectricSimulation.WIRE_THICKNESS,
-                wireExten:          DielectricSimulation.WIRE_EXTENT
+                wireExtent:         DielectricSimulation.WIRE_EXTENT
             };
 
-            var circuit = new SingleCircuit({ batteryConnected: false }, { options: circuitConfig });
+            var circuit = new SingleCircuit({ batteryConnected: false }, { config: circuitConfig });
             circuit.set('disconnectedPlateCharge', this.getMaxPlateCharge());
 
             return circuit.capacitor.getDielectricEField();
