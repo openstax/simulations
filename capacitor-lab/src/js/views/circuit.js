@@ -10,6 +10,8 @@ define(function(require) {
     var Vector2   = require('common/math/vector2');
 
     var CapacitorView = require('views/capacitor');
+    var WireView      = require('views/wire');
+    var BatteryView   = require('views/battery');
 
     var Constants = require('constants');
 
@@ -19,10 +21,12 @@ define(function(require) {
     var CircuitView = PixiView.extend({
 
         initialize: function(options) {
+            this.mvt = options.mvt;
+
             // Arrays for views
             this.batteryViews = [];
             this.capacitorViews = [];
-            this.wireSegmentViews = [];
+            this.wireViews = [];
 
             // Cached objects
 
@@ -43,7 +47,11 @@ define(function(require) {
         },
 
         addBattery: function() {
-
+            var batteryView = new BatteryView({
+                model: this.model.battery,
+                mvt: this.mvt
+            });
+            this.batteryViews.push(batteryView);
         },
 
         addCapacitors: function() {
@@ -53,16 +61,22 @@ define(function(require) {
                     model: capacitors.at(i),
                     mvt: this.mvt
                 });
+                this.capacitorViews.push(capacitorView);
             }
         },
 
         /**
-         * Creates the wire segments, sorting them by their y-value and inserting
-         *   them in and around the capacitors and battery so they render in the
-         *   right order.
+         * Creates and adds the wire views
          */
         addWires: function() {
-
+            var wires = this.model.wires;
+            for (var i = 0; i < wires.length; i++) {
+                var wireView = new WireView({
+                    model: wires.at(i),
+                    mvt: this.mvt
+                });
+                this.wireViews.push(wireView);
+            }
         },
 
         getAllComponentViews: function() {
@@ -110,6 +124,8 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.sortComponents();
         }
 
     });

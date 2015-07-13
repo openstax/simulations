@@ -7,6 +7,11 @@ define(function(require) {
     
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
+    var Vector3  = require('common/math/vector3');
+
+    var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
+    var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
 
     var Constants = require('constants');
 
@@ -26,7 +31,12 @@ define(function(require) {
          * Initializes the new WireView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex(this.model.get('color'));
+            this.color = Colors.parseHex('#bbb');
+
+            this._modelStartVec = new Vector3();
+            this._modelEndVec   = new Vector3();
+            this._viewStartVec  = new Vector2();
+            this._viewEndVec    = new Vector2();
 
             this.listenTo(this.model, 'change:position', this.drawWire);
 
@@ -37,9 +47,30 @@ define(function(require) {
          * Draws the wire
          */
         drawWire: function() {
+            var thickness = Math.round(this.mvt.modelToViewDeltaX(this.model.get('thickness')));
+
             var graphics = this.displayObject;
             graphics.clear();
-           
+            graphics.lineStyle(thickness, this.color, 1);
+
+            var modelStart = this._modelStartVec;
+            var modelEnd   = this._modelEndVec;
+            var viewStart  = this._viewStartVec;
+            var viewEnd    = this._viewEndVec;
+            
+            var segment;
+            for (var i = 0; i < this.model.segments.length; i++) {
+                segment = this.model.segments.at(i);
+
+                modelStart.set(segment.get('startX'), segment.get('startY'), 0);
+                modelEnd.set(segment.get('endX'), segment.get('endY'), 0);
+
+                viewStart.set(this.mvt.modelToView(modelStart));
+                viewEnd.set(this.mvt.modelToView(modelEnd));
+                
+                graphics.moveTo(modelStart.x, modelStart.y);
+                graphics.lineTo(modelEnd.x, modelEnd.y);
+            }
         },
 
         /**
@@ -57,8 +88,16 @@ define(function(require) {
          *   average y for all segment endpoints.
          */
         getYSortValue: function() {
-            if (model typeof )
+            var y;
             
+            if (this.model instanceof BatteryToCapacitorsTopWire)
+                y = this.model.getMinY();
+            else if (this.model instanceof BatteryToCapacitorsBottomWire)
+                y = this.model.getMaxY();
+            else
+                y = this.model.getAverageY();
+
+            return this.mvt.modelToViewY(y);
         }
 
     });

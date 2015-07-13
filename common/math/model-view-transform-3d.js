@@ -42,13 +42,14 @@ define(function (require) {
         // Cached objects for recycling
         this._modelToViewPoint2D = new Vector2();
         this._deltaPoint2D = new Vector2();
+        this._deltaPoint3D = new Vector3();
         this._point3D = new Vector3();
         this._viewToModel2D = new Vector2();
         this._viewToModel3D = new Vector3();
 
         // Origins of model and view for making delta calculations
-        this.modelOrigin = this.modelToView(0, 0, 0).clone();
-        this.viewOrigin  = this.viewToModel(0, 0).clone();
+        this.viewOrigin  = this.modelToView(0, 0, 0).clone();
+        this.modelOrigin = this.viewToModel(0, 0).clone();
     };
 
     /**
@@ -139,8 +140,8 @@ define(function (require) {
                 throw 'modelToViewDelta cannot convert shapes.';
 
             var viewPoint = this.modelToView(coordinates);
-            this._deltaPoint2D.x = point.x - this.modelOrigin.x;
-            this._deltaPoint2D.y = point.y - this.modelOrigin.y;
+            this._deltaPoint2D.x = viewPoint.x - this.viewOrigin.x;
+            this._deltaPoint2D.y = viewPoint.y - this.viewOrigin.y;
             return this._deltaPoint2D;
         },
 
@@ -215,9 +216,10 @@ define(function (require) {
             if (x instanceof Rectangle || x instanceof PiecewiseCurve)
                 throw 'modelToViewDelta cannot convert shapes.';
 
-            var viewPoint = this.viewToModel(coordinates);
-            this._deltaPoint2D.x = point.x - this.viewOrigin.x;
-            this._deltaPoint2D.y = point.y - this.viewOrigin.y;
+            var modelPoint = this.viewToModel(coordinates);
+            this._deltaPoint3D.x = modelPoint.x - this.modelOrigin.x;
+            this._deltaPoint3D.y = modelPoint.y - this.modelOrigin.y;
+            this._deltaPoint3D.z = 0;
             return this._deltaPoint2D;
         },
 

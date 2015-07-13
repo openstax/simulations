@@ -14,11 +14,7 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * This is a view for any object that is stored in an object
-     *   reservoir.  It is meant to draw circular-shaped objects
-     *   by default but could be extended to draw other things.
-     *   This is the base class for the negative and positive 
-     *   charge views as well as the e-field sensor.
+     * 
      */
     var CapacitorView = PixiView.extend({
 
@@ -130,23 +126,21 @@ define(function(require) {
             // label.y = 0;
         },
 
-        initLabel: function() {
+        initDielectric: function() {
             
-
-            this.displayObject.addChild(label);
         },
 
         drawPlates: function() {
             this.bottomPlate.clear();
             this.bottomPlate.lineStyle(1, 0x000000, 1);
             this.bottomPlate.beginFill(0xFF5555, 1);
-            this.bottomPlate.drawPiecewiseCurve(shapeCreator.createBottomPlateShape());
+            this.bottomPlate.drawPiecewiseCurve(this.shapeCreator.createBottomPlateShape());
             this.bottomPlate.endFill();
 
             this.topPlate.clear();
             this.topPlate.lineStyle(1, 0x000000, 1);
             this.topPlate.beginFill(0x5555FF, 1);
-            this.topPlate.drawPiecewiseCurve(shapeCreator.createTopPlateShape());
+            this.topPlate.drawPiecewiseCurve(this.shapeCreator.createTopPlateShape());
             this.topPlate.endFill();
         },
 

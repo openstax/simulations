@@ -67,7 +67,7 @@ define(function (require) {
          * Returns the maximum y for all segment endpoints.
          */
         getMaxY: function() {
-            var maxY = Numbers.NEGATIVE_INFINITY;
+            var maxY = Number.NEGATIVE_INFINITY;
             this.segments.each(function(segment) {
                 maxY = Math.max(maxY, segment.get('startY'));
                 maxY = Math.max(maxY, segment.get('endY'));
@@ -79,7 +79,7 @@ define(function (require) {
          * Returns the minimum y for all segment endpoints.
          */
         getMinY: function() {
-            var minY = Numbers.POSITIVE_INFINITY;
+            var minY = Number.POSITIVE_INFINITY;
             this.segments.each(function(segment) {
                 minY = Math.min(minY, segment.get('startY'));
                 minY = Math.min(minY, segment.get('endY'));

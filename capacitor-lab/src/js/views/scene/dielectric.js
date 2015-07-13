@@ -6,14 +6,10 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var CapacitorLabSceneView = require('views/scene');
-
-    var Assets = require('assets');
+    var CircuitView           = require('views/circuit');
 
     // Constants
     var Constants = require('constants');
-
-    // CSS
-    require('less!styles/scene');
 
     /**
      *
@@ -31,7 +27,12 @@ define(function(require) {
         initGraphics: function() {
             CapacitorLabSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.circuitView = new CircuitView({
+                model: this.simulation.circuit,
+                mvt: this.mvt
+            });
 
+            this.stage.addChild(this.circuitView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
