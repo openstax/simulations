@@ -100,7 +100,7 @@ define(function(require) {
                 return b.getYSortValue() - a.getYSortValue();
             });
 
-            this.detachComponentViews();
+            this.components.removeChildren();
             for (var i = 0; i < views.length; i++)
                 this.components.addChild(views[i].displayObject);
         },
@@ -112,14 +112,6 @@ define(function(require) {
                 views[i].removeFrom(this.components);
                 views.splice(i, 1);
             }
-        },
-
-        detachComponentViews: function() {
-            this.components.removeChildren();
-            // var views = this.getAllComponentViews();
-
-            // for (var i = views.length - 1; i >= 0; i--)
-            //     this.components.removeChild(views[i].displayObject);
         },
 
         updateMVT: function(mvt) {

@@ -67,9 +67,9 @@ define(function(require) {
 
                 viewStart.set(this.mvt.modelToView(modelStart));
                 viewEnd.set(this.mvt.modelToView(modelEnd));
-                
-                graphics.moveTo(modelStart.x, modelStart.y);
-                graphics.lineTo(modelEnd.x, modelEnd.y);
+
+                graphics.moveTo(viewStart.x, viewStart.y);
+                graphics.lineTo(viewEnd.x, viewEnd.y);
             }
         },
 
