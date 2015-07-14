@@ -38,8 +38,8 @@ define(function(require) {
             'touchendoutside .plateSeparationHandle': 'dragPlateSeparationEnd',
             'mouseupoutside  .plateSeparationHandle': 'dragPlateSeparationEnd',
 
-            'mouseover .plateAreaHandle'  : 'plateAreaHover',
-            'mouseout  .plateAreaHandle'  : 'plateAreaUnhover',
+            'mouseover .plateAreaHandle'       : 'plateAreaHover',
+            'mouseout  .plateAreaHandle'       : 'plateAreaUnhover',
             'mouseover .plateSeparationHandle' : 'plateSeparationHover',
             'mouseout  .plateSeparationHandle' : 'plateSeparationUnhover',
         },
@@ -105,7 +105,7 @@ define(function(require) {
             this.drawDragHandle(this.plateAreaHandleGraphic,      this.handleColor);
             this.drawDragHandle(this.plateAreaHandleHoverGraphic, this.handleHoverColor);
 
-            this.plateAreaHandleGraphic.hitArea = new PIXI.Circle(0, 0, 17);
+            this.plateAreaHandleGraphic.hitArea      = new PIXI.Circle(0, 0, 17);
             this.plateAreaHandleHoverGraphic.hitArea = new PIXI.Circle(0, 0, 17);
 
             this.plateAreaHandleGraphic.x = this.plateAreaHandleHoverGraphic.x = -32;
@@ -133,8 +133,6 @@ define(function(require) {
 
             var plateAreaHandle = new PIXI.DisplayObjectContainer();
             plateAreaHandle.buttonMode = true;
-            plateAreaHandle.x = lowerLeft.x;
-            plateAreaHandle.y = lowerLeft.y;
             plateAreaHandle.addChild(graphicsWrapper);
             plateAreaHandle.addChild(textWrapper);
 
@@ -143,23 +141,57 @@ define(function(require) {
         },
 
         initPlateSeparationHandle: function() {
-            var plateSeparationHandle = new PIXI.Graphics();
+            this.plateSeparationHandleGraphic = new PIXI.Graphics();
+            this.plateSeparationHandleHoverGraphic = new PIXI.Graphics();
 
+            this.drawDragHandle(this.plateSeparationHandleGraphic,      this.handleColor);
+            this.drawDragHandle(this.plateSeparationHandleHoverGraphic, this.handleHoverColor);
+
+            this.plateSeparationHandleGraphic.hitArea      = new PIXI.Circle(0, 0, 17);
+            this.plateSeparationHandleHoverGraphic.hitArea = new PIXI.Circle(0, 0, 17);
+
+            this.plateSeparationHandleGraphic.x = this.plateSeparationHandleHoverGraphic.x = -58;
+
+            var dots = new PIXI.Graphics();
+            dots.beginFill(0x000000, 1);
+            for (var x = -40; x <= 0; x += 4)
+                dots.drawCircle(x, 0, 1);
+            dots.endFill();
+
+            var graphicsWrapper = new PIXI.DisplayObjectContainer();
+            graphicsWrapper.rotation = Math.PI / 2;
+            graphicsWrapper.addChild(this.plateSeparationHandleGraphic);
+            graphicsWrapper.addChild(this.plateSeparationHandleHoverGraphic);
+            graphicsWrapper.addChild(dots);
+            
+            this.plateSeparationLabelTitle = new PIXI.Text('Separation', this.labelTitleStyle);
+            this.plateSeparationLabelValue = new PIXI.Text('5.0 mm', this.labelValueStyle);
+            this.plateSeparationLabelValue.y = 18;
+            var textWrapper = new PIXI.DisplayObjectContainer();
+            textWrapper.addChild(this.plateSeparationLabelTitle);
+            textWrapper.addChild(this.plateSeparationLabelValue);
+            textWrapper.x = -66;
+            textWrapper.y = -100;
+
+            var plateSeparationHandle = new PIXI.Graphics();
             plateSeparationHandle.buttonMode = true;
-            plateSeparationHandle.defaultCursor = 'move';
+            plateSeparationHandle.addChild(graphicsWrapper);
+            plateSeparationHandle.addChild(textWrapper);
 
             this.plateSeparationHandle = plateSeparationHandle;
+            this.topLayer.addChild(plateSeparationHandle);
+        },
 
-            // var textSettings = {
-            //     font: this.labelFontSize + ' ' + this.labelFontFamily,
-            //     fill: this.labelColor
-            // };
+        updateHandlePositions: function() {
+            var lowerLeft  = this.getPlateDragCorner();
+            this.plateAreaHandle.x = Math.round(lowerLeft.x);
+            this.plateAreaHandle.y = Math.round(lowerLeft.y);
 
-            // var label = new PIXI.Text(this.labelText, textSettings);
-            // label.anchor.x = 0.5;
-            // label.anchor.y = 0.47;
-            // label.x = 0;
-            // label.y = 0;
+            var modelSHandleLoc = this.model.getTopPlateCenter();
+            modelSHandleLoc.x -= this.model.get('plateWidth') / 4;
+            var sHandleLoc = this.mvt.modelToView(modelSHandleLoc);
+            this.plateSeparationHandle.x = Math.round(sHandleLoc.x);
+            this.plateSeparationHandle.y = Math.round(sHandleLoc.y);
         },
 
         drawDragHandle: function(graphics, color) {
@@ -216,6 +248,12 @@ define(function(require) {
             
         },
 
+        updateMVT: function(mvt) {
+            CapacitorView.prototype.updateMVT.apply(this, arguments);
+
+            this.updateHandlePositions();
+        },
+
         dragPlateAreaStart: function(data) {
             this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
             this.draggingPlateArea = true;
@@ -262,6 +300,22 @@ define(function(require) {
 
             this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
             this.plateAreaLabelValue.setStyle(this.labelValueStyle);
+        },
+
+        plateSeparationHover: function() {
+            this.plateSeparationHandleGraphic.visible = false;
+            this.plateSeparationHandleHoverGraphic.visible = true;
+
+            this.plateSeparationLabelTitle.setStyle(this.labelTitleHoverStyle);
+            this.plateSeparationLabelValue.setStyle(this.labelValueHoverStyle);
+        },
+
+        plateSeparationUnhover: function() {
+            this.plateSeparationHandleGraphic.visible = true;
+            this.plateSeparationHandleHoverGraphic.visible = false;
+
+            this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
+            this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
         }
 
     });
