@@ -21,10 +21,10 @@ define(function (require) {
     var Capacitor = PositionableObject3D.extend({
 
         defaults: _.extend({}, PositionableObject3D.prototype.defaults, {
-            plateWidth: 0,      // Width of the plate in meters
-            plateHeight: 0,     // Height of the plate in meters
-            plateDepth: 0,      // Depth of plate in meters
-            plateSeparation: 0, // Distance between plates in meters
+            plateWidth: 0,                       // Width of the plate in meters
+            plateHeight: Constants.PLATE_HEIGHT, // Height of the plate in meters
+            plateDepth: 0,                       // Depth of plate in meters
+            plateSeparation: 0,                  // Distance between plates in meters
 
             dielectricMaterial: null, // Insulator between plates
             dielectricOffset: 0,      // The x offset of the dielectric's center, relative to the capacitor's origin
