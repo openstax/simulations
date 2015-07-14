@@ -31,7 +31,7 @@ define(function(require) {
          * Initializes the new WireView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex('#bbb');
+            this.color = Colors.parseHex('#dedede');
 
             this._modelStartVec = new Vector3();
             this._modelEndVec   = new Vector3();

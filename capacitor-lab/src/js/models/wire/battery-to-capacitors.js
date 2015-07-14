@@ -58,7 +58,7 @@ define(function (require) {
 
             // Horizontal segment connecting battery (B) to the rightmost capacitor (Cn)
             var rightmostCapacitor = capacitors[capacitors.length - 1];
-            var leftCorner = new Vector2(battery.x, horizontalY);
+            var leftCorner = new Vector2(battery.getX(), horizontalY);
             var rightCorner = new Vector2(rightmostCapacitor.getX(), leftCorner.y);
 
             this.addSegment(BatteryToCapacitorsWire.getBatteryWireSegment(connectionPoint, battery, leftCorner));
@@ -88,7 +88,7 @@ define(function (require) {
             }
             else {
                 for (var i = 0; i < capacitors.length; i++)
-                    y = Math.min(y, capacitors[i].getY() + wireExtent);
+                    y = Math.max(y, capacitors[i].getY() + wireExtent);
             }
             return y;
         },
