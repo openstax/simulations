@@ -9,9 +9,10 @@ define(function(require) {
     var Colors    = require('common/colors/colors');
     var Vector2   = require('common/math/vector2');
 
-    var CapacitorView = require('views/capacitor');
-    var WireView      = require('views/wire');
-    var BatteryView   = require('views/battery');
+    var CapacitorView           = require('views/capacitor');
+    var DielectricCapacitorView = require('views/capacitor/dielectric');
+    var WireView                = require('views/wire');
+    var BatteryView             = require('views/battery');
 
     var Constants = require('constants');
 
@@ -22,6 +23,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.dielectric = options.dielectric;
 
             // Arrays for views
             this.batteryViews = [];
@@ -56,11 +58,20 @@ define(function(require) {
 
         addCapacitors: function() {
             var capacitors = this.model.capacitors;
+            var capacitorView;
             for (var i = 0; i < capacitors.length; i++) {
-                var capacitorView = new CapacitorView({
-                    model: capacitors.at(i),
-                    mvt: this.mvt
-                });
+                if (this.dielectric) {
+                    capacitorView = new DielectricCapacitorView({
+                        model: capacitors.at(i),
+                        mvt: this.mvt
+                    });
+                }
+                else {
+                    capacitorView = new CapacitorView({
+                        model: capacitors.at(i),
+                        mvt: this.mvt
+                    });
+                }
                 this.capacitorViews.push(capacitorView);
             }
         },

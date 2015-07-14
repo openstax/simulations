@@ -29,7 +29,8 @@ define(function(require) {
 
             this.circuitView = new CircuitView({
                 model: this.simulation.circuit,
-                mvt: this.mvt
+                mvt: this.mvt,
+                dielectric: true
             });
 
             this.stage.addChild(this.circuitView.displayObject);
