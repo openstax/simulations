@@ -40,7 +40,7 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                outlineColor: '#000',
+                outlineColor: '#888',
                 outlineWidth: 1,
                 outlineAlpha: 1,
 
@@ -136,15 +136,16 @@ define(function(require) {
             // this.bottomPlate.beginFill(0xFF5555, 1);
             // this.bottomPlate.drawPiecewiseCurve(this.shapeCreator.createBottomPlateShape());
             // this.bottomPlate.endFill();
-
-            this.shapeCreator.drawBottomPlateShape(this.bottomPlate, '#FF5555', 1);
+            this.shapeCreator.drawBottomPlateShape(this.bottomPlate, '#f2f2f2', 1);
+            this.shapeCreator.outlineBottomPlateShape(this.bottomPlate, 1, this.outlineColor, 1);
 
             this.topPlate.clear();
             // this.topPlate.lineStyle(1, 0x000000, 1);
             // this.topPlate.beginFill(0x5555FF, 1);
             // this.topPlate.drawPiecewiseCurve(this.shapeCreator.createTopPlateShape());
             // this.topPlate.endFill();
-            this.shapeCreator.drawTopPlateShape(this.topPlate, '#5555FF', 1);
+            this.shapeCreator.drawTopPlateShape(this.topPlate, '#f2f2f2', 1);
+            this.shapeCreator.outlineTopPlateShape(this.topPlate, 1, this.outlineColor, 1);
         },
 
         moveToTop: function() {

@@ -274,6 +274,54 @@ define(function (require) {
             );
         },
 
+        outlineTopPlateShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.outlineBoxShape(
+                graphics,
+                outlineWidth, 
+                outlineColor,
+                outlineAlpha,
+                pos.x, 
+                this.capacitor.getTopPlateCenter().y, 
+                pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        outlineBottomPlateShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.outlineBoxShape(
+                graphics,
+                outlineWidth, 
+                outlineColor,
+                outlineAlpha,
+                pos.x, 
+                this.capacitor.getBottomPlateCenter().y, 
+                pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        outlineDielectricShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.outlineBoxShape(
+                graphics,
+                outlineWidth, 
+                outlineColor,
+                outlineAlpha,
+                pos.x + this.capacitor.get('dielectricOffset'), 
+                pos.y - this.capacitor.getDielectricHeight() / 2, 
+                pos.z, 
+                this.capacitor.getDielectricWidth(), 
+                this.capacitor.getDielectricHeight(), 
+                this.capacitor.getDielectricDepth()
+            );
+        },
+
     });
 
     return CapacitorShapeCreator;
