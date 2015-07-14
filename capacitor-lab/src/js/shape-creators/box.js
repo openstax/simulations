@@ -8,6 +8,7 @@ define(function (require) {
     var Vector2        = require('common/math/vector2');
     var Vector3        = require('common/math/vector3');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Colors         = require('common/colors/colors');
 
     /**
      * Creates 2D projections of shapes that are related to the 3D boxes.
@@ -148,6 +149,28 @@ define(function (require) {
                 .lineTo(p3)
                 .close();
             return curve;
+        },
+
+        drawBoxShape: function(graphics, baseFillColor, fillAlpha, x, y, z, width, height, depth) {
+            var topCurve   = this.createTopFace( x, y, z, width, height, depth );
+            var frontCurve = this.createFrontFace( x, y, z, width, height, depth );
+            var sideCurve  = this.createRightSideFace( x, y, z, width, height, depth );
+
+            var topColor   = Colors.parseHex(baseFillColor);
+            var frontColor = Colors.parseHex(Colors.darkenHex(baseFillColor, 0.1));
+            var sideColor  = Colors.parseHex(Colors.darkenHex(baseFillColor, 0.2));
+
+            graphics.beginFill(topColor, fillAlpha);
+            graphics.drawPiecewiseCurve(topCurve);
+            graphics.endFill();
+
+            graphics.beginFill(frontColor, fillAlpha);
+            graphics.drawPiecewiseCurve(frontCurve);
+            graphics.endFill();
+
+            graphics.beginFill(sideColor, fillAlpha);
+            graphics.drawPiecewiseCurve(sideCurve);
+            graphics.endFill();
         }
 
     });

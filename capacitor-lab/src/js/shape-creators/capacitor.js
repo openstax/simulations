@@ -223,7 +223,56 @@ define(function (require) {
             var p3 = this._p3.set(this.mvt.modelToView(m3));
             var p4 = this._p4.set(this.mvt.modelToView(m4));
             var p5 = this._p5.set(this.mvt.modelToView(m5));
-        }
+        },
+
+        //----------------------------------------------------------------------------------------
+        // Draw shaded boxes
+        //----------------------------------------------------------------------------------------
+
+        drawTopPlateShape: function(graphics, baseFillColor, fillAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.drawBoxShape(
+                graphics,
+                baseFillColor,
+                fillAlpha,
+                pos.x, 
+                this.capacitor.getTopPlateCenter().y, 
+                pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        drawBottomPlateShape: function(graphics, baseFillColor, fillAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.drawBoxShape(
+                graphics,
+                baseFillColor,
+                fillAlpha,
+                pos.x, 
+                this.capacitor.getBottomPlateCenter().y, 
+                pos.z, 
+                this.capacitor.get('plateWidth'), 
+                this.capacitor.get('plateHeight'), 
+                this.capacitor.get('plateDepth')
+            );
+        },
+
+        drawDielectricShape: function(graphics, baseFillColor, fillAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.drawBoxShape(
+                graphics,
+                baseFillColor,
+                fillAlpha,
+                pos.x + this.capacitor.get('dielectricOffset'), 
+                pos.y - this.capacitor.getDielectricHeight() / 2, 
+                pos.z, 
+                this.capacitor.getDielectricWidth(), 
+                this.capacitor.getDielectricHeight(), 
+                this.capacitor.getDielectricDepth()
+            );
+        },
 
     });
 

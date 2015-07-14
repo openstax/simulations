@@ -132,16 +132,19 @@ define(function(require) {
 
         drawPlates: function() {
             this.bottomPlate.clear();
-            this.bottomPlate.lineStyle(1, 0x000000, 1);
-            this.bottomPlate.beginFill(0xFF5555, 1);
-            this.bottomPlate.drawPiecewiseCurve(this.shapeCreator.createBottomPlateShape());
-            this.bottomPlate.endFill();
+            //this.bottomPlate.lineStyle(1, 0x000000, 1);
+            // this.bottomPlate.beginFill(0xFF5555, 1);
+            // this.bottomPlate.drawPiecewiseCurve(this.shapeCreator.createBottomPlateShape());
+            // this.bottomPlate.endFill();
+
+            this.shapeCreator.drawBottomPlateShape(this.bottomPlate, '#FF5555', 1);
 
             this.topPlate.clear();
-            this.topPlate.lineStyle(1, 0x000000, 1);
-            this.topPlate.beginFill(0x5555FF, 1);
-            this.topPlate.drawPiecewiseCurve(this.shapeCreator.createTopPlateShape());
-            this.topPlate.endFill();
+            // this.topPlate.lineStyle(1, 0x000000, 1);
+            // this.topPlate.beginFill(0x5555FF, 1);
+            // this.topPlate.drawPiecewiseCurve(this.shapeCreator.createTopPlateShape());
+            // this.topPlate.endFill();
+            this.shapeCreator.drawTopPlateShape(this.topPlate, '#5555FF', 1);
         },
 
         moveToTop: function() {
