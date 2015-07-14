@@ -171,7 +171,7 @@ define(function (require) {
      */
     Battery.POSITIVE_TERMINAL_ELLIPSE_SIZE = new Vector2(0.0025, 0.0005);
     Battery.POSITIVE_TERMINAL_CYLINDER_HEIGHT = 0.0009;
-    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.000505;
+    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.0004;
 
     /*
      * Negative terminal is part of the image file.

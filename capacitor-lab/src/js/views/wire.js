@@ -31,7 +31,7 @@ define(function(require) {
          * Initializes the new WireView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex('#dedede');
+            this.color = Colors.parseHex('#444');
 
             this._modelStartVec = new Vector3();
             this._modelEndVec   = new Vector3();
@@ -51,7 +51,7 @@ define(function(require) {
 
             var graphics = this.displayObject;
             graphics.clear();
-            graphics.lineStyle(thickness, this.color, 1);
+            
 
             var modelStart = this._modelStartVec;
             var modelEnd   = this._modelEndVec;
@@ -68,8 +68,15 @@ define(function(require) {
                 viewStart.set(this.mvt.modelToView(modelStart));
                 viewEnd.set(this.mvt.modelToView(modelEnd));
 
+                graphics.lineStyle(thickness, this.color, 1);
                 graphics.moveTo(viewStart.x, viewStart.y);
                 graphics.lineTo(viewEnd.x, viewEnd.y);
+
+                graphics.lineStyle(0, 0, 0);
+                graphics.beginFill(this.color, 1);
+                graphics.drawCircle(viewStart.x, viewStart.y, thickness / 2);
+                graphics.drawCircle(viewEnd.x, viewEnd.y, thickness / 2);
+                graphics.endFill();
             }
         },
 
