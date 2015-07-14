@@ -60,9 +60,9 @@ define(function(require) {
             // this.viewOriginX = Math.round(usableScreenSpace.x + usableScreenSpace.w / 2);
             // this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h);
 
-            this.viewOriginX = 200;
-            this.viewOriginY = this.height / 2;
-            var scale = 2400;
+            this.viewOriginX = 15;
+            this.viewOriginY = 15;
+            var scale = 15000;
 
             this.mvt = ModelViewTransform3D.createSinglePointScaleMapping(
                 new Vector2(0, 0),
