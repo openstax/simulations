@@ -7,7 +7,8 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+       BATTERY_UP:   'battery-up.png',
+       BATTERY_DOWN: 'battery-down.png'
     };
 
     Assets.SpriteSheets = {};

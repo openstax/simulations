@@ -86,8 +86,12 @@ define(function (require) {
             return this.getBottomPlateRect().overlapsCircle(point.x, point.y, radius);
         },
 
-        getBodySize: function() {
-            return Battery.BODY_SIZE;
+        getBodyWidth: function() {
+            return Battery.BODY_WIDTH;
+        },
+
+        getBodyHeight: function() {
+            return Battery.BODY_HEIGHT;
         },
 
         getPositiveTerminalCylinderHeight: function() {
@@ -118,7 +122,7 @@ define(function (require) {
          * We don't need to account for the polarity since the bottom terminal is never visible.
          */
         getBottomTerminalYOffset: function() {
-            return Battery.BODY_SIZE.y / 2;
+            return Battery.BODY_HEIGHT / 2;
         }
 
     }, 

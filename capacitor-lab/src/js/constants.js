@@ -161,7 +161,8 @@ define(function (require) {
     var Battery = {};
 
     // size of the associated image file, determined by visual inspection
-    Battery.BODY_SIZE = new Vector2( 0.0065, 0.01425 ); // dimensions of the rectangle that bounds the battery image
+    Battery.BODY_WIDTH  = 0.0065;  // Meters
+    Battery.BODY_HEIGHT = 0.01425; // Meters
 
     /*
      * Positive terminal is part of the image file.
@@ -170,7 +171,7 @@ define(function (require) {
      */
     Battery.POSITIVE_TERMINAL_ELLIPSE_SIZE = new Vector2(0.0025, 0.0005);
     Battery.POSITIVE_TERMINAL_CYLINDER_HEIGHT = 0.0009;
-    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.y / 2) + 0.000505;
+    Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.000505;
 
     /*
      * Negative terminal is part of the image file.
@@ -178,7 +179,7 @@ define(function (require) {
      * The origin of the terminal is at the center of the ellipse.
      */
     Battery.NEGATIVE_TERMINAL_ELLIPSE_SIZE = new Vector2(0.0035, 0.0009); // dimension of the ellipse that defines the negative terminal
-    Battery.NEGATIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_SIZE.y / 2) + 0.00105; // center of the negative terminal, when it's the top terminal
+    Battery.NEGATIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.00105; // center of the negative terminal, when it's the top terminal
 
     Constants.Battery = Battery;
 

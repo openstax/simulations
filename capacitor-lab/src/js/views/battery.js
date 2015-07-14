@@ -10,6 +10,8 @@ define(function(require) {
 
     //var BatteryShapeCreator = require('shape-creators/battery');
 
+    var Assets = require('assets');
+
     var Constants = require('constants');
 
     /**
@@ -32,11 +34,15 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xEF9114, 1);
-            graphics.drawCircle(0, 0, 10);
-            graphics.endFill();
-            this.displayObject.addChild(graphics);
+            this.batteryUp   = Assets.createSprite(Assets.Images.BATTERY_UP);
+            this.batteryDown = Assets.createSprite(Assets.Images.BATTERY_DOWN);
+
+            this.batteryUp.anchor.x = this.batteryUp.anchor.y = 0.5;
+            this.batteryDown.anchor.x = this.batteryDown.anchor.y = 0.5;
+            this.batteryDown.visible = false;
+
+            this.displayObject.addChild(this.batteryUp);
+            this.displayObject.addChild(this.batteryDown);
             
             this.updateMVT(this.mvt);
         },
@@ -49,6 +55,13 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            var targetSpriteWidth = this.mvt.modelToViewDeltaY(this.model.getBodyWidth()); // in pixels
+            var scale = targetSpriteWidth / this.batteryUp.texture.width;
+            this.batteryUp.scale.x = scale;
+            this.batteryUp.scale.y = scale;
+            this.batteryDown.scale.x = scale;
+            this.batteryDown.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
         },

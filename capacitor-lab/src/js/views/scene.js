@@ -62,7 +62,7 @@ define(function(require) {
 
             this.viewOriginX = 15;
             this.viewOriginY = 15;
-            var scale = 15000;
+            var scale = 12000;
 
             this.mvt = ModelViewTransform3D.createSinglePointScaleMapping(
                 new Vector2(0, 0),
