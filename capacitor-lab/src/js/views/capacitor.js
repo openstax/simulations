@@ -22,12 +22,7 @@ define(function(require) {
             options = _.extend({
                 outlineColor: '#888',
                 outlineWidth: 1,
-                outlineAlpha: 1,
-
-                labelFontFamily: 'Helvetica Neue',
-                labelFontSize: '16px',
-                labelColor: '#000',
-                labelAlpha: 1
+                outlineAlpha: 1
             }, options);
 
             this.mvt = options.mvt;
@@ -36,10 +31,7 @@ define(function(require) {
             this.outlineWidth = options.outlineWidth;
             this.outlineAlpha = options.outlineAlpha;
 
-            this.labelFontFamily = options.labelFontFamily;
-            this.labelFontSize = options.labelFontSize;
-            this.labelColor = options.labelColor;
-            this.labelAlpha = options.labelAlpha;
+            
 
             // Initialize graphics
             this.initGraphics();

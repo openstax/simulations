@@ -47,11 +47,33 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 handleColor: '#5c35a3',
-                handleHoverColor: '#955cff'
+                handleHoverColor: '#955cff',
+
+                labelFontFamily: 'Helvetica Neue',
+                labelFontSize: '14px',
+                labelColor: '#000',
+                labelAlpha: 1
             }, options);
 
+            // Handle colors
             this.handleColor = Colors.parseHex(options.handleColor);
             this.handleHoverColor = Colors.parseHex(options.handleHoverColor);
+
+            // Label text
+            this.labelAlpha = options.labelAlpha;
+            this.labelTitleStyle = {
+                font: 'bold ' + options.labelFontSize + ' ' + options.labelFontFamily,
+                fill: options.labelColor
+            };
+            this.labelTitleHoverStyle = _.clone(this.labelTitleStyle);
+            this.labelTitleHoverStyle.fill = options.handleHoverColor;
+
+            this.labelValueStyle = {
+                font: options.labelFontSize + ' ' + options.labelFontFamily,
+                fill: options.labelColor
+            };
+            this.labelValueHoverStyle = _.clone(this.labelValueStyle);
+            this.labelValueHoverStyle.fill = options.handleHoverColor;
 
             // Cached objects
             this._dragOffset   = new PIXI.Point();
@@ -99,13 +121,22 @@ define(function(require) {
             graphicsWrapper.addChild(this.plateAreaHandleGraphic);
             graphicsWrapper.addChild(this.plateAreaHandleHoverGraphic);
             graphicsWrapper.addChild(dots);
+            
+            this.plateAreaLabelTitle = new PIXI.Text('Plate Area', this.labelTitleStyle);
+            this.plateAreaLabelValue = new PIXI.Text('100.0 mm²', this.labelValueStyle);
+            this.plateAreaLabelValue.y = 18;
+            var textWrapper = new PIXI.DisplayObjectContainer();
+            textWrapper.addChild(this.plateAreaLabelTitle);
+            textWrapper.addChild(this.plateAreaLabelValue);
+            textWrapper.x = -76;
+            textWrapper.y = -38;
 
             var plateAreaHandle = new PIXI.DisplayObjectContainer();
             plateAreaHandle.buttonMode = true;
             plateAreaHandle.x = lowerLeft.x;
             plateAreaHandle.y = lowerLeft.y;
-            //plateAreaHandle.hitArea = new PIXI.Circle(0, 0, 16);
             plateAreaHandle.addChild(graphicsWrapper);
+            plateAreaHandle.addChild(textWrapper);
 
             this.plateAreaHandle = plateAreaHandle;
             this.topLayer.addChild(plateAreaHandle);
@@ -220,11 +251,17 @@ define(function(require) {
         plateAreaHover: function() {
             this.plateAreaHandleGraphic.visible = false;
             this.plateAreaHandleHoverGraphic.visible = true;
+
+            this.plateAreaLabelTitle.setStyle(this.labelTitleHoverStyle);
+            this.plateAreaLabelValue.setStyle(this.labelValueHoverStyle);
         },
 
         plateAreaUnhover: function() {
             this.plateAreaHandleGraphic.visible = true;
             this.plateAreaHandleHoverGraphic.visible = false;
+
+            this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
+            this.plateAreaLabelValue.setStyle(this.labelValueStyle);
         }
 
     });
