@@ -51,7 +51,6 @@ define(function(require) {
 
             var graphics = this.displayObject;
             graphics.clear();
-            
 
             var modelStart = this._modelStartVec;
             var modelEnd   = this._modelEndVec;

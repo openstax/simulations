@@ -149,15 +149,10 @@ define(function(require) {
             parent.setChildIndex(this.displayObject, parent.children.length - 1);
         },
 
-        setPosition: function(x, y) {
-            var modelPosition = this.mvt.viewToModel(this._position.set(x, y));
-            this.model.setPosition(modelPosition);
-        },
-
         updatePosition: function(model, position) {
-            var viewPos = this.mvt.modelToView(position);
-            this.displayObject.x = viewPos.x;
-            this.displayObject.y = viewPos.y;
+            // var viewPos = this.mvt.modelToView(position);
+            // this.displayObject.x = viewPos.x;
+            // this.displayObject.y = viewPos.y;
         },
 
         updateMVT: function(mvt) {
@@ -203,7 +198,7 @@ define(function(require) {
          * Returns the y-value that should be used for sorting.
          */
         getYSortValue: function() {
-            return this.displayObject.y;
+            return this.mvt.modelToViewY(this.model.getY());
         }
 
     });
