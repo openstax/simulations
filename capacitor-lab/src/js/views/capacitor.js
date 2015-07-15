@@ -74,7 +74,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.drawPlates();
+            this.update();
         },
 
         update: function() {

@@ -196,6 +196,13 @@ define(function(require) {
             this.plateSeparationHandle.y = Math.round(sHandleLoc.y);
         },
 
+        updateHandleLabels: function() {
+            var separationInMM = this.model.get('plateSeparation') * 1000;
+            var areaInMM = this.model.getPlateArea() * (1000 * 1000); // It's a squared measurement.
+            this.plateSeparationLabelValue.setText(separationInMM.toFixed(1) + ' mm');
+            this.plateAreaLabelValue.setText(areaInMM.toFixed(1) + ' mm²');
+        },
+
         drawDragHandle: function(graphics, color) {
             var length = 16;
             var headLength = 10;
@@ -250,11 +257,9 @@ define(function(require) {
             
         },
 
-        updateMVT: function(mvt) {
-            CapacitorView.prototype.updateMVT.apply(this, arguments);
-
-            this.updateHandlePositions();
-        },
+        // updateMVT: function(mvt) {
+        //     CapacitorView.prototype.updateMVT.apply(this, arguments);
+        // },
 
         dragPlateAreaStart: function(data) {
             this.lastDragX = data.global.x;
@@ -361,8 +366,10 @@ define(function(require) {
         },
 
         update: function() {
-            this.drawPlates();
+            CapacitorView.prototype.update.apply(this, arguments);
+
             this.updateHandlePositions();
+            this.updateHandleLabels();
         }
 
     });
