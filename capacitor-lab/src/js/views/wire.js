@@ -39,6 +39,7 @@ define(function(require) {
             this._viewEndVec    = new Vector2();
 
             this.listenTo(this.model, 'change:position', this.drawWire);
+            this.listenTo(this.model.segments, 'change', this.drawWire);
 
             this.updateMVT(options.mvt);
         },
