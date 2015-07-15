@@ -5,8 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var Colors    = require('common/colors/colors');
-    var Vector2   = require('common/math/vector2');
+    var Colors  = require('common/colors/colors');
+    var Vector2 = require('common/math/vector2');
+    var Vector3 = require('common/math/vector3');
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
@@ -38,10 +39,21 @@ define(function(require) {
             'touchendoutside .plateSeparationHandle': 'dragPlateSeparationEnd',
             'mouseupoutside  .plateSeparationHandle': 'dragPlateSeparationEnd',
 
+            'touchstart      .dielectricHandle': 'dragDielectricStart',
+            'mousedown       .dielectricHandle': 'dragDielectricStart',
+            'touchmove       .dielectricHandle': 'dragDielectric',
+            'mousemove       .dielectricHandle': 'dragDielectric',
+            'touchend        .dielectricHandle': 'dragDielectricEnd',
+            'mouseup         .dielectricHandle': 'dragDielectricEnd',
+            'touchendoutside .dielectricHandle': 'dragDielectricEnd',
+            'mouseupoutside  .dielectricHandle': 'dragDielectricEnd',
+
             'mouseover .plateAreaHandle'       : 'plateAreaHover',
             'mouseout  .plateAreaHandle'       : 'plateAreaUnhover',
             'mouseover .plateSeparationHandle' : 'plateSeparationHover',
             'mouseout  .plateSeparationHandle' : 'plateSeparationUnhover',
+            'mouseover .dielectricHandle'      : 'dielectricHover',
+            'mouseout  .dielectricHandle'      : 'dielectricUnhover'
         },
 
         initialize: function(options) {
@@ -80,11 +92,13 @@ define(function(require) {
             this._dragLocation = new PIXI.Point();
             this._ll = new Vector2();
             this._ur = new Vector2();
+            this._vec3 = new Vector3();
 
             CapacitorView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:plateDepth', this.update);
-            this.listenTo(this.model, 'change:dielectricMaterial', this.updateDielectric);
+            this.listenTo(this.model, 'change:dielectricMaterial', this.update);
+            this.listenTo(this.model, 'change:dielectricOffset', this.update);
         },
 
         initGraphics: function() {
@@ -93,6 +107,7 @@ define(function(require) {
             this.initPlateAreaHandle();
             this.initPlateSeparationHandle();
             this.initDielectric();
+            this.initDielectricHandle();
         },
 
         initPlateAreaHandle: function() {
@@ -185,23 +200,76 @@ define(function(require) {
             this.topLayer.addChild(plateSeparationHandle);
         },
 
+        initDielectricHandle: function() {
+            this.dielectricHandleGraphic = new PIXI.Graphics();
+            this.dielectricHandleHoverGraphic = new PIXI.Graphics();
+
+            this.drawDragHandle(this.dielectricHandleGraphic,      this.handleColor);
+            this.drawDragHandle(this.dielectricHandleHoverGraphic, this.handleHoverColor);
+
+            this.dielectricHandleGraphic.hitArea      = new PIXI.Circle(0, 0, 17);
+            this.dielectricHandleHoverGraphic.hitArea = new PIXI.Circle(0, 0, 17);
+
+            this.dielectricHandleGraphic.x = this.dielectricHandleHoverGraphic.x = 58;
+
+            var dots = new PIXI.Graphics();
+            dots.beginFill(0x000000, 1);
+            for (var x = 0; x <= 40; x += 4)
+                dots.drawCircle(x, 0, 1);
+            dots.endFill();
+
+            var graphicsWrapper = new PIXI.DisplayObjectContainer();
+            graphicsWrapper.addChild(this.dielectricHandleGraphic);
+            graphicsWrapper.addChild(this.dielectricHandleHoverGraphic);
+            graphicsWrapper.addChild(dots);
+            
+            this.dielectricLabelTitle = new PIXI.Text('Offset', this.labelTitleStyle);
+            this.dielectricLabelValue = new PIXI.Text('5.0 mm', this.labelValueStyle);
+            this.dielectricLabelValue.y = 18;
+            var textWrapper = new PIXI.DisplayObjectContainer();
+            textWrapper.addChild(this.dielectricLabelTitle);
+            textWrapper.addChild(this.dielectricLabelValue);
+            textWrapper.x = 50;
+            textWrapper.y = 10;
+
+            var dielectricHandle = new PIXI.Graphics();
+            dielectricHandle.buttonMode = true;
+            dielectricHandle.addChild(graphicsWrapper);
+            dielectricHandle.addChild(textWrapper);
+
+            this.dielectricHandle = dielectricHandle;
+            this.middleLayer.addChild(dielectricHandle);
+        },
+
         updateHandlePositions: function() {
+            // Plate area handle
             var lowerLeft  = this.getPlateDragCorner();
             this.plateAreaHandle.x = Math.round(lowerLeft.x);
             this.plateAreaHandle.y = Math.round(lowerLeft.y);
 
-            var modelSHandleLoc = this.model.getTopPlateCenter();
-            modelSHandleLoc.x -= this.model.get('plateWidth') / 4;
-            var sHandleLoc = this.mvt.modelToView(modelSHandleLoc);
-            this.plateSeparationHandle.x = Math.round(sHandleLoc.x);
-            this.plateSeparationHandle.y = Math.round(sHandleLoc.y);
+            // Plate separation handle
+            var modelPoint = this.model.getTopPlateCenter();
+            modelPoint.x -= this.model.get('plateWidth') / 4;
+            var viewPoint = this.mvt.modelToView(modelPoint);
+            this.plateSeparationHandle.x = Math.round(viewPoint.x);
+            this.plateSeparationHandle.y = Math.round(viewPoint.y);
+
+            // Dielectric offset handle
+            modelPoint = this._vec3.set(this.model.get('position'));
+            modelPoint.x += this.model.get('dielectricOffset') + (this.model.getDielectricWidth() / 2);
+            viewPoint = this.mvt.modelToView(modelPoint);
+            this.dielectricHandle.x = Math.round(viewPoint.x);
+            this.dielectricHandle.y = Math.round(viewPoint.y);
         },
 
         updateHandleLabels: function() {
             var separationInMM = this.model.get('plateSeparation') * 1000;
             var areaInMM = this.model.getPlateArea() * (1000 * 1000); // It's a squared measurement.
+            var offsetInMM = this.model.get('dielectricOffset') * 1000;
+
             this.plateSeparationLabelValue.setText(separationInMM.toFixed(1) + ' mm');
             this.plateAreaLabelValue.setText(areaInMM.toFixed(1) + ' mm²');
+            this.dielectricLabelValue.setText(offsetInMM.toFixed(1) + ' mm');
         },
 
         drawDragHandle: function(graphics, color) {
@@ -332,6 +400,36 @@ define(function(require) {
                 this.plateSeparationUnhover();
         },
 
+        dragDielectricStart: function(data) {
+            this.lastDragX = data.global.x;
+            this.draggingDielectric = true;
+        },
+
+        dragDielectric: function(data) {
+            if (this.draggingDielectric) {
+                var dx = data.global.x - this.lastDragX;
+
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+
+                var newOffset = this.model.get('dielectricOffset') + mdx;
+
+                if (newOffset < Constants.DIELECTRIC_OFFSET_RANGE.min)
+                    newOffset = Constants.DIELECTRIC_OFFSET_RANGE.min;
+                if (newOffset > Constants.DIELECTRIC_OFFSET_RANGE.max)
+                    newOffset = Constants.DIELECTRIC_OFFSET_RANGE.max;
+                
+                this.model.set('dielectricOffset', newOffset);
+
+                this.lastDragX = data.global.x;
+            }
+        },
+
+        dragDielectricEnd: function(data) {
+            this.draggingDielectric = false;
+            if (!this.dielectricHandleHovering)
+                this.dielectricUnhover();
+        },
+
         plateAreaHover: function() {
             this.plateAreaHandleHovering = true;
 
@@ -376,15 +474,33 @@ define(function(require) {
             }
         },
 
+        dielectricHover: function() {
+            this.dielectricHandleHovering = true;
+
+            this.dielectricHandleGraphic.visible = false;
+            this.dielectricHandleHoverGraphic.visible = true;
+
+            this.dielectricLabelTitle.setStyle(this.labelTitleHoverStyle);
+            this.dielectricLabelValue.setStyle(this.labelValueHoverStyle);
+        },
+
+        dielectricUnhover: function() {
+            this.dielectricHandleHovering = false;
+
+            if (!this.draggingDielectric) {
+                this.dielectricHandleGraphic.visible = true;
+                this.dielectricHandleHoverGraphic.visible = false;
+
+                this.dielectricLabelTitle.setStyle(this.labelTitleStyle);
+                this.dielectricLabelValue.setStyle(this.labelValueStyle);
+            }
+        },
+
         update: function() {
             CapacitorView.prototype.update.apply(this, arguments);
 
             this.updateHandlePositions();
             this.updateHandleLabels();
-            this.drawDielectric();
-        },
-
-        updateDielectric: function() {
             this.drawDielectric();
         }
 
