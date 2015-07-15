@@ -154,7 +154,7 @@ define(function (require) {
             return curve;
         },
 
-        drawBoxShape: function(graphics, baseFillColor, fillAlpha, x, y, z, width, height, depth) {
+        drawBox: function(graphics, baseFillColor, fillAlpha, x, y, z, width, height, depth) {
             var topCurve   = this.createTopFace( x, y, z, width, height, depth );
             var frontCurve = this.createFrontFace( x, y, z, width, height, depth );
             var sideCurve  = this.createRightSideFace( x, y, z, width, height, depth );
@@ -188,7 +188,7 @@ define(function (require) {
          *   p5 --------------- p4
          * 
          */
-        outlineBoxShape: function(graphics, outlineWidth, outlineColor, outlineAlpha, x, y, z, width, height, depth) {
+        outlineBox: function(graphics, outlineWidth, outlineColor, outlineAlpha, x, y, z, width, height, depth) {
             var p0 = this._p0.set(this.mvt.modelToView(x - (width / 2), y,          z - (depth / 2)));
             var p1 = this._p1.set(this.mvt.modelToView(x - (width / 2), y,          z + (depth / 2)));
             var p2 = this._p2.set(this.mvt.modelToView(x + (width / 2), y,          z + (depth / 2)));
@@ -210,6 +210,35 @@ define(function (require) {
             graphics.lineTo(p4.x, p4.y);
             graphics.moveTo(p6.x, p6.y);
             graphics.lineTo(p2.x, p2.y);
+        },
+
+        /**
+         * Draws an outline of the back of the box onto a graphics object
+         * 
+         *      p1
+         *       |                   
+         *       |                   
+         *      p0 --------------- p2
+         *      /                   
+         *     /                   
+         *   p3
+         */
+        outlineBoxBack: function(graphics, outlineWidth, outlineColor, outlineAlpha, x, y, z, width, height, depth) {
+            var p0 = this._p0.set(this.mvt.modelToView(x - (width / 2), y + height, z + (depth / 2)));
+            var p1 = this._p1.set(this.mvt.modelToView(x - (width / 2), y,          z + (depth / 2)));
+            var p2 = this._p2.set(this.mvt.modelToView(x + (width / 2), y + height, z + (depth / 2)));
+            var p3 = this._p3.set(this.mvt.modelToView(x - (width / 2), y + height, z - (depth / 2)));
+            
+            graphics.lineStyle(outlineWidth, Colors.parseHex(outlineColor), outlineAlpha);
+
+            graphics.moveTo(p0.x, p0.y);
+            graphics.lineTo(p1.x, p1.y);
+            
+            graphics.moveTo(p0.x, p0.y);
+            graphics.lineTo(p2.x, p2.y);
+
+            graphics.moveTo(p0.x, p0.y);
+            graphics.lineTo(p3.x, p3.y);
         }
 
     });

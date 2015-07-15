@@ -63,12 +63,12 @@ define(function(require) {
 
         drawPlates: function() {
             this.bottomPlate.clear();
-            this.shapeCreator.drawBottomPlateShape(this.bottomPlate, '#f2f2f2', 1);
-            this.shapeCreator.outlineBottomPlateShape(this.bottomPlate, 1, this.outlineColor, 1);
+            this.shapeCreator.drawBottomPlate(this.bottomPlate, '#f2f2f2', 1);
+            this.shapeCreator.outlineBottomPlate(this.bottomPlate, 1, this.outlineColor, 1);
 
             this.topPlate.clear();
-            this.shapeCreator.drawTopPlateShape(this.topPlate, '#f2f2f2', 1);
-            this.shapeCreator.outlineTopPlateShape(this.topPlate, 1, this.outlineColor, 1);
+            this.shapeCreator.drawTopPlate(this.topPlate, '#f2f2f2', 1);
+            this.shapeCreator.outlineTopPlate(this.topPlate, 1, this.outlineColor, 1);
         },
 
         updateMVT: function(mvt) {

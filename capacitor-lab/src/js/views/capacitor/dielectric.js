@@ -260,18 +260,16 @@ define(function(require) {
         },
 
         drawDielectric: function() {
+            var outlineColor = Colors.darkenHex(this.model.get('dielectricMaterial').get('color'), 0.4);
+
             this.dielectric.clear();
-            this.shapeCreator.drawDielectricShape(
+            this.shapeCreator.outlineDielectricBack(this.dielectric, 1, outlineColor, 1);
+            this.shapeCreator.drawDielectric(
                 this.dielectric, 
                 this.model.get('dielectricMaterial').get('color'), 
                 this.model.get('dielectricMaterial').get('alpha')
             );
-            this.shapeCreator.outlineDielectricShape(
-                this.dielectric,
-                1,
-                Colors.darkenHex(this.model.get('dielectricMaterial').get('color'), 0.4),
-                1
-            );
+            this.shapeCreator.outlineDielectric(this.dielectric, 1, outlineColor, 1);
         },
 
         dragPlateAreaStart: function(data) {

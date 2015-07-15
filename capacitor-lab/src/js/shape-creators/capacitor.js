@@ -229,9 +229,9 @@ define(function (require) {
         // Draw shaded boxes
         //----------------------------------------------------------------------------------------
 
-        drawTopPlateShape: function(graphics, baseFillColor, fillAlpha) {
+        drawTopPlate: function(graphics, baseFillColor, fillAlpha) {
             var pos = this.capacitor.get('position');
-            return this.drawBoxShape(
+            return this.drawBox(
                 graphics,
                 baseFillColor,
                 fillAlpha,
@@ -244,9 +244,9 @@ define(function (require) {
             );
         },
 
-        drawBottomPlateShape: function(graphics, baseFillColor, fillAlpha) {
+        drawBottomPlate: function(graphics, baseFillColor, fillAlpha) {
             var pos = this.capacitor.get('position');
-            return this.drawBoxShape(
+            return this.drawBox(
                 graphics,
                 baseFillColor,
                 fillAlpha,
@@ -259,9 +259,9 @@ define(function (require) {
             );
         },
 
-        drawDielectricShape: function(graphics, baseFillColor, fillAlpha) {
+        drawDielectric: function(graphics, baseFillColor, fillAlpha) {
             var pos = this.capacitor.get('position');
-            return this.drawBoxShape(
+            return this.drawBox(
                 graphics,
                 baseFillColor,
                 fillAlpha,
@@ -274,9 +274,9 @@ define(function (require) {
             );
         },
 
-        outlineTopPlateShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+        outlineTopPlate: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
             var pos = this.capacitor.get('position');
-            return this.outlineBoxShape(
+            return this.outlineBox(
                 graphics,
                 outlineWidth, 
                 outlineColor,
@@ -290,9 +290,9 @@ define(function (require) {
             );
         },
 
-        outlineBottomPlateShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+        outlineBottomPlate: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
             var pos = this.capacitor.get('position');
-            return this.outlineBoxShape(
+            return this.outlineBox(
                 graphics,
                 outlineWidth, 
                 outlineColor,
@@ -306,9 +306,25 @@ define(function (require) {
             );
         },
 
-        outlineDielectricShape: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+        outlineDielectric: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
             var pos = this.capacitor.get('position');
-            return this.outlineBoxShape(
+            return this.outlineBox(
+                graphics,
+                outlineWidth, 
+                outlineColor,
+                outlineAlpha,
+                pos.x + this.capacitor.get('dielectricOffset'), 
+                pos.y - this.capacitor.getDielectricHeight() / 2, 
+                pos.z, 
+                this.capacitor.getDielectricWidth(), 
+                this.capacitor.getDielectricHeight(), 
+                this.capacitor.getDielectricDepth()
+            );
+        },
+
+        outlineDielectricBack: function(graphics, outlineWidth, outlineColor, outlineAlpha) {
+            var pos = this.capacitor.get('position');
+            return this.outlineBoxBack(
                 graphics,
                 outlineWidth, 
                 outlineColor,
