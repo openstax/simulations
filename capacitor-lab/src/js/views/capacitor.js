@@ -31,14 +31,12 @@ define(function(require) {
             this.outlineWidth = options.outlineWidth;
             this.outlineAlpha = options.outlineAlpha;
 
-            
-
             // Initialize graphics
             this.initGraphics();
             this.updateMVT(this.mvt);
 
             // Listen for model events
-            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:plateSeparation', this.update);
         },
 
         initGraphics: function() {
@@ -76,6 +74,10 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.drawPlates();
+        },
+
+        update: function() {
             this.drawPlates();
         },
 

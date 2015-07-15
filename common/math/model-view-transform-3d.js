@@ -200,7 +200,7 @@ define(function (require) {
                 if (_.isNumber(x))
                     this._viewToModel2D.set(x, y)
                 else
-                    this._viewToModel2D.set(x);
+                    this._viewToModel2D.set(x.x, x.y);
                 
                 var modelPoint = this.mvt2D.viewToModel(this._viewToModel2D);
                 return this._viewToModel3D.set(modelPoint.x, modelPoint.y, 0);
@@ -213,14 +213,14 @@ define(function (require) {
          *   a point and not a 2D shape.
          */
         viewToModelDelta: function(coordinates) {
-            if (x instanceof Rectangle || x instanceof PiecewiseCurve)
+            if (coordinates instanceof Rectangle || coordinates instanceof PiecewiseCurve)
                 throw 'modelToViewDelta cannot convert shapes.';
 
             var modelPoint = this.viewToModel(coordinates);
             this._deltaPoint3D.x = modelPoint.x - this.modelOrigin.x;
             this._deltaPoint3D.y = modelPoint.y - this.modelOrigin.y;
             this._deltaPoint3D.z = 0;
-            return this._deltaPoint2D;
+            return this._deltaPoint3D;
         },
 
         viewToModelScale: function(coordinates) {

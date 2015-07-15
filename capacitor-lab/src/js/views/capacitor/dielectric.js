@@ -82,6 +82,8 @@ define(function(require) {
             this._ur = new Vector2();
 
             CapacitorView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:plateDepth', this.update);
         },
 
         initGraphics: function() {
@@ -261,8 +263,13 @@ define(function(require) {
 
         dragPlateArea: function(data) {
             if (this.draggingPlateArea) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
 
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                
             }
         },
 
@@ -277,8 +284,15 @@ define(function(require) {
 
         dragPlateSeparation: function(data) {
             if (this.draggingPlateSeparation) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
 
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                var newSeparation = this.model.get('plateSeparation') - (mdy / 4);
+
+                if (newSeparation >= Constants.PLATE_SEPARATION_RANGE.min && 
+                    newSeparation <= Constants.PLATE_SEPARATION_RANGE.max)
+                    this.model.set('plateSeparation', newSeparation);
             }
         },
 
@@ -316,6 +330,11 @@ define(function(require) {
 
             this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
             this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
+        },
+
+        update: function() {
+            this.drawPlates();
+            this.updateHandlePositions();
         }
 
     });
