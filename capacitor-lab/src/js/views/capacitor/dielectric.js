@@ -257,19 +257,26 @@ define(function(require) {
         },
 
         dragPlateAreaStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.lastDragX = data.global.x;
             this.draggingPlateArea = true;
         },
 
         dragPlateArea: function(data) {
             if (this.draggingPlateArea) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = data.global.x - this.lastDragX;
 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
-                var mdy = this.mvt.viewToModelDeltaY(dy);
 
+                var newWidth = this.model.get('plateWidth') - mdx;
+
+                if (newWidth < Constants.PLATE_WIDTH_RANGE.min)
+                    newWidth = Constants.PLATE_WIDTH_RANGE.min;
+                if (newWidth > Constants.PLATE_WIDTH_RANGE.max)
+                    newWidth = Constants.PLATE_WIDTH_RANGE.max;
                 
+                this.model.set('plateWidth', newWidth);
+
+                this.lastDragX = data.global.x;
             }
         },
 
