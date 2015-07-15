@@ -197,7 +197,7 @@ define(function (require) {
             var p5 = this._p5.set(this.mvt.modelToView(x - (width / 2), y + height, z - (depth / 2)));
             var p6 = this._p6.set(this.mvt.modelToView(x + (width / 2), y,          z - (depth / 2)));
             
-            graphics.lineStyle(outlineWidth, outlineColor, outlineAlpha);
+            graphics.lineStyle(outlineWidth, Colors.parseHex(outlineColor), outlineAlpha);
 
             graphics.moveTo(p0.x, p0.y);
             graphics.lineTo(p1.x, p1.y);

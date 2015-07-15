@@ -84,6 +84,7 @@ define(function(require) {
             CapacitorView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:plateDepth', this.update);
+            this.listenTo(this.model, 'change:dielectricMaterial', this.updateDielectric);
         },
 
         initGraphics: function() {
@@ -265,6 +266,12 @@ define(function(require) {
                 this.model.get('dielectricMaterial').get('color'), 
                 this.model.get('dielectricMaterial').get('alpha')
             );
+            this.shapeCreator.outlineDielectricShape(
+                this.dielectric,
+                1,
+                Colors.darkenHex(this.model.get('dielectricMaterial').get('color'), 0.4),
+                1
+            );
         },
 
         dragPlateAreaStart: function(data) {
@@ -376,6 +383,10 @@ define(function(require) {
 
             this.updateHandlePositions();
             this.updateHandleLabels();
+            this.drawDielectric();
+        },
+
+        updateDielectric: function() {
             this.drawDielectric();
         }
 

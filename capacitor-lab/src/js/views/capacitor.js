@@ -27,7 +27,7 @@ define(function(require) {
 
             this.mvt = options.mvt;
 
-            this.outlineColor = Colors.parseHex(options.outlineColor);
+            this.outlineColor = options.outlineColor;
             this.outlineWidth = options.outlineWidth;
             this.outlineAlpha = options.outlineAlpha;
 

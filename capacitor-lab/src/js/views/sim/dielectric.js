@@ -26,6 +26,7 @@ define(function (require) {
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
             'slide .dielectric-constant-slider' : 'changeDielectricConstant',
+            'change .dielectric-material' : 'changeDielectricMaterial'
         }),
 
         /**
@@ -64,20 +65,6 @@ define(function (require) {
         renderScaffolding: function() {
             CapacitorLabSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            // var tempMaterialsList = [{
-            //     label: 'Custom',
-            //     config: {}
-            // }, {
-            //     label: 'Teflon (2.1)',
-            //     config: {}
-            // }, {
-            //     label: 'Paper (3.5)',
-            //     config: {}
-            // }, {
-            //     label: 'Glass (4.7)',
-            //     config: {}
-            // }];
-
             var materials = _.map(this.simulation.dielectricMaterials, function(material) {
                 return material.get('name') + ' (' + material.get('dielectricConstant').toFixed(1) + ')';
             });
@@ -111,6 +98,13 @@ define(function (require) {
                 this.$dielectricConstant.text(dielectricConstant.toFixed(2));
                 this.simulation.set('dielectricConstant', dielectricConstant);
             });
+        },
+
+        changeDielectricMaterial: function(event){
+            var index = parseInt($(event.target).val());
+
+            // Set the selected projectile on the simulation
+            this.simulation.circuit.capacitor.set('dielectricMaterial', this.simulation.dielectricMaterials[index]);
         }
 
     });
