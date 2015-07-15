@@ -24,6 +24,10 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             CapacitorLabSimulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.listenTo(this.circuit, 'circuit-changed', function() {
+                console.log(this.circuit.getTotalCapacitance());
+            });
         },
 
         /**
@@ -65,7 +69,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            this.circuit.getTotalCapacitance();
+            
         },
 
         /**

@@ -44,7 +44,7 @@ define(function (require) {
             this.initCapacitors(options.config, options.numberOfCapacitors);
             this.initWires(options.config, options.numberOfCapacitors);
 
-            this.listenTo(this.capacitors, 'capacitor-changed', this.capacitorChanged);
+            this.listenTo(this.capacitors, 'change', this.capacitorChanged);
             this.on('change:mvt', this.mvtChanged);
         },
 
