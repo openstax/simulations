@@ -32,7 +32,10 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new DielectricSimulation();
+            this.simulation = new DielectricSimulation({
+                // The dielectric needs to be moved outside the bounds of effectiveness
+                startingDielectricOffset: Constants.DIELECTRIC_OFFSET_RANGE.max + 1 
+            });
         },
 
         /**
