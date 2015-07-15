@@ -3,6 +3,8 @@ define(function (require) {
     'use strict';
 
     var CapacitorLabSimView = require('views/sim');
+    var DielectricSceneView = require('views/scene/dielectric');
+    
     var DielectricSimulation = require('models/simulation/dielectric');
 
     var Constants = require('constants');
@@ -45,6 +47,15 @@ define(function (require) {
          */
         initSimulation: function() {
             this.simulation = new DielectricSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new DielectricSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**

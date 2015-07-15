@@ -71,7 +71,7 @@ define(function (require) {
             var pos = this.capacitor.get('position');
             return this.createBoxShape(
                 pos.x, 
-                this.capacitor.getBottomPlateCenter().y, 
+                this.capacitor.getBottomPlateCenter().y - this.capacitor.get('plateHeight'), 
                 pos.z, 
                 this.capacitor.get('plateWidth'), 
                 this.capacitor.get('plateHeight'), 
@@ -251,7 +251,7 @@ define(function (require) {
                 baseFillColor,
                 fillAlpha,
                 pos.x, 
-                this.capacitor.getBottomPlateCenter().y, 
+                this.capacitor.getBottomPlateCenter().y - this.capacitor.get('plateHeight'), 
                 pos.z, 
                 this.capacitor.get('plateWidth'), 
                 this.capacitor.get('plateHeight'), 
@@ -298,7 +298,7 @@ define(function (require) {
                 outlineColor,
                 outlineAlpha,
                 pos.x, 
-                this.capacitor.getBottomPlateCenter().y, 
+                this.capacitor.getBottomPlateCenter().y - this.capacitor.get('plateHeight'),  
                 pos.z, 
                 this.capacitor.get('plateWidth'), 
                 this.capacitor.get('plateHeight'), 

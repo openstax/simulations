@@ -254,12 +254,18 @@ define(function(require) {
         },
 
         initDielectric: function() {
-            
+            this.dielectric = new PIXI.Graphics();
+            this.middleLayer.addChild(this.dielectric);
         },
 
-        // updateMVT: function(mvt) {
-        //     CapacitorView.prototype.updateMVT.apply(this, arguments);
-        // },
+        drawDielectric: function() {
+            this.dielectric.clear();
+            this.shapeCreator.drawDielectricShape(
+                this.dielectric, 
+                this.model.get('dielectricMaterial').get('color'), 
+                this.model.get('dielectricMaterial').get('alpha')
+            );
+        },
 
         dragPlateAreaStart: function(data) {
             this.lastDragX = data.global.x;
@@ -370,6 +376,7 @@ define(function(require) {
 
             this.updateHandlePositions();
             this.updateHandleLabels();
+            this.drawDielectric();
         }
 
     });
