@@ -275,32 +275,43 @@ define(function(require) {
 
         dragPlateAreaEnd: function(data) {
             this.draggingPlateArea = false;
+            if (!this.plateAreaHandleHovering)
+                this.plateAreaUnhover();
         },
 
         dragPlateSeparationStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.lastDragY = data.global.y;
             this.draggingPlateSeparation = true;
         },
 
         dragPlateSeparation: function(data) {
             if (this.draggingPlateSeparation) {
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dy = data.global.y - this.lastDragY;
 
                 var mdy = this.mvt.viewToModelDeltaY(dy);
 
-                var newSeparation = this.model.get('plateSeparation') - (mdy / 4);
+                var newSeparation = this.model.get('plateSeparation') - (mdy * 2);
 
-                if (newSeparation >= Constants.PLATE_SEPARATION_RANGE.min && 
-                    newSeparation <= Constants.PLATE_SEPARATION_RANGE.max)
-                    this.model.set('plateSeparation', newSeparation);
+                if (newSeparation < Constants.PLATE_SEPARATION_RANGE.min)
+                    newSeparation = Constants.PLATE_SEPARATION_RANGE.min;
+                if (newSeparation > Constants.PLATE_SEPARATION_RANGE.max)
+                    newSeparation = Constants.PLATE_SEPARATION_RANGE.max;
+                
+                this.model.set('plateSeparation', newSeparation);
+
+                this.lastDragY = data.global.y;
             }
         },
 
         dragPlateSeparationEnd: function(data) {
             this.draggingPlateSeparation = false;
+            if (!this.plateSeparationHandleHovering)
+                this.plateSeparationUnhover();
         },
 
         plateAreaHover: function() {
+            this.plateAreaHandleHovering = true;
+
             this.plateAreaHandleGraphic.visible = false;
             this.plateAreaHandleHoverGraphic.visible = true;
 
@@ -309,14 +320,20 @@ define(function(require) {
         },
 
         plateAreaUnhover: function() {
-            this.plateAreaHandleGraphic.visible = true;
-            this.plateAreaHandleHoverGraphic.visible = false;
+            this.plateAreaHandleHovering = false;
 
-            this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
-            this.plateAreaLabelValue.setStyle(this.labelValueStyle);
+            if (!this.draggingPlateArea) {
+                this.plateAreaHandleGraphic.visible = true;
+                this.plateAreaHandleHoverGraphic.visible = false;
+
+                this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
+                this.plateAreaLabelValue.setStyle(this.labelValueStyle);
+            }
         },
 
         plateSeparationHover: function() {
+            this.plateSeparationHandleHovering = true;
+
             this.plateSeparationHandleGraphic.visible = false;
             this.plateSeparationHandleHoverGraphic.visible = true;
 
@@ -325,11 +342,15 @@ define(function(require) {
         },
 
         plateSeparationUnhover: function() {
-            this.plateSeparationHandleGraphic.visible = true;
-            this.plateSeparationHandleHoverGraphic.visible = false;
+            this.plateSeparationHandleHovering = false;
 
-            this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
-            this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
+            if (!this.draggingPlateSeparation) {
+                this.plateSeparationHandleGraphic.visible = true;
+                this.plateSeparationHandleHoverGraphic.visible = false;
+
+                this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
+                this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
+            }
         },
 
         update: function() {
