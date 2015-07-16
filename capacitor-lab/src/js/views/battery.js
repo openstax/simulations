@@ -8,6 +8,7 @@ define(function(require) {
     var PixiView   = require('common/pixi/view');
     var SliderView = require('common/pixi/view/slider');
     var Vector2    = require('common/math/vector2');
+    var Colors     = require('common/colors/colors');
 
     var Assets = require('assets');
 
@@ -51,7 +52,7 @@ define(function(require) {
         initSlider: function() {
             var topHeight = this.mvt.modelToViewDeltaY(Constants.Battery.TOP_IMAGE_HEIGHT);
             var cylindarHeight = this.mvt.modelToViewDeltaY(Constants.Battery.BODY_HEIGHT) - topHeight;
-            var sliderHeight = Math.floor(cylindarHeight * 0.8);
+            var sliderHeight = Math.floor(cylindarHeight * 0.73);
 
             var sliderView = new SliderView({
                 start: Constants.BATTERY_VOLTAGE_RANGE.defaultValue,
@@ -83,14 +84,69 @@ define(function(require) {
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
                 this.model.set('voltage', value);
-                
+
                 if (value >= 0)
                     this.pointUp();
                 else
                     this.pointDown();
             });
 
-            // Add it
+            this.listenTo(sliderView, 'drag-end', function() {
+                // Snap to zero if we get close
+                if (Math.abs(sliderView.val()) < 0.1) {
+                    sliderView.val(0);
+                    this.model.set('voltage', 0);
+                    this.pointUp();
+                }
+            }); 
+
+            // Draw guide marks
+            var lineWidth = 14;
+            var halfWidth = lineWidth / 2;
+            var lineThickness = 1;
+            var top = Math.floor(sliderView.displayObject.y);
+            var middle = Math.floor(sliderView.displayObject.y + sliderView.displayObject.height / 2);
+            var bottom = Math.floor(sliderView.displayObject.y + sliderView.displayObject.height - lineThickness);
+
+            var lines = new PIXI.Graphics();
+            lines.lineStyle(lineThickness, Colors.parseHex('#777'), 0.8);
+            lines.moveTo(-halfWidth, top);
+            lines.lineTo( halfWidth, top);
+            lines.moveTo(-halfWidth, middle);
+            lines.lineTo( halfWidth, middle);
+            lines.moveTo(-halfWidth, bottom);
+            lines.lineTo( halfWidth, bottom);
+
+            // Draw guide labels
+            var textStyle = {
+                font: '11px Helvetica Neue',
+                fill: '#777'
+            };
+            var topNumber    = new PIXI.Text( '1.5', textStyle);
+            var middleNumber = new PIXI.Text( '0',   textStyle);
+            var bottomNumber = new PIXI.Text('-1.5', textStyle);
+            var topUnit      = new PIXI.Text('V',    textStyle);
+            var middleUnit   = new PIXI.Text('V',    textStyle);
+            var bottomUnit   = new PIXI.Text('V',    textStyle);
+
+            topNumber.anchor.y = middleNumber.anchor.y = bottomNumber.anchor.y = 0.35;
+            topUnit.anchor.y = middleUnit.anchor.y = bottomUnit.anchor.y = 0.35;
+
+            topNumber.anchor.x = middleNumber.anchor.x = bottomNumber.anchor.x = 1;
+            topNumber.x = middleNumber.x = bottomNumber.x = -halfWidth - 4;
+            topUnit.x = middleUnit.x = bottomUnit.x = halfWidth + 4;
+            topNumber.y = topUnit.y = top;
+            middleNumber.y = middleUnit.y = middle;
+            bottomNumber.y = bottomUnit.y = bottom;
+
+            // Add everything
+            this.displayObject.addChild(lines);
+            this.displayObject.addChild(topNumber);
+            this.displayObject.addChild(middleNumber);
+            this.displayObject.addChild(bottomNumber);
+            this.displayObject.addChild(topUnit);
+            this.displayObject.addChild(middleUnit);
+            this.displayObject.addChild(bottomUnit);
             this.displayObject.addChild(sliderView.displayObject);
         },
 
