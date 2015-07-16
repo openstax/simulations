@@ -46,6 +46,14 @@ define(function (require) {
 
             this.listenTo(this.capacitors, 'change', this.capacitorChanged);
             this.on('change:mvt', this.mvtChanged);
+
+            /*
+             * When the battery voltage changes, update the plate voltages.
+             *   Do NOT automatically do this when adding the observer because
+             *   updatePlateVoltages is implemented by the subclass, and all
+             *   necessary fields in the subclass may not be initialized.
+             */
+             this.listenTo(this.battery, 'change:voltage', this.updatePlateVoltages);
         },
 
         /**

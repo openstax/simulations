@@ -83,6 +83,11 @@ define(function(require) {
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
                 this.model.set('voltage', value);
+                
+                if (value >= 0)
+                    this.pointUp();
+                else
+                    this.pointDown();
             });
 
             // Add it
@@ -106,6 +111,16 @@ define(function(require) {
             this.batteryDown.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
+        },
+
+        pointUp: function() {
+            this.batteryUp.visible = true;
+            this.batteryDown.visible = false;
+        },
+
+        pointDown: function() {
+            this.batteryUp.visible = false;
+            this.batteryDown.visible = true;
         },
 
         /**
