@@ -163,6 +163,7 @@ define(function (require) {
     // size of the associated image file, determined by visual inspection
     Battery.BODY_WIDTH  = 0.0065;  // Meters
     Battery.BODY_HEIGHT = 0.01425; // Meters
+    Battery.TOP_IMAGE_HEIGHT = 0.0024; // The top of the cylindar in 3D mode in meters
 
     /*
      * Positive terminal is part of the image file.

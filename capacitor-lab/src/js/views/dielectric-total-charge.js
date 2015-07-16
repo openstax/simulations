@@ -58,7 +58,7 @@ define(function(require) {
             this.listenTo(this.model, 'change:plateSeparation',    this.draw);
             this.listenTo(this.model, 'change:dielectricMaterial', this.draw);
             this.listenTo(this.model, 'change:dielectricOffset',   this.draw);
-            this.listenTo(this.model, 'change:plateVoltage',       this.draw);
+            this.listenTo(this.model, 'change:platesVoltage',      this.draw);
         },
 
         initGraphics: function() {
@@ -122,7 +122,7 @@ define(function(require) {
                     pairNegativeChargeOffset *= (polarity === Polarity.POSITIVE) ? 1 : -1;
 
                     this.drawNegativeSymbol(x, y + pairNegativeChargeOffset, z);
-                    this.drawPositiveSymbol(x, y + pairNegativeChargeOffset, z);
+                    this.drawPositiveSymbol(x, y, z);
 
                     // Side face
                     // Center of the pair
@@ -138,7 +138,7 @@ define(function(require) {
                     pairNegativeChargeOffset *= (polarity === Polarity.POSITIVE) ? 1 : -1;
 
                     this.drawNegativeSymbol(x, y + pairNegativeChargeOffset, z);
-                    this.drawPositiveSymbol(x, y + pairNegativeChargeOffset, z);
+                    this.drawPositiveSymbol(x, y, z);
                 }
             }
         },
