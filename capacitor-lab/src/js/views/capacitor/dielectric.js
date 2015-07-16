@@ -49,12 +49,23 @@ define(function(require) {
             'touchendoutside .dielectricHandle': 'dragDielectricEnd',
             'mouseupoutside  .dielectricHandle': 'dragDielectricEnd',
 
+            // Or we can drag the dielectric block itself
+            'touchstart      .dielectric'      : 'dragDielectricStart',
+            'mousedown       .dielectric'      : 'dragDielectricStart',
+            'touchmove       .dielectric'      : 'dragDielectric',
+            'mousemove       .dielectric'      : 'dragDielectric',
+            'touchend        .dielectric'      : 'dragDielectricEnd',
+            'mouseup         .dielectric'      : 'dragDielectricEnd',
+            'touchendoutside .dielectric'      : 'dragDielectricEnd',
+            'mouseupoutside  .dielectric'      : 'dragDielectricEnd',
+
             'mouseover .plateAreaHandle'       : 'plateAreaHover',
             'mouseout  .plateAreaHandle'       : 'plateAreaUnhover',
             'mouseover .plateSeparationHandle' : 'plateSeparationHover',
             'mouseout  .plateSeparationHandle' : 'plateSeparationUnhover',
             'mouseover .dielectricHandle'      : 'dielectricHover',
             'mouseout  .dielectricHandle'      : 'dielectricUnhover'
+
         },
 
         initialize: function(options) {
@@ -328,6 +339,8 @@ define(function(require) {
 
         initDielectric: function() {
             this.dielectric = new PIXI.Graphics();
+            this.dielectric.buttonMode = true;
+            this.dielectric.defaultCursor = 'col-resize';
             this.middleLayer.addChild(this.dielectric);
         },
 
