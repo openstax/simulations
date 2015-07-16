@@ -349,21 +349,21 @@ define(function (require) {
          *   This is uniform everywhere between the plates.
          */
         getEffectiveEField: function() {
-            return this.getPlatesVoltage() / this.getPlateSeparation();
+            return this.getPlatesVoltage() / this.get('plateSeparation');
         },
 
         /**
          * Gets the field due to the plates in the capacitor volume that contains air.
          */
         getPlatesAirEField: function() {
-            return Capacitor.calculatePlatesEField(Constants.EPSILON_AIR, this.getPlatesVoltage(), this.getPlateSeparation());
+            return Capacitor.calculatePlatesEField(Constants.EPSILON_AIR, this.getPlatesVoltage(), this.get('plateSeparation'));
         },
 
         /**
          * Gets the field due to the plates in the capacitor volume that contains the dielectric.
          */
         getPlatesDielectricEField: function() {
-            return Capacitor.calculatePlatesEField(this.getDielectricConstant(), this.getPlatesVoltage(), this.getPlateSeparation());
+            return Capacitor.calculatePlatesEField(this.getDielectricConstant(), this.getPlatesVoltage(), this.get('plateSeparation'));
         },
 
         /**

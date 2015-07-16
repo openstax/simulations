@@ -24,6 +24,7 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.dielectric = options.dielectric;
+            this.maxDielectricEField = options.maxDielectricEField;
 
             // Arrays for views
             this.batteryViews = [];
@@ -63,13 +64,15 @@ define(function(require) {
                 if (this.dielectric) {
                     capacitorView = new DielectricCapacitorView({
                         model: capacitors.at(i),
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        maxDielectricEField: this.maxDielectricEField
                     });
                 }
                 else {
                     capacitorView = new CapacitorView({
                         model: capacitors.at(i),
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        maxDielectricEField: this.maxDielectricEField
                     });
                 }
                 this.capacitorViews.push(capacitorView);

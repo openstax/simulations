@@ -30,7 +30,8 @@ define(function(require) {
             this.circuitView = new CircuitView({
                 model: this.simulation.circuit,
                 mvt: this.mvt,
-                dielectric: true
+                dielectric: true,
+                maxDielectricEField: this.simulation.getMaxDielectricEField()
             });
 
             this.stage.addChild(this.circuitView.displayObject);

@@ -114,15 +114,6 @@ define(function (require) {
         },
 
         /**
-         * Default implementation has a connected battery. In the "single capacitor"
-         *   circuit, we'll override this and add a setter, so that the battery can
-         *   be dynamically connected and disconnected in the "Dielectric" module.
-         */
-        batteryIsConnected: function() {
-            return true;
-        },
-
-        /**
          * Gets the wire connected to the battery's top terminal
          */
         getTopWire: function() {

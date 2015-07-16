@@ -11,7 +11,8 @@ define(function(require) {
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
-    var CapacitorView = require('views/capacitor');
+    var CapacitorView             = require('views/capacitor');
+    var DielectricTotalChargeView = require('views/dielectric-total-charge');
 
     var Constants = require('constants');
 
@@ -67,6 +68,8 @@ define(function(require) {
                 labelAlpha: 1
             }, options);
 
+            this.maxDielectricEField = options.maxDielectricEField;
+
             // Handle colors
             this.handleColor = Colors.parseHex(options.handleColor);
             this.handleHoverColor = Colors.parseHex(options.handleHoverColor);
@@ -108,6 +111,7 @@ define(function(require) {
             this.initPlateSeparationHandle();
             this.initDielectric();
             this.initDielectricHandle();
+            this.initDielectricTotalChargeView();
         },
 
         initPlateAreaHandle: function() {
@@ -338,6 +342,15 @@ define(function(require) {
                 this.model.get('dielectricMaterial').get('alpha')
             );
             this.shapeCreator.outlineDielectric(this.dielectric, 1, outlineColor, 1);
+        },
+
+        initDielectricTotalChargeView: function() {
+            this.dielectricTotalChargeView = new DielectricTotalChargeView({
+                model: this.model,
+                mvt: this.mvt,
+                maxDielectricEField: this.maxDielectricEField
+            });
+            this.middleLayer.addChild(this.dielectricTotalChargeView.displayObject);
         },
 
         dragPlateAreaStart: function(data) {

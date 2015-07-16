@@ -191,8 +191,8 @@ define(function (require) {
      *************************************************************************/
 
     Constants.Polarity = {
-    	POSITIVE:  1,
-    	NEGATIVE: -1
+        POSITIVE:  1,
+        NEGATIVE: -1
     };
 
     Constants.ConnectionPoint = {
@@ -217,6 +217,24 @@ define(function (require) {
 
     Constants.DielectricMaterial = DielectricMaterial;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                               CHARGES                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var DielectricTotalChargeView = {};
+
+    DielectricTotalChargeView.LINE_WIDTH = 4;
+    DielectricTotalChargeView.SYMBOL_WIDTH = 20;
+    DielectricTotalChargeView.POSITIVE_COLOR = '#ff0000';
+    DielectricTotalChargeView.NEGATIVE_COLOR = '#0000ff';
+    DielectricTotalChargeView.SYMBOL_SPACING = Constants.PLATE_SEPARATION_RANGE.max / 4; // In meters
+    DielectricTotalChargeView.SYMBOL_SPACING_EXPONENT = 1 / 4;
+    DielectricTotalChargeView.NEGATIVE_CHARGE_OFFSET_RANGE = range({ min: 0, max: DielectricTotalChargeView.SYMBOL_SPACING / 2 });
+
+    Constants.DielectricTotalChargeView = DielectricTotalChargeView;
 
     return Constants;
 });

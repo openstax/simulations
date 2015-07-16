@@ -59,11 +59,11 @@ define(function (require) {
             });
 
             this.on('change:disconnectedPlateCharge', function() {
-                if (!this.batteryIsConnected()) {
+                if (!this.get('batteryConnected')) {
                     this.updatePlateVoltages();
                     this.trigger('circuit-change');
                 }
-            })
+            });
         },
 
         /**
@@ -78,9 +78,9 @@ define(function (require) {
 
             var v = this.battery.get('voltage');
 
-            if (!this.batteryIsConnected()) {
+            if (!this.get('batteryConnected')) {
                 // V = Q / C
-                v = this.disconnectedPlateCharge / this.capacitor.getTotalCapacitance();
+                v = this.get('disconnectedPlateCharge') / this.capacitor.getTotalCapacitance();
             }
 
             this.capacitor.set('platesVoltage', v);
@@ -92,7 +92,7 @@ define(function (require) {
          *   override this method.
          */
         getTotalVoltage: function() {
-            if (this.batteryIsConnected())
+            if (this.get('batteryConnected'))
                 return ParallelCircuit.prototype.getTotalVoltage.apply(this, arguments);
             else
                 return this.capacitor.get('platesVoltage');
@@ -104,7 +104,7 @@ define(function (require) {
          */
         getVoltageAt: function(shape) {
             var voltage = NaN;
-            if (this.batteryIsConnected()) {
+            if (this.get('batteryConnected')) {
                 voltage = ParallelCircuit.prototype.getVoltageAt.apply(this, arguments);
             }
             else {

@@ -4,9 +4,12 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
+    var Vector3 = require('common/math/vector3');
+
     var CapacitorLabSimulation = require('models/simulation');
     var SingleCircuit          = require('models/circuit/single');
     var DielectricMaterial     = require('models/dielectric-material');
+    var Capacitor              = require('models/capacitor');
 
     /**
      * Constants
@@ -97,11 +100,11 @@ define(function (require, exports, module) {
             });
 
             var capacitor = new Capacitor({
-                plateWidth:         DielectricSimulation.PLATE_WIDTH_RANGE.max,
-                plateSeparation:    DielectricSimulation.PLATE_SEPARATION_RANGE.min,
+                plateWidth:         Constants.PLATE_WIDTH_RANGE.max,
+                plateSeparation:    Constants.PLATE_SEPARATION_RANGE.min,
                 dielectricMaterial: material,
-                dielectricOffset:   DielectricSimulation.DIELECTRIC_OFFSET_RANGE.min,
-                platesVoltage:      DielectricSimulation.BATTERY_VOLTAGE_RANGE.max
+                dielectricOffset:   Constants.DIELECTRIC_OFFSET_RANGE.min,
+                platesVoltage:      Constants.BATTERY_VOLTAGE_RANGE.max
             });
 
             return capacitor;
@@ -123,10 +126,10 @@ define(function (require, exports, module) {
                 batteryLocation:    new Vector3(),
                 capacitorXSpacing:  DielectricSimulation.CAPACITOR_X_SPACING,
                 capacitorYSpacing:  DielectricSimulation.CAPACITOR_Y_SPACING,
-                plateWidth:         DielectricSimulation.PLATE_WIDTH_RANGE.min,
-                plateSeparation:    DielectricSimulation.PLATE_SEPARATION_RANGE.min,
+                plateWidth:         Constants.PLATE_WIDTH_RANGE.min,
+                plateSeparation:    Constants.PLATE_SEPARATION_RANGE.min,
                 dielectricMaterial: material,
-                dielectricOffset:   Constant.DIELECTRIC_OFFSET_RANGE.min,
+                dielectricOffset:   Constants.DIELECTRIC_OFFSET_RANGE.min,
                 wireThickness:      DielectricSimulation.WIRE_THICKNESS,
                 wireExtent:         DielectricSimulation.WIRE_EXTENT
             };
@@ -148,11 +151,11 @@ define(function (require, exports, module) {
             });
 
             var capacitor = new Capacitor({
-                plateWidth:         DielectricSimulation.PLATE_WIDTH_RANGE.defaultValue,
-                plateSeparation:    DielectricSimulation.PLATE_SEPARATION_RANGE.defaultValue,
+                plateWidth:         Constants.PLATE_WIDTH_RANGE.defaultValue,
+                plateSeparation:    Constants.PLATE_SEPARATION_RANGE.defaultValue,
                 dielectricMaterial: material,
-                dielectricOffset:   Constant.DIELECTRIC_OFFSET_RANGE.defaultValue,
-                platesVoltage:      DielectricSimulation.BATTERY_VOLTAGE_RANGE.max
+                dielectricOffset:   Constants.DIELECTRIC_OFFSET_RANGE.defaultValue,
+                platesVoltage:      Constants.BATTERY_VOLTAGE_RANGE.max
             });
 
             return capacitor.getEffectiveEField();
