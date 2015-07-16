@@ -135,11 +135,11 @@ define(function (require) {
          * Maps relative distances (delta) from 3D model space to 2D view space.
          *   Takes a Vector3 object.
          */
-        modelToViewDelta: function(coordinates) {
-            if (coordinates instanceof Rectangle || coordinates instanceof PiecewiseCurve)
+        modelToViewDelta: function(x, y, z) {
+            if (x instanceof Rectangle || x instanceof PiecewiseCurve)
                 throw 'modelToViewDelta cannot convert shapes.';
 
-            var viewPoint = this.modelToView(coordinates);
+            var viewPoint = this.modelToView(x, y, z);
             this._deltaPoint2D.x = viewPoint.x - this.viewOrigin.x;
             this._deltaPoint2D.y = viewPoint.y - this.viewOrigin.y;
             return this._deltaPoint2D;

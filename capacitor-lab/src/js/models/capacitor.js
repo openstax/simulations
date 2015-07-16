@@ -164,6 +164,10 @@ define(function (require) {
             return this.get('plateDepth');
         },
 
+        getDielectricOffset: function() {
+            return this.get('dielectricOffset');
+        },
+
         /**
          * Gets the area of the contact between one of the plates and air.
          */

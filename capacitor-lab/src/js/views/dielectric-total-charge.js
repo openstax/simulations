@@ -8,6 +8,7 @@ define(function(require) {
     var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2   = require('common/math/vector2');
+    var Vector3   = require('common/math/vector3');
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
@@ -43,20 +44,26 @@ define(function(require) {
             this.mvt = options.mvt;
             this.maxDielectricEField = options.maxDielectricEField;
 
+            // Cached objects
+            this._vec3 = new Vector3();
+
             // Initialize graphics
             this.initGraphics();
             this.updateMVT(this.mvt);
 
             // Listen for model events
-            
+            this.listenTo(this.model, 'change:position',           this.updatePosition);
+            this.listenTo(this.model, 'change:dielectricOffset',   this.updatePosition);
+            this.listenTo(this.model, 'change:plateDepth',         this.draw);
+            this.listenTo(this.model, 'change:plateSeparation',    this.draw);
+            this.listenTo(this.model, 'change:dielectricMaterial', this.draw);
+            this.listenTo(this.model, 'change:dielectricOffset',   this.draw);
+            this.listenTo(this.model, 'change:plateVoltage',       this.draw);
         },
 
         initGraphics: function() {
             this.positiveCharges = new PIXI.Graphics();
             this.negativeCharges = new PIXI.Graphics();
-
-            this.positiveCharges.lineStyle(LINE_WIDTH, POSITIVE_COLOR, 1);
-            this.negativeCharges.lineStyle(LINE_WIDTH, NEGATIVE_COLOR, 1);
 
             this.displayObject.addChild(this.positiveCharges);
             this.displayObject.addChild(this.negativeCharges);
@@ -66,14 +73,17 @@ define(function(require) {
             this.positiveCharges.clear();
             this.negativeCharges.clear();
 
+            this.positiveCharges.lineStyle(LINE_WIDTH, POSITIVE_COLOR, 1);
+            this.negativeCharges.lineStyle(LINE_WIDTH, NEGATIVE_COLOR, 1);
+
             var capacitor = this.model;
 
             // Offset of negative charges
             var eField = capacitor.getDielectricEField();
-            var negativeChargeOffset = this.getNegativeChargeOffset( eField );
+            var negativeChargeOffset = this.getNegativeChargeOffset(eField);
 
             // Spacing between pairs
-            var spacingBetweenPairs = this.mvt.modelToViewDeltaX(SYMBOL_SPACING);
+            var spacingBetweenPairs = SYMBOL_SPACING;
 
             // Rows and columns
             var dielectricWidth  = capacitor.getDielectricWidth();
@@ -100,9 +110,9 @@ define(function(require) {
                 for (var col = 0; col < cols; col++) {
                     // Front face
                     // Calculate center of the pair
-                    x = -(dielectricWidth / 2) + offset + xMargin + (col * spacingBetweenPairs);
-                    y = yMargin + offset + (row * spacingBetweenPairs);
-                    z = (-dielectricDepth / 2);
+                    x = -(dielectricWidth  / 2) + offset + xMargin + (col * spacingBetweenPairs);
+                    y = -(dielectricHeight / 2) + offset + yMargin + (row * spacingBetweenPairs);
+                    z = (-dielectricDepth  / 2);
 
                     // Spacing between charges
                     if (x <= xPlateEdge)
@@ -112,12 +122,13 @@ define(function(require) {
                     pairNegativeChargeOffset *= (polarity === Polarity.POSITIVE) ? 1 : -1;
 
                     this.drawNegativeSymbol(x, y + pairNegativeChargeOffset, z);
+                    this.drawPositiveSymbol(x, y + pairNegativeChargeOffset, z);
 
                     // Side face
                     // Center of the pair
-                    x = ( dielectricWidth / 2 );
-                    y = yMargin + offset + ( row * spacingBetweenPairs );
-                    z = ( -dielectricDepth / 2 ) + offset + zMargin + ( col * spacingBetweenPairs );
+                    x =  (dielectricWidth  / 2);
+                    y = -(dielectricHeight / 2) + offset + yMargin + (row * spacingBetweenPairs);
+                    z = -(dielectricDepth  / 2) + offset + zMargin + (col * spacingBetweenPairs);
 
                     // Spacing between charges
                     if (capacitor.getDielectricOffset() === 0)
@@ -126,21 +137,24 @@ define(function(require) {
                         pairNegativeChargeOffset = NEGATIVE_CHARGE_OFFSET_RANGE.min;
                     pairNegativeChargeOffset *= (polarity === Polarity.POSITIVE) ? 1 : -1;
 
+                    this.drawNegativeSymbol(x, y + pairNegativeChargeOffset, z);
                     this.drawPositiveSymbol(x, y + pairNegativeChargeOffset, z);
                 }
             }
         },
 
         drawNegativeSymbol: function(x, y, z) {
-            this.negativeCharges.moveTo(x - SYMBOL_WIDTH / 2, y);
-            this.negativeCharges.lineTo(x + SYMBOL_WIDTH / 2, y);
+            var viewPoint = this.mvt.modelToViewDelta(x, y, z);
+            this.negativeCharges.moveTo(viewPoint.x - SYMBOL_WIDTH / 2, viewPoint.y);
+            this.negativeCharges.lineTo(viewPoint.x + SYMBOL_WIDTH / 2, viewPoint.y);
         },
 
         drawPositiveSymbol: function(x, y, z) {
-            this.positiveCharges.moveTo(x - SYMBOL_WIDTH / 2, y);
-            this.positiveCharges.lineTo(x + SYMBOL_WIDTH / 2, y);
-            this.positiveCharges.moveTo(x, y - SYMBOL_WIDTH / 2);
-            this.positiveCharges.lineTo(x, y + SYMBOL_WIDTH / 2);
+            var viewPoint = this.mvt.modelToViewDelta(x, y, z);
+            this.positiveCharges.moveTo(viewPoint.x - SYMBOL_WIDTH / 2, viewPoint.y);
+            this.positiveCharges.lineTo(viewPoint.x + SYMBOL_WIDTH / 2, viewPoint.y);
+            this.positiveCharges.moveTo(viewPoint.x, viewPoint.y - SYMBOL_WIDTH / 2);
+            this.positiveCharges.lineTo(viewPoint.x, viewPoint.y + SYMBOL_WIDTH / 2);
         },
 
         getNegativeChargeOffset: function(eField) {
@@ -148,11 +162,20 @@ define(function(require) {
             var percent = Math.pow(absEField / this.maxDielectricEField, SYMBOL_SPACING_EXPONENT);
             return NEGATIVE_CHARGE_OFFSET_RANGE.min + (percent * NEGATIVE_CHARGE_OFFSET_RANGE.length());
         },
+
+        updatePosition: function() {
+            var modelPos = this._vec3.set(this.model.get('position'));
+            modelPos.x += this.model.get('dielectricOffset');
+            var viewPos = this.mvt.modelToView(modelPos);
+            this.displayObject.x = viewPos.x;
+            this.displayObject.y = viewPos.y;
+        },
  
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
             this.draw();
+            this.updatePosition(this.model, this.model.get('position'));
         },
 
         show: function() {
