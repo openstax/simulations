@@ -125,7 +125,14 @@ define(function(require) {
         },
 
         updatePosition: function(capacitor, position) {
-            var viewPos = this.mvt.modelToView(position);
+            var modelPoint;
+            if (this.polarity === Polarity.POSITIVE)
+                modelPoint = capacitor.getTopPlateCenter();
+            else {
+                modelPoint = capacitor.getBottomPlateCenter();
+                modelPoint.y -= capacitor.get('plateHeight');
+            }
+            var viewPos = this.mvt.modelToView(modelPoint);
             this.displayObject.x = viewPos.x;
             this.displayObject.y = viewPos.y;
         },
