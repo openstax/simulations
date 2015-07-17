@@ -377,16 +377,32 @@ define(function(require) {
             var topChargesOptions = {
                 model: this.model,
                 mvt: this.mvt,
+                transparency: 1,
                 maxPlateCharge: this.maxPlateCharge,
                 polarity: Polarity.POSITIVE
             };
 
-            // are there two per plate?? what layer do they go on??
             var topAirCharges = new AirPlateChargeView(topChargesOptions);
             var topDielectricCharges = new DielectricPlateChargeView(topChargesOptions);
 
             this.topLayer.addChild(topAirCharges.displayObject);
             this.topLayer.addChild(topDielectricCharges.displayObject);
+
+            var bottomChargesOptions = {
+                model: this.model,
+                mvt: this.mvt,
+                transparency: 1,
+                maxPlateCharge: this.maxPlateCharge,
+                polarity: Polarity.NEGATIVE
+            };
+
+            var bottomAirCharges = new AirPlateChargeView(bottomChargesOptions);
+            var bottomDielectricCharges = new DielectricPlateChargeView(
+                _.extend({}, bottomChargesOptions, { transparency: 0.25 })
+            );
+
+            this.bottomLayer.addChild(bottomAirCharges.displayObject);
+            this.bottomLayer.addChild(bottomDielectricCharges.displayObject);
         },
 
         dragPlateAreaStart: function(data) {

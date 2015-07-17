@@ -78,9 +78,9 @@ define(function(require) {
 
                 // populate the grid
                 for (var row = 0; row < rows; row++) {
-                    for (var cols = 0; cols < cols; cols++) {
+                    for (var col = 0; col < cols; col++) {
                         // Position the charge in cell in the grid
-                        x = this.getContactXOrigin() + xOffset + (cols * dx);
+                        x = this.getContactXOrigin() + xOffset + (col * dx);
                         y = 0;
                         z = -(gridDepth / 2) + (zMargin / 2) + zOffset + (row * dz);
                         if (numberOfCharges === 1)

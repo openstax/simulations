@@ -29,7 +29,7 @@ define(function (require, exports, module) {
             CapacitorLabSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.listenTo(this.circuit, 'circuit-changed', function() {
-                console.log(this.circuit.getTotalCapacitance());
+                
             });
         },
 
