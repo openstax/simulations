@@ -11,10 +11,11 @@ define(function(require) {
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
-    var CapacitorView             = require('views/capacitor');
-    var DielectricTotalChargeView = require('views/charge/dielectric-total');
-    var DielectricPlateChargeView = require('views/charge/dielectric-plate');
-    var AirPlateChargeView        = require('views/charge/air-plate');
+    var CapacitorView              = require('views/capacitor');
+    var DielectricTotalChargeView  = require('views/charge/dielectric-total');
+    var DielectricExcessChargeView = require('views/charge/dielectric-excess');
+    var DielectricPlateChargeView  = require('views/charge/dielectric-plate');
+    var AirPlateChargeView         = require('views/charge/air-plate');
 
     var Constants = require('constants');
     var Polarity = Constants.Polarity;
@@ -129,6 +130,7 @@ define(function(require) {
             this.initDielectric();
             this.initDielectricHandle();
             this.initDielectricTotalChargeView();
+            this.initDielectricExcessChargeView();
             this.initPlateChargeViews();
         },
 
@@ -371,6 +373,15 @@ define(function(require) {
                 maxDielectricEField: this.maxDielectricEField
             });
             this.middleLayer.addChild(this.dielectricTotalChargeView.displayObject);
+        },
+
+        initDielectricExcessChargeView: function() {
+            this.dielectricExcessChargeView = new DielectricExcessChargeView({
+                model: this.model,
+                mvt: this.mvt,
+                maxExcessDielectricPlateCharge: this.maxExcessDielectricPlateCharge
+            });
+            this.middleLayer.addChild(this.dielectricExcessChargeView.displayObject);
         },
 
         initPlateChargeViews: function() {

@@ -31,7 +31,7 @@ define(function(require) {
 
             // Listen for model events
             this.listenTo(this.model, 'change:plateDepth',         this.draw);
-            this.listenTo(this.model, 'change:plateSeparation',    this.draw);
+            this.listenTo(this.model, 'change:plateSeparation',    this.update);
             this.listenTo(this.model, 'change:dielectricMaterial', this.draw);
             this.listenTo(this.model, 'change:dielectricOffset',   this.draw);
             this.listenTo(this.model, 'change:platesVoltage',      this.draw);
@@ -59,16 +59,16 @@ define(function(require) {
                 var gridWidth = this.getContactWidth(); // Contact between plate and dielectric
                 var gridDepth = capacitor.get('plateDepth') - (2 * zMargin);
 
-                // grid dimensions
+                // Grid dimensions
                 var gridDimensions = calculateGridSize(numberOfCharges, gridWidth, gridDepth);
                 var rows = gridDimensions.rows;
                 var cols = gridDimensions.columns;
 
-                // distance between cells
+                // Distance between cells
                 var dx = gridWidth / cols;
                 var dz = gridDepth / rows;
 
-                // offset to move us to the center of cells
+                // Offset to move us to the center of cells
                 var xOffset = dx / 2;
                 var zOffset = dz / 2;
 
@@ -76,7 +76,7 @@ define(function(require) {
                 var y;
                 var z;
 
-                // populate the grid
+                // Populate the grid
                 for (var row = 0; row < rows; row++) {
                     for (var col = 0; col < cols; col++) {
                         // Position the charge in cell in the grid
@@ -140,6 +140,11 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.draw();
+            this.updatePosition(this.model, this.model.get('position'));
+        },
+
+        update: function() {
             this.draw();
             this.updatePosition(this.model, this.model.get('position'));
         }
