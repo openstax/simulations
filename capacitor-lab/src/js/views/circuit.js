@@ -135,6 +135,36 @@ define(function(require) {
             this.mvt = mvt;
 
             this.sortComponents();
+        },
+
+        showExcessDielectricCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].showExcessDielectricCharges();
+        },
+
+        hideExcessDielectricCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].hideExcessDielectricCharges();
+        },
+
+        showTotalDielectricCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].showTotalDielectricCharges();
+        },
+
+        hideTotalDielectricCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].hideTotalDielectricCharges();
+        },
+
+        showPlateCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].showPlateCharges();
+        },
+
+        hidePlateCharges: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].hidePlateCharges();
         }
 
     });

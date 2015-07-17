@@ -14,8 +14,6 @@ define(function(require) {
     var CapacitorView              = require('views/capacitor');
     var DielectricTotalChargeView  = require('views/charge/dielectric-total');
     var DielectricExcessChargeView = require('views/charge/dielectric-excess');
-    var DielectricPlateChargeView  = require('views/charge/dielectric-plate');
-    var AirPlateChargeView         = require('views/charge/air-plate');
 
     var Constants = require('constants');
     var Polarity = Constants.Polarity;
@@ -131,7 +129,8 @@ define(function(require) {
             this.initDielectricHandle();
             this.initDielectricTotalChargeView();
             this.initDielectricExcessChargeView();
-            this.initPlateChargeViews();
+
+            this.hideExcessDielectricCharges();
         },
 
         initPlateAreaHandle: function() {
@@ -381,39 +380,7 @@ define(function(require) {
                 mvt: this.mvt,
                 maxExcessDielectricPlateCharge: this.maxExcessDielectricPlateCharge
             });
-            this.middleLayer.addChild(this.dielectricExcessChargeView.displayObject);
-        },
-
-        initPlateChargeViews: function() {
-            var topChargesOptions = {
-                model: this.model,
-                mvt: this.mvt,
-                transparency: 1,
-                maxPlateCharge: this.maxPlateCharge,
-                polarity: Polarity.POSITIVE
-            };
-
-            var topAirCharges = new AirPlateChargeView(topChargesOptions);
-            var topDielectricCharges = new DielectricPlateChargeView(topChargesOptions);
-
-            this.topLayer.addChild(topAirCharges.displayObject);
-            this.topLayer.addChild(topDielectricCharges.displayObject);
-
-            var bottomChargesOptions = {
-                model: this.model,
-                mvt: this.mvt,
-                transparency: 1,
-                maxPlateCharge: this.maxPlateCharge,
-                polarity: Polarity.NEGATIVE
-            };
-
-            var bottomAirCharges = new AirPlateChargeView(bottomChargesOptions);
-            var bottomDielectricCharges = new DielectricPlateChargeView(
-                _.extend({}, bottomChargesOptions, { transparency: 0.25 })
-            );
-
-            this.bottomLayer.addChild(bottomAirCharges.displayObject);
-            this.bottomLayer.addChild(bottomDielectricCharges.displayObject);
+            this.middleLayer.addChildAt(this.dielectricExcessChargeView.displayObject, 0);
         },
 
         dragPlateAreaStart: function(data) {
@@ -578,9 +545,27 @@ define(function(require) {
             this.updateHandlePositions();
             this.updateHandleLabels();
             this.drawDielectric();
+        },
+
+        showExcessDielectricCharges: function() {
+            this.dielectric.alpha = DielectricCapacitorView.DIELECTRIC_ALPHA_IN_EXCESS_CHARGE_MODE;
+            this.dielectricExcessChargeView.show();
+        },
+
+        hideExcessDielectricCharges: function() {
+            this.dielectric.alpha = 1;
+            this.dielectricExcessChargeView.hide();
+        },
+
+        showTotalDielectricCharges: function() {
+            this.dielectricTotalChargeView.show();
+        },
+
+        hideTotalDielectricCharges: function() {
+            this.dielectricTotalChargeView.hide();
         }
 
-    });
+    }, Constants.DielectricCapacitorView);
 
     return DielectricCapacitorView;
 });

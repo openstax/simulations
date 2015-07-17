@@ -26,7 +26,10 @@ define(function (require) {
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
             'slide .dielectric-constant-slider' : 'changeDielectricConstant',
-            'change .dielectric-material' : 'changeDielectricMaterial'
+            'change .dielectric-material'       : 'changeDielectricMaterial',
+            'click #hide-all-charges'    : 'hideAllCharges',
+            'click #show-all-charges'    : 'showAllCharges',
+            'click #show-excess-charges' : 'showExcessCharges',
         }),
 
         /**
@@ -105,6 +108,21 @@ define(function (require) {
 
             // Set the selected projectile on the simulation
             this.simulation.circuit.capacitor.set('dielectricMaterial', this.simulation.dielectricMaterials[index]);
+        },
+
+        hideAllCharges: function() {
+            this.sceneView.hideExcessDielectricCharges();
+            this.sceneView.hideTotalDielectricCharges();
+        },
+
+        showAllCharges: function() {
+            this.sceneView.hideExcessDielectricCharges();
+            this.sceneView.showTotalDielectricCharges();
+        },
+
+        showExcessCharges: function() {
+            this.sceneView.showExcessDielectricCharges();
+            this.sceneView.hideTotalDielectricCharges();
         }
 
     });

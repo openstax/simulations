@@ -221,6 +221,19 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                            CAPACITOR VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var DielectricCapacitorView = {};
+
+    DielectricCapacitorView.DIELECTRIC_ALPHA_IN_EXCESS_CHARGE_MODE = 0.5;
+
+    Constants.DielectricCapacitorView = DielectricCapacitorView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                               CHARGES                               **
      **                                                                     **
      *************************************************************************/
@@ -242,6 +255,9 @@ define(function (require) {
     DielectricTotalChargeView.NEGATIVE_CHARGE_OFFSET_RANGE = range({ min: 0, max: DielectricTotalChargeView.SYMBOL_SPACING / 2 });
 
     Constants.DielectricTotalChargeView = DielectricTotalChargeView;
+
+
+
 
     return Constants;
 });

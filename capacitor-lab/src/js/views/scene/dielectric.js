@@ -44,6 +44,30 @@ define(function(require) {
             
         },
 
+        showExcessDielectricCharges: function() {
+            this.circuitView.showExcessDielectricCharges();
+        },
+
+        hideExcessDielectricCharges: function() {
+            this.circuitView.hideExcessDielectricCharges();
+        },
+
+        showTotalDielectricCharges: function() {
+            this.circuitView.showTotalDielectricCharges();
+        },
+
+        hideTotalDielectricCharges: function() {
+            this.circuitView.hideTotalDielectricCharges();
+        },
+
+        showPlateCharges: function() {
+            this.circuitView.showPlateCharges();
+        },
+
+        hidePlateCharges: function() {
+            this.circuitView.hidePlateCharges();
+        }
+
     });
 
     return DielectricSceneView;

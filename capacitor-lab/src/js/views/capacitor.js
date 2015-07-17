@@ -11,7 +11,11 @@ define(function(require) {
 
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
+    var DielectricPlateChargeView  = require('views/charge/dielectric-plate');
+    var AirPlateChargeView         = require('views/charge/air-plate');
+
     var Constants = require('constants');
+    var Polarity = Constants.Polarity;
 
     /**
      * 
@@ -51,6 +55,7 @@ define(function(require) {
             this.displayObject.addChild(this.topLayer);
 
             this.initPlates();
+            this.initPlateChargeViews();
         },
 
         initPlates: function() {
@@ -71,6 +76,42 @@ define(function(require) {
             this.shapeCreator.outlineTopPlate(this.topPlate, 1, this.outlineColor, 1);
         },
 
+        initPlateChargeViews: function() {
+            var topChargesOptions = {
+                model: this.model,
+                mvt: this.mvt,
+                transparency: 1,
+                maxPlateCharge: this.maxPlateCharge,
+                polarity: Polarity.POSITIVE
+            };
+
+            var topAirCharges = new AirPlateChargeView(topChargesOptions);
+            var topDielectricCharges = new DielectricPlateChargeView(topChargesOptions);
+
+            this.topPlateCharges = new PIXI.DisplayObjectContainer();
+            this.topPlateCharges.addChild(topAirCharges.displayObject);
+            this.topPlateCharges.addChild(topDielectricCharges.displayObject);
+            this.topLayer.addChild(this.topPlateCharges);
+
+            var bottomChargesOptions = {
+                model: this.model,
+                mvt: this.mvt,
+                transparency: 1,
+                maxPlateCharge: this.maxPlateCharge,
+                polarity: Polarity.NEGATIVE
+            };
+
+            var bottomAirCharges = new AirPlateChargeView(bottomChargesOptions);
+            var bottomDielectricCharges = new DielectricPlateChargeView(
+                _.extend({}, bottomChargesOptions, { transparency: 0.25 })
+            );
+
+            this.bottomPlateCharges = new PIXI.DisplayObjectContainer();
+            this.bottomPlateCharges.addChild(bottomAirCharges.displayObject);
+            this.bottomPlateCharges.addChild(bottomDielectricCharges.displayObject);
+            this.bottomLayer.addChild(this.bottomPlateCharges);
+        },
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
@@ -79,6 +120,16 @@ define(function(require) {
 
         update: function() {
             this.drawPlates();
+        },
+
+        showPlateCharges: function() {
+            this.topPlateCharges.visible = true;
+            this.bottomPlateCharges.visible = true;
+        },
+
+        hidePlateCharges: function() {
+            this.topPlateCharges.visible = false;
+            this.bottomPlateCharges.visible = false;
         },
 
         /**
