@@ -49,7 +49,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'change .plate-charges-check' : 'togglePlateCharges'
         },
 
         /**
@@ -150,6 +150,13 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        togglePlateCharges: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showPlateCharges();
+            else
+                this.sceneView.hidePlateCharges();
+        }
 
     });
 
