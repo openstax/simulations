@@ -31,7 +31,10 @@ define(function(require) {
                 model: this.simulation.circuit,
                 mvt: this.mvt,
                 dielectric: true,
-                maxDielectricEField: this.simulation.getMaxDielectricEField()
+                maxDielectricEField: this.simulation.getMaxDielectricEField(),
+                maxPlateCharge: this.simulation.getMaxPlateCharge(),
+                maxExcessDielectricPlateCharge: this.simulation.getMaxExcessDielectricPlateCharge(),
+                maxEffectiveEField: this.simulation.getMaxEffectiveEField()
             });
 
             this.stage.addChild(this.circuitView.displayObject);

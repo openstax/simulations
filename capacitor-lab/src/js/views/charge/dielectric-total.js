@@ -2,22 +2,14 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-    
-    var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2   = require('common/math/vector2');
     var Vector3   = require('common/math/vector3');
 
-    var CapacitorShapeCreator = require('shape-creators/capacitor');
+    var ChargeView = require('views/charge');
 
     var Constants = require('constants');
 
-    var LINE_WIDTH = Constants.DielectricTotalChargeView.LINE_WIDTH;
-    var SYMBOL_WIDTH = Constants.DielectricTotalChargeView.SYMBOL_WIDTH;
-    var POSITIVE_COLOR = Colors.parseHex(Constants.DielectricTotalChargeView.POSITIVE_COLOR);
-    var NEGATIVE_COLOR = Colors.parseHex(Constants.DielectricTotalChargeView.NEGATIVE_COLOR);
     var SYMBOL_SPACING = Constants.DielectricTotalChargeView.SYMBOL_SPACING;
     var SYMBOL_SPACING_EXPONENT = Constants.DielectricTotalChargeView.SYMBOL_SPACING_EXPONENT;
     var NEGATIVE_CHARGE_OFFSET_RANGE = Constants.DielectricTotalChargeView.NEGATIVE_CHARGE_OFFSET_RANGE;
@@ -34,22 +26,16 @@ define(function(require) {
      * All model coordinates are relative to the dielectric's local coordinate frame,
      * where the origin is at the 3D geometric center of the dielectric.
      */
-    var DielectricTotalChargeView = PixiView.extend({
+    var DielectricTotalChargeView = ChargeView.extend({
 
         initialize: function(options) {
-            // options = _.extend({
-                
-            // }, options);
-
-            this.mvt = options.mvt;
             this.maxDielectricEField = options.maxDielectricEField;
-
+            
             // Cached objects
             this._vec3 = new Vector3();
 
-            // Initialize graphics
-            this.initGraphics();
-            this.updateMVT(this.mvt);
+            // Call parent initialize
+            ChargeView.prototype.initialize.apply(this, [options]);
 
             // Listen for model events
             this.listenTo(this.model, 'change:position',           this.updatePosition);
@@ -61,20 +47,8 @@ define(function(require) {
             this.listenTo(this.model, 'change:platesVoltage',      this.draw);
         },
 
-        initGraphics: function() {
-            this.positiveCharges = new PIXI.Graphics();
-            this.negativeCharges = new PIXI.Graphics();
-
-            this.displayObject.addChild(this.positiveCharges);
-            this.displayObject.addChild(this.negativeCharges);
-        },
-
         draw: function() {
-            this.positiveCharges.clear();
-            this.negativeCharges.clear();
-
-            this.positiveCharges.lineStyle(LINE_WIDTH, POSITIVE_COLOR, 1);
-            this.negativeCharges.lineStyle(LINE_WIDTH, NEGATIVE_COLOR, 1);
+            ChargeView.prototype.draw.apply(this, arguments);
 
             var capacitor = this.model;
 
@@ -143,20 +117,6 @@ define(function(require) {
             }
         },
 
-        drawNegativeSymbol: function(x, y, z) {
-            var viewPoint = this.mvt.modelToViewDelta(x, y, z);
-            this.negativeCharges.moveTo(viewPoint.x - SYMBOL_WIDTH / 2, viewPoint.y);
-            this.negativeCharges.lineTo(viewPoint.x + SYMBOL_WIDTH / 2, viewPoint.y);
-        },
-
-        drawPositiveSymbol: function(x, y, z) {
-            var viewPoint = this.mvt.modelToViewDelta(x, y, z);
-            this.positiveCharges.moveTo(viewPoint.x - SYMBOL_WIDTH / 2, viewPoint.y);
-            this.positiveCharges.lineTo(viewPoint.x + SYMBOL_WIDTH / 2, viewPoint.y);
-            this.positiveCharges.moveTo(viewPoint.x, viewPoint.y - SYMBOL_WIDTH / 2);
-            this.positiveCharges.lineTo(viewPoint.x, viewPoint.y + SYMBOL_WIDTH / 2);
-        },
-
         getNegativeChargeOffset: function(eField) {
             var absEField = Math.abs(eField);
             var percent = Math.pow(absEField / this.maxDielectricEField, SYMBOL_SPACING_EXPONENT);
@@ -176,14 +136,6 @@ define(function(require) {
 
             this.draw();
             this.updatePosition(this.model, this.model.get('position'));
-        },
-
-        show: function() {
-            this.displayObject.visible = true;
-        },
-
-        hide: function() {
-            this.displayObject.visible = false;
         }
 
     });

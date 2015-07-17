@@ -25,6 +25,9 @@ define(function(require) {
             this.mvt = options.mvt;
             this.dielectric = options.dielectric;
             this.maxDielectricEField = options.maxDielectricEField;
+            this.maxPlateCharge = options.maxPlateCharge;
+            this.maxExcessDielectricPlateCharge = options.maxExcessDielectricPlateCharge;
+            this.maxEffectiveEField = options.maxEffectiveEField;
 
             // Arrays for views
             this.batteryViews = [];
@@ -61,20 +64,20 @@ define(function(require) {
             var capacitors = this.model.capacitors;
             var capacitorView;
             for (var i = 0; i < capacitors.length; i++) {
-                if (this.dielectric) {
-                    capacitorView = new DielectricCapacitorView({
-                        model: capacitors.at(i),
-                        mvt: this.mvt,
-                        maxDielectricEField: this.maxDielectricEField
-                    });
-                }
-                else {
-                    capacitorView = new CapacitorView({
-                        model: capacitors.at(i),
-                        mvt: this.mvt,
-                        maxDielectricEField: this.maxDielectricEField
-                    });
-                }
+                var options = {
+                    model: capacitors.at(i),
+                    mvt: this.mvt,
+                    maxDielectricEField: this.maxDielectricEField,
+                    maxPlateCharge: this.maxPlateCharge,
+                    maxExcessDielectricPlateCharge: this.maxExcessDielectricPlateCharge,
+                    maxEffectiveEField: this.maxEffectiveEField
+                };
+
+                if (this.dielectric)
+                    capacitorView = new DielectricCapacitorView(options);
+                else
+                    capacitorView = new CapacitorView(options);
+
                 this.capacitorViews.push(capacitorView);
             }
         },

@@ -12,9 +12,12 @@ define(function(require) {
     var CapacitorShapeCreator = require('shape-creators/capacitor');
 
     var CapacitorView             = require('views/capacitor');
-    var DielectricTotalChargeView = require('views/dielectric-total-charge');
+    var DielectricTotalChargeView = require('views/charge/dielectric-total');
+    var DielectricPlateChargeView = require('views/charge/dielectric-plate');
+    var AirPlateChargeView        = require('views/charge/air-plate');
 
     var Constants = require('constants');
+    var Polarity = Constants.Polarity;
 
     /**
      * 
@@ -80,6 +83,9 @@ define(function(require) {
             }, options);
 
             this.maxDielectricEField = options.maxDielectricEField;
+            this.maxPlateCharge = options.maxPlateCharge;
+            this.maxExcessDielectricPlateCharge = options.maxExcessDielectricPlateCharge;
+            this.maxEffectiveEField = options.maxEffectiveEField;
 
             // Handle colors
             this.handleColor = Colors.parseHex(options.handleColor);
@@ -123,6 +129,7 @@ define(function(require) {
             this.initDielectric();
             this.initDielectricHandle();
             this.initDielectricTotalChargeView();
+            this.initPlateChargeViews();
         },
 
         initPlateAreaHandle: function() {
@@ -364,6 +371,22 @@ define(function(require) {
                 maxDielectricEField: this.maxDielectricEField
             });
             this.middleLayer.addChild(this.dielectricTotalChargeView.displayObject);
+        },
+
+        initPlateChargeViews: function() {
+            var topChargesOptions = {
+                model: this.model,
+                mvt: this.mvt,
+                maxPlateCharge: this.maxPlateCharge,
+                polarity: Polarity.POSITIVE
+            };
+
+            // are there two per plate?? what layer do they go on??
+            var topAirCharges = new AirPlateChargeView(topChargesOptions);
+            var topDielectricCharges = new DielectricPlateChargeView(topChargesOptions);
+
+            this.topLayer.addChild(topAirCharges.displayObject);
+            this.topLayer.addChild(topDielectricCharges.displayObject);
         },
 
         dragPlateAreaStart: function(data) {

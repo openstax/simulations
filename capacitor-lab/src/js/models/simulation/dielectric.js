@@ -110,7 +110,37 @@ define(function (require, exports, module) {
             return capacitor;
         },
 
-        /*
+        /**
+         * Gets the maximum effective E-field between the plates (E_effective).  The
+         *   maximum occurs when the battery is disconnected, the Plate Charge control
+         *   is set to its maximum, the plate area is set to its minimum, and the
+         *   dielectric constant is min, and the dielectric is fully inserted. And in
+         *   this situation, plate separation is irrelevant.
+         */
+        getMaxEffectiveEField: function() {
+            var material = new DielectricMaterial.Custom({ 
+                dielectricConstant: Constants.DIELECTRIC_CONSTANT_RANGE.min
+            });
+
+            var circuitConfig = {
+                batteryLocation:    new Vector3(),
+                capacitorXSpacing:  DielectricSimulation.CAPACITOR_X_SPACING,
+                capacitorYSpacing:  DielectricSimulation.CAPACITOR_Y_SPACING,
+                plateWidth:         Constants.PLATE_WIDTH_RANGE.min,
+                plateSeparation:    Constants.PLATE_SEPARATION_RANGE.min,
+                dielectricMaterial: material,
+                dielectricOffset:   Constants.DIELECTRIC_OFFSET_RANGE.min,
+                wireThickness:      DielectricSimulation.WIRE_THICKNESS,
+                wireExtent:         DielectricSimulation.WIRE_EXTENT
+            };
+
+            var circuit = new SingleCircuit({ batteryConnected: false }, { config: circuitConfig });
+            circuit.set('disconnectedPlateCharge', this.getMaxPlateCharge());
+
+            return circuit.capacitor.getEffectiveEField();
+        },
+
+        /**
          * Gets the maximum effective E-field between the plates (E_effective).  The
          *   maximum occurs when the battery is disconnected, the Plate Charge control
          *   is set to its maximum, the plate area is set to its minimum, and the

@@ -225,12 +225,18 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var DielectricTotalChargeView = {};
+    var ChargeView = {};
 
-    DielectricTotalChargeView.LINE_WIDTH = 2;
-    DielectricTotalChargeView.SYMBOL_WIDTH = 6;
-    DielectricTotalChargeView.POSITIVE_COLOR = '#ff0000';
-    DielectricTotalChargeView.NEGATIVE_COLOR = '#0000ff';
+    ChargeView.LINE_WIDTH = 2;
+    ChargeView.SYMBOL_WIDTH = 6;
+    ChargeView.POSITIVE_COLOR = '#ff0000';
+    ChargeView.NEGATIVE_COLOR = '#0000ff';
+
+    Constants.ChargeView = ChargeView;
+
+
+    var DielectricTotalChargeView = {};
+    
     DielectricTotalChargeView.SYMBOL_SPACING = Constants.PLATE_SEPARATION_RANGE.max * 0.3; // In meters
     DielectricTotalChargeView.SYMBOL_SPACING_EXPONENT = 1 / 4;
     DielectricTotalChargeView.NEGATIVE_CHARGE_OFFSET_RANGE = range({ min: 0, max: DielectricTotalChargeView.SYMBOL_SPACING / 2 });
