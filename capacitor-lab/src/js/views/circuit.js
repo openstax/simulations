@@ -5,9 +5,11 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView  = require('common/pixi/view');
-    var Colors    = require('common/colors/colors');
-    var Vector2   = require('common/math/vector2');
+    var PixiView   = require('common/pixi/view');
+    var SliderView = require('common/pixi/view/slider');
+    var AppView    = require('common/app/app');
+    var Colors     = require('common/colors/colors');
+    var Vector2    = require('common/math/vector2');
 
     var CapacitorView           = require('views/capacitor');
     var DielectricCapacitorView = require('views/capacitor/dielectric');
@@ -48,6 +50,8 @@ define(function(require) {
             this.addBattery();
             this.addCapacitors();
             this.addWires();
+
+            this.initPlateChargePanel();
 
             this.displayObject.addChild(this.components);
             
@@ -98,6 +102,60 @@ define(function(require) {
             }
         },
 
+        initPlateChargePanel: function() {
+            var width  = Math.round(this.mvt.modelToViewDeltaX(0.006));
+            var height = Math.round(this.mvt.modelToViewDeltaX(0.014));
+            var capacitorCenter = this.mvt.modelToView(this.model.capacitors.first().get('position'));
+            var x = capacitorCenter.x - width / 2;
+            var y = AppView.windowIsShort() ? 12 : 20;
+
+            var panel = new PIXI.Graphics();
+            panel.x = x;
+            panel.y = y;
+            panel.beginFill(0xE2F3FA, 1);
+            panel.drawRect(0, 0, width, height);
+            panel.endFill();
+            this.displayObject.addChild(panel);
+
+            var sliderHeight = Math.floor(height * 0.75);
+
+            var sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: -this.maxPlateCharge,
+                    max:  this.maxPlateCharge
+                },
+                orientation: 'vertical',
+                direction: 'rtl',
+
+                width: sliderHeight,
+                backgroundHeight: AppView.windowIsShort() ? 3 : 4,
+                backgroundColor: '#fff',
+                backgroundAlpha: 1,
+                handleSize: 11
+            });
+
+            // Position and add it
+            sliderView.displayObject.x = Math.round(width * 0.25);
+            sliderView.displayObject.y = -sliderView.displayObject.height / 2 + height / 2;
+            panel.addChild(sliderView.displayObject);
+
+            // Bind events for it
+            this.listenTo(sliderView, 'slide', function(value, prev) {
+                this.model.set('disconnectedPlateCharge', value);
+            });
+
+            this.listenTo(sliderView, 'drag-end', function() {
+                // Snap to zero if we get close
+                if (Math.abs(sliderView.val()) < this.maxPlateCharge * 0.05) {
+                    sliderView.val(0);
+                    this.model.set('disconnectedPlateCharge', 0);
+                }
+            }); 
+
+            this.plateChargeSlider = sliderView;
+        },
+
         getAllComponentViews: function() {
             return _.flatten([
                 this.batteryViews,
@@ -142,8 +200,10 @@ define(function(require) {
         batteryConnectedStateChanged: function(circuit, batteryConnected) {
             if (batteryConnected)
                 this.showWires();
-            else
+            else {
                 this.hideWires();
+                this.plateChargeSlider.val(circuit.capacitors.first().get('disconnectedPlateCharge'));
+            }
         },
 
         showWires: function() {

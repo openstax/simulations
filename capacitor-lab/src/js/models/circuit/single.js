@@ -53,8 +53,8 @@ define(function (require) {
             
             // Bind event listeners
             this.on('change:batteryConnected', function() {
+                this.set('disconnectedPlateCharge', this.getTotalCharge());
                 this.updatePlateVoltages();
-                this.disconnectedPlateCharge = this.getTotalCharge();
                 this.trigger('circuit-changed');
             });
 

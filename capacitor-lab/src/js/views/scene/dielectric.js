@@ -5,6 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView = require('common/app/app');
+
     var CapacitorLabSceneView = require('views/scene');
     var CircuitView           = require('views/circuit');
 
@@ -41,9 +43,12 @@ define(function(require) {
         postRender: function() {
             CapacitorLabSceneView.prototype.postRender.apply(this, arguments);
 
-            this.$ui
-                .find('.connect-battery-btn, .disconnect-battery-btn')
-                .css('top', Math.round(this.height * 0.183) + 'px');
+            var $btns = this.$ui.find('.connect-battery-btn, .disconnect-battery-btn')
+            
+            $btns.css('top', Math.round(this.height * 0.183) + 'px');
+            if (AppView.windowIsShort())
+                $btns.css('left', '255px');
+
         },
 
         initGraphics: function() {

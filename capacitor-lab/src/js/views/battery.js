@@ -4,6 +4,8 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+
+    var AppView = require('common/app/app');
     
     var PixiView   = require('common/pixi/view');
     var SliderView = require('common/pixi/view/slider');
@@ -64,7 +66,7 @@ define(function(require) {
                 direction: 'rtl',
 
                 width: sliderHeight,
-                backgroundHeight: 4,
+                backgroundHeight: AppView.windowIsShort() ? 3 : 4,
                 backgroundColor: '#ededed',
                 backgroundAlpha: 1,
                 backgroundLineColor: '#000',
@@ -101,12 +103,13 @@ define(function(require) {
             }); 
 
             // Draw guide marks
-            var lineWidth = 14;
+            var lineWidth = AppView.windowIsShort() ? 12 : 14;
             var halfWidth = lineWidth / 2;
             var lineThickness = 1;
             var top = Math.floor(sliderView.displayObject.y);
             var middle = Math.floor(sliderView.displayObject.y + sliderView.displayObject.height / 2);
             var bottom = Math.floor(sliderView.displayObject.y + sliderView.displayObject.height - lineThickness);
+            var textMargin = AppView.windowIsShort() ? 2 : 4;
 
             var lines = new PIXI.Graphics();
             lines.lineStyle(lineThickness, Colors.parseHex('#777'), 0.8);
@@ -118,8 +121,9 @@ define(function(require) {
             lines.lineTo( halfWidth, bottom);
 
             // Draw guide labels
+            var fontSize = AppView.windowIsShort() ? 9 : 11;
             var textStyle = {
-                font: '11px Helvetica Neue',
+                font: fontSize + 'px Helvetica Neue',
                 fill: '#777'
             };
             var topNumber    = new PIXI.Text( '1.5', textStyle);
@@ -133,8 +137,8 @@ define(function(require) {
             topUnit.anchor.y = middleUnit.anchor.y = bottomUnit.anchor.y = 0.35;
 
             topNumber.anchor.x = middleNumber.anchor.x = bottomNumber.anchor.x = 1;
-            topNumber.x = middleNumber.x = bottomNumber.x = -halfWidth - 4;
-            topUnit.x = middleUnit.x = bottomUnit.x = halfWidth + 4;
+            topNumber.x = middleNumber.x = bottomNumber.x = -halfWidth - textMargin;
+            topUnit.x = middleUnit.x = bottomUnit.x = halfWidth + textMargin;
             topNumber.y = topUnit.y = top;
             middleNumber.y = middleUnit.y = middle;
             bottomNumber.y = bottomUnit.y = bottom;
