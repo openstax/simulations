@@ -27,7 +27,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
-
+            'click input[name="circuit"]' : 'changeCircuit'
         }),
 
         /**
@@ -96,6 +96,11 @@ define(function (require) {
             };
 
             this.$('.sim-controls-group-2').append(this.circuitsTemplate(data));
+        },
+
+        changeCircuit: function(event) {
+            var index = parseInt(this.$('input[name="circuit"]:checked').val());
+            this.simulation.set('currentCircuitIndex', index);
         }
 
     });
