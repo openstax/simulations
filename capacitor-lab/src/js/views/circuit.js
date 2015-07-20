@@ -263,6 +263,14 @@ define(function(require) {
             }
         },
 
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
+        },
+
         showWires: function() {
             for (var i = 0; i < this.wireViews.length; i++)
                 this.wireViews[i].show();

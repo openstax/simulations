@@ -9,6 +9,7 @@ define(function (require) {
     var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
+    var CapacitorToCapacitorsWire     = require('models/wire/capacitor-to-capacitors');
 
     /**
      * Constants
@@ -97,23 +98,26 @@ define(function (require) {
             var c3 = this.capacitors.at(2);
 
             this.wires.add(new BatteryToCapacitorsTopWire({
+                thickness: config.wireThickness
+            },{
                 battery: this.battery,
                 capacitors: [ c1 ],
-                wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
 
             this.wires.add(new CapacitorToCapacitorsWire({
+                thickness: config.wireThickness
+            },{
                 topCapacitor: c1,
                 bottomCapacitors: [ c2, c3 ],
-                wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
 
             this.wires.add(new BatteryToCapacitorsBottomWire({
+                thickness: config.wireThickness
+            },{
                 battery: this.battery,
                 capacitors: [ c2, c3 ],
-                wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
         },
@@ -124,9 +128,9 @@ define(function (require) {
         updatePlateVoltages: function() {
             var Q_total = this.getTotalCharge();
             // Series
-            this.c1.set('platesVoltage', Q_series / this.c1.getTotalCapacitance());
+            this.c1.set('platesVoltage', Q_total / this.c1.getTotalCapacitance());
             // Parallel
-            var V_parallel = Q_total / (c2.getTotalCapacitance() + c3.getTotalCapacitance());
+            var V_parallel = Q_total / (this.c2.getTotalCapacitance() + this.c3.getTotalCapacitance());
             this.c2.set('platesVoltage', V_parallel);
             this.c3.set('platesVoltage', V_parallel);
         },

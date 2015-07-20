@@ -9,6 +9,7 @@ define(function (require) {
     var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
+    var CapacitorToCapacitorsWire     = require('models/wire/capacitor-to-capacitors');
 
     /**
      * Constants
@@ -73,25 +74,28 @@ define(function (require) {
             var capacitors = this.capacitors;
 
             this.wires.add(new BatteryToCapacitorsTopWire({
+                thickness: config.wireThickness
+            },{
                 battery: this.battery,
                 capacitors: [ capacitors.at(0) ],
-                wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
 
             for (var i = 0; i < capacitors.length - 1; i++) {
                 this.wires.add(new CapacitorToCapacitorsWire({
+                    thickness: config.wireThickness
+                },{
                     topCapacitor: capacitors.at(i),
                     bottomCapacitors: [ capacitors.at(i + 1) ],
-                    wireThickness: config.wireThickness,
                     wireExtent: config.wireExtent
                 }));
             }
 
             this.wires.add(new BatteryToCapacitorsBottomWire({
+                thickness: config.wireThickness
+            },{
                 battery: this.battery,
                 capacitors: [ capacitors.at(0) ],
-                wireThickness: config.wireThickness,
                 wireExtent: config.wireExtent
             }));
         },

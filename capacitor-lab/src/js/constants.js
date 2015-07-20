@@ -154,6 +154,25 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                        DIELECTRIC SIMULATION                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var MultipleCapacitorsSimulation = {};
+
+    MultipleCapacitorsSimulation.BATTERY_LOCATION = new Vector3(0.005, 0.030, 0); // meters
+    MultipleCapacitorsSimulation.CAPACITOR_X_SPACING = 0.018; // meters
+    MultipleCapacitorsSimulation.CAPACITOR_Y_SPACING = 0.016; // meters
+    MultipleCapacitorsSimulation.DIELECTRIC_OFFSET = 0;
+    MultipleCapacitorsSimulation.PLATE_WIDTH = 0.0075; // meters
+    MultipleCapacitorsSimulation.WIRE_THICKNESS = Constants.WIRE_THICKNESS;
+    MultipleCapacitorsSimulation.WIRE_EXTENT = 0.01; // how far a wire extends above or below topmost capacitor's origin, in meters
+
+    Constants.MultipleCapacitorsSimulation = MultipleCapacitorsSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                               BATTERY                               **
      **                                                                     **
      *************************************************************************/

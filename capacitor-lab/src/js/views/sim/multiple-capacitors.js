@@ -2,7 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var CapacitorLabSimView = require('views/sim');
+    var MultipleCapacitorsSimulation = require('models/simulation/multiple-capacitors');
+
+    var CapacitorLabSimView         = require('views/sim');
+    var MultipleCapacitorsSceneView = require('views/scene/multiple-capacitors');
 
     var Constants = require('constants');
 
@@ -39,6 +42,22 @@ define(function (require) {
             }, options);
 
             CapacitorLabSimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new MultipleCapacitorsSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new MultipleCapacitorsSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**

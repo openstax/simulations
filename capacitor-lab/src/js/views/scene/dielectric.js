@@ -7,6 +7,8 @@ define(function(require) {
 
     var AppView = require('common/app/app');
 
+    var DielectricSimulation = require('models/simulation/dielectric');
+
     var CapacitorLabSceneView = require('views/scene');
     var CircuitView           = require('views/circuit');
 
@@ -61,10 +63,10 @@ define(function(require) {
                 model: this.simulation.circuit,
                 mvt: this.mvt,
                 dielectric: true,
-                maxDielectricEField: this.simulation.getMaxDielectricEField(),
-                maxPlateCharge: this.simulation.getMaxPlateCharge(),
-                maxExcessDielectricPlateCharge: this.simulation.getMaxExcessDielectricPlateCharge(),
-                maxEffectiveEField: this.simulation.getMaxEffectiveEField()
+                maxDielectricEField:            DielectricSimulation.getMaxDielectricEField(),
+                maxPlateCharge:                 DielectricSimulation.getMaxPlateCharge(),
+                maxExcessDielectricPlateCharge: DielectricSimulation.getMaxExcessDielectricPlateCharge(),
+                maxEffectiveEField:             DielectricSimulation.getMaxEffectiveEField()
             });
 
             this.stage.addChild(this.circuitView.displayObject);

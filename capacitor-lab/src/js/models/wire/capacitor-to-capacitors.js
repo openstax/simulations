@@ -46,7 +46,7 @@ define(function (require) {
             // Vertical segment connecting top capacitor (C1) to leftmost bottom capacitor (C2)
             this.addSegment(new WireSegment.CapacitorToCapacitorWireSegment({
                 topCapacitor: topCapacitor,
-                bottomCapacitors: bottomCapacitors
+                bottomCapacitor: bottomCapacitors[0]
             }));
 
             if (bottomCapacitors.length > 1) {

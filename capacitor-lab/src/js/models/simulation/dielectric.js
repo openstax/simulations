@@ -75,6 +75,16 @@ define(function (require, exports, module) {
             
         },
 
+        connectBattery: function() {
+            this.circuit.connectBattery();
+        },
+
+        disconnectBattery: function() {
+            this.circuit.disconnectBattery();
+        }
+
+    }, _.extend({
+
         /**
          * Gets the maximum charge on the top plate (Q_total). We compute this with the
          *   battery connected because this is used to determine the range of the Plate
@@ -189,17 +199,9 @@ define(function (require, exports, module) {
             });
 
             return capacitor.getEffectiveEField();
-        },
-
-        connectBattery: function() {
-            this.circuit.connectBattery();
-        },
-
-        disconnectBattery: function() {
-            this.circuit.disconnectBattery();
         }
 
-    }, Constants.DielectricSimulation);
+    }, Constants.DielectricSimulation));
 
     return DielectricSimulation;
 });
