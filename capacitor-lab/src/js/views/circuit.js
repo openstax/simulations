@@ -103,10 +103,10 @@ define(function(require) {
         },
 
         initPlateChargePanel: function() {
-            var width  = Math.round(this.mvt.modelToViewDeltaX(0.006));
+            var width  = Math.round(this.mvt.modelToViewDeltaX(0.0075));
             var height = Math.round(this.mvt.modelToViewDeltaX(0.014));
             var capacitorCenter = this.mvt.modelToView(this.model.capacitors.first().get('position'));
-            var x = capacitorCenter.x - width / 2;
+            var x = Math.round(capacitorCenter.x - width / 2);
             var y = AppView.windowIsShort() ? 12 : 20;
 
             var panel = new PIXI.Graphics();
@@ -135,10 +135,10 @@ define(function(require) {
                 handleSize: 11
             });
 
-            // Position and add it
-            sliderView.displayObject.x = Math.round(width * 0.25);
+            // Position it
+            sliderView.displayObject.x = Math.round(width * 0.20);
             sliderView.displayObject.y = -sliderView.displayObject.height / 2 + height / 2;
-            panel.addChild(sliderView.displayObject);
+            
 
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
@@ -153,7 +153,50 @@ define(function(require) {
                 }
             }); 
 
+            // Save a reference
             this.plateChargeSlider = sliderView;
+
+            // Create labels
+            var fontFamily = 'Helvetica Neue';
+            var markerStyle = {
+                font: 'bold ' + (AppView.windowIsShort() ? 9 : 11) + 'px ' + fontFamily,
+                fill: '#000'
+            };
+
+            var plus  = new PIXI.Text('Lots (+)', markerStyle);
+            var none  = new PIXI.Text('None',     markerStyle);
+            var minus = new PIXI.Text('Lots (-)', markerStyle);
+
+            var markerX = Math.round(width * 0.36);
+            var plusY  = Math.round(sliderView.displayObject.y);
+            var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2)
+            var minusY = Math.round(sliderView.displayObject.y + sliderView.displayObject.height) - 1;
+
+            plus.x = none.x = minus.x = markerX;
+
+            plus.y  = plusY;
+            none.y  = noneY;
+            minus.y = minusY;
+
+            plus.anchor.y = none.anchor.y = minus.anchor.y = 0.4;
+
+            var lineStartX = sliderView.displayObject.x;
+            var lineEndX = markerX - 3;
+            var lines = new PIXI.Graphics();
+            lines.lineStyle(1, 0xFFFFFF, 1);
+            lines.moveTo(lineStartX, plusY);
+            lines.lineTo(lineEndX,   plusY);
+            lines.moveTo(lineStartX, noneY);
+            lines.lineTo(lineEndX,   noneY);
+            lines.moveTo(lineStartX, minusY);
+            lines.lineTo(lineEndX,   minusY);
+
+
+            panel.addChild(lines);
+            panel.addChild(plus);
+            panel.addChild(none);
+            panel.addChild(minus);
+            panel.addChild(sliderView.displayObject);
         },
 
         getAllComponentViews: function() {
