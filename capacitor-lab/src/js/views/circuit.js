@@ -191,12 +191,20 @@ define(function(require) {
             lines.moveTo(lineStartX, minusY);
             lines.lineTo(lineEndX,   minusY);
 
+            var caption = new PIXI.Text('Plate Charge (Top)', {
+                font: 'bold 14px Helvetica Neue',
+                fill: '#000'
+            });
+            caption.x = width / 2;
+            caption.y = Math.round(height + 4);
+            caption.anchor.x = 0.5;
 
             panel.addChild(lines);
             panel.addChild(plus);
             panel.addChild(none);
             panel.addChild(minus);
             panel.addChild(sliderView.displayObject);
+            panel.addChild(caption);
 
             panel.visible = false;
             this.plateChargePanel = panel;
