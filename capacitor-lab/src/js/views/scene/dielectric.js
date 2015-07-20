@@ -45,10 +45,13 @@ define(function(require) {
 
             var $btns = this.$ui.find('.connect-battery-btn, .disconnect-battery-btn')
             
-            $btns.css('top', Math.round(this.height * 0.183) + 'px');
-            if (AppView.windowIsShort())
+            if (AppView.windowIsShort()) {
+                $btns.css('top', Math.round(this.height * 0.110) + 'px');
                 $btns.css('left', '255px');
-
+            }
+            else {
+                $btns.css('top', Math.round(this.height * 0.183) + 'px');
+            }
         },
 
         initGraphics: function() {

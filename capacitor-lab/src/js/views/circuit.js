@@ -103,7 +103,7 @@ define(function(require) {
         },
 
         initPlateChargePanel: function() {
-            var width  = Math.round(this.mvt.modelToViewDeltaX(0.0075));
+            var width  = Math.round(this.mvt.modelToViewDeltaX(AppView.windowIsShort() ? 0.0100 : 0.0075));
             var height = Math.round(this.mvt.modelToViewDeltaX(0.014));
             var capacitorCenter = this.mvt.modelToView(this.model.capacitors.first().get('position'));
             var x = Math.round(capacitorCenter.x - width / 2);
@@ -117,7 +117,7 @@ define(function(require) {
             panel.endFill();
             this.displayObject.addChild(panel);
 
-            var sliderHeight = Math.floor(height * 0.75);
+            var sliderHeight = Math.floor(height * (AppView.windowIsShort() ? 0.68 : 0.75));
 
             var sliderView = new SliderView({
                 start: 0,
@@ -159,7 +159,7 @@ define(function(require) {
             // Create labels
             var fontFamily = 'Helvetica Neue';
             var markerStyle = {
-                font: 'bold ' + (AppView.windowIsShort() ? 9 : 11) + 'px ' + fontFamily,
+                font: 'bold 11px ' + fontFamily,
                 fill: '#000'
             };
 
@@ -197,6 +197,9 @@ define(function(require) {
             panel.addChild(none);
             panel.addChild(minus);
             panel.addChild(sliderView.displayObject);
+
+            panel.visible = false;
+            this.plateChargePanel = panel;
         },
 
         getAllComponentViews: function() {
@@ -241,11 +244,14 @@ define(function(require) {
         },
 
         batteryConnectedStateChanged: function(circuit, batteryConnected) {
-            if (batteryConnected)
+            if (batteryConnected) {
                 this.showWires();
+                this.plateChargePanel.visible = false;
+            }
             else {
                 this.hideWires();
                 this.plateChargeSlider.val(circuit.capacitors.first().get('disconnectedPlateCharge'));
+                this.plateChargePanel.visible = true;
             }
         },
 
