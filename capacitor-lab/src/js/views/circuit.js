@@ -38,6 +38,8 @@ define(function(require) {
 
             // Initialize graphics
             this.initGraphics();
+
+            this.listenTo(this.model, 'change:batteryConnected', this.batteryConnectedStateChanged);
         },
 
         initGraphics: function() {
@@ -135,6 +137,23 @@ define(function(require) {
             this.mvt = mvt;
 
             this.sortComponents();
+        },
+
+        batteryConnectedStateChanged: function(circuit, batteryConnected) {
+            if (batteryConnected)
+                this.showWires();
+            else
+                this.hideWires();
+        },
+
+        showWires: function() {
+            for (var i = 0; i < this.wireViews.length; i++)
+                this.wireViews[i].show();
+        },
+
+        hideWires: function() {
+            for (var i = 0; i < this.wireViews.length; i++)
+                this.wireViews[i].hide();
         },
 
         showExcessDielectricCharges: function() {

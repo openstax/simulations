@@ -123,6 +123,14 @@ define(function (require) {
             return this.capacitor.getTotalPlateCharge();
         },
 
+        connectBattery: function() {
+            this.set('batteryConnected', true);
+        },
+
+        disconnectBattery: function() {
+            this.set('batteryConnected', false);
+        }
+
     });
 
     return SingleCircuit;

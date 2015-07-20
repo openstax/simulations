@@ -118,6 +118,7 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.ui);
         },
 
         /**

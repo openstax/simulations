@@ -105,6 +105,14 @@ define(function(require) {
                 y = this.model.getAverageY();
 
             return this.mvt.modelToViewY(y);
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     });

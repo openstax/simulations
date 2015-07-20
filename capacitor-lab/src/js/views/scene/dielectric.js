@@ -11,6 +11,8 @@ define(function(require) {
     // Constants
     var Constants = require('constants');
 
+    var batteryButtonsHtml = require('text!templates/battery-buttons.html');
+
     /**
      *
      */
@@ -22,6 +24,26 @@ define(function(require) {
 
         initialize: function(options) {
             CapacitorLabSceneView.prototype.initialize.apply(this, arguments);
+        },
+
+        renderContent: function() {
+            this.$ui.append(batteryButtonsHtml);
+
+            this.$connectBtn    = this.$ui.find('.connect-battery-btn');
+            this.$disconnectBtn = this.$ui.find('.disconnect-battery-btn');
+
+            this.$connectBtn.click(_.bind(this.connectBattery, this));
+            this.$disconnectBtn.click(_.bind(this.disconnectBattery, this));
+
+            this.$connectBtn.hide();
+        },
+
+        postRender: function() {
+            CapacitorLabSceneView.prototype.postRender.apply(this, arguments);
+
+            this.$ui
+                .find('.connect-battery-btn, .disconnect-battery-btn')
+                .css('top', Math.round(this.height * 0.183) + 'px');
         },
 
         initGraphics: function() {
@@ -42,6 +64,18 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             
+        },
+
+        connectBattery: function() {
+            this.$connectBtn.hide();
+            this.$disconnectBtn.show();
+            this.simulation.connectBattery();
+        },
+
+        disconnectBattery: function() {
+            this.$disconnectBtn.hide();
+            this.$connectBtn.show();
+            this.simulation.disconnectBattery();
         },
 
         showExcessDielectricCharges: function() {

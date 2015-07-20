@@ -50,8 +50,8 @@ define(function(require) {
             // // ...to the usable screen space that we have
             var controlsWidth = 220;
             var margin = 20;
-            var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + margin : margin;
-            var rightMargin = margin + controlsWidth + margin;
+            var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + 0 : 0;
+            var rightMargin = 0 + controlsWidth + margin;
             var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
 
             var boundsRatio = bounds.w / bounds.h;
@@ -75,6 +75,10 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
+
+        showPlateCharges: function() {},
+
+        hidePlateCharges: function() {}
 
     });
 

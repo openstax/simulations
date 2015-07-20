@@ -189,6 +189,14 @@ define(function (require, exports, module) {
             });
 
             return capacitor.getEffectiveEField();
+        },
+
+        connectBattery: function() {
+            this.circuit.connectBattery();
+        },
+
+        disconnectBattery: function() {
+            this.circuit.disconnectBattery();
         }
 
     }, Constants.DielectricSimulation);
