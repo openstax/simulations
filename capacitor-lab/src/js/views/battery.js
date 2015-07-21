@@ -156,8 +156,8 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPos = this.mvt.modelToView(position);
-            this.displayObject.x = viewPos.x;
-            this.displayObject.y = viewPos.y;
+            this.displayObject.x = Math.round(viewPos.x);
+            this.displayObject.y = Math.round(viewPos.y);
         },
 
         updateMVT: function(mvt) {

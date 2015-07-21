@@ -160,7 +160,7 @@ define(function (require) {
 
     var MultipleCapacitorsSimulation = {};
 
-    MultipleCapacitorsSimulation.BATTERY_LOCATION = new Vector3(0.005, 0.030, 0); // meters
+    MultipleCapacitorsSimulation.BATTERY_LOCATION = new Vector3(0.005, 0.0283, 0); // meters
     MultipleCapacitorsSimulation.CAPACITOR_X_SPACING = 0.018; // meters
     MultipleCapacitorsSimulation.CAPACITOR_Y_SPACING = 0.016; // meters
     MultipleCapacitorsSimulation.DIELECTRIC_OFFSET = 0;

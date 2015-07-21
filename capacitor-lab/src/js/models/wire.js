@@ -60,7 +60,8 @@ define(function (require) {
                 ySum += segment.get('startY');
                 ySum += segment.get('endY');
             });
-            var averageY = ySum /= (this.segments.length * 2);
+            var averageY = ySum / (this.segments.length * 2);
+            return averageY;
         },
 
         /**

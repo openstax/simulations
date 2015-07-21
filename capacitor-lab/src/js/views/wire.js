@@ -48,7 +48,7 @@ define(function(require) {
          * Draws the wire
          */
         drawWire: function() {
-            var thickness = Math.round(this.mvt.modelToViewDeltaX(this.model.get('thickness')));
+            var thickness = Math.round(this.mvt.modelToViewDeltaX(this.model.get('thickness')) / 2) * 2;
 
             var graphics = this.displayObject;
             graphics.clear();
@@ -67,6 +67,11 @@ define(function(require) {
 
                 viewStart.set(this.mvt.modelToView(modelStart));
                 viewEnd.set(this.mvt.modelToView(modelEnd));
+
+                viewStart.x = Math.round(viewStart.x);
+                viewStart.y = Math.round(viewStart.y);
+                viewEnd.x = Math.round(viewEnd.x);
+                viewEnd.y = Math.round(viewEnd.y);
 
                 graphics.lineStyle(thickness, this.color, 1);
                 graphics.moveTo(viewStart.x, viewStart.y);

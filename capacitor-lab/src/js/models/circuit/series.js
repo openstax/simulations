@@ -45,10 +45,10 @@ define(function (require) {
         initCapacitors: function(config, numberOfCapacitors) {
             var x = config.batteryLocation.x + config.capacitorXSpacing;
             var y = config.batteryLocation.y - ((numberOfCapacitors / 2) * config.capacitorYSpacing);
-            if (numberOfCapacitors % 2 === 0) {
+            //if (numberOfCapacitors % 2 === 0) {
                 // We have an even number of capacitors, shift up
                 y += (0.5 * config.capacitorYSpacing);
-            }
+            //}
             var z = config.batteryLocation.z;
 
             var capacitors = this.capacitors;
@@ -77,7 +77,7 @@ define(function (require) {
                 thickness: config.wireThickness
             },{
                 battery: this.battery,
-                capacitors: [ capacitors.at(0) ],
+                capacitors: [ capacitors.first() ],
                 wireExtent: config.wireExtent
             }));
 
@@ -95,7 +95,7 @@ define(function (require) {
                 thickness: config.wireThickness
             },{
                 battery: this.battery,
-                capacitors: [ capacitors.at(0) ],
+                capacitors: [ capacitors.last() ],
                 wireExtent: config.wireExtent
             }));
         },

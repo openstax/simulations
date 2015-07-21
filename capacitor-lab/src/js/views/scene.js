@@ -45,7 +45,7 @@ define(function(require) {
 
         initMVT: function() {
             // Map the simulation bounds...
-            var bounds = new Rectangle(0, 0, 0.06, 0.055);
+            var bounds = new Rectangle(0, 0, 0.062, 0.0565);
 
             // // ...to the usable screen space that we have
             var controlsWidth = 220;
