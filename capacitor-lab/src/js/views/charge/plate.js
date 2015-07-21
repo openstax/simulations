@@ -92,8 +92,6 @@ define(function(require) {
                             this.drawNegativeSymbol(x, y, z);
                     }
                 }
-
-                console.log(numberOfCharges + " charges computed, " + (rows * cols) + " charges displayed");
             }
         },
 

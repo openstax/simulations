@@ -10,7 +10,7 @@ define(function(require) {
     var DielectricSimulation = require('models/simulation/dielectric');
 
     var CapacitorLabSceneView = require('views/scene');
-    var CircuitView           = require('views/circuit');
+    var DielectricCircuitView = require('views/circuit/dielectric');
 
     // Constants
     var Constants = require('constants');
@@ -59,10 +59,9 @@ define(function(require) {
         initGraphics: function() {
             CapacitorLabSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.circuitView = new CircuitView({
+            this.circuitView = new DielectricCircuitView({
                 model: this.simulation.circuit,
                 mvt: this.mvt,
-                dielectric: true,
                 maxDielectricEField:            DielectricSimulation.getMaxDielectricEField(),
                 maxPlateCharge:                 DielectricSimulation.getMaxPlateCharge(),
                 maxExcessDielectricPlateCharge: DielectricSimulation.getMaxExcessDielectricPlateCharge(),
