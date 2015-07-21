@@ -38,7 +38,7 @@ define(function(require) {
             var panel = new PIXI.Graphics();
             panel.x = x;
             panel.y = y;
-            panel.beginFill(0xE2F3FA, 1);
+            panel.beginFill(0xFFFFFF, 0.7);
             panel.drawRect(0, 0, width, height);
             panel.endFill();
             this.displayObject.addChild(panel);

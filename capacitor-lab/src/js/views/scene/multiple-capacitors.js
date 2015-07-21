@@ -69,11 +69,13 @@ define(function(require) {
         },
 
         showPlateCharges: function() {
-            this.circuitView.showPlateCharges();
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].showPlateCharges();
         },
 
         hidePlateCharges: function() {
-            this.circuitView.hidePlateCharges();
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].hidePlateCharges();
         }
 
     });

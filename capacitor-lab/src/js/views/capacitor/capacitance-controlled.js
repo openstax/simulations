@@ -81,7 +81,7 @@ define(function(require) {
 
         initCapacitanceControlPanel: function() {
             var width  = Math.round(this.mvt.modelToViewDeltaX(AppView.windowIsShort() ? 0.004 : 0.003));
-            var height = Math.round(this.mvt.modelToViewDeltaX(0.010));
+            var height = Math.round(this.mvt.modelToViewDeltaX(0.0088));
             var xOffset = -this.mvt.modelToViewDeltaX(-0.010);
             var capacitorCenter = this.mvt.modelToView(this.model.get('position'));
             var x = Math.round(capacitorCenter.x - xOffset);
@@ -90,7 +90,7 @@ define(function(require) {
             var panel = new PIXI.Graphics();
             panel.x = x;
             panel.y = y;
-            panel.beginFill(0xE2F3FA, 1);
+            panel.beginFill(0xFFFFFF, 0.7);
             panel.drawRect(0, 0, width, height);
             panel.endFill();
             this.displayObject.addChild(panel);
