@@ -56,14 +56,14 @@ define(function(require) {
 
                 width: sliderHeight,
                 backgroundHeight: AppView.windowIsShort() ? 3 : 4,
-                backgroundColor: '#fff',
+                backgroundColor: '#A2B8C8',
                 backgroundAlpha: 1,
                 handleSize: 11
             });
 
             // Position it
             sliderView.displayObject.x = Math.round(width * 0.20);
-            sliderView.displayObject.y = -sliderView.displayObject.height / 2 + height / 2;
+            sliderView.displayObject.y = Math.round(height / 2 - sliderView.displayObject.height / 2);
             
 
             // Bind events for it
@@ -107,9 +107,9 @@ define(function(require) {
             plus.anchor.y = none.anchor.y = minus.anchor.y = 0.4;
 
             var lineStartX = sliderView.displayObject.x;
-            var lineEndX = markerX - 3;
+            var lineEndX = markerX - 5;
             var lines = new PIXI.Graphics();
-            lines.lineStyle(1, 0xFFFFFF, 1);
+            lines.lineStyle(1, 0xA2B8C8, 1);
             lines.moveTo(lineStartX, plusY);
             lines.lineTo(lineEndX,   plusY);
             lines.moveTo(lineStartX, noneY);
@@ -121,9 +121,8 @@ define(function(require) {
                 font: 'bold 14px Helvetica Neue',
                 fill: '#000'
             });
-            caption.x = width / 2;
+            caption.x = Math.round(width / 2 - caption.width / 2);;
             caption.y = Math.round(height + 4);
-            caption.anchor.x = 0.5;
 
             panel.addChild(lines);
             panel.addChild(plus);

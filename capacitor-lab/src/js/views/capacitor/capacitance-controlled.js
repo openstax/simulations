@@ -108,7 +108,7 @@ define(function(require) {
 
                 width: sliderHeight,
                 backgroundHeight: AppView.windowIsShort() ? 3 : 4,
-                backgroundColor: '#fff',
+                backgroundColor: '#A2B8C8',
                 backgroundAlpha: 1,
                 handleSize: 11
             });
