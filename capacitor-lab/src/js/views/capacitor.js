@@ -13,6 +13,7 @@ define(function(require) {
 
     var DielectricPlateChargeView  = require('views/charge/dielectric-plate');
     var AirPlateChargeView         = require('views/charge/air-plate');
+    var EFieldLinesView            = require('views/e-field-lines');
 
     var Constants = require('constants');
     var Polarity = Constants.Polarity;
@@ -30,6 +31,7 @@ define(function(require) {
             }, options);
 
             this.mvt = options.mvt;
+            this.maxEffectiveEField = options.maxEffectiveEField;
 
             this.outlineColor = options.outlineColor;
             this.outlineWidth = options.outlineWidth;
@@ -56,6 +58,7 @@ define(function(require) {
 
             this.initPlates();
             this.initPlateChargeViews();
+            this.initEFieldLines();
         },
 
         initPlates: function() {
@@ -110,6 +113,16 @@ define(function(require) {
             this.bottomPlateCharges.addChild(bottomAirCharges.displayObject);
             this.bottomPlateCharges.addChild(bottomDielectricCharges.displayObject);
             this.bottomLayer.addChild(this.bottomPlateCharges);
+        },
+
+        initEFieldLines: function() {
+            this.eFieldLinesView = new EFieldLinesView({
+                model: this.model,
+                mvt: this.mvt,
+                maxEffectiveEField: this.maxEffectiveEField
+            });
+
+            this.middleLayer.addChild(this.eFieldLinesView.displayObject);
         },
 
         updateMVT: function(mvt) {

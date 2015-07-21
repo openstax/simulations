@@ -39,7 +39,6 @@ define(function(require) {
             this.maxDielectricEField = options.maxDielectricEField;
             this.maxPlateCharge = options.maxPlateCharge;
             this.maxExcessDielectricPlateCharge = options.maxExcessDielectricPlateCharge;
-            this.maxEffectiveEField = options.maxEffectiveEField;
 
             // Handle colors
             this.handleColor = Colors.parseHex(options.handleColor);
