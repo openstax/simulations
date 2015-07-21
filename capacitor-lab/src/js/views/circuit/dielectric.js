@@ -95,7 +95,7 @@ define(function(require) {
 
             var markerX = Math.round(width * 0.36);
             var plusY  = Math.round(sliderView.displayObject.y);
-            var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2)
+            var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2) - 1
             var minusY = Math.round(sliderView.displayObject.y + sliderView.displayObject.height) - 1;
 
             plus.x = none.x = minus.x = markerX;

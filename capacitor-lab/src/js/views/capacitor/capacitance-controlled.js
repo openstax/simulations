@@ -119,7 +119,9 @@ define(function(require) {
 
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
-                this.model.set('disconnectedPlateCharge', value);
+                this.model.setTotalCapacitance(value);
+                var displayCapacitance = value / (Math.pow(10, Constants.CAPACITANCE_CONTROL_EXPONENT));
+                this.capacitanceValue.setText(displayCapacitance.toFixed(2) + this.capacitanceSuffix);
             });
 
             // Save a reference
@@ -134,7 +136,6 @@ define(function(require) {
             this.capacitanceValue = new PIXI.Text('1.00' + this.capacitanceSuffix, this.labelValueStyle);
             this.capacitanceValue.x = Math.round(width / 2 - this.capacitanceValue.width / 2);
             this.capacitanceValue.y = Math.round(height + 24);
-            //this.capacitanceValue.anchor.x = 0.5;
 
             this.capacitanceValuePower = new PIXI.Text(Constants.CAPACITANCE_CONTROL_EXPONENT, this.labelValuePowerStyle);
             this.capacitanceValuePower.x = Math.round(width / 2 + this.capacitanceValue.width * 0.15);
