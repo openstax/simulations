@@ -76,6 +76,16 @@ define(function(require) {
         hidePlateCharges: function() {
             for (var i = 0; i < this.circuitViews.length; i++)
                 this.circuitViews[i].hidePlateCharges();
+        },
+
+        showEFieldLines: function() {
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].showEFieldLines();
+        },
+
+        hideEFieldLines: function() {
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].hideEFieldLines();
         }
 
     });

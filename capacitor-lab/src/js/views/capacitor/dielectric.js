@@ -547,13 +547,15 @@ define(function(require) {
         },
 
         showExcessDielectricCharges: function() {
-            this.dielectric.alpha = DielectricCapacitorView.DIELECTRIC_ALPHA_IN_EXCESS_CHARGE_MODE;
+            this.excessChargesVisible = true;
             this.dielectricExcessChargeView.show();
+            this.determineDielectricTranslucency();
         },
 
         hideExcessDielectricCharges: function() {
-            this.dielectric.alpha = 1;
+            this.excessChargesVisible = false;
             this.dielectricExcessChargeView.hide();
+            this.determineDielectricTranslucency();
         },
 
         showTotalDielectricCharges: function() {
@@ -562,6 +564,27 @@ define(function(require) {
 
         hideTotalDielectricCharges: function() {
             this.dielectricTotalChargeView.hide();
+        },
+
+        showEFieldLines: function() {
+            CapacitorView.prototype.showEFieldLines.apply(this, arguments);
+
+            this.eFieldLinesVisible = true;
+            this.determineDielectricTranslucency();
+        },
+
+        hideEFieldLines: function() {
+            CapacitorView.prototype.hideEFieldLines.apply(this, arguments);
+
+            this.eFieldLinesVisible = false;
+            this.determineDielectricTranslucency();
+        },
+
+        determineDielectricTranslucency: function() {
+            if (this.excessChargesVisible || this.eFieldLinesVisible)
+                this.dielectric.alpha = DielectricCapacitorView.DIELECTRIC_TRANSLUCENT_ALPHA;
+            else
+                this.dielectric.alpha = 1;
         }
 
     }, Constants.DielectricCapacitorView);

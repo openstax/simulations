@@ -109,6 +109,14 @@ define(function(require) {
 
         hidePlateCharges: function() {
             this.circuitView.hidePlateCharges();
+        },
+
+        showEFieldLines: function() {
+            this.circuitView.showEFieldLines();
+        },
+
+        hideEFieldLines: function() {
+            this.circuitView.hideEFieldLines();
         }
 
     });

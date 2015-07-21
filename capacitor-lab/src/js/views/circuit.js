@@ -179,6 +179,16 @@ define(function(require) {
         hidePlateCharges: function() {
             for (var i = 0; i < this.capacitorViews.length; i++)
                 this.capacitorViews[i].hidePlateCharges();
+        },
+
+        showEFieldLines: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].showEFieldLines();
+        },
+
+        hideEFieldLines: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].hideEFieldLines();
         }
 
     });

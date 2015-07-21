@@ -121,6 +121,7 @@ define(function(require) {
                 mvt: this.mvt,
                 maxEffectiveEField: this.maxEffectiveEField
             });
+            this.eFieldLinesView.hide();
 
             this.middleLayer.addChild(this.eFieldLinesView.displayObject);
         },
@@ -143,6 +144,14 @@ define(function(require) {
         hidePlateCharges: function() {
             this.topPlateCharges.visible = false;
             this.bottomPlateCharges.visible = false;
+        },
+
+        showEFieldLines: function() {
+            this.eFieldLinesView.show();
+        },
+
+        hideEFieldLines: function() {
+            this.eFieldLinesView.hide();
         },
 
         /**

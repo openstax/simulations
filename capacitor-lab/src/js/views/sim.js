@@ -49,7 +49,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'change .plate-charges-check' : 'togglePlateCharges'
+            'change .plate-charges-check'        : 'togglePlateCharges',
+            'change .electric-field-lines-check' : 'toggleEFieldLines'
         },
 
         /**
@@ -157,6 +158,13 @@ define(function (require) {
                 this.sceneView.showPlateCharges();
             else
                 this.sceneView.hidePlateCharges();
+        },
+
+        toggleEFieldLines: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showEFieldLines();
+            else
+                this.sceneView.hideEFieldLines();
         }
 
     });

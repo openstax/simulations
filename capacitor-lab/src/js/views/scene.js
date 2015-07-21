@@ -78,7 +78,11 @@ define(function(require) {
 
         showPlateCharges: function() {},
 
-        hidePlateCharges: function() {}
+        hidePlateCharges: function() {},
+
+        showEFieldLines: function() {},
+
+        hideEFieldLines: function() {}
 
     });
 

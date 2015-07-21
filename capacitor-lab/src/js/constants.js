@@ -246,7 +246,7 @@ define(function (require) {
 
     var DielectricCapacitorView = {};
 
-    DielectricCapacitorView.DIELECTRIC_ALPHA_IN_EXCESS_CHARGE_MODE = 0.5;
+    DielectricCapacitorView.DIELECTRIC_TRANSLUCENT_ALPHA = 0.5;
 
     Constants.DielectricCapacitorView = DielectricCapacitorView;
 
