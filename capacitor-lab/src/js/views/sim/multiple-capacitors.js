@@ -66,33 +66,10 @@ define(function (require) {
         renderScaffolding: function() {
             CapacitorLabSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            var tempCircuitScenarios = [{
-                label: 'Single',
-                config: {}
-            }, {
-                label: '2 in Series',
-                config: {}
-            }, {
-                label: '3 in Series',
-                config: {}
-            }, {
-                label: '2 in Parallel',
-                config: {}
-            }, {
-                label: '3 in Parallel',
-                config: {}
-            }, {
-                label: '2 in Series + 1 in Parallel',
-                config: {}
-            }, {
-                label: '2 in Parallel + 1 in Series',
-                config: {}
-            }];
-
             var data = {
                 Constants: Constants,
                 unique: this.cid,
-                circuitScenarios: tempCircuitScenarios
+                circuitLabels: this.simulation.circuitLabels
             };
 
             this.$('.sim-controls-group-2').append(this.circuitsTemplate(data));

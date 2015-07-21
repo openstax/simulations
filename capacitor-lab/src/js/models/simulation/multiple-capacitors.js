@@ -63,15 +63,18 @@ define(function (require, exports, module) {
                 wireExtent:         MultipleCapacitorsSimulation.WIRE_EXTENT
             };
 
-            this.circuits = [
-                new SingleCircuit(      {}, { config: config }),
-                new SeriesCircuit(      {}, { config: config, numberOfCapacitors: 2 }),
-                new SeriesCircuit(      {}, { config: config, numberOfCapacitors: 3 }),
-                new ParallelCircuit(    {}, { config: config, numberOfCapacitors: 2 }),
-                new ParallelCircuit(    {}, { config: config, numberOfCapacitors: 3 }),
-                new Combination1Circuit({}, { config: config }),
-                new Combination2Circuit({}, { config: config })
-            ];
+            var circuits = {
+                'Single':                      new SingleCircuit(      {}, { config: config }),
+                '2 in Series':                 new SeriesCircuit(      {}, { config: config, numberOfCapacitors: 2 }),
+                '3 in Series':                 new SeriesCircuit(      {}, { config: config, numberOfCapacitors: 3 }),
+                '2 in Parallel':               new ParallelCircuit(    {}, { config: config, numberOfCapacitors: 2 }),
+                '3 in Parallel':               new ParallelCircuit(    {}, { config: config, numberOfCapacitors: 3 }),
+                '2 in Series + 1 in Parallel': new Combination1Circuit({}, { config: config }),
+                '2 in Parallel + 1 in Series': new Combination2Circuit({}, { config: config })
+            };
+
+            this.circuits = _.values(circuits);
+            this.circuitLabels = _.keys(circuits);
 
             this.currentCircuitIndexChanged(this, this.get('currentCircuitIndex'));
         },
