@@ -11,10 +11,10 @@ define(function(require) {
     var Colors     = require('common/colors/colors');
     var Vector2    = require('common/math/vector2');
 
-    var CapacitorView           = require('views/capacitor');
-    var DielectricCapacitorView = require('views/capacitor/dielectric');
-    var WireView                = require('views/wire');
-    var BatteryView             = require('views/battery');
+    var CapacitanceControlledCapacitorView = require('views/capacitor/capacitance-controlled');
+    var DielectricCapacitorView            = require('views/capacitor/dielectric');
+    var WireView                           = require('views/wire');
+    var BatteryView                        = require('views/battery');
 
     var Constants = require('constants');
 
@@ -82,7 +82,7 @@ define(function(require) {
                 if (this.dielectric)
                     capacitorView = new DielectricCapacitorView(options);
                 else
-                    capacitorView = new CapacitorView(options);
+                    capacitorView = new CapacitanceControlledCapacitorView(options);
 
                 this.capacitorViews.push(capacitorView);
             }
