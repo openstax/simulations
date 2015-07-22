@@ -15,6 +15,7 @@ define(function(require) {
     var DielectricCapacitorView            = require('views/capacitor/dielectric');
     var WireView                           = require('views/wire');
     var BatteryView                        = require('views/battery');
+    var CurrentIndicatorView               = require('views/current-indicator');
 
     var Constants = require('constants');
 
@@ -47,12 +48,32 @@ define(function(require) {
 
         initGraphics: function() {
             this.components = new PIXI.DisplayObjectContainer();
+            this.displayObject.addChild(this.components);
 
             this.addBattery();
             this.addCapacitors();
             this.addWires();
 
-            this.displayObject.addChild(this.components);
+            this.initCurrentIndicators();
+        },
+
+        initCurrentIndicators: function() {
+            this.topCurrentIndicatorView = new CurrentIndicatorView({ 
+                model: this.model, 
+                mvt: this.mvt 
+            });
+
+            this.bottomCurrentIndicatorView = new CurrentIndicatorView({ 
+                model: this.model, 
+                mvt: this.mvt,
+                positivePointsRight: true
+            });
+
+            this.topWire = this.model.wires.first();
+            this.bottomWire = this.model.wires.last();
+
+            this.displayObject.addChild(this.topCurrentIndicatorView.displayObject);
+            this.displayObject.addChild(this.bottomCurrentIndicatorView.displayObject);
         },
 
         addBattery: function() {
@@ -135,10 +156,28 @@ define(function(require) {
             }
         },
 
+        updateCurrentIndicatorPositions: function() {
+            var x, y;
+
+            x = this.mvt.modelToViewX(this.topWire.getCenterX());
+            y = this.mvt.modelToViewY(this.topWire.getMinY());
+            this.topCurrentIndicatorView.setPosition(x, y);
+
+            x = this.mvt.modelToViewX(this.bottomWire.getCenterX());
+            y = this.mvt.modelToViewY(this.bottomWire.getMaxY());
+            this.bottomCurrentIndicatorView.setPosition(x, y);
+        },
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
             this.sortComponents();
+            this.updateCurrentIndicatorPositions();
+        },
+
+        update: function(time, deltaTime) {
+            this.topCurrentIndicatorView.update(time, deltaTime);
+            this.bottomCurrentIndicatorView.update(time, deltaTime);
         },
 
         batteryConnectedStateChanged: function(circuit, batteryConnected) {

@@ -276,6 +276,18 @@ define(function (require) {
     Constants.DielectricTotalChargeView = DielectricTotalChargeView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                        CURRENT INDICATOR VIEW                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var CurrentIndicatorView = {};
+
+    CurrentIndicatorView.TRANSPARENCY = 0.80;
+    CurrentIndicatorView.FADEOUT_DURATION = 0.5; // s
+
+    Constants.CurrentIndicatorView = CurrentIndicatorView;
 
 
     return Constants;

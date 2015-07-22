@@ -58,7 +58,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].update(time, deltaTime);
         },
 
         circuitChanged: function(simulation, circuit) {

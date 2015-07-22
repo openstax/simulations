@@ -72,7 +72,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.circuit.update(time, deltaTime);
         },
 
         connectBattery: function() {

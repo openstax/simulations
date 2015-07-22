@@ -26,11 +26,7 @@ define(function(require) {
         initGraphics: function() {
             DielectricSceneView.prototype.initGraphics.apply(this, arguments);
 
-        },
-
-        _update: function(time, deltaTime, paused, timeScale) {
-            
-        },
+        }
 
     });
 
