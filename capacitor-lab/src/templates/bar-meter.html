@@ -1,0 +1,26 @@
+<div class="bar-meter-container">
+    <div class="bar-meter-ticks">
+        <% for (var y = 0; y <= 100; y += 10) { %>
+            <div class="bar-meter-tick" style="top: <%= y %>%"></div>
+        <% } %>
+    </div>
+    <div class="bar-meter-min-value"></div>
+    <div class="bar-meter-max-value"></div>
+
+    <div class="bar-meter-zoom-controls">
+        <button class="btn btn-zoom-in"><span class="fa fa-search"><span class="fa fa-plus"></span></span></button>
+        <button class="btn btn-zoom-out"><span class="fa fa-search"><span class="fa fa-minus"></span></span></button>
+    </div>
+
+    <div class="bar-meter-bar"></div>
+    <div class="bar-meter-overflow">
+        <span>+</span>
+        <span>+</span>
+        <span>+</span>
+    </div>
+</div>
+
+<div class="bar-meter-caption">
+    <div class="bar-meter-title"></div>
+    <div class="bar-meter-value"></div>
+</div>

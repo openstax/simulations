@@ -8,7 +8,9 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var CapacitorLabSimulation = require('models/simulation');
-    var CapacitorLabSceneView  = require('views/scene');
+
+    var CapacitorLabSceneView = require('views/scene');
+    var CapacitanceMeterView  = require('views/bar-meter/capacitance');
 
     var Constants = require('constants');
 
@@ -66,6 +68,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initBarMeterViews();
         },
 
         /**
@@ -84,6 +87,13 @@ define(function (require) {
             });
         },
 
+        initBarMeterViews: function() {
+            this.capacitanceMeterView = new CapacitanceMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -92,6 +102,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderBarMeterViews();
 
             return this;
         },
@@ -122,12 +133,18 @@ define(function (require) {
             this.$el.append(this.sceneView.ui);
         },
 
+        renderBarMeterViews: function() {
+            this.capacitanceMeterView.render();
+            this.$el.append(this.capacitanceMeterView.el);
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.capacitanceMeterView.postRender();
         },
 
         /**
@@ -151,6 +168,9 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+
+            // Update the bar meters
+            this.capacitanceMeterView.update(timeSeconds, dtSeconds);
         },
 
         togglePlateCharges: function(event) {
