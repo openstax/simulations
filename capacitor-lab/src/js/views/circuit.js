@@ -157,13 +157,14 @@ define(function(require) {
         },
 
         updateCurrentIndicatorPositions: function() {
+            var battery = this.model.battery;
+            var capacitors = this.model.capacitors;
             var x, y;
 
-            x = this.mvt.modelToViewX(this.topWire.getCenterX());
+            x = this.mvt.modelToViewX(battery.getX() + (capacitors.first().getX() - battery.getX()) / 2);
             y = this.mvt.modelToViewY(this.topWire.getMinY());
             this.topCurrentIndicatorView.setPosition(x, y);
 
-            x = this.mvt.modelToViewX(this.bottomWire.getCenterX());
             y = this.mvt.modelToViewY(this.bottomWire.getMaxY());
             this.bottomCurrentIndicatorView.setPosition(x, y);
         },

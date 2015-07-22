@@ -86,39 +86,6 @@ define(function (require) {
                 minY = Math.min(minY, segment.get('endY'));
             });
             return minY;
-        },
-
-        /**
-         * Returns the maximum x for all segment endpoints.
-         */
-        getMaxX: function() {
-            var maxX = Number.NEGATIVE_INFINITY;
-            this.segments.each(function(segment) {
-                maxX = Math.max(maxX, segment.get('startX'));
-                maxX = Math.max(maxX, segment.get('endX'));
-            });
-            return maxX;
-        },
-
-        /**
-         * Returns the minimum y for all segment endpoints.
-         */
-        getMinX: function() {
-            var minX = Number.POSITIVE_INFINITY;
-            this.segments.each(function(segment) {
-                minX = Math.min(minX, segment.get('startX'));
-                minX = Math.min(minX, segment.get('endX'));
-            });
-            return minX;
-        },
-
-        /**
-         * Returns the center x between the maximum x and minimum x.
-         */
-        getCenterX: function() {
-            var minX = this.getMinX();
-            var maxX = this.getMaxX();
-            return minX + (maxX - minX) / 2;
         }
 
     });
