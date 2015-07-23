@@ -108,6 +108,14 @@ define(function(require) {
         setPosition: function(x, y) {
             this.displayObject.x = x;
             this.displayObject.y = y;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     }, Constants.CurrentIndicatorView);

@@ -185,11 +185,15 @@ define(function(require) {
             if (batteryConnected) {
                 this.showWires();
                 this.plateChargePanel.visible = false;
+                this.topCurrentIndicatorView.show();
+                this.bottomCurrentIndicatorView.show();
             }
             else {
                 this.hideWires();
                 this.plateChargeSlider.val(circuit.capacitors.first().get('disconnectedPlateCharge'));
                 this.plateChargePanel.visible = true;
+                this.topCurrentIndicatorView.hide();
+                this.bottomCurrentIndicatorView.hide();
             }
         },
 

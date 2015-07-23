@@ -30,9 +30,9 @@ define(function(require) {
 
         initPlateChargePanel: function() {
             var width  = Math.round(this.mvt.modelToViewDeltaX(AppView.windowIsShort() ? 0.0100 : 0.0075));
-            var height = Math.round(this.mvt.modelToViewDeltaX(0.014));
+            var height = Math.round(this.mvt.modelToViewDeltaX(0.015));
             var capacitorCenter = this.mvt.modelToView(this.model.capacitors.first().get('position'));
-            var x = Math.round(capacitorCenter.x - width / 2);
+            var x = Math.round(capacitorCenter.x - width / 2) - Math.round(this.mvt.modelToViewDeltaX(0.0031));
             var y = AppView.windowIsShort() ? 12 : 20;
 
             var panel = new PIXI.Graphics();
