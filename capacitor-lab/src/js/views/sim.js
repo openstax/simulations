@@ -54,7 +54,13 @@ define(function (require) {
          */
         events: {
             'change .plate-charges-check'        : 'togglePlateCharges',
-            'change .electric-field-lines-check' : 'toggleEFieldLines'
+            'change .electric-field-lines-check' : 'toggleEFieldLines',
+
+            'click .capacitance-meter-check'      : 'toggleCapacitance',
+            'click .plate-charge-meter-check'     : 'togglePlateChargeMeter',
+            'click .stored-energy-meter-check'    : 'toggleStoredEnergy',
+            'click .voltmeter-check'              : 'toggleVoltmeter',
+            'click .electric-field-detector-check': 'toggleEFieldDetector'
         },
 
         /**
@@ -210,6 +216,41 @@ define(function (require) {
                 this.sceneView.showEFieldLines();
             else
                 this.sceneView.hideEFieldLines();
+        },
+
+        toggleCapacitance: function(event) {
+            if ($(event.target).is(':checked'))
+                this.capacitanceMeterView.show();
+            else
+                this.capacitanceMeterView.hide();
+        },
+
+        togglePlateChargeMeter: function(event) {
+            if ($(event.target).is(':checked'))
+                this.plateChargeMeterView.show();
+            else
+                this.plateChargeMeterView.hide();
+        },
+
+        toggleStoredEnergy: function(event) {
+            if ($(event.target).is(':checked'))
+                this.storedEnergyMeterView.show();
+            else
+                this.storedEnergyMeterView.hide();
+        },
+
+        toggleVoltmeter: function(event) {
+            // if ($(event.target).is(':checked'))
+            //     this.capacitanceMeterView.show();
+            // else
+            //     this.capacitanceMeterView.hide();
+        },
+
+        toggleEFieldDetector: function(event) {
+            // if ($(event.target).is(':checked'))
+            //     this.capacitanceMeterView.show();
+            // else
+            //     this.capacitanceMeterView.hide();
         }
 
     });

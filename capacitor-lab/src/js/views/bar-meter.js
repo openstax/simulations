@@ -79,6 +79,8 @@ define(function (require) {
             this.updateMin();
             this.updateMax();
             this.updateZoomButtons();
+
+            this.hide();
         },
 
         setPosition: function(x, y) {
@@ -215,6 +217,15 @@ define(function (require) {
                 this.$el.removeClass('dragging');
             }
         },
+
+        show: function() {
+            this.$el.show();
+        },
+
+        hide: function() {
+            this.$el.hide();
+        }
+
     });
 
     return BarMeterView;
