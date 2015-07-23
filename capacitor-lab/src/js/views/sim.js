@@ -11,6 +11,8 @@ define(function (require) {
 
     var CapacitorLabSceneView = require('views/scene');
     var CapacitanceMeterView  = require('views/bar-meter/capacitance');
+    var PlateChargeMeterView  = require('views/bar-meter/plate-charge');
+    var StoredEnergyMeterView = require('views/bar-meter/stored-energy');
 
     var Constants = require('constants');
 
@@ -92,6 +94,20 @@ define(function (require) {
                 model: this.simulation,
                 dragFrame: this.el
             });
+            
+            this.plateChargeMeterView = new PlateChargeMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+
+            this.storedEnergyMeterView = new StoredEnergyMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+
+            this.capacitanceMeterView.setPosition(380, 20);
+            this.plateChargeMeterView.setPosition(510, 20);
+            this.storedEnergyMeterView.setPosition(640, 20);
         },
 
         /**
@@ -135,7 +151,12 @@ define(function (require) {
 
         renderBarMeterViews: function() {
             this.capacitanceMeterView.render();
+            this.plateChargeMeterView.render();
+            this.storedEnergyMeterView.render();
+
             this.$el.append(this.capacitanceMeterView.el);
+            this.$el.append(this.plateChargeMeterView.el);
+            this.$el.append(this.storedEnergyMeterView.el);
         },
 
         /**
@@ -145,6 +166,8 @@ define(function (require) {
         postRender: function() {
             this.sceneView.postRender();
             this.capacitanceMeterView.postRender();
+            this.plateChargeMeterView.postRender();
+            this.storedEnergyMeterView.postRender();
         },
 
         /**
@@ -171,6 +194,8 @@ define(function (require) {
 
             // Update the bar meters
             this.capacitanceMeterView.update(timeSeconds, dtSeconds);
+            this.plateChargeMeterView.update(timeSeconds, dtSeconds);
+            this.storedEnergyMeterView.update(timeSeconds, dtSeconds);
         },
 
         togglePlateCharges: function(event) {

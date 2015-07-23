@@ -70,6 +70,9 @@ define(function (require) {
     // View
     //----------------------------------------------------------------------------
 
+    Constants.POSITIVE_COLOR = '#ff0000';
+    Constants.NEGATIVE_COLOR = '#0000ff';
+
     // reference coordinate frame size for world nodes
     Constants.CANVAS_RENDERING_SIZE = new Vector2( 1024, 864 );
 
@@ -261,8 +264,8 @@ define(function (require) {
 
     ChargeView.LINE_WIDTH = 2;
     ChargeView.SYMBOL_WIDTH = 6;
-    ChargeView.POSITIVE_COLOR = '#ff0000';
-    ChargeView.NEGATIVE_COLOR = '#0000ff';
+    ChargeView.POSITIVE_COLOR = Constants.POSITIVE_COLOR;
+    ChargeView.NEGATIVE_COLOR = Constants.NEGATIVE_COLOR;
 
     Constants.ChargeView = ChargeView;
 

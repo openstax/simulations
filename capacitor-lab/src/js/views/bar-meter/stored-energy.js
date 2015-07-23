@@ -6,16 +6,16 @@ define(function (require) {
 
     var BarMeterView = require('views/bar-meter');
 
-    var CapacitanceMeterView = BarMeterView.extend({
+    var StoredEnergyMeterView = BarMeterView.extend({
 
         initialize: function(options) {
             options = _.extend({
-                units: 'F',
-                barColor: '#21366b',
-                title: 'Capacitance'
+                units: 'J',
+                barColor: '#ffc601',
+                title: 'Stored Energy'
             }, options);
 
-            this.lastCapacitance = undefined;
+            this.lastStoredEnergy = undefined;
 
             BarMeterView.prototype.initialize.apply(this, [options]);
         },
@@ -26,24 +26,24 @@ define(function (require) {
         },
 
         update: function(time, delta, paused, timeScale) {
-            var capacitance;
+            var storedEnergy;
 
             if (this.model.circuits)
-                capacitance = this.model.get('circuit').getTotalCapacitance();
+                storedEnergy = this.model.get('circuit').getStoredEnergy();
             else
-                capacitance = this.model.circuit.getTotalCapacitance();
+                storedEnergy = this.model.circuit.getStoredEnergy();
 
-            if (capacitance !== this.lastCapacitance) {
-                this.setValue(capacitance);
+            if (storedEnergy !== this.lastStoredEnergy) {
+                this.setValue(storedEnergy);
                 this.updateZoomButtons();
             }
 
             BarMeterView.prototype.update.apply(this, arguments);
 
-            this.lastCapacitance = capacitance;
+            this.lastStoredEnergy = storedEnergy;
         }
 
     });
 
-    return CapacitanceMeterView;
+    return StoredEnergyMeterView;
 });
