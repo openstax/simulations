@@ -2,27 +2,21 @@
 <span class="scene-view-placeholder"></span>
 
 <div class="sim-controls-wrapper">
-    <div class="sim-controls-group-1">
-        <div class="sim-controls view-options">
-            <h2>View</h2>
+    <div class="sim-controls view-options">
+        <h2>View</h2>
 
-            <ul class="checkboxes view-options">
-                <li>
-                    <input type="checkbox" class="plate-charges-check" id="plate-charges-check-<%= unique %>" checked>
-                    <label for="plate-charges-check-<%= unique %>">Plate Charges</label>
-                </li>
-                <li>
-                    <input type="checkbox" class="electric-field-lines-check" id="electric-field-lines-check-<%= unique %>">
-                    <label for="electric-field-lines-check-<%= unique %>">Electric Field Lines</label>
-                </li>
-            </ul>
-        </div>
-
-        <!-- include the reset all button, but just have it absolutely positioned relative to the bottom -->
-        <button class="btn panel-btn reset-btn"><span class="fa fa-undo"></span>&nbsp; Reset Everything</button>
+        <ul class="checkboxes view-options">
+            <li>
+                <input type="checkbox" class="plate-charges-check" id="plate-charges-check-<%= unique %>" checked>
+                <label for="plate-charges-check-<%= unique %>">Plate Charges</label>
+            </li>
+            <li>
+                <input type="checkbox" class="electric-field-lines-check" id="electric-field-lines-check-<%= unique %>">
+                <label for="electric-field-lines-check-<%= unique %>">Electric Field Lines</label>
+            </li>
+        </ul>
     </div>
 
-    <div class="sim-controls-group-2">
-       
-    </div>
+    <!-- include the reset all button, but just have it absolutely positioned relative to the bottom -->
+    <button class="btn panel-btn reset-btn"><span class="fa fa-undo"></span>&nbsp; Reset Everything</button>
 </div>

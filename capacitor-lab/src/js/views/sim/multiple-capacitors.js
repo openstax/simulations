@@ -27,7 +27,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
-            'click input[name="circuit"]' : 'changeCircuit'
+            'click input[name="circuit"]' : 'changeCircuit',
+
+            'click .meters-panel   > h2' : 'toggleMetersPanel',
+            'click .circuits-panel > h2' : 'toggleCircuitsPanel'
         }),
 
         /**
@@ -72,12 +75,25 @@ define(function (require) {
                 circuitLabels: this.simulation.circuitLabels
             };
 
-            this.$('.sim-controls-group-2').append(this.circuitsTemplate(data));
+            this.$('.sim-controls-wrapper').append(this.circuitsTemplate(data));
+
+            // Hide the meters panel by default for small screens
+            this.$('.meters-panel').addClass('collapsed');
         },
 
         changeCircuit: function(event) {
             var index = parseInt(this.$('input[name="circuit"]:checked').val());
             this.simulation.set('currentCircuitIndex', index);
+        },
+
+        toggleMetersPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.circuits-panel').toggleClass('collapsed');
+        },
+
+        toggleCircuitsPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.circuits-panel').toggleClass('collapsed');
         }
 
     });

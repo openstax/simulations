@@ -49,7 +49,7 @@ define(function(require) {
             
             if (AppView.windowIsShort()) {
                 $btns.css('top', Math.round(this.height * 0.110) + 'px');
-                $btns.css('left', '255px');
+                $btns.css('left', '15px');
             }
             else {
                 $btns.css('top', Math.round(this.height * 0.183) + 'px');

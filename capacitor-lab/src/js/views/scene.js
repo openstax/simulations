@@ -50,7 +50,7 @@ define(function(require) {
             // // ...to the usable screen space that we have
             var controlsWidth = 220;
             var margin = 20;
-            var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + 0 : 0;
+            var leftMargin = 0;
             var rightMargin = 0 + controlsWidth + margin;
             var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
 

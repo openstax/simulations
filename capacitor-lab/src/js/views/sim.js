@@ -137,7 +137,7 @@ define(function (require) {
             this.$el.html(this.template(data));
 
             // Meters control panel
-            this.$('.sim-controls-group-1').append(this.metersTemplate(data));
+            this.$('.sim-controls-wrapper').append(this.metersTemplate(data));
         },
 
         /**

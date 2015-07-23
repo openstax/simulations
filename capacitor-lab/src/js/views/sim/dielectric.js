@@ -27,9 +27,13 @@ define(function (require) {
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
             'slide .dielectric-constant-slider' : 'changeDielectricConstant',
             'change .dielectric-material'       : 'changeDielectricMaterial',
+            
             'click #hide-all-charges'    : 'hideAllCharges',
             'click #show-all-charges'    : 'showAllCharges',
             'click #show-excess-charges' : 'showExcessCharges',
+
+            'click .meters-panel       > h2' : 'toggleMetersPanel',
+            'click .dielectric-options > h2' : 'toggleDielectricPanel'
         }),
 
         /**
@@ -78,7 +82,7 @@ define(function (require) {
                 materials: materials
             };
 
-            this.$('.sim-controls-group-2').append(this.dielectricTemplate(data));
+            this.$('.sim-controls-wrapper').append(this.dielectricTemplate(data));
 
             // Turn basic select into a nice one
             this.$('select').selectpicker();
@@ -91,6 +95,9 @@ define(function (require) {
                     'max': 5
                 }
             });
+
+            // Hide the meters panel by default for small screens
+            this.$('.meters-panel').addClass('collapsed');
 
             this.$dielectricConstant = this.$('.dielectric-constant-value');
         },
@@ -108,6 +115,16 @@ define(function (require) {
 
             // Set the selected projectile on the simulation
             this.simulation.circuit.capacitor.set('dielectricMaterial', this.simulation.dielectricMaterials[index]);
+        },
+
+        toggleMetersPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.dielectric-options').toggleClass('collapsed');
+        },
+
+        toggleDielectricPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.dielectric-options').toggleClass('collapsed');
         },
 
         hideAllCharges: function() {
