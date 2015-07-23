@@ -33,8 +33,10 @@ define(function (require) {
             else
                 capacitance = this.model.circuit.getTotalCapacitance();
 
-            if (capacitance !== this.lastCapacitance)
+            if (capacitance !== this.lastCapacitance) {
                 this.setValue(capacitance);
+                this.updateZoomButtons();
+            }
 
             BarMeterView.prototype.update.apply(this, arguments);
 

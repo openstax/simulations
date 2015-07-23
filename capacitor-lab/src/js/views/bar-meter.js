@@ -75,8 +75,10 @@ define(function (require) {
         postRender: function() {
             Draggable.prototype.postRender.apply(this, arguments);
 
+            this.calculateExponent();
             this.updateMin();
             this.updateMax();
+            this.updateZoomButtons();
         },
 
         setPosition: function(x, y) {
@@ -134,12 +136,13 @@ define(function (require) {
         },
 
         zoomIn: function(event) {
-            console.log('hey')
             this.calculateExponent();
+            this.updateZoomButtons();
         },
 
         zoomOut: function(event) {
             this.calculateExponent();
+            this.updateZoomButtons();
         },
 
         calculateExponent: function() {
@@ -153,6 +156,24 @@ define(function (require) {
                 this.updateMax();
                 this.setValue(this.value);
             }
+        },
+
+        /**
+         * At most one of the zoom buttons is enabled.
+         * If the bar is empty, neither button is enabled.
+         * If the bar is less than 10% full, the zoom in button is enabled.
+         * If the bar is overflowing, the zoom out button is enabled.
+         */
+        updateZoomButtons: function() {
+            this.$('.btn-zoom-in, .btn-zoom-out').prop('disabled', true);
+
+            var mantissa = this.value / Math.pow(10, this.exponent);
+
+            if ((this.value !== 0) && (mantissa < 0.1))
+                this.$('.btn-zoom-in').removeAttr('disabled');
+
+            if ((this.value !== 0) && (mantissa > 1))
+                this.$('.btn-zoom-out').removeAttr('disabled');
         },
 
         dragStart: function(event) {
