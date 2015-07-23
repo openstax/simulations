@@ -8,11 +8,6 @@ define(function (require) {
 
     var CapacitanceMeterView = BarMeterView.extend({
 
-        events: {
-            'mousedown' : 'dragStart',
-            'touchstart': 'dragStart'
-        },
-
         initialize: function(options) {
             options = _.extend({
                 units: 'F',

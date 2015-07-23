@@ -23,8 +23,11 @@ define(function (require) {
         className: 'bar-meter-view',
 
         events: {
-            'mousedown' : 'dragStart',
-            'touchstart': 'dragStart'
+            'mousedown  .bar-meter-drag-area': 'dragStart',
+            'touchstart .bar-meter-drag-area': 'dragStart',
+
+            'click .btn-zoom-in' : 'zoomIn',
+            'click .btn-zoom-out': 'zoomOut'
         },
 
         initialize: function(options) {
@@ -76,49 +79,6 @@ define(function (require) {
             this.updateMax();
         },
 
-        dragStart: function(event) {
-            //if (event.currentTarget === this.el) {
-                event.preventDefault();
-
-                this.$el.addClass('dragging');
-
-                this.dragging = true;
-
-                this.fixTouchEvents(event);
-
-                this.dragX = event.pageX;
-                this.dragY = event.pageY;
-            //}
-        },
-
-        drag: function(event) {
-            if (this.dragging) {
-
-                this.fixTouchEvents(event);
-
-                dx = event.pageX - this.dragX;
-                dy = event.pageY - this.dragY;
-
-                if (!this.boxOutOfBounds(this.position.x + dx, this.position.y + dy)) {
-
-                    this.position.x += dx;
-                    this.position.y += dy;
-                }
-
-                this.dragX = event.pageX;
-                this.dragY = event.pageY;
-
-                this.updateOnNextFrame = true;
-            }
-        },
-
-        dragEnd: function(event) {
-            if (this.dragging) {
-                this.dragging = false;
-                this.$el.removeClass('dragging');
-            }
-        },
-
         setPosition: function(x, y) {
             this.position.x = x;
             this.position.y = y;
@@ -138,6 +98,8 @@ define(function (require) {
 
             this.$value.html(mantissa.toFixed(this.decimals) + 'x10<sup>' + this.exponent + '</sup> ' + this.units);
             this.$bar.css('height', percent + '%');
+
+            this.value = value;
         },
 
         updateMin: function() {
@@ -150,12 +112,11 @@ define(function (require) {
         updateMax: function() {
             this.$max.html('10<sup>' + this.exponent + '</sup>');
             this.$max.css({
-                'margin-top': -this.$min.height() / 2
+                'margin-top': -this.$max.height() / 2
             });
         },
 
         update: function(time, delta, paused, timeScale) {
-
             // If there aren't any changes, don't do anything.
             if (!this.updateOnNextFrame)
                 return;
@@ -172,9 +133,67 @@ define(function (require) {
             });
         },
 
-        showOverflow: function() {
-            
-        }
+        zoomIn: function(event) {
+            console.log('hey')
+            this.calculateExponent();
+        },
+
+        zoomOut: function(event) {
+            this.calculateExponent();
+        },
+
+        calculateExponent: function() {
+            if (this.value !== 0) {
+                var exponent = 0;
+                while ((this.value / Math.pow(10, exponent)) < 0.1)
+                    exponent--;
+
+                this.exponent = exponent;
+
+                this.updateMax();
+                this.setValue(this.value);
+            }
+        },
+
+        dragStart: function(event) {
+            event.preventDefault();
+
+            this.$el.addClass('dragging');
+
+            this.dragging = true;
+
+            this.fixTouchEvents(event);
+
+            this.dragX = event.pageX;
+            this.dragY = event.pageY;
+        },
+
+        drag: function(event) {
+            if (this.dragging) {
+
+                this.fixTouchEvents(event);
+
+                dx = event.pageX - this.dragX;
+                dy = event.pageY - this.dragY;
+
+                if (!this.boxOutOfBounds(this.position.x + dx, this.position.y + dy)) {
+                    this.position.x += dx;
+                    this.position.y += dy;
+                }
+
+                this.dragX = event.pageX;
+                this.dragY = event.pageY;
+
+                this.updateOnNextFrame = true;
+            }
+        },
+
+        dragEnd: function(event) {
+            if (this.dragging) {
+                this.dragging = false;
+                this.$el.removeClass('dragging');
+            }
+        },
     });
 
     return BarMeterView;

@@ -15,12 +15,21 @@
     z-index: 200;
     cursor: -webkit-grab;
     cursor: grab;
+    .user-select(none);
 
     .bar-meter-container {
         .panel();
         position: relative;
         width: @bar-width;
         height: @bar-height;
+
+        .bar-meter-drag-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
 
         .bar-meter-bar {
             position: absolute;
