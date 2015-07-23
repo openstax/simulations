@@ -12,6 +12,8 @@ define(function(require) {
     var Vector2              = require('common/math/vector2');
     var Rectangle            = require('common/math/rectangle');
 
+    var VoltmeterView = require('views/voltmeter');
+
     var Assets = require('assets');
 
     // Constants
@@ -41,6 +43,16 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initVoltmeter();
+        },
+
+        initVoltmeter: function() {
+            this.voltmeterView = new VoltmeterView({
+                model: this.simulation,
+                mvt: this.mvt
+            });
+
+            this.stage.addChild(this.voltmeterView.displayObject);
         },
 
         initMVT: function() {

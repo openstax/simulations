@@ -293,5 +293,18 @@ define(function (require) {
     Constants.CurrentIndicatorView = CurrentIndicatorView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              VOLTMETER                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var VoltmeterView = {};
+
+    VoltmeterView.HEIGHT = 0.018408064516129034; // In meters
+
+    Constants.VoltmeterView = VoltmeterView;
+    
+
     return Constants;
 });
