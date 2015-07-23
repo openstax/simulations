@@ -302,9 +302,10 @@ define(function (require) {
     var VoltmeterView = {};
 
     VoltmeterView.HEIGHT = 0.018408064516129034; // In meters
+    VoltmeterView.PROBE_HEIGHT = 0.016; // In meters
 
     Constants.VoltmeterView = VoltmeterView;
-    
+
 
     return Constants;
 });
