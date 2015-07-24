@@ -72,6 +72,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
+            CapacitorLabSceneView.prototype._update.apply(this, arguments);
+            
             this.circuitView.update(time, deltaTime);
         },
 

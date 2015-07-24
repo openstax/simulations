@@ -58,6 +58,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
+            CapacitorLabSceneView.prototype._update.apply(this, arguments);
+            
             for (var i = 0; i < this.circuitViews.length; i++)
                 this.circuitViews[i].update(time, deltaTime);
         },
@@ -67,7 +69,7 @@ define(function(require) {
          *   given polygon in view space.
          */
         getIntersectingComponentView: function(polygon) {
-            return this.circuitViews[simulation.get('currentCircuitIndex')].getIntersectingComponentView(polygon);
+            return this.circuitViews[this.simulation.get('currentCircuitIndex')].getIntersectingComponentView(polygon);
         },
 
         circuitChanged: function(simulation, circuit) {

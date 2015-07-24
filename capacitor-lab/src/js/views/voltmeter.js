@@ -60,8 +60,6 @@ define(function(require) {
 
             this.initGraphics();
             this.updateMVT(this.mvt);
-
-            this.listenTo(this.scene.simulation.get('circuit'), 'circuit-changed', this.updateVoltage);
         },
 
         initGraphics: function() {
@@ -177,12 +175,12 @@ define(function(require) {
             this.redProbe.scale.y = this.blackProbe.scale.y = scale;
 
             this.drawWires();
+
+            this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
+            this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
         },
 
         updateVoltage: function() {
-            this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
-            this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
-
             var viewTouchingRed   = this.scene.getIntersectingComponentView(this.redProbePolygon);
             var viewTouchingBlack = this.scene.getIntersectingComponentView(this.blackProbePolygon);
 
@@ -232,6 +230,11 @@ define(function(require) {
             polygon.setPoints(polygon.points);
         },
 
+        update: function(time, deltaTime) {
+            if (this.displayObject.visible)
+                this.updateVoltage();
+        },
+
         dragStart: function(data) {
             this.lastPosition.x = data.global.x;
             this.lastPosition.y = data.global.y;
@@ -248,7 +251,6 @@ define(function(require) {
                 this.voltmeterContainer.y += dy;
 
                 this.drawWires();
-                this.updateVoltage();
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
@@ -275,7 +277,7 @@ define(function(require) {
                 this.redProbe.y += dy;
 
                 this.drawWires();
-                this.updateVoltage();
+                this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
@@ -302,7 +304,7 @@ define(function(require) {
                 this.blackProbe.y += dy;
 
                 this.drawWires();
-                this.updateVoltage();
+                this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
