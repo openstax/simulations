@@ -79,15 +79,8 @@ define(function(require) {
             this.shapeCreator.drawTopPlate(this.topPlate, '#f2f2f2', 1);
             this.shapeCreator.outlineTopPlate(this.topPlate, 1, this.outlineColor, 1);
 
-            var topPlate    = this.shapeCreator.createTopPlateSilhouette();
-            var bottomPlate = this.shapeCreator.createBottomPlateSilhouette();
-            
-            this.topPlatePolygon    = this.curveToPolygon(topPlate);
-            this.bottomPlatePolygon = this.curveToPolygon(bottomPlate);
-        },
-
-        curveToPolygon: function(curve) {
-            
+            this.topPlatePolygon    = this.shapeCreator.createTopPlateSilhouette();
+            this.bottomPlatePolygon = this.shapeCreator.createBottomPlateSilhouette();
         },
 
         initPlateChargeViews: function() {
@@ -151,7 +144,8 @@ define(function(require) {
          * Returns whether or not the given polygon intersects this view.
          */
         intersects: function(polygon) {
-
+            return SAT.testPolygonPolygon(polygon, this.topPlatePolygon) ||
+                SAT.testPolygonPolygon(polygon, this.bottomPlatePolygon);
         },
 
 
@@ -164,11 +158,11 @@ define(function(require) {
 
 
         intersectsTopPlate: function(polygon) {
-
+            return SAT.testPolygonPolygon(polygon, this.topPlatePolygon);
         },
 
         intersectsBottomPlate: function(polygon) {
-
+            return SAT.testPolygonPolygon(polygon, this.bottomPlatePolygon);
         },
 
         showPlateCharges: function() {

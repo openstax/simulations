@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _   = require('underscore');
+    var SAT = require('sat');
     
     var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
@@ -159,17 +160,16 @@ define(function (require) {
             var p4 = this._p4.set(this.mvt.modelToView(x + (width / 2), y + height, z - (depth / 2)));
             var p5 = this._p5.set(this.mvt.modelToView(x - (width / 2), y + height, z - (depth / 2)));
             
-            var curve = new PiecewiseCurve();
+            var polygon = new SAT.Polygon(new SAT.Vector(), [
+                new SAT.Vector(p0.x, p0.y),
+                new SAT.Vector(p1.x, p1.y),
+                new SAT.Vector(p2.x, p2.y),
+                new SAT.Vector(p3.x, p3.y),
+                new SAT.Vector(p4.x, p4.y),
+                new SAT.Vector(p5.x, p5.y)
+            ]);
 
-            curve.moveTo(p0.x, p0.y);
-            curve.lineTo(p1.x, p1.y);
-            curve.lineTo(p2.x, p2.y);
-            curve.lineTo(p3.x, p3.y);
-            curve.lineTo(p4.x, p4.y);
-            curve.lineTo(p5.x, p5.y);
-            curve.lineTo(p0.x, p0.y);
-
-            return curve;
+            return polygon;
         },
 
         /**

@@ -208,7 +208,7 @@ define(function(require) {
 
             for (var i = views.length - 1; i >= 0; i--) {
                 if (views[i].intersects(polygon))
-                    return view[i];
+                    return views[i];
             }
             
             return null;

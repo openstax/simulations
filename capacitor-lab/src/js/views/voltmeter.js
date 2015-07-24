@@ -66,9 +66,6 @@ define(function(require) {
             this.redProbe.x   = this.voltmeterContainer.x - 100;
             this.blackProbe.x = this.voltmeterContainer.x -  60;
             this.redProbe.y = this.blackProbe.y = this.voltmeterContainer.y;
-
-            this.graphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.graphics);
         },
 
         initVoltmeterBrick: function() {
@@ -183,13 +180,7 @@ define(function(require) {
             var viewTouchingRed   = this.scene.getIntersectingComponentView(this.redProbePolygon);
             var viewTouchingBlack = this.scene.getIntersectingComponentView(this.blackProbePolygon);
 
-            this.graphics.clear();
-            this.graphics.beginFill(0x3300FF, 1);
-            this.graphics.moveTo(this.redProbePolygon.points[0].x, this.redProbePolygon.points[0].y);
-            this.graphics.lineTo(this.redProbePolygon.points[1].x, this.redProbePolygon.points[1].y);
-            this.graphics.lineTo(this.redProbePolygon.points[2].x, this.redProbePolygon.points[2].y);
-            this.graphics.lineTo(this.redProbePolygon.points[3].x, this.redProbePolygon.points[3].y);
-            this.graphics.endFill();
+            console.log(viewTouchingRed, viewTouchingBlack);
         },
 
         updateProbePolygon: function(probe, polygon) {
