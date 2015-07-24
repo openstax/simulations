@@ -303,6 +303,8 @@ define(function (require) {
 
     VoltmeterView.HEIGHT = 0.018408064516129034; // In meters
     VoltmeterView.PROBE_HEIGHT = 0.016; // In meters
+    VoltmeterView.RED_COLOR   = '#ff0000';
+    VoltmeterView.BLACK_COLOR = '#111111';
 
     Constants.VoltmeterView = VoltmeterView;
 

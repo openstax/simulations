@@ -7,6 +7,7 @@ define(function(require) {
     require('common/pixi/extensions');
 
     var PixiView = require('common/pixi/view');
+    var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
 
@@ -49,6 +50,9 @@ define(function(require) {
             }, options);
 
             this.mvt = options.mvt;
+            this.redColor   = Colors.parseHex(VoltmeterView.RED_COLOR);
+            this.blackColor = Colors.parseHex(VoltmeterView.BLACK_COLOR);
+
             this.lastPosition = new PIXI.Point();
 
             this.initGraphics();
@@ -56,9 +60,13 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.initProbes();
             this.initVoltmeterBrick();
             this.initVoltageLabel();
-            this.initProbes();
+
+            this.redProbe.x   = this.voltmeterContainer.x - 100;
+            this.blackProbe.x = this.voltmeterContainer.x -  60;
+            this.redProbe.y = this.blackProbe.y = this.voltmeterContainer.y;
         },
 
         initVoltmeterBrick: function() {
@@ -66,6 +74,7 @@ define(function(require) {
 
             this.voltmeterContainer = new PIXI.DisplayObjectContainer();
             this.voltmeterContainer.buttonMode = true;
+            this.voltmeterContainer.defaultCursor = 'move';
             this.voltmeterContainer.addChild(this.voltmeterSprite);
 
             this.voltmeterContainer.x = 590;
@@ -103,15 +112,45 @@ define(function(require) {
             this.redProbe.rotation   = Math.PI / 4;
             this.blackProbe.rotation = Math.PI / 4;
 
-            this.redProbe.x   = this.voltmeterContainer.x - 100;
-            this.blackProbe.x = this.voltmeterContainer.x -  60;
-
-            this.redProbe.y = this.blackProbe.y = this.voltmeterContainer.y;
+            this.redProbe.buttonMode   = true;
+            this.blackProbe.buttonMode = true;
+            this.redProbe.defaultCursor   = 'move';
+            this.blackProbe.defaultCursor = 'move';
 
             this.displayObject.addChild(this.redWire);
             this.displayObject.addChild(this.blackWire);
             this.displayObject.addChild(this.redProbe);
             this.displayObject.addChild(this.blackProbe);
+        },
+
+        drawWires: function() {
+            this.drawWire(this.redWire,   this.redColor,   this.redProbe,  -this.voltmeterContainer.width / 5);
+            this.drawWire(this.blackWire, this.blackColor, this.blackProbe, this.voltmeterContainer.width / 5);
+        },
+
+        drawWire: function(graphics, color, probe, connectionXOffset) {
+            var x0 = probe.x - Math.cos(probe.rotation) * probe.height;
+            var y0 = probe.y + Math.sin(probe.rotation) * probe.height;
+
+            var x1 = this.voltmeterContainer.x + this.voltmeterContainer.width / 2 + connectionXOffset;
+            var y1 = this.voltmeterContainer.y + this.voltmeterContainer.height * (190 / 202);
+
+            //var dist = Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+
+            var c1x = x0 - Math.cos(probe.rotation) * probe.height * 0.5;
+            var c1y = y0 + Math.sin(probe.rotation) * probe.height * 0.5;
+
+            var c2x = x1;
+            var c2y = y1 + probe.height * 0.5;
+
+            graphics.clear();
+            graphics.lineStyle(2, color, 1);
+            graphics.moveTo(x0, y0);
+            graphics.bezierCurveTo(c1x, c1y, c2x, c2y, x1, y1);
+
+            graphics.lineStyle(8, color, 1);
+            graphics.moveTo(x1, y1);
+            graphics.lineTo(x1, y1 + this.voltmeterContainer.height * 0.02);
         },
 
         updateMVT: function(mvt) {
@@ -128,6 +167,8 @@ define(function(require) {
             
             this.redProbe.scale.x = this.blackProbe.scale.x = scale;
             this.redProbe.scale.y = this.blackProbe.scale.y = scale;
+
+            this.drawWires();
         },
 
         dragStart: function(data) {
@@ -144,6 +185,8 @@ define(function(require) {
 
                 this.voltmeterContainer.x += dx;
                 this.voltmeterContainer.y += dy;
+
+                this.drawWires();
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
@@ -169,6 +212,8 @@ define(function(require) {
                 this.redProbe.x += dx;
                 this.redProbe.y += dy;
 
+                this.drawWires();
+
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
             }
@@ -193,6 +238,8 @@ define(function(require) {
                 this.blackProbe.x += dx;
                 this.blackProbe.y += dy;
 
+                this.drawWires();
+
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
             }
@@ -213,14 +260,19 @@ define(function(require) {
         setPosition: function(x, y) {
             this.voltmeterContainer.x = x;
             this.voltmeterContainer.y = y;
+            this.drawWires();
         },
 
         setRedProbePosition: function(x, y) {
-
+            this.redProbe.x = x;
+            this.redProbe.y = y;
+            this.drawWires();
         },
 
         setBlackProbePosition: function(x, y) {
-
+            this.blackProbe.x = x;
+            this.blackProbe.y = y;
+            this.drawWires();
         }
 
     }, Constants.VoltmeterView);

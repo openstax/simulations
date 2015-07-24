@@ -49,7 +49,7 @@ define(function(require) {
 
                 // Hide it and add it to the stage
                 circuitView.hide();
-                this.stage.addChild(circuitView.displayObject);
+                this.circuitLayer.addChild(circuitView.displayObject);
 
                 this.circuitViews.push(circuitView);
             }

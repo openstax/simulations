@@ -68,7 +68,7 @@ define(function(require) {
                 maxEffectiveEField:             DielectricSimulation.getMaxEffectiveEField()
             });
 
-            this.stage.addChild(this.circuitView.displayObject);
+            this.circuitLayer.addChild(this.circuitView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

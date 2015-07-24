@@ -42,6 +42,12 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.circuitLayer = new PIXI.DisplayObjectContainer();
+            this.toolsLayer   = new PIXI.DisplayObjectContainer();
+
+            this.stage.addChild(this.circuitLayer);
+            this.stage.addChild(this.toolsLayer);
+
             this.initMVT();
             this.initVoltmeter();
         },
@@ -52,7 +58,7 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.stage.addChild(this.voltmeterView.displayObject);
+            this.toolsLayer.addChild(this.voltmeterView.displayObject);
         },
 
         initMVT: function() {
@@ -94,7 +100,15 @@ define(function(require) {
 
         showEFieldLines: function() {},
 
-        hideEFieldLines: function() {}
+        hideEFieldLines: function() {},
+
+        showVoltmeter: function() {
+            this.voltmeterView.show();
+        },
+
+        hideVoltmeter: function() {
+            this.voltmeterView.hide();
+        }
 
     });
 
