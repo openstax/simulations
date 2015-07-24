@@ -140,6 +140,39 @@ define(function (require) {
         },
 
         /**
+         * Creates a box's silhouette.
+         * 
+         *      p1 --------------- p2
+         *      /                   |
+         *     /                    |
+         *   p0                    p3
+         *   |                     /
+         *   |                    /
+         *   p5 --------------- p4
+         * 
+         */
+        createBoxSilhouette: function(x, y, z, width, height, depth) {
+            var p0 = this._p0.set(this.mvt.modelToView(x - (width / 2), y,          z - (depth / 2)));
+            var p1 = this._p1.set(this.mvt.modelToView(x - (width / 2), y,          z + (depth / 2)));
+            var p2 = this._p2.set(this.mvt.modelToView(x + (width / 2), y,          z + (depth / 2)));
+            var p3 = this._p3.set(this.mvt.modelToView(x + (width / 2), y + height, z + (depth / 2)));
+            var p4 = this._p4.set(this.mvt.modelToView(x + (width / 2), y + height, z - (depth / 2)));
+            var p5 = this._p5.set(this.mvt.modelToView(x - (width / 2), y + height, z - (depth / 2)));
+            
+            var curve = new PiecewiseCurve();
+
+            curve.moveTo(p0.x, p0.y);
+            curve.lineTo(p1.x, p1.y);
+            curve.lineTo(p2.x, p2.y);
+            curve.lineTo(p3.x, p3.y);
+            curve.lineTo(p4.x, p4.y);
+            curve.lineTo(p5.x, p5.y);
+            curve.lineTo(p0.x, p0.y);
+
+            return curve;
+        },
+
+        /**
          * Returns a PiecewiseCurve object representing the face
          *   created by connecting the four points.
          */

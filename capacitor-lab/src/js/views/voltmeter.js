@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var SAT      = require('sat');
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
 
@@ -45,11 +46,9 @@ define(function(require) {
         },
 
         initialize: function(options) {
-            options = _.extend({
-
-            }, options);
-
             this.mvt = options.mvt;
+            this.scene = options.scene;
+
             this.redColor   = Colors.parseHex(VoltmeterView.RED_COLOR);
             this.blackColor = Colors.parseHex(VoltmeterView.BLACK_COLOR);
 
@@ -67,6 +66,9 @@ define(function(require) {
             this.redProbe.x   = this.voltmeterContainer.x - 100;
             this.blackProbe.x = this.voltmeterContainer.x -  60;
             this.redProbe.y = this.blackProbe.y = this.voltmeterContainer.y;
+
+            this.graphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.graphics);
         },
 
         initVoltmeterBrick: function() {
@@ -121,6 +123,9 @@ define(function(require) {
             this.displayObject.addChild(this.blackWire);
             this.displayObject.addChild(this.redProbe);
             this.displayObject.addChild(this.blackProbe);
+
+            this.redProbePolygon   = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector(), new SAT.Vector(), new SAT.Vector() ]);
+            this.blackProbePolygon = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector(), new SAT.Vector(), new SAT.Vector() ]);
         },
 
         drawWires: function() {
@@ -171,6 +176,46 @@ define(function(require) {
             this.drawWires();
         },
 
+        updateVoltage: function() {
+            this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
+            this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
+
+            var viewTouchingRed   = this.scene.getIntersectingComponentView(this.redProbePolygon);
+            var viewTouchingBlack = this.scene.getIntersectingComponentView(this.blackProbePolygon);
+
+            this.graphics.clear();
+            this.graphics.beginFill(0x3300FF, 1);
+            this.graphics.moveTo(this.redProbePolygon.points[0].x, this.redProbePolygon.points[0].y);
+            this.graphics.lineTo(this.redProbePolygon.points[1].x, this.redProbePolygon.points[1].y);
+            this.graphics.lineTo(this.redProbePolygon.points[2].x, this.redProbePolygon.points[2].y);
+            this.graphics.lineTo(this.redProbePolygon.points[3].x, this.redProbePolygon.points[3].y);
+            this.graphics.endFill();
+        },
+
+        updateProbePolygon: function(probe, polygon) {
+            var thickness = probe.width * (7 / 29);
+            var length = probe.height * (23 / 202);
+
+            var xOffset = Math.cos(probe.rotation) * thickness / 2;
+            var yOffset = Math.sin(probe.rotation) * thickness / 2;
+
+            var x0 = probe.x;
+            var y0 = probe.y;
+            var x1 = x0 - Math.cos(probe.rotation) * length;
+            var y1 = y0 + Math.sin(probe.rotation) * length;
+
+            polygon.points[0].x = x0 - xOffset;
+            polygon.points[0].y = y0 - yOffset;
+            polygon.points[1].x = x0 + xOffset;
+            polygon.points[1].y = y0 + yOffset;
+            polygon.points[2].x = x1 + xOffset;
+            polygon.points[2].y = y1 + yOffset;
+            polygon.points[3].x = x1 - xOffset;
+            polygon.points[3].y = y1 - yOffset;
+
+            polygon.setPoints(polygon.points);
+        },
+
         dragStart: function(data) {
             this.lastPosition.x = data.global.x;
             this.lastPosition.y = data.global.y;
@@ -187,6 +232,7 @@ define(function(require) {
                 this.voltmeterContainer.y += dy;
 
                 this.drawWires();
+                this.updateVoltage();
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
@@ -213,6 +259,7 @@ define(function(require) {
                 this.redProbe.y += dy;
 
                 this.drawWires();
+                this.updateVoltage();
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;
@@ -239,6 +286,7 @@ define(function(require) {
                 this.blackProbe.y += dy;
 
                 this.drawWires();
+                this.updateVoltage();
 
                 this.lastPosition.x = data.global.x;
                 this.lastPosition.y = data.global.y;

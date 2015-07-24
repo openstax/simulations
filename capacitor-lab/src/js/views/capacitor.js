@@ -4,6 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    var SAT  = require('sat');
     
     var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
@@ -77,6 +78,16 @@ define(function(require) {
             this.topPlate.clear();
             this.shapeCreator.drawTopPlate(this.topPlate, '#f2f2f2', 1);
             this.shapeCreator.outlineTopPlate(this.topPlate, 1, this.outlineColor, 1);
+
+            var topPlate    = this.shapeCreator.createTopPlateSilhouette();
+            var bottomPlate = this.shapeCreator.createBottomPlateSilhouette();
+            
+            this.topPlatePolygon    = this.curveToPolygon(topPlate);
+            this.bottomPlatePolygon = this.curveToPolygon(bottomPlate);
+        },
+
+        curveToPolygon: function(curve) {
+            
         },
 
         initPlateChargeViews: function() {
@@ -134,6 +145,30 @@ define(function(require) {
 
         update: function() {
             this.drawPlates();
+        },
+
+        /**
+         * Returns whether or not the given polygon intersects this view.
+         */
+        intersects: function(polygon) {
+
+        },
+
+
+
+        /*
+         * TODO: FOR THE E-FIELD DETECTOR, WE CAN JUST POLL WITH A POINT
+         *   AND DO NOT HAVE TO DEAL WITH POLYGON-POLYGON COLLISION
+         */
+
+
+
+        intersectsTopPlate: function(polygon) {
+
+        },
+
+        intersectsBottomPlate: function(polygon) {
+
         },
 
         showPlateCharges: function() {

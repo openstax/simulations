@@ -75,6 +75,14 @@ define(function(require) {
             this.circuitView.update(time, deltaTime);
         },
 
+        /**
+         * Returns the view of the circuit component that intersects with the
+         *   given polygon in view space.
+         */
+        getIntersectingComponentView: function(polygon) {
+            return this.circuitView.getIntersectingComponentView(polygon);
+        },
+
         connectBattery: function() {
             this.$connectBtn.hide();
             this.$disconnectBtn.show();

@@ -55,7 +55,8 @@ define(function(require) {
         initVoltmeter: function() {
             this.voltmeterView = new VoltmeterView({
                 model: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                scene: this
             });
 
             this.toolsLayer.addChild(this.voltmeterView.displayObject);
@@ -93,6 +94,12 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
+
+        /**
+         * Returns the view of the circuit component that intersects with the
+         *   given polygon in view space.
+         */
+        getIntersectingComponentView: function(polygon) {},
 
         showPlateCharges: function() {},
 

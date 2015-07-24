@@ -145,6 +145,8 @@ define(function(require) {
             this.components.removeChildren();
             for (var i = 0; i < views.length; i++)
                 this.components.addChild(views[i].displayObject);
+
+            this.sortedViews = views;
         },
 
         removeComponentViews: function() {
@@ -195,6 +197,21 @@ define(function(require) {
                 this.topCurrentIndicatorView.hide();
                 this.bottomCurrentIndicatorView.hide();
             }
+        },
+
+        /**
+         * Returns the view of the circuit component that intersects with the
+         *   given polygon in view space.
+         */
+        getIntersectingComponentView: function(polygon) {
+            var views = this.sortedViews;
+
+            for (var i = views.length - 1; i >= 0; i--) {
+                if (views[i].intersects(polygon))
+                    return view[i];
+            }
+            
+            return null;
         },
 
         show: function() {

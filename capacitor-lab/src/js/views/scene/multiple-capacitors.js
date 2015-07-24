@@ -62,6 +62,14 @@ define(function(require) {
                 this.circuitViews[i].update(time, deltaTime);
         },
 
+        /**
+         * Returns the view of the circuit component that intersects with the
+         *   given polygon in view space.
+         */
+        getIntersectingComponentView: function(polygon) {
+            return this.circuitViews[simulation.get('currentCircuitIndex')].getIntersectingComponentView(polygon);
+        },
+
         circuitChanged: function(simulation, circuit) {
             for (var i = 0; i < this.circuitViews.length; i++)
                 this.circuitViews[i].hide();

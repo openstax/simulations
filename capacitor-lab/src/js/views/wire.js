@@ -96,6 +96,13 @@ define(function(require) {
         },
 
         /**
+         * Returns whether or not the given polygon intersects this view.
+         */
+        intersects: function(polygon) {
+
+        },
+
+        /**
          * Returns the y-value that should be used for sorting. Calculates the
          *   average y for all segment endpoints.
          */

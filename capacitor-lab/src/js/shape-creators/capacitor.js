@@ -55,9 +55,9 @@ define(function (require) {
         // Unoccluded shapes
         //----------------------------------------------------------------------------------------
 
-        createTopPlateShape: function() {
+        createTopPlateSilhouette: function() {
             var pos = this.capacitor.get('position');
-            return this.createBoxShape(
+            return this.createBoxSilhouette(
                 pos.x, 
                 this.capacitor.getTopPlateCenter().y, 
                 pos.z, 
@@ -67,9 +67,9 @@ define(function (require) {
             );
         },
 
-        createBottomPlateShape: function() {
+        createBottomPlateSilhouette: function() {
             var pos = this.capacitor.get('position');
-            return this.createBoxShape(
+            return this.createBoxSilhouette(
                 pos.x, 
                 this.capacitor.getBottomPlateCenter().y - this.capacitor.get('plateHeight'), 
                 pos.z, 
@@ -79,9 +79,9 @@ define(function (require) {
             );
         },
 
-        createDielectricShape: function() {
+        createDielectricSilhouette: function() {
             var pos = this.capacitor.get('position');
-            return this.createBoxShape(
+            return this.createBoxSilhouette(
                 pos.x + this.capacitor.get('dielectricOffset'), 
                 pos.y - this.capacitor.getDielectricHeight() / 2, 
                 pos.z, 
@@ -91,12 +91,12 @@ define(function (require) {
             );
         },
 
-        createAirBetweenPlateShape: function() {
+        createAirBetweenPlateSilhouette: function() {
             var pos        = this.capacitor.get('position');
             var plateWidth = this.capacitor.get('plateWidth');
             var airWidth   = this.capacitor.get('dielectricOffset');
 
-            return this.createBoxShape(
+            return this.createBoxSilhouette(
                 pos.x - (plateWidth / 2) + (airWidth / 2), 
                 pos.y - this.capacitor.getDielectricHeight() / 2, 
                 pos.z, 
