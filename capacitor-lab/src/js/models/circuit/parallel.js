@@ -108,64 +108,57 @@ define(function (require) {
         },
 
         /**
-         * True if circle is touching part of the circuit that is connected
+         * Gets the voltage at a certain circuit component, with respect to ground.
+         *   Returns NaN if the component is not connected to the circuit.
+         */
+        getVoltageAt: function(component, touchesTopPart) {
+            var voltage = NaN;
+            if (this.connectedToBatteryTop(component, touchesTopPart))
+                voltage = this.getTotalVoltage();
+            else if (this.connectedToBatteryBottom(component, touchesTopPart))
+                voltage = 0;
+            return voltage;
+        },
+
+        /**
+         * True if component is on part of the circuit that is connected
          *   to the battery's top terminal.
          */
-        connectedToBatteryTop: function(point, radius) {
-            // return this.battery.intersectsTopTerminal(shape) || 
-            //     this.getTopWire().intersects(shape) || 
-            //     this.intersectsSomeTopPlate(shape);
-            return this.battery.touchesTopTerminal(point, radius) ||
-                this.getTopWire().touches(point, radius) ||
-                this.touchesSomeTopPlate(point, radius);
-        },
-
-        /**
-         * True if shape is touching part of the circuit that is connected
-         *   to the battery's bottom terminal.
-         */
-        connectedToBatteryBottom: function(point, radius) {
-            // return this.battery.intersectsBottomTerminal(shape) || 
-            //     this.getBottomWire().intersects(shape) || 
-            //     this.intersectsSomeBottomPlate(shape);
-            return this.battery.touchesBottomTerminal(point, radius) ||
-                this.getBottomWire().touches(point, radius) ||
-                this.touchesSomeBottomPlate(point, radius);
-        },
-
-        /**
-         * True if the shape intersects any capacitor's top plate.
-         */
-        intersectsSomeTopPlate: function(shape) {
-            throw 'intersectsSomeTopPlate is deprecated. Use touchesSomeTopPlate instead.';
-        },
-
-        /**
-         * True if the shape intersects any capacitor's bottom plate.
-         */
-        intersectsSomeBottomPlate: function(shape) {
-            throw 'intersectsSomeBottomPlate is deprecated. Use touchesSomeBottomPlate instead.';
-        },
-
-        /**
-         * True if the point touches any capacitor's top plate.
-         */
-        touchesSomeTopPlate: function(point, radius) {
-            for (var i = 0; i < this.capacitors.length; i++) {
-                if (this.capacitor.touchesTopPlate(point, radius))
+        connectedToBatteryTop: function(component, touchesTopPart) {
+            if (component === this.battery) {
+                if (touchesTopPart)
                     return true;
+                else
+                    return false;
             }
+
+            if (component === this.getTopWire())
+                return true;
+
+            if (component instanceof Capacitor && touchesTopPart)
+                return true;
+
             return false;
         },
 
         /**
-         * True if the point touches any capacitor's top plate.
+         * True if component is on part of the circuit that is connected
+         *   to the battery's bottom terminal.
          */
-        touchesSomeBottomPlate: function(point, radius) {
-            for (var i = 0; i < this.capacitors.length; i++) {
-                if (this.capacitor.touchesBottomPlate(point, radius))
+        connectedToBatteryBottom: function(component, touchesTopPart) {
+            if (component === this.battery) {
+                if (touchesTopPart)
+                    return false;
+                else
                     return true;
             }
+
+            if (component === this.getBottomWire())
+                return true;
+
+            if (component instanceof Capacitor && !touchesTopPart)
+                return true;
+
             return false;
         }
 

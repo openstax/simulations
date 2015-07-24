@@ -64,6 +64,7 @@ define(function (require, exports, module) {
             };
 
             this.circuit = new SingleCircuit({ batteryConnected: DielectricSimulation.BATTERY_CONNECTED }, { config: config });
+            this.set('circuit', this.circuit);
         },
 
         resetComponents: function() {

@@ -10,6 +10,10 @@ define(function(require) {
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
 
+    var CapacitorView = require('views/capacitor');
+    var WireView      = require('views/wire');
+    var BatteryView   = require('views/battery');
+
     var Constants = require('constants');
 
     var Assets = require('assets');
@@ -56,6 +60,8 @@ define(function(require) {
 
             this.initGraphics();
             this.updateMVT(this.mvt);
+
+            this.listenTo(this.scene.simulation.get('circuit'), 'circuit-changed', this.updateVoltage);
         },
 
         initGraphics: function() {
@@ -180,7 +186,26 @@ define(function(require) {
             var viewTouchingRed   = this.scene.getIntersectingComponentView(this.redProbePolygon);
             var viewTouchingBlack = this.scene.getIntersectingComponentView(this.blackProbePolygon);
 
-            console.log(viewTouchingRed, viewTouchingBlack);
+            if (viewTouchingRed && viewTouchingBlack) {
+                var redVoltage   = this.getVoltageFromView(viewTouchingRed,   this.redProbePolygon);
+                var blackVoltage = this.getVoltageFromView(viewTouchingBlack, this.blackProbePolygon);
+
+                var voltage = redVoltage - blackVoltage;
+
+                this.voltageLabel.setText(voltage.toFixed(3) + ' V');
+            }
+            else {
+                this.voltageLabel.setText('-- V');
+            }
+        },
+
+        getVoltageFromView: function(view, polygon) {
+            if (view instanceof CapacitorView)
+                return this.scene.simulation.get('circuit').getVoltageAt(view.model, view.intersectsTopPlate(polygon));
+            if (view instanceof BatteryView)
+                return this.scene.simulation.get('circuit').getVoltageAt(view.model, view.intersectsTopTerminal(polygon));
+            else
+                return this.scene.simulation.get('circuit').getVoltageAt(view.model);
         },
 
         updateProbePolygon: function(probe, polygon) {

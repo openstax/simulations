@@ -124,17 +124,18 @@ define(function (require) {
         },
 
         /**
-         * Gets the voltage at a point, with respect to ground.
+         * Gets the voltage at a certain circuit component, with respect to ground.
+         *   Returns NaN if the component is not connected to the circuit.
          */
-        getVoltageAt: function(point, radius) {
+        getVoltageAt: function(component, touchesTopPart) {
             var voltage = NaN;
 
             // Check the battery
-            if (this.battery.touchesTopTerminal(point, radius)) {
-                voltage = this.getTotalVoltage();
-            }
-            else if (this.battery.touchesBottomTerminal(point, radius)) {
-                voltage = 0;
+            if (component === this.battery) {
+                if (touchesTopPart)
+                    voltage = this.getTotalVoltage();
+                else
+                    voltage = 0;
             }
             else {
                 // Check the plates and wires
@@ -145,12 +146,12 @@ define(function (require) {
                     var topWire    = this.wires.at(i);
                     var bottomWire = this.wires.at(i + 1);
 
-                    if (capacitor.touchesTopPlate(point, radius) || topWire.touches(point, radius)) {
+                    if ((component === capacitor && touchesTopPart) || component === topWire) {
                         // Touches top plate or wire, so sum voltage of this capacitor
                         //   and all capacitors below it.
                         voltage = this.sumPlateVoltages(i);
                     }
-                    else if (capacitor.touchesbottomPlate(point, radius) || bottomWire.touches(point, radius)) {
+                    else if ((component === capacitor && !touchesTopPart) || component === bottomWire) {
                         // Touches bottom plate or wire, sum voltage of all capacitors
                         //   below this one.
                         voltage = this.sumPlateVoltages(i + 1);

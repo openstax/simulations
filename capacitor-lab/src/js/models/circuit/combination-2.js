@@ -154,54 +154,64 @@ define(function (require) {
         },
 
         /**
-         * Gets the voltage at a point, with respect to ground.
+         * Gets the voltage at a certain circuit component, with respect to ground.
+         *   Returns NaN if the component is not connected to the circuit.
          */
-        getVoltageAt: function(point, radius) {
+        getVoltageAt: function(component, touchesTopPart) {
             var voltage = NaN;
 
-            if (this.connectedToBatteryTop(point, radius))
+            if (this.connectedToBatteryTop(component, touchesTopPart))
                 voltage = this.getTotalVoltage();
-            else if (this.connectedToBatteryBottom(point, radius))
+            else if (this.connectedToBatteryBottom(component, touchesTopPart))
                 voltage = 0;
-            else if (this.connectedToC2TopPlate(point, radius))
+            else if (this.connectedToC2TopPlate(component, touchesTopPart))
                 voltage = this.c2.get('platesVoltage');
 
             return voltage;
         },
 
         /**
-         * True if circle is touching part of the circuit that is connected to
+         * True if component is on part of the circuit that is connected to
          *   the battery's top terminal.
          */
-        connectedToBatteryTop: function(point, radius) {
-            return
-                this.battery.touchesTopTerminal(point, radius) ||
-                this.getTopWire().touches(point, radius) ||
-                this.c1.touchesTopPlate(point, radius);
+        connectedToBatteryTop: function(component, touchesTopPart) {
+            if (component === this.battery) {
+                if (touchesTopPart)
+                    return true;
+                else
+                    return false;
+            }
+
+            return (component === this.getTopWire()) ||
+                (component === this.c1 && touchesTopPart);
         },
 
         /**
-         * True if circle is touching part of the circuit that is connected to
+         * True if component is on part of the circuit that is connected to
          *   the battery's bottom terminal.
          */
-        connectedToBatteryBottom: function(point, radius) {
-            return
-                this.battery.touchesBottomTerminal(point, radius) ||
-                this.getBottomWire().touches(point, radius) ||
-                this.c2.touchesBottomPlate(point, radius) ||
-                this.c3.touchesBottomPlate(point, radius);
+        connectedToBatteryBottom: function(component, touchesTopPart) {
+            if (component === this.battery) {
+                if (touchesTopPart)
+                    return false;
+                else
+                    return true;
+            }
+
+            return (component === this.getBottomWire())    ||
+                (component === this.c2 && !touchesTopPart) ||
+                (component === this.c3 && !touchesTopPart);
         },
 
         /**
-         * True if circle is touching part of the circuit that is connected to
+         * True if component is on part of the circuit that is connected to
          *   C2's top plate.
          */
-        connectedToC2TopPlate: function(point, radius) {
-            return
-                this.c1.touchesBottomPlate(point, radius) ||
-                this.getMiddleWire().touches(point, radius) ||
-                this.c2.touchesTopPlate(point, radius) ||
-                this.c3.touchesTopPlate(point, radius);
+        connectedToC2TopPlate: function(component, touchesTopPart) {
+            return (component === this.getMiddleWire())    ||
+                (component === this.c1 && !touchesTopPart) ||
+                (component === this.c2 &&  touchesTopPart) ||
+                (component === this.c3 &&  touchesTopPart);
         }
 
     });

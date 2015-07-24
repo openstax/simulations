@@ -172,10 +172,10 @@ define(function (require) {
         },
 
         /**
-         * Gets the voltage at a shape, with respect to ground.
-         * Returns Double.NaN if the Shape is not connected to the circuit
+         * Gets the voltage at a certain circuit component, with respect to ground.
+         *   Returns NaN if the component is not connected to the circuit.
          */
-        getVoltageAt: function(shape) {},
+        getVoltageAt: function(component, intersectsWithTopPlate) {},
 
         /**
          * Gets the effective E-field at a specified location.

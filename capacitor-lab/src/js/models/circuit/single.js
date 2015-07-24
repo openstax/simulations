@@ -99,20 +99,22 @@ define(function (require) {
         },
 
         /**
-         * Gets the voltage at a shape, with respect to ground.
-         * Returns Double.NaN if the Shape is not connected to the circuit
+         * Gets the voltage at a certain circuit component, with respect to ground.
+         *   Returns NaN if the component is not connected to the circuit.
          */
-        getVoltageAt: function(shape) {
+        getVoltageAt: function(component, touchesTopPart) {
             var voltage = NaN;
+
             if (this.get('batteryConnected')) {
                 voltage = ParallelCircuit.prototype.getVoltageAt.apply(this, arguments);
             }
-            else {
-                if (this.intersectsSomeTopPlate(shape))
+            else if (component instanceof Capacitor) {
+                if (touchesTopPart)
                     voltage = this.getTotalVoltage();
-                else if (this.intersectsSomeBottomPlate(shape))
+                else
                     voltage = 0;
             }
+            
             return voltage;
         },
 
