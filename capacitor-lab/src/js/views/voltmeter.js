@@ -201,7 +201,7 @@ define(function(require) {
             if (view instanceof CapacitorView)
                 return this.scene.simulation.get('circuit').getVoltageAt(view.model, view.intersectsTopPlate(polygon));
             if (view instanceof BatteryView)
-                return this.scene.simulation.get('circuit').getVoltageAt(view.model, view.intersectsTopTerminal(polygon));
+                return this.scene.simulation.get('circuit').getVoltageAt(view.model, true);
             else
                 return this.scene.simulation.get('circuit').getVoltageAt(view.model);
         },

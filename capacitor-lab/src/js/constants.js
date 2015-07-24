@@ -196,6 +196,10 @@ define(function (require) {
     Battery.POSITIVE_TERMINAL_CYLINDER_HEIGHT = 0.0009;
     Battery.POSITIVE_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.0004;
 
+    Battery.TOP_TERMINAL_WIDTH  = 0.0045;
+    Battery.TOP_TERMINAL_HEIGHT = 0.0014;
+    Battery.TOP_TERMINAL_Y_OFFSET = -(Battery.BODY_HEIGHT / 2) + 0.0010;
+
     /*
      * Negative terminal is part of the image file.
      * The terminal is an ellipse, whose dimension were determined by visual inspection.

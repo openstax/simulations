@@ -4,6 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    var SAT  = require('sat');
 
     var AppView = require('common/app/app');
     
@@ -11,6 +12,8 @@ define(function(require) {
     var SliderView = require('common/pixi/view/slider');
     var Vector2    = require('common/math/vector2');
     var Colors     = require('common/colors/colors');
+
+    var BatteryShapeCreator = require('shape-creators/battery');
 
     var Assets = require('assets');
 
@@ -36,6 +39,8 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.shapeCreator = new BatteryShapeCreator(this.model, this.mvt);
+
             this.batteryUp   = Assets.createSprite(Assets.Images.BATTERY_UP);
             this.batteryDown = Assets.createSprite(Assets.Images.BATTERY_DOWN);
 
@@ -171,6 +176,8 @@ define(function(require) {
             this.batteryDown.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
+
+            this.batteryPolygon = this.shapeCreator.createTopTerminalSilhouette();
         },
 
         pointUp: function() {
@@ -187,7 +194,7 @@ define(function(require) {
          * Returns whether or not the given polygon intersects this view.
          */
         intersects: function(polygon) {
-
+            return SAT.testPolygonPolygon(polygon, this.batteryPolygon);
         },
 
         /**
