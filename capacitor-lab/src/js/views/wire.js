@@ -4,6 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    var SAT  = require('sat');
     
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
@@ -33,10 +34,13 @@ define(function(require) {
         initialize: function(options) {
             this.color = Colors.parseHex('#444');
 
+            // Cached objects
             this._modelStartVec = new Vector3();
             this._modelEndVec   = new Vector3();
             this._viewStartVec  = new Vector2();
             this._viewEndVec    = new Vector2();
+            this._directionVec  = new Vector2();
+            this._testBox       = new SAT.Box();
 
             this.listenTo(this.model, 'change:position', this.drawWire);
             this.listenTo(this.model.segments, 'change', this.drawWire);
@@ -48,30 +52,20 @@ define(function(require) {
          * Draws the wire
          */
         drawWire: function() {
-            var thickness = Math.round(this.mvt.modelToViewDeltaX(this.model.get('thickness')) / 2) * 2;
+            var thickness = this.getWireThickness();
 
             var graphics = this.displayObject;
             graphics.clear();
 
-            var modelStart = this._modelStartVec;
-            var modelEnd   = this._modelEndVec;
-            var viewStart  = this._viewStartVec;
-            var viewEnd    = this._viewEndVec;
+            var viewStart;
+            var viewEnd;
             
             var segment;
             for (var i = 0; i < this.model.segments.length; i++) {
                 segment = this.model.segments.at(i);
 
-                modelStart.set(segment.get('startX'), segment.get('startY'), 0);
-                modelEnd.set(segment.get('endX'), segment.get('endY'), 0);
-
-                viewStart.set(this.mvt.modelToView(modelStart));
-                viewEnd.set(this.mvt.modelToView(modelEnd));
-
-                viewStart.x = Math.round(viewStart.x);
-                viewStart.y = Math.round(viewStart.y);
-                viewEnd.x = Math.round(viewEnd.x);
-                viewEnd.y = Math.round(viewEnd.y);
+                viewStart = this.getSegmentStart(segment);
+                viewEnd   = this.getSegmentEnd(segment);
 
                 graphics.lineStyle(thickness, this.color, 1);
                 graphics.moveTo(viewStart.x, viewStart.y);
@@ -83,6 +77,26 @@ define(function(require) {
                 graphics.drawCircle(viewEnd.x, viewEnd.y, thickness / 2);
                 graphics.endFill();
             }
+        },
+
+        getWireThickness: function() {
+            return Math.round(this.mvt.modelToViewDeltaX(this.model.get('thickness')) / 2) * 2;
+        },
+
+        getSegmentStart: function(segment) {
+            this._modelStartVec.set(segment.get('startX'), segment.get('startY'), 0);
+            this._viewStartVec.set(this.mvt.modelToView(this._modelStartVec));
+            this._viewStartVec.x = Math.round(this._viewStartVec.x);
+            this._viewStartVec.y = Math.round(this._viewStartVec.y);
+            return this._viewStartVec;
+        },
+
+        getSegmentEnd: function(segment) {
+            this._modelEndVec.set(segment.get('endX'), segment.get('endY'), 0);
+            this._viewEndVec.set(this.mvt.modelToView(this._modelEndVec));
+            this._viewEndVec.x = Math.round(this._viewEndVec.x);
+            this._viewEndVec.y = Math.round(this._viewEndVec.y);
+            return this._viewEndVec;
         },
 
         /**
@@ -99,7 +113,42 @@ define(function(require) {
          * Returns whether or not the given polygon intersects this view.
          */
         intersects: function(polygon) {
+            var thickness = this.getWireThickness();
+            var halfThickness = thickness / 2;
+            var box = this._testBox;
+            var segment;
+            var viewStart;
+            var viewEnd;
+            var swap;
+            var direction = this._directionVec;
 
+            // Loop through the segments and see if it intersects any of them
+            for (var i = 0; i < this.model.segments.length; i++) {
+                segment = this.model.segments.at(i);
+
+                viewStart = this.getSegmentStart(segment);
+                viewEnd   = this.getSegmentEnd(segment);
+
+                if (viewStart.x > viewEnd.x || viewStart.y > viewEnd.y) {
+                    swap = viewStart;
+                    viewStart = viewEnd;
+                    viewEnd = swap;
+                }
+
+                // Get vector from start to end
+                direction.set(viewEnd).sub(viewStart);
+
+                // We're assuming a wire is always at right angles to simplify
+                box.pos.x = viewStart.x - halfThickness;
+                box.pos.y = viewStart.y - halfThickness;
+                box.w = direction.x + thickness;
+                box.h = direction.y + thickness;
+
+                if (SAT.testPolygonPolygon(polygon, box.toPolygon()))
+                    return true;
+            }
+
+            return false;
         },
 
         /**
