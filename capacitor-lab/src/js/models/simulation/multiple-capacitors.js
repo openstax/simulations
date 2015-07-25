@@ -89,6 +89,12 @@ define(function (require, exports, module) {
         },
 
         currentCircuitIndexChanged: function(simulation, currentCircuitIndex) {
+            var previousCircuit = this.circuits[this.previous('currentCircuitIndex')];
+            if (previousCircuit) {
+                var previousBatteryVoltage = previousCircuit.battery.get('voltage');
+                this.circuits[currentCircuitIndex].battery.set('voltage', previousBatteryVoltage);
+            }
+            
             this.set('circuit', this.circuits[currentCircuitIndex]);
         }
 

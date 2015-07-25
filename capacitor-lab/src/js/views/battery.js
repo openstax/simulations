@@ -6,8 +6,9 @@ define(function(require) {
     var PIXI = require('pixi');
     var SAT  = require('sat');
 
-    var AppView = require('common/app/app');
+    var defineInputUpdateLocks = require('common/locks/define-locks');
     
+    var AppView    = require('common/app/app');
     var PixiView   = require('common/pixi/view');
     var SliderView = require('common/pixi/view/slider');
     var Vector2    = require('common/math/vector2');
@@ -36,6 +37,7 @@ define(function(require) {
 
             // Listen for model events
             this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:voltage',   this.updateVoltage);
         },
 
         initGraphics: function() {
@@ -90,7 +92,9 @@ define(function(require) {
 
             // Bind events for it
             this.listenTo(sliderView, 'slide', function(value, prev) {
-                this.model.set('voltage', value);
+                this.inputLock(function() {
+                    this.model.set('voltage', value);
+                });
 
                 if (value >= 0)
                     this.pointUp();
@@ -102,7 +106,11 @@ define(function(require) {
                 // Snap to zero if we get close
                 if (Math.abs(sliderView.val()) < 0.1) {
                     sliderView.val(0);
-                    this.model.set('voltage', 0);
+
+                    this.inputLock(function() {
+                        this.model.set('voltage', 0);
+                    });
+
                     this.pointUp();
                 }
             }); 
@@ -157,12 +165,25 @@ define(function(require) {
             this.displayObject.addChild(middleUnit);
             this.displayObject.addChild(bottomUnit);
             this.displayObject.addChild(sliderView.displayObject);
+
+            this.sliderView = sliderView;
         },
 
         updatePosition: function(model, position) {
             var viewPos = this.mvt.modelToView(position);
             this.displayObject.x = Math.round(viewPos.x);
             this.displayObject.y = Math.round(viewPos.y);
+        },
+
+        updateVoltage: function(model, voltage) {
+            this.updateLock(function() {
+                this.sliderView.val(voltage);
+
+                if (voltage >= 0)
+                    this.pointUp();
+                else
+                    this.pointDown();
+            });
         },
 
         updateMVT: function(mvt) {
@@ -205,6 +226,11 @@ define(function(require) {
         }
 
     });
+
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(BatteryView);
+
 
     return BatteryView;
 });
