@@ -139,7 +139,7 @@ define(function (require) {
          * Gets the wire that connects C1 to C2 and C3.
          */
         getMiddleWire: function() {
-            this.wires.at(1);
+            return this.wires.at(1);
         },
 
         /**

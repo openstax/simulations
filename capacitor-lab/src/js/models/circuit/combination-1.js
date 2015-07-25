@@ -141,7 +141,7 @@ define(function (require) {
          * Gets the wire between the 2 capacitors.
          */
         getMiddleWire: function() {
-            this.wires.at(1);
+            return this.wires.at(1);
         },
 
         /**
