@@ -26,7 +26,10 @@ define(function (require) {
         EFD_ZOOM_IN_BTN_DISABLED:  'zoom-in-btn-disabled',
         EFD_ZOOM_OUT_BTN:          'zoom-out-btn',
         EFD_ZOOM_OUT_BTN_DISABLED: 'zoom-out-btn-disabled',
-        EFD_ZOOM_LABEL:            'zoom-label'
+        EFD_ZOOM_LABEL:            'zoom-label',
+        EFD_PLATE_LABEL:           'plate-label',
+        EFD_SUM_LABEL:             'sum-label',
+        EFD_DIELECTRIC_LABEL:      'dielectric-label'
     };
 
     Assets.SpriteSheets = {
@@ -42,7 +45,10 @@ define(function (require) {
             Assets.Images.EFD_ZOOM_IN_BTN_DISABLED,
             Assets.Images.EFD_ZOOM_OUT_BTN,
             Assets.Images.EFD_ZOOM_OUT_BTN_DISABLED,
-            Assets.Images.EFD_ZOOM_LABEL
+            Assets.Images.EFD_ZOOM_LABEL,
+            Assets.Images.EFD_PLATE_LABEL,
+            Assets.Images.EFD_SUM_LABEL,
+            Assets.Images.EFD_DIELECTRIC_LABEL
         ]
     };
 

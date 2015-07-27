@@ -94,6 +94,32 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":30,"h":7},
 		"sourceSize": {"w":30,"h":7},
 		"pivot": {"x":0,"y":0}
+	},
+	"plate-label": {
+		"frame": {"x":1,"y":268,"w":24,"h":7},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":24,"h":7},
+		"sourceSize": {"w":24,"h":7},
+		"pivot": {"x":0,"y":0}
+	}
+	,
+	"sum-label": {
+		"frame": {"x":1,"y":290,"w":21,"h":7},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":21,"h":7},
+		"sourceSize": {"w":21,"h":7},
+		"pivot": {"x":0,"y":0}
+	}
+	,
+	"dielectric-label": {
+		"frame": {"x":1,"y":279,"w":45,"h":7},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":45,"h":7},
+		"sourceSize": {"w":45,"h":7},
+		"pivot": {"x":0,"y":0}
 	}
 },
 "meta": {

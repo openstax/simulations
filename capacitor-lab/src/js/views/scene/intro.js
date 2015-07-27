@@ -5,7 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var DielectricSceneView = require('views/scene/dielectric');
+    var CapacitorLabSceneView = require('views/scene');
+    var DielectricSceneView   = require('views/scene/dielectric');
 
     // Constants
     var Constants = require('constants');
@@ -26,7 +27,12 @@ define(function(require) {
         initGraphics: function() {
             DielectricSceneView.prototype.initGraphics.apply(this, arguments);
 
-        }
+        },
+
+        initEFieldDetector: function() {
+            // We don't want the dielectric version of the e-field reader
+            CapacitorLabSceneView.prototype.initEFieldDetector.apply(this, arguments);
+        },
 
     });
 

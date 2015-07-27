@@ -86,8 +86,8 @@ define(function(require) {
             this.detectorContainer.defaultCursor = 'move';
             this.detectorContainer.addChild(this.bodySprite);
 
-            this.detectorContainer.x = 500;
-            this.detectorContainer.y = 300;
+            this.detectorContainer.x = 520;
+            this.detectorContainer.y = 304;
 
             this.displayObject.addChild(this.detectorContainer);
 
@@ -150,12 +150,22 @@ define(function(require) {
                 dielectricBtn.x = btnX;
                 dielectricBtn.y = 14;
 
+                var sumLabel = Assets.createSprite(Assets.Images.EFD_SUM_LABEL);
+                sumLabel.x = sumBtn.x + sumBtn.width + 1;
+                sumLabel.y = 6;
+
+                var dielectricLabel = Assets.createSprite(Assets.Images.EFD_DIELECTRIC_LABEL);
+                dielectricLabel.x = dielectricBtn.x + dielectricBtn.width + 1;
+                dielectricLabel.y = 21;
+
                 this.dielectricDisplay = new PIXI.DisplayObjectContainer();
                 this.dielectricDisplay.x = displayX;
                 this.dielectricDisplay.y = displayY;
 
                 rightArea.addChild(sumBtn);
                 rightArea.addChild(dielectricBtn);
+                rightArea.addChild(sumLabel);
+                rightArea.addChild(dielectricLabel);
                 rightArea.addChild(this.dielectricDisplay);
 
                 this.body.addChild(leftArea);
@@ -190,11 +200,16 @@ define(function(require) {
             plateBtn.x = btnX;
             plateBtn.y = 6;
 
+            var plateLabel = Assets.createSprite(Assets.Images.EFD_PLATE_LABEL);
+            plateLabel.x = plateBtn.x + plateBtn.width + 1;
+            plateLabel.y = 13;
+
             this.plateDisplay = new PIXI.DisplayObjectContainer();
             this.plateDisplay.x = displayX;
             this.plateDisplay.y = displayY;
 
             plateArea.addChild(plateBtn);
+            plateArea.addChild(plateLabel);
             plateArea.addChild(this.plateDisplay);
         },
 
