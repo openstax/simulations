@@ -37,13 +37,25 @@ define(function(require) {
             'touchend        .probe': 'dragProbeEnd',
             'mouseup         .probe': 'dragProbeEnd',
             'touchendoutside .probe': 'dragProbeEnd',
-            'mouseupoutside  .probe': 'dragProbeEnd'
+            'mouseupoutside  .probe': 'dragProbeEnd',
+
+            'click .zoomInBtn'  : 'zoomIn',
+            'click .zoomOutBtn' : 'zoomOut'
         },
 
         initialize: function(options) {
             this.mvt = options.mvt;
             this.scene = options.scene;
+            this.dielectric = options.dielectric;
 
+            this.plateEnabled = true;
+            this.sumEnabled = true;
+            this.dielectricEnabled = true;
+
+            this.displayWidth  = 62
+            this.displayHeight = 136;
+
+            this.color = Colors.parseHex(EFieldDetectorView.DISPLAY_COLOR);
             this.wireColor = Colors.parseHex(EFieldDetectorView.WIRE_COLOR);
 
             this.lastPosition = new PIXI.Point();
@@ -55,31 +67,232 @@ define(function(require) {
         initGraphics: function() {
             this.initProbes();
             this.initBody();
+            this.initZoomControls();
+            this.initShowValuesBtn();
+            this.initDisplayAreas();
 
             this.probe.x = this.detectorContainer.x - 100;
             this.probe.y = this.detectorContainer.y;
         },
 
         initBody: function() {
-            this.bodySprite = Assets.createSprite(Assets.Images.EFD_DEVICE_BODY);
+            if (this.dielectric)
+                this.bodySprite = Assets.createSprite(Assets.Images.EFD_DEVICE_BODY);
+            else
+                this.bodySprite = Assets.createSprite(Assets.Images.EFD_DEVICE_BODY_NARROW);
 
             this.detectorContainer = new PIXI.DisplayObjectContainer();
             this.detectorContainer.buttonMode = true;
             this.detectorContainer.defaultCursor = 'move';
             this.detectorContainer.addChild(this.bodySprite);
 
-            this.detectorContainer.x = 590;
-            this.detectorContainer.y = 370;
+            this.detectorContainer.x = 500;
+            this.detectorContainer.y = 300;
 
             this.displayObject.addChild(this.detectorContainer);
 
             this.body = new PIXI.DisplayObjectContainer();
             this.body.x = 13;
             this.body.y = 13;
-            this.bodyHeight = this.bodySprite.texture.height - 26;
-            this.bodyWidth  = this.bodySprite.texture.width  - 26;
+            this.bodyHeight = this.bodySprite.texture.height - 24;
+            this.bodyWidth  = this.bodySprite.texture.width  - 24;
 
             this.detectorContainer.addChild(this.body);
+        },
+
+        initDisplayAreas: function() {
+            var self = this;
+            var plateArea;
+            var y = 32;
+            var btnX = -2;
+            var displayX = 3;
+            var displayY = 34;
+
+            if (this.dielectric) {
+                var leftArea  = Assets.createSprite(Assets.Images.EFD_DISPLAY_AREA);
+                var rightArea = Assets.createSprite(Assets.Images.EFD_DISPLAY_AREA);
+
+                var middleMargin = 6;
+                var sideMargin = Math.floor(this.bodyWidth - leftArea.width - rightArea.width - middleMargin) / 2;
+
+                leftArea.x = sideMargin;
+                leftArea.y = y;
+                rightArea.x = this.bodyWidth - sideMargin - rightArea.width;
+                rightArea.y = y;
+
+                var sumBtn = this.createToggleButton(
+                    Assets.Images.EFD_CHECK_BTN_ON, 
+                    Assets.Images.EFD_CHECK_BTN_OFF, 
+                    function() {
+                        self.sumEnabled = true;
+                        self.updateArrows();
+                    },
+                    function() {
+                        self.sumEnabled = false;
+                        self.updateArrows();
+                    }
+                );
+                sumBtn.x = btnX;
+                sumBtn.y = -1;
+
+                var dielectricBtn = this.createToggleButton(
+                    Assets.Images.EFD_CHECK_BTN_ON, 
+                    Assets.Images.EFD_CHECK_BTN_OFF, 
+                    function() {
+                        self.dielectricEnabled = true;
+                        self.updateArrows();
+                    },
+                    function() {
+                        self.dielectricEnabled = false;
+                        self.updateArrows();
+                    }
+                );
+                dielectricBtn.x = btnX;
+                dielectricBtn.y = 14;
+
+                this.dielectricDisplay = new PIXI.DisplayObjectContainer();
+                this.dielectricDisplay.x = displayX;
+                this.dielectricDisplay.y = displayY;
+
+                rightArea.addChild(sumBtn);
+                rightArea.addChild(dielectricBtn);
+                rightArea.addChild(this.dielectricDisplay);
+
+                this.body.addChild(leftArea);
+                this.body.addChild(rightArea);
+
+                plateArea = leftArea;
+            }
+            else {
+                var area = Assets.createSprite(Assets.Images.EFD_DISPLAY_AREA);
+                var margin = Math.floor(this.bodyWidth - area.width) / 2;
+
+                area.x = margin;
+                area.y = y;
+
+                this.body.addChild(area);
+
+                plateArea = area;
+            }
+
+            var plateBtn = this.createToggleButton(
+                Assets.Images.EFD_CHECK_BTN_ON, 
+                Assets.Images.EFD_CHECK_BTN_OFF, 
+                function() {
+                    self.plateEnabled = true;
+                    self.updateArrows();
+                },
+                function() {
+                    self.plateEnabled = false;
+                    self.updateArrows();
+                }
+            );
+            plateBtn.x = btnX;
+            plateBtn.y = 6;
+
+            this.plateDisplay = new PIXI.DisplayObjectContainer();
+            this.plateDisplay.x = displayX;
+            this.plateDisplay.y = displayY;
+
+            plateArea.addChild(plateBtn);
+            plateArea.addChild(this.plateDisplay);
+        },
+
+        createToggleButton: function(onImage, offImage, onCallback, offCallback) {
+            var onBtn  = Assets.createSprite(onImage);
+            var offBtn = Assets.createSprite(offImage);
+
+            onBtn.interactive = true;
+            onBtn.buttonMode = true;
+            offBtn.buttonMode = true;
+            offBtn.interactive = true;
+            offBtn.visible = false;
+
+            onBtn.mousedown = onBtn.touchstart = function() {
+                onBtn.y = 1;
+            };
+
+            offBtn.mousedown = offBtn.touchstart = function() {
+                offBtn.y = 1;
+            };
+
+            onBtn.mouseup = onBtn.touchend = function() {
+                onBtn.y = 0;
+                onBtn.visible = false;
+                offBtn.visible = true;
+                offCallback();
+            };
+
+            offBtn.mouseup = offBtn.touchend = function() {
+                offBtn.y = 0;
+                offBtn.visible = false;
+                onBtn.visible = true;
+                onCallback();
+            };
+
+            var container = new PIXI.DisplayObjectContainer();
+            container.addChild(onBtn);
+            container.addChild(offBtn);
+
+            return container;
+        },
+
+        initZoomControls: function() {
+            var label = Assets.createSprite(Assets.Images.EFD_ZOOM_LABEL);
+
+            var zoomInBtn          = Assets.createSprite(Assets.Images.EFD_ZOOM_IN_BTN);
+            var zoomInBtnDisabled  = Assets.createSprite(Assets.Images.EFD_ZOOM_IN_BTN_DISABLED);
+            var zoomOutBtn         = Assets.createSprite(Assets.Images.EFD_ZOOM_OUT_BTN);
+            var zoomOutBtnDisabled = Assets.createSprite(Assets.Images.EFD_ZOOM_OUT_BTN_DISABLED);
+
+            zoomInBtn.x  = zoomInBtnDisabled.x  = label.width + 1;
+            zoomOutBtn.x = zoomOutBtnDisabled.x = zoomInBtn.x + zoomInBtn.width;
+            label.y = zoomInBtn.height / 2 - label.height / 2;
+
+            zoomInBtn.buttonMode = true;
+            zoomOutBtn.buttonMode = true;
+
+            var wrapper = new PIXI.DisplayObjectContainer();
+            wrapper.addChild(label);
+            wrapper.addChild(zoomInBtn);
+            wrapper.addChild(zoomInBtnDisabled);
+            wrapper.addChild(zoomOutBtn);
+            wrapper.addChild(zoomOutBtnDisabled);
+
+            wrapper.x = Math.floor(this.bodyWidth / 2 - wrapper.width / 2);
+            wrapper.y = 210;
+
+            this.body.addChild(wrapper);
+
+            this.zoomInBtn  = zoomInBtn;
+            this.zoomOutBtn = zoomOutBtn;
+            this.zoomInBtnDisabled  = zoomInBtnDisabled;
+            this.zoomOutBtnDisabled = zoomOutBtnDisabled;
+
+            this.zoomInBtn.visible = false;
+            this.zoomOutBtn.visible = false;
+        },
+
+        initShowValuesBtn: function() {
+            var self = this;
+
+            var showValuesBtn = this.createToggleButton(
+                Assets.Images.EFD_SHOW_VALUES_BTN_ON, 
+                Assets.Images.EFD_SHOW_VALUES_BTN_OFF, 
+                function() {
+                    self.valuesEnabled = true;
+                    self.updateArrows();
+                },
+                function() {
+                    self.valuesEnabled = false;
+                    self.updateArrows();
+                }
+            );
+
+            showValuesBtn.x = Math.floor(this.bodyWidth / 2 - showValuesBtn.width / 2);
+            showValuesBtn.y = 232;
+
+            this.body.addChild(showValuesBtn);
         },
 
         initProbes: function() {
@@ -144,6 +357,10 @@ define(function(require) {
  
         },
 
+        updateArrows: function() {
+
+        },
+
         update: function(time, deltaTime) {
             if (this.displayObject.visible)
                 this.updateReadout();
@@ -199,6 +416,14 @@ define(function(require) {
 
         dragProbeEnd: function(data) {
             this.draggingProbe = false;
+        },
+
+        zoomIn: function() {
+            console.log('zoom in')
+        },
+
+        zoomOut: function() {
+            console.log('zoom out')
         },
 
         show: function() {

@@ -11,6 +11,7 @@ define(function(require) {
 
     var CapacitorLabSceneView = require('views/scene');
     var DielectricCircuitView = require('views/circuit/dielectric');
+    var EFieldDetectorView    = require('views/e-field-detector');
 
     // Constants
     var Constants = require('constants');
@@ -28,6 +29,17 @@ define(function(require) {
 
         initialize: function(options) {
             CapacitorLabSceneView.prototype.initialize.apply(this, arguments);
+        },
+
+        initEFieldDetector: function() {
+            this.eFieldDetectorView = new EFieldDetectorView({
+                model: this.simulation,
+                mvt: this.mvt,
+                scene: this,
+                dielectric: true
+            });
+
+            this.toolsLayer.addChild(this.eFieldDetectorView.displayObject);
         },
 
         renderContent: function() {

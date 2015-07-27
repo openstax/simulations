@@ -321,9 +321,10 @@ define(function (require) {
 
     var EFieldDetectorView = {};
 
-    EFieldDetectorView.HEIGHT = 0.026883064516129034; // In meters
+    EFieldDetectorView.HEIGHT = 0.026700806451612904; // In meters
     EFieldDetectorView.PROBE_HEIGHT = 0.016; // In meters
     EFieldDetectorView.WIRE_COLOR = '#6f7070';
+    EFieldDetectorView.DISPLAY_COLOR = '#222f1f';
 
     Constants.EFieldDetectorView = EFieldDetectorView;
 
