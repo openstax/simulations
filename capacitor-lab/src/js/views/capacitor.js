@@ -90,12 +90,12 @@ define(function(require) {
 
             this.graphics.clear();
             this.graphics.beginFill(0x55FF55, 1);
-            this.graphics.moveTo(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y);
-            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y);
-            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y);
-            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y);
-            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y);
-            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y);
+            // this.graphics.moveTo(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y);
+            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y);
+            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y);
+            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y);
+            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y);
+            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y);
             // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y, 2);
             // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y, 2);
             // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y, 2);

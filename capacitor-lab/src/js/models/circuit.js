@@ -182,15 +182,10 @@ define(function (require) {
          * Inside the plates, this is E_effective.
          * Outside the plates, it is zero.
          */
-        getEffectiveEFieldAt: function(location) {
-            var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++) {
-                if (this.capacitors.at(i).isBetweenPlates(location)) {
-                    eField = this.capacitors.at(i).getEffectiveEField();
-                    break;
-                }
-            }
-            return eField;
+        getEffectiveEFieldAt: function(capacitor) {
+            if (capacitor)
+                return capacitor.getEffectiveEField();
+            return 0;
         },
 
         /**
@@ -199,18 +194,16 @@ define(function (require) {
          *   depending on whether the probe intersects the dielectric.
          * Outside the plates, the field is zero.
          */
-        getPlatesDielectricEFieldAt: function(location) {
+        getPlatesDielectricEFieldAt: function(capacitor, insideDielectric) {
             var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++) {
-                if (this.capacitors.at(i).isInsideDielectricBetweenPlates(location)) {
-                    eField = this.capacitors.at(i).getPlatesDielectricEField();
-                    break;
-                }
-                else if (this.capacitors.at(i).isInsideAirBetweenPlates(location)) {
-                    eField = this.capacitors.at(i).getPlatesAirEField();
-                    break;
-                }
+
+            if (capacitor) {
+                if (insideDielectric)
+                    eField = capacitor.getPlatesDielectricEField();
+                else
+                    eField = capacitor.getPlatesAirEField()
             }
+
             return eField;
         },
 
@@ -220,18 +213,16 @@ define(function (require) {
          *   on whether the probe intersects the dielectric.
          * Outside the plates, the field is zero.
          */
-        getDielectricEFieldAt: function(location) {
+        getDielectricEFieldAt: function(capacitor, insideDielectric) {
             var eField = 0;
-            for (var i = 0; i < this.capacitors.length; i++) {
-                if (this.capacitors.at(i).isInsideDielectricBetweenPlates(location)) {
-                    eField = this.capacitors.at(i).getDielectricEField();
-                    break;
-                }
-                else if (this.capacitors.at(i).isInsideAirBetweenPlates(location)) {
-                    eField = this.capacitors.at(i).getAirEField();
-                    break;
-                }
+
+            if (capacitor) {
+                if (insideDielectric)
+                    eField = capacitor.getDielectricEField();
+                else
+                    eField = capacitor.getAirEField()
             }
+
             return eField;
         },
 

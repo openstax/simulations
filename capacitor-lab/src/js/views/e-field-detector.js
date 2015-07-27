@@ -374,7 +374,7 @@ define(function(require) {
         updateReadout: function() {
             var imageScale = this.probe.scale.x;
             var xOffset = -11 * imageScale;
-            var yOffset = -20 * imageScale;
+            var yOffset =  20 * imageScale;
             var point = this._satVec;
             point.x = this.probe.x + xOffset;
             point.y = this.probe.y + yOffset;
@@ -384,14 +384,16 @@ define(function(require) {
             //   or the dielectric.
             var capacitorView = this.scene.getIntersectingCapacitorView(point);
             if (capacitorView) {
-                //console.log(capacitorView);
+                var intersectsWithDielectric = capacitorView.pointIntersectsDielectricBetweenPlates(point);
+
+                var capacitor = capacitorView.model;
+
+                var platesEField     = this.simulation.get('circuit').getPlatesDielectricEFieldAt(capacitor, intersectsWithDielectric);
+                var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(capacitor, intersectsWithDielectric);
+                var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(capacitor);
+
+                console.log(platesEField, dielectricEField, sumEField);
             }
-
-            // var platesEField     = this.simulation.get('circuit').getPlatesDielectricEFieldAt(modelPoint);
-            // var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(modelPoint);
-            // var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(modelPoint);
-
-            //console.log(platesEField, dielectricEField, sumEField);
         },
 
         updateArrows: function() {
