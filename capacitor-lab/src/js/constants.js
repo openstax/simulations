@@ -313,5 +313,22 @@ define(function (require) {
     Constants.VoltmeterView = VoltmeterView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           E-FIELD DETECTOR                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var EFieldDetectorView = {};
+
+    EFieldDetectorView.HEIGHT = 0.026883064516129034; // In meters
+    EFieldDetectorView.PROBE_HEIGHT = 0.016; // In meters
+    EFieldDetectorView.WIRE_COLOR = '#6f7070';
+
+    Constants.EFieldDetectorView = EFieldDetectorView;
+
+
+
+
     return Constants;
 });

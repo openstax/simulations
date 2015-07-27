@@ -240,10 +240,10 @@ define(function (require) {
         },
 
         toggleVoltmeter: function(event) {
-            // if ($(event.target).is(':checked'))
-            //     this.capacitanceMeterView.show();
-            // else
-            //     this.capacitanceMeterView.hide();
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltmeter();
+            else
+                this.sceneView.hideVoltmeter();
         },
 
         toggleEFieldDetector: function(event) {

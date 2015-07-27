@@ -12,7 +12,8 @@ define(function(require) {
     var Vector2              = require('common/math/vector2');
     var Rectangle            = require('common/math/rectangle');
 
-    var VoltmeterView = require('views/voltmeter');
+    var VoltmeterView      = require('views/voltmeter');
+    var EFieldDetectorView = require('views/e-field-detector');
 
     var Assets = require('assets');
 
@@ -50,6 +51,7 @@ define(function(require) {
 
             this.initMVT();
             this.initVoltmeter();
+            this.initEFieldDetector();
         },
 
         initVoltmeter: function() {
@@ -58,8 +60,19 @@ define(function(require) {
                 mvt: this.mvt,
                 scene: this
             });
+            this.voltmeterView.hide();
 
             this.toolsLayer.addChild(this.voltmeterView.displayObject);
+        },
+
+        initEFieldDetector: function() {
+            this.eFieldDetectorView = new EFieldDetectorView({
+                model: this.simulation,
+                mvt: this.mvt,
+                scene: this
+            });
+
+            this.toolsLayer.addChild(this.eFieldDetectorView.displayObject);
         },
 
         initMVT: function() {
@@ -93,6 +106,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.voltmeterView.update(time, deltaTime);
+            this.eFieldDetectorView.update(time, deltaTime);
         },
 
         /**
