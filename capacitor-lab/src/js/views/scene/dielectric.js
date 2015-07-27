@@ -97,6 +97,13 @@ define(function(require) {
             return this.circuitView.getIntersectingComponentView(polygon);
         },
 
+        /**
+         * 
+         */
+        getIntersectingCapacitorView: function(point) {
+            return this.circuitView.getIntersectingCapacitorView(point);
+        },
+
         connectBattery: function() {
             this.$connectBtn.hide();
             this.$disconnectBtn.show();

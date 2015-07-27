@@ -115,6 +115,11 @@ define(function(require) {
          */
         getIntersectingComponentView: function(polygon) {},
 
+        /**
+         * 
+         */
+        getIntersectingCapacitorView: function(point) {},
+
         showPlateCharges: function() {},
 
         hidePlateCharges: function() {},

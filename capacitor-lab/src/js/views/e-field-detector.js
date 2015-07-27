@@ -9,6 +9,7 @@ define(function(require) {
 
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var CapacitorView = require('views/capacitor');
     var WireView      = require('views/wire');
@@ -47,6 +48,7 @@ define(function(require) {
             this.mvt = options.mvt;
             this.scene = options.scene;
             this.dielectric = options.dielectric;
+            this.simulation = this.model;
 
             this.plateEnabled = true;
             this.sumEnabled = true;
@@ -59,6 +61,7 @@ define(function(require) {
             this.wireColor = Colors.parseHex(EFieldDetectorView.WIRE_COLOR);
 
             this.lastPosition = new PIXI.Point();
+            this._satVec = new SAT.Vector();
 
             this.initGraphics();
             this.updateMVT(this.mvt);
@@ -369,7 +372,26 @@ define(function(require) {
         },
 
         updateReadout: function() {
- 
+            var imageScale = this.probe.scale.x;
+            var xOffset = -11 * imageScale;
+            var yOffset = -20 * imageScale;
+            var point = this._satVec;
+            point.x = this.probe.x + xOffset;
+            point.y = this.probe.y + yOffset;
+
+            // Find out from the scene which capacitor view it's intersecting with
+            //   and then ask the capacitor view if it's intersecting with the air
+            //   or the dielectric.
+            var capacitorView = this.scene.getIntersectingCapacitorView(point);
+            if (capacitorView) {
+                //console.log(capacitorView);
+            }
+
+            // var platesEField     = this.simulation.get('circuit').getPlatesDielectricEFieldAt(modelPoint);
+            // var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(modelPoint);
+            // var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(modelPoint);
+
+            //console.log(platesEField, dielectricEField, sumEField);
         },
 
         updateArrows: function() {

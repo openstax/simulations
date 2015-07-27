@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _   = require('underscore');
+    var SAT = require('sat');
 
     var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
@@ -145,17 +146,17 @@ define(function (require) {
          *  p4---p3
          *
          */
-        createDielectricBetweenPlatesShapeOccluded: function() {
+        createDielectricBetweenPlatesSilhouetteOccluded: function() {
             var plateWidth  = this.capacitor.get('plateWidth');
             var dielectricOffset = this.capacitor.get('dielectricOffset');
             var dielectricOverlap = plateWidth - dielectricOffset;
 
             // If the dielectric isn't between the plates at all, just
-            //   return an empty curve.
+            //   return an empty polygon.
             if (dielectricOverlap <= 0)
-                return new PiecewiseCurve();
+                return new SAT.Polygon();
 
-            return this.createSpaceBetweenPlatesShapeOccluded(dielectricOverlap)
+            return this.createSpaceBetweenPlatesSilhouetteOccluded(dielectricOverlap);
         },
 
 
@@ -192,7 +193,7 @@ define(function (require) {
          *  p4-----p3
          *
          */
-        createSpaceBetweenPlatesShapeOccluded: function(distanceFromEdge) {
+        createSpaceBetweenPlatesSilhouetteOccluded: function(distanceFromEdge) {
             var x = this.capacitor.get('position').x;
             var y = this.capacitor.get('position').y;
             var z = this.capacitor.get('position').z;
@@ -200,6 +201,9 @@ define(function (require) {
             var plateHeight = this.capacitor.get('plateHeight');
             var plateDepth  = this.capacitor.get('plateDepth');
             var plateSeparation = this.capacitor.get('plateSeparation');
+
+            if (distanceFromEdge === undefined)
+                distanceFromEdge = plateWidth;
 
             // 3D model-space points (before MVT)
             var m0 = this._m0;
@@ -209,12 +213,12 @@ define(function (require) {
             var m4 = this._m4;
             var m5 = this._m5;
 
-            m0.set(x + (plateWidth / 2),    y + plateHeight,        z + (plateDepth / 2));
-            m1.set(x + (plateWidth / 2),    y + plateHeight,        z - (plateDepth / 2));
-            m2.set(m1.x,                    m1.y + plateSeparation, m1.z);
-            m3.set(m2.x,                    m2.y,                   m0.z);
-            m4.set(m3.x - distanceFromEdge, m3.y,                   m3.z);
-            m5.set(m0.x - distanceFromEdge, m0.y,                   m0.z);
+            m0.set(x + (plateWidth / 2),    y - plateSeparation / 2, z - (plateDepth / 2));
+            m1.set(x + (plateWidth / 2),    y - plateSeparation / 2, z + (plateDepth / 2));
+            m2.set(m1.x,                    m1.y + plateSeparation,  m1.z);
+            m3.set(m2.x,                    m2.y,                    m0.z);
+            m4.set(m3.x - distanceFromEdge, m3.y,                    m3.z);
+            m5.set(m0.x - distanceFromEdge, m0.y,                    m0.z);
 
             // 2D view points (after MVT)
             var p0 = this._p0.set(this.mvt.modelToView(m0));
@@ -223,6 +227,17 @@ define(function (require) {
             var p3 = this._p3.set(this.mvt.modelToView(m3));
             var p4 = this._p4.set(this.mvt.modelToView(m4));
             var p5 = this._p5.set(this.mvt.modelToView(m5));
+
+            var polygon = new SAT.Polygon(new SAT.Vector(), [
+                new SAT.Vector(p0.x, p0.y),
+                new SAT.Vector(p1.x, p1.y),
+                new SAT.Vector(p2.x, p2.y),
+                new SAT.Vector(p3.x, p3.y),
+                new SAT.Vector(p4.x, p4.y),
+                new SAT.Vector(p5.x, p5.y)
+            ]);
+
+            return polygon;
         },
 
         //----------------------------------------------------------------------------------------

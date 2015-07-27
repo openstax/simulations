@@ -60,6 +60,9 @@ define(function(require) {
             this.initPlates();
             this.initPlateChargeViews();
             this.initEFieldLines();
+
+            this.graphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.graphics);
         },
 
         initPlates: function() {
@@ -81,6 +84,25 @@ define(function(require) {
 
             this.topPlatePolygon    = this.shapeCreator.createTopPlateSilhouette();
             this.bottomPlatePolygon = this.shapeCreator.createBottomPlateSilhouette();
+
+            this.spaceBetweenPlatesPolygon      = this.shapeCreator.createSpaceBetweenPlatesSilhouetteOccluded();
+            this.dielectricBetweenPlatesPolygon = this.shapeCreator.createDielectricBetweenPlatesSilhouetteOccluded();
+
+            this.graphics.clear();
+            this.graphics.beginFill(0x55FF55, 1);
+            this.graphics.moveTo(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y);
+            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y);
+            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y);
+            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y);
+            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y);
+            this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y, 2);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y, 2);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y, 2);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y, 2);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y, 2);
+            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y, 2);
+            this.graphics.endFill();
         },
 
         initPlateChargeViews: function() {
@@ -141,21 +163,12 @@ define(function(require) {
         },
 
         /**
-         * Returns whether or not the given polygon intersects this view.
+         * Returns whether or not the given polygon or point intersects this view.
          */
-        intersects: function(polygon) {
+        intersectsPolygon: function(polygon) {
             return SAT.testPolygonPolygon(polygon, this.topPlatePolygon) ||
                 SAT.testPolygonPolygon(polygon, this.bottomPlatePolygon);
         },
-
-
-
-        /*
-         * TODO: FOR THE E-FIELD DETECTOR, WE CAN JUST POLL WITH A POINT
-         *   AND DO NOT HAVE TO DEAL WITH POLYGON-POLYGON COLLISION
-         */
-
-
 
         intersectsTopPlate: function(polygon) {
             return SAT.testPolygonPolygon(polygon, this.topPlatePolygon);
@@ -163,6 +176,18 @@ define(function(require) {
 
         intersectsBottomPlate: function(polygon) {
             return SAT.testPolygonPolygon(polygon, this.bottomPlatePolygon);
+        },
+
+        pointIntersects: function(point) {
+            return this.pointIntersectsSpaceBetweenPlates(point);
+        },
+
+        pointIntersectsSpaceBetweenPlates: function(point) {
+            return SAT.pointInPolygon(point, this.spaceBetweenPlatesPolygon);
+        },
+
+        pointIntersectsDielectricBetweenPlates: function(point) {
+            return SAT.pointInPolygon(point, this.dielectricBetweenPlatesPolygon);
         },
 
         showPlateCharges: function() {

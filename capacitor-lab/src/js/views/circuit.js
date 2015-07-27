@@ -12,6 +12,7 @@ define(function(require) {
     var Vector2    = require('common/math/vector2');
 
     var CapacitanceControlledCapacitorView = require('views/capacitor/capacitance-controlled');
+    var CapacitorView                      = require('views/capacitor');
     var DielectricCapacitorView            = require('views/capacitor/dielectric');
     var WireView                           = require('views/wire');
     var BatteryView                        = require('views/battery');
@@ -201,13 +202,27 @@ define(function(require) {
 
         /**
          * Returns the view of the circuit component that intersects with the
-         *   given polygon in view space.
+         *   given polygon or point in view space.
          */
         getIntersectingComponentView: function(polygon) {
             var views = this.sortedViews;
 
             for (var i = views.length - 1; i >= 0; i--) {
                 if (views[i].intersects(polygon))
+                    return views[i];
+            }
+            
+            return null;
+        },
+
+        /**
+         * 
+         */
+        getIntersectingCapacitorView: function(point) {
+            var views = this.sortedViews;
+
+            for (var i = views.length - 1; i >= 0; i--) {
+                if (views[i] instanceof CapacitorView && views[i].pointIntersects(point))
                     return views[i];
             }
             

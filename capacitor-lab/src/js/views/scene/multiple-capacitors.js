@@ -72,6 +72,13 @@ define(function(require) {
             return this.circuitViews[this.simulation.get('currentCircuitIndex')].getIntersectingComponentView(polygon);
         },
 
+        /**
+         * 
+         */
+        getIntersectingCapacitorView: function(point) {
+            return this.circuitViews[this.simulation.get('currentCircuitIndex')].getIntersectingCapacitorView(point);
+        },
+
         circuitChanged: function(simulation, circuit) {
             for (var i = 0; i < this.circuitViews.length; i++)
                 this.circuitViews[i].hide();
