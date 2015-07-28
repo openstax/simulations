@@ -340,9 +340,7 @@ define(function(require) {
 
         initArrows: function() {
             this.plateArrow = new EFieldDetectorArrowView({
-                label: 'Plate',
-                centerX: this.displayWidth / 2,
-                centerY: this.displayHeight / 2
+                label: 'Plate'
             });
             this.plateDisplay.addChild(this.plateArrow.displayObject);
 
@@ -354,6 +352,9 @@ define(function(require) {
                 this.dielectricArrow = new EFieldDetectorArrowView({
                     label: 'Dielectric'
                 });
+
+                this.dielectricDisplay.addChild(this.sumArrow.displayObject);
+                this.dielectricDisplay.addChild(this.dielectricArrow.displayObject);
             }
 
             this.arrowScale = 1;
@@ -417,32 +418,65 @@ define(function(require) {
             point.x = this.probe.x + xOffset;
             point.y = this.probe.y + yOffset;
 
+            var platesEField = 0;
+            var dielectricEField = 0;
+            var sumEField = 0;
+
             // Find out from the scene which capacitor view it's intersecting with
             //   and then ask the capacitor view if it's intersecting with the air
             //   or the dielectric.
             var capacitorView = this.scene.getIntersectingCapacitorView(point);
             if (capacitorView) {
                 var intersectsWithDielectric = capacitorView.pointIntersectsDielectricBetweenPlates(point);
-
                 var capacitor = capacitorView.model;
 
-                var platesEField = this.simulation.get('circuit').getPlatesDielectricEFieldAt(capacitor, intersectsWithDielectric);
-                this.plateArrow.setValue(platesEField);
+                platesEField = this.simulation.get('circuit').getPlatesDielectricEFieldAt(capacitor, intersectsWithDielectric);
 
                 if (this.dielectric) {
-                    var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(capacitor, intersectsWithDielectric);
-                    var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(capacitor);
-                    this.sumArrow.setValue(sumEField);
-                    this.dielectricArrow.setValue(dielectricEField);
+                    dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(capacitor, intersectsWithDielectric);
+                    sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(capacitor);
                 }
+            }
+            
+            if (platesEField) {
+                this.plateArrow.setValue(platesEField);
+                this.plateArrow.centerOn(this.displayWidth / 2, this.displayHeight / 2);
             }
             else {
                 this.plateArrow.setValue(0);
+                this.plateArrow.centerOn(this.displayWidth / 2, this.displayHeight / 2);
+            }
 
-                if (this.dielectric) {
-                    this.sumArrow.setValue(0);
-                    this.dielectricArrow.setValue(0);
+            if (this.dielectric) {
+                if (sumEField) {
+                    this.sumArrow.setValue(sumEField);
+                    this.sumArrow.moveToY(this.plateArrow.getOriginY());
                 }
+                else {
+                    this.sumArrow.setValue(0);
+                    this.sumArrow.centerOn(this.displayWidth / 2, this.displayHeight / 2); 
+                }
+
+                // This has to happen before the dielectric arrow is positioned
+                if (platesEField > 0)
+                    this.sumArrow.alignTextAbove();
+                else
+                    this.sumArrow.alignTextBelow();
+                
+                if (dielectricEField) {
+                    this.dielectricArrow.setValue(-dielectricEField);
+                    this.dielectricArrow.moveToY(this.plateArrow.getTargetY());
+                }
+                else {
+                    this.dielectricArrow.setValue(0);
+                    this.dielectricArrow.centerOn(this.displayWidth / 2, this.displayHeight / 2);
+                    this.dielectricArrow.moveToY(this.sumArrow.getTargetY());
+                }
+
+                if (platesEField > 0)
+                    this.dielectricArrow.alignTextBelow();
+                else
+                    this.dielectricArrow.alignTextAbove();
             }
 
             this.zoomOutBtn.visible = this.canZoomOut();

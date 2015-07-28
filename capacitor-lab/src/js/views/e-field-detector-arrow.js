@@ -14,8 +14,6 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 label: 'An Arrow',
-                centerX: 0,
-                centerY: 0,
 
                 tailWidth: 8,
 
@@ -26,10 +24,14 @@ define(function(require) {
             }, options);
 
             this.label = options.label;
-            this.centerX = options.centerX;
-            this.centerY = options.centerY;
 
-            this.model = new ArrowView.ArrowViewModel({ minLength: null });
+            this.model = new ArrowView.ArrowViewModel({
+                originX: 0,
+                originY: 0,
+                targetX: 0,
+                targetY: 0,
+                minLength: null 
+            });
             this.scale = 1;
             this.value = 0;
 
@@ -62,11 +64,16 @@ define(function(require) {
 
         update: function() {
             var length = this.value * this.scale;
-            this.model.centerOn(this.centerX, this.centerY, 0, length);
+            this.model.set('targetY', this.model.get('originY') + length);
 
-            if (length === 0)
+            this.updateText();
+        },
+
+        updateText: function(defaultDirection) {
+            var length = this.value * this.scale;
+            if (length === 0 && !defaultDirection)
                 this.text.y = Math.round(-this.text.height / 2);
-            else if (length > 0)
+            else if (length > 0 || (defaultDirection && defaultDirection < 0))
                 this.text.y = Math.round(-this.text.height + 4)
             else
                 this.text.y = 4;
@@ -87,6 +94,23 @@ define(function(require) {
             this.update();
         },
 
+        alignTextAbove: function() {
+            this.updateText(-1);
+        },
+
+        alignTextBelow: function() {
+            this.updateText(1);
+        },
+
+        centerOn: function(x, y) {
+            this.model.centerOn(x, y);
+            this.updateText();
+        },
+
+        moveToY: function(y) {
+            this.model.moveTo(this.model.get('originX'), y);
+        },
+
         getTotalHeight: function() {
             return this.displayObject.height;
         },
@@ -97,6 +121,14 @@ define(function(require) {
 
         getTextHeight: function() {
             return this.text.height;
+        },
+
+        getOriginY: function() {
+            return this.model.get('originY');
+        },
+
+        getTargetY: function() {
+            return this.model.get('targetY');
         },
 
         showValue: function() {
