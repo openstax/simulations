@@ -48,6 +48,14 @@ define(function (require, exports, module) {
                 new DielectricMaterial.Paper(),
                 new DielectricMaterial.Glass()
             ];
+
+            if (this.customMaterial)
+                this.stopListening(this.customMaterial);
+
+            this.customMaterial = this.dielectricMaterials[0];
+            this.listenTo(this.customMaterial, 'change', function() {
+                this.circuit.capacitor.trigger('change');
+            });
         },
 
         initCircuit: function() {

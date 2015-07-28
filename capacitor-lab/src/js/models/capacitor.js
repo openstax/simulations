@@ -29,9 +29,7 @@ define(function (require) {
             dielectricMaterial: null, // Insulator between plates
             dielectricOffset: 0,      // The x offset of the dielectric's center, relative to the capacitor's origin
 
-            platesVoltage: 0, // Voltage across the plates in Volts
-
-            mvt: null // Model-view transform
+            platesVoltage: 0 // Voltage across the plates in Volts
         }),
 
         initialize: function(attributes, options) {
@@ -45,7 +43,6 @@ define(function (require) {
             PositionableObject3D.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:plateWidth', this.plateWidthChanged);
-            this.on('change:mvt',        this.mvtChanged);
 
             this.plateWidthChanged(this, this.get('plateWidth'));
         },
@@ -63,14 +60,6 @@ define(function (require) {
          */
         update: function(time, deltaTime) {
             
-        },
-
-        /**
-         * Updates everything dependent on the mvt
-         */
-        mvtChanged: function(capacitor, mvt) {
-            // TODO: Delete all the references to MVT on the model side if indeed
-            //   I decide that I can do without it.
         },
 
         //----------------------------------------------------------------------------------

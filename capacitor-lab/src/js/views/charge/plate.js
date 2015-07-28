@@ -30,11 +30,9 @@ define(function(require) {
             ChargeView.prototype.initialize.apply(this, [options]);
 
             // Listen for model events
-            this.listenTo(this.model, 'change:plateDepth',         this.draw);
-            this.listenTo(this.model, 'change:plateSeparation',    this.update);
-            this.listenTo(this.model, 'change:dielectricMaterial', this.draw);
-            this.listenTo(this.model, 'change:dielectricOffset',   this.draw);
-            this.listenTo(this.model, 'change:platesVoltage',      this.draw);
+            
+            this.listenTo(this.model, 'change:plateSeparation', this.updatePosition);
+            this.listenTo(this.model, 'change', this.draw);
         },
 
         initGraphics: function() {
@@ -122,13 +120,13 @@ define(function(require) {
             );
         },
 
-        updatePosition: function(capacitor, position) {
+        updatePosition: function() {
             var modelPoint;
             if (this.polarity === Polarity.POSITIVE)
-                modelPoint = capacitor.getTopPlateCenter();
+                modelPoint = this.model.getTopPlateCenter();
             else {
-                modelPoint = capacitor.getBottomPlateCenter();
-                modelPoint.y -= capacitor.get('plateHeight');
+                modelPoint = this.model.getBottomPlateCenter();
+                modelPoint.y -= this.model.get('plateHeight');
             }
             var viewPos = this.mvt.modelToView(modelPoint);
             this.displayObject.x = viewPos.x;
@@ -139,12 +137,12 @@ define(function(require) {
             this.mvt = mvt;
 
             this.draw();
-            this.updatePosition(this.model, this.model.get('position'));
+            this.updatePosition();
         },
 
         update: function() {
             this.draw();
-            this.updatePosition(this.model, this.model.get('position'));
+            this.updatePosition();
         }
 
     });

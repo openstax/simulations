@@ -106,7 +106,7 @@ define(function (require) {
             var dielectricConstant = parseFloat($(event.target).val());
             this.inputLock(function() {
                 this.$dielectricConstant.text(dielectricConstant.toFixed(2));
-                this.simulation.set('dielectricConstant', dielectricConstant);
+                this.simulation.customMaterial.set('dielectricConstant', dielectricConstant);
             });
         },
 
@@ -115,6 +115,17 @@ define(function (require) {
 
             // Set the selected projectile on the simulation
             this.simulation.circuit.capacitor.set('dielectricMaterial', this.simulation.dielectricMaterials[index]);
+
+            // If it's the custom material, enable the slider
+            if (this.simulation.circuit.capacitor.get('dielectricMaterial') === this.simulation.customMaterial)
+                this.$('.dielectric-constant-slider').removeAttr('disabled');
+            else
+                this.$('.dielectric-constant-slider').attr('disabled', 'disabled');
+
+            // Set the slider default value
+            var value = this.simulation.dielectricMaterials[index].get('dielectricConstant');
+            this.$('.dielectric-constant-slider').val(value);
+            this.$dielectricConstant.text(value.toFixed(2));
         },
 
         toggleMetersPanel: function(event) {

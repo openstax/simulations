@@ -21,11 +21,7 @@ define(function (require) {
 
         defaults: {
             // Simulates current flow.  A zero value means no flow.
-            currentAmplitude: 0,
-
-            // The model-view transform, used for calculating interactions
-            //   between objects that happen in 3D (view) space.
-            mvt: null
+            currentAmplitude: 0
         },
 
         initialize: function(attributes, options) {
@@ -45,7 +41,6 @@ define(function (require) {
             this.initWires(options.config, options.numberOfCapacitors);
 
             this.listenTo(this.capacitors, 'change', this.capacitorChanged);
-            this.on('change:mvt', this.mvtChanged);
 
             /*
              * When the battery voltage changes, update the plate voltages.
@@ -100,18 +95,6 @@ define(function (require) {
          * Updates plate voltages
          */
         updatePlateVoltages: function() {},
-
-        /**
-         * Updates everything dependent on the mvt
-         */
-        mvtChanged: function(capacitor, mvt) {
-            var i;
-            for (i = 0; i < this.capacitors.length; i++)
-                this.capacitors.at(i).set('mvt', mvt);
-            for (i = 0; i < this.wires.length; i++)
-                this.wires.at(i).set('mvt', mvt);
-            this.battery.set('mvt', mvt);
-        },
 
         /**
          * Responds to any capacitor-changed events

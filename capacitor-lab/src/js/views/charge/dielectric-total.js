@@ -38,13 +38,8 @@ define(function(require) {
             ChargeView.prototype.initialize.apply(this, [options]);
 
             // Listen for model events
-            this.listenTo(this.model, 'change:position',           this.updatePosition);
-            this.listenTo(this.model, 'change:dielectricOffset',   this.updatePosition);
-            this.listenTo(this.model, 'change:plateDepth',         this.draw);
-            this.listenTo(this.model, 'change:plateSeparation',    this.draw);
-            this.listenTo(this.model, 'change:dielectricMaterial', this.draw);
-            this.listenTo(this.model, 'change:dielectricOffset',   this.draw);
-            this.listenTo(this.model, 'change:platesVoltage',      this.draw);
+            this.listenTo(this.model, 'change:position change:dielectricOffset', this.updatePosition);
+            this.listenTo(this.model, 'change', this.draw);
         },
 
         draw: function() {
