@@ -7,6 +7,7 @@ define(function(require) {
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
 
+    var AppView   = require('common/app/app');
     var PixiView  = require('common/pixi/view');
     var ArrowView = require('common/pixi/view/arrow');
     var Colors    = require('common/colors/colors');
@@ -95,8 +96,14 @@ define(function(require) {
             this.detectorContainer.defaultCursor = 'move';
             this.detectorContainer.addChild(this.bodySprite);
 
-            this.detectorContainer.x = 520;
-            this.detectorContainer.y = 304;
+            if (AppView.windowIsShort()) {
+                this.detectorContainer.x = 520;
+                this.detectorContainer.y = 160;
+            }
+            else {
+                this.detectorContainer.x = 520;
+                this.detectorContainer.y = 304;
+            }
 
             this.displayObject.addChild(this.detectorContainer);
 
@@ -389,12 +396,6 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            var targetSpriteHeight = this.mvt.modelToViewDeltaY(EFieldDetectorView.HEIGHT); // in pixels
-            var scale = targetSpriteHeight / this.bodySprite.texture.height;
-
-            this.detectorContainer.scale.x = scale;
-            this.detectorContainer.scale.y = scale;
 
             var targetProbeHeight = this.mvt.modelToViewDeltaY(EFieldDetectorView.PROBE_HEIGHT); // in pixels
             var scale = targetProbeHeight / this.probe.texture.height;

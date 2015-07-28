@@ -7,6 +7,7 @@ define(function(require) {
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
 
+    var AppView  = require('common/app/app');
     var PixiView = require('common/pixi/view');
     var Colors   = require('common/colors/colors');
 
@@ -80,8 +81,14 @@ define(function(require) {
             this.voltmeterContainer.defaultCursor = 'move';
             this.voltmeterContainer.addChild(this.voltmeterSprite);
 
-            this.voltmeterContainer.x = 590;
-            this.voltmeterContainer.y = 370;
+            if (AppView.windowIsShort()) {
+                this.voltmeterContainer.x = 600;
+                this.voltmeterContainer.y = 230;
+            }
+            else {
+                this.voltmeterContainer.x = 590;
+                this.voltmeterContainer.y = 370;
+            }
 
             this.displayObject.addChild(this.voltmeterContainer);
         },
@@ -161,12 +168,6 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            var targetSpriteHeight = this.mvt.modelToViewDeltaY(VoltmeterView.HEIGHT); // in pixels
-            var scale = targetSpriteHeight / this.voltmeterSprite.texture.height;
-
-            this.voltmeterContainer.scale.x = scale;
-            this.voltmeterContainer.scale.y = scale;
 
             var targetProbeHeight = this.mvt.modelToViewDeltaY(VoltmeterView.PROBE_HEIGHT); // in pixels
             var scale = targetProbeHeight / this.redProbe.texture.height;
