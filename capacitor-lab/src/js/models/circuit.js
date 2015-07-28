@@ -76,7 +76,7 @@ define(function (require) {
                     plateSeparation: config.plateSeparation,
                     dielectricMaterial: config.dielectricMaterial,
                     dielectricOffset: config.dielectricOffset
-                })
+                });
             });
 
             this.updatePlateVoltages();
