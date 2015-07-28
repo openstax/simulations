@@ -214,7 +214,7 @@ define(function(require) {
         /**
          * Returns whether or not the given polygon intersects this view.
          */
-        intersects: function(polygon) {
+        intersectsPolygon: function(polygon) {
             return SAT.testPolygonPolygon(polygon, this.batteryPolygon);
         },
 

@@ -71,6 +71,7 @@ define(function(require) {
                 mvt: this.mvt,
                 scene: this
             });
+            this.eFieldDetectorView.hide();
 
             this.toolsLayer.addChild(this.eFieldDetectorView.displayObject);
         },
@@ -134,6 +135,14 @@ define(function(require) {
 
         hideVoltmeter: function() {
             this.voltmeterView.hide();
+        },
+
+        showEFieldDetector: function() {
+            this.eFieldDetectorView.show();
+        },
+
+        hideEFieldDetector: function() {
+            this.eFieldDetectorView.hide();
         }
 
     });

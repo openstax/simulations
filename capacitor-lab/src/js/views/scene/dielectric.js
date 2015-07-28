@@ -38,6 +38,7 @@ define(function(require) {
                 scene: this,
                 dielectric: true
             });
+            this.eFieldDetectorView.hide();
 
             this.toolsLayer.addChild(this.eFieldDetectorView.displayObject);
         },

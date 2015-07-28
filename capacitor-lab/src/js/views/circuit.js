@@ -208,7 +208,7 @@ define(function(require) {
             var views = this.sortedViews;
 
             for (var i = views.length - 1; i >= 0; i--) {
-                if (views[i].intersects(polygon))
+                if (views[i].intersectsPolygon(polygon))
                     return views[i];
             }
             

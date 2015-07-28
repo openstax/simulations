@@ -112,7 +112,7 @@ define(function(require) {
         /**
          * Returns whether or not the given polygon intersects this view.
          */
-        intersects: function(polygon) {
+        intersectsPolygon: function(polygon) {
             var thickness = this.getWireThickness();
             var halfThickness = thickness / 2;
             var box = this._testBox;

@@ -247,10 +247,10 @@ define(function (require) {
         },
 
         toggleEFieldDetector: function(event) {
-            // if ($(event.target).is(':checked'))
-            //     this.capacitanceMeterView.show();
-            // else
-            //     this.capacitanceMeterView.hide();
+            if ($(event.target).is(':checked'))
+                this.sceneView.showEFieldDetector();
+            else
+                this.sceneView.hideEFieldDetector();
         }
 
     });
