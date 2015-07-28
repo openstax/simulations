@@ -11,3 +11,26 @@
         height: @short-scene-height;
     }
 }
+
+.scene-view-ui {
+	position: absolute;
+	top: 0;
+	left: 0;
+
+	.connect-battery-btn,
+	.disconnect-battery-btn {
+		position: absolute;
+		left: 20px;
+		background-color: #78b04a;
+		color: white;
+
+		&:hover {
+			color: #fff;
+			background-color: darken(#78b04a, 5%);
+		}
+
+		&:active {
+			background-color: darken(#78b04a, 8%);
+		}
+	}
+}

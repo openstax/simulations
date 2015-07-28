@@ -1,0 +1,151 @@
+@import "variables.less";
+@import "mixins.less";
+
+@bar-width: 30px;
+@bar-height: 120px;
+
+@tick-color: #fff;
+@tick-width: 4px;
+@tick-thickness: 1px;
+
+.bar-meter-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    cursor: -webkit-grab;
+    cursor: grab;
+    .user-select(none);
+
+    .bar-meter-container {
+        .panel();
+        position: relative;
+        width: @bar-width;
+        height: @bar-height;
+
+        .bar-meter-drag-area {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+        }
+
+        .bar-meter-bar {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            height: 50%;
+            background-color: @link-color;
+        }
+
+        .bar-meter-ticks {
+
+            .bar-meter-tick {
+                position: absolute;
+                left: (@tick-width * -1);
+                width: @tick-width;
+                height: @tick-thickness;
+                background-color: fadeout(@tick-color, 30%);
+
+                &:last-child {
+                    margin-top: -1px;
+                }
+            }
+        }
+
+        .bar-meter-zoom-controls {
+            position: absolute;
+            right: 100%;
+            top: 50%;
+            margin-top: -24px;
+            padding-right: (@tick-width + 6);
+
+            .btn-zoom-in,
+            .btn-zoom-out,
+            .btn.btn-zoom-in,
+            .btn.btn-zoom-out {
+                .text-button(normal);
+
+                > .fa {
+                    position: relative;
+                    font-size: 16px;
+
+                    > .fa {
+                        font-size: 8px;
+                        position: absolute;
+                        top: 3px;
+                        left: 3px;
+                    }
+                }
+
+                &:disabled {
+                    opacity: 0.2;
+                }
+            }
+        }
+
+        .bar-meter-min-value,
+        .bar-meter-max-value {
+            position: absolute;
+            right: 100%;
+            margin-right: (@tick-width + 3);
+            font-size: 12px;
+            pointer-events: none;
+        }
+
+        .bar-meter-min-value {
+            bottom: 0;
+        }
+
+        .bar-meter-max-value {
+            top: 0;
+        }
+
+        .bar-meter-overflow {
+            position: absolute;
+            bottom: 100%;
+            width: 100%;
+            pointer-events: none;
+            display: none;
+
+            span {
+                position: absolute;
+                bottom: -4px;
+                font-weight: bold;
+
+                &:nth-child(1) {
+                    text-align: center;
+                    left: 0;
+                    right: 0;
+                    bottom: -2px;
+                    font-size: 20px;
+                }
+
+                &:nth-child(2) {
+                    left: 4px;
+                }
+
+                &:nth-child(3) {
+                    right: 4px;
+                }
+            }
+        }
+    }
+
+    .bar-meter-caption {
+        position: absolute;
+        left: 50%;
+        width: 126px;
+        margin-left: -63px;
+        top: 100%;
+        margin-top: 6px;
+        text-align: center;
+        pointer-events: none;
+
+        .bar-meter-title {
+            font-weight: bold;
+        }
+    }
+}

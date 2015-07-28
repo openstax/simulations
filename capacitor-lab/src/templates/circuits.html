@@ -1,11 +1,15 @@
 <div class="sim-controls circuits-panel">
-    <h2>Circuits</h2>
+    <h2>
+        Circuits
+        <span class="expand-icon"><span class="fa fa-chevron-down"></span></span>
+        <span class="collapse-icon"><span class="fa fa-chevron-up"></span></span>
+    </h2>
 
     <ul class="radios circuits">
-    <% _.each(circuitScenarios, function(scenario, i){ %>
+    <% _.each(circuitLabels, function(circuitLabel, i){ %>
         <li>
             <input type="radio" name="circuit" value="<%= i %>" id="circuit-<%= i %>" <% if (i === 0) { %>checked="checked"<% } %>>
-            <label  for="circuit-<%= i %>"><%= scenario.label %></label>
+            <label  for="circuit-<%= i %>"><%= circuitLabel %></label>
         </li>
     <% }); %>
     </ul>

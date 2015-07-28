@@ -3,6 +3,9 @@ define(function (require) {
     'use strict';
 
     var CapacitorLabSimView = require('views/sim');
+    var DielectricSceneView = require('views/scene/dielectric');
+    
+    var DielectricSimulation = require('models/simulation/dielectric');
 
     var Constants = require('constants');
 
@@ -23,6 +26,14 @@ define(function (require) {
          */
         events: _.extend({}, CapacitorLabSimView.prototype.events, {
             'slide .dielectric-constant-slider' : 'changeDielectricConstant',
+            'change .dielectric-material'       : 'changeDielectricMaterial',
+            
+            'click #hide-all-charges'    : 'hideAllCharges',
+            'click #show-all-charges'    : 'showAllCharges',
+            'click #show-excess-charges' : 'showExcessCharges',
+
+            'click .meters-panel       > h2' : 'toggleMetersPanel',
+            'click .dielectric-options > h2' : 'toggleDielectricPanel'
         }),
 
         /**
@@ -40,32 +51,38 @@ define(function (require) {
         },
 
         /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new DielectricSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new DielectricSceneView({
+                simulation: this.simulation
+            });
+        },
+
+        /**
          * Renders page content
          */
         renderScaffolding: function() {
             CapacitorLabSimView.prototype.renderScaffolding.apply(this, arguments);
 
-            var tempMaterialsList = [{
-                label: 'Custom',
-                config: {}
-            }, {
-                label: 'Teflon (2.1)',
-                config: {}
-            }, {
-                label: 'Paper (3.5)',
-                config: {}
-            }, {
-                label: 'Glass (4.7)',
-                config: {}
-            }];
+            var materials = _.map(this.simulation.dielectricMaterials, function(material) {
+                return material.get('name') + ' (' + material.get('dielectricConstant').toFixed(1) + ')';
+            });
 
             var data = {
                 Constants: Constants,
                 unique: this.cid,
-                materials: tempMaterialsList
+                materials: materials
             };
 
-            this.$('.sim-controls-group-2').append(this.dielectricTemplate(data));
+            this.$('.sim-controls-wrapper').append(this.dielectricTemplate(data));
 
             // Turn basic select into a nice one
             this.$('select').selectpicker();
@@ -79,6 +96,9 @@ define(function (require) {
                 }
             });
 
+            // Hide the meters panel by default for small screens
+            this.$('.meters-panel').addClass('collapsed');
+
             this.$dielectricConstant = this.$('.dielectric-constant-value');
         },
 
@@ -86,8 +106,51 @@ define(function (require) {
             var dielectricConstant = parseFloat($(event.target).val());
             this.inputLock(function() {
                 this.$dielectricConstant.text(dielectricConstant.toFixed(2));
-                this.simulation.set('dielectricConstant', dielectricConstant);
+                this.simulation.customMaterial.set('dielectricConstant', dielectricConstant);
             });
+        },
+
+        changeDielectricMaterial: function(event){
+            var index = parseInt($(event.target).val());
+
+            // Set the selected projectile on the simulation
+            this.simulation.circuit.capacitor.set('dielectricMaterial', this.simulation.dielectricMaterials[index]);
+
+            // If it's the custom material, enable the slider
+            if (this.simulation.circuit.capacitor.get('dielectricMaterial') === this.simulation.customMaterial)
+                this.$('.dielectric-constant-slider').removeAttr('disabled');
+            else
+                this.$('.dielectric-constant-slider').attr('disabled', 'disabled');
+
+            // Set the slider default value
+            var value = this.simulation.dielectricMaterials[index].get('dielectricConstant');
+            this.$('.dielectric-constant-slider').val(value);
+            this.$dielectricConstant.text(value.toFixed(2));
+        },
+
+        toggleMetersPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.dielectric-options').toggleClass('collapsed');
+        },
+
+        toggleDielectricPanel: function(event) {
+            this.$('.meters-panel').toggleClass('collapsed');
+            this.$('.dielectric-options').toggleClass('collapsed');
+        },
+
+        hideAllCharges: function() {
+            this.sceneView.hideExcessDielectricCharges();
+            this.sceneView.hideTotalDielectricCharges();
+        },
+
+        showAllCharges: function() {
+            this.sceneView.hideExcessDielectricCharges();
+            this.sceneView.showTotalDielectricCharges();
+        },
+
+        showExcessCharges: function() {
+            this.sceneView.showExcessDielectricCharges();
+            this.sceneView.hideTotalDielectricCharges();
         }
 
     });

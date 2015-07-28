@@ -17,7 +17,7 @@ define(function (require, exports, module) {
     var CapacitorLabSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            circuit: null
         }),
         
         initialize: function(attributes, options) {

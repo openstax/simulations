@@ -8,7 +8,11 @@ define(function (require) {
     var SimView = require('common/app/sim');
 
     var CapacitorLabSimulation = require('models/simulation');
-    var CapacitorLabSceneView  = require('views/scene');
+
+    var CapacitorLabSceneView = require('views/scene');
+    var CapacitanceMeterView  = require('views/bar-meter/capacitance');
+    var PlateChargeMeterView  = require('views/bar-meter/plate-charge');
+    var StoredEnergyMeterView = require('views/bar-meter/stored-energy');
 
     var Constants = require('constants');
 
@@ -49,7 +53,14 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'change .plate-charges-check'        : 'togglePlateCharges',
+            'change .electric-field-lines-check' : 'toggleEFieldLines',
 
+            'click .capacitance-meter-check'      : 'toggleCapacitance',
+            'click .plate-charge-meter-check'     : 'togglePlateChargeMeter',
+            'click .stored-energy-meter-check'    : 'toggleStoredEnergy',
+            'click .voltmeter-check'              : 'toggleVoltmeter',
+            'click .electric-field-detector-check': 'toggleEFieldDetector'
         },
 
         /**
@@ -65,6 +76,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initBarMeterViews();
         },
 
         /**
@@ -83,6 +95,27 @@ define(function (require) {
             });
         },
 
+        initBarMeterViews: function() {
+            this.capacitanceMeterView = new CapacitanceMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+            
+            this.plateChargeMeterView = new PlateChargeMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+
+            this.storedEnergyMeterView = new StoredEnergyMeterView({
+                model: this.simulation,
+                dragFrame: this.el
+            });
+
+            this.capacitanceMeterView.setPosition(380, 20);
+            this.plateChargeMeterView.setPosition(510, 20);
+            this.storedEnergyMeterView.setPosition(640, 20);
+        },
+
         /**
          * Renders everything
          */
@@ -91,6 +124,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderBarMeterViews();
 
             return this;
         },
@@ -109,7 +143,7 @@ define(function (require) {
             this.$el.html(this.template(data));
 
             // Meters control panel
-            this.$('.sim-controls-group-1').append(this.metersTemplate(data));
+            this.$('.sim-controls-wrapper').append(this.metersTemplate(data));
         },
 
         /**
@@ -118,6 +152,17 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.ui);
+        },
+
+        renderBarMeterViews: function() {
+            this.capacitanceMeterView.render();
+            this.plateChargeMeterView.render();
+            this.storedEnergyMeterView.render();
+
+            this.$el.append(this.capacitanceMeterView.el);
+            this.$el.append(this.plateChargeMeterView.el);
+            this.$el.append(this.storedEnergyMeterView.el);
         },
 
         /**
@@ -126,6 +171,9 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.capacitanceMeterView.postRender();
+            this.plateChargeMeterView.postRender();
+            this.storedEnergyMeterView.postRender();
         },
 
         /**
@@ -149,7 +197,61 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+
+            // Update the bar meters
+            this.capacitanceMeterView.update(timeSeconds, dtSeconds);
+            this.plateChargeMeterView.update(timeSeconds, dtSeconds);
+            this.storedEnergyMeterView.update(timeSeconds, dtSeconds);
         },
+
+        togglePlateCharges: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showPlateCharges();
+            else
+                this.sceneView.hidePlateCharges();
+        },
+
+        toggleEFieldLines: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showEFieldLines();
+            else
+                this.sceneView.hideEFieldLines();
+        },
+
+        toggleCapacitance: function(event) {
+            if ($(event.target).is(':checked'))
+                this.capacitanceMeterView.show();
+            else
+                this.capacitanceMeterView.hide();
+        },
+
+        togglePlateChargeMeter: function(event) {
+            if ($(event.target).is(':checked'))
+                this.plateChargeMeterView.show();
+            else
+                this.plateChargeMeterView.hide();
+        },
+
+        toggleStoredEnergy: function(event) {
+            if ($(event.target).is(':checked'))
+                this.storedEnergyMeterView.show();
+            else
+                this.storedEnergyMeterView.hide();
+        },
+
+        toggleVoltmeter: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltmeter();
+            else
+                this.sceneView.hideVoltmeter();
+        },
+
+        toggleEFieldDetector: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showEFieldDetector();
+            else
+                this.sceneView.hideEFieldDetector();
+        }
 
     });
 
