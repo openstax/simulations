@@ -34,7 +34,7 @@ define(function (require) {
          * Resets the model to its original state
          */
         reset: function() {
-            
+            this.set('voltage', 0);
         },
 
         /**

@@ -102,6 +102,23 @@ define(function (require) {
             this.$dielectricConstant = this.$('.dielectric-constant-value');
         },
 
+        /**
+         * Performs the actual resetting on everything
+         */
+        resetComponents: function() {
+            CapacitorLabSimView.prototype.resetComponents.apply(this, arguments);
+
+            this.$('.dielectric-material')
+                .val(0)
+                .selectpicker('refresh');
+
+            this.$('#show-all-charges').click();
+
+            var value = this.simulation.dielectricMaterials[0].get('dielectricConstant');
+            this.$('.dielectric-constant-slider').val(value);
+            this.$dielectricConstant.text(value.toFixed(2));
+        },
+
         changeDielectricConstant: function(event) {
             var dielectricConstant = parseFloat($(event.target).val());
             this.inputLock(function() {

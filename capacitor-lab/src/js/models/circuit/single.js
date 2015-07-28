@@ -66,6 +66,12 @@ define(function (require) {
             });
         },
 
+        reset: function() {
+            ParallelCircuit.prototype.reset.apply(this, arguments);
+
+            this.set('batteryConnected', true);
+        },
+
         /**
          * Updates the plate voltage, depending on whether the battery is connected.
          *   Null check required because superclass calls this method from its

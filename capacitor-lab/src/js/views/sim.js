@@ -60,7 +60,9 @@ define(function (require) {
             'click .plate-charge-meter-check'     : 'togglePlateChargeMeter',
             'click .stored-energy-meter-check'    : 'toggleStoredEnergy',
             'click .voltmeter-check'              : 'toggleVoltmeter',
-            'click .electric-field-detector-check': 'toggleEFieldDetector'
+            'click .electric-field-detector-check': 'toggleEFieldDetector',
+
+            'click .reset-btn' : 'reset'
         },
 
         /**
@@ -177,11 +179,36 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the simulation and all settings
+         */
+        resetSimulation: function() {
+            this.resetComponents();
+        },
+
+        /**
+         * Performs the actual resetting on everything
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            this.simulation.reset();
+            this.sceneView.reset();
+
+            this.$('.plate-charges-check').prop('checked', true);
+            this.$('.electric-field-lines-check').prop('checked', false);
+
+            this.$('.capacitance-meter-check').prop('checked', false);
+            this.$('.plate-charge-meter-check').prop('checked', false);
+            this.$('.stored-energy-meter-check').prop('checked', false);
+            this.$('.voltmeter-check').prop('checked', false);
+            this.$('.electric-field-detector-check').prop('checked', false);
+
+            this.sceneView.showPlateCharges();
+            this.sceneView.hideEFieldLines();
+            
+            this.capacitanceMeterView.hide();
+            this.plateChargeMeterView.hide();
+            this.storedEnergyMeterView.hide();
+            this.sceneView.hideVoltmeter();
+            this.sceneView.hideEFieldDetector();
         },
 
         /**
