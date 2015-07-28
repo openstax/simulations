@@ -412,8 +412,8 @@ define(function(require) {
 
         updateReadout: function() {
             var imageScale = this.probe.scale.x;
-            var xOffset = -11 * imageScale;
-            var yOffset =  20 * imageScale;
+            var xOffset = -10 * imageScale;
+            var yOffset =  10 * imageScale;
             var point = this._satVec;
             point.x = this.probe.x + xOffset;
             point.y = this.probe.y + yOffset;
