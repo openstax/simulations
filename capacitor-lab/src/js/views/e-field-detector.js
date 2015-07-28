@@ -7,13 +7,15 @@ define(function(require) {
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
 
-    var PixiView = require('common/pixi/view');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
+    var PixiView  = require('common/pixi/view');
+    var ArrowView = require('common/pixi/view/arrow');
+    var Colors    = require('common/colors/colors');
+    var Vector2   = require('common/math/vector2');
 
-    var CapacitorView = require('views/capacitor');
-    var WireView      = require('views/wire');
-    var BatteryView   = require('views/battery');
+    var CapacitorView           = require('views/capacitor');
+    var WireView                = require('views/wire');
+    var BatteryView             = require('views/battery');
+    var EFieldDetectorArrowView = require('views/e-field-detector-arrow');
 
     var Constants = require('constants');
 
@@ -40,8 +42,15 @@ define(function(require) {
             'touchendoutside .probe': 'dragProbeEnd',
             'mouseupoutside  .probe': 'dragProbeEnd',
 
-            'click .zoomInBtn'  : 'zoomIn',
-            'click .zoomOutBtn' : 'zoomOut'
+            'mouseup    .zoomInBtn'  : 'zoomIn',
+            'touchend   .zoomInBtn'  : 'zoomIn',
+            'mouseup    .zoomOutBtn' : 'zoomOut',
+            'touchend   .zoomOutBtn' : 'zoomOut',
+
+            'mousedown  .zoomInBtn'  : 'zoomInDown',
+            'touchstart .zoomInBtn'  : 'zoomInDown',
+            'mousedown  .zoomOutBtn' : 'zoomOutDown',
+            'touchstart .zoomOutBtn' : 'zoomOutDown'
         },
 
         initialize: function(options) {
@@ -49,10 +58,6 @@ define(function(require) {
             this.scene = options.scene;
             this.dielectric = options.dielectric;
             this.simulation = this.model;
-
-            this.plateEnabled = true;
-            this.sumEnabled = true;
-            this.dielectricEnabled = true;
 
             this.displayWidth  = 62
             this.displayHeight = 136;
@@ -73,6 +78,7 @@ define(function(require) {
             this.initZoomControls();
             this.initShowValuesBtn();
             this.initDisplayAreas();
+            this.initArrows();
 
             this.probe.x = this.detectorContainer.x - 100;
             this.probe.y = this.detectorContainer.y;
@@ -127,12 +133,10 @@ define(function(require) {
                     Assets.Images.EFD_CHECK_BTN_ON, 
                     Assets.Images.EFD_CHECK_BTN_OFF, 
                     function() {
-                        self.sumEnabled = true;
-                        self.updateArrows();
+                        self.sumArrow.show();
                     },
                     function() {
-                        self.sumEnabled = false;
-                        self.updateArrows();
+                        self.sumArrow.hide();
                     }
                 );
                 sumBtn.x = btnX;
@@ -142,12 +146,10 @@ define(function(require) {
                     Assets.Images.EFD_CHECK_BTN_ON, 
                     Assets.Images.EFD_CHECK_BTN_OFF, 
                     function() {
-                        self.dielectricEnabled = true;
-                        self.updateArrows();
+                        self.dielectricArrow.show();
                     },
                     function() {
-                        self.dielectricEnabled = false;
-                        self.updateArrows();
+                        self.dielectricArrow.hide();
                     }
                 );
                 dielectricBtn.x = btnX;
@@ -161,15 +163,22 @@ define(function(require) {
                 dielectricLabel.x = dielectricBtn.x + dielectricBtn.width + 1;
                 dielectricLabel.y = 21;
 
+                var dielectricMask = new PIXI.Graphics();
+                dielectricMask.beginFill(0x000000, 1);
+                dielectricMask.drawRect(displayX, displayY, this.displayWidth, this.displayHeight);
+                dielectricMask.endFill();
+
                 this.dielectricDisplay = new PIXI.DisplayObjectContainer();
                 this.dielectricDisplay.x = displayX;
                 this.dielectricDisplay.y = displayY;
+                this.dielectricDisplay.mask = dielectricMask;
 
                 rightArea.addChild(sumBtn);
                 rightArea.addChild(dielectricBtn);
                 rightArea.addChild(sumLabel);
                 rightArea.addChild(dielectricLabel);
                 rightArea.addChild(this.dielectricDisplay);
+                rightArea.addChild(dielectricMask);
 
                 this.body.addChild(leftArea);
                 this.body.addChild(rightArea);
@@ -192,12 +201,10 @@ define(function(require) {
                 Assets.Images.EFD_CHECK_BTN_ON, 
                 Assets.Images.EFD_CHECK_BTN_OFF, 
                 function() {
-                    self.plateEnabled = true;
-                    self.updateArrows();
+                    self.plateArrow.show();
                 },
                 function() {
-                    self.plateEnabled = false;
-                    self.updateArrows();
+                    self.plateArrow.hide();
                 }
             );
             plateBtn.x = btnX;
@@ -207,13 +214,20 @@ define(function(require) {
             plateLabel.x = plateBtn.x + plateBtn.width + 1;
             plateLabel.y = 13;
 
+            var plateMask = new PIXI.Graphics();
+            plateMask.beginFill(0x000000, 1);
+            plateMask.drawRect(displayX, displayY, this.displayWidth, this.displayHeight);
+            plateMask.endFill();
+
             this.plateDisplay = new PIXI.DisplayObjectContainer();
             this.plateDisplay.x = displayX;
             this.plateDisplay.y = displayY;
+            this.plateDisplay.mask = plateMask;
 
             plateArea.addChild(plateBtn);
             plateArea.addChild(plateLabel);
             plateArea.addChild(this.plateDisplay);
+            plateArea.addChild(plateMask);
         },
 
         createToggleButton: function(onImage, offImage, onCallback, offCallback) {
@@ -298,12 +312,10 @@ define(function(require) {
                 Assets.Images.EFD_SHOW_VALUES_BTN_ON, 
                 Assets.Images.EFD_SHOW_VALUES_BTN_OFF, 
                 function() {
-                    self.valuesEnabled = true;
-                    self.updateArrows();
+                    self.showValues();
                 },
                 function() {
-                    self.valuesEnabled = false;
-                    self.updateArrows();
+                    self.hideValues();
                 }
             );
 
@@ -324,6 +336,25 @@ define(function(require) {
 
             this.displayObject.addChild(this.wire);
             this.displayObject.addChild(this.probe);
+        },
+
+        initArrows: function() {
+            this.plateArrow = new EFieldDetectorArrowView({
+                label: 'Plate',
+                centerX: this.displayWidth / 2,
+                centerY: this.displayHeight / 2
+            });
+            this.plateDisplay.addChild(this.plateArrow.displayObject);
+
+            if (this.dielectric) {
+                this.sumArrow = new EFieldDetectorArrowView({
+                    label: 'Sum'
+                });
+
+                this.dielectricArrow = new EFieldDetectorArrowView({
+                    label: 'Dielectric'
+                });
+            }
         },
 
         drawWires: function() {
@@ -371,6 +402,11 @@ define(function(require) {
             this.drawWires();
         },
 
+        update: function(time, deltaTime) {
+            if (this.displayObject.visible)
+                this.updateReadout();
+        },
+
         updateReadout: function() {
             var imageScale = this.probe.scale.x;
             var xOffset = -11 * imageScale;
@@ -388,21 +424,98 @@ define(function(require) {
 
                 var capacitor = capacitorView.model;
 
-                var platesEField     = this.simulation.get('circuit').getPlatesDielectricEFieldAt(capacitor, intersectsWithDielectric);
-                var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(capacitor, intersectsWithDielectric);
-                var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(capacitor);
+                var platesEField = this.simulation.get('circuit').getPlatesDielectricEFieldAt(capacitor, intersectsWithDielectric);
+                this.plateArrow.setValue(platesEField);
 
-                console.log(platesEField, dielectricEField, sumEField);
+                if (this.dielectric) {
+                    var dielectricEField = this.simulation.get('circuit').getDielectricEFieldAt(capacitor, intersectsWithDielectric);
+                    var sumEField        = this.simulation.get('circuit').getEffectiveEFieldAt(capacitor);
+                    this.sumArrow.setValue(sumEField);
+                    this.dielectricArrow.setValue(dielectricEField);
+                }
+            }
+            else {
+                this.plateArrow.setValue(0);
+
+                if (this.dielectric) {
+                    this.sumArrow.setValue(0);
+                    this.dielectricArrow.setValue(0);
+                }
+            }
+
+            this.zoomOutBtn.visible = this.canZoomOut();
+            this.zoomInBtn.visible = this.canZoomIn();
+
+            this.zoomOutBtnDisabled.visible = !this.zoomOutBtn.visible;
+            this.zoomInBtnDisabled.visible = !this.zoomInBtn.visible;
+        },
+
+        canZoomOut: function() {
+            return (this.canZoom() && this.displayHeight < this.getArrowsHeight());
+        },
+
+        canZoomIn: function() {
+            var filledDisplayPercent = 0.75;
+            return (this.canZoom() && this.displayHeight * filledDisplayPercent > this.getArrowsHeight());
+        },
+
+        canZoom: function() {
+            return this.hasVisibleVector() && this.hasNonZeroVector();
+        },
+
+        hasNonZeroVector: function() {
+            var nonZero = this.plateArrow.value !== 0;
+            if (this.dielectric) {
+                nonZero = nonZero || this.sumArrow.value !== 0;
+                nonZero = nonZero || this.dielectricArrow.value !== 0;
+            }
+            return nonZero;
+        },
+
+        hasVisibleVector: function() {
+            var visible = this.plateArrow.displayObject.visible;
+            if (this.dielectric) {
+                visible = visible || this.sumArrow.displayObject.visible;
+                visible = visible || this.dielectricArrow.displayObject.visible;
+            }
+            return visible;
+        },
+
+        /**
+         * Zooms to the optimum scale that makes everything visible in the viewport,
+         *   with a little bit of whitespace at the top and bottom of the viewport.
+         *   The zoom factor computation is complicated by the fact that the vectors
+         *   scale, while their labels and values do not. Zooming is based solely on
+         *   vertical dimensions (height); width of the scene is irrelevant.
+         */
+        determineZoomScale: function() {
+            var totalHeight = this.getArrowsHeight();
+            var textHeight = this.plateArrow.getTextHeight();
+            var displayHeight = this.displayHeight;
+            var percentOfDisplayToFill = 0.9;
+
+            var zoomFactor = (percentOfDisplayToFill * (displayHeight - textHeight * 2)) / (totalHeight - textHeight * 2);
+
+            this.plateArrow.setScale(zoomFactor);
+            if (this.dielectric) {
+                this.sumArrow.setScale(zoomFactor);
+                this.dielectricArrow.setScale(zoomFactor);
             }
         },
 
-        updateArrows: function() {
-
-        },
-
-        update: function(time, deltaTime) {
-            if (this.displayObject.visible)
-                this.updateReadout();
+        /**
+         * Returns the maximum height of all the arrows and their labels
+         */
+        getArrowsHeight: function() {
+            if (!this.dielectric)
+                return this.plateArrow.displayObject.height;
+            else {
+                var max = Number.NEGATIVE_INFINITY;
+                max = Math.max(max, this.plateArrow.getTotalHeight());
+                max = Math.max(max, this.sumArrow.getTotalHeight());
+                max = Math.max(max, this.dielectricArrow.getTotalHeight());
+                return max;
+            }
         },
 
         dragStart: function(data) {
@@ -458,11 +571,37 @@ define(function(require) {
         },
 
         zoomIn: function() {
-            console.log('zoom in')
+            this.determineZoomScale();
+            this.zoomInBtn.y = 0;
         },
 
         zoomOut: function() {
-            console.log('zoom out')
+            this.determineZoomScale();
+            this.zoomOutBtn.y = 0;
+        },
+
+        zoomInDown: function() {
+            this.zoomInBtn.y = 1;
+        },
+
+        zoomOutDown: function() {
+            this.zoomOutBtn.y = 1;
+        },
+
+        showValues: function() {
+            this.plateArrow.showValue();
+            if (this.dielectric) {
+                this.sumArrow.showValue();
+                this.dielectricArrow.showValue();
+            }
+        },
+
+        hideValues: function() {
+            this.plateArrow.hideValue();
+            if (this.dielectric) {
+                this.sumArrow.hideValue();
+                this.dielectricArrow.hideValue();
+            }
         },
 
         show: function() {

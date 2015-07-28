@@ -41,6 +41,23 @@ define(function(require) {
             this._settings.targetX = x + (this.get('targetX') - this.get('originX'));
             this._settings.targetY = y + (this.get('targetY') - this.get('originY'));
             this.set(this._settings);
+        },
+
+        /**
+         * Centers the arrow at a given (x, y). Can optionally set
+         *   the length of each component at the same time.
+         */
+        centerOn: function(x, y, lengthX, lengthY) {
+            if (lengthX === undefined) {
+                lengthX = this.get('targetX') - this.get('originX');
+                lengthY = this.get('targetY') - this.get('originY');
+            }
+
+            this._settings.originX = x - lengthX / 2;
+            this._settings.originY = y - lengthY / 2;
+            this._settings.targetX = x + lengthX / 2;
+            this._settings.targetY = y + lengthY / 2;
+            this.set(this._settings);
         }
     });
 
