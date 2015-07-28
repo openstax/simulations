@@ -105,6 +105,12 @@ define(function(require) {
             );
         },
 
+        reset: function() {
+            PixiSceneView.prototype.reset.apply(this, arguments);
+
+            this.eFieldDetectorView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             this.voltmeterView.update(time, deltaTime);
             this.eFieldDetectorView.update(time, deltaTime);
