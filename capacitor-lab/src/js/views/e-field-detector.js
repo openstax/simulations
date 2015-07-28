@@ -355,6 +355,8 @@ define(function(require) {
                     label: 'Dielectric'
                 });
             }
+
+            this.arrowScale = 1;
         },
 
         drawWires: function() {
@@ -451,12 +453,12 @@ define(function(require) {
         },
 
         canZoomOut: function() {
-            return (this.canZoom() && this.displayHeight < this.getArrowsHeight());
+            return (this.canZoom() && this.displayHeight < this.getArrowsHeight() * this.arrowScale + 2 * this.getArrowsTextHeight());
         },
 
         canZoomIn: function() {
             var filledDisplayPercent = 0.75;
-            return (this.canZoom() && this.displayHeight * filledDisplayPercent > this.getArrowsHeight());
+            return (this.canZoom() && this.displayHeight * filledDisplayPercent > this.getArrowsHeight() * this.arrowScale + 2 * this.getArrowsTextHeight());
         },
 
         canZoom: function() {
@@ -489,31 +491,49 @@ define(function(require) {
          *   vertical dimensions (height); width of the scene is irrelevant.
          */
         determineZoomScale: function() {
-            var totalHeight = this.getArrowsHeight();
-            var textHeight = this.plateArrow.getTextHeight();
+            var arrowHeight = this.getArrowsHeight();
+            var textHeight = this.getArrowsTextHeight();
+            var totalHeight = arrowHeight + 2 * textHeight;
             var displayHeight = this.displayHeight;
-            var percentOfDisplayToFill = 0.9;
+            var percentOfDisplayToFill = 1;
 
-            var zoomFactor = (percentOfDisplayToFill * (displayHeight - textHeight * 2)) / (totalHeight - textHeight * 2);
+            var scale = (displayHeight * percentOfDisplayToFill - 2 * textHeight) / arrowHeight;
 
-            this.plateArrow.setScale(zoomFactor);
+            this.plateArrow.setScale(scale);
             if (this.dielectric) {
-                this.sumArrow.setScale(zoomFactor);
-                this.dielectricArrow.setScale(zoomFactor);
+                this.sumArrow.setScale(scale);
+                this.dielectricArrow.setScale(scale);
+            }
+
+            this.arrowScale = scale;
+        },
+
+        /**
+         * Returns the maximum height of all the arrows
+         */
+        getArrowsHeight: function() {
+            if (!this.dielectric)
+                return this.plateArrow.getArrowHeight();
+            else {
+                var max = Number.NEGATIVE_INFINITY;
+                max = Math.max(max, this.plateArrow.getArrowHeight());
+                max = Math.max(max, this.sumArrow.getArrowHeight());
+                max = Math.max(max, this.dielectricArrow.getArrowHeight());
+                return max;
             }
         },
 
         /**
-         * Returns the maximum height of all the arrows and their labels
+         * Returns the maximum height of all the arrows' text
          */
-        getArrowsHeight: function() {
+        getArrowsTextHeight: function() {
             if (!this.dielectric)
-                return this.plateArrow.displayObject.height;
+                return this.plateArrow.getTextHeight();
             else {
                 var max = Number.NEGATIVE_INFINITY;
-                max = Math.max(max, this.plateArrow.getTotalHeight());
-                max = Math.max(max, this.sumArrow.getTotalHeight());
-                max = Math.max(max, this.dielectricArrow.getTotalHeight());
+                max = Math.max(max, this.plateArrow.getTextHeight());
+                max = Math.max(max, this.sumArrow.getTextHeight());
+                max = Math.max(max, this.dielectricArrow.getTextHeight());
                 return max;
             }
         },

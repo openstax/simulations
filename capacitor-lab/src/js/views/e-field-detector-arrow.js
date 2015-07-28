@@ -92,7 +92,7 @@ define(function(require) {
         },
 
         getArrowHeight: function() {
-            return this.transformFrame.height;
+            return Math.abs(Math.round(this.value));
         },
 
         getTextHeight: function() {
