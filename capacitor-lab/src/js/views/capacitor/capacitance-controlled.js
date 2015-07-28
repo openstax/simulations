@@ -148,6 +148,10 @@ define(function(require) {
             this.capacitancePanel = panel;
         },
 
+        reset: function() {
+            this.capacitanceSlider.val(Constants.CAPACITANCE_RANGE.min);
+        },
+
         update: function() {
             CapacitorView.prototype.update.apply(this, arguments);
 

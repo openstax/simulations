@@ -30,6 +30,7 @@ define(function (require) {
                 numberOfCapacitors: 0
             }, options);
 
+            this.config = options.config;
             this.previousTotalCharge = -1; // No value
 
             this.battery = new Battery({ position: options.config.batteryLocation });
@@ -65,10 +66,20 @@ define(function (require) {
          * Resets the model to its original state
          */
         reset: function() {
+            var config = this.config;
+
             this.battery.reset();
-            _.each(this.capacitors, function(capacitor) {
-                capacitor.reset();
+
+            this.capacitors.each(function(capacitor) {
+                capacitor.set({
+                    plateWidth: config.plateWidth,
+                    plateSeparation: config.plateSeparation,
+                    dielectricMaterial: config.dielectricMaterial,
+                    dielectricOffset: config.dielectricOffset
+                });
             });
+
+            this.updatePlateVoltages();
         },
 
         /**

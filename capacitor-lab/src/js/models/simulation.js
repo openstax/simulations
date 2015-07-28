@@ -32,6 +32,14 @@ define(function (require, exports, module) {
             
         },
 
+        /**
+         * The model attributes are really simple, and there's no time,
+         *   so it's best to simplify the reset function as well.
+         */
+        reset: function() {
+            this.resetComponents();
+        },
+
         _update: function(time, deltaTime) {
             
         }

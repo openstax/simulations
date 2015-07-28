@@ -80,7 +80,10 @@ define(function (require, exports, module) {
         },
 
         resetComponents: function() {
-            
+            for (var i = 0; i < this.circuits.length; i++)
+                this.circuits[i].reset();
+
+            this.set('currentCircuitIndex', 0);
         },
 
         _update: function(time, deltaTime) {

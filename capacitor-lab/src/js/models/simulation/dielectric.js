@@ -76,7 +76,7 @@ define(function (require, exports, module) {
         },
 
         resetComponents: function() {
-            this.dielectricMaterials[0].reset();
+            this.customMaterial.reset();
             this.circuit.reset();
         },
 

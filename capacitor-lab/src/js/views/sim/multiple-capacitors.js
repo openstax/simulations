@@ -81,6 +81,16 @@ define(function (require) {
             this.$('.meters-panel').addClass('collapsed');
         },
 
+        /**
+         * Performs the actual resetting on everything
+         */
+        resetComponents: function() {
+            CapacitorLabSimView.prototype.resetComponents.apply(this, arguments);
+
+            this.$('#circuit-0').click();
+            this.simulation.set('currentCircuitIndex', 0);
+        },
+
         changeCircuit: function(event) {
             var index = parseInt(this.$('input[name="circuit"]:checked').val());
             this.simulation.set('currentCircuitIndex', index);

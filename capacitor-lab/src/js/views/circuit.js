@@ -77,6 +77,11 @@ define(function(require) {
             this.displayObject.addChild(this.bottomCurrentIndicatorView.displayObject);
         },
 
+        reset: function() {
+            for (var i = 0; i < this.capacitorViews.length; i++)
+                this.capacitorViews[i].reset();
+        },
+
         addBattery: function() {
             var batteryView = new BatteryView({
                 model: this.model.battery,

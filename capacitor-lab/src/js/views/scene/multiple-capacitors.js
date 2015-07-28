@@ -57,6 +57,13 @@ define(function(require) {
             this.circuitChanged(this.simulation);
         },
 
+        reset: function() {
+            CapacitorLabSceneView.prototype.reset.apply(this, arguments);
+
+            for (var i = 0; i < this.circuitViews.length; i++)
+                this.circuitViews[i].reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             CapacitorLabSceneView.prototype._update.apply(this, arguments);
             

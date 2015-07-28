@@ -148,6 +148,7 @@ define(function(require) {
                 );
                 sumBtn.x = btnX;
                 sumBtn.y = -1;
+                this.sumBtn = sumBtn;
 
                 var dielectricBtn = this.createToggleButton(
                     Assets.Images.EFD_CHECK_BTN_ON, 
@@ -161,6 +162,7 @@ define(function(require) {
                 );
                 dielectricBtn.x = btnX;
                 dielectricBtn.y = 14;
+                this.dielectricBtn = dielectricBtn;
 
                 var sumLabel = Assets.createSprite(Assets.Images.EFD_SUM_LABEL);
                 sumLabel.x = sumBtn.x + sumBtn.width + 1;
@@ -216,6 +218,7 @@ define(function(require) {
             );
             plateBtn.x = btnX;
             plateBtn.y = 6;
+            this.plateBtn = plateBtn;
 
             var plateLabel = Assets.createSprite(Assets.Images.EFD_PLATE_LABEL);
             plateLabel.x = plateBtn.x + plateBtn.width + 1;
@@ -273,6 +276,11 @@ define(function(require) {
             container.addChild(onBtn);
             container.addChild(offBtn);
 
+            container.reset = function() {
+                onBtn.visible = true;
+                offBtn.visible = false;
+            };
+
             return container;
         },
 
@@ -328,6 +336,7 @@ define(function(require) {
 
             showValuesBtn.x = Math.floor(this.bodyWidth / 2 - showValuesBtn.width / 2);
             showValuesBtn.y = 232;
+            this.showValuesBtn = showValuesBtn;
 
             this.body.addChild(showValuesBtn);
         },
@@ -365,6 +374,22 @@ define(function(require) {
             }
 
             this.arrowScale = 1;
+        },
+
+        reset: function() {
+            this.plateArrow.show();
+            this.plateBtn.reset();
+
+            if (this.dielectric) {
+                this.sumArrow.show();
+                this.sumBtn.reset();
+
+                this.dielectricArrow.show();
+                this.dielectricBtn.reset();
+            }
+
+            this.showValues();
+            this.showValuesBtn.reset();
         },
 
         drawWires: function() {
