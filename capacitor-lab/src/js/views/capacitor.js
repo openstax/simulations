@@ -60,9 +60,6 @@ define(function(require) {
             this.initPlates();
             this.initPlateChargeViews();
             this.initEFieldLines();
-
-            this.graphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.graphics);
         },
 
         initPlates: function() {
@@ -87,22 +84,6 @@ define(function(require) {
 
             this.spaceBetweenPlatesPolygon      = this.shapeCreator.createSpaceBetweenPlatesSilhouetteOccluded();
             this.dielectricBetweenPlatesPolygon = this.shapeCreator.createDielectricBetweenPlatesSilhouetteOccluded();
-
-            this.graphics.clear();
-            this.graphics.beginFill(0x55FF55, 1);
-            // this.graphics.moveTo(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y);
-            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y);
-            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y);
-            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y);
-            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y);
-            // this.graphics.lineTo(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[0].x, this.spaceBetweenPlatesPolygon.points[0].y, 2);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[1].x, this.spaceBetweenPlatesPolygon.points[1].y, 2);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[2].x, this.spaceBetweenPlatesPolygon.points[2].y, 2);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[3].x, this.spaceBetweenPlatesPolygon.points[3].y, 2);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[4].x, this.spaceBetweenPlatesPolygon.points[4].y, 2);
-            // this.graphics.drawCircle(this.spaceBetweenPlatesPolygon.points[5].x, this.spaceBetweenPlatesPolygon.points[5].y, 2);
-            this.graphics.endFill();
         },
 
         initPlateChargeViews: function() {
@@ -183,11 +164,17 @@ define(function(require) {
         },
 
         pointIntersectsSpaceBetweenPlates: function(point) {
-            return SAT.pointInPolygon(point, this.spaceBetweenPlatesPolygon);
+            // The Separating Axis Theorem that SAT implements doesn't support concave polygons,
+            //   and the space between plates is a concave polygon, but we can get around it by
+            //   just checking to make sure if it hits that it doesn't also hit the top plate.
+            return SAT.pointInPolygon(point, this.spaceBetweenPlatesPolygon) && !SAT.pointInPolygon(point, this.topPlatePolygon);
         },
 
         pointIntersectsDielectricBetweenPlates: function(point) {
-            return SAT.pointInPolygon(point, this.dielectricBetweenPlatesPolygon);
+            // The Separating Axis Theorem that SAT implements doesn't support concave polygons,
+            //   and the space between plates is a concave polygon, but we can get around it by
+            //   just checking to make sure if it hits that it doesn't also hit the top plate.
+            return SAT.pointInPolygon(point, this.dielectricBetweenPlatesPolygon) && !SAT.pointInPolygon(point, this.topPlatePolygon);
         },
 
         showPlateCharges: function() {
