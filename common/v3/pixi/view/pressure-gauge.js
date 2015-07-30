@@ -213,7 +213,7 @@ define(function(require) {
             this.readout.x = this.gaugeCenter.x;
             this.readout.y = this.gaugeCenter.y + this.radius - this.readout.height * 0.9;
             this.readout.anchor.x = 0.5;
-            this.readout.anchor.y = 0.7;
+            this.readout.anchor.y = 0.8;
             this.displayObject.addChild(this.readout);
 
             this.units = new PIXI.Text(this.units, {
