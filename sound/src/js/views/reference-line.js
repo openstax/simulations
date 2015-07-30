@@ -92,18 +92,18 @@ define(function(require) {
             }
         },
 
-        dragStart: function(data){
-            this.dragOffset = data.getLocalPosition(this.displayObject);
+        dragStart: function(event){
+            this.dragOffset = event.data.getLocalPosition(this.displayObject);
             this.grabbed = true;
         },
 
-        dragEnd: function(data){
+        dragEnd: function(event){
             this.grabbed = false;
         },
 
-        drag: function(data){
+        drag: function(event){
             if (this.grabbed) {
-                this.displayObject.x = data.global.x - this.dragOffset.x;                
+                this.displayObject.x = event.data.global.x - this.dragOffset.x;                
             }
         }
 
