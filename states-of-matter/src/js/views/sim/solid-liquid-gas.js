@@ -30,6 +30,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Solid, Liquid, Gas',
                 name: 'solid-liquid-gas-sim',
+                link: 'states-of-matter-basics'
             }, options);
 
             SOMSimView.prototype.initialize.apply(this, [options]);

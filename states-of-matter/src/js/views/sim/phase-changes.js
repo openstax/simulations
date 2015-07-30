@@ -26,6 +26,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Phase Changes',
                 name: 'phase-changes-sim',
+                link: 'states-of-matter-basics'
             }, options);
 
             SOMSimView.prototype.initialize.apply(this, [options]);

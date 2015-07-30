@@ -77,6 +77,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Template Sim',
                 name: 'template-sim',
+                link: 'sound'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

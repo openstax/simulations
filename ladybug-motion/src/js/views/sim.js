@@ -82,6 +82,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Ladybug Motion',
                 name: 'ladybug-motion',
+                link: 'ladybug-motion-2d'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
