@@ -103,11 +103,11 @@ define(function(require) {
             });
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (this.disableMovement)
                 return;
             
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
@@ -117,10 +117,10 @@ define(function(require) {
          *   to the Doippler Effect, but the changes are either imperceptible
          *   or the code is not actually used.
          */
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
 
                 var x = this.mvt.viewToModelX(this.displayObject.x + dx);
                 var y = this.mvt.viewToModelY(this.displayObject.y + dy);
@@ -142,7 +142,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
