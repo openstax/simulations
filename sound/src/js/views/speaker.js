@@ -126,11 +126,11 @@ define(function(require) {
         /**
          *
          */
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (!this.bindToSecondOrigin)
                 return;
 
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
@@ -140,12 +140,12 @@ define(function(require) {
          *   to the Doippler Effect, but the changes are either imperceptible
          *   or the code is not actually used.
          */
-        drag: function(data) {
+        drag: function(event) {
             if (!this.bindToSecondOrigin)
                 return;
 
             if (this.dragging) {
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
 
                 var y = this.mvt.viewToModelY(this.displayObject.y + dy);
 
@@ -157,7 +157,7 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             if (!this.bindToSecondOrigin)
                 return;
 

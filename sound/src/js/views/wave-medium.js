@@ -104,11 +104,11 @@ define(function(require) {
                 arcCenter = arcCenters[i];
                 radius = startRadius + i * lineWidth;
 
-                // var halfAngle = (endAngle - startAngle) / 2;
-                // var xOffset = Math.cos(halfAngle) * radius;
-                // var yOffset = -Math.sin(halfAngle) * radius;
+                var halfAngle = (endAngle - startAngle) / 2;
+                var xOffset = Math.cos(halfAngle) * radius;
+                var yOffset = Math.sin(halfAngle) * radius;
                 
-                graphics.moveTo(arcCenter.x, arcCenter.y);
+                graphics.moveTo(arcCenter.x + xOffset, arcCenter.y + yOffset);
                 graphics.arc(arcCenter.x, arcCenter.y, radius, startAngle + this.angle, endAngle + this.angle, counterclockwise);
                 counterclockwise = !counterclockwise;
             }
