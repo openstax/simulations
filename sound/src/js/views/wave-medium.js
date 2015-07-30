@@ -70,6 +70,7 @@ define(function(require) {
             var lineWidth = this.lineWidth;
             var startAngle;
             var endAngle;
+            var radius;
             var i;
 
             var lightColor = this.lightColor;
@@ -101,7 +102,14 @@ define(function(require) {
                 startAngle = -angle * (counterclockwise ? -1 : 1);
                 endAngle = angle * (counterclockwise ? -1 : 1);
                 arcCenter = arcCenters[i];
-                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle + this.angle, endAngle + this.angle, counterclockwise);
+                radius = startRadius + i * lineWidth;
+
+                // var halfAngle = (endAngle - startAngle) / 2;
+                // var xOffset = Math.cos(halfAngle) * radius;
+                // var yOffset = -Math.sin(halfAngle) * radius;
+                
+                graphics.moveTo(arcCenter.x, arcCenter.y);
+                graphics.arc(arcCenter.x, arcCenter.y, radius, startAngle + this.angle, endAngle + this.angle, counterclockwise);
                 counterclockwise = !counterclockwise;
             }
         },
