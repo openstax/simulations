@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var FixedIntervalSimulation = require('common/v3/simulation/fixed-interval-simulation');
 
     var Wavefront           = require('models/wavefront');
     var WaveMedium          = require('models/wave-medium');

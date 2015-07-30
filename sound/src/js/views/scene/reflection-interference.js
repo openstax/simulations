@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var HelpLabelView = require('common/help-label/index');
-    var Reflection    = require('common/math/reflection');
+    var HelpLabelView = require('common/v3/help-label/index');
+    var Reflection    = require('common/v3/math/reflection');
 
     var SoundSceneView = require('views/scene');
     var WaveMediumView = require('views/wave-medium');
