@@ -103,7 +103,9 @@ define(function(require) {
 
         updateMasks: function() {
             var minX = this.waveMediumView.getOrigin().x + this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
-            this.reflectionLine.paintLeftSideMask(this.leftMask, minX, this.width, this.height);
+            var maskFunction = this.reflectionLine.getLeftSideMaskFunction(minX, this.width, this.height);
+            
+            this.waveMediumView.setSecondaryMaskFunction(maskFunction);
         }
 
     });

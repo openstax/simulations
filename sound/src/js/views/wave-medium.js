@@ -55,6 +55,9 @@ define(function(require) {
             ctx.beginPath();
             ctx.rect(startX, -length * 2, length * 2, length * 4);
             ctx.clip();
+
+            if (this.secondaryMaskFunction)
+                this.secondaryMaskFunction(ctx);
         },
 
         /**
@@ -176,6 +179,10 @@ define(function(require) {
             for (i = 0; i < this.arcCenters.length; i++)
                 this.arcCenters[i].set(this.origin.x, this.origin.y);
             this.update();
+        },
+
+        setSecondaryMaskFunction: function(fn) {
+            this.secondaryMaskFunction = fn;
         }
 
     });
