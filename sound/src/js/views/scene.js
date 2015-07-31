@@ -62,9 +62,11 @@ define(function(require) {
         initWaveMediumView: function() {
             this.waveMediumView = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-            this.stage.addChild(this.waveMediumView.displayObject);
+            this.$ui.append(this.waveMediumView.el);
 
             this.waveMediumView.setPosition(this.mvt.modelToViewX(0), this.mvt.modelToViewY(0));
         },

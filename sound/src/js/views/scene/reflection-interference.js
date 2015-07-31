@@ -32,7 +32,6 @@ define(function(require) {
 
             this.initReflectedWaveMediumView();
             this.initReflectionLine();
-            this.initMasks();
 
             this.updateReflection();
         },
@@ -40,10 +39,11 @@ define(function(require) {
         initReflectedWaveMediumView: function() {
             this.reflectedWaveMediumView = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-
-            this.stage.addChild(this.reflectedWaveMediumView.displayObject);
+            this.$ui.append(this.waveMediumView.el);
         },
 
         initReflectionLine: function() {
@@ -57,13 +57,6 @@ define(function(require) {
             });
 
             this.stage.addChild(this.reflectionLine.displayObject);
-        },
-
-        initMasks: function() {
-            this.leftMask = new PIXI.Graphics();
-            this.stage.addChild(this.leftMask);
-            this.waveMediumView.setMask(this.leftMask);
-            this.reflectedWaveMediumView.setMask(this.leftMask);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

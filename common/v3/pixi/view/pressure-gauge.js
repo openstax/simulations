@@ -254,7 +254,7 @@ define(function(require) {
             var percent = this.pressureRange.percent(this.value);
             var angle = this.angleRange.lerp(1 - percent);
             this.needle.rotation = -angle;
-            this.readout.setText(this.value.toFixed(this.decimals));
+            this.readout.text = this.value.toFixed(this.decimals);
 
             if (percent > 1) {
                 this.overload.visible = true;

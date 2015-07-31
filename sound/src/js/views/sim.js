@@ -192,6 +192,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.$('.scene-background').after(this.sceneView.ui);
         },
 
         /**

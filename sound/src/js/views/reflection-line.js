@@ -84,14 +84,14 @@ define(function(require) {
         paintLeftSideMask: function(graphics, minX, stageWidth, stageHeight) {
             var topPointX = this.displayObject.x + Math.cos(this.displayObject.rotation) * this.length;
             var topPointY = this.displayObject.y + Math.sin(this.displayObject.rotation) * this.length;
-            graphics.clear();
-            graphics.beginFill(0x000000, 1);
-            graphics.moveTo(minX, 0);
-            graphics.lineTo(minX, stageHeight);
-            graphics.lineTo(this.displayObject.x, this.displayObject.y);
-            graphics.lineTo(topPointX, topPointY);
-            graphics.lineTo(topPointX, -20);
-            graphics.endFill();
+            // graphics.clear();
+            // graphics.beginFill(0x000000, 1);
+            // graphics.moveTo(minX, 0);
+            // graphics.lineTo(minX, stageHeight);
+            // graphics.lineTo(this.displayObject.x, this.displayObject.y);
+            // graphics.lineTo(topPointX, topPointY);
+            // graphics.lineTo(topPointX, -20);
+            // graphics.endFill();
         }
 
     });

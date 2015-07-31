@@ -65,10 +65,11 @@ define(function(require) {
         initSecondWaveMediumView: function() {
             this.waveMedium2View = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-
-            this.stage.addChild(this.waveMedium2View.displayObject);
+            this.$ui.append(this.waveMediumView.el);
         },
 
         initSecondSpeakerView: function() {
