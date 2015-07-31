@@ -43,7 +43,7 @@ define(function(require) {
                 width: this.width,
                 height: this.height
             });
-            this.$ui.append(this.waveMediumView.el);
+            this.$ui.append(this.reflectedWaveMediumView.el);
         },
 
         initReflectionLine: function() {
@@ -104,8 +104,9 @@ define(function(require) {
         updateMasks: function() {
             var minX = this.waveMediumView.getOrigin().x + this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
             var maskFunction = this.reflectionLine.getLeftSideMaskFunction(minX, this.width, this.height);
-            
+
             this.waveMediumView.setSecondaryMaskFunction(maskFunction);
+            this.reflectedWaveMediumView.setSecondaryMaskFunction(maskFunction);
         }
 
     });

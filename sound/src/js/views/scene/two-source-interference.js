@@ -69,7 +69,7 @@ define(function(require) {
                 width: this.width,
                 height: this.height
             });
-            this.$ui.append(this.waveMediumView.el);
+            this.$ui.append(this.waveMedium2View.el);
         },
 
         initSecondSpeakerView: function() {
