@@ -475,7 +475,8 @@ define(function(require) {
         plateAreaHover: function() {
             this.plateAreaHandleHovering = true;
 
-            this.plateAreaHandleHoverGraphic.visible = true;
+            this.plateAreaHandleGraphic.alpha = 0;
+            this.plateAreaHandleHoverGraphic.alpha = 1;
 
             this.plateAreaLabelTitle.setStyle(this.labelTitleHoverStyle);
             this.plateAreaLabelValue.setStyle(this.labelValueHoverStyle);
@@ -485,7 +486,8 @@ define(function(require) {
             this.plateAreaHandleHovering = false;
 
             if (!this.draggingPlateArea) {
-                this.plateAreaHandleHoverGraphic.visible = false;
+                this.plateAreaHandleGraphic.alpha = 1;
+                this.plateAreaHandleHoverGraphic.alpha = 0;
 
                 this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
                 this.plateAreaLabelValue.setStyle(this.labelValueStyle);
@@ -495,7 +497,8 @@ define(function(require) {
         plateSeparationHover: function() {
             this.plateSeparationHandleHovering = true;
 
-            this.plateSeparationHandleHoverGraphic.visible = true;
+            this.plateSeparationHandleGraphic.alpha = 0;
+            this.plateSeparationHandleHoverGraphic.alpha = 1;
 
             this.plateSeparationLabelTitle.setStyle(this.labelTitleHoverStyle);
             this.plateSeparationLabelValue.setStyle(this.labelValueHoverStyle);
@@ -505,7 +508,8 @@ define(function(require) {
             this.plateSeparationHandleHovering = false;
 
             if (!this.draggingPlateSeparation) {
-                this.plateSeparationHandleHoverGraphic.visible = false;
+                this.plateSeparationHandleGraphic.alpha = 1;
+                this.plateSeparationHandleHoverGraphic.alpha = 0;
 
                 this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
                 this.plateSeparationLabelValue.setStyle(this.labelValueStyle);
@@ -515,7 +519,8 @@ define(function(require) {
         dielectricHover: function() {
             this.dielectricHandleHovering = true;
 
-            this.dielectricHandleHoverGraphic.visible = true;
+            this.dielectricHandleGraphic.alpha = 0;
+            this.dielectricHandleHoverGraphic.alpha = 1;
 
             this.dielectricLabelTitle.setStyle(this.labelTitleHoverStyle);
             this.dielectricLabelValue.setStyle(this.labelValueHoverStyle);
@@ -525,7 +530,8 @@ define(function(require) {
             this.dielectricHandleHovering = false;
 
             if (!this.draggingDielectric) {
-                this.dielectricHandleHoverGraphic.visible = false;
+                this.dielectricHandleGraphic.alpha = 1;
+                this.dielectricHandleHoverGraphic.alpha = 0;
 
                 this.dielectricLabelTitle.setStyle(this.labelTitleStyle);
                 this.dielectricLabelValue.setStyle(this.labelValueStyle);
