@@ -42,7 +42,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Interference by Reflection',
-                name: 'reflection-interference-sim',
+                name: 'reflection-interference',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);

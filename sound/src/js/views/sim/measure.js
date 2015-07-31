@@ -32,7 +32,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Measure',
-                name: 'measure-sim',
+                name: 'measure',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);

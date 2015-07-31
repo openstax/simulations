@@ -20,8 +20,8 @@ define(function(require) {
          * Initializes the new WaveMediumView.
          */
         initialize: function(options) {
-            this.darkColor  = Colors.parseHex('#333333');
-            this.lightColor = Colors.parseHex('#ffffff');
+            this.darkColor  = Colors.hexToRgb('#333333');
+            this.lightColor = Colors.hexToRgb('#ffffff');
 
             this.initGraphics();
 
@@ -36,6 +36,20 @@ define(function(require) {
             this.displayObject.addChild(this.mask);
 
             this.graphics.mask = this.mask;
+
+            var canvas = document.createElement('canvas');
+            canvas.width  = $('#sim-single-source .sim-view').width();
+            canvas.height = $('#sim-single-source .sim-view').height();
+            $(canvas).css({
+                position: 'absolute',
+
+            });
+
+            this.ctx = canvas.getContext('2d');
+            this.canvasWidth = canvas.width;
+            this.canvasHeight = canvas.height;
+
+            $('#sim-single-source .sim-view').append(canvas);
 
             this.arcCenters = [];
             for (var i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++)
@@ -62,8 +76,10 @@ define(function(require) {
          *   amplitudes.
          */
         drawAmplitudes: function() {
-            var graphics = this.graphics;
-            graphics.clear();
+            // var graphics = this.graphics;
+            // graphics.clear();
+            var ctx = this.ctx;
+            ctx.clearRect(0, 0, this.canvasWidth, this.canvasHeight);
 
             var counterclockwise = false;
             var angle = Math.PI / 4;
@@ -93,10 +109,20 @@ define(function(require) {
             for (i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
 
+                // if (amplitude >= 0)
+                //     graphics.lineStyle(lineWidth, lightColor, Math.min(1, amplitude * alphaMultiplier));
+                // else if (amplitude < 0)
+                //     graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+                // else
+                //     graphics.lineStyle(0, 0, 0);
+                ctx.beginPath();
+
                 if (amplitude >= 0)
-                    graphics.lineStyle(lineWidth, lightColor, Math.min(1, amplitude * alphaMultiplier));
+                    ctx.strokeStyle = 'rgba(' + lightColor.r +',' + lightColor.g + ',' + lightColor.b + ',' + Math.min(1, amplitude * alphaMultiplier) + ')';
+                else if (amplitude < 0)
+                    ctx.strokeStyle = 'rgba(' + darkColor.r +',' + darkColor.g + ',' + darkColor.b + ',' + Math.min(1, Math.abs(amplitude) * alphaMultiplier) + ')';
                 else
-                    graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+                    continue;
 
                 // We alternate the direction so we don't get lines on one edge
                 startAngle = -angle * (counterclockwise ? -1 : 1);
@@ -107,10 +133,12 @@ define(function(require) {
                 var halfAngle = (endAngle - startAngle) / 2;
                 var xOffset = Math.cos(halfAngle) * radius;
                 var yOffset = Math.sin(halfAngle) * radius;
-                
-                graphics.moveTo(arcCenter.x + xOffset, arcCenter.y + yOffset);
-                graphics.arc(arcCenter.x, arcCenter.y, radius, startAngle + this.angle, endAngle + this.angle, counterclockwise);
+
+                //graphics.moveTo(arcCenter.x + xOffset, arcCenter.y + yOffset);
+                ctx.arc(arcCenter.x, arcCenter.y, radius, startAngle + this.angle, endAngle + this.angle, counterclockwise);
                 counterclockwise = !counterclockwise;
+
+                ctx.stroke();
             }
         },
 
