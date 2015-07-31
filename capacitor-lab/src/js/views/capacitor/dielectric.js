@@ -475,7 +475,6 @@ define(function(require) {
         plateAreaHover: function() {
             this.plateAreaHandleHovering = true;
 
-            this.plateAreaHandleGraphic.visible = false;
             this.plateAreaHandleHoverGraphic.visible = true;
 
             this.plateAreaLabelTitle.setStyle(this.labelTitleHoverStyle);
@@ -486,7 +485,6 @@ define(function(require) {
             this.plateAreaHandleHovering = false;
 
             if (!this.draggingPlateArea) {
-                this.plateAreaHandleGraphic.visible = true;
                 this.plateAreaHandleHoverGraphic.visible = false;
 
                 this.plateAreaLabelTitle.setStyle(this.labelTitleStyle);
@@ -497,7 +495,6 @@ define(function(require) {
         plateSeparationHover: function() {
             this.plateSeparationHandleHovering = true;
 
-            this.plateSeparationHandleGraphic.visible = false;
             this.plateSeparationHandleHoverGraphic.visible = true;
 
             this.plateSeparationLabelTitle.setStyle(this.labelTitleHoverStyle);
@@ -508,7 +505,6 @@ define(function(require) {
             this.plateSeparationHandleHovering = false;
 
             if (!this.draggingPlateSeparation) {
-                this.plateSeparationHandleGraphic.visible = true;
                 this.plateSeparationHandleHoverGraphic.visible = false;
 
                 this.plateSeparationLabelTitle.setStyle(this.labelTitleStyle);
@@ -519,7 +515,6 @@ define(function(require) {
         dielectricHover: function() {
             this.dielectricHandleHovering = true;
 
-            this.dielectricHandleGraphic.visible = false;
             this.dielectricHandleHoverGraphic.visible = true;
 
             this.dielectricLabelTitle.setStyle(this.labelTitleHoverStyle);
@@ -530,7 +525,6 @@ define(function(require) {
             this.dielectricHandleHovering = false;
 
             if (!this.draggingDielectric) {
-                this.dielectricHandleGraphic.visible = true;
                 this.dielectricHandleHoverGraphic.visible = false;
 
                 this.dielectricLabelTitle.setStyle(this.labelTitleStyle);
