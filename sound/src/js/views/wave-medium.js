@@ -32,6 +32,7 @@ define(function(require) {
             this.el.height = this.height;
 
             this.ctx = this.el.getContext('2d');
+            this.ctx.save();
 
             this.initCenters();
 
@@ -69,8 +70,6 @@ define(function(require) {
             var ctx = this.ctx;
             ctx.clearRect(0, 0, this.width, this.height);
             //ctx.lineWidth = Math.ceil(this.lineWidth);
-
-            this.drawMask();
 
             var counterclockwise = false;
             var angle = Math.PI / 4;
@@ -133,6 +132,12 @@ define(function(require) {
 
             this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
             this.startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
+
+            this.ctx.restore();
+            this.ctx.save();
+            this.ctx.clearRect(0, 0, this.width, this.height);
+
+            this.drawMask();
         },
 
         /**
@@ -183,6 +188,11 @@ define(function(require) {
 
         setSecondaryMaskFunction: function(fn) {
             this.secondaryMaskFunction = fn;
+
+            this.ctx.restore();
+            this.ctx.save();
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.drawMask();
         }
 
     });
