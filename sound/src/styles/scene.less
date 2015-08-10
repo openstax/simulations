@@ -1,12 +1,29 @@
 @import "mixins.less";
 @import "variables.less";
 
-.scene-view {
-    width: 100%;
-    height: @scene-height;
-    background: url(../img/squairy_light.png);
+.scene-background {
+	position: absolute;
+	background: url(../img/squairy_light.png);
+	z-index: -2;
+}
 
-    @media screen and (max-height: @short-window) {
-        height: @short-scene-height;
-    }
+.scene-background,
+.scene-view {
+	width: 100%;
+	height: @scene-height;
+
+	@media screen and (max-height: @short-window) {
+	    height: @short-scene-height;
+	}
+}
+
+.scene-view-ui {
+	position: absolute;
+	z-index: -1;
+}
+
+.wave-medium-canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
 }

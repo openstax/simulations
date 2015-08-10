@@ -22,7 +22,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Single Source',
-                name: 'single-source-sim',
+                name: 'single-source',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);

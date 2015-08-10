@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var HelpLabelView = require('common/help-label/index');
+    var HelpLabelView = require('common/v3/help-label/index');
 
     var SoundSceneView = require('views/scene');
     var ListenerView   = require('views/listener');

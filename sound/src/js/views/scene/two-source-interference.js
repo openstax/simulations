@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var HelpLabelView = require('common/help-label/index');
+    var HelpLabelView = require('common/v3/help-label/index');
 
     var SoundSceneView = require('views/scene');
     var WaveMediumView = require('views/wave-medium');
@@ -65,10 +65,11 @@ define(function(require) {
         initSecondWaveMediumView: function() {
             this.waveMedium2View = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-
-            this.stage.addChild(this.waveMedium2View.displayObject);
+            this.$ui.append(this.waveMedium2View.el);
         },
 
         initSecondSpeakerView: function() {

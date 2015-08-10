@@ -2,7 +2,7 @@ define(function(require) {
     
     'use strict';
 
-    var PixiAppView = require('common/pixi/view/app');
+    var PixiAppView = require('common/v3/pixi/view/app');
 
     var SingleSourceSimView           = require('views/sim/single-source');
     var MeasureSimView                = require('views/sim/measure');
@@ -22,7 +22,7 @@ define(function(require) {
         simViewConstructors: [
             SingleSourceSimView,
             MeasureSimView,
-            //TwoSourceInterferenceSimView,
+            TwoSourceInterferenceSimView,
             ReflectionInterferenceSimView,
             VariableAirPressureSimView
         ],

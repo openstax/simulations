@@ -5,7 +5,7 @@ define(function (require) {
     //var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Rectangle = require('common/math/rectangle');
+    var Rectangle = require('common/v3/math/rectangle');
 
     var WavefrontType = require('models/wavefront-type');
 

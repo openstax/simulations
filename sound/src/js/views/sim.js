@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView = require('common/v3/app/sim');
 
     var SoundSimulation = require('models/simulation');
     var SoundSceneView  = require('views/scene');
@@ -193,6 +193,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.$('.scene-background').after(this.sceneView.ui);
         },
 
         /**

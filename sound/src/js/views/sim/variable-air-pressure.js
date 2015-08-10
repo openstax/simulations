@@ -35,7 +35,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Varying Air Pressure',
-                name: 'variable-air-pressure-sim',
+                name: 'variable-air-pressure',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);

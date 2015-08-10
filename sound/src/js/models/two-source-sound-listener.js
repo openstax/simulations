@@ -4,7 +4,7 @@ define(function (require) {
 
     var Pool = require('object-pool');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2 = require('common/v3/math/vector2');
 
     var SoundListener = require('models/sound-listener');
 

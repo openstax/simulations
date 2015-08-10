@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var HelpLabelView = require('common/help-label/index');
-    var Reflection    = require('common/math/reflection');
+    var HelpLabelView = require('common/v3/help-label/index');
+    var Reflection    = require('common/v3/math/reflection');
 
     var SoundSceneView = require('views/scene');
     var WaveMediumView = require('views/wave-medium');
@@ -32,7 +32,6 @@ define(function(require) {
 
             this.initReflectedWaveMediumView();
             this.initReflectionLine();
-            this.initMasks();
 
             this.updateReflection();
         },
@@ -40,10 +39,11 @@ define(function(require) {
         initReflectedWaveMediumView: function() {
             this.reflectedWaveMediumView = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-
-            this.stage.addChild(this.reflectedWaveMediumView.displayObject);
+            this.$ui.append(this.reflectedWaveMediumView.el);
         },
 
         initReflectionLine: function() {
@@ -57,13 +57,6 @@ define(function(require) {
             });
 
             this.stage.addChild(this.reflectionLine.displayObject);
-        },
-
-        initMasks: function() {
-            this.leftMask = new PIXI.Graphics();
-            this.stage.addChild(this.leftMask);
-            this.waveMediumView.setMask(this.leftMask);
-            this.reflectedWaveMediumView.setMask(this.leftMask);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -110,7 +103,10 @@ define(function(require) {
 
         updateMasks: function() {
             var minX = this.waveMediumView.getOrigin().x + this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
-            this.reflectionLine.paintLeftSideMask(this.leftMask, minX, this.width, this.height);
+            var maskFunction = this.reflectionLine.getLeftSideMaskFunction(minX, this.width, this.height);
+
+            this.waveMediumView.setSecondaryMaskFunction(maskFunction);
+            this.reflectedWaveMediumView.setSecondaryMaskFunction(maskFunction);
         }
 
     });

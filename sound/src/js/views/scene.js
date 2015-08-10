@@ -5,9 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var ModelViewTransform = require('common/math/model-view-transform');
-    var Vector2            = require('common/math/vector2');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var ModelViewTransform = require('common/v3/math/model-view-transform');
+    var Vector2            = require('common/v3/math/vector2');
 
     var WaveMediumView = require('views/wave-medium');
     var SpeakerView    = require('views/speaker');
@@ -62,9 +62,11 @@ define(function(require) {
         initWaveMediumView: function() {
             this.waveMediumView = new WaveMediumView({
                 model: this.simulation.waveMedium,
-                mvt: this.mvt
+                mvt: this.mvt,
+                width: this.width,
+                height: this.height
             });
-            this.stage.addChild(this.waveMediumView.displayObject);
+            this.$ui.append(this.waveMediumView.el);
 
             this.waveMediumView.setPosition(this.mvt.modelToViewX(0), this.mvt.modelToViewY(0));
         },

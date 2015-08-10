@@ -24,7 +24,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Two Source Interference',
-                name: 'two-source-interference-sim',
+                name: 'two-source-interference',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);
