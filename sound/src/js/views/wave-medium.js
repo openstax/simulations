@@ -3,40 +3,43 @@ define(function(require) {
     'use strict';
 
     var _    = require('underscore');
-    var PIXI = require('pixi');
+    var Backbone = require('backbone')
     
-    var PixiView = require('common/pixi/view');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
+    var Colors   = require('common/v3/colors/colors');
+    var Vector2  = require('common/v3/math/vector2');
 
     var Constants = require('constants');
 
     /**
      * A view that draws a 2D representation of the wave medium
      */
-    var WaveMediumView = PixiView.extend({
+    var WaveMediumView = Backbone.View.extend({
+
+        tagName:   'canvas',
+        className: 'wave-medium-canvas',
 
         /**
          * Initializes the new WaveMediumView.
          */
         initialize: function(options) {
-            this.darkColor  = Colors.parseHex('#333333');
-            this.lightColor = Colors.parseHex('#ffffff');
+            this.width = options.width;
+            this.height = options.height;
 
-            this.initGraphics();
+            this.darkColor  = Colors.hexToRgb('#333333');
+            this.lightColor = Colors.hexToRgb('#ffffff');
+
+            this.el.width  = this.width;
+            this.el.height = this.height;
+
+            this.ctx = this.el.getContext('2d');
+            this.ctx.save();
+
+            this.initCenters();
 
             this.updateMVT(options.mvt);
         },
 
-        initGraphics: function() {
-            this.graphics = new PIXI.Graphics();
-            this.mask = new PIXI.Graphics();
-
-            this.displayObject.addChild(this.graphics);
-            this.displayObject.addChild(this.mask);
-
-            this.graphics.mask = this.mask;
-
+        initCenters: function() {
             this.arcCenters = [];
             for (var i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++)
                 this.arcCenters.push(new Vector2());
@@ -49,11 +52,13 @@ define(function(require) {
             var length = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS);
             var startX = this.startX;
 
-            var mask = this.mask;
-            mask.clear();
-            mask.beginFill(0x000000, 1);
-            mask.drawRect(startX, -length * 2, length * 2, length * 4);
-            mask.endFill();
+            var ctx = this.ctx;
+            ctx.beginPath();
+            ctx.rect(startX, -length * 2, length * 2, length * 4);
+            ctx.clip();
+
+            if (this.secondaryMaskFunction)
+                this.secondaryMaskFunction(ctx);
         },
 
         /**
@@ -62,14 +67,16 @@ define(function(require) {
          *   amplitudes.
          */
         drawAmplitudes: function() {
-            var graphics = this.graphics;
-            graphics.clear();
+            var ctx = this.ctx;
+            ctx.clearRect(0, 0, this.width, this.height);
+            //ctx.lineWidth = Math.ceil(this.lineWidth);
 
             var counterclockwise = false;
             var angle = Math.PI / 4;
             var lineWidth = this.lineWidth;
             var startAngle;
             var endAngle;
+            var radius;
             var i;
 
             var lightColor = this.lightColor;
@@ -92,18 +99,28 @@ define(function(require) {
             for (i = 0; i < Constants.Wavefront.SAMPLE_LENGTH; i++) {
                 amplitude = this.model.getAmplitudeAt(i);
 
-                if (amplitude >= 0)
-                    graphics.lineStyle(lineWidth, lightColor, Math.min(1, amplitude * alphaMultiplier));
-                else
-                    graphics.lineStyle(lineWidth, darkColor, Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+                ctx.beginPath();
 
-                // We alternate the direction so we don't get lines on one edge
-                startAngle = -angle * (counterclockwise ? -1 : 1);
-                endAngle = angle * (counterclockwise ? -1 : 1);
+                if (amplitude >= 0)
+                    ctx.strokeStyle = this.toRgbaString(lightColor, Math.min(1, amplitude * alphaMultiplier));
+                else if (amplitude < 0)
+                    ctx.strokeStyle = this.toRgbaString(darkColor,  Math.min(1, Math.abs(amplitude) * alphaMultiplier));
+                else
+                    continue;
+
+                startAngle = -angle;
+                endAngle = angle;
                 arcCenter = arcCenters[i];
-                graphics.arc(arcCenter.x, arcCenter.y, startRadius + i * lineWidth, startAngle + this.angle, endAngle + this.angle, counterclockwise);
-                counterclockwise = !counterclockwise;
+                radius = startRadius + i * lineWidth;
+
+                ctx.arc(arcCenter.x, arcCenter.y, radius, startAngle + this.angle, endAngle + this.angle, false);
+
+                ctx.stroke();
             }
+        },
+
+        toRgbaString: function(rgbObject, alpha) {
+            return 'rgba(' + rgbObject.r +',' + rgbObject.g + ',' + rgbObject.b + ',' + alpha + ')';
         },
 
         /**
@@ -113,9 +130,14 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.drawMask();
             this.lineWidth = this.mvt.modelToViewDeltaX(Constants.Wavefront.LENGTH_IN_METERS) / Constants.Wavefront.SAMPLE_LENGTH;
             this.startX = this.mvt.modelToViewDeltaX(Constants.SpeakerView.WIDTH_IN_METERS);
+
+            this.ctx.restore();
+            this.ctx.save();
+            this.ctx.clearRect(0, 0, this.width, this.height);
+
+            this.drawMask();
         },
 
         /**
@@ -164,11 +186,13 @@ define(function(require) {
             this.update();
         },
 
-        /**
-         *
-         */
-        setMask: function(mask) {
-            this.displayObject.mask = mask;
+        setSecondaryMaskFunction: function(fn) {
+            this.secondaryMaskFunction = fn;
+
+            this.ctx.restore();
+            this.ctx.save();
+            this.ctx.clearRect(0, 0, this.width, this.height);
+            this.drawMask();
         }
 
     });

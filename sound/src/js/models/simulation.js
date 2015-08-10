@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var FixedIntervalSimulation = require('common/v3/simulation/fixed-interval-simulation');
 
     var Wavefront           = require('models/wavefront');
     var WaveMedium          = require('models/wave-medium');
@@ -143,9 +143,17 @@ define(function (require, exports, module) {
 
         pausedChanged: function(simulation, paused) {
             if (paused)
-                this.primaryOscillator.pause();
+                this.pauseAudio();
             else
-                this.primaryOscillator.play();
+                this.resumeAudio();
+        },
+
+        pauseAudio: function() {
+            this.primaryOscillator.pause();
+        },
+
+        resumeAudio: function() {
+            this.primaryOscillator.play();
         },
 
         audioEnabledChanged: function(simulation, audioEnabled) {

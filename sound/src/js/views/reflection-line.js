@@ -5,10 +5,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
+    var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/v3/colors/colors');
+    var Vector2  = require('common/v3/math/vector2');
+    var Rectangle = require('common/v3/math/rectangle');
 
     var Constants = require('constants');
     var DEG_TO_RAD = Math.PI / 180;
@@ -81,17 +81,21 @@ define(function(require) {
             return this.displayObject.rotation;
         },
 
-        paintLeftSideMask: function(graphics, minX, stageWidth, stageHeight) {
-            var topPointX = this.displayObject.x + Math.cos(this.displayObject.rotation) * this.length;
-            var topPointY = this.displayObject.y + Math.sin(this.displayObject.rotation) * this.length;
-            graphics.clear();
-            graphics.beginFill(0x000000, 1);
-            graphics.moveTo(minX, 0);
-            graphics.lineTo(minX, stageHeight);
-            graphics.lineTo(this.displayObject.x, this.displayObject.y);
-            graphics.lineTo(topPointX, topPointY);
-            graphics.lineTo(topPointX, -20);
-            graphics.endFill();
+        getLeftSideMaskFunction: function(minX, stageWidth, stageHeight) {
+            var x = this.displayObject.x;
+            var y = this.displayObject.y;
+            var topPointX = x + Math.cos(this.displayObject.rotation) * this.length;
+            var topPointY = y + Math.sin(this.displayObject.rotation) * this.length;
+
+            return function(ctx) {
+                ctx.beginPath();
+                ctx.moveTo(minX, 0);
+                ctx.lineTo(minX, stageHeight);
+                ctx.lineTo(x, y);
+                ctx.lineTo(topPointX, topPointY);
+                ctx.lineTo(topPointX, -20);
+                ctx.clip();
+            };
         }
 
     });

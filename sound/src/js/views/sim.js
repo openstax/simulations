@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView = require('common/v3/app/sim');
 
     var SoundSimulation = require('models/simulation');
     var SoundSceneView  = require('views/scene');
@@ -193,6 +193,7 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.$('.scene-background').after(this.sceneView.ui);
         },
 
         /**
@@ -209,6 +210,29 @@ define(function (require) {
         step: function() {
             this.play();
             setTimeout(this._stepFinished, this.simulation.frameDuration * 1000);
+        },
+
+        /**
+         * If we switch to a new sim, we pause this one,
+         *   but we want to save whether or not it was
+         *   paused already so it doesn't resume when we
+         *   don't want it to.
+         */
+        halt: function() {
+            SimView.prototype.halt.apply(this, arguments);
+
+            this.simulation.pauseAudio();
+        },
+
+        /**
+         * Used from the outside to continue execution but
+         *   paying attention to whether it was already
+         *   paused or not before it was halted.
+         */
+        resume: function() {
+            SimView.prototype.resume.apply(this, arguments);
+
+            this.simulation.resumeAudio();
         },
 
         /**

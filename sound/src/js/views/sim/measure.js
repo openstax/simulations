@@ -2,8 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var AppView       = require('common/app/app');
-    var StopwatchView = require('common/tools/stopwatch');
+    var AppView       = require('common/v3/app/app');
+    var StopwatchView = require('common/v3/tools/stopwatch');
 
     var SoundSimView     = require('views/sim');
     var MeasureSceneView = require('views/scene/measure');
@@ -32,7 +32,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Measure',
-                name: 'measure-sim',
+                name: 'measure',
             }, options);
 
             SoundSimView.prototype.initialize.apply(this, [options]);

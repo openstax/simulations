@@ -5,10 +5,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
-    var Colors   = require('common/colors/colors');
-    // var Vector2  = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
+    var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/v3/colors/colors');
+    // var Vector2  = require('common/v3/math/vector2');
+    var Rectangle = require('common/v3/math/rectangle');
 
 
     /**
@@ -92,18 +92,18 @@ define(function(require) {
             }
         },
 
-        dragStart: function(data){
-            this.dragOffset = data.getLocalPosition(this.displayObject);
+        dragStart: function(event){
+            this.dragOffset = event.data.getLocalPosition(this.displayObject);
             this.grabbed = true;
         },
 
-        dragEnd: function(data){
+        dragEnd: function(event){
             this.grabbed = false;
         },
 
-        drag: function(data){
+        drag: function(event){
             if (this.grabbed) {
-                this.displayObject.x = data.global.x - this.dragOffset.x;                
+                this.displayObject.x = event.data.global.x - this.dragOffset.x;                
             }
         }
 

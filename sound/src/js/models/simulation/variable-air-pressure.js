@@ -46,6 +46,11 @@ define(function (require, exports, module) {
             attenuationFunction.outsideRadiusAttenuation = 1;
             
             this.waveMedium.attenuationFunction = attenuationFunction;
+
+            // Move the speaker listener out in front of the speaker a bit so it
+            //   it gets an attenuated wavefront.  If we leave it at (0,0), the
+            //   sound is never attenuated.
+            this.speakerListener.setPosition(0, 0.1);
         },
 
         setInsideRadiusAttenuation: function(attenuation) {

@@ -1,0 +1,238 @@
+@import "../node_modules/bootstrap/less/bootstrap.less"; // Bootstrap
+@import "../styles/variables.less";
+@import "../styles/mixins/vendor-prefixes.less";
+
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+}
+
+@beaker-height: 120px;
+@beaker-liquid-height: 75px;
+
+.app-view {
+
+    position: relative;
+    margin: 10px auto 0 auto;
+    max-width: @max-viewport-width;
+    width: 100%;
+
+    @media screen and (max-height: @short-window) {
+        margin-top: 0;
+    }
+
+    .loading-screen {
+        position: fixed;
+        z-index: 1200;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 600px;
+        background-color: #fff;
+
+        @bgcolor: @gray-lightest;
+        @thickness: 10px;
+        @width: 100px;
+        @liquid-height: @beaker-liquid-height;
+
+        .beaker {
+            /* Based off this CodePen icon: http://codepen.io/joshnh/pen/EsoDv */
+            border-radius: 10px;
+            border-top-right-radius: 0;
+            border-top-left-radius: 0;
+            display: inline-block;
+            height: @liquid-height;
+            left: 50%;
+            margin-left: -(@width / 2);
+            position: absolute;
+            top: 50%;
+            margin-top: -(@beaker-height / 2);
+            width: @width;
+            background-color: @bgcolor;
+            box-sizing: content-box;
+
+            &:before, &:after {
+                content: '';
+                box-sizing: content-box;
+                position: absolute;
+                top: -(@beaker-height - @liquid-height);
+            }
+
+            &:before {
+                border-left: @thickness solid @bgcolor;
+                border-radius: @thickness;
+                border-right: @thickness solid @bgcolor;
+                height: @thickness;
+                left: -(@thickness / 2);
+                width: (@width - @thickness);
+            }
+
+            &:after {
+                border-left: @thickness solid @bgcolor;
+                border-right: @thickness solid @bgcolor;
+                height: (@beaker-height - @liquid-height);
+                width: (@width - 2 * @thickness);
+            }
+
+            .bubbles {
+                position: absolute;
+                left: @thickness;
+                right: @thickness;
+                bottom: @liquid-height;
+                height: 1000px;
+                //background-color: #fab;
+                overflow: hidden;
+
+                .bubble {
+                    position: absolute;
+                    bottom: 0;
+                    border-radius: 50%;
+                    background-color: #575c5f;
+                    width:  (0.1 * @width);
+                    height: (0.1 * @width);
+
+                    .animation-name(bubble);
+                    .animation-duration(1600ms);
+                    .animation-iteration-count(infinite);
+                    .animation-timing-function(linear);
+
+                    .transform(translateY(1.0em));
+                }
+
+                .bubble:nth-child(1) {
+                    left: 5%;
+                }
+
+                .bubble:nth-child(2) {
+                    background-color: #20356b;
+                    width:  (0.07 * @width);
+                    height: (0.07 * @width);
+                    left: 12%;
+                    bottom: -(@liquid-height * 0.6);
+                    .animation-delay(200ms);
+                }
+
+                .bubble:nth-child(3) {
+                    background-color: #f0cf31;
+                    width:  (0.16 * @width);
+                    height: (0.16 * @width);
+                    left: 26%;
+                    .animation-duration(2000ms);
+                }
+
+                .bubble:nth-child(4) {
+                    background-color: #71b653;
+                    width:  (0.09 * @width);
+                    height: (0.09 * @width);
+                    left: 46%;
+                    .animation-duration(1400ms);
+                    .animation-delay(400ms);
+                }
+
+                .bubble:nth-child(5) {
+                    background-color: #f47b4d;
+                    width:  (0.12 * @width);
+                    height: (0.12 * @width);
+                    left: 59%;
+                    bottom: -(@liquid-height * 0.3);
+                    .animation-delay(-100ms);
+                }
+
+                .bubble:nth-child(6) {
+                    background-color: #20356b;
+                    width:  (0.14 * @width);
+                    height: (0.14 * @width);
+                    left: 77%;
+                    .animation-duration(1400ms);
+                    .animation-delay(200ms);
+                }
+
+                .bubble:nth-child(7) {
+                    background-color: #f47b4d;
+                    width:  (0.06 * @width);
+                    height: (0.06 * @width);
+                    left: 13%;
+                    bottom: -(@liquid-height * 0.5);
+                    .animation-delay(800ms);
+                }
+            }
+        }
+    }
+}
+
+@-webkit-keyframes bubble {
+      0% { .transform(translateY( (@beaker-liquid-height * 0.8)) scale(1, 1));   }
+     80% { .transform(translateY(-(@beaker-liquid-height * 0.8)) scale(1, 1));   }
+     97% { .transform(translateY(-(@beaker-liquid-height))       scale(1.4, 1.4)); }
+    100% { .transform(translateY(-(@beaker-liquid-height))       scale(0.1, 0.1)); }
+}
+
+.sims {
+    position: relative;
+}
+
+/**
+ * We need a rendering mode where each sim is in its
+ *   natural position relative to the document (where
+ *   it will be when it's visible to the user) instead
+ *   of stacked up in relative-position mode.
+ */
+.sim-content.rendering {
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.sim-view {
+    height: 100%;
+    width: 100%;
+}
+
+.footer {
+    position: absolute;
+    margin: 16px 0px 10px 0px;
+    float: left;
+    clear: both;
+    width: 100%;
+    font-size: 16px;
+    color: #222;
+
+    .footer-left {
+        float: left;
+        margin-left: 16px;
+
+        img {
+            opacity: 0.7;
+        }
+    }
+
+    .footer-right {
+        float: right;
+        margin-right: 16px;
+
+        span {
+            width: 88px;
+            display: inline-block;
+            padding-right: 8px;
+            line-height: 14px;
+            vertical-align: bottom;
+            color: #B5B5B5;
+            text-transform: lowercase;
+            text-align: right;
+            font-size: 12px;
+        }
+
+        a {
+            display: inline-block;
+            padding-bottom: 2px;
+        }
+    }
+
+    img {
+        max-height: 32px;
+        display: inline-block;
+    }
+}

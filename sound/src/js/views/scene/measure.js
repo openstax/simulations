@@ -4,8 +4,8 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var RulerView     = require('common/pixi/view/ruler');
-    var HelpLabelView = require('common/help-label/index');
+    var RulerView     = require('common/v3/pixi/view/ruler');
+    var HelpLabelView = require('common/v3/help-label/index');
 
     var SoundSceneView    = require('views/scene');
     var ReferenceLineView = require('views/reference-line');
