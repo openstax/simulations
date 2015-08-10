@@ -72,6 +72,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Maze Game',
                 name: 'maze-game',
+                link: 'maze-game'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
