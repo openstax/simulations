@@ -8,98 +8,133 @@
 
 			html {
 				font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-				margin: 20px;
-			}
-
-			body {
-				max-width: 400px;
-				margin: 0 auto;
+				margin: 0;
 			}
 
 			h1 {
 				margin: 0;
 				text-align: center;
-				padding: 10px 20px;
+				padding: 20px 20px;
 				color: #333;
 				font-weight: 500;
 				border-bottom: 1px solid #eee;
 			}
 
-			ol, ul {
-				margin: 0;
-				padding: 0;
+			.simulation-links {
+				margin: 15px auto;
 			}
 
-			ul {
-				list-style-type: none;
+			@media screen andv(max-width: 450px) {
+			    .simulation-links { width: 400px; }
+			    .simulation-links > a { width: 400px; }
+			    .simulation-links > a > h2 { font-size: 18px; }
 			}
 
-			ul > li {
-				margin-top: 0;
-				margin-left: 0;
-				font-size: 1.4em;
-				text-align: center;
+			@media screen and (min-width: 930px) and (max-width: 1380px) {
+			    .simulation-links { width: 901px; }
 			}
 
-			ul > li > a {
+			@media screen and (min-width: 1381px) and (max-width: 1830px) {
+			    .simulation-links { width: 1351px; }
+			}
+
+			@media screen and (min-width: 1831px) {
+			    .simulation-links { width: 1801px; }
+			}
+
+			.simulation-links > a {
 				display: block;
-				line-height: 2.2em;
-				color: #777;
+				-webkit-box-sizing: border-box;
+				-moz-box-sizing: border-box;
+				box-sizing: border-box;
+				float: left;
+				width: 450px;
+				height: 110px;
+				padding: 15px;
+				text-align: left;
 				text-decoration: none;
+				color: #555;
+				border: 1px solid transparent;
 			}
 
-			ul > li > a:hover {
+			.simulation-links > a:hover {
+				background-color: #eee;
+				border-color: #e1e1e1;
 				color: #000;
-				border-left: 4px solid #777;
-				border-right: 4px solid #777;
+			}
+
+			.simulation-links > a > h2 {
+				font-size: 22px;
+				font-weight: normal;
+				margin-top: 0;
+			}
+
+			.simulation-links > a > img {
+				width:  120px;
+				height: 80px;
+				display: block;
+				float: left;
+				margin-right: 15px;
+				border: 1px solid #c0c0c0;
 			}
 
 		</style>
 	</head>
 	<body>
 		<h1>Simulations</h1>
-		<ul>
+		<div class="simulation-links">
 		<!--(if target dev)><!-->
-			<li><a href="/capacitor-lab/src/">Capacitor Lab</a></li>
-			<li><a href="/charges-and-fields/src/">Charges &amp; Fields</a></li>
-			<li><a href="/collision-lab/src/">Collision Lab</a></li>
-			<li><a href="/energy-forms-and-changes/src/">Energy Forms &amp; Changes</a></li>
-			<li><a href="/geometric-optics/src/">Geometric Optics</a></li>
-			<li><a href="/gravity-and-orbits/src/">Gravity &amp; Orbits</a></li>
-			<li><a href="/ladybug-motion/src/">Ladybug Motion</a></li>
-			<li><a href="/masses-and-springs/src/">Masses &amp; Springs</a></li>
-			<li><a href="/maze-game/src/">Maze Game</a></li>
-			<li><a href="/moving-man/src/">Moving Man</a></li>
-			<li><a href="/my-solar-system/src/">My Solar System</a></li>
-			<li><a href="/pendulum-lab/src/">Pendulum Lab</a></li>
-			<li><a href="/projectile-motion/src/">Projectile Motion</a></li>
-			<li><a href="/sound/src/">Sound</a></li>
-			<li><a href="/states-of-matter/src/">States of Matter</a></li>
-			<li><a href="/template/src/">Template Simulation</a></li>
-			<li><a href="/greenhouse-effect/src/">The Greenhouse Effect</a></li>
-			<li><a href="/vector-addition/src/">Vector Addition</a></li>
-			<li><a href="/wave-interference/src/">Wave Interference</a></li>
-			
+			<a href="/capacitor-lab/src/">           <img><h2>Capacitor Lab</h2>              </a>
+			<a href="/charges-and-fields/src/">      <img><h2>Charges &amp; Fields</h2>       </a>
+			<a href="/collision-lab/src/">           <img><h2>Collision Lab</h2>              </a>
+			<a href="/energy-forms-and-changes/src/"><img><h2>Energy Forms &amp; Changes</h2> </a>
+			<a href="/geometric-optics/src/">        <img><h2>Geometric Optics</h2>           </a>
+			<a href="/gravity-and-orbits/src/">      <img><h2>Gravity &amp; Orbits</h2>       </a>
+			<a href="/ladybug-motion/src/">          <img><h2>Ladybug Motion</h2>             </a>
+			<a href="/masses-and-springs/src/">      <img><h2>Masses &amp; Springs</h2>       </a>
+			<a href="/maze-game/src/">               <img><h2>Maze Game</h2>                  </a>
+			<a href="/moving-man/src/">              <img><h2>Moving Man</h2>                 </a>
+			<a href="/my-solar-system/src/">         <img><h2>My Solar System</h2>            </a>
+			<a href="/pendulum-lab/src/">            <img><h2>Pendulum Lab</h2>               </a>
+			<a href="/projectile-motion/src/">       <img><h2>Projectile Motion</h2>          </a>
+			<a href="/sound/src/">                   <img><h2>Sound</h2>                      </a>
+			<a href="/states-of-matter/src/">        <img><h2>States of Matter</h2>           </a>
+			<a href="/template/src/">                <img><h2>Template Simulation</h2>        </a>
+			<a href="/greenhouse-effect/src/">       <img><h2>The Greenhouse Effect</h2>      </a>
+			<a href="/vector-addition/src/">         <img><h2>Vector Addition</h2>            </a>
+			<a href="/wave-interference/src/">       <img><h2>Wave Interference</h2>          </a>
 		<!--<!(endif)-->
 
 		<!--(if target dist)>
-			<li><a href="capacitor-lab/">Capacitor Lab</a></li>
-			<li><a href="charges-and-fields/">Charges &amp; Fields</a></li>
-			<li><a href="collision-lab/">Collision Lab</a></li>
-			<li><a href="energy-forms-and-changes/">Energy Forms &amp; Changes</a></li>
-			<li><a href="geometric-optics/">Geometric Optics</a></li>
-			<li><a href="gravity-and-orbits/">Gravity &amp; Orbits</a></li>
-			<li><a href="ladybug-motion/">Ladybug Motion</a></li>
-			<li><a href="masses-and-springs/">Masses &amp; Springs</a></li>
-			<li><a href="maze-game/">Maze Game</a></li>
-			<li><a href="moving-man/">Moving Man</a></li>
-			<li><a href="my-solar-system/">My Solar System</a></li>
-			<li><a href="states-of-matter/">States of Matter</a></li>
-			<li><a href="projectile-motion/">Projectile Motion</a></li>
-			<li><a href="greenhouse-effect/">The Greenhouse Effect</a></li>
-			<li><a href="vector-addition/">Vector Addition</a></li>
-			<li><a href="wave-interference/">Wave Interference</a></li>
+			<a href="capacitor-lab/">Capacitor Lab</h2>      </a>
+			<a href="charges-and-fields/">Charges &amp; Fields</h2>      </a>
+			<a href="collision-lab/">Collision Lab</h2>      </a>
+			<a href="energy-forms-and-changes/">Energy Forms &amp; Changes</h2>      </a>
+			<a href="geometric-optics/">Geometric Optics</h2>      </a>
+			<a href="gravity-and-orbits/">Gravity &amp; Orbits</h2>      </a>
+			<a href="ladybug-motion/">Ladybug Motion</h2>      </a>
+			<a href="masses-and-springs/">Masses &amp; Springs</h2>      </a>
+			<a href="maze-game/">Maze Game</h2>      </a>
+			<a href="moving-man/">Moving Man</h2>      </a>
+			<a href="my-solar-system/">My Solar System</h2>      </a>
+			<a href="states-of-matter/">States of Matter</h2>      </a>
+			<a href="projectile-motion/">Projectile Motion</h2>      </a>
+			<a href="greenhouse-effect/">The Greenhouse Effect</h2>      </a>
+			<a href="vector-addition/">Vector Addition</h2>      </a>
+			<a href="wave-interference/">Wave Interference</h2>      </a>
 		<!(endif)-->
-		</ul>
+		</div>
+
+		<script>
+
+			var simulationLinks = document.getElementsByClassName('simulation-links')[0];
+			var children = simulationLinks.children;
+			var anchor;
+			for (var i = 0; i < children.length; i++) {
+				anchor = children[i];
+				anchor.getElementsByTagName('img')[0].src = anchor.href + 'screenshot.png';
+			}
+
+		</script>
 	</body>
 </html>
