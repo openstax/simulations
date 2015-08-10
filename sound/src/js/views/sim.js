@@ -213,6 +213,29 @@ define(function (require) {
         },
 
         /**
+         * If we switch to a new sim, we pause this one,
+         *   but we want to save whether or not it was
+         *   paused already so it doesn't resume when we
+         *   don't want it to.
+         */
+        halt: function() {
+            SimView.prototype.halt.apply(this, arguments);
+
+            this.simulation.pauseAudio();
+        },
+
+        /**
+         * Used from the outside to continue execution but
+         *   paying attention to whether it was already
+         *   paused or not before it was halted.
+         */
+        resume: function() {
+            SimView.prototype.resume.apply(this, arguments);
+
+            this.simulation.resumeAudio();
+        },
+
+        /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */

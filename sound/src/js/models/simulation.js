@@ -143,9 +143,17 @@ define(function (require, exports, module) {
 
         pausedChanged: function(simulation, paused) {
             if (paused)
-                this.primaryOscillator.pause();
+                this.pauseAudio();
             else
-                this.primaryOscillator.play();
+                this.resumeAudio();
+        },
+
+        pauseAudio: function() {
+            this.primaryOscillator.pause();
+        },
+
+        resumeAudio: function() {
+            this.primaryOscillator.play();
         },
 
         audioEnabledChanged: function(simulation, audioEnabled) {
