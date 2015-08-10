@@ -277,7 +277,7 @@ define(function (require) {
          * Returns whether a point is inside the Shape that is the 2D
          *   projection of air between the plates
          */
-        isInsideAirBetweenPlates(p) {
+        isInsideAirBetweenPlates: function(p) {
             //return this.shapeCreator.createAirBetweenPlatesShapeOccluded().contains(this.mvt.modelToView(p));
             throw 'not yet implemented';
         },
