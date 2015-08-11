@@ -5,14 +5,6 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
-    var Polarity = Constants.Polarity;
-
     /**
      * Represents a straight segment of wire. One or more segments are joined to
      *   create a wire.

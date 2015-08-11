@@ -14,8 +14,6 @@ define(function(require) {
     var POSITIVE_COLOR = Colors.parseHex(Constants.ChargeView.POSITIVE_COLOR);
     var NEGATIVE_COLOR = Colors.parseHex(Constants.ChargeView.NEGATIVE_COLOR);
 
-    var Polarity = Constants.Polarity;
-
     /**
      * Base class for views that render charges
      */

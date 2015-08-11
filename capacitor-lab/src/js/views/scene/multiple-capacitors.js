@@ -2,16 +2,10 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-
     var DielectricSimulation = require('models/simulation/dielectric');
 
     var CapacitorLabSceneView = require('views/scene');
     var CircuitView           = require('views/circuit');
-
-    // Constants
-    var Constants = require('constants');
 
     /**
      *

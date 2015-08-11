@@ -5,14 +5,7 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
-
     var Battery = require('models/battery');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * Base class for all circuits
@@ -195,7 +188,7 @@ define(function (require) {
                 if (insideDielectric)
                     eField = capacitor.getPlatesDielectricEField();
                 else
-                    eField = capacitor.getPlatesAirEField()
+                    eField = capacitor.getPlatesAirEField();
             }
 
             return eField;
@@ -214,7 +207,7 @@ define(function (require) {
                 if (insideDielectric)
                     eField = capacitor.getDielectricEField();
                 else
-                    eField = capacitor.getAirEField()
+                    eField = capacitor.getAirEField();
             }
 
             return eField;

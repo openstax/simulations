@@ -2,9 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
-
     var Vector2 = require('common/math/vector2');
 
     var Wire = require('models/wire');
@@ -81,13 +78,14 @@ define(function (require) {
          *   distance above/below the capacitor that is closest to the wire.
          */
         getHorizontalY: function(connectionPoint, capacitors, wireExtent) {
+            var i;
             var y = capacitors[0].getY();
             if (connectionPoint === ConnectionPoint.TOP) {
-                for (var i = 0; i < capacitors.length; i++)
+                for (i = 0; i < capacitors.length; i++)
                     y = Math.min(y, capacitors[i].getY() - wireExtent);
             }
             else {
-                for (var i = 0; i < capacitors.length; i++)
+                for (i = 0; i < capacitors.length; i++)
                     y = Math.max(y, capacitors[i].getY() + wireExtent);
             }
             return y;

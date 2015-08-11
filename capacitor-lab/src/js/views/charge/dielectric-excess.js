@@ -2,14 +2,14 @@ define(function(require) {
 
     'use strict';
 
-    var Vector2   = require('common/math/vector2');
-    var Vector3   = require('common/math/vector3');
+    var _ = require('underscore');
+
+    var Vector3 = require('common/math/vector3');
 
     var ChargeView        = require('views/charge');
     var calculateGridSize = require('views/calculate-grid-size');
 
     var Constants = require('constants');
-    var Polarity = Constants.Polarity;
 
     /**
      * Shows the excess dielectric charge (Q_excess_dielectric). Charges appear on
@@ -102,7 +102,6 @@ define(function(require) {
                 // Draw front edge for top face
                 x = 0;
                 y = yOffset;
-                z;
                 for (var c = 0; c < cols; c++) {
                     // Position the charge
                     x = -(dielectricWidth / 2) + xOffset + (c * dx) + dielectricOffset;

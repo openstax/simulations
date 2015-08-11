@@ -7,11 +7,6 @@ define(function (require, exports, module) {
     var Simulation = require('common/simulation/simulation');
 
     /**
-     * Constants
-     */
-    var Constants = require('constants');
-
-    /**
      * Wraps the update function in 
      */
     var CapacitorLabSimulation = Simulation.extend({

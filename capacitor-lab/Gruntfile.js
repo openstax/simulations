@@ -42,6 +42,10 @@ module.exports = function(grunt) {
                     '../common/img/**/*.{png,jpg,jpeg,gif}'
 				],
 				dest: 'dist/common/'
+			},
+			screenshot: {
+				src: 'src/screenshot.png',
+				dest: 'dist/screenshot.png'
 			}
 		},
 		rename: {
@@ -108,7 +112,8 @@ module.exports = function(grunt) {
 			options: {		
 				globals: {
 					require: true,
-					define: true
+					define: true,
+					module: true
 				},
 
 				// Enforcing Options

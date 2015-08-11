@@ -4,8 +4,6 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Vector3 = require('common/math/vector3');
-
     var CapacitorLabSimulation = require('models/simulation');
     var DielectricMaterial     = require('models/dielectric-material');
     var Capacitor              = require('models/capacitor');
