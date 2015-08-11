@@ -107,7 +107,22 @@ define(function (require) {
                 electronSrc: ''
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
+
+            this.$('.frequency-slider').noUiSlider({
+                start: 1,
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
+
+            this.$('.amplitude-slider').noUiSlider({
+                start: 1,
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
         },
 
         /**

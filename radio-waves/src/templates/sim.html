@@ -13,6 +13,16 @@
         <div class="sim-controls transmitter-movement-panel">
             <h2>Transmitter Movement</h2>
 
+            <ul class="radio field-sense">
+                <li>
+                    <input type="radio" name="transmitter-movement" value="manual" id="transmitter-movement-manual" checked>
+                    <label for="transmitter-movement-manual">Manual</label>
+                </li>
+                <li>
+                    <input type="radio" name="transmitter-movement" value="oscillate" id="transmitter-movement-oscillate">
+                    <label for="transmitter-movement-oscillate">Oscillate</label>
+                </li>
+            </ul>
 
             <label for="frequency-slider" class="slider-label">Frequency</label>
             <div class="frequency-slider-wrapper">
@@ -27,13 +37,13 @@
     </div>
 
     <div class="sim-controls-right">
-        <div class="sim-controls field-display-type-panel">
+        <div class="sim-controls field-options-panel">
             <h2>Field Display Type</h2>
 
             <ul class="radio field-display-type">
                 <li>
                     <input type="radio" name="field-display-type" value="curve-with-vectors" id="field-display-type-curve-with-vectors" checked>
-                    <label for="atmosphere-type-curve-with-vectors">Curve with Vectors</label>
+                    <label for="field-display-type-curve-with-vectors">Curve with Vectors</label>
                 </li>
                 <li>
                     <input type="radio" name="field-display-type" value="curve" id="field-display-type-curve">
@@ -48,30 +58,26 @@
                     <label for="field-display-type-none">None</label>
                 </li>
             </ul>
-        </div>
 
-        <div class="sim-controls field-sense-panel">
             <h2>Field Sense</h2>
 
             <ul class="radio field-sense">
                 <li>
                     <input type="radio" name="field-sense" value="force-on-electron" id="field-sense-force-on-electron" checked>
-                    <label for="atmosphere-type-force-on-electron">Force on Electron</label>
+                    <label for="field-sense-force-on-electron">Force on Electron</label>
                 </li>
                 <li>
                     <input type="radio" name="field-sense" value="electric-field" id="field-sense-electric-field">
                     <label for="field-sense-electric-field">Electric Field</label>
                 </li>
             </ul>
-        </div>
 
-        <div class="sim-controls field-displayed-panel">
             <h2>Field Displayed</h2>
 
             <ul class="radio field-displayed">
                 <li>
                     <input type="radio" name="field-displayed" value="radiated-field" id="field-displayed-radiated-field" checked>
-                    <label for="atmosphere-type-radiated-field">Radiated Field</label>
+                    <label for="field-displayed-radiated-field">Radiated Field</label>
                 </li>
                 <li>
                     <input type="radio" name="field-displayed" value="static-field" id="field-displayed-static-field">
