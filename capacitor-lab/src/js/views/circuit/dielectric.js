@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
     
     var SliderView = require('common/pixi/view/slider');
@@ -10,8 +9,6 @@ define(function(require) {
 
     var CircuitView             = require('views/circuit');
     var DielectricCapacitorView = require('views/capacitor/dielectric');
-
-    var Constants = require('constants');
 
     /**
      * 
@@ -95,7 +92,7 @@ define(function(require) {
 
             var markerX = Math.round(width * 0.36);
             var plusY  = Math.round(sliderView.displayObject.y);
-            var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2) - 1
+            var noneY  = Math.round(sliderView.displayObject.y + sliderView.displayObject.height / 2) - 1;
             var minusY = Math.round(sliderView.displayObject.y + sliderView.displayObject.height) - 1;
 
             plus.x = none.x = minus.x = markerX;
@@ -121,7 +118,7 @@ define(function(require) {
                 font: 'bold 14px Helvetica Neue',
                 fill: '#000'
             });
-            caption.x = Math.round(width / 2 - caption.width / 2);;
+            caption.x = Math.round(width / 2 - caption.width / 2);
             caption.y = Math.round(height + 4);
 
             panel.addChild(lines);

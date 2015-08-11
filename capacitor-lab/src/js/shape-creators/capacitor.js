@@ -5,10 +5,8 @@ define(function (require) {
     var _   = require('underscore');
     var SAT = require('sat');
 
-    var Rectangle      = require('common/math/rectangle');
     var Vector2        = require('common/math/vector2');
     var Vector3        = require('common/math/vector3');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var BoxShapeCreator = require('shape-creators/box');
 
@@ -198,7 +196,6 @@ define(function (require) {
             var y = this.capacitor.get('position').y;
             var z = this.capacitor.get('position').z;
             var plateWidth  = this.capacitor.get('plateWidth');
-            var plateHeight = this.capacitor.get('plateHeight');
             var plateDepth  = this.capacitor.get('plateDepth');
             var plateSeparation = this.capacitor.get('plateSeparation');
 

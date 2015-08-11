@@ -2,20 +2,14 @@ define(function(require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
     var SAT      = require('sat');
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
 
     var AppView   = require('common/app/app');
     var PixiView  = require('common/pixi/view');
-    var ArrowView = require('common/pixi/view/arrow');
     var Colors    = require('common/colors/colors');
-    var Vector2   = require('common/math/vector2');
 
-    var CapacitorView           = require('views/capacitor');
-    var WireView                = require('views/wire');
-    var BatteryView             = require('views/battery');
     var EFieldDetectorArrowView = require('views/e-field-detector-arrow');
 
     var Constants = require('constants');
@@ -60,7 +54,7 @@ define(function(require) {
             this.dielectric = options.dielectric;
             this.simulation = this.model;
 
-            this.displayWidth  = 62
+            this.displayWidth  =  62;
             this.displayHeight = 136;
 
             this.color = Colors.parseHex(EFieldDetectorView.DISPLAY_COLOR);
@@ -553,7 +547,6 @@ define(function(require) {
         determineZoomScale: function() {
             var arrowHeight = this.getArrowsHeight();
             var textHeight = this.getArrowsTextHeight();
-            var totalHeight = arrowHeight + 2 * textHeight;
             var displayHeight = this.displayHeight;
             var percentOfDisplayToFill = 1;
 

@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var ArrowView = require('common/pixi/view/arrow');
@@ -74,7 +75,7 @@ define(function(require) {
             if (length === 0 && !defaultDirection)
                 this.text.y = Math.round(-this.text.height / 2);
             else if (length > 0 || (defaultDirection && defaultDirection < 0))
-                this.text.y = Math.round(-this.text.height + 4)
+                this.text.y = Math.round(-this.text.height + 4);
             else
                 this.text.y = 4;
 

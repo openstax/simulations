@@ -4,17 +4,10 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-
-    var AppView = require('common/app/app');
     
     var PixiView   = require('common/pixi/view');
-    var SliderView = require('common/pixi/view/slider');
     var ArrowView  = require('common/pixi/view/arrow');
-    var Vector2    = require('common/math/vector2');
-    var Colors     = require('common/colors/colors');
-
-    var Assets = require('assets');
-
+    
     var Constants = require('constants');
 
     /**

@@ -2,17 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
-
-    var Vector2 = require('common/math/vector2');
+    var _ = require('underscore');
 
     var ParallelCircuit = require('models/circuit/parallel');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
+    var Capacitor       = require('models/capacitor');
 
     /**
      * Model of a circuit with a battery (B) connected to a single capacitor (C1).

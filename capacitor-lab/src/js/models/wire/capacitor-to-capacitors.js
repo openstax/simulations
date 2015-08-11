@@ -2,18 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
-
-    var Vector2 = require('common/math/vector2');
-
     var Wire = require('models/wire');
     var WireSegment = require('models/wire-segment');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * A specialized wire, found in all of our circuits, that connects the bottom plate

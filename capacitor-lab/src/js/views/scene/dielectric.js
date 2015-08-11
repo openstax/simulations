@@ -2,8 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
+    var _ = require('underscore');
 
     var AppView = require('common/app/app');
 
@@ -12,9 +11,6 @@ define(function(require) {
     var CapacitorLabSceneView = require('views/scene');
     var DielectricCircuitView = require('views/circuit/dielectric');
     var EFieldDetectorView    = require('views/e-field-detector');
-
-    // Constants
-    var Constants = require('constants');
 
     var batteryButtonsHtml = require('text!templates/battery-buttons.html');
 
@@ -58,7 +54,7 @@ define(function(require) {
         postRender: function() {
             CapacitorLabSceneView.prototype.postRender.apply(this, arguments);
 
-            var $btns = this.$ui.find('.connect-battery-btn, .disconnect-battery-btn')
+            var $btns = this.$ui.find('.connect-battery-btn, .disconnect-battery-btn');
             
             if (AppView.windowIsShort()) {
                 $btns.css('top', Math.round(this.height * 0.110) + 'px');

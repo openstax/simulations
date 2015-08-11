@@ -2,12 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var PositionableObject3D = require('common/models/positionable-object-3d');
     var Vector3              = require('common/math/vector3');
-    var Vector2              = require('common/math/vector2');
     var Rectangle            = require('common/math/rectangle');
 
     /**

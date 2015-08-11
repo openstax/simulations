@@ -6,19 +6,12 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var Colors     = require('common/colors/colors');
-    var Vector2    = require('common/math/vector2');
-    var Vector3    = require('common/math/vector3');
     var AppView    = require('common/app/app');
     var SliderView = require('common/pixi/view/slider');
 
-    var CapacitorShapeCreator = require('shape-creators/capacitor');
-
-    var CapacitorView              = require('views/capacitor');
-    var DielectricTotalChargeView  = require('views/charge/dielectric-total');
-    var DielectricExcessChargeView = require('views/charge/dielectric-excess');
+    var CapacitorView = require('views/capacitor');
 
     var Constants = require('constants');
-    var Polarity = Constants.Polarity;
 
     /**
      * 
