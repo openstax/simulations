@@ -3,6 +3,7 @@ define(function(require) {
 	'use strict';
 
 	var _ = require('underscore');
+	var Backbone = require('backbone');
 
 	var html  = require('text!./help-label.html');
 

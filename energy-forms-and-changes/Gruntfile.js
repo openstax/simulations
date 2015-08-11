@@ -39,6 +39,10 @@ module.exports = function(grunt){
                     '../common/img/**/*.{png,jpg,jpeg,gif}'
                 ],
                 dest: 'dist/common/'
+            },
+            screenshot: {
+                src: 'src/screenshot.png',
+                dest: 'dist/screenshot.png'
             }
         },
         rename: {
