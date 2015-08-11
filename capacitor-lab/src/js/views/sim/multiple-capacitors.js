@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var MultipleCapacitorsSimulation = require('models/simulation/multiple-capacitors');
 
     var CapacitorLabSimView         = require('views/sim');

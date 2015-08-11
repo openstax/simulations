@@ -2,17 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
-
     var WireSegment = require('models/wire-segment');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * A wire is a collection of connected wire segments. It contains a creator object

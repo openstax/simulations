@@ -2,20 +2,16 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
     require('common/pixi/extensions');
 
     var PixiSceneView        = require('common/pixi/view/scene');
-    var AppView              = require('common/app/app');
     var ModelViewTransform3D = require('common/math/model-view-transform-3d');
     var Vector2              = require('common/math/vector2');
     var Rectangle            = require('common/math/rectangle');
 
     var VoltmeterView      = require('views/voltmeter');
     var EFieldDetectorView = require('views/e-field-detector');
-
-    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');

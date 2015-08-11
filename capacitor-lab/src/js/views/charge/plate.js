@@ -2,10 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var Colors    = require('common/colors/colors');
-    var Vector2   = require('common/math/vector2');
-    var Vector3   = require('common/math/vector3');
-
     var ChargeView        = require('views/charge');
     var calculateGridSize = require('views/calculate-grid-size');
 

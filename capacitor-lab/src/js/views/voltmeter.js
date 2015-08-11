@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
     var SAT      = require('sat');
     var PIXI     = require('pixi');
     require('common/pixi/extensions');
@@ -12,7 +11,6 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
 
     var CapacitorView = require('views/capacitor');
-    var WireView      = require('views/wire');
     var BatteryView   = require('views/battery');
 
     var Constants = require('constants');

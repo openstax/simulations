@@ -2,7 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
     var Vector3 = require('common/math/vector3');
 
     var AbstractCircuit               = require('models/circuit');
@@ -10,11 +9,6 @@ define(function (require) {
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
     var CapacitorToCapacitorsWire     = require('models/wire/capacitor-to-capacitors');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * Model of a circuit with a battery (B), 2 capacitors in series (C1, C2), and one additional in parallel (C3).

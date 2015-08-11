@@ -5,11 +5,6 @@ define(function (require) {
     var _   = require('underscore');
     var SAT = require('sat');
 
-    var Rectangle      = require('common/math/rectangle');
-    var Vector2        = require('common/math/vector2');
-    var Vector3        = require('common/math/vector3');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-
     var BoxShapeCreator = require('shape-creators/box');
 
     var Battery = require('models/battery');

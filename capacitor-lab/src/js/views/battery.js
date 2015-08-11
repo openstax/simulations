@@ -11,7 +11,6 @@ define(function(require) {
     var AppView    = require('common/app/app');
     var PixiView   = require('common/pixi/view');
     var SliderView = require('common/pixi/view/slider');
-    var Vector2    = require('common/math/vector2');
     var Colors     = require('common/colors/colors');
 
     var BatteryShapeCreator = require('shape-creators/battery');

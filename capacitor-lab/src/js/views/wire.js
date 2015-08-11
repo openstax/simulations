@@ -2,7 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
     var PIXI = require('pixi');
     var SAT  = require('sat');
     
@@ -13,8 +12,6 @@ define(function(require) {
 
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
-
-    var Constants = require('constants');
 
     /**
      * A view that represents a wire, which consists of one or more wire segments.

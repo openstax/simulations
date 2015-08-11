@@ -2,6 +2,9 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+    var $ = require('jquery');
+
     var CapacitorLabSimView = require('views/sim');
     var DielectricSceneView = require('views/scene/dielectric');
     

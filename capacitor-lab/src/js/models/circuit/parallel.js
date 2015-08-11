@@ -2,18 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2 = require('common/math/vector2');
     var Vector3 = require('common/math/vector3');
 
     var AbstractCircuit               = require('models/circuit');
     var Capacitor                     = require('models/capacitor');
     var BatteryToCapacitorsTopWire    = require('models/wire/battery-to-capacitors-top');
     var BatteryToCapacitorsBottomWire = require('models/wire/battery-to-capacitors-bottom');
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * Model of a circuit with a battery (B) and N capacitors (C1...Cn) in parallel.
@@ -42,7 +36,6 @@ define(function (require) {
             var y = config.batteryLocation.y;
             var z = config.batteryLocation.z;
 
-            var capacitors = this.capacitors;
             for (var i = 0; i < numberOfCapacitors; i++) {
                 var capacitor = new Capacitor({
                     position: new Vector3(x, y, z),
@@ -92,19 +85,6 @@ define(function (require) {
             for (var i = 0; i < this.capacitors.length; i++)
                 sum += this.capacitors.at(i).getTotalCapacitance();
             return sum;
-        },
-
-        /**
-         * Gets the voltage at a shape, with respect to ground.
-         * Returns Double.NaN if the Shape is not connected to the circuit
-         */
-        getVoltageAt: function(shape) {
-            var voltage = NaN;
-            if (this.connectedToBatteryTop(shape))
-                voltage = this.getTotalVoltage();
-            else if (this.connectedToBatteryBottom(shape))
-                voltage = 0;
-            return voltage;
         },
 
         /**
