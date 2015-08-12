@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Pool = require('object-pool');
 
     var PositionableObject = require('common/v3/models/positionable-object');
@@ -24,8 +26,6 @@ define(function (require) {
             vector.set(0, 0);
         }
     });
-
-    var Constants = require('constants');
 
     /**
      * SoundListener is a model for the listener person graphic that keeps
@@ -78,7 +78,7 @@ define(function (require) {
          *
          */
         update: function(deltaTime) {
-            var primaryWavefront = this.get('simulation').primaryWavefront
+            var primaryWavefront = this.get('simulation').primaryWavefront;
             var meterDistFromSource = this.get('position').distance(this.get('origin'));
             var wavefrontDist = primaryWavefront.getIndexFromMeters(meterDistFromSource);
             var currentFrequency = primaryWavefront.getFrequencyAtTime(wavefrontDist);

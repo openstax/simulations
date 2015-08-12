@@ -3,12 +3,11 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
     
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/v3/colors/colors');
-    // var Vector2  = require('common/v3/math/vector2');
-    var Rectangle = require('common/v3/math/rectangle');
 
 
     /**

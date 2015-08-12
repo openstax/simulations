@@ -2,6 +2,8 @@ define(function(require) {
     
     'use strict';
 
+    var _ = require('underscore');
+
     var PixiAppView = require('common/v3/pixi/view/app');
 
     var SingleSourceSimView           = require('views/sim/single-source');

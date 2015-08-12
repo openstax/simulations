@@ -2,12 +2,12 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var VariableAirPressureSimulation = require('models/simulation/variable-air-pressure');
 
     var SoundSimView                 = require('views/sim');
     var VariableAirPressureSceneView = require('views/scene/variable-air-pressure');
-
-    var Constants = require('constants');
 
     var airDensityControlsHtml = require('text!templates/air-density-controls.html');
         

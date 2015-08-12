@@ -246,7 +246,7 @@ define(function (require) {
             var timeSeconds = time / 1000;
             var dtSeconds   = deltaTime / 1000;
 
-            this._update(timeSeconds, dtSeconds, this.simulation.get('paused'))
+            this._update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         /**

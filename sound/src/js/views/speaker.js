@@ -2,8 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
-    
     var PixiView               = require('common/v3/pixi/view');
     var defineInputUpdateLocks = require('common/v3/locks/define-locks');
 

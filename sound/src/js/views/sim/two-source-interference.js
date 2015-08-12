@@ -9,8 +9,6 @@ define(function (require) {
     var SoundSimView                   = require('views/sim');
     var TwoSourceInterferenceSceneView = require('views/scene/two-source-interference');
 
-    var Constants = require('constants');
-
     /**
      * 
      */

@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var Pool = require('object-pool');
 
     var Vector2 = require('common/v3/math/vector2');
@@ -25,8 +27,6 @@ define(function (require) {
             vector.set(0, 0);
         }
     });
-
-    var Constants = require('constants');
 
     /**
      * The TwoSourceSoundListener adds the ability to listen to two sources
@@ -80,7 +80,7 @@ define(function (require) {
             //   each audio source in units of phase angle of the current
             //   frequency.
             var simulation = this.get('simulation');
-            var wavefront = simulation.primaryWavefront
+            var wavefront = simulation.primaryWavefront;
 
             var meterDistA = this.get('position').distance(this.get('origin'));
             var meterDistB = this.get('position').distance(this.get('origin2'));
