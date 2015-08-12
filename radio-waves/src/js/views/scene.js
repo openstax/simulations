@@ -51,13 +51,22 @@ define(function(require) {
             this.updateBackgroundScale();
         },
 
+        resize: function() {
+            PixiSceneView.prototype.resize.apply(this, arguments);
+
+            if (this.bg) {
+                this.updateBackgroundScale();
+                this.bg.y = this.height;
+            }
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
 
         updateBackgroundScale: function() {
             var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.width; // In pixels
-            var scale = targetBackgroundWidth / this.bg.width;
+            var scale = targetBackgroundWidth / this.bg.texture.width;
             this.bg.scale.x = scale;
             this.bg.scale.y = scale;
         },
