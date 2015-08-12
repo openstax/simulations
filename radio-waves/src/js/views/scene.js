@@ -65,7 +65,7 @@ define(function(require) {
         },
 
         updateBackgroundScale: function() {
-            var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.width; // In pixels
+            var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.texture.width; // In pixels
             var scale = targetBackgroundWidth / this.bg.texture.width;
             this.bg.scale.x = scale;
             this.bg.scale.y = scale;
