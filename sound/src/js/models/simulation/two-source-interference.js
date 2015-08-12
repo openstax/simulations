@@ -2,18 +2,11 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var SoundSimulation        = require('models/simulation');
     var TwoSourceSoundListener = require('models/two-source-sound-listener');
 
     /**
-     * Constants
-     */
-    var Constants = require('constants');
-
-    /**
-     * Wraps the update function in 
+     * Simulation for the two-source interference tab
      */
     var TwoSourceInterferenceSimulation = SoundSimulation.extend({
 

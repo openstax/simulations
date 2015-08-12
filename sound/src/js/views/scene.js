@@ -2,9 +2,6 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-
     var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/v3/math/model-view-transform');
     var Vector2            = require('common/v3/math/vector2');
@@ -12,8 +9,6 @@ define(function(require) {
     var WaveMediumView = require('views/wave-medium');
     var SpeakerView    = require('views/speaker');
     var ListenerView   = require('views/listener');
-
-    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');

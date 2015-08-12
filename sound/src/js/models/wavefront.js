@@ -2,10 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    //var _        = require('underscore');
     var Backbone = require('backbone');
-
-    var Rectangle = require('common/v3/math/rectangle');
 
     var WavefrontType = require('models/wavefront-type');
 

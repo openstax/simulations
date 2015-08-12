@@ -2,6 +2,8 @@ define(function (require, exports, module) {
 
     'use strict';
 
+    var _ = require('underscore');
+
     var SoundSimulation = require('models/simulation');
 
     /**

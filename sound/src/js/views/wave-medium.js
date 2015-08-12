@@ -2,8 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var Backbone = require('backbone')
+    var Backbone = require('backbone');
     
     var Colors   = require('common/v3/colors/colors');
     var Vector2  = require('common/v3/math/vector2');
@@ -69,9 +68,7 @@ define(function(require) {
         drawAmplitudes: function() {
             var ctx = this.ctx;
             ctx.clearRect(0, 0, this.width, this.height);
-            //ctx.lineWidth = Math.ceil(this.lineWidth);
 
-            var counterclockwise = false;
             var angle = Math.PI / 4;
             var lineWidth = this.lineWidth;
             var startAngle;
@@ -181,7 +178,7 @@ define(function(require) {
          *
          */
         clear: function() {
-            for (i = 0; i < this.arcCenters.length; i++)
+            for (var i = 0; i < this.arcCenters.length; i++)
                 this.arcCenters[i].set(this.origin.x, this.origin.y);
             this.update();
         },

@@ -2,8 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
+    var _ = require('underscore');
     
     var PixiView               = require('common/v3/pixi/view');
     var defineInputUpdateLocks = require('common/v3/locks/define-locks');

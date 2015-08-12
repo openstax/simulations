@@ -7,8 +7,6 @@ define(function (require) {
     var SoundSimView          = require('views/sim');
     var SingleSourceSceneView = require('views/scene/single-source');
 
-    var Constants = require('constants');
-
     /**
      * 
      */

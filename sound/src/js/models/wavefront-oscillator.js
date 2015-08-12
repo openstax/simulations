@@ -9,13 +9,10 @@ define(function (require) {
 
     var Vector2 = require('common/v3/math/vector2');
 
-    var WavefrontType = require('models/wavefront-type');
-
     /**
      * Constants
      */
     var Constants = require('constants');
-    var S_LENGTH = 400;
 
     /**
      * TODO: Make it actually play sounds like the original

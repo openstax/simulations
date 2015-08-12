@@ -10,11 +10,8 @@ define(function(require) {
     var SoundSceneView    = require('views/scene');
     var ReferenceLineView = require('views/reference-line');
 
-    // Constants
-    var Constants = require('constants');
-
     /**
-     *
+     * Scene view for the measure tab
      */
     var MeasureSceneView = SoundSceneView.extend({
 
