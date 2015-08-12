@@ -4,7 +4,7 @@
 @import "control-panel.less";
 
 .sims .sim-content {
-    min-height: initial;
+    min-height: inherit;
 }
 
 .sim-view {
@@ -37,7 +37,7 @@
 	background: @panel-bg;
 
 	@media screen and (max-height: @short-window) {
-        top: initial;
+        top: inherit;
         bottom: @short-screen-panel-margin;
         left: @short-screen-panel-margin;
     }

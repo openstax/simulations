@@ -3,7 +3,7 @@
 @import "mixins.less";
 
 .sims .sim-content {
-    min-height: initial;
+    min-height: inherit;
 }
 
 @reference-mass-label-color: fadeout(#74C5FF, 40%);
@@ -18,8 +18,8 @@
     @media screen and (max-height: @short-window) {
         position: relative;
         margin-top: 7px;
-        left: initial;
-        top: initial;
+        left: inherit;
+        top: inherit;
     }
 
     .body-settings-view {
@@ -120,8 +120,8 @@
     @media screen and (max-height: @short-window) {
         position: relative;
         margin-top: @short-screen-panel-margin;
-        left: initial;
-        top: initial;
+        left: inherit;
+        top: inherit;
     }
 
     .bootstrap-select {
@@ -160,7 +160,7 @@
 
     @media screen and (max-height: @short-window) {
         left: 20px;
-        right: initial;
+        right: inherit;
     }
 }
 
@@ -182,8 +182,8 @@
 
     @media screen and (max-height: @short-window) {
         width: 100%;
-        right: initial;
-        top: initial;
+        right: inherit;
+        top: inherit;
         position: relative;
     }
 
