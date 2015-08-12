@@ -110,6 +110,7 @@ define(function (require) {
 
             this.$('.frequency-slider').noUiSlider({
                 start: 1,
+                connect: 'lower',
                 range: {
                     'min': 0.2,
                     'max': 1
@@ -118,6 +119,7 @@ define(function (require) {
 
             this.$('.amplitude-slider').noUiSlider({
                 start: 1,
+                connect: 'lower',
                 range: {
                     'min': 0.2,
                     'max': 1
