@@ -1,10 +1,89 @@
 
 <span class="scene-view-placeholder"></span>
 
-<div class="sound-btn-wrapper">
-    <button class="sound-btn sound-btn-mute" title="Mute effect volume (click to raise)"><span class="fa fa-volume-off"></span></button>
-    <button class="sound-btn sound-btn-low"  title="Low effect volume (click to raise)"><span class="fa fa-volume-down"></span></button>
-    <button class="sound-btn sound-btn-high" title="High effect volume (click to mute)"><span class="fa fa-volume-up"></span></button>
-</div>
 
-<div class="hello-world">Hello World.</div>
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+        <div class="sim-controls legend-panel">
+            <h2>Legend</h2>
+
+            <div class="legend-symbol"><%= Assets.createIcon(electronSrc, { 'class': 'symbol-icon' }, 20) %> Electron</div>
+        </div>
+
+        <div class="sim-controls transmitter-movement-panel">
+            <h2>Transmitter Movement</h2>
+
+            <ul class="radio field-sense">
+                <li>
+                    <input type="radio" name="transmitter-movement" value="manual" id="transmitter-movement-manual" checked>
+                    <label for="transmitter-movement-manual">Manual</label>
+                </li>
+                <li>
+                    <input type="radio" name="transmitter-movement" value="oscillate" id="transmitter-movement-oscillate">
+                    <label for="transmitter-movement-oscillate">Oscillate</label>
+                </li>
+            </ul>
+
+            <label for="frequency-slider" class="slider-label">Frequency</label>
+            <div class="frequency-slider-wrapper">
+                <div id="frequency-slider" class="slider frequency-slider"></div>
+            </div>
+
+            <label for="amplitude-slider" class="slider-label">Amplitude</label>
+            <div class="amplitude-slider-wrapper">
+                <div id="amplitude-slider" class="slider amplitude-slider"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sim-controls-right">
+        <div class="sim-controls field-options-panel">
+            <h2>Field Display Type</h2>
+
+            <ul class="radio field-display-type">
+                <li>
+                    <input type="radio" name="field-display-type" value="curve-with-vectors" id="field-display-type-curve-with-vectors" checked>
+                    <label for="field-display-type-curve-with-vectors">Curve with Vectors</label>
+                </li>
+                <li>
+                    <input type="radio" name="field-display-type" value="curve" id="field-display-type-curve">
+                    <label for="field-display-type-curve">Curve</label>
+                </li>
+                <li>
+                    <input type="radio" name="field-display-type" value="full-field" id="field-display-type-full-field">
+                    <label for="field-display-type-full-field">Full Field</label>
+                </li>
+                <li>
+                    <input type="radio" name="atmosphere-type" value="none" id="field-display-type-none">
+                    <label for="field-display-type-none">None</label>
+                </li>
+            </ul>
+
+            <h2>Field Sense</h2>
+
+            <ul class="radio field-sense">
+                <li>
+                    <input type="radio" name="field-sense" value="force-on-electron" id="field-sense-force-on-electron" checked>
+                    <label for="field-sense-force-on-electron">Force on Electron</label>
+                </li>
+                <li>
+                    <input type="radio" name="field-sense" value="electric-field" id="field-sense-electric-field">
+                    <label for="field-sense-electric-field">Electric Field</label>
+                </li>
+            </ul>
+
+            <h2>Field Displayed</h2>
+
+            <ul class="radio field-displayed">
+                <li>
+                    <input type="radio" name="field-displayed" value="radiated-field" id="field-displayed-radiated-field" checked>
+                    <label for="field-displayed-radiated-field">Radiated Field</label>
+                </li>
+                <li>
+                    <input type="radio" name="field-displayed" value="static-field" id="field-displayed-static-field">
+                    <label for="field-displayed-static-field">Static Field</label>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
