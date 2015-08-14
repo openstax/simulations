@@ -12,6 +12,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     require('nouislider');
     require('bootstrap');
     require('bootstrap-select');
@@ -100,10 +102,29 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                Assets: Assets,
+                electronSrc: ''
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
+
+            this.$('.frequency-slider').noUiSlider({
+                start: 1,
+                connect: 'lower',
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
+
+            this.$('.amplitude-slider').noUiSlider({
+                start: 1,
+                connect: 'lower',
+                range: {
+                    'min': 0.2,
+                    'max': 1
+                }
+            });
         },
 
         /**
