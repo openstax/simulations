@@ -75,6 +75,14 @@ define(function (require) {
             return -this.amplitude * this.omega * this.omega * s;
         },
 
+        getFrequency: function() {
+            return this.frequency;
+        },
+
+        getAmplitude: function() {
+            return this.amplitude;
+        },
+
         valueAtTime: function(frequency, maxAmplitude, time) {
             var amplitude;
             
@@ -93,6 +101,10 @@ define(function (require) {
 
         setAmplitude: function(amplitude) {
             this.amplitude = amplitude;
+        },
+
+        setRunningTime: function(runningTime) {
+            this.runningTime = runningTime;
         }
 
     });
