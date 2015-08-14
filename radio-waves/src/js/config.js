@@ -10,11 +10,13 @@
             text:       '../../bower_components/requirejs-text/text',
             pixi:       '../../bower_components/pixi/bin/pixi',
             nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-            'vector2-node':   '../../node_modules/vector2-node-shimmed/index',
-            'object-pool':    '../../node_modules/object-pool-shimmed/index',
-            'circular-list':  '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
+            
+            'vector2-node':          '../../node_modules/vector2-node-shimmed/index',
+            'object-pool':           '../../node_modules/object-pool-shimmed/index',
+            'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
+            'filters':               '../../node_modules/filters-shimmed/index',
 
             views:      '../js/views',
             models:     '../js/models',
