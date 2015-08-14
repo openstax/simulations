@@ -72,7 +72,7 @@ define(function(require) {
          */
         hideLoading: function() {
             this.$loadingScreen.fadeOut(300, function() {
-                this.remove();
+                $(this).remove();
             });
         },
 
