@@ -269,6 +269,10 @@ define(function (require) {
             return fieldStrength;
         },
 
+        getStartPosition: function() {
+            return this.startPosition;
+        },
+
         setFrequency: function(freq) {
             if (this.movementStrategy instanceof SinusoidalMovementStrategy) {
                 this.changeFreq = true;
