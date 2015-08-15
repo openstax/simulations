@@ -26,8 +26,6 @@ define(function (require) {
         this.yPosHistory = [];
         this.yVelHistory = [];
         this.yAccHistory = [];
-        
-
     };
 
     /**

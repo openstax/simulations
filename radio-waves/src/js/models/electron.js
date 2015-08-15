@@ -8,6 +8,9 @@ define(function (require) {
     var Vector2      = require('common/math/vector2');
     var MotionObject = require('common/models/motion-object');
 
+    var ManualMovementStrategy     = require('models/movement-strategy/manual');
+    var SinusoidalMovementStrategy = require('models/movement-strategy/sinusoidal');
+
     var Constants = require('constants');
     var RETARDED_FIELD_LENGTH = 2000;
     // Fudge factor for scaling the field strength from the acceleration
@@ -51,7 +54,10 @@ define(function (require) {
 
             // The history of what movement strategy was in place a point in time
             this.movementStrategyHistory = [];
-            this.movementStrategy = new ManualMovement();
+            this.movementStrategy = new ManualMovementStrategy();
+
+            this.manualMovement     = new ManualMovementStrategy(this);
+            this.sinusoidalMovement = new SinusoidalMovementStrategy(this);
 
             this._staticFieldStrength  = new Vector2;
             this._dynamicFieldStrength = new Vector2;
@@ -83,7 +89,7 @@ define(function (require) {
 
             // If the electron is using sinusoidal movement, we need to see if it's
             //   time to make frequency or amplitude changes
-            if (this.movementStrategy instanceof SinusoidalMovement) {
+            if (this.movementStrategy instanceof SinusoidalMovementStrategy) {
                 var ms = this.movementStrategy;
                 // If we have a frequency change pending, determine if this is the
                 //   right time to make it
@@ -264,21 +270,21 @@ define(function (require) {
         },
 
         setFrequency: function(freq) {
-            if (this.movementStrategy instanceof SinusoidalMovement) {
+            if (this.movementStrategy instanceof SinusoidalMovementStrategy) {
                 this.changeFreq = true;
                 this.newFreq = freq;
             }
         },
 
         setAmplitude: function(amp) {
-            if (this.movementStrategy instanceof SinusoidalMovement) {
+            if (this.movementStrategy instanceof SinusoidalMovementStrategy) {
                 this.changeAmplitude = true;
                 this.newAmplitude = amp;
             }
         },
 
         moveToNewPosition: function(newPosition) {
-            if (this.movementStrategy instanceof ManualMovement)
+            if (this.movementStrategy instanceof ManualMovementStrategy)
                 this.movementStrategy.setPosition(newPosition);
         }
 
