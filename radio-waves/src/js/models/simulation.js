@@ -51,9 +51,10 @@ define(function (require, exports, module) {
             });
 
             // Create the receiving antenna
+            var receivingXOffset = 625;
             this.receivingAntenna = new Antenna(
-                new Vector2(this.origin.x + 679, this.transmittingElectron.getStartPosition().y - 50), 
-                new Vector2(this.origin.x + 679, this.transmittingElectron.getStartPosition().y + 75)
+                new Vector2(this.origin.x + receivingXOffset, this.transmittingElectron.getStartPosition().y - 50), 
+                new Vector2(this.origin.x + receivingXOffset, this.transmittingElectron.getStartPosition().y + 75)
             );
 
             // Create the receiving antenna's atom

@@ -38,9 +38,10 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
-
-            this.initMVT();
+            
             this.initBackground();
+            this.initMVT();
+            this.updateBackgroundScale();
 
             var graphics = new PIXI.Graphics();
             graphics.beginFill(0xFF0000, 0.2);
@@ -86,12 +87,10 @@ define(function(require) {
             var bounds = Constants.SIMULATION_BOUNDS;
 
             // ...to the usable screen space that we have
-            var controlsWidth = 192;
-            var margin = 20;
-            var smallMargin = 13;
-            var leftMargin  = AppView.windowIsShort() ? smallMargin + controlsWidth : 0;
-            var rightMargin = AppView.windowIsShort() ? smallMargin + controlsWidth : 0;
-            var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
+            var availableWidth = AppView.windowIsShort() ? this.width * this.getBackgroundScale() : this.width;
+            var availableHeight = this.height + 999; // Just a value that is big enough not to matter
+            var x = AppView.windowIsShort() ? (this.width - availableWidth) / 2 : 0;
+            var usableScreenSpace = new Rectangle(x, 0, availableWidth, availableHeight);
 
             var boundsRatio = bounds.w / bounds.h;
             var screenRatio = usableScreenSpace.w / usableScreenSpace.h;
@@ -117,7 +116,6 @@ define(function(require) {
             this.stage.addChild(bg);
 
             this.bg = bg;
-            this.updateBackgroundScale();
         },
 
         resize: function() {
@@ -134,11 +132,16 @@ define(function(require) {
         },
 
         updateBackgroundScale: function() {
-            var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.texture.width; // In pixels
-            var scale = targetBackgroundWidth / this.bg.texture.width;
+            var scale = this.getBackgroundScale();
             this.bg.scale.x = scale;
             this.bg.scale.y = scale;
         },
+
+        getBackgroundScale: function() {
+            var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.texture.width; // In pixels
+            var scale = targetBackgroundWidth / this.bg.texture.width;
+            return scale;
+        }
 
     });
 
