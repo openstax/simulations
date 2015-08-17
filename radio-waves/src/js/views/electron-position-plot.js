@@ -17,8 +17,8 @@ define(function(require) {
      */
     var ElectronPositionPlot = PixiView.extend({
 
-        width: 200,
-        height: 116,
+        width: 260,
+        height: 140,
         margin: 15,
 
         events: {

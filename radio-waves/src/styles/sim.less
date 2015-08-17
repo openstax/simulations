@@ -48,8 +48,8 @@
         font-weight: 400;
         color: fadeout(#222, 35%);
         margin-top: 0;
-        margin-bottom: 8px;
-        padding-bottom: 4px;
+        margin-bottom: 6px;
+        padding-bottom: 2px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
 
         @media screen and (max-height: @short-window) {
@@ -83,8 +83,13 @@
         li {
             text-align: left;
             list-style-image: none;
+            margin-top: -2px;
 
-            label{
+            @media screen and (max-height: @short-window) {
+                margin-top: 0;
+            }
+
+            label {
                 font-weight: bold;
             }
         }
@@ -106,7 +111,12 @@
 
     .slider.amplitude-slider,
     .slider.frequency-slider {
+        margin-top: 4px;
         margin-bottom: 6px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 12px;
+        }
     }
 
 }
