@@ -13,7 +13,7 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents an atom
+     * A view that represents an electron-position plot
      */
     var ElectronPositionPlot = PixiView.extend({
 

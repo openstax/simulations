@@ -1,0 +1,65 @@
+define(function(require) {
+
+    'use strict';
+
+    var PIXI = require('pixi');
+
+    var ElectronView = require('views/electron');
+
+    /**
+     * An electron view that the user can interact with
+     */
+    var DraggableElectronView = ElectronView.extend({
+
+        events: {
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd'
+        },
+
+        /**
+         * Initializes the new DraggableElectronView.
+         */
+        initialize: function(options) {
+            // Cached objects
+            this._dragOffset = new PIXI.Point();
+
+            ElectronView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            ElectronView.prototype.initGraphics.apply(this, arguments);
+        },
+
+        dragStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragging = true;
+        },
+
+        drag: function(data) {
+            if (this.dragging) {
+                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                
+                this.displayObject.x += dx;
+                this.displayObject.y += dy;
+            }
+        },
+
+        dragEnd: function(data) {
+            this.dragging = false;
+        },
+
+    });
+
+
+    return DraggableElectronView;
+});

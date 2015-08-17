@@ -11,7 +11,9 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
 
-    var ElectronPositionPlot = require('views/electron-position-plot');
+    var ElectronPositionPlot  = require('views/electron-position-plot');
+    var ElectronView          = require('views/electron');
+    var DraggableElectronView = require('views/electron/draggable');
 
     var Assets = require('assets');
 
@@ -43,6 +45,7 @@ define(function(require) {
 
             this.initBackground();
             this.initMVT();
+            this.initElectrons();
             this.initElectronPositionPlots();
 
             this.updateBackgroundScale();
@@ -82,6 +85,20 @@ define(function(require) {
             this.stage.addChild(bg);
 
             this.bg = bg;
+        },
+
+        initElectrons: function() {
+            this.transmittingElectronView = new DraggableElectronView({
+                model: this.simulation.transmittingElectron,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.transmittingElectronView.displayObject);
+
+            this.receivingElectronView = new ElectronView({
+                model: this.simulation.receivingElectron,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.receivingElectronView.displayObject);
         },
 
         initElectronPositionPlots: function() {
