@@ -35,14 +35,10 @@ define(function (require) {
          * Initializes the new electron
          */
         initialize: function(attributes, options) {
-            options = _.extend({
-                startPosition: null
-            }, options);
-
             MotionObject.prototype.initialize.apply(this, [attributes, options]);
 
             this.positionHistory = [];
-            this.startPosition    = new Vector2(options.startPosition);
+            this.startPosition    = new Vector2(this.get('position'));
             this.previousPosition = new Vector2();
             this.setPosition(this.startPosition);
 

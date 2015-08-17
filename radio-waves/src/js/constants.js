@@ -15,7 +15,8 @@ define(function (require) {
 
     Constants.SPEED_OF_LIGHT = 6;
 
-    Constants.MODEL_BOUNDS = new Rectangle(125, 300, 1000, 700);
+    Constants.SIMULATION_BOUNDS = new Rectangle(0, 0, 1000, 700);
+    Constants.SIMULATION_ORIGIN = new Vector2(125, 300);
 
     return Constants;
 });

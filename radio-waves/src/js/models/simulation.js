@@ -28,7 +28,7 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            this.origin = new Vector2(Constants.MODEL_BOUNDS.x, Constants.MODEL_BOUNDS.y);
+            this.origin = new Vector2(Constants.SIMULATION_ORIGIN.x, Constants.SIMULATION_ORIGIN.y);
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
         },
