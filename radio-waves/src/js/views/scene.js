@@ -11,6 +11,8 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
 
+    var ElectronPositionPlot = require('views/electron-position-plot');
+
     var Assets = require('assets');
 
     // Constants
@@ -38,48 +40,12 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
-            
+
             this.initBackground();
             this.initMVT();
+            this.initElectronPositionPlots();
+
             this.updateBackgroundScale();
-
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 0.2);
-            graphics.drawRect(
-                this.mvt.modelToViewX(Constants.SIMULATION_BOUNDS.x),
-                this.mvt.modelToViewY(Constants.SIMULATION_BOUNDS.y),
-                this.mvt.modelToViewDeltaX(Constants.SIMULATION_BOUNDS.w),
-                this.mvt.modelToViewDeltaY(Constants.SIMULATION_BOUNDS.h)
-            );
-            graphics.endFill();
-
-            graphics.beginFill();
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.transmittingAntenna.end1.x),
-                this.mvt.modelToViewY(this.simulation.transmittingAntenna.end1.y),
-                3
-            );
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.transmittingAntenna.end2.x),
-                this.mvt.modelToViewY(this.simulation.transmittingAntenna.end2.y),
-                3
-            );
-            graphics.endFill();
-
-            graphics.beginFill(0xFFFFFF, 1);
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.receivingAntenna.end1.x),
-                this.mvt.modelToViewY(this.simulation.receivingAntenna.end1.y),
-                3
-            );
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.receivingAntenna.end2.x),
-                this.mvt.modelToViewY(this.simulation.receivingAntenna.end2.y),
-                3
-            );
-            graphics.endFill();
-
-            this.stage.addChild(graphics);
         },
 
         initMVT: function() {
@@ -116,6 +82,17 @@ define(function(require) {
             this.stage.addChild(bg);
 
             this.bg = bg;
+        },
+
+        initElectronPositionPlots: function() {
+            this.transmittingElectronPositionPlot = new ElectronPositionPlot({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                electron: this.simulation.transmittingElectron,
+                title: 'Transmitter'
+            });
+
+            this.stage.addChild(this.transmittingElectronPositionPlot.displayObject);
         },
 
         resize: function() {

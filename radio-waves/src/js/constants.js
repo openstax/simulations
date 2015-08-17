@@ -18,5 +18,7 @@ define(function (require) {
     Constants.SIMULATION_BOUNDS = new Rectangle(0, 0, 1000, 700);
     Constants.SIMULATION_ORIGIN = new Vector2(108, 325);
 
+    Constants.PANEL_BG = '#D6DFE9';
+
     return Constants;
 });
