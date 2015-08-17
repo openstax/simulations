@@ -36,7 +36,34 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initMVT();
             this.initBackground();
+        },
+
+        initMVT: function() {
+            // Map the simulation bounds...
+            var bounds = Constants.MODEL_BOUNDS;
+
+            // ...to the usable screen space that we have
+            // var controlsWidth = 180;
+            // var margin = 20;
+            // var leftMargin = AppView.windowIsShort() ? margin + controlsWidth + margin : margin;
+            // var rightMargin = margin + controlsWidth + margin;
+            // var usableScreenSpace = new Rectangle(leftMargin, 0, this.width - leftMargin - rightMargin, this.height);
+
+            // var boundsRatio = bounds.w / bounds.h;
+            // var screenRatio = usableScreenSpace.w / usableScreenSpace.h;
+            
+            // var scale = (screenRatio > boundsRatio) ? usableScreenSpace.h / bounds.h : usableScreenSpace.w / bounds.w;
+            
+            // this.viewOriginX = Math.round(usableScreenSpace.x + usableScreenSpace.w / 2);
+            // this.viewOriginY = Math.round(usableScreenSpace.y + usableScreenSpace.h);
+
+            // this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
+            //     new Vector2(0, 0),
+            //     new Vector2(this.viewOriginX, this.viewOriginY),
+            //     scale
+            // );
         },
 
         initBackground: function() {

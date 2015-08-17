@@ -5,6 +5,7 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var Simulation = require('common/simulation/simulation');
+    var Vector2    = require('common/math/vector2');
 
     var Antenna                     = require('models/antenna');
     var PositionConstrainedElectron = require('models/electron/position-constrained');
@@ -27,7 +28,7 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            this.origin = new Vector2(125, 300);
+            this.origin = new Vector2(Constants.MODEL_BOUNDS.x, Constants.MODEL_BOUNDS.y);
 
             Simulation.prototype.initialize.apply(this, [attributes, options]);
         },
@@ -59,7 +60,8 @@ define(function (require, exports, module) {
             this.receivingElectron = new EmfSensingElectron({
                 position: new Vector2(this.origin.x + 680, this.transmittingElectron.getStartPosition().y)
             }, {
-                positionConstraint: this.receivingAntenna
+                positionConstraint: this.receivingAntenna,
+                sourceElectron: this.transmittingElectron
             });
 
             // Create movement strategies

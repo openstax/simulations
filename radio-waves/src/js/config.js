@@ -16,7 +16,11 @@
             'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
+            
             'filters':               '../../node_modules/filters-shimmed/index',
+            'lib/median':            '../../node_modules/filters-shimmed/lib/median',
+            'lib/average':           '../../node_modules/filters-shimmed/lib/average',
+            'lib/aggregate':         '../../node_modules/filters-shimmed/lib/aggregate',
 
             views:      '../js/views',
             models:     '../js/models',

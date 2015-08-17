@@ -25,13 +25,14 @@ define(function (require) {
 
             PositionConstrainedElectron.prototype.initialize.apply(this, [attributes, options]);
 
-            this.movementStrategy = this.manualMovement;
+            this._location.set(this.get('position'));
             this.recordingHistory = false;
         },
 
         update: function(time, deltaTime) {
             PositionConstrainedElectron.prototype.update.apply(this, arguments);
 
+            var dt = deltaTime;
             var v = this.get('velocity');
             var location = this._location;
             var aPrev = this._aPrevious;

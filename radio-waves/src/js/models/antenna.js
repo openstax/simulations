@@ -20,13 +20,13 @@ define(function (require) {
 
         this.r = Math.sqrt((Math.pow(end1.x - end2.x, 2) + Math.pow(end1.y - end2.y, 2)));
         this.theta = Math.atan((end1.y - end2.y) / (end1.x - end2.x));
-        if (end1.x == end2.x) {
+        if (end1.x === end2.x) {
             this.theta = Math.PI / 2;
             this.m = Number.POSITIVE_INFINITY;
             this.b = Number.NaN;
         }
         else {
-            this.m = (end1.y - end2.y) / (end1.x - end2.x ;
+            this.m = (end1.y - end2.y) / (end1.x - end2.x);
             this.b = end1.y - (end1.x * this.m);
         }
     };

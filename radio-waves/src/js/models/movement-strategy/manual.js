@@ -36,7 +36,7 @@ define(function (require) {
     	update: function(deltaTime) {
             if (this.position) {
                 this.numHistoryEntries = Math.min(this.numHistoryEntries + 1, HISTORY_LENGTH);
-                this.electron.set(this.position);
+                this.electron.setPosition(this.position);
                 for (var i = this.yPosHistory.length - 1; i > 0; i--)
                     this.yPosHistory[i] = yPosHistory[i - 1];
                 this.yPosHistory[0] = this.electron.get('position').y;

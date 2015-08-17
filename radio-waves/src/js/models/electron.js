@@ -54,7 +54,7 @@ define(function (require) {
 
             // The history of what movement strategy was in place a point in time
             this.movementStrategyHistory = [];
-            this.movementStrategy = new ManualMovementStrategy();
+            this.movementStrategy = new ManualMovementStrategy(this);
 
             this._staticFieldStrength  = new Vector2;
             this._dynamicFieldStrength = new Vector2;
@@ -62,9 +62,9 @@ define(function (require) {
             this.recordingHistory = true;
 
             for (var i = 0; i < RETARDED_FIELD_LENGTH; i++) {
-                positionHistory[i] = new Vector2(this.startPosition);
-                accelerationHistory[i] = new MutableVector2D();
-                maxAccelerationHistory[i] = new MutableVector2D();
+                this.positionHistory[i] = new Vector2(this.startPosition);
+                this.accelerationHistory[i] = new Vector2();
+                this.maxAccelerationHistory[i] = new Vector2();
             }
         },
 
@@ -127,14 +127,27 @@ define(function (require) {
                 this.movementStrategyHistory[i] = this.movementStrategyHistory[i - STEP_SIZE];
             }
 
-            var a = accelerationHistory[0];
-            var df = (a.y - movementStrategy.getAcceleration() * B) / STEP_SIZE;
+            var a = this.accelerationHistory[0];
+            var df = (a.y - this.movementStrategy.getAcceleration() * B) / STEP_SIZE;
             for (i = 0; i < STEP_SIZE; i++) {
                 this.positionHistory[i].set(position);
                 this.accelerationHistory[i].y = this.movementStrategy.getAcceleration() * B + i * df;
                 this.maxAccelerationHistory[i].y = this.movementStrategy.getMaxAcceleration() * B;
                 this.movementStrategyHistory[i] = this.movementStrategy;
             }
+        },
+
+        /**
+         * Tells if the field is zero between the electron and a specified x coordinate
+         */
+        isFieldOff: function(x) {
+            var result = true;
+            for (var i = 0; i < this.accelerationHistory.length && i < x && result == true; i++) {
+                var field = this.accelerationHistory[i];
+                if (field.x !== 0 || field.y !== 0)
+                    result = false;
+            }
+            return result;
         },
 
         /**
