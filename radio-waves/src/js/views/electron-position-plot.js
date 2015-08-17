@@ -159,6 +159,14 @@ define(function(require) {
             this.dragging = false;
         },
 
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
+        }
+
     });
 
 

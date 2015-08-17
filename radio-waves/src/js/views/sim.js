@@ -49,7 +49,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click #electron-positions-check' : 'toggleElectronPositions'
         },
 
         /**
@@ -165,6 +165,13 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        toggleElectronPositions: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showElectronPositionPlots();
+            else
+                this.sceneView.hideElectronPositionPlots();
+        }
 
     });
 

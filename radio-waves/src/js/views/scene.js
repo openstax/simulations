@@ -85,14 +85,32 @@ define(function(require) {
         },
 
         initElectronPositionPlots: function() {
+            var r = AppView.windowIsShort() ? 
+                this.width - (13 + 192) - 4 :
+                this.width - (20 + 192) - 4;
+            var m = AppView.windowIsShort() ? 13 : 20;
+
             this.transmittingElectronPositionPlot = new ElectronPositionPlot({
                 mvt: this.mvt,
                 simulation: this.simulation,
                 electron: this.simulation.transmittingElectron,
                 title: 'Transmitter'
             });
-
+            this.transmittingElectronPositionPlot.displayObject.x = r - this.transmittingElectronPositionPlot.width;
+            this.transmittingElectronPositionPlot.displayObject.y = m;
             this.stage.addChild(this.transmittingElectronPositionPlot.displayObject);
+
+            this.receivingElectronPositionPlot = new ElectronPositionPlot({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                electron: this.simulation.receivingElectron,
+                title: 'Receiver'
+            });
+            this.receivingElectronPositionPlot.displayObject.x = r - this.receivingElectronPositionPlot.width;
+            this.receivingElectronPositionPlot.displayObject.y = this.height - m - 2 - this.receivingElectronPositionPlot.height;
+            this.stage.addChild(this.receivingElectronPositionPlot.displayObject);
+
+            this.hideElectronPositionPlots();
         },
 
         resize: function() {
@@ -118,6 +136,16 @@ define(function(require) {
             var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.texture.width; // In pixels
             var scale = targetBackgroundWidth / this.bg.texture.width;
             return scale;
+        },
+
+        showElectronPositionPlots: function() {
+            this.transmittingElectronPositionPlot.show();
+            this.receivingElectronPositionPlot.show();
+        },
+
+        hideElectronPositionPlots: function() {
+            this.transmittingElectronPositionPlot.hide();
+            this.receivingElectronPositionPlot.hide();
         }
 
     });
