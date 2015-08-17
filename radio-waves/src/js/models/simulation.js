@@ -9,6 +9,8 @@ define(function (require, exports, module) {
     var Antenna                     = require('models/antenna');
     var PositionConstrainedElectron = require('models/electron/position-constrained');
     var EmfSensingElectron          = require('models/electron/emf-sensing');
+    var ManualMovementStrategy      = require('models/movement-strategy/manual');
+    var SinusoidalMovementStrategy  = require('models/movement-strategy/sinusoidal');
 
     /**
      * Constants
@@ -59,21 +61,23 @@ define(function (require, exports, module) {
             }, {
                 positionConstraint: this.receivingAntenna
             });
+
+            // Create movement strategies
+            this.manualMovement     = new ManualMovementStrategy(this.transmittingElectron);
+            this.sinusoidalMovement = new SinusoidalMovementStrategy(this.transmittingElectron, 0.02, 50);
         },
 
         _update: function(time, deltaTime) {
-            
+            this.transmittingElectron.update(time, deltaTime);
+            this.receivingElectron.update(time, deltaTime);
         },
 
         setTransmittingElectronMovementStrategyToManual: function() {
-
+            this.transmittingElectron.setMovementStrategy(this.manualMovement);
         },
 
-        setTransmittingElectronMovementStrategyToSinusoidal: function(frequency, amplitude) {
-            // The original one had us creating a new MovementType object each time and
-            //   passing it to setTransmittingElectronMovementStrategy, but here I'm 
-            //   creating two separate functions instead
-            //this.transmittingElectron.
+        setTransmittingElectronMovementStrategyToSinusoidal: function() {
+            this.transmittingElectron.setMovementStrategy(this.sinusoidalMovement);
         }
 
     });

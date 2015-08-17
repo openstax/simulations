@@ -56,9 +56,6 @@ define(function (require) {
             this.movementStrategyHistory = [];
             this.movementStrategy = new ManualMovementStrategy();
 
-            this.manualMovement     = new ManualMovementStrategy(this);
-            this.sinusoidalMovement = new SinusoidalMovementStrategy(this);
-
             this._staticFieldStrength  = new Vector2;
             this._dynamicFieldStrength = new Vector2;
 
@@ -290,7 +287,11 @@ define(function (require) {
         moveToNewPosition: function(newPosition) {
             if (this.movementStrategy instanceof ManualMovementStrategy)
                 this.movementStrategy.setPosition(newPosition);
-        }
+        },
+
+        setMovementStrategy: function(movementStrategy) {
+            this.movementStrategy = movementStrategy;
+        } 
 
     });
 
