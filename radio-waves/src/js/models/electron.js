@@ -99,7 +99,6 @@ define(function (require) {
                     }
                 }
             }
-            
         },
 
         /**

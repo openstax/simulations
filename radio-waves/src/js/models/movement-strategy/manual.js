@@ -91,7 +91,7 @@ define(function (require) {
         },
 
         setPosition: function(position) {
-            this.position = position;
+            this.position.set(position);
         },
 
     	getMaxAcceleration: function() {
