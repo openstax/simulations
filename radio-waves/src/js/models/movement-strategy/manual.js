@@ -19,8 +19,8 @@ define(function (require) {
     var ManualMovementStrategy = function(electron) {
         this.electron = electron;
 
-        this.position = new Vector2();
-        this.velocity = new Vector2();
+        this.position = new Vector2(electron.get('position'));
+        this.velocity = new Vector2(electron.get('velocity'));
 
         this.numHistoryEntries;
         this.yPosHistory = [];

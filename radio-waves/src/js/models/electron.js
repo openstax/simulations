@@ -23,13 +23,6 @@ define(function (require) {
      * Represents a body with mass moving in space.
      */
     var Electron = MotionObject.extend({
-        
-        /**
-         * Default attribute values
-         */
-        defaults: _.extend({}, MotionObject.prototype.defaults, {
-
-        }),
 
         /**
          * Initializes the new electron
@@ -40,7 +33,6 @@ define(function (require) {
             this.positionHistory = [];
             this.startPosition    = new Vector2(this.get('position'));
             this.previousPosition = new Vector2();
-            this.setPosition(this.startPosition);
 
             this.accelerationHistory = [];
             // The history of the maximum acceleration the electron courld have had

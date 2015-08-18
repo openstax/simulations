@@ -208,14 +208,14 @@ define(function (require) {
 
         frequencyChanged: function(electron, frequency) {
             this.updateLock(function() {
-                
+                this.$('.frequency-slider').val(frequency / Constants.FREQUENCY_SCALE);
             });
         },
 
         amplitudeChanged: function(electron, amplitude) {
             this.updateLock(function() {
-                
-            });  
+                this.$('.amplitude-slider').val(amplitude);
+            });
         }
 
     });
