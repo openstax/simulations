@@ -51,7 +51,10 @@ define(function (require) {
         events: {
             'click #electron-positions-check'       : 'toggleElectronPositions',
             'click #transmitter-movement-manual'    : 'manualClicked',
-            'click #transmitter-movement-oscillate' : 'oscillateClicked'
+            'click #transmitter-movement-oscillate' : 'oscillateClicked',
+
+            'slide .frequency-slider' : 'changeFrequency',
+            'slide .amplitude-slider' : 'changeAmplitude'
         },
 
         /**
@@ -111,20 +114,20 @@ define(function (require) {
             this.$el.html(this.template(data));
 
             this.$('.frequency-slider').noUiSlider({
-                start: 1,
+                start: Constants.FREQUENCY_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 1
+                    'min': Constants.FREQUENCY_RANGE.min,
+                    'max': Constants.FREQUENCY_RANGE.max
                 }
             });
 
             this.$('.amplitude-slider').noUiSlider({
-                start: 1,
+                start: Constants.AMPLITUDE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 1
+                    'min': Constants.AMPLITUDE_RANGE.min,
+                    'max': Constants.AMPLITUDE_RANGE.max
                 }
             });
         },
@@ -187,6 +190,32 @@ define(function (require) {
             this.$('.oscillation-controls').removeClass('disabled');
             this.$('.frequency-slider').removeAttr('disabled');
             this.$('.amplitude-slider').removeAttr('disabled');
+        },
+
+        changeFrequency: function(event) {
+            var frequency = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.transmittingElectron.setFrequency(Constants.FREQUENCY_SCALE * frequency);
+            });
+        },
+
+        changeAmplitude: function(event) {
+            var amplitude = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.transmittingElectron.setAmplitude(amplitude);
+            });
+        },
+
+        frequencyChanged: function(electron, frequency) {
+            this.updateLock(function() {
+                
+            });
+        },
+
+        amplitudeChanged: function(electron, amplitude) {
+            this.updateLock(function() {
+                
+            });  
         }
 
     });

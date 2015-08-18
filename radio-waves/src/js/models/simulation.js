@@ -32,7 +32,7 @@ define(function (require, exports, module) {
                 frameDuration: Constants.FRAME_DURATION,
                 deltaTimePerFrame: Constants.DT_PER_FRAME
             }, options);
-            
+
             this.origin = new Vector2(Constants.SIMULATION_ORIGIN.x, Constants.SIMULATION_ORIGIN.y);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
@@ -72,7 +72,7 @@ define(function (require, exports, module) {
 
             // Create movement strategies
             this.manualMovement     = new ManualMovementStrategy(this.transmittingElectron);
-            this.sinusoidalMovement = new SinusoidalMovementStrategy(this.transmittingElectron, 0.02, 50);
+            this.sinusoidalMovement = new SinusoidalMovementStrategy(this.transmittingElectron, Constants.DEFAULT_FREQUENCY, Constants.DEFAULT_AMPLITUDE);
         },
 
         _update: function(time, deltaTime) {

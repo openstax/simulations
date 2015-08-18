@@ -75,6 +75,10 @@ define(function (require) {
             return -this.amplitude * this.omega * this.omega * s;
         },
 
+        getRunningTime: function() {
+            return this.runningTime;
+        },
+
         getFrequency: function() {
             return this.frequency;
         },
