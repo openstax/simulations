@@ -109,7 +109,7 @@ define(function (require) {
                 Constants: Constants,
                 simulation: this.simulation,
                 Assets: Assets,
-                electronSrc: ''
+                electronSrc: Assets.Images.ELECTRON
             };
             this.$el.html(this.template(data));
 
