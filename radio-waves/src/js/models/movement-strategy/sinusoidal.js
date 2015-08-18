@@ -22,7 +22,7 @@ define(function (require) {
         this.amplitude = amplitude;
         this.nextPosition = new Vector2();
         this.omega = this.computeOmega();
-        this.runningTime = undefined;
+        this.runningTime = 0;
         this.velocity = new Vector2();
     };
 
