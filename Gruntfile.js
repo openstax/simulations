@@ -49,6 +49,7 @@ module.exports = function(grunt){
 			options: {
 				packageFiles: [
 					'./*/package.json',
+					'./common/v3/package.json'
 				]
 			}
 		}
