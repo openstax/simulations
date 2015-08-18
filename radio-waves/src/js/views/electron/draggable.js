@@ -4,6 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    var Vector2 = require('common/math/vector2');
+
     var ElectronView = require('views/electron');
 
     /**
@@ -28,6 +30,7 @@ define(function(require) {
         initialize: function(options) {
             // Cached objects
             this._dragOffset = new PIXI.Point();
+            this._viewPosition = new Vector2();
 
             ElectronView.prototype.initialize.apply(this, [options]);
         },
@@ -48,11 +51,12 @@ define(function(require) {
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
-                
-                this.displayObject.x += dx;
-                this.displayObject.y += dy;
+                this._viewPosition.x = data.global.x - this.dragOffset.x;
+                this._viewPosition.y = data.global.y - this.dragOffset.y;
+
+                var modelPoint = this.mvt.viewToModel(this._viewPosition);
+
+                this.model.moveToNewPosition(modelPoint);
             }
         },
 

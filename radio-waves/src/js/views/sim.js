@@ -49,7 +49,9 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click #electron-positions-check' : 'toggleElectronPositions'
+            'click #electron-positions-check'       : 'toggleElectronPositions',
+            'click #transmitter-movement-manual'    : 'manualClicked',
+            'click #transmitter-movement-oscillate' : 'oscillateClicked'
         },
 
         /**
@@ -171,6 +173,20 @@ define(function (require) {
                 this.sceneView.showElectronPositionPlots();
             else
                 this.sceneView.hideElectronPositionPlots();
+        },
+
+        manualClicked: function(event) {
+            this.simulation.setTransmittingElectronMovementStrategyToManual();
+            this.$('.oscillation-controls').addClass('disabled');
+            this.$('.frequency-slider').attr('disabled', 'disabled');
+            this.$('.amplitude-slider').attr('disabled', 'disabled');
+        },
+
+        oscillateClicked: function(event) {
+            this.simulation.setTransmittingElectronMovementStrategyToSinusoidal();
+            this.$('.oscillation-controls').removeClass('disabled');
+            this.$('.frequency-slider').removeAttr('disabled');
+            this.$('.amplitude-slider').removeAttr('disabled');
         }
 
     });

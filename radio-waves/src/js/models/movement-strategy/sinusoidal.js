@@ -63,8 +63,8 @@ define(function (require) {
         getNextPosition: function(position, t) {
             var newY = this.valueAtTime(this.frequency, this.amplitude, t);
             this.nextPosition.set(
-                this.position.x,
-                this.position.y + newY
+                position.x,
+                position.y + newY
             );
             return this.nextPosition;
         },
