@@ -37,6 +37,8 @@ define(function(require) {
          */
         initGraphics: function() {
             ElectronView.prototype.initGraphics.apply(this, arguments);
+
+            this.displayObject.buttonMode = true;
         },
 
         dragStart: function(data) {
