@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
     var Vector2    = require('common/math/vector2');
 
     var Antenna                     = require('models/antenna');
@@ -21,16 +21,21 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var RadioWavesSimulation = Simulation.extend({
+    var RadioWavesSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
 
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                frameDuration: Constants.FRAME_DURATION,
+                deltaTimePerFrame: Constants.DT_PER_FRAME
+            }, options);
+            
             this.origin = new Vector2(Constants.SIMULATION_ORIGIN.x, Constants.SIMULATION_ORIGIN.y);
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
         },
 
         /**
