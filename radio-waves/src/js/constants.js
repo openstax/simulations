@@ -33,5 +33,30 @@ define(function (require) {
 
     Constants.PANEL_BG = '#D6DFE9';
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                          FIELD LATTICE VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var FieldLatticeView = {};
+
+    FieldLatticeView.NO_FIELD = 0;
+    FieldLatticeView.FULL_FIELD = 1;
+    FieldLatticeView.CURVE = 2;
+    FieldLatticeView.CURVE_WITH_VECTORS = 3;
+
+    FieldLatticeView.ALPHA_FOR_MAGNITUDE = 5;
+    FieldLatticeView.VECTORS_CENTERED_ON_X_AXIS = 5;
+
+    FieldLatticeView.SHOW_ELECTRIC_FIELD = -1;
+    FieldLatticeView.SHOW_FORCE_ON_ELECTRON = 1;
+
+    FieldLatticeView.FORCE_COLOR = '#c80000';
+    FieldLatticeView.FIELD_COLOR = '#006400';
+
+    Constants.FieldLatticeView = FieldLatticeView;
+
     return Constants;
 });
