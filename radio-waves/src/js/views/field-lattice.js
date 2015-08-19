@@ -30,7 +30,8 @@ define(function(require) {
             this.firstArrowOffset = 25;
 
             this.fieldSense = FieldLatticeView.SHOW_FORCE_ON_ELECTRON;
-            
+            this.displayStaticField = false;
+            this.displayDynamicField = false;
 
 
             this.initLattice();
@@ -89,6 +90,13 @@ define(function(require) {
             this.arrows = _.flatten(this.leftArrows, this.rightArrows);
         },
 
+        createLatticePoint: function(x, y) {
+            return {
+                location: new Vector2(x, y),
+                field: new Vector2()
+            };
+        },
+
         /**
          * Initializes everything for rendering graphics
          */
@@ -109,14 +117,61 @@ define(function(require) {
         },
 
         update: function(time, deltaTime) {
+            switch (this.fieldDisplayType) {
 
+                // Full field display
+                case FieldLatticeView.FULL_FIELD:
+
+                    if ( fieldDisplayType == EmfPanel.FULL_FIELD ) {
+                        for ( int i = 0; i < latticePts.length; i++ ) {
+                            evaluateLatticePoint( latticePts[i] );
+                        }
+                    }
+
+                    break;
+
+                // Single line display
+                case FieldLatticeView.CURVE:
+                case FieldLatticeView.CURVE_WITH_VECTORS:
+                case FieldLatticeView.VECTORS_CENTERED_ON_X_AXIS:
+
+                    // Set the field magnitudes for all the negative and positive arrows
+                    var i;
+                    for (i = 0; i < this.latticePointsLeft.length; i++)
+                        this.evaluateLatticePoint(this.latticePointsLeft[i]);
+                    
+                    for (i = 0; i < this.latticePointsRight.length; i++)
+                        this.evaluateLatticePoint(his.latticePointsRight[i]);
+
+                    // this.negPath = createCurves( latticePtsNeg );
+                    // this.posPath = createCurves( latticePtsPos );
+                    // addArrows( negArrows, latticePtsNeg );
+                    // addArrows( posArrows, latticePtsPos );
+
+                    break;
+            }
         },
 
-        createLatticePoint: function(x, y) {
-            return {
-                location: new Vector2(x, y),
-                field: new Vector2()
-            };
+        /**
+         * Determines the field at the lattice point's location and sets its value
+         */
+        evaluateLatticePoint: function(latticePoint) {
+            if (this.fieldDisplayType !== FieldLatticeView.NO_FIELD) {
+                if (this.displayStaticField)
+                    latticePoint.field.set(this.sourceElectron.getStaticFieldAt(latticePoint.location));
+                else if (this.displayDynamicField)
+                    latticePoint.field.set(this.sourceElectron.getDynamicFieldAt(latticePoint.location));
+            }
+        },
+
+        /**
+         * 
+         */
+        createCurves: function(points) {
+            // PhET note:
+            // We modify the amplitude of the curve because it is supposed to connect the
+            //  heads of the vectors onthe x axis that show the field strength, and those
+            //  vectors are centered on the x axis. Their tails are not on the axis.
         }
 
     }, Constants.FieldLatticeView);
