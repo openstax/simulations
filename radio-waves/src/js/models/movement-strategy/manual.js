@@ -22,7 +22,7 @@ define(function (require) {
         this.position = new Vector2(electron.get('position'));
         this.velocity = new Vector2(electron.get('velocity'));
 
-        this.numHistoryEntries;
+        this.numHistoryEntries = 0;
         this.yPosHistory = [];
         this.yVelHistory = [];
         this.yAccHistory = [];
