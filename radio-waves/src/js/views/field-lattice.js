@@ -223,29 +223,31 @@ define(function(require) {
             var orig = points[this.curveStartingIndex];
             var xDist = orig.location.x - this.origin.x;
             var xSign = Math.sign(xDist);
-
-            graphics.moveTo(
-                this.mvt.modelToViewX(orig.location.x), 
-                this.mvt.modelToViewY(orig.location.y + orig.field.length() * Math.sign(orig.field.y) * curveAmplitudeOffset)
-            );
             
             var yLast = orig.field.length() * Math.sign(orig.field.y * curveAmplitudeOffset);
             var yCurr = yLast;
             var xLimit = points[points.length - 1].location.x;
             var latticePoint = this._latticePointVec;
             var sourceElectron = this.sourceElectron;
+            var i = 0;
+            var viewX;
+            var viewY;
 
             for (var x = orig.location.x; xSign > 0 ? x <= xLimit : x >= xLimit; x += 10 * xSign) {
                 latticePoint.set(Math.abs(x), this.origin.y);
                 var field = sourceElectron.getDynamicFieldAt(latticePoint);
                 yCurr = field.length() * Math.sign(field.y);
 
-                graphics.lineTo(
-                    this.mvt.modelToViewX(x), 
-                    this.mvt.modelToViewY(this.origin.y + yCurr * curveAmplitudeOffset)
-                );
+                viewX = this.mvt.modelToViewX(x);
+                viewY = this.mvt.modelToViewY(this.origin.y + yCurr * curveAmplitudeOffset);
 
                 yLast = yCurr;
+
+                if (i === 0)
+                    graphics.moveTo(viewX, viewY);
+                else
+                    graphics.lineTo(viewX, viewY);
+                i++;
             }
         },
 
