@@ -257,9 +257,9 @@ define(function (require) {
             fieldStrength.scale(acceleration / distanceScaleFactor);
 
             // The following factor is used to give the fall-off associated with being off-axis.
-            if ( distanceFromSource == 0.0 ) {
+            if (distanceFromSource === 0)
                 distanceFromSource = 1;
-            }
+            
             var dubsonFactor = Math.abs(location.x - this.startPosition.x) / distanceFromSource;
             fieldStrength.scale(dubsonFactor);
 

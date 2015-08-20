@@ -72,6 +72,8 @@ define(function(require) {
             var origin = this.origin;
             var width = this.width;
             var x;
+            var minX = this.minX - latticeSpacingX;
+            var maxX = this.maxX + latticeSpacingX;
 
             // Create lattice points for full-field view
             for (var i = 0; i < totalLatticePoints; i++) {
@@ -84,18 +86,18 @@ define(function(require) {
             // Create x-axis lattice points and arrows on the left
             this.latticePointsLeft.push(this.createLatticePoint(origin.x - 0.001, origin.y));
 
-            for (x = origin.x - this.firstArrowOffset; x >= this.minX; x -= latticeSpacingX) {
+            for (x = origin.x - this.firstArrowOffset; x >= minX; x -= latticeSpacingX) {
                 this.latticePointsLeft.push(this.createLatticePoint(x, origin.y));
-                //console.log('left', x)
+                console.log('left', x, minX)
                 //this.leftArrows.push(new Arrow( new Point2D.Double(), new Point2D.Double(), maxArrowHeadWidth, maxArrowHeadWidth, 3, 0.5, false ));
             }
 
             // Create x-axis lattice points and arrows on the right
             this.latticePointsRight.push(this.createLatticePoint(origin.x + 0.001, origin.y));
 
-            for (x = origin.x + this.firstArrowOffset; x < this.maxX; x += latticeSpacingX) {
+            for (x = origin.x + this.firstArrowOffset; x < maxX; x += latticeSpacingX) {
                 this.latticePointsRight.push(this.createLatticePoint(x, origin.y));
-                //console.log('right', x, width)
+                console.log('right', x, maxX)
                 //this.rightArrows.push( new Arrow( new Point2D.Double(), new Point2D.Double(), maxArrowHeadWidth, maxArrowHeadWidth, 3, 0.5, false ) );
             }
 
@@ -212,7 +214,7 @@ define(function(require) {
             var latticePoint = this._latticePointVec;
             var sourceElectron = this.sourceElectron;
 
-            for (var x = orig.location.x; xSign > 0 ? x < xLimit : x > xLimit; x += 10 * xSign) {
+            for (var x = orig.location.x; xSign > 0 ? x <= xLimit : x >= xLimit; x += 10 * xSign) {
                 latticePoint.set(Math.abs(x), this.origin.y);
                 var field = sourceElectron.getDynamicFieldAt(latticePoint);
                 yCurr = field.length() * Math.sign(field.y);
@@ -224,11 +226,6 @@ define(function(require) {
 
                 yLast = yCurr;
             }
-
-            graphics.lineTo(
-                this.mvt.modelToViewX(xLimit), 
-                this.mvt.modelToViewY(this.origin.y + yCurr * xSign)
-            );
         }
 
     }, Constants.FieldLatticeView);
