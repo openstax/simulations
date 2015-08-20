@@ -14,6 +14,7 @@ define(function(require) {
     var ElectronPositionPlot  = require('views/electron-position-plot');
     var ElectronView          = require('views/electron');
     var DraggableElectronView = require('views/electron/draggable');
+    var FieldLatticeView      = require('views/field-lattice');
 
     var Assets = require('assets');
 
@@ -45,6 +46,7 @@ define(function(require) {
 
             this.initBackground();
             this.initMVT();
+            this.initFieldLattice();
             this.initElectrons();
             this.initElectronPositionPlots();
 
@@ -85,6 +87,23 @@ define(function(require) {
             this.stage.addChild(bg);
 
             this.bg = bg;
+        },
+
+        initFieldLattice: function() {
+            var latticeSpacingX = 50;
+            var latticeSpacingY = 50;
+
+            this.fieldLatticeView = new FieldLatticeView({
+                mvt: this.mvt,
+                origin: this.simulation.origin,
+                width: this.width,
+                height: this.height,
+                latticeSpacingX: latticeSpacingX,
+                latticeSpacingY: latticeSpacingY,
+                sourceElectron: this.simulation.transmittingElectron
+            });
+
+            this.stage.addChild(this.fieldLatticeView.displayObject);
         },
 
         initElectrons: function() {
@@ -140,7 +159,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.fieldLatticeView.update();
         },
 
         updateBackgroundScale: function() {
