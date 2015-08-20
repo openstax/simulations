@@ -24,7 +24,9 @@ define(function(require) {
 
             this.sourceElectron   = options.sourceElectron;
             this.origin           = options.origin;
-            this.width            = options.width;
+            this.minX             = options.minX;
+            this.maxX             = options.maxX;
+            this.width            = options.maxX - options.minX;
             this.height           = options.height;
             this.latticeSpacingX  = options.latticeSpacingX;
             this.latticeSpacingY  = options.latticeSpacingY;
@@ -36,7 +38,7 @@ define(function(require) {
             this.fieldSense = FieldLatticeView.SHOW_FORCE_ON_ELECTRON;
             this.fieldDisplayType = FieldLatticeView.CURVE_WITH_VECTORS;
             this.displayStaticField = false;
-            this.displayDynamicField = false;
+            this.displayDynamicField = true;
 
             // Cached objects
             this._latticePointVec = new Vector2();
@@ -59,8 +61,8 @@ define(function(require) {
             this.rightArrows = [];
             this.arrows;
 
-            this.numLatticePtsX = Math.floor(1 + (this.width  - 1) / this.latticeSpacingX);
-            this.numLatticePtsY = Math.floor(1 + (this.height - 1) / this.latticeSpacingY);
+            this.numLatticePtsX = 1 + Math.floor((this.width  - 1) / this.latticeSpacingX);
+            this.numLatticePtsY = 1 + Math.floor((this.height - 1) / this.latticeSpacingY);
 
             var latticeSpacingX = this.latticeSpacingX;
             var latticeSpacingY = this.latticeSpacingY;
@@ -82,16 +84,18 @@ define(function(require) {
             // Create x-axis lattice points and arrows on the left
             this.latticePointsLeft.push(this.createLatticePoint(origin.x - 0.001, origin.y));
 
-            for (x = origin.x - this.firstArrowOffset; x >= -latticeSpacingX; x -= latticeSpacingX) {
+            for (x = origin.x - this.firstArrowOffset; x >= this.minX; x -= latticeSpacingX) {
                 this.latticePointsLeft.push(this.createLatticePoint(x, origin.y));
+                //console.log('left', x)
                 //this.leftArrows.push(new Arrow( new Point2D.Double(), new Point2D.Double(), maxArrowHeadWidth, maxArrowHeadWidth, 3, 0.5, false ));
             }
 
             // Create x-axis lattice points and arrows on the right
             this.latticePointsRight.push(this.createLatticePoint(origin.x + 0.001, origin.y));
 
-            for (x = origin.x + this.firstArrowOffset; x < width; x += latticeSpacingX) {
+            for (x = origin.x + this.firstArrowOffset; x < this.maxX; x += latticeSpacingX) {
                 this.latticePointsRight.push(this.createLatticePoint(x, origin.y));
+                //console.log('right', x, width)
                 //this.rightArrows.push( new Arrow( new Point2D.Double(), new Point2D.Double(), maxArrowHeadWidth, maxArrowHeadWidth, 3, 0.5, false ) );
             }
 
@@ -152,6 +156,10 @@ define(function(require) {
                     for (i = 0; i < this.latticePointsRight.length; i++)
                         this.evaluateLatticePoint(this.latticePointsRight[i]);
 
+                    var graphics = this.curveGraphics;
+                    graphics.clear();
+                    graphics.lineStyle(1, 0x000000, 1);
+
                     this.drawCurves(this.latticePointsLeft);
                     this.drawCurves(this.latticePointsRight);
                     // addArrows(negArrows, latticePtsNeg);
@@ -174,7 +182,11 @@ define(function(require) {
         },
 
         /**
-         * 
+         * Draws curve between the points specified. Note that the function doesn't
+         *   actually use the field vector values in these points except for at the
+         *   beginning of the line; it calculates the values on its own when it's
+         *   about to draw because it draws way more points than are given in the
+         *   points array.
          */
         drawCurves: function(points) {
             // PhET note:
@@ -183,8 +195,6 @@ define(function(require) {
             //  vectors are centered on the x axis. Their tails are not on the axis.
 
             var graphics = this.curveGraphics;
-            graphics.clear();
-            graphics.lineStyle(1, 0x000000, 1);
 
             var curveAmplitudeOffset = 1 - this.singleVectorRowOffset;
             var orig = points[this.curveStartingIndex];
@@ -192,8 +202,8 @@ define(function(require) {
             var xSign = Math.sign(xDist);
 
             graphics.moveTo(
-                orig.location.x, 
-                orig.location.y + orig.field.length() * Math.sign(orig.field.y) * curveAmplitudeOffset
+                this.mvt.modelToViewX(orig.location.x), 
+                this.mvt.modelToViewY(orig.location.y + orig.field.length() * Math.sign(orig.field.y) * curveAmplitudeOffset)
             );
             
             var yLast = orig.field.length() * Math.sign(orig.field.y * curveAmplitudeOffset);
@@ -207,12 +217,18 @@ define(function(require) {
                 var field = sourceElectron.getDynamicFieldAt(latticePoint);
                 yCurr = field.length() * Math.sign(field.y);
 
-                graphics.lineTo(x, this.origin.y + yCurr * curveAmplitudeOffset);
+                graphics.lineTo(
+                    this.mvt.modelToViewX(x), 
+                    this.mvt.modelToViewY(this.origin.y + yCurr * curveAmplitudeOffset)
+                );
 
                 yLast = yCurr;
             }
 
-            graphics.lineTo(xLimit, this.origin.y + yCurr * xSign);
+            graphics.lineTo(
+                this.mvt.modelToViewX(xLimit), 
+                this.mvt.modelToViewY(this.origin.y + yCurr * xSign)
+            );
         }
 
     }, Constants.FieldLatticeView);

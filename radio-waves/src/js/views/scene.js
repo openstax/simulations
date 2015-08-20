@@ -92,12 +92,16 @@ define(function(require) {
         initFieldLattice: function() {
             var latticeSpacingX = 50;
             var latticeSpacingY = 50;
+            var minX = this.mvt.viewToModelX(0);
+            var maxX = this.mvt.viewToModelX(this.width)
+            var height = this.mvt.viewToModelY(this.height) - this.mvt.viewToModelY(0);
 
             this.fieldLatticeView = new FieldLatticeView({
                 mvt: this.mvt,
                 origin: this.simulation.origin,
-                width: this.width,
-                height: this.height,
+                minX: minX,
+                maxX: maxX,
+                height: height,
                 latticeSpacingX: latticeSpacingX,
                 latticeSpacingY: latticeSpacingY,
                 sourceElectron: this.simulation.transmittingElectron
@@ -159,7 +163,9 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            this.fieldLatticeView.update();
+            if (!paused) {
+                this.fieldLatticeView.update();    
+            }
         },
 
         updateBackgroundScale: function() {
