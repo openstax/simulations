@@ -188,6 +188,14 @@ define(function(require) {
         hideElectronPositionPlots: function() {
             this.transmittingElectronPositionPlot.hide();
             this.receivingElectronPositionPlot.hide();
+        },
+
+        displayStaticField: function() {
+            this.fieldLatticeView.displayStaticField();
+        },
+
+        displayDynamicField: function() {
+            this.fieldLatticeView.displayDynamicField();
         }
 
     });

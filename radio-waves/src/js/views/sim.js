@@ -59,7 +59,10 @@ define(function (require) {
             'click #transmitter-movement-oscillate' : 'oscillateClicked',
 
             'slide .frequency-slider' : 'changeFrequency',
-            'slide .amplitude-slider' : 'changeAmplitude'
+            'slide .amplitude-slider' : 'changeAmplitude',
+
+            'click #field-displayed-radiated-field' : 'displayDynamicField',
+            'click #field-displayed-static-field'   : 'displayStaticField'
         },
 
         /**
@@ -234,6 +237,24 @@ define(function (require) {
             this.updateLock(function() {
                 this.$('.amplitude-slider').val(amplitude);
             });
+        },
+
+        displayStaticField: function(event) {
+            this.sceneView.displayStaticField();
+
+            this.$('#field-display-type-full-field').click();
+
+            this.$('#field-display-type-curve').attr('disabled', 'disabled');
+            this.$('#field-display-type-curve-with-vectors').attr('disabled', 'disabled');
+            this.$('#field-display-type-none').attr('disabled', 'disabled');
+        },
+
+        displayDynamicField: function(event) {
+            this.sceneView.displayDynamicField();
+
+            this.$('#field-display-type-curve').removeAttr('disabled');
+            this.$('#field-display-type-curve-with-vectors').removeAttr('disabled');
+            this.$('#field-display-type-none').removeAttr('disabled');
         }
 
     });

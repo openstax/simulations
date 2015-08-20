@@ -39,8 +39,8 @@ define(function(require) {
 
             this.fieldSense = FieldLatticeView.SHOW_FORCE_ON_ELECTRON;
             this.fieldDisplayType = FieldLatticeView.CURVE_WITH_VECTORS;
-            this.displayStaticField = false;
-            this.displayDynamicField = true;
+            this.displayingStaticField = false;
+            this.displayingDynamicField = true;
 
             this.forceColor = Colors.parseHex(FieldLatticeView.FORCE_COLOR);
             this.fieldColor = Colors.parseHex(FieldLatticeView.FIELD_COLOR);
@@ -49,8 +49,23 @@ define(function(require) {
             this._latticePointVec = new Vector2();
             this._arrowAttrs = {};
 
-            this.initLattice();
             this.initGraphics();
+            this.initLattice();
+
+            this.updateMVT(this.mvt);
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            this.curveGraphics = new PIXI.Graphics();
+            this.singleLineArrows = new PIXI.DisplayObjectContainer();
+            this.fullFieldGraphics = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.curveGraphics);
+            this.displayObject.addChild(this.singleLineArrows);
+            this.displayObject.addChild(this.fullFieldGraphics);
         },
 
         /**
@@ -126,20 +141,9 @@ define(function(require) {
                 lineColor: this.forceColor
             });
 
-            this.displayObject.addChild(arrowView.displayObject);
+            this.singleLineArrows.addChild(arrowView.displayObject);
 
             return arrowViewModel;
-        },
-
-        /**
-         * Initializes everything for rendering graphics
-         */
-        initGraphics: function() {
-            this.curveGraphics = new PIXI.Graphics();
-
-            this.displayObject.addChild(this.curveGraphics);
-
-            this.updateMVT(this.mvt);
         },
 
         /**
@@ -177,15 +181,18 @@ define(function(require) {
                     for (i = 0; i < this.latticePointsRight.length; i++)
                         this.evaluateLatticePoint(this.latticePointsRight[i]);
 
-                    var color = (this.displayDynamicField) ? this.forceColor : this.fieldColor;
+                    var color = (this.displayingDynamicField) ? this.forceColor : this.fieldColor;
                     var graphics = this.curveGraphics;
                     graphics.clear();
                     graphics.lineStyle(1, color, 1);
 
                     this.drawCurves(this.latticePointsLeft);
                     this.drawCurves(this.latticePointsRight);
-                    this.updateArrows(this.leftArrows,  this.latticePointsLeft);
-                    this.updateArrows(this.rightArrows, this.latticePointsRight);
+
+                    if (this.fieldDisplayType === FieldLatticeView.CURVE_WITH_VECTORS) {
+                        this.updateArrows(this.leftArrows,  this.latticePointsLeft);
+                        this.updateArrows(this.rightArrows, this.latticePointsRight);
+                    }
 
                     break;
             }
@@ -196,9 +203,9 @@ define(function(require) {
          */
         evaluateLatticePoint: function(latticePoint) {
             if (this.fieldDisplayType !== FieldLatticeView.NO_FIELD) {
-                if (this.displayStaticField)
+                if (this.displayingStaticField)
                     latticePoint.field.set(this.sourceElectron.getStaticFieldAt(latticePoint.location));
-                else if (this.displayDynamicField)
+                else if (this.displayingDynamicField)
                     latticePoint.field.set(this.sourceElectron.getDynamicFieldAt(latticePoint.location));
             }
         },
@@ -270,7 +277,43 @@ define(function(require) {
             }
         },
 
+        setFieldDisplayType: function(fieldDisplayType) {
+            this.fieldDisplayType = fieldDisplayType;
 
+            // Show/hide single-line arrows
+            this.singleLineArrows.visible = (fieldDisplayType === FieldLatticeView.CURVE_WITH_VECTORS);
+
+            // Show/hide curve
+            this.curveGraphics.visible = (
+                fieldDisplayType === FieldLatticeView.CURVE || 
+                fieldDisplayType === FieldLatticeView.CURVE_WITH_VECTORS
+            );
+
+            // Show/hide full field
+            this.fullFieldGraphics.visible = (fieldDisplayType === FieldLatticeView.FULL_FIELD);
+        },
+
+        getFieldDisplayType: function() {
+            return this.fieldDisplayType;
+        },
+
+        isDisplayingStaticField: function() {
+            return this.displayingStaticField;
+        },
+
+        isDisplayingDynamicField: function() {
+            return this.displayingDynamicField;
+        },
+
+        displayStaticField: function() {
+            this.displayingStaticField = true;
+            this.displayingDynamicField = false;
+        },
+
+        displayDynamicField: function() {
+            this.displayingStaticField = false;
+            this.displayingDynamicField = true;
+        }
 
     }, Constants.FieldLatticeView);
 
