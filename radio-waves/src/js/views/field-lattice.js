@@ -169,7 +169,6 @@ define(function(require) {
                 // Single line display
                 case FieldLatticeView.CURVE:
                 case FieldLatticeView.CURVE_WITH_VECTORS:
-                case FieldLatticeView.VECTORS_CENTERED_ON_X_AXIS:
 
                     // Set the field magnitudes for all the negative and positive arrows
                     for (i = 0; i < this.latticePointsLeft.length; i++)
@@ -269,7 +268,9 @@ define(function(require) {
 
                 arrows[i - 1].set(attrs);
             }
-        }
+        },
+
+
 
     }, Constants.FieldLatticeView);
 

@@ -47,9 +47,6 @@ define(function (require) {
     FieldLatticeView.CURVE = 2;
     FieldLatticeView.CURVE_WITH_VECTORS = 3;
 
-    FieldLatticeView.ALPHA_FOR_MAGNITUDE = 5;
-    FieldLatticeView.VECTORS_CENTERED_ON_X_AXIS = 5;
-
     FieldLatticeView.SHOW_ELECTRIC_FIELD = -1;
     FieldLatticeView.SHOW_FORCE_ON_ELECTRON = 1;
 
