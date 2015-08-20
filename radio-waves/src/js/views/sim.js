@@ -61,6 +61,12 @@ define(function (require) {
             'slide .frequency-slider' : 'changeFrequency',
             'slide .amplitude-slider' : 'changeAmplitude',
 
+
+            'click #field-display-type-curve-with-vectors'  : 'displayCurveWithVectors',
+            'click #field-display-type-curve'               : 'displayCurve',
+            'click #field-display-type-full-field'          : 'displayFullField', 
+            'click #field-display-type-none'                : 'displayNoField',
+
             'click #field-sense-force-on-electron' : 'fieldSenseForceOnElectronClicked',
             'click #field-sense-electric-field'    : 'fieldSenseElectricFieldClicked',
 
@@ -241,6 +247,23 @@ define(function (require) {
                 this.$('.amplitude-slider').val(amplitude);
             });
         },
+
+        displayCurveWithVectors: function() {
+            this.sceneView.displayCurveWithVectors();
+        },
+
+        displayCurve: function() {
+            this.sceneView.displayCurve();
+        },
+
+        displayFullField: function() {
+            this.sceneView.displayFullField();
+        },
+
+        displayNoField: function() {
+            this.sceneView.displayNoField();
+        },
+
 
         displayStaticField: function(event) {
             this.sceneView.displayStaticField();

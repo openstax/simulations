@@ -190,6 +190,22 @@ define(function(require) {
             this.receivingElectronPositionPlot.hide();
         },
 
+        displayCurveWithVectors: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.CURVE_WITH_VECTORS);
+        },
+
+        displayCurve: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.CURVE);
+        },
+
+        displayFullField: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.FULL_FIELD);
+        },
+
+        displayNoField: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.NO_FIELD);
+        },
+
         displayStaticField: function() {
             this.fieldLatticeView.displayStaticField();
         },
