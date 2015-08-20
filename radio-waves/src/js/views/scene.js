@@ -196,6 +196,14 @@ define(function(require) {
 
         displayDynamicField: function() {
             this.fieldLatticeView.displayDynamicField();
+        },
+
+        setFieldSenseForceOnElectron: function() {
+            this.fieldLatticeView.setFieldSense(FieldLatticeView.SHOW_FORCE_ON_ELECTRON);
+        },
+
+        setFieldSenseElectricField: function() {
+            this.fieldLatticeView.setFieldSense(FieldLatticeView.SHOW_ELECTRIC_FIELD);
         }
 
     });

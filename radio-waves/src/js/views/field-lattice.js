@@ -81,6 +81,7 @@ define(function(require) {
             this.leftArrows = [];
             this.rightArrows = [];
             this.arrows;
+            this.arrowViews = [];
 
             this.numLatticePtsX = 1 + Math.floor((this.width  - 1) / this.latticeSpacingX);
             this.numLatticePtsY = 1 + Math.floor((this.height - 1) / this.latticeSpacingY);
@@ -142,6 +143,7 @@ define(function(require) {
             });
 
             this.singleLineArrows.addChild(arrowView.displayObject);
+            this.arrowViews.push(arrowView);
 
             return arrowViewModel;
         },
@@ -259,6 +261,7 @@ define(function(require) {
 
         updateArrows: function(arrows, points) {
             var attrs = this._arrowAttrs;
+
             // We do not draw an arrow for the first lattice point because it is very close
             //   to the antenna.
             for (var i = 1; i < points.length; i++) {
@@ -313,6 +316,17 @@ define(function(require) {
         displayDynamicField: function() {
             this.displayingStaticField = false;
             this.displayingDynamicField = true;
+        },
+
+        setFieldSense: function(fieldSense) {
+            this.fieldSense = fieldSense;
+            var color = (fieldSense === FieldLatticeView.SHOW_FORCE_ON_ELECTRON) ? this.forceColor : this.fieldColor;
+            this.setArrowColor(color);
+        },
+
+        setArrowColor: function(color) {
+            for (var i = 0; i < this.arrowViews.length; i++)
+                this.arrowViews[i].lineColor = color;
         }
 
     }, Constants.FieldLatticeView);

@@ -61,6 +61,9 @@ define(function (require) {
             'slide .frequency-slider' : 'changeFrequency',
             'slide .amplitude-slider' : 'changeAmplitude',
 
+            'click #field-sense-force-on-electron' : 'fieldSenseForceOnElectronClicked',
+            'click #field-sense-electric-field'    : 'fieldSenseElectricFieldClicked',
+
             'click #field-displayed-radiated-field' : 'displayDynamicField',
             'click #field-displayed-static-field'   : 'displayStaticField'
         },
@@ -255,6 +258,14 @@ define(function (require) {
             this.$('#field-display-type-curve').removeAttr('disabled');
             this.$('#field-display-type-curve-with-vectors').removeAttr('disabled');
             this.$('#field-display-type-none').removeAttr('disabled');
+        },
+
+        fieldSenseForceOnElectronClicked: function() {
+            this.sceneView.setFieldSenseForceOnElectron();
+        },
+
+        fieldSenseElectricFieldClicked: function() {
+            this.sceneView.setFieldSenseElectricField();
         }
 
     });
