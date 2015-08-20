@@ -52,13 +52,15 @@ define(function(require) {
             head.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
 
             tail.moveTo(length - this.headLength,  this.tailWidth / 2);
-            tail.lineTo(0,  this.tailWidth / 2);
-            tail.lineTo(0, -this.tailWidth / 2);
+            tail.lineTo(0,                         this.tailWidth / 2);
+            tail.lineTo(0,                        -this.tailWidth / 2);
             tail.lineTo(length - this.headLength, -this.tailWidth / 2);
 
-            head.moveTo(length - this.headLength,  this.headWidth / 2);
-            head.lineTo(length, 0);
+            head.moveTo(length - this.headLength,  this.headWidth / 2 - this.tailWidth / 2);
+            head.lineTo(length - this.headLength,  this.headWidth / 2);
+            head.lineTo(length - this.lineWidth,   0);
             head.lineTo(length - this.headLength, -this.headWidth / 2);
+            head.lineTo(length - this.headLength, -this.headWidth / 2 + this.tailWidth / 2);
 
             this.displayObject.x = origin.x;
             this.displayObject.y = origin.y;
