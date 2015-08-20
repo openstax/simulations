@@ -56,6 +56,10 @@ define(function (require) {
     FieldLatticeView.FORCE_COLOR = '#c80000';
     FieldLatticeView.FIELD_COLOR = '#006400';
 
+    FieldLatticeView.ARROW_HEAD_WIDTH = 10;
+    FieldLatticeView.ARROW_HEAD_LENGTH = 10;
+    FieldLatticeView.ARROW_TAIL_WIDTH = 4;
+
     Constants.FieldLatticeView = FieldLatticeView;
 
     return Constants;
