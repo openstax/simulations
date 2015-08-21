@@ -237,8 +237,8 @@ define(function(require) {
                 var length = field.length();
 
                 if (length > 3) {
-                    originX = points[i].location.x;
-                    originY = points[i].location.y;
+                    originX = points[i].location.x - field.x / 2;
+                    originY = points[i].location.y - field.y / 2;
                     targetX = originX + field.x;
                     targetY = originY + field.y;
 
