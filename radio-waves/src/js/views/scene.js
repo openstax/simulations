@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
+    var HelpLabelView      = require('common/help-label/index');
 
     var ElectronPositionPlot  = require('views/electron-position-plot');
     var ElectronView          = require('views/electron');
@@ -49,6 +50,7 @@ define(function(require) {
             this.initFieldLattice();
             this.initElectrons();
             this.initElectronPositionPlots();
+            this.initHelpLabel();
 
             this.updateBackgroundScale();
         },
@@ -155,6 +157,22 @@ define(function(require) {
             this.hideElectronPositionPlots();
         },
 
+        initHelpLabel: function() {
+            var position = new Vector2(this.mvt.modelToView(this.simulation.origin)).add(14, 10);
+            position.x = Math.round(position.x);
+            position.y = Math.round(position.y);
+
+            this.helpLabel = new HelpLabelView({
+                attachTo: this.stage,
+                position: position,
+                title: 'Drag the electron to move it manually, \nor click "Oscillate" on the control panel.',
+                color: '#000',
+                font: '11pt Helvetica Neue'
+            });
+
+            this.helpLabel.render();
+        },
+
         resize: function() {
             PixiSceneView.prototype.resize.apply(this, arguments);
 
@@ -222,6 +240,10 @@ define(function(require) {
 
         setFieldSenseElectricField: function() {
             this.fieldLatticeView.setFieldSense(FieldLatticeView.SHOW_ELECTRIC_FIELD);
+        },
+
+        toggleHelpLabel: function() {
+            this.helpLabel.toggle();
         }
 
     });

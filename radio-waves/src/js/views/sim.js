@@ -205,7 +205,7 @@ define(function (require) {
 
         toggleHelp: function(event){
            $(event.currentTarget).toggleClass('active');
-           
+           this.sceneView.toggleHelpLabel();
         },
 
         toggleElectronPositions: function(event) {
