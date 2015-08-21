@@ -50,6 +50,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .help-btn' : 'toggleHelp',
+
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
@@ -199,6 +201,11 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        toggleHelp: function(event){
+           $(event.currentTarget).toggleClass('active');
+           
         },
 
         toggleElectronPositions: function(event) {
