@@ -7,6 +7,7 @@ define(function(require) {
 
     var PixiView         = require('common/pixi/view');
     var ArrowOutlineView = require('common/pixi/view/arrow-outline');
+                           require('common/pixi/draw-arrow');
     var Colors           = require('common/colors/colors');
     var Vector2          = require('common/math/vector2');
                            require('common/math/polyfills');
@@ -169,6 +170,10 @@ define(function(require) {
 
                     for (i = 0; i < this.latticePoints.length; i++)
                         this.evaluateLatticePoint(this.latticePoints[i]);
+
+                    this.fullFieldGraphics.clear();
+                    this.fullFieldGraphics.lineStyle(1, 0x000000, 1);
+                    this.fullFieldGraphics.drawArrow(30, 30, 200, 200, 6, 14, 14);
 
                     break;
 
