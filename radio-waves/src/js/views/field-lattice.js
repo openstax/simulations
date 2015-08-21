@@ -98,12 +98,14 @@ define(function(require) {
             var x;
             var minX = this.minX - latticeSpacingX;
             var maxX = this.maxX + latticeSpacingX;
+            var offsetX = 32;
+            var offsetY = 0;
 
             // Create lattice points for full-field view
             for (var i = 0; i < totalLatticePoints; i++) {
                 this.latticePoints[i] = this.createLatticePoint(
-                    (i % numLatticePtsX) * latticeSpacingX, 
-                    (i / numLatticePtsX) * latticeSpacingY
+                    offsetX + (i % numLatticePtsX) * latticeSpacingX, 
+                    offsetY + (i / numLatticePtsX) * latticeSpacingY
                 );
             }
 
