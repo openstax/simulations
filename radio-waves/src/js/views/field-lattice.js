@@ -275,15 +275,19 @@ define(function(require) {
             
             var yLast = orig.field.length() * Math.sign(orig.field.y * curveAmplitudeOffset);
             var yCurr = yLast;
-            var xLimit = points[points.length - 1].location.x;
+            var maxX = this.maxX;
+            var minX = this.minX;
             var latticePoint = this._latticePointVec;
             var sourceElectron = this.sourceElectron;
             var i = 0;
             var viewX;
             var viewY;
 
-            for (var x = orig.location.x; xSign > 0 ? x <= xLimit : x >= xLimit; x += 10 * xSign) {
-                latticePoint.set(Math.abs(x), this.origin.y);
+            for (var x = orig.location.x; xSign > 0 ? x <= maxX : x >= minX; x += 10 * xSign) {
+                if (x < 0)
+                    latticePoint.set(this.origin.x + (this.origin.x - x), this.origin.y);
+                else
+                    latticePoint.set(Math.abs(x), this.origin.y);
                 var field = sourceElectron.getDynamicFieldAt(latticePoint);
                 yCurr = field.length() * Math.sign(field.y);
 
