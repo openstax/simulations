@@ -27,12 +27,14 @@ define(function(require) {
                     y: 0
                 },
                 attachTo : false,
+                alwaysAttached: false,
                 title : '',
                 content : ''
             }, options);
 
             this.position = options.position;
             this.attachTo = options.attachTo.displayObject || options.attachTo;
+            this.alwaysAttached = options.alwaysAttached;
             this.width = options.width;
 
             this.labelModel = {};
@@ -50,6 +52,9 @@ define(function(require) {
             this.renderHelpLabel();
             // this.update();
             this.hide();
+
+            if (this.alwaysAttached)
+                this.attachTo.addChild(this.displayObject);
         },
 
         renderHelpLabel: function() {
@@ -70,12 +75,18 @@ define(function(require) {
         },
 
         show: function(){
-            this.attachTo.addChildAt(this.displayObject, 0);
+            if (this.alwaysAttached)
+                this.displayObject.visible = true;
+            else
+                this.attachTo.addChildAt(this.displayObject, 0);
             this.showing = true;
         },
 
         hide: function(){
-            this.attachTo.removeChild(this.displayObject);
+            if (this.alwaysAttached)
+                this.displayObject.visible = false;
+            else
+                this.attachTo.removeChild(this.displayObject);
             this.showing = false;
         },
 

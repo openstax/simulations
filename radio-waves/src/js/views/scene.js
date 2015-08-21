@@ -164,6 +164,7 @@ define(function(require) {
 
             this.helpLabel = new HelpLabelView({
                 attachTo: this.stage,
+                alwaysAttached: true,
                 position: position,
                 title: 'Drag the electron to move it manually, \nor click "Oscillate" on the control panel.',
                 color: '#000',
