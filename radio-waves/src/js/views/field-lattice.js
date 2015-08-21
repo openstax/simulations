@@ -31,6 +31,8 @@ define(function(require) {
             this.maxX             = options.maxX;
             this.width            = options.maxX - options.minX;
             this.height           = options.height;
+            this.modelWidth       = options.modelWidth;
+            this.modelHeight      = options.modelHeight;
             this.latticeSpacingX  = options.latticeSpacingX;
             this.latticeSpacingY  = options.latticeSpacingY;
 
@@ -85,14 +87,14 @@ define(function(require) {
             this.arrows;
             this.arrowViews = [];
 
-            this.numLatticePtsX = 1 + Math.floor((this.width  - 1) / this.latticeSpacingX);
-            this.numLatticePtsY = 1 + Math.floor((this.height - 1) / this.latticeSpacingY);
+            this.numLatticePointsX = 1 + Math.floor((this.modelWidth  - 1) / this.latticeSpacingX);
+            this.numLatticePointsY = 1 + Math.floor((this.modelHeight - 1) / this.latticeSpacingY);
 
             var latticeSpacingX = this.latticeSpacingX;
             var latticeSpacingY = this.latticeSpacingY;
-            var numLatticePtsX = this.numLatticePtsX;
-            var numLatticePtsY = this.numLatticePtsY;
-            var totalLatticePoints = numLatticePtsY * numLatticePtsX;
+            var numLatticePointsX = this.numLatticePointsX;
+            var numLatticePointsY = this.numLatticePointsY;
+            var totalLatticePoints = numLatticePointsY * numLatticePointsX;
             var origin = this.origin;
             var width = this.width;
             var x;
@@ -104,8 +106,8 @@ define(function(require) {
             // Create lattice points for full-field view
             for (var i = 0; i < totalLatticePoints; i++) {
                 this.latticePoints[i] = this.createLatticePoint(
-                    offsetX + (i % numLatticePtsX) * latticeSpacingX, 
-                    offsetY + (i / numLatticePtsX) * latticeSpacingY
+                    offsetX + (i % numLatticePointsX) * latticeSpacingX, 
+                    offsetY + (i / numLatticePointsX) * latticeSpacingY
                 );
             }
 

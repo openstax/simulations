@@ -34,6 +34,7 @@ define(function (require, exports, module) {
             }, options);
 
             this.origin = new Vector2(Constants.SIMULATION_ORIGIN.x, Constants.SIMULATION_ORIGIN.y);
+            this.bounds = Constants.SIMULATION_BOUNDS;
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
         },

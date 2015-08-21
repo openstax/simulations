@@ -102,6 +102,8 @@ define(function(require) {
                 minX: minX,
                 maxX: maxX,
                 height: height,
+                modelWidth: this.simulation.bounds.w,
+                modelHeight: this.simulation.bounds.h,
                 latticeSpacingX: latticeSpacingX,
                 latticeSpacingY: latticeSpacingY,
                 sourceElectron: this.simulation.transmittingElectron
