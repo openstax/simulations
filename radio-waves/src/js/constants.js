@@ -51,7 +51,7 @@ define(function (require) {
     FieldLatticeView.SHOW_FORCE_ON_ELECTRON = 1;
 
     FieldLatticeView.FORCE_COLOR = '#c80000';
-    FieldLatticeView.FIELD_COLOR = '#006400';
+    FieldLatticeView.FIELD_COLOR = '#21366b';
 
     FieldLatticeView.ARROW_HEAD_WIDTH = 10;
     FieldLatticeView.ARROW_HEAD_LENGTH = 10;
