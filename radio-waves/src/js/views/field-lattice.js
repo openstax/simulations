@@ -48,6 +48,7 @@ define(function(require) {
 
             // Cached objects
             this._latticePointVec = new Vector2();
+            this._fieldVec = new Vector2();
             this._arrowAttrs = {};
 
             this.initGraphics();
@@ -171,9 +172,7 @@ define(function(require) {
                     for (i = 0; i < this.latticePoints.length; i++)
                         this.evaluateLatticePoint(this.latticePoints[i]);
 
-                    this.fullFieldGraphics.clear();
-                    this.fullFieldGraphics.lineStyle(1, 0x000000, 1);
-                    this.fullFieldGraphics.drawArrow(30, 30, 200, 200, 6, 14, 14);
+                    this.drawFullFieldArrows();
 
                     break;
 
@@ -214,6 +213,41 @@ define(function(require) {
                     latticePoint.field.set(this.sourceElectron.getStaticFieldAt(latticePoint.location));
                 else if (this.displayingDynamicField)
                     latticePoint.field.set(this.sourceElectron.getDynamicFieldAt(latticePoint.location));
+            }
+        },
+
+        /**
+         *
+         */
+        drawFullFieldArrows: function() {
+            var points = this.latticePoints;
+            var field = this._fieldVec;
+            var fieldSense = this.fieldSense;
+            var originX, originY;
+            var targetX, targetY;
+
+            var graphics = this.fullFieldGraphics;
+            graphics.clear();
+            graphics.lineStyle(FieldLatticeView.ARROW_LINE_WIDTH, this.getColor(), 1);
+
+            for (var i = 0; i < points.length; i++) {
+                field.set(points[i].field).scale(fieldSense);
+                var length = field.length();
+
+                if (length > 3) {
+                    originX = points[i].location.x;
+                    originY = points[i].location.y;
+                    targetX = originX + field.x;
+                    targetY = originY + field.y;
+
+                    graphics.drawArrow(
+                        this.mvt.modelToViewX(originX), this.mvt.modelToViewY(originY), 
+                        this.mvt.modelToViewX(targetX), this.mvt.modelToViewY(targetY), 
+                        FieldLatticeView.ARROW_TAIL_WIDTH, 
+                        FieldLatticeView.ARROW_HEAD_WIDTH, 
+                        FieldLatticeView.ARROW_HEAD_LENGTH
+                    );
+                }
             }
         },
 
@@ -285,6 +319,10 @@ define(function(require) {
             }
         },
 
+        getColor: function() {
+            return (this.fieldSense === FieldLatticeView.SHOW_FORCE_ON_ELECTRON) ? this.forceColor : this.fieldColor;
+        },
+
         setFieldDisplayType: function(fieldDisplayType) {
             this.fieldDisplayType = fieldDisplayType;
 
@@ -325,8 +363,7 @@ define(function(require) {
 
         setFieldSense: function(fieldSense) {
             this.fieldSense = fieldSense;
-            var color = (fieldSense === FieldLatticeView.SHOW_FORCE_ON_ELECTRON) ? this.forceColor : this.fieldColor;
-            this.setArrowColor(color);
+            this.setArrowColor(this.getColor());
         },
 
         setArrowColor: function(color) {

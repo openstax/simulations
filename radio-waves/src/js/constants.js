@@ -56,6 +56,7 @@ define(function (require) {
     FieldLatticeView.ARROW_HEAD_WIDTH = 10;
     FieldLatticeView.ARROW_HEAD_LENGTH = 10;
     FieldLatticeView.ARROW_TAIL_WIDTH = 4;
+    FieldLatticeView.ARROW_LINE_WIDTH = 1;
 
     Constants.FieldLatticeView = FieldLatticeView;
 
