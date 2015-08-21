@@ -30,20 +30,19 @@ define(function(require) {
         var target = this._targetVector.set(targetX, targetY);
 
         var angle  = this._direction.set(target).sub(origin).angle();
-        var scale  = 1;
+        var scale  = false;
         var length = origin.distance(target);
 
         // Define all the points as if it were pointing to the right
         if (length < headLength) {
-            scale = length / headLength;
-            length = headLength;
+            // We're going to find out what the scale should be to be
+            //   able to render it correctly, blow up the length to
+            //   draw it big, and then scale it back down.
+            scale = length / (headLength + 4);
+            length /= scale;
 
-            // What to do about length that is less than the head length??
+            console.log(scale, length, headLength)
         }
-        else {
-
-        }
-
         
         points[0].set(length - headLength,  tailWidth / 2);
         points[1].set(0,                    tailWidth / 2);
@@ -57,15 +56,17 @@ define(function(require) {
         for (i = 0; i < points.length; i++)
             points[i].rotate(angle);
 
+        // Scale it down to the right size if we blew it up 
+        if (scale !== false) {
+            for (i = 0; i < points.length; i++)
+                points[i].scale(scale);
+        }
+
         // Translate all the points so it starts in the right place
         for (i = 0; i < points.length; i++)
             points[i].add(origin);
 
         // Draw the points
-        // if (length < headLength) {
-
-        // }
-        // else {
         this.moveTo(points[0].x, points[0].y);
         this.lineTo(points[1].x, points[1].y);
         this.lineTo(points[2].x, points[2].y);
@@ -74,7 +75,6 @@ define(function(require) {
         this.lineTo(points[5].x, points[5].y);
         this.lineTo(points[6].x, points[6].y);
         this.lineTo(points[0].x, points[0].y);
-        // }
     };
 
     return PIXI;
