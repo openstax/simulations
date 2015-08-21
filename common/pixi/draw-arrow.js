@@ -40,8 +40,6 @@ define(function(require) {
             //   draw it big, and then scale it back down.
             scale = length / (headLength + 4);
             length /= scale;
-
-            console.log(scale, length, headLength)
         }
         
         points[0].set(length - headLength,  tailWidth / 2);
