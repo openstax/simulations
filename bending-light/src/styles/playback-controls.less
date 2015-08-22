@@ -1,0 +1,113 @@
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/buttons.less";
+@import "../../../common/styles/variables.less";
+@import "variables.less";
+@import "mixins.less";
+
+.playback-controls-wrapper {
+    position: absolute;
+    bottom: 5px;
+    width: 100%;
+    height: 62px;
+    padding: 10px;
+    background: @panel-bg;
+    text-align: center;
+    .user-select(none);
+
+    .playback-center-buttons-wrapper {
+        width: 150px;
+        position: absolute;
+        left: 50%;
+        margin-left: -75px;
+        top: 0;
+        height: 100%;
+        padding: 10px;
+        text-align: center;
+
+        .playback-btn {
+            display: inline-block;
+            background: @panel-btn-bg;
+            color: @panel-btn-fg;
+            outline: none;
+            border: none;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            text-align: center;
+
+            &:hover {
+                opacity: 0.9;
+            }
+
+            &:active {
+                background: @panel-btn-fg;
+                color: @panel-btn-bg;
+            }
+
+            &.pause-btn {
+                display: none;
+            }
+            .sim-view.playing &.pause-btn {
+                display: inline-block;
+            }
+            .sim-view.playing &.play-btn {
+                display: none;
+            }
+
+            &.play-btn,
+            &.pause-btn {
+                width: 42px;
+                height: 42px;
+                font-size: 16px;
+            }
+
+            &.play-btn {
+                padding-left: 10px;
+            }
+        }
+    }
+
+    .btn-normal {
+        .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+        margin: 5px 5px 0;
+    }
+
+    .clear-btn {
+        float: right;
+    }
+
+    .reset-btn {
+        float: right;
+    }
+
+    label {
+        color: @panel-fg;
+        font-weight: normal;
+    }
+
+    .playback-speed-wrapper {
+        position: absolute;
+        left: 100px;
+        height: 100%;
+        top: 0;
+        padding-top: 18px;
+
+        .playback-speed {
+            width: 140px;
+            display: inline-block;
+            vertical-align: middle;
+            background: @panel-slider-color;
+
+            &.slider .noUi-handle:after {
+                background: #222;
+                border: 2px solid @panel-slider-color;
+            }
+        }
+
+        label {
+            vertical-align: middle;
+            margin: 0 8px;
+        }
+    }
+
+}
