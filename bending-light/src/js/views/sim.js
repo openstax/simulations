@@ -128,9 +128,17 @@ define(function (require) {
          * Renders the playback controls at the bottom of the screen
          */
         renderPlaybackControls: function() {
-            this.$playbackControls = this.playbackControlsPanelTemplate({ unique: this.cid });
+            this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
 
-            this.$('.playback-controls-placeholder').replaceWith(this.$playbackControls);
+            this.$playbackControls.find('.playback-speed').noUiSlider({
+                start: 1,
+                range: {
+                    min: 0.1,
+                    max: 2.0
+                }
+            });
+
+            this.$el.append(this.$playbackControls);
         },
 
         /**
