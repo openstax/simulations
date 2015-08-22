@@ -13,12 +13,14 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * A view that represents an electron-position plot
+     * A view that represents an electron-position plot. Its update
+     *   function assumes a constant deltaTime because the spacing
+     *   between data points is the same.
      */
     var ElectronPositionPlot = PixiView.extend({
 
         width: 260,
-        height: 140,
+        height: 160,
         margin: 15,
 
         events: {
@@ -40,8 +42,15 @@ define(function(require) {
             this.simulation = options.simulation;
             this.electron = options.electron;
             this.titleText = options.title;
+            this.minY = options.minY;
+            this.maxY = options.maxY;
 
             this.panelColor = Colors.parseHex('#fff');
+            this.gridColor  = Colors.parseHex('#ccc');
+            this.lineColor  = Colors.parseHex('#2575BA');
+
+            this.lineWidth  = 1;
+            this.gridLineWidth = 1;
 
             // Cached objects
             this._dragOffset = new PIXI.Point();
@@ -55,6 +64,8 @@ define(function(require) {
         initGraphics: function() {
             this.initPanel();
             this.initTitle();
+            this.initAxisLabel();
+            this.initPlot();
 
             this.displayObject.buttonMode = true;
 
@@ -82,7 +93,7 @@ define(function(require) {
             };
 
             var shadow = PIXI.Sprite.fromPiecewiseCurve(outline, drawStyle);
-            shadow.alpha = 0.3;
+            shadow.alpha = 0.13;
             this.displayObject.addChild(shadow);
 
             // Draw the panel
@@ -112,7 +123,7 @@ define(function(require) {
             var y1 = 6;
             var y2 = 10;
             // Padding between words and line
-            var p = m;
+            var p = m / 2;
 
             var graphics = new PIXI.Graphics();
             graphics.lineStyle(1, 0xC1C1C1, 1);
@@ -132,12 +143,119 @@ define(function(require) {
             this.displayObject.addChild(graphics);
         },
 
+        initAxisLabel: function() {
+            var m = this.margin;
+
+            var settings = {
+                font: '11px Helvetica Neue',
+                fill: '#888'
+            };
+
+            var label = new PIXI.Text('Time', settings);
+            label.x = Math.round((this.width - label.width) / 2);
+            label.y = this.height - 20;
+
+            this.displayObject.addChild(label);
+        },
+
+        initPlot: function() {
+            var plotX = this.margin;
+            var plotY = this.margin + 19;
+            var plotWidth  = this.width  - (plotX * 2);
+            var plotHeight = this.height - (plotY + 26);
+
+            var plotBg = new PIXI.Graphics();
+            // Draw border
+            plotBg.beginFill(0xCCCCCC, 1);
+            plotBg.drawRect(plotX - 1, plotY - 1, plotWidth + 2, plotHeight + 2);
+            plotBg.endFill();
+            // Draw fill color
+            plotBg.beginFill(0xFFFFFF, 1);
+            plotBg.drawRect(plotX, plotY, plotWidth, plotHeight);
+            plotBg.endFill();
+
+            var plotGraphics = new PIXI.Graphics();
+            plotGraphics.x = plotX;
+            plotGraphics.y = plotY;
+
+            this.displayObject.addChild(plotBg);
+            this.displayObject.addChild(plotGraphics);
+
+            this.plotX = plotX;
+            this.plotY = plotY;
+            this.plotWidth = plotWidth;
+            this.plotHeight = plotHeight;
+            this.plotGraphics = plotGraphics;
+
+            this.plotDataLength = plotWidth;
+            this.plotData = [];
+
+            this.tickX = 0;
+            this.tickSpace = 20;
+
+            this.yScale = plotHeight / (this.maxY - this.minY);
+            this.yOffset = Math.floor(this.minY * this.yScale);
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+        },
+
+        /**
+         * This function assumes a constant deltaTime, so only call it
+         *   in that context.
+         */
+        update: function() {
+            // Add the current electron position to the dataset
+            this.addDatum(this.electron.get('position').y);
+
+            var data       = this.plotData;
+            var plotWidth  = this.plotWidth;
+            var plotHeight = this.plotHeight;
+            var graphics   = this.plotGraphics;
+            var yScale     = this.yScale;
+            var yOffset    = this.yOffset;
+            var tickX      = this.tickX;
+            var tickSpace  = this.tickSpace;
+
+            // Draw horizontal lines
+            graphics.lineStyle(this.gridLineWidth, this.gridColor, 1);
+            graphics.moveTo(0,         plotHeight / 2);
+            graphics.lineTo(plotWidth, plotHeight / 2);
+
+            // Draw vertical lines
+            for (var x = 0; x < plotWidth; x++) {
+                if ((x % tickSpace) === tickX) {
+                    graphics.moveTo(x, 0);
+                    graphics.lineTo(x, plotHeight);
+                }
+            }
+
+            // Draw data points
+            graphics.lineStyle(this.lineWidth, this.lineColor, 1);
+            for (var i = 1; i < data.length; i++) {
+                var d0 = data[i - 1] * yScale;
+                var d1 = data[i] * yScale;
+
+                graphics.moveTo(i - 1, d0 - yOffset);
+                graphics.lineTo(i,     d1 - yOffset);
+            }
+        },
+
+        addDatum: function(datum) {
+            // Move the vertical tick location
+            this.tickX = (this.tickX + 1) % this.tickSpace;
+
+            // Move all data one spot to the right
+            var data = this.plotData;
+            for (var i = this.plotDataLength - 1; i > 0; i--)
+                data[i] = data[i - 1];
+
+            data[0] = datum;
         },
 
         dragStart: function(data) {

@@ -79,6 +79,7 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             this.transmittingElectron.update(time, deltaTime);
             this.receivingElectron.update(time, deltaTime);
+            this.trigger('updated');
         },
 
         setTransmittingElectronMovementStrategyToManual: function() {

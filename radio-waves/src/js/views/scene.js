@@ -36,6 +36,8 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'updated', this.updateConstantDeltaTime);
         },
 
         renderContent: function() {
@@ -134,11 +136,17 @@ define(function(require) {
                 this.width - (20 + 192) - 4;
             var m = AppView.windowIsShort() ? 13 : 20;
 
+            var maxDy = (this.simulation.transmittingAntenna.getMaxY() - this.simulation.transmittingAntenna.getMinY()) / 2;
+            var minY = this.simulation.transmittingElectron.getPositionAt(0) + maxDy;
+            var maxY = this.simulation.transmittingElectron.getPositionAt(0) - maxDy;
+
             this.transmittingElectronPositionPlot = new ElectronPositionPlot({
                 mvt: this.mvt,
                 simulation: this.simulation,
                 electron: this.simulation.transmittingElectron,
-                title: 'Transmitter'
+                minY: minY,
+                maxY: maxY,
+                title: 'Transmitter Electron Position'
             });
             this.transmittingElectronPositionPlot.displayObject.x = r - this.transmittingElectronPositionPlot.width;
             this.transmittingElectronPositionPlot.displayObject.y = m;
@@ -148,7 +156,9 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 electron: this.simulation.receivingElectron,
-                title: 'Receiver'
+                minY: minY,
+                maxY: maxY,
+                title: 'Receiver Electron Position'
             });
             this.receivingElectronPositionPlot.displayObject.x = r - this.receivingElectronPositionPlot.width;
             this.receivingElectronPositionPlot.displayObject.y = this.height - m - 2 - this.receivingElectronPositionPlot.height;
@@ -185,7 +195,17 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (!paused) {
-                this.fieldLatticeView.update();    
+                   
+            }
+        },
+
+        updateConstantDeltaTime: function() {
+            if (!this.simulation.get('paused')) {
+                this.fieldLatticeView.update();
+                if (this.showingPositionPlots) {
+                    this.transmittingElectronPositionPlot.update();
+                    this.receivingElectronPositionPlot.update();    
+                }
             }
         },
 
@@ -202,11 +222,13 @@ define(function(require) {
         },
 
         showElectronPositionPlots: function() {
+            this.showingPositionPlots = true;
             this.transmittingElectronPositionPlot.show();
             this.receivingElectronPositionPlot.show();
         },
 
         hideElectronPositionPlots: function() {
+            this.showingPositionPlots = false;
             this.transmittingElectronPositionPlot.hide();
             this.receivingElectronPositionPlot.hide();
         },
