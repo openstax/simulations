@@ -23,7 +23,7 @@ define(function (require) {
     Constants.DT_PER_FRAME   = 0.375; // Seconds
 
     Constants.SIMULATION_BOUNDS = new Rectangle(0, 0, 1000, 700);
-    Constants.SIMULATION_ORIGIN = new Vector2(108, 325);
+    Constants.SIMULATION_ORIGIN = new Vector2(108, 345);
 
     Constants.FREQUENCY_RANGE = range({ min: 0, max: 200, defaultValue: 100 });
     Constants.FREQUENCY_SCALE = 1 / 5000;
