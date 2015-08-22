@@ -222,6 +222,8 @@ define(function(require) {
             var tickX      = this.tickX;
             var tickSpace  = this.tickSpace;
 
+            graphics.clear();
+
             // Draw horizontal lines
             graphics.lineStyle(this.gridLineWidth, this.gridColor, 1);
             graphics.moveTo(0,         plotHeight / 2);
