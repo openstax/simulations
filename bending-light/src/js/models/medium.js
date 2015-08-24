@@ -11,15 +11,10 @@ define(function (require) {
     /**
      * Holds information for a medium
      */
-    var Medium = function(name, indexForRed, mystery, custom) {
-        this.name = name;
-        this.mystery = mystery;
-        this.custom = custom;
-
-        if (typeof indexForRed === 'function')
-            this.dispersionFunction = indexForRed;
-        else
-            this.dispersionFunction = new DispersionFunction(indexForRed);
+    var Medium = function(shape, mediumProperties, color) {
+        this.shape = shape;
+        this.mediumProperties = mediumProperties;
+        this.color = color;
     };
 
     /**
@@ -27,8 +22,8 @@ define(function (require) {
      */
     _.extend(Medium.prototype, {
 
-        getIndexOfRefractionForRedLight: function() {
-            return this.dispersionFunction.getIndexOfRefraction(Constants.WAVELENGTH_RED);
+        getIndexOfRefraction: function(wavelength) {
+            return this.mediumProperties.dispersionFunction.getIndexOfRefraction(wavelength);
         }
 
     });
