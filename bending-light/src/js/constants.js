@@ -24,7 +24,8 @@ define(function (require) {
     // Thirty frames per cycle times the speedup scale
     Constants.MAX_DT = 1.0 / RED_LIGHT_FREQUENCY / 30 * TIME_SPEEDUP_SCALE;
     Constants.MIN_DT = MAX_DT / 10;
-    Constants.DEFAULT_DT = MAX_DT / 4;
+    Constants.DEFAULT_DT = MAX_DT / 4; // Seconds
+    Constants.FRAME_DURATION = 20 / 1000; // Seconds
 
     // A good size for the units being used in the sim; used to determine the 
     //   dimensions of various model objects
