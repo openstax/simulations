@@ -2,7 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var MediumProperties = require('models/medium-property');
+    var Constants = require('constants');
+
+    var MediumProperties = require('models/medium-properties');
 
     // Media that can be selected
     var MediumPropertiesPresets = {};

@@ -4,11 +4,12 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
-    var Rectangle  = require('common/math/rectangle');
+    var Rectangle = require('common/math/rectangle');
+    var Vector2   = require('common/math/vector2');
 
-    var Medium   = require('models/medium');
-    var LightRay = require('models/light-ray');
+    var BendingLightSimulation = require('models/simulation');
+    var Medium                 = require('models/medium');
+    var LightRay               = require('models/light-ray');
 
     /**
      * Constants
@@ -170,14 +171,14 @@ define(function (require, exports, module) {
          * Get the top medium index of refraction
          */
         getN1: function() {
-            return topMedium.get().getIndexOfRefraction( laser.color.get().getWavelength() );
+            return this.topMedium.getIndexOfRefraction(this.laser.getWavelength());
         },
 
         /**
          * Get the bottom medium index of refraction
          */
         getN2: function() {
-            return bottomMedium.get().getIndexOfRefraction( laser.color.get().getWavelength() );
+            return this.bottomMedium.getIndexOfRefraction(this.laser.getWavelength());
         },
 
         /**r
@@ -185,8 +186,39 @@ define(function (require, exports, module) {
          *   If the intensity meter misses the ray, the original ray is added.
          */
         addAndAbsorb: function(ray) {
+            var rayAbsorbed = false;//ray.intersects(this.intensityMeter.getSensorShape()) && this.intensityMeter.get('enabled');
+            if (rayAbsorbed) {
+                // Find intersection points with the intensity sensor
+                // TODO: Implement
+            }
+            else {
+                this.addRay(ray);
+            }
 
+            // if (rayAbsorbed) {
+            //     intensityMeter.addRayReading( new IntensityMeter.Reading( ray.getPowerFraction() ) );
+            // }
+            // else {
+            //     intensityMeter.addRayReading( MISS );
+            // }
+            return rayAbsorbed;
         },
+
+        /**
+         * Determine the velocity of the topmost light ray at the specified position,
+         *   if one exists, otherwise None
+         */
+        getVelocity: function(position) {
+            throw 'Not implemented yet.';
+        },
+
+        /**
+         * Determine the wave value of the topmost light ray at the specified position,
+         *   or None if none exists
+         */
+        getWaveValue: function(position) {
+            throw 'Not implemented yet.';
+        }
 
     });
 

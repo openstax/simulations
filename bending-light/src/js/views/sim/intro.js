@@ -5,9 +5,9 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var BendingLightSimulation = require('models/simulation');
-    var BendingLightSimView    = require('views/sim');
-    var IntroSceneView         = require('views/scene/intro');
+    var IntroSimulation     = require('models/simulation/intro');
+    var BendingLightSimView = require('views/sim');
+    var IntroSceneView      = require('views/scene/intro');
 
     var simHtml = require('text!templates/sim/intro.html');
 
@@ -37,7 +37,7 @@ define(function(require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new BendingLightSimulation();
+            this.simulation = new IntroSimulation();
         },
 
         /**

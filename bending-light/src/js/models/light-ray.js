@@ -29,7 +29,7 @@ define(function (require) {
      *
      *  Constructor parameters:
      *    tail, tip, indexOfRefraction, wavelength, powerFraction,
-     *    wavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium,
+     *    laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium,
      *    extend, extendBackwards
      *
      */
@@ -57,7 +57,7 @@ define(function (require) {
         /**
          * Initializes the LightRay's properties with provided initial values
          */
-        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, wavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium, extend, extendBackwards) {
+        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium, extend, extendBackwards) {
             this.tip.set(tip);
             this.tail.set(tail);
             this.vector.set(tip).sub(tail);
@@ -66,7 +66,7 @@ define(function (require) {
             this.indexOfRefraction = indexOfRefraction;
             this.wavelength = wavelength;
             this.powerFraction = powerFraction;
-            this.wavelength = wavelength;
+            this.laserWavelength = laserWavelength;
             this.waveWidth = waveWidth;
             //This number indicates how many wavelengths have passed before this light ray
             //   begins; it is zero for the light coming out of the laser.
@@ -122,8 +122,12 @@ define(function (require) {
             return this.wavelength;
         },
 
-        getWavelength: function() {
-            return this.wavelength;
+        getLaserWavelength: function() {
+            return this.laserWavelength;
+        },
+
+        getColor: function() {
+            throw 'Use getLaserWavelength.';
         },
 
         /**

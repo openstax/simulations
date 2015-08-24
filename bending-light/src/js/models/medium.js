@@ -4,10 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var DispersionFunction = require('model/dispersion-function');
-
-    var Constants = require('constants');
-
     /**
      * Holds information for a medium
      */

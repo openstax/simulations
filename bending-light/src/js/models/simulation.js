@@ -6,6 +6,8 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var Laser = require('models/laser');
+
     /**
      * Constants
      */
@@ -81,7 +83,7 @@ define(function (require, exports, module) {
             
         },
 
-        propagateRays: function() { throw 'propagateRays must be implemented in child class.'; }
+        propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
 
         wavelengthChanged: function(simulation, wavelength) {
             this.laser.set('wavelength', wavelength);
@@ -102,7 +104,7 @@ define(function (require, exports, module) {
          */
         getTransmittedPower: function(n1, n2, cosTheta1, cosTheta2) {
             return 4 * n1 * n2 * cosTheta1 * cosTheta2 / (Math.pow(n1 * cosTheta1 + n2 * cosTheta2, 2));
-        }
+        },
 
         /**
          * Get the fraction of power reflected from the medium

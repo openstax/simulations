@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var DispersionFunction = require('model/dispersion-function');
+    var DispersionFunction = require('models/dispersion-function');
 
     var Constants = require('constants');
 
