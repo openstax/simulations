@@ -17,7 +17,7 @@ define(function (require, exports, module) {
     var BendingLightSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            wavelength: Constants.WAVELENGTH_RED
         }),
         
         initialize: function(attributes, options) {

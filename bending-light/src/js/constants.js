@@ -30,6 +30,9 @@ define(function (require) {
     //   dimensions of various model objects
     Constants.CHARACTERISTIC_LENGTH = WAVELENGTH_RED;
 
+    Constants.MODEL_WIDTH = Constants.CHARACTERISTIC_LENGTH * 62;
+    Constants.MODEL_HEIGHT = Constants.MODEL_WIDTH * 0.7;
+
 
 
     // Materials
@@ -37,6 +40,20 @@ define(function (require) {
     Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT = 2.419;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                                LASER                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var Laser = {};
+    
+    // So the refracted wave mode doesn't get too big because at angle = PI
+    //   it would become infinite.  This value was determined by printing out
+    //   actual angle values at runtime and sampling a good value.
+	Laser.MAX_ANGLE_IN_WAVE_MODE = 3.0194;
+
+	Constants.Laser = Laser;
 
 
     return Constants;
