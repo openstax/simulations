@@ -85,6 +85,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Radio Waves & Electromagnetic Fields',
                 name: 'radio-waves',
+                link: 'radio-waves'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
