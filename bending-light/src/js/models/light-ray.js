@@ -96,6 +96,14 @@ define(function (require) {
             this.zIndex = highestZIndex + 1;
         },
 
+        getTip: function() {
+            return this.tip;
+        },
+
+        getTail: function() {
+            return this.tail;
+        },
+
         getSpeed: function() {
             return Constants.SPEED_OF_LIGHT / this.indexOfRefraction;
         },

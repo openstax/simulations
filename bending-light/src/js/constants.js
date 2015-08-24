@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var nmToHex = require('common/colors/nm-to-hex');
+
     var Constants = {}; 
 
     /*************************************************************************
@@ -39,6 +41,12 @@ define(function (require) {
     // Materials
     Constants.DEFAULT_LASER_DISTANCE_FROM_PIVOT = 8.125E-6;
     Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT = 2.419;
+
+    // Wavelengths to colors
+    Constants.wavelengthToHex = function(wavelength, returnHexInteger) {
+        var nm = wavelength * 1E9; // Convert to nanometers
+        return nmToHex(nm, returnHexInteger);
+    };
 
 
     /*************************************************************************
