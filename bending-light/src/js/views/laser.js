@@ -128,6 +128,11 @@ define(function(require) {
 
         initTranslationArrows: function() {
             this.translationArrows = new PIXI.Graphics();
+            this.translationArrows.visible = false;
+
+            // We'll draw them later, because they need to be at the center
+            //   of the rotated body but not be rotated, so it has to be
+            //   calculated based off of the rotation of the body.
 
             this.displayObject.addChildAt(this.translationArrows, 0);
         },
@@ -173,6 +178,33 @@ define(function(require) {
             this.rotationFrame.addChild(this.button);
         },
 
+        drawTranslationArrows: function() {
+            var xOrigin = Math.cos(this.rotationFrame.rotation) * -this.spriteWidth / 2;
+            var yOrigin = Math.sin(this.rotationFrame.rotation) * -this.spriteWidth / 2;
+            var length = this.spriteHeight * 2;
+            var tw = this.arrowTailWidth;
+            var hw = this.arrowHeadWidth;
+            var hl = this.arrowHeadLength;
+
+            this.translationArrows.clear();
+
+            this.translationArrows.beginFill(this.arrowColor, 1);
+            this.translationArrows.drawArrow(xOrigin, yOrigin, xOrigin, yOrigin + length, tw, hw, hl);
+            this.translationArrows.endFill();
+
+            this.translationArrows.beginFill(this.arrowColor, 1);
+            this.translationArrows.drawArrow(xOrigin, yOrigin, xOrigin + length, yOrigin, tw, hw, hl);
+            this.translationArrows.endFill();
+
+            this.translationArrows.beginFill(this.arrowColor, 1);
+            this.translationArrows.drawArrow(xOrigin, yOrigin, xOrigin, yOrigin - length, tw, hw, hl);
+            this.translationArrows.endFill();
+
+            this.translationArrows.beginFill(this.arrowColor, 1);
+            this.translationArrows.drawArrow(xOrigin, yOrigin, xOrigin - length, yOrigin, tw, hw, hl);
+            this.translationArrows.endFill();
+        },
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
@@ -191,6 +223,7 @@ define(function(require) {
 
         updateAngle: function() {
             this.rotationFrame.rotation = -this.model.getAngle() - Math.PI;
+            this.drawTranslationArrows();
         },
 
         updatePosition: function() {
