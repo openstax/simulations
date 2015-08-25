@@ -22,7 +22,7 @@ define(function (require) {
         this.amplitude = amplitude;
         this.nextPosition = new Vector2();
         this.omega = this.computeOmega();
-        this.runningTime = undefined;
+        this.runningTime = 0;
         this.velocity = new Vector2();
     };
 
@@ -63,8 +63,8 @@ define(function (require) {
         getNextPosition: function(position, t) {
             var newY = this.valueAtTime(this.frequency, this.amplitude, t);
             this.nextPosition.set(
-                this.position.x,
-                this.position.y + newY
+                position.x,
+                position.y + newY
             );
             return this.nextPosition;
         },
@@ -73,6 +73,10 @@ define(function (require) {
             var k = this.omega / Constants.SPEED_OF_LIGHT;
             var s = Math.sin(k * x - this.omega * this.runningTime);
             return -this.amplitude * this.omega * this.omega * s;
+        },
+
+        getRunningTime: function() {
+            return this.runningTime;
         },
 
         getFrequency: function() {

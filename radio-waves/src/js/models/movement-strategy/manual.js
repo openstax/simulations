@@ -19,13 +19,15 @@ define(function (require) {
     var ManualMovementStrategy = function(electron) {
         this.electron = electron;
 
-        this.position = new Vector2();
-        this.velocity = new Vector2();
+        this.position = new Vector2(electron.get('position'));
+        this.velocity = new Vector2(electron.get('velocity'));
 
-        this.numHistoryEntries;
+        this.numHistoryEntries = 0;
         this.yPosHistory = [];
         this.yVelHistory = [];
         this.yAccHistory = [];
+
+        this.initHistory();
     };
 
     /**
@@ -33,12 +35,20 @@ define(function (require) {
      */
     _.extend(ManualMovementStrategy.prototype, MovementStrategy.prototype, {
 
+        initHistory: function() {
+            for (var i = 0; i < HISTORY_LENGTH; i++) {
+                this.yPosHistory.push(0);
+                this.yVelHistory.push(0);
+                this.yAccHistory.push(0);
+            }
+        },
+
     	update: function(deltaTime) {
             if (this.position) {
                 this.numHistoryEntries = Math.min(this.numHistoryEntries + 1, HISTORY_LENGTH);
                 this.electron.setPosition(this.position);
                 for (var i = this.yPosHistory.length - 1; i > 0; i--)
-                    this.yPosHistory[i] = yPosHistory[i - 1];
+                    this.yPosHistory[i] = this.yPosHistory[i - 1];
                 this.yPosHistory[0] = this.electron.get('position').y;
                 this.computeKinetics();
             }
@@ -56,7 +66,7 @@ define(function (require) {
                 vSum += v;
             }
             this.velocityAvg = vSum / this.yVelHistory.length;
-            this.velocity.x = this.velocityAvg;
+            this.velocity.x = this.velocityAvg; // Why the heck is it being stored in the x component???????
 
             // Compute accelerations
             this.yVelHistory = median(this.yVelHistory, 3);
@@ -81,7 +91,7 @@ define(function (require) {
         },
 
         setPosition: function(position) {
-            this.position = position;
+            this.position.set(position);
         },
 
     	getMaxAcceleration: function() {
