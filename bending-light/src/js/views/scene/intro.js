@@ -41,7 +41,12 @@ define(function(require) {
             this.laserView = new LaserView({
                 model: this.simulation.laser,
                 mvt: this.mvt,
-                rotateOnly: true
+                rotateOnly: true,
+                clampAngleFunction: function(angle) {
+                    while (angle < 0) 
+                        angle += Math.PI * 2;
+                    return Math.max(Math.PI / 2, Math.min(angle, Math.PI));
+                }
             });
 
             this.topLayer.addChild(this.laserView.displayObject);

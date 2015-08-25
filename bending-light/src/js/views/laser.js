@@ -52,6 +52,7 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.rotateOnly = options.rotateOnly;
+            this.clampAngleFunction = options.clampAngleFunction;
 
             this.arrowTailWidth = 12;
             this.arrowHeadWidth = 24;
@@ -60,7 +61,8 @@ define(function(require) {
 
             this.initGraphics();
 
-            this._initialPosition = new Vector2();
+            // Cached objects
+            this._vec = new Vector2();
 
             this.listenTo(this.model, 'change:on', this.onChanged);
             this.listenTo(this.model, 'change:emissionPoint', this.update);
@@ -258,6 +260,8 @@ define(function(require) {
 
         dragTranslateAreaEnd: function(data) {
             this.draggingTranslateArea = false;
+            if (!this.translateAreaHovering)
+                this.translateAreaUnhover();
         },
 
         dragRotateAreaStart: function(data) {
@@ -267,29 +271,46 @@ define(function(require) {
 
         dragRotateArea: function(data) {
             if (this.draggingRotateArea) {
-                var x = data.global.x - this.displayObject.x;
-                var y = data.global.y - this.displayObject.y;
+                var x = data.global.x;
+                var y = data.global.y;
+
+                var mx = this.mvt.viewToModelX(x);
+                var my = this.mvt.viewToModelY(y);
+                var vector = this._vec.set(mx, my).sub(this.model.get('pivotPoint'));
+                this.model.setAngle(this.clampAngleFunction(vector.angle()));
+
+                // Vector2D modelPoint = new Vector2D( transform.viewToModel( event.event.getPositionRelativeTo( getParent().getParent() ) ) );
+                // Vector2D vector = modelPoint.minus( laser.pivot.get() );
+                // final double angle = vector.getAngle();
+                // double after = clampDragAngle.apply( angle );
+                // laser.setAngle( after );
             }
         },
 
         dragRotateAreaEnd: function(data) {
             this.draggingRotateArea = false;
+            if (!this.rotateAreaHovering)
+                this.rotateAreaUnhover();
         },
 
         translateAreaHover: function() {
+            this.translateAreaHovering = true;
             this.translationArrows.visible = true;
         },
 
         translateAreaUnhover: function() {
+            this.translateAreaHovering = false;
             if (!this.draggingTranslateArea)
                 this.translationArrows.visible = false;
         },
 
         rotateAreaHover: function() {
+            this.rotateAreaHovering = true;
             this.rotationArrows.visible = true;
         },
         
         rotateAreaUnhover: function() {
+            this.rotateAreaHovering = false;
             if (!this.draggingRotateArea)
                 this.rotationArrows.visible = false;
         },

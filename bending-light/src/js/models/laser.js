@@ -45,9 +45,9 @@ define(function (require) {
 
             this._vec = new Vector2();
 
-            this.set('pivotPoint', new Vector2(this.get('pivotPoint')));
+            this.set('pivotPoint', vectorPool.create().set(this.get('pivotPoint')));
             this.set('emissionPoint', 
-                new Vector2(options.distanceFromPivot, 0).rotate(options.angle)
+                vectorPool.create().set(options.distanceFromPivot, 0).rotate(options.angle)
             );
 
             this.on('change:wave', this.clampAngle);
