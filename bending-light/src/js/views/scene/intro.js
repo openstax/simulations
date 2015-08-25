@@ -9,6 +9,7 @@ define(function(require) {
 
     var BendingLightSceneView = require('views/scene');
     var LaserView             = require('views/laser');
+    var MediumView            = require('views/medium');
 
     var Assets = require('assets');
 
@@ -25,16 +26,12 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.mediumLayer = new PIXI.DisplayObjectContainer();
+            this.stage.addChild(this.mediumLayer);
+
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var color = this.simulation.bottomMedium.color;
-            var hex = Colors.rgbToHexInteger(color.r, color.g, color.b);
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(hex, color.a);
-            graphics.drawRect(0, this.height / 2, this.width, this.height / 2);
-            graphics.endFill();
-
-            this.stage.addChild(graphics);
+            this.initMediumViews();
         },
 
         initLaserView: function() {
@@ -51,6 +48,14 @@ define(function(require) {
 
             this.topLayer.addChild(this.laserView.displayObject);
         },
+
+        initMediumViews: function() {
+            this.topMediumView    = new MediumView({ model: this.simulation.topMedium,    mvt: this.mvt });
+            this.bottomMediumView = new MediumView({ model: this.simulation.bottomMedium, mvt: this.mvt });
+
+            this.mediumLayer.addChild(this.topMediumView.displayObject);
+            this.mediumLayer.addChild(this.bottomMediumView.displayObject);
+        }
 
     });
 
