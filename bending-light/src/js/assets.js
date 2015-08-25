@@ -7,10 +7,16 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        LASER_ON:  'laser-on',
+        LASER_OFF: 'laser-off'
     };
 
-    Assets.SpriteSheets = {};
+    Assets.SpriteSheets = {
+        'objects.json': [
+            Assets.Images.LASER_ON,
+            Assets.Images.LASER_OFF,
+        ]
+    };
 
     return Assets;
 });

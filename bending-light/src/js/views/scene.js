@@ -9,6 +9,8 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
+    var LaserView = require('views/laser');
+
     var Assets = require('assets');
 
     // Constants
@@ -50,6 +52,7 @@ define(function(require) {
 
             this.initMVT();
             this.initLightRays();
+            this.initLaserView();
         },
 
         initMVT: function() {
@@ -69,6 +72,15 @@ define(function(require) {
         initLightRays: function() {
             this.rayGraphics = new PIXI.Graphics();
             this.lightWaveLayer.addChild(this.rayGraphics);
+        },
+
+        initLaserView: function() {
+            this.laserView = new LaserView({
+                model: this.simulation.laser,
+                mvt: this.mvt
+            });
+
+            this.topLayer.addChild(this.laserView.displayObject);
         },
 
         drawLightRays: function() {

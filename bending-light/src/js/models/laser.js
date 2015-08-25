@@ -29,7 +29,7 @@ define(function (require) {
         defaults: {
             emissionPoint: null, // Where the light comes from
             pivotPoint: null,    // Point to be pivoted about, and at which the laser points
-            on: true,           // True if the laser is activated and emitting light
+            on: false,           // True if the laser is activated and emitting light
             wave: false,
             wavelength: Constants.WAVELENGTH_RED
         },

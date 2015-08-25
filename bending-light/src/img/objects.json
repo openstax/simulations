@@ -1,0 +1,25 @@
+{"frames": {
+	"laser-on": {
+		"frame": {"x":0,"y":0,"w":150,"h":60},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":150,"h":60},
+		"sourceSize": {"w":150,"h":60},
+		"pivot": {"x":0,"y":0}
+	},
+	"laser-off": {
+		"frame": {"x":0,"y":62,"w":150,"h":60},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":150,"h":60},
+		"sourceSize": {"w":150,"h":60},
+		"pivot": {"x":0,"y":0}
+	}
+},
+"meta": {
+	"image": "objects.png",
+	"format": "RGBA8888",
+	"size": {"w":150,"h":122},
+	"scale": "1"
+}
+}
