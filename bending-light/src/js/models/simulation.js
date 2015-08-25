@@ -32,11 +32,12 @@ define(function (require, exports, module) {
                 topLeftQuadrant: true
             }, options);
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
             this.laserDistanceFromPivot = options.laserDistanceFromPivot
             this.laserAngle = options.laserAngle
             this.topLeftQuadrant = options.topLeftQuadrant
+            this.updateOnNextFrame = true;
+
+            Simulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:wavelength', this.wavelengthChanged);
         },
@@ -52,7 +53,9 @@ define(function (require, exports, module) {
                 distanceFromPivot: this.laserDistanceFromPivot, 
                 angle: this.laserAngle, 
                 topLeftQuadrant: this.topLeftQuadrant
-            })
+            });
+
+            this.listenTo(this.laser, 'change', this.laserChanged);
 
             // Initialize the light-rays array
             this.rays = [];
@@ -66,7 +69,7 @@ define(function (require, exports, module) {
         },
 
         addRay: function(lightRay) {
-            this.rays.push();
+            this.rays.push(lightRay);
         },
 
         /**
@@ -80,10 +83,27 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.dirty = false;
+
+            if (this.updateOnNextFrame) {
+                this.updateOnNextFrame = false;
+
+                this.clear();
+                this.propagateRays();
+
+                this.dirty = true;
+            }
+
+            // Update the light rays' running time for the waves
+            for (var i = 0; i < this.rays.length; i++)
+                this.rays[i].setTime(time);
         },
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
+
+        laserChanged: function() {
+            this.updateOnNextFrame = true;
+        },
 
         wavelengthChanged: function(simulation, wavelength) {
             this.laser.set('wavelength', wavelength);

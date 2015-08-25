@@ -46,7 +46,7 @@ define(function (require) {
         };
 
         // Call init with any arguments passed to the constructor
-        this.init.call(this, arguments);
+        this.init.apply(this, arguments);
     };
 
     /**
@@ -58,9 +58,17 @@ define(function (require) {
          * Initializes the LightRay's properties with provided initial values
          */
         init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium, extend, extendBackwards) {
-            this.tip.set(tip);
-            this.tail.set(tail);
-            this.vector.set(tip).sub(tail);
+            if (tip)
+                this.tip.set(tip);
+            else
+                this.tip.set(0, 0);
+
+            if (tail)
+                this.tail.set(tail);
+            else
+                this.tail.set(0, 0);
+
+            this.vector.set(this.tip).sub(this.tail);
             this.unitVector.set(this.vector).normalize();
 
             this.indexOfRefraction = indexOfRefraction;
@@ -71,7 +79,7 @@ define(function (require) {
             //This number indicates how many wavelengths have passed before this light ray
             //   begins; it is zero for the light coming out of the laser.
             this.numWavelengthsPhaseOffset = numWavelengthsPhaseOffset;
-            this.oppositeMediumShape = oppositeMediumShape;
+            this.oppositeMedium = oppositeMedium;
             this.extend = extend;
             // Light must be extended backwards for the transmitted wave shape to be correct
             this.extendBackwards = extendBackwards;
@@ -281,7 +289,7 @@ define(function (require) {
          */
         create: function() {
             var lightRay = pool.create();
-            lightRay.init.call(lightRay, arguments);
+            lightRay.init.apply(lightRay, arguments);
             return lightRay;
         }
 

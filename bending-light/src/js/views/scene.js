@@ -5,7 +5,9 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView      = require('common/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
 
     var Assets = require('assets');
 
@@ -67,7 +69,7 @@ define(function(require) {
         initLightRays: function() {
             this.rayGraphics = new PIXI.Graphics();
             this.lightWaveLayer.addChild(this.rayGraphics);
-        }
+        },
 
         drawLightRays: function() {
             var rays = this.simulation.rays;
@@ -94,7 +96,9 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            if (this.simulation.dirty) {
+                this.drawLightRays();
+            }
         },
 
     });

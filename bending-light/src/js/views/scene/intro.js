@@ -33,11 +33,7 @@ define(function(require) {
             graphics.endFill();
 
             this.stage.addChild(graphics);
-        },
-
-        _update: function(time, deltaTime, paused, timeScale) {
-            
-        },
+        }
 
     });
 
