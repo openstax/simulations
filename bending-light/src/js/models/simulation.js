@@ -78,7 +78,7 @@ define(function (require, exports, module) {
         clear: function() {
             for (var i = this.rays.length - 1; i >= 0; i--) {
                 this.rays[i].destroy();
-                this.rays.slice(i, 1);
+                this.rays.splice(i, 1);
             }
         },
 
