@@ -10,6 +10,12 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
     var ModelViewTransform = require('common/math/model-view-transform');
+    var HelpLabelView      = require('common/help-label/index');
+
+    var ElectronPositionPlot  = require('views/electron-position-plot');
+    var ElectronView          = require('views/electron');
+    var DraggableElectronView = require('views/electron/draggable');
+    var FieldLatticeView      = require('views/field-lattice');
 
     var Assets = require('assets');
 
@@ -30,6 +36,8 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation, 'updated', this.updateConstantDeltaTime);
         },
 
         renderContent: function() {
@@ -38,48 +46,15 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
-            
+
             this.initBackground();
             this.initMVT();
+            this.initFieldLattice();
+            this.initElectrons();
+            this.initElectronPositionPlots();
+            this.initHelpLabel();
+
             this.updateBackgroundScale();
-
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 0.2);
-            graphics.drawRect(
-                this.mvt.modelToViewX(Constants.SIMULATION_BOUNDS.x),
-                this.mvt.modelToViewY(Constants.SIMULATION_BOUNDS.y),
-                this.mvt.modelToViewDeltaX(Constants.SIMULATION_BOUNDS.w),
-                this.mvt.modelToViewDeltaY(Constants.SIMULATION_BOUNDS.h)
-            );
-            graphics.endFill();
-
-            graphics.beginFill();
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.transmittingAntenna.end1.x),
-                this.mvt.modelToViewY(this.simulation.transmittingAntenna.end1.y),
-                3
-            );
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.transmittingAntenna.end2.x),
-                this.mvt.modelToViewY(this.simulation.transmittingAntenna.end2.y),
-                3
-            );
-            graphics.endFill();
-
-            graphics.beginFill(0xFFFFFF, 1);
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.receivingAntenna.end1.x),
-                this.mvt.modelToViewY(this.simulation.receivingAntenna.end1.y),
-                3
-            );
-            graphics.drawCircle(
-                this.mvt.modelToViewX(this.simulation.receivingAntenna.end2.x),
-                this.mvt.modelToViewY(this.simulation.receivingAntenna.end2.y),
-                3
-            );
-            graphics.endFill();
-
-            this.stage.addChild(graphics);
         },
 
         initMVT: function() {
@@ -118,6 +93,97 @@ define(function(require) {
             this.bg = bg;
         },
 
+        initFieldLattice: function() {
+            var latticeSpacingX = 50;
+            var latticeSpacingY = 50;
+            var minX = this.mvt.viewToModelX(0);
+            var maxX = this.mvt.viewToModelX(this.width)
+            var height = this.mvt.viewToModelY(this.height) - this.mvt.viewToModelY(0);
+
+            this.fieldLatticeView = new FieldLatticeView({
+                mvt: this.mvt,
+                origin: this.simulation.origin,
+                minX: minX,
+                maxX: maxX,
+                height: height,
+                modelWidth: this.simulation.bounds.w,
+                modelHeight: this.simulation.bounds.h,
+                latticeSpacingX: latticeSpacingX,
+                latticeSpacingY: latticeSpacingY,
+                sourceElectron: this.simulation.transmittingElectron
+            });
+
+            this.stage.addChild(this.fieldLatticeView.displayObject);
+        },
+
+        initElectrons: function() {
+            this.transmittingElectronView = new DraggableElectronView({
+                model: this.simulation.transmittingElectron,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.transmittingElectronView.displayObject);
+
+            this.receivingElectronView = new ElectronView({
+                model: this.simulation.receivingElectron,
+                mvt: this.mvt
+            });
+            this.stage.addChild(this.receivingElectronView.displayObject);
+        },
+
+        initElectronPositionPlots: function() {
+            var r = AppView.windowIsShort() ? 
+                this.width - (13 + 192) - 4 :
+                this.width - (20 + 192) - 4;
+            var m = AppView.windowIsShort() ? 13 : 20;
+
+            var maxDy = (this.simulation.transmittingAntenna.getMaxY() - this.simulation.transmittingAntenna.getMinY()) / 2;
+            var minY = this.simulation.transmittingElectron.getPositionAt(0) + maxDy;
+            var maxY = this.simulation.transmittingElectron.getPositionAt(0) - maxDy;
+
+            this.transmittingElectronPositionPlot = new ElectronPositionPlot({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                electron: this.simulation.transmittingElectron,
+                minY: minY,
+                maxY: maxY,
+                title: 'Transmitter Electron Position'
+            });
+            this.transmittingElectronPositionPlot.displayObject.x = r - this.transmittingElectronPositionPlot.width;
+            this.transmittingElectronPositionPlot.displayObject.y = m;
+            this.stage.addChild(this.transmittingElectronPositionPlot.displayObject);
+
+            this.receivingElectronPositionPlot = new ElectronPositionPlot({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                electron: this.simulation.receivingElectron,
+                minY: minY,
+                maxY: maxY,
+                title: 'Receiver Electron Position'
+            });
+            this.receivingElectronPositionPlot.displayObject.x = r - this.receivingElectronPositionPlot.width;
+            this.receivingElectronPositionPlot.displayObject.y = this.height - m - 2 - this.receivingElectronPositionPlot.height;
+            this.stage.addChild(this.receivingElectronPositionPlot.displayObject);
+
+            this.hideElectronPositionPlots();
+        },
+
+        initHelpLabel: function() {
+            var position = new Vector2(this.mvt.modelToView(this.simulation.origin)).add(14, 10);
+            position.x = Math.round(position.x);
+            position.y = Math.round(position.y);
+
+            this.helpLabel = new HelpLabelView({
+                attachTo: this.stage,
+                alwaysAttached: true,
+                position: position,
+                title: 'Drag the electron to move it manually, \nor click "Oscillate" on the control panel.',
+                color: '#000',
+                font: '11pt Helvetica Neue'
+            });
+
+            this.helpLabel.render();
+        },
+
         resize: function() {
             PixiSceneView.prototype.resize.apply(this, arguments);
 
@@ -128,7 +194,19 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            if (!paused) {
+                   
+            }
+        },
+
+        updateConstantDeltaTime: function() {
+            if (!this.simulation.get('paused')) {
+                this.fieldLatticeView.update();
+                if (this.showingPositionPlots) {
+                    this.transmittingElectronPositionPlot.update();
+                    this.receivingElectronPositionPlot.update();    
+                }
+            }
         },
 
         updateBackgroundScale: function() {
@@ -141,6 +219,54 @@ define(function(require) {
             var targetBackgroundWidth = AppView.windowIsShort() ? this.width : this.bg.texture.width; // In pixels
             var scale = targetBackgroundWidth / this.bg.texture.width;
             return scale;
+        },
+
+        showElectronPositionPlots: function() {
+            this.showingPositionPlots = true;
+            this.transmittingElectronPositionPlot.show();
+            this.receivingElectronPositionPlot.show();
+        },
+
+        hideElectronPositionPlots: function() {
+            this.showingPositionPlots = false;
+            this.transmittingElectronPositionPlot.hide();
+            this.receivingElectronPositionPlot.hide();
+        },
+
+        displayCurveWithVectors: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.CURVE_WITH_VECTORS);
+        },
+
+        displayCurve: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.CURVE);
+        },
+
+        displayFullField: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.FULL_FIELD);
+        },
+
+        displayNoField: function() {
+            this.fieldLatticeView.setFieldDisplayType(FieldLatticeView.NO_FIELD);
+        },
+
+        displayStaticField: function() {
+            this.fieldLatticeView.displayStaticField();
+        },
+
+        displayDynamicField: function() {
+            this.fieldLatticeView.displayDynamicField();
+        },
+
+        setFieldSenseForceOnElectron: function() {
+            this.fieldLatticeView.setFieldSense(FieldLatticeView.SHOW_FORCE_ON_ELECTRON);
+        },
+
+        setFieldSenseElectricField: function() {
+            this.fieldLatticeView.setFieldSense(FieldLatticeView.SHOW_ELECTRIC_FIELD);
+        },
+
+        toggleHelpLabel: function() {
+            this.helpLabel.toggle();
         }
 
     });

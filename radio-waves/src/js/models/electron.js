@@ -23,13 +23,6 @@ define(function (require) {
      * Represents a body with mass moving in space.
      */
     var Electron = MotionObject.extend({
-        
-        /**
-         * Default attribute values
-         */
-        defaults: _.extend({}, MotionObject.prototype.defaults, {
-
-        }),
 
         /**
          * Initializes the new electron
@@ -40,7 +33,6 @@ define(function (require) {
             this.positionHistory = [];
             this.startPosition    = new Vector2(this.get('position'));
             this.previousPosition = new Vector2();
-            this.setPosition(this.startPosition);
 
             this.accelerationHistory = [];
             // The history of the maximum acceleration the electron courld have had
@@ -107,7 +99,6 @@ define(function (require) {
                     }
                 }
             }
-            
         },
 
         /**
@@ -266,9 +257,9 @@ define(function (require) {
             fieldStrength.scale(acceleration / distanceScaleFactor);
 
             // The following factor is used to give the fall-off associated with being off-axis.
-            if ( distanceFromSource == 0.0 ) {
+            if (distanceFromSource === 0)
                 distanceFromSource = 1;
-            }
+            
             var dubsonFactor = Math.abs(location.x - this.startPosition.x) / distanceFromSource;
             fieldStrength.scale(dubsonFactor);
 

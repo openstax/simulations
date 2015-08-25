@@ -1,3 +1,7 @@
+<div class="help-btn-wrapper">
+    <button class="help-btn" title="Help"><span class="fa fa-question"></span></button>
+</div>
+
 
 <span class="scene-view-placeholder"></span>
 
@@ -7,7 +11,7 @@
         <div class="sim-controls legend-panel">
             <h2>Legend</h2>
 
-            <div class="legend-symbol"><%= Assets.createIcon(electronSrc, { 'class': 'symbol-icon' }, 20) %> Electron</div>
+            <div class="legend-symbol"><%= Assets.createIcon(electronSrc, { 'class': 'symbol-icon' }, 15) %><span>Electron</span></div>
         </div>
 
         <div class="sim-controls transmitter-movement-panel">
@@ -24,14 +28,16 @@
                 </li>
             </ul>
 
-            <label for="frequency-slider" class="slider-label">Frequency</label>
-            <div class="frequency-slider-wrapper">
-                <div id="frequency-slider" class="slider frequency-slider"></div>
-            </div>
+            <div class="oscillation-controls disabled">
+                <label for="frequency-slider" class="slider-label">Frequency</label>
+                <div class="frequency-slider-wrapper">
+                    <div id="frequency-slider" class="slider frequency-slider" disabled></div>
+                </div>
 
-            <label for="amplitude-slider" class="slider-label">Amplitude</label>
-            <div class="amplitude-slider-wrapper">
-                <div id="amplitude-slider" class="slider amplitude-slider"></div>
+                <label for="amplitude-slider" class="slider-label">Amplitude</label>
+                <div class="amplitude-slider-wrapper">
+                    <div id="amplitude-slider" class="slider amplitude-slider" disabled></div>
+                </div>
             </div>
         </div>
     </div>
@@ -54,7 +60,7 @@
                     <label for="field-display-type-full-field">Full Field</label>
                 </li>
                 <li>
-                    <input type="radio" name="atmosphere-type" value="none" id="field-display-type-none">
+                    <input type="radio" name="field-display-type" value="none" id="field-display-type-none">
                     <label for="field-display-type-none">None</label>
                 </li>
             </ul>
@@ -85,5 +91,19 @@
                 </li>
             </ul>
         </div>
+    </div>
+</div>
+
+
+<div class="playback-controls-wrapper">
+    <div class="playback-center-buttons-wrapper">
+        <button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
+        <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
+        <button class="playback-btn step-btn"   title="Step"><span class="fa fa-step-forward"></span></button>
+    </div>
+
+    <div class="electron-positions-check-wrapper">
+        <input type="checkbox" id="electron-positions-check">
+        <label for="electron-positions-check">Electron Positions</label>
     </div>
 </div>
