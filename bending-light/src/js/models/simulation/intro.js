@@ -113,7 +113,7 @@ define(function (require, exports, module) {
                         reflectedPowerRatio = 1.0;
                     
                     var reflectedWaveWidth = sourceWaveWidth;
-                    this.addAndAbsorb(new LightRay(
+                    this.addAndAbsorb(LightRay.create(
                         null, 
                         this._vec.set(1, 0).rotate(Math.PI - this.laser.getAngle()),
                         n1, 
@@ -143,7 +143,7 @@ define(function (require, exports, module) {
                             var transmittedBeamHalfWidth = Math.cos(theta2) * extentInterceptedHalfWidth;
                             var transmittedWaveWidth = transmittedBeamHalfWidth * 2;
 
-                            var transmittedRay = new LightRay(
+                            var transmittedRay = LightRay.create(
                                 null,
                                 this._vec.set(1, 0).rotate(theta2 - Math.PI / 2), 
                                 n2, 
