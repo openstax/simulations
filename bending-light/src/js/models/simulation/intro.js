@@ -10,6 +10,7 @@ define(function (require, exports, module) {
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
     var LightRay               = require('models/light-ray');
+    var MediumColorFactory     = require('models/medium-color-factory');
 
     /**
      * Constants
@@ -32,13 +33,13 @@ define(function (require, exports, module) {
             this.topMedium = new Medium(
                 new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
                 MediumPropertiesPresets.AIR,
-                null
+                MediumColorFactory.getRgbaColor(MediumPropertiesPresets.AIR.getIndexOfRefractionForRedLight())
             );
 
             this.bottomMedium = new Medium(
                 new Rectangle(-1, -1, 2, 1),
                 MediumPropertiesPresets.WATER,
-                null // TODO: implement the color factory
+                MediumColorFactory.getRgbaColor(MediumPropertiesPresets.WATER.getIndexOfRefractionForRedLight())
             );
 
             this._top    = new Rectangle(-10, -10, 20, 10);

@@ -5,6 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var Colors = require('common/colors/colors');
+
     var BendingLightSceneView = require('views/scene');
 
     var Assets = require('assets');
@@ -27,8 +29,10 @@ define(function(require) {
         initGraphics: function() {
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
+            var color = this.simulation.bottomMedium.color;
+            var hex = Colors.rgbToHexInteger(color.r, color.g, color.b);
             var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xCCCCFF, 1);
+            graphics.beginFill(hex, color.a);
             graphics.drawRect(0, this.height / 2, this.width, this.height / 2);
             graphics.endFill();
 
