@@ -99,7 +99,7 @@ define(function(require) {
                 // Draw a line between its endpoints
             var point;
             for (var i = 0; i < rays.length; i++) {
-                graphics.lineStyle(1, Constants.wavelengthToHex(rays[i].getWavelength(), true), 1);
+                graphics.lineStyle(BendingLightSceneView.LASER_BEAM_WIDTH, Constants.wavelengthToHex(rays[i].getWavelength(), true), 1);
                 point = this.mvt.modelToView(rays[i].getTip());
                 graphics.moveTo(point.x, point.y);
                 point = this.mvt.modelToView(rays[i].getTail());
@@ -113,7 +113,7 @@ define(function(require) {
             }
         },
 
-    });
+    }, Constants.SceneView);
 
     return BendingLightSceneView;
 });

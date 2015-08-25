@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('common/pixi/view');
+                   require('common/pixi/draw-arrow');
     var Colors   = require('common/colors/colors');
     var range    = require('common/math/range');
     var Vector2  = require('common/math/vector2');
@@ -17,7 +18,7 @@ define(function(require) {
     /**
      * A view that represents a cannon model
      */
-    var CannonView = PixiView.extend({
+    var LaserView = PixiView.extend({
 
         events: {
             'touchstart      .translateArea': 'dragTranslateAreaStart',
@@ -28,6 +29,8 @@ define(function(require) {
             'mouseup         .translateArea': 'dragTranslateAreaEnd',
             'touchendoutside .translateArea': 'dragTranslateAreaEnd',
             'mouseupoutside  .translateArea': 'dragTranslateAreaEnd',
+            'mouseover       .translateArea': 'translateAreaHover',
+            'mouseout        .translateArea': 'translateAreaUnhover',
 
             'touchstart      .rotateArea': 'dragRotateAreaStart',
             'mousedown       .rotateArea': 'dragRotateAreaStart',
@@ -37,6 +40,8 @@ define(function(require) {
             'mouseup         .rotateArea': 'dragRotateAreaEnd',
             'touchendoutside .rotateArea': 'dragRotateAreaEnd',
             'mouseupoutside  .rotateArea': 'dragRotateAreaEnd',
+            'mouseover       .rotateArea': 'rotateAreaHover',
+            'mouseout        .rotateArea': 'rotateAreaUnhover',
 
             'click .button': 'buttonClicked'
         },
@@ -46,24 +51,27 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.time = 0;
+            this.rotateOnly = options.rotateOnly;
+
+            this.arrowTailWidth = 12;
+            this.arrowHeadWidth = 24;
+            this.arrowHeadLength = 20;
+            this.arrowColor = 0x81E4AA;
 
             this.initGraphics();
 
             this._initialPosition = new Vector2();
 
-            // Listen to angle because the user can change that from the control panel,
-            //   but don't listen to x or y because those will only ever be changed
-            //   through this view.
-            // this.listenTo(this.model, 'change:angle', this.updateAngle);
-            // this.updateAngle(this.model, this.model.get('angle'));
-
             this.listenTo(this.model, 'change:on', this.onChanged);
-            this.listenTo(this.model, 'change:emissionPoint', this.updatePosition);
+            this.listenTo(this.model, 'change:emissionPoint', this.update);
         },
 
         initGraphics: function() {
+            this.rotationFrame = new PIXI.DisplayObjectContainer();
+
             this.initSprites();
+            this.initRotationArrows();
+            this.initTranslationArrows();
             this.initDragAreas();
             this.initButton();
 
@@ -81,38 +89,88 @@ define(function(require) {
             this.spriteWidth  = this.onSprite.texture.width;
             this.spriteHeight = this.onSprite.texture.height;
 
-            this.displayObject.addChild(this.onSprite);
-            this.displayObject.addChild(this.offSprite);
+            this.rotationFrame.addChild(this.onSprite);
+            this.rotationFrame.addChild(this.offSprite);
+
+            this.displayObject.addChild(this.rotationFrame);
+        },
+
+        initRotationArrows: function() {
+            this.rotationArrows = new PIXI.Graphics();
+            this.rotationArrows.visible = false;
+
+            var startX = -this.spriteWidth + this.spriteWidth * 0.19;
+            var endX   = -this.spriteWidth + this.spriteWidth * 0.24;
+            var yExtent = this.spriteHeight * 1.2;
+
+            this.rotationArrows.beginFill(this.arrowColor, 1);
+            this.rotationArrows.drawArrow(
+                startX, 0,
+                endX,   yExtent,
+                this.arrowTailWidth, 
+                this.arrowHeadWidth, 
+                this.arrowHeadLength
+            );
+            this.rotationArrows.endFill();
+
+            this.rotationArrows.beginFill(this.arrowColor, 1);
+            this.rotationArrows.drawArrow(
+                startX, 0,
+                endX,   -yExtent,
+                this.arrowTailWidth, 
+                this.arrowHeadWidth, 
+                this.arrowHeadLength
+            );
+            this.rotationArrows.endFill();
+
+            this.rotationFrame.addChildAt(this.rotationArrows, 0);
+        },
+
+        initTranslationArrows: function() {
+            this.translationArrows = new PIXI.Graphics();
+
+            this.displayObject.addChildAt(this.translationArrows, 0);
         },
 
         initDragAreas: function() {
-            this.translateArea = new PIXI.DisplayObjectContainer();
-            this.translateArea.hitArea = new PIXI.Rectangle(-this.spriteWidth, -this.spriteHeight / 2, this.spriteWidth, this.spriteHeight);
-            this.translateArea.buttonMode = true;
-            this.translateArea.defaultCursor = 'move';
-            this.displayObject.addChild(this.translateArea);
+            
+            var bodyArea = new PIXI.Rectangle(-this.spriteWidth, -this.spriteHeight / 2, this.spriteWidth, this.spriteHeight);
 
+            if (!this.rotateOnly) {
+                // Make the body the handle for translation
+                this.translateArea = new PIXI.DisplayObjectContainer();
+                this.translateArea.hitArea = bodyArea;
+                this.translateArea.buttonMode = true;
+                this.translateArea.defaultCursor = 'move';
+                this.rotationFrame.addChild(this.translateArea);
+
+                // Create a special rotation handle off the back end
+                this.initRotateHandle();
+            }
+            else {
+                // Just create a dummy translate area
+                this.translateArea = new PIXI.DisplayObjectContainer();
+
+                // Make the whole body the drag handle for rotation
+                this.rotateArea = new PIXI.DisplayObjectContainer();
+                this.rotateArea.buttonMode = true;
+                this.rotateArea.defaultCursor = 'nesw-resize';
+                this.rotateArea.hitArea = bodyArea;
+                this.rotationFrame.addChild(this.rotateArea);
+            }
+        },
+
+        initRotateHandle: function() {
             this.rotateArea = new PIXI.DisplayObjectContainer();
-            this.rotateArea.hitArea = new PIXI.Rectangle(-this.spriteWidth * 1.5, -this.spriteHeight / 2, this.spriteWidth / 2, this.spriteHeight);
             this.rotateArea.buttonMode = true;
-            this.displayObject.addChild(this.rotateArea);
+            this.rotateArea.defaultCursor = 'nesw-resize';
         },
 
         initButton: function() {
             this.button = new PIXI.DisplayObjectContainer();
             this.button.hitArea = new PIXI.Circle(-this.spriteWidth + this.spriteWidth * (99 / 150), 0, 10);
             this.button.buttonMode = true;
-            this.displayObject.addChild(this.button);
-        },
-
-        updateAngle: function(cannon, angleInDegrees) {
-            this.spritesLayer.rotation = this.model.firingAngle();
-        },
-
-        updatePosition: function() {
-            var emissionPoint = this.mvt.modelToView(this.model.get('emissionPoint'));
-            this.displayObject.x = emissionPoint.x;
-            this.displayObject.y = emissionPoint.y;
+            this.rotationFrame.addChild(this.button);
         },
 
         updateMVT: function(mvt) {
@@ -123,11 +181,22 @@ define(function(require) {
 
             // this.spritesLayer.scale.x = this.spritesLayer.scale.y = scale;
 
-            this.updatePosition();
+            this.update();
         },
 
-        update: function(time, deltaTime, paused) {
+        update: function() {
+            this.updatePosition();
+            this.updateAngle();
+        },
 
+        updateAngle: function() {
+            this.rotationFrame.rotation = -this.model.getAngle() - Math.PI;
+        },
+
+        updatePosition: function() {
+            var emissionPoint = this.mvt.modelToView(this.model.get('emissionPoint'));
+            this.displayObject.x = emissionPoint.x;
+            this.displayObject.y = emissionPoint.y;
         },
 
         onChanged: function(laser, on) {
@@ -140,62 +209,59 @@ define(function(require) {
         },
 
         dragTranslateAreaStart: function(data) {
-            this.draggingCannon = true;
+            if (!this.rotateOnly) {
+                this.draggingTranslateArea = true;    
+            }
         },
 
         dragTranslateArea: function(data) {
-            if (this.draggingCannon) {
+            if (this.draggingTranslateArea) {
                 var x = data.global.x - this.displayObject.x;
                 var y = data.global.y - this.displayObject.y;
                 
-                var angle = Math.atan2(y, x);
-                var degrees = -angle * RADIANS_TO_DEGREES;
-                // Catch the case where we go into negatives at the 180deg mark
-                if (degrees >= -180 && degrees < Constants.Cannon.MIN_ANGLE && this.model.get('angle') > 0)
-                    degrees = 360 + degrees;
-
-                // Make sure it's within bounds
-                if (degrees < Constants.Cannon.MIN_ANGLE)
-                    degrees = Constants.Cannon.MIN_ANGLE;
-                if (degrees > Constants.Cannon.MAX_ANGLE)
-                    degrees = Constants.Cannon.MAX_ANGLE;
-                this.model.set('angle', degrees);
+                
             }
         },
 
         dragTranslateAreaEnd: function(data) {
-            this.draggingCannon = false;
+            this.draggingTranslateArea = false;
         },
 
         dragRotateAreaStart: function(data) {
             this.previousPedestalY = data.global.y;
-            this.draggingPedestal = true;
+            this.draggingRotateArea = true;
         },
 
         dragRotateArea: function(data) {
-            if (this.draggingPedestal) {
-                var dy = data.global.y - this.previousPedestalY;
-                this.previousPedestalY = data.global.y;
-
-                dy = this.mvt.viewToModelDeltaY(dy);
-
-                var y = this.model.get('y') + dy;
-                if (y < 0)
-                    y = 0;
-                this.model.set('y', y);
-
-                this.updatePosition();
-                this.drawPedestal();
-                this.drawAxes();
+            if (this.draggingRotateArea) {
+                var x = data.global.x - this.displayObject.x;
+                var y = data.global.y - this.displayObject.y;
             }
         },
 
         dragRotateAreaEnd: function(data) {
-            this.draggingPedestal = false;
+            this.draggingRotateArea = false;
         },
 
+        translateAreaHover: function() {
+            this.translationArrows.visible = true;
+        },
 
-    }, Constants.CannonView);
+        translateAreaUnhover: function() {
+            if (!this.draggingTranslateArea)
+                this.translationArrows.visible = false;
+        },
 
-    return CannonView;
+        rotateAreaHover: function() {
+            this.rotationArrows.visible = true;
+        },
+        
+        rotateAreaUnhover: function() {
+            if (!this.draggingRotateArea)
+                this.rotationArrows.visible = false;
+        },
+
+    });
+
+    return LaserView;
 });

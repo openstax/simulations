@@ -65,5 +65,18 @@ define(function (require) {
 	Constants.Laser = Laser;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              SCENE VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var SceneView = {};
+
+    SceneView.LASER_BEAM_WIDTH = 3;
+
+    Constants.SceneView = SceneView;
+
+
     return Constants;
 });

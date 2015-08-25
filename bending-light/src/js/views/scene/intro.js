@@ -8,14 +8,12 @@ define(function(require) {
     var Colors = require('common/colors/colors');
 
     var BendingLightSceneView = require('views/scene');
+    var LaserView             = require('views/laser');
 
     var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');
-
-    // CSS
-    require('less!styles/scene');
 
     /**
      *
@@ -37,7 +35,17 @@ define(function(require) {
             graphics.endFill();
 
             this.stage.addChild(graphics);
-        }
+        },
+
+        initLaserView: function() {
+            this.laserView = new LaserView({
+                model: this.simulation.laser,
+                mvt: this.mvt,
+                rotateOnly: true
+            });
+
+            this.topLayer.addChild(this.laserView.displayObject);
+        },
 
     });
 
