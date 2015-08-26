@@ -48,7 +48,8 @@ define(function(require) {
             this.$el.remove();
             this.setElement($(this.template(data)));
             
-            this.$('.slider').noUiSlider({
+            this.$slider = this.$('.slider');
+            this.$slider.noUiSlider({
                 start: 0.5,
                 range: {
                     min: Constants.MIN_INDEX_OF_REFRACTION,
@@ -59,6 +60,8 @@ define(function(require) {
             this.$value = this.$('.index-of-refraction-value');
 
             this.$('select').selectpicker();
+
+            this.materialChanged(this.model, this.model.get('mediumProperties'));
 
             return this;
         },
@@ -78,10 +81,22 @@ define(function(require) {
         },
 
         materialChanged: function(medium, mediumProperties) {
-            
             this.updateLock(function() {
-                // Select one with matching name
+                var selectedKey;
+                _.each(MediumPropertiesPresets, function(preset, key) {
+                    if (preset === mediumProperties) {
+                        selectedKey = key;
+                        return false;
+                    }
+                });
+                this.$('select')
+                    .val(selectedKey)
+                    .selectpicker('refresh');;
             });
+
+            var indexOfRefraction = mediumProperties.getIndexOfRefractionForRedLight()
+            this.$slider.val(indexOfRefraction);
+            this.$value.text(indexOfRefraction.toFixed(2));
         }
 
     });
