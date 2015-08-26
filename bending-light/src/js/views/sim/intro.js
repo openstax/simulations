@@ -8,6 +8,7 @@ define(function(require) {
     var IntroSimulation     = require('models/simulation/intro');
     var BendingLightSimView = require('views/sim');
     var IntroSceneView      = require('views/scene/intro');
+    var MediumControlsView  = require('views/medium-controls');
 
     var simHtml = require('text!templates/sim/intro.html');
 
@@ -30,7 +31,7 @@ define(function(require) {
             
             BendingLightSimView.prototype.initialize.apply(this, [ options ]);
 
-            
+            this.initMediumControls();
         },
 
         /**
@@ -49,8 +50,26 @@ define(function(require) {
             });
         },
 
+        initMediumControls: function() {
+            this.topMediumControlsView = new MediumControlsView({
+                model: this.simulation,
+                name: 'top'
+            });
+
+            this.bottomMediumControlsView = new MediumControlsView({
+                model: this.simulation,
+                name: 'bottom'
+            });
+        },
+
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
+
+            this.topMediumControlsView.render();
+            this.bottomMediumControlsView.render();
+
+            this.$el.append(this.topMediumControlsView.el);
+            this.$el.append(this.bottomMediumControlsView.el);
 
             return this;
         }
