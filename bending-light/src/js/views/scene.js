@@ -94,12 +94,14 @@ define(function(require) {
             var graphics = this.rayGraphics;
             graphics.clear();
 
+            var beamWidth = BendingLightSceneView.LASER_BEAM_WIDTH;
+
             // For each LightRay instance:
                 // Set our line color to its color
                 // Draw a line between its endpoints
             var point;
             for (var i = 0; i < rays.length; i++) {
-                graphics.lineStyle(BendingLightSceneView.LASER_BEAM_WIDTH, Constants.wavelengthToHex(rays[i].getWavelength(), true), 1);
+                graphics.lineStyle(beamWidth, Constants.wavelengthToHex(rays[i].getLaserWavelength(), true), rays[i].getPowerFraction());
                 point = this.mvt.modelToView(rays[i].getTip());
                 graphics.moveTo(point.x, point.y);
                 point = this.mvt.modelToView(rays[i].getTail());
