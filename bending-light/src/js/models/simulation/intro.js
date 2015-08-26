@@ -10,7 +10,6 @@ define(function (require, exports, module) {
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
     var LightRay               = require('models/light-ray');
-    var MediumColorFactory     = require('models/medium-color-factory');
 
     /**
      * Constants
@@ -30,21 +29,22 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.topMedium = new Medium(
-                new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
-                MediumPropertiesPresets.AIR,
-                MediumColorFactory.getRgbaColor(MediumPropertiesPresets.AIR.getIndexOfRefractionForRedLight())
-            );
+            this.topMedium = new Medium({
+                shape: new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
+                mediumProperties: MediumPropertiesPresets.AIR
+            });
 
-            this.bottomMedium = new Medium(
-                new Rectangle(-1, -1, 2, 1),
-                MediumPropertiesPresets.WATER,
-                MediumColorFactory.getRgbaColor(MediumPropertiesPresets.WATER.getIndexOfRefractionForRedLight())
-            );
+            this.bottomMedium = new Medium({
+                shape: new Rectangle(-1, -1, 2, 1),
+                mediumProperties: MediumPropertiesPresets.WATER
+            });
 
             this._top    = new Rectangle(-10, -10, 20, 10);
             this._bottom = new Rectangle(-10,   0, 20, 10);
             this._vec = new Vector2();
+
+            this.listenTo(this.topMedium,    'change:mediumProperties', this.mediumChanged);
+            this.listenTo(this.bottomMedium, 'change:mediumProperties', this.mediumChanged);
         },
 
         /**
@@ -215,6 +215,13 @@ define(function (require, exports, module) {
          */
         getWaveValue: function(position) {
             throw 'Not implemented yet.';
+        },
+
+        /**
+         * Responds to changes in mediums by telling the simulation to update
+         */
+        mediumChanged: function() {
+            this.updateOnNextFrame = true;
         }
 
     });

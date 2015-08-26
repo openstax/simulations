@@ -42,6 +42,9 @@ define(function (require) {
     Constants.DEFAULT_LASER_DISTANCE_FROM_PIVOT = 8.125E-6;
     Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT = 2.419;
 
+    Constants.MIN_INDEX_OF_REFRACTION = 1;
+    Constants.MAX_INDEX_OF_REFRACTION = 1.6;
+
     // Wavelengths to colors
     Constants.wavelengthToHex = function(wavelength, returnHexInteger) {
         var nm = wavelength * 1E9; // Convert to nanometers

@@ -6,6 +6,9 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
 
+    var MediumPropertiesPresets = require('medium-properties-presets');
+    var Constants = require('constants');
+
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var html = require('text!../../templates/medium-controls.html');
@@ -18,13 +21,14 @@ define(function(require) {
         template: _.template(html),
 
         events: {
-            'slide .slider' : 'changeIndexOfRefraction'
+            'slide  .slider' : 'changeIndexOfRefraction',
+            'change .select' : 'changeMaterial'
         },
 
         initialize: function(options) {
             this.name = options.name;
-
-
+            
+            this.listenTo(this.model, 'change:mediumProperties', this.materialChanged);
         },
 
         /**
@@ -33,7 +37,12 @@ define(function(require) {
         render: function() {
             var data = {
                 name: this.name,
-                mediums: {}
+                mediums: _.map(MediumPropertiesPresets, function(preset, key) {
+                    return {
+                        name: preset.name,
+                        key: key
+                    };
+                })
             };
 
             this.$el.remove();
@@ -42,12 +51,14 @@ define(function(require) {
             this.$('.slider').noUiSlider({
                 start: 0.5,
                 range: {
-                    'min': 0.01,
-                    'max': 1
+                    min: Constants.MIN_INDEX_OF_REFRACTION,
+                    max: Constants.MAX_INDEX_OF_REFRACTION
                 }
             });
 
-            this.$value = this.$('index-of-refraction-value');
+            this.$value = this.$('.index-of-refraction-value');
+
+            this.$('select').selectpicker();
 
             return this;
         },
@@ -56,7 +67,20 @@ define(function(require) {
             var indexOfRefraction = parseFloat($(event.target).val());
             this.inputLock(function() {
                 this.$value.text(indexOfRefraction.toFixed(2));
-                
+            });
+        },
+
+        changeMaterial: function(event) {
+            var key = $(event.target).val();
+            this.inputLock(function() {
+                this.model.set('mediumProperties', MediumPropertiesPresets[key]);
+            });
+        },
+
+        materialChanged: function(medium, mediumProperties) {
+            
+            this.updateLock(function() {
+                // Select one with matching name
             });
         }
 

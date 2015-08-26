@@ -8,6 +8,7 @@
 .control-panel {
     background: @panel-bg;
     padding: @panel-padding;
+    .user-select(none);
 
     input.form-control {
         background: rgba(255, 255, 255, 0.27);
@@ -25,14 +26,36 @@
         margin-top: 18px;
     }
 
-    h2.slider-header {
-        border-bottom: none;
-        margin-bottom: -4px;
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: rgba(255, 255, 255, 0.27);
+            border-color: rgba(0, 0, 0, 0.1);
+            text-transform: capitalize;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
     }
 
-    // .slider {
-    //     box-shadow: 0 0px 4px rgba(71, 64, 166, 0.08);
-    // }
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
+    }
 }
 
 .medium-controls-panel {
@@ -46,20 +69,42 @@
 
     &.medium-top {
         bottom: 50%;
-        margin-bottom: 13px;
+        margin-bottom: (@panel-margin + 3);
     }
 
     &.medium-bottom {
         top: 50%;
-        margin-top: 8px;
+        margin-top: (@panel-margin - 3);
     }
 
-    .select-label {
-        text-align: right;
+    .material-select-wrapper {
+        position: relative;
+        margin-top: 10px;
+        margin-bottom: 14px;
+
+        .select-label {
+            text-align: right;
+        }
+
+        .select-wrapper {
+            position: absolute;
+            right: 0;
+            top: -7px;
+
+            > .select {
+                width: 160px !important;
+            }
+        }
     }
 
+    
     .index-of-refraction-value {
         float: right;
+        font-weight: normal;
+    }
+
+    .slider-header {
+        display: block;
     }
 
     .slider-wrapper {
@@ -67,18 +112,31 @@
 
         .index-of-refraction-slider {
             margin-bottom: 20px;
-            background: #aaa;
+            margin-left: 10px;
+            margin-right: 10px;
+            background: fadeout(@link-color, 70%);
         }
 
         label {
             position: absolute;
             top: 4px;
-            opacity: 0.6;
             font-weight: normal;
+            color: fadeout(@link-color, 50%);
 
-            &.air-label   { left: 0; }
-            &.water-label { left: 190px; }
-            &.glass-label { left: 240px; }
+            &.air-label   { left:   2px; }
+            &.water-label { left: 119px; }
+            &.glass-label { left: 184px; }
+
+            &:after {
+                content: '';
+                display: block;
+                position: absolute;
+                top: -2px;
+                left: 50%;
+                width: 1px;
+                height: 4px;
+                border-left: 2px solid fadeout(@link-color, 70%)
+            }
         }
     }
 }

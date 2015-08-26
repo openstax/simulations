@@ -113,7 +113,6 @@ define(function (require) {
                 name: this.name
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
         },
 
         /**

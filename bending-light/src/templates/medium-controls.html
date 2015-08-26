@@ -1,16 +1,16 @@
 <div class="control-panel medium-controls-panel medium-<%= name %>">
-    <div class="row">
-        <div class="col-sm-6 select-label"><label>Material</label></div>
-        <div class="col-sm-6">
+    <div class="material-select-wrapper">
+        <label>Material</label>
+        <div class="select-wrapper">
             <select class="select medium-<%= name %>">
-            <% _.each(mediums, function(value, key) { %>
-                <option value="<%= key %>"><%= value %></option>
-            <% }); %>
+                <% _.each(mediums, function(preset) { %>
+                    <option value="<%= preset.key %>"><%= preset.name %></option>
+                <% }); %>
             </select>
         </div>
     </div>
 
-    <h2 class="slider-header">Index of Refraction <span class="index-of-refraction-value medium-<%= name %>">1.00</span></h2>
+    <label class="slider-header">Index of Refraction <span class="index-of-refraction-value medium-<%= name %>">1.00</span></label>
     
     <div class="slider-wrapper">
         <div class="slider index-of-refraction-slider medium-<%= name %>"></div>

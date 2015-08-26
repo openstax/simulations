@@ -18,14 +18,16 @@ define(function(require) {
 
         initialize: function(options) {
             this.updateMVT(options.mvt);
+
+            this.listenTo(this.model, 'change:color', this.draw)
         },
 
         draw: function() {
-            var rect = this.mvt.modelToView(this.model.shape);
+            var rect = this.mvt.modelToView(this.model.get('shape'));
             rect.h = Math.abs(rect.h);
             rect.y -= rect.h;
 
-            var color = this.model.color;
+            var color = this.model.get('color');
 
             var graphics = this.displayObject;
             graphics.clear();
