@@ -24,6 +24,7 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
+    var html = require('text!../../templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
@@ -101,6 +102,8 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+
+            this.$el.append(html);
 
             return this;
         },

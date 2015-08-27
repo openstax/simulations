@@ -5,6 +5,14 @@
     min-height: inherit;
 }
 
+.reset-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 20px;
+    z-index: 200;
+    .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+}
+
 .control-panel {
     background: @panel-bg;
     padding: @panel-padding;
