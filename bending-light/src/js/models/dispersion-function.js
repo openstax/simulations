@@ -48,6 +48,14 @@ define(function (require) {
             // Take a linear combination of glass and air equations
             var index = x * DispersionFunction.getSellmeierValue(wavelength) + (1 - x) * DispersionFunction.getAirIndex(wavelength);
             return index;
+        },
+
+        setIndexOfRefraction: function(indexOfRefraction) {
+            this.referenceIndexOfRefraction = indexOfRefraction;
+        },
+
+        setReferenceWavelength: function(wavelength) {
+            this.referenceWavelength = wavelength;
         }
 
     });

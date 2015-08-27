@@ -27,6 +27,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.name = options.name;
+            this.simulation = options.simulation;
             
             this.listenTo(this.model, 'change:mediumProperties', this.materialChanged);
         },
@@ -69,9 +70,18 @@ define(function(require) {
         },
 
         changeIndexOfRefraction: function(event) {
+            // If this is happening inside the input lock, we know the user is sliding
+            //   it, and that means the medium material is now "custom"
             var indexOfRefraction = parseFloat($(event.target).val());
+            MediumPropertiesPresets.CUSTOM.setIndexOfRefraction(indexOfRefraction);
+            MediumPropertiesPresets.CUSTOM.setReferenceWavelength(this.simulation.get('wavelength'));
+            this.model.set('mediumProperties', MediumPropertiesPresets.CUSTOM);
+            this.model.updateColor();
+
+            this.$value.text(indexOfRefraction.toFixed(2));
+
             this.inputLock(function() {
-                this.$value.text(indexOfRefraction.toFixed(2));
+                
             });
         },
 

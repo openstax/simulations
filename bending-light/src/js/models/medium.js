@@ -22,11 +22,15 @@ define(function (require) {
             this.on('change:mediumProperties', this.mediumPropertiesChanged);
 
             // Set starting color
-            this.mediumPropertiesChanged(this, this.get('mediumProperties'));
+            this.updateColor();
         },
 
         getIndexOfRefraction: function(wavelength) {
             return this.get('mediumProperties').dispersionFunction.getIndexOfRefraction(wavelength);
+        },
+
+        updateColor: function() {
+            this.mediumPropertiesChanged(this, this.get('mediumProperties'));
         },
 
         mediumPropertiesChanged: function(model, mediumProperties) {

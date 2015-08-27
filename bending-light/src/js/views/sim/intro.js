@@ -53,11 +53,13 @@ define(function(require) {
         initMediumControls: function() {
             this.topMediumControlsView = new MediumControlsView({
                 model: this.simulation.topMedium,
+                simulation: this.simulation,
                 name: 'top'
             });
 
             this.bottomMediumControlsView = new MediumControlsView({
                 model: this.simulation.bottomMedium,
+                simulation: this.simulation,
                 name: 'bottom'
             });
         },

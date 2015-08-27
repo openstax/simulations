@@ -29,6 +29,14 @@ define(function (require) {
 
         getIndexOfRefractionForRedLight: function() {
             return this.dispersionFunction.getIndexOfRefraction(Constants.WAVELENGTH_RED);
+        },
+
+        setIndexOfRefraction: function(indexOfRefraction) {
+            this.dispersionFunction.setIndexOfRefraction(indexOfRefraction);
+        },
+
+        setReferenceWavelength: function(wavelength) {
+            this.dispersionFunction.setReferenceWavelength(wavelength);
         }
 
     });

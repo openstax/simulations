@@ -22,9 +22,8 @@ define(function (require, exports, module) {
      */
     var IntroSimulation = BendingLightSimulation.extend({
 
-        defaults: _.extend(BendingLightSimulation.prototype.defaults, {
-            wavelength: Constants.WAVELENGTH_RED
-        }),
+        // defaults: _.extend(BendingLightSimulation.prototype.defaults, {
+        // }),
         
         initialize: function(attributes, options) {
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
