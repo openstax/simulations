@@ -2,8 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
-    var Pool     = require('object-pool');
+    var Backbone   = require('backbone');
+    var Pool       = require('object-pool');
+    var ClipperLib = require('clipper-lib');
 
     var Vector2        = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -30,7 +31,7 @@ define(function (require) {
      *
      *  Constructor parameters:
      *    tail, tip, indexOfRefraction, wavelength, powerFraction,
-     *    laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium,
+     *    laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMediumShape,
      *    extend, extendBackwards
      *
      */
@@ -40,7 +41,20 @@ define(function (require) {
         this.vector     = new Vector2();
         this.unitVector = new Vector2();
         this._vec       = new Vector2();
-        this._beamShape = new PiecewiseCurve();
+
+        this._beamSubjectPaths = [[]];
+        this._beamClipPaths = [[]];
+        this._beamSolutionPaths = [];
+
+        // Both the subject path and clip path have 4 points
+        for (var i = 0; i < 4; i++) {
+            this._beamSubjectPaths[0].push({ X: 0, Y: 0 });
+            this._beamClipPaths[0].push({ X: 0, Y: 0 });
+        }
+
+        this._beamClipper = new ClipperLib.Clipper();
+        this._beamClipper.AddPaths(this._beamClipPaths,    ClipperLib.PolyType.ptSubject, true);
+        this._beamClipper.AddPaths(this._beamSubjectPaths, ClipperLib.PolyType.ptClip,    true);
 
         this._line = {
             start: new Vector2(),
@@ -59,7 +73,7 @@ define(function (require) {
         /**
          * Initializes the LightRay's properties with provided initial values
          */
-        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium, extend, extendBackwards) {
+        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMediumShape, extend, extendBackwards) {
             if (tip)
                 this.tip.set(tip);
             else
@@ -81,12 +95,14 @@ define(function (require) {
             //This number indicates how many wavelengths have passed before this light ray
             //   begins; it is zero for the light coming out of the laser.
             this.numWavelengthsPhaseOffset = numWavelengthsPhaseOffset;
-            this.oppositeMedium = oppositeMedium;
+            this.oppositeMediumShape = oppositeMediumShape;
             this.extend = extend;
             // Light must be extended backwards for the transmitted wave shape to be correct
             this.extendBackwards = extendBackwards;
 
             this.zIndex = 0;
+
+            this.initWaveShape();
         },
 
         /**
@@ -165,7 +181,59 @@ define(function (require) {
          */
         getWaveShape: function() {
             // It is a rectangle that represents a line that then has part of
-            //   itself cut off from the oppositeMedium's rectangle shape.
+            //   itself cut off from the oppositeMediumShape's rectangle shape.
+
+            // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
+            //ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+
+
+            
+            
+
+        },
+
+        setWavePathPoint: function(i, x, y) {
+            this._beamSubjectPaths[0][i].X = x;
+            this._beamSubjectPaths[0][i].Y = y;
+        },
+
+        setOppositeMediumPathPoint: function(i, x, y) {
+            this._beamClipPaths[0][i].X = x;
+            this._beamClipPaths[0][i].Y = y;
+        },
+
+        /**
+         * Sets up the clip path with data from the oppositeMediumShape.
+         */
+        initClippingShape: function() {
+            // It's a rectangle, so just set the four corners
+            var rect = this.oppositeMediumShape;
+            this.setOppositeMediumPathPoint(0, rect.left(),  rect.top());
+            this.setOppositeMediumPathPoint(1, rect.right(), rect.top());
+            this.setOppositeMediumPathPoint(2, rect.right(), rect.bottom());
+            this.setOppositeMediumPathPoint(3, rect.left(),  rect.bottom());
+        },
+
+        initBeamShape: function() {
+            
+        },
+
+        initWaveShape: function() {
+            this.initClippingShape();
+            this.initBeamShape();
+            this.cutBeamShape();
+        },
+
+        cutBeamShape: function() {
+            // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
+            //ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+
+            var succeeded = this._beamClipper.Execute(
+                ClipperLib.ClipType.ctDifference, 
+                this._beamSolutionPaths, 
+                ClipperLib.PolyFillType.pftNonZero, 
+                ClipperLib.PolyFillType.pftNonZero
+            );
         },
 
         /**
@@ -226,7 +294,7 @@ define(function (require) {
         },
 
         getOppositeMedium: function() {
-            return this.oppositeMedium;
+            return this.oppositeMediumShape;
         },
 
         /**
