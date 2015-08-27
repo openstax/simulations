@@ -72,15 +72,15 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                              SCENE VIEW                             **
+     **                            LASER BEAM VIEW                          **
      **                                                                     **
      *************************************************************************/
 
-    var SceneView = {};
+    var LaserBeamView = {};
 
-    SceneView.LASER_BEAM_WIDTH = 3;
+    LaserBeamView.LASER_BEAM_WIDTH = 3;
 
-    Constants.SceneView = SceneView;
+    Constants.LaserBeamView = LaserBeamView;
 
 
     return Constants;

@@ -9,7 +9,8 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var LaserView = require('views/laser');
+    var LaserView     = require('views/laser');
+    var LaserBeamView = require('views/laser-beam');
 
     var Assets = require('assets');
 
@@ -70,8 +71,11 @@ define(function(require) {
         },
 
         initLightRays: function() {
-            this.rayGraphics = new PIXI.Graphics();
-            this.lightWaveLayer.addChild(this.rayGraphics);
+            this.laserBeamView = new LaserBeamView({
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+            this.lightWaveLayer.addChild(this.laserBeamView.displayObject);
         },
 
         initLaserView: function() {
@@ -83,35 +87,9 @@ define(function(require) {
             this.topLayer.addChild(this.laserView.displayObject);
         },
 
-        drawLightRays: function() {
-            var rays = this.simulation.rays;
-
-            // Sort rays by zIndex so the lower z-indexes come first
-            rays.sort(function(a, b) {
-                return a.zIndex - b.zIndex;
-            });
-
-            var graphics = this.rayGraphics;
-            graphics.clear();
-
-            var beamWidth = BendingLightSceneView.LASER_BEAM_WIDTH;
-
-            // For each LightRay instance:
-                // Set our line color to its color
-                // Draw a line between its endpoints
-            var point;
-            for (var i = 0; i < rays.length; i++) {
-                graphics.lineStyle(beamWidth, Constants.wavelengthToHex(rays[i].getLaserWavelength(), true), Math.sqrt(rays[i].getPowerFraction()));
-                point = this.mvt.modelToView(rays[i].getTip());
-                graphics.moveTo(point.x, point.y);
-                point = this.mvt.modelToView(rays[i].getTail());
-                graphics.lineTo(point.x, point.y);
-            }
-        },
-
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.dirty) {
-                this.drawLightRays();
+                this.laserBeamView.draw();
             }
         },
 

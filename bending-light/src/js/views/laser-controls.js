@@ -64,10 +64,9 @@ define(function(require) {
         },
 
         changeWavelength: function(event) {
-
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
-
+                this.simulation.set('wavelength', wavelength);
                 this.$value.text(wavelength + 'nm');
             });
         },
