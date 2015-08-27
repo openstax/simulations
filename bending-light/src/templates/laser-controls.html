@@ -1,8 +1,19 @@
 <div class="control-panel laser-controls-panel">
-    
+    <h2>Laser View</h2>
+
+    <ul class="radios laser-beam-type-options">
+        <li>
+            <input type="radio" name="laser-beam-type" value="ray" class="ray" id="ray-<%= unique %>" checked>
+            <label for="ray-<%= unique %>">Ray</label>
+        </li>
+        <li>
+            <input type="radio" name="laser-beam-type" value="wave" class="wave" id="wave-<%= unique %>">
+            <label for="wave-<%= unique %>">Wave</label>
+        </li>
+    </ul>
 
     <% if (showWavelengthControls) { %>
-        <label class="slider-header">Index of Refraction <span class="slider-value index-of-refraction-value medium-<%= name %>">1.00</span></label>
+        <label class="slider-header">Wavelength <span class="slider-value wavelength-value">400nm</span></label>
         
         <div class="wavelength-slider-wrapper"></div>
     <% } %>

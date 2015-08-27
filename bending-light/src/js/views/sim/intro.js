@@ -70,7 +70,7 @@ define(function(require) {
             this.laserControlsView = new LaserControlsView({
                 model: this.simulation.laser,
                 simulation: this.simulation,
-                showWavelengthControls: true
+                showWavelengthControls: false
             });
         },
 

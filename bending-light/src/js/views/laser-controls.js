@@ -23,7 +23,9 @@ define(function(require) {
         template: _.template(html),
 
         events: {
-            'slide  .slider' : 'changeWavelength'
+            'click .ray'    : 'rayClicked',
+            'click .wave'   : 'waveClicked',
+            'slide .slider' : 'changeWavelength'
         },
 
         initialize: function(options) {
@@ -42,7 +44,8 @@ define(function(require) {
          */
         render: function() {
             var data = {
-                showWavelengthControls: this.showWavelengthControls
+                showWavelengthControls: this.showWavelengthControls,
+                unique: this.cid
             };
 
             this.$el.remove();
@@ -67,6 +70,14 @@ define(function(require) {
 
                 this.$value.text(wavelength + 'nm');
             });
+        },
+
+        rayClicked: function(event) {
+            this.model.set('wave', false);
+        },
+
+        waveClicked: function(event) {
+            this.model.set('wave', true);
         }
 
     });

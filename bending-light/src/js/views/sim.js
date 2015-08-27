@@ -72,7 +72,8 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation.laser, 'change:wave', this.laserBeamTypeChanged);
         },
 
         /**
@@ -146,6 +147,8 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.laserBeamTypeChanged(this.simulation.laser, this.simulation.laser.get('wave'));
         },
 
         /**
@@ -180,6 +183,13 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        laserBeamTypeChanged: function(laser, wave) {
+            if (wave)
+                this.$playbackControls.show();
+            else
+                this.$playbackControls.hide();
         }
 
     });
