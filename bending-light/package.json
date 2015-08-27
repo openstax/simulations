@@ -25,6 +25,7 @@
     "bootstrap": "^3.2.0",
     "bootstrap-select": "^1.6.3",
     "bower": "^1.3.9",
+    "clipper-lib": "^1.0.0",
     "csso": "^1.3.11",
     "font-awesome": "^4.2.0",
     "grunt": "^0.4.5",

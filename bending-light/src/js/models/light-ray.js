@@ -5,7 +5,8 @@ define(function (require) {
     var Backbone = require('backbone');
     var Pool     = require('object-pool');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2        = require('common/math/vector2');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
     
     var pool = Pool({
         init: function() {
@@ -39,6 +40,7 @@ define(function (require) {
         this.vector     = new Vector2();
         this.unitVector = new Vector2();
         this._vec       = new Vector2();
+        this._beamShape = new PiecewiseCurve();
 
         this._line = {
             start: new Vector2(),
@@ -162,7 +164,8 @@ define(function (require) {
          *   medium so it doesn't leak over
          */
         getWaveShape: function() {
-            throw 'Not yet implemented.';
+            // It is a rectangle that represents a line that then has part of
+            //   itself cut off from the oppositeMedium's rectangle shape.
         },
 
         /**
