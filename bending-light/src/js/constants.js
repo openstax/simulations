@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var nmToHex = require('common/colors/nm-to-hex');
+    var WavelengthColors = require('common/colors/wavelength');
 
     var Constants = {}; 
 
@@ -48,10 +48,15 @@ define(function (require) {
     // Wavelengths to colors
     Constants.wavelengthToHex = function(wavelength, returnHexInteger) {
         var nm = wavelength * 1E9; // Convert to nanometers
-        return nmToHex(nm, returnHexInteger);
+        return WavelengthColors.nmToHex(nm, returnHexInteger);
     };
 
-    Constants.MIN_WAVELENGTH = nmToHex.MIN_WAVELENGTH;
+    Constants.wavelengthToRgba = function(wavelength, alpha) {
+        var nm = wavelength * 1E9; // Convert to nanometers
+        return WavelengthColors.nmToRgba(nm, alpha);
+    };
+
+    Constants.MIN_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
     Constants.MAX_WAVELENGTH = 700;
 
     /*************************************************************************

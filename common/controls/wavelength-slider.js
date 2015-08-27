@@ -7,7 +7,7 @@ define(function(require) {
     var Backbone = require('backbone'); Backbone.$ = $;
 
     var defineInputUpdateLocks = require('../locks/define-locks');
-    var nmToHex = require('../colors/nm-to-hex');
+    var WavelengthColors = require('../colors/wavelength');
     
     require('nouislider');
     require('less!./wavelength-slider');
@@ -34,9 +34,9 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                minWavelength: nmToHex.MIN_WAVELENGTH,
-                maxWavelength: nmToHex.MAX_WAVELENGTH,
-                defaultWavelength: Math.floor((nmToHex.MAX_WAVELENGTH - nmToHex.MIN_WAVELENGTH) / 2) + nmToHex.MIN_WAVELENGTH
+                minWavelength: WavelengthColors.MIN_WAVELENGTH,
+                maxWavelength: WavelengthColors.MAX_WAVELENGTH,
+                defaultWavelength: Math.floor((WavelengthColors.MAX_WAVELENGTH - WavelengthColors.MIN_WAVELENGTH) / 2) + WavelengthColors.MIN_WAVELENGTH
             }, options);
 
             this.minWavelength = options.minWavelength;
@@ -109,7 +109,7 @@ define(function(require) {
                 wavelength = this.minWavelength * (1 - percentage) + this.maxWavelength * percentage;
 
                 // Convert wavelength to rgb and apply to fill style
-                color = nmToHex(wavelength);
+                color = WavelengthColors.nmToHex(wavelength);
                 ctx.fillStyle = color;
                 ctx.fillRect(i, 0, 1, height);
             }
@@ -120,7 +120,7 @@ define(function(require) {
          */
         changeWavelength: function(event) {
             var wavelength = parseInt($(event.target).val());
-            var color = nmToHex(wavelength);
+            var color = WavelengthColors.nmToHex(wavelength);
 
             this.$wavelengthSliderHandle.css('background-color', color);
         },

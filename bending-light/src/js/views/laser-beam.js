@@ -11,24 +11,33 @@ define(function(require) {
 
     var LaserBeamView = PixiView.extend({
 
-        /**
-         * Overrides PixiView's initializeDisplayObject function
-         */
-        initializeDisplayObject: function() {
-            this.displayObject = new PIXI.Graphics();
-        },
-
         initialize: function(options) {
             this.simulation = options.simulation;
+
+            this.raysGraphics = new PIXI.Graphics();
+            this.wavesSprite = new PIXI.Sprite();
+
+            this.displayObject.addChild(this.raysGraphics);
+            this.displayObject.addChild(this.wavesSprite);
+
+            // create a regular canvas
+            this.wavesCanvas = document.createElement('canvas');
+            this.wavesContext = this.wavesCanvas.getContext("2d");
 
             this.updateMVT(options.mvt);
         },
 
         draw: function() {
-            if (this.simulation.laser.get('wave'))
+            if (this.simulation.laser.get('wave')) {
+                this.wavesSprite.visible = true;
+                this.raysGraphics.visible = false;
                 this.drawLightWaves();
-            else
+            }
+            else {
+                this.wavesSprite.visible = false;
+                this.raysGraphics.visible = true;
                 this.drawLightRays();
+            }
         },
 
         drawLightRays: function() {
@@ -39,7 +48,7 @@ define(function(require) {
                 return a.zIndex - b.zIndex;
             });
 
-            var graphics = this.displayObject;
+            var graphics = this.raysGraphics;
             graphics.clear();
 
             var beamWidth = LaserBeamView.LASER_BEAM_WIDTH;
@@ -65,9 +74,6 @@ define(function(require) {
                 return a.zIndex - b.zIndex;
             });
 
-            var graphics = this.displayObject;
-            graphics.clear();
-
             // The original Java version seems to have a gradient fill function that can repeat a
             //   linear gradient ("cyclic" option).  We don't have that, so we need to come up
             //   with another way of doing it.
@@ -77,6 +83,28 @@ define(function(require) {
             //      separate gradients for each segments.
             //   2) We could create one big gradient where we calculate the size of the color stops
             //      relative to the total length of the line and then just draw one line.
+
+            var ctx = this.wavesContext;
+
+            var point;
+            for (var i = 0; i < rays.length; i++) {
+                var gradient = ctx.createLinearGradient(0,0,200,0);
+                gradient.addColorStop(0,"black");
+                gradient.addColorStop(1, this.rgbaFromRay(rays[i]));
+                ctx.fillStyle = gradient;
+                ctx.fillRect(10,10,200,100);
+            }
+
+            // Render it to a texture to apply to the sprite
+            var canvasTexture = PIXI.Texture.fromCanvas(this.wavesCanvas);
+            this.wavesSprite.setTexture(canvasTexture);
+        },
+
+        rgbaFromRay: function(ray) {
+            return Constants.wavelengthToRgba(
+                ray.getLaserWavelength(), 
+                Math.sqrt(ray.getPowerFraction()).toFixed(4)
+            );
         },
 
         /**
