@@ -51,6 +51,8 @@ define(function (require) {
         return nmToHex(nm, returnHexInteger);
     };
 
+    Constants.MIN_WAVELENGTH = nmToHex.MIN_WAVELENGTH;
+    Constants.MAX_WAVELENGTH = 700;
 
     /*************************************************************************
      **                                                                     **

@@ -12,6 +12,8 @@ define(function(require) {
     var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var html = require('text!../../templates/medium-controls.html');
+    
+    require('less!styles/medium-controls');
 
     /**
      * 

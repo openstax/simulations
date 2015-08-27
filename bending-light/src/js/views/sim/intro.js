@@ -9,6 +9,7 @@ define(function(require) {
     var BendingLightSimView = require('views/sim');
     var IntroSceneView      = require('views/scene/intro');
     var MediumControlsView  = require('views/medium-controls');
+    var LaserControlsView   = require('views/laser-controls');
 
     var simHtml = require('text!templates/sim/intro.html');
 
@@ -32,6 +33,7 @@ define(function(require) {
             BendingLightSimView.prototype.initialize.apply(this, [ options ]);
 
             this.initMediumControls();
+            this.initLaserControls();
         },
 
         /**
@@ -64,16 +66,32 @@ define(function(require) {
             });
         },
 
+        initLaserControls: function() {
+            this.laserControlsView = new LaserControlsView({
+                model: this.simulation.laser,
+                simulation: this.simulation,
+                showWavelengthControls: true
+            });
+        },
+
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
 
             this.topMediumControlsView.render();
             this.bottomMediumControlsView.render();
+            this.laserControlsView.render();
 
             this.$el.append(this.topMediumControlsView.el);
             this.$el.append(this.bottomMediumControlsView.el);
+            this.$el.append(this.laserControlsView.el);
 
             return this;
+        },
+
+        postRender: function() {
+            BendingLightSimView.prototype.postRender.apply(this, arguments);
+
+            this.laserControlsView.postRender();
         }
 
     });
