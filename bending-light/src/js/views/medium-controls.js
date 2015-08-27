@@ -77,11 +77,12 @@ define(function(require) {
             MediumPropertiesPresets.CUSTOM.setReferenceWavelength(this.simulation.get('wavelength'));
             this.model.set('mediumProperties', MediumPropertiesPresets.CUSTOM);
             this.model.updateColor();
+            this.model.trigger('change');
 
             this.$value.text(indexOfRefraction.toFixed(2));
 
             this.inputLock(function() {
-                
+
             });
         },
 

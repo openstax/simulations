@@ -42,8 +42,8 @@ define(function (require, exports, module) {
             this._bottom = new Rectangle(-10,   0, 20, 10);
             this._vec = new Vector2();
 
-            this.listenTo(this.topMedium,    'change:mediumProperties', this.mediumChanged);
-            this.listenTo(this.bottomMedium, 'change:mediumProperties', this.mediumChanged);
+            this.listenTo(this.topMedium,    'change', this.mediumChanged);
+            this.listenTo(this.bottomMedium, 'change', this.mediumChanged);
         },
 
         /**

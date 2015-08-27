@@ -70,7 +70,7 @@ define(function (require) {
         },
 
         getAngle: function() {
-            return this.getDirectionUnitVector().angle() + Math.PI;
+            return this.getDirectionUnitVector().angle() - Math.PI;
         },
 
         getDirectionUnitVector: function() {

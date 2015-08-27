@@ -101,7 +101,7 @@ define(function(require) {
                 // Draw a line between its endpoints
             var point;
             for (var i = 0; i < rays.length; i++) {
-                graphics.lineStyle(beamWidth, Constants.wavelengthToHex(rays[i].getLaserWavelength(), true), rays[i].getPowerFraction());
+                graphics.lineStyle(beamWidth, Constants.wavelengthToHex(rays[i].getLaserWavelength(), true), Math.sqrt(rays[i].getPowerFraction()));
                 point = this.mvt.modelToView(rays[i].getTip());
                 graphics.moveTo(point.x, point.y);
                 point = this.mvt.modelToView(rays[i].getTail());
