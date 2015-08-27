@@ -57,7 +57,9 @@ define(function(require) {
                 }
             });
 
-            this.$value = this.$('.index-of-refraction-value');
+            this.$noMystery = this.$('.no-mystery');
+            this.$mystery   = this.$('.mystery');
+            this.$value     = this.$('.index-of-refraction-value');
 
             this.$('select').selectpicker();
 
@@ -91,12 +93,20 @@ define(function(require) {
                 });
                 this.$('select')
                     .val(selectedKey)
-                    .selectpicker('refresh');;
+                    .selectpicker('refresh');
             });
 
-            var indexOfRefraction = mediumProperties.getIndexOfRefractionForRedLight()
-            this.$slider.val(indexOfRefraction);
-            this.$value.text(indexOfRefraction.toFixed(2));
+            if (mediumProperties.mystery) {
+                this.$noMystery.hide();
+                this.$mystery.show();
+            }
+            else {
+                this.$mystery.hide();
+                this.$noMystery.show();
+                var indexOfRefraction = mediumProperties.getIndexOfRefractionForRedLight();
+                this.$slider.val(indexOfRefraction);
+                this.$value.text(indexOfRefraction.toFixed(2));    
+            }
         }
 
     });
