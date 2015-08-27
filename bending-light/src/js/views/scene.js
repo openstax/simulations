@@ -73,7 +73,9 @@ define(function(require) {
         initLightRays: function() {
             this.laserBeamView = new LaserBeamView({
                 simulation: this.simulation,
-                mvt: this.mvt
+                mvt: this.mvt,
+                stageWidth: this.width,
+                stageHeight: this.height
             });
             this.lightWaveLayer.addChild(this.laserBeamView.displayObject);
         },

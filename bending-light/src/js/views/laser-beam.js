@@ -4,8 +4,10 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
-    var Colors   = require('common/colors/colors');
+    var PixiView  = require('common/pixi/view');
+    var Colors    = require('common/colors/colors');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var Constants = require('constants');
 
@@ -13,6 +15,11 @@ define(function(require) {
 
         initialize: function(options) {
             this.simulation = options.simulation;
+
+            this.width = options.stageWidth;
+            this.height = options.stageHeight;
+            this.viewportRect = new Rectangle(0, 0, this.width, this.height);
+            this.maxLineLength = (this.width > this.height) ? this.width : this.height;
 
             this.raysGraphics = new PIXI.Graphics();
             this.wavesSprite = new PIXI.Sprite();
@@ -22,7 +29,15 @@ define(function(require) {
 
             // create a regular canvas
             this.wavesCanvas = document.createElement('canvas');
+            this.wavesCanvas.width = this.width;
+            this.wavesCanvas.height = this.height;
             this.wavesContext = this.wavesCanvas.getContext("2d");
+
+            // Cached objects
+            this._point0 = new Vector2();
+            this._point1 = new Vector2();
+            this._vector = new Vector2();
+            this._checkVec = new Vector2();
 
             this.updateMVT(options.mvt);
         },
@@ -85,14 +100,48 @@ define(function(require) {
             //      relative to the total length of the line and then just draw one line.
 
             var ctx = this.wavesContext;
+            var p0 = this._point0;
+            var p1 = this._point1;
+            var vector = this._vector;
 
-            var point;
+            ctx.clearRect(0, 0, this.wavesCanvas.width, this.wavesCanvas.height);
+
             for (var i = 0; i < rays.length; i++) {
-                var gradient = ctx.createLinearGradient(0,0,200,0);
-                gradient.addColorStop(0,"black");
-                gradient.addColorStop(1, this.rgbaFromRay(rays[i]));
-                ctx.fillStyle = gradient;
-                ctx.fillRect(10,10,200,100);
+                // Get the endpoints of the ray in view coordinates
+                this.getRayEndpoints(rays[i], p0, p1);
+
+                // Get the vector from p0 to p1
+                vector.set(p1).sub(p0);
+
+                // Get the length of one period in view coordinates
+                var wavelength = this.mvt.modelToViewDeltaX(rays[i].getWavelength());
+
+                // Find the number of waves (periods) in the line
+                var periods = vector.length() / wavelength;
+                var wholePeriods = Math.ceil(periods);
+
+                // Make vector extend past p1 to a length that would cover all periods fully
+                vector.scale(wholePeriods / periods);
+
+                var beamColor = this.rgbaFromRay(rays[i]);
+                var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
+
+                var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
+
+                var percentForOnePeriod = 1 / wholePeriods;
+                for (var p = 0; p < wholePeriods; p++) {
+                    gradient.addColorStop(percentForOnePeriod * p,         black);
+                    gradient.addColorStop(percentForOnePeriod * (p + 0.5), beamColor);
+                }
+                gradient.addColorStop(1, black);
+                
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = this.mvt.modelToViewDeltaX(rays[i].getWaveWidth());
+
+                ctx.beginPath();
+                ctx.moveTo(p0.x, p0.y);
+                ctx.lineTo(p1.x, p1.y);
+                ctx.stroke();
             }
 
             // Render it to a texture to apply to the sprite
@@ -103,8 +152,44 @@ define(function(require) {
         rgbaFromRay: function(ray) {
             return Constants.wavelengthToRgba(
                 ray.getLaserWavelength(), 
-                Math.sqrt(ray.getPowerFraction()).toFixed(4)
+                this.alphaFromRay(ray)
             );
+        },
+
+        alphaFromRay: function(ray) {
+            return Math.sqrt(ray.getPowerFraction()).toFixed(4);
+        },
+
+        /**
+         * Converts ray's endpoints to view space and restricts them to the viewport.
+         *   Returns false if no endpoint is within the viewport (roughly).
+         */
+        getRayEndpoints: function(ray, p0, p1) {
+            var vec = this._checkVec;
+
+            p0.set(this.mvt.modelToView(ray.getTip()));
+            p1.set(this.mvt.modelToView(ray.getTail()));
+
+            if (!this.pointVisible(p0) && !this.pointVisible(p1)) {
+                // The line isn't visible at all, so don't draw it.
+                return false;
+            }
+            else if (!this.pointVisible(p0)) {
+                vec.set(p0).sub(p1);
+                vec.scale(this.maxLineLength / vec.length());
+                p0.set(p1.x + vec.x, p1.y + vec.y);
+            }
+            else if (!this.pointVisible(p1)) {
+                vec.set(p1).sub(p0);
+                vec.scale(this.maxLineLength / vec.length());
+                p1.set(p0.x + vec.x, p0.y + vec.y);
+            }
+
+            return true;
+        },
+
+        pointVisible: function(point) {
+            return this.viewportRect.contains(point);
         },
 
         /**
