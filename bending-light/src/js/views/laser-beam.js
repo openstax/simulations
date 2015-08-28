@@ -21,6 +21,8 @@ define(function(require) {
             this.height = options.stageHeight;
             this.viewportRect = new Rectangle(0, 0, this.width, this.height);
             this.maxLineLength = (this.width > this.height) ? this.width : this.height;
+            var m = 100;
+            this.viewportClippingRect = new Rectangle(-m, -m, this.width + m * 2, this.height + m * 2);
 
             this.initGraphics();
             this.initWavesCanvas();
@@ -138,48 +140,48 @@ define(function(require) {
 
             for (var i = 0; i < rays.length; i++) {
                 // Get the endpoints of the ray in view coordinates
-                if (this.getRayEndpoints(rays[i], p0, p1)) {
-                    // Get the vector from p0 to p1
-                    vector.set(p1).sub(p0);
+                this.getRayEndpoints(rays[i], p0, p1);
 
-                    // Get the length of one period in view coordinates
-                    var wavelength = this.mvt.modelToViewDeltaX(rays[i].getWavelength());
+                // Get the vector from p0 to p1
+                vector.set(p1).sub(p0);
 
-                    // Find the number of waves (periods) in the line
-                    var periods = vector.length() / wavelength;
-                    var wholePeriods = Math.ceil(periods);
+                // Get the length of one period in view coordinates
+                var wavelength = this.mvt.modelToViewDeltaX(rays[i].getWavelength());
 
-                    // Make vector extend past p1 to a length that would cover all periods fully
-                    vector.scale(wholePeriods / periods);
+                // Find the number of waves (periods) in the line
+                var periods = vector.length() / wavelength;
+                var wholePeriods = Math.ceil(periods);
 
-                    // Create the gradient
-                    var beamColor = this.rgbaFromRay(rays[i]);
-                    var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
+                // Make vector extend past p1 to a length that would cover all periods fully
+                vector.scale(wholePeriods / periods);
 
-                    var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
+                // Create the gradient
+                var beamColor = this.rgbaFromRay(rays[i]);
+                var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
 
-                    var percentForOnePeriod = 1 / wholePeriods;
-                    for (var p = 0; p < wholePeriods; p++) {
-                        gradient.addColorStop(percentForOnePeriod * p,         black);
-                        gradient.addColorStop(percentForOnePeriod * (p + 0.5), beamColor);
+                var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
+
+                var percentForOnePeriod = 1 / wholePeriods;
+                for (var p = 0; p < wholePeriods; p++) {
+                    gradient.addColorStop(percentForOnePeriod * p,         black);
+                    gradient.addColorStop(percentForOnePeriod * (p + 0.5), beamColor);
+                }
+                gradient.addColorStop(1, black);
+                
+                ctx.fillStyle = gradient;
+
+                // Calculate and apply the wave shape
+                var paths = this.getWaveShape(rays[i], p0, p1);
+                var polygon = paths[0];
+                
+                if (polygon && polygon.length) {
+                    ctx.beginPath();
+                    ctx.moveTo(polygon[0].X, polygon[0].Y);
+                    for (var j = 1; j < polygon.length; j++) {
+                        ctx.lineTo(polygon[j].X, polygon[j].Y);
                     }
-                    gradient.addColorStop(1, black);
-                    
-                    ctx.fillStyle = gradient;
-
-                    // Calculate and apply the wave shape
-                    var paths = this.getWaveShape(rays[i], p0, p1);
-                    var polygon = paths[0];
-                    
-                    if (polygon && polygon.length) {
-                        ctx.beginPath();
-                        ctx.moveTo(polygon[0].X, polygon[0].Y);
-                        for (var j = 1; j < polygon.length; j++) {
-                            ctx.lineTo(polygon[j].X, polygon[j].Y);
-                        }
-                        ctx.closePath();
-                        ctx.fill();
-                    }
+                    ctx.closePath();
+                    ctx.fill();
                 }
             }
 
@@ -207,37 +209,38 @@ define(function(require) {
         getRayEndpoints: function(ray, p0, p1) {
             var vec = this._checkVec;
 
-            p0.set(this.mvt.modelToView(ray.getTip()));
-            p1.set(this.mvt.modelToView(ray.getTail()));
+            var line = ray.extendBackwards ? ray.getExtendedLineBackwards() : ray.getExtendedLine();
 
-            // Let's just extend it really far on both ends to make sure it doesn't
-            //   terminate at an awkward spot.  This chunk of code right here is
-            //   really, really specific to this scenario and could be quite
-            //   fragile.  I'm not proud of it, but I've been banging my head
-            //   against the wall for hours today tryinng to get this wave-mode
-            //   rendering to work.
-            var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
-            var endExtension = this._endExtension.set(p1).sub(p0);
-            p0.sub(endExtension);
-            endExtension.normalize().scale(beamWidth);
-            p1.add(endExtension);
+            p0.set(this.mvt.modelToView(line.start));
+            p1.set(this.mvt.modelToView(line.end));
 
+            var points;
+
+            // Clip any points that go off the screen
             if (!this.pointVisible(p0) && !this.pointVisible(p1)) {
-                // The line isn't visible at all, so don't draw it.
-                return false;
+                points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);
+                
+                var dist00 = points[0].distance(p0);
+                var dist01 = points[0].distance(p1);
+
+                if (dist00 < dist01) {
+                    p0.set(points[0]);
+                    p1.set(points[1]);
+                }
+                else {
+                    p0.set(points[1]);
+                    p1.set(points[0]);
+                }
             }
             else if (!this.pointVisible(p0)) {
-                vec.set(p0).sub(p1);
-                vec.scale(this.maxLineLength / vec.length());
-                p0.set(p1.x + vec.x, p1.y + vec.y);
+                points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);
+                p0.set(points[0]);
             }
             else if (!this.pointVisible(p1)) {
-                vec.set(p1).sub(p0);
-                vec.scale(this.maxLineLength / vec.length());
-                p1.set(p0.x + vec.x, p0.y + vec.y);
+                points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);
+                p1.set(points[0]);
             }
-
-            return true;
+            console.log(p0.toString(), p1.toString())
         },
 
         pointVisible: function(point) {
@@ -288,9 +291,8 @@ define(function(require) {
         initBeamShape: function(ray, p0, p1) {
             // We need to extend both ends a bit for drawing purposes
             var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
-            // var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
-            // p0.sub(endExtension);
-            // p1.add(endExtension);
+            if (beamWidth > this.maxLineLength)
+                beamWidth = this.maxLineLength;
 
             var beamVec = this._beamVec.set(p1).sub(p0);
             var beamLength = beamVec.length();

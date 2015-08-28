@@ -50,7 +50,7 @@ define(function (require) {
                 vectorPool.create().set(options.distanceFromPivot, 0).rotate(options.angle)
             );
 
-            this.on('change:wave', this.clampAngle);
+            this.on('change:wave change:emissionPoint', this.clampAngle);
         },
 
         clampAngle: function() {
