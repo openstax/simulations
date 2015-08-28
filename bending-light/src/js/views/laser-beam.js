@@ -186,13 +186,7 @@ define(function(require) {
             // Render it to a texture to apply to the sprite
             var canvasTexture = PIXI.Texture.fromCanvas(this.wavesCanvas);
             this.wavesSprite.setTexture(canvasTexture);
-
-            // For some reason the texture doesn't seem to update when it's a cleared canvas,
-            //   so this is a little workaround until I understand why it's doing that.
-            if (rays.length)
-                this.wavesSprite.visible = true;
-            else
-                this.wavesSprite.visible = false;
+            this.wavesSprite.texture.baseTexture._dirty[0] = true;
         },
 
         rgbaFromRay: function(ray) {
@@ -215,6 +209,11 @@ define(function(require) {
 
             p0.set(this.mvt.modelToView(ray.getTip()));
             p1.set(this.mvt.modelToView(ray.getTail()));
+
+            var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
+            var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
+            p0.sub(endExtension);
+            p1.add(endExtension);
 
             if (!this.pointVisible(p0) && !this.pointVisible(p1)) {
                 // The line isn't visible at all, so don't draw it.
@@ -282,9 +281,9 @@ define(function(require) {
         initBeamShape: function(ray, p0, p1) {
             // We need to extend both ends a bit for drawing purposes
             var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
-            var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
-            p0.sub(endExtension);
-            p1.add(endExtension);
+            // var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
+            // p0.sub(endExtension);
+            // p1.add(endExtension);
 
             var beamVec = this._beamVec.set(p1).sub(p0);
             var beamLength = beamVec.length();
