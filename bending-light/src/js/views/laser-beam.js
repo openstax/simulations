@@ -240,7 +240,6 @@ define(function(require) {
                 points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);
                 p1.set(points[0]);
             }
-            console.log(p0.toString(), p1.toString())
         },
 
         pointVisible: function(point) {
@@ -256,8 +255,6 @@ define(function(require) {
             this.initClippingShape(ray);
             this.cutBeamShape(ray);
 
-            // Convert coordinates to view-space and return.
-            console.log(this.beamSolutionPaths);
             return this.beamSolutionPaths;
         },
 
@@ -267,8 +264,8 @@ define(function(require) {
         },
 
         setOppositeMediumPathPoint: function(i, x, y) {
-            this.beamClipPath[i].X = x;
-            this.beamClipPath[i].Y = y;
+            this.beamClipPath[i].X = this.mvt.modelToViewX(x);
+            this.beamClipPath[i].Y = this.mvt.modelToViewY(y);
         },
 
         /**
@@ -276,8 +273,7 @@ define(function(require) {
          */
         initClippingShape: function(ray) {
             // It's a rectangle, so just set the four corners
-            var rect = this.mvt.modelToView(ray.oppositeMediumShape);
-            rect.h = Math.abs(rect.h);
+            var rect = ray.oppositeMediumShape;
 
             this.setOppositeMediumPathPoint(0, rect.left(),  rect.top());
             this.setOppositeMediumPathPoint(1, rect.right(), rect.top());

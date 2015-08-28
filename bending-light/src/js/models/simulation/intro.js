@@ -38,8 +38,8 @@ define(function (require, exports, module) {
                 mediumProperties: MediumPropertiesPresets.WATER
             });
 
-            this._top    = new Rectangle(-10, -10, 20, 10);
-            this._bottom = new Rectangle(-10,   0, 20, 10);
+            this._bottom = new Rectangle(-10, -10, 20, 10);
+            this._top    = new Rectangle(-10,   0, 20, 10);
             this._vec = new Vector2();
 
             this.listenTo(this.topMedium,    'change', this.mediumChanged);
