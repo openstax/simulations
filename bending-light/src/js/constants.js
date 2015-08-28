@@ -84,6 +84,7 @@ define(function (require) {
     var LaserBeamView = {};
 
     LaserBeamView.LASER_BEAM_WIDTH = 3;
+    LaserBeamView.CLIPPER_COORDINATE_SCALE = 10;
 
     Constants.LaserBeamView = LaserBeamView;
 

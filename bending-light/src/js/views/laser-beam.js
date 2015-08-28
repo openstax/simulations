@@ -66,8 +66,7 @@ define(function(require) {
             }
 
             this.beamClipper = new ClipperLib.Clipper();
-            this.beamClipper.AddPaths(this.beamClipPaths,    ClipperLib.PolyType.ptSubject, true);
-            this.beamClipper.AddPaths(this.beamSubjectPaths, ClipperLib.PolyType.ptClip,    true);
+            
         },
 
         draw: function() {
@@ -136,40 +135,48 @@ define(function(require) {
 
             for (var i = 0; i < rays.length; i++) {
                 // Get the endpoints of the ray in view coordinates
-                this.getRayEndpoints(rays[i], p0, p1);
+                if (this.getRayEndpoints(rays[i], p0, p1)) {
+                    // Get the vector from p0 to p1
+                    vector.set(p1).sub(p0);
 
-                // Get the vector from p0 to p1
-                vector.set(p1).sub(p0);
+                    // Get the length of one period in view coordinates
+                    var wavelength = this.mvt.modelToViewDeltaX(rays[i].getWavelength());
 
-                // Get the length of one period in view coordinates
-                var wavelength = this.mvt.modelToViewDeltaX(rays[i].getWavelength());
+                    // Find the number of waves (periods) in the line
+                    var periods = vector.length() / wavelength;
+                    var wholePeriods = Math.ceil(periods);
 
-                // Find the number of waves (periods) in the line
-                var periods = vector.length() / wavelength;
-                var wholePeriods = Math.ceil(periods);
+                    // Make vector extend past p1 to a length that would cover all periods fully
+                    vector.scale(wholePeriods / periods);
 
-                // Make vector extend past p1 to a length that would cover all periods fully
-                vector.scale(wholePeriods / periods);
+                    // Create the gradient
+                    var beamColor = this.rgbaFromRay(rays[i]);
+                    var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
 
-                var beamColor = this.rgbaFromRay(rays[i]);
-                var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
+                    var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
 
-                var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
+                    var percentForOnePeriod = 1 / wholePeriods;
+                    for (var p = 0; p < wholePeriods; p++) {
+                        gradient.addColorStop(percentForOnePeriod * p,         black);
+                        gradient.addColorStop(percentForOnePeriod * (p + 0.5), beamColor);
+                    }
+                    gradient.addColorStop(1, black);
+                    
+                    ctx.fillStyle = gradient;
 
-                var percentForOnePeriod = 1 / wholePeriods;
-                for (var p = 0; p < wholePeriods; p++) {
-                    gradient.addColorStop(percentForOnePeriod * p,         black);
-                    gradient.addColorStop(percentForOnePeriod * (p + 0.5), beamColor);
+                    // Calculate and apply the wave shape
+                    var paths = this.getWaveShape(rays[i]);
+                    var polygon = paths[0];
+                    
+                    if (polygon && polygon.length) {
+                        ctx.beginPath();
+                        ctx.moveTo(polygon[0].X, polygon[0].Y);
+                        for (var j = 1; j < polygon.length; j++) {
+                            ctx.lineTo(polygon[j].X, polygon[j].Y);
+                        }
+                        ctx.fill();
+                    }
                 }
-                gradient.addColorStop(1, black);
-                
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = this.mvt.modelToViewDeltaX(rays[i].getWaveWidth());
-
-                ctx.beginPath();
-                ctx.moveTo(p0.x, p0.y);
-                ctx.lineTo(p1.x, p1.y);
-                ctx.stroke();
             }
 
             // Render it to a texture to apply to the sprite
@@ -238,16 +245,17 @@ define(function(require) {
 
             // Convert coordinates to view-space and return.
             console.log(this.beamSolutionPaths);
+            return this.beamSolutionPaths;
         },
 
         setWavePathPoint: function(i, x, y) {
-            this.beamSubjectPaths[0][i].X = x;
-            this.beamSubjectPaths[0][i].Y = y;
+            this.beamSubjectPaths[0][i].X = this.mvt.modelToViewX(x);
+            this.beamSubjectPaths[0][i].Y = this.mvt.modelToViewY(y);
         },
 
         setOppositeMediumPathPoint: function(i, x, y) {
-            this.beamClipPaths[0][i].X = x;
-            this.beamClipPaths[0][i].Y = y;
+            this.beamClipPaths[0][i].X = this.mvt.modelToViewX(x);
+            this.beamClipPaths[0][i].Y = this.mvt.modelToViewY(y);
         },
 
         /**
@@ -271,18 +279,18 @@ define(function(require) {
             var beamWidth = ray.getWaveWidth();
             var beamLength = ray.getLength();
             this.beamCorner0.set(0,          -beamWidth / 2);
-            this.beamCorner1.set(0,           beamWidth / 2);
-            this.beamCorner2.set(beamLength, -beamWidth / 2);
-            this.beamCorner3.set(beamLength,  beamWidth / 2);
+            this.beamCorner1.set(beamLength, -beamWidth / 2);
+            this.beamCorner2.set(beamLength,  beamWidth / 2);
+            this.beamCorner3.set(0,          -beamWidth / 2);
 
             // Rotate and then translate the points
             var angle = ray.getAngle();
-            this.beamCorner0.rotate(angle).translate(ray.tip.x, ray.tip.y);
-            this.beamCorner1.rotate(angle).translate(ray.tip.x, ray.tip.y);
-            this.beamCorner2.rotate(angle).translate(ray.tip.x, ray.tip.y);
-            this.beamCorner3.rotate(angle).translate(ray.tip.x, ray.tip.y);
+            this.beamCorner0.rotate(angle).add(ray.tip.x, ray.tip.y);
+            this.beamCorner1.rotate(angle).add(ray.tip.x, ray.tip.y);
+            this.beamCorner2.rotate(angle).add(ray.tip.x, ray.tip.y);
+            this.beamCorner3.rotate(angle).add(ray.tip.x, ray.tip.y);
 
-            // Then put them in the clipper subject
+            // Then put them in the clipper subject and convert to view coordinates
             this.setWavePathPoint(0, this.beamCorner0.x, this.beamCorner0.y);
             this.setWavePathPoint(1, this.beamCorner1.x, this.beamCorner1.y);
             this.setWavePathPoint(2, this.beamCorner2.x, this.beamCorner2.y);
@@ -295,7 +303,12 @@ define(function(require) {
          */
         cutBeamShape: function() {
             // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
-            //ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+            ClipperLib.JS.ScaleUpPaths(this.beamSubjectPaths, LaserBeamView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleUpPaths(this.beamClipPaths,    LaserBeamView.CLIPPER_COORDINATE_SCALE);
+
+            this.beamClipper.Clear();
+            this.beamClipper.AddPaths(this.beamSubjectPaths, ClipperLib.PolyType.ptSubject, true);
+            this.beamClipper.AddPaths(this.beamClipPaths,    ClipperLib.PolyType.ptClip,    true);
 
             var succeeded = this.beamClipper.Execute(
                 ClipperLib.ClipType.ctDifference, 
@@ -304,7 +317,8 @@ define(function(require) {
                 ClipperLib.PolyFillType.pftNonZero
             );
 
-            // Scale back down
+            // Scale the solution back down
+            ClipperLib.JS.ScaleDownPaths(this.beamSolutionPaths, LaserBeamView.CLIPPER_COORDINATE_SCALE);
         },
 
         /**
