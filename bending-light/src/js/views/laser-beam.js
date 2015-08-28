@@ -33,6 +33,7 @@ define(function(require) {
             this._point1 = new Vector2();
             this._vector = new Vector2();
             this._checkVec = new Vector2();
+            this._phaseOffset = new Vector2();
 
             this.updateMVT(options.mvt);
         },
@@ -159,7 +160,19 @@ define(function(require) {
                 var beamColor = this.rgbaFromRay(rays[i]);
                 var black = 'rgba(0, 0, 0, ' + this.alphaFromRay(rays[i]) + ')';
 
-                var gradient = ctx.createLinearGradient(p0.x, p0.y, p0.x + vector.x, p0.y + vector.y);
+                // The problem with translating the code for phase offsets from the original
+                //   is that they have the cyclical gradients which automatically handle 
+                //   repeating, so it doesn't matter where the offset is.  They use huge
+                //   offsets that go off the screen, but we need to start at the right place.
+                var periodsToOffset = rays[i].getPhaseOffset() / 2 / Math.PI;
+                var phaseOffset = this._phaseOffset
+                    .set(vector)
+                    .normalize()
+                    .scale(this.mvt.modelToViewDeltaX(-(periodsToOffset * rays[i].getWavelength()) % rays[i].getWavelength()));
+
+                var x0 = p0.x + phaseOffset.x;
+                var y0 = p0.y + phaseOffset.y;
+                var gradient = ctx.createLinearGradient(x0, y0, x0 + vector.x, y0 + vector.y);
 
                 var percentForOnePeriod = 1 / wholePeriods;
                 for (var p = 0; p < wholePeriods; p++) {

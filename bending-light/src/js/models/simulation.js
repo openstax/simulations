@@ -103,6 +103,8 @@ define(function (require, exports, module) {
 
         laserChanged: function() {
             this.updateOnNextFrame = true;
+            if (this.get('paused'))
+                this._update(this.get('time'), 0);
         },
 
         wavelengthChanged: function(simulation, wavelength) {

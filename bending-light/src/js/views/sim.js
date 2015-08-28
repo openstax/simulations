@@ -75,6 +75,8 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.listenTo(this.simulation.laser, 'change:wave', this.laserBeamTypeChanged);
+
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
