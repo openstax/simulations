@@ -210,9 +210,16 @@ define(function(require) {
             p0.set(this.mvt.modelToView(ray.getTip()));
             p1.set(this.mvt.modelToView(ray.getTail()));
 
+            // Let's just extend it really far on both ends to make sure it doesn't
+            //   terminate at an awkward spot.  This chunk of code right here is
+            //   really, really specific to this scenario and could be quite
+            //   fragile.  I'm not proud of it, but I've been banging my head
+            //   against the wall for hours today tryinng to get this wave-mode
+            //   rendering to work.
             var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
-            var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
+            var endExtension = this._endExtension.set(p1).sub(p0);
             p0.sub(endExtension);
+            endExtension.normalize().scale(beamWidth);
             p1.add(endExtension);
 
             if (!this.pointVisible(p0) && !this.pointVisible(p1)) {
