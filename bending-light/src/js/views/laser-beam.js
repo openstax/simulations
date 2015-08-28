@@ -2,7 +2,8 @@ define(function(require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
+    var PIXI       = require('pixi');
+    var ClipperLib = require('clipper-lib');
     
     var PixiView  = require('common/pixi/view');
     var Colors    = require('common/colors/colors');
@@ -21,17 +22,9 @@ define(function(require) {
             this.viewportRect = new Rectangle(0, 0, this.width, this.height);
             this.maxLineLength = (this.width > this.height) ? this.width : this.height;
 
-            this.raysGraphics = new PIXI.Graphics();
-            this.wavesSprite = new PIXI.Sprite();
-
-            this.displayObject.addChild(this.raysGraphics);
-            this.displayObject.addChild(this.wavesSprite);
-
-            // create a regular canvas
-            this.wavesCanvas = document.createElement('canvas');
-            this.wavesCanvas.width = this.width;
-            this.wavesCanvas.height = this.height;
-            this.wavesContext = this.wavesCanvas.getContext("2d");
+            this.initGraphics();
+            this.initWavesCanvas();
+            this.initClipper();
 
             // Cached objects
             this._point0 = new Vector2();
@@ -40,6 +33,41 @@ define(function(require) {
             this._checkVec = new Vector2();
 
             this.updateMVT(options.mvt);
+        },
+
+        initGraphics: function() {
+            this.raysGraphics = new PIXI.Graphics();
+            this.wavesSprite = new PIXI.Sprite();
+
+            this.displayObject.addChild(this.raysGraphics);
+            this.displayObject.addChild(this.wavesSprite);
+        },
+
+        initWavesCanvas: function() {
+            this.wavesCanvas = document.createElement('canvas');
+            this.wavesCanvas.width = this.width;
+            this.wavesCanvas.height = this.height;
+            this.wavesContext = this.wavesCanvas.getContext("2d");
+        },
+
+        initClipper: function() {
+            this.beamCorner0 = new Vector2();
+            this.beamCorner1 = new Vector2();
+            this.beamCorner2 = new Vector2();
+            this.beamCorner3 = new Vector2();
+            this.beamSubjectPaths = [[]];
+            this.beamClipPaths = [[]];
+            this.beamSolutionPaths = [];
+
+            // Both the subject path and clip path have 4 points
+            for (var i = 0; i < 4; i++) {
+                this.beamSubjectPaths[0].push({ X: 0, Y: 0 });
+                this.beamClipPaths[0].push({ X: 0, Y: 0 });
+            }
+
+            this.beamClipper = new ClipperLib.Clipper();
+            this.beamClipper.AddPaths(this.beamClipPaths,    ClipperLib.PolyType.ptSubject, true);
+            this.beamClipper.AddPaths(this.beamSubjectPaths, ClipperLib.PolyType.ptClip,    true);
         },
 
         draw: function() {
@@ -147,6 +175,13 @@ define(function(require) {
             // Render it to a texture to apply to the sprite
             var canvasTexture = PIXI.Texture.fromCanvas(this.wavesCanvas);
             this.wavesSprite.setTexture(canvasTexture);
+
+            // For some reason the texture doesn't seem to update when it's a cleared canvas,
+            //   so this is a little workaround until I understand why it's doing that.
+            if (rays.length)
+                this.wavesSprite.visible = true;
+            else
+                this.wavesSprite.visible = false;
         },
 
         rgbaFromRay: function(ray) {
@@ -190,6 +225,86 @@ define(function(require) {
 
         pointVisible: function(point) {
             return this.viewportRect.contains(point);
+        },
+
+        /**
+         * Calculates the wave shape from a LightRay instance as a series
+         *   of points that create a polygon that should be filled in.
+         */
+        getWaveShape: function(ray) {
+            this.initClippingShape(ray);
+            this.initBeamShape(ray);
+            this.cutBeamShape(ray);
+
+            // Convert coordinates to view-space and return.
+            console.log(this.beamSolutionPaths);
+        },
+
+        setWavePathPoint: function(i, x, y) {
+            this.beamSubjectPaths[0][i].X = x;
+            this.beamSubjectPaths[0][i].Y = y;
+        },
+
+        setOppositeMediumPathPoint: function(i, x, y) {
+            this.beamClipPaths[0][i].X = x;
+            this.beamClipPaths[0][i].Y = y;
+        },
+
+        /**
+         * Sets up the clip path with data from the oppositeMediumShape.
+         */
+        initClippingShape: function(ray) {
+            // It's a rectangle, so just set the four corners
+            var rect = ray.oppositeMediumShape;
+            this.setOppositeMediumPathPoint(0, rect.left(),  rect.top());
+            this.setOppositeMediumPathPoint(1, rect.right(), rect.top());
+            this.setOppositeMediumPathPoint(2, rect.right(), rect.bottom());
+            this.setOppositeMediumPathPoint(3, rect.left(),  rect.bottom());
+        },
+
+        /**
+         * Sets up the subject path to represent the original beam.
+         */
+        initBeamShape: function(ray) {
+            // Set some points up as the corners of the rectangle that represents
+            //   the beam as if it were at (0, 0) and pointing to the right.
+            var beamWidth = ray.getWaveWidth();
+            var beamLength = ray.getLength();
+            this.beamCorner0.set(0,          -beamWidth / 2);
+            this.beamCorner1.set(0,           beamWidth / 2);
+            this.beamCorner2.set(beamLength, -beamWidth / 2);
+            this.beamCorner3.set(beamLength,  beamWidth / 2);
+
+            // Rotate and then translate the points
+            var angle = ray.getAngle();
+            this.beamCorner0.rotate(angle).translate(ray.tip.x, ray.tip.y);
+            this.beamCorner1.rotate(angle).translate(ray.tip.x, ray.tip.y);
+            this.beamCorner2.rotate(angle).translate(ray.tip.x, ray.tip.y);
+            this.beamCorner3.rotate(angle).translate(ray.tip.x, ray.tip.y);
+
+            // Then put them in the clipper subject
+            this.setWavePathPoint(0, this.beamCorner0.x, this.beamCorner0.y);
+            this.setWavePathPoint(1, this.beamCorner1.x, this.beamCorner1.y);
+            this.setWavePathPoint(2, this.beamCorner2.x, this.beamCorner2.y);
+            this.setWavePathPoint(3, this.beamCorner3.x, this.beamCorner3.y);
+        },
+
+        /**
+         * The wave is wider than the ray and must be clipped against the opposite
+         *   medium so it doesn't leak over.
+         */
+        cutBeamShape: function() {
+            // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
+            //ClipperLib.JS.ScaleUpPaths(clip_paths, scale);
+
+            var succeeded = this.beamClipper.Execute(
+                ClipperLib.ClipType.ctDifference, 
+                this.beamSolutionPaths, 
+                ClipperLib.PolyFillType.pftNonZero, 
+                ClipperLib.PolyFillType.pftNonZero
+            );
+
+            // Scale back down
         },
 
         /**
