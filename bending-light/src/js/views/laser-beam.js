@@ -51,18 +51,21 @@ define(function(require) {
         },
 
         initClipper: function() {
+            this._beamVec = new Vector2();
+            this._endExtension = new Vector2();
+
             this.beamCorner0 = new Vector2();
             this.beamCorner1 = new Vector2();
             this.beamCorner2 = new Vector2();
             this.beamCorner3 = new Vector2();
-            this.beamSubjectPaths = [[]];
-            this.beamClipPaths = [[]];
+            this.beamSubjectPath = [];
+            this.beamClipPath = [];
             this.beamSolutionPaths = [];
 
             // Both the subject path and clip path have 4 points
             for (var i = 0; i < 4; i++) {
-                this.beamSubjectPaths[0].push({ X: 0, Y: 0 });
-                this.beamClipPaths[0].push({ X: 0, Y: 0 });
+                this.beamSubjectPath.push({ X: 0, Y: 0 });
+                this.beamClipPath.push({ X: 0, Y: 0 });
             }
 
             this.beamClipper = new ClipperLib.Clipper();
@@ -165,7 +168,7 @@ define(function(require) {
                     ctx.fillStyle = gradient;
 
                     // Calculate and apply the wave shape
-                    var paths = this.getWaveShape(rays[i]);
+                    var paths = this.getWaveShape(rays[i], p0, p1);
                     var polygon = paths[0];
                     
                     if (polygon && polygon.length) {
@@ -174,6 +177,7 @@ define(function(require) {
                         for (var j = 1; j < polygon.length; j++) {
                             ctx.lineTo(polygon[j].X, polygon[j].Y);
                         }
+                        ctx.closePath();
                         ctx.fill();
                     }
                 }
@@ -238,9 +242,9 @@ define(function(require) {
          * Calculates the wave shape from a LightRay instance as a series
          *   of points that create a polygon that should be filled in.
          */
-        getWaveShape: function(ray) {
+        getWaveShape: function(ray, p0, p1) {
+            this.initBeamShape(ray, p0, p1);
             this.initClippingShape(ray);
-            this.initBeamShape(ray);
             this.cutBeamShape(ray);
 
             // Convert coordinates to view-space and return.
@@ -249,13 +253,13 @@ define(function(require) {
         },
 
         setWavePathPoint: function(i, x, y) {
-            this.beamSubjectPaths[0][i].X = this.mvt.modelToViewX(x);
-            this.beamSubjectPaths[0][i].Y = this.mvt.modelToViewY(y);
+            this.beamSubjectPath[i].X = x;
+            this.beamSubjectPath[i].Y = y;
         },
 
         setOppositeMediumPathPoint: function(i, x, y) {
-            this.beamClipPaths[0][i].X = this.mvt.modelToViewX(x);
-            this.beamClipPaths[0][i].Y = this.mvt.modelToViewY(y);
+            this.beamClipPath[i].X = x;
+            this.beamClipPath[i].Y = y;
         },
 
         /**
@@ -263,7 +267,9 @@ define(function(require) {
          */
         initClippingShape: function(ray) {
             // It's a rectangle, so just set the four corners
-            var rect = ray.oppositeMediumShape;
+            var rect = this.mvt.modelToView(ray.oppositeMediumShape);
+            rect.h = Math.abs(rect.h);
+
             this.setOppositeMediumPathPoint(0, rect.left(),  rect.top());
             this.setOppositeMediumPathPoint(1, rect.right(), rect.top());
             this.setOppositeMediumPathPoint(2, rect.right(), rect.bottom());
@@ -273,22 +279,30 @@ define(function(require) {
         /**
          * Sets up the subject path to represent the original beam.
          */
-        initBeamShape: function(ray) {
+        initBeamShape: function(ray, p0, p1) {
+            // We need to extend both ends a bit for drawing purposes
+            var beamWidth = this.mvt.modelToViewDeltaX(ray.getWaveWidth());
+            var endExtension = this._endExtension.set(p1).sub(p0).normalize().scale(beamWidth);
+            p0.sub(endExtension);
+            p1.add(endExtension);
+
+            var beamVec = this._beamVec.set(p1).sub(p0);
+            var beamLength = beamVec.length();
+            var angle = beamVec.angle();
+
             // Set some points up as the corners of the rectangle that represents
             //   the beam as if it were at (0, 0) and pointing to the right.
-            var beamWidth = ray.getWaveWidth();
-            var beamLength = ray.getLength();
             this.beamCorner0.set(0,          -beamWidth / 2);
             this.beamCorner1.set(beamLength, -beamWidth / 2);
             this.beamCorner2.set(beamLength,  beamWidth / 2);
-            this.beamCorner3.set(0,          -beamWidth / 2);
+            this.beamCorner3.set(0,           beamWidth / 2);
 
             // Rotate and then translate the points
-            var angle = ray.getAngle();
-            this.beamCorner0.rotate(angle).add(ray.tip.x, ray.tip.y);
-            this.beamCorner1.rotate(angle).add(ray.tip.x, ray.tip.y);
-            this.beamCorner2.rotate(angle).add(ray.tip.x, ray.tip.y);
-            this.beamCorner3.rotate(angle).add(ray.tip.x, ray.tip.y);
+            
+            this.beamCorner0.rotate(angle).add(p0.x, p0.y);
+            this.beamCorner1.rotate(angle).add(p0.x, p0.y);
+            this.beamCorner2.rotate(angle).add(p0.x, p0.y);
+            this.beamCorner3.rotate(angle).add(p0.x, p0.y);
 
             // Then put them in the clipper subject and convert to view coordinates
             this.setWavePathPoint(0, this.beamCorner0.x, this.beamCorner0.y);
@@ -303,12 +317,12 @@ define(function(require) {
          */
         cutBeamShape: function() {
             // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
-            ClipperLib.JS.ScaleUpPaths(this.beamSubjectPaths, LaserBeamView.CLIPPER_COORDINATE_SCALE);
-            ClipperLib.JS.ScaleUpPaths(this.beamClipPaths,    LaserBeamView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleUpPath(this.beamSubjectPath, LaserBeamView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleUpPath(this.beamClipPath,    LaserBeamView.CLIPPER_COORDINATE_SCALE);
 
             this.beamClipper.Clear();
-            this.beamClipper.AddPaths(this.beamSubjectPaths, ClipperLib.PolyType.ptSubject, true);
-            this.beamClipper.AddPaths(this.beamClipPaths,    ClipperLib.PolyType.ptClip,    true);
+            this.beamClipper.AddPath(this.beamSubjectPath, ClipperLib.PolyType.ptSubject, true);
+            this.beamClipper.AddPath(this.beamClipPath,    ClipperLib.PolyType.ptClip,    true);
 
             var succeeded = this.beamClipper.Execute(
                 ClipperLib.ClipType.ctDifference, 
