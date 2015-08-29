@@ -28,6 +28,7 @@ define(function (require) {
     Constants.MIN_DT = Constants.MAX_DT / 10;
     Constants.DEFAULT_DT = Constants.MAX_DT / 4; // Seconds
     Constants.FRAME_DURATION = 20 / 1000; // Seconds
+    Constants.INTERFACE_DT_SCALE = 1e17;
 
     // A good size for the units being used in the sim; used to determine the 
     //   dimensions of various model objects

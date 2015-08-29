@@ -136,10 +136,10 @@ define(function (require) {
             this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
 
             this.$playbackControls.find('.playback-speed').noUiSlider({
-                start: 1,
+                start: Constants.DEFAULT_DT * Constants.INTERFACE_DT_SCALE,
                 range: {
-                    min: 0.1,
-                    max: 2.0
+                    min: Constants.MIN_DT * Constants.INTERFACE_DT_SCALE,
+                    max: Constants.MAX_DT * Constants.INTERFACE_DT_SCALE
                 }
             });
 
@@ -195,6 +195,12 @@ define(function (require) {
                 this.$playbackControls.show();
             else
                 this.$playbackControls.hide();
+        },
+
+        changeSpeed: function(event) {
+            var dt = parseFloat($(event.target).val()) / Constants.INTERFACE_DT_SCALE;
+            this.simulation.deltaTimePerFrame = dt;
+            console.log(dt)
         }
 
     });
