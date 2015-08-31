@@ -62,11 +62,11 @@ define(function(require) {
         initNormalView: function() {
             this.normalLine = new PIXI.Graphics();
 
-            this.stage.addChild(this.normalLine);
-
             this.normalLine.lineStyle(1, 0x000000, 1);
-            this.normalLine.moveTo(this.width / 2, 0);
-            this.normalLine.dashTo(this.width / 2, this.height, [ 10, 10 ]);
+            this.normalLine.moveTo(this.width / 2, this.height * 0.25);
+            this.normalLine.dashTo(this.width / 2, this.height * 0.75, [ 10, 10 ]);
+
+            this.stage.addChild(this.normalLine);
         }
 
     });
