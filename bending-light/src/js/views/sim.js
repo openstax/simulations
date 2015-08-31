@@ -200,7 +200,6 @@ define(function (require) {
         changeSpeed: function(event) {
             var dt = parseFloat($(event.target).val()) / Constants.INTERFACE_DT_SCALE;
             this.simulation.deltaTimePerFrame = dt;
-            console.log(dt)
         }
 
     });

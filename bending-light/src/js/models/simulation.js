@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     var Laser = require('models/laser');
 
@@ -16,9 +16,9 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var BendingLightSimulation = Simulation.extend({
+    var BendingLightSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             wavelength: Constants.WAVELENGTH_RED
         }),
         
@@ -37,7 +37,7 @@ define(function (require, exports, module) {
             this.topLeftQuadrant = options.topLeftQuadrant
             this.updateOnNextFrame = true;
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:wavelength', this.wavelengthChanged);
         },
@@ -97,6 +97,9 @@ define(function (require, exports, module) {
             // Update the light rays' running time for the waves
             for (var i = 0; i < this.rays.length; i++)
                 this.rays[i].setTime(time);
+
+            // if (this.rays.length)
+            //     console.log(this.rays[0].getTime(), this.rays[0].getAngularFrequency(), this.rays[0].getSpeed(), this.rays[0].getWavelength());
         },
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },

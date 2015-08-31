@@ -164,12 +164,12 @@ define(function(require) {
                 //   is that they have the cyclical gradients which automatically handle 
                 //   repeating, so it doesn't matter where the offset is.  They use huge
                 //   offsets that go off the screen, but we need to start at the right place.
-                var periodsToOffset = rays[i].getPhaseOffset() / 2 / Math.PI;
+                var partialPeriodOffset = (rays[i].getPhaseOffset() % (2 * Math.PI)) / (2 * Math.PI);
                 var phaseOffset = this._phaseOffset
                     .set(vector)
                     .normalize()
-                    .scale(this.mvt.modelToViewDeltaX(-(periodsToOffset * rays[i].getWavelength()) % rays[i].getWavelength()));
-
+                    .scale(this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()));
+                console.log(partialPeriodOffset, this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()), phaseOffset.length());
                 var x0 = p0.x + phaseOffset.x;
                 var y0 = p0.y + phaseOffset.y;
                 var gradient = ctx.createLinearGradient(x0, y0, x0 + vector.x, y0 + vector.y);
