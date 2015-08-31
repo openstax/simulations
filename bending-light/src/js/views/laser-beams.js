@@ -12,7 +12,7 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var LaserBeamView = PixiView.extend({
+    var LaserBeamsView = PixiView.extend({
 
         initialize: function(options) {
             this.simulation = options.simulation;
@@ -99,7 +99,7 @@ define(function(require) {
             var graphics = this.raysGraphics;
             graphics.clear();
 
-            var beamWidth = LaserBeamView.LASER_BEAM_WIDTH;
+            var beamWidth = LaserBeamsView.LASER_BEAM_WIDTH;
 
             // For each LightRay instance:
                 // Set our line color to its color
@@ -334,8 +334,8 @@ define(function(require) {
          */
         cutBeamShape: function() {
             // ClipperLib only supports integers, so we need to scale everything up by a lot and then back down
-            ClipperLib.JS.ScaleUpPath(this.beamSubjectPath, LaserBeamView.CLIPPER_COORDINATE_SCALE);
-            ClipperLib.JS.ScaleUpPath(this.beamClipPath,    LaserBeamView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleUpPath(this.beamSubjectPath, LaserBeamsView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleUpPath(this.beamClipPath,    LaserBeamsView.CLIPPER_COORDINATE_SCALE);
 
             this.beamClipper.Clear();
             this.beamClipper.AddPath(this.beamSubjectPath, ClipperLib.PolyType.ptSubject, true);
@@ -349,7 +349,7 @@ define(function(require) {
             );
 
             // Scale the solution back down
-            ClipperLib.JS.ScaleDownPaths(this.beamSolutionPaths, LaserBeamView.CLIPPER_COORDINATE_SCALE);
+            ClipperLib.JS.ScaleDownPaths(this.beamSolutionPaths, LaserBeamsView.CLIPPER_COORDINATE_SCALE);
         },
 
         /**
@@ -362,7 +362,7 @@ define(function(require) {
             this.draw();
         }
 
-    }, Constants.LaserBeamView);
+    }, Constants.LaserBeamsView);
 
-    return LaserBeamView;
+    return LaserBeamsView;
 });

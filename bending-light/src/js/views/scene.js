@@ -10,7 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var LaserView     = require('views/laser');
-    var LaserBeamView = require('views/laser-beam');
+    var LaserBeamsView = require('views/laser-beams');
 
     var Assets = require('assets');
 
@@ -71,13 +71,13 @@ define(function(require) {
         },
 
         initLightRays: function() {
-            this.laserBeamView = new LaserBeamView({
+            this.laserBeamsView = new LaserBeamsView({
                 simulation: this.simulation,
                 mvt: this.mvt,
                 stageWidth: this.width,
                 stageHeight: this.height
             });
-            this.lightWaveLayer.addChild(this.laserBeamView.displayObject);
+            this.lightWaveLayer.addChild(this.laserBeamsView.displayObject);
         },
 
         initLaserView: function() {
@@ -91,7 +91,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.dirty || this.simulation.laser.get('wave')) {
-                this.laserBeamView.draw();
+                this.laserBeamsView.draw();
             }
         },
 

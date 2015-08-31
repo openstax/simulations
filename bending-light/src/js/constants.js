@@ -82,12 +82,12 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var LaserBeamView = {};
+    var LaserBeamsView = {};
 
-    LaserBeamView.LASER_BEAM_WIDTH = 3;
-    LaserBeamView.CLIPPER_COORDINATE_SCALE = 10;
+    LaserBeamsView.LASER_BEAM_WIDTH = 3;
+    LaserBeamsView.CLIPPER_COORDINATE_SCALE = 10;
 
-    Constants.LaserBeamView = LaserBeamView;
+    Constants.LaserBeamsView = LaserBeamsView;
 
 
     return Constants;

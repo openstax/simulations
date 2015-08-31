@@ -4,6 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+               require('common/pixi/dash-to');
 
     var Colors = require('common/colors/colors');
 
@@ -32,6 +33,7 @@ define(function(require) {
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMediumViews();
+            this.initNormalView();
         },
 
         initLaserView: function() {
@@ -55,6 +57,16 @@ define(function(require) {
 
             this.mediumLayer.addChild(this.topMediumView.displayObject);
             this.mediumLayer.addChild(this.bottomMediumView.displayObject);
+        },
+
+        initNormalView: function() {
+            this.normalLine = new PIXI.Graphics();
+
+            this.stage.addChild(this.normalLine);
+
+            this.normalLine.lineStyle(1, 0x000000, 1);
+            this.normalLine.moveTo(this.width / 2, 0);
+            this.normalLine.dashTo(this.width / 2, this.height, [ 10, 10 ]);
         }
 
     });
