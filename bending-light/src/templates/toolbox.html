@@ -1,10 +1,11 @@
 <div class="control-panel toolbox">
-    <h2>Toolbox</h2>
+    <h2><%= title %></h2>
 
     <div class="tools">
     <% _.each(tools, function(tool, key) { %>
-        <button class="btn tool-toggle-btn" name="<%= key %>">
-            
+        <button class="btn tool-toggle-btn" name="<%= key %>" title="<%= tool.title %>">
+            <% if (tool.label) { %><span><%= tool.label %></span><% } %>
+            <% if (tool.img) { %><img src="<%= tool.img %>"><% } %>
         </button>
     <% }); %>
     </div>

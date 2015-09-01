@@ -7,8 +7,9 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        LASER_ON:  'laser-on',
-        LASER_OFF: 'laser-off'
+        LASER_ON:   'laser-on',
+        LASER_OFF:  'laser-off',
+        PROTRACTOR: 'protractor.png'
     };
 
     Assets.SpriteSheets = {

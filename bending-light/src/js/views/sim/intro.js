@@ -10,6 +10,9 @@ define(function(require) {
     var IntroSceneView      = require('views/scene/intro');
     var MediumControlsView  = require('views/medium-controls');
     var LaserControlsView   = require('views/laser-controls');
+    var ToolboxView         = require('views/toolbox');
+
+    var Assets = require('assets');
 
     var simHtml = require('text!templates/sim/intro.html');
 
@@ -34,6 +37,7 @@ define(function(require) {
 
             this.initMediumControls();
             this.initLaserControls();
+            this.initToolbox();
         },
 
         /**
@@ -74,16 +78,33 @@ define(function(require) {
             });
         },
 
+        initToolbox: function() {
+            this.toolboxView = new ToolboxView({
+                title: 'Toolbox',
+                tools: {
+                    protractor: {
+                        title: 'Protractor',
+                        label: '',
+                        img: Assets.Image(Assets.Images.PROTRACTOR),
+                        activate: function() {console.log('protractor activated');},
+                        deactivate: function() {console.log('protractor deactivated');}
+                    }
+                }
+            });
+        },
+
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
 
             this.topMediumControlsView.render();
             this.bottomMediumControlsView.render();
             this.laserControlsView.render();
+            this.toolboxView.render();
 
             this.$el.append(this.topMediumControlsView.el);
             this.$el.append(this.bottomMediumControlsView.el);
             this.$el.append(this.laserControlsView.el);
+            this.$el.append(this.toolboxView.el);
 
             return this;
         },

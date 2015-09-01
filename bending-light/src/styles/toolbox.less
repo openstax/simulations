@@ -1,0 +1,39 @@
+@import "variables.less";
+@import "mixins.less";
+
+.toolbox {
+	width: @toolbox-width;
+	position: absolute;
+	left: @panel-margin;
+	top: 50%;
+	
+	#sim-intro & {
+		margin-top: -150px;
+	}
+
+	#sim-more-tools & {
+		margin-top: -200px;
+	}
+
+	.btn {
+		width: 100%;
+		background: transparent;
+
+		&:hover {
+			border: 1px solid #ddd;
+			background: rgba(0, 0, 0, 0.04);
+		}
+
+		&:active,
+		&.active,
+		&:hover.active {
+			border: 1px solid #d0d0d0;
+			background: rgba(0, 0, 0, 0.06);
+			.box-shadow(inset 0 1px 1px rgba(0, 0, 0, 0.125));
+		}
+
+		img {
+			height: 30px;
+		}
+	}
+}
