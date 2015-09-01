@@ -28,11 +28,12 @@ define(function(require) {
          *   title: string,
          *   tools: {
          *     key: {
-         *       title:      string,
-         *       label:      [optional] string, 
-         *       img:        string (url),
-         *       activate:   function,
-         *       deactivate: function
+         *       title:       string,
+         *       label:       string [optional], 
+         *       img:         string (url),
+         *       activate:    function,
+         *       deactivate:  function,
+         *       startActive: boolean [optional]
          *     }
          *   }
          * }

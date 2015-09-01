@@ -11,6 +11,8 @@ define(function(require) {
     var BendingLightSceneView = require('views/scene');
     var LaserView             = require('views/laser');
     var MediumView            = require('views/medium');
+    var ProtractorView        = require('views/protractor');
+    var IntensityMeterView    = require('views/intensity-meter');
 
     var Assets = require('assets');
 
@@ -34,6 +36,8 @@ define(function(require) {
 
             this.initMediumViews();
             this.initNormalView();
+            this.initProtractorView();
+            this.initIntensityMeterView();
         },
 
         initLaserView: function() {
@@ -69,12 +73,41 @@ define(function(require) {
             this.stage.addChild(this.normalLine);
         },
 
+        initProtractorView: function() {
+            this.protractorView = new ProtractorView({
+                mvt: this.mvt
+            });
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+
+            this.stage.addChild(this.protractorView.displayObject);
+        },
+
+        initIntensityMeterView: function() {
+            this.intensityMeterView = new IntensityMeterView({
+                model: this.simulation.intensityMeter,
+                mvt: this.mvt
+            });
+            //this.intensityMeterView.hide();
+
+            this.stage.addChild(this.intensityMeterView.displayObject);
+        },
+
         showNormal: function() {
             this.normalLine.visible = true;
         },
 
         hideNormal: function() {
             this.normalLine.visible = false;
+        },
+
+        showProtractor: function() {
+            this.protractorView.show();
+        },
+
+        hideProtractor: function() {
+            this.protractorView.hide();
         }
 
     });

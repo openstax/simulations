@@ -87,8 +87,12 @@ define(function(require) {
                         title: 'Protractor',
                         label: '',
                         img: Assets.Image(Assets.Images.PROTRACTOR),
-                        activate: function() {console.log('protractor activated');},
-                        deactivate: function() {console.log('protractor deactivated');}
+                        activate: function() {
+                            sceneView.showProtractor();
+                        },
+                        deactivate: function() {
+                            sceneView.hideProtractor();
+                        }
                     },
                     normal: {
                         title: 'Normal Line',
@@ -99,7 +103,8 @@ define(function(require) {
                         },
                         deactivate: function() {
                             sceneView.hideNormal();
-                        }
+                        },
+                        startActive: true
                     }
                 }
             });

@@ -14,6 +14,22 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":150,"h":60},
 		"sourceSize": {"w":150,"h":60},
 		"pivot": {"x":0,"y":0}
+	},
+	"intensity-meter-body": {
+		"frame": {"x":0,"y":159,"w":166,"h":102},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":166,"h":102},
+		"sourceSize": {"w":166,"h":102},
+		"pivot": {"x":0,"y":0}
+	},
+	"intensity-meter-sensor": {
+		"frame": {"x":151,"y":0,"w":100,"h":158},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":100,"h":158},
+		"sourceSize": {"w":100,"h":158},
+		"pivot": {"x":0,"y":0}
 	}
 },
 "meta": {

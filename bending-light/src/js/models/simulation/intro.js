@@ -182,7 +182,12 @@ define(function (require, exports, module) {
          *   If the intensity meter misses the ray, the original ray is added.
          */
         addAndAbsorb: function(ray) {
-            var rayAbsorbed = false;//ray.intersects(this.intensityMeter.getSensorShape()) && this.intensityMeter.get('enabled');
+            var intersects = ray.intersectsCircle(
+                this.intensityMeter.getSensorX(), 
+                this.intensityMeter.getSensorY(), 
+                this.intensityMeter.get('radius')
+            );
+            var rayAbsorbed = intersects && this.intensityMeter.get('enabled');
             if (rayAbsorbed) {
                 // Find intersection points with the intensity sensor
                 // TODO: Implement

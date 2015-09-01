@@ -5,8 +5,10 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2                 = require('common/math/vector2');
 
-    var Laser = require('models/laser');
+    var Laser          = require('models/laser');
+    var IntensityMeter = require('models/intensity-meter');
 
     /**
      * Constants
@@ -59,6 +61,11 @@ define(function (require, exports, module) {
 
             // Initialize the light-rays array
             this.rays = [];
+
+            this.intensityMeter = new IntensityMeter({
+                sensorPosition: new Vector2(Constants.MODEL_WIDTH * 0.3, Constants.MODEL_HEIGHT * -0.3),
+                bodyPosition:   new Vector2(Constants.MODEL_WIDTH * 0.4, Constants.MODEL_HEIGHT * -0.3)
+            });
         },
 
         /**

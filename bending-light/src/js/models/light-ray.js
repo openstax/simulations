@@ -4,6 +4,7 @@ define(function (require) {
 
     var Backbone = require('backbone');
     var Pool     = require('object-pool');
+    var SAT      = require('sat');
 
     var Vector2        = require('common/math/vector2');
     var PiecewiseCurve = require('common/math/piecewise-curve');
@@ -45,6 +46,11 @@ define(function (require) {
             start: new Vector2(),
             end:   new Vector2()
         };
+
+        // SAT variables
+        this._linePolygon = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector() ]);
+        this._circle = new SAT.Circle(new SAT.Vector(), 1);
+        this._satResponse = new SAT.Response();
 
         // Call init with any arguments passed to the constructor
         this.init.apply(this, arguments);
@@ -225,6 +231,26 @@ define(function (require) {
          */
         contains: function(position, waveMode) {
             throw 'Not yet implemented.';
+        },
+
+        intersectsCircle: function(x, y, radius) {
+            this._linePolygon.points[0].x = this.tail.x;
+            this._linePolygon.points[0].y = this.tail.y;
+            this._linePolygon.points[1].x = this.tip.x;
+            this._linePolygon.points[1].y = this.tip.y;
+            this._linePolygon.setPoints(this._linePolygon.points);
+
+            this._circle.pos.x = x;
+            this._circle.pos.y = y;
+            this._circle.r = radius;
+
+            this._satResponse.clear();
+
+            return SAT.testPolygonCircle(this._linePolygon, this._circle, this._satResponse);
+        },
+
+        getLastIntersectionWithCircle: function() {
+            return this._satResponse;
         },
 
         getRayWidth: function() {
