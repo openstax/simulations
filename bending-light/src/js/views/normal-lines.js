@@ -31,6 +31,7 @@ define(function(require) {
         draw: function() {
             var graphics = this.displayObject;
             graphics.clear();
+            graphics.lineStyle(1, 0x000000, 1);
             graphics.moveTo(0, 0);
             graphics.dashTo(200, 200, this._dashStyle);
         },

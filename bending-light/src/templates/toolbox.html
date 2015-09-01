@@ -1,0 +1,11 @@
+<div class="control-panel toolbox">
+    <h2>Toolbox</h2>
+
+    <div class="tools">
+    <% _.each(tools, function(tool, key) { %>
+        <button class="btn tool-toggle-btn" name="<%= key %>">
+            
+        </button>
+    <% }); %>
+    </div>
+</div>
