@@ -4,11 +4,9 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-               require('common/pixi/extensions');
     
     var PixiView       = require('common/pixi/view');
     var Colors         = require('common/colors/colors');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var Constants = require('constants');
 
@@ -19,21 +17,15 @@ define(function(require) {
      */
     var IntensityMeterView = PixiView.extend({
 
-        width: 200,
-        height: 116,
-        margin: 15,
-        sensorConnectionRadius: 20,
-        sensorRadius: 40,
-
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd',
+            'touchstart      .bodyPanel': 'dragStart',
+            'mousedown       .bodyPanel': 'dragStart',
+            'touchmove       .bodyPanel': 'drag',
+            'mousemove       .bodyPanel': 'drag',
+            'touchend        .bodyPanel': 'dragEnd',
+            'mouseup         .bodyPanel': 'dragEnd',
+            'touchendoutside .bodyPanel': 'dragEnd',
+            'mouseupoutside  .bodyPanel': 'dragEnd',
 
             'touchstart      .sensor': 'dragSensorStart',
             'mousedown       .sensor': 'dragSensorStart',
@@ -52,18 +44,13 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
-            this.panelColor = Colors.parseHex('#ededed');
-            this.plotBtnColor = Colors.parseHex('#21366b');
-            this.clearBtnColor = Colors.parseHex('#bbb');
-
-            this.plotViews = [];
-
             // Cached objects
             this._dragOffset = new PIXI.Point();
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:bodyPosition', this.updateBodyPosition);
+            this.listenTo(this.model, 'change:bodyPosition',   this.updateBodyPosition);
+            this.listenTo(this.model, 'change:sensorPosition', this.updateSensorPosition);
         },
 
         /**
@@ -74,63 +61,23 @@ define(function(require) {
             this.initSensor();
             this.initReadoutText();
 
-            this.displayObject.buttonMode = true;
+            
 
             this.updateMVT(this.mvt);
         },
 
         initPanel: function() {
-            this.bodyPanel = new PIXI.DisplayObjectContainer();
+            this.bodyPanel = Assets.createSprite(Assets.Images.INTENSITY_METER_BODY);
+            this.bodyPanel.buttonMode = true;
 
-            var halfWidth = this.width / 2;
-
-            // Draw the shadow
-            var outline = new PiecewiseCurve();
-            var kappa = 4 * ((Math.sqrt(2) - 1) / 3);
-            var radius = this.sensorConnectionRadius;
-
-            outline
-                .moveTo(-halfWidth, 0)
-                .lineTo(-radius, 0)
-                .curveTo(
-                    -radius, 0 -radius * kappa, 
-                    -radius*kappa, -radius,
-                    0, -radius
-                )
-                .curveTo(
-                    radius * kappa, -radius,
-                    radius, -radius * kappa,
-                    radius, 0
-                )
-                .lineTo(halfWidth, 0)
-                .lineTo(halfWidth, this.height)
-                .lineTo(-halfWidth, this.height)
-                .close();
-
-            var drawStyle = {
-                lineWidth: 11,
-                strokeStyle: 'rgba(0,0,0,0)',
-                shadowBlur: 11,
-                fillStyle: 'rgba(0,0,0,1)'
-            };
-
-            var shadow = PIXI.Sprite.fromPiecewiseCurve(outline, drawStyle);
-            shadow.alpha = 0.3;
-            this.bodyPanel.addChild(shadow);
-
-            // Draw the panel
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(this.panelColor, 1);
-            graphics.drawRect(-halfWidth, 0, this.width, this.height);
-            graphics.drawCircle(0, 0, this.sensorConnectionRadius);
-            graphics.endFill();
-
-            this.bodyPanel.addChild(graphics);
             this.displayObject.addChild(this.bodyPanel);
         },
 
         initSensor: function() {
-            
+            this.sensor = Assets.createSprite(Assets.Images.INTENSITY_METER_SENSOR);
+            this.sensor.buttonMode = true;
+
+            this.displayObject.addChild(this.sensor);
         },
 
         initReadoutText: function() {
@@ -168,7 +115,9 @@ define(function(require) {
         },
 
         updateSensorPosition: function(model, position) {
-
+            var viewPosition = this.mvt.modelToView(position);
+            this.sensor.x = viewPosition.x;
+            this.sensor.y = viewPosition.y;
         },
 
         /**
@@ -179,6 +128,7 @@ define(function(require) {
             this.mvt = mvt;
 
             this.updateBodyPosition(this.model, this.model.get('bodyPosition'));
+            this.updateSensorPosition(this.model, this.model.get('sensorPosition'));
         },
 
         dragStart: function(data) {
@@ -200,6 +150,27 @@ define(function(require) {
 
         dragEnd: function(data) {
             this.dragging = false;
+        },
+
+        dragSensorStart: function(data) {
+            this.dragOffset = data.getLocalPosition(this.sensor, this._dragOffset);
+            this.draggingSensor = true;
+        },
+
+        dragSensor: function(data) {
+            if (this.draggingSensor) {
+                var dx = data.global.x - this.sensor.x - this.dragOffset.x;
+                var dy = data.global.y - this.sensor.y - this.dragOffset.y;
+                
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                this.model.translateSensor(mdx, mdy);
+            }
+        },
+
+        dragSensorEnd: function(data) {
+            this.draggingSensor = false;
         },
 
         show: function() {
