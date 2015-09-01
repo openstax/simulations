@@ -79,6 +79,7 @@ define(function(require) {
         },
 
         initToolbox: function() {
+            var sceneView = this.sceneView;
             this.toolboxView = new ToolboxView({
                 title: 'Toolbox',
                 tools: {
@@ -88,6 +89,17 @@ define(function(require) {
                         img: Assets.Image(Assets.Images.PROTRACTOR),
                         activate: function() {console.log('protractor activated');},
                         deactivate: function() {console.log('protractor deactivated');}
+                    },
+                    normal: {
+                        title: 'Normal Line',
+                        label: 'Normal Line',
+                        img: sceneView.getNormalLineIcon(),
+                        activate: function() {
+                            sceneView.showNormal();
+                        },
+                        deactivate: function() {
+                            sceneView.hideNormal();
+                        }
                     }
                 }
             });

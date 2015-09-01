@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiSceneView      = require('common/pixi/view/scene');
+    var PixiToImage        = require('common/pixi/pixi-to-image');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
@@ -93,6 +94,20 @@ define(function(require) {
             if (this.simulation.dirty || this.simulation.laser.get('wave')) {
                 this.laserBeamsView.draw();
             }
+        },
+
+        getNormalLineIcon: function() {
+            var normalLine = new PIXI.Graphics();
+
+            normalLine.lineStyle(1, 0x000000, 1);
+            normalLine.moveTo(0, -15);
+            normalLine.dashTo(0,  15, [ 6, 6 ]);
+
+            // Draw some transparent space to give it a margin on the left
+            normalLine.lineStyle(1, 0x000000, 0);
+            normalLine.moveTo(-8, 15);
+
+            return PixiToImage.displayObjectToDataURI(normalLine);
         },
 
     }, Constants.SceneView);

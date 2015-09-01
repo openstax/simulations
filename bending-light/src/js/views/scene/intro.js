@@ -67,6 +67,14 @@ define(function(require) {
             this.normalLine.dashTo(this.width / 2, this.height * 0.75, [ 10, 10 ]);
 
             this.stage.addChild(this.normalLine);
+        },
+
+        showNormal: function() {
+            this.normalLine.visible = true;
+        },
+
+        hideNormal: function() {
+            this.normalLine.visible = false;
         }
 
     });
