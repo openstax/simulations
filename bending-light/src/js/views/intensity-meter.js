@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView       = require('common/pixi/view');
+    var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
 
     var Constants = require('constants');
@@ -165,15 +165,15 @@ define(function(require) {
             this.updateReadout(this.model, this.model.get('reading'));
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.body, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.body, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.body.x - this.dragOffset.x;
-                var dy = data.global.y - this.body.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.body.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.body.y - this.dragOffset.y;
                 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
@@ -182,19 +182,19 @@ define(function(require) {
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 
-        dragSensorStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.sensor, this._dragOffset);
+        dragSensorStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.sensor, this._dragOffset);
             this.draggingSensor = true;
         },
 
-        dragSensor: function(data) {
+        dragSensor: function(event) {
             if (this.draggingSensor) {
-                var dx = data.global.x - this.sensor.x - this.dragOffset.x;
-                var dy = data.global.y - this.sensor.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.sensor.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.sensor.y - this.dragOffset.y;
                 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
@@ -203,7 +203,7 @@ define(function(require) {
             }
         },
 
-        dragSensorEnd: function(data) {
+        dragSensorEnd: function(event) {
             this.draggingSensor = false;
         },
 

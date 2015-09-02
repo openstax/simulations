@@ -4,7 +4,7 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-               require('common/pixi/dash-to');
+               require('common/v3/pixi/dash-to');
 
     var Colors = require('common/colors/colors');
 
@@ -29,7 +29,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.mediumLayer = new PIXI.DisplayObjectContainer();
+            this.mediumLayer = new PIXI.Container();
             this.stage.addChild(this.mediumLayer);
 
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);

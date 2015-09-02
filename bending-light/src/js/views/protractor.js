@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var Assets = require('assets');
 
@@ -61,22 +61,22 @@ define(function(require) {
             this.sprite.scale.x = this.sprite.scale.y = scale;
         },
 
-        dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var dx = data.global.x - this.displayObject.x - this.dragOffset.x;
-                var dy = data.global.y - this.displayObject.y - this.dragOffset.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
                 this.displayObject.x += dx;
                 this.displayObject.y += dy;
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
         },
 

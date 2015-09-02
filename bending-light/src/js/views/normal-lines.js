@@ -3,9 +3,9 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
-               require('common/pixi/dash-to');
+               require('common/v3/pixi/dash-to');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2   = require('common/math/vector2');
 

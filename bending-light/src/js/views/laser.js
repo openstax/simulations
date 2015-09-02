@@ -4,8 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
     
-    var PixiView = require('common/pixi/view');
-                   require('common/pixi/draw-arrow');
+    var PixiView = require('common/v3/pixi/view');
+                   require('common/v3/pixi/draw-arrow');
     var Colors   = require('common/colors/colors');
     var range    = require('common/math/range');
     var Vector2  = require('common/math/vector2');
@@ -69,7 +69,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.rotationFrame = new PIXI.DisplayObjectContainer();
+            this.rotationFrame = new PIXI.Container();
 
             this.initSprites();
             this.initRotationArrows();
@@ -145,7 +145,7 @@ define(function(require) {
 
             if (!this.rotateOnly) {
                 // Make the body the handle for translation
-                this.translateArea = new PIXI.DisplayObjectContainer();
+                this.translateArea = new PIXI.Container();
                 this.translateArea.hitArea = bodyArea;
                 this.translateArea.buttonMode = true;
                 this.translateArea.defaultCursor = 'move';
@@ -156,10 +156,10 @@ define(function(require) {
             }
             else {
                 // Just create a dummy translate area
-                this.translateArea = new PIXI.DisplayObjectContainer();
+                this.translateArea = new PIXI.Container();
 
                 // Make the whole body the drag handle for rotation
-                this.rotateArea = new PIXI.DisplayObjectContainer();
+                this.rotateArea = new PIXI.Container();
                 this.rotateArea.buttonMode = true;
                 this.rotateArea.defaultCursor = 'nesw-resize';
                 this.rotateArea.hitArea = bodyArea;
@@ -168,13 +168,13 @@ define(function(require) {
         },
 
         initRotateHandle: function() {
-            this.rotateArea = new PIXI.DisplayObjectContainer();
+            this.rotateArea = new PIXI.Container();
             this.rotateArea.buttonMode = true;
             this.rotateArea.defaultCursor = 'nesw-resize';
         },
 
         initButton: function() {
-            this.button = new PIXI.DisplayObjectContainer();
+            this.button = new PIXI.Container();
             this.button.hitArea = new PIXI.Circle(-this.spriteWidth + this.spriteWidth * (99 / 150), 0, 10);
             this.button.buttonMode = true;
             this.rotationFrame.addChild(this.button);
@@ -243,36 +243,36 @@ define(function(require) {
             this.model.set('on', !this.model.get('on'));
         },
 
-        dragTranslateAreaStart: function(data) {
+        dragTranslateAreaStart: function(event) {
             if (!this.rotateOnly) {
                 this.draggingTranslateArea = true;    
             }
         },
 
-        dragTranslateArea: function(data) {
+        dragTranslateArea: function(event) {
             if (this.draggingTranslateArea) {
-                var x = data.global.x - this.displayObject.x;
-                var y = data.global.y - this.displayObject.y;
+                var x = event.data.global.x - this.displayObject.x;
+                var y = event.data.global.y - this.displayObject.y;
                 
                 
             }
         },
 
-        dragTranslateAreaEnd: function(data) {
+        dragTranslateAreaEnd: function(event) {
             this.draggingTranslateArea = false;
             if (!this.translateAreaHovering)
                 this.translateAreaUnhover();
         },
 
-        dragRotateAreaStart: function(data) {
-            this.previousPedestalY = data.global.y;
+        dragRotateAreaStart: function(event) {
+            this.previousPedestalY = event.data.global.y;
             this.draggingRotateArea = true;
         },
 
-        dragRotateArea: function(data) {
+        dragRotateArea: function(event) {
             if (this.draggingRotateArea) {
-                var x = data.global.x;
-                var y = data.global.y;
+                var x = event.data.global.x;
+                var y = event.data.global.y;
 
                 var mx = this.mvt.viewToModelX(x);
                 var my = this.mvt.viewToModelY(y);
@@ -287,7 +287,7 @@ define(function(require) {
             }
         },
 
-        dragRotateAreaEnd: function(data) {
+        dragRotateAreaEnd: function(event) {
             this.draggingRotateArea = false;
             if (!this.rotateAreaHovering)
                 this.rotateAreaUnhover();

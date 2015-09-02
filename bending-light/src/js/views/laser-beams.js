@@ -5,7 +5,7 @@ define(function(require) {
     var PIXI       = require('pixi');
     var ClipperLib = require('clipper-lib');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
@@ -200,8 +200,8 @@ define(function(require) {
 
             // Render it to a texture to apply to the sprite
             var canvasTexture = PIXI.Texture.fromCanvas(this.wavesCanvas);
-            this.wavesSprite.setTexture(canvasTexture);
-            this.wavesSprite.texture.baseTexture._dirty[0] = true;
+            this.wavesSprite.texture = canvasTexture;
+            this.wavesSprite.texture.baseTexture.update();
         },
 
         rgbaFromRay: function(ray) {

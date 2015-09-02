@@ -5,8 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView      = require('common/pixi/view/scene');
-    var PixiToImage        = require('common/pixi/pixi-to-image');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var PixiToImage        = require('common/v3/pixi/pixi-to-image');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
@@ -43,11 +43,11 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.bottomLayer    = new PIXI.DisplayObjectContainer();
-            this.lightRayLayer  = new PIXI.DisplayObjectContainer();
-            this.lightWaveLayer = new PIXI.DisplayObjectContainer();
-            this.middleLayer    = new PIXI.DisplayObjectContainer();
-            this.topLayer       = new PIXI.DisplayObjectContainer();
+            this.bottomLayer    = new PIXI.Container();
+            this.lightRayLayer  = new PIXI.Container();
+            this.lightWaveLayer = new PIXI.Container();
+            this.middleLayer    = new PIXI.Container();
+            this.topLayer       = new PIXI.Container();
 
             this.stage.addChild(this.bottomLayer);
             this.stage.addChild(this.lightRayLayer);
