@@ -81,7 +81,7 @@ define(function(require) {
             this.protractorView.displayObject.y = this.height / 2;
             this.protractorView.hide();
 
-            this.stage.addChild(this.protractorView.displayObject);
+            this.middleLayer.addChild(this.protractorView.displayObject);
         },
 
         initIntensityMeterView: function() {
@@ -89,9 +89,9 @@ define(function(require) {
                 model: this.simulation.intensityMeter,
                 mvt: this.mvt
             });
-            //this.intensityMeterView.hide();
+            this.intensityMeterView.hide();
 
-            this.stage.addChild(this.intensityMeterView.displayObject);
+            this.bottomLayer.addChild(this.intensityMeterView.displayObject);
         },
 
         showNormal: function() {

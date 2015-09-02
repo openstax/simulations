@@ -10,8 +10,11 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var LaserView     = require('views/laser');
-    var LaserBeamsView = require('views/laser-beams');
+    var IntensityMeter = require('models/intensity-meter');
+
+    var LaserView          = require('views/laser');
+    var LaserBeamsView     = require('views/laser-beams');
+    var IntensityMeterView = require('views/intensity-meter');
 
     var Assets = require('assets');
 
@@ -109,6 +112,22 @@ define(function(require) {
 
             return PixiToImage.displayObjectToDataURI(normalLine);
         },
+
+        getIntensityMeterIcon: function() {
+            var mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), 1);
+
+            var intensityMeter = new IntensityMeter({
+                sensorPosition: new Vector2(-25, 0),
+                bodyPosition:   new Vector2(25, 0)
+            });
+
+            var intensityMeterView = new IntensityMeterView({
+                model: intensityMeter,
+                mvt: mvt
+            });
+
+            return PixiToImage.displayObjectToDataURI(intensityMeterView.displayObject);
+        }
 
     }, Constants.SceneView);
 

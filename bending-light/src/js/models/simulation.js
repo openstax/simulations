@@ -57,15 +57,17 @@ define(function (require, exports, module) {
                 topLeftQuadrant: this.topLeftQuadrant
             });
 
-            this.listenTo(this.laser, 'change', this.laserChanged);
+            this.listenTo(this.laser, 'change', this.simulationChanged);
 
             // Initialize the light-rays array
             this.rays = [];
 
             this.intensityMeter = new IntensityMeter({
-                sensorPosition: new Vector2(Constants.MODEL_WIDTH * 0.3, Constants.MODEL_HEIGHT * -0.3),
-                bodyPosition:   new Vector2(Constants.MODEL_WIDTH * 0.4, Constants.MODEL_HEIGHT * -0.3)
+                sensorPosition: new Vector2(Constants.MODEL_WIDTH * -0.15, Constants.MODEL_HEIGHT * -0.1),
+                bodyPosition:   new Vector2(Constants.MODEL_WIDTH * -0.04, Constants.MODEL_HEIGHT * -0.2)
             });
+
+            this.listenTo(this.intensityMeter, 'change:sensorPosition', this.simulationChanged);
         },
 
         /**
@@ -111,7 +113,7 @@ define(function (require, exports, module) {
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
 
-        laserChanged: function() {
+        simulationChanged: function() {
             this.updateOnNextFrame = true;
             if (this.get('paused'))
                 this._update(this.get('time'), 0);

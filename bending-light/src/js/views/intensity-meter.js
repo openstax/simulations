@@ -18,14 +18,14 @@ define(function(require) {
     var IntensityMeterView = PixiView.extend({
 
         events: {
-            'touchstart      .bodyPanel': 'dragStart',
-            'mousedown       .bodyPanel': 'dragStart',
-            'touchmove       .bodyPanel': 'drag',
-            'mousemove       .bodyPanel': 'drag',
-            'touchend        .bodyPanel': 'dragEnd',
-            'mouseup         .bodyPanel': 'dragEnd',
-            'touchendoutside .bodyPanel': 'dragEnd',
-            'mouseupoutside  .bodyPanel': 'dragEnd',
+            'touchstart      .body': 'dragStart',
+            'mousedown       .body': 'dragStart',
+            'touchmove       .body': 'drag',
+            'mousemove       .body': 'drag',
+            'touchend        .body': 'dragEnd',
+            'mouseup         .body': 'dragEnd',
+            'touchendoutside .body': 'dragEnd',
+            'mouseupoutside  .body': 'dragEnd',
 
             'touchstart      .sensor': 'dragSensorStart',
             'mousedown       .sensor': 'dragSensorStart',
@@ -44,6 +44,9 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
+            this.wireColor = Colors.parseHex('#333');
+            this.wireThickness = 6;
+
             // Cached objects
             this._dragOffset = new PIXI.Point();
 
@@ -51,6 +54,7 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:bodyPosition',   this.updateBodyPosition);
             this.listenTo(this.model, 'change:sensorPosition', this.updateSensorPosition);
+            this.listenTo(this.model, 'change:enabled',        this.enabledChanged);
         },
 
         /**
@@ -60,64 +64,92 @@ define(function(require) {
             this.initPanel();
             this.initSensor();
             this.initReadoutText();
-
-            
+            this.initWire();
 
             this.updateMVT(this.mvt);
         },
 
         initPanel: function() {
-            this.bodyPanel = Assets.createSprite(Assets.Images.INTENSITY_METER_BODY);
-            this.bodyPanel.buttonMode = true;
+            this.body = Assets.createSprite(Assets.Images.INTENSITY_METER_BODY);
+            this.body.anchor.x = (6 / 166);
+            this.body.anchor.y = (6 / 102);
+            this.body.buttonMode = true;
 
-            this.displayObject.addChild(this.bodyPanel);
+            this.displayObject.addChild(this.body);
         },
 
         initSensor: function() {
             this.sensor = Assets.createSprite(Assets.Images.INTENSITY_METER_SENSOR);
+            this.sensor.anchor.x = 0.5;
+            this.sensor.anchor.y = (50 / 158);
             this.sensor.buttonMode = true;
 
             this.displayObject.addChild(this.sensor);
         },
 
         initReadoutText: function() {
-            var w = this.width;
-            var m = this.margin;
 
             var readoutTextSettings = {
-                font: '16px Helvetica Neue',
-                fill: '#555'
+                font: '18px Helvetica Neue',
+                fill: '#000'
             };
 
-            var intensity = new PIXI.Text('Intensity', readoutTextSettings);
-            intensity.x = -Math.round(intensity.width / 2);
-            intensity.y = m;
-
-            var readout = new PIXI.Text('40.9 V', readoutTextSettings);
-            readout.x = w / 2 - m;
-            readout.y = m;
+            var readout = new PIXI.Text('100 %', readoutTextSettings);
+            readout.x = Math.floor(this.body.width * (140 / 166));
+            readout.y = Math.floor(this.body.height * (63 / 102) - readout.height * 0.4);
             readout.anchor.x = 1;
 
-            this.bodyPanel.addChild(intensity);
-            this.bodyPanel.addChild(readout);
+            this.body.addChild(readout);
 
             this.readout = readout;
         },
 
-        updateReadout: function(intensity) {
-            this.readout.setText((intensity * 100).toFixed(2) + '%');
+        initWire: function() {
+            this.wireGraphics = new PIXI.Graphics();
+            this.displayObject.addChildAt(this.wireGraphics, 0);
+        },
+
+        drawWire: function() {
+            var graphics = this.wireGraphics;
+
+            var sensor = this.sensor;
+            var x0 = sensor.x;
+            var y0 = sensor.y + sensor.height * (102 / 158) - this.wireThickness;
+
+            var x1 = this.body.x + this.wireThickness;
+            var y1 = this.body.y + this.body.height * (45 / 102);
+
+            var c1x = x0;
+            var c1y = y0 + sensor.height * 0.25;
+
+            var c2x = x1 - sensor.height * 0.25;
+            var c2y = y1;
+
+            graphics.clear();
+            graphics.lineStyle(this.wireThickness, this.wireColor, 1);
+            graphics.moveTo(x0, y0);
+            graphics.bezierCurveTo(c1x, c1y, c2x, c2y, x1, y1);
+        },
+
+        updateReadout: function(model, intensity) {
+            if (intensity === null)
+                this.readout.setText('—');
+            else
+                this.readout.setText((intensity * 100).toFixed(2) + '%');
         },
 
         updateBodyPosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
-            this.bodyPanel.x = viewPosition.x;
-            this.bodyPanel.y = viewPosition.y;
+            this.body.x = viewPosition.x;
+            this.body.y = viewPosition.y;
+            this.drawWire();
         },
 
         updateSensorPosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
             this.sensor.x = viewPosition.x;
             this.sensor.y = viewPosition.y;
+            this.drawWire();
         },
 
         /**
@@ -129,17 +161,18 @@ define(function(require) {
 
             this.updateBodyPosition(this.model, this.model.get('bodyPosition'));
             this.updateSensorPosition(this.model, this.model.get('sensorPosition'));
+            this.updateReadout(this.model, this.model.get('reading'));
         },
 
         dragStart: function(data) {
-            this.dragOffset = data.getLocalPosition(this.bodyPanel, this._dragOffset);
+            this.dragOffset = data.getLocalPosition(this.body, this._dragOffset);
             this.dragging = true;
         },
 
         drag: function(data) {
             if (this.dragging) {
-                var dx = data.global.x - this.bodyPanel.x - this.dragOffset.x;
-                var dy = data.global.y - this.bodyPanel.y - this.dragOffset.y;
+                var dx = data.global.x - this.body.x - this.dragOffset.x;
+                var dy = data.global.y - this.body.y - this.dragOffset.y;
                 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
@@ -179,6 +212,13 @@ define(function(require) {
 
         hide: function() {
             this.displayObject.visible = false;
+        },
+
+        enabledChanged: function(model, enabled) {
+            if (enabled)
+                this.show();
+            else
+                this.hide();
         }
 
     });

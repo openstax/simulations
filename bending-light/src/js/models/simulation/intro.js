@@ -28,6 +28,21 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
 
+            
+
+            this._bottom = new Rectangle(-10, -10, 20, 10);
+            this._top    = new Rectangle(-10,   0, 20, 10);
+            this._vec = new Vector2();
+
+            
+        },
+
+        /**
+         * Initializes the models used in the simulation
+         */
+        initComponents: function() {
+            BendingLightSimulation.prototype.initComponents.apply(this, arguments);
+
             this.topMedium = new Medium({
                 shape: new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
                 mediumProperties: MediumPropertiesPresets.AIR
@@ -38,19 +53,8 @@ define(function (require, exports, module) {
                 mediumProperties: MediumPropertiesPresets.WATER
             });
 
-            this._bottom = new Rectangle(-10, -10, 20, 10);
-            this._top    = new Rectangle(-10,   0, 20, 10);
-            this._vec = new Vector2();
-
             this.listenTo(this.topMedium,    'change', this.mediumChanged);
             this.listenTo(this.bottomMedium, 'change', this.mediumChanged);
-        },
-
-        /**
-         * Initializes the models used in the simulation
-         */
-        initComponents: function() {
-            BendingLightSimulation.prototype.initComponents.apply(this, arguments);
         },
 
         /**
@@ -183,12 +187,13 @@ define(function (require, exports, module) {
          */
         addAndAbsorb: function(ray) {
             var intersects = ray.intersectsCircle(
-                this.intensityMeter.getSensorX(), 
-                this.intensityMeter.getSensorY(), 
-                this.intensityMeter.get('radius')
+                this.intensityMeter.get('sensorPosition').x, 
+                this.intensityMeter.get('sensorPosition').y, 
+                this.intensityMeter.get('sensorRadius')
             );
             var rayAbsorbed = intersects && this.intensityMeter.get('enabled');
             if (rayAbsorbed) {
+                console.log('absorbed!')
                 // Find intersection points with the intensity sensor
                 // TODO: Implement
             }

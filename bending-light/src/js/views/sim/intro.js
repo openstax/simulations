@@ -37,7 +37,6 @@ define(function(require) {
 
             this.initMediumControls();
             this.initLaserControls();
-            this.initToolbox();
         },
 
         /**
@@ -80,6 +79,8 @@ define(function(require) {
 
         initToolbox: function() {
             var sceneView = this.sceneView;
+            var simulation = this.simulation;
+
             this.toolboxView = new ToolboxView({
                 title: 'Toolbox',
                 tools: {
@@ -92,6 +93,17 @@ define(function(require) {
                         },
                         deactivate: function() {
                             sceneView.hideProtractor();
+                        }
+                    },
+                    intensityMeter: {
+                        title: 'Intensity Meter',
+                        label: '',
+                        img: sceneView.getIntensityMeterIcon(),
+                        activate: function() {
+                            simulation.intensityMeter.set('enabled', true);
+                        },
+                        deactivate: function() {
+                            simulation.intensityMeter.set('enabled', false);
                         }
                     },
                     normal: {
@@ -112,6 +124,8 @@ define(function(require) {
 
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
+
+            this.initToolbox();
 
             this.topMediumControlsView.render();
             this.bottomMediumControlsView.render();
