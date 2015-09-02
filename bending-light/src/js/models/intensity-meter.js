@@ -34,7 +34,7 @@ define(function (require) {
             enabled: false,
             bodyPosition: null,
             sensorPosition: null,
-            sensorRadius: 1.215e-6,
+            sensorRadius: 1.5e-6,
             reading: null
         },
         

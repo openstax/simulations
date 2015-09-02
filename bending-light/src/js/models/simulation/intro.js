@@ -4,8 +4,9 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var Rectangle        = require('common/math/rectangle');
+    var Vector2          = require('common/math/vector2');
+    var LineIntersection = require('common/math/line-intersection');
 
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
@@ -186,16 +187,19 @@ define(function (require, exports, module) {
          *   If the intensity meter misses the ray, the original ray is added.
          */
         addAndAbsorb: function(ray) {
-            var intersects = ray.intersectsCircle(
-                this.intensityMeter.get('sensorPosition').x, 
-                this.intensityMeter.get('sensorPosition').y, 
-                this.intensityMeter.get('sensorRadius')
-            );
+            var sx = this.intensityMeter.get('sensorPosition').x;
+            var sy = this.intensityMeter.get('sensorPosition').y;
+            var sr = this.intensityMeter.get('sensorRadius');
+            var intersects = ray.intersectsCircle(sx, sy, sr);
             var rayAbsorbed = intersects && this.intensityMeter.get('enabled');
             if (rayAbsorbed) {
-                console.log('absorbed!')
+                
                 // Find intersection points with the intensity sensor
-                // TODO: Implement
+                
+                var intersectionResponse = ray.getLastIntersectionWithCircle();
+                var line = ray.toLine();
+                var results = LineIntersection.lineCircleIntersection(line.start.x, line.start.y, line.end.x, line.end.y, sx, sy, sr);
+                console.log(results);
             }
             else {
                 this.addRay(ray);

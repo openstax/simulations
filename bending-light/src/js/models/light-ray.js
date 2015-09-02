@@ -129,7 +129,7 @@ define(function (require) {
 
         toLine: function() {
             this._line.start.set(this.tail);
-            this._line.end.set(this.tail);
+            this._line.end.set(this.tip);
             return this._line;
         },
 
