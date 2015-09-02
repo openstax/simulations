@@ -169,7 +169,7 @@ define(function(require) {
                     .set(vector)
                     .normalize()
                     .scale(this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()));
-                console.log(partialPeriodOffset, this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()), phaseOffset.length());
+                console.log(partialPeriodOffset, this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()));
                 var x0 = p0.x + phaseOffset.x;
                 var y0 = p0.y + phaseOffset.y;
                 var gradient = ctx.createLinearGradient(x0, y0, x0 + vector.x, y0 + vector.y);

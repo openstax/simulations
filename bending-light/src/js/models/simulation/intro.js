@@ -225,7 +225,6 @@ define(function (require, exports, module) {
                         this.addRay(ray);
                         rayAbsorbed = false;
                     }
-                        
                 }
             }
             else {
