@@ -54,6 +54,7 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:bodyPosition',   this.updateBodyPosition);
             this.listenTo(this.model, 'change:sensorPosition', this.updateSensorPosition);
+            this.listenTo(this.model, 'change:reading',        this.updateReadout);
             this.listenTo(this.model, 'change:enabled',        this.enabledChanged);
         },
 

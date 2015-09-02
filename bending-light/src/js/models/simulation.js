@@ -89,6 +89,7 @@ define(function (require, exports, module) {
                 this.rays[i].destroy();
                 this.rays.splice(i, 1);
             }
+            this.intensityMeter.clearRayReadings();
         },
 
         _update: function(time, deltaTime) {

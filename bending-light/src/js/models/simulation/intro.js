@@ -195,22 +195,48 @@ define(function (require, exports, module) {
             if (rayAbsorbed) {
                 
                 // Find intersection points with the intensity sensor
-                
-                var intersectionResponse = ray.getLastIntersectionWithCircle();
                 var line = ray.toLine();
-                var results = LineIntersection.lineCircleIntersection(line.start.x, line.start.y, line.end.x, line.end.y, sx, sy, sr);
-                console.log(results);
+                var intersections = LineIntersection.lineCircleIntersection(line.start.x, line.start.y, line.end.x, line.end.y, sx, sy, sr);
+                // If it intersected, then absorb the ray
+                if (intersections && intersections[0] && intersections[1]) {
+                    var x = intersections[0].x + intersections[1].x;
+                    var y = intersections[0].y + intersections[1].y;
+                    var interruptedRay = LightRay.create(
+                        ray.tail,
+                        this._vec.set(x / 2, y / 2), 
+                        ray.indexOfRefraction, 
+                        ray.getWavelength(),
+                        ray.getPowerFraction(), 
+                        this.laser.get('wavelength'), 
+                        ray.getWaveWidth(), 
+                        ray.getNumWavelengthsPhaseOffset(), 
+                        ray.getOppositeMedium(), 
+                        false, 
+                        ray.extendBackwards
+                    );
+
+                    // Don't let the wave intersect the intensity meter if it is behind the
+                    //   laser emission point
+                    var isForward = ray.getVector().dot(interruptedRay.getVector()) > 0;
+                    if (interruptedRay.getLength() < ray.getLength() && isForward) {
+                        this.addRay(interruptedRay);
+                    }
+                    else {
+                        this.addRay(ray);
+                        rayAbsorbed = false;
+                    }
+                        
+                }
             }
             else {
                 this.addRay(ray);
             }
 
-            // if (rayAbsorbed) {
-            //     intensityMeter.addRayReading( new IntensityMeter.Reading( ray.getPowerFraction() ) );
-            // }
-            // else {
-            //     intensityMeter.addRayReading( MISS );
-            // }
+            if (rayAbsorbed)
+                this.intensityMeter.addRayReading(ray.getPowerFraction());
+            else
+                this.intensityMeter.addRayReading(null);
+
             return rayAbsorbed;
         },
 
