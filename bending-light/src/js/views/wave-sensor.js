@@ -106,6 +106,7 @@ define(function(require) {
         createProbe: function(color, wireColor) {
             var probe = new PIXI.Graphics();
             probe.buttonMode = true;
+            probe.hitArea = new PIXI.Circle(0, 0, this.probeRadius + (this.probeThickness / 2));
 
             probe.lineStyle(this.probeThickness, color, 1);
             probe.arc(0, 0, this.probeRadius, 0, Math.PI * 2);

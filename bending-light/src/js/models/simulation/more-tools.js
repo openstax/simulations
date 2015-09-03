@@ -30,7 +30,14 @@ define(function (require, exports, module) {
         initComponents: function() {
             IntroSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.waveSensor = new WaveSensor();
+            var w = Constants.MODEL_WIDTH;
+            var h = Constants.MODEL_HEIGHT;
+
+            this.waveSensor = new WaveSensor({
+                bodyPosition:   new Vector2(w * -0.105, h * -0.15),
+                probe1Position: new Vector2(w * -0.027, h *  0.039),
+                probe2Position: new Vector2(w *  0.027, h *  0.039),
+            });
         },
 
     });

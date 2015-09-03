@@ -81,7 +81,7 @@ define(function (require) {
             vectorPool.remove(oldProbe1Position);
         },
 
-        translateSensor: function(x, y) {
+        translateProbe2: function(x, y) {
             var oldProbe2Position = this.get('probe2Position');
             var newProbe2Position = vectorPool.create().set(this.get('probe2Position'));
 
