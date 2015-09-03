@@ -100,6 +100,14 @@ define(function (require) {
             }
 
             return result;
+        },
+
+        /**
+         * Returns whether a line intersects with a circle.
+         */
+        lineAndCircleIntersect: function(x1, y1, x2, y2, circleX, circleY, radius) {
+            var result = this.lineCircleIntersection(x1, y1, x2, y2, circleX, circleY, radius);
+            return (result[0] != null || result[1] != null);
         }
 
     };

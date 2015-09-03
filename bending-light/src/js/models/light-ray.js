@@ -6,8 +6,9 @@ define(function (require) {
     var Pool     = require('object-pool');
     var SAT      = require('sat');
 
-    var Vector2        = require('common/math/vector2');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Vector2          = require('common/math/vector2');
+    var PiecewiseCurve   = require('common/math/piecewise-curve');
+    var LineIntersection = require('common/math/line-intersection');
     
     var pool = Pool({
         init: function() {
@@ -213,6 +214,10 @@ define(function (require) {
             return this.waveWidth;
         },
 
+        getRayWidth: function() {
+            return 1.5992063492063494E-7;
+        },
+
         getNumberOfWavelengths: function() {
             return this.getLength() / this.wavelength;
         },
@@ -230,7 +235,22 @@ define(function (require) {
          *   for whether it is shown as a thin light ray or wide wave
          */
         contains: function(position, waveMode) {
-            throw 'Not yet implemented.';
+            // If it's in the opposite medium, it's not valid anyway
+            if (waveMode && this.oppositeMediumShape.contains(position))
+                return false;
+            
+            // Otherwise, we just check to make sure it's on the line (or within 
+            //   its thickness as a distance)
+            var line = this.toLine();
+            return LineIntersection.lineAndCircleIntersect(
+                line.start.x, 
+                line.start.y, 
+                line.end.x, 
+                line.end.y, 
+                position.x, 
+                position.y, 
+                waveMode ? this.getWaveWidth() / 2 : this.getRayWidth() / 2
+            );
         },
 
         intersectsCircle: function(x, y, radius) {

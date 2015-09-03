@@ -12,7 +12,7 @@ define(function (require) {
         INTENSITY_METER_BODY:   'intensity-meter-body',
         INTENSITY_METER_SENSOR: 'intensity-meter-sensor',
         WAVE_SENSOR_BODY:       'wave-sensor-body',
-        PROTRACTOR:             'protractor.png'
+        PROTRACTOR:             'protractor-white.png'
     };
 
     Assets.SpriteSheets = {

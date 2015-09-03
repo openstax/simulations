@@ -34,7 +34,7 @@ define(function (require, exports, module) {
             this._bottom = new Rectangle(-10, -10, 20, 10);
             this._top    = new Rectangle(-10,   0, 20, 10);
             this._vec = new Vector2();
-
+            this._distVec = new Vector2();
             
         },
 
@@ -252,7 +252,32 @@ define(function (require, exports, module) {
          *   or None if none exists
          */
         getWaveValue: function(position) {
-            throw 'Not implemented yet.';
+            var rays = this.rays.slice();
+
+            // Sort rays by zIndex so the higher z-indexes come first so we hit the ones on top
+            rays.sort(function(a, b) {
+                return b.zIndex - a.zIndex;
+            });
+
+            var distVec = this._distVec;
+            var ray;
+            for (var i = 0; i < rays.length; i++) {
+                ray = rays[i];
+                if (ray.contains(position, this.laser.get('wave'))) {
+                    // Map power to displayed amplitude
+                    var amplitude = Math.sqrt(ray.getPowerFraction());
+
+                    // Find out how far the light has come, so we can compute the remainder of phases
+                    distVec.set(position).sub(ray.tail);
+                    var distanceAlongRay = ray.getUnitVector().dot(distVec);
+                    var phase = ray.getCosArg(distanceAlongRay);
+
+                    // Wave is a*cos(theta)
+                    return amplitude * Math.cos(phase + Math.PI);
+                }
+            }
+
+            return null;
         },
 
         /**

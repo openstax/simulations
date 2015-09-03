@@ -81,12 +81,12 @@ define(function(require) {
                 waveSensor: {
                     title: 'Wave Sensor',
                     label: '',
-                    img: sceneView.getIntensityMeterIcon(),
+                    img: sceneView.getWaveSensorIcon(),
                     activate: function() {
-                        
+                        simulation.waveSensor.set('enabled', true);
                     },
                     deactivate: function() {
-                        
+                        simulation.waveSensor.set('enabled', false);
                     }
                 },
                 intensityMeter: config.tools.intensityMeter,

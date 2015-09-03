@@ -49,10 +49,12 @@ define(function (require) {
 
         addProbe1Sample: function(sample) {
             this.probe1Series.push(sample);
+            console.log(sample)
         },
 
         addProbe2Sample: function(sample) {
             this.probe2Series.push(sample);
+            console.log(sample)
         },
 
         translateBody: function(x, y) {
