@@ -41,7 +41,7 @@ define(function(require) {
             });
             //this.waveSensorView.hide();
 
-            this.bottomLayer.addChild(this.waveSensorView.displayObject);
+            this.topLayer.addChild(this.waveSensorView.displayObject);
         },
 
     });

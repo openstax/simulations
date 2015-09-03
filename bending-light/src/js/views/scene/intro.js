@@ -70,7 +70,7 @@ define(function(require) {
             this.normalLine.moveTo(this.width / 2, this.height * 0.25);
             this.normalLine.dashTo(this.width / 2, this.height * 0.75, [ 10, 10 ]);
 
-            this.stage.addChild(this.normalLine);
+            this.middleLayer.addChild(this.normalLine);
         },
 
         initProtractorView: function() {
