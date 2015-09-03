@@ -11,6 +11,7 @@ define(function (require) {
         LASER_OFF:              'laser-off',
         INTENSITY_METER_BODY:   'intensity-meter-body',
         INTENSITY_METER_SENSOR: 'intensity-meter-sensor',
+        WAVE_SENSOR_BODY:       'wave-sensor-body',
         PROTRACTOR:             'protractor.png'
     };
 
@@ -19,7 +20,8 @@ define(function (require) {
             Assets.Images.LASER_ON,
             Assets.Images.LASER_OFF,
             Assets.Images.INTENSITY_METER_BODY,
-            Assets.Images.INTENSITY_METER_SENSOR
+            Assets.Images.INTENSITY_METER_SENSOR,
+            Assets.Images.WAVE_SENSOR_BODY
         ]
     };
 

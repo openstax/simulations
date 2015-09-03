@@ -30,12 +30,20 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":100,"h":158},
 		"sourceSize": {"w":100,"h":158},
 		"pivot": {"x":0,"y":0}
+	},
+	"wave-sensor-body": {
+		"frame": {"x":0,"y":262,"w":200,"h":140},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":200,"h":140},
+		"sourceSize": {"w":200,"h":140},
+		"pivot": {"x":0,"y":0}
 	}
 },
 "meta": {
 	"image": "objects.png",
 	"format": "RGBA8888",
-	"size": {"w":150,"h":122},
+	"size": {"w":251,"h":402},
 	"scale": "1"
 }
 }

@@ -7,6 +7,7 @@ define(function (require, exports, module) {
     var Vector2 = require('common/math/vector2');
 
     var IntroSimulation = require('models/simulation/intro');
+    var WaveSensor      = require('models/wave-sensor');
 
     /**
      * Constants
@@ -29,6 +30,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             IntroSimulation.prototype.initComponents.apply(this, arguments);
 
+            this.waveSensor = new WaveSensor();
         },
 
     });

@@ -78,10 +78,14 @@ define(function(require) {
         },
 
         initToolbox: function() {
+            this.toolboxView = new ToolboxView(this.getToolboxConfig());
+        },
+
+        getToolboxConfig: function() {
             var sceneView = this.sceneView;
             var simulation = this.simulation;
 
-            this.toolboxView = new ToolboxView({
+            return {
                 title: 'Toolbox',
                 tools: {
                     protractor: {
@@ -119,7 +123,7 @@ define(function(require) {
                         startActive: true
                     }
                 }
-            });
+            };
         },
 
         render: function() {
