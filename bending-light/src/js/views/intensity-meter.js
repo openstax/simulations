@@ -130,13 +130,17 @@ define(function(require) {
             graphics.lineStyle(this.wireThickness, this.wireColor, 1);
             graphics.moveTo(x0, y0);
             graphics.bezierCurveTo(c1x, c1y, c2x, c2y, x1, y1);
+
+            // This is a little workaround for a current Pixi 3 bug:
+            if (graphics.currentPath && graphics.currentPath.shape)
+                graphics.currentPath.shape.closed = false;
         },
 
         updateReadout: function(model, intensity) {
             if (intensity === null)
-                this.readout.setText('—');
+                this.readout.text = '—';
             else
-                this.readout.setText((intensity * 100).toFixed(2) + '%');
+                this.readout.text = (intensity * 100).toFixed(2) + '%';
         },
 
         updateBodyPosition: function(model, position) {
