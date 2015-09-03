@@ -45,16 +45,24 @@ define(function (require) {
 
             this.probe1Series = [];
             this.probe2Series = [];
+
+            this.maxSeriesLength = 172;
         },
 
         addProbe1Sample: function(sample) {
-            this.probe1Series.push(sample);
-            console.log(sample)
+            this.addSampleToSeries(sample, this.probe1Series);
         },
 
         addProbe2Sample: function(sample) {
-            this.probe2Series.push(sample);
-            console.log(sample)
+            this.addSampleToSeries(sample, this.probe2Series);
+        },
+
+        addSampleToSeries: function(sample, series) {
+            series.unshift(sample);
+
+            // Keep it to a manageable size
+            if (series.length > this.maxSeriesLength)
+                series.splice(series.length - 1, 1);
         },
 
         translateBody: function(x, y) {

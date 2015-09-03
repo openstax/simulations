@@ -64,7 +64,13 @@ define(function(require) {
             });
 
             return PixiToImage.displayObjectToDataURI(waveSensorView.displayObject);
-        }
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            IntroSceneView.prototype._update.apply(this, arguments);
+
+            this.waveSensorView.drawGraphs();
+        },
 
     });
 

@@ -64,6 +64,10 @@ define(function(require) {
             this.wire2Color = Colors.parseHex(Colors.darkenHex(probe2Color, 0.3));
             this.wireThickness = 3;
 
+            this.gridColor  = Colors.parseHex('#ccc');
+            this.lineWidth  = 2;
+            this.gridLineWidth = 1;
+
             // Cached objects
             this._dragOffset = new PIXI.Point();
 
@@ -82,6 +86,7 @@ define(function(require) {
             this.initPanel();
             this.initProbes();
             this.initWires();
+            this.initGraphs();
 
             this.updateMVT(this.mvt);
         },
@@ -134,6 +139,37 @@ define(function(require) {
             this.displayObject.addChildAt(this.wire2Graphics, 0);
         },
 
+        initGraphs: function() {
+            var plotX = this.body.width  *  (9 / 200);
+            var plotY = this.body.height * (10 / 140);
+            var plotWidth  = this.body.width  * (170 / 200);
+            var plotHeight = this.body.height *  (97 / 140);
+
+            this.graph1 = new PIXI.Graphics();
+            this.graph1.x = plotX;
+            this.graph1.y = plotY;
+
+            this.graph2 = new PIXI.Graphics();
+            this.graph2.x = plotX;
+            this.graph2.y = plotY;
+
+            this.body.addChild(this.graph1);
+            this.body.addChild(this.graph2);
+
+            this.plotX = plotX;
+            this.plotY = plotY;
+            this.plotWidth = plotWidth;
+            this.plotHeight = plotHeight;
+
+            this.plotDataLength = plotWidth;
+
+            this.tickX = 0;
+            this.tickSpace = 40;
+
+            this.yScale = plotHeight / 2;
+            this.yOffset = Math.floor(-1 * this.yScale);
+        },
+
         drawWire: function(graphics, wireColor, probe, connectionPointX, connectionPointY) {
             var x0 = probe.x;
             var y0 = probe.y + this.probeRadius;
@@ -172,6 +208,55 @@ define(function(require) {
         drawWires: function() {
             this.drawWire1();
             this.drawWire2();
+        },
+
+        drawGraph: function(graphics, color, data) {
+            var plotWidth  = this.plotWidth;
+            var plotHeight = this.plotHeight;
+            var yScale     = this.yScale;
+            var yOffset    = this.yOffset;
+            var tickX      = this.tickX;
+            var tickSpace  = this.tickSpace;
+
+            graphics.clear();
+
+            // Draw horizontal lines
+            graphics.lineStyle(this.gridLineWidth, this.gridColor, 1);
+            graphics.moveTo(0,         plotHeight / 2);
+            graphics.lineTo(plotWidth, plotHeight / 2);
+
+            // Draw vertical lines
+            for (var x = 0; x < plotWidth; x++) {
+                if ((x % tickSpace) === tickX) {
+                    graphics.moveTo(x, 0);
+                    graphics.lineTo(x, plotHeight);
+                }
+            }
+
+            // Draw data points
+            if (data.length) {
+                graphics.lineStyle(this.lineWidth, color, 1);
+
+                var y = data[0] * yScale - yOffset;
+                if (_.isNumber(y))
+                    graphics.moveTo(plotWidth, y);
+
+                for (var i = 1; i < data.length && i < this.plotDataLength; i++) {
+                    if (data[i] !== null) {
+                        y = data[i] * yScale - yOffset;
+                        graphics.lineTo(plotWidth - i, y);
+                    }
+                }
+
+                if (graphics.currentPath && graphics.currentPath.shape)
+                    graphics.currentPath.shape.closed = false;
+            }
+            
+        },
+
+        drawGraphs: function() {
+            this.drawGraph(this.graph1, this.probe1Color, this.model.probe1Series);
+            this.drawGraph(this.graph2, this.probe2Color, this.model.probe2Series);
         },
 
         updateBodyPosition: function(model, position) {
