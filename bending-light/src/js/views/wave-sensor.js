@@ -27,14 +27,23 @@ define(function(require) {
             'touchendoutside .body': 'dragEnd',
             'mouseupoutside  .body': 'dragEnd',
 
-            // 'touchstart      .sensor': 'dragSensorStart',
-            // 'mousedown       .sensor': 'dragSensorStart',
-            // 'touchmove       .sensor': 'dragSensor',
-            // 'mousemove       .sensor': 'dragSensor',
-            // 'touchend        .sensor': 'dragSensorEnd',
-            // 'mouseup         .sensor': 'dragSensorEnd',
-            // 'touchendoutside .sensor': 'dragSensorEnd',
-            // 'mouseupoutside  .sensor': 'dragSensorEnd',
+            'touchstart      .probe1': 'dragProbe1Start',
+            'mousedown       .probe1': 'dragProbe1Start',
+            'touchmove       .probe1': 'dragProbe1',
+            'mousemove       .probe1': 'dragProbe1',
+            'touchend        .probe1': 'dragProbe1End',
+            'mouseup         .probe1': 'dragProbe1End',
+            'touchendoutside .probe1': 'dragProbe1End',
+            'mouseupoutside  .probe1': 'dragProbe1End',
+
+            'touchstart      .probe2': 'dragProbe2Start',
+            'mousedown       .probe2': 'dragProbe2Start',
+            'touchmove       .probe2': 'dragProbe2',
+            'mousemove       .probe2': 'dragProbe2',
+            'touchend        .probe2': 'dragProbe2End',
+            'mouseup         .probe2': 'dragProbe2End',
+            'touchendoutside .probe2': 'dragProbe2End',
+            'mouseupoutside  .probe2': 'dragProbe2End'
         },
 
         /**
@@ -53,7 +62,7 @@ define(function(require) {
 
             this.wire1Color = Colors.parseHex(Colors.darkenHex(probe1Color, 0.3));
             this.wire2Color = Colors.parseHex(Colors.darkenHex(probe2Color, 0.3));
-            this.wireThickness = 6;
+            this.wireThickness = 3;
 
             // Cached objects
             this._dragOffset = new PIXI.Point();
@@ -87,47 +96,31 @@ define(function(require) {
         },
 
         initProbes: function() {
-            // this.sensor = Assets.createSprite(Assets.Images.INTENSITY_METER_SENSOR);
-            // this.sensor.anchor.x = 0.5;
-            // this.sensor.anchor.y = (50 / 158);
-            // this.sensor.buttonMode = true;
-
-            // this.displayObject.addChild(this.sensor);
-
             this.probe1 = this.createProbe(this.probe1Color, this.wire1Color);
             this.probe2 = this.createProbe(this.probe2Color, this.wire2Color);
 
-            this.displayObject.addChild(this.probe1);
-            this.displayObject.addChild(this.probe2);
+            this.displayObject.addChildAt(this.probe1, 0);
+            this.displayObject.addChildAt(this.probe2, 0);
         },
 
         createProbe: function(color, wireColor) {
             var probe = new PIXI.Graphics();
             probe.buttonMode = true;
 
-            probe.lineStyle(Math.floor(this.wireThickness * 1.4), wireColor, 1);
-            probe.moveTo(0, this.probeRadius);
-            probe.lineTo(0, this.probeRadius + Math.floor(this.wireThickness * 1.6));
-
-            // Need to make this next part a separate graphics object because of some Pixi 3 line-rendering bugs...
-
-            var ring = new PIXI.Graphics();
-            ring.lineStyle(this.probeThickness, color, 1);
-            ring.arc(0, 0, this.probeRadius, 0, Math.PI * 2);
+            probe.lineStyle(this.probeThickness, color, 1);
+            probe.arc(0, 0, this.probeRadius, 0, Math.PI * 2);
 
             var offset = this.probeRadius - (this.probeThickness / 2);
             var lineLength = Math.floor(this.probeThickness * 0.7);
-            ring.lineStyle(2, wireColor, 1);
-            ring.moveTo(0, -offset);
-            ring.lineTo(0, -offset - lineLength);
-            ring.moveTo(0,  offset);
-            ring.lineTo(0,  offset + lineLength);
-            ring.moveTo(-offset,              0);
-            ring.lineTo(-offset - lineLength, 0);
-            ring.moveTo( offset,              0);
-            ring.lineTo( offset + lineLength, 0);
-
-            probe.addChild(ring);
+            probe.lineStyle(2, wireColor, 1);
+            probe.moveTo(0, -offset);
+            probe.lineTo(0, -offset - lineLength);
+            probe.moveTo(0,  offset);
+            probe.lineTo(0,  offset + lineLength);
+            probe.moveTo(-offset,              0);
+            probe.lineTo(-offset - lineLength, 0);
+            probe.moveTo( offset,              0);
+            probe.lineTo( offset + lineLength, 0);
 
             return probe;
         },
@@ -136,22 +129,22 @@ define(function(require) {
             this.wire1Graphics = new PIXI.Graphics();
             this.wire2Graphics = new PIXI.Graphics();
 
-            this.displayObject.addChildAt(this.wire2Graphics, 0);
             this.displayObject.addChildAt(this.wire1Graphics, 0);
+            this.displayObject.addChildAt(this.wire2Graphics, 0);
         },
 
-        drawWire: function(graphics, wireColor, probe) {
+        drawWire: function(graphics, wireColor, probe, connectionPointX, connectionPointY) {
             var x0 = probe.x;
-            var y0 = probe.y + probe.height * (102 / 158) - this.wireThickness;
+            var y0 = probe.y + this.probeRadius;
 
-            var x1 = this.body.x + this.wireThickness;
-            var y1 = this.body.y + this.body.height * (45 / 102);
+            var x1 = connectionPointX;
+            var y1 = connectionPointY;
 
             var c1x = x0;
             var c1y = y0 + probe.height * 0.25;
 
-            var c2x = x1 - probe.height * 0.25;
-            var c2y = y1;
+            var c2x = x1;
+            var c2y = y1 - probe.height * 0.25;
 
             graphics.clear();
             graphics.lineStyle(this.wireThickness, wireColor, 1);
@@ -164,11 +157,15 @@ define(function(require) {
         },
 
         drawWire1: function() {
-            this.drawWire(this.wire1Graphics, this.wire1Color, this.probe1);
+            var x = this.body.x + this.body.width * (20 / 200);
+            var y = this.body.y;
+            this.drawWire(this.wire1Graphics, this.wire1Color, this.probe1, x, y);
         },
 
         drawWire2: function() {
-            this.drawWire(this.wire2Graphics, this.wire2Color, this.probe2);
+            var x = this.body.x + this.body.width * (40 / 200);
+            var y = this.body.y;
+            this.drawWire(this.wire2Graphics, this.wire2Color, this.probe2, x, y);
         },
 
         drawWires: function() {
@@ -194,7 +191,7 @@ define(function(require) {
             var viewPosition = this.mvt.modelToView(position);
             this.probe2.x = viewPosition.x;
             this.probe2.y = viewPosition.y;
-            this.drawWire1();
+            this.drawWire2();
         },
 
         /**
@@ -230,25 +227,46 @@ define(function(require) {
             this.dragging = false;
         },
 
-        dragSensorStart: function(event) {
-            this.dragOffset = event.data.getLocalPosition(this.sensor, this._dragOffset);
-            this.draggingSensor = true;
+        dragProbe1Start: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.probe1, this._dragOffset);
+            this.draggingProbe1 = true;
         },
 
-        dragSensor: function(event) {
-            if (this.draggingSensor) {
-                var dx = event.data.global.x - this.sensor.x - this.dragOffset.x;
-                var dy = event.data.global.y - this.sensor.y - this.dragOffset.y;
+        dragProbe1: function(event) {
+            if (this.draggingProbe1) {
+                var dx = event.data.global.x - this.probe1.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.probe1.y - this.dragOffset.y;
                 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
 
-                this.model.translateSensor(mdx, mdy);
+                this.model.translateProbe1(mdx, mdy);
             }
         },
 
-        dragSensorEnd: function(event) {
-            this.draggingSensor = false;
+        dragProbe1End: function(event) {
+            this.draggingProbe1 = false;
+        },
+
+        dragProbe2Start: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.probe2, this._dragOffset);
+            this.draggingProbe2 = true;
+        },
+
+        dragProbe2: function(event) {
+            if (this.draggingProbe2) {
+                var dx = event.data.global.x - this.probe2.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.probe2.y - this.dragOffset.y;
+                
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                this.model.translateProbe2(mdx, mdy);
+            }
+        },
+
+        dragProbe2End: function(event) {
+            this.draggingProbe2 = false;
         },
 
         show: function() {
