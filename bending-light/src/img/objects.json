@@ -38,12 +38,20 @@
 		"spriteSourceSize": {"x":0,"y":0,"w":200,"h":140},
 		"sourceSize": {"w":200,"h":140},
 		"pivot": {"x":0,"y":0}
+	},
+	"velocity-sensor-body": {
+		"frame": {"x":0,"y":403,"w":160,"h":115},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":160,"h":115},
+		"sourceSize": {"w":160,"h":115},
+		"pivot": {"x":0,"y":0}
 	}
 },
 "meta": {
 	"image": "objects.png",
 	"format": "RGBA8888",
-	"size": {"w":251,"h":402},
+	"size": {"w":251,"h":518},
 	"scale": "1"
 }
 }

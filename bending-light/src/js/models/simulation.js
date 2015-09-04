@@ -131,7 +131,30 @@ define(function (require, exports, module) {
 
         getHeight: function() {
             return Constants.MODEL_HEIGHT;
-        }
+        },
+
+        /**
+         * Returns topmost light ray at the specified position or null if there is no
+         *   ray at that position.
+         */
+        getRayAt: function(position) {
+            var rays = this.rays.slice();
+
+            // Sort rays by zIndex so the higher z-indexes come first so we hit the ones on top
+            rays.sort(function(a, b) {
+                return b.zIndex - a.zIndex;
+            });
+
+            var ray;
+            for (var i = 0; i < rays.length; i++) {
+                ray = rays[i];
+                if (ray.contains(position, this.laser.get('wave'))) {
+                    return ray;
+                }
+            }
+
+            return null;
+        },
 
     }, {
 

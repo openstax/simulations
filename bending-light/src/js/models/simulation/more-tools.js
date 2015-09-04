@@ -8,6 +8,7 @@ define(function (require, exports, module) {
 
     var IntroSimulation = require('models/simulation/intro');
     var WaveSensor      = require('models/wave-sensor');
+    var VelocitySensor  = require('models/velocity-sensor');
 
     /**
      * Constants
@@ -38,6 +39,10 @@ define(function (require, exports, module) {
                 probe1Position: new Vector2(w * -0.027, h *  0.039),
                 probe2Position: new Vector2(w *  0.027, h *  0.039),
             });
+
+            this.velocitySensor = new VelocitySensor({
+                position: new Vector2(w * -0.105, h * -0.15)
+            });
         },
 
         _update: function(time, deltaTime) {
@@ -45,6 +50,8 @@ define(function (require, exports, module) {
 
             this.waveSensor.addProbe1Sample(this.getWaveValue(this.waveSensor.get('probe1Position')));
             this.waveSensor.addProbe2Sample(this.getWaveValue(this.waveSensor.get('probe2Position')));
+
+            this.velocitySensor.set('velocity', this.getVelocity(this.velocitySensor.get('position')));
         },
 
     });
