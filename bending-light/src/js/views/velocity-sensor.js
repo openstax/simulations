@@ -37,7 +37,8 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.arrowColor = Colors.parseHex('#000');
-            this.arrowRotationTarget = -Math.PI * 2.5;
+            this.defaultArrowRotation =  -Math.PI * 1.5
+            this.arrowRotationTarget = this.defaultArrowRotation;
             this.rotationSpeed = Math.PI * 6; // Radians per second
 
             // Cached objects
@@ -75,9 +76,20 @@ define(function(require) {
             ring.anchor.x = 0.5;
             ring.anchor.y = 0.5;
 
+            var readout = new PIXI.Text('', {
+                font: '18px Helvetica Neue',
+                fill: '#000'
+            });
+            readout.x = Math.floor(panel.width  *  (47 / 160));
+            readout.y = Math.floor(panel.height * (-45 / 120) - readout.height * 0.4);
+            readout.anchor.x = 1;
+            readout.alpha = 0.7;
+            this.readout = readout;
+
             this.displayObject.addChild(panel);
             this.displayObject.addChild(arrow);
             this.displayObject.addChild(ring);
+            this.displayObject.addChild(readout);
 
             this.displayObject.buttonMode = true;
 
@@ -97,9 +109,11 @@ define(function(require) {
         updateVelocity: function(model, velocity) {
             if (velocity) {
                 this.setArrowRotationTarget(-velocity.angle());
+                this.readout.text = (velocity.length() / Constants.SPEED_OF_LIGHT).toFixed(2) + ' c';
             }
             else {
-                this.setArrowRotationTarget(-Math.PI / 2);
+                this.setArrowRotationTarget(this.defaultArrowRotation);
+                this.readout.text = '—';
             }
         },
 

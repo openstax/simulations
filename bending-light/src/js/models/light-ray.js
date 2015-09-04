@@ -237,7 +237,7 @@ define(function (require) {
          */
         contains: function(position, waveMode) {
             // If it's in the opposite medium, it's not valid anyway
-            if (waveMode && this.oppositeMediumShape.contains(position))
+            if (this.oppositeMediumShape.contains(position))
                 return false;
             
             // Otherwise, we just check to make sure it's on the line (or within 

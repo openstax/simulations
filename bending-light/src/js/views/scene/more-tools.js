@@ -57,7 +57,7 @@ define(function(require) {
                 model: this.simulation.velocitySensor,
                 mvt: this.mvt
             });
-            //this.velocitySensorView.hide();
+            this.velocitySensorView.hide();
 
             this.topLayer.addChild(this.velocitySensorView.displayObject);
         },
