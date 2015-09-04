@@ -145,14 +145,24 @@ define(function(require) {
             var plotWidth  = this.body.width  * (170 / 200);
             var plotHeight = this.body.height *  (97 / 140);
 
+            this.plotMask = new PIXI.Graphics();
+            this.plotMask.x = plotX;
+            this.plotMask.y = plotY;
+            this.plotMask.beginFill();
+            this.plotMask.drawRect(0, 0, plotWidth, plotHeight);
+            this.plotMask.endFill();
+
             this.graph1 = new PIXI.Graphics();
             this.graph1.x = plotX;
             this.graph1.y = plotY;
+            this.graph1.mask = this.plotMask;
 
             this.graph2 = new PIXI.Graphics();
             this.graph2.x = plotX;
             this.graph2.y = plotY;
+            this.graph2.mask = this.plotMask;
 
+            this.body.addChild(this.plotMask);
             this.body.addChild(this.graph1);
             this.body.addChild(this.graph2);
 
