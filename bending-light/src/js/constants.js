@@ -37,7 +37,7 @@ define(function (require) {
     Constants.MODEL_WIDTH = Constants.CHARACTERISTIC_LENGTH * 62;
     Constants.MODEL_HEIGHT = Constants.MODEL_WIDTH * 0.7;
 
-
+    Constants.METERS_TO_NANOMETERS = 1e9;
 
     // Materials
     Constants.DEFAULT_LASER_DISTANCE_FROM_PIVOT = 8.125E-6;
@@ -48,12 +48,12 @@ define(function (require) {
 
     // Wavelengths to colors
     Constants.wavelengthToHex = function(wavelength, returnHexInteger) {
-        var nm = wavelength * 1E9; // Convert to nanometers
+        var nm = wavelength * Constants.METERS_TO_NANOMETERS; // Convert to nanometers
         return WavelengthColors.nmToHex(nm, returnHexInteger);
     };
 
     Constants.wavelengthToRgba = function(wavelength, alpha) {
-        var nm = wavelength * 1E9; // Convert to nanometers
+        var nm = wavelength * Constants.METERS_TO_NANOMETERS; // Convert to nanometers
         return WavelengthColors.nmToRgba(nm, alpha);
     };
 

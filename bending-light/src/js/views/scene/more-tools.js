@@ -44,7 +44,7 @@ define(function(require) {
                 model: this.simulation.waveSensor,
                 mvt: this.mvt
             });
-            //this.waveSensorView.hide();
+            this.waveSensorView.hide();
 
             this.topLayer.addChild(this.waveSensorView.displayObject);
         },
