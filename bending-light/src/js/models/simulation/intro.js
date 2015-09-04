@@ -277,7 +277,7 @@ define(function (require, exports, module) {
          * Responds to changes in mediums by telling the simulation to update
          */
         mediumChanged: function() {
-            this.updateOnNextFrame = true;
+            this.updateOnNextFrame();
         }
 
     });
