@@ -82,9 +82,7 @@ define(function(require) {
         getVelocitySensorIcon: function() {
             var mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), 1);
 
-            var velocitySensor = new VelocitySensor({
-                position:   new Vector2(0, 0)
-            });
+            var velocitySensor = new VelocitySensor();
 
             var velocitySensorView = new VelocitySensorView({
                 model: velocitySensor,
@@ -98,6 +96,9 @@ define(function(require) {
             IntroSceneView.prototype._update.apply(this, arguments);
 
             this.waveSensorView.drawGraphs();
+
+            if (!paused)
+                this.velocitySensorView.update(time, deltaTime);
         },
 
     });

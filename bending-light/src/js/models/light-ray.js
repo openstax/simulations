@@ -41,6 +41,7 @@ define(function (require) {
         this.tail       = new Vector2();
         this.vector     = new Vector2();
         this.unitVector = new Vector2();
+        this.velocity   = new Vector2();
         this._vec       = new Vector2();
 
         this._line = {
@@ -280,7 +281,7 @@ define(function (require) {
         },
 
         getVelocityVector: function() {
-            return this._vec
+            return this.velocity
                 .set(this.unitVector)
                 .scale(this.getSpeed());
         },
