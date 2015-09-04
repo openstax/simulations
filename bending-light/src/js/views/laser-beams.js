@@ -169,7 +169,7 @@ define(function(require) {
                     .set(vector)
                     .normalize()
                     .scale(this.mvt.modelToViewDeltaX((partialPeriodOffset - 1) * rays[i].getWavelength()));
-                //console.log(partialPeriodOffset, this.mvt.modelToViewDeltaX(-partialPeriodOffset * rays[i].getWavelength()));
+
                 var x0 = p0.x + phaseOffset.x;
                 var y0 = p0.y + phaseOffset.y;
                 var gradient = ctx.createLinearGradient(x0, y0, x0 + vector.x, y0 + vector.y);
@@ -232,18 +232,9 @@ define(function(require) {
             // Clip any points that go off the screen
             if (!this.pointVisible(p0) && !this.pointVisible(p1)) {
                 points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);
-                
-                var dist00 = points[0].distance(p0);
-                var dist01 = points[0].distance(p1);
 
-                if (dist00 < dist01) {
-                    p0.set(points[0]);
-                    p1.set(points[1]);
-                }
-                else {
-                    p0.set(points[1]);
-                    p1.set(points[0]);
-                }
+                p0.set(points[1]);
+                p1.set(points[0]);
             }
             else if (!this.pointVisible(p0)) {
                 points = this.viewportClippingRect.lineIntersectionPoints(p0.x, p0.y, p1.x, p1.y);

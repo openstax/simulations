@@ -111,9 +111,6 @@ define(function (require, exports, module) {
             // Update the light rays' running time for the waves
             for (var i = 0; i < this.rays.length; i++)
                 this.rays[i].setTime(this.simTime);
-
-            // if (this.rays.length)
-            //     console.log(this.rays[0].getTime(), this.rays[0].getAngularFrequency(), this.rays[0].getSpeed(), this.rays[0].getWavelength());
         },
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
