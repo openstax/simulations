@@ -2,8 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
-    var Pool     = require('object-pool');
+    var Pool = require('object-pool');
 
     var Vector2 = require('common/math/vector2');
     

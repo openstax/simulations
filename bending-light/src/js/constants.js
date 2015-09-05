@@ -15,6 +15,7 @@ define(function (require) {
     
     Constants.SPEED_OF_LIGHT = 2.99792458E8;
     Constants.WAVELENGTH_RED = 650E-9;
+    Constants.WHITE_LIGHT = 1;
 
     // To come up with a good time scale dt, use lambda = v/f.  
     // For lambda = RED_WAVELENGTH and C=SPEED_OF_LIGHT, we have f=4.612E14

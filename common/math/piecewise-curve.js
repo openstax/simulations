@@ -47,6 +47,7 @@ define(function (require) {
 
         // Cached bounds rectangle
         this._bounds = new Rectangle();
+        this._point  = new Vector2();
     };
 
     /**
@@ -211,6 +212,17 @@ define(function (require) {
             this._scale[4] = y !== undefined ? y : x;
             this.transform(this._scale);
             return this;
+        },
+
+        length: function() {
+            return this.index;
+        },
+
+        at: function(index) {
+            return this._point.set(
+                this.xPoints[index],
+                this.yPoints[index]
+            );
         },
 
         /**
