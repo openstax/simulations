@@ -48,7 +48,7 @@ define(function (require) {
                     edges[i][0].x, edges[i][0].y,
                     edges[i][1].x, edges[i][1].y,
                     tail.x,        tail.y,
-                    tail.x + directionUnitVector.x, tail.y + directionUnitVector.y
+                    tail.x + direction.x, tail.y + direction.y
                 );
 
                 if (intersection && intersection instanceof Vector2) {
@@ -56,7 +56,7 @@ define(function (require) {
                     //   the incoming ray
                     var normal1 = this._normal1.set(edges[i][1]).sub(edges[i][0]).rotate(+Math.PI / 2).normalize();
                     var normal2 = this._normal2.set(edges[i][1]).sub(edges[i][0]).rotate(-Math.PI / 2).normalize();
-                    var unitNormal = directionUnitVector.dot(normal1) < 0 ? normal1 : normal2;
+                    var unitNormal = direction.dot(normal1) < 0 ? normal1 : normal2;
 
                     // Add to the list of intersections
                     intersections.push(Intersection.create(unitNormal, intersection));
