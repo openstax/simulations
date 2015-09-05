@@ -41,7 +41,7 @@ define(function (require) {
          * Compute the intersections of the specified ray with this polygon's edges
          */
         getIntersections: function(incidentRay) {
-
+            return this.shape.getIntersections(incidentRay);
         },
 
         /**
