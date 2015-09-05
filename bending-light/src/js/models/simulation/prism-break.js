@@ -13,6 +13,10 @@ define(function (require, exports, module) {
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
     var Ray                    = require('models/ray');
+    var Polygon                = require('models/shape/polygon');
+    var Circle                 = require('models/shape/circle');
+    var ShapeIntersection      = require('models/shape/shape-intersection');
+    var ShapeDifference        = require('models/shape/shape-difference');
 
     /**
      * Constants
@@ -32,9 +36,83 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
+            this.initPrismPrototypes();
 
-            
+            BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
+        },
+
+        initPrismPrototypes: function() {
+            var prisms = [];
+
+            var a = Constants.CHARACTERISTIC_LENGTH * 10; // characteristic length scale
+            var b = a / 4; // characteristic length scale
+
+            // Square
+            prisms.push(new Prism({
+                referencePointIndex: 3, // Attach at bottom right
+                points: [
+                    new Vector2(),
+                    new Vector2(0, a),
+                    new Vector2(a, a),
+                    new Vector2(a, 0)
+                ]
+            }));
+
+            // Triangle
+            prisms.push(new Prism({
+                referencePointIndex: 1, // Attach at bottom right
+                points: [
+                    new Vector2(),
+                    new Vector2(a, 0),
+                    new Vector2(a / 2, a * sqrt(3) / 2)
+                ]
+            }));
+
+            // Trapezoid
+            prisms.push(new Prism({
+                referencePointIndex: 1, // Attach at bottom right
+                points: [
+                    new Vector2(),
+                    new Vector2(a, 0),
+                    new Vector2(a / 2 + b, a * sqrt(3) / 2),
+                    new Vector2(a / 2 - b, a * sqrt(3) / 2)
+                ]
+            }));
+
+            var radius = a / 2;
+
+            // Continuous Circle
+            prisms.push(new Prism({
+                shape: new Circle(radius)
+            });
+
+            // Continuous Semicircle
+            prisms.push(new Prism({
+                shape: new ShapeIntersection(
+                    new Circle(radius), 
+                    new Polygon([
+                        new Vector2(0,        radius),
+                        new Vector2(0,       -radius),
+                        new Vector2(-radius, -radius),
+                        new Vector2(-radius,  radius)
+                    ], 1 /* Attach at bottom right */)
+                )
+            }));
+
+            // Continuous Diverging Lens
+            prisms.push(new Prism({
+                shape: new ShapeDifference(
+                    new Polygon([
+                        new Vector2(0,                    -radius),
+                        new Vector2(radius * (0.6 / 0.5), -radius),
+                        new Vector2(radius * (0.6 / 0.5),  radius),
+                        new Vector2(0,                     radius)
+                    ], 1 /* Attach at bottom right */),
+                    new Circle(radius)
+                )
+            }));
+
+            this.prismPrototypes = prisms;
         },
 
         /**

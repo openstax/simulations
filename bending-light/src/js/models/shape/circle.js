@@ -13,7 +13,7 @@ define(function (require) {
     /**
      * 
      */
-    var Circle = function() {
+    var Circle = function(radius) {
         Shape.apply(this, arguments);
 
         this.radius = radius;
