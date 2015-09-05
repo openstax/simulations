@@ -19,11 +19,6 @@ define(function (require) {
     _.extend(Shape.prototype, {
 
         /**
-         * Translates the shape
-         */
-        translate: function(dx, dy) {},
-
-        /**
          * Rotates the shape
          */
         rotate: function(radians) {},
@@ -31,7 +26,7 @@ define(function (require) {
         /**
          * Compute the intersections of the specified ray with this polygon's edges
          */
-        getIntersections: function(ray) {},
+        getIntersections: function(tail, direction) {},
 
         /**
          * Returns a rectangle representing the bounds of the shape

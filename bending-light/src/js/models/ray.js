@@ -64,6 +64,13 @@ define(function (require) {
          */
         getBaseWavelength: function() {
             return Constants.SPEED_OF_LIGHT / this.frequency;
+        },
+
+        /**
+         * Releases this instance to the object pool.
+         */
+        destroy: function() {
+            pool.remove(this);
         }
 
     });

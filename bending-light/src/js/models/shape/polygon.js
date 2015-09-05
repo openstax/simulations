@@ -30,13 +30,6 @@ define(function (require) {
     _.extend(Polygon.prototype, Shape.prototype, {
 
         /**
-         * Translates the shape
-         */
-        translate: function(dx, dy) {
-            this.piecewiseCurve.translate(dx, dy);
-        },
-
-        /**
          * Rotates the shape
          */
         rotate: function(radians) {
@@ -46,7 +39,7 @@ define(function (require) {
         /**
          * Compute the intersections of the specified ray with this polygon's edges
          */
-        getIntersections: function(ray) {
+        getIntersections: function(tail, direction) {
             var intersections = [];
             var edges = this.getEdges();
             for (var i = 0; i < edges.length; i++) {
@@ -54,8 +47,8 @@ define(function (require) {
                 var intersection = LineIntersection.lineIntersection(
                     edges[i][0].x, edges[i][0].y,
                     edges[i][1].x, edges[i][1].y,
-                    ray.tail.x,    ray.tail.y,
-                    ray.tail.x + ray.directionUnitVector.x, ray.tail.y + ray.directionUnitVector.y
+                    tail.x,        tail.y,
+                    tail.x + directionUnitVector.x, tail.y + directionUnitVector.y
                 );
 
                 if (intersection && intersection instanceof Vector2) {
@@ -63,7 +56,7 @@ define(function (require) {
                     //   the incoming ray
                     var normal1 = this._normal1.set(edges[i][1]).sub(edges[i][0]).rotate(+Math.PI / 2).normalize();
                     var normal2 = this._normal2.set(edges[i][1]).sub(edges[i][0]).rotate(-Math.PI / 2).normalize();
-                    var unitNormal = ray.directionUnitVector.dot(normal1) < 0 ? normal1 : normal2;
+                    var unitNormal = directionUnitVector.dot(normal1) < 0 ? normal1 : normal2;
 
                     // Add to the list of intersections
                     intersections.push(Intersection.create(unitNormal, intersection));
@@ -112,7 +105,9 @@ define(function (require) {
         /**
          * Returns whether the shape contains a given point
          */
-        contains: function(point) {}
+        contains: function(point) {
+            return this.piecewiseCurve.contains(point);
+        }
 
     });
 

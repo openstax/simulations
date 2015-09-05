@@ -22,17 +22,14 @@ define(function (require) {
                 this.shape = new Polygon(options.points, options.referencePointIndex);
             
             this._point = new Vector2();
-
-            this.on('change:position', this.positionChanged);
         },
 
         /**
          * Returns whether a point falls within the prism's shape
          */
         contains: function(point) {
-            // Translate the point because the shape is centered on its
-            //   own pivot point which should correspond to the position.
-            point = this._point.set(point).add(this.get('position'));
+            // Convert to the shape's local coordinates
+            point = this.getPointRelativeToPosition(point);
 
             return this.shape.contains(point);
         },
@@ -41,7 +38,18 @@ define(function (require) {
          * Compute the intersections of the specified ray with this polygon's edges
          */
         getIntersections: function(incidentRay) {
-            return this.shape.getIntersections(incidentRay);
+            // Convert to the shape's local coordinates
+            var tail = this.getPointRelativeToPosition(incidentRay.tail);
+            return this.shape.getIntersections(tail, incidentRay.directionUnitVector);
+        },
+
+        /**
+         * The shape is always centered on (0, 0), which is its pivot point,
+         *   so to do checks in global space, we need to translate it 
+         *   according to the prism's position.
+         */
+        getPointRelativeToPosition: function(point) {
+            return this._point.set(point).sub(this.get('position'));
         },
 
         /**
@@ -60,10 +68,6 @@ define(function (require) {
          */
         rotate: function(rotate) {
             this.shape.rotate(rotate);
-        },
-
-        positionChanged: function(prism, position) {
-            this.shape.translate(position);
         }
 
     }, Prism);

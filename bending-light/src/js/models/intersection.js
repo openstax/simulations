@@ -54,6 +54,13 @@ define(function (require) {
 
         getUnitNormal: function() {
             return this.unitNormal;
+        },
+
+        /**
+         * Releases this instance to the object pool.
+         */
+        destroy: function() {
+            pool.remove(this);
         }
 
     });

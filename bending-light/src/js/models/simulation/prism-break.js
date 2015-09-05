@@ -66,6 +66,8 @@ define(function (require, exports, module) {
             this._vReflect = new Vector2();
             this._vRefract = new Vector2();
 
+            this._intersectionCompare = this._intersectionCompare.bind(this);
+
             this.listenTo(this.environment, 'change',           this.mediumChanged);
             this.listenTo(this.prisms,      'change',           this.prismChanged);
             this.listenTo(this.prisms,      'add remove reset', this.prismChanged);
@@ -166,7 +168,7 @@ define(function (require, exports, module) {
             var L = incidentRay.directionUnitVector;
             var n1 = incidentRay.mediumIndexOfRefraction;
             var wavelengthInN1 = incidentRay.wavelength / n1;
-            if (intersection !== null) {
+            if (intersection) {
                 // There was an intersection, so reflect and refract the light
 
                 // List the intersection in the model
@@ -196,6 +198,9 @@ define(function (require, exports, module) {
                 var scratchN = this._scratchN;
                 var scratchP = this._scratchP;
                 var scratchU = this._scratchU;
+
+                // Clean up; we don't need this anymore
+                intersection.destroy();
 
                 // Compute the output rays; see http://en.wikipedia.org/wiki/Snell's_law#Vector_form
                 var cosTheta1 = n.dot(scratchL.set(L).scale(-1));
@@ -259,6 +264,35 @@ define(function (require, exports, module) {
          */
         getIntersection: function(incidentRay, prisms) {
             throw 'Not yet implemented';
+            // Get all the intersections
+            var allIntersections = [];
+            for (var i = 0; i < this.prisms.length; i++)
+                allIntersections.concat(this.prisms.at(i).getIntersections(incidentRay));
+
+            if (allIntersections.length) {
+                // Get the closest one (which would be hit first)
+                this._incidentRay = incidentRay;
+                allIntersections.sort(this._intersectionCompare);
+
+                var keeper = allIntersections[0];
+                this.destroyIntersections(allIntersections, keeper);
+
+                return keeper;
+            }
+            else {
+                return null;
+            }
+        },
+
+        _intersectionCompare: function(i1, i2) {
+            return i1.getPoint().distance(this._incidentRay.tail) - i2.getPoint().distance(this._incidentRay.tail);
+        },
+
+        destroyIntersections: function(intersections, except) {
+            for (var i = 0; i < intersections.length; i++) {
+                if (intersections[i] !== except)
+                    intersections[i].destroy();
+            }
         },
 
         /**
