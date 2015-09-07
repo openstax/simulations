@@ -43,12 +43,14 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.mediumLayer    = new PIXI.Container();
             this.bottomLayer    = new PIXI.Container();
             this.lightRayLayer  = new PIXI.Container();
             this.lightWaveLayer = new PIXI.Container();
             this.middleLayer    = new PIXI.Container();
             this.topLayer       = new PIXI.Container();
 
+            this.stage.addChild(this.mediumLayer);
             this.stage.addChild(this.bottomLayer);
             this.stage.addChild(this.lightRayLayer);
             this.stage.addChild(this.lightWaveLayer);

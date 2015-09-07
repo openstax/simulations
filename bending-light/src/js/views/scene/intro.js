@@ -29,9 +29,6 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.mediumLayer = new PIXI.Container();
-            this.stage.addChild(this.mediumLayer);
-
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMediumViews();

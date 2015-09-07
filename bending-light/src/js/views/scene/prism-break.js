@@ -31,14 +31,41 @@ define(function(require) {
         initGraphics: function() {
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initMediumView();
+            this.initProtractorView();
+        },
+
+        initMediumView: function() {
+            this.environmentView = new MediumView({ model: this.simulation.environment, mvt: this.mvt });
+
+            this.mediumLayer.addChild(this.environmentView.displayObject);
+        },
+
+        initProtractorView: function() {
+            this.protractorView = new ProtractorView({
+                mvt: this.mvt
+            });
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+
+            this.middleLayer.addChild(this.protractorView.displayObject);
         },
 
         getPrismIcons: function() {
             var icons = [];
 
-            
+
 
             return icons;
+        },
+
+        showProtractor: function() {
+            this.protractorView.show();
+        },
+
+        hideProtractor: function() {
+            this.protractorView.hide();
         }
 
     });

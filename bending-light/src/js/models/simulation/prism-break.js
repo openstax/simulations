@@ -142,15 +142,16 @@ define(function (require, exports, module) {
                 mediumProperties: MediumPropertiesPresets.GLASS
             });
 
-            this._from   = new Vector2();
-            this._offset = new Vector2();
-            this._point  = new Vector2();
-            this._scratchL = new Vector2();
-            this._scratchN = new Vector2();
-            this._scratchP = new Vector2();
-            this._scratchU = new Vector2();
-            this._vReflect = new Vector2();
-            this._vRefract = new Vector2();
+            this._from       = new Vector2();
+            this._offset     = new Vector2();
+            this._point      = new Vector2();
+            this._scratchVec = new Vector2();
+            this._scratchL   = new Vector2();
+            this._scratchN   = new Vector2();
+            this._scratchP   = new Vector2();
+            this._scratchU   = new Vector2();
+            this._vReflect   = new Vector2();
+            this._vRefract   = new Vector2();
 
             this._intersectionCompare = this._intersectionCompare.bind(this);
 
@@ -330,7 +331,7 @@ define(function (require, exports, module) {
                 // No intersection, so the light ray should just keep going
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
-                    incidentRay.tail.add(incidentRay.directionUnitVector), // 1 meter long ray (long enough to seem like infinity for the sim which is at nm scale)
+                    this._scratchVec.set(incidentRay.tail).add(incidentRay.directionUnitVector), // 1 meter long ray (long enough to seem like infinity for the sim which is at nm scale)
                     n1, 
                     wavelengthInN1, 
                     incidentRay.power, 
