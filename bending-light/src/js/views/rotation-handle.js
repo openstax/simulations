@@ -26,7 +26,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 radius:  6,
-                length: 12,
+                length: 16,
                 lineWidth: 2
             }, options);
 
@@ -34,16 +34,18 @@ define(function(require) {
             this.length = options.length;
             this.lineWidth = options.lineWidth;
 
-            this.idleColor  = Colors.parseHex('#000');
-            this.hoverColor = Colors.parseHex('#000');
+            this.idleColor  = Colors.parseHex('#81E4AA');
+            this.idleAlpha  = 0.4;
+            this.hoverColor = this.idleColor;
+            this.hoverAlpha = 1;
             this.fillAlpha = 0.7;
 
             this.initGraphics();
         },
 
         initGraphics: function() {
-            this.idleHandle  = this.createRotationHandle(this.idleColor);
-            this.hoverHandle = this.createRotationHandle(this.hoverColor);
+            this.idleHandle  = this.createRotationHandle(this.idleColor,  this.idleAlpha);
+            this.hoverHandle = this.createRotationHandle(this.hoverColor, this.hoverAlpha);
 
             this.unhover();
 
@@ -51,15 +53,15 @@ define(function(require) {
             this.displayObject.addChild(this.hoverHandle);
         },
 
-        createRotationHandle: function(color) {
+        createRotationHandle: function(color, alpha) {
             var handle = new PIXI.Graphics();
 
-            handle.lineStyle(this.lineWidth, color, 1);
+            handle.lineStyle(this.lineWidth, color, alpha);
             handle.moveTo(0, 0);
             handle.lineTo(this.length - this.radius, 0);
             handle.drawCircle(this.length, 0, this.radius);
 
-            handle.beginFill(color, this.fillAlpha);
+            handle.beginFill(color, this.fillAlpha * alpha);
             handle.drawCircle(this.length, 0, this.radius);
             handle.endFill();
 

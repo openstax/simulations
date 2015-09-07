@@ -66,6 +66,7 @@ define(function(require) {
 
             // Cached objects
             this._vec = new Vector2();
+            this._dragOffset = new PIXI.Point();
 
             this.listenTo(this.model, 'change:on', this.onChanged);
             this.listenTo(this.model, 'change:emissionPoint', this.update);
@@ -255,16 +256,20 @@ define(function(require) {
 
         dragTranslateAreaStart: function(event) {
             if (!this.rotateOnly) {
+                this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
                 this.draggingTranslateArea = true;    
             }
         },
 
         dragTranslateArea: function(event) {
             if (this.draggingTranslateArea) {
-                var x = event.data.global.x - this.displayObject.x;
-                var y = event.data.global.y - this.displayObject.y;
+                var dx = event.data.global.x - this.displayObject.x - this.dragOffset.x;
+                var dy = event.data.global.y - this.displayObject.y - this.dragOffset.y;
                 
-                
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                this.model.translate(mdx, mdy);
             }
         },
 

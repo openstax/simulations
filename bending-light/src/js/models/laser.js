@@ -96,8 +96,8 @@ define(function (require) {
         },
 
         translate: function(dx, dy) {
-            this.translateEmissionPoint(dx, dy);
             this.translatePivotPoint(dx, dy);
+            this.translateEmissionPoint(dx, dy);
         },
 
         translateEmissionPoint: function(x, y) {
@@ -115,7 +115,6 @@ define(function (require) {
 
         setEmissionPoint: function(x, y) {
             var oldEmissionPoint = this.get('emissionPoint');
-            //console.log(vectorPool.list.length);
             
             if (x instanceof Vector2)
                 this.set('emissionPoint', vectorPool.create().set(x));
