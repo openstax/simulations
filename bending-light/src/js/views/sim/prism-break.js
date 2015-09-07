@@ -5,8 +5,9 @@ define(function(require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var BendingLightSimulation = require('models/simulation');
-    var BendingLightSimView    = require('views/sim');
+    var PrismBreakSimulation = require('models/simulation/prism-break');
+
+    var BendingLightSimView  = require('views/sim');
 
     var simHtml = require('text!templates/sim/prism-break.html');
 
@@ -36,7 +37,7 @@ define(function(require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new BendingLightSimulation();
+            this.simulation = new PrismBreakSimulation();
         },
 
         render: function() {

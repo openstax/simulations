@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Shape        = require('models/polygon');
+    var Shape        = require('models/shape');
     var Intersection = require('models/intersection');
 
     /**
@@ -38,7 +38,7 @@ define(function (require) {
         },
 
         /**
-         * Compute the intersections of the specified ray with this polygon's edges
+         * Compute the intersections of the specified ray
          */
         getIntersections: function(tail, direction) {
             var i;

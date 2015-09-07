@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Shape        = require('models/polygon');
+    var Shape        = require('models/shape');
     var Intersection = require('models/intersection');
 
     /**
@@ -12,6 +12,9 @@ define(function (require) {
      * 
      * CSG intro: https://secure.wikimedia.org/wikipedia/en/wiki/Constructive_solid_geometry
      * Rationale for intersection: http://groups.csail.mit.edu/graphics/classes/6.838/F01/lectures/SmoothSurfaces/0the_s040.html
+     *
+     * Note to self: TODO: When drawing these, Pixi v3 can now do alpha masks, so we should be able to draw
+     *   a color to a canvas and clear a section of it to create an inverted mask.
      */
     var ShapeDifference = function(a, b) {
         Shape.apply(this, arguments);
@@ -34,7 +37,7 @@ define(function (require) {
         },
 
         /**
-         * Compute the intersections of the specified ray with this polygon's edges
+         * Compute the intersections of the specified ray
          */
         getIntersections: function(tail, direction) {
             var i;

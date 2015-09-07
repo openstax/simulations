@@ -13,6 +13,7 @@ define(function (require, exports, module) {
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
     var Ray                    = require('models/ray');
+    var Prism                  = require('models/prism');
     var Polygon                = require('models/shape/polygon');
     var Circle                 = require('models/shape/circle');
     var ShapeIntersection      = require('models/shape/shape-intersection');
@@ -48,7 +49,7 @@ define(function (require, exports, module) {
             var b = a / 4; // characteristic length scale
 
             // Square
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 referencePointIndex: 3, // Attach at bottom right
                 points: [
                     new Vector2(),
@@ -59,35 +60,35 @@ define(function (require, exports, module) {
             }));
 
             // Triangle
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
                     new Vector2(),
                     new Vector2(a, 0),
-                    new Vector2(a / 2, a * sqrt(3) / 2)
+                    new Vector2(a / 2, a * Math.sqrt(3) / 2)
                 ]
             }));
 
             // Trapezoid
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
                     new Vector2(),
                     new Vector2(a, 0),
-                    new Vector2(a / 2 + b, a * sqrt(3) / 2),
-                    new Vector2(a / 2 - b, a * sqrt(3) / 2)
+                    new Vector2(a / 2 + b, a * Math.sqrt(3) / 2),
+                    new Vector2(a / 2 - b, a * Math.sqrt(3) / 2)
                 ]
             }));
 
             var radius = a / 2;
 
             // Continuous Circle
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 shape: new Circle(radius)
-            });
+            }));
 
             // Continuous Semicircle
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 shape: new ShapeIntersection(
                     new Circle(radius), 
                     new Polygon([
@@ -100,7 +101,7 @@ define(function (require, exports, module) {
             }));
 
             // Continuous Diverging Lens
-            prisms.push(new Prism({
+            prisms.push(new Prism({}, {
                 shape: new ShapeDifference(
                     new Polygon([
                         new Vector2(0,                    -radius),

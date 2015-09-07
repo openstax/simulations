@@ -7,7 +7,7 @@ define(function (require) {
     var LineIntersection = require('common/math/line-intersection');
     var Vector2          = require('common/math/vector2');
 
-    var Shape        = require('models/polygon');
+    var Shape        = require('models/shape');
     var Intersection = require('models/intersection');
 
     /**
@@ -27,7 +27,7 @@ define(function (require) {
     _.extend(Circle.prototype, Shape.prototype, {
 
         /**
-         * Compute the intersections of the specified ray with this polygon's edges
+         * Compute the intersections of the specified ray with the circle
          */
         getIntersections: function(tail, direction) {
             // Find the intersections between the infinite ray's line (not a segment) and the circle

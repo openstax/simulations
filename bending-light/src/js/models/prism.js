@@ -7,6 +7,8 @@ define(function (require) {
     var PositionableObject = require('common/models/positionable-object');
     var Vector2            = require('common/math/vector2');
 
+    var Polygon = require('models/shape/polygon');
+
     /**
      * 
      */

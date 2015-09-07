@@ -8,7 +8,7 @@ define(function (require) {
     var LineIntersection = require('common/math/line-intersection');
     var Vector2          = require('common/math/vector2');
 
-    var Shape        = require('models/polygon');
+    var Shape        = require('models/shape');
     var Intersection = require('models/intersection');
 
     /**
