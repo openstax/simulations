@@ -10,13 +10,16 @@ define(function(require) {
     var range    = require('common/math/range');
     var Vector2  = require('common/math/vector2');
 
+    var RotationHandle = require('views/rotation-handle');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
     var RADIANS_TO_DEGREES = 180 / Math.PI;
 
     /**
-     * A view that represents a cannon model
+     * A view that represents the laser and can be moved and rotated
+     *   by the user to change the laser beam's direction and origin.
      */
     var LaserView = PixiView.extend({
 
@@ -171,6 +174,13 @@ define(function(require) {
             this.rotateArea = new PIXI.Container();
             this.rotateArea.buttonMode = true;
             this.rotateArea.defaultCursor = 'nesw-resize';
+
+            var rotationHandleView = new RotationHandle();
+            rotationHandleView.displayObject.x = -this.spriteWidth;
+            rotationHandleView.displayObject.rotation = Math.PI;
+            this.rotateArea.addChild(rotationHandleView.displayObject);
+
+            this.rotationFrame.addChild(this.rotateArea);
         },
 
         initButton: function() {
@@ -265,7 +275,6 @@ define(function(require) {
         },
 
         dragRotateAreaStart: function(event) {
-            this.previousPedestalY = event.data.global.y;
             this.draggingRotateArea = true;
         },
 
@@ -277,13 +286,11 @@ define(function(require) {
                 var mx = this.mvt.viewToModelX(x);
                 var my = this.mvt.viewToModelY(y);
                 var vector = this._vec.set(mx, my).sub(this.model.get('pivotPoint'));
-                this.model.setAngle(this.clampAngleFunction(vector.angle()));
 
-                // Vector2D modelPoint = new Vector2D( transform.viewToModel( event.event.getPositionRelativeTo( getParent().getParent() ) ) );
-                // Vector2D vector = modelPoint.minus( laser.pivot.get() );
-                // final double angle = vector.getAngle();
-                // double after = clampDragAngle.apply( angle );
-                // laser.setAngle( after );
+                if (this.clampAngleFunction)
+                    this.model.setAngle(this.clampAngleFunction(vector.angle()));
+                else
+                    this.model.setAngle(vector.angle());
             }
         },
 
@@ -294,8 +301,10 @@ define(function(require) {
         },
 
         translateAreaHover: function() {
-            this.translateAreaHovering = true;
-            this.translationArrows.visible = true;
+            if (!this.draggingRotateArea) {
+                this.translateAreaHovering = true;
+                this.translationArrows.visible = true;    
+            }
         },
 
         translateAreaUnhover: function() {
@@ -305,8 +314,10 @@ define(function(require) {
         },
 
         rotateAreaHover: function() {
-            this.rotateAreaHovering = true;
-            this.rotationArrows.visible = true;
+            if (!this.draggingTranslateArea) {
+                this.rotateAreaHovering = true;
+                this.rotationArrows.visible = true;
+            }
         },
         
         rotateAreaUnhover: function() {

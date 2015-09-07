@@ -12,6 +12,7 @@ define(function (require, exports, module) {
 
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
+    var LightRay               = require('models/light-ray');
     var Ray                    = require('models/ray');
     var Prism                  = require('models/prism');
     var Polygon                = require('models/shape/polygon');
@@ -37,6 +38,12 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                laserDistanceFromPivot: Constants.DEFAULT_LASER_DISTANCE_FROM_PIVOT * 0.9, 
+                laserAngle: Math.PI, 
+                topLeftQuadrant: false
+            }, options);
+
             this.initPrismPrototypes();
 
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
@@ -243,7 +250,7 @@ define(function (require, exports, module) {
                 return;
 
             // Check for an intersection
-            var intersection = this.getIntersection(incidentRay, prisms);
+            var intersection = this.getIntersection(incidentRay, this.prisms);
             var L = incidentRay.directionUnitVector;
             var n1 = incidentRay.mediumIndexOfRefraction;
             var wavelengthInN1 = incidentRay.wavelength / n1;
@@ -323,7 +330,7 @@ define(function (require, exports, module) {
                 // No intersection, so the light ray should just keep going
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
-                    incidentRay.tail.add(scratchU.set(incidentRay.directionUnitVector).scale(1)), // 1 meter long ray (long enough to seem like infinity for the sim which is at nm scale)
+                    incidentRay.tail.add(incidentRay.directionUnitVector), // 1 meter long ray (long enough to seem like infinity for the sim which is at nm scale)
                     n1, 
                     wavelengthInN1, 
                     incidentRay.power, 
@@ -342,7 +349,6 @@ define(function (require, exports, module) {
          *   in the play area and return it or return null.
          */
         getIntersection: function(incidentRay, prisms) {
-            throw 'Not yet implemented';
             // Get all the intersections
             var allIntersections = [];
             for (var i = 0; i < this.prisms.length; i++)
