@@ -29,6 +29,7 @@ define(function(require) {
 
         initialize: function(options) {
             this.name = options.name;
+            this.label = options.label || 'Material';
             this.simulation = options.simulation;
             
             this.listenTo(this.model, 'change:mediumProperties', this.materialChanged);
@@ -40,6 +41,7 @@ define(function(require) {
         render: function() {
             var data = {
                 name: this.name,
+                label: this.label,
                 mediums: _.map(MediumPropertiesPresets, function(preset, key) {
                     return {
                         name: preset.name,

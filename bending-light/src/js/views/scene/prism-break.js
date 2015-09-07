@@ -36,9 +36,9 @@ define(function(require) {
         },
 
         initMediumView: function() {
-            this.environmentView = new MediumView({ model: this.simulation.environment, mvt: this.mvt });
-
-            this.mediumLayer.addChild(this.environmentView.displayObject);
+            this.environmentGraphics = new PIXI.Graphics();
+            this.mediumLayer.addChild(this.environmentGraphics);
+            this.listenTo(this.simulation.environment, 'change:color', this.updateEnvironmentColor);
         },
 
         initProtractorView: function() {
@@ -50,6 +50,14 @@ define(function(require) {
             this.protractorView.hide();
 
             this.middleLayer.addChild(this.protractorView.displayObject);
+        },
+
+        updateEnvironmentColor: function(medium, color) {
+            var graphics = this.environmentGraphics;
+            graphics.clear();
+            graphics.beginFill(Colors.rgbToHexInteger(color.r, color.g, color.b), 1);
+            graphics.drawRect(0, 0, this.width, this.height);
+            graphics.endFill();
         },
 
         getPrismIcons: function() {
