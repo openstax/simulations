@@ -114,17 +114,29 @@ define(function(require) {
             graphics.lineStyle(1, outlineColor, 1);
             graphics.beginFill(color, 1);
 
+            this.drawShape(graphics, shape);
+
+            graphics.endFill();
+        },
+
+        drawShape: function(graphics, shape) {
             if (shape instanceof Circle) {
                 graphics.drawCircle(0, 0, this.mvt.modelToViewDeltaX(shape.radius));
             }
             else if (shape instanceof Polygon) {
                 graphics.drawPiecewiseCurve(this.mvt.modelToView(shape.piecewiseCurve));
             }
-            else {
-                graphics.drawRect(0, 0, 100, 100);
-            }
+            else if (shape instanceof ShapeIntersection) {
+                this.drawShape(graphics, shape.a);
 
-            graphics.endFill();
+                var mask = new PIXI.Graphics();
+                mask.beginFill();
+                this.drawShape(mask, shape.b);
+                mask.endFill();
+
+                graphics.mask = mask;
+                graphics.parent.addChild(mask);
+            }
         },
 
         updateMVT: function(mvt) {
