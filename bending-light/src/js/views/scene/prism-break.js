@@ -36,6 +36,14 @@ define(function(require) {
 
             this.initMediumView();
             this.initProtractorView();
+
+            var view = new PrismView({
+                mvt: this.mvt,
+                model: this.simulation.prismPrototypes[this.simulation.prismPrototypes.length - 1],
+                medium: this.simulation.prismMedium,
+                drawRotationHandle: false
+            });
+            this.stage.addChild(view.displayObject);
         },
 
         initMediumView: function() {

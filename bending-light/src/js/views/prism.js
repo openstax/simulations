@@ -19,6 +19,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     /**
      * 
      */
@@ -125,7 +127,8 @@ define(function(require) {
                 graphics.drawCircle(0, 0, this.mvt.modelToViewDeltaX(shape.radius));
             }
             else if (shape instanceof Polygon) {
-                graphics.drawPiecewiseCurve(this.mvt.modelToView(shape.piecewiseCurve));
+                var curve = this.mvt.modelToViewDelta(shape.piecewiseCurve);
+                graphics.drawPiecewiseCurve(curve);
             }
             else if (shape instanceof ShapeIntersection) {
                 this.drawShape(graphics, shape.a);
@@ -150,11 +153,13 @@ define(function(require) {
                     var width  = Math.floor(Math.abs(this.mvt.modelToViewDeltaX((bounds.x + bounds.w))) * 2);
                     var height = Math.floor(Math.abs(this.mvt.modelToViewDeltaY((bounds.y + bounds.h))) * 2);
                     var mask = createReverseCircleMask(radius, width, height);
+                    mask = Assets.createSprite('mask-test.png');
+                    mask.anchor.x = mask.anchor.y = 0.5;
 
                     if (graphics.mask)
                         graphics.mask.parent.removeChild(graphics.mask);
 
-                    // graphics.mask = mask;
+                    graphics.mask = mask;
                     graphics.parent.addChild(mask);
                 }
             }
