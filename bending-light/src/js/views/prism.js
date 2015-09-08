@@ -153,6 +153,7 @@ define(function(require) {
                     var width  = Math.floor(Math.abs(this.mvt.modelToViewDeltaX((bounds.x + bounds.w))) * 2);
                     var height = Math.floor(Math.abs(this.mvt.modelToViewDeltaY((bounds.y + bounds.h))) * 2);
                     var mask = createReverseCircleMask(radius, width, height);
+                    mask.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
 
                     if (graphics.mask)
                         graphics.mask.parent.removeChild(graphics.mask);

@@ -67,9 +67,9 @@ define(function (require) {
      */
     _.extend(PiecewiseCurve, {
 
-        fromPoints: function(points) {
+        fromPoints: function(points, closeSubcurve) {
             var curve = new PiecewiseCurve();
-            curve.addPoints(points);
+            curve.addPoints(points, closeSubcurve);
             return curve;
         },
 
@@ -113,15 +113,15 @@ define(function (require) {
             return this.index;
         },
 
-        addPoints: function(points, closeLineWhenFinished) {
+        addPoints: function(points, closeSubcurve) {
             if (points.length === 0)
                 return;
 
             this.moveTo(points[0].x, points[0].y);
-            for (var i = 0; i < points.length; i++)
+            for (var i = 1; i < points.length; i++)
                 this.lineTo(points[i].x, points[i].y);
 
-            if (closeLineWhenFinished || closeLineWhenFinished === undefined)
+            if (closeSubcurve || closeSubcurve === undefined)
                 this.close();
         },
 

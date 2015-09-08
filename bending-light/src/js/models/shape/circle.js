@@ -71,7 +71,7 @@ define(function (require) {
          * Returns whether the shape contains a given point
          */
         contains: function(point) {
-            return point.distance(center) <= this.radius;
+            return point.distance(0, 0) <= this.radius;
         }
 
     });

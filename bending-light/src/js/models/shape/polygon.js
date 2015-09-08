@@ -18,7 +18,7 @@ define(function (require) {
         Shape.apply(this, arguments);
 
         this.referencePointIndex = referencePointIndex;
-        this.piecewiseCurve = PiecewiseCurve.fromPoints(points);
+        this.piecewiseCurve = PiecewiseCurve.fromPoints(points, false);
 
         this._normal1 = new Vector2();
         this._normal2 = new Vector2();
@@ -41,6 +41,7 @@ define(function (require) {
          */
         getIntersections: function(tail, direction) {
             var intersections = [];
+
             var edges = this.getEdges();
             for (var i = 0; i < edges.length; i++) {
                 // Get the intersection if there is one
@@ -62,6 +63,8 @@ define(function (require) {
                     intersections.push(Intersection.create(unitNormal, intersection));
                 }
             }
+
+            return intersections;
         },
 
         /**
@@ -72,7 +75,7 @@ define(function (require) {
             if (!this._edges) {
                 this._edges = [];
                 for (var k = 0; k < this.piecewiseCurve.length(); k++)
-                    this._edges.push([]);
+                    this._edges.push([new Vector2(), new Vector2()]);
             }
 
             var edges = this._edges;
@@ -80,8 +83,10 @@ define(function (require) {
             for (var i = 0; i < piecewiseCurve.length(); i++) {
                 // Make sure to loop from the last point to the first point
                 var next = (i === piecewiseCurve.length() - 1) ? 0 : i + 1;
-                edges[i][0] = piecewiseCurve.at(i);
-                edges[i][1] = piecewiseCurve.at(next);
+                edges[i][0].x = piecewiseCurve.at(i).x;
+                edges[i][0].y = piecewiseCurve.at(i).y;
+                edges[i][1].x = piecewiseCurve.at(next).x;
+                edges[i][1].y = piecewiseCurve.at(next).y;
             }
 
             return edges;

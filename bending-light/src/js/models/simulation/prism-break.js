@@ -50,13 +50,13 @@ define(function (require, exports, module) {
         },
 
         initPrismPrototypes: function() {
-            var prisms = [];
+            var prismPrototypes = [];
 
             var a = Constants.CHARACTERISTIC_LENGTH * 10; // characteristic length scale
             var b = a / 4; // characteristic length scale
 
             // Square
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 referencePointIndex: 3, // Attach at bottom right
                 points: [
                     new Vector2(),
@@ -67,7 +67,7 @@ define(function (require, exports, module) {
             }));
 
             // Triangle
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
                     new Vector2(),
@@ -77,7 +77,7 @@ define(function (require, exports, module) {
             }));
 
             // Trapezoid
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
                     new Vector2(),
@@ -90,12 +90,12 @@ define(function (require, exports, module) {
             var radius = a / 2;
 
             // Continuous Circle
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 shape: new Circle(radius)
             }));
 
             // Continuous Semicircle
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 shape: new ShapeIntersection(
                     new Circle(radius), 
                     new Polygon([
@@ -108,7 +108,7 @@ define(function (require, exports, module) {
             }));
 
             // Continuous Diverging Lens
-            prisms.push(new Prism({}, {
+            prismPrototypes.push(new Prism({}, {
                 shape: new ShapeDifference(
                     new Polygon([
                         new Vector2(0,                    -radius),
@@ -120,7 +120,7 @@ define(function (require, exports, module) {
                 )
             }));
 
-            this.prismPrototypes = prisms;
+            this.prismPrototypes = prismPrototypes;
         },
 
         /**
@@ -145,6 +145,7 @@ define(function (require, exports, module) {
             this._from       = new Vector2();
             this._offset     = new Vector2();
             this._point      = new Vector2();
+            this._direction  = new Vector2();
             this._scratchVec = new Vector2();
             this._scratchL   = new Vector2();
             this._scratchN   = new Vector2();
@@ -158,6 +159,10 @@ define(function (require, exports, module) {
             this.listenTo(this.environment, 'change',           this.mediumChanged);
             this.listenTo(this.prisms,      'change',           this.prismChanged);
             this.listenTo(this.prisms,      'add remove reset', this.prismChanged);
+        },
+
+        createPrismFromPrototype: function(prototypeIndex) {
+            return this.prismPrototypes[prototypeIndex].clone();
         },
 
         addPrism: function(prism) {
@@ -263,7 +268,10 @@ define(function (require, exports, module) {
 
                 var pointOnOtherSide = this._point
                     .set(intersection.getPoint())
-                    .add(incidentRay.directionUnitVector.getInstanceOfMagnitude(1E-12));
+                    .add(this._direction
+                        .set(incidentRay.directionUnitVector)
+                        .scale(1E-12)
+                    );
 
                 var outputInsidePrism = false;
                 for (var i = 0; i < this.prisms.length; i++) {
@@ -352,9 +360,11 @@ define(function (require, exports, module) {
         getIntersection: function(incidentRay, prisms) {
             // Get all the intersections
             var allIntersections = [];
-            for (var i = 0; i < this.prisms.length; i++)
-                allIntersections.concat(this.prisms.at(i).getIntersections(incidentRay));
-
+            for (var i = 0; i < this.prisms.length; i++){
+                var intersections = this.prisms.at(i).getIntersections(incidentRay);
+                for (var j = 0; j < intersections.length; j++)
+                    allIntersections.push(intersections[j]);
+            }
             if (allIntersections.length) {
                 // Get the closest one (which would be hit first)
                 this._incidentRay = incidentRay;

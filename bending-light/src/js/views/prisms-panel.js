@@ -24,7 +24,7 @@ define(function(require) {
         template: _.template(html),
 
         events: {
-
+            'click .prism-icon' : 'iconClicked'
         },
 
         initialize: function(options) {
@@ -60,6 +60,12 @@ define(function(require) {
             this.$('.medium-controls-wrapper').append(this.mediumControlsView.el);
 
             return this;
+        },
+
+        iconClicked: function(event) {
+            var index = $(event.target).data('index');
+            var prism = this.simulation.createPrismFromPrototype(index);
+            this.simulation.addPrism(prism);
         }
 
     });

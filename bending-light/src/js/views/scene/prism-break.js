@@ -29,6 +29,10 @@ define(function(require) {
 
         initialize: function(options) {
             BendingLightSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.prisms, 'reset',  this.prismsReset);
+            this.listenTo(this.simulation.prisms, 'add',    this.prismAdded);
+            this.listenTo(this.simulation.prisms, 'remove', this.prismRemoved);
         },
 
         initGraphics: function() {
@@ -36,14 +40,7 @@ define(function(require) {
 
             this.initMediumView();
             this.initProtractorView();
-
-            var view = new PrismView({
-                mvt: this.mvt,
-                model: this.simulation.prismPrototypes[this.simulation.prismPrototypes.length - 1],
-                medium: this.simulation.prismMedium,
-                drawRotationHandle: false
-            });
-            this.stage.addChild(view.displayObject);
+            this.initPrisms();
         },
 
         initMediumView: function() {
@@ -61,6 +58,13 @@ define(function(require) {
             this.protractorView.hide();
 
             this.middleLayer.addChild(this.protractorView.displayObject);
+        },
+
+        initPrisms: function() {
+            this.prisms = new PIXI.Container();
+            this.prismViews = [];
+
+            this.bottomLayer.addChild(this.prisms);
         },
 
         updateEnvironmentColor: function(medium, color) {
@@ -90,6 +94,43 @@ define(function(require) {
             }
 
             return icons;
+        },
+
+        prismsReset: function(prisms) {
+            // Remove old prism views
+            for (var i = this.prismViews.length - 1; i >= 0; i--) {
+                this.prismViews[i].removeFrom(this.prisms);
+                this.prismViews.splice(i, 1);
+            }
+
+            // Add new prism views
+            prisms.each(function(prism) {
+                this.createAndAddPrismView(prism);
+            }, this);
+        },
+
+        prismAdded: function(prism, prisms) {
+            this.createAndAddPrismView(prism);
+        },
+
+        prismRemoved: function(prism, prisms) {
+            for (var i = this.prismViews.length - 1; i >= 0; i--) {
+                if (this.prismViews[i].model === prism) {
+                    this.prismViews[i].removeFrom(this.prisms);
+                    this.prismViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        createAndAddPrismView: function(prism) {
+            var prismView = new PrismView({ 
+                mvt: this.mvt,
+                model: prism,
+                medium: this.simulation.prismMedium
+            });
+            this.prisms.addChild(prismView.displayObject);
+            this.prismViews.push(prismView);
         },
 
         showProtractor: function() {

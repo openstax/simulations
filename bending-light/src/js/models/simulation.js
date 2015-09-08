@@ -160,8 +160,6 @@ define(function (require, exports, module) {
             return null;
         },
 
-    }, {
-
         /**
          * Get the fraction of power transmitted through the medium
          */
