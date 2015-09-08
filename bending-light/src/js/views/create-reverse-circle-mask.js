@@ -25,7 +25,7 @@ define(function(require) {
 
     	var ctx = canvas.getContext('2d');
 
-    	ctx.fillStyle = '#000';
+    	ctx.fillStyle = '#ffffff';
     	ctx.fillRect(0, 0, width, height);
     	clearCircle(ctx, width / 2, height / 2, radius);
 

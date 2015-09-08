@@ -153,8 +153,6 @@ define(function(require) {
                     var width  = Math.floor(Math.abs(this.mvt.modelToViewDeltaX((bounds.x + bounds.w))) * 2);
                     var height = Math.floor(Math.abs(this.mvt.modelToViewDeltaY((bounds.y + bounds.h))) * 2);
                     var mask = createReverseCircleMask(radius, width, height);
-                    mask = Assets.createSprite('mask-test.png');
-                    mask.anchor.x = mask.anchor.y = 0.5;
 
                     if (graphics.mask)
                         graphics.mask.parent.removeChild(graphics.mask);
