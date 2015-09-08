@@ -216,14 +216,18 @@ define(function (require, exports, module) {
                         this.prismMedium.getIndexOfRefraction(wavelength) : 
                         this.environment.getIndexOfRefraction(wavelength);
 
-                    this.propagateRay(Ray.create(
+                    var ray = Ray.create(
                         tail, 
                         directionUnitVector, 
                         power, 
                         wavelength, 
                         mediumIndexOfRefraction, 
                         Constants.SPEED_OF_LIGHT / wavelength
-                    ), 0);
+                    );
+
+                    this.propagateRay(ray, 0);
+
+                    ray.destroy();
                 }
             }
             else {
@@ -231,14 +235,18 @@ define(function (require, exports, module) {
                     this.prismMedium.getIndexOfRefraction(this.laser.getWavelength()) : 
                     this.environment.getIndexOfRefraction(this.laser.getWavelength());
 
-                this.propagateRay(Ray.create(
+                var ray = Ray.create(
                     tail, 
                     directionUnitVector, 
                     power, 
                     this.laser.getWavelength(), 
                     mediumIndexOfRefraction, 
                     this.laser.getFrequency()
-                ), 0);
+                );
+
+                this.propagateRay(ray, 0);
+
+                ray.destroy();
             }
         },
 
@@ -334,6 +342,10 @@ define(function (require, exports, module) {
                     true, 
                     false
                 ));
+
+                // Clean up; we don't need this anymore
+                reflected.destroy();
+                refracted.destroy();
             }
             else {
                 // No intersection, so the light ray should just keep going
