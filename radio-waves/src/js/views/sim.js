@@ -20,6 +20,7 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
@@ -49,7 +50,30 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .help-btn' : 'toggleHelp',
 
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+
+            'click #electron-positions-check'       : 'toggleElectronPositions',
+            'click #transmitter-movement-manual'    : 'manualClicked',
+            'click #transmitter-movement-oscillate' : 'oscillateClicked',
+
+            'slide .frequency-slider' : 'changeFrequency',
+            'slide .amplitude-slider' : 'changeAmplitude',
+
+
+            'click #field-display-type-curve-with-vectors'  : 'displayCurveWithVectors',
+            'click #field-display-type-curve'               : 'displayCurve',
+            'click #field-display-type-full-field'          : 'displayFullField', 
+            'click #field-display-type-none'                : 'displayNoField',
+
+            'click #field-sense-force-on-electron' : 'fieldSenseForceOnElectronClicked',
+            'click #field-sense-electric-field'    : 'fieldSenseElectricFieldClicked',
+
+            'click #field-displayed-radiated-field' : 'displayDynamicField',
+            'click #field-displayed-static-field'   : 'displayStaticField'
         },
 
         /**
@@ -61,11 +85,15 @@ define(function (require) {
             options = _.extend({
                 title: 'Radio Waves & Electromagnetic Fields',
                 name: 'radio-waves',
+                link: 'radio-waves'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -104,25 +132,25 @@ define(function (require) {
                 Constants: Constants,
                 simulation: this.simulation,
                 Assets: Assets,
-                electronSrc: ''
+                electronSrc: Assets.Images.ELECTRON
             };
             this.$el.html(this.template(data));
 
             this.$('.frequency-slider').noUiSlider({
-                start: 1,
+                start: Constants.FREQUENCY_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 1
+                    'min': Constants.FREQUENCY_RANGE.min,
+                    'max': Constants.FREQUENCY_RANGE.max
                 }
             });
 
             this.$('.amplitude-slider').noUiSlider({
-                start: 1,
+                start: Constants.AMPLITUDE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 1
+                    'min': Constants.AMPLITUDE_RANGE.min,
+                    'max': Constants.AMPLITUDE_RANGE.max
                 }
             });
         },
@@ -165,6 +193,111 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        toggleHelp: function(event){
+           $(event.currentTarget).toggleClass('active');
+           this.sceneView.toggleHelpLabel();
+        },
+
+        toggleElectronPositions: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showElectronPositionPlots();
+            else
+                this.sceneView.hideElectronPositionPlots();
+        },
+
+        manualClicked: function(event) {
+            this.simulation.setTransmittingElectronMovementStrategyToManual();
+            this.$('.oscillation-controls').addClass('disabled');
+            this.$('.frequency-slider').attr('disabled', 'disabled');
+            this.$('.amplitude-slider').attr('disabled', 'disabled');
+        },
+
+        oscillateClicked: function(event) {
+            this.simulation.setTransmittingElectronMovementStrategyToSinusoidal();
+            this.$('.oscillation-controls').removeClass('disabled');
+            this.$('.frequency-slider').removeAttr('disabled');
+            this.$('.amplitude-slider').removeAttr('disabled');
+        },
+
+        changeFrequency: function(event) {
+            var frequency = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.transmittingElectron.setFrequency(Constants.FREQUENCY_SCALE * frequency);
+            });
+        },
+
+        changeAmplitude: function(event) {
+            var amplitude = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.simulation.transmittingElectron.setAmplitude(amplitude);
+            });
+        },
+
+        frequencyChanged: function(electron, frequency) {
+            this.updateLock(function() {
+                this.$('.frequency-slider').val(frequency / Constants.FREQUENCY_SCALE);
+            });
+        },
+
+        amplitudeChanged: function(electron, amplitude) {
+            this.updateLock(function() {
+                this.$('.amplitude-slider').val(amplitude);
+            });
+        },
+
+        displayCurveWithVectors: function() {
+            this.sceneView.displayCurveWithVectors();
+        },
+
+        displayCurve: function() {
+            this.sceneView.displayCurve();
+        },
+
+        displayFullField: function() {
+            this.sceneView.displayFullField();
+        },
+
+        displayNoField: function() {
+            this.sceneView.displayNoField();
+        },
+
+
+        displayStaticField: function(event) {
+            this.sceneView.displayStaticField();
+
+            this.$('#field-display-type-full-field').click();
+
+            this.$('#field-display-type-curve').attr('disabled', 'disabled');
+            this.$('#field-display-type-curve-with-vectors').attr('disabled', 'disabled');
+            this.$('#field-display-type-none').attr('disabled', 'disabled');
+        },
+
+        displayDynamicField: function(event) {
+            this.sceneView.displayDynamicField();
+
+            this.$('#field-display-type-curve').removeAttr('disabled');
+            this.$('#field-display-type-curve-with-vectors').removeAttr('disabled');
+            this.$('#field-display-type-none').removeAttr('disabled');
+        },
+
+        fieldSenseForceOnElectronClicked: function() {
+            this.sceneView.setFieldSenseForceOnElectron();
+        },
+
+        fieldSenseElectricFieldClicked: function() {
+            this.sceneView.setFieldSenseElectricField();
+        }
 
     });
 
