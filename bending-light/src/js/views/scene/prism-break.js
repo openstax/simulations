@@ -5,14 +5,17 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                      require('common/v3/pixi/dash-to');
-    var PixiToImage = require('common/v3/pixi/pixi-to-image');
-    var Colors      = require('common/colors/colors');
+                             require('common/v3/pixi/dash-to');
+    var PixiToImage        = require('common/v3/pixi/pixi-to-image');
+    var Colors             = require('common/colors/colors');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
 
     var BendingLightSceneView = require('views/scene');
     var LaserView             = require('views/laser');
     var MediumView            = require('views/medium');
     var ProtractorView        = require('views/protractor');
+    var PrismView             = require('views/prism');
 
     var Assets = require('assets');
 
@@ -63,7 +66,19 @@ define(function(require) {
         getPrismIcons: function() {
             var icons = [];
 
+            var scale = 2000 / this.simulation.getHeight();
+            var mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), scale);
 
+            var prisms = this.simulation.prismPrototypes;
+            for (var i = 0; i < prisms.length; i++) {
+                var view = new PrismView({
+                    mvt: mvt,
+                    model: prisms[i],
+                    medium: this.simulation.prismMedium
+                });
+
+                icons.push(PixiToImage.displayObjectToDataURI(view.displayObject));
+            }
 
             return icons;
         },

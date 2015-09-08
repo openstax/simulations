@@ -14,10 +14,16 @@ define(function (require) {
      */
     var Prism = PositionableObject.extend({
 
+        defaults: _.extend({}, PositionableObject.prototype.defaults, {
+            rotation: 0
+        }),
+
         /**
          * Initializes new Prism object.
          */
         initialize: function(attributes, options) {
+            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
+            
             if (options.shape)
                 this.shape = options.shape;
             else if (options.points)
@@ -68,8 +74,11 @@ define(function (require) {
         /**
          * Rotates the shape in place
          */
-        rotate: function(rotate) {
-            this.shape.rotate(rotate);
+        rotate: function(radians) {
+            this.shape.rotate(radians);
+
+            // Add the rotation amount to our rotation attribute
+            this.set('rotation', this.get('rotation') + radians);
         }
 
     }, Prism);

@@ -55,8 +55,7 @@ define(function(require) {
             this.setElement($(this.template(data)));
 
             this.mediumControlsView.render();
-            this.mediumControlsView.$el
-                .removeClass('control-panel');
+            this.mediumControlsView.$el.removeClass('control-panel');
 
             this.$('.medium-controls-wrapper').append(this.mediumControlsView.el);
 
