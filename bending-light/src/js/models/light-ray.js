@@ -41,6 +41,7 @@ define(function (require) {
         this.tail       = new Vector2();
         this.vector     = new Vector2();
         this.unitVector = new Vector2();
+        this.velocity   = new Vector2();
         this._vec       = new Vector2();
 
         this._line = {
@@ -236,7 +237,7 @@ define(function (require) {
          */
         contains: function(position, waveMode) {
             // If it's in the opposite medium, it's not valid anyway
-            if (waveMode && this.oppositeMediumShape.contains(position))
+            if (this.oppositeMediumShape.contains(position))
                 return false;
             
             // Otherwise, we just check to make sure it's on the line (or within 
@@ -280,7 +281,7 @@ define(function (require) {
         },
 
         getVelocityVector: function() {
-            return this._vec
+            return this.velocity
                 .set(this.unitVector)
                 .scale(this.getSpeed());
         },

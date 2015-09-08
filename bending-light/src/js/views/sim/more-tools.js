@@ -70,12 +70,12 @@ define(function(require) {
                 velocitySensor: {
                     title: 'Velocity Sensor',
                     label: '',
-                    img: sceneView.getIntensityMeterIcon(),
+                    img: sceneView.getVelocitySensorIcon(),
                     activate: function() {
-                        
+                        simulation.velocitySensor.set('enabled', true);
                     },
                     deactivate: function() {
-                        
+                        simulation.velocitySensor.set('enabled', false);
                     }
                 },
                 waveSensor: {

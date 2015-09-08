@@ -11,13 +11,15 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var WaveSensor = require('models/wave-sensor');
+    var WaveSensor     = require('models/wave-sensor');
+    var VelocitySensor = require('models/velocity-sensor');
 
     var IntroSceneView        = require('views/scene/intro');
     var LaserView             = require('views/laser');
     var MediumView            = require('views/medium');
     var ProtractorView        = require('views/protractor');
     var WaveSensorView        = require('views/wave-sensor');
+    var VelocitySensorView    = require('views/velocity-sensor');
 
     var Assets = require('assets');
 
@@ -37,6 +39,7 @@ define(function(require) {
             IntroSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initWaveSensorView();
+            this.initVelocitySensorView();
         },
 
         initWaveSensorView: function() {
@@ -47,6 +50,16 @@ define(function(require) {
             this.waveSensorView.hide();
 
             this.topLayer.addChild(this.waveSensorView.displayObject);
+        },
+
+        initVelocitySensorView: function() {
+            this.velocitySensorView = new VelocitySensorView({
+                model: this.simulation.velocitySensor,
+                mvt: this.mvt
+            });
+            this.velocitySensorView.hide();
+
+            this.topLayer.addChild(this.velocitySensorView.displayObject);
         },
 
         getWaveSensorIcon: function() {
@@ -66,10 +79,26 @@ define(function(require) {
             return PixiToImage.displayObjectToDataURI(waveSensorView.displayObject);
         },
 
+        getVelocitySensorIcon: function() {
+            var mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), 1);
+
+            var velocitySensor = new VelocitySensor();
+
+            var velocitySensorView = new VelocitySensorView({
+                model: velocitySensor,
+                mvt: mvt
+            });
+
+            return PixiToImage.displayObjectToDataURI(velocitySensorView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             IntroSceneView.prototype._update.apply(this, arguments);
 
             this.waveSensorView.drawGraphs();
+
+            if (!paused)
+                this.velocitySensorView.update(time, deltaTime);
         },
 
     });

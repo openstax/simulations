@@ -12,6 +12,8 @@ define(function (require) {
         INTENSITY_METER_BODY:   'intensity-meter-body',
         INTENSITY_METER_SENSOR: 'intensity-meter-sensor',
         WAVE_SENSOR_BODY:       'wave-sensor-body',
+        VELOCITY_SENSOR_BODY:   'velocity-sensor-body',
+        VELOCITY_SENSOR_RING:   'velocity-sensor-ring',
         PROTRACTOR:             'protractor-white.png'
     };
 
@@ -21,7 +23,9 @@ define(function (require) {
             Assets.Images.LASER_OFF,
             Assets.Images.INTENSITY_METER_BODY,
             Assets.Images.INTENSITY_METER_SENSOR,
-            Assets.Images.WAVE_SENSOR_BODY
+            Assets.Images.WAVE_SENSOR_BODY,
+            Assets.Images.VELOCITY_SENSOR_RING,
+            Assets.Images.VELOCITY_SENSOR_BODY
         ]
     };
 

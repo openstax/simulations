@@ -244,7 +244,11 @@ define(function (require, exports, module) {
          *   if one exists, otherwise None
          */
         getVelocity: function(position) {
-            throw 'Not implemented yet.';
+            var ray = this.getRayAt(position);
+            if (ray)
+                return ray.getVelocityVector();
+
+            return null;
         },
 
         /**
@@ -252,29 +256,18 @@ define(function (require, exports, module) {
          *   or None if none exists
          */
         getWaveValue: function(position) {
-            var rays = this.rays.slice();
+            var ray = this.getRayAt(position);
+            if (ray) {
+                // Map power to displayed amplitude
+                var amplitude = Math.sqrt(ray.getPowerFraction());
 
-            // Sort rays by zIndex so the higher z-indexes come first so we hit the ones on top
-            rays.sort(function(a, b) {
-                return b.zIndex - a.zIndex;
-            });
+                // Find out how far the light has come, so we can compute the remainder of phases
+                var distVec = this._distVec.set(position).sub(ray.tail);
+                var distanceAlongRay = ray.getUnitVector().dot(distVec);
+                var phase = ray.getCosArg(distanceAlongRay);
 
-            var distVec = this._distVec;
-            var ray;
-            for (var i = 0; i < rays.length; i++) {
-                ray = rays[i];
-                if (ray.contains(position, this.laser.get('wave'))) {
-                    // Map power to displayed amplitude
-                    var amplitude = Math.sqrt(ray.getPowerFraction());
-
-                    // Find out how far the light has come, so we can compute the remainder of phases
-                    distVec.set(position).sub(ray.tail);
-                    var distanceAlongRay = ray.getUnitVector().dot(distVec);
-                    var phase = ray.getCosArg(distanceAlongRay);
-
-                    // Wave is a*cos(theta)
-                    return amplitude * Math.cos(phase + Math.PI);
-                }
+                // Wave is a*cos(theta)
+                return amplitude * Math.cos(phase + Math.PI);
             }
 
             return null;
