@@ -4,8 +4,9 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var Rectangle        = require('common/math/rectangle');
+    var Vector2          = require('common/math/vector2');
+    var LineIntersection = require('common/math/line-intersection');
 
     var BendingLightSimulation = require('models/simulation');
     var Medium                 = require('models/medium');
@@ -22,32 +23,19 @@ define(function (require, exports, module) {
      */
     var IntroSimulation = BendingLightSimulation.extend({
 
-        defaults: _.extend(BendingLightSimulation.prototype.defaults, {
-            wavelength: Constants.WAVELENGTH_RED
-        }),
+        // defaults: _.extend(BendingLightSimulation.prototype.defaults, {
+        // }),
         
         initialize: function(attributes, options) {
-            options = _.extend({
-                bottomMediumProperties: null
-            }, options);
-
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.topMedium = new Medium(
-                new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
-                MediumPropertiesPresets.AIR,
-                null
-            );
+            
 
-            this.bottomMedium = new Medium(
-                new Rectangle(-1, -1, 2, 1),
-                options.bottomMediumProperties,
-                null // TODO: implement the color factory
-            );
-
-            this._top    = new Rectangle(-10, -10, 20, 10);
-            this._bottom = new Rectangle(-10,   0, 20, 10);
+            this._bottom = new Rectangle(-10, -10, 20, 10);
+            this._top    = new Rectangle(-10,   0, 20, 10);
             this._vec = new Vector2();
+            this._distVec = new Vector2();
+            
         },
 
         /**
@@ -55,6 +43,19 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             BendingLightSimulation.prototype.initComponents.apply(this, arguments);
+
+            this.topMedium = new Medium({
+                shape: new Rectangle(-1, 0, 2, 1), // In Meters, very large compared to visible model region in the stage
+                mediumProperties: MediumPropertiesPresets.AIR
+            });
+
+            this.bottomMedium = new Medium({
+                shape: new Rectangle(-1, -1, 2, 1),
+                mediumProperties: MediumPropertiesPresets.WATER
+            });
+
+            this.listenTo(this.topMedium,    'change', this.mediumChanged);
+            this.listenTo(this.bottomMedium, 'change', this.mediumChanged);
         },
 
         /**
@@ -111,12 +112,12 @@ define(function (require, exports, module) {
                     // Assuming perpendicular beam polarization, compute percent power
                     var reflectedPowerRatio;
                     if (hasTransmittedRay)
-                        reflectedPowerRatio = this.getReflectedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
+                        reflectedPowerRatio = IntroSimulation.getReflectedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
                     else
                         reflectedPowerRatio = 1.0;
                     
                     var reflectedWaveWidth = sourceWaveWidth;
-                    this.addAndAbsorb(new LightRay(
+                    this.addAndAbsorb(LightRay.create(
                         null, 
                         this._vec.set(1, 0).rotate(Math.PI - this.laser.getAngle()),
                         n1, 
@@ -137,7 +138,7 @@ define(function (require, exports, module) {
                         var transmittedWavelength = incidentRay.getWavelength() / n2 * n1;
 
                         if (!isNaN(theta2) && Number.isFinite(theta2)) {
-                            var transmittedPowerRatio = this.getTransmittedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
+                            var transmittedPowerRatio = IntroSimulation.getTransmittedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
 
                             // Make the beam width depend on the input beam width, so that
                             //   the same beam width is transmitted as was intercepted
@@ -146,7 +147,7 @@ define(function (require, exports, module) {
                             var transmittedBeamHalfWidth = Math.cos(theta2) * extentInterceptedHalfWidth;
                             var transmittedWaveWidth = transmittedBeamHalfWidth * 2;
 
-                            var transmittedRay = new LightRay(
+                            var transmittedRay = LightRay.create(
                                 null,
                                 this._vec.set(1, 0).rotate(theta2 - Math.PI / 2), 
                                 n2, 
@@ -186,21 +187,55 @@ define(function (require, exports, module) {
          *   If the intensity meter misses the ray, the original ray is added.
          */
         addAndAbsorb: function(ray) {
-            var rayAbsorbed = false;//ray.intersects(this.intensityMeter.getSensorShape()) && this.intensityMeter.get('enabled');
+            var sx = this.intensityMeter.get('sensorPosition').x;
+            var sy = this.intensityMeter.get('sensorPosition').y;
+            var sr = this.intensityMeter.get('sensorRadius');
+            var intersects = ray.intersectsCircle(sx, sy, sr);
+            var rayAbsorbed = intersects && this.intensityMeter.get('enabled');
             if (rayAbsorbed) {
+                
                 // Find intersection points with the intensity sensor
-                // TODO: Implement
+                var line = ray.toLine();
+                var intersections = LineIntersection.lineCircleIntersection(line.start.x, line.start.y, line.end.x, line.end.y, sx, sy, sr);
+                // If it intersected, then absorb the ray
+                if (intersections && intersections[0] && intersections[1]) {
+                    var x = intersections[0].x + intersections[1].x;
+                    var y = intersections[0].y + intersections[1].y;
+                    var interruptedRay = LightRay.create(
+                        ray.tail,
+                        this._vec.set(x / 2, y / 2), 
+                        ray.indexOfRefraction, 
+                        ray.getWavelength(),
+                        ray.getPowerFraction(), 
+                        this.laser.get('wavelength'), 
+                        ray.getWaveWidth(), 
+                        ray.getNumWavelengthsPhaseOffset(), 
+                        ray.getOppositeMedium(), 
+                        false, 
+                        ray.extendBackwards
+                    );
+
+                    // Don't let the wave intersect the intensity meter if it is behind the
+                    //   laser emission point
+                    var isForward = ray.getVector().dot(interruptedRay.getVector()) > 0;
+                    if (interruptedRay.getLength() < ray.getLength() && isForward) {
+                        this.addRay(interruptedRay);
+                    }
+                    else {
+                        this.addRay(ray);
+                        rayAbsorbed = false;
+                    }
+                }
             }
             else {
                 this.addRay(ray);
             }
 
-            // if (rayAbsorbed) {
-            //     intensityMeter.addRayReading( new IntensityMeter.Reading( ray.getPowerFraction() ) );
-            // }
-            // else {
-            //     intensityMeter.addRayReading( MISS );
-            // }
+            if (rayAbsorbed)
+                this.intensityMeter.addRayReading(ray.getPowerFraction());
+            else
+                this.intensityMeter.addRayReading(null);
+
             return rayAbsorbed;
         },
 
@@ -217,7 +252,39 @@ define(function (require, exports, module) {
          *   or None if none exists
          */
         getWaveValue: function(position) {
-            throw 'Not implemented yet.';
+            var rays = this.rays.slice();
+
+            // Sort rays by zIndex so the higher z-indexes come first so we hit the ones on top
+            rays.sort(function(a, b) {
+                return b.zIndex - a.zIndex;
+            });
+
+            var distVec = this._distVec;
+            var ray;
+            for (var i = 0; i < rays.length; i++) {
+                ray = rays[i];
+                if (ray.contains(position, this.laser.get('wave'))) {
+                    // Map power to displayed amplitude
+                    var amplitude = Math.sqrt(ray.getPowerFraction());
+
+                    // Find out how far the light has come, so we can compute the remainder of phases
+                    distVec.set(position).sub(ray.tail);
+                    var distanceAlongRay = ray.getUnitVector().dot(distVec);
+                    var phase = ray.getCosArg(distanceAlongRay);
+
+                    // Wave is a*cos(theta)
+                    return amplitude * Math.cos(phase + Math.PI);
+                }
+            }
+
+            return null;
+        },
+
+        /**
+         * Responds to changes in mediums by telling the simulation to update
+         */
+        mediumChanged: function() {
+            this.updateOnNextFrame = true;
         }
 
     });

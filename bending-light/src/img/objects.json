@@ -1,0 +1,49 @@
+{"frames": {
+	"laser-on": {
+		"frame": {"x":0,"y":0,"w":150,"h":60},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":150,"h":60},
+		"sourceSize": {"w":150,"h":60},
+		"pivot": {"x":0,"y":0}
+	},
+	"laser-off": {
+		"frame": {"x":0,"y":62,"w":150,"h":60},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":150,"h":60},
+		"sourceSize": {"w":150,"h":60},
+		"pivot": {"x":0,"y":0}
+	},
+	"intensity-meter-body": {
+		"frame": {"x":0,"y":159,"w":166,"h":102},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":166,"h":102},
+		"sourceSize": {"w":166,"h":102},
+		"pivot": {"x":0,"y":0}
+	},
+	"intensity-meter-sensor": {
+		"frame": {"x":151,"y":0,"w":100,"h":158},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":100,"h":158},
+		"sourceSize": {"w":100,"h":158},
+		"pivot": {"x":0,"y":0}
+	},
+	"wave-sensor-body": {
+		"frame": {"x":0,"y":262,"w":200,"h":140},
+		"rotated": false,
+		"trimmed": true,
+		"spriteSourceSize": {"x":0,"y":0,"w":200,"h":140},
+		"sourceSize": {"w":200,"h":140},
+		"pivot": {"x":0,"y":0}
+	}
+},
+"meta": {
+	"image": "objects.png",
+	"format": "RGBA8888",
+	"size": {"w":251,"h":402},
+	"scale": "1"
+}
+}

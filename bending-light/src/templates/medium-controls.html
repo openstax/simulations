@@ -1,0 +1,26 @@
+<div class="control-panel medium-controls-panel medium-<%= name %>">
+    <div class="material-select-wrapper">
+        <label>Material</label>
+        <div class="select-wrapper">
+            <select class="select medium-<%= name %>">
+                <% _.each(mediums, function(preset) { %>
+                    <option value="<%= preset.key %>"><%= preset.name %></option>
+                <% }); %>
+            </select>
+        </div>
+    </div>
+
+    <div class="no-mystery">
+        <label class="slider-header">Index of Refraction <span class="slider-value index-of-refraction-value medium-<%= name %>">1.00</span></label>
+        
+        <div class="slider-wrapper">
+            <div class="slider index-of-refraction-slider medium-<%= name %>"></div>
+            <label class="air-label">Air</label>
+            <label class="water-label">Water</label>
+            <label class="glass-label">Glass</label>
+        </div>
+    </div>
+    <div class="mystery">
+        <p>What is n?</p>
+    </div>
+</div>

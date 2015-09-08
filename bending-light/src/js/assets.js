@@ -2,15 +2,28 @@ define(function (require) {
 
     'use strict';
 
-    var Assets = require('common/pixi/assets');
+    var Assets = require('common/v3/pixi/assets');
 
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
+        LASER_ON:               'laser-on',
+        LASER_OFF:              'laser-off',
+        INTENSITY_METER_BODY:   'intensity-meter-body',
+        INTENSITY_METER_SENSOR: 'intensity-meter-sensor',
+        WAVE_SENSOR_BODY:       'wave-sensor-body',
+        PROTRACTOR:             'protractor-white.png'
     };
 
-    Assets.SpriteSheets = {};
+    Assets.SpriteSheets = {
+        'objects.json': [
+            Assets.Images.LASER_ON,
+            Assets.Images.LASER_OFF,
+            Assets.Images.INTENSITY_METER_BODY,
+            Assets.Images.INTENSITY_METER_SENSOR,
+            Assets.Images.WAVE_SENSOR_BODY
+        ]
+    };
 
     return Assets;
 });

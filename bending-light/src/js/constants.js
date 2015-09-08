@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var WavelengthColors = require('common/colors/wavelength');
+
     var Constants = {}; 
 
     /*************************************************************************
@@ -26,6 +28,7 @@ define(function (require) {
     Constants.MIN_DT = Constants.MAX_DT / 10;
     Constants.DEFAULT_DT = Constants.MAX_DT / 4; // Seconds
     Constants.FRAME_DURATION = 20 / 1000; // Seconds
+    Constants.INTERFACE_DT_SCALE = 1e17;
 
     // A good size for the units being used in the sim; used to determine the 
     //   dimensions of various model objects
@@ -34,12 +37,28 @@ define(function (require) {
     Constants.MODEL_WIDTH = Constants.CHARACTERISTIC_LENGTH * 62;
     Constants.MODEL_HEIGHT = Constants.MODEL_WIDTH * 0.7;
 
-
+    Constants.METERS_TO_NANOMETERS = 1e9;
 
     // Materials
     Constants.DEFAULT_LASER_DISTANCE_FROM_PIVOT = 8.125E-6;
     Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT = 2.419;
 
+    Constants.MIN_INDEX_OF_REFRACTION = 1;
+    Constants.MAX_INDEX_OF_REFRACTION = 1.6;
+
+    // Wavelengths to colors
+    Constants.wavelengthToHex = function(wavelength, returnHexInteger) {
+        var nm = wavelength * Constants.METERS_TO_NANOMETERS; // Convert to nanometers
+        return WavelengthColors.nmToHex(nm, returnHexInteger);
+    };
+
+    Constants.wavelengthToRgba = function(wavelength, alpha) {
+        var nm = wavelength * Constants.METERS_TO_NANOMETERS; // Convert to nanometers
+        return WavelengthColors.nmToRgba(nm, alpha);
+    };
+
+    Constants.MIN_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
+    Constants.MAX_WAVELENGTH = 700;
 
     /*************************************************************************
      **                                                                     **
@@ -55,6 +74,20 @@ define(function (require) {
 	Laser.MAX_ANGLE_IN_WAVE_MODE = 3.0194;
 
 	Constants.Laser = Laser;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            LASER BEAM VIEW                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var LaserBeamsView = {};
+
+    LaserBeamsView.LASER_BEAM_WIDTH = 3;
+    LaserBeamsView.CLIPPER_COORDINATE_SCALE = 10;
+
+    Constants.LaserBeamsView = LaserBeamsView;
 
 
     return Constants;

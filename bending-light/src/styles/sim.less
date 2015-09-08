@@ -4,3 +4,93 @@
 .sims .sim-content {
     min-height: inherit;
 }
+
+.reset-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 20px;
+    z-index: 200;
+    .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+}
+
+.control-panel {
+    background: @panel-bg;
+    padding: @panel-padding;
+    .user-select(none);
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    h2 {
+        .header();
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+        margin-top: 18px;
+    }
+
+    .bootstrap-select {
+        background-color: transparent;
+        border-color: transparent;
+
+        > .btn {
+            background: rgba(255, 255, 255, 0.5);
+            border-color: rgba(0, 0, 0, 0.14);
+            text-transform: capitalize;
+
+            &:focus {
+                outline: none !important;
+            }
+
+            &:active {
+                .box-shadow(none);
+            }
+        }
+
+        a {
+            text-transform: capitalize;
+        }
+
+        a:focus {
+            outline: none;
+        }
+    }
+
+    .bootstrap-select.open > .btn {
+        .box-shadow(none);
+    }
+
+    .slider-header {
+        display: block;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 2px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+}

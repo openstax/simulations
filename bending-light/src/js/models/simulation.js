@@ -4,9 +4,11 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2                 = require('common/math/vector2');
 
-    var Laser = require('models/laser');
+    var Laser          = require('models/laser');
+    var IntensityMeter = require('models/intensity-meter');
 
     /**
      * Constants
@@ -16,9 +18,9 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var BendingLightSimulation = Simulation.extend({
+    var BendingLightSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             wavelength: Constants.WAVELENGTH_RED
         }),
         
@@ -32,11 +34,14 @@ define(function (require, exports, module) {
                 topLeftQuadrant: true
             }, options);
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
             this.laserDistanceFromPivot = options.laserDistanceFromPivot
             this.laserAngle = options.laserAngle
             this.topLeftQuadrant = options.topLeftQuadrant
+            this.updateOnNextFrame = true;
+
+            this.simTime = 0;
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:wavelength', this.wavelengthChanged);
         },
@@ -52,10 +57,19 @@ define(function (require, exports, module) {
                 distanceFromPivot: this.laserDistanceFromPivot, 
                 angle: this.laserAngle, 
                 topLeftQuadrant: this.topLeftQuadrant
-            })
+            });
+
+            this.listenTo(this.laser, 'change', this.simulationChanged);
 
             // Initialize the light-rays array
             this.rays = [];
+
+            this.intensityMeter = new IntensityMeter({
+                sensorPosition: new Vector2(Constants.MODEL_WIDTH * -0.15, Constants.MODEL_HEIGHT * -0.1),
+                bodyPosition:   new Vector2(Constants.MODEL_WIDTH * -0.04, Constants.MODEL_HEIGHT * -0.2)
+            });
+
+            this.listenTo(this.intensityMeter, 'change:sensorPosition', this.simulationChanged);
         },
 
         /**
@@ -66,7 +80,7 @@ define(function (require, exports, module) {
         },
 
         addRay: function(lightRay) {
-            this.rays.push();
+            this.rays.push(lightRay);
         },
 
         /**
@@ -75,15 +89,37 @@ define(function (require, exports, module) {
         clear: function() {
             for (var i = this.rays.length - 1; i >= 0; i--) {
                 this.rays[i].destroy();
-                this.rays.slice(i, 1);
+                this.rays.splice(i, 1);
             }
+            this.intensityMeter.clearRayReadings();
         },
 
         _update: function(time, deltaTime) {
+            this.simTime += deltaTime;
             
+            this.dirty = false;
+
+            if (this.updateOnNextFrame) {
+                this.updateOnNextFrame = false;
+
+                this.clear();
+                this.propagateRays();
+
+                this.dirty = true;
+            }
+
+            // Update the light rays' running time for the waves
+            for (var i = 0; i < this.rays.length; i++)
+                this.rays[i].setTime(this.simTime);
         },
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
+
+        simulationChanged: function() {
+            this.updateOnNextFrame = true;
+            if (this.get('paused'))
+                this._update(this.get('time'), 0);
+        },
 
         wavelengthChanged: function(simulation, wavelength) {
             this.laser.set('wavelength', wavelength);

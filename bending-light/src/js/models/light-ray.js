@@ -4,8 +4,11 @@ define(function (require) {
 
     var Backbone = require('backbone');
     var Pool     = require('object-pool');
+    var SAT      = require('sat');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2          = require('common/math/vector2');
+    var PiecewiseCurve   = require('common/math/piecewise-curve');
+    var LineIntersection = require('common/math/line-intersection');
     
     var pool = Pool({
         init: function() {
@@ -29,7 +32,7 @@ define(function (require) {
      *
      *  Constructor parameters:
      *    tail, tip, indexOfRefraction, wavelength, powerFraction,
-     *    laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium,
+     *    laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMediumShape,
      *    extend, extendBackwards
      *
      */
@@ -45,8 +48,13 @@ define(function (require) {
             end:   new Vector2()
         };
 
+        // SAT variables
+        this._linePolygon = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector() ]);
+        this._circle = new SAT.Circle(new SAT.Vector(), 1);
+        this._satResponse = new SAT.Response();
+
         // Call init with any arguments passed to the constructor
-        this.init.call(this, arguments);
+        this.init.apply(this, arguments);
     };
 
     /**
@@ -57,10 +65,18 @@ define(function (require) {
         /**
          * Initializes the LightRay's properties with provided initial values
          */
-        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMedium, extend, extendBackwards) {
-            this.tip.set(tip);
-            this.tail.set(tail);
-            this.vector.set(tip).sub(tail);
+        init: function(tail, tip, indexOfRefraction, wavelength, powerFraction, laserWavelength, waveWidth, numWavelengthsPhaseOffset, oppositeMediumShape, extend, extendBackwards) {
+            if (tip)
+                this.tip.set(tip);
+            else
+                this.tip.set(0, 0);
+
+            if (tail)
+                this.tail.set(tail);
+            else
+                this.tail.set(0, 0);
+
+            this.vector.set(this.tip).sub(this.tail);
             this.unitVector.set(this.vector).normalize();
 
             this.indexOfRefraction = indexOfRefraction;
@@ -96,6 +112,14 @@ define(function (require) {
             this.zIndex = highestZIndex + 1;
         },
 
+        getTip: function() {
+            return this.tip;
+        },
+
+        getTail: function() {
+            return this.tail;
+        },
+
         getSpeed: function() {
             return Constants.SPEED_OF_LIGHT / this.indexOfRefraction;
         },
@@ -106,7 +130,7 @@ define(function (require) {
 
         toLine: function() {
             this._line.start.set(this.tail);
-            this._line.end.set(this.tail);
+            this._line.end.set(this.tip);
             return this._line;
         },
 
@@ -139,14 +163,6 @@ define(function (require) {
                 return this.wavelength * 1E6;
             else
                 return 0;
-        },
-
-        /**
-         * The wave is wider than the ray, and must be clipped against the opposite
-         *   medium so it doesn't leak over
-         */
-        getWaveShape: function() {
-            throw 'Not yet implemented.';
         },
 
         /**
@@ -198,6 +214,10 @@ define(function (require) {
             return this.waveWidth;
         },
 
+        getRayWidth: function() {
+            return 1.5992063492063494E-7;
+        },
+
         getNumberOfWavelengths: function() {
             return this.getLength() / this.wavelength;
         },
@@ -207,7 +227,7 @@ define(function (require) {
         },
 
         getOppositeMedium: function() {
-            return this.oppositeMedium;
+            return this.oppositeMediumShape;
         },
 
         /**
@@ -215,7 +235,42 @@ define(function (require) {
          *   for whether it is shown as a thin light ray or wide wave
          */
         contains: function(position, waveMode) {
-            throw 'Not yet implemented.';
+            // If it's in the opposite medium, it's not valid anyway
+            if (waveMode && this.oppositeMediumShape.contains(position))
+                return false;
+            
+            // Otherwise, we just check to make sure it's on the line (or within 
+            //   its thickness as a distance)
+            var line = this.toLine();
+            return LineIntersection.lineAndCircleIntersect(
+                line.start.x, 
+                line.start.y, 
+                line.end.x, 
+                line.end.y, 
+                position.x, 
+                position.y, 
+                waveMode ? this.getWaveWidth() / 2 : this.getRayWidth() / 2
+            );
+        },
+
+        intersectsCircle: function(x, y, radius) {
+            this._linePolygon.points[0].x = this.tail.x;
+            this._linePolygon.points[0].y = this.tail.y;
+            this._linePolygon.points[1].x = this.tip.x;
+            this._linePolygon.points[1].y = this.tip.y;
+            this._linePolygon.setPoints(this._linePolygon.points);
+
+            this._circle.pos.x = x;
+            this._circle.pos.y = y;
+            this._circle.r = radius;
+
+            this._satResponse.clear();
+
+            return SAT.testPolygonCircle(this._linePolygon, this._circle, this._satResponse);
+        },
+
+        getLastIntersectionWithCircle: function() {
+            return this._satResponse;
         },
 
         getRayWidth: function() {
@@ -273,7 +328,7 @@ define(function (require) {
          */
         create: function() {
             var lightRay = pool.create();
-            lightRay.init.call(lightRay, arguments);
+            lightRay.init.apply(lightRay, arguments);
             return lightRay;
         }
 

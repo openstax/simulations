@@ -15,6 +15,7 @@ define(function (require) {
     MediumPropertiesPresets.DIAMOND   = new MediumProperties('Diamond',   Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT);
     MediumPropertiesPresets.MYSTERY_A = new MediumProperties('Mystery A', Constants.DIAMOND_INDEX_OF_REFRACTION_FOR_RED_LIGHT, true);
     MediumPropertiesPresets.MYSTERY_B = new MediumProperties('Mystery B', 1.4, true);
+    MediumPropertiesPresets.CUSTOM    = new MediumProperties('Custom',    1.0, false, true);
 
     return MediumPropertiesPresets;
 });
