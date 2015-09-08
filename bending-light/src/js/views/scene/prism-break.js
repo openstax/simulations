@@ -66,18 +66,19 @@ define(function(require) {
         getPrismIcons: function() {
             var icons = [];
 
-            var scale = 2000 / this.simulation.getHeight();
-            var mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), scale);
+            var scale = 300 / this.simulation.getHeight();
+            var mvt = new ModelViewTransform.createSinglePointScaleInvertedYMapping(new Vector2(0, 0), new Vector2(0, 0), scale);
 
             var prisms = this.simulation.prismPrototypes;
             for (var i = 0; i < prisms.length; i++) {
                 var view = new PrismView({
                     mvt: mvt,
                     model: prisms[i],
-                    medium: this.simulation.prismMedium
+                    medium: this.simulation.prismMedium,
+                    drawRotationHandle: false
                 });
 
-                icons.push(PixiToImage.displayObjectToDataURI(view.displayObject));
+                icons.push(PixiToImage.displayObjectToDataURI(view.displayObject, 1));
             }
 
             return icons;

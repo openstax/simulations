@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('common/v3/pixi/view');
+                   require('common/v3/pixi/extensions');
     var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -46,18 +47,24 @@ define(function(require) {
          *
          */
         initialize: function(options) {
+            options = _.extend({
+                drawRotationHandle: true
+            }, options);
+
             this.mvt = options.mvt;
             this.medium = options.medium;
-
-            this.initGraphics();
+            this.drawRotationHandle = options.drawRotationHandle;
 
             // Cached objects
             this._vec = new Vector2();
             this._dragOffset = new PIXI.Point();
+            this._color = {};
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
-            this.listenTo(this.model, 'change:rotation', this.updateRotation);
-            this.listenTo(this.medium, 'change:color',   this.draw);
+            this.initGraphics();
+
+            this.listenTo(this.model,  'change:position', this.updatePosition);
+            this.listenTo(this.model,  'change:rotation', this.updateRotation);
+            this.listenTo(this.medium, 'change:color',    this.draw);
         },
 
         initGraphics: function() {
@@ -73,13 +80,18 @@ define(function(require) {
         },
 
         initRotationHandle: function() {
-            var rotationHandleView = new RotationHandle();
-            rotationHandleView.displayObject.x = -this.spriteWidth;
-            rotationHandleView.displayObject.rotation = Math.PI;
-            this.rotationHandle = rotationHandleView.displayObject
-            this.rotationHandle.buttonMode = true;
+            if (this.drawRotationHandle) {
+                var rotationHandleView = new RotationHandle();
+                rotationHandleView.displayObject.x = -this.spriteWidth;
+                rotationHandleView.displayObject.rotation = Math.PI;
+                this.rotationHandle = rotationHandleView.displayObject;
+                this.rotationHandle.buttonMode = true;
 
-            this.displayObject.addChild(this.rotationHandle);
+                this.displayObject.addChild(this.rotationHandle);    
+            }
+            else {
+                this.rotationHandle = new PIXI.Container();
+            }
         },
 
         draw: function() {
@@ -92,17 +104,25 @@ define(function(require) {
             //   the actual state of the shape.
             graphics.rotation = this.model.get('rotation');
 
-            var colorRgba = this.medium.get('color');
+            var colorRgba = this._color;
+            colorRgba.r = this.medium.get('color').r;
+            colorRgba.g = this.medium.get('color').g;
+            colorRgba.b = this.medium.get('color').b;
             var color = Colors.rgbToHexInteger(colorRgba);
             var outlineColor = Colors.rgbToHexInteger(Colors.darkenRgba(colorRgba, 0.2));
+
             graphics.lineStyle(1, outlineColor, 1);
             graphics.beginFill(color, 1);
 
             if (shape instanceof Circle) {
                 graphics.drawCircle(0, 0, this.mvt.modelToViewDeltaX(shape.radius));
             }
-            else
+            else if (shape instanceof Polygon) {
+                graphics.drawPiecewiseCurve(this.mvt.modelToView(shape.piecewiseCurve));
+            }
+            else {
                 graphics.drawRect(0, 0, 100, 100);
+            }
 
             graphics.endFill();
         },
