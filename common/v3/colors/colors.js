@@ -26,6 +26,11 @@ define(function (require) {
 		 * http://stackoverflow.com/a/5624139
 		 */
 		rgbToHex: function(r, g, b) {
+			if (typeof r === 'object') {
+				b = r.b;
+				g = r.g;
+				r = r.r;
+			}
 			return '#' + this.rgbToHexInteger(r, g, b).toString(16).slice(1);
 		},
 
@@ -33,6 +38,11 @@ define(function (require) {
 		 * http://stackoverflow.com/a/5624139
 		 */
 		rgbToHexInteger: function(r, g, b) {
+			if (typeof r === 'object') {
+				b = r.b;
+				g = r.g;
+				r = r.r;
+			}
 			return (1 << 24) + (r << 16) + (g << 8) + b;
 		},
 

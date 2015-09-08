@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2  = require('common/math/vector2');
 
     var RotationHandle = require('views/rotation-handle');
+    var createReverseCircleMask = require('views/create-reverse-circle-mask');
 
     var Polygon           = require('models/shape/polygon');
     var Circle            = require('models/shape/circle');
@@ -111,7 +112,7 @@ define(function(require) {
             var color = Colors.rgbToHexInteger(colorRgba);
             var outlineColor = Colors.rgbToHexInteger(Colors.darkenRgba(colorRgba, 0.2));
 
-            graphics.lineStyle(1, outlineColor, 1);
+            //graphics.lineStyle(1, outlineColor, 1);
             graphics.beginFill(color, 1);
 
             this.drawShape(graphics, shape);
@@ -134,8 +135,28 @@ define(function(require) {
                 this.drawShape(mask, shape.b);
                 mask.endFill();
 
+                if (graphics.mask)
+                    graphics.mask.parent.removeChild(graphics.mask);
+
                 graphics.mask = mask;
                 graphics.parent.addChild(mask);
+            }
+            else if (shape instanceof ShapeDifference) {
+                this.drawShape(graphics, shape.a);
+
+                if (shape.b instanceof Circle) {
+                    var bounds = shape.a.getBounds();
+                    var radius = this.mvt.modelToViewDeltaX(shape.b.radius);
+                    var width  = Math.floor(Math.abs(this.mvt.modelToViewDeltaX((bounds.x + bounds.w))) * 2);
+                    var height = Math.floor(Math.abs(this.mvt.modelToViewDeltaY((bounds.y + bounds.h))) * 2);
+                    var mask = createReverseCircleMask(radius, width, height);
+
+                    if (graphics.mask)
+                        graphics.mask.parent.removeChild(graphics.mask);
+
+                    // graphics.mask = mask;
+                    graphics.parent.addChild(mask);
+                }
             }
         },
 
