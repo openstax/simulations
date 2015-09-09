@@ -48,7 +48,14 @@ define(function (require) {
         getIntersections: function(incidentRay) {
             // Convert to the shape's local coordinates
             var tail = this.getPointRelativeToPosition(incidentRay.tail);
-            return this.shape.getIntersections(tail, incidentRay.directionUnitVector);
+            var intersections = this.shape.getIntersections(tail, incidentRay.directionUnitVector);
+
+            // Then convert the intersection points back to global coordinates
+            var offset = this.get('position');
+            for (var i = 0; i < intersections.length; i++)
+                intersections[i].point.add(offset);
+            
+            return intersections;
         },
 
         /**
