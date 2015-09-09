@@ -149,7 +149,7 @@ define(function(require) {
         },
 
         updateRotation: function() {
-            this.displayObject.rotation = -this.model.get('rotation');
+            this.graphics.rotation = -this.model.get('rotation');
         },
 
         updatePosition: function() {
