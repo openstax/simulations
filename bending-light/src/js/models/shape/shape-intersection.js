@@ -91,6 +91,13 @@ define(function (require) {
          */
         contains: function(point) {
             return this.a.contains(point) && this.b.contains(point);
+        },
+        
+        /**
+         * Clones this shape instance and returns it
+         */
+        clone: function() {
+            return new ShapeIntersection(this.a.clone(), this.b.clone());
         }
 
     });

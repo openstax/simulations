@@ -42,7 +42,12 @@ define(function (require) {
         /**
          * Returns whether the shape contains a given point
          */
-        contains: function(point) {}
+        contains: function(point) {},
+
+        /**
+         * Clones this shape instance and returns it
+         */
+        clone: function() {}
 
     });
 

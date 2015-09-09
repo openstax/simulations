@@ -85,8 +85,6 @@ define(function(require) {
         initRotationHandle: function() {
             if (this.drawRotationHandle) {
                 var rotationHandleView = new RotationHandle();
-                rotationHandleView.displayObject.x = -this.spriteWidth;
-                rotationHandleView.displayObject.rotation = Math.PI;
                 this.rotationHandle = rotationHandleView.displayObject;
                 this.rotationHandle.buttonMode = true;
 
@@ -125,10 +123,20 @@ define(function(require) {
         drawShape: function(graphics, shape) {
             if (shape instanceof Circle) {
                 graphics.drawCircle(0, 0, this.mvt.modelToViewDeltaX(shape.radius));
+
+                this.rotationHandle.visible = false;
             }
             else if (shape instanceof Polygon) {
                 var curve = this.mvt.modelToViewDelta(shape.piecewiseCurve);
                 graphics.drawPiecewiseCurve(curve);
+
+                var handleLoc = this.mvt.modelToViewDelta(shape.getReferencePoint());
+                this.rotationHandle.x = handleLoc.x;
+                this.rotationHandle.y = handleLoc.y;
+                this.rotationHandle.rotation = this._vec
+                    .set(this.displayObject.x, this.displayObject.y)
+                    .sub(handleLoc.x, handleLoc.y)
+                    .angle();
             }
             else if (shape instanceof ShapeIntersection) {
                 this.drawShape(graphics, shape.a);
@@ -183,7 +191,7 @@ define(function(require) {
         },
 
         dragStart: function(event) {
-            if (!this.rotateOnly) {
+            if (!this.rotateOnly && !this.rotating) {
                 this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
                 this.translating = true;    
             }
@@ -215,8 +223,9 @@ define(function(require) {
                 var y = event.data.global.y;
 
                 var vector = this._vec.set(x, y).sub(this.displayObject.x, this.displayObject.y);
-                var rotation = vector.angle();
+                var rotation = -vector.angle();
                 var dr = rotation - this.model.get('rotation');
+                console.log(this.model.get('rotation'), rotation, dr);
                 
                 this.model.rotate(dr);
             }

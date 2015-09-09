@@ -17,11 +17,14 @@ define(function (require) {
     var Polygon = function(points, referencePointIndex) {
         Shape.apply(this, arguments);
 
+        if (points)
+            this.piecewiseCurve = PiecewiseCurve.fromPoints(points, false);
+
         this.referencePointIndex = referencePointIndex;
-        this.piecewiseCurve = PiecewiseCurve.fromPoints(points, false);
 
         this._normal1 = new Vector2();
         this._normal2 = new Vector2();
+        this._centroid = new Vector2();
     };
 
     /**
@@ -93,6 +96,66 @@ define(function (require) {
         },
 
         /**
+         * Returns the calculated area of the polygon.
+         *
+         * Algorithm from http://stackoverflow.com/a/16283349/4085004
+         */
+        getArea: function() {
+            var area = 0;
+            var i, j;
+            var pointsX = this.piecewiseCurve.xPoints;
+            var pointsY = this.piecewiseCurve.yPoints;
+            var length = pointsX.length;
+
+            for (i = 0, j = length - 1; i < length; j = i, i++) {
+                area += pointsX[i] * pointsY[j];
+                area -= pointsY[i] * pointsX[j];
+            }
+            area /= 2;
+
+            return area;
+        },
+
+        /**
+         * Returns the calculated centroid of the polygon as a Vector2.
+         *
+         * Algorithm from http://stackoverflow.com/a/16283349/4085004
+         */
+        getCentroid: function() {
+            var x = 0;
+            var y = 0;
+            var f;
+            var i, j;
+            var pointsX = this.piecewiseCurve.xPoints;
+            var pointsY = this.piecewiseCurve.yPoints;
+            var point1X, point1Y;
+            var point2X, point2Y;
+            var length = pointsX.length
+
+            for (i = 0, j = length - 1; i < length; j=i,i++) {
+                point1X = pointsX[i];
+                point1Y = pointsY[i];
+                point2X = pointsX[j];
+                point2Y = pointsY[j];
+                f = point1X * point2Y - point2X * point1Y;
+                x += (point1X + point2X) * f;
+                y += (point1Y + point2Y) * f;
+            }
+
+            f = this.getArea() * 6;
+
+            return this._centroid.set(x / f, y / f);
+        },
+
+        /**
+         * Translates the polygon's points so its centroid is at the origin
+         */
+        centerOnCentroid: function() {
+            var centroid = this.getCentroid();
+            this.piecewiseCurve.translate(-centroid.x, -centroid.y);
+        },
+
+        /**
          * Returns a rectangle representing the bounds of the shape
          */
         getBounds: function() {
@@ -112,6 +175,16 @@ define(function (require) {
          */
         contains: function(point) {
             return this.piecewiseCurve.contains(point);
+        },
+
+        /**
+         * Clones this shape instance and returns it
+         */
+        clone: function() {
+            var polygon = new Polygon();
+            polygon.piecewiseCurve = this.piecewiseCurve.clone();
+            polygon.referencePointIndex = this.referencePointIndex;
+            return polygon;
         }
 
     });

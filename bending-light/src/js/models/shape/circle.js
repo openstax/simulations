@@ -72,6 +72,13 @@ define(function (require) {
          */
         contains: function(point) {
             return point.distance(0, 0) <= this.radius;
+        },
+
+        /**
+         * Clones this shape instance and returns it
+         */
+        clone: function() {
+            return new Circle(this.radius);
         }
 
     });

@@ -54,6 +54,7 @@ define(function (require, exports, module) {
 
             var a = Constants.CHARACTERISTIC_LENGTH * 10; // characteristic length scale
             var b = a / 4; // characteristic length scale
+            var h = a * Math.sqrt(3) / 2;
 
             // Square
             prismPrototypes.push(new Prism({}, {
@@ -67,25 +68,29 @@ define(function (require, exports, module) {
             }));
 
             // Triangle
+            var oX = -a / 2;                     // X offset to center
+            var oY = Math.tan(Math.PI / 6) * oX; // Y offset to center
             prismPrototypes.push(new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
-                    new Vector2(),
-                    new Vector2(a, 0),
-                    new Vector2(a / 2, a * Math.sqrt(3) / 2)
+                    new Vector2(0 + oX,     0 + oY),
+                    new Vector2(a + oX,     0 + oY),
+                    new Vector2(a / 2 + oX, h + oY)
                 ]
             }));
 
             // Trapezoid
-            prismPrototypes.push(new Prism({}, {
+            var trapezoid = new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
                     new Vector2(),
                     new Vector2(a, 0),
-                    new Vector2(a / 2 + b, a * Math.sqrt(3) / 2),
-                    new Vector2(a / 2 - b, a * Math.sqrt(3) / 2)
+                    new Vector2(a / 2 + b, h),
+                    new Vector2(a / 2 - b, h)
                 ]
-            }));
+            });
+            trapezoid.shape.centerOnCentroid();
+            prismPrototypes.push(trapezoid);
 
             var radius = a / 2;
 
@@ -377,6 +382,7 @@ define(function (require, exports, module) {
                 for (var j = 0; j < intersections.length; j++)
                     allIntersections.push(intersections[j]);
             }
+
             if (allIntersections.length) {
                 // Get the closest one (which would be hit first)
                 this._incidentRay = incidentRay;

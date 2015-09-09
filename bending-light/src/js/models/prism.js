@@ -23,7 +23,7 @@ define(function (require) {
          */
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, [attributes, options]);
-            
+
             if (options.shape)
                 this.shape = options.shape;
             else if (options.points)
@@ -67,7 +67,7 @@ define(function (require) {
             return new Prism({ 
                 position: this.get('position') 
             }, { 
-                shape: this.shape 
+                shape: this.shape.clone()
             });
         },
 
