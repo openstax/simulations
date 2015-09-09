@@ -160,6 +160,7 @@ define(function (require, exports, module) {
             this._from       = new Vector2();
             this._offset     = new Vector2();
             this._point      = new Vector2();
+            this._dirUnit    = new Vector2();
             this._direction  = new Vector2();
             this._scratchVec = new Vector2();
             this._scratchL   = new Vector2();
@@ -204,10 +205,10 @@ define(function (require, exports, module) {
          * Algorithm that computes the trajectories of the rays throughout the system
          */
         propagateRays: function() {
-            if (this.laser.get('on')) {
+            if (this.laser.get('on')) {console.log('-----------------')
                 var tail = this.laser.get('emissionPoint');
                 var laserInPrism = this.isLaserInPrism();
-                var directionUnitVector = this.laser.getDirectionUnitVector();
+                var directionUnitVector = this._dirUnit.set(this.laser.getDirectionUnitVector());
                 if (!this.get('manyRays')) {
                     // Just one main, central ray
                     this.propagateFrom(tail, directionUnitVector, 1.0, laserInPrism);
@@ -354,7 +355,7 @@ define(function (require, exports, module) {
                     this.propagateRay(reflected, count + 1);
                 
                 this.propagateRay(refracted, count + 1);
-
+console.log(intersection.getPoint())
                 // Add the incident ray itself
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
