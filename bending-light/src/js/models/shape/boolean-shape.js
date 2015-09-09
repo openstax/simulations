@@ -40,8 +40,21 @@ define(function (require) {
                 ClipperLib.PolyFillType.pftNonZero
             );
 
+            // This is somewhat of a hack. For some reason we get a tiny sliver of leftover
+            //   rectangle on the top and bottom of the circle, but if I make the shape
+            //   smaller and then make it bigger again with a miter limit, it gets rid of
+            //   the unwanted leftovers. I'm glad it works though.
+            var offsetPaths = [];
+            var miterLimit = 1;
+            var arcTolerance = 0.05;
+            var clipperOffset = new ClipperLib.ClipperOffset(miterLimit, arcTolerance);
+            clipperOffset.AddPaths(solutionPaths, ClipperLib.JoinType.jtMiter, ClipperLib.EndType.etClosedPolygon);
+            clipperOffset.Execute(offsetPaths, -10000);
+            clipperOffset.Execute(offsetPaths, +10000);
+            var solutionPath = offsetPaths[0];
+
             if (succeeded)
-                return this.clipperPathToPiecewiseCurve(solutionPaths[0]);
+                return this.clipperPathToPiecewiseCurve(solutionPath);
             else
                 console.error('Clipper difference failed! Paths: ', aPath, bPath);
         },
