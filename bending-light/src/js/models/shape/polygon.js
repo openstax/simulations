@@ -69,7 +69,7 @@ define(function (require) {
                     tail.x,        tail.y,
                     tail.x + direction.x, tail.y + direction.y
                 );
-
+                
                 if (intersection && intersection instanceof Vector2) {
                     // Choose the normal vector that points the opposite direction of
                     //   the incoming ray

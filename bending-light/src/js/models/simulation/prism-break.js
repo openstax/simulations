@@ -189,6 +189,18 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Clear the model in preparation for another ray propagation update phase
+         */
+        clear: function() {
+            BendingLightSimulation.prototype.clear.apply(this, arguments);
+
+            for (var i = this.intersections.length - 1; i >= 0; i--) {
+                this.intersections[i].destroy();
+                this.intersections.splice(i, 1);
+            }
+        },
+
+        /**
          * Algorithm that computes the trajectories of the rays throughout the system
          */
         propagateRays: function() {

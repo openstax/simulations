@@ -80,6 +80,8 @@ define(function(require) {
         initPrism: function() {
             this.graphics = new PIXI.Graphics();
             this.displayObject.addChild(this.graphics);
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = 'move';
 
             if (!(this.model.shape instanceof Circle))
                 this.originalPiecewiseCurve = this.model.shape.toPiecewiseCurve();

@@ -11,11 +11,12 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var BendingLightSceneView = require('views/scene');
-    var LaserView             = require('views/laser');
-    var MediumView            = require('views/medium');
-    var ProtractorView        = require('views/protractor');
-    var PrismView             = require('views/prism');
+    var BendingLightSceneView   = require('views/scene');
+    var LaserView               = require('views/laser');
+    var MediumView              = require('views/medium');
+    var ProtractorView          = require('views/protractor');
+    var PrismView               = require('views/prism');
+    var IntersectionNormalsView = require('views/intersection-normals');
 
     var Assets = require('assets');
 
@@ -41,6 +42,7 @@ define(function(require) {
             this.initMediumView();
             this.initProtractorView();
             this.initPrisms();
+            this.initIntersectionNormals();
         },
 
         initMediumView: function() {
@@ -67,12 +69,28 @@ define(function(require) {
             this.bottomLayer.addChild(this.prisms);
         },
 
+        initIntersectionNormals: function() {
+            this.intersectionNormalsView = new IntersectionNormalsView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.intersectionNormalsView.displayObject);
+        },
+
         updateEnvironmentColor: function(medium, color) {
             var graphics = this.environmentGraphics;
             graphics.clear();
             graphics.beginFill(Colors.rgbToHexInteger(color.r, color.g, color.b), 1);
             graphics.drawRect(0, 0, this.width, this.height);
             graphics.endFill();
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            BendingLightSceneView.prototype._update.apply(this, arguments);
+
+            if (this.simulation.dirty)
+                this.intersectionNormalsView.update();
         },
 
         getPrismIcons: function() {
