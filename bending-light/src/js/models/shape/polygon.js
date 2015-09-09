@@ -40,6 +40,13 @@ define(function (require) {
         },
 
         /**
+         * Returns a piecewise curve approximation
+         */
+        toPiecewiseCurve: function() {
+            return this.piecewiseCurve.clone();
+        },
+
+        /**
          * Compute the intersections of the specified ray with this polygon's edges
          */
         getIntersections: function(tail, direction) {

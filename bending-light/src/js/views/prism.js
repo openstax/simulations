@@ -80,6 +80,9 @@ define(function(require) {
         initPrism: function() {
             this.graphics = new PIXI.Graphics();
             this.displayObject.addChild(this.graphics);
+
+            if (!(this.model.shape instanceof Circle))
+                this.originalPiecewiseCurve = this.model.shape.toPiecewiseCurve();
         },
 
         initRotationHandle: function() {
@@ -99,12 +102,6 @@ define(function(require) {
             var shape = this.model.shape;
             var graphics = this.graphics;
             graphics.clear();
-
-            // We need to set the graphics object's rotation back by the current
-            //   rotation in case the shape itself has been rotated, because we
-            //   apply all the rotations to the displayObject instead of drawing
-            //   the actual state of the shape.
-            graphics.rotation = this.model.get('rotation');
 
             var colorRgba = this._color;
             colorRgba.r = this.medium.get('color').r;
@@ -127,8 +124,8 @@ define(function(require) {
 
                 this.rotationHandle.visible = false;
             }
-            else if (shape instanceof Polygon) {
-                var curve = this.mvt.modelToViewDelta(shape.piecewiseCurve);
+            else {
+                var curve = this.mvt.modelToViewDelta(this.originalPiecewiseCurve);
                 graphics.drawPiecewiseCurve(curve);
 
                 var handleLoc = this.mvt.modelToViewDelta(shape.getReferencePoint());
@@ -137,41 +134,9 @@ define(function(require) {
                 this.rotationHandle.rotation = this._vec
                     .set(this.displayObject.x, this.displayObject.y)
                     .sub(handleLoc.x, handleLoc.y)
-                    .angle() - graphics.rotation;
+                    .angle();
 
-                this.rotationOffset = this.rotationHandle.rotation + graphics.rotation;
-            }
-            else if (shape instanceof ShapeIntersection) {
-                this.drawShape(graphics, shape.a);
-
-                var mask = new PIXI.Graphics();
-                mask.beginFill();
-                this.drawShape(mask, shape.b);
-                mask.endFill();
-
-                if (graphics.mask)
-                    graphics.mask.parent.removeChild(graphics.mask);
-
-                graphics.mask = mask;
-                graphics.parent.addChild(mask);
-            }
-            else if (shape instanceof ShapeDifference) {
-                this.drawShape(graphics, shape.a);
-
-                if (shape.b instanceof Circle) {
-                    var bounds = shape.a.getBounds();
-                    var radius = this.mvt.modelToViewDeltaX(shape.b.radius);
-                    var width  = Math.floor(Math.abs(this.mvt.modelToViewDeltaX((bounds.x + bounds.w))) * 2);
-                    var height = Math.floor(Math.abs(this.mvt.modelToViewDeltaY((bounds.y + bounds.h))) * 2);
-                    var mask = createReverseCircleMask(radius, width, height);
-                    mask.hitArea = new PIXI.Rectangle(0, 0, 0, 0);
-
-                    if (graphics.mask)
-                        graphics.mask.parent.removeChild(graphics.mask);
-
-                    graphics.mask = mask;
-                    graphics.parent.addChild(mask);
-                }
+                this.rotationOffset = this.rotationHandle.rotation;
             }
         },
 

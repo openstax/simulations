@@ -2,9 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _          = require('underscore');
+    var ClipperLib = require('clipper-lib');
 
-    var Shape        = require('models/shape');
+    var BooleanShape = require('models/shape/boolean-shape');
     var Intersection = require('models/intersection');
 
     /**
@@ -16,8 +17,8 @@ define(function (require) {
      * Note to self: TODO: When drawing these, Pixi v3 can now do alpha masks, so we should be able to draw
      *   a color to a canvas and clear a section of it to create an inverted mask.
      */
-    var ShapeDifference = function(a, b, center) {
-        Shape.apply(this, arguments);
+    var ShapeDifference = function(a, b) {
+        BooleanShape.apply(this, arguments);
 
         this.a = a;
         this.b = b;
@@ -26,7 +27,7 @@ define(function (require) {
     /**
      * Instance functions/properties
      */
-    _.extend(ShapeDifference.prototype, Shape.prototype, {
+    _.extend(ShapeDifference.prototype, BooleanShape.prototype, {
 
         /**
          * Rotates the shape
@@ -34,6 +35,17 @@ define(function (require) {
         rotate: function(radians) {
             this.a.rotate(radians);
             this.b.rotate(radians);
+        },
+
+        /**
+         * Returns a piecewise curve approximation
+         */
+        toPiecewiseCurve: function() {
+            return this.clipPiecewiseCurves(
+                this.a.toPiecewiseCurve(), 
+                this.b.toPiecewiseCurve(), 
+                ClipperLib.ClipType.ctDifference
+            );
         },
 
         /**

@@ -2,9 +2,10 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _          = require('underscore');
+    var ClipperLib = require('clipper-lib');
 
-    var Shape        = require('models/shape');
+    var BooleanShape = require('models/shape/boolean-shape');
     var Intersection = require('models/intersection');
 
     /**
@@ -18,7 +19,7 @@ define(function (require) {
      *   the intersection of the two.
      */
     var ShapeIntersection = function(a, b, center) {
-        Shape.apply(this, arguments);
+        BooleanShape.apply(this, arguments);
 
         this.a = a;
         this.b = b;
@@ -27,7 +28,7 @@ define(function (require) {
     /**
      * Instance functions/properties
      */
-    _.extend(ShapeIntersection.prototype, Shape.prototype, {
+    _.extend(ShapeIntersection.prototype, BooleanShape.prototype, {
 
         /**
          * Rotates the shape
@@ -35,6 +36,17 @@ define(function (require) {
         rotate: function(radians) {
             this.a.rotate(radians);
             this.b.rotate(radians);
+        },
+
+        /**
+         * Returns a piecewise curve approximation
+         */
+        toPiecewiseCurve: function() {
+            return this.clipPiecewiseCurves(
+                this.a.toPiecewiseCurve(), 
+                this.b.toPiecewiseCurve(), 
+                ClipperLib.ClipType.ctIntersection
+            );
         },
 
         /**

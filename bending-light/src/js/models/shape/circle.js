@@ -4,6 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var PiecewiseCurve   = require('common/math/piecewise-curve');
     var LineIntersection = require('common/math/line-intersection');
     var Vector2          = require('common/math/vector2');
 
@@ -25,6 +26,27 @@ define(function (require) {
      * Instance functions/properties
      */
     _.extend(Circle.prototype, Shape.prototype, {
+
+        /**
+         * Returns a piecewise curve approximation of a circle.
+         *
+         * Algorithm from http://journal.missiondata.com/post/63399320412/approximating-a-circle-with-a-polygon
+         */
+        toPiecewiseCurve: function() {
+            var numPoints = 48; // Increase this to get a higher-quality circle
+            var radius = this.radius;
+            var points = [];
+
+            for (var i = 0; i < numPoints; i++) {
+                var theta = Math.PI * (i / (numPoints / 2));
+                points.push(new Vector2(
+                    radius * Math.cos(theta),
+                    radius * Math.sin(theta)
+                ));
+            }
+
+            return PiecewiseCurve.fromPoints(points, false);
+        },
 
         /**
          * Compute the intersections of the specified ray with the circle

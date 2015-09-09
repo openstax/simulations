@@ -24,6 +24,11 @@ define(function (require) {
         rotate: function(radians) {},
 
         /**
+         * Returns a piecewise curve approximation
+         */
+        toPiecewiseCurve: function() {},
+
+        /**
          * Compute the intersections of the specified ray with this polygon's edges
          */
         getIntersections: function(tail, direction) {},
