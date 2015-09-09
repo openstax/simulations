@@ -102,7 +102,7 @@ define(function (require, exports, module) {
             }));
 
             // Continuous Semicircle
-            prismPrototypes.push(new Prism({}, {
+            var semicircle = new Prism({}, {
                 shape: new ShapeIntersection(
                     new Circle(radius), 
                     new Polygon([
@@ -112,10 +112,16 @@ define(function (require, exports, module) {
                         new Vector2(-radius,  radius)
                     ], 1 /* Attach at bottom right */)
                 )
-            }));
+            });
+            // The only problem with calculating these centroids from the polygons
+            //   is that, because the circle approximations have a lot of points,
+            //   the circles end up biasing the centroid calculation towards the
+            //   circle edges.
+            semicircle.shape.centerOnCentroid();
+            prismPrototypes.push(semicircle);
 
             // Continuous Diverging Lens
-            prismPrototypes.push(new Prism({}, {
+            var divergingLens = new Prism({}, {
                 shape: new ShapeDifference(
                     new Polygon([
                         new Vector2(0,                    -radius),
@@ -125,7 +131,9 @@ define(function (require, exports, module) {
                     ], 1 /* Attach at bottom right */),
                     new Circle(radius)
                 )
-            }));
+            });
+            divergingLens.shape.centerOnCentroid();
+            prismPrototypes.push(divergingLens);
 
             this.prismPrototypes = prismPrototypes;
         },

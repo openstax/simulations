@@ -4,9 +4,10 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var PiecewiseCurve   = require('common/math/piecewise-curve');
-    var LineIntersection = require('common/math/line-intersection');
-    var Vector2          = require('common/math/vector2');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var LineIntersection   = require('common/math/line-intersection');
+    var Vector2            = require('common/math/vector2');
+    var getPolygonCentroid = require('common/math/get-polygon-centroid');
 
     var Shape        = require('models/shape');
     var Intersection = require('models/intersection');
@@ -31,6 +32,13 @@ define(function (require) {
      * Instance functions/properties
      */
     _.extend(Polygon.prototype, Shape.prototype, {
+
+        /**
+         * Translates the shape
+         */
+        translate: function(dx, dy) {
+            this.piecewiseCurve.translate(dx, dy);
+        },
 
         /**
          * Rotates the shape
@@ -103,55 +111,14 @@ define(function (require) {
         },
 
         /**
-         * Returns the calculated area of the polygon.
-         *
-         * Algorithm from http://stackoverflow.com/a/16283349/4085004
-         */
-        getArea: function() {
-            var area = 0;
-            var i, j;
-            var pointsX = this.piecewiseCurve.xPoints;
-            var pointsY = this.piecewiseCurve.yPoints;
-            var length = pointsX.length;
-
-            for (i = 0, j = length - 1; i < length; j = i, i++) {
-                area += pointsX[i] * pointsY[j];
-                area -= pointsY[i] * pointsX[j];
-            }
-            area /= 2;
-
-            return area;
-        },
-
-        /**
          * Returns the calculated centroid of the polygon as a Vector2.
-         *
-         * Algorithm from http://stackoverflow.com/a/16283349/4085004
          */
         getCentroid: function() {
-            var x = 0;
-            var y = 0;
-            var f;
-            var i, j;
-            var pointsX = this.piecewiseCurve.xPoints;
-            var pointsY = this.piecewiseCurve.yPoints;
-            var point1X, point1Y;
-            var point2X, point2Y;
-            var length = pointsX.length
-
-            for (i = 0, j = length - 1; i < length; j=i,i++) {
-                point1X = pointsX[i];
-                point1Y = pointsY[i];
-                point2X = pointsX[j];
-                point2Y = pointsY[j];
-                f = point1X * point2Y - point2X * point1Y;
-                x += (point1X + point2X) * f;
-                y += (point1Y + point2Y) * f;
-            }
-
-            f = this.getArea() * 6;
-
-            return this._centroid.set(x / f, y / f);
+            return getPolygonCentroid(
+                this.piecewiseCurve.xPoints,
+                this.piecewiseCurve.yPoints,
+                this._centroid
+            );
         },
 
         /**

@@ -19,6 +19,11 @@ define(function (require) {
     _.extend(Shape.prototype, {
 
         /**
+         * Translates the shape
+         */
+        translate: function(dx, dy) {},
+
+        /**
          * Rotates the shape
          */
         rotate: function(radians) {},

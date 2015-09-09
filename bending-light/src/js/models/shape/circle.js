@@ -18,6 +18,7 @@ define(function (require) {
         Shape.apply(this, arguments);
 
         this.radius = radius;
+        this.center = new Vector2();
 
         this._vec = new Vector2();
     };
@@ -26,6 +27,13 @@ define(function (require) {
      * Instance functions/properties
      */
     _.extend(Circle.prototype, Shape.prototype, {
+
+        /**
+         * Translates the shape
+         */
+        translate: function(dx, dy) {
+            this.center.add(dx, dy);
+        },
 
         /**
          * Returns a piecewise curve approximation of a circle.
@@ -40,8 +48,8 @@ define(function (require) {
             for (var i = 0; i < numPoints; i++) {
                 var theta = Math.PI * (i / (numPoints / 2));
                 points.push(new Vector2(
-                    radius * Math.cos(theta),
-                    radius * Math.sin(theta)
+                    this.center.x + radius * Math.cos(theta),
+                    this.center.y + radius * Math.sin(theta)
                 ));
             }
 
@@ -53,7 +61,15 @@ define(function (require) {
          */
         getIntersections: function(tail, direction) {
             // Find the intersections between the infinite ray's line (not a segment) and the circle
-            var points = LineIntersection.lineCircleIntersection(tail.x, tail.y, tail.x + direction.x, tail.y + direction.y, 0, 0, this.radius);
+            var points = LineIntersection.lineCircleIntersection(
+                tail.x, 
+                tail.y, 
+                tail.x + direction.x, 
+                tail.y + direction.y, 
+                this.center.x, 
+                this.center.y, 
+                this.radius
+            );
 
             // Create Intersection instances from the returned points
             var intersections = [];
@@ -93,14 +109,17 @@ define(function (require) {
          * Returns whether the shape contains a given point
          */
         contains: function(point) {
-            return point.distance(0, 0) <= this.radius;
+            return point.distance(this.center) <= this.radius;
         },
 
         /**
          * Clones this shape instance and returns it
          */
         clone: function() {
-            return new Circle(this.radius);
+            var circle = new Circle(this.radius);
+            circle.center.x = this.center.x;
+            circle.center.y = this.center.y;
+            return circle;
         }
 
     });

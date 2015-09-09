@@ -172,7 +172,7 @@ define(function(require) {
                 
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
-
+                
                 this.model.translate(mdx, mdy);
             }
         },

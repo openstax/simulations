@@ -5,8 +5,9 @@ define(function (require) {
     var _          = require('underscore');
     var ClipperLib = require('clipper-lib');
 
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-    var Vector2        = require('common/math/vector2');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var Vector2            = require('common/math/vector2');
+    var getPolygonCentroid = require('common/math/get-polygon-centroid');
 
     var Shape = require('models/shape');
 
@@ -17,6 +18,8 @@ define(function (require) {
      */
     var BooleanShape = function() {
         Shape.apply(this, arguments);
+
+        this._centroid = new Vector2();
     };
 
     /**
@@ -89,7 +92,28 @@ define(function (require) {
             }
 
             return PiecewiseCurve.fromPoints(points, false);
-        }
+        },
+
+        /**
+         * Returns the calculated centroid of the polygon as a Vector2.
+         */
+        getCentroid: function() {
+            var solutionCurve = this.toPiecewiseCurve();
+            return getPolygonCentroid(
+                solutionCurve.xPoints,
+                solutionCurve.yPoints,
+                this._centroid
+            );
+        },
+
+        /**
+         * Translates the polygon's points so its centroid is at the origin
+         */
+        centerOnCentroid: function() {
+            var centroid = this.getCentroid();
+            this.a.translate(-centroid.x, -centroid.y);
+            this.b.translate(-centroid.x, -centroid.y);
+        },
 
     });
 
