@@ -84,7 +84,7 @@ define(function(require) {
 
         initRotationHandle: function() {
             if (this.drawRotationHandle) {
-                var rotationHandleView = new RotationHandle();
+                var rotationHandleView = new RotationHandle({ length: 10 });
                 this.rotationHandle = rotationHandleView.displayObject;
                 this.rotationHandle.buttonMode = true;
 
@@ -137,6 +137,8 @@ define(function(require) {
                     .set(this.displayObject.x, this.displayObject.y)
                     .sub(handleLoc.x, handleLoc.y)
                     .angle();
+
+                this.rotationOffset = this.rotationHandle.rotation;
             }
             else if (shape instanceof ShapeIntersection) {
                 this.drawShape(graphics, shape.a);
@@ -223,9 +225,8 @@ define(function(require) {
                 var y = event.data.global.y;
 
                 var vector = this._vec.set(x, y).sub(this.displayObject.x, this.displayObject.y);
-                var rotation = -vector.angle();
+                var rotation = -vector.angle() + this.rotationOffset;
                 var dr = rotation - this.model.get('rotation');
-                console.log(this.model.get('rotation'), rotation, dr);
                 
                 this.model.rotate(dr);
             }

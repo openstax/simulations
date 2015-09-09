@@ -57,7 +57,7 @@ define(function (require, exports, module) {
             var h = a * Math.sqrt(3) / 2;
 
             // Square
-            prismPrototypes.push(new Prism({}, {
+            var square = new Prism({}, {
                 referencePointIndex: 3, // Attach at bottom right
                 points: [
                     new Vector2(),
@@ -65,19 +65,21 @@ define(function (require, exports, module) {
                     new Vector2(a, a),
                     new Vector2(a, 0)
                 ]
-            }));
+            });
+            square.shape.centerOnCentroid();
+            prismPrototypes.push(square);
 
             // Triangle
-            var oX = -a / 2;                     // X offset to center
-            var oY = Math.tan(Math.PI / 6) * oX; // Y offset to center
-            prismPrototypes.push(new Prism({}, {
+            var triangle = new Prism({}, {
                 referencePointIndex: 1, // Attach at bottom right
                 points: [
-                    new Vector2(0 + oX,     0 + oY),
-                    new Vector2(a + oX,     0 + oY),
-                    new Vector2(a / 2 + oX, h + oY)
+                    new Vector2(0,     0),
+                    new Vector2(a,     0),
+                    new Vector2(a / 2, h)
                 ]
-            }));
+            });
+            triangle.shape.centerOnCentroid();
+            prismPrototypes.push(triangle);
 
             // Trapezoid
             var trapezoid = new Prism({}, {
