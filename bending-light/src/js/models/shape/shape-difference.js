@@ -16,7 +16,7 @@ define(function (require) {
      * Note to self: TODO: When drawing these, Pixi v3 can now do alpha masks, so we should be able to draw
      *   a color to a canvas and clear a section of it to create an inverted mask.
      */
-    var ShapeDifference = function(a, b) {
+    var ShapeDifference = function(a, b, center) {
         Shape.apply(this, arguments);
 
         this.a = a;

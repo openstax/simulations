@@ -17,7 +17,7 @@ define(function (require) {
      *   easy if the second shape is just used as a mask, because it is
      *   the intersection of the two.
      */
-    var ShapeIntersection = function(a, b) {
+    var ShapeIntersection = function(a, b, center) {
         Shape.apply(this, arguments);
 
         this.a = a;

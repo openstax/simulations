@@ -88,7 +88,7 @@ define(function(require) {
                 this.rotationHandle = rotationHandleView.displayObject;
                 this.rotationHandle.buttonMode = true;
 
-                this.displayObject.addChild(this.rotationHandle);    
+                this.graphics.addChild(this.rotationHandle);    
             }
             else {
                 this.rotationHandle = new PIXI.Container();
@@ -98,6 +98,7 @@ define(function(require) {
         draw: function() {
             var shape = this.model.shape;
             var graphics = this.graphics;
+            graphics.clear();
 
             // We need to set the graphics object's rotation back by the current
             //   rotation in case the shape itself has been rotated, because we
@@ -112,7 +113,7 @@ define(function(require) {
             var color = Colors.rgbToHexInteger(colorRgba);
             var outlineColor = Colors.rgbToHexInteger(Colors.darkenRgba(colorRgba, 0.2));
 
-            //graphics.lineStyle(1, outlineColor, 1);
+            graphics.lineStyle(1, outlineColor, 1);
             graphics.beginFill(color, 1);
 
             this.drawShape(graphics, shape);
@@ -136,9 +137,9 @@ define(function(require) {
                 this.rotationHandle.rotation = this._vec
                     .set(this.displayObject.x, this.displayObject.y)
                     .sub(handleLoc.x, handleLoc.y)
-                    .angle();
+                    .angle() - graphics.rotation;
 
-                this.rotationOffset = this.rotationHandle.rotation;
+                this.rotationOffset = this.rotationHandle.rotation + graphics.rotation;
             }
             else if (shape instanceof ShapeIntersection) {
                 this.drawShape(graphics, shape.a);
