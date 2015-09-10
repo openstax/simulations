@@ -207,6 +207,7 @@ define(function (require, exports, module) {
         propagateRays: function() {
             if (this.laser.get('on')) {console.log('-----------------')
                 var tail = this.laser.get('emissionPoint');
+            console.log(tail)
                 var laserInPrism = this.isLaserInPrism();
                 var directionUnitVector = this._dirUnit.set(this.laser.getDirectionUnitVector());
                 if (!this.get('manyRays')) {
@@ -299,6 +300,22 @@ define(function (require, exports, module) {
             if (intersection) {
                 // There was an intersection, so reflect and refract the light
 
+                // Add the incident ray itself
+                console.log(incidentRay.tail, ' --> ', intersection.getPoint())
+                this.addRay(LightRay.create(
+                    incidentRay.tail, 
+                    intersection.getPoint(), 
+                    n1, 
+                    wavelengthInN1, 
+                    incidentRay.power, 
+                    incidentRay.wavelength, 
+                    waveWidth, 
+                    0, 
+                    null, 
+                    true, 
+                    false
+                ));
+
                 // List the intersection in the model
                 this.addIntersection(intersection);
 
@@ -355,27 +372,12 @@ define(function (require, exports, module) {
                     this.propagateRay(reflected, count + 1);
                 
                 this.propagateRay(refracted, count + 1);
-console.log(intersection.getPoint())
-                // Add the incident ray itself
-                this.addRay(LightRay.create(
-                    incidentRay.tail, 
-                    intersection.getPoint(), 
-                    n1, 
-                    wavelengthInN1, 
-                    incidentRay.power, 
-                    incidentRay.wavelength, 
-                    waveWidth, 
-                    0, 
-                    null, 
-                    true, 
-                    false
-                ));
 
                 // Clean up; we don't need this anymore
                 reflected.destroy();
                 refracted.destroy();
             }
-            else {
+            else {console.log(incidentRay.tail, ' =-> ', this._scratchVec.set(incidentRay.tail).add(incidentRay.directionUnitVector))
                 // No intersection, so the light ray should just keep going
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
