@@ -24,6 +24,8 @@ define(function(require) {
         template: _.template(html),
 
         events: {
+            'click #color-type-one'   : 'colorOneClicked',
+            'click #color-type-white' : 'colorWhiteClicked',
             'slide .slider' : 'changeWavelength'
         },
 
@@ -69,9 +71,25 @@ define(function(require) {
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
                 this.$value.text(wavelength + 'nm');
-                this.simulation.set('wavelength', wavelength / Constants.METERS_TO_NANOMETERS);
+                this.setSimulationWavelength(wavelength);
             });
         },
+
+        colorOneClicked: function(event) {
+            this.wavelengthSliderView.enable();
+            this.$('.wavelength-selection-wrapper').removeClass('disabled');
+            this.setSimulationWavelength(this.$('.slider').val());
+        },
+
+        colorWhiteClicked: function(event) {
+            this.wavelengthSliderView.disable();
+            this.$('.wavelength-selection-wrapper').addClass('disabled');
+            this.simulation.set('wavelength', Constants.WHITE_LIGHT);
+        },
+
+        setSimulationWavelength: function(sliderWavelength) {
+            this.simulation.set('wavelength', sliderWavelength / Constants.METERS_TO_NANOMETERS);
+        }
 
     });
 

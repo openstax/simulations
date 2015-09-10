@@ -125,6 +125,14 @@ define(function(require) {
             this.$wavelengthSliderHandle.css('background-color', color);
         },
 
+        disable: function() {
+            this.$el.attr('disabled', 'disabled');
+        },
+
+        enable: function() {
+            this.$el.removeAttr('disabled');
+        }
+
     });
 
 
