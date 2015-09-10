@@ -207,7 +207,6 @@ define(function (require, exports, module) {
         propagateRays: function() {
             if (this.laser.get('on')) {console.log('-----------------')
                 var tail = this.laser.get('emissionPoint');
-            console.log(tail)
                 var laserInPrism = this.isLaserInPrism();
                 var directionUnitVector = this._dirUnit.set(this.laser.getDirectionUnitVector());
                 if (!this.get('manyRays')) {
