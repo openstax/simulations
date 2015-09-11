@@ -66,6 +66,14 @@ define(function(require) {
 
         update: function() {
             this.draw();
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     });

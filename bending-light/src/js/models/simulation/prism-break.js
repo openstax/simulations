@@ -47,6 +47,9 @@ define(function (require, exports, module) {
             this.initPrismPrototypes();
 
             BendingLightSimulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.on('change:manyRays',        this.updateOnNextFrame);
+            this.on('change:showReflections', this.updateOnNextFrame);
         },
 
         initPrismPrototypes: function() {

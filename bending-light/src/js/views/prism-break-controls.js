@@ -26,12 +26,21 @@ define(function(require) {
         events: {
             'click #color-type-one'   : 'colorOneClicked',
             'click #color-type-white' : 'colorWhiteClicked',
-            'slide .slider' : 'changeWavelength'
+
+            'slide .slider' : 'changeWavelength',
+
+            'click #ray-count-single'   : 'rayCountSingleClicked',
+            'click #ray-count-multiple' : 'rayCountMultipleClicked',
+
+            'click #show-reflections-check' : 'toggleReflections',
+            'click #show-normals-check'     : 'toggleNormals',
+            'click #show-protractor-check'  : 'toggleProtractor'
         },
 
         initialize: function(options) {
             this.simulation = options.simulation;
             this.laser = this.simulation.laser;
+            this.sceneView = options.sceneView;
 
             this.initWavelengthSliderView();
         },
@@ -89,6 +98,35 @@ define(function(require) {
 
         setSimulationWavelength: function(sliderWavelength) {
             this.simulation.set('wavelength', sliderWavelength / Constants.METERS_TO_NANOMETERS);
+        },
+
+        rayCountSingleClicked: function(event) {
+            this.simulation.set('manyRays', false);
+        },
+
+        rayCountMultipleClicked: function(event) {
+            this.simulation.set('manyRays', true);
+        },
+
+        toggleReflections: function(event) {
+            if ($(event.target).is(':checked'))
+                this.simulation.set('showReflections', true);
+            else
+                this.simulation.set('showReflections', false);
+        },
+
+        toggleNormals: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showIntersectionNormals();
+            else
+                this.sceneView.hideIntersectionNormals();
+        },
+
+        toggleProtractor: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showProtractor();
+            else
+                this.sceneView.hideProtractor();
         }
 
     });

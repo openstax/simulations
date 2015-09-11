@@ -15,6 +15,7 @@ define(function(require) {
     var LaserView          = require('views/laser');
     var LaserBeamsView     = require('views/laser-beams');
     var IntensityMeterView = require('views/intensity-meter');
+    var ProtractorView     = require('views/protractor');
 
     var Assets = require('assets');
 
@@ -60,6 +61,7 @@ define(function(require) {
             this.initMVT();
             this.initLightRays();
             this.initLaserView();
+            this.initProtractorView();
         },
 
         initMVT: function() {
@@ -93,6 +95,17 @@ define(function(require) {
             });
 
             this.topLayer.addChild(this.laserView.displayObject);
+        },
+
+        initProtractorView: function() {
+            this.protractorView = new ProtractorView({
+                mvt: this.mvt
+            });
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+
+            this.middleLayer.addChild(this.protractorView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -129,6 +142,14 @@ define(function(require) {
             });
 
             return PixiToImage.displayObjectToDataURI(intensityMeterView.displayObject);
+        },
+
+        showProtractor: function() {
+            this.protractorView.show();
+        },
+
+        hideProtractor: function() {
+            this.protractorView.hide();
         }
 
     }, Constants.SceneView);

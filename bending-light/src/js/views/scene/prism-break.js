@@ -14,9 +14,9 @@ define(function(require) {
     var BendingLightSceneView   = require('views/scene');
     var LaserView               = require('views/laser');
     var MediumView              = require('views/medium');
-    var ProtractorView          = require('views/protractor');
     var PrismView               = require('views/prism');
     var IntersectionNormalsView = require('views/intersection-normals');
+    var ProtractorView          = require('views/protractor');
 
     var Assets = require('assets');
 
@@ -40,7 +40,6 @@ define(function(require) {
             BendingLightSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMediumView();
-            this.initProtractorView();
             this.initPrisms();
             this.initIntersectionNormals();
         },
@@ -49,17 +48,6 @@ define(function(require) {
             this.environmentGraphics = new PIXI.Graphics();
             this.mediumLayer.addChild(this.environmentGraphics);
             this.listenTo(this.simulation.environment, 'change:color', this.updateEnvironmentColor);
-        },
-
-        initProtractorView: function() {
-            this.protractorView = new ProtractorView({
-                mvt: this.mvt
-            });
-            this.protractorView.displayObject.x = this.width / 2;
-            this.protractorView.displayObject.y = this.height / 2;
-            this.protractorView.hide();
-
-            this.middleLayer.addChild(this.protractorView.displayObject);
         },
 
         initPrisms: function() {
@@ -76,6 +64,19 @@ define(function(require) {
             });
 
             this.middleLayer.addChild(this.intersectionNormalsView.displayObject);
+        },
+
+        initProtractorView: function() {
+            this.protractorView = new ProtractorView({
+                mvt: this.mvt,
+                scale: 0.6,
+                enableRotation: true
+            });
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+
+            this.topLayer.addChild(this.protractorView.displayObject);
         },
 
         updateEnvironmentColor: function(medium, color) {
@@ -151,12 +152,12 @@ define(function(require) {
             this.prismViews.push(prismView);
         },
 
-        showProtractor: function() {
-            this.protractorView.show();
+        showIntersectionNormals: function() {
+            this.intersectionNormalsView.show();
         },
 
-        hideProtractor: function() {
-            this.protractorView.hide();
+        hideIntersectionNormals: function() {
+            this.intersectionNormalsView.hide();
         }
 
     });

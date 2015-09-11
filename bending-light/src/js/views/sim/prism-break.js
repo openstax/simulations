@@ -71,7 +71,8 @@ define(function(require) {
 
         initPrismBreakControls: function() {
             this.prismBreakControlsView = new PrismBreakControlsView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                sceneView: this.sceneView
             });
         },
 
