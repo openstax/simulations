@@ -97,7 +97,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.dirty || this.simulation.laser.get('wave')) {
-                this.laserBeamsView.draw();
+                this.laserBeamsView.update();
             }
         },
 

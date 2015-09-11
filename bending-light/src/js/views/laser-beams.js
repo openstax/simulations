@@ -350,7 +350,19 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.update();
+        },
+
+        updateBlendMode: function() {
+            if (this.simulation.get('wavelength') === Constants.WHITE_LIGHT)
+                this.raysGraphics.blendMode = PIXI.BLEND_MODES.ADD;
+            else
+                this.raysGraphics.blendMode = PIXI.BLEND_MODES.NORMAL;
+        },
+
+        update: function() {
             this.draw();
+            this.updateBlendMode();
         }
 
     }, Constants.LaserBeamsView);
