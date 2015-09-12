@@ -76,6 +76,15 @@ define(function(require) {
             });
         },
 
+        /**
+         * Resets the sim and options
+         */
+        reset: function() {
+            BendingLightSimView.prototype.reset.apply(this);
+            
+            this.prismBreakControlsView.reset();
+        },
+
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
 

@@ -53,6 +53,12 @@ define(function(require) {
             });
         },
 
+        reset: function() {
+            this.$('#color-type-one').click();
+            this.$('#ray-count-single').click();
+            this.$('input[type="checkbox"]').removeAttr('checked');
+        },
+
         /**
          * Renders content and canvas for heatmap
          */

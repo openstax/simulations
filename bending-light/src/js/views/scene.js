@@ -111,6 +111,7 @@ define(function(require) {
         reset: function() {
             this.protractorView.displayObject.x = this.width / 2;
             this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
