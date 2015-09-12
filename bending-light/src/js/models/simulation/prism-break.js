@@ -189,7 +189,7 @@ define(function (require, exports, module) {
                 mediumProperties: MediumPropertiesPresets.AIR
             });
 
-            this.prismMedium = new Medium({
+            this.prismMedium.set({
                 mediumProperties: MediumPropertiesPresets.GLASS
             });
         },
