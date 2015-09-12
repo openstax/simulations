@@ -7,6 +7,8 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
     var Pool    = require('object-pool');
 
+    var Constants = require('constants');
+
     /**
      * Because Backbone models only see shallow changes, we need to
      *   create new objects when assigning a new value to an attribute
@@ -65,6 +67,23 @@ define(function (require) {
                 series.splice(series.length - 1, 1);
         },
 
+        clearSamples: function() {
+            this.probe1Series = [];
+            this.probe2Series = [];
+        },
+
+        setBodyPosition: function(x, y) {
+            var oldBodyPosition = this.get('bodyPosition');
+            
+            if (x instanceof Vector2)
+                this.set('bodyPosition', vectorPool.create().set(x));
+            else
+                this.set('bodyPosition', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldBodyPosition);
+        },
+
         translateBody: function(x, y) {
             var oldBodyPosition = this.get('bodyPosition');
             var newBodyPosition = vectorPool.create().set(this.get('bodyPosition'));
@@ -78,6 +97,18 @@ define(function (require) {
             vectorPool.remove(oldBodyPosition);
         },
 
+        setProbe1Position: function(x, y) {
+            var oldProbePosition = this.get('probe1Position');
+            
+            if (x instanceof Vector2)
+                this.set('probe1Position', vectorPool.create().set(x));
+            else
+                this.set('probe1Position', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldProbePosition);
+        },
+
         translateProbe1: function(x, y) {
             var oldProbe1Position = this.get('probe1Position');
             var newProbe1Position = vectorPool.create().set(this.get('probe1Position'));
@@ -89,6 +120,18 @@ define(function (require) {
             
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldProbe1Position);
+        },
+
+        setProbe2Position: function(x, y) {
+            var oldProbePosition = this.get('probe2Position');
+            
+            if (x instanceof Vector2)
+                this.set('probe2Position', vectorPool.create().set(x));
+            else
+                this.set('probe2Position', vectorPool.create().set(x, y));
+
+            // Only remove it at the end or we might be given the same one
+            vectorPool.remove(oldProbePosition);
         },
 
         translateProbe2: function(x, y) {
@@ -117,7 +160,7 @@ define(function (require) {
             vectorPool.remove(this.get('probe2Position'));
         }
 
-    });
+    }, Constants.WaveSensor);
 
     return WaveSensor;
 });

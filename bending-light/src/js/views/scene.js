@@ -108,6 +108,11 @@ define(function(require) {
             this.middleLayer.addChild(this.protractorView.displayObject);
         },
 
+        reset: function() {
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.dirty || this.simulation.laser.get('wave')) {
                 this.laserBeamsView.update();

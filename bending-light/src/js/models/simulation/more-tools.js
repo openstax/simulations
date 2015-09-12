@@ -31,18 +31,26 @@ define(function (require, exports, module) {
         initComponents: function() {
             IntroSimulation.prototype.initComponents.apply(this, arguments);
 
-            var w = Constants.MODEL_WIDTH;
-            var h = Constants.MODEL_HEIGHT;
-
             this.waveSensor = new WaveSensor({
-                bodyPosition:   new Vector2(w * -0.105, h * -0.15),
-                probe1Position: new Vector2(w * -0.027, h *  0.039),
-                probe2Position: new Vector2(w *  0.027, h *  0.039),
+                bodyPosition:   new Vector2(WaveSensor.DEFAULT_BODY_X, WaveSensor.DEFAULT_BODY_Y),
+                probe1Position: new Vector2(WaveSensor.DEFAULT_PROBE1_X, WaveSensor.DEFAULT_PROBE1_Y),
+                probe2Position: new Vector2(WaveSensor.DEFAULT_PROBE2_X, WaveSensor.DEFAULT_PROBE2_Y)
             });
-
+            
             this.velocitySensor = new VelocitySensor({
-                position: new Vector2(w * -0.105, h * -0.15)
+                position: new Vector2(VelocitySensor.DEFAULT_X, VelocitySensor.DEFAULT_Y)
             });
+        },
+
+        resetComponents: function() {
+            IntroSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.waveSensor.setBodyPosition(WaveSensor.DEFAULT_BODY_X, WaveSensor.DEFAULT_BODY_Y);
+            this.waveSensor.setProbe1Position(WaveSensor.DEFAULT_PROBE1_X, WaveSensor.DEFAULT_PROBE1_Y);
+            this.waveSensor.setProbe2Position(WaveSensor.DEFAULT_PROBE2_X, WaveSensor.DEFAULT_PROBE2_Y);
+            this.waveSensor.clearSamples();
+            
+            this.velocitySensor.setPosition(VelocitySensor.DEFAULT_X, VelocitySensor.DEFAULT_Y);
         },
 
         _update: function(time, deltaTime) {

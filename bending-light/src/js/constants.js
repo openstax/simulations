@@ -61,6 +61,42 @@ define(function (require) {
     Constants.MIN_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
     Constants.MAX_WAVELENGTH = 700;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                                TOOLS                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var IntensityMeter = {};
+
+    IntensityMeter.DEFAULT_SENSOR_X = Constants.MODEL_WIDTH  * -0.15;
+    IntensityMeter.DEFAULT_SENSOR_Y = Constants.MODEL_HEIGHT * -0.1;
+    IntensityMeter.DEFAULT_BODY_X   = Constants.MODEL_WIDTH  * -0.04;
+    IntensityMeter.DEFAULT_BODY_Y   = Constants.MODEL_HEIGHT * -0.2;
+
+    Constants.IntensityMeter = IntensityMeter;
+
+
+    var WaveSensor = {};
+
+    WaveSensor.DEFAULT_BODY_X   = Constants.MODEL_WIDTH  * -0.105;
+    WaveSensor.DEFAULT_BODY_Y   = Constants.MODEL_HEIGHT * -0.15;
+    WaveSensor.DEFAULT_PROBE1_X = Constants.MODEL_WIDTH  * -0.027;
+    WaveSensor.DEFAULT_PROBE1_Y = Constants.MODEL_HEIGHT *  0.039;
+    WaveSensor.DEFAULT_PROBE2_X = Constants.MODEL_WIDTH  *  0.027;
+    WaveSensor.DEFAULT_PROBE2_Y = Constants.MODEL_HEIGHT *  0.039;
+
+    Constants.WaveSensor = WaveSensor;
+
+
+    var VelocitySensor = {};
+
+    VelocitySensor.DEFAULT_X = Constants.MODEL_WIDTH  * -0.105;
+    VelocitySensor.DEFAULT_Y = Constants.MODEL_HEIGHT * -0.15;
+
+    Constants.VelocitySensor = VelocitySensor;
+
     /*************************************************************************
      **                                                                     **
      **                                LASER                                **

@@ -7,6 +7,8 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
     var Pool    = require('object-pool');
 
+    var Constants = require('constants');
+
     /**
      * Because Backbone models only see shallow changes, we need to
      *   create new objects when assigning a new value to an attribute
@@ -151,7 +153,7 @@ define(function (require) {
             vectorPool.remove(this.get('sensorPosition'));
         }
 
-    });
+    }, Constants.IntensityMeter);
 
     return IntensityMeter;
 });
