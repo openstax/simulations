@@ -39,6 +39,18 @@ define(function(require) {
             });
         },
 
+        reset: function() {
+            if (this.model.get('wave'))
+                this.$('.wave').click();
+            else
+                this.$('.ray').click();
+
+            this.updateLock(function() {
+                this.wavelengthSliderView.reset();
+                this.$value.text(parseInt(this.wavelengthSliderView.val()) + 'nm');
+            });
+        },
+
         /**
          * Renders content and canvas for heatmap
          */
@@ -48,7 +60,6 @@ define(function(require) {
                 unique: this.cid
             };
 
-            this.$el.remove();
             this.setElement($(this.template(data)));
             
             this.wavelengthSliderView.render();

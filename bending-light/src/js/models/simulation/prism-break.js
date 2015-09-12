@@ -180,6 +180,20 @@ define(function (require, exports, module) {
             this.listenTo(this.prisms,      'add remove reset', this.prismChanged);
         },
 
+        resetComponents: function() {
+            BendingLightSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.prisms.reset();
+
+            this.environment.set({
+                mediumProperties: MediumPropertiesPresets.AIR
+            });
+
+            this.prismMedium = new Medium({
+                mediumProperties: MediumPropertiesPresets.GLASS
+            });
+        },
+
         createPrismFromPrototype: function(prototypeIndex) {
             return this.prismPrototypes[prototypeIndex].clone();
         },

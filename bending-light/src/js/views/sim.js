@@ -162,7 +162,6 @@ define(function (require) {
         reset: function() {
             this.simulation.reset();
             this.sceneView.reset();
-            
         },
 
         /**

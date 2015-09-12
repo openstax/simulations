@@ -61,7 +61,6 @@ define(function(require) {
                 
             };
 
-            this.$el.remove();
             this.setElement($(this.template(data)));
 
             this.wavelengthSliderView.render();

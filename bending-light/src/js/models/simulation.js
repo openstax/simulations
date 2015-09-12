@@ -76,7 +76,17 @@ define(function (require, exports, module) {
          * Resets all model components
          */
         resetComponents: function() {
-            
+            this.clear();
+
+            this.laser.set({
+                wavelength: this.get('wavelength'),
+                wave: false,
+                on: false
+            });
+            this.laser.setPivotPoint(0, 0);
+            this.laser.setEmissionPoint(new Vector2(this.laserDistanceFromPivot, 0).rotate(this.laserAngle));
+
+                        
         },
 
         addRay: function(lightRay) {

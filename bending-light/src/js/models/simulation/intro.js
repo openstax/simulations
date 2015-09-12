@@ -58,6 +58,18 @@ define(function (require, exports, module) {
             this.listenTo(this.bottomMedium, 'change', this.mediumChanged);
         },
 
+        resetComponents: function() {
+            BendingLightSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.topMedium.set({
+                mediumProperties: MediumPropertiesPresets.AIR
+            });
+
+            this.bottomMedium.set({
+                mediumProperties: MediumPropertiesPresets.WATER
+            });
+        },
+
         /**
          * Light rays were cleared from model before propagateRays was called, 
          *   this creates them according to the laser and mediums

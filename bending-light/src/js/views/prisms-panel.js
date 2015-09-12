@@ -51,7 +51,6 @@ define(function(require) {
                 prismImages: this.prismImages
             };
 
-            this.$el.remove();
             this.setElement($(this.template(data)));
 
             this.mediumControlsView.render();
