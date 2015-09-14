@@ -317,7 +317,6 @@ define(function (require, exports, module) {
                 // There was an intersection, so reflect and refract the light
 
                 // Add the incident ray itself
-                // console.log(incidentRay.tail, ' --> ', intersection.getPoint())
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
                     intersection.getPoint(), 
@@ -373,6 +372,7 @@ define(function (require, exports, module) {
                 var vRefract = cosTheta1 > 0 ?
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 - cosTheta2)) :
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 + cosTheta2));
+                console.log(vRefract.angle() + ' (original: ' + n.angle() + ')', n1, n2)
 
                 var reflectedPower   = shouldTotalInternalReflection ? 1 : clamp(0, this.getReflectedPower(  n1, n2, cosTheta1, cosTheta2), 1);
                 var transmittedPower = shouldTotalInternalReflection ? 0 : clamp(0, this.getTransmittedPower(n1, n2, cosTheta1, cosTheta2), 1);
@@ -390,7 +390,7 @@ define(function (require, exports, module) {
                 reflected.destroy();
                 refracted.destroy();
             }
-            else {//console.log(incidentRay.tail, ' =-> ', this._scratchVec.set(incidentRay.tail).add(incidentRay.directionUnitVector))
+            else {
                 // No intersection, so the light ray should just keep going
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
