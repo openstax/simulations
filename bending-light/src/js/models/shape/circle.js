@@ -83,22 +83,11 @@ define(function (require) {
                         var normalVector = this._vec.set(points[i]).normalize();
                         if (normalVector.dot(direction) > 0)
                             normalVector.negate();
-                        console.log(points[i], '=?')
                         intersections.push(Intersection.create(normalVector, points[i]));
-                        console.log(intersections[intersections.length - 1].point)
-                        // Here they are equal
                     }
                 }
             }
 
-            for (var j = 0; j < intersections.length; j++) {
-                for (var k = 0; k < intersections.length; k++) {
-                    if (j !== k && intersections[j] === intersections[k])
-                        console.log('THEY ARE THE SAME OBJECT (' + j + '=' + k + ')')
-                }
-            }
-            // But here they are not
-            console.log(intersections)
             return intersections;
         },
 

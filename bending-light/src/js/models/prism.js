@@ -36,9 +36,6 @@ define(function (require) {
          * Returns whether a point falls within the prism's shape
          */
         contains: function(point) {
-            // Convert to the shape's local coordinates
-            //point = this.getPointRelativeToPosition(point);
-
             return this.shape.contains(point);
         },
 
@@ -47,24 +44,10 @@ define(function (require) {
          */
         getIntersections: function(incidentRay) {
             // Convert to the shape's local coordinates
-            var tail = incidentRay.tail; //this.getPointRelativeToPosition(incidentRay.tail);
+            var tail = incidentRay.tail;
             var intersections = this.shape.getIntersections(tail, incidentRay.directionUnitVector);
-
-            // Then convert the intersection points back to global coordinates
-            // var offset = this.get('position');
-            // for (var i = 0; i < intersections.length; i++)
-            //     intersections[i].point.add(offset);
             
             return intersections;
-        },
-
-        /**
-         * The shape is always centered on (0, 0), which is its pivot point,
-         *   so to do checks in global space, we need to translate it 
-         *   according to the prism's position.
-         */
-        getPointRelativeToPosition: function(point) {
-            return this._point.set(point).sub(this.get('position'));
         },
 
         /**

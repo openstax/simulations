@@ -9,7 +9,7 @@ define(function (require) {
     var pool = Pool({
         init: function() {
             return new Intersection();
-        },
+        }
     });
 
     /**
