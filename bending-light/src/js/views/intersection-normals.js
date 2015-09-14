@@ -48,7 +48,7 @@ define(function(require) {
 
             for (var i = 0; i < intersections.length; i++) {
                 point.set(this.mvt.modelToView(intersections[i].point));
-                offset.set(intersections[i].unitNormal).scale(halfLength);
+                offset.set(intersections[i].unitNormal.x, -intersections[i].unitNormal.y).scale(halfLength);
                 graphics.moveTo(point.x - offset.x, point.y - offset.y);
                 graphics.dashTo(point.x + offset.x, point.y + offset.y, dashStyle);
             }

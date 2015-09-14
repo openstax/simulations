@@ -64,9 +64,9 @@ define(function (require) {
             for (var i = 0; i < edges.length; i++) {
                 // Get the intersection if there is one
                 var intersection = LineIntersection.lineIntersection(
-                    edges[i][0].x, edges[i][0].y,
-                    edges[i][1].x, edges[i][1].y,
-                    tail.x,        tail.y,
+                    edges[i][0].x,        edges[i][0].y,
+                    edges[i][1].x,        edges[i][1].y,
+                    tail.x,               tail.y,
                     tail.x + direction.x, tail.y + direction.y
                 );
                 
