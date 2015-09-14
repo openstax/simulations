@@ -37,7 +37,7 @@ define(function (require) {
          */
         contains: function(point) {
             // Convert to the shape's local coordinates
-            point = this.getPointRelativeToPosition(point);
+            //point = this.getPointRelativeToPosition(point);
 
             return this.shape.contains(point);
         },
@@ -47,13 +47,13 @@ define(function (require) {
          */
         getIntersections: function(incidentRay) {
             // Convert to the shape's local coordinates
-            var tail = this.getPointRelativeToPosition(incidentRay.tail);
+            var tail = incidentRay.tail; //this.getPointRelativeToPosition(incidentRay.tail);
             var intersections = this.shape.getIntersections(tail, incidentRay.directionUnitVector);
 
             // Then convert the intersection points back to global coordinates
-            var offset = this.get('position');
-            for (var i = 0; i < intersections.length; i++)
-                intersections[i].point.add(offset);
+            // var offset = this.get('position');
+            // for (var i = 0; i < intersections.length; i++)
+            //     intersections[i].point.add(offset);
             
             return intersections;
         },
@@ -82,10 +82,18 @@ define(function (require) {
          * Rotates the shape in place
          */
         rotate: function(radians) {
+            this.shape.translate(-this.get('position').x, -this.get('position').y);
             this.shape.rotate(radians);
+            this.shape.translate(this.get('position').x, this.get('position').y);
 
             // Add the rotation amount to our rotation attribute
             this.set('rotation', this.get('rotation') + radians);
+        },
+
+        translate: function(dx, dy) {
+            PositionableObject.prototype.translate.apply(this, arguments);
+
+            this.shape.translate(dx, dy);
         }
 
     }, Prism);

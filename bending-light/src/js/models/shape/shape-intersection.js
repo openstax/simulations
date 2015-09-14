@@ -31,6 +31,14 @@ define(function (require) {
     _.extend(ShapeIntersection.prototype, BooleanShape.prototype, {
 
         /**
+         * Translates the shape
+         */
+        translate: function(dx, dy) {
+            this.a.translate(dx, dy);
+            this.b.translate(dx, dy);
+        },
+        
+        /**
          * Rotates the shape
          */
         rotate: function(radians) {

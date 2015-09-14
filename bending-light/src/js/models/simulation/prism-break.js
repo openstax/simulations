@@ -317,7 +317,7 @@ define(function (require, exports, module) {
                 // There was an intersection, so reflect and refract the light
 
                 // Add the incident ray itself
-                console.log(incidentRay.tail, ' --> ', intersection.getPoint())
+                // console.log(incidentRay.tail, ' --> ', intersection.getPoint())
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
                     intersection.getPoint(), 
@@ -363,9 +363,6 @@ define(function (require, exports, module) {
                 var scratchP = this._scratchP;
                 var scratchU = this._scratchU;
 
-                // Clean up; we don't need this anymore
-                intersection.destroy();
-
                 // Compute the output rays; see http://en.wikipedia.org/wiki/Snell's_law#Vector_form
                 var cosTheta1 = n.dot(scratchL.set(L).scale(-1));
                 var cosTheta2Radicand = 1 - Math.pow(n1 / n2, 2) * (1 - Math.pow(cosTheta1, 2));
@@ -393,7 +390,7 @@ define(function (require, exports, module) {
                 reflected.destroy();
                 refracted.destroy();
             }
-            else {console.log(incidentRay.tail, ' =-> ', this._scratchVec.set(incidentRay.tail).add(incidentRay.directionUnitVector))
+            else {//console.log(incidentRay.tail, ' =-> ', this._scratchVec.set(incidentRay.tail).add(incidentRay.directionUnitVector))
                 // No intersection, so the light ray should just keep going
                 this.addRay(LightRay.create(
                     incidentRay.tail, 
