@@ -366,7 +366,7 @@ define(function (require, exports, module) {
                 var cosTheta1 = n.dot(scratchL.set(L).scale(-1));
                 var cosTheta2Radicand = 1 - Math.pow(n1 / n2, 2) * (1 - Math.pow(cosTheta1, 2));
                 var cosTheta2 = Math.sqrt(cosTheta2Radicand);
-                var shouldTotalInternalReflection = cosTheta2Radicand < 0;
+                var totalInternalReflectionOccurs = cosTheta2Radicand < 0;
 
                 var vReflect = this._vReflect.set(L).add(scratchN.set(n).scale(2 * cosTheta1));
                 var vRefract = cosTheta1 > 0 ?
@@ -374,17 +374,18 @@ define(function (require, exports, module) {
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 + cosTheta2));
                 console.log(vRefract.angle() + ' (original: ' + n.angle() + ')', n1, n2)
 
-                var reflectedPower   = shouldTotalInternalReflection ? 1 : clamp(0, this.getReflectedPower(  n1, n2, cosTheta1, cosTheta2), 1);
-                var transmittedPower = shouldTotalInternalReflection ? 0 : clamp(0, this.getTransmittedPower(n1, n2, cosTheta1, cosTheta2), 1);
+                var reflectedPower   = totalInternalReflectionOccurs ? 1 : clamp(0, this.getReflectedPower(  n1, n2, cosTheta1, cosTheta2), 1);
+                var transmittedPower = totalInternalReflectionOccurs ? 0 : clamp(0, this.getTransmittedPower(n1, n2, cosTheta1, cosTheta2), 1);
 
                 // Create the new rays and propagate them recursively
                 var reflected = Ray.create(scratchP.set(point).add(scratchU.set(incidentRay.directionUnitVector).scale(-1E-12)), vReflect, incidentRay.power * reflectedPower,   incidentRay.wavelength, incidentRay.mediumIndexOfRefraction, incidentRay.frequency);
                 var refracted = Ray.create(scratchP.set(point).add(scratchU.set(incidentRay.directionUnitVector).scale(+1E-12)), vRefract, incidentRay.power * transmittedPower, incidentRay.wavelength, n2,                                  incidentRay.frequency);
                 
-                if (this.get('showReflections') || shouldTotalInternalReflection)
+                if (this.get('showReflections') || totalInternalReflectionOccurs)
                     this.propagateRay(reflected, count + 1);
-                
-                this.propagateRay(refracted, count + 1);
+
+                if (!totalInternalReflectionOccurs) // I added this because there's no use propagating a ray whose direction is NaN
+                    this.propagateRay(refracted, count + 1);
 
                 // Clean up; we don't need this anymore
                 reflected.destroy();
