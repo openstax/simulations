@@ -70,17 +70,17 @@ define(function (require) {
                 this.center.y, 
                 this.radius
             );
-console.log(this.center)
+
             // Create Intersection instances from the returned points
             var intersections = [];
             for (var i = 0; i < points.length; i++) {
                 // Filter out null results, which are returned if there is no intersection
                 if (points[i] !== null) {
                     var vector = this._vec.set(points[i]).sub(tail);
-//console.log(direction)
+                    
                     // Only consider intersections that are in front of the ray
                     if (vector.dot(direction) > 0) {
-                        var normalVector = this._vec.set(points[i]).normalize();
+                        var normalVector = this._vec.set(points[i]).sub(this.center).normalize();
                         if (normalVector.dot(direction) > 0)
                             normalVector.negate();
                         intersections.push(Intersection.create(normalVector, points[i]));
