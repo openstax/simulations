@@ -83,7 +83,8 @@ define(function(require) {
                 simulation: this.simulation,
                 mvt: this.mvt,
                 stageWidth: this.width,
-                stageHeight: this.height
+                stageHeight: this.height,
+                renderer: this.renderer
             });
             this.lightWaveLayer.addChild(this.laserBeamsView.displayObject);
         },

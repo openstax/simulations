@@ -62,6 +62,7 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation
             });
+            this.intersectionNormalsView.hide();
 
             this.middleLayer.addChild(this.intersectionNormalsView.displayObject);
         },
