@@ -83,8 +83,10 @@ define(function(require) {
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
 
-            if (!(this.model.shape instanceof Circle))
+            if (!(this.model.shape instanceof Circle)) {
                 this.originalPiecewiseCurve = this.model.shape.toPiecewiseCurve();
+                this.originalHandleLocation = this.model.shape.getReferencePoint();
+            }
         },
 
         initRotationHandle: function() {
@@ -130,13 +132,10 @@ define(function(require) {
                 var curve = this.mvt.modelToViewDelta(this.originalPiecewiseCurve);
                 graphics.drawPiecewiseCurve(curve);
 
-                var handleLoc = this.mvt.modelToViewDelta(shape.getReferencePoint());
+                var handleLoc = this.mvt.modelToViewDelta(this.originalHandleLocation);
                 this.rotationHandle.x = handleLoc.x;
                 this.rotationHandle.y = handleLoc.y;
-                this.rotationHandle.rotation = this._vec
-                    .set(this.displayObject.x, this.displayObject.y)
-                    .sub(handleLoc.x, handleLoc.y)
-                    .angle();
+                this.rotationHandle.rotation = handleLoc.angle();
 
                 this.rotationOffset = this.rotationHandle.rotation;
             }
