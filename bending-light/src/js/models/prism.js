@@ -43,11 +43,7 @@ define(function (require) {
          * Compute the intersections of the specified ray with this polygon's edges
          */
         getIntersections: function(incidentRay) {
-            // Convert to the shape's local coordinates
-            var tail = incidentRay.tail;
-            var intersections = this.shape.getIntersections(tail, incidentRay.directionUnitVector);
-            
-            return intersections;
+            return this.shape.getIntersections(incidentRay.tail, incidentRay.directionUnitVector);
         },
 
         /**

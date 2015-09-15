@@ -73,6 +73,8 @@ define(function (require) {
             for (i = 0; i < intersectionsWithA.length; i++) {
                 if (!b.contains(intersectionsWithA[i].getPoint()))
                     result.push(intersectionsWithA[i]);
+                else
+                    intersectionsWithA[i].destroy();
             }
 
             // Find all intersections with B that are in A
@@ -80,6 +82,8 @@ define(function (require) {
             for (i = 0; i < intersectionsWithB.length; i++) {
                 if (a.contains(intersectionsWithB[i].getPoint()))
                     result.push(intersectionsWithB[i]);
+                else
+                    intersectionsWithB[i].destroy();
             }
 
             return result;

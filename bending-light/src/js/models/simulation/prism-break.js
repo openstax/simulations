@@ -222,7 +222,7 @@ define(function (require, exports, module) {
          * Algorithm that computes the trajectories of the rays throughout the system
          */
         propagateRays: function() {
-            if (this.laser.get('on')) {console.log('-----------------')
+            if (this.laser.get('on')) {
                 var tail = this.laser.get('emissionPoint');
                 var laserInPrism = this.isLaserInPrism();
                 var directionUnitVector = this._dirUnit.set(this.laser.getDirectionUnitVector());
@@ -372,7 +372,6 @@ define(function (require, exports, module) {
                 var vRefract = cosTheta1 > 0 ?
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 - cosTheta2)) :
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 + cosTheta2));
-                // console.log(vRefract.angle() + ' (original: ' + n.angle() + ')', n1, n2, outputInsidePrism ? 'inside prism: ' : 'outside prism')
 
                 var reflectedPower   = totalInternalReflectionOccurs ? 1 : clamp(0, this.getReflectedPower(  n1, n2, cosTheta1, cosTheta2), 1);
                 var transmittedPower = totalInternalReflectionOccurs ? 0 : clamp(0, this.getTransmittedPower(n1, n2, cosTheta1, cosTheta2), 1);

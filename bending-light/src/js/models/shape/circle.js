@@ -36,6 +36,13 @@ define(function (require) {
         },
 
         /**
+         * Rotates the shape
+         */
+        rotate: function(radians) {
+            this.center.rotate(radians);
+        },
+
+        /**
          * Returns a piecewise curve approximation of a circle.
          *
          * Algorithm from http://journal.missiondata.com/post/63399320412/approximating-a-circle-with-a-polygon
@@ -77,7 +84,7 @@ define(function (require) {
                 // Filter out null results, which are returned if there is no intersection
                 if (points[i] !== null) {
                     var vector = this._vec.set(points[i]).sub(tail);
-                    
+
                     // Only consider intersections that are in front of the ray
                     if (vector.dot(direction) > 0) {
                         var normalVector = this._vec.set(points[i]).sub(this.center).normalize();
