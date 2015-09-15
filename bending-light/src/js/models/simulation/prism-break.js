@@ -372,7 +372,7 @@ define(function (require, exports, module) {
                 var vRefract = cosTheta1 > 0 ?
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 - cosTheta2)) :
                     this._vRefract.set(L).scale(n1 / n2).add(scratchN.set(n).scale(n1 / n2 * cosTheta1 + cosTheta2));
-                console.log(vRefract.angle() + ' (original: ' + n.angle() + ')', n1, n2)
+                console.log(vRefract.angle() + ' (original: ' + n.angle() + ')', n1, n2, outputInsidePrism ? 'inside prism: ' : 'outside prism')
 
                 var reflectedPower   = totalInternalReflectionOccurs ? 1 : clamp(0, this.getReflectedPower(  n1, n2, cosTheta1, cosTheta2), 1);
                 var transmittedPower = totalInternalReflectionOccurs ? 0 : clamp(0, this.getTransmittedPower(n1, n2, cosTheta1, cosTheta2), 1);

@@ -19,7 +19,7 @@ define(function (require) {
         Shape.apply(this, arguments);
 
         if (points)
-            this.piecewiseCurve = PiecewiseCurve.fromPoints(points, false);
+            this.piecewiseCurve = PiecewiseCurve.fromPoints(points);
 
         this.referencePointIndex = referencePointIndex;
 
