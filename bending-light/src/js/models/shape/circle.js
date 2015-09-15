@@ -70,14 +70,14 @@ define(function (require) {
                 this.center.y, 
                 this.radius
             );
-
+console.log(this.center)
             // Create Intersection instances from the returned points
             var intersections = [];
             for (var i = 0; i < points.length; i++) {
                 // Filter out null results, which are returned if there is no intersection
                 if (points[i] !== null) {
                     var vector = this._vec.set(points[i]).sub(tail);
-
+//console.log(direction)
                     // Only consider intersections that are in front of the ray
                     if (vector.dot(direction) > 0) {
                         var normalVector = this._vec.set(points[i]).normalize();
@@ -95,7 +95,7 @@ define(function (require) {
          * Returns a rectangle representing the bounds of the shape
          */
         getBounds: function() {
-            return this._bounds.set(-radius, -radius, radius * 2, radius * 2);
+            return this._bounds.set(this.center.x - radius, this.center.y - radius, radius * 2, radius * 2);
         },
 
         /**

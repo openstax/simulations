@@ -74,9 +74,9 @@ define(function (require) {
         },
 
         translate: function(dx, dy) {
-            PositionableObject.prototype.translate.apply(this, arguments);
-
             this.shape.translate(dx, dy);
+
+            PositionableObject.prototype.translate.apply(this, arguments);
         }
 
     }, Prism);

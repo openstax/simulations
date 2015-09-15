@@ -85,8 +85,8 @@ define(function (require) {
 
             var discriminant = r * r * dr * dr - D * D;
             var radical = Math.sqrt(discriminant);
-            var numeratorX_1 = D * dy - Math.sign(dy) * dx * radical;
-            var numeratorX_2 = D * dy + Math.sign(dy) * dx * radical;
+            var numeratorX_1 = D * dy - (dy >= 0 ? 1 : -1) * dx * radical;
+            var numeratorX_2 = D * dy + (dy >= 0 ? 1 : -1) * dx * radical;
 
             var numeratorY_1 = -D * dx - Math.abs(dy) * radical;
             var numeratorY_2 = -D * dx + Math.abs(dy) * radical;
