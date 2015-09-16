@@ -33,7 +33,7 @@ define(function(require) {
             
             IntroSimView.prototype.initialize.apply(this, [ options ]);
 
-            
+            this.listenTo(this.simulation.waveSensor, 'change:enabled', this.showHidePlaybackControls);
         },
 
         /**
@@ -100,6 +100,17 @@ define(function(require) {
             IntroSimView.prototype.render.apply(this);
 
             return this;
+        },
+
+        laserBeamTypeChanged: function(laser, wave) {
+            this.showHidePlaybackControls();
+        },
+
+        showHidePlaybackControls: function() {
+            if (this.simulation.laser.get('wave') || this.simulation.waveSensor.get('enabled'))
+                this.$playbackControls.show();
+            else
+                this.$playbackControls.hide();
         }
 
     });

@@ -45,6 +45,7 @@ define(function(require) {
         initWaveSensorView: function() {
             this.waveSensorView = new WaveSensorView({
                 model: this.simulation.waveSensor,
+                simulation: this.simulation,
                 mvt: this.mvt
             });
             this.waveSensorView.hide();
