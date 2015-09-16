@@ -238,6 +238,7 @@ define(function(require) {
             var yOffset    = this.yOffset;
             var tickX      = this.tickX;
             var tickSpace  = this.tickSpace;
+            var timeWidth  = this.timeWidth;
             
             var values = data.values;
             var times  = data.times;
@@ -250,18 +251,18 @@ define(function(require) {
             graphics.lineTo(plotWidth, plotHeight / 2);
 
             // Draw vertical lines
-            for (var x = 0; x < plotWidth; x++) {
-                if ((x % tickSpace) === tickX) {
-                    graphics.moveTo(x, 0);
-                    graphics.lineTo(x, plotHeight);
-                }
+            var minTime = this.simulation.simTime - timeWidth;
+            var verticalGridLineSpacing = timeWidth / 4; // Distance between vertical grid lines
+            var verticalGridLineSpacingDelta = this.getDelta(verticalGridLineSpacing);
+            for (var x = minTime - verticalGridLineSpacingDelta; x <= minTime + timeWidth; x += timeWidth / 4) {
+                var viewX = this.plotMvt.modelToViewX(x - minTime);
+                graphics.moveTo(viewX, 0);
+                graphics.lineTo(viewX, plotHeight);
             }
 
             // Draw data points
             if (values.length) {
                 graphics.lineStyle(this.lineWidth, color, 1);
-
-                var minTime = this.simulation.simTime - this.timeWidth;
 
                 var modelPoint = this._modelPoint;
                 var viewPoint;
@@ -288,6 +289,15 @@ define(function(require) {
         drawGraphs: function() {
             this.drawGraph(this.graph1, this.probe1Color, this.model.getProbe1Series());
             this.drawGraph(this.graph2, this.probe2Color, this.model.getProbe2Series());
+        },
+
+        /**
+         * Compute the phase offset so that grid lines appear to be moving at the right speed
+         */
+        getDelta: function(verticalGridLineSpacing) {
+            var totalNumPeriods = this.simulation.simTime / verticalGridLineSpacing;
+            var integralNumberOfPeriods = Math.floor(totalNumPeriods); // For computing the phase so we make the right number of grid lines
+            return (totalNumPeriods - integralNumberOfPeriods) * verticalGridLineSpacing;
         },
 
         updateBodyPosition: function(model, position) {
@@ -321,6 +331,11 @@ define(function(require) {
             this.updateBodyPosition(this.model, this.model.get('bodyPosition'));
             this.updateProbe1Position(this.model, this.model.get('probe1Position'));
             this.updateProbe2Position(this.model, this.model.get('probe2Position'));
+        },
+
+        update: function() {
+            if (this.model.get('enabled'))
+                this.drawGraphs();
         },
 
         dragStart: function(event) {

@@ -96,10 +96,10 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             IntroSceneView.prototype._update.apply(this, arguments);
 
-            this.waveSensorView.drawGraphs();
-
-            if (!paused)
+            if (!paused) {
                 this.velocitySensorView.update(time, deltaTime);
+                this.waveSensorView.update();
+            }
         },
 
     });
