@@ -4,8 +4,8 @@ define(function(require) {
 
     var Backbone = require('backbone');
     
-    var Colors   = require('common/v3/colors/colors');
-    var Vector2  = require('common/v3/math/vector2');
+    var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var Constants = require('constants');
 

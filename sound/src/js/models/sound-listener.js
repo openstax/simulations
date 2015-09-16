@@ -6,8 +6,8 @@ define(function (require) {
 
     var Pool = require('object-pool');
 
-    var PositionableObject = require('common/v3/models/positionable-object');
-    var Vector2            = require('common/v3/math/vector2');
+    var PositionableObject = require('common/models/positionable-object');
+    var Vector2            = require('common/math/vector2');
 
     /**
      * Because Backbone models only see shallow changes, we need to

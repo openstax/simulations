@@ -7,8 +7,8 @@ define(function(require) {
 
     var ArrowView = require('./arrow');
 
-    var Colors  = require('../../colors/colors');
-    var Vector2 = require('../../math/vector2');
+    var Colors  = require('common/colors/colors');
+    var Vector2 = require('common/math/vector2');
 
     // Default snapping function just snaps to nearest 10 pixels
     var defaultSnappingFunction = function(coordinateComponent) {

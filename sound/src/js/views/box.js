@@ -7,7 +7,7 @@ define(function(require) {
     
     var PixiView          = require('common/v3/pixi/view');
     var PressureGaugeView = require('common/v3/pixi/view/pressure-gauge');
-    var Colors            = require('common/v3/colors/colors');
+    var Colors            = require('common/colors/colors');
 
     var Constants = require('constants');
     var Assets = require('assets');
