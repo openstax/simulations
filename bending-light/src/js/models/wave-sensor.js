@@ -45,31 +45,50 @@ define(function (require) {
             this.set('probe1Position', vectorPool.create().set(this.get('probe1Position')));
             this.set('probe2Position', vectorPool.create().set(this.get('probe2Position')));
 
-            this.probe1Series = [];
-            this.probe2Series = [];
+            this.initSeries();
 
-            this.maxSeriesLength = 172;
+            this.maxSeriesLength = 200;
         },
 
-        addProbe1Sample: function(sample) {
-            this.addSampleToSeries(sample, this.probe1Series);
+        initSeries: function() {
+            this.series = [{
+                values: [],
+                times: []
+            },{
+                values: [],
+                times: []
+            }];
         },
 
-        addProbe2Sample: function(sample) {
-            this.addSampleToSeries(sample, this.probe2Series);
+        addProbe1Sample: function(sample, time) {
+            this.addSampleToSeries(sample, time, this.series[0]);
         },
 
-        addSampleToSeries: function(sample, series) {
-            series.unshift(sample);
+        addProbe2Sample: function(sample, time) {
+            this.addSampleToSeries(sample, time, this.series[1]);
+        },
+
+        addSampleToSeries: function(sample, time, series) {
+            series.values.unshift(sample);
+            series.times.unshift(time);
 
             // Keep it to a manageable size
-            if (series.length > this.maxSeriesLength)
-                series.splice(series.length - 1, 1);
+            if (series.values.length > this.maxSeriesLength) {
+                series.values.splice(series.values.length - 1, 1);
+                series.times.splice(series.times.length - 1, 1);
+            }
         },
 
         clearSamples: function() {
-            this.probe1Series = [];
-            this.probe2Series = [];
+            this.initSeries();
+        },
+
+        getProbe1Series: function() {
+            return this.series[0];
+        },
+
+        getProbe2Series: function() {
+            return this.series[1];
         },
 
         setBodyPosition: function(x, y) {

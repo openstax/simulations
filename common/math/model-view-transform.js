@@ -170,6 +170,27 @@ define(function (require) {
          */
         createSinglePointScaleInvertedYMapping: function(modelPoint, viewPoint, scale) {
             return ModelViewTransform.createSinglePointScaleMapping(modelPoint, viewPoint, scale, -scale);
+        },
+
+        /**
+         * Creates a shearless ModelViewTransform that maps the specified rectangle in the model to the specified rectangle in the view,
+         * so that any point x% of the way across and y% down in the model rectangle will be mapped to the corresponding point x% across and y% down in the view rectangle.
+         * Linear extrapolation is performed outside of the rectangle bounds.
+         *
+         * @param modelBounds the reference rectangle in the model, must have area > 0
+         * @param viewBounds  the reference rectangle in the view, must have area > 0
+         * @return the resultant ModelViewTransform
+         */
+        createRectangleMapping: function(modelBounds, viewBounds) {
+            var m00 = viewBounds.w / modelBounds.w;
+            var m02 = viewBounds.x - m00 * modelBounds.x;
+            var m11 = viewBounds.h / modelBounds.h;
+            var m12 = viewBounds.y - m11 * modelBounds.y;
+
+            return new ModelViewTransform([
+                m00, 0, m02,
+                0, m11, m12
+            ]);
         }
 
     });
