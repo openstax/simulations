@@ -45,12 +45,12 @@ define(function (require) {
 
             this._vec = new Vector2();
 
-            this.set('pivotPoint', new Vector2(this.get('pivotPoint')));
+            this.set('pivotPoint', vectorPool.create().set(this.get('pivotPoint')));
             this.set('emissionPoint', 
-                new Vector2(options.distanceFromPivot, 0).rotate(options.angle)
+                vectorPool.create().set(options.distanceFromPivot, 0).rotate(options.angle)
             );
 
-            this.on('change:wave', this.clampAngle);
+            this.on('change:wave change:emissionPoint', this.clampAngle);
         },
 
         clampAngle: function() {
@@ -70,7 +70,7 @@ define(function (require) {
         },
 
         getAngle: function() {
-            return this.getDirectionUnitVector().angle() + Math.PI;
+            return this.getDirectionUnitVector().angle() - Math.PI;
         },
 
         getDirectionUnitVector: function() {
@@ -96,8 +96,8 @@ define(function (require) {
         },
 
         translate: function(dx, dy) {
-            this.translateEmissionPoint(dx, dy);
             this.translatePivotPoint(dx, dy);
+            this.translateEmissionPoint(dx, dy);
         },
 
         translateEmissionPoint: function(x, y) {
@@ -115,7 +115,6 @@ define(function (require) {
 
         setEmissionPoint: function(x, y) {
             var oldEmissionPoint = this.get('emissionPoint');
-            //console.log(vectorPool.list.length);
             
             if (x instanceof Vector2)
                 this.set('emissionPoint', vectorPool.create().set(x));

@@ -4,6 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var clamp = require('common/math/clamp');
+
     var Constants = require('constants');
 
     /**
@@ -43,11 +45,19 @@ define(function (require) {
             // Determine the mapping and make sure it is in a good range
             var delta = nGlassReference - nAirReference;
             var x = (this.referenceIndexOfRefraction - nAirReference) / delta; // 0 to 1 (air to glass)
-            x = Math.max(0, Math.min(x, Number.POSITIVE_INFINITY));
+            x = clamp(0, x, Number.POSITIVE_INFINITY);
 
             // Take a linear combination of glass and air equations
             var index = x * DispersionFunction.getSellmeierValue(wavelength) + (1 - x) * DispersionFunction.getAirIndex(wavelength);
             return index;
+        },
+
+        setIndexOfRefraction: function(indexOfRefraction) {
+            this.referenceIndexOfRefraction = indexOfRefraction;
+        },
+
+        setReferenceWavelength: function(wavelength) {
+            this.referenceWavelength = wavelength;
         }
 
     });

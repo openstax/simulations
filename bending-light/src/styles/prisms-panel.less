@@ -1,0 +1,30 @@
+@import "variables.less";
+@import "mixins.less";
+
+.prisms-panel {
+    width: @prisms-panel-width;
+    height: @prisms-panel-height;
+    position: absolute;
+    left: @panel-margin;
+    bottom: @panel-margin;
+
+    .prisms-wrapper {
+        h2 {
+            width: (@prisms-panel-width - @medium-control-panel-width - 3 * @panel-margin);
+        }
+
+        .prisms > img {
+            cursor: pointer;
+
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    .medium-controls-wrapper {
+        position: absolute;
+        right: @panel-padding;
+        top: @panel-padding;
+    }
+}

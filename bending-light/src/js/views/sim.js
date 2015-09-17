@@ -5,7 +5,7 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/app/sim');
+    var SimView = require('common/v3/app/sim');
 
     var BendingLightSimulation = require('models/simulation');
     var BendingLightSceneView  = require('views/scene');
@@ -24,6 +24,7 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
+    var html = require('text!../../templates/sim.html');
     var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
@@ -72,7 +73,10 @@ define(function (require) {
 
             this.initSceneView();
 
-            this.listenTo(this.simulation, 'change:paused',        this.pausedChanged);
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.listenTo(this.simulation.laser, 'change:wave', this.laserBeamTypeChanged);
+
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -101,6 +105,8 @@ define(function (require) {
             this.renderSceneView();
             this.renderPlaybackControls();
 
+            this.$el.append(html);
+
             return this;
         },
 
@@ -113,7 +119,6 @@ define(function (require) {
                 name: this.name
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
         },
 
         /**
@@ -131,10 +136,10 @@ define(function (require) {
             this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
 
             this.$playbackControls.find('.playback-speed').noUiSlider({
-                start: 1,
+                start: Constants.DEFAULT_DT * Constants.INTERFACE_DT_SCALE,
                 range: {
-                    min: 0.1,
-                    max: 2.0
+                    min: Constants.MIN_DT * Constants.INTERFACE_DT_SCALE,
+                    max: Constants.MAX_DT * Constants.INTERFACE_DT_SCALE
                 }
             });
 
@@ -147,6 +152,8 @@ define(function (require) {
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.laserBeamTypeChanged(this.simulation.laser, this.simulation.laser.get('wave'));
         },
 
         /**
@@ -155,7 +162,6 @@ define(function (require) {
         reset: function() {
             this.simulation.reset();
             this.sceneView.reset();
-            
         },
 
         /**
@@ -181,6 +187,18 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        laserBeamTypeChanged: function(laser, wave) {
+            if (wave)
+                this.$playbackControls.show();
+            else
+                this.$playbackControls.hide();
+        },
+
+        changeSpeed: function(event) {
+            var dt = parseFloat($(event.target).val()) / Constants.INTERFACE_DT_SCALE;
+            this.simulation.deltaTimePerFrame = dt;
         }
 
     });

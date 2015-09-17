@@ -4,9 +4,11 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2                 = require('common/math/vector2');
 
-    var Laser = require('models/laser');
+    var Laser          = require('models/laser');
+    var IntensityMeter = require('models/intensity-meter');
 
     /**
      * Constants
@@ -16,9 +18,9 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var BendingLightSimulation = Simulation.extend({
+    var BendingLightSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             wavelength: Constants.WAVELENGTH_RED
         }),
         
@@ -32,11 +34,14 @@ define(function (require, exports, module) {
                 topLeftQuadrant: true
             }, options);
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
-
             this.laserDistanceFromPivot = options.laserDistanceFromPivot
             this.laserAngle = options.laserAngle
             this.topLeftQuadrant = options.topLeftQuadrant
+            this._updateOnNextFrame = true;
+
+            this.simTime = 0;
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:wavelength', this.wavelengthChanged);
         },
@@ -52,21 +57,41 @@ define(function (require, exports, module) {
                 distanceFromPivot: this.laserDistanceFromPivot, 
                 angle: this.laserAngle, 
                 topLeftQuadrant: this.topLeftQuadrant
-            })
+            });
+
+            this.listenTo(this.laser, 'change', this.simulationChanged);
 
             // Initialize the light-rays array
             this.rays = [];
+
+            this.intensityMeter = new IntensityMeter({
+                sensorPosition: new Vector2(IntensityMeter.DEFAULT_SENSOR_X, IntensityMeter.DEFAULT_SENSOR_Y),
+                bodyPosition:   new Vector2(IntensityMeter.DEFAULT_BODY_X, IntensityMeter.DEFAULT_BODY_Y)
+            });
+
+            this.listenTo(this.intensityMeter, 'change:sensorPosition', this.simulationChanged);
         },
 
         /**
          * Resets all model components
          */
         resetComponents: function() {
-            
+            this.clear();
+
+            this.laser.set({
+                wavelength: this.get('wavelength'),
+                wave: false,
+                on: false
+            });
+            this.laser.setPivotPoint(0, 0);
+            this.laser.setEmissionPoint(new Vector2(this.laserDistanceFromPivot, 0).rotate(this.laserAngle));
+
+            this.intensityMeter.setSensorPosition(IntensityMeter.DEFAULT_SENSOR_X, IntensityMeter.DEFAULT_SENSOR_Y);
+            this.intensityMeter.setBodyPosition(IntensityMeter.DEFAULT_BODY_X, IntensityMeter.DEFAULT_BODY_Y);
         },
 
         addRay: function(lightRay) {
-            this.rays.push();
+            this.rays.push(lightRay);
         },
 
         /**
@@ -75,15 +100,41 @@ define(function (require, exports, module) {
         clear: function() {
             for (var i = this.rays.length - 1; i >= 0; i--) {
                 this.rays[i].destroy();
-                this.rays.slice(i, 1);
+                this.rays.splice(i, 1);
             }
+            this.intensityMeter.clearRayReadings();
         },
 
         _update: function(time, deltaTime) {
+            this.simTime += deltaTime;
             
+            this.dirty = false;
+
+            if (this._updateOnNextFrame) {
+                this._updateOnNextFrame = false;
+
+                this.clear();
+                this.propagateRays();
+
+                this.dirty = true;
+            }
+
+            // Update the light rays' running time for the waves
+            for (var i = 0; i < this.rays.length; i++)
+                this.rays[i].setTime(this.simTime);
+        },
+
+        updateOnNextFrame: function() {
+            this._updateOnNextFrame = true;
         },
 
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
+
+        simulationChanged: function() {
+            this.updateOnNextFrame();
+            if (this.get('paused'))
+                this._update(this.get('time'), 0);
+        },
 
         wavelengthChanged: function(simulation, wavelength) {
             this.laser.set('wavelength', wavelength);
@@ -95,9 +146,30 @@ define(function (require, exports, module) {
 
         getHeight: function() {
             return Constants.MODEL_HEIGHT;
-        }
+        },
 
-    }, {
+        /**
+         * Returns topmost light ray at the specified position or null if there is no
+         *   ray at that position.
+         */
+        getRayAt: function(position) {
+            var rays = this.rays.slice();
+
+            // Sort rays by zIndex so the higher z-indexes come first so we hit the ones on top
+            rays.sort(function(a, b) {
+                return b.zIndex - a.zIndex;
+            });
+
+            var ray;
+            for (var i = 0; i < rays.length; i++) {
+                ray = rays[i];
+                if (ray.contains(position, this.laser.get('wave'))) {
+                    return ray;
+                }
+            }
+
+            return null;
+        },
 
         /**
          * Get the fraction of power transmitted through the medium

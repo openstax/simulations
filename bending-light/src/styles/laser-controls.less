@@ -1,0 +1,18 @@
+@import "variables.less";
+@import "mixins.less";
+
+.laser-controls-panel {
+    position: absolute;
+    top: @panel-margin;
+    left: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        top: @short-screen-panel-margin;
+        left: @short-screen-panel-margin;
+    }
+
+    .wavelength-slider-wrapper {
+        width: 160px;
+    }
+
+}

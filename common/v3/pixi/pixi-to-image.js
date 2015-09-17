@@ -21,19 +21,22 @@ define(function(require) {
          * Takes a Pixi DisplayObject, renders it to a canvas,
          *   and generates and returns an image data URI.
          */
-        displayObjectToDataURI: function(displayObject) {
+        displayObjectToDataURI: function(displayObject, padding) {
+            if (padding === undefined)
+                padding = 0;
+            
             // Resize the canvas to make sure it fits.
             renderer.resize(
-                displayObject.width,
-                displayObject.height
+                displayObject.width + padding * 2,
+                displayObject.height + padding * 2
             );
 
             // Wrap the display object in a container so we can 
             //   move it and fit it in the canvas.
             var wrapper = new PIXI.Container();
             var bounds = displayObject.getBounds();
-            var xShift = 0 - bounds.x;
-            var yShift = 0 - bounds.y;
+            var xShift = 0 - bounds.x + padding;
+            var yShift = 0 - bounds.y + padding;
             wrapper.addChild(displayObject);
             wrapper.x = xShift;
             wrapper.y = yShift;
