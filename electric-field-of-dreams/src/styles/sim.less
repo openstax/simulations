@@ -5,41 +5,87 @@
     min-height: inherit;
 }
 
-.sound-btn-wrapper {
-    position: absolute;
-    top: -36px;
-    right: 30px;
+.control-panel {
+    background: @panel-bg;
+    padding: @panel-padding;
+    width: @control-panel-width;
+    .user-select(none);
 
-    > .sound-btn {
-        background: @gray-lightest;
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    h2 {
+        .header();
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    h2:not(:first-child) {
+        margin-top: 18px;
+    }
+
+    > .btn-add,
+    > .btn-remove {
+        position: absolute;
+        top: 100%;
+        margin-top: 4px;
+        width: (@control-panel-width / 2 - 2);
+        background: fadeout(#fff, 60%);
         color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+        box-shadow: none;
+        border-radius: 0;
+
+        font-weight: bold;
+
+        &:focus {
+            outline: none;
+        }
 
         &:hover {
-            opacity: 0.9;
+            background: fadeout(#fff, 40%);
+            color: @link-color;
         }
 
         &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
+            margin-top: 5px;
+            box-shadow: none;
+            color: @link-color;
         }
     }
+
+    > .btn-add {
+        left: 0;
+    }
+
+    > .btn-remove {
+        right: 0;
+    }
+
+    .control-group {
+        margin-top: 10px;
+
+        label {
+            float: left;
+            width: 68%;
+            padding-right: 6px;
+            line-height: 34px;
+            text-align: right;
+        }
+
+        .input-wrapper {
+            float: left;
+            width: 32%;
+            padding-right: 0;
+        }
+    }
+
 }
 
-.hello-world {
+.particle-panel {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    top: @panel-margin;
+    right: @panel-margin;
 }
