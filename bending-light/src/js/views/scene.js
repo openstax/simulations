@@ -15,6 +15,7 @@ define(function(require) {
     var LaserView          = require('views/laser');
     var LaserBeamsView     = require('views/laser-beams');
     var IntensityMeterView = require('views/intensity-meter');
+    var ProtractorView     = require('views/protractor');
 
     var Assets = require('assets');
 
@@ -43,12 +44,14 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.mediumLayer    = new PIXI.Container();
             this.bottomLayer    = new PIXI.Container();
             this.lightRayLayer  = new PIXI.Container();
             this.lightWaveLayer = new PIXI.Container();
             this.middleLayer    = new PIXI.Container();
             this.topLayer       = new PIXI.Container();
 
+            this.stage.addChild(this.mediumLayer);
             this.stage.addChild(this.bottomLayer);
             this.stage.addChild(this.lightRayLayer);
             this.stage.addChild(this.lightWaveLayer);
@@ -58,6 +61,7 @@ define(function(require) {
             this.initMVT();
             this.initLightRays();
             this.initLaserView();
+            this.initProtractorView();
         },
 
         initMVT: function() {
@@ -79,7 +83,8 @@ define(function(require) {
                 simulation: this.simulation,
                 mvt: this.mvt,
                 stageWidth: this.width,
-                stageHeight: this.height
+                stageHeight: this.height,
+                renderer: this.renderer
             });
             this.lightWaveLayer.addChild(this.laserBeamsView.displayObject);
         },
@@ -93,9 +98,26 @@ define(function(require) {
             this.topLayer.addChild(this.laserView.displayObject);
         },
 
+        initProtractorView: function() {
+            this.protractorView = new ProtractorView({
+                mvt: this.mvt
+            });
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+
+            this.middleLayer.addChild(this.protractorView.displayObject);
+        },
+
+        reset: function() {
+            this.protractorView.displayObject.x = this.width / 2;
+            this.protractorView.displayObject.y = this.height / 2;
+            this.protractorView.hide();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.dirty || this.simulation.laser.get('wave')) {
-                this.laserBeamsView.draw();
+                this.laserBeamsView.update();
             }
         },
 
@@ -127,6 +149,14 @@ define(function(require) {
             });
 
             return PixiToImage.displayObjectToDataURI(intensityMeterView.displayObject);
+        },
+
+        showProtractor: function() {
+            this.protractorView.show();
+        },
+
+        hideProtractor: function() {
+            this.protractorView.hide();
         }
 
     }, Constants.SceneView);

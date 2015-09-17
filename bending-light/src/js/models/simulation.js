@@ -37,7 +37,7 @@ define(function (require, exports, module) {
             this.laserDistanceFromPivot = options.laserDistanceFromPivot
             this.laserAngle = options.laserAngle
             this.topLeftQuadrant = options.topLeftQuadrant
-            this.updateOnNextFrame = true;
+            this._updateOnNextFrame = true;
 
             this.simTime = 0;
 
@@ -65,8 +65,8 @@ define(function (require, exports, module) {
             this.rays = [];
 
             this.intensityMeter = new IntensityMeter({
-                sensorPosition: new Vector2(Constants.MODEL_WIDTH * -0.15, Constants.MODEL_HEIGHT * -0.1),
-                bodyPosition:   new Vector2(Constants.MODEL_WIDTH * -0.04, Constants.MODEL_HEIGHT * -0.2)
+                sensorPosition: new Vector2(IntensityMeter.DEFAULT_SENSOR_X, IntensityMeter.DEFAULT_SENSOR_Y),
+                bodyPosition:   new Vector2(IntensityMeter.DEFAULT_BODY_X, IntensityMeter.DEFAULT_BODY_Y)
             });
 
             this.listenTo(this.intensityMeter, 'change:sensorPosition', this.simulationChanged);
@@ -76,7 +76,18 @@ define(function (require, exports, module) {
          * Resets all model components
          */
         resetComponents: function() {
-            
+            this.clear();
+
+            this.laser.set({
+                wavelength: this.get('wavelength'),
+                wave: false,
+                on: false
+            });
+            this.laser.setPivotPoint(0, 0);
+            this.laser.setEmissionPoint(new Vector2(this.laserDistanceFromPivot, 0).rotate(this.laserAngle));
+
+            this.intensityMeter.setSensorPosition(IntensityMeter.DEFAULT_SENSOR_X, IntensityMeter.DEFAULT_SENSOR_Y);
+            this.intensityMeter.setBodyPosition(IntensityMeter.DEFAULT_BODY_X, IntensityMeter.DEFAULT_BODY_Y);
         },
 
         addRay: function(lightRay) {
@@ -99,8 +110,8 @@ define(function (require, exports, module) {
             
             this.dirty = false;
 
-            if (this.updateOnNextFrame) {
-                this.updateOnNextFrame = false;
+            if (this._updateOnNextFrame) {
+                this._updateOnNextFrame = false;
 
                 this.clear();
                 this.propagateRays();
@@ -113,10 +124,14 @@ define(function (require, exports, module) {
                 this.rays[i].setTime(this.simTime);
         },
 
+        updateOnNextFrame: function() {
+            this._updateOnNextFrame = true;
+        },
+
         propagateRays: function() { throw 'propagateRays must be implemented in child class.'; },
 
         simulationChanged: function() {
-            this.updateOnNextFrame = true;
+            this.updateOnNextFrame();
             if (this.get('paused'))
                 this._update(this.get('time'), 0);
         },
@@ -155,8 +170,6 @@ define(function (require, exports, module) {
 
             return null;
         },
-
-    }, {
 
         /**
          * Get the fraction of power transmitted through the medium

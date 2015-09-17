@@ -5,7 +5,8 @@
     width: @medium-control-panel-width;
 
     &.medium-top,
-    &.medium-bottom {
+    &.medium-bottom,
+    &.medium-environment {
         position: absolute;
         right: @panel-margin;
     }
@@ -18,6 +19,18 @@
     &.medium-bottom {
         top: 50%;
         margin-top: (@panel-margin - 3);
+    }
+
+    &.medium-environment {
+        top: @panel-margin;
+
+        .material-select-wrapper {
+            .select-wrapper {
+                > .select {
+                    width: 140px !important;
+                }
+            }
+        }
     }
 
     .material-select-wrapper {

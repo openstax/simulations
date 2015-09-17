@@ -44,6 +44,10 @@ define(function(require) {
             this.defaultWavelength = options.defaultWavelength;
         },
 
+        reset: function() {
+            this.val(this.defaultWavelength);
+        },
+
         /**
          * Renders content and canvas for heatmap
          */
@@ -119,11 +123,30 @@ define(function(require) {
          * Handles wavelength slider slide events
          */
         changeWavelength: function(event) {
-            var wavelength = parseInt($(event.target).val());
-            var color = WavelengthColors.nmToHex(wavelength);
+            this.updateColor();
+        },
 
+        updateColor: function() {
+            var color = WavelengthColors.nmToHex(this.val());
             this.$wavelengthSliderHandle.css('background-color', color);
         },
+
+        disable: function() {
+            this.$el.attr('disabled', 'disabled');
+        },
+
+        enable: function() {
+            this.$el.removeAttr('disabled');
+        },
+
+        val: function(wavelength) {
+            if (wavelength === undefined)
+                return this.$el.val();
+            else {
+                this.$el.val(wavelength);
+                this.updateColor();
+            } 
+        }
 
     });
 

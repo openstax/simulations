@@ -44,6 +44,19 @@ define(function(require) {
             this.simulation = options.simulation;
         },
 
+        reset: function() {
+            _.each(this.tools, function(tool, key) {
+                if (tool.startActive) {
+                    tool.activate();
+                    this.$('.btn[name="' + key + '"]').addClass('active');
+                }
+                else {
+                    tool.deactivate();
+                    this.$('.btn[name="' + key + '"]').removeClass('active');
+                }
+            }, this);
+        },
+
         /**
          * Renders content and canvas for heatmap
          */
@@ -53,7 +66,6 @@ define(function(require) {
                 tools: this.tools
             };
 
-            this.$el.remove();
             this.setElement($(this.template(data)));
 
             return this;

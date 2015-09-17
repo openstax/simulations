@@ -28,7 +28,14 @@ define(function(require) {
          * Initializes the new ProtractorView.
          */
         initialize: function(options) {
+            options = _.extend({
+                scale: 1,
+                enableRotation: false
+            }, options);
+
             this.mvt = options.mvt;
+            this.scale = options.scale;
+            this.enableRotation = options.enableRotation;
 
             // Cached objects
             this._dragOffset = new PIXI.Point();
@@ -58,7 +65,7 @@ define(function(require) {
 
             var targetSpriteWidth = this.mvt.modelToViewDeltaX(0.000012); // in pixels
             var scale = targetSpriteWidth / this.sprite.texture.width;
-            this.sprite.scale.x = this.sprite.scale.y = scale;
+            this.sprite.scale.x = this.sprite.scale.y = scale * this.scale;
         },
 
         dragStart: function(event) {

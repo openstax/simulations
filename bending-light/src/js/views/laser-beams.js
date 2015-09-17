@@ -17,6 +17,7 @@ define(function(require) {
         initialize: function(options) {
             this.simulation = options.simulation;
 
+            this.renderer = options.renderer;
             this.width = options.stageWidth;
             this.height = options.stageHeight;
             this.viewportRect = new Rectangle(0, 0, this.width, this.height);
@@ -39,10 +40,14 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            //var renderer = PIXI.autoDetectRenderer(this.width, this.height, { transparent: true });
+            this.raysRenderTexture = new PIXI.RenderTexture(this.renderer, this.width, this.height);
+            this.raysSprite = new PIXI.Sprite(this.raysRenderTexture);
             this.raysGraphics = new PIXI.Graphics();
+
             this.wavesSprite = new PIXI.Sprite();
 
-            this.displayObject.addChild(this.raysGraphics);
+            this.displayObject.addChild(this.raysSprite);
             this.displayObject.addChild(this.wavesSprite);
         },
 
@@ -78,12 +83,12 @@ define(function(require) {
         draw: function() {
             if (this.simulation.laser.get('wave')) {
                 this.wavesSprite.visible = true;
-                this.raysGraphics.visible = false;
+                this.raysSprite.visible = false;
                 this.drawLightWaves();
             }
             else {
                 this.wavesSprite.visible = false;
-                this.raysGraphics.visible = true;
+                this.raysSprite.visible = true;
                 this.drawLightRays();
             }
         },
@@ -112,6 +117,9 @@ define(function(require) {
                 point = this.mvt.modelToView(rays[i].getTail());
                 graphics.lineTo(point.x, point.y);
             }
+
+            this.raysRenderTexture.clear();
+            this.raysRenderTexture.render(graphics);
         },
 
         drawLightWaves: function() {
@@ -350,7 +358,19 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.update();
+        },
+
+        updateBlendMode: function() {
+            if (this.simulation.get('wavelength') === Constants.WHITE_LIGHT)
+                this.raysGraphics.blendMode = PIXI.BLEND_MODES.ADD;
+            else
+                this.raysGraphics.blendMode = PIXI.BLEND_MODES.NORMAL;
+        },
+
+        update: function() {
             this.draw();
+            this.updateBlendMode();
         }
 
     }, Constants.LaserBeamsView);

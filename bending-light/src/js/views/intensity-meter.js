@@ -5,8 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView       = require('common/v3/pixi/view');
-    var Colors         = require('common/colors/colors');
+    var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/colors/colors');
 
     var Constants = require('constants');
 

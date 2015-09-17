@@ -58,6 +58,18 @@ define(function (require, exports, module) {
             this.listenTo(this.bottomMedium, 'change', this.mediumChanged);
         },
 
+        resetComponents: function() {
+            BendingLightSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.topMedium.set({
+                mediumProperties: MediumPropertiesPresets.AIR
+            });
+
+            this.bottomMedium.set({
+                mediumProperties: MediumPropertiesPresets.WATER
+            });
+        },
+
         /**
          * Light rays were cleared from model before propagateRays was called, 
          *   this creates them according to the laser and mediums
@@ -112,7 +124,7 @@ define(function (require, exports, module) {
                     // Assuming perpendicular beam polarization, compute percent power
                     var reflectedPowerRatio;
                     if (hasTransmittedRay)
-                        reflectedPowerRatio = IntroSimulation.getReflectedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
+                        reflectedPowerRatio = this.getReflectedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
                     else
                         reflectedPowerRatio = 1.0;
                     
@@ -138,7 +150,7 @@ define(function (require, exports, module) {
                         var transmittedWavelength = incidentRay.getWavelength() / n2 * n1;
 
                         if (!isNaN(theta2) && Number.isFinite(theta2)) {
-                            var transmittedPowerRatio = IntroSimulation.getTransmittedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
+                            var transmittedPowerRatio = this.getTransmittedPower(n1, n2, Math.cos(theta1), Math.cos(theta2));
 
                             // Make the beam width depend on the input beam width, so that
                             //   the same beam width is transmitted as was intercepted
@@ -277,7 +289,7 @@ define(function (require, exports, module) {
          * Responds to changes in mediums by telling the simulation to update
          */
         mediumChanged: function() {
-            this.updateOnNextFrame = true;
+            this.updateOnNextFrame();
         }
 
     });

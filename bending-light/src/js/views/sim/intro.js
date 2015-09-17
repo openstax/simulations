@@ -126,6 +126,16 @@ define(function(require) {
             };
         },
 
+        /**
+         * Resets the sim and options
+         */
+        reset: function() {
+            BendingLightSimView.prototype.reset.apply(this);
+            
+            this.toolboxView.reset();
+            this.laserControlsView.reset();
+        },
+
         render: function() {
             BendingLightSimView.prototype.render.apply(this);
 
