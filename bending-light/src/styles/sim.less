@@ -11,6 +11,18 @@
     bottom: 20px;
     z-index: 200;
     .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+
+    @media screen and (max-height: @short-window) {
+        right: 9px;
+        bottom: 14px;
+    }
+
+    #sim-prism-break & {
+        @media screen and (max-height: @short-window) {
+            right: 210px;
+            bottom: 178px;
+        }
+    }
 }
 
 .control-panel {

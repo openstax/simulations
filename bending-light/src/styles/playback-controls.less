@@ -14,6 +14,11 @@
     text-align: center;
     .user-select(none);
 
+    @media screen and (max-height: @short-window) {
+        padding: 4px 10px;
+        height: 50px;
+    }
+
     .playback-center-buttons-wrapper {
         width: 150px;
         position: absolute;
@@ -23,6 +28,10 @@
         height: 100%;
         padding: 10px;
         text-align: center;
+
+        @media screen and (max-height: @short-window) {
+            padding: 4px 10px;
+        }
 
         .playback-btn {
             display: inline-block;
@@ -78,6 +87,10 @@
         height: 100%;
         top: 0;
         padding-top: 18px;
+
+        @media screen and (max-height: @short-window) {
+            padding-top: 12px;
+        }
 
         .playback-speed {
             width: 140px;

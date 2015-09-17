@@ -369,8 +369,8 @@ define(function(require) {
         },
 
         update: function() {
-            this.draw();
             this.updateBlendMode();
+            this.draw();
         }
 
     }, Constants.LaserBeamsView);
