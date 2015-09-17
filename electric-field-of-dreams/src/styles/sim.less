@@ -20,65 +20,42 @@
     h2 {
         .header();
         padding-bottom: 4px;
+        margin-bottom: 10px;
         border-bottom: 1px solid rgba(0, 0, 0, 0.09);
     }
 
-    h2:not(:first-child) {
-        margin-top: 18px;
-    }
+    .btns-wrapper {
+        position: relative;
+        margin-top: 8px;
 
-    > .btn-add,
-    > .btn-remove {
-        position: absolute;
-        top: 100%;
-        margin-top: 4px;
-        width: (@control-panel-width / 2 - 2);
-        background: fadeout(#fff, 60%);
-        color: @link-color;
-        box-shadow: none;
-        border-radius: 0;
-
-        font-weight: bold;
-
-        &:focus {
-            outline: none;
+        .btn-add,
+        .btn-remove {
+            .panel-button();
+            margin: 0;
         }
 
-        &:hover {
-            background: fadeout(#fff, 40%);
-            color: @link-color;
+        .btn-remove {
+            float: right;
         }
-
-        &:active {
-            margin-top: 5px;
-            box-shadow: none;
-            color: @link-color;
-        }
-    }
-
-    > .btn-add {
-        left: 0;
-    }
-
-    > .btn-remove {
-        right: 0;
     }
 
     .control-group {
-        margin-top: 10px;
+        margin-top: 4px;
 
         label {
-            float: left;
-            width: 68%;
+            width: 50%;
             padding-right: 6px;
             line-height: 34px;
-            text-align: right;
         }
 
         .input-wrapper {
-            float: left;
-            width: 32%;
+            float: right;
+            width: 50%;
             padding-right: 0;
+            
+            input {
+                text-align: right;
+            }
         }
     }
 
