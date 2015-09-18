@@ -36,6 +36,7 @@ define(function(require) {
         },
 
         initialize: function(options) {
+            this.mvt = options.mvt;
             this.simulation = options.simulation;
 
             this._dragOffset = new PIXI.Point();
@@ -50,6 +51,7 @@ define(function(require) {
         initGraphics: function() {
             this.initPanel();
             this.initArrows();
+            this.updateMVT(this.mvt);
         },
 
         initPanel: function() {
@@ -136,8 +138,8 @@ define(function(require) {
                 return;
 
             this.updateLock(function() {
-                var x = this.model.get('field').x;
-                var y = this.model.get('field').y;
+                var x = this.mvt.modelToViewDeltaX(this.model.get('field').x);
+                var y = this.mvt.modelToViewDeltaY(this.model.get('field').y);
                 this.arrowModel.set('targetX', this.arrowModel.get('originX') + x);
                 this.arrowModel.set('targetY', this.arrowModel.get('originY') + y);
             });
@@ -145,6 +147,12 @@ define(function(require) {
 
         reset: function() {
             
+        },
+
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
+
+            this.updateArrow();
         },
 
         dragStart: function(event) {
@@ -177,7 +185,10 @@ define(function(require) {
                 var dx = arrowModel.get('targetX') - arrowModel.get('originX');
                 var dy = arrowModel.get('targetY') - arrowModel.get('originY');
 
-                this.model.translateField(dx, dy);
+                var mdx = this.mvt.viewToModelDeltaX(dx);
+                var mdy = this.mvt.viewToModelDeltaY(dy);
+
+                this.model.translateField(mdx, mdy);
             });
         }
 

@@ -14,6 +14,7 @@ define(function (require) {
 
     Constants.DISCRETENESS_RANGE = range({ min: 1, max: 30, defaultValue: 10 });
 
+    Constants.SYSTEM_WIDTH = 300; // Arbitrary units
 
 
     /*************************************************************************

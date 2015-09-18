@@ -46,6 +46,12 @@ define(function (require, exports, module) {
             this.fieldLaw = new ElectricForceLaw();
         },
 
+        resetComponents: function() {
+
+            // Electric force law
+            this.fieldLaw.setField(0, 0);
+        },
+
         _update: function(time, deltaTime) {
             
         }
