@@ -11,6 +11,18 @@
     width: @control-panel-width;
     .user-select(none);
 
+    &.external-field-control-view-header {
+        pointer-events: none;
+        background: transparent;
+        position: absolute;
+        right: @panel-margin;
+        padding-bottom: 0;
+
+        h2 {
+            margin-bottom: 0;
+        }
+    }
+
     input.form-control {
         background: rgba(255, 255, 255, 0.27);
         border-color: rgba(0, 0, 0, 0.1);
