@@ -2,70 +2,39 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
-    var Pool     = require('object-pool');
+    var _ = require('underscore');
 
     var Vector2 = require('common/math/vector2');
 
-    var vectorPool = Pool({
-        init: function() {
-            return new Vector2();
-        },
-        enable: function(vector) {
-            vector.set(0, 0);
-        }
-    });
-
+    var Law = require('models/law');
 
     /**
      * 
      */
-    var ElectricForceLaw = Backbone.Model.extend({
+    var ElectricForceLaw = function(radius) {
+        this.field = new Vector2();
 
-        defaults: {
-            field: null
-        },
+        this._field = new Vector2();
+        this._acc   = new Vector2();
+    };
 
-        /**
-         * Initializes new ElectricForceLaw object.
-         */
-        initialize: function(attributes, options) {
-            this.set('field', vectorPool.create().set(this.get('field')));
-        },
+    /**
+     * Instance functions/properties
+     */
+    _.extend(ElectricForceLaw.prototype, Law.prototype, {
 
-        translateField: function(x, y) {
-            var oldField = this.get('field');
-            var newField = vectorPool.create().set(this.get('field'));
+        iterate: function(deltaTime, system) {
+            for (var i = 0; i < system.particles.length; i++) {
+                var particle = system.particles.at(i);
+                var force = this._field.set(field).scale(particle.get('charge')); // f = qE
+                // f = ma
+                var mass = particle.get('mass');
+                var forceOverMass = force.scale(1 / mass);
+                var oldAcc = this._acc.set(particle.get('acceleration'));
+                var newAcc = oldAcc.add(forceOverMass);
 
-            if (x instanceof Vector2)
-                this.set('field', newField.add(x));
-            else
-                this.set('field', newField.add(x, y));
-            
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldField);
-        },
-
-        setField: function(x, y) {
-            var oldField = this.get('field');
-            
-            if (x instanceof Vector2)
-                this.set('field', vectorPool.create().set(x));
-            else
-                this.set('field', vectorPool.create().set(x, y));
-
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldField);
-        },
-
-        /**
-         * We need to make sure we release the model's vectors
-         *   back into the vector pool or we get memory leaks,
-         *   so destroy must be called on all ElectricForceLaw objects.
-         */
-        destroy: function(options) {
-            this.trigger('destroy', this, this.collection, options);
-            vectorPool.remove(this.get('field'));
+                particle.setAcceleration(newAcc);
+            }
         }
 
     });

@@ -44,8 +44,6 @@ define(function(require) {
             this.initGraphics();
 
             this.$el.html('<h2>External Field</h2>');
-
-            this.listenTo(this.model, 'change:field', this.updateArrow);
         },
 
         initGraphics: function() {
@@ -138,8 +136,8 @@ define(function(require) {
                 return;
 
             this.updateLock(function() {
-                var x = this.mvt.modelToViewDeltaX(this.model.get('field').x);
-                var y = this.mvt.modelToViewDeltaY(this.model.get('field').y);
+                var x = this.mvt.modelToViewDeltaX(this.model.field.x);
+                var y = this.mvt.modelToViewDeltaY(this.model.field.y);
                 this.arrowModel.set('targetX', this.arrowModel.get('originX') + x);
                 this.arrowModel.set('targetY', this.arrowModel.get('originY') + y);
             });
@@ -188,7 +186,7 @@ define(function(require) {
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
 
-                this.model.translateField(mdx, mdy);
+                this.model.field.add(mdx, mdy);
             });
         }
 

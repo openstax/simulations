@@ -2,10 +2,12 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var Simulation = require('common/simulation/simulation');
 
+    var Particle         = require('models/particle');
     var ElectricForceLaw = require('models/law/electric-force');
 
     /**
@@ -42,6 +44,12 @@ define(function (require, exports, module) {
             //  - Set up bounds
             //  - Do velocity update and position update
 
+            // Particles that hold charge and can move around in the system
+            this.particles = new Backbone.Collection();
+
+            // Laws (don't need any fancy collections for these)
+            this.laws = [];
+
             // Electric force law (found in EFieldSimulationPanel in the original)
             this.fieldLaw = new ElectricForceLaw();
         },
@@ -50,6 +58,20 @@ define(function (require, exports, module) {
 
             // Electric force law
             this.fieldLaw.setField(0, 0);
+        },
+
+        addParticle: function(charge, mass) {
+            this.particles.add(new Particle({
+                charge: charge,
+                mass: mass
+            }));
+        },
+
+        /**
+         * Removes the last-created particle.
+         */
+        removeParticle: function() {
+            this.particles.remove(this.particles.last());
         },
 
         _update: function(time, deltaTime) {
