@@ -15,6 +15,7 @@ define(function (require, exports, module) {
     var FourBoundsPropagator        = require('models/propagator/four-bounds');
     var VelocityPropagator          = require('models/propagator/velocity');
     var PositionPropagator          = require('models/propagator/position');
+    var ChargeFieldCalculator       = require('models/charge-field-calculator');
 
     /**
      * Constants
@@ -68,6 +69,11 @@ define(function (require, exports, module) {
             // Particles that hold charge and can move around in the system
             this.particles = new Backbone.Collection();
 
+            // Listen to particle events
+            this.listenTo(this.particles, 'detach', this.particleDetached);
+            this.listenTo(this.particles, 'attach', this.particleAttached);
+            this.listenTo(this.particles, 'reset',  this.particlesReset);
+
             // Laws and Propagators (don't need any fancy collections for these)
             this.laws = [];
             this.propagators = [];
@@ -85,10 +91,10 @@ define(function (require, exports, module) {
             this.propagators.push(new VelocityPropagator(100));
             this.propagators.push(new PositionPropagator());
 
-            // Listen to particle events
-            this.listenTo(this.particles, 'detach', this.particleDetached);
-            this.listenTo(this.particles, 'attach', this.particleAttached);
-            this.listenTo(this.particles, 'reset',  this.particlesReset);
+            // Initialize an object for calculating electric fields at a given location
+            this.chargeFieldCalculator = new ChargeFieldCalculator(this.particles, 120000, Constants.MAX_ARROW_LENGTH);
+
+            
         },
 
         resetComponents: function() {
@@ -115,6 +121,13 @@ define(function (require, exports, module) {
 
             this.particles.remove(particle);
             this.coulombsLaw.particles.remove(particle);
+        },
+
+        /**
+         * Returns the electric field at a certain location.
+         */
+        getFieldAt: function(x, y) {
+            return this.chargeFieldCalculator.getFieldAt(x, y);
         },
 
         _update: function(time, deltaTime) {
