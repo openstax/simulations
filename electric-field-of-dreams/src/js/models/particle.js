@@ -15,7 +15,20 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             MotionObject.prototype.initialize.apply(this, arguments);
+        },
 
+        /**
+         * Signals to listeners that this particle should enter a detached state.
+         */
+        detach: function() {
+            this.trigger('detach', this);
+        },
+
+        /**
+         * Signals to listeners that this particle should leave its detached state.
+         */
+        attach: function() {
+            this.trigger('attach', this);
         }
 
     });

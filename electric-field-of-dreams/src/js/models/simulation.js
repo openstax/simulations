@@ -84,6 +84,11 @@ define(function (require, exports, module) {
             this.propagators.push(new FourBoundsPropagator(this.minX, this.minY, this.width, this.height, 1.2));
             this.propagators.push(new VelocityPropagator(100));
             this.propagators.push(new PositionPropagator());
+
+            // Listen to particle events
+            this.listenTo(this.particles, 'detach', this.particleDetached);
+            this.listenTo(this.particles, 'attach', this.particleAttached);
+            this.listenTo(this.particles, 'reset',  this.particlesReset);
         },
 
         resetComponents: function() {
@@ -93,17 +98,23 @@ define(function (require, exports, module) {
         },
 
         addParticle: function(charge, mass) {
-            this.particles.add(new Particle({
+            var particle = new Particle({
                 charge: charge,
                 mass: mass
-            }));
+            });
+
+            this.particles.add(particle);
+            this.coulombsLaw.particles.add(particle);
         },
 
         /**
          * Removes the last-created particle.
          */
         removeParticle: function() {
-            this.particles.remove(this.particles.last());
+            var particle = this.particles.last();
+
+            this.particles.remove(particle);
+            this.coulombsLaw.particles.remove(particle);
         },
 
         _update: function(time, deltaTime) {
@@ -114,6 +125,29 @@ define(function (require, exports, module) {
 
             for (i = 0; i < this.propagators.length; i++)
                 this.propagators[i].update(deltaTime, this);
+        },
+
+        /**
+         * A particle has triggered a detach event, meaning we should temporarily
+         *   remove it from the system's particle list so position, velocity, and
+         *   force propagators don't act upon it while in a detached state.
+         */
+        particleDetached: function(particle) {
+            this.particles.remove(particle);
+        },
+
+        /**
+         * A particle has triggreed an attach event, meaning it was previously in
+         *   a detached state, and now it's time to add it back to the system's
+         *   particle collection so it will again be affected by other forces and
+         *   objects in the system.
+         */
+        particleAttached: function(particle) {
+            this.particles.add(particle);
+        },
+
+        particlesReset: function() {
+            this.coulombsLaw.particles.reset();
         }
 
     });
