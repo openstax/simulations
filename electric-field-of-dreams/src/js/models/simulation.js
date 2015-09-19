@@ -77,7 +77,7 @@ define(function (require, exports, module) {
 
             // Coulomb's Law
             var coulombsLaw = new CoulombsLaw(100000);
-            this.coulombsLaw = new ParticleForceLawAdapter([], coulombsLaw);
+            this.coulombsLaw = new ParticleForceLawAdapter(coulombsLaw);
 
             // Add propagators
             this.propagators.push(new ResetAccelerationPropagator());

@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
 
@@ -11,8 +12,8 @@ define(function (require) {
     /**
      * 
      */
-    var ParticleForceLawAdapter = function(particles, forceLaw) {
-        this.particles = particles;
+    var ParticleForceLawAdapter = function(forceLaw) {
+        this.particles = new Backbone.Collection();
         this.forceLaw = forceLaw;
 
         this._totalForce = new Vector2();
@@ -30,15 +31,15 @@ define(function (require) {
             for (var i = 0; i < particles.length; i++) {
                 totalForce.set(0, 0);
                 for (var j = 0; j < particles.length; j++) {
-                    totalForce.add(this.forceLaw.getForce(particles[j], particles[i]));
+                    totalForce.add(this.forceLaw.getForce(particles.at(j), particles.at(i)));
                 }
 
-                var mass = particles[i].get('pass');
+                var mass = particles.at(i).get('pass');
                 var forceOverMass = totalForce.scale(1 / mass);
-                var oldAcc = particles[i].get('acceleration');
+                var oldAcc = particles.at(i).get('acceleration');
                 var newAcc = oldAcc.add(forceOverMass);
 
-                particles[i].setAcceleration(newAcc);
+                particles.at(i).setAcceleration(newAcc);
             }
         }
 
