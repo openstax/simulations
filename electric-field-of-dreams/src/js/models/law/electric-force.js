@@ -11,7 +11,7 @@ define(function (require) {
     /**
      * 
      */
-    var ElectricForceLaw = function(radius) {
+    var ElectricForceLaw = function() {
         this.field = new Vector2();
 
         this._field = new Vector2();
@@ -23,7 +23,7 @@ define(function (require) {
      */
     _.extend(ElectricForceLaw.prototype, Law.prototype, {
 
-        iterate: function(deltaTime, system) {
+        update: function(deltaTime, system) {
             for (var i = 0; i < system.particles.length; i++) {
                 var particle = system.particles.at(i);
                 var force = this._field.set(field).scale(particle.get('charge')); // f = qE

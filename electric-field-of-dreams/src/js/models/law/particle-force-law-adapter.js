@@ -23,7 +23,7 @@ define(function (require) {
      */
     _.extend(ParticleForceLawAdapter.prototype, Law.prototype, {
 
-        iterate: function(deltaTime, system) {
+        update: function(deltaTime, system) {
             var totalForce = this._totalForce;
             var particles = this.particles;
 
@@ -37,7 +37,7 @@ define(function (require) {
                 var forceOverMass = totalForce.scale(1 / mass);
                 var oldAcc = particles[i].get('acceleration');
                 var newAcc = oldAcc.add(forceOverMass);
-                
+
                 particles[i].setAcceleration(newAcc);
             }
         }

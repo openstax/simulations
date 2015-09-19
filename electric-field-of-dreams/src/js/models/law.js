@@ -11,8 +11,8 @@ define(function (require) {
      */
     _.extend(Law.prototype, {
 
-        iterate: function(deltaTime, system) {
-            throw 'Iterate function not implemented.';
+        update: function(deltaTime, system) {
+            throw 'Update function not implemented.';
         }
 
     });
