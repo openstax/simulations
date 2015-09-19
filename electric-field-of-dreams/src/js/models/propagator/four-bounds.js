@@ -7,10 +7,10 @@ define(function (require) {
     var Vector2 = require('common/math/vector2');
 
     var Propagator = require('models/propagator');
-    var NorthBouncePropagator = require('models/propagator/north');
-    var SouthBouncePropagator = require('models/propagator/south');
-    var EastBouncePropagator  = require('models/propagator/east');
-    var WestBouncePropagator  = require('models/propagator/west');
+    var NorthBouncePropagator = require('models/propagator/north-bounce');
+    var SouthBouncePropagator = require('models/propagator/south-bounce');
+    var EastBouncePropagator  = require('models/propagator/east-bounce');
+    var WestBouncePropagator  = require('models/propagator/west-bounce');
 
     /**
      * Keeps a particle within four bounding walls.

@@ -32,7 +32,7 @@ define(function (require) {
             for (var i = 0; i < this.particles.length; i++) {
                 var particle = this.particles.at(i);
 
-                field.add(this.getParticleFieldAt(particle, x, y);)
+                field.add(this.getParticleFieldAt(particle, x, y));
             }
             
             return field;

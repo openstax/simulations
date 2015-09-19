@@ -52,7 +52,10 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
-            'click .reset-btn'  : 'reset'
+            'click .reset-btn'  : 'reset',
+
+            'click .add-btn'    : 'addParticle',
+            'click .remove-btn' : 'removeParticle'
         },
 
         /**
@@ -185,6 +188,17 @@ define(function (require) {
 
         setEFieldDiscreteness: function(discreteness) {
             console.log('discreteness: ' + discreteness);
+        },
+
+        addParticle: function() {
+            var charge = parseFloat(this.$('#charge').val());
+            var mass   = parseFloat(this.$('#mass').val());
+            
+            this.simulation.addParticle(charge, mass);
+        },
+
+        removeParticle: function() {
+            this.simulation.removeParticle();
         }
 
     });

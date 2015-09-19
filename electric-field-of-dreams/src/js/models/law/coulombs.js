@@ -13,8 +13,8 @@ define(function (require) {
      */
     var CoulombsLaw = function(k, range, minDist) {
         this.k = k;
-        this.range = (range !== undefined) ? range || 1.7976931348623157e+308;
-        this.minDist = (minDist !== undefined) ? minDist || 0;
+        this.range = (range !== undefined) ? range : 1.7976931348623157e+308;
+        this.minDist = (minDist !== undefined) ? minDist : 0;
 
         this._force = new Vector2();
         this._direction = new Vector2();
