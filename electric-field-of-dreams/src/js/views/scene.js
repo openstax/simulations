@@ -169,8 +169,7 @@ define(function(require) {
         createAndAddParticleView: function(particle) {
             var particleView = new ParticleView({ 
                 model: particle,
-                mvt: this.mvt,
-                simulation: this.simulation
+                mvt: this.mvt
             });
             this.particles.addChild(particleView.displayObject);
             this.particleViews.push(particleView);

@@ -32,7 +32,6 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.simulation = options.simulation;
 
             this.lineWidth = ParticleView.LINE_WIDTH;
             this.lineColor = Colors.parseHex(ParticleView.LINE_COLOR);
@@ -64,27 +63,27 @@ define(function(require) {
             this.displayObject.endFill();
         },
 
-        dragStart: function(data) {
-            if (!this.simulation.get('paused'))
-                return;
-
-            this.dragOffset = data.getLocalPosition(this.displayObject, this._dragOffset);
+        dragStart: function(event) {
+            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
             this.dragging = true;
 
             this.model.detach();
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                var local = data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
                 
-                
+                var mx = this.mvt.viewToModelX(x);
+                var my = this.mvt.viewToModelY(y);
+
+                this.model.setPosition(mx, my);
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
             this.model.attach();
