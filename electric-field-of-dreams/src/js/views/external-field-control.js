@@ -184,10 +184,10 @@ define(function(require) {
                 var dx = arrowModel.get('targetX') - arrowModel.get('originX');
                 var dy = arrowModel.get('targetY') - arrowModel.get('originY');
 
-                var mdx = this.mvt.viewToModelDeltaX(dx);
-                var mdy = this.mvt.viewToModelDeltaY(dy);
+                var mdx = -this.mvt.viewToModelDeltaX(dx);
+                var mdy = -this.mvt.viewToModelDeltaY(dy);
 
-                this.model.field.add(mdx, mdy);
+                this.model.field.set(mdx, mdy);
             });
         }
 
