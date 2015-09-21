@@ -11,6 +11,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var ExternalFieldControlView = require('views/external-field-control');
+    var ParticleView             = require('views/particle');
 
     var Assets = require('assets');
 
@@ -31,6 +32,10 @@ define(function(require) {
 
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.particles, 'reset',  this.particlesReset);
+            this.listenTo(this.simulation.particles, 'add',    this.particleAdded);
+            this.listenTo(this.simulation.particles, 'remove', this.particleRemoved);
         },
 
         renderContent: function() {
@@ -42,6 +47,7 @@ define(function(require) {
 
             this.initMVT();
             this.initExternalFieldControlView();
+            this.initParticles();
         },
 
         initMVT: function() {
@@ -94,6 +100,14 @@ define(function(require) {
             });
         },
 
+        initParticles: function() {
+            this.particleViews = [];
+
+            this.particles = new PIXI.Container();
+
+            this.stage.addChild(this.particles);
+        },
+
         reset: function() {
 
         },
@@ -101,6 +115,43 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             
         },
+
+        particlesReset: function(particles) {
+            // Remove old particle views
+            for (var i = this.particleViews.length - 1; i >= 0; i--) {
+                this.particleViews[i].removeFrom(this.particles);
+                this.particleViews.splice(i, 1);
+            }
+
+            // Add new particle views
+            particles.each(function(particle) {
+                this.createAndAddParticleView(particle);
+            }, this);
+        },
+
+        particleAdded: function(particle, particles) {
+            this.createAndAddParticleView(particle);
+        },
+
+        particleRemoved: function(particle, particles) {
+            for (var i = this.particleViews.length - 1; i >= 0; i--) {
+                if (this.particleViews[i].model === particle) {
+                    this.particleViews[i].removeFrom(this.particles);
+                    this.particleViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        createAndAddParticleView: function(particle) {
+            var particleView = new ParticleView({ 
+                model: particle,
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+            this.particles.addChild(particleView.displayObject);
+            this.particleViews.push(particleView);
+        }
 
     });
 

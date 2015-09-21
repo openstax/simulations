@@ -26,7 +26,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                         REMOTE CONTROL VIEW                         **
+     **                     EXTERNAL FIELD CONTROL VIEW                     **
      **                                                                     **
      *************************************************************************/
 
@@ -46,6 +46,24 @@ define(function (require) {
     ExternalFieldControlView.ARROW_COLOR = '#21366b';
 
     Constants.ExternalFieldControlView = ExternalFieldControlView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            PARTICLE VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var ParticleView = {};
+
+    ParticleView.MODEL_RADIUS = 12;
+    ParticleView.FILL_COLOR = '#7986A6';
+    ParticleView.LINE_COLOR = '#21366b';
+    ParticleView.LINE_WIDTH = 3;
+
+    Constants.ParticleView = ParticleView;
+
+    
 
 
     return Constants;
