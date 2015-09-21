@@ -12,6 +12,7 @@ define(function(require) {
 
     var ExternalFieldControlView = require('views/external-field-control');
     var ParticleView             = require('views/particle');
+    var BoundsView               = require('views/bounds');
 
     var Assets = require('assets');
 
@@ -47,12 +48,13 @@ define(function(require) {
 
             this.initMVT();
             this.initParticles();
+            this.initBoundsView();
             this.initExternalFieldControlView();
         },
 
         initMVT: function() {
             // Use whichever dimension is smaller
-            var m = 20;
+            var m = 36;
             var usableWidth = this.width - ExternalFieldControlView.PANEL_WIDTH - ExternalFieldControlView.RIGHT - m * 2;
             var usableHeight = this.height - 62 - 8 - m * 2;
 
@@ -89,6 +91,15 @@ define(function(require) {
             this.particles = new PIXI.Container();
 
             this.stage.addChild(this.particles);
+        },
+
+        initBoundsView: function() {
+            this.boundsView = new BoundsView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.stage.addChild(this.boundsView.displayObject);
         },
 
         initExternalFieldControlView: function() {

@@ -56,12 +56,27 @@ define(function (require) {
 
     var ParticleView = {};
 
-    ParticleView.MODEL_RADIUS = 12;
+    ParticleView.MODEL_RADIUS = 10;
     ParticleView.FILL_COLOR = '#7986A6';
     ParticleView.LINE_COLOR = '#21366b';
     ParticleView.LINE_WIDTH = 3;
 
     Constants.ParticleView = ParticleView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             BOUNDS VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var BoundsView = {};
+
+    BoundsView.LINE_COLOR = '#000';
+    BoundsView.LINE_WIDTH = 10;
+    BoundsView.LINE_ALPHA = 0.2;
+
+    Constants.BoundsView = BoundsView;
 
     
 
