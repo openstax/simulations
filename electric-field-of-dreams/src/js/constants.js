@@ -85,15 +85,15 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
     
-    var ExternalFieldView = {};
+    var ElectricFieldView = {};
 
-    ExternalFieldView.ARROW_TAIL_WIDTH  = 2;
-    ExternalFieldView.ARROW_HEAD_WIDTH  = 6;
-    ExternalFieldView.ARROW_HEAD_LENGTH = 8;
-    ExternalFieldView.ARROW_COLOR = '#21366b';
-    ExternalFieldView.ARROW_ALPHA = 1;
+    ElectricFieldView.ARROW_TAIL_WIDTH  = 2;
+    ElectricFieldView.ARROW_HEAD_WIDTH  = 6;
+    ElectricFieldView.ARROW_HEAD_LENGTH = 8;
+    ElectricFieldView.ARROW_COLOR = '#21366b';
+    ElectricFieldView.ARROW_ALPHA = 1;
 
-    Constants.ExternalFieldView = ExternalFieldView;
+    Constants.ElectricFieldView = ElectricFieldView;
 
 
     return Constants;

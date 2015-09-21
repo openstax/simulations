@@ -11,7 +11,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var ExternalFieldControlView = require('views/external-field-control');
-    var ExternalFieldView        = require('views/external-field');
+    var ElectricFieldView        = require('views/electric-field');
     var ParticleView             = require('views/particle');
     var BoundsView               = require('views/bounds');
 
@@ -48,7 +48,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
-            this.initExternalFieldView();
+            this.initElectricFieldView();
             this.initParticles();
             this.initBoundsView();
             this.initExternalFieldControlView();
@@ -87,13 +87,13 @@ define(function(require) {
             );
         },
 
-        initExternalFieldView: function() {
-            this.externalFieldView = new ExternalFieldView({
+        initElectricFieldView: function() {
+            this.electricFieldView = new ElectricFieldView({
                 mvt: this.mvt,
                 simulation: this.simulation
             });
 
-            this.stage.addChild(this.externalFieldView.displayObject);
+            this.stage.addChild(this.electricFieldView.displayObject);
         },
 
         initParticles: function() {
@@ -136,7 +136,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            this.externalFieldView.update(time, deltaTime);
+            this.electricFieldView.update(time, deltaTime);
         },
 
         particlesReset: function(particles) {

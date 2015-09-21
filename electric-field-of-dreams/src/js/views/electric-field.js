@@ -10,7 +10,7 @@ define(function(require) {
 
     var Constants = require('constants');
 
-    var ExternalFieldView = PixiView.extend({
+    var ElectricFieldView = PixiView.extend({
 
         /**
          * Overrides PixiView's initializeDisplayObject function
@@ -23,8 +23,8 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
-            this.arrowColor = Colors.parseHex(ExternalFieldView.ARROW_COLOR);
-            this.arrowAlpha = ExternalFieldView.ARROW_ALPHA;
+            this.arrowColor = Colors.parseHex(ElectricFieldView.ARROW_COLOR);
+            this.arrowAlpha = ElectricFieldView.ARROW_ALPHA;
             this.minComponentSize = 4;
 
             this.updateMVT(this.mvt);
@@ -38,9 +38,9 @@ define(function(require) {
             var w = Math.round(this.mvt.modelToViewDeltaX(this.simulation.width));
             var h = Math.round(this.mvt.modelToViewDeltaY(this.simulation.height));
             
-            var tailWidth  = Math.round(this.mvt.modelToViewDeltaX(ExternalFieldView.ARROW_TAIL_WIDTH));
-            var headWidth  = Math.round(this.mvt.modelToViewDeltaX(ExternalFieldView.ARROW_HEAD_WIDTH));
-            var headLength = Math.round(this.mvt.modelToViewDeltaX(ExternalFieldView.ARROW_HEAD_LENGTH));
+            var tailWidth  = Math.round(this.mvt.modelToViewDeltaX(ElectricFieldView.ARROW_TAIL_WIDTH));
+            var headWidth  = Math.round(this.mvt.modelToViewDeltaX(ElectricFieldView.ARROW_HEAD_WIDTH));
+            var headLength = Math.round(this.mvt.modelToViewDeltaX(ElectricFieldView.ARROW_HEAD_LENGTH));
 
             var n = this.simulation.get('fieldLatticeWidth');
             var xStep = w / n;
@@ -92,7 +92,7 @@ define(function(require) {
             this.draw();
         }
 
-    }, Constants.ExternalFieldView);
+    }, Constants.ElectricFieldView);
 
-    return ExternalFieldView;
+    return ElectricFieldView;
 });
