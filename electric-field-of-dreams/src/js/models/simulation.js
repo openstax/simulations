@@ -38,7 +38,7 @@ define(function (require, exports, module) {
     var EFDSimulation = FixedIntervalSimulation.extend({
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
-
+            fieldLatticeWidth: Constants.DISCRETENESS_RANGE.defaultValue
         }),
         
         initialize: function(attributes, options) {

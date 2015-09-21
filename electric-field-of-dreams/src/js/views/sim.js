@@ -187,7 +187,7 @@ define(function (require) {
         },
 
         setEFieldDiscreteness: function(discreteness) {
-            console.log('discreteness: ' + discreteness);
+            this.simulation.set('fieldLatticeWidth', discreteness);
         },
 
         addParticle: function() {

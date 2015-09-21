@@ -20,7 +20,7 @@ define(function (require) {
     Constants.FRAME_DURATION = 35 / 1000; // Seconds
     Constants.DT_PER_FRAME = 0.15;        // Seconds
 
-    Constants.DISCRETENESS_RANGE = range({ min: 1, max: 30, defaultValue: 10 });
+    Constants.DISCRETENESS_RANGE = range({ min: 1, max: 30, defaultValue: 6 });
     Constants.MAX_ARROW_LENGTH = 25;
 
 
@@ -78,7 +78,22 @@ define(function (require) {
 
     Constants.BoundsView = BoundsView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                         EXTERNAL FIELD VIEW                         **
+     **                                                                     **
+     *************************************************************************/
     
+    var ExternalFieldView = {};
+
+    ExternalFieldView.ARROW_TAIL_WIDTH  = 2;
+    ExternalFieldView.ARROW_HEAD_WIDTH  = 6;
+    ExternalFieldView.ARROW_HEAD_LENGTH = 8;
+    ExternalFieldView.ARROW_COLOR = '#21366b';
+    ExternalFieldView.ARROW_ALPHA = 1;
+
+    Constants.ExternalFieldView = ExternalFieldView;
 
 
     return Constants;

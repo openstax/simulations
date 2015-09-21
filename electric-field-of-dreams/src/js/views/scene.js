@@ -11,6 +11,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var ExternalFieldControlView = require('views/external-field-control');
+    var ExternalFieldView        = require('views/external-field');
     var ParticleView             = require('views/particle');
     var BoundsView               = require('views/bounds');
 
@@ -47,6 +48,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initExternalFieldView();
             this.initParticles();
             this.initBoundsView();
             this.initExternalFieldControlView();
@@ -83,6 +85,15 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+        },
+
+        initExternalFieldView: function() {
+            this.externalFieldView = new ExternalFieldView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.stage.addChild(this.externalFieldView.displayObject);
         },
 
         initParticles: function() {
@@ -125,7 +136,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            this.externalFieldView.update(time, deltaTime);
         },
 
         particlesReset: function(particles) {

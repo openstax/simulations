@@ -40,14 +40,12 @@ define(function(require) {
             var graphics = this.displayObject;
 
             graphics.clear();
-            //graphics.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
             graphics.beginFill(this.lineColor, this.lineAlpha);
             graphics.drawRect(x - m, y - m, w + m * 2, m); // Top
             graphics.drawRect(x - m, y + h, w + m * 2, m); // Bottom
             graphics.drawRect(x - m, y,     m,         h); // Left
             graphics.drawRect(x + w, y,     m,         h); // Right
             graphics.endFill();
-            //graphics.drawRect(x, y, w, h);
         },
 
         updateMVT: function(mvt) {
