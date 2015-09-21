@@ -6,6 +6,7 @@ define(function (require, exports, module) {
     var Backbone = require('backbone');
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2                 = require('common/math/vector2');
 
     var System                      = require('models/system');
     var Particle                    = require('models/particle');
@@ -55,6 +56,8 @@ define(function (require, exports, module) {
             this.minY = options.minY;
             this.width = options.width;
             this.height = options.height;
+
+            this.center = new Vector2(this.minX + this.width / 2, this.minY + this.height / 2);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
         },
@@ -109,7 +112,11 @@ define(function (require, exports, module) {
         addParticle: function(charge, mass) {
             var particle = new Particle({
                 charge: charge,
-                mass: mass
+                mass: mass,
+                position: new Vector2(
+                    this.minX + Math.random() * this.width,
+                    this.minY + Math.random() * this.height
+                )
             });
 
             this.particles.add(particle);
@@ -141,8 +148,8 @@ define(function (require, exports, module) {
             for (i = 0; i < this.system.laws.length; i++)
                 this.system.laws[i].update(deltaTime, this.system);
 
-            for (i = 0; i < this.particles.length; i++)
-                console.log(this.particles.at(i).get('position'));
+            // for (i = 0; i < this.particles.length; i++)
+            //     console.log(this.particles.at(i).get('position'));
         },
 
         /**

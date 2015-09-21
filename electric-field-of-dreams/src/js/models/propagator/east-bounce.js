@@ -29,7 +29,7 @@ define(function (require) {
 
         getPointAtBounds: function(oldPosition) {
             // TODO: See if this is a mistake in the original. I think it's supposed to be this.xMax - this.distFromWall
-            return this._vec.set(this.xMax, oldPosition.y);
+            return this._vec.set(this.xMax - this.distFromWall, oldPosition.y);
         },
         
         getNewVelocity: function(oldVelocity) {

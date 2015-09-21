@@ -46,14 +46,15 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
-            this.initExternalFieldControlView();
             this.initParticles();
+            this.initExternalFieldControlView();
         },
 
         initMVT: function() {
             // Use whichever dimension is smaller
-            var usableWidth = this.width - ExternalFieldControlView.PANEL_WIDTH - ExternalFieldControlView.RIGHT;
-            var usableHeight = this.height - 62 - 8;
+            var m = 20;
+            var usableWidth = this.width - ExternalFieldControlView.PANEL_WIDTH - ExternalFieldControlView.RIGHT - m * 2;
+            var usableHeight = this.height - 62 - 8 - m * 2;
 
             if (AppView.windowIsShort())
                 usableWidth -= ExternalFieldControlView.PANEL_WIDTH + ExternalFieldControlView.RIGHT;
@@ -66,20 +67,28 @@ define(function(require) {
 
             if (AppView.windowIsShort()) {
                 // Center between the two columns
-                this.viewOriginX = Math.round(this.width / 2);
-                this.viewOriginY = Math.round(usableHeight / 2);
+                this.viewOriginX = Math.round(m + this.width / 2);
+                this.viewOriginY = Math.round(m + usableHeight / 2);
             }
             else {
                 // Center in the usable area on the left
-                this.viewOriginX = Math.round(usableWidth / 2);
-                this.viewOriginY = Math.round(usableHeight / 2);
+                this.viewOriginX = Math.round(m + usableWidth / 2);
+                this.viewOriginY = Math.round(m + usableHeight / 2);
             }
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
+                this.simulation.center,
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+        },
+
+        initParticles: function() {
+            this.particleViews = [];
+
+            this.particles = new PIXI.Container();
+
+            this.stage.addChild(this.particles);
         },
 
         initExternalFieldControlView: function() {
@@ -98,14 +107,6 @@ define(function(require) {
             this.externalFieldControlView.$el.css({
                 'top': (this.height - ExternalFieldControlView.BOTTOM - ExternalFieldControlView.PANEL_HEIGHT) + 'px'
             });
-        },
-
-        initParticles: function() {
-            this.particleViews = [];
-
-            this.particles = new PIXI.Container();
-
-            this.stage.addChild(this.particles);
         },
 
         reset: function() {
