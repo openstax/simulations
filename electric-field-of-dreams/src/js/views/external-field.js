@@ -67,7 +67,7 @@ define(function(require) {
                     else {
                         graphics.drawArrow(
                             Math.floor(ox), Math.floor(oy),
-                            Math.floor(tx), Math.floor(ty),
+                            Math.floor(ox + tx), Math.floor(oy + ty),
                             tailWidth, headWidth, headLength
                         );
                     }
