@@ -30,17 +30,24 @@ define(function(require) {
         },
 
         draw: function() {
-            var m = Constants.ParticleView.MODEL_RADIUS;
-            var x = Math.round(this.mvt.modelToViewX(this.simulation.minX - m));
-            var y = Math.round(this.mvt.modelToViewY(this.simulation.minY - m));
-            var w = Math.round(this.mvt.modelToViewDeltaX(this.simulation.width + m * 2));
-            var h = Math.round(this.mvt.modelToViewDeltaY(this.simulation.height + m * 2));
+            var r = Constants.ParticleView.MODEL_RADIUS;
+            var x = Math.round(this.mvt.modelToViewX(this.simulation.minX - r));
+            var y = Math.round(this.mvt.modelToViewY(this.simulation.minY - r));
+            var w = Math.round(this.mvt.modelToViewDeltaX(this.simulation.width + r * 2));
+            var h = Math.round(this.mvt.modelToViewDeltaY(this.simulation.height + r * 2));
+            var m = this.lineWidth;
 
             var graphics = this.displayObject;
 
             graphics.clear();
-            graphics.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
-            graphics.drawRect(x, y, w, h);
+            //graphics.lineStyle(this.lineWidth, this.lineColor, this.lineAlpha);
+            graphics.beginFill(this.lineColor, this.lineAlpha);
+            graphics.drawRect(x - m, y - m, w + m * 2, m); // Top
+            graphics.drawRect(x - m, y + h, w + m * 2, m); // Bottom
+            graphics.drawRect(x - m, y,     m,         h); // Left
+            graphics.drawRect(x + w, y,     m,         h); // Right
+            graphics.endFill();
+            //graphics.drawRect(x, y, w, h);
         },
 
         updateMVT: function(mvt) {

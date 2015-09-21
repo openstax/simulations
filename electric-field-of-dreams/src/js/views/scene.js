@@ -56,7 +56,7 @@ define(function(require) {
             // Use whichever dimension is smaller
             var m = 36;
             var usableWidth = this.width - ExternalFieldControlView.PANEL_WIDTH - ExternalFieldControlView.RIGHT - m * 2;
-            var usableHeight = this.height - 62 - 8 - m * 2;
+            var usableHeight = this.height - 62 - m * 2;
 
             if (AppView.windowIsShort())
                 usableWidth -= ExternalFieldControlView.PANEL_WIDTH + ExternalFieldControlView.RIGHT;
