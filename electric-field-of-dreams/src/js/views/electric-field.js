@@ -61,7 +61,7 @@ define(function(require) {
                     tx = this.mvt.modelToViewDeltaX(field.x);
                     ty = this.mvt.modelToViewDeltaY(field.y);
 
-                    if (tx < minSize && ty < minSize) {
+                    if (Math.abs(tx) < minSize && Math.abs(ty) < minSize) {
                         graphics.drawCircle(Math.floor(ox), Math.floor(oy), minSize / 2);
                     }
                     else {

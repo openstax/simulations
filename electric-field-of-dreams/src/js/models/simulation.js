@@ -139,7 +139,12 @@ define(function (require, exports, module) {
          * Returns the electric field at a certain location.
          */
         getFieldAt: function(x, y) {
-            return this.chargeFieldCalculator.getFieldAt(x, y);
+            // The field is actually a sum of the field created by the charges...
+            var field = this.chargeFieldCalculator.getFieldAt(x, y);
+            // ...and the external electric field
+            field.add(this.fieldLaw.field);
+            
+            return field;
         },
 
         _update: function(time, deltaTime) {
