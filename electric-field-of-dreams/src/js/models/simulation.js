@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var ElectricForceLaw            = require('models/law/electric-force');
     var ParticleForceLawAdapter     = require('models/law/particle-force-law-adapter');
     var CoulombsLaw                 = require('models/law/coulombs');
+    var PropagatorLawAdapter        = require('models/law/propagator-adapter');
     var ResetAccelerationPropagator = require('models/propagator/reset-acceleration');
     var FourBoundsPropagator        = require('models/propagator/four-bounds');
     var VelocityPropagator          = require('models/propagator/velocity');
@@ -80,19 +81,18 @@ define(function (require, exports, module) {
 
             // Electric force law (found in EFieldSimulationPanel in the original)
             this.fieldLaw = new ElectricForceLaw();
-            this.system.laws.push(this.fieldLaw);
 
             // Coulomb's Law
             var coulombsLaw = new CoulombsLaw(100000);
             this.coulombsLaw = new ParticleForceLawAdapter(coulombsLaw);
-            this.system.laws.push(this.coulombsLaw);
 
-            // Add propagators
-            this.system.propagators.push(new ResetAccelerationPropagator());
-            this.system.propagators.push(new FourBoundsPropagator(this.minX, this.minY, this.width, this.height, 1.2));
-            
-            this.system.propagators.push(new VelocityPropagator(100));
-            this.system.propagators.push(new PositionPropagator());
+            // Create and add propagators and laws
+            this.system.laws.push(new PropagatorLawAdapter(new ResetAccelerationPropagator()));
+            this.system.laws.push(new PropagatorLawAdapter(new FourBoundsPropagator(this.minX, this.minY, this.width, this.height, 1.2)));
+            this.system.laws.push(this.fieldLaw);
+            this.system.laws.push(this.coulombsLaw);
+            this.system.laws.push(new PropagatorLawAdapter(new VelocityPropagator(100)));
+            this.system.laws.push(new PropagatorLawAdapter(new PositionPropagator()));
 
             // Initialize an object for calculating electric fields at a given location
             this.chargeFieldCalculator = new ChargeFieldCalculator(this.particles, 120000, Constants.MAX_ARROW_LENGTH);
@@ -138,11 +138,11 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             var i;
 
-            for (i = 0; i < this.system.propagators.length; i++)
-                this.system.propagators[i].update(deltaTime, this.system);
-
             for (i = 0; i < this.system.laws.length; i++)
                 this.system.laws[i].update(deltaTime, this.system);
+
+            for (i = 0; i < this.particles.length; i++)
+                console.log(this.particles.at(i).get('position'));
         },
 
         /**

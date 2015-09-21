@@ -14,17 +14,8 @@ define(function (require) {
             // Particles that hold charge and can move around in the system
             this.particles = new Backbone.Collection();
 
-            // Laws and Propagators (don't need any fancy collections for these)
+            // Laws (don't need any fancy collections for these)
             this.laws = [];
-            this.propagators = [];
-        },
-
-        addLaw: function(law) {
-            this.laws.push(law);
-        },
-
-        addPropagator: function(propagator) {
-            this.propagators.push(propagator);
         }
 
     });
