@@ -28,7 +28,7 @@ define(function (require) {
         },
 
         getPointAtBounds: function(oldPosition) {
-            return this._vec.set(oldPosition.x, this.yMin + distFromWall);
+            return this._vec.set(oldPosition.x, this.yMin + this.distFromWall);
         },
         
         getNewVelocity: function(oldVelocity) {

@@ -62,6 +62,7 @@ define(function(require) {
 
             this.panel = panel;
             this.controlArea = controlArea;
+            this.controlArea.buttonMode = true;
 
             var pw = ExternalFieldControlView.PANEL_WIDTH;
             var ph = ExternalFieldControlView.PANEL_HEIGHT;
