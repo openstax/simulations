@@ -99,11 +99,10 @@ define(function (require, exports, module) {
 
             // Initialize an object for calculating electric fields at a given location
             this.chargeFieldCalculator = new ChargeFieldCalculator(this.particles, 120000, Constants.MAX_ARROW_LENGTH);
-
-            
         },
 
         resetComponents: function() {
+            this.particles.reset();
 
             // Electric force law
             this.fieldLaw.field.set(0, 0);
@@ -143,7 +142,7 @@ define(function (require, exports, module) {
             var field = this.chargeFieldCalculator.getFieldAt(x, y);
             // ...and the external electric field
             field.add(this.fieldLaw.field);
-            
+
             return field;
         },
 

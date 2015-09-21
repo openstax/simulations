@@ -132,7 +132,7 @@ define(function(require) {
         },
 
         reset: function() {
-
+            this.externalFieldControlView.reset();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
