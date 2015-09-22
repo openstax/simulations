@@ -18,6 +18,7 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
@@ -103,7 +104,24 @@ define(function (require) {
                 simulation: this.simulation
             };
             this.$el.html(this.template(data));
-            this.$('select').selectpicker();
+            
+            this.$('.resistance-slider').noUiSlider({
+                start: 0.4,
+                connect: 'lower',
+                range: {
+                    'min': 0.2,
+                    'max': 0.93
+                }
+            });
+
+            this.$('.voltage-slider').noUiSlider({
+                start: 2.88,
+                connect: 'lower',
+                range: {
+                    'min': -12,
+                    'max':  12
+                }
+            });
         },
 
         /**

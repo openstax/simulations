@@ -1,2 +1,46 @@
 
 <span class="scene-view-placeholder"></span>
+
+<img src="img/battery@2x.png" style="width: 360px; position: absolute; top: 40%; left: 50%; margin-left: -190px"></img>
+
+<div class="sim-controls-wrapper">
+    <div class="control-panel visibility-options">
+        <h2>Visibility Options</h2>
+
+        <ul class="checkboxes">
+            <li>
+                <input type="checkbox" class="show-chores-check" id="show-chores-check">
+                <label for="show-chores-check">Cores</label>
+            </li>
+            <li>
+                <input type="checkbox" class="show-voltage-calculation-check" id="show-voltage-calculation-check">
+                <label for="show-voltage-calculation-check">Voltage Calculation</label>
+            </li>
+            <li>
+                <input type="checkbox" class="show-inside-battery-check" id="show-inside-battery-check">
+                <label for="show-inside-battery-check">Inside Battery</label>
+            </li>
+        </ul>
+    </div>
+    <div class="control-panel sim-settings">
+        <h2>Simulation Settings</h2>
+
+        <div class="resistance-slider-wrapper">
+            <div class="slider-header">Resistance <span class="slider-value" id="resistance">0.4 Ohms</span></div>
+            <div class="slider resistance-slider"></div>
+        </div>
+
+        <div class="voltage-slider-wrapper">
+            <div class="slider-header">Voltage <span class="slider-value" id="voltage">2.88 Volts</span></div>
+            <div class="slider voltage-slider"></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="playback-controls-wrapper">
+    <div class="playback-center-buttons-wrapper">
+        <button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
+        <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
+    </div>
+</div>

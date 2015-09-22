@@ -4,3 +4,91 @@
 .sims .sim-content {
     min-height: inherit;
 }
+
+.sim-controls-wrapper {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+.control-panel {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    margin-bottom: @panel-margin;
+    position: relative;
+    width: @sim-controls-panel-width;
+
+    @media screen and (max-height: @short-window) {
+        margin-bottom: @short-screen-panel-margin ;
+    }
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        //margin-bottom: -12px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 2px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
+        font-weight: bold;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    .voltage-slider-wrapper {
+        margin-bottom: 6px;
+    }
+
+}
