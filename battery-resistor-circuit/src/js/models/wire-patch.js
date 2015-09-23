@@ -47,6 +47,7 @@ define(function (require) {
 
         addSegment: function(wireSegment) {
             this.segments.push(wireSegment);
+            return this;
         },
 
         /**
@@ -66,13 +67,15 @@ define(function (require) {
             var dist = this.totalDistance();
 
             this.addSegment(new WireSegment(start, end, dist));
+            return this;
         },
 
         /**
          * Start the system with a segment between two points
          */
-        start: function(a, b) {
+        startSegmentBetween: function(a, b) {
             this.createFirstSegment(a, new Vector2(b).sub(a));
+            return this;
         },
 
         /**

@@ -4,11 +4,11 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var CoulombForceParameters = function(k, power) {
+    var CoulombForceParameters = function(k, power, minDist) {
         this.k = k;
         this.power = power;
         this.maxDist = Number.POSITIVE_INFINITY;
-        this.minDist = 0;
+        this.minDist = (minDist !== undefined) ? minDist : 0;
     };
 
     /**

@@ -17,6 +17,11 @@ define(function (require) {
             throw 'Update function not implemented.';
         },
 
+        addWirePatch: function(wirePatch) {
+            this.patches.push(wirePatch);
+            return this;
+        },
+
         getPatch: function(position) {
             var sum = 0;
             for (var i = 0; i < this.patches.length; i++) {
