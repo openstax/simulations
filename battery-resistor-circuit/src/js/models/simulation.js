@@ -17,7 +17,7 @@ define(function (require, exports, module) {
     var BRCSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            mass: 
         }),
         
         initialize: function(attributes, options) {
