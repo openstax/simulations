@@ -145,7 +145,8 @@ define(function(require) {
         },
 
         reset: function() {
-            
+            this.arrowModel.set('targetX', this.arrowModel.get('originX'));
+            this.arrowModel.set('targetY', this.arrowModel.get('originY'));
         },
 
         updateMVT: function(mvt) {
@@ -171,11 +172,9 @@ define(function(require) {
 
         arrowDragStart: function() {
             this.dragging = true;
-            //this.simulation.startSampling();
         },
 
         arrowDragEnd: function() {
-            //this.simulation.stopSampling();
             this.dragging = false;
         },
 
@@ -187,7 +186,7 @@ define(function(require) {
                 var mdx = this.mvt.viewToModelDeltaX(dx);
                 var mdy = this.mvt.viewToModelDeltaY(dy);
 
-                this.model.field.add(mdx, mdy);
+                this.model.field.set(mdx, mdy);
             });
         }
 

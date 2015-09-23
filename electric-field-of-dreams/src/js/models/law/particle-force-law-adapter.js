@@ -34,7 +34,7 @@ define(function (require) {
                     totalForce.add(this.forceLaw.getForce(particles.at(j), particles.at(i)));
                 }
 
-                var mass = particles.at(i).get('pass');
+                var mass = particles.at(i).get('mass');
                 var forceOverMass = totalForce.scale(1 / mass);
                 var oldAcc = particles.at(i).get('acceleration');
                 var newAcc = oldAcc.add(forceOverMass);

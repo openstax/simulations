@@ -26,7 +26,7 @@ define(function (require) {
         update: function(deltaTime, system) {
             for (var i = 0; i < system.particles.length; i++) {
                 var particle = system.particles.at(i);
-                var force = this._field.set(field).scale(particle.get('charge')); // f = qE
+                var force = this._field.set(this.field).scale(particle.get('charge')); // f = qE
                 // f = ma
                 var mass = particle.get('mass');
                 var forceOverMass = force.scale(1 / mass);

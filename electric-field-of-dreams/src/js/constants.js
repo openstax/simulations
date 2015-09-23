@@ -20,13 +20,13 @@ define(function (require) {
     Constants.FRAME_DURATION = 35 / 1000; // Seconds
     Constants.DT_PER_FRAME = 0.15;        // Seconds
 
-    Constants.DISCRETENESS_RANGE = range({ min: 1, max: 30, defaultValue: 10 });
+    Constants.DISCRETENESS_RANGE = range({ min: 1, max: 30, defaultValue: 6 });
     Constants.MAX_ARROW_LENGTH = 25;
 
 
     /*************************************************************************
      **                                                                     **
-     **                         REMOTE CONTROL VIEW                         **
+     **                     EXTERNAL FIELD CONTROL VIEW                     **
      **                                                                     **
      *************************************************************************/
 
@@ -46,6 +46,54 @@ define(function (require) {
     ExternalFieldControlView.ARROW_COLOR = '#21366b';
 
     Constants.ExternalFieldControlView = ExternalFieldControlView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            PARTICLE VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var ParticleView = {};
+
+    ParticleView.MODEL_RADIUS = 10;
+    ParticleView.FILL_COLOR = '#7986A6';
+    ParticleView.LINE_COLOR = '#21366b';
+    ParticleView.LINE_WIDTH = 3;
+
+    Constants.ParticleView = ParticleView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             BOUNDS VIEW                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var BoundsView = {};
+
+    BoundsView.LINE_COLOR = '#000';
+    BoundsView.LINE_WIDTH = 10;
+    BoundsView.LINE_ALPHA = 0.2;
+
+    Constants.BoundsView = BoundsView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         EXTERNAL FIELD VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+    
+    var ElectricFieldView = {};
+
+    ElectricFieldView.ARROW_TAIL_WIDTH  = 2;
+    ElectricFieldView.ARROW_HEAD_WIDTH  = 6;
+    ElectricFieldView.ARROW_HEAD_LENGTH = 8;
+    ElectricFieldView.ARROW_COLOR = '#21366b';
+    ElectricFieldView.ARROW_ALPHA = 1;
+
+    Constants.ElectricFieldView = ElectricFieldView;
 
 
     return Constants;
