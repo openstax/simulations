@@ -200,4 +200,59 @@ module.exports = function(grunt){
 			});
 		}
 	});
+
+	/**
+	 * This task creates a new sim folder and renames all the references inside.
+	 *   Note that one must specify each argument by name.  Example:
+	 *
+	 *   `grunt create --dirName="plant-growth" --packageName="plant-growth" --classPrefix="PlantGrowth" --title="Plant Growth"`
+	 */
+	grunt.registerTask('create', 'Creates a new simulation project.', function() {
+		var wrench = require('wrench');
+
+		var dirName = grunt.option('dirName') || 'template-copy';
+		var packageName = grunt.option('packageName') || dirName;
+		var classPrefix = grunt.option('classPrefix') || 'TemplateCopy';
+		var title = grunt.option('title') || 'Template Copy';
+
+		// Remove the current template's /dist directory if it exists--just slows down the copy
+		if (grunt.file.exists('./template/dist/'))
+			wrench.rmdirSyncRecursive('./template/dist/');
+
+		// Copy the template directory
+		var newDir = './' + dirName;
+		wrench.copyDirSyncRecursive('./template/', newDir);
+
+		// Replace certain strings in certain files
+		var replacements = [
+			['package.json',                [{ from: 'template-sim',              to: packageName                }]],
+			['bower.json',                  [{ from: 'template-sim',              to: packageName                }]],
+			['README.md',                   [{ from: 'template',                  to: dirName                    },
+			                                 { from: 'Empty Simulation Template', to: title                      }]],
+			['src/index.html',              [{ from: 'Empty Simulation',          to: title                      }]],
+			['src/js/main.js',              [{ from: 'TemplateAppView',           to: classPrefix + 'AppView'    }]],
+			['src/js/views/app.js',         [{ from: 'Template',                  to: classPrefix                }]],
+			['src/js/views/sim.js',         [{ from: 'TemplateSimulation',        to: classPrefix + 'Simulation' },
+			                                 { from: 'TemplateSimView',           to: classPrefix + 'SimView'    },
+			                                 { from: 'TemplateSceneView',         to: classPrefix + 'SceneView'  },
+			                                 { from: 'Template Sim',              to: title                      },
+			                                 { from: 'template-sim',              to: packageName                }]],
+			['src/js/views/scene.js',       [{ from: 'Template',                  to: classPrefix                }]],
+			['src/js/models/simulation.js', [{ from: 'Template',                  to: classPrefix                }]]
+		];
+
+		for (var i = 0; i < replacements.length; i++) {
+			var filename = newDir + '/' + replacements[i][0];
+			var contents = grunt.file.read(filename);
+			// Loop through all the replacements to change the content into what we want
+			for (var r = 0; r < replacements[i][1].length; r++) {
+				var replacement = replacements[i][1][r];
+				// Replace globally (multiple replaces)
+				contents = contents.replace(new RegExp(replacement.from, 'g'), replacement.to);
+			}
+			grunt.file.write(filename, contents);
+		}
+
+		grunt.log.writeln('>> New sim created in ' + newDir + '/');
+	});
 };
