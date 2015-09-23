@@ -7,8 +7,7 @@ define(function (require) {
     var Law = require('models/law');
 
     /**
-     * This class isn't actually necessary, but it explains within the system how
-     *   a Propagator object can be placed in the laws array in the system...
+     * Class for holding info about the wire system and updating particles
      */
     var WireSystem = function(propagator) {
         this.particles = [];

@@ -98,7 +98,7 @@ define(function (require) {
         totalDistance: function() {
             var x = 0;
             for (var i = 0; i < this.segments.length; i++)
-                x += this.segments[i].length();
+                x += this.segments[i].getLength();
             return x;
         }
 

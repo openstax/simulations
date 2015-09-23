@@ -58,7 +58,7 @@ define(function (require) {
             return dx;
         },
 
-        length: function() {
+        getLength: function() {
             return this.length;
         }
 
