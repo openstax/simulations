@@ -7,10 +7,10 @@ define(function(require) {
     
     var PixiView = require('../view');
 
-    var Colors         = require('../../colors/colors');
-    var Vector2        = require('../../math/vector2');
-    var PiecewiseCurve = require('../../math/piecewise-curve');
-    var range          = require('../../math/range');
+    var Colors         = require('common/colors/colors');
+    var Vector2        = require('common/math/vector2');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var range          = require('common/math/range');
 
     /**
      * A view that represents a pressure gauge

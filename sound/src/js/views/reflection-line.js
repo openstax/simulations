@@ -7,8 +7,8 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/v3/colors/colors');
-    var Vector2  = require('common/v3/math/vector2');
+    var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var DEG_TO_RAD = Math.PI / 180;
 
