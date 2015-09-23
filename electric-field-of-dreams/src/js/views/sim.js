@@ -17,13 +17,15 @@ define(function (require) {
     require('bootstrap-select');
 
     // CSS
-    require('less!styles/sim');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
+    require('less!styles/sim');
+    require('less!styles/playback-controls.less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!templates/sim.html');
+    var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -47,7 +49,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            'click .reset-btn'  : 'reset'
         },
 
         /**
@@ -65,6 +70,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -91,6 +99,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
         },
@@ -113,6 +122,14 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.ui);
+        },
+
+        /**
+         * Renders playback controls bar
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
         },
 
         /**
@@ -124,11 +141,21 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
+         * Resets the simulation and all settings
+         */
+        resetSimulation: function() {
+            this.pause();
+            this.resetComponents();
+            this.play();
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        /**
+         * Performs the actual resetting on everything
          */
         resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            this.simulation.reset();
+            this.sceneView.reset();
         },
 
         /**
@@ -144,6 +171,16 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
         },
 
         setEFieldDiscreteness: function(discreteness) {
