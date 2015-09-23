@@ -1,0 +1,80 @@
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: inherit;
+}
+
+.control-panel {
+    background: @panel-bg;
+    padding: @panel-padding;
+    width: @control-panel-width;
+    .user-select(none);
+
+    &.external-field-control-view-header {
+        pointer-events: none;
+        background: transparent;
+        position: absolute;
+        right: @panel-margin;
+        padding-bottom: 0;
+
+        h2 {
+            margin-bottom: 0;
+        }
+    }
+
+    input.form-control {
+        background: rgba(255, 255, 255, 0.27);
+        border-color: rgba(0, 0, 0, 0.1);
+        position: relative;
+    }
+
+    h2 {
+        .header();
+        padding-bottom: 4px;
+        margin-bottom: 10px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+    }
+
+    .btns-wrapper {
+        position: relative;
+        margin-top: 8px;
+
+        .add-btn,
+        .remove-btn {
+            .panel-button();
+            margin: 0;
+        }
+
+        .remove-btn {
+            float: right;
+        }
+    }
+
+    .control-group {
+        margin-top: 4px;
+
+        label {
+            width: 50%;
+            padding-right: 6px;
+            line-height: 34px;
+        }
+
+        .input-wrapper {
+            float: right;
+            width: 50%;
+            padding-right: 0;
+            
+            input {
+                text-align: right;
+            }
+        }
+    }
+
+}
+
+.particle-panel {
+    position: absolute;
+    top: @panel-margin;
+    right: @panel-margin;
+}
