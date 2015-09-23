@@ -5,8 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PiecewiseCurve   = require('../../math/piecewise-curve');
-    var Colors           = require('../../colors/colors');
+    var PiecewiseCurve   = require('common/math/piecewise-curve');
+    var Colors           = require('common/colors/colors');
     var PixiView         = require('../view');
     var SliderView       = require('./slider');
 

@@ -5,8 +5,8 @@ define(function (require) {
 	var $ = require('jquery');
 	var _ = require('underscore');
 
-	var Vector2    = require('../math/vector2');
-	var selectText = require('../dom/select-text');
+	var Vector2    = require('common/math/vector2');
+	var selectText = require('common/dom/select-text');
 	var Draggable  = require('./draggable');
 
 	var html  = require('text!./measuring-tape.html');

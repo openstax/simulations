@@ -4,7 +4,7 @@ define(function (require) {
 
 	var _ = require('underscore');
 
-	var selectText = require('../dom/select-text');
+	var selectText = require('common/dom/select-text');
 	var Draggable = require('./draggable');
 
 	var html  = require('text!./stopwatch.html');

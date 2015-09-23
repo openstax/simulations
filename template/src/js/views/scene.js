@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/pixi/view/scene');
+    var PixiSceneView = require('common/v3/pixi/view/scene');
 
     var Assets = require('assets');
 

@@ -5,8 +5,8 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('../pixi/view');
-    var Colors   = require('../colors/colors');
-    var Rectangle = require('../math/rectangle');
+    var Colors   = require('common/colors/colors');
+    var Rectangle = require('common/math/rectangle');
 
     var HelpLabelView = PixiView.extend({
 

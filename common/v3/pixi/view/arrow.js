@@ -6,8 +6,8 @@ define(function(require) {
     var PIXI     = require('pixi');
     var PixiView = require('../view');
 
-    var Colors    = require('../../colors/colors');
-    var Vector2   = require('../../math/vector2');
+    var Colors    = require('common/colors/colors');
+    var Vector2   = require('common/math/vector2');
 
 
     var ArrowViewModel = Backbone.Model.extend({

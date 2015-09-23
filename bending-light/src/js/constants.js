@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var WavelengthColors = require('common/colors/wavelength');
+    var range            = require('common/math/range');
 
     var Constants = {}; 
 
@@ -30,6 +31,8 @@ define(function (require) {
     Constants.DEFAULT_DT = Constants.MAX_DT / 4; // Seconds
     Constants.FRAME_DURATION = 20 / 1000; // Seconds
     Constants.INTERFACE_DT_SCALE = 1e17;
+
+    Constants.DT_RANGE = range({ min: Constants.MIN_DT, max: Constants.MAX_DT });
 
     // A good size for the units being used in the sim; used to determine the 
     //   dimensions of various model objects

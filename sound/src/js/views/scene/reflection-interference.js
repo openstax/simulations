@@ -2,7 +2,7 @@ define(function(require) {
 
     'use strict';
 
-    var Reflection = require('common/v3/math/reflection');
+    var Reflection = require('common/math/reflection');
 
     var SoundSceneView = require('views/scene');
     var WaveMediumView = require('views/wave-medium');

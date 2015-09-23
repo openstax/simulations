@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Vector2 = require('../math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     /**
      * Draws an arrow shape.

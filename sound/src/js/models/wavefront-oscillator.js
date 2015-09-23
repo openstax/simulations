@@ -7,7 +7,7 @@ define(function (require) {
 
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/v3/math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     /**
      * Constants

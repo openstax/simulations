@@ -56,8 +56,8 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             IntroSimulation.prototype._update.apply(this, arguments);
 
-            this.waveSensor.addProbe1Sample(this.getWaveValue(this.waveSensor.get('probe1Position')));
-            this.waveSensor.addProbe2Sample(this.getWaveValue(this.waveSensor.get('probe2Position')));
+            this.waveSensor.addProbe1Sample(this.getWaveValue(this.waveSensor.get('probe1Position')), this.simTime);
+            this.waveSensor.addProbe2Sample(this.getWaveValue(this.waveSensor.get('probe2Position')), this.simTime);
 
             this.velocitySensor.set('velocity', this.getVelocity(this.velocitySensor.get('position')));
         },

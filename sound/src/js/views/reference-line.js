@@ -7,7 +7,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/v3/colors/colors');
+    var Colors   = require('common/colors/colors');
 
 
     /**

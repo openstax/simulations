@@ -3,8 +3,8 @@ define(function(require) {
     'use strict';
 
     var PixiSceneView      = require('common/v3/pixi/view/scene');
-    var ModelViewTransform = require('common/v3/math/model-view-transform');
-    var Vector2            = require('common/v3/math/vector2');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
 
     var WaveMediumView = require('views/wave-medium');
     var SpeakerView    = require('views/speaker');
