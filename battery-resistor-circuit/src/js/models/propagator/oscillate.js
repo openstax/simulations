@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Propagator = require('models/propagation');
+    var Propagator = require('models/propagator');
 
     /**
      * Oscillates a positionable object along a specified axis

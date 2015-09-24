@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Propagator = require('models/propagation');
+    var Propagator = require('models/propagator');
 
     /**
      * This matches the high end of a and the low end of b.
