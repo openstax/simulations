@@ -15,7 +15,7 @@ define(function (require) {
         this.series = new NumberSeries(numSamples);
         this.resistance = 0;
         this.voltage = 0;
-        this.display = 0;
+        this.current = 0;
     };
 
     /**
@@ -27,7 +27,7 @@ define(function (require) {
             var hollyscale = 3.5 * 3.3;
             var hollywood = this.resistance / this.voltage * hollyscale;
             this.series.add(hollywood);
-            this.display = this.series.average();
+            this.current = this.series.average();
             console.log('does anything need to listen to this?');
         },
 
@@ -39,8 +39,8 @@ define(function (require) {
             this.voltage = x;
         },
 
-        getDisplay: function() {
-            return this.display;
+        getCurrent: function() {
+            return this.current;
         }
 
     });

@@ -94,11 +94,7 @@ define(function (require, exports, module) {
                 system
             );
             
-            var accelInset = 15;
-            var coulombInset = 10;
-            var accelerationRegion        = new PatchWireRegion(Constants.CORE_START - accelInset,   Constants.CORE_END + accelInset,   loopWirePatch);
-            var scatteringRegionNoCoulomb = new PatchWireRegion(Constants.CORE_START - coulombInset, Constants.CORE_END + coulombInset, loopWirePatch);
-
+            // Battery stuff
             var batteryRegion = new SimplePatchRegion(batteryWirePatch);
             var batteryProps = new CompositePropagator(); // original: cpr
             var batteryRangedProps = new RangedPropagator(); // original: range
@@ -121,29 +117,55 @@ define(function (require, exports, module) {
             var coulombForceParameters = new CoulombForceParameters(Constants.K, Constants.COULOMB_POWER, 2); // original: cfp
             var coulombForce = new CoulombForce(coulombForceParameters, wireSystem); // original: cf
 
-            var batteryForcePropagator = new BatteryForcePropagator(0, 10 * Constants.VMAX); // original: fp
+            var batteryForcePropagator = new BatteryForcePropagator(0, 10 * Constants.MAX_VEL); // original: fp
             batteryForcePropagator.addForce(coulombForce); 
             // Add a coulomb force from the end of batteryWirePatch onto the beginning of loopWirePatch
             batteryForcePropagator.addForce(new AdjacentPatchCoulombForceEndToBeginning(coulombForceParameters, wireSystem, batteryWirePatch, loopWirePatch));
             batteryForcePropagator.addForce(new AdjacentPatchCoulombForceBeginningToEnd(coulombForceParameters, wireSystem, batteryWirePatch, loopWirePatch));
             batteryForcePropagator.addForce(new FrictionForce(0.9999999));
 
+            var accelInset = 15;
+            var coulombInset = 10;
+            var accelerationRegion        = new PatchWireRegion(Constants.CORE_START - accelInset,   Constants.CORE_END + accelInset,   loopWirePatch);
+            var scatteringRegionNoCoulomb = new PatchWireRegion(Constants.CORE_START - coulombInset, Constants.CORE_END + coulombInset, loopWirePatch);
+
             var nonCoulombRegion = new AndWireRegion();
             nonCoulombRegion.addRegion(batteryRegion);
             nonCoulombRegion.addRegion(scatteringRegionNoCoulomb);  // PhET Note: Comment out this line to put coulomb interactions into the scattering region
 
             var accelScale = 1.4;
-            var scatProp = new AccelerationPropagator(2, Constants.VMAX * 15, accelScale);
+            var scatProp = new AccelerationPropagator(2, Constants.MAX_VEL * 15, accelScale);
             batteryRangedProps.addPropagator(accelerationRegion, scatProp);
             batteryRangedProps.addInverse(nonCoulombRegion, batteryForcePropagator);
             props.addPropagator(new DualJunctionPropagator(loopWirePatch, batteryWirePatch));
             props.addPropagator(new DualJunctionPropagator(batteryWirePatch, loopWirePatch));
 
-            var resetScatterability = new ResetScatterability(wireSystem);
+            var resetScatterability = new ResetScatterability(wireSystem); // original: rs
+
+            // Average current calculator
+            var averageCurrent = new AverageCurrent(100); // original: current
+            this.averageCurrent = averageCurrent;
+
+            // Collider stuff
+            resistance.layoutCores();
+            var axis = new Vector2(1, 2);
+            var oscillateFactory = new OscillateFactory(
+                Constants.V_TO_AMP_SCALE, 
+                Constants.DEFAULT_DECAY, 
+                Constants.DEFAULT_FREQUENCY, 
+                Constants.MAX_ACC, 
+                axis
+            );
+            var collisionEvent = new CollisionEvent(Constants.COLLISION_DIST, Constants.AMPLITUDE_THRESHOLD, oscillateFactory);
+            system.addLaw(collisionEvent);
+            var collider = new Collider(wireSystem, collisionEvent, loopWirePatch);
         },
 
         _update: function(time, deltaTime) {
             
+
+            // TODO: Might need to change this later, but just adding it in here so I don't forget
+            this.set('current', this.averageCurrent.getCurrent())
         }
 
     });
