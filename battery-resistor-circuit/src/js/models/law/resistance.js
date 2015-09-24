@@ -6,7 +6,7 @@ define(function (require) {
 
     var Law                 = require('models/law');
     var OscillatePropagator = require('models/propagator/oscillate');
-    var Core                = require('models/particle/core');
+    var Core                = require('models/free-particle/core');
 
     /**
      * 

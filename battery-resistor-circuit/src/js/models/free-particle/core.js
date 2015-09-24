@@ -16,36 +16,23 @@ define(function (require) {
         }
     });
 
-    var Particle = require('models/particle');
+    var FreeParticle = require('models/free-particle');
 
     /**
      * 
      */
-    var Core = Particle.extend({
+    var Core = FreeParticle.extend({
 
-        defaults: _.extend({}, Particle.prototype.defaults, {
+        defaults: _.extend({}, FreeParticle.prototype.defaults, {
             origin: null,
             scalarPosition: 1,
             propagator: null
         }),
 
         initialize: function(attributes, options) {
-            Particle.prototype.initialize.apply(this, arguments);
+            FreeParticle.prototype.initialize.apply(this, arguments);
 
             this.set('origin', vectorPool.create().set(this.get('origin')));
-        },
-
-        translateOrigin: function(x, y) {
-            var oldOrigin = this.get('origin');
-            var newOrigin = vectorPool.create().set(this.get('origin'));
-
-            if (x instanceof Vector2)
-                this.set('origin', newOrigin.add(x));
-            else
-                this.set('origin', newOrigin.add(x, y));
-            
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldOrigin);
         },
 
         setOrigin: function(x, y) {
