@@ -9,7 +9,8 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     * 
+     * This is a particle that is only used in the wire system part of the
+     *   simulation and doesn't have a direct representation in the scene.
      */
     var WireParticle = function(attributes) {
         attributes = _.extend({

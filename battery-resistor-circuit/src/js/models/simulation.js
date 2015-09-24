@@ -82,6 +82,19 @@ define(function (require, exports, module) {
 
             var coulombForceParameters = new CoulombForceParameters(Constants.K, Constants.COULOMB_POWER, 2);
             var coulombForce = new CoulombForce(coulombForceParameters, wireSystem);
+
+            var system = new System();
+
+            var resistance = new Resistance( 
+                Constants.CORE_START, 
+                Constants.CORE_END, 
+                Constants.DEFAULT_NUM_CORES, 
+                loopWirePatch, 
+                Constants.DEFAULT_AMPLITUDE, 
+                Constants.DEFAULT_FREQUENCY, 
+                Constants.DEFAULT_DECAY, 
+                system
+            );
             
         },
 
