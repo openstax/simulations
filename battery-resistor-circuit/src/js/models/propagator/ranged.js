@@ -7,7 +7,10 @@ define(function (require) {
     var Propagator = require('models/propagator');
 
     /**
-     * This matches the high end of a and the low end of b.
+     * Propagates particles according to the right region.  Propagators that are
+     *   added to the normal list with addPropagator only run on particles in
+     *   their region, whereas propagators that are added to the inverse list
+     *   with addInverse only run on particles that are NOT in their region.
      */
     var RangedPropagator = function() {
         this.rangedProps = [];

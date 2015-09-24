@@ -4,20 +4,20 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Battery = require('models/propagator/battery');
+    var BatteryPropagator = require('models/propagator/battery');
 
     /**
      * A propagator for moving electrons through the battery, overwriting
      *   most of the behavior for its parent.
      */
-    var SmoothBattery = function(plusRegion, minusRegion, system, volts, desiredVolts) {
-        Battery.apply(this, arguments);
+    var SmoothBatteryPropagator = function(plusRegion, minusRegion, system, volts, desiredVolts) {
+        BatteryPropagator.apply(this, arguments);
     };
 
     /**
      * Instance functions/properties
      */
-    _.extend(SmoothBattery.prototype, Battery.prototype, {
+    _.extend(SmoothBatteryPropagator.prototype, BatteryPropagator.prototype, {
 
         propagate: function(deltaTime, particle) {
             var speed = this.getSpeed();
@@ -63,5 +63,5 @@ define(function (require) {
 
     });
 
-    return SmoothBattery;
+    return SmoothBatteryPropagator;
 });

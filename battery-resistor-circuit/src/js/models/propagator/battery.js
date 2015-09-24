@@ -9,7 +9,7 @@ define(function (require) {
     /**
      * A propagator for moving electrons through the battery
      */
-    var Battery = function(plusRegion, minusRegion, system, volts, desiredVolts) {
+    var BatteryPropagator = function(plusRegion, minusRegion, system, volts, desiredVolts) {
         this.desiredVolts = desiredVolts;
         this.volts = volts;
         this.plusRegion = plusRegion;
@@ -20,7 +20,7 @@ define(function (require) {
     /**
      * Instance functions/properties
      */
-    _.extend(Battery.prototype, Propagator.prototype, {
+    _.extend(BatteryPropagator.prototype, Propagator.prototype, {
 
         propagate: function(deltaTime, particle) {
             var left  = this.countLeft();
@@ -57,11 +57,11 @@ define(function (require) {
 
         coreCountChanged: function(val) {},
 
-        valueChanged: function(val) {
-            this.desiredVolts = val;
+        voltageChanged: function(voltage) {
+            this.desiredVolts = voltage;
         }
 
     });
 
-    return Battery;
+    return BatteryPropagator;
 });

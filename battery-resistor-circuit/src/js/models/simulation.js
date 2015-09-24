@@ -80,9 +80,6 @@ define(function (require, exports, module) {
 
             var props = new CompositePropagator();
 
-            var coulombForceParameters = new CoulombForceParameters(Constants.K, Constants.COULOMB_POWER, 2);
-            var coulombForce = new CoulombForce(coulombForceParameters, wireSystem);
-
             // Create the system which will be representative of the resistor
             var system = new System();
 
@@ -105,13 +102,44 @@ define(function (require, exports, module) {
             var batteryRegion = new SimplePatchRegion(batteryWirePatch);
             var batteryProps = new CompositePropagator(); // original: cpr
             var batteryRangedProps = new RangedPropagator(); // original: range
+
             var inset = 50;
             var battX = Constants.CORE_START - inset;
             var battY = Constants.CORE_END + inset;
             var leftBatteryRegion  = new PatchWireRegion(0, battX, loopWirePatch);
             var rightBatteryRegion = new PatchWireRegion(battY, loopWirePatch.getLength(), loopWirePatch);
+
             var batterySpeed = 35;
-            var battery = new SmoothBatt(leftSideBatt, rightSideBatt, ws, batterySpeed, 18);
+            var battery = new SmoothBatteryPropagator(leftBatteryRegion, rightBatteryRegion, wireSystem, batterySpeed, 18);
+
+            batteryRangedProps.addPropagator(batteryRegion, battery);
+            batteryRangedProps.addPropagator(batteryRegion, new ResetElectronPropagator());
+            batteryProps.addPropagator(batteryRangedProps);
+            batteryProps.addPropagator(new CrashPropagator());
+            props.addPropagator(batteryProps);
+
+            var coulombForceParameters = new CoulombForceParameters(Constants.K, Constants.COULOMB_POWER, 2); // original: cfp
+            var coulombForce = new CoulombForce(coulombForceParameters, wireSystem); // original: cf
+
+            var batteryForcePropagator = new BatteryForcePropagator(0, 10 * Constants.VMAX); // original: fp
+            batteryForcePropagator.addForce(coulombForce); 
+            // Add a coulomb force from the end of batteryWirePatch onto the beginning of loopWirePatch
+            batteryForcePropagator.addForce(new AdjacentPatchCoulombForceEndToBeginning(coulombForceParameters, wireSystem, batteryWirePatch, loopWirePatch));
+            batteryForcePropagator.addForce(new AdjacentPatchCoulombForceBeginningToEnd(coulombForceParameters, wireSystem, batteryWirePatch, loopWirePatch));
+            batteryForcePropagator.addForce(new FrictionForce(0.9999999));
+
+            var nonCoulombRegion = new AndWireRegion();
+            nonCoulombRegion.addRegion(batteryRegion);
+            nonCoulombRegion.addRegion(scatteringRegionNoCoulomb);  // PhET Note: Comment out this line to put coulomb interactions into the scattering region
+
+            var accelScale = 1.4;
+            var scatProp = new AccelerationPropagator(2, Constants.VMAX * 15, accelScale);
+            batteryRangedProps.addPropagator(accelerationRegion, scatProp);
+            batteryRangedProps.addInverse(nonCoulombRegion, batteryForcePropagator);
+            props.addPropagator(new DualJunctionPropagator(loopWirePatch, batteryWirePatch));
+            props.addPropagator(new DualJunctionPropagator(batteryWirePatch, loopWirePatch));
+
+            var resetScatterability = new ResetScatterability(wireSystem);
         },
 
         _update: function(time, deltaTime) {

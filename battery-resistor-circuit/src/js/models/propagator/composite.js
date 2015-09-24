@@ -7,7 +7,7 @@ define(function (require) {
     var Propagator = require('models/propagator');
 
     /**
-     * This matches the high end of a and the low end of b.
+     * A container for multiple propagators that runs its children in sequence.
      */
     var CompositePropagator = function() {
         this.propagators = [];

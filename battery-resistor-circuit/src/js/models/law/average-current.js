@@ -31,8 +31,8 @@ define(function (require) {
             console.log('does anything need to listen to this?');
         },
 
-        valueChanged: function(v) {
-            this.resistance = v;
+        voltageChanged: function(voltage) {
+            this.resistance = voltage;
         },
 
         coreCountChanged: function(x) {
