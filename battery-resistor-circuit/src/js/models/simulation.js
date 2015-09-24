@@ -83,6 +83,7 @@ define(function (require, exports, module) {
             var coulombForceParameters = new CoulombForceParameters(Constants.K, Constants.COULOMB_POWER, 2);
             var coulombForce = new CoulombForce(coulombForceParameters, wireSystem);
 
+            // Create the system which will be representative of the resistor
             var system = new System();
 
             var resistance = new Resistance( 
@@ -96,6 +97,21 @@ define(function (require, exports, module) {
                 system
             );
             
+            var accelInset = 15;
+            var coulombInset = 10;
+            var accelerationRegion        = new PatchWireRegion(Constants.CORE_START - accelInset,   Constants.CORE_END + accelInset,   loopWirePatch);
+            var scatteringRegionNoCoulomb = new PatchWireRegion(Constants.CORE_START - coulombInset, Constants.CORE_END + coulombInset, loopWirePatch);
+
+            var batteryRegion = new SimplePatchRegion(batteryWirePatch);
+            var batteryProps = new CompositePropagator(); // original: cpr
+            var batteryRangedProps = new RangedPropagator(); // original: range
+            var inset = 50;
+            var battX = Constants.CORE_START - inset;
+            var battY = Constants.CORE_END + inset;
+            var leftBatteryRegion  = new PatchWireRegion(0, battX, loopWirePatch);
+            var rightBatteryRegion = new PatchWireRegion(battY, loopWirePatch.getLength(), loopWirePatch);
+            var batterySpeed = 35;
+            var battery = new SmoothBatt(leftSideBatt, rightSideBatt, ws, batterySpeed, 18);
         },
 
         _update: function(time, deltaTime) {
