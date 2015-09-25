@@ -1,0 +1,74 @@
+define(function(require) {
+
+    'use strict';
+
+    var PIXI = require('pixi');
+
+    var PixiView = require('common/pixi/view');
+
+    var Constants = require('constants');
+
+    var Assets = require('assets');
+    var Constants = require('constants');
+
+    /**
+     * A view that represents an electron
+     */
+    var TurnstileView = PixiView.extend({
+
+        /**
+         * Initializes the new TurnstileView.
+         */
+        initialize: function(options) {
+            this.mvt = options.mvt;
+
+            this.initGraphics();
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            var stick = new PIXI.Graphics();
+
+            
+
+            var pinwheel = Assets.createSprite(Assets.Images.PINWHEEL);
+            pinwheel.anchor.x = 0.5;
+            pinwheel.anchor.y = 0.5;
+            this.pinwheel = pinwheel;
+
+            this.displayObject.addChild(stick);
+            this.displayObject.addChild(pinwheel);
+
+            this.updateMVT(this.mvt);
+        },
+
+        /**
+         * Updates the model-view-transform and anything that
+         *   relies on it.
+         */
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
+
+            // TurnstileView.PINWHEEL_MODEL_WIDTH
+
+            this.displayObject.x = Math.floor(this.mvt.modelToViewX(this.model.center.x));
+            this.displayObject.y = Math.floor(this.mvt.modelToViewY(this.model.center.y));
+
+            this.update();
+        },
+
+        updateRotation: function(model, rotation) {
+            this.pinwheel.rotation = rotation
+        },
+
+        update: function() {
+            this.updateRotation(this.model, this.model.angle);
+        }
+
+    }, Constants.TurnstileView);
+
+
+    return TurnstileView;
+});

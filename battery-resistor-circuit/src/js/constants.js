@@ -13,6 +13,9 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
+    Constants.SIM_WIDTH  = 860; // Arbitrary units
+    Constants.SIM_HEIGHT = 420; // Arbitrary units
+
     Constants.FRAME_DURATION = 1 / 30; // Seconds
     Constants.DT_PER_FRAME = 0.2; // Seconds
 
@@ -46,6 +49,19 @@ define(function (require) {
     };
 
     Constants.VOLTAGE_RANGE = range({ min: -12, max: 12, defaultValue: 2.88 });
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            TURNSTILE VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var TurnstileView = {};
+
+    TurnstileView.PINWHEEL_MODEL_WIDTH = 50;
+
+    Constants.TurnstileView = TurnstileView;
 
 
     return Constants;

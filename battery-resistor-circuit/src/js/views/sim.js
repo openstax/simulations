@@ -49,7 +49,10 @@ define(function (require) {
          */
         events: {
             'click .play-btn'  : 'play',
-            'click .pause-btn' : 'pause'
+            'click .pause-btn' : 'pause',
+
+            'slide .resistance-slider' : 'changeResistance',
+            'slide .voltage-slider'    : 'changeVoltage'
         },
 
         /**
@@ -126,6 +129,9 @@ define(function (require) {
                     'max': Constants.VOLTAGE_RANGE.max
                 }
             });
+
+            this.$resistance = this.$('#resistance');
+            this.$voltage    = this.$('#voltage');
         },
 
         /**
@@ -175,7 +181,29 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
-        }
+        },
+
+        /**
+         * Responds to changes in the resistance slider
+         */
+        changeResistance: function(event) {
+            var numCores = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$resistance.text(Constants.numCoresToOhms(numCores).toFixed(2) + ' Ohms');
+                this.simulation.set('numCores', numCores);
+            });
+        },
+
+        /**
+         * Responds to changes in the voltage slider
+         */
+        changeVoltage: function(event) {
+            var voltage = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$voltage.text(voltage.toFixed(2) + ' Volts');
+                this.simulation.set('voltage', voltage);
+            });
+        },
 
     });
 
