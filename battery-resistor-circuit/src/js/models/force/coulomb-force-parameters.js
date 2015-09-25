@@ -25,7 +25,7 @@ define(function (require) {
             else if (r > this.maxDist)
                 r = this.maxDist;
             
-            var term = k * Math.pow(r, this.power) * sourceQ * testQ;
+            var term = this.k * Math.pow(r, this.power) * sourceQ * testQ;
             if (dx > 0)
                 term *= -1;
 

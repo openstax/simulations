@@ -19,7 +19,7 @@ define(function (require) {
     _.extend(FrictionForce.prototype, Force.prototype, {
 
         getForce: function(wireParticle) {
-            var v = wp.velocity;
+            var v = wireParticle.velocity;
             var f = -v * this.value;
             return f;
         }

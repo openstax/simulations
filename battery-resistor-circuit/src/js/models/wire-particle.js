@@ -4,10 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-
-    var Constants = require('constants');
-
     /**
      * This is a particle that is only used in the wire system part of the
      *   simulation and doesn't have a direct representation in the scene.
@@ -41,7 +37,7 @@ define(function (require) {
         /**
          * Updates the particle by calling its propagator
          */
-        update: function(deltaTime) {
+        propagate: function(deltaTime) {
             this.propagator.propagate(deltaTime, this);
         }
 

@@ -55,7 +55,7 @@ define(function (require) {
          */
         appendSegmentAt: function(x, y) {
             if (this.segments.length === 0)
-                throw "No wires specified.";
+                throw 'No wires specified.';
             
             if (x instanceof Vector2) {
                 y = x.y;
@@ -83,7 +83,7 @@ define(function (require) {
          */
         createFirstSegment: function(x, y, dx, dy) {
             if (this.segments.length !== 0)
-                throw "Already started.";
+                throw 'Already started.';
 
             if (x instanceof Vector2) {
                 dy = y.y;

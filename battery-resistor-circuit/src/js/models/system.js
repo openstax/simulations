@@ -2,7 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
     var Backbone = require('backbone');
 
     /**
@@ -24,6 +23,11 @@ define(function (require) {
 
         addLaw: function(law) {
             this.laws.push(law);
+        },
+
+        update: function(deltaTime) {
+            for (var i = 0; i < this.laws.length; i++)
+                this.laws[i].update(deltaTime, this);
         }
 
     });

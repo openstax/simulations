@@ -34,7 +34,7 @@ define(function (require) {
         },
 
         toString: function() {
-            return "Start=" + this.start + ", finish=" + this.finish + ", length=" + this.length + ", scalarStart=" + this.scalarStart + ", scalarFinish=" + this.scalarFinish;
+            return 'Start=' + this.start + ', finish=' + this.finish + ', length=' + this.length + ', scalarStart=' + this.scalarStart + ', scalarFinish=' + this.scalarFinish;
         },
 
         getFinish: function() {

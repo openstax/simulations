@@ -26,7 +26,7 @@ define(function (require) {
             var xVal = Math.random() * 3 + 0.5;
             if (Math.random() >= 0.5)
                 xVal = -xVal;
-            axis.set(1, xVal);
+            this.axis.set(1, xVal);
 
             var x = Math.abs(v * this.vToAScale);
             var amp = 0;
@@ -37,7 +37,7 @@ define(function (require) {
             else
                 amp = this.aMax;
 
-            return OscillatePropagator.create(core.get('origin'), amp, this.freq, this.decay, axis);
+            return OscillatePropagator.create(core.get('origin'), amp, this.freq, this.decay, this.axis);
         }
 
     });

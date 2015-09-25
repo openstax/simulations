@@ -15,7 +15,7 @@ define(function (require) {
         this.center = new Vector2(center);
         this.angleVelocityScale = angleVelocityScale;
         this.angle = 0;
-        this.angularSpeed = 0.31
+        this.angularSpeed = 0.31;
     };
 
     /**

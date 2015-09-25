@@ -4,8 +4,8 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
-    var Vector2    = require('common/math/vector2');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
+    var Vector2                 = require('common/math/vector2');
 
     var System                  = require('models/system');
     var Circuit                 = require('models/circuit');
@@ -45,19 +45,24 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var BRCSimulation = Simulation.extend({
+    var BRCSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             voltage: 0,
             current: 0
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                frameDuration: Constants.FRAME_DURATION,
+                deltaTimePerFrame: Constants.DT_PER_FRAME
+            }, options);
+
             // Not really the way to do it in Backbone, but an easier solution when porting than debugging later
             this.voltageListeners = [];
             this.currentListeners = [];
 
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:voltage', this.voltageChanged);
             this.on('change:current', this.currentChanged);
@@ -122,6 +127,7 @@ define(function (require, exports, module) {
 
             // Create the system which will be representative of the resistor
             var system = new System();
+            this.system = system;
 
             var resistance = new Resistance( 
                 Constants.CORE_START, 
@@ -242,10 +248,10 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.system.update(deltaTime);
 
             // TODO: Might need to change this later, but just adding it in here so I don't forget
-            this.set('current', this.averageCurrent.getCurrent())
+            this.set('current', this.averageCurrent.getCurrent());
         },
 
         voltageChanged: function(simulation, voltage) {
@@ -255,7 +261,7 @@ define(function (require, exports, module) {
 
         currentChanged: function(simulation, current) {
             for (var i = 0; i < this.currentListeners.length; i++)
-                this.currentListeners[i].currentChanged(voltage);
+                this.currentListeners[i].currentChanged(current);
         }
 
     });

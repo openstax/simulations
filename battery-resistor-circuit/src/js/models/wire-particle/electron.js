@@ -46,7 +46,7 @@ define(function (require) {
         },
 
         hasCollided: function() {
-            return collided;
+            return this.collided;
         }
 
     });

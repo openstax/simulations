@@ -24,11 +24,11 @@ define(function (require) {
             var particles = this.system.particles;
             for (var i = 0; i < particles.length; i++) {
                 var p = particles[i];
-                if (p !== wp) {
-                    if (p.wirePatch == wp.wirePatch)
-                        sum += this.params.getForce(p.position, p.charge, wp.position, wp.charge);
+                if (p !== wireParticle) {
+                    if (p.wirePatch == wireParticle.wirePatch)
+                        sum += this.params.getForce(p.position, p.charge, wireParticle.position, wireParticle.charge);
                     else
-                        console.error("Different patches.");
+                        console.error('Different patches.');
                 }
             }
             return sum;

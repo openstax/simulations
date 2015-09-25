@@ -31,7 +31,7 @@ define(function (require) {
                 sign = -1;
 
             var abs = Math.abs(this.desiredVolts);
-            if (abs <= .1)
+            if (abs <= 0.1)
                 return 0;
             else if (abs <= 0.3)
                 return -4 * sign;

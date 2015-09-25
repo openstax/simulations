@@ -13,6 +13,9 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
+    Constants.FRAME_DURATION = 1 / 30; // Seconds
+    Constants.DT_PER_FRAME = 0.2; // Seconds
+
     Constants.VMAX = 15;
     Constants.MAX_ACC = Number.MAX_VALUE;
     Constants.K = 900;
@@ -26,7 +29,7 @@ define(function (require) {
 
     Constants.DEFAULT_AMPLITUDE = 70;
     Constants.DEFAULT_FREQUENCY = 2.6;
-    Constants.DEFAULT_DECAY = .93;
+    Constants.DEFAULT_DECAY = 0.93;
 
     Constants.V_TO_AMP_SCALE = 0.9;
     Constants.AMPLITUDE_THRESHOLD = 2000;

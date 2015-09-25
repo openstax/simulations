@@ -33,19 +33,18 @@ define(function (require) {
 
             v = v + a * deltaTime;
 
-            var vpre = v;
             if (this.desiredVoltage < 0) {
                 // Going clockwise--Positive velocity required.
-                if (v > maxSpeed)
-                    v = maxSpeed;
-                else if (v < minSpeed)
-                    v = minSpeed;
+                if (v > this.maxSpeed)
+                    v = this.maxSpeed;
+                else if (v < this.minSpeed)
+                    v = this.minSpeed;
             }
             else {
-                if (v < -maxSpeed)
-                    v = -maxSpeed;
-                else if (v > -minSpeed)
-                    v = -minSpeed;
+                if (v < -this.maxSpeed)
+                    v = -this.maxSpeed;
+                else if (v > -this.minSpeed)
+                    v = -this.minSpeed;
             }
             
             particle.velocity = v;
@@ -63,7 +62,7 @@ define(function (require) {
         voltageChanged: function(val) {
             this.desiredVoltage = val;
 
-            this.setMinSpeed(Math.abs(val * .7));
+            this.setMinSpeed(Math.abs(val * 0.7));
         }
 
     });
