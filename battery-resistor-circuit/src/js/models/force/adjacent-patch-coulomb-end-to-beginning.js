@@ -26,18 +26,13 @@ define(function (require) {
             var particles = this.system.particles;
             for (var i = 0; i < particles.length; i++) {
                 var p = particles[i];
-                if (p !== wireParticle) {
-                    if (p.wirePatch === this.a && wireParticle.wirePatch === this.b) {
-                        sum += this.params.getForce(
-                            p.position, 
-                            p.charge, 
-                            wireParticle.position + this.a.getLength(), 
-                            wireParticle.charge
-                        );
-                    }
-                    else {
-                        console.error('different patches');
-                    }
+                if (p !== wireParticle && p.wirePatch === this.a && wireParticle.wirePatch === this.b) {
+                    sum += this.params.getForce(
+                        p.position, 
+                        p.charge, 
+                        wireParticle.position + this.a.getLength(), 
+                        wireParticle.charge
+                    );
                 }
             }
             return sum;

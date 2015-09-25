@@ -28,7 +28,6 @@ define(function (require) {
             var hollywood = this.resistance / this.voltage * hollyscale;
             this.series.add(hollywood);
             this.current = this.series.average();
-            console.log('does anything need to listen to this?');
         },
 
         voltageChanged: function(voltage) {

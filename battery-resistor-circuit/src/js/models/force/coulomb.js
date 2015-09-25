@@ -24,12 +24,8 @@ define(function (require) {
             var particles = this.system.particles;
             for (var i = 0; i < particles.length; i++) {
                 var p = particles[i];
-                if (p !== wireParticle) {
-                    if (p.wirePatch == wireParticle.wirePatch)
-                        sum += this.params.getForce(p.position, p.charge, wireParticle.position, wireParticle.charge);
-                    else
-                        console.error('Different patches.');
-                }
+                if (p !== wireParticle && p.wirePatch == wireParticle.wirePatch)
+                    sum += this.params.getForce(p.position, p.charge, wireParticle.position, wireParticle.charge);
             }
             return sum;
         }
