@@ -30,6 +30,8 @@ define(function (require) {
     Constants.AMPLITUDE_THRESHOLD = 2000;
     Constants.COLLISION_DIST = 18;
 
+    Constants.NUM_ELECTRONS = 50;
+
 
     return Constants;
 });

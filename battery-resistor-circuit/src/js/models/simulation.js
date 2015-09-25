@@ -159,6 +159,29 @@ define(function (require, exports, module) {
             var collisionEvent = new CollisionEvent(Constants.COLLISION_DIST, Constants.AMPLITUDE_THRESHOLD, oscillateFactory);
             system.addLaw(collisionEvent);
             var collider = new Collider(wireSystem, collisionEvent, loopWirePatch);
+
+            // Create and add electrons
+            var dx = parseInt(circuit.getLength() / Constants.NUM_ELECTRONS);
+            var mod = 0;
+            for (var i = 0; i < Constants.NUM_ELECTRONS; i++) {
+                var position = dx * i;
+
+                if (position > Constants.CORE_START && position < Constants.CORE_END && mod++ % 2 === 0)
+                    continue;
+
+                var electron = new Electron({
+                    propagator: props, 
+                    wirePatch: circuit.getPatch(position), 
+                    collisionEvent: collisionEvent,
+                    velocity: 0,
+                    position: circuit.getLocalPosition(position, circuit.getPatch(position))
+                });
+
+                wireSystem.add(electron);
+                averageCurrent.addParticle(electron);
+            }
+
+
         },
 
         _update: function(time, deltaTime) {

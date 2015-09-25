@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Law = require('models/law');
-
     /**
      * Class for holding info about the wire system and updating particles
      */
@@ -16,7 +14,7 @@ define(function (require) {
     /**
      * Instance functions/properties
      */
-    _.extend(WireSystem.prototype, Law.prototype, {
+    _.extend(WireSystem.prototype, {
 
         update: function(deltaTime, system) {
             for (var i = 0; i < this.particles.length; i++) {
