@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var Vector2 = require('common/math/vector2');
-
+    var range   = require('common/math/range');
 
     var Constants = {}; 
 
@@ -39,6 +39,13 @@ define(function (require) {
 
     Constants.TURNSTILE_CENTER = new Vector2(5, 140);
    	Constants.TURNSTILE_SPEED_SCALE = 0.02;
+
+    Constants.RESISTANCE_RANGE = range({ min: 3, max: 14, defaultValue: 6 });
+    Constants.numCoresToOhms = function(numCores) {
+        return numCores * 0.2 / 3.0;
+    };
+
+    Constants.VOLTAGE_RANGE = range({ min: -12, max: 12, defaultValue: 2.88 });
 
 
     return Constants;

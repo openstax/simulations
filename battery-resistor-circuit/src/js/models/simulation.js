@@ -48,7 +48,8 @@ define(function (require, exports, module) {
     var BRCSimulation = FixedIntervalSimulation.extend({
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
-            voltage: 0,
+            coreCount: Constants.RESISTANCE_RANGE.defaultValue,
+            voltage: Constants.VOLTAGE_RANGE.defaultValue,
             current: 0
         }),
         
@@ -61,11 +62,13 @@ define(function (require, exports, module) {
             // Not really the way to do it in Backbone, but an easier solution when porting than debugging later
             this.voltageListeners = [];
             this.currentListeners = [];
+            this.coreCountListeners = [];
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:voltage', this.voltageChanged);
-            this.on('change:current', this.currentChanged);
+            this.on('change:voltage',   this.voltageChanged);
+            this.on('change:current',   this.currentChanged);
+            this.on('change:coreCount', this.coreCountChanged);
         },
 
         /**
@@ -245,6 +248,15 @@ define(function (require, exports, module) {
             this.voltageListeners.push(resetScatterability);
 
             this.currentListeners.push(turnstile);
+
+            this.coreCountListeners.push(resistance);
+            this.coreCountListeners.push(averageCurrent);
+            this.coreCountListeners.push(battery);
+
+            // Trigger changes for default values
+            this.voltageChanged(this, this.get('voltage'));
+            this.currentChanged(this, this.get('current'));
+            this.coreCountChanged(this, this.get('coreCount'));
         },
 
         _update: function(time, deltaTime) {
@@ -262,6 +274,11 @@ define(function (require, exports, module) {
         currentChanged: function(simulation, current) {
             for (var i = 0; i < this.currentListeners.length; i++)
                 this.currentListeners[i].currentChanged(current);
+        },
+
+        coreCountChanged: function(simulation, coreCount) {
+            for (var i = 0; i < this.coreCountListeners.length; i++)
+                this.coreCountListeners[i].coreCountChanged(coreCount);
         }
 
     });

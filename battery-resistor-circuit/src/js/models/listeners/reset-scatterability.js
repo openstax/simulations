@@ -19,7 +19,7 @@ define(function (require) {
 
         doChange: function() {
             for (var i = 0; i < this.wireSystem.particles.length; i++)
-                this.wireSystem.particles.at(i).forgetCollision();
+                this.wireSystem.particles[i].forgetCollision();
         },
 
         voltageChanged: function(voltage) {

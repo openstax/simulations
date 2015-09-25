@@ -110,20 +110,20 @@ define(function (require) {
             this.$el.html(this.template(data));
             
             this.$('.resistance-slider').noUiSlider({
-                start: 0.4,
+                start: Constants.RESISTANCE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 0.93
+                    'min': Constants.RESISTANCE_RANGE.min,
+                    'max': Constants.RESISTANCE_RANGE.max
                 }
             });
 
             this.$('.voltage-slider').noUiSlider({
-                start: 2.88,
+                start: Constants.VOLTAGE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': -12,
-                    'max':  12
+                    'min': Constants.VOLTAGE_RANGE.min,
+                    'max': Constants.VOLTAGE_RANGE.max
                 }
             });
         },

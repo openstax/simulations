@@ -21,8 +21,26 @@ define(function (require) {
             this.particles.push(particle);
         },
 
+        removeParticle: function(particle) {
+            for (var i = this.particles.length - 1; i >= 0; i--) {
+                if (this.particles[i] === particle) {
+                    this.particles.splice(i, 1);
+                    return;
+                }
+            }
+        },
+
         addLaw: function(law) {
             this.laws.push(law);
+        },
+
+        removeLaw: function(law) {
+            for (var i = this.laws.length - 1; i >= 0; i--) {
+                if (this.laws[i] === law) {
+                    this.laws.splice(i, 1);
+                    return;
+                }
+            }
         },
 
         update: function(deltaTime) {
