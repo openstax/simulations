@@ -27,8 +27,8 @@ define(function (require) {
         },
 
         collide: function(core, waveParticle) {
-            var dx = core.getScalarPosition() - waveParticle.position;
-            var osc = core.getPropagator();
+            var dx = core.get('scalarPosition') - waveParticle.position;
+            var osc = core.get('propagator');
 
             if (Math.abs(dx) < this.distThreshold) {
                 if (osc.getAmplitude() < this.amplitudeThreshold) {
