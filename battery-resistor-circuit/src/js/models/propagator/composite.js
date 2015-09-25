@@ -23,7 +23,7 @@ define(function (require) {
                 this.propagators[i].propagate(deltaTime, particle);
         },
 
-        add: function(propagator) {
+        addPropagator: function(propagator) {
             this.propagators.push(propagator);
         }
 

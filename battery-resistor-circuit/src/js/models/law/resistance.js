@@ -4,6 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var Vector2 = require('common/math/vector2');
+
     var Law                 = require('models/law');
     var OscillatePropagator = require('models/propagator/oscillate');
     var Core                = require('models/free-particle/core');
@@ -57,9 +59,9 @@ define(function (require) {
         layoutCores: function() {
             var coreSpacing = this.getCoreSpacing();
             for (var i = 0; i < this.numCores; i++) {
-                var scalarPosition = start + (coreSpacing * i) + 15;
+                var scalarPosition = this.start + (coreSpacing * i) + 15;
                 if (this.numCores === 1)
-                    scalarPosition = (end - start) / 2 + start;
+                    scalarPosition = (this.end - this.start) / 2 + this.start;
                 
                 var x0 = this.wirePatch.getPosition(scalarPosition);
                 var axis = new Vector2(1, 0);

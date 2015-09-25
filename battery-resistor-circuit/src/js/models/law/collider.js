@@ -4,8 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Law = require('models/law');
-    var Core = require('free-particle/core');
+    var Law  = require('models/law');
+    var Core = require('models/free-particle/core');
 
     /**
      * 

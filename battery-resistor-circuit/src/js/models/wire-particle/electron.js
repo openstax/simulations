@@ -12,7 +12,7 @@ define(function (require) {
     var Electron = function(attributes) {
         WireParticle.apply(this, arguments);
 
-        this.collisionEvent = options.collisionEvent;
+        this.collisionEvent = attributes.collisionEvent;
     };
 
     /**
@@ -22,7 +22,7 @@ define(function (require) {
 
         forgetCollision: function() {
             this.lastCollisionObject = null;
-            this.lastCollisionTime = Double.NaN;
+            this.lastCollisionTime = NaN;
             this.collided = false;
         },
 

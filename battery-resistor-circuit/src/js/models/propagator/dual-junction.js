@@ -20,13 +20,13 @@ define(function (require) {
     _.extend(DualJunctionPropagator.prototype, Propagator.prototype, {
 
         propagate: function(deltaTime, particle) {
-            if (p.wirePatch == this.a && p.position >= this.a.getLength()) {
-                p.wirePatch = this.b;
-                p.position = 1; // Original PhET note: This should maybe be b.getScalarStart().
+            if (particle.wirePatch == this.a && particle.position >= this.a.getLength()) {
+                particle.wirePatch = this.b;
+                particle.position = 1; // Original PhET note: This should maybe be b.getScalarStart().
             }
-            else if (p.wirePatch == this.b && p.position <= 0) {
-                p.wirePatch = this.a;
-                p.position = this.a.getLength() - 4;
+            else if (particle.wirePatch == this.b && particle.position <= 0) {
+                particle.wirePatch = this.a;
+                particle.position = this.a.getLength() - 4;
             }
         }
 

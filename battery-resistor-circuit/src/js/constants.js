@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
 
     var Constants = {}; 
 
@@ -31,6 +33,9 @@ define(function (require) {
     Constants.COLLISION_DIST = 18;
 
     Constants.NUM_ELECTRONS = 50;
+
+    Constants.TURNSTILE_CENTER = new Vector2(5, 140);
+   	Constants.TURNSTILE_SPEED_SCALE = 0.02;
 
 
     return Constants;

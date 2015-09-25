@@ -5,6 +5,37 @@ define(function (require, exports, module) {
     var _ = require('underscore');
 
     var Simulation = require('common/simulation/simulation');
+    var Vector2    = require('common/math/vector2');
+
+    var System                  = require('models/system');
+    var Circuit                 = require('models/circuit');
+    var WirePatch               = require('models/wire-patch');
+    var WireSystem              = require('models/wire-system');
+    var PatchWireRegion         = require('models/wire-region/patch');
+    var SimplePatchRegion       = require('models/wire-region/simple-patch');
+    var AndWireRegion           = require('models/wire-region/and');
+    var Electron                = require('models/wire-particle/electron');
+    var Resistance              = require('models/law/resistance');
+    var AverageCurrent          = require('models/law/average-current');
+    var CollisionEvent          = require('models/law/collision-event');
+    var Collider                = require('models/law/collider');
+    var ParticleLaw             = require('models/law/particle');
+    var Turnstile               = require('models/law/turnstile');
+    var DualJunctionPropagator  = require('models/propagator/dual-junction');
+    var CompositePropagator     = require('models/propagator/composite');
+    var RangedPropagator        = require('models/propagator/ranged');
+    var ResetElectronPropagator = require('models/propagator/reset-electron');
+    var SmoothBatteryPropagator = require('models/propagator/smooth-battery');
+    var BatteryForcePropagator  = require('models/propagator/battery-force');
+    var AccelerationPropagator  = require('models/propagator/acceleration');
+    var CrashPropagator         = require('models/propagator/crash');
+    var FrictionForce           = require('models/force/friction');
+    var CoulombForceParameters  = require('models/force/coulomb-force-parameters');
+    var CoulombForce            = require('models/force/coulomb');
+    var ResetScatterability     = require('models/listeners/reset-scatterability');
+    var OscillateFactory        = require('models/oscillate-factory');
+    var AdjacentPatchCoulombForceEndToBeginning = require('models/force/adjacent-patch-coulomb-beginning-to-end');
+    var AdjacentPatchCoulombForceBeginningToEnd = require('models/force/adjacent-patch-coulomb-end-to-beginning');
 
     /**
      * Constants
@@ -17,18 +48,27 @@ define(function (require, exports, module) {
     var BRCSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-            
+            voltage: 0,
+            current: 0
         }),
         
         initialize: function(attributes, options) {
+            // Not really the way to do it in Backbone, but an easier solution when porting than debugging later
+            this.voltageListeners = [];
+            this.currentListeners = [];
+
             Simulation.prototype.initialize.apply(this, [attributes, options]);
 
+            this.on('change:voltage', this.voltageChanged);
+            this.on('change:current', this.currentChanged);
         },
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
+            // TODO: Break this thing into smaller functions as soon as I know it all works
+
             var moveRight = 68;
             var scatInset = 60 + moveRight;
             var battInset = scatInset;
@@ -53,7 +93,7 @@ define(function (require, exports, module) {
                 .startSegmentBetween(bottomRightInset, bottomLeftInset);
 
             // Patches that will be used for painting (and  aren't actually used in the simulation)
-            var.scatterPatch = new WirePatch()
+            var scatterPatch = new WirePatch()
                 .startSegmentBetween(topLeftInset, topRightInset);
 
             var leftPatch = new WirePatch()
@@ -177,11 +217,28 @@ define(function (require, exports, module) {
                     position: circuit.getLocalPosition(position, circuit.getPatch(position))
                 });
 
-                wireSystem.add(electron);
-                averageCurrent.addParticle(electron);
+                wireSystem.addParticle(electron);
             }
 
+            // Add some laws
+            system.addLaw(wireSystem);
+            system.addLaw(collider);
+            system.addLaw(new ParticleLaw());
+            system.addLaw(averageCurrent);
 
+            // Turnstile (the pinwheel)
+            var turnstile = new Turnstile(Constants.TURNSTILE_CENTER, Constants.TURNSTILE_SPEED_SCALE);
+            this.turnstile = turnstile;
+            system.addLaw(turnstile);
+
+            // Add listeners
+            this.voltageListeners.push(battery);
+            this.voltageListeners.push(averageCurrent);
+            this.voltageListeners.push(scatProp);
+            this.voltageListeners.push(batteryForcePropagator);
+            this.voltageListeners.push(resetScatterability);
+
+            this.currentListeners.push(turnstile);
         },
 
         _update: function(time, deltaTime) {
@@ -189,6 +246,16 @@ define(function (require, exports, module) {
 
             // TODO: Might need to change this later, but just adding it in here so I don't forget
             this.set('current', this.averageCurrent.getCurrent())
+        },
+
+        voltageChanged: function(simulation, voltage) {
+            for (var i = 0; i < this.voltageListeners.length; i++)
+                this.voltageListeners[i].voltageChanged(voltage);
+        },
+
+        currentChanged: function(simulation, current) {
+            for (var i = 0; i < this.currentListeners.length; i++)
+                this.currentListeners[i].currentChanged(voltage);
         }
 
     });

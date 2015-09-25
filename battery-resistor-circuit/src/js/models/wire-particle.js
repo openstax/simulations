@@ -25,12 +25,12 @@ define(function (require) {
         this.mass   = attributes.mass;
         this.charge = attributes.charge;
 
-        this.position = options.position;
-        this.velocity = options.velocity;
-        this.acceleration = options.acceleration;
+        this.position = attributes.position;
+        this.velocity = attributes.velocity;
+        this.acceleration = attributes.acceleration;
 
-        this.propagator = options.propagator;
-        this.wirePatch = options.wirePatch;
+        this.propagator = attributes.propagator;
+        this.wirePatch = attributes.wirePatch;
     };
 
     /**

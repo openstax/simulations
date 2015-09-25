@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var OscillatePropagator = require('common/propagator/oscillate');
+    var OscillatePropagator = require('models/propagator/oscillate');
 
     var OscillateFactory = function(vToAScale, decay, freq, aMax, axis) {
         this.axis = new Vector2(axis);

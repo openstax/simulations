@@ -16,6 +16,14 @@ define(function (require) {
 
             // Laws
             this.laws = [];
+        },
+
+        addParticle: function(particle) {
+            this.particles.push(particle);
+        },
+
+        addLaw: function(law) {
+            this.laws.push(law);
         }
 
     });

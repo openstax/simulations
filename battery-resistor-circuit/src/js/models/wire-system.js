@@ -20,6 +20,10 @@ define(function (require) {
             for (var i = 0; i < this.particles.length; i++) {
                 this.particles[i].propagate(deltaTime);
             }
+        },
+
+        addParticle: function(particle) {
+            this.particles.push(particle);
         }
 
     });

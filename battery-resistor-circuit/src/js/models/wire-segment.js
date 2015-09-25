@@ -6,8 +6,6 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var WireSegment = require('wire-segment');
-
     /**
      * 
      */
