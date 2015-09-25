@@ -37,7 +37,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            if (this.simulation.updated())
+                console.log(this.simulation.get('current'))
         },
 
     });
