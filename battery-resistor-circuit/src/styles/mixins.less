@@ -1,0 +1,9 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "../../../common/styles/variables.less";
+@import "../../../common/styles/mixins/vendor-prefixes.less";
+@import "../../../common/styles/mixins/buttons.less";
+
+.panel(@shadow-alpha: 0.15, @background-fade-percent: 30%) {
+    background: fadeout(#fff, @background-fade-percent);
+    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+}
