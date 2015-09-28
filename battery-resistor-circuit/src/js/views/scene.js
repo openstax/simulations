@@ -12,6 +12,7 @@ define(function(require) {
     var TurnstileView = require('views/turnstile');
     var WirePatchView = require('views/wire-patch');
     var BatteryView   = require('views/battery');
+    var ElectronView  = require('views/electron');
 
     var Assets = require('assets');
 
@@ -55,6 +56,7 @@ define(function(require) {
             this.initWires();
             this.initBatteryView();
             this.initTurnstileView();
+            this.initElectronViews();
         },
 
         initMVT: function() {
@@ -118,9 +120,24 @@ define(function(require) {
             this.topLayer.addChild(this.turnstileView.displayObject);
         },
 
+        initElectronViews: function() {
+            this.electronViews = [];
+
+            for (var i = 0; i < this.simulation.wireSystem.particles.length; i++) {
+                var view = new ElectronView({
+                    mvt: this.mvt,
+                    model: this.simulation.wireSystem.particles[i]
+                });
+                this.electronLayer.addChild(view.displayObject);
+            }
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated()) {
                 this.turnstileView.update();
+
+                // for (var i = 0; i < this.electronViews.length; i++)
+                //     this.electronViews[i].update();
             }
         },
 

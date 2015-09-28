@@ -4,7 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
 
     var Constants = require('constants');
 
@@ -22,15 +22,16 @@ define(function(require) {
             this.mvt = options.mvt;
 
             this.initGraphics();
-
-            this.listenTo(this.model, 'change:position', this.updatePosition);
         },
 
         /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            
+            var sprite = Assets.createSprite(Assets.Images.ELECTRON);
+            sprite.anchor.x = sprite.anchor.y = 0.5;
+
+            this.displayObject.addChild(sprite);
 
             this.updateMVT(this.mvt);
         },
@@ -42,13 +43,24 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.updatePosition(this.model, this.model.get('position'));
+            this.update();
         },
 
-        updatePosition: function(electron, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+        updatePosition: function() {
+            // First we need to convert wire position to (x,y) and then to view
+            var modelPosition = this.model.wirePatch.getPosition(this.model.position);
+            if (modelPosition) {
+                var viewPosition = this.mvt.modelToView(modelPosition);
+                this.displayObject.x = viewPosition.x;
+                this.displayObject.y = viewPosition.y;    
+            }
+            // else {
+            //     console.log(this.model.position)
+            // }
+        },
+
+        update: function() {
+            this.updatePosition();
         }
 
     });

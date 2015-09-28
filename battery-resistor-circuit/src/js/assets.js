@@ -2,14 +2,15 @@ define(function (require) {
 
     'use strict';
 
-    var Assets = require('common/pixi/assets');
+    var Assets = require('common/v3/pixi/assets');
 
     Assets.Path = 'img/';
 
     Assets.Images = {   
         PINWHEEL:       'pinwheel.png',
         BATTERY:        'battery.png',
-        BATTERY_INSIDE: 'battery-inside.png'
+        BATTERY_INSIDE: 'battery-inside.png',
+        ELECTRON:       'electron.png'
     };
 
     Assets.SpriteSheets = {};

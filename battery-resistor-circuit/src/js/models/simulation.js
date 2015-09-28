@@ -125,6 +125,7 @@ define(function (require, exports, module) {
 
             // Set up the wire system
             var wireSystem = new WireSystem();
+            this.wireSystem = wireSystem;
 
             var props = new CompositePropagator();
 
