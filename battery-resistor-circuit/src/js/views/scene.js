@@ -10,6 +10,8 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var TurnstileView = require('views/turnstile');
+    var WirePatchView = require('views/wire-patch');
+    var BatteryView   = require('views/battery');
 
     var Assets = require('assets');
 
@@ -40,6 +42,8 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
+            this.initWires();
+            this.initBatteryView();
             this.initTurnstileView();
         },
 
@@ -68,6 +72,30 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
+        },
+
+        initWires: function() {
+            this.leftWirePatchView = new WirePatchView({
+                model: this.simulation.leftPatch,
+                mvt: this.mvt
+            });
+
+            this.rightWirePatchView = new WirePatchView({
+                model: this.simulation.rightPatch,
+                mvt: this.mvt
+            });
+
+            this.stage.addChild(this.leftWirePatchView.displayObject);
+            this.stage.addChild(this.rightWirePatchView.displayObject);
+        },
+
+        initBatteryView: function() {
+            this.batteryView = new BatteryView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.stage.addChild(this.batteryView.displayObject);
         },
 
         initTurnstileView: function() {

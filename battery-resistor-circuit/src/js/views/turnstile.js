@@ -51,7 +51,10 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            // TurnstileView.PINWHEEL_MODEL_WIDTH
+            var targetWidth = Math.round(this.mvt.modelToViewDeltaX(TurnstileView.PINWHEEL_MODEL_WIDTH));
+            var scale = targetWidth / this.pinwheel.texture.width;
+            this.pinwheel.scale.x = scale;
+            this.pinwheel.scale.y = scale;
 
             this.displayObject.x = Math.floor(this.mvt.modelToViewX(this.model.center.x));
             this.displayObject.y = Math.floor(this.mvt.modelToViewY(this.model.center.y));

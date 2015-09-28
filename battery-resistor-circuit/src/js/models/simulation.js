@@ -77,7 +77,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             // TODO: Break this thing into smaller functions as soon as I know it all works
 
-            var moveRight = 68;
+            var moveRight = Constants.SIM_X_OFFSET;
             var scatInset = 60 + moveRight;
             var battInset = scatInset;
             var topLeftWirePoint     = new Vector2(25  + moveRight, 120); // Top left
@@ -149,10 +149,13 @@ define(function (require, exports, module) {
             var batteryRangedProps = new RangedPropagator(); // original: range
 
             var inset = 50;
-            var battX = Constants.CORE_START - inset;
-            var battY = Constants.CORE_END + inset;
-            var leftBatteryRegion  = new PatchWireRegion(0, battX, loopWirePatch);
-            var rightBatteryRegion = new PatchWireRegion(battY, loopWirePatch.getLength(), loopWirePatch);
+            var battL = Constants.CORE_START - inset;
+            var battR = Constants.CORE_END + inset;
+            var leftBatteryRegion  = new PatchWireRegion(0, battL, loopWirePatch);
+            var rightBatteryRegion = new PatchWireRegion(battR, loopWirePatch.getLength(), loopWirePatch);
+            this.batteryLeft  = bottomLeftInset.x;
+            this.batteryRight = bottomRightInset.x;
+            this.batteryY = bottomLeftInset.y;
 
             var batterySpeed = 35;
             var battery = new SmoothBatteryPropagator(leftBatteryRegion, rightBatteryRegion, wireSystem, batterySpeed, 18);
