@@ -41,6 +41,16 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.bottomLayer   = new PIXI.Container();
+            this.middleLayer   = new PIXI.Container();
+            this.electronLayer = new PIXI.Container();
+            this.topLayer      = new PIXI.Container();
+
+            this.stage.addChild(this.bottomLayer);
+            this.stage.addChild(this.middleLayer);
+            this.stage.addChild(this.electronLayer);
+            this.stage.addChild(this.topLayer);
+
             this.initMVT();
             this.initWires();
             this.initBatteryView();
@@ -85,8 +95,8 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.stage.addChild(this.leftWirePatchView.displayObject);
-            this.stage.addChild(this.rightWirePatchView.displayObject);
+            this.bottomLayer.addChild(this.leftWirePatchView.displayObject);
+            this.bottomLayer.addChild(this.rightWirePatchView.displayObject);
         },
 
         initBatteryView: function() {
@@ -95,7 +105,8 @@ define(function(require) {
                 simulation: this.simulation
             });
 
-            this.stage.addChild(this.batteryView.displayObject);
+            this.topLayer.addChild(this.batteryView.solidLayer);
+            this.middleLayer.addChild(this.batteryView.cutawayLayer);
         },
 
         initTurnstileView: function() {
@@ -104,7 +115,7 @@ define(function(require) {
                 model: this.simulation.turnstile
             });
 
-            this.stage.addChild(this.turnstileView.displayObject);
+            this.topLayer.addChild(this.turnstileView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -112,6 +123,14 @@ define(function(require) {
                 this.turnstileView.update();
             }
         },
+
+        showSolidBattery: function() {
+            this.batteryView.showSolid();
+        },
+
+        showCutawayBattery: function() {
+            this.batteryView.showCutaway();
+        }
 
     });
 

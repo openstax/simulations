@@ -51,6 +51,10 @@ define(function (require) {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
 
+            'click #show-cores-check'               : 'toggleCores',
+            'click #show-voltage-calculation-check' : 'toggleVoltageCalculation',
+            'click #show-inside-battery-check'      : 'toggleInsideBattery',
+
             'slide .resistance-slider' : 'changeResistance',
             'slide .voltage-slider'    : 'changeVoltage'
         },
@@ -203,6 +207,27 @@ define(function (require) {
                 this.$voltage.text(voltage.toFixed(2) + ' Volts');
                 this.simulation.set('voltage', voltage);
             });
+        },
+
+        toggleCores: function(event) {
+            // if ($(event.target).is(':checked'))
+            //     this.sceneView.showVelocityArrows();
+            // else
+            //     this.sceneView.hideVelocityArrows();
+        },
+
+        toggleVoltageCalculation: function(event) {
+            // if ($(event.target).is(':checked'))
+            //     this.sceneView.showVelocityArrows();
+            // else
+            //     this.sceneView.hideVelocityArrows();
+        },
+
+        toggleInsideBattery: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCutawayBattery();
+            else
+                this.sceneView.showSolidBattery();
         },
 
     });

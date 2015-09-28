@@ -41,10 +41,17 @@ define(function(require) {
             this.batterySprite.anchor.x = 0.5;
             this.batterySprite.anchor.y = 0.5;
 
-            this.directionContainer = new PIXI.Container();
-            this.directionContainer.addChild(this.batterySprite);
+            this.solidLayer = new PIXI.Container();
+            this.solidLayer.addChild(this.batterySprite);
 
-            this.displayObject.addChild(this.directionContainer);
+            this.cutawayBatterySprite = Assets.createSprite(Assets.Images.BATTERY_INSIDE);
+            this.cutawayBatterySprite.anchor.x = 0.5;
+            this.cutawayBatterySprite.anchor.y = 0.5;
+
+            this.cutawayLayer = new PIXI.Container();
+            this.cutawayLayer.addChild(this.cutawayBatterySprite);
+
+            this.showSolid();
 
             this.updateMVT(this.mvt);
         },
@@ -58,20 +65,34 @@ define(function(require) {
 
             var targetWidth  = Math.round(this.mvt.modelToViewDeltaX(this.modelRightX - this.modelLeftX));
             var targetHeight = Math.round(this.mvt.modelToViewDeltaY(BatteryView.MODEL_HEIGHT));
-            this.batterySprite.scale.x = targetWidth  / this.batterySprite.texture.width;
-            this.batterySprite.scale.y = targetHeight / this.batterySprite.texture.height;
+            this.batterySprite.scale.x = this.cutawayBatterySprite.scale.x = targetWidth  / this.batterySprite.texture.width;
+            this.batterySprite.scale.y = this.cutawayBatterySprite.scale.y = targetHeight / this.batterySprite.texture.height;
 
             this.updateDirection();
         },
 
         updateDirection: function() {
-            if (this.simulation.get('voltage') > 0)
-                this.directionContainer.scale.x = -1;
-            else
-                this.directionContainer.scale.x = 1;
+            if (this.simulation.get('voltage') > 0) {
+                this.solidLayer.scale.x   = -1;
+                this.cutawayLayer.scale.x = -1;
+            }
+            else {
+                this.solidLayer.scale.x   = 1;
+                this.cutawayLayer.scale.x = 1;
+            }
 
-            this.displayObject.x = Math.floor(this.mvt.modelToViewX(this.modelLeftX) + this.batterySprite.width / 2);
-            this.displayObject.y = Math.floor(this.mvt.modelToViewY(this.modelY));
+            this.solidLayer.x = this.cutawayLayer.x = Math.floor(this.mvt.modelToViewX(this.modelLeftX) + this.batterySprite.width / 2);
+            this.solidLayer.y = this.cutawayLayer.y = Math.floor(this.mvt.modelToViewY(this.modelY));
+        },
+
+        showSolid: function() {
+            this.solidLayer.visible = true;
+            this.cutawayLayer.visible = false;
+        },
+
+        showCutaway: function() {
+            this.solidLayer.visible = false;
+            this.cutawayLayer.visible = true;
         }
 
     }, Constants.BatteryView);
