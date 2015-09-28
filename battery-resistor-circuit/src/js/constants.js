@@ -15,7 +15,7 @@ define(function (require) {
 
     Constants.SIM_WIDTH  = 880;  // Arbitrary units
     Constants.SIM_HEIGHT = 480;  // Arbitrary units
-    Constants.SIM_X_OFFSET = 140; // Arbitrary units
+    Constants.SIM_X_OFFSET = 72; // Arbitrary units
 
     Constants.FRAME_DURATION = 1 / 30; // Seconds
     Constants.DT_PER_FRAME = 0.2; // Seconds

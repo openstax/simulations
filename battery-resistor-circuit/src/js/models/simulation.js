@@ -77,7 +77,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             // TODO: Break this thing into smaller functions as soon as I know it all works
 
-            var moveRight = Constants.SIM_X_OFFSET;
+            var moveRight = 68;
             var scatInset = 60 + moveRight;
             var battInset = scatInset;
             var topLeftWirePoint     = new Vector2(25  + moveRight, 120); // Top left

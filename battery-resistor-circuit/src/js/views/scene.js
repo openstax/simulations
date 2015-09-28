@@ -80,7 +80,7 @@ define(function(require) {
             this.viewOriginY = 0;
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
+                new Vector2(-Constants.SIM_X_OFFSET, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
@@ -128,6 +128,7 @@ define(function(require) {
                     mvt: this.mvt,
                     model: this.simulation.wireSystem.particles[i]
                 });
+                this.electronViews.push(view);
                 this.electronLayer.addChild(view.displayObject);
             }
         },
@@ -136,8 +137,8 @@ define(function(require) {
             if (this.simulation.updated()) {
                 this.turnstileView.update();
 
-                // for (var i = 0; i < this.electronViews.length; i++)
-                //     this.electronViews[i].update();
+                for (var i = 0; i < this.electronViews.length; i++)
+                    this.electronViews[i].update();
             }
         },
 
