@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
 
@@ -24,6 +25,11 @@ define(function (require) {
         this.coreCount = coreCount;
         this.cores = [];
     };
+
+    /**
+     * Add Backbone.Events functionality
+     */
+    _.extend(Resistance.prototype, Backbone.Events);
 
     /**
      * Instance functions/properties
@@ -52,6 +58,7 @@ define(function (require) {
             for (var i = this.cores.length - 1; i >= 0; i--) {
                 var particle = this.cores[i];
                 this.system.removeParticle(particle);
+                particle.destroy();
                 this.cores.splice(i, 1);
             }
         },
@@ -78,6 +85,8 @@ define(function (require) {
                 this.system.addParticle(core);
                 this.cores.push(core);
             }
+
+            this.trigger('new-cores');
         },
 
         getCoreSpacing: function() {

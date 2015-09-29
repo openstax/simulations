@@ -17,15 +17,15 @@ define(function(require) {
          * Initializes the new CoresView.
          */
         initialize: function(options) {
-            this.simulation = options.simulation;
-            this.cores = this.simulation.resistance.cores;
+            this.resistance = options.resistance;
+            this.cores = this.resistance.cores;
 
             this.coreViews = [];
 
             this.updateMVT(options.mvt);
 
-            this.listenTo(this.simulation, 'change:coreCount', this.coreCountChanged);
-            this.coreCountChanged(this.simulation, this.simulation.get('coreCount'));
+            this.listenTo(this.resistance, 'new-cores', this.replaceCores);
+            this.replaceCores();
         },
 
         /**
@@ -44,7 +44,7 @@ define(function(require) {
                 this.coreViews[i].update();
         },
 
-        coreCountChanged: function(simulation, coreCount) {
+        replaceCores: function() {
             // Remove the views for the old cores
             for (var i = this.coreViews.length - 1; i >= 0; i--) {
                 this.coreViews[i].removeFrom(this.displayObject);

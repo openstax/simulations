@@ -75,7 +75,7 @@ define(function(require) {
         initCores: function() {
             this.coresView = new CoresView({
                 mvt: this.mvt,
-                simulation: this.simulation
+                resistance: this.simulation.resistance
             });
 
             // This cores layer must be added to the scene separately from the displayObject
