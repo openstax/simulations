@@ -129,6 +129,7 @@ define(function(require) {
             });
 
             this.middleLayer.addChild(this.resistorView.displayObject);
+            this.topLayer.addChild(this.resistorView.coresLayer);
         },
 
         initElectronViews: function() {
@@ -160,7 +161,15 @@ define(function(require) {
 
         showCutawayBattery: function() {
             this.batteryView.showCutaway();
-        }
+        },
+
+        showCores: function() {
+            this.resistorView.showCores();
+        },
+
+        hideCores: function() {
+            this.resistorView.hideCores();
+        },
 
     });
 

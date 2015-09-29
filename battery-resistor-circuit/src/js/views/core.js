@@ -30,6 +30,7 @@ define(function(require) {
         initGraphics: function() {
             var sprite = Assets.createSprite(Assets.Images.CORE);
             sprite.anchor.x = sprite.anchor.y = 0.5;
+            sprite.alpha = 0.9;
 
             this.displayObject.addChild(sprite);
 

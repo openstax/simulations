@@ -46,7 +46,7 @@ define(function(require) {
 
         coreCountChanged: function(simulation, coreCount) {
             // Remove the views for the old cores
-            for (var i = 0; i < this.coreViews.length; i++) {
+            for (var i = this.coreViews.length - 1; i >= 0; i--) {
                 this.coreViews[i].removeFrom(this.displayObject);
                 this.coreViews.splice(i, 1);
             }

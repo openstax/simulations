@@ -210,10 +210,10 @@ define(function (require) {
         },
 
         toggleCores: function(event) {
-            // if ($(event.target).is(':checked'))
-            //     this.sceneView.showVelocityArrows();
-            // else
-            //     this.sceneView.hideVelocityArrows();
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCores();
+            else
+                this.sceneView.hideCores();
         },
 
         toggleVoltageCalculation: function(event) {

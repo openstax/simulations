@@ -78,7 +78,9 @@ define(function(require) {
                 simulation: this.simulation
             });
 
-            this.displayObject.addChild(this.coresView.displayObject);
+            // This cores layer must be added to the scene separately from the displayObject
+            this.coresLayer = new PIXI.Container();
+            this.coresLayer.addChild(this.coresView.displayObject);
         },
 
         drawBackground: function() {
@@ -190,6 +192,14 @@ define(function(require) {
         update: function() {
             this.updateColor();
             this.drawBackground();
+        },
+
+        showCores: function() {
+            this.coresLayer.visible = true;
+        },
+
+        hideCores: function() {
+            this.coresLayer.visible = false;
         }
 
     }, Constants.ResistorView);
