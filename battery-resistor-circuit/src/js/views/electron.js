@@ -49,12 +49,9 @@ define(function(require) {
         updatePosition: function() {
             // First we need to convert wire position to (x,y) and then to view
             var modelPosition = this.model.wirePatch.getPosition(this.model.position);
-            if (modelPosition) {
-                var viewPosition = this.mvt.modelToView(modelPosition);
-                this.displayObject.x = viewPosition.x;
-                this.displayObject.y = viewPosition.y; 
-
-            }
+            var viewPosition = this.mvt.modelToView(modelPosition);
+            this.displayObject.x = viewPosition.x;
+            this.displayObject.y = viewPosition.y; 
         },
 
         update: function() {
