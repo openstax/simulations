@@ -6,8 +6,6 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
 
-    var Constants = require('constants');
-
     var Assets = require('assets');
     var Constants = require('constants');
 

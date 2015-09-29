@@ -14,6 +14,7 @@ define(function(require) {
     var WirePatchView = require('views/wire-patch');
     var BatteryView   = require('views/battery');
     var ElectronView  = require('views/electron');
+    var SpectrumView  = require('views/spectrum');
 
     var Assets = require('assets');
 
@@ -58,6 +59,7 @@ define(function(require) {
             this.initBatteryView();
             this.initTurnstileView();
             this.initResistorView();
+            this.initSpectrumView();
             this.initElectronViews();
         },
 
@@ -130,6 +132,15 @@ define(function(require) {
 
             this.middleLayer.addChild(this.resistorView.displayObject);
             this.topLayer.addChild(this.resistorView.coresLayer);
+        },
+
+        initSpectrumView: function() {
+            this.spectrumView = new SpectrumView({
+                mvt: this.mvt,
+                resistorView: this.resistorView
+            });
+
+            this.topLayer.addChild(this.spectrumView.displayObject);
         },
 
         initElectronViews: function() {

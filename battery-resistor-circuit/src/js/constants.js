@@ -114,5 +114,18 @@ define(function (require) {
     Constants.ResistorView = ResistorView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            SPECTRUM VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var SpectrumView = {};
+
+    SpectrumView.MARKER_COLOR = '#21366b';
+
+    Constants.SpectrumView = SpectrumView;
+
+
     return Constants;
 });
