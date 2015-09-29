@@ -72,13 +72,19 @@ define(function(require) {
         },
 
         initMarker: function() {
-            var height = this.spectrum.height;
-            var width = 4;
+            var height = Math.floor(this.spectrum.height * 0.5);
+            var width = Math.floor(height * 1.2);
             var graphics = this.marker;
 
-            graphics.alpha = 0.8;
-            graphics.lineStyle(2, MARKER_COLOR, 1);
-            graphics.drawRect(-width / 2, 0, width, height);
+            // graphics.alpha = 0.8;
+            // graphics.lineStyle(2, MARKER_COLOR, 1);
+            // graphics.drawRect(-width / 2, 0, width, height);
+            graphics.y = this.spectrum.height;
+            graphics.beginFill(MARKER_COLOR, 1);
+            graphics.moveTo(0, 0);
+            graphics.lineTo( width / 2, height);
+            graphics.lineTo(-width / 2, height);
+            graphics.endFill();
         },
 
         /**
