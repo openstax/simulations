@@ -9,7 +9,7 @@ define(function(require) {
     var NumberSeries = require('common/math/number-series');
     var clamp        = require('common/math/clamp');
 
-    var Constants = require('constants');
+    var CoresView = require('views/cores');
 
     var Assets = require('assets');
     var Constants = require('constants');
@@ -45,10 +45,13 @@ define(function(require) {
             this.background = new PIXI.Graphics();
             this.outline = new PIXI.Graphics();
 
-            this.displayObject.addChild(this.background);
-            this.displayObject.addChild(this.outline);
+            this.graphicsLayer = new PIXI.Container();
+            this.graphicsLayer.addChild(this.background);
+            this.graphicsLayer.addChild(this.outline);
+            this.displayObject.addChild(this.graphicsLayer);
 
             this.initSpectrum();
+            this.initCores();
 
             this.updateMVT(this.mvt);
         },
@@ -67,6 +70,15 @@ define(function(require) {
 
             this.ratioSamples = new NumberSeries(ResistorView.NUM_RATIO_SAMPLES);
             this.numSame = 0;
+        },
+
+        initCores: function() {
+            this.coresView = new CoresView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.displayObject.addChild(this.coresView.displayObject);
         },
 
         drawBackground: function() {
@@ -154,13 +166,15 @@ define(function(require) {
 
             this.drawBackground();
             this.drawOutline();
+
+            this.coresView.updateMVT(mvt);
         },
 
         updateDimensions: function() {
             this.width  = Math.round(this.mvt.modelToViewDeltaX(this.modelRightX - this.modelLeftX));
             this.height = Math.round(this.mvt.modelToViewDeltaY(ResistorView.MODEL_HEIGHT));
-            this.displayObject.x = Math.round(this.mvt.modelToViewX(this.modelLeftX));
-            this.displayObject.y = Math.round(this.mvt.modelToViewY(this.modelY));
+            this.graphicsLayer.x = Math.round(this.mvt.modelToViewX(this.modelLeftX));
+            this.graphicsLayer.y = Math.round(this.mvt.modelToViewY(this.modelY));
         },
 
         updateColor: function() {

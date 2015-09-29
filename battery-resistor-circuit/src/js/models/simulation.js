@@ -143,6 +143,7 @@ define(function (require, exports, module) {
                 Constants.DEFAULT_DECAY, 
                 system
             );
+            this.resistance = resistance;
 
             this.resistorLeft  = topLeftInset.x;
             this.resistorRight = topRightInset.x;
