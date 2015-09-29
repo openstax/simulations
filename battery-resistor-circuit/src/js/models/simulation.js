@@ -143,6 +143,10 @@ define(function (require, exports, module) {
                 Constants.DEFAULT_DECAY, 
                 system
             );
+
+            this.resistorLeft  = topLeftInset.x;
+            this.resistorRight = topRightInset.x;
+            this.resistorY     = topRightInset.y;
             
             // Battery stuff
             var batteryRegion = new SimplePatchRegion(batteryWirePatch);

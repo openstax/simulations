@@ -1,0 +1,151 @@
+define(function(require) {
+
+    'use strict';
+
+    var PIXI = require('pixi');
+
+    var PixiView     = require('common/v3/pixi/view');
+    var Colors       = require('common/colors/colors');
+    var NumberSeries = require('common/math/number-series');
+    var clamp        = require('common/math/clamp');
+
+    var Constants = require('constants');
+
+    var Assets = require('assets');
+    var Constants = require('constants');
+
+    /**
+     * A view that represents an electron
+     */
+    var ResistorView = PixiView.extend({
+
+        /**
+         * Initializes the new ResistorView.
+         */
+        initialize: function(options) {
+            this.mvt = options.mvt;
+            this.simulation = options.simulation;
+            this.modelLeftX  = this.simulation.resistorLeft;
+            this.modelRightX = this.simulation.resistorRight;
+            this.modelY      = this.simulation.resistorY;
+            this.maxPower = ResistorView.MAX_POWER;
+
+            this.initGraphics();
+
+            this.listenTo(this.simulation, 'change:voltage change:coreCount', this.update);
+        },
+
+        /**
+         * Initializes everything for rendering graphics
+         */
+        initGraphics: function() {
+            this.background = new PIXI.Graphics();
+            this.outline = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.background);
+            this.displayObject.addChild(this.outline);
+
+            this.initSpectrum();
+
+            this.updateMVT(this.mvt);
+        },
+
+        initSpectrum: function() {
+            // Get the spectrum image and draw it to a hidden canvas so we can
+            //   pull pixel data from it to determine the resistor's color.
+            var spectrumTexture = Assets.Texture(Assets.Images.SPECTRUM);
+            var spectrumImage = spectrumTexture.baseTexture.source;
+            var canvas = document.createElement('canvas');
+            canvas.width  = spectrumTexture.width;
+            canvas.height = spectrumTexture.height;
+            this.spectrumContext = canvas.getContext('2d');
+            this.spectrumContext.drawImage(spectrumImage, 0, 0, spectrumTexture.width, spectrumTexture.height);
+            this.spectrumWidth = spectrumTexture.width;
+
+            this.ratioSamples = new NumberSeries(ResistorView.NUM_RATIO_SAMPLES);
+            this.numSame = 0;
+        },
+
+        drawBackground: function() {
+            var graphics = this.background;
+            graphics.clear();
+            graphics.beginFill(this.color, 1);
+            graphics.drawRect(0, 0, this.width, this.height);
+            graphics.endFill();
+        },
+
+        drawOutline: function() {
+
+        },
+
+        /**
+         * Returns the resistor color for the given power ratio.
+         */
+        getColor: function(ratio) {
+            // Make sure the ratio stays between 0 and 1
+            ratio = clamp(0, ratio, 1);
+            
+            // Use a normalized ratio instead of the raw ratio
+            this.ratioSamples.add(ratio);
+            ratio = this.ratioSamples.average();
+
+            var x = clamp(0, parseInt(this.spectrumWidth * ratio), this.spectrumWidth - 1);
+            
+            var color = this.spectrumContext.getImageData(x, 0, 1, 1).data;
+            var hexInt = Colors.rgbToHexInteger(color[0], color[1], color[2]);
+
+            var average = ratio;
+            if (this.lastAverage === average)
+                this.numSame++;
+            else
+                this.numSame = 0;
+            this.lastAverage = average;
+
+            this.trigger('powerChanged', average);
+
+            return hexInt;
+        },
+
+        isChanging: function() {
+            return this.numSame < this.ratioSamples.length();
+        },
+
+        /**
+         * Updates the model-view-transform and anything that
+         *   relies on it.
+         */
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
+
+            this.updateDimensions();
+            this.updateColor();
+
+            this.drawBackground();
+            this.drawOutline();
+        },
+
+        updateDimensions: function() {
+            this.width  = Math.round(this.mvt.modelToViewDeltaX(this.modelRightX - this.modelLeftX));
+            this.height = Math.round(this.mvt.modelToViewDeltaY(ResistorView.MODEL_HEIGHT));
+            this.displayObject.x = Math.round(this.mvt.modelToViewX(this.modelLeftX));
+            this.displayObject.y = Math.round(this.mvt.modelToViewY(this.modelY) - this.height / 2);
+        },
+
+        updateColor: function() {
+            var r = this.simulation.get('coreCount');
+            var v = this.simulation.get('voltage');
+            var power = v * v / r;
+            var powerRatio = power / this.maxPower;
+            this.color = this.getColor(powerRatio);
+        },
+
+        update: function() {
+            this.updateColor();
+            this.drawBackground();
+        }
+
+    }, Constants.ResistorView);
+
+
+    return ResistorView;
+});

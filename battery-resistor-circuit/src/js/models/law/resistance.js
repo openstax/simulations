@@ -13,7 +13,7 @@ define(function (require) {
     /**
      * 
      */
-    var Resistance = function(start, end, numCores, wirePatch, amplitude, freq, decay, system) {
+    var Resistance = function(start, end, coreCount, wirePatch, amplitude, freq, decay, system) {
         this.system = system;
         this.decay = decay;
         this.freq = freq;
@@ -21,7 +21,7 @@ define(function (require) {
         this.wirePatch = wirePatch;
         this.start = start;
         this.end = end;
-        this.numCores = numCores;
+        this.coreCount = coreCount;
         this.cores = [];
     };
 
@@ -42,8 +42,8 @@ define(function (require) {
         },
 
         coreCountChanged: function(value) {
-            if (value !== this.numCores) {
-                this.numCores = value;
+            if (value !== this.coreCount) {
+                this.coreCount = value;
                 this.system.addLaw(this); // Register the update to happen synchronously
             }
         },
@@ -58,9 +58,9 @@ define(function (require) {
 
         layoutCores: function() {
             var coreSpacing = this.getCoreSpacing();
-            for (var i = 0; i < this.numCores; i++) {
+            for (var i = 0; i < this.coreCount; i++) {
                 var scalarPosition = this.start + (coreSpacing * i) + 15;
-                if (this.numCores === 1)
+                if (this.coreCount === 1)
                     scalarPosition = (this.end - this.start) / 2 + this.start;
                 
                 var x0 = this.wirePatch.getPosition(scalarPosition);
@@ -81,11 +81,11 @@ define(function (require) {
         },
 
         getCoreSpacing: function() {
-            if (this.numCores <= 1)
+            if (this.coreCount <= 1)
                 return 0;
             
             var coreSpan = this.end - this.start;
-            var coreSpacing = coreSpan / (this.numCores - 1);
+            var coreSpacing = coreSpan / (this.coreCount - 1);
 
             return coreSpacing;
         }

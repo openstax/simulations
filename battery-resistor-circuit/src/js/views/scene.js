@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var TurnstileView = require('views/turnstile');
+    var ResistorView  = require('views/resistor');
     var WirePatchView = require('views/wire-patch');
     var BatteryView   = require('views/battery');
     var ElectronView  = require('views/electron');
@@ -56,6 +57,7 @@ define(function(require) {
             this.initWires();
             this.initBatteryView();
             this.initTurnstileView();
+            this.initResistorView();
             this.initElectronViews();
         },
 
@@ -120,6 +122,15 @@ define(function(require) {
             this.topLayer.addChild(this.turnstileView.displayObject);
         },
 
+        initResistorView: function() {
+            this.resistorView = new ResistorView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.resistorView.displayObject);
+        },
+
         initElectronViews: function() {
             this.electronViews = [];
 
@@ -136,6 +147,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated()) {
                 this.turnstileView.update();
+                this.resistorView.update();
 
                 for (var i = 0; i < this.electronViews.length; i++)
                     this.electronViews[i].update();

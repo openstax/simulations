@@ -10,7 +10,8 @@ define(function (require) {
         PINWHEEL:       'pinwheel.png',
         BATTERY:        'battery.png',
         BATTERY_INSIDE: 'battery-inside.png',
-        ELECTRON:       'electron.png'
+        ELECTRON:       'electron.png',
+        SPECTRUM:       'spectrum.png'
     };
 
     Assets.SpriteSheets = {};

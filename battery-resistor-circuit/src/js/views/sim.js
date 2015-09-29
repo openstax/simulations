@@ -191,10 +191,10 @@ define(function (require) {
          * Responds to changes in the resistance slider
          */
         changeResistance: function(event) {
-            var numCores = parseInt($(event.target).val());
+            var coreCount = parseInt($(event.target).val());
             this.inputLock(function() {
-                this.$resistance.text(Constants.numCoresToOhms(numCores).toFixed(2) + ' Ohms');
-                this.simulation.set('numCores', numCores);
+                this.$resistance.text(Constants.coreCountToOhms(coreCount).toFixed(2) + ' Ohms');
+                this.simulation.set('coreCount', coreCount);
             });
         },
 

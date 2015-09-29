@@ -45,8 +45,8 @@ define(function (require) {
    	Constants.TURNSTILE_SPEED_SCALE = 0.02;
 
     Constants.RESISTANCE_RANGE = range({ min: 3, max: 14, defaultValue: 6 });
-    Constants.numCoresToOhms = function(numCores) {
-        return numCores * 0.2 / 3.0;
+    Constants.coreCountToOhms = function(coreCount) {
+        return coreCount * 0.2 / 3.0;
     };
 
     Constants.VOLTAGE_RANGE = range({ min: -12, max: 12, defaultValue: 2.88 });
@@ -92,6 +92,23 @@ define(function (require) {
     BatteryView.MODEL_HEIGHT = 143.33333333333334;
 
     Constants.BatteryView = BatteryView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            RESISTOR VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var ResistorView = {};
+
+    ResistorView.MODEL_HEIGHT = 105.1111111111111;
+    var VMAX = 6;
+    var RMAX = 1;
+    ResistorView.MAX_POWER = VMAX * VMAX / RMAX;
+    ResistorView.NUM_RATIO_SAMPLES = 100;
+
+    Constants.ResistorView = ResistorView;
 
 
     return Constants;
