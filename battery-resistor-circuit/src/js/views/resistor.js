@@ -30,6 +30,9 @@ define(function(require) {
             this.modelY      = this.simulation.resistorY;
             this.maxPower = ResistorView.MAX_POWER;
 
+            this.outlineColor = Colors.parseHex(ResistorView.OUTLINE_COLOR);
+            this._rgba = {};
+
             this.initGraphics();
 
             this.listenTo(this.simulation, 'change:voltage change:coreCount', this.update);
@@ -70,12 +73,38 @@ define(function(require) {
             var graphics = this.background;
             graphics.clear();
             graphics.beginFill(this.color, 1);
-            graphics.drawRect(0, 0, this.width, this.height);
+            graphics.drawRect(0, -this.height / 2, this.width, this.height);
+            graphics.endFill();
+
+            var cw = ResistorView.CHANNEL_WIDTH;
+            graphics.beginFill(this.channelColor, 1);
+            graphics.drawRect(0, -cw / 2, this.width, cw);
             graphics.endFill();
         },
 
         drawOutline: function() {
+            var cw = ResistorView.CHANNEL_WIDTH;
+            var m  = ResistorView.OUTLINE_WIDTH / 2;
 
+            var graphics = this.outline;
+            graphics.clear();
+
+            graphics.lineStyle(ResistorView.OUTLINE_WIDTH, this.outlineColor, 1);
+            graphics.moveTo(m,              -cw / 2);
+            graphics.lineTo(m,              -this.height / 2 + m);
+            graphics.lineTo(this.width - m, -this.height / 2 + m);
+            graphics.lineTo(this.width - m, -cw / 2);
+
+            if (graphics.currentPath && graphics.currentPath.shape)
+                graphics.currentPath.shape.closed = false;
+
+            graphics.moveTo(m,              cw / 2);
+            graphics.lineTo(m,              this.height / 2 - m);
+            graphics.lineTo(this.width - m, this.height / 2 - m);
+            graphics.lineTo(this.width - m, cw / 2);
+
+            if (graphics.currentPath && graphics.currentPath.shape)
+                graphics.currentPath.shape.closed = false;
         },
 
         /**
@@ -92,7 +121,10 @@ define(function(require) {
             var x = clamp(0, parseInt(this.spectrumWidth * ratio), this.spectrumWidth - 1);
             
             var color = this.spectrumContext.getImageData(x, 0, 1, 1).data;
-            var hexInt = Colors.rgbToHexInteger(color[0], color[1], color[2]);
+            this._rgba.r = color[0];
+            this._rgba.g = color[1];
+            this._rgba.b = color[2];
+            //var hexInt = Colors.rgbToHexInteger(color[0], color[1], color[2]);
 
             var average = ratio;
             if (this.lastAverage === average)
@@ -103,7 +135,7 @@ define(function(require) {
 
             this.trigger('powerChanged', average);
 
-            return hexInt;
+            return this._rgba;
         },
 
         isChanging: function() {
@@ -128,7 +160,7 @@ define(function(require) {
             this.width  = Math.round(this.mvt.modelToViewDeltaX(this.modelRightX - this.modelLeftX));
             this.height = Math.round(this.mvt.modelToViewDeltaY(ResistorView.MODEL_HEIGHT));
             this.displayObject.x = Math.round(this.mvt.modelToViewX(this.modelLeftX));
-            this.displayObject.y = Math.round(this.mvt.modelToViewY(this.modelY) - this.height / 2);
+            this.displayObject.y = Math.round(this.mvt.modelToViewY(this.modelY));
         },
 
         updateColor: function() {
@@ -136,7 +168,9 @@ define(function(require) {
             var v = this.simulation.get('voltage');
             var power = v * v / r;
             var powerRatio = power / this.maxPower;
-            this.color = this.getColor(powerRatio);
+            var rgba = this.getColor(powerRatio);
+            this.color = Colors.rgbToHexInteger(rgba.r, rgba.g, rgba.b);
+            this.channelColor = Colors.rgbToHexInteger(Colors.darkenRgba(rgba, 0.15));
         },
 
         update: function() {

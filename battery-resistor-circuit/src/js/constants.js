@@ -107,6 +107,9 @@ define(function (require) {
     var RMAX = 1;
     ResistorView.MAX_POWER = VMAX * VMAX / RMAX;
     ResistorView.NUM_RATIO_SAMPLES = 100;
+    ResistorView.CHANNEL_WIDTH = WirePatchView.INNER_WIDTH;
+    ResistorView.OUTLINE_COLOR = '#3C1717';
+    ResistorView.OUTLINE_WIDTH = 6;
 
     Constants.ResistorView = ResistorView;
 
