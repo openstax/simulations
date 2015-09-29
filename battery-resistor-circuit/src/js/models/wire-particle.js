@@ -14,8 +14,7 @@ define(function (require) {
             charge: -1,
 
             position: 0,
-            velocity: 0,
-            acceleration: 0
+            velocity: 0
         }, attributes);
 
         this.mass   = attributes.mass;
@@ -23,7 +22,6 @@ define(function (require) {
 
         this.position = attributes.position;
         this.velocity = attributes.velocity;
-        this.acceleration = attributes.acceleration;
 
         this.propagator = attributes.propagator;
         this.wirePatch = attributes.wirePatch;

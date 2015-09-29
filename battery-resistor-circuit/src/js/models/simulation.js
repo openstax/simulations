@@ -151,7 +151,7 @@ define(function (require, exports, module) {
 
             var inset = 50;
             var battL = Constants.CORE_START - inset;
-            var battR = Constants.CORE_END + inset;
+            var battR = Constants.CORE_END   + inset;
             var leftBatteryRegion  = new PatchWireRegion(0, battL, loopWirePatch);
             var rightBatteryRegion = new PatchWireRegion(battR, loopWirePatch.getLength(), loopWirePatch);
             this.batteryLeft  = bottomLeftInset.x;

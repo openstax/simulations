@@ -52,11 +52,9 @@ define(function(require) {
             if (modelPosition) {
                 var viewPosition = this.mvt.modelToView(modelPosition);
                 this.displayObject.x = viewPosition.x;
-                this.displayObject.y = viewPosition.y;    
+                this.displayObject.y = viewPosition.y; 
+
             }
-            // else {
-            //     console.log(this.model.position)
-            // }
         },
 
         update: function() {

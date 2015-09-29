@@ -20,7 +20,7 @@ define(function (require) {
     Constants.FRAME_DURATION = 1 / 30; // Seconds
     Constants.DT_PER_FRAME = 0.2; // Seconds
 
-    Constants.VMAX = 15;
+    Constants.MAX_VEL = 15;
     Constants.MAX_ACC = Number.MAX_VALUE;
     Constants.K = 900;
     Constants.COULOMB_POWER = -1.3;
