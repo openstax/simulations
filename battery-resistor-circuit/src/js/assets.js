@@ -11,6 +11,7 @@ define(function (require) {
         BATTERY:        'battery.png',
         BATTERY_INSIDE: 'battery-inside.png',
         ELECTRON:       'electron.png',
+        ELECTRON_GLOW:  'electron-glow.png',
         SPECTRUM:       'spectrum.png',
         CORE:           'core.png'
     };

@@ -20,6 +20,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.batteryWirePatch = options.batteryWirePatch;
 
             this.initGraphics();
         },
@@ -28,10 +29,16 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            var sprite = Assets.createSprite(Assets.Images.ELECTRON);
-            sprite.anchor.x = sprite.anchor.y = 0.5;
+            var electron     = Assets.createSprite(Assets.Images.ELECTRON);
+            var electronGlow = Assets.createSprite(Assets.Images.ELECTRON_GLOW);
 
-            this.displayObject.addChild(sprite);
+            electron.anchor.x = electron.anchor.y = 0.5;
+            electronGlow.anchor.x = electronGlow.anchor.y = 0.5;
+            electronGlow.visible = false;
+            this.glow = electronGlow;
+
+            this.displayObject.addChild(electronGlow);
+            this.displayObject.addChild(electron);
 
             this.updateMVT(this.mvt);
         },
@@ -54,8 +61,20 @@ define(function(require) {
             this.displayObject.y = viewPosition.y; 
         },
 
-        update: function() {
+        updateGlow: function(paused) {
+            if (this.model.wirePatch === this.batteryWirePatch) {
+                this.glow.visible = true;
+                if (!paused)
+                    this.glow.rotation = Math.random() * Math.PI * 2;
+            }
+            else {
+                this.glow.visible = false;
+            }
+        },
+
+        update: function(time, deltaTime, paused) {
             this.updatePosition();
+            this.updateGlow();
         }
 
     });

@@ -76,9 +76,6 @@ define(function(require) {
             var width = Math.floor(height * 1.2);
             var graphics = this.marker;
 
-            // graphics.alpha = 0.8;
-            // graphics.lineStyle(2, MARKER_COLOR, 1);
-            // graphics.drawRect(-width / 2, 0, width, height);
             graphics.y = this.spectrum.height;
             graphics.beginFill(MARKER_COLOR, 1);
             graphics.moveTo(0, 0);

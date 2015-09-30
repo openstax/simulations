@@ -149,7 +149,8 @@ define(function(require) {
             for (var i = 0; i < this.simulation.wireSystem.particles.length; i++) {
                 var view = new ElectronView({
                     mvt: this.mvt,
-                    model: this.simulation.wireSystem.particles[i]
+                    model: this.simulation.wireSystem.particles[i],
+                    batteryWirePatch: this.simulation.batteryWirePatch
                 });
                 this.electronViews.push(view);
                 this.electronLayer.addChild(view.displayObject);
@@ -162,7 +163,7 @@ define(function(require) {
                 this.resistorView.update();
 
                 for (var i = 0; i < this.electronViews.length; i++)
-                    this.electronViews[i].update();
+                    this.electronViews[i].update(time, deltaTime, paused);
             }
         },
 

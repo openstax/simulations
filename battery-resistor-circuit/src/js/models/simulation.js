@@ -100,6 +100,8 @@ define(function (require, exports, module) {
             var batteryWirePatch = new WirePatch()
                 .startSegmentBetween(bottomRightInset, bottomLeftInset);
 
+            this.batteryWirePatch = batteryWirePatch;
+
             // Patches that will be used for painting (and  aren't actually used in the simulation)
             var scatterPatch = new WirePatch()
                 .startSegmentBetween(topLeftInset, topRightInset);
