@@ -5,9 +5,11 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/colors/colors');
     
     var Assets = require('assets');
     var Constants = require('constants');
+    var STICK_COLOR = Colors.parseHex(Constants.TurnstileView.STICK_COLOR);
 
     /**
      * A view that represents an electron
@@ -27,19 +29,26 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            var stick = new PIXI.Graphics();
+            this.stick = new PIXI.Graphics();
 
-            
+            this.pinwheel = Assets.createSprite(Assets.Images.PINWHEEL);
+            this.pinwheel.anchor.x = 0.5;
+            this.pinwheel.anchor.y = 0.5;
 
-            var pinwheel = Assets.createSprite(Assets.Images.PINWHEEL);
-            pinwheel.anchor.x = 0.5;
-            pinwheel.anchor.y = 0.5;
-            this.pinwheel = pinwheel;
-
-            this.displayObject.addChild(stick);
-            this.displayObject.addChild(pinwheel);
+            this.displayObject.addChild(this.stick);
+            this.displayObject.addChild(this.pinwheel);
 
             this.updateMVT(this.mvt);
+        },
+
+        drawStick: function() {
+            var width  = Math.round(this.mvt.modelToViewDeltaX(TurnstileView.STICK_WIDTH) / 2) * 2;
+            var height = Math.round(this.mvt.modelToViewDeltaY(TurnstileView.STICK_HEIGHT));
+            var graphics = this.stick;
+            graphics.clear();
+            graphics.beginFill(STICK_COLOR, 1);
+            graphics.drawRect(-width / 2, 0, width, height);
+            graphics.endFill();
         },
 
         /**
@@ -57,11 +66,13 @@ define(function(require) {
             this.displayObject.x = Math.floor(this.mvt.modelToViewX(this.model.center.x));
             this.displayObject.y = Math.floor(this.mvt.modelToViewY(this.model.center.y));
 
+            this.drawStick();
+
             this.update();
         },
 
         updateRotation: function(model, rotation) {
-            this.pinwheel.rotation = rotation
+            this.pinwheel.rotation = rotation;
         },
 
         update: function() {

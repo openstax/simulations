@@ -10,6 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var TurnstileView = require('views/turnstile');
+    var AmmeterView   = require('views/ammeter');
     var ResistorView  = require('views/resistor');
     var WirePatchView = require('views/wire-patch');
     var BatteryView   = require('views/battery');
@@ -58,6 +59,7 @@ define(function(require) {
             this.initWires();
             this.initBatteryView();
             this.initTurnstileView();
+            this.initAmmeterView();
             this.initResistorView();
             this.initSpectrumView();
             this.initElectronViews();
@@ -122,6 +124,15 @@ define(function(require) {
             });
 
             this.topLayer.addChild(this.turnstileView.displayObject);
+        },
+
+        initAmmeterView: function() {
+            this.ammeterView = new AmmeterView({
+                mvt: this.mvt,
+                simulation: this.simulation
+            });
+
+            this.topLayer.addChild(this.ammeterView.displayObject);
         },
 
         initResistorView: function() {

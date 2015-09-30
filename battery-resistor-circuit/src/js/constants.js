@@ -14,7 +14,7 @@ define(function (require) {
      *************************************************************************/
 
     Constants.SIM_WIDTH  = 880;  // Arbitrary units
-    Constants.SIM_HEIGHT = 480;  // Arbitrary units
+    Constants.SIM_HEIGHT = 540;  // Arbitrary units
     Constants.SIM_X_OFFSET = 72; // Arbitrary units
 
     Constants.FRAME_DURATION = 1 / 30; // Seconds
@@ -22,6 +22,7 @@ define(function (require) {
 
     Constants.MAX_VEL = 15;
     Constants.MAX_ACC = Number.MAX_VALUE;
+    Constants.MAX_CURRENT = Constants.MAX_VEL * 4;
     Constants.K = 900;
     Constants.COULOMB_POWER = -1.3;
 
@@ -41,7 +42,7 @@ define(function (require) {
 
     Constants.NUM_ELECTRONS = 50;
 
-    Constants.TURNSTILE_CENTER = new Vector2(Constants.SIM_X_OFFSET - 50, 190);
+    Constants.TURNSTILE_CENTER = new Vector2(Constants.SIM_X_OFFSET - 60, 190);
    	Constants.TURNSTILE_SPEED_SCALE = 0.02;
 
     Constants.RESISTANCE_RANGE = range({ min: 3, max: 14, defaultValue: 6 });
@@ -61,8 +62,31 @@ define(function (require) {
     var TurnstileView = {};
 
     TurnstileView.PINWHEEL_MODEL_WIDTH = 200;
+    TurnstileView.STICK_WIDTH = 10;
+    TurnstileView.STICK_HEIGHT = 240;
+    TurnstileView.STICK_COLOR = '#ffbf00';
 
     Constants.TurnstileView = TurnstileView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             AMMETER VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var AmmeterView = {};
+
+    AmmeterView.MODEL_WIDTH = 249.33333333333331;
+    AmmeterView.MODEL_X = -29;
+    AmmeterView.MODEL_Y = 410;
+    AmmeterView.SHORT_SCREEN_MODEL_X = AmmeterView.MODEL_X;
+    AmmeterView.SHORT_SCREEN_MODEL_Y = 370;
+    AmmeterView.NEEDLE_COLOR = '#444';
+    AmmeterView.TICK_COLOR   = '#888';
+    AmmeterView.MAX_CURRENT = 40;
+
+    Constants.AmmeterView = AmmeterView;
 
 
     /*************************************************************************

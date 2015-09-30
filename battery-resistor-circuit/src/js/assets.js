@@ -13,7 +13,8 @@ define(function (require) {
         ELECTRON:       'electron.png',
         ELECTRON_GLOW:  'electron-glow.png',
         SPECTRUM:       'spectrum.png',
-        CORE:           'core.png'
+        CORE:           'core.png',
+        AMMETER_BOX:    'ammeter-box.png'
     };
 
     Assets.SpriteSheets = {};
