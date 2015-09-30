@@ -82,7 +82,7 @@ define(function(require) {
             
             var scale = (screenRatio > simRatio) ? usableHeight / simHeight : usableWidth / simWidth;
             
-            this.viewOriginX = 0;
+            this.viewOriginX = (usableWidth - simWidth * scale) / 2; // Center it
             this.viewOriginY = 0;
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
