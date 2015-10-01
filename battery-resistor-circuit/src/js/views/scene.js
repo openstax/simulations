@@ -177,6 +177,7 @@ define(function(require) {
                 width: this.width,
                 height: this.height
             });
+            this.voltageCalculationView.hide();
 
             this.topLayer.addChild(this.voltageCalculationView.displayObject);
         },

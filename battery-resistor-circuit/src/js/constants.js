@@ -167,13 +167,15 @@ define(function (require) {
     VoltageCalculationView.HIGHLIGHT_COLOR = '#fff';//'#ffbf00';
     VoltageCalculationView.CALCULATION_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
 
-    var y = Constants.TOP_WIRE_Y + (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) / 2;
-    VoltageCalculationView.LEFT_CENTER  = new Vector2(Constants.LEFT_WIRE_X,  y);
-    VoltageCalculationView.RIGHT_CENTER = new Vector2(Constants.RIGHT_WIRE_X, y);
-    VoltageCalculationView.ELLIPSE_WIDTH = 60;
-    VoltageCalculationView.ELLIPSE_HEIGHT = (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) + 40;
+    VoltageCalculationView.ELLIPSE_WIDTH = 100;
+    VoltageCalculationView.ELLIPSE_HEIGHT = (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) + 80;
     VoltageCalculationView.ELLIPSE_LINE_WIDTH = 3;
     VoltageCalculationView.ELLIPSE_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+
+    var y = Constants.TOP_WIRE_Y + (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) / 2;
+    var shift = 20;
+    VoltageCalculationView.LEFT_CENTER  = new Vector2(Constants.LEFT_WIRE_X  + shift, y);
+    VoltageCalculationView.RIGHT_CENTER = new Vector2(Constants.RIGHT_WIRE_X - shift, y);
 
     VoltageCalculationView.CONNECTOR_LINE_WIDTH = 3; // Pixel
     VoltageCalculationView.CONNECTOR_END_RADIUS = 4; // Pixel
