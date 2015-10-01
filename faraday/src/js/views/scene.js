@@ -34,6 +34,9 @@ define(function(require) {
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
+
+            var sprite = Assets.createSprite(Assets.Images.BAR_MAGNET);
+            this.stage.addChild(sprite);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

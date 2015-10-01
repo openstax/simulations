@@ -2,15 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var Assets = require('common/v3/pixi/assets');
+    var Assets = require('faraday-assets');
 
-    Assets.Path = 'img/';
-
-    Assets.Images = {   
-        // THE_IMAGE: 'the-image.png'
-    };
-
-    Assets.SpriteSheets = {};
+    Assets.Path = '../../../faraday/src/img/';
 
     return Assets;
 });

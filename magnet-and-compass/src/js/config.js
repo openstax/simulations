@@ -18,13 +18,14 @@
             'bootstrap-select':      '../../../faraday/node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../../faraday/node_modules/bootstrap-select/less/bootstrap-select',
 
-            views:      '../../../faraday/src/js/views',
-            models:     '../../../faraday/src/js/models',
-            assets:     '../../../faraday/src/js/assets',
-            constants:  '../../../faraday/src/js/constants',
-            templates:  '../../../faraday/src/templates',
-            styles:     '../../../faraday/src/styles',
-            common:     '../../../common'
+            views:            '../../../faraday/src/js/views',
+            models:           '../../../faraday/src/js/models',
+            assets:           '../js/assets',
+            'faraday-assets': '../../../faraday/src/js/assets',
+            constants:        '../../../faraday/src/js/constants',
+            templates:        '../../../faraday/src/templates',
+            styles:           '../../../faraday/src/styles',
+            common:           '../../../common'
         },
 
         packages: [{

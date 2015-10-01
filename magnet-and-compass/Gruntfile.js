@@ -38,10 +38,16 @@ module.exports = function(grunt) {
 			common: {
 				src: [
 					'!../common/**/docs/**/*',
-                    '../common/**/*.{eot,svg,ttf,woff,otf}',
-                    '../common/img/**/*.{png,jpg,jpeg,gif}'
+					'../common/**/*.{eot,svg,ttf,woff,otf}',
+					'../common/img/**/*.{png,jpg,jpeg,gif}'
 				],
 				dest: 'dist/common/'
+			},
+			faraday: {
+				src: [
+					'../faraday/src/img/**/*.{png,jpg,jpeg,gif}'
+				],
+				dest: 'dist/faraday/src/'
 			},
 			screenshot: {
 				src: 'src/screenshot.png',
@@ -72,9 +78,10 @@ module.exports = function(grunt) {
 					out: 'src/optimized.js',
 
 					less: {
-					    modifyVars: {
-					        'fa-font-path': '"../node_modules/font-awesome/fonts/"'
-					    }
+						modifyVars: {
+							//'fa-font-path': '"../node_modules/font-awesome/fonts/"',
+							'assets': '"../../faraday/src/js/assets"'
+						}
 					}
 
 					// Doing it this way doesn't work:
