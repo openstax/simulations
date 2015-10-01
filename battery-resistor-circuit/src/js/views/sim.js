@@ -217,10 +217,10 @@ define(function (require) {
         },
 
         toggleVoltageCalculation: function(event) {
-            // if ($(event.target).is(':checked'))
-            //     this.sceneView.showVelocityArrows();
-            // else
-            //     this.sceneView.hideVelocityArrows();
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltageCalculation();
+            else
+                this.sceneView.hideVoltageCalculation();
         },
 
         toggleInsideBattery: function(event) {

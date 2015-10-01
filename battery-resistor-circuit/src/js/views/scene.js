@@ -207,6 +207,14 @@ define(function(require) {
             this.resistorView.hideCores();
         },
 
+        showVoltageCalculation: function() {
+            this.voltageCalculationView.show();
+        },
+
+        hideVoltageCalculation: function() {
+            this.voltageCalculationView.hide();
+        }
+
     });
 
     return BRCSceneView;

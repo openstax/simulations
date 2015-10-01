@@ -164,15 +164,30 @@ define(function (require) {
 
     var VoltageCalculationView = {};
 
-    VoltageCalculationView.HIGHLIGHT_COLOR = '#3ad7ff';
+    VoltageCalculationView.HIGHLIGHT_COLOR = '#fff';//'#ffbf00';
     VoltageCalculationView.CALCULATION_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+
     var y = Constants.TOP_WIRE_Y + (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) / 2;
     VoltageCalculationView.LEFT_CENTER  = new Vector2(Constants.LEFT_WIRE_X,  y);
     VoltageCalculationView.RIGHT_CENTER = new Vector2(Constants.RIGHT_WIRE_X, y);
     VoltageCalculationView.ELLIPSE_WIDTH = 60;
     VoltageCalculationView.ELLIPSE_HEIGHT = (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) + 40;
-    VoltageCalculationView.ELLIPSE_LINE_WIDTH = 6;
+    VoltageCalculationView.ELLIPSE_LINE_WIDTH = 3;
     VoltageCalculationView.ELLIPSE_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+
+    VoltageCalculationView.CONNECTOR_LINE_WIDTH = 3; // Pixel
+    VoltageCalculationView.CONNECTOR_END_RADIUS = 4; // Pixel
+    VoltageCalculationView.CONNECTOR_LINE_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+
+    VoltageCalculationView.CALCULATION_X     = 405;              // Sim units
+    VoltageCalculationView.CALCULATION_TOP_Y = 370;              // Sim units
+    VoltageCalculationView.SHORT_SCREEN_CALCULATION_TOP_Y = 390; // Sim units
+    VoltageCalculationView.CALCULATION_LEFT_MARGIN = 50;         // Pixels
+    VoltageCalculationView.CALCULATION_RIGHT_MARGIN = 100;       // Pixels
+    VoltageCalculationView.MINUEND_Y_OFFSET = 4;                 // Pixels
+    VoltageCalculationView.SUBTRAHEND_Y_OFFSET = 24;             // Pixels
+    VoltageCalculationView.TOTAL_LINE_Y_OFFSET = 39;             // Pixels
+    VoltageCalculationView.DIFFERENCE_Y_OFFSET = 54;             // Pixels
 
     Constants.VoltageCalculationView = VoltageCalculationView;
 
