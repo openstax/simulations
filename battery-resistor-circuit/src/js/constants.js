@@ -16,6 +16,11 @@ define(function (require) {
     Constants.SIM_WIDTH  = 880;  // Arbitrary units
     Constants.SIM_HEIGHT = 540;  // Arbitrary units
     Constants.SIM_X_OFFSET = 72; // Arbitrary units
+    Constants.X_SHIFT = 68;
+    Constants.LEFT_WIRE_X   = 25  + Constants.X_SHIFT;
+    Constants.RIGHT_WIRE_X  = 700 + Constants.X_SHIFT;
+    Constants.TOP_WIRE_Y    = 120;
+    Constants.BOTTOM_WIRE_Y = 270;
 
     Constants.FRAME_DURATION = 1 / 30; // Seconds
     Constants.DT_PER_FRAME = 0.2; // Seconds
@@ -42,7 +47,7 @@ define(function (require) {
 
     Constants.NUM_ELECTRONS = 50;
 
-    Constants.TURNSTILE_CENTER = new Vector2(Constants.SIM_X_OFFSET - 60, 190);
+    Constants.TURNSTILE_CENTER = new Vector2(12, 190);
    	Constants.TURNSTILE_SPEED_SCALE = 0.02;
 
     Constants.RESISTANCE_RANGE = range({ min: 3, max: 14, defaultValue: 6 });
@@ -149,6 +154,27 @@ define(function (require) {
     SpectrumView.MARKER_COLOR = '#21366b';
 
     Constants.SpectrumView = SpectrumView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                       VOLTAGE CALCULATION VIEW                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var VoltageCalculationView = {};
+
+    VoltageCalculationView.HIGHLIGHT_COLOR = '#3ad7ff';
+    VoltageCalculationView.CALCULATION_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+    var y = Constants.TOP_WIRE_Y + (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) / 2;
+    VoltageCalculationView.LEFT_CENTER  = new Vector2(Constants.LEFT_WIRE_X,  y);
+    VoltageCalculationView.RIGHT_CENTER = new Vector2(Constants.RIGHT_WIRE_X, y);
+    VoltageCalculationView.ELLIPSE_WIDTH = 60;
+    VoltageCalculationView.ELLIPSE_HEIGHT = (Constants.BOTTOM_WIRE_Y - Constants.TOP_WIRE_Y) + 40;
+    VoltageCalculationView.ELLIPSE_LINE_WIDTH = 6;
+    VoltageCalculationView.ELLIPSE_COLOR = VoltageCalculationView.HIGHLIGHT_COLOR;
+
+    Constants.VoltageCalculationView = VoltageCalculationView;
 
 
     return Constants;

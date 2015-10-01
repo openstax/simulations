@@ -77,13 +77,13 @@ define(function (require, exports, module) {
         initComponents: function() {
             // TODO: Break this thing into smaller functions as soon as I know it all works
 
-            var moveRight = 68;
+            var moveRight = Constants.X_SHIFT;
             var scatInset = 60 + moveRight;
             var battInset = scatInset;
-            var topLeftWirePoint     = new Vector2(25  + moveRight, 120); // Top left
-            var topRightWirePoint    = new Vector2(700 + moveRight, 120); // Top right
-            var bottomRightWirePoint = new Vector2(700 + moveRight, 270); // Bottom right
-            var bottomLeftWirePoint  = new Vector2(25  + moveRight, 270); // Bottom left
+            var topLeftWirePoint     = new Vector2(Constants.LEFT_WIRE_X,  Constants.TOP_WIRE_Y);    // Top left
+            var topRightWirePoint    = new Vector2(Constants.RIGHT_WIRE_X, Constants.TOP_WIRE_Y);    // Top right
+            var bottomRightWirePoint = new Vector2(Constants.RIGHT_WIRE_X, Constants.BOTTOM_WIRE_Y); // Bottom right
+            var bottomLeftWirePoint  = new Vector2(Constants.LEFT_WIRE_X,  Constants.BOTTOM_WIRE_Y); // Bottom left
             var topLeftInset         = new Vector2(topLeftWirePoint    ).add( scatInset - moveRight, 0);
             var topRightInset        = new Vector2(topRightWirePoint   ).add(-scatInset + moveRight, 0);
             var bottomLeftInset      = new Vector2(bottomLeftWirePoint ).add( battInset - moveRight, 0);

@@ -9,13 +9,14 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var TurnstileView = require('views/turnstile');
-    var AmmeterView   = require('views/ammeter');
-    var ResistorView  = require('views/resistor');
-    var WirePatchView = require('views/wire-patch');
-    var BatteryView   = require('views/battery');
-    var ElectronView  = require('views/electron');
-    var SpectrumView  = require('views/spectrum');
+    var TurnstileView          = require('views/turnstile');
+    var AmmeterView            = require('views/ammeter');
+    var ResistorView           = require('views/resistor');
+    var WirePatchView          = require('views/wire-patch');
+    var BatteryView            = require('views/battery');
+    var ElectronView           = require('views/electron');
+    var SpectrumView           = require('views/spectrum');
+    var VoltageCalculationView = require('views/voltage-calculation');
 
     var Assets = require('assets');
 
@@ -63,6 +64,7 @@ define(function(require) {
             this.initResistorView();
             this.initSpectrumView();
             this.initElectronViews();
+            this.initVoltageCalculationView();
         },
 
         initMVT: function() {
@@ -166,6 +168,17 @@ define(function(require) {
                 this.electronViews.push(view);
                 this.electronLayer.addChild(view.displayObject);
             }
+        },
+
+        initVoltageCalculationView: function() {
+            this.voltageCalculationView = new VoltageCalculationView({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                width: this.width,
+                height: this.height
+            });
+
+            this.topLayer.addChild(this.voltageCalculationView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
