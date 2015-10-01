@@ -27,8 +27,10 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
             this.width = options.width;
             this.height = options.height;
+            this.battery = this.simulation.battery;
 
             this._leftCenter  = new Vector2();
             this._rightCenter = new Vector2();
@@ -168,7 +170,11 @@ define(function(require) {
          * Updates the actual text of the calculation
          */
         update: function() {
-            
+            var right = this.battery.countRight();
+            var left  = this.battery.countLeft();
+            this.minuend.text = right;
+            this.subtrahend.text = '- ' + left;
+            this.difference.text = (right - left);
         },
 
         show: function() {

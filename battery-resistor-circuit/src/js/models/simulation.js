@@ -167,6 +167,7 @@ define(function (require, exports, module) {
 
             var batterySpeed = 35;
             var battery = new SmoothBatteryPropagator(leftBatteryRegion, rightBatteryRegion, wireSystem, batterySpeed, 18);
+            this.battery = battery;
 
             batteryRangedProps.addPropagator(batteryRegion, battery);
             batteryRangedProps.addPropagator(batteryRegion, new ResetElectronPropagator());

@@ -185,6 +185,7 @@ define(function(require) {
             if (this.simulation.updated()) {
                 this.turnstileView.update();
                 this.resistorView.update();
+                this.voltageCalculationView.update();
 
                 for (var i = 0; i < this.electronViews.length; i++)
                     this.electronViews[i].update(time, deltaTime, paused);
