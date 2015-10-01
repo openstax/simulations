@@ -68,6 +68,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Battery-Resistor Circuit',
                 name: 'battery-resistor-circuit',
+                link: 'battery-resistor-circuit'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
