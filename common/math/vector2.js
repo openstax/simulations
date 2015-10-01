@@ -17,6 +17,15 @@ define(function (require) {
         return '(' + this.x.toFixed(precision) + ', ' + this.y.toFixed(precision) + ')';
     };
 
+    /**
+     * Rounds each component to the nearest integer.
+     */
+    Vector2.prototype.round = function() {
+        this.x = Math.round(this.x);
+        this.y = Math.round(this.y);
+        return this;
+    };
+
     return Vector2;
 
 });

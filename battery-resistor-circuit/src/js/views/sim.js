@@ -49,7 +49,14 @@ define(function (require) {
          */
         events: {
             'click .play-btn'  : 'play',
-            'click .pause-btn' : 'pause'
+            'click .pause-btn' : 'pause',
+
+            'click #show-cores-check'               : 'toggleCores',
+            'click #show-voltage-calculation-check' : 'toggleVoltageCalculation',
+            'click #show-inside-battery-check'      : 'toggleInsideBattery',
+
+            'slide .resistance-slider' : 'changeResistance',
+            'slide .voltage-slider'    : 'changeVoltage'
         },
 
         /**
@@ -110,22 +117,25 @@ define(function (require) {
             this.$el.html(this.template(data));
             
             this.$('.resistance-slider').noUiSlider({
-                start: 0.4,
+                start: Constants.RESISTANCE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': 0.2,
-                    'max': 0.93
+                    'min': Constants.RESISTANCE_RANGE.min,
+                    'max': Constants.RESISTANCE_RANGE.max
                 }
             });
 
             this.$('.voltage-slider').noUiSlider({
-                start: 2.88,
+                start: Constants.VOLTAGE_RANGE.defaultValue,
                 connect: 'lower',
                 range: {
-                    'min': -12,
-                    'max':  12
+                    'min': Constants.VOLTAGE_RANGE.min,
+                    'max': Constants.VOLTAGE_RANGE.max
                 }
             });
+
+            this.$resistance = this.$('#resistance');
+            this.$voltage    = this.$('#voltage');
         },
 
         /**
@@ -175,7 +185,50 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
-        }
+        },
+
+        /**
+         * Responds to changes in the resistance slider
+         */
+        changeResistance: function(event) {
+            var coreCount = parseInt($(event.target).val());
+            this.inputLock(function() {
+                this.$resistance.text(Constants.coreCountToOhms(coreCount).toFixed(2) + ' Ohms');
+                this.simulation.set('coreCount', coreCount);
+            });
+        },
+
+        /**
+         * Responds to changes in the voltage slider
+         */
+        changeVoltage: function(event) {
+            var voltage = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$voltage.text(voltage.toFixed(2) + ' Volts');
+                this.simulation.set('voltage', voltage);
+            });
+        },
+
+        toggleCores: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCores();
+            else
+                this.sceneView.hideCores();
+        },
+
+        toggleVoltageCalculation: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltageCalculation();
+            else
+                this.sceneView.hideVoltageCalculation();
+        },
+
+        toggleInsideBattery: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCutawayBattery();
+            else
+                this.sceneView.showSolidBattery();
+        },
 
     });
 

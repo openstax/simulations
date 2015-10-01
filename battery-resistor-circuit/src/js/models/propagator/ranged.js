@@ -34,7 +34,7 @@ define(function (require) {
 
             for (i = 0; i < this.inverseRangedProps.length; i++) {
                 rangedProp = this.inverseRangedProps[i];
-                if (rangedProp.wireRegion.contains(particle))
+                if (!rangedProp.wireRegion.contains(particle))
                     rangedProp.propagator.propagate(deltaTime, particle);
             }
         },

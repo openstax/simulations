@@ -15,7 +15,7 @@ define(function (require) {
         this.length = new Vector2(finish).sub(start).length();
 
         this.scalarStart = scalarStart;
-        this.scalarFinish = scalarStart + length;
+        this.scalarFinish = scalarStart + this.length;
 
         this._vec = new Vector2();
     };

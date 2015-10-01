@@ -48,7 +48,8 @@ define(function (require, exports, module) {
     var BRCSimulation = FixedIntervalSimulation.extend({
 
         defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
-            voltage: 0,
+            coreCount: Constants.RESISTANCE_RANGE.defaultValue,
+            voltage: Constants.VOLTAGE_RANGE.defaultValue,
             current: 0
         }),
         
@@ -61,11 +62,13 @@ define(function (require, exports, module) {
             // Not really the way to do it in Backbone, but an easier solution when porting than debugging later
             this.voltageListeners = [];
             this.currentListeners = [];
+            this.coreCountListeners = [];
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:voltage', this.voltageChanged);
-            this.on('change:current', this.currentChanged);
+            this.on('change:voltage',   this.voltageChanged);
+            this.on('change:current',   this.currentChanged);
+            this.on('change:coreCount', this.coreCountChanged);
         },
 
         /**
@@ -74,13 +77,13 @@ define(function (require, exports, module) {
         initComponents: function() {
             // TODO: Break this thing into smaller functions as soon as I know it all works
 
-            var moveRight = 68;
+            var moveRight = Constants.X_SHIFT;
             var scatInset = 60 + moveRight;
             var battInset = scatInset;
-            var topLeftWirePoint     = new Vector2(25  + moveRight, 120); // Top left
-            var topRightWirePoint    = new Vector2(700 + moveRight, 120); // Top right
-            var bottomRightWirePoint = new Vector2(700 + moveRight, 270); // Bottom right
-            var bottomLeftWirePoint  = new Vector2(25  + moveRight, 270); // Bottom left
+            var topLeftWirePoint     = new Vector2(Constants.LEFT_WIRE_X,  Constants.TOP_WIRE_Y);    // Top left
+            var topRightWirePoint    = new Vector2(Constants.RIGHT_WIRE_X, Constants.TOP_WIRE_Y);    // Top right
+            var bottomRightWirePoint = new Vector2(Constants.RIGHT_WIRE_X, Constants.BOTTOM_WIRE_Y); // Bottom right
+            var bottomLeftWirePoint  = new Vector2(Constants.LEFT_WIRE_X,  Constants.BOTTOM_WIRE_Y); // Bottom left
             var topLeftInset         = new Vector2(topLeftWirePoint    ).add( scatInset - moveRight, 0);
             var topRightInset        = new Vector2(topRightWirePoint   ).add(-scatInset + moveRight, 0);
             var bottomLeftInset      = new Vector2(bottomLeftWirePoint ).add( battInset - moveRight, 0);
@@ -96,6 +99,8 @@ define(function (require, exports, module) {
 
             var batteryWirePatch = new WirePatch()
                 .startSegmentBetween(bottomRightInset, bottomLeftInset);
+
+            this.batteryWirePatch = batteryWirePatch;
 
             // Patches that will be used for painting (and  aren't actually used in the simulation)
             var scatterPatch = new WirePatch()
@@ -122,6 +127,7 @@ define(function (require, exports, module) {
 
             // Set up the wire system
             var wireSystem = new WireSystem();
+            this.wireSystem = wireSystem;
 
             var props = new CompositePropagator();
 
@@ -139,6 +145,11 @@ define(function (require, exports, module) {
                 Constants.DEFAULT_DECAY, 
                 system
             );
+            this.resistance = resistance;
+
+            this.resistorLeft  = topLeftInset.x;
+            this.resistorRight = topRightInset.x;
+            this.resistorY     = topRightInset.y;
             
             // Battery stuff
             var batteryRegion = new SimplePatchRegion(batteryWirePatch);
@@ -146,13 +157,17 @@ define(function (require, exports, module) {
             var batteryRangedProps = new RangedPropagator(); // original: range
 
             var inset = 50;
-            var battX = Constants.CORE_START - inset;
-            var battY = Constants.CORE_END + inset;
-            var leftBatteryRegion  = new PatchWireRegion(0, battX, loopWirePatch);
-            var rightBatteryRegion = new PatchWireRegion(battY, loopWirePatch.getLength(), loopWirePatch);
+            var battL = Constants.CORE_START - inset;
+            var battR = Constants.CORE_END   + inset;
+            var leftBatteryRegion  = new PatchWireRegion(0, battL, loopWirePatch);
+            var rightBatteryRegion = new PatchWireRegion(battR, loopWirePatch.getLength(), loopWirePatch);
+            this.batteryLeft  = bottomLeftInset.x;
+            this.batteryRight = bottomRightInset.x;
+            this.batteryY = bottomLeftInset.y;
 
             var batterySpeed = 35;
             var battery = new SmoothBatteryPropagator(leftBatteryRegion, rightBatteryRegion, wireSystem, batterySpeed, 18);
+            this.battery = battery;
 
             batteryRangedProps.addPropagator(batteryRegion, battery);
             batteryRangedProps.addPropagator(batteryRegion, new ResetElectronPropagator());
@@ -245,6 +260,15 @@ define(function (require, exports, module) {
             this.voltageListeners.push(resetScatterability);
 
             this.currentListeners.push(turnstile);
+
+            this.coreCountListeners.push(resistance);
+            this.coreCountListeners.push(averageCurrent);
+            this.coreCountListeners.push(battery);
+
+            // Trigger changes for default values
+            this.voltageChanged(this, this.get('voltage'));
+            this.currentChanged(this, this.get('current'));
+            this.coreCountChanged(this, this.get('coreCount'));
         },
 
         _update: function(time, deltaTime) {
@@ -262,6 +286,11 @@ define(function (require, exports, module) {
         currentChanged: function(simulation, current) {
             for (var i = 0; i < this.currentListeners.length; i++)
                 this.currentListeners[i].currentChanged(current);
+        },
+
+        coreCountChanged: function(simulation, coreCount) {
+            for (var i = 0; i < this.coreCountListeners.length; i++)
+                this.coreCountListeners[i].coreCountChanged(coreCount);
         }
 
     });

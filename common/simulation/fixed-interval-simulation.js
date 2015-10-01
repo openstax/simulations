@@ -36,6 +36,7 @@ define(function (require) {
          *   http://gamesfromwithin.com/casey-and-the-clearly-deterministic-contraptions
          */
         update: function(time, delta) {
+            this._updated = false;
 
             if (!this.paused) {
                 delta = (delta / 1000) * this.get('timeScale');
@@ -45,11 +46,25 @@ define(function (require) {
                     this.time += this.frameDuration;
 
                     this._update(this.time, this.deltaTimePerFrame);
+                    this._updated = true;
                     
                     this.frameAccumulator -= this.frameDuration;
                 }    
             }
-            
+        },
+
+        /**
+         * Returns whether or not a simulation update has occured since
+         *   the last time "update" was called.  Because this version
+         *   only does updates on fixed intervals, it might not actually
+         *   update the simulation every time "update" is called, which
+         *   should be on every frame.  Using this function lets the
+         *   view know whether it should redraw things that are
+         *   dependent on the sim so it doesn't waste its time if
+         *   nothing has actually changed.
+         */
+        updated: function() {
+            return this._updated;
         }
 
     });
