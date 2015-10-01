@@ -16,15 +16,9 @@ module.exports = function(grunt) {
 				src: 'bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
-			images: {
-				expand: true, // required when using cwd
-				cwd: 'src/img/',
-				src: '**',
-				dest: 'dist/img/'
-			},
 			audio: {
 				expand: true, // required when using cwd
-				cwd: 'src/audio/',
+				cwd: '../faraday/src/audio/',
 				src: '**',
 				dest: 'dist/audio/'
 			},
@@ -32,7 +26,7 @@ module.exports = function(grunt) {
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['node_modules/font-awesome/fonts/**'],
+				src: ['../faraday/node_modules/font-awesome/fonts/**'],
 				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
