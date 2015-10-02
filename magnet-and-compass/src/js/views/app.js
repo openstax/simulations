@@ -4,7 +4,7 @@ define(function(require) {
 
     var PixiAppView = require('common/v3/pixi/view/app');
 
-    var FaradaySimView = require('views/sim');
+    var MagnetAndCompassSimView = require('./sim/magnet-and-compass');
 
     var Assets = require('assets');
 
@@ -15,7 +15,7 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            FaradaySimView
+            MagnetAndCompassSimView
         ]
 
     });

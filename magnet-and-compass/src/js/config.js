@@ -18,6 +18,7 @@
             'bootstrap-select':      '../../../faraday/node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../../faraday/node_modules/bootstrap-select/less/bootstrap-select',
 
+            local:            './',
             views:            '../../../faraday/src/js/views',
             models:           '../../../faraday/src/js/models',
             assets:           '../js/assets',

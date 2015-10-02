@@ -3,7 +3,7 @@
 
     // Load the config
     require(['config'], function () {
-        require(['jquery', './views/app'], function($, FaradayAppView) {
+        require(['jquery', 'local/views/app'], function($, FaradayAppView) {
 
             $(function(){
                 var appView = new FaradayAppView();

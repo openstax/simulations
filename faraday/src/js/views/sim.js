@@ -59,6 +59,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Faraday\'s Electromagnetic Lab',
                 name: 'faraday',
+                link: 'legacy/faraday'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
