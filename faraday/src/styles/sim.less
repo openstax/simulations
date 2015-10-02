@@ -110,37 +110,15 @@
 
 }
 
-.btn.panel-btn,
-.panel-btn {
-    .panel();
-    margin-top: 0;
-    margin-bottom: 0;
-    padding: 8px 0;
-    display: block;
-    width: 100%;
-    border-radius: 0;
-    font-weight: bold;
-    color: @link-color;
-
-    &:focus {
-        outline: none;
-        color: @link-color;
-    }
-
-    &:hover {
-        background: fadeout(#fff, 20%);
-    }
-
-    &:active {
-        margin-top: 1px;
-        margin-bottom: -1px;
-        box-shadow: 0 -1px 11px rgba(0, 0, 0, 0.13);
-        color: @link-color;
-    }
-}
-
 .reset-btn {
     position: absolute;
-    top: 100%;
-    left: 0;
+    right: 15px;
+    bottom: 20px;
+    z-index: 200;
+    .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+
+    @media screen and (max-height: @short-window) {
+        right: 9px;
+        bottom: 14px;
+    }
 }

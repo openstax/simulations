@@ -4,7 +4,8 @@ define(function(require) {
 
     var PixiAppView = require('common/v3/pixi/view/app');
 
-    var BarMagnetSimView = require('views/sim/bar-magnet');
+    var BarMagnetSimView  = require('views/sim/bar-magnet');
+    var PickupCoilSimView = require('views/sim/pickup-coil');
 
     var Assets = require('assets');
 
@@ -19,7 +20,8 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            BarMagnetSimView
+            BarMagnetSimView,
+            PickupCoilSimView
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
