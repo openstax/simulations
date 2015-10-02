@@ -9,6 +9,8 @@ define(function(require) {
 
     var Assets = require('assets');
 
+    var Constants = require('constants');
+
     require('less!common/styles/slider');
     require('less!styles/font-awesome');
     require('less!styles/app');
@@ -25,7 +27,8 @@ define(function(require) {
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
-            'slide #needle-spacing-slider' : 'changeNeedleSpacing'
+            'slide #needle-spacing-slider' : 'changeNeedleSpacing',
+            'slide #needle-size-slider'    : 'changeNeedleSize'
         }),
 
         render: function() {
@@ -34,17 +37,37 @@ define(function(require) {
             this.$el.append(settingsDialogHtml);
 
             this.$('#needle-spacing-slider').noUiSlider({
-                start: 3,
+                start: Constants.GRID_SPACING,
                 range: {
-                    min: 1,
-                    max: 5
+                    min: Constants.GRID_SPACING_MIN,
+                    max: Constants.GRID_SPACING_MAX
                 },
                 step: 1
             });
+
+            this.$('#needle-size-slider').noUiSlider({
+                start: Constants.GRID_NEEDLE_WIDTH,
+                range: {
+                    min: Constants.GRID_NEEDLE_WIDTH_MIN,
+                    max: Constants.GRID_NEEDLE_WIDTH_MAX
+                },
+                step: 1
+            });
+
+            this.$spacing = this.$('#needle-spacing-value');
+            this.$size    = this.$('#needle-size-value');
         },
 
         changeNeedleSpacing: function(event) {
-            
+            var spacing = parseInt($(event.target).val());
+            this.$spacing.html(spacing);
+        },
+
+        changeNeedleSize: function(event) {
+            var width  = parseInt($(event.target).val());
+            var height = parseInt(width / Constants.GRID_NEEDLE_ASPECT_RATIO);
+
+            this.$size.html(width + 'x' + height);
         }
 
     });
