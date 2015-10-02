@@ -23,7 +23,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         controlsTemplate: _.template(controlsHtml),
-        
+
         /**
          * Inits simulation, views, and variables.
          *
@@ -58,6 +58,24 @@ define(function (require) {
          */
         renderScaffolding: function() {
             FaradaySimView.prototype.renderScaffolding.apply(this);
+
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                name: this.name,
+                includeEarth: this.includeEarth
+            };
+
+            this.$('.sim-controls-wrapper').append(this.controlsTemplate(data));
+
+            this.$('.strength-slider').noUiSlider({
+                start: 3,
+                range: {
+                    min: 1,
+                    max: 5
+                },
+                connect: 'lower'
+            });
         },
 
         /**

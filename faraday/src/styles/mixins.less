@@ -3,48 +3,21 @@
 @import "../../../common/styles/mixins/vendor-prefixes.less";
 @import "../../../common/styles/mixins/buttons.less";
 
-.text-button(@font-weight: bold) {
-    background: transparent;
-    padding: 0;
-    opacity: 0.8;
-    font-weight: @font-weight;
+.panel(@shadow-alpha: 0.15, @background-fade-percent: 30%) {
+    background: fadeout(#fff, @background-fade-percent);
+    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+}
+
+.sim-controls-button() {
+    background: rgba(255, 255, 255, 0.27);
+    border-color: rgba(0, 0, 0, 0.27);
+    text-transform: capitalize;
 
     &:focus {
-        outline: none;
-        color: inherit;
-    }
-
-    &:hover {
-        color: inherit;
-        opacity: 1;
+        outline: none !important;
     }
 
     &:active {
-        color: inherit;
         .box-shadow(none);
     }
-}
-
-.btn-zoom-in,
-.btn-zoom-out,
-.btn.btn-zoom-in,
-.btn.btn-zoom-out {
-    .text-button(normal);
-
-    > .fa {
-        position: relative;
-        font-size: 20px;
-
-        > .fa {
-            font-size: 10px;
-            position: absolute;
-            top: 5px;
-            left: 4px;
-        }
-    }
-}
-
-.white-panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
-    background: fadeout(#fff, @background-fade-percent);
-    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }

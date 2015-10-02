@@ -4,7 +4,7 @@ define(function(require) {
 
     var PixiAppView = require('common/v3/pixi/view/app');
 
-    var FaradaySimView = require('views/sim');
+    var BarMagnetSimView = require('views/sim/bar-magnet');
 
     var Assets = require('assets');
 
@@ -19,7 +19,7 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            FaradaySimView
+            BarMagnetSimView
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
