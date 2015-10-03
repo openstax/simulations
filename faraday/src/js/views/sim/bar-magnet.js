@@ -5,6 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var BarMagnetSimulation = require('models/simulation/bar-magnet');
+
     var FaradaySimView = require('views/sim');
 
     var Constants = require('constants');
@@ -39,6 +41,13 @@ define(function (require) {
             this.includeEarth = options.includeEarth;
 
             FaradaySimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new BarMagnetSimulation();
         },
 
         /**

@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
 
     var Constants = {}; 
 
@@ -130,6 +132,37 @@ define(function (require) {
     Constants.LIGHTBULB_GLASS_GLOW_SCALE_MIN = 1;
     Constants.LIGHTBULB_GLASS_GLOW_SCALE_MAX = 100;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                        BAR MAGNET SIMULATION                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var BarMagnetSimulation = {};
+
+    // Rendering layers
+	BarMagnetSimulation.B_FIELD_LAYER     = 1;
+	BarMagnetSimulation.BAR_MAGNET_LAYER  = 2;
+	BarMagnetSimulation.COMPASS_LAYER     = 3;
+	BarMagnetSimulation.FIELD_METER_LAYER = 4;
+	BarMagnetSimulation.EARTH_LAYER       = 5;
+
+    // Locations
+	BarMagnetSimulation.BAR_MAGNET_LOCATION  = new Vector2(450, 300);
+	BarMagnetSimulation.COMPASS_LOCATION     = new Vector2(150, 300);
+	BarMagnetSimulation.FIELD_METER_LOCATION = new Vector2(150, 400);
+	BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(250, 175);
+
+    // Colors
+    BarMagnetSimulation.APPARATUS_BACKGROUND = Color.BLACK;
+
+    // Bar Magnet
+    BarMagnetSimulation.BAR_MAGNET_SIZE = Constants.BAR_MAGNET_SIZE;
+    BarMagnetSimulation.BAR_MAGNET_STRENGTH = 0.75 * Constants.BAR_MAGNET_STRENGTH_MAX;
+    BarMagnetSimulation.BAR_MAGNET_DIRECTION = 0.0; // radians
+
+    Constants.BarMagnetSimulation = BarMagnetSimulation;
 
 
     return Constants;
