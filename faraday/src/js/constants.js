@@ -4,6 +4,11 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
+    var Dimension = function(width, height) {
+        this.width = width;
+        this.height = height;
+    };
+
 
     var Constants = {}; 
 
@@ -142,17 +147,17 @@ define(function (require) {
     var BarMagnetSimulation = {};
 
     // Rendering layers
-	BarMagnetSimulation.B_FIELD_LAYER     = 1;
-	BarMagnetSimulation.BAR_MAGNET_LAYER  = 2;
-	BarMagnetSimulation.COMPASS_LAYER     = 3;
-	BarMagnetSimulation.FIELD_METER_LAYER = 4;
-	BarMagnetSimulation.EARTH_LAYER       = 5;
+    BarMagnetSimulation.B_FIELD_LAYER     = 1;
+    BarMagnetSimulation.BAR_MAGNET_LAYER  = 2;
+    BarMagnetSimulation.COMPASS_LAYER     = 3;
+    BarMagnetSimulation.FIELD_METER_LAYER = 4;
+    BarMagnetSimulation.EARTH_LAYER       = 5;
 
     // Locations
-	BarMagnetSimulation.BAR_MAGNET_LOCATION  = new Vector2(450, 300);
-	BarMagnetSimulation.COMPASS_LOCATION     = new Vector2(150, 300);
-	BarMagnetSimulation.FIELD_METER_LOCATION = new Vector2(150, 400);
-	BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(250, 175);
+    BarMagnetSimulation.BAR_MAGNET_LOCATION  = new Vector2(450, 300);
+    BarMagnetSimulation.COMPASS_LOCATION     = new Vector2(150, 300);
+    BarMagnetSimulation.FIELD_METER_LOCATION = new Vector2(150, 400);
+    BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(250, 175);
 
     // Colors
     BarMagnetSimulation.APPARATUS_BACKGROUND = Color.BLACK;
@@ -163,6 +168,35 @@ define(function (require) {
     BarMagnetSimulation.BAR_MAGNET_DIRECTION = 0.0; // radians
 
     Constants.BarMagnetSimulation = BarMagnetSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              BAR MAGNET                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var BarMagnet = {};
+
+    // values used in MathCAD for generating the grid files
+    BarMagnet.GRID_MAGNET_STRENGTH       =  1; // strength of the magnet, in Gauss
+    BarMagnet.INTERNAL_GRID_SPACING      =  5; // spacing between points in the internal grid, same in both dimensions
+    BarMagnet.EXTERNAL_NEAR_GRID_SPACING =  5; // spacing between points in the external-near grid, same in both dimensions
+    BarMagnet.EXTERNAL_FAR_GRID_SPACING  = 20; // spacing between points in the external-far grid, same in both dimensions
+    BarMagnet.INTERNAL_GRID_SIZE      = new Dimension(26,   6); // number of points in the internal grid
+    BarMagnet.EXTERNAL_NEAR_GRID_SIZE = new Dimension(101, 81); // number of points in the external-near grid
+    BarMagnet.EXTERNAL_FAR_GRID_SIZE  = new Dimension(126, 61); // number of points in the external-far grid
+
+    BarMagnet.BX_INTERNAL      = require('text!models/bfield/BX_internal.csv');
+    BarMagnet.BY_INTERNAL      = require('text!models/bfield/BY_internal.csv');
+    BarMagnet.BX_EXTERNAL_NEAR = require('text!models/bfield/BX_external_near.csv');
+    BarMagnet.BY_EXTERNAL_NEAR = require('text!models/bfield/BY_external_near.csv');
+    BarMagnet.BX_EXTERNAL_FAR  = require('text!models/bfield/BX_external_far.csv');
+    BarMagnet.BY_EXTERNAL_FAR  = require('text!models/bfield/BY_external_far.csv');
+
+    Constants.BarMagnet = BarMagnet;
+
+    
 
 
     return Constants;
