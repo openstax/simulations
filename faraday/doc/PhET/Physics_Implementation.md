@@ -3,7 +3,7 @@
 **(how it’s implemented, how it works)**
 
 
-Chris Malley (cmalley@pixelzoom.com)
+Chris Malley
 
 
 This document describes the physics-related bits of the Faraday
