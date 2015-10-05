@@ -9,6 +9,8 @@ define(function (require) {
         this.height = height;
     };
 
+    var DEG_TO_RAD = Math.PI / 180;
+
 
     var Constants = {}; 
 
@@ -196,6 +198,62 @@ define(function (require) {
 
     Constants.BarMagnet = BarMagnet;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                           AC POWER SUPPLY                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var ACPowerSupply = {};
+
+    // The minimum number of steps used to approximate one sine wave cycle.
+    ACPowerSupply.MIN_STEPS_PER_CYCLE = 10;
+
+    Constants.ACPowerSupply = ACPowerSupply;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                               COMPASS                               **
+     **                                                                     **
+     *************************************************************************/
+
+    var Compass = {};
+
+    // Public interface for specifying behavior.
+    Compass.SIMPLE_BEHAVIOR      = 0; // see SimpleBehavior
+    Compass.INCREMENTAL_BEHAVIOR = 1; // see IncrementalBehavior
+    Compass.KINEMATIC_BEHAVIOR   = 2; // see KinematicBehavior
+
+    Constants.Compass = Compass;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              VOLTMETER                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Voltmeter = {};
+
+    // Define the zero point of the needle.
+    Voltmeter.ZERO_NEEDLE_ANGLE = 0.0 * DEG_TO_RAD;
+    // The needle deflection range is this much on either side of the zero point.
+    Voltmeter.MAX_NEEDLE_ANGLE = 90.0 * DEG_TO_RAD;
+    // If rotational kinematics is enabled, the needle will jiggle this much around the zero reading.
+    Voltmeter.NEEDLE_JIGGLE_ANGLE = 3.0 * DEG_TO_RAD;
+    // When the angle is this close to zero, the needle stops jiggling.
+    Voltmeter.NEEDLE_JIGGLE_THRESHOLD = 0.5 * DEG_TO_RAD;
+    /*
+     * Determines how much the needle jiggles around the zero point.
+     * The value L should be such that 0 < L < 1.
+     * If set to 0, the needle will not jiggle at all.
+     * If set to 1, the needle will ocsillate forever.
+     */
+    Voltmeter.NEEDLE_LIVELINESS = 0.6;
+
+    Constants.Voltmeter = Voltmeter;
     
 
 
