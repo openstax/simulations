@@ -5,41 +5,120 @@
     min-height: inherit;
 }
 
-.sound-btn-wrapper {
+.sim-controls-wrapper {
     position: absolute;
-    top: -36px;
-    right: 30px;
+    right: @panel-margin;
+    top: @panel-margin;
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
-
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.sound-btn-mute,
-        &.sound-btn-low {
-            display: none;
-        }
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
     }
 }
 
-.hello-world {
+.sim-controls {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        font-size: 16px;
+        font-weight: 400;
+        color: fadeout(#222, 35%);
+        margin-top: 0;
+        margin-bottom: 8px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+
+        .expand-icon,
+        .collapse-icon {
+            display: none;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        //margin-bottom: -12px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 2px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
+        font-weight: bold;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    .btn {
+        .sim-controls-button();
+
+        &:hover {
+            background: fadeout(#fff, 60%);
+            border-color: fadeout(#fff, 80%);
+        }
+
+        &:active {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+    }
+
+    .flip-polarity-btn {
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 12px;
+    }
+
+}
+
+.reset-btn {
     position: absolute;
-    top: 44%;
-    width: 100%;
-    text-align: center;
-    font-size: 26px;
+    right: 15px;
+    bottom: 20px;
+    z-index: 200;
+    .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+
+    @media screen and (max-height: @short-window) {
+        right: 9px;
+        bottom: 14px;
+    }
 }

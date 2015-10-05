@@ -2,15 +2,13 @@ define(function(require) {
     
     'use strict';
 
-    var PixiAppView = require('common/v3/pixi/view/app');
-
+    var FaradayAppView = require('views/app');
+    
     var MagnetAndCompassSimView = require('./sim/magnet-and-compass');
 
     var Assets = require('assets');
 
-    require('less!styles/font-awesome');
-
-    var FaradayAppView = PixiAppView.extend({
+    var MagnetAndCompassAppView = FaradayAppView.extend({
 
         assets: Assets.getAssetList(),
 
@@ -20,5 +18,5 @@ define(function(require) {
 
     });
 
-    return FaradayAppView;
+    return MagnetAndCompassAppView;
 });
