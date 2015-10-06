@@ -7,6 +7,8 @@ define(function (require) {
     var AbstractMagnet = require('models/magnet');
     var Grid           = require('models/grid');
 
+    var Constants = require('constants');
+
     /**
      * Mostly original PhET documentation:
      *
@@ -192,7 +194,7 @@ define(function (require) {
             return value;
         }
 
-    });
+    }, Constants.BarMagnet);
 
     return BarMagnet;
 });

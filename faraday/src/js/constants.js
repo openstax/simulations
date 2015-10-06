@@ -26,7 +26,7 @@ define(function (require) {
     
     Constants.CLOCK_STEP = 1; // clock ticks
     Constants.CLOCK_FRAME_RATE = 25;  // frames per second
-    Constants.CLOCK_DELAY = ( 1000 / Constants.CLOCK_FRAME_RATE ); // milliseconds
+    Constants.CLOCK_DELAY = (1000 / Constants.CLOCK_FRAME_RATE); // milliseconds
     Constants.CLOCK_TIME_STEP_IS_CONSTANT = true;
     Constants.CLOCK_ENABLE_CONTROLS = true;
 
@@ -34,8 +34,7 @@ define(function (require) {
     // Bar Magnet parameters
     //----------------------------------------------------------------------------
     
-    Constants.BAR_MAGNET_WIDTH = 250;
-    Constants.BAR_MAGNET_HEIGHT = 50;
+    Constants.BAR_MAGNET_SIZE = new Dimension(250, 50);
     Constants.BAR_MAGNET_STRENGTH_MAX = 300; // Gauss
     Constants.BAR_MAGNET_STRENGTH_MIN = 0; // Gauss
 
@@ -265,7 +264,7 @@ define(function (require) {
     Electron.MAX_PATH_POSITION_DELTA = 0.15;
 
     Constants.Electron = Electron;
-    
+
 
     /*************************************************************************
      **                                                                     **

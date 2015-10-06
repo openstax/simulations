@@ -81,6 +81,8 @@ define(function (require) {
                     }
                 }
             }
+
+            return data;
         }
 
     });
