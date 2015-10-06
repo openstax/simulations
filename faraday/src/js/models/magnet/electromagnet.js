@@ -4,8 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-    var clamp   = require('common/math/clamp');
+    var clamp = require('common/math/clamp');
 
     var CoilMagnet = require('models/coil');
 
@@ -47,7 +46,7 @@ define(function (require) {
             sourceCoilModel.set('currentAmplitude', amplitude);
             
             // Compute the electromagnet's emf amplitude.
-            var amplitude = (sourceCoilModel.get('numberOfLoops') / Constants.ELECTROMAGNET_LOOPS_MAX) * amplitude;
+            amplitude = (sourceCoilModel.get('numberOfLoops') / Constants.ELECTROMAGNET_LOOPS_MAX) * amplitude;
             amplitude = clamp(-1, amplitude, 1);
             
             // Flip the polarity

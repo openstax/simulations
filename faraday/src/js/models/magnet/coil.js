@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
@@ -68,7 +66,7 @@ define(function (require) {
             return this._bField.set(
                 Math.cos(0) * this.get('strength'), 
                 Math.sin(0) * this.get('strength')
-            )
+            );
         },
 
         /*

@@ -4,8 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-    var clamp   = require('common/math/clamp');
+    var clamp = require('common/math/clamp');
 
     var FaradayObject = require('models/faraday-object');
 
@@ -55,7 +54,7 @@ define(function (require) {
                 amplitude = 0;
             
             // Determine the needle deflection angle.
-            return amplitude * MAX_NEEDLE_ANGLE;
+            return amplitude * Voltmeter.MAX_NEEDLE_ANGLE;
         },
 
         /**

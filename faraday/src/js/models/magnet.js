@@ -14,8 +14,8 @@ define(function (require) {
             width: 250,
             height: 50,
             strength: 1,
-            minStrength: 0,                         // couldn't be any weaker
-            maxStrength: Number.POSITIVE_INFINITY;  // couldn't be any stronger
+            minStrength: 0,                       // couldn't be any weaker
+            maxStrength: Number.POSITIVE_INFINITY // couldn't be any stronger
         }),
 
         initialize: function(attributes, options) {
@@ -93,7 +93,7 @@ define(function (require) {
 
             if (minStrength > this.get('maxStrength'))
                 this.set('maxStrength', minStrength);
-        }
+        },
 
         /**
          * Makes sure the strength isn't greater than maxStrength and that minStrength

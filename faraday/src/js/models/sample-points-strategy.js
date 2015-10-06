@@ -15,8 +15,6 @@ define(function (require) {
         }
     });
 
-    var Constants = require('constants');
-
     var SamplePointsStrategy = {};
 
     var destroySamplePoints = function(pickupCoilModel) {

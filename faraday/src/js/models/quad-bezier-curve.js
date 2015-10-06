@@ -6,8 +6,6 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Constants = require('constants');
-
     /**
      * 
      */
@@ -18,6 +16,8 @@ define(function (require) {
         this.cy = controlPoint.y;
         this.x2 = endPoint.x;
         this.y2 = endPoint.y;
+
+        this._point = new Vector2();
     };
 
     /**
@@ -30,13 +30,10 @@ define(function (require) {
          *   fraction t of the way along the curve from the start point to the end
          *   point. (t=1 is at the start point, and t=0 is at the end point.)
          */
-        evaluate: function(t, returnPoint) {
+        evaluate: function(t) {
             var x = (this.x1 * t * t) + (this.cx * 2 * t * (1 - t)) + (this.x2 * (1 - t) * (1 - t));
             var y = (this.y1 * t * t) + (this.cy * 2 * t * (1 - t)) + (this.y2 * (1 - t) * (1 - t));
-            if (!returnPoint)
-                returnPoint = new Vector2();
-            returnPoint.set(x, y);
-            return returnPoint;
+            return this._point.set(x, y);
         }
 
     });

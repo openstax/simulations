@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-
     var BarMagnet = require('models/magnet');
 
     var Constants = require('constants');
@@ -34,7 +32,7 @@ define(function (require) {
             // Pre-compute the maximum change in angle per clock tick.
             var framesPerSecond = Constants.CLOCK_FRAME_RATE;
             var framesPerMinute = 60 * framesPerSecond;
-            this.set('maxDelta', (2 * Math.PI) * (maxRPM / framesPerMinute);
+            this.set('maxDelta', (2 * Math.PI) * (maxRPM / framesPerMinute));
         },
 
         /**
@@ -48,7 +46,7 @@ define(function (require) {
          * Update the turbine's direction, based on its speed.
          */
         update: function(time, deltaTime) {
-            if (this.get('speed') != 0 ) {
+            if (this.get('speed') !== 0) {
                 
                 // Determine the new direction
                 var delta = deltaTime * this.get('speed') * this.get('maxDelta');

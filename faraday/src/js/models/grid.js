@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Constants = require('constants');
-
     // TODO: See if I can find a CSV parser on npm--naaaa, they're too much for too little
 
     /**
@@ -48,7 +46,7 @@ define(function (require) {
             var absX = Math.abs(x);
             var absY = Math.abs(y);
             return (absX >= 0 && absX <= this.getMaxX() && absY >= 0 && absY <= this.getMaxY());
-        }
+        },
 
         getMaxX: function() {
             return this.spacing * (this.size.width - 1);
@@ -79,7 +77,7 @@ define(function (require) {
                     row++;
                     if (row === height) {
                         row = 0;
-                        column++;
+                        col++;
                     }
                 }
             }
