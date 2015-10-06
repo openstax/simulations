@@ -53,17 +53,16 @@ define(function (require) {
             var fieldAngle = fieldVector.angle();
             var needleAngle = this.compassModel.get('direction');
             var delta = fieldAngle - needleAngle;
+            var deltaSign = (delta < 0) ? -1 : 1;
 
             // Normalize the angle to the range -355...+355 degrees
-            if (Math.abs(delta) >= (2 * Math.PI)) {
-                var sign = (delta < 0) ? -1 : +1;
-                delta = sign * (delta % (2 * Math.PI));
-            }
+            if (Math.abs(delta) >= (2 * Math.PI))
+                delta = deltaSign * (delta % (2 * Math.PI));
 
             // Convert to an equivalent angle in the range -180...+180 degrees.
             if (delta > Math.PI)
                 delta = delta - (2 * Math.PI);
-            else if (delta < -Math.PI) {
+            else if (delta < -Math.PI)
                 delta = delta + (2 * Math.PI);
 
             if (Math.abs(delta) < MAX_INCREMENT) {
@@ -72,8 +71,7 @@ define(function (require) {
             }
             else {
                 // If the delta is large, rotate incrementally.
-                var sign = (delta < 0) ? -1 : 1;
-                delta = sign * MAX_INCREMENT;
+                delta = deltaSign * MAX_INCREMENT;
                 this.compassModel.set('direction', needleAngle + delta);
             }
         }

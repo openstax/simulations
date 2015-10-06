@@ -12,7 +12,7 @@ define(function (require) {
     var AbstractCurrentSource = FaradayObject.extend({
 
         defaults: _.extend({}, FaradayObject.prototype.defaults, {
-            maxVoltage: Number.POSITIVE_INFINITY
+            maxVoltage: Number.POSITIVE_INFINITY,
             amplitude: 1 // Full strength
         })
 

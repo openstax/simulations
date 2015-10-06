@@ -18,7 +18,7 @@ define(function (require) {
      */
     var PickupCoil = AbstractCoil.extend({
 
-        defaults: _.extend({}, FaradayObject.prototype.defaults, {
+        defaults: _.extend({}, AbstractCoil.prototype.defaults, {
             samplePointsStrategy: new SamplePointsStrategy.ConstantNumberOfSamplePointsStrategy(9)
         }),
 
@@ -142,7 +142,7 @@ define(function (require) {
                 samplePoint.x = this.get('position').x + this.samplePoints[i].x; 
                 samplePoint.y = this.get('position').y + this.samplePoints[i].y;
 
-                if (this.get('direction') != 0 ) {
+                if (this.get('direction') !== 0) {
                     // Adjust for rotation.
                     var x = this.get('position').x;
                     var y = this.get('position').y;

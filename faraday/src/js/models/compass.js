@@ -77,7 +77,7 @@ define(function (require) {
             if (this.get('enabled')) {
                 var point = this._point.set(this.get('position'));
                 var vec = this._vec.set(this.magnetModel.getBField(point));
-                if (vec.length() !=== 0)
+                if (vec.length() !== 0)
                     this.behavior.setDirection(vec, deltaTime);
             }
         }

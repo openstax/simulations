@@ -161,9 +161,6 @@ define(function (require) {
     BarMagnetSimulation.FIELD_METER_LOCATION = new Vector2(150, 400);
     BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(250, 175);
 
-    // Colors
-    BarMagnetSimulation.APPARATUS_BACKGROUND = Color.BLACK;
-
     // Bar Magnet
     BarMagnetSimulation.BAR_MAGNET_SIZE = Constants.BAR_MAGNET_SIZE;
     BarMagnetSimulation.BAR_MAGNET_STRENGTH = 0.75 * Constants.BAR_MAGNET_STRENGTH_MAX;
@@ -254,6 +251,20 @@ define(function (require) {
     Voltmeter.NEEDLE_LIVELINESS = 0.6;
 
     Constants.Voltmeter = Voltmeter;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                               ELECTRON                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Electron = {};
+
+    // Maximum distance along a path that can be traveled in one clock tick.
+    Electron.MAX_PATH_POSITION_DELTA = 0.15;
+
+    Constants.Electron = Electron;
     
 
     /*************************************************************************

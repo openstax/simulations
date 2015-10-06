@@ -5,7 +5,6 @@ define(function (require) {
     var _ = require('underscore');
 
     var Vector2 = require('common/math/vector2');
-    var clamp   = require('common/math/clamp');
 
     var FaradayObject = require('models/faraday-object');
 
@@ -76,8 +75,8 @@ define(function (require) {
         update: function(time, deltaTime) {
             if (this.get('enabled')) {
                 // Move the electron along the path.
-                var pathScale = this.path.[this.pathIndex].getPathScale();
-                var delta = deltaTime * MAX_PATH_POSITION_DELTA * this.speed * this.speedScale * pathScale;
+                var pathScale = this.path[this.pathIndex].getPathScale();
+                var delta = deltaTime * Electron.MAX_PATH_POSITION_DELTA * this.speed * this.speedScale * pathScale;
                 this.pathPosition -= delta;
                 
                 // Do we need to switch curves?
@@ -100,6 +99,8 @@ define(function (require) {
          */
         switchCurves: function() {
             var oldSpeedScale = this.path[this.pathIndex].getPathScale();
+            var newSpeedScale;
+            var overshoot;
             
             if ( this.pathPosition <= 0 ) {
                 
@@ -109,8 +110,8 @@ define(function (require) {
                     this.pathIndex = 0;
                 
                 // Set the position on the curve.
-                var newSpeedScale = this.path[this.pathIndex].getPathScale();
-                var overshoot = Math.abs( this.pathPosition * newSpeedScale / oldSpeedScale );
+                newSpeedScale = this.path[this.pathIndex].getPathScale();
+                overshoot = Math.abs( this.pathPosition * newSpeedScale / oldSpeedScale );
                 this.pathPosition = 1.0 - overshoot;
                 
                 // Did we overshoot the curve?
@@ -125,8 +126,8 @@ define(function (require) {
                     this.pathIndex = this.path.length - 1;
                 
                 // Set the position on the curve.
-                var newSpeedScale = this.path[this.pathIndex].getPathScale();
-                var overshoot = Math.abs((1 - this.pathPosition) * newSpeedScale / oldSpeedScale);
+                newSpeedScale = this.path[this.pathIndex].getPathScale();
+                overshoot = Math.abs((1 - this.pathPosition) * newSpeedScale / oldSpeedScale);
                 this.pathPosition = 0 + overshoot;
                 
                 // Did we overshoot the curve?
