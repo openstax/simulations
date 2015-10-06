@@ -256,6 +256,23 @@ define(function (require) {
     Constants.Voltmeter = Voltmeter;
     
 
+    /*************************************************************************
+     **                                                                     **
+     **                       ELECTRON PATH DESCRIPTOR                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElectronPathDescriptor = {};
+
+    // The default speed scale
+    ElectronPathDescriptor.DEFAULT_SPEED_SCALE = 1.0;
+    // Curve is part of the foreground layer
+    ElectronPathDescriptor.FOREGROUND = 0;
+    // Curve is part of the background layer
+    ElectronPathDescriptor.BACKGROUND = 1;
+
+    Constants.ElectronPathDescriptor = ElectronPathDescriptor;
+
 
     return Constants;
 });

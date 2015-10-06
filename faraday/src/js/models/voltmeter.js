@@ -32,10 +32,6 @@ define(function (require) {
 
             this.pickupCoilModel = options.pickupCoilModel; // Magnet that the compass is observing.
 
-            // Cached objects
-            this._point = new Vector2();
-            this._vec = new Vector2();
-
             this.on('change:needleAngle', this.needleAngleChanged);
         },
 
