@@ -7,7 +7,8 @@ define(function (require) {
 
     var BarMagnetSimulation = require('models/simulation/bar-magnet');
 
-    var FaradaySimView = require('views/sim');
+    var FaradaySimView     = require('views/sim');
+    var BarMagnetSceneView = require('views/scene/bar-magnet');
 
     var Constants = require('constants');
 
@@ -48,6 +49,15 @@ define(function (require) {
          */
         initSimulation: function() {
             this.simulation = new BarMagnetSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new BarMagnetSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**

@@ -19,6 +19,9 @@ define(function (require) {
      **                         UNIVERSAL CONSTANTS                         **
      **                                                                     **
      *************************************************************************/
+
+    Constants.SCENE_WIDTH  = 800;
+    Constants.SCENE_HEIGHT = 600;
     
     //----------------------------------------------------------------------------
     // Clock parameters
@@ -282,6 +285,30 @@ define(function (require) {
     ElectronPathDescriptor.BACKGROUND = 1;
 
     Constants.ElectronPathDescriptor = ElectronPathDescriptor;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             COMPASS VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var CompassView = {};
+
+    CompassView.RING_DIAMETER      = 80; // In sim units, outer diameter, including stroke
+    CompassView.RING_STROKE_WIDTH  = 10; // In sim units
+    CompassView.INDICATOR_DIAMETER =  6; // In sim units
+    CompassView.ANCHOR_DIAMETER    =  6; // In sim units
+    CompassView.NEEDLE_WIDTH       = 55; // In sim units
+    CompassView.RING_COLOR = '#999';
+    CompassView.LENS_COLOR = '#fff';
+    CompassView.LENS_ALPHA = 0.15;
+    CompassView.INDICATOR_COLOR = '#000';
+    CompassView.ANCHOR_COLOR = '#000';
+    CompassView.INDICATOR_INCREMENT = Math.PI / 4; // Radians
+
+    Constants.CompassView = CompassView;
+
 
 
     return Constants;
