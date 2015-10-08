@@ -8,6 +8,7 @@ define(function(require) {
 
     var FaradaySceneView  = require('views/scene');
     var CompassView       = require('views/compass');
+    var BarMagnetView     = require('views/bar-magnet');
     var BFieldOutsideView = require('views/bfield/outside');
 
     var Assets = require('assets');
@@ -25,6 +26,7 @@ define(function(require) {
 
             this.initOutsideBField();
             this.initCompass();
+            this.initBarMagnet();
         },
 
         initOutsideBField: function() {
@@ -49,9 +51,19 @@ define(function(require) {
             this.stage.addChild(this.compassView.displayObject);
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {
-            
+        initBarMagnet: function() {
+            this.barMagnetView = new BarMagnetView({
+                mvt: this.mvt,
+                model: this.simulation.barMagnet
+            });
 
+            this.stage.addChild(this.barMagnetView.displayObject);
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            if (this.simulation.updated()) {
+                this.bFieldOutsideView.update();
+            }
         },
 
     });
