@@ -39,6 +39,9 @@ define(function (require) {
             this._vec = new Vector2();
 
             this.on('change:behavior', this.behaviorChanged);
+            // this.on('change:direction', function(model, direction){
+            //     console.log(direction)
+            // })
 
             this.behaviorChanged(this, this.get('behavior'));
         },

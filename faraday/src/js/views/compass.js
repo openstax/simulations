@@ -46,7 +46,8 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:direction', this.updateDirection);
         },
 
         /**
@@ -115,6 +116,10 @@ define(function(require) {
             var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
+        },
+
+        updateDirection: function(model, direction) {
+            this.needle.rotation = direction;
         },
 
         dragStart: function(event) {

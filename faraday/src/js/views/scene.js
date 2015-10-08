@@ -48,9 +48,9 @@ define(function(require) {
             // ...to the usable screen space that we have
             var controlsWidth = 220;
             var margin = 20;
-            var rightMargin = 0 + controlsWidth + margin;
+            var rightMargin = 0; //0 + controlsWidth + margin;
             var usableWidth = this.width - rightMargin;
-            var usableHeight = this.height - 62;
+            var usableHeight = this.height; // - 62;
 
             var simRatio = simWidth / simHeight;
             var screenRatio = usableWidth / usableHeight;

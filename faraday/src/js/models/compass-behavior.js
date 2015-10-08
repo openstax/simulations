@@ -104,7 +104,7 @@ define(function (require) {
 
             // Difference between the field angle and the compass angle.
             var phi = ((magnitude === 0 ) ? 0.0 : (angle - this.theta));
-
+//console.log(phi.toFixed(5), this.alpha.toFixed(5), this.omega.toFixed(5), this.theta.toFixed(5))
             if (Math.abs(phi) < THRESHOLD) {
                 // When the difference between the field angle and the compass angle is insignificant,
                 // simply set the angle and consider the compass to be at rest.
