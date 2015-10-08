@@ -21,7 +21,7 @@ define(function (require) {
      *************************************************************************/
 
     Constants.SCENE_WIDTH  = 800;
-    Constants.SCENE_HEIGHT = 600;
+    Constants.SCENE_HEIGHT = 640; // Changed from 600 to account for playback controls panel
     
     //----------------------------------------------------------------------------
     // Clock parameters
