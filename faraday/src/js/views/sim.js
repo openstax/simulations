@@ -47,7 +47,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .show-field-check' : 'toggleField'
         },
 
         /**
@@ -147,12 +147,19 @@ define(function (require) {
         },
 
         setNeedleSpacing: function(spacing) {
-
+            this.sceneView.setNeedleSpacing(spacing);
         },
 
         setNeedleSize: function(width, height) {
-            
-        }
+            this.sceneView.setNeedleSize(width, height);
+        },
+
+        toggleField: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showOutsideField();
+            else
+                this.sceneView.hideOutsideField();
+        },
 
     });
 

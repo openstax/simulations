@@ -106,6 +106,14 @@ define(function(require) {
             }
         },
 
+        showOutsideField: function() {
+            this.bFieldOutsideView.show();
+        },
+
+        hideOutsideField: function() {
+            this.bFieldOutsideView.hide();
+        }
+
     });
 
     return FaradaySceneView;
