@@ -173,6 +173,40 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                        PICKUP COIL SIMULATION                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var PickupCoilSimulation = {};
+
+    // Locations
+    PickupCoilSimulation.BAR_MAGNET_LOCATION  = new Vector2( 200, 400 );
+    PickupCoilSimulation.PICKUP_COIL_LOCATION = new Vector2( 500, 400 );
+    PickupCoilSimulation.COMPASS_LOCATION     = new Vector2( 100, 525 );
+    PickupCoilSimulation.FIELD_METER_LOCATION = new Vector2( 150, 400 );
+
+    // Bar Magnet
+    PickupCoilSimulation.BAR_MAGNET_SIZE = Constants.BAR_MAGNET_SIZE;
+    PickupCoilSimulation.BAR_MAGNET_STRENGTH = 0.75 * Constants.BAR_MAGNET_STRENGTH_MAX;
+    PickupCoilSimulation.BAR_MAGNET_DIRECTION = 0.0; // radians
+
+    // Pickup Coil parameters
+    PickupCoilSimulation.PICKUP_COIL_NUMBER_OF_LOOPS = 2;
+    PickupCoilSimulation.PICKUP_COIL_LOOP_AREA = Constants.DEFAULT_PICKUP_LOOP_AREA;
+    PickupCoilSimulation.PICKUP_COIL_DIRECTION = 0.0; // radians
+    PickupCoilSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE = 0.77; // see PickupCoil.setTransitionSmoothingScale
+
+    // Scaling
+    PickupCoilSimulation.CALIBRATION_EMF = 2700000; // see PickupCoil.calibrateEmf for calibration instructions
+    PickupCoilSimulation.ELECTRON_SPEED_SCALE = 3.0;
+
+    Constants.PickupCoilSimulation = PickupCoilSimulation;
+
+
+    
+
+    /*************************************************************************
+     **                                                                     **
      **                              BAR MAGNET                             **
      **                                                                     **
      *************************************************************************/
@@ -316,12 +350,14 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var BFieldView = {};
+    var BFieldInsideView = {};
 
-    BFieldView.NEEDLE_WIDTH = 40; // Sim units
+    BFieldInsideView.X_SPACING = 34;
+    BFieldInsideView.Y_SPACING = 20;
+    BFieldInsideView.COLUMNS = 7; // this must be an odd number!
 
-    Constants.BFieldView = BFieldView;
-    
+    Constants.BFieldInsideView = BFieldInsideView;
+
 
     return Constants;
 });

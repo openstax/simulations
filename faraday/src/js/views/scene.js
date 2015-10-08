@@ -8,6 +8,9 @@ define(function(require) {
     var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
+
+    var BFieldOutsideView = require('views/bfield/outside');
 
     var Assets = require('assets');
 
@@ -37,7 +40,16 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.bottomLayer = new PIXI.Container();
+            this.middleLayer = new PIXI.Container();
+            this.topLayer = new PIXI.Container();
+
+            this.stage.addChild(this.bottomLayer);
+            this.stage.addChild(this.middleLayer);
+            this.stage.addChild(this.topLayer);
+
             this.initMVT();
+            this.initOutsideBField();
         },
 
         initMVT: function() {
@@ -65,7 +77,34 @@ define(function(require) {
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 scale
             );
-        }
+        },
+
+        initOutsideBField: function() {
+            this.bFieldOutsideView = new BFieldOutsideView({
+                mvt: this.mvt,
+                magnetModel: this.simulation.barMagnet,
+                xSpacing:    Constants.GRID_SPACING, 
+                ySpacing:    Constants.GRID_SPACING,
+                needleWidth: Constants.GRID_NEEDLE_WIDTH,
+                bounds: new Rectangle(0, 0, this.width, this.height)
+            });
+
+            this.bottomLayer.addChild(this.bFieldOutsideView.displayObject);
+        },
+
+        setNeedleSpacing: function(spacing) {
+            this.bFieldOutsideView.setNeedleSpacing(spacing);
+        },
+
+        setNeedleSize: function(width, height) {
+            this.bFieldOutsideView.setNeedleWidth(width);
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            if (this.simulation.updated()) {
+                this.bFieldOutsideView.update();
+            }
+        },
 
     });
 

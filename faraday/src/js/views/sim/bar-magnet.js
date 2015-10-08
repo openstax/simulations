@@ -23,6 +23,13 @@ define(function (require) {
     var BarMagnetSimView = FaradaySimView.extend({
 
         /**
+         * Dom event listeners
+         */
+        events: _.extend(FaradaySimView.prototype.events, {
+            'click .inside-magnet-check' : 'toggleInsideBarMagnet',
+        }),
+
+        /**
          * Template for rendering the basic scaffolding
          */
         controlsTemplate: _.template(controlsHtml),
@@ -110,6 +117,12 @@ define(function (require) {
             
         },
 
+        toggleInsideBarMagnet: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showInsideBarMagnet();
+            else
+                this.sceneView.hideInsideBarMagnet();
+        },
 
     });
 

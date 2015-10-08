@@ -146,6 +146,14 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        setNeedleSpacing: function(spacing) {
+
+        },
+
+        setNeedleSize: function(width, height) {
+            
+        }
+
     });
 
     return FaradaySimView;

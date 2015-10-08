@@ -5,6 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var PickupCoilSimulation = require('models/simulation/pickup-coil');
+
     var FaradaySimView = require('views/sim');
 
     var Constants = require('constants');
@@ -41,6 +43,13 @@ define(function (require) {
             }, options);
 
             FaradaySimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new PickupCoilSimulation();
         },
 
         /**
