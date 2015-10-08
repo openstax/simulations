@@ -38,6 +38,12 @@ define(function(require) {
             
         },
 
+        postRender: function() {
+            PixiSceneView.prototype.postRender.apply(this, arguments);
+
+            this.initFieldMeter();
+        },
+
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
@@ -98,10 +104,11 @@ define(function(require) {
             this.fieldMeterView = new FieldMeterView({
                 mvt: this.mvt,
                 model: this.simulation.fieldMeter,
-                magnetModel: this.simulation.barMagnet
+                magnetModel: this.simulation.barMagnet,
+                dragFrame: this.ui
             });
 
-            this.topLayer.addChild(this.fieldMeterView.displayObject);
+            this.$ui.append(this.fieldMeterView.render().el);
         },
 
         setNeedleSpacing: function(spacing) {
@@ -115,6 +122,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated()) {
                 this.bFieldOutsideView.update();
+                this.fieldMeterView.update();
             }
         },
 

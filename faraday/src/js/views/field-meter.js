@@ -1,131 +1,147 @@
-define(function(require) {
+define(function (require) {
 
     'use strict';
 
-    var PIXI = require('pixi');
+    var _ = require('underscore');
 
-    var PixiView = require('common/v3/pixi/view');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
+    var Draggable = require('common/tools/draggable');
+    var Vector2   = require('common/math/vector2');
 
-    var Constants = require('constants');
-    var PANEL_COLOR = Colors.parseHex(Constants.FieldMeterView.PANEL_COLOR);
+    var html = require('text!templates/field-meter.html');
 
-    /**
-     * 
-     */
-    var FieldMeterView = PixiView.extend({
+    require('less!styles/field-meter');
 
-        width:  120,
-        height: 100,
-        ringRadius: 20,
-        ringThickness: 8,
+    var dx,
+        dy,
+        translate;
+
+    var FieldMeterView = Draggable.extend({
+
+        template: _.template(html),
+
+        tagName: 'div',
+        className: 'field-meter-view',
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd'
+            'mousedown' : 'dragStart',
+            'touchstart': 'dragStart'
         },
 
-        /**
-         * Initializes the new FieldMeterView.
-         */
         initialize: function(options) {
             this.mvt = options.mvt;
             this.magnetModel = options.magnetModel;
 
-            this._dragOffset   = new PIXI.Point();
-            this._dragLocation = new PIXI.Point();
-            this._vec = new Vector2();
+            Draggable.prototype.initialize.apply(this, [options]);
 
-            this.initGraphics();
+            
 
-            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.position = new Vector2();
+
+            this.listenTo(this.model, 'change:position', this.updatePosition);
         },
 
-        /**
-         * Initializes everything for rendering graphics
-         */
-        initGraphics: function() {
-            this.displayObject.buttonMode = true;
+        render: function() {
+            this.renderFieldMeter();
+            this.bindDragEvents();
+            this.resize();
+            this.update();
 
-            this.initPanel();
-
-            this.updateMVT(this.mvt);
+            return this;
         },
 
-        initPanel: function() {
-            var w = this.width;
-            var h = this.height;
-            var r = this.ringRadius;
-            var t = this.ringThickness;
-            var y = r - t / 2;
+        renderFieldMeter: function() {
+            this.$el.html(this.template());
+            
+            // this.$('.bar-meter-bar').css('background-color', this.barColor);
+            // this.$('.bar-meter-overflow').css('color', this.barColor);
+            // this.$('.bar-meter-title').html(this.title);
 
-            var body = new PIXI.Graphics();
-            body.beginFill(PANEL_COLOR, 1);
-            body.drawRect(-w / 2, y, w, h);
-            body.endFill();
-            body.alpha = 0.7;
+            // this.$min = this.$('.bar-meter-min-value');
+            // this.$max = this.$('.bar-meter-max-value');
 
-            var ring = new PIXI.Graphics();
-            ring.lineStyle(t, PANEL_COLOR, 1);
-            ring.arc(0, 0, r, 0, Math.PI * 2);
-            ring.alpha = 0.7;
-            ring.mask = new PIXI.Graphics();
-            ring.mask.beginFill(0, 1);
-            ring.mask.drawRect(-w / 2, -r - t, w, y + r + t);
-            ring.mask.endFill();
-
-            this.displayObject.addChild(body);
-            this.displayObject.addChild(ring);
-            this.displayObject.addChild(ring.mask);
+            // this.$value    = this.$('.bar-meter-value');
+            // this.$bar      = this.$('.bar-meter-bar');
+            // this.$overflow = this.$('.bar-meter-overflow');
         },
 
-        /**
-         * Updates the model-view-transform and anything that
-         *   relies on it.
-         */
-        updateMVT: function(mvt) {
-            this.mvt = mvt;
+        postRender: function() {
+            Draggable.prototype.postRender.apply(this, arguments);
 
-            this.updatePosition(this.model, this.model.get('position'));
         },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+            this.position.x = viewPosition.x;
+            this.position.y = viewPosition.y;
+            this.updateOnNextFrame = true;
+        },
+
+        update: function(time, delta, paused, timeScale) {
+            // If there aren't any changes, don't do anything.
+            if (!this.updateOnNextFrame)
+                return;
+
+            this.updateOnNextFrame = false;
+
+            translate = 'translateX(' + this.position.x + 'px) translateY(' + this.position.y + 'px)';
+
+            this.$el.css({
+                '-webkit-transform': translate,
+                '-ms-transform': translate,
+                '-o-transform': translate,
+                'transform': translate,
+            });
         },
 
         dragStart: function(event) {
-            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
+            event.preventDefault();
+
+            this.$el.addClass('dragging');
+
             this.dragging = true;
+
+            this.fixTouchEvents(event);
+
+            this.dragX = event.pageX;
+            this.dragY = event.pageY;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
-                var x = local.x - this.dragOffset.x;
-                var y = local.y - this.dragOffset.y;
-                
-                var mx = this.mvt.viewToModelX(x);
-                var my = this.mvt.viewToModelY(y);
+
+                this.fixTouchEvents(event);
+
+                dx = event.pageX - this.dragX;
+                dy = event.pageY - this.dragY;
+
+                var mx = this.model.get('position').x + this.mvt.viewToModelDeltaX(dx);
+                var my = this.model.get('position').y + this.mvt.viewToModelDeltaY(dy);
 
                 this.model.setPosition(mx, my);
+
+                this.dragX = event.pageX;
+                this.dragY = event.pageY;
+
+                this.updateOnNextFrame = true;
             }
         },
 
         dragEnd: function(event) {
-            this.dragging = false;
+            if (this.dragging) {
+                this.dragging = false;
+                this.$el.removeClass('dragging');
+            }
+        },
+
+        show: function() {
+            this.$el.show();
+        },
+
+        hide: function() {
+            this.$el.hide();
         }
 
-    }, Constants.FieldMeterView);
-
+    });
 
     return FieldMeterView;
 });

@@ -1,0 +1,66 @@
+@import "variables.less";
+@import "mixins.less";
+
+@field-meter-width:  120px;
+@field-meter-height: 100px;
+@ring-radius: 24px;
+@ring-thickness: 8px;
+@panel-y: (@ring-radius - @ring-thickness);
+
+.field-meter-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    cursor: -webkit-grab;
+    cursor: grab;
+    .user-select(none);
+
+    .field-meter-background {
+        position: absolute;
+        opacity: 0.7;
+
+        .field-meter-ring {
+            position: absolute;
+            top: -@ring-radius;
+            left: -@ring-radius;
+            width:  (@ring-radius * 2);
+            height: (@ring-radius * 2);
+            border: @ring-thickness solid @panel-bg;
+            border-radius: 50%;
+
+            &:before, &:after {
+                content: '';
+                position: absolute;
+                background: #fff;
+            }
+
+            &:before {
+                width: 100%;
+                height: 2px;
+                top: 50%;
+                margin-top: -1px;
+            }
+
+            &:after {
+                width: 2px;
+                height: 100%;
+                left: 50%;
+                margin-left: -1px;
+            }
+        }
+
+        .field-meter-panel-bg {
+            position: absolute;
+            top: @panel-y;
+            left: -(@field-meter-width / 2);
+            width: @field-meter-width;
+            height: @field-meter-height;
+            background: @panel-bg;
+        }
+    }
+
+    .field-meter-content {
+        padding: 10px;
+    }
+}
