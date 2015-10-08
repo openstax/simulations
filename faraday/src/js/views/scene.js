@@ -11,6 +11,7 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var BFieldOutsideView = require('views/bfield/outside');
+    var FieldMeterView    = require('views/field-meter');
 
     var Assets = require('assets');
 
@@ -50,6 +51,7 @@ define(function(require) {
 
             this.initMVT();
             this.initOutsideBField();
+            this.initFieldMeter();
         },
 
         initMVT: function() {
@@ -90,6 +92,16 @@ define(function(require) {
             });
 
             this.bottomLayer.addChild(this.bFieldOutsideView.displayObject);
+        },
+
+        initFieldMeter: function() {
+            this.fieldMeterView = new FieldMeterView({
+                mvt: this.mvt,
+                model: this.simulation.fieldMeter,
+                magnetModel: this.simulation.barMagnet
+            });
+
+            this.topLayer.addChild(this.fieldMeterView.displayObject);
         },
 
         setNeedleSpacing: function(spacing) {
