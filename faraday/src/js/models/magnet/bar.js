@@ -100,8 +100,8 @@ define(function (require) {
         getBx: function(x, y) {
             var grid = this.chooseGrid(x, y);
             return this.interpolate(
-                Math.abs( x ), 
-                Math.abs( y ), 
+                Math.abs(x), 
+                Math.abs(y), 
                 grid.getMaxX(), 
                 grid.getMaxY(), 
                 grid.getBxArray(), 
@@ -116,8 +116,8 @@ define(function (require) {
         getBy: function(x, y) {
             var grid = this.chooseGrid(x, y);
             var by = this.interpolate(
-                Math.abs( x ),
-                Math.abs( y ),
+                Math.abs(x),
+                Math.abs(y),
                 grid.getMaxX(),
                 grid.getMaxY(),
                 grid.getByArray(),

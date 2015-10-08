@@ -310,6 +310,18 @@ define(function (require) {
     Constants.CompassView = CompassView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              BFIELD VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var BFieldView = {};
+
+    BFieldView.NEEDLE_WIDTH = 40; // Sim units
+
+    Constants.BFieldView = BFieldView;
+    
 
     return Constants;
 });

@@ -39,8 +39,8 @@ define(function (require, exports, module) {
                 width:       BarMagnetSimulation.BAR_MAGNET_SIZE.width,
                 height:      BarMagnetSimulation.BAR_MAGNET_SIZE.height,
                 strength:    BarMagnetSimulation.BAR_MAGNET_STRENGTH,
-                minStrength: BarMagnetSimulation.BAR_MAGNET_STRENGTH_MIN,
-                maxStrength: BarMagnetSimulation.BAR_MAGNET_STRENGTH_MAX,
+                minStrength: Constants.BAR_MAGNET_STRENGTH_MIN,
+                maxStrength: Constants.BAR_MAGNET_STRENGTH_MAX,
                 position:    BarMagnetSimulation.BAR_MAGNET_LOCATION,
                 direction:   BarMagnetSimulation.BAR_MAGNET_DIRECTION
             });

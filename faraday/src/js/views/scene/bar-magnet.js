@@ -4,8 +4,11 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var FaradaySceneView = require('views/scene');
-    var CompassView      = require('views/compass');
+    var Rectangle = require('common/math/rectangle');
+
+    var FaradaySceneView  = require('views/scene');
+    var CompassView       = require('views/compass');
+    var BFieldOutsideView = require('views/bfield/outside');
 
     var Assets = require('assets');
 
@@ -20,7 +23,21 @@ define(function(require) {
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initOutsideBField();
             this.initCompass();
+        },
+
+        initOutsideBField: function() {
+            this.bFieldOutsideView = new BFieldOutsideView({
+                mvt: this.mvt,
+                magnetModel: this.simulation.barMagnet,
+                xSpacing:    Constants.GRID_SPACING, 
+                ySpacing:    Constants.GRID_SPACING,
+                needleWidth: Constants.GRID_NEEDLE_WIDTH,
+                bounds: new Rectangle(0, 0, this.width, this.height)
+            });
+
+            this.stage.addChild(this.bFieldOutsideView.displayObject);
         },
 
         initCompass: function() {
