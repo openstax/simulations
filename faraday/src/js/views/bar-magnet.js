@@ -77,7 +77,7 @@ define(function(require) {
         },
 
         updateDirection: function(model, direction) {
-            this.needle.rotation = direction;
+            this.sprite.rotation = direction;
         },
 
         dragStart: function(event) {

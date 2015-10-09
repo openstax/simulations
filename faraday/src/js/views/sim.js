@@ -49,7 +49,8 @@ define(function (require) {
         events: {
             'click .show-field-check'       : 'toggleField',
             'click .show-field-meter-check' : 'toggleFieldMeter',
-            'slide .strength-slider'        : 'changeStrength'
+            'slide .strength-slider'        : 'changeStrength',
+            'click .flip-polarity-btn'      : 'flipPolarity'
         },
 
         /**
@@ -178,6 +179,10 @@ define(function (require) {
                 this.$strengthValue.text(percent);
                 this.simulation.barMagnet.set('strength', strength);
             });
+        },
+
+        flipPolarity: function(event) {
+            this.simulation.barMagnet.flipPolarity();
         }
 
     });
