@@ -92,13 +92,15 @@ define(function (require) {
             this.$('.sim-controls-wrapper').append(this.controlsTemplate(data));
 
             this.$('.strength-slider').noUiSlider({
-                start: 3,
+                start: (this.simulation.barMagnet.get('strength') / Constants.BAR_MAGNET_STRENGTH_MAX) * 100,
                 range: {
-                    min: 1,
-                    max: 5
+                    min: 0,
+                    max: 100
                 },
                 connect: 'lower'
             });
+
+            this.$strengthValue = this.$('.strength-value');
         },
 
         /**

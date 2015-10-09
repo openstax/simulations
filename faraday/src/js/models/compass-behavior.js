@@ -118,7 +118,9 @@ define(function (require) {
 
                 // Step 1: orientation
                 var thetaOld = this.theta;
+                //console.log((SENSITIVITY * Math.sin(phi) * magnitude), (DAMPING * this.omega))
                 var alphaTemp = (SENSITIVITY * Math.sin(phi) * magnitude) - (DAMPING * this.omega);
+                //console.log(this.theta)
                 this.theta = this.theta + (this.omega * deltaTime) + (0.5 * alphaTemp * deltaTime * deltaTime);
                 if (this.theta !== thetaOld) {
                     // Set the compass needle direction.

@@ -48,7 +48,8 @@ define(function (require) {
          */
         events: {
             'click .show-field-check'       : 'toggleField',
-            'click .show-field-meter-check' : 'toggleFieldMeter'
+            'click .show-field-meter-check' : 'toggleFieldMeter',
+            'slide .strength-slider'        : 'changeStrength'
         },
 
         /**
@@ -169,6 +170,15 @@ define(function (require) {
             else
                 this.sceneView.hideFieldMeter();
         },
+
+        changeStrength: function(event) {
+            var percent = parseInt($(event.target).val());
+            var strength = Constants.BAR_MAGNET_STRENGTH_RANGE.lerp(percent / 100);
+            this.inputLock(function() {
+                this.$strengthValue.text(percent);
+                this.simulation.barMagnet.set('strength', strength);
+            });
+        }
 
     });
 

@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Vector2 = require('common/math/vector2');
+    var range   = require('common/math/range');
 
     var Dimension = function(width, height) {
         this.width = width;
@@ -40,6 +41,10 @@ define(function (require) {
     Constants.BAR_MAGNET_SIZE = new Dimension(250, 50);
     Constants.BAR_MAGNET_STRENGTH_MAX = 300; // Gauss
     Constants.BAR_MAGNET_STRENGTH_MIN = 0; // Gauss
+    Constants.BAR_MAGNET_STRENGTH_RANGE = range({ 
+        min: Constants.BAR_MAGNET_STRENGTH_MIN, 
+        max: Constants.BAR_MAGNET_STRENGTH_MAX
+    });
 
     //----------------------------------------------------------------------------
     // Electromagnet parameters
