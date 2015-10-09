@@ -31,7 +31,7 @@ define(function (require) {
          * Flips the magnet's polarity by rotating it 180 degrees.
          */
         flipPolarity: function() {
-            this.set('direction', (this.get('direction') + Math.PI) % (2 * Math.PI));
+            this.set('direction', (this.get('direction') - Math.PI) % (2 * Math.PI));
         },
 
         /**
@@ -53,8 +53,8 @@ define(function (require) {
              */
             var relativePoint = this._relativePoint
                 .set(point)
-                .rotate(-this.get('direction'))
-                .sub(this.get('position'));
+                .sub(this.get('position'))
+                .rotate(-this.get('direction'));
                 
             
             // Get strength in magnet's local coordinate frame
