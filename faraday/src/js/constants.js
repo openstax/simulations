@@ -359,18 +359,6 @@ define(function (require) {
     Constants.BFieldInsideView = BFieldInsideView;
 
 
-    /*************************************************************************
-     **                                                                     **
-     **                           FIELD METER VIEW                          **
-     **                                                                     **
-     *************************************************************************/
-
-    var FieldMeterView = {};
-
-    FieldMeterView.PANEL_COLOR = '#ededed';
-
-    Constants.FieldMeterView = FieldMeterView;
-
 
     return Constants;
 });

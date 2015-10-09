@@ -2,7 +2,7 @@
 @import "mixins.less";
 
 @field-meter-width:  160px;
-@field-meter-height: 100px;
+@field-meter-height: 150px;
 @ring-radius: 24px;
 @ring-thickness: 8px;
 @panel-y: (@ring-radius - @ring-thickness);
@@ -47,12 +47,40 @@
         top: @panel-y;
         left: -(@field-meter-width / 2);
         width: @field-meter-width;
-        padding: 10px;
+        padding: 10px 15px 15px 15px;
 
         h2 {
             .header();
             text-align: center;
             margin-top: 0;
+        }
+
+        div {
+            padding-left: 10px;
+            padding-right: 10px;
+
+            label {
+                display: inline-block;
+                width: 28px;
+            }
+
+            .equals {
+                display: inline-block;
+                width: 20px;
+                font-weight: bold;
+            }
+
+            .value {
+                float: right;
+                text-align: right;
+
+                .unit {
+                    text-align: left;
+                    display: inline-block;
+                    width: 16px;
+                    margin-left: 6px;
+                }
+            }            
         }
     }
 

@@ -64,6 +64,7 @@ define(function (require, exports, module) {
 
         _update: function(time, deltaTime) {
             this.compass.update(time, deltaTime);
+            this.fieldMeter.update(time, deltaTime);
         }
 
     }, Constants.BarMagnetSimulation);

@@ -11,6 +11,13 @@ define(function (require) {
 
     require('less!styles/field-meter');
 
+    var STRING_MAGNITUDE_NEGATIVE_ZERO = "-0.00";
+    var STRING_MAGNITUDE_POSITIVE_ZERO = "0.00";
+    var STRING_ANGLE_NEGATIVE_ZERO = "-0.00";
+    var STRING_ANGLE_POSITIVE_ZERO = "0.00";
+    var STRING_ANGLE_NEGATIVE_PI = "-180.00";
+    var STRING_ANGLE_POSITIVE_PI = "180.00";
+
     var dx,
         dy,
         translate;
@@ -33,9 +40,10 @@ define(function (require) {
 
             Draggable.prototype.initialize.apply(this, [options]);
 
-            
+            this.model.set('enabled', true);
 
             this.position = new Vector2();
+            this.lastFieldVector = new Vector2();
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
         },
@@ -43,6 +51,7 @@ define(function (require) {
         render: function() {
             this.renderFieldMeter();
             this.bindDragEvents();
+            this.updatePosition(this.model, this.model.get('position'));
             this.resize();
             this.update();
 
@@ -51,23 +60,16 @@ define(function (require) {
 
         renderFieldMeter: function() {
             this.$el.html(this.template());
-            
-            // this.$('.bar-meter-bar').css('background-color', this.barColor);
-            // this.$('.bar-meter-overflow').css('color', this.barColor);
-            // this.$('.bar-meter-title').html(this.title);
 
-            // this.$min = this.$('.bar-meter-min-value');
-            // this.$max = this.$('.bar-meter-max-value');
-
-            // this.$value    = this.$('.bar-meter-value');
-            // this.$bar      = this.$('.bar-meter-bar');
-            // this.$overflow = this.$('.bar-meter-overflow');
+            this.$bBar  = this.$('.b-bar');
+            this.$bBarX = this.$('.b-bar-x');
+            this.$bBarY = this.$('.b-bar-y');
+            this.$theta = this.$('.theta');
         },
 
-        postRender: function() {
-            Draggable.prototype.postRender.apply(this, arguments);
-
-        },
+        // postRender: function() {
+        //     Draggable.prototype.postRender.apply(this, arguments);
+        // },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
@@ -77,20 +79,89 @@ define(function (require) {
         },
 
         update: function(time, delta, paused, timeScale) {
-            // If there aren't any changes, don't do anything.
-            if (!this.updateOnNextFrame)
+            if (this.model.get('enabled')) {
+                translate = 'translateX(' + this.position.x + 'px) translateY(' + this.position.y + 'px)';
+
+                this.$el.css({
+                    '-webkit-transform': translate,
+                    '-ms-transform': translate,
+                    '-o-transform': translate,
+                    'transform': translate,
+                });
+
+                this.updateValues();    
+            }
+        },
+
+
+        updateValues: function() {
+            // Get the field vector from the model.
+            var fieldVector = this.model.getStrength();
+            if (fieldVector.equals(this.lastFieldVector))
                 return;
 
-            this.updateOnNextFrame = false;
+            // Get the components, adjust the coordinate system.
+            var b = fieldVector.length();
+            var bx = fieldVector.x;
+            var by = -fieldVector.y; // +Y is up
+            var angle = -fieldVector.angle();  // +angle is counterclockwise
 
-            translate = 'translateX(' + this.position.x + 'px) translateY(' + this.position.y + 'px)';
+            // Convert the angle to a value in the range -180...180 degrees.
+            // Normalize the angle to the range -360...360 degrees
+            if (Math.abs(angle) >= (2 * Math.PI)) {
+                var sign = (angle < 0) ? -1 : +1;
+                angle = sign * (angle % (2 * Math.PI));
+            }
 
-            this.$el.css({
-                '-webkit-transform': translate,
-                '-ms-transform': translate,
-                '-o-transform': translate,
-                'transform': translate,
-            });
+            // Convert to an equivalent angle in the range -180...180 degrees.
+            if (angle < -Math.PI)
+                angle = angle + (2 * Math.PI);
+            else if (angle > Math.PI)
+                angle = angle - (2 * Math.PI);
+
+            var bString = b.toFixed(2);
+            var bxString = bx.toFixed(2);
+            var byString = by.toFixed(2);
+            var angleString = (angle * (180 / Math.PI)).toFixed(2);
+
+            /*
+             * Correct some offensive looking values.
+             * We need to perform this format-dependent check on the strings
+             * because a value like -0.00005 will display as -0.00.
+             */
+            // B
+            if (bString == STRING_MAGNITUDE_NEGATIVE_ZERO)
+                bString = STRING_MAGNITUDE_POSITIVE_ZERO;
+
+            if (bString == STRING_MAGNITUDE_POSITIVE_ZERO) {
+                // If B displays 0, all others should display zero.
+                bxString = STRING_MAGNITUDE_POSITIVE_ZERO;
+                byString = STRING_MAGNITUDE_POSITIVE_ZERO;
+                angleString = STRING_ANGLE_POSITIVE_ZERO;
+            }
+            else {
+                // Bx
+                if (bxString == STRING_MAGNITUDE_NEGATIVE_ZERO)
+                    bxString = STRING_MAGNITUDE_POSITIVE_ZERO;
+
+                // By
+                if (byString == STRING_MAGNITUDE_NEGATIVE_ZERO)
+                    byString = STRING_MAGNITUDE_POSITIVE_ZERO;
+
+                // Theta
+                if (angleString == STRING_ANGLE_NEGATIVE_ZERO)
+                    angleString = STRING_ANGLE_POSITIVE_ZERO;
+                else if ( angleString == STRING_ANGLE_NEGATIVE_PI)
+                    angleString = STRING_ANGLE_POSITIVE_PI;
+            }
+
+            // Update the view
+            this.$bBar.html(bString);
+            this.$bBarX.html(bxString);
+            this.$bBarY.html(byString);
+            this.$theta.html(angleString);
+
+            this.lastFieldVector.set(fieldVector);
         },
 
         dragStart: function(event) {
@@ -134,10 +205,12 @@ define(function (require) {
         },
 
         show: function() {
+            this.model.set('enabled', true);
             this.$el.show();
         },
 
         hide: function() {
+            this.model.set('enabled', false);
             this.$el.hide();
         }
 
