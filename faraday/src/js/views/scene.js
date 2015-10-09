@@ -57,7 +57,6 @@ define(function(require) {
 
             this.initMVT();
             this.initOutsideBField();
-            this.initFieldMeter();
         },
 
         initMVT: function() {
