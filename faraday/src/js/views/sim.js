@@ -47,7 +47,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .show-field-check' : 'toggleField'
+            'click .show-field-check'       : 'toggleField',
+            'click .show-field-meter-check' : 'toggleFieldMeter'
         },
 
         /**
@@ -160,6 +161,13 @@ define(function (require) {
                 this.sceneView.showOutsideField();
             else
                 this.sceneView.hideOutsideField();
+        },
+
+        toggleFieldMeter: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showFieldMeter();
+            else
+                this.sceneView.hideFieldMeter();
         },
 
     });

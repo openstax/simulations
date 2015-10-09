@@ -131,6 +131,14 @@ define(function(require) {
 
         hideOutsideField: function() {
             this.bFieldOutsideView.hide();
+        },
+
+        showFieldMeter: function() {
+            this.fieldMeterView.show();
+        },
+
+        hideFieldMeter: function() {
+            this.fieldMeterView.hide();
         }
 
     });

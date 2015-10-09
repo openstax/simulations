@@ -40,8 +40,6 @@ define(function (require) {
 
             Draggable.prototype.initialize.apply(this, [options]);
 
-            this.model.set('enabled', true);
-
             this.position = new Vector2();
             this.lastFieldVector = new Vector2();
 
@@ -54,6 +52,7 @@ define(function (require) {
             this.updatePosition(this.model, this.model.get('position'));
             this.resize();
             this.update();
+            this.hide();
 
             return this;
         },
@@ -66,10 +65,6 @@ define(function (require) {
             this.$bBarY = this.$('.b-bar-y');
             this.$theta = this.$('.theta');
         },
-
-        // postRender: function() {
-        //     Draggable.prototype.postRender.apply(this, arguments);
-        // },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
@@ -206,6 +201,7 @@ define(function (require) {
 
         show: function() {
             this.model.set('enabled', true);
+            this.update();
             this.$el.show();
         },
 
