@@ -19,7 +19,11 @@ define(function (require) {
     var PickupCoil = AbstractCoil.extend({
 
         defaults: _.extend({}, AbstractCoil.prototype.defaults, {
-            samplePointsStrategy: new SamplePointsStrategy.ConstantNumberOfSamplePointsStrategy(9)
+            samplePointsStrategy: new SamplePointsStrategy.ConstantNumberOfSamplePointsStrategy(9),
+            // This is used to scale the B-field for sample points inside the magnet, eliminating
+            //   abrupt transitions at the left and right edges of the magnet.  For any sample
+            //   point inside the magnet, the B field sample is multiplied by this value.
+            transitionSmoothingScale: 1 // no smoothing
         }),
 
         initialize: function(attributes, options) {
@@ -33,10 +37,6 @@ define(function (require) {
             this.biggestAbsEmf            = 0; // in volts
             this.samplePoints             = null; // B-field sample points
             this.calibrationEmf           = options.calibrationEmf;
-            // This is used to scale the B-field for sample points inside the magnet, eliminating
-            //   abrupt transitions at the left and right edges of the magnet.  For any sample
-            //   point inside the magnet, the B field sample is multiplied by this value.
-            this.transitionSmoothingScale = 1; // no smoothing
 
             // loosely packed loops
             this.set('loopSpacing', 1.5 * this.get('wireWidth'));
@@ -161,7 +161,7 @@ define(function (require) {
                  */
                 var Bx = bField.x;
                 if (Math.abs(Bx) === magnetStrength)
-                    Bx *= this.transitionSmoothingScale;
+                    Bx *= this.get('transitionSmoothingScale');
 
                 // Accumulate a sum of the sample points.
                 sumBx += Bx;

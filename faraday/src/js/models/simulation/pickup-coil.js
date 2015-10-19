@@ -4,10 +4,13 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var FaradaySimulation = require('models/simulation');
-    var BarMagnet         = require('models/magnet/bar');
-    var Compass           = require('models/compass');
-    var FieldMeter        = require('models/field-meter');
+    var FaradaySimulation    = require('models/simulation');
+    var BarMagnet            = require('models/magnet/bar');
+    var Compass              = require('models/compass');
+    var FieldMeter           = require('models/field-meter');
+    var PickupCoil           = require('models/coil/pickup');
+    var Lightbulb            = require('models/lightbulb');
+    var SamplePointsStrategy = require('models/sample-points-strategy');
 
     /**
      * Constants
@@ -60,10 +63,32 @@ define(function (require, exports, module) {
             }, {
                 magnetModel: this.barMagnet
             });
+
+            // Pickup Coil
+            var ySpacing = this.barMagnet.get('height') / 10;
+            this.pickupCoil = new PickupCoil({
+                position: PickupCoilSimulation.PICKUP_COIL_LOCATION,
+                direction: PickupCoilSimulation.PICKUP_COIL_DIRECTION,
+                numberOfLoops: PickupCoilSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
+                transitionSmoothingScale: PickupCoilSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE,
+                samplePointsStrategy: new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing),
+            }, {
+                magnetModel: this.barMagnet,
+                calibrationEmf: PickupCoilSimulation.CALIBRATION_EMF
+            });
+            this.pickupCoil.setLoopArea(PickupCoilSimulation.PICKUP_COIL_LOOP_AREA);
+
+            // Lightbulb
+            this.lightbulb = new Lightbulb({
+                enabled: true
+            }, {
+                pickupCoilModel: this.pickupCoil
+            });
         },
 
         _update: function(time, deltaTime) {
             this.compass.update(time, deltaTime);
+            this.pickupCoil.update(time, deltaTime);
         }
 
     }, Constants.PickupCoilSimulation);

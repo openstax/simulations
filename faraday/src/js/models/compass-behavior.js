@@ -92,19 +92,21 @@ define(function (require) {
         this.alpha = 0; // Angular acceleration, the change in angular velocity over time.
     };
 
-    var SENSITIVITY = 0.01; // increase this to make the compass more sensitive to smaller fields
-    var DAMPING     = 0.08; // increase this to make the needle wobble less
+    var SENSITIVITY = 0.01 / 1000; // increase this to make the compass more sensitive to smaller fields
+    var DAMPING     = 0.08 / 1000; // increase this to make the needle wobble less
     var THRESHOLD   = 0.2 * (Math.PI / 180); // angle at which the needle stops wobbling and snaps to the actual field orientation
 
     _.extend(Kinematic.prototype, baseFunctions, {
 
         setDirection: function(fieldVector, deltaTime) {
             var magnitude = fieldVector.length();
-            var angle = fieldVector.angle();
-
+            //var angle = fieldVector.angle();
+            var angle = Math.atan2(fieldVector.y, fieldVector.x);
+// console.log(angle, this.theta)
+// console.log(deltaTime)
             // Difference between the field angle and the compass angle.
             var phi = ((magnitude === 0 ) ? 0.0 : (angle - this.theta));
-//console.log(phi.toFixed(5), this.alpha.toFixed(5), this.omega.toFixed(5), this.theta.toFixed(5))
+// console.log(phi.toFixed(5), this.alpha.toFixed(5), this.omega.toFixed(5), this.theta.toFixed(5))
             if (Math.abs(phi) < THRESHOLD) {
                 // When the difference between the field angle and the compass angle is insignificant,
                 // simply set the angle and consider the compass to be at rest.
@@ -118,9 +120,9 @@ define(function (require) {
 
                 // Step 1: orientation
                 var thetaOld = this.theta;
-                //console.log((SENSITIVITY * Math.sin(phi) * magnitude), (DAMPING * this.omega))
+// console.log((SENSITIVITY * Math.sin(phi) * magnitude), (DAMPING * this.omega))
                 var alphaTemp = (SENSITIVITY * Math.sin(phi) * magnitude) - (DAMPING * this.omega);
-                //console.log(this.theta)
+// console.log(this.theta)
                 this.theta = this.theta + (this.omega * deltaTime) + (0.5 * alphaTemp * deltaTime * deltaTime);
                 if (this.theta !== thetaOld) {
                     // Set the compass needle direction.

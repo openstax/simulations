@@ -92,14 +92,14 @@ define(function (require) {
 
             // Center
             var index = 0;
-            samplePoints[index++] = vectorPool.create.set( xOffset, 0 );
+            samplePoints[index++] = vectorPool.create().set(xOffset, 0);
 
             // Offsets below & above the center
             var y = 0;
             for (var i = 0; i < numberOfSamplePointsOnRadius; i++) {
                 y += this.ySpacing;
-                samplePoints[index++] = vectorPool.create.set(xOffset,  y);
-                samplePoints[index++] = vectorPool.create.set(xOffset, -y);
+                samplePoints[index++] = vectorPool.create().set(xOffset,  y);
+                samplePoints[index++] = vectorPool.create().set(xOffset, -y);
             }
 
             return samplePoints;
