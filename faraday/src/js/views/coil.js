@@ -8,6 +8,12 @@ define(function(require) {
     var Vector2  = require('common/math/vector2');
     var Colors   = require('common/colors/colors');
 
+    var Electron               = require('models/electron');
+    var ElectronPathDescriptor = require('models/electron-path-descriptor');
+    var QuadBezierSpline       = require('models/quad-bezier-spline');
+
+    var ElectronView = require('views/electron');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -51,9 +57,9 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.electronAnimationEnabled = true;
-            this.foregroundColor   = Colors.parseHex(CoilView.FOREGROUND_COLOR);
-            this.middlegroundColor = Colors.parseHex(CoilView.MIDDLEGROUND_COLOR);
-            this.backgroundColor   = Colors.parseHex(CoilView.BACKGROUND_COLOR);
+            this.foregroundLayerColor   = CoilView.FOREGROUND_COLOR;
+            this.middlegroundColor = CoilView.MIDDLEGROUND_COLOR;
+            this.backgroundLayerColor   = CoilView.BACKGROUND_COLOR;
             
             this.electronPath = [];
             this.electrons = [];
@@ -62,15 +68,15 @@ define(function(require) {
             this.loopRadius    = -1; // force update
             this.wireWidth     = -1; // force update
             this.loopSpacing   = -1; // force update
-            this.current       = -1;  // force update
+            this.current       = -1; // force update
             this.electronSpeedScale = 1;
             this.endsConnected = false;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
-            this._vec = new Vector2();
-            this._endPoint = new Vector2();
-            this._startPoint = new Vector2();
+            this._vec          = new Vector2();
+            this._endPoint     = new Vector2();
+            this._startPoint   = new Vector2();
             this._controlPoint = new Vector2();
 
             this.initGraphics();
@@ -83,7 +89,11 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
+
+            this.displayObject.addChild(this.backgroundLayer);
+            this.displayObject.addChild(this.foregroundLayer);
 
             this.updateMVT(this.mvt);
         },
@@ -133,35 +143,54 @@ define(function(require) {
                 this.endsConnected = endsConnected;
                 this.updateCoil();
             }
-        }
+        },
         
         isEndsConnected: function() {
             return this.endsConnected;
         },
 
         /**
+         * Determines if the physical appearance of the coil has changed.
+         */
+        coilChanged: function() {
+            var changed = false;
+            if (this.numberOfLoops !== this.model.get('numberOfLoops') ||
+                this.loopRadius    !== this.model.get('radius') ||
+                this.wireWidth     !== this.model.get('wireWidth') ||
+                this.loopSpacing   !== this.model.get('loopSpacing')
+            ) {
+                changed = true;
+                this.numberOfLoops = this.model.get('numberOfLoops');
+                this.loopRadius    = this.model.get('radius');
+                this.wireWidth     = this.model.get('wireWidth');
+                this.loopSpacing   = this.model.get('loopSpacing');
+            }
+            return changed;
+        },
+        
+        /*
+         * Determines if the electron animation has changed.
+         * 
+         * @return true or false
+         */
+        electronsChanged: function() {
+            var changed = !(this.current === 0 && this.model.get('currentAmplitude') === 0);
+            this.current = this.model.get('currentAmplitude');
+            return changed;
+        },
+
+        /**
          * Updates the view to match the model.
          */
         update: function() {
-            if ( isVisible() ) {
-                
-                boolean dirty = false;
-                
+            if (this.displayObject.visible) {
                 // Update the physical appearance of the coil.
-                if ( coilChanged() ) {
-                    dirty = true;
-                    updateCoil();
-                }
+                if (this.coilChanged())
+                    this.updateCoil();
                 
                 // Change the speed/direction of electrons to match the voltage.
-                if ( _electronAnimationEnabled && electronsChanged() ) {
-                    dirty = true;
-                    updateElectrons();
-                }
-                       
-                if ( dirty ) {
-                    repaint();
-                }
+                if (this.electronAnimationEnabled && this.electronsChanged())
+                    this.updateElectrons();
             }
         },
 
@@ -171,8 +200,6 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            
 
             this.updatePosition(this.model, this.model.get('position'));
         },
@@ -192,8 +219,8 @@ define(function(require) {
          */
         updateCoil: function() {
             // Start with a clean slate.
-            this.foreground.removeChildren();
-            this.background.removeChildren();
+            this.foregroundLayer.removeChildren();
+            this.backgroundLayer.removeChildren();
 
             // Clear electron path descriptions
             this.clearElectronPath();
@@ -214,10 +241,10 @@ define(function(require) {
             var rightEndPoint;
 
             // Create canvases to draw to because we're drawing gradients
-            var bg = this.background;
+            var bg = this.backgroundLayer;
             var bgCanvas = this.createCoilCanvas();
             var bgCtx = bgCanvas.getContext('2d');
-            var fg = this.foreground;
+            var fg = this.foregroundLayer;
             var fgCanvas = this.createCoilCanvas();
             var fgCtx = fgCanvas.getContext('2d');
 
@@ -236,41 +263,34 @@ define(function(require) {
                     leftEndPoint = this.createWireLeftEnd(bg, bgCtx, loopSpacing, xOffset, radius);
 
                     // Back top (left-most) is slightly different so it connects to the left wire end.
-                    this.createWireLeftBackTop();
+                    this.createWireLeftBackTop(bg, bgCtx, loopSpacing, xOffset, radius);
                 }
                 else {
                     // Back top (no wire end connected)
-                    this.createWireBackTop();
+                    this.createWireBackTop(bg, bgCtx, loopSpacing, xOffset, radius);
                 }
                 
                 // Back bottom
-                this.createWireBackBottom();
+                this.createWireBackBottom(bg, bgCtx, xOffset, radius);
                 
                 // Front bottom
-                this.createWireFrontBottom();
+                this.createWireFrontBottom(bg, bgCtx, xOffset, radius);
 
                 // Front top
-                this.createWireFrontTop();
+                this.createWireFrontTop(bg, bgCtx, loopSpacing, xOffset, radius);
                 
                 // If last loop (right)
                 if (i === numberOfLoops - 1) {
                     // Right wire end
-                    rightEndPoint = this.createWireRightEnd();
+                    rightEndPoint = this.createWireRightEnd(bg, bgCtx, loopSpacing, xOffset, radius);
                 }
             }
 
             // Connect the ends
-            if ( _endsConnected ) {
-                
-                Line2D line = new Line2D.Double( leftEndPoint.getX(), leftEndPoint.getY(), rightEndPoint.getX(), rightEndPoint.getY() );
-                PhetShapeGraphic shapeGraphic = new PhetShapeGraphic( _component );
-                
-                Paint paint = _middlegroundColor;
-                
-                shapeGraphic.setShape( line );
-                shapeGraphic.setStroke( loopStroke );
-                shapeGraphic.setBorderPaint( paint );
-                _foreground.addGraphic( shapeGraphic );
+            if (this.endsConnected) {
+                fgCtx.strokeStyle = this.middlegroundColor;
+                fgCtx.moveTo(leftEndPoint.x, leftEndPoint.y);
+                fgCtx.lineTo(rightEndPoint.x, rightEndPoint.y);
             }
 
             // Create sprites from the canvases
@@ -323,10 +343,29 @@ define(function(require) {
                     // View
                     var descriptor = electron.getPathDescriptor();
                     var parent = descriptor.getParent();
-                    var electronView = new ElectronView({ model: electron });
+                    var electronView = new ElectronView({
+                        mvt: this.mvt,
+                        model: electron 
+                    });
                     parent.addChild(electronView.displayObject);
-                    descriptor.getParent().addGraphic( electronView );
+                    descriptor.getParent().addChild(electronView.displayObject);
                 }
+            }
+        },
+
+        /**
+         * Updates the speed and direction of electrons.
+         */
+        updateElectrons: function() {
+            // Speed and direction is a function of the voltage.
+            var speed = this.calculateElectronSpeed();
+            
+            // Update all electrons.
+            var numberOfElectrons = this.electrons.length;
+            for (var i = 0; i < numberOfElectrons; i++) {
+                var electron = this.electrons[i];
+                electron.set('enabled', this.electronAnimationEnabled);
+                electron.set('speed', speed);
             }
         },
 
@@ -358,8 +397,8 @@ define(function(require) {
                 ctx.strokeStyle = startColor;
             }
 
-            ctx.moveTo(curve.x1, curve.y1);
-            ctx.quadraticCurveTo(curve.cx, curve.cy, curve.x2, curve.y2);
+            ctx.moveTo(spline.x1, spline.y1);
+            ctx.quadraticCurveTo(spline.cx, spline.cy, spline.x2, spline.y2);
         },
 
         /**
@@ -377,7 +416,7 @@ define(function(require) {
             this.electronPath.push(d);
             
             // Horizontal gradient, left to right.
-            this.drawQuadBezierSpline(ctx, curve, this.middlegroundColor, this.backgroundColor, startPoint.x, 0, endPoint.x, 0);
+            this.drawQuadBezierSpline(ctx, curve, this.middlegroundColor, this.backgroundLayerColor, startPoint.x, 0, endPoint.x, 0);
             
             return startPoint;
         },
@@ -394,7 +433,7 @@ define(function(require) {
             var d = new ElectronPathDescriptor(curve, background, ElectronPathDescriptor.BACKGROUND);
             this.electronPath.push(d);
             
-            this.drawQuadBezierSpline(ctx, curve, this.backgroundColor);
+            this.drawQuadBezierSpline(ctx, curve, this.backgroundLayerColor);
         },
 
         /**
@@ -411,7 +450,7 @@ define(function(require) {
 
             // Diagonal gradient, upper left to lower right.
             this.drawQuadBezierSpline(
-                ctx, curve, this.middlegroundColor, this.backgroundColor, 
+                ctx, curve, this.middlegroundColor, this.backgroundLayerColor, 
                 Math.floor(startPoint.x + (radius * 0.10)), -Math.floor(radius), 
                 xOffset, -Math.floor(radius * 0.92)
             );
@@ -430,7 +469,7 @@ define(function(require) {
             this.electronPath.push(d);
 
             // Vertical gradient, upper to lower
-            this.drawQuadBezierSpline(ctx, curve, this.backgroundColor, this.middlegroundColor, 0, Math.floor(radius * 0.92), 0, Math.floor(radius));
+            this.drawQuadBezierSpline(ctx, curve, this.backgroundLayerColor, this.middlegroundColor, 0, Math.floor(radius * 0.92), 0, Math.floor(radius));
         },
 
         /**
@@ -447,7 +486,7 @@ define(function(require) {
 
             // Horizontal gradient, left to right
             this.drawQuadBezierSpline(
-                ctx, curve, this.foregroundColor, this.middlegroundColor, 
+                ctx, curve, this.foregroundLayerColor, this.middlegroundColor, 
                 Math.floor(-radius * 0.25) + xOffset, 0, 
                 Math.floor(-radius * 0.15) + xOffset, 0
             );
@@ -467,7 +506,7 @@ define(function(require) {
             
             // Horizontal gradient, left to right
             this.drawQuadBezierSpline(
-                ctx, curve, this.foregroundColor, this.middlegroundColor, 
+                ctx, curve, this.foregroundLayerColor, this.middlegroundColor, 
                 Math.floor(-radius * 0.25) + xOffset, 0, 
                 Math.floor(-radius * 0.15) + xOffset, 0
             );

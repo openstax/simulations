@@ -384,6 +384,17 @@ define(function (require) {
     Constants.CoilView = CoilView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                             ELECTRON VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElectronView = {};
+
+    ElectronView.MODEL_WIDTH = 10;
+
+    Constants.ElectronView = ElectronView;
 
     return Constants;
 });

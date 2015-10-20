@@ -47,7 +47,7 @@ define(function (require) {
          * @return an ElectronPathDescriptor
          */
         getPathDescriptor: function() {
-            return this.path.get(this.pathIndex);
+            return this.path[this.pathIndex];
         },
 
         updatePositionFromPath: function() {

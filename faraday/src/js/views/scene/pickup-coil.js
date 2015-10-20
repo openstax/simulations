@@ -9,6 +9,7 @@ define(function(require) {
     var BarMagnetView     = require('views/bar-magnet');
 
     var BFieldInsideView = require('views/bfield/inside');
+    var PickupCoilView   = require('views/pickup-coil');
 
     var Assets = require('assets');
 
@@ -26,6 +27,7 @@ define(function(require) {
             this.initCompass();
             this.initBarMagnet();
             this.initInsideBField();
+            this.initPickupCoil();
         },
 
         initCompass: function() {
@@ -58,6 +60,17 @@ define(function(require) {
             this.middleLayer.addChild(this.bFieldInsideView.displayObject);
 
             this.bFieldInsideView.hide();
+        },
+
+        initPickupCoil: function() {
+            this.pickupCoilView = new PickupCoilView({
+                mvt: this.mvt,
+                model: this.simulation.pickupCoil,
+                simulation: this.simulation
+            });
+
+            this.bottomLayer.addChild(this.pickupCoilView.backgroundLayer);
+            this.topLayer.addChild(this.pickupCoilView.foregroundLayer);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

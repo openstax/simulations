@@ -7,6 +7,8 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
 
+    var CoilView = require('views/coil');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -49,11 +51,8 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            this.foreground = new PIXI.Container();
-            this.background = new PIXI.Container();
-
-            this.displayObject.addChild(this.background);
-            this.displayObject.addChild(this.foreground);
+            this.foregroundLayer = new PIXI.Container();
+            this.backgroundLayer = new PIXI.Container();
 
             this.initCoilView();
 
@@ -61,10 +60,14 @@ define(function(require) {
         },
 
         initCoilView: function() {
-            this.coilView = new CoilView();
+            this.coilView = new CoilView({
+                mvt: this.mvt,
+                model: this.model,
+                simulation: this.simulation
+            });
 
-            this.background.addChild(this.coilView.backgroundLayer);
-            this.foreground.addChild(this.coilView.foregroundLayer);
+            this.backgroundLayer.addChild(this.coilView.backgroundLayer);
+            this.foregroundLayer.addChild(this.coilView.foregroundLayer);
         },
 
         /**
