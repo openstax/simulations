@@ -47,6 +47,10 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            
             'click .show-field-check'       : 'toggleField',
             'click .show-field-meter-check' : 'toggleFieldMeter',
             'slide .strength-slider'        : 'changeStrength',
@@ -68,6 +72,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -156,6 +163,16 @@ define(function (require) {
 
         setNeedleSize: function(width, height) {
             this.sceneView.setNeedleSize(width, height);
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
         },
 
         toggleField: function(event) {

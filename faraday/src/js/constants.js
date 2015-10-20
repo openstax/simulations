@@ -364,6 +364,26 @@ define(function (require) {
     Constants.BFieldInsideView = BFieldInsideView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                              COIL VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var CoilView = {};
+
+    CoilView.FOREGROUND_COLOR   = '#996633'; // light brown
+    CoilView.MIDDLEGROUND_COLOR = '#5C340C'; // dark brown
+    CoilView.BACKGROUND_COLOR   = '#281703'; // really dark brown
+
+    // Space between electrons, determines the number of electrons add to each curve.
+    CoilView.ELECTRON_SPACING = 25;
+    CoilView.ELECTRONS_IN_LEFT_END = 2;
+    CoilView.ELECTRONS_IN_RIGHT_END = 2;
+
+    Constants.CoilView = CoilView;
+
+
 
     return Constants;
 });

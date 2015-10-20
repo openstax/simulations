@@ -18,7 +18,7 @@ define(function(require) {
     /**
      *
      */
-    var BarMagnetSceneView = FaradaySceneView.extend({
+    var PickupCoilSceneView = FaradaySceneView.extend({
 
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
@@ -75,5 +75,5 @@ define(function(require) {
 
     });
 
-    return BarMagnetSceneView;
+    return PickupCoilSceneView;
 });

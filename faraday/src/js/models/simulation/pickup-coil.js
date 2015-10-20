@@ -10,6 +10,7 @@ define(function (require, exports, module) {
     var FieldMeter           = require('models/field-meter');
     var PickupCoil           = require('models/coil/pickup');
     var Lightbulb            = require('models/lightbulb');
+    var Voltmeter            = require('models/voltmeter');
     var SamplePointsStrategy = require('models/sample-points-strategy');
 
     /**
@@ -84,11 +85,21 @@ define(function (require, exports, module) {
             }, {
                 pickupCoilModel: this.pickupCoil
             });
+
+            // Voltmeter
+            this.voltmeter = new Voltmeter({
+                enabled: false,
+                jiggleEnabled: true
+            }, {
+                pickupCoilModel: this.pickupCoil
+            });
         },
 
         _update: function(time, deltaTime) {
             this.compass.update(time, deltaTime);
             this.pickupCoil.update(time, deltaTime);
+            this.lightbulb.update(time, deltaTime);
+            this.voltmeter.update(time, deltaTime);
         }
 
     }, Constants.PickupCoilSimulation);

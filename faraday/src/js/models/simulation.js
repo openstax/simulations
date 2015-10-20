@@ -2,7 +2,8 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
@@ -28,6 +29,7 @@ define(function (require, exports, module) {
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
+            this.electrons = new Backbone.Collection();
         },
 
         /**
@@ -37,8 +39,17 @@ define(function (require, exports, module) {
             
         },
 
+        addElectron: function(electron) {
+            this.electrons.add(electron);
+        },
+
+        clearElectrons: function() {
+            this.electrons.reset();
+        },
+
         _update: function(time, deltaTime) {
-            
+            for (var i = 0; i < this.electrons.length)
+                this.electrons.at(i).update(time, deltaTime);
         }
 
     });

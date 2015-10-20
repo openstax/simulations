@@ -12,9 +12,11 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * 
+     * PickupCoilView is the graphical representation of a pickup coil, with
+     *   indicators (lightbulb and voltmeter) for displaying the effect of
+     *   electromagnetic induction.
      */
-    var BarMagnetView = PixiView.extend({
+    var PickupCoilView = PixiView.extend({
 
         events: {
             'touchstart      .displayObject': 'dragStart',
@@ -28,7 +30,7 @@ define(function(require) {
         },
 
         /**
-         * Initializes the new BarMagnetView.
+         * Initializes the new PickupCoilView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
@@ -41,19 +43,28 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:position',  this.updatePosition);
-            this.listenTo(this.model, 'change:direction', this.updateDirection);
         },
 
         /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            this.sprite = Assets.createSprite(Assets.Images.BAR_MAGNET);
-            this.sprite.anchor.x = this.sprite.anchor.y = 0.5;
-            this.displayObject.addChild(this.sprite);
-            this.displayObject.buttonMode = true;
+            this.foreground = new PIXI.Container();
+            this.background = new PIXI.Container();
+
+            this.displayObject.addChild(this.background);
+            this.displayObject.addChild(this.foreground);
+
+            this.initCoilView();
 
             this.updateMVT(this.mvt);
+        },
+
+        initCoilView: function() {
+            this.coilView = new CoilView();
+
+            this.background.addChild(this.coilView.backgroundLayer);
+            this.foreground.addChild(this.coilView.foregroundLayer);
         },
 
         /**
@@ -63,10 +74,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            var targetWidth = this.mvt.modelToViewDeltaX(this.model.get('width'));
-            var scale = targetWidth / this.sprite.texture.width;
-            this.displayObject.scale.x = scale;
-            this.displayObject.scale.y = scale;
+            
 
             this.updatePosition(this.model, this.model.get('position'));
         },
@@ -77,12 +85,8 @@ define(function(require) {
             this.displayObject.y = viewPosition.y;
         },
 
-        updateDirection: function(model, direction) {
-            this.sprite.rotation = direction;
-        },
-
         dragStart: function(event) {
-            if (this.simulation.get('paused'))
+            if (!this.simulation.get('paused'))
                 return;
 
             this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
@@ -109,5 +113,5 @@ define(function(require) {
     });
 
 
-    return BarMagnetView;
+    return PickupCoilView;
 });

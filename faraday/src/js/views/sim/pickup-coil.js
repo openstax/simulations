@@ -7,7 +7,8 @@ define(function (require) {
 
     var PickupCoilSimulation = require('models/simulation/pickup-coil');
 
-    var FaradaySimView = require('views/sim');
+    var FaradaySimView      = require('views/sim');
+    var PickupCoilSceneView = require('views/scene/pickup-coil');
 
     var Constants = require('constants');
 
@@ -50,6 +51,15 @@ define(function (require) {
          */
         initSimulation: function() {
             this.simulation = new PickupCoilSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new PickupCoilSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**
