@@ -68,11 +68,11 @@ define(function (require, exports, module) {
             // Pickup Coil
             var ySpacing = this.barMagnet.get('height') / 10;
             this.pickupCoil = new PickupCoil({
-                position: PickupCoilSimulation.PICKUP_COIL_LOCATION,
-                direction: PickupCoilSimulation.PICKUP_COIL_DIRECTION,
-                numberOfLoops: PickupCoilSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
+                position:                 PickupCoilSimulation.PICKUP_COIL_LOCATION,
+                direction:                PickupCoilSimulation.PICKUP_COIL_DIRECTION,
+                numberOfLoops:            PickupCoilSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
                 transitionSmoothingScale: PickupCoilSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE,
-                samplePointsStrategy: new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing),
+                samplePointsStrategy:     new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing),
             }, {
                 magnetModel: this.barMagnet,
                 calibrationEmf: PickupCoilSimulation.CALIBRATION_EMF

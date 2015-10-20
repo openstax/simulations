@@ -198,6 +198,9 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.width = this.getWidth();
+            this.height = this.getHeight();
         },
 
         /**
@@ -225,7 +228,7 @@ define(function(require) {
             var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
             
             // Start at the left-most loop, keeping the coil centered.
-            var xStart = (loopSpacing * numberOfLoops) / 2 + wireWidth; //-(loopSpacing * (numberOfLoops - 1) / 2);
+            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);//(loopSpacing * numberOfLoops) / 2 + wireWidth; //-(loopSpacing * (numberOfLoops - 1) / 2);
             
             var leftEndPoint;
             var rightEndPoint;
@@ -241,12 +244,15 @@ define(function(require) {
             fgCtx.lineWidth = bgCtx.lineWidth = wireWidth;
             fgCtx.lineJoin = bgCtx.lineJoin = 'bevel';
             fgCtx.lineCap = bgCtx.lineCap = 'round';
+
+            // bgCtx.fillStyle = '#00d';
+            // bgCtx.fillRect(0, 0, 600, 600);
             
             // Create the wire ends & loops from left to right.
             // Curves are created in the order that they are pieced together.
             for (var i = 0; i < numberOfLoops; i++) {
-                var xOffset = xStart + (i * loopSpacing);
-                var yOffset = Math.floor(radius);
+                var xOffset = xStart + (i * loopSpacing);// + this.getWidth() / 2;
+                var yOffset = 0//Math.floor(radius) + 40;
                 
                 // If first loop (left)
                 if (i === 0) {     
@@ -265,15 +271,15 @@ define(function(require) {
                 this.createWireBackBottom(bg, bgCtx, xOffset, yOffset, radius);
                 
                 // Front bottom
-                this.createWireFrontBottom(bg, bgCtx, xOffset, yOffset, radius);
+                this.createWireFrontBottom(fg, fgCtx, xOffset, yOffset, radius);
 
                 // Front top
-                this.createWireFrontTop(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
+                this.createWireFrontTop(fg, fgCtx, loopSpacing, xOffset, yOffset, radius);
                 
                 // If last loop (right)
                 if (i === numberOfLoops - 1) {
                     // Right wire end
-                    rightEndPoint = this.createWireRightEnd(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
+                    rightEndPoint = this.createWireRightEnd(fg, fgCtx, loopSpacing, xOffset, yOffset, radius);
                 }
             }
 
@@ -288,17 +294,20 @@ define(function(require) {
             // Create sprites from the canvases
             var bgSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(bgCanvas));
             var fgSprite = new PIXI.Sprite(PIXI.Texture.fromCanvas(fgCanvas));
-            bgSprite.anchor.x = bgSprite.anchor.y = 0.5;
-            fgSprite.anchor.x = fgSprite.anchor.y = 0.5;
             bg.addChild(bgSprite);
             fg.addChild(fgSprite);
+            bgSprite.x = -this.width / 2;
+            fgSprite.x = -this.width / 2;
+            bgSprite.y = -this.height / 2;
+            fgSprite.y = -this.height / 2;
             
             // Add electrons to the coil.
             var speed = this.calculateElectronSpeed();
             
             var leftEndIndex = 0;
             var rightEndIndex = this.electronPath.length - 1;
-
+bg.name = 'background'
+fg.name = 'foreground'
             // For each curve...
             for (var pathIndex = 0; pathIndex < this.electronPath.length; pathIndex++) {
                 /*
@@ -335,6 +344,7 @@ define(function(require) {
                     // View
                     var descriptor = electron.getPathDescriptor();
                     var parent = descriptor.getParent();
+console.log(parent.name)
                     var electronView = new ElectronView({
                         mvt: this.mvt,
                         model: electron 
@@ -363,8 +373,8 @@ define(function(require) {
 
         createCoilCanvas: function() {
             var canvas = document.createElement('canvas');
-            canvas.width  = this.getWidth();
-            canvas.height = this.getHeight();
+            canvas.width  = this.width;
+            canvas.height = this.height;
             return canvas;
         },
 
@@ -378,8 +388,11 @@ define(function(require) {
         },
 
         drawQuadBezierSpline: function(ctx, spline, startColor, endColor, x1, y1, x2, y2) {
+            var ox = this.width  / 2; // x offset to make sure it draws within the canvas bounds
+            var oy = this.height / 2; // y offset to make sure it draws within the canvas bounds
+
             if (endColor !== undefined) {
-                var gradient = ctx.createLinearGradient(x1, y1, x2, y2);
+                var gradient = ctx.createLinearGradient(x1 + ox, y1 + oy, x2 + ox, y2 + oy);
                 gradient.addColorStop(0, startColor);
                 gradient.addColorStop(1, endColor);
 
@@ -390,9 +403,8 @@ define(function(require) {
             }
 
             ctx.beginPath();
-            ctx.moveTo(spline.x1, spline.y1);
-            ctx.quadraticCurveTo(spline.cx, spline.cy, spline.x2, spline.y2);
-            //ctx.closePath();
+            ctx.moveTo(spline.x1 + ox, spline.y1 + oy);
+            ctx.quadraticCurveTo(spline.cx + ox, spline.cy + oy, spline.x2 + ox, spline.y2 + oy);
             ctx.stroke();
         },
 
@@ -543,7 +555,7 @@ define(function(require) {
 
         getHeight: function() {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
-            return 2 * (radius * 1.2);
+            return 2 * (radius * 1.2) + 40;
         },
 
         /**
