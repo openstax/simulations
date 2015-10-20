@@ -96,7 +96,7 @@ define(function(require) {
                 bounds: new Rectangle(0, 0, this.width, this.height)
             });
 
-            this.bottomLayer.addChild(this.bFieldOutsideView.displayObject);
+            this.middleLayer.addChild(this.bFieldOutsideView.displayObject);
         },
 
         initFieldMeter: function() {

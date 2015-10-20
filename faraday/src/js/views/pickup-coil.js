@@ -84,8 +84,10 @@ define(function(require) {
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+            this.backgroundLayer.x = viewPosition.x;
+            this.backgroundLayer.y = viewPosition.y;
+            this.foregroundLayer.x = viewPosition.x;
+            this.foregroundLayer.y = viewPosition.y;
         },
 
         dragStart: function(event) {

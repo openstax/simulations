@@ -81,8 +81,6 @@ define(function(require) {
 
             this.initGraphics();
             this.update();
-
-            this.listenTo(this.model, 'change:position',  this.updatePosition);
         },
 
         /**
@@ -200,14 +198,6 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            this.updatePosition(this.model, this.model.get('position'));
-        },
-
-        updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToView(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
         },
 
         /**
@@ -235,7 +225,7 @@ define(function(require) {
             var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
             
             // Start at the left-most loop, keeping the coil centered.
-            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);
+            var xStart = (loopSpacing * numberOfLoops) / 2 + wireWidth; //-(loopSpacing * (numberOfLoops - 1) / 2);
             
             var leftEndPoint;
             var rightEndPoint;
@@ -256,33 +246,34 @@ define(function(require) {
             // Curves are created in the order that they are pieced together.
             for (var i = 0; i < numberOfLoops; i++) {
                 var xOffset = xStart + (i * loopSpacing);
+                var yOffset = Math.floor(radius);
                 
                 // If first loop (left)
                 if (i === 0) {     
                     // Left wire end
-                    leftEndPoint = this.createWireLeftEnd(bg, bgCtx, loopSpacing, xOffset, radius);
+                    leftEndPoint = this.createWireLeftEnd(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
 
                     // Back top (left-most) is slightly different so it connects to the left wire end.
-                    this.createWireLeftBackTop(bg, bgCtx, loopSpacing, xOffset, radius);
+                    this.createWireLeftBackTop(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
                 }
                 else {
                     // Back top (no wire end connected)
-                    this.createWireBackTop(bg, bgCtx, loopSpacing, xOffset, radius);
+                    this.createWireBackTop(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
                 }
                 
                 // Back bottom
-                this.createWireBackBottom(bg, bgCtx, xOffset, radius);
+                this.createWireBackBottom(bg, bgCtx, xOffset, yOffset, radius);
                 
                 // Front bottom
-                this.createWireFrontBottom(bg, bgCtx, xOffset, radius);
+                this.createWireFrontBottom(bg, bgCtx, xOffset, yOffset, radius);
 
                 // Front top
-                this.createWireFrontTop(bg, bgCtx, loopSpacing, xOffset, radius);
+                this.createWireFrontTop(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
                 
                 // If last loop (right)
                 if (i === numberOfLoops - 1) {
                     // Right wire end
-                    rightEndPoint = this.createWireRightEnd(bg, bgCtx, loopSpacing, xOffset, radius);
+                    rightEndPoint = this.createWireRightEnd(bg, bgCtx, loopSpacing, xOffset, yOffset, radius);
                 }
             }
 
@@ -291,6 +282,7 @@ define(function(require) {
                 fgCtx.strokeStyle = this.middlegroundColor;
                 fgCtx.moveTo(leftEndPoint.x, leftEndPoint.y);
                 fgCtx.lineTo(rightEndPoint.x, rightEndPoint.y);
+                fgCtx.stroke();
             }
 
             // Create sprites from the canvases
@@ -397,15 +389,18 @@ define(function(require) {
                 ctx.strokeStyle = startColor;
             }
 
+            ctx.beginPath();
             ctx.moveTo(spline.x1, spline.y1);
             ctx.quadraticCurveTo(spline.cx, spline.cy, spline.x2, spline.y2);
+            //ctx.closePath();
+            ctx.stroke();
         },
 
         /**
          * Left wire end. Returns the left end point
          */
-        createWireLeftEnd: function(background, ctx, loopSpacing, xOffset, radius) {
-            var endPoint = this._endPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius)); // lower
+        createWireLeftEnd: function(background, ctx, loopSpacing, xOffset, yOffset, radius) {
+            var endPoint = this._endPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius) + yOffset); // lower
             var startPoint = this._startPoint.set(endPoint.x - 15, endPoint.y - 40); // upper
             var controlPoint = this._controlPoint.set(endPoint.x - 20, endPoint.y - 20);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
@@ -416,7 +411,11 @@ define(function(require) {
             this.electronPath.push(d);
             
             // Horizontal gradient, left to right.
-            this.drawQuadBezierSpline(ctx, curve, this.middlegroundColor, this.backgroundLayerColor, startPoint.x, 0, endPoint.x, 0);
+            this.drawQuadBezierSpline(
+                ctx, curve, this.middlegroundColor, this.backgroundLayerColor, 
+                startPoint.x, yOffset, 
+                endPoint.x, yOffset
+            );
             
             return startPoint;
         },
@@ -424,10 +423,10 @@ define(function(require) {
         /**
          * Back top (left-most) is slightly different so it connects to the left wire end
          */
-        createWireLeftBackTop: function(background, ctx, loopSpacing, xOffset, radius) {
-            var startPoint = this._startPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius)); // upper
-            var endPoint = this._endPoint.set(Math.floor(radius * 0.25) + xOffset, 0); // lower
-            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.15) + xOffset, Math.floor(-radius * 0.70));
+        createWireLeftBackTop: function(background, ctx, loopSpacing, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius) + yOffset); // upper
+            var endPoint = this._endPoint.set(Math.floor(radius * 0.25) + xOffset, yOffset); // lower
+            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.15) + xOffset, Math.floor(-radius * 0.70) + yOffset);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             var d = new ElectronPathDescriptor(curve, background, ElectronPathDescriptor.BACKGROUND);
@@ -439,10 +438,10 @@ define(function(require) {
         /**
          * Back top (no wire end connected)
          */
-        createWireBackTop: function(background, ctx, loopSpacing, xOffset, radius) {
-            var startPoint = this._startPoint.set(-loopSpacing + xOffset, Math.floor(-radius)); // upper
-            var endPoint = this._endPoint.set(Math.floor(radius * 0.25) + xOffset, 0); // lower
-            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.15) + xOffset, Math.floor(-radius * 1.20));
+        createWireBackTop: function(background, ctx, loopSpacing, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(-loopSpacing + xOffset, Math.floor(-radius) + yOffset); // upper
+            var endPoint = this._endPoint.set(Math.floor(radius * 0.25) + xOffset, yOffset); // lower
+            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.15) + xOffset, Math.floor(-radius * 1.20) + yOffset);
             var curve = new QuadBezierSpline( startPoint, controlPoint, endPoint );
 
             var d = new ElectronPathDescriptor( curve, background, ElectronPathDescriptor.BACKGROUND );
@@ -451,34 +450,38 @@ define(function(require) {
             // Diagonal gradient, upper left to lower right.
             this.drawQuadBezierSpline(
                 ctx, curve, this.middlegroundColor, this.backgroundLayerColor, 
-                Math.floor(startPoint.x + (radius * 0.10)), -Math.floor(radius), 
-                xOffset, -Math.floor(radius * 0.92)
+                Math.floor(startPoint.x + (radius * 0.10)), -Math.floor(radius) + yOffset, 
+                xOffset, -Math.floor(radius * 0.92) + yOffset
             );
         },
 
         /**
          * Back bottom
          */
-        createWireBackBottom: function(background, ctx, xOffset, radius) {
-            var startPoint = this._startPoint.set(Math.floor(radius * 0.25) + xOffset, 0); // upper
-            var endPoint = this._endPoint.set(xOffset, Math.floor(radius)); // lower
-            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.35) + xOffset, Math.floor(radius * 1.20));
+        createWireBackBottom: function(background, ctx, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(Math.floor(radius * 0.25) + xOffset, 0 + yOffset); // upper
+            var endPoint = this._endPoint.set(xOffset, Math.floor(radius) + yOffset); // lower
+            var controlPoint = this._controlPoint.set(Math.floor(radius * 0.35) + xOffset, Math.floor(radius * 1.20) + yOffset);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             var d = new ElectronPathDescriptor(curve, background, ElectronPathDescriptor.BACKGROUND);
             this.electronPath.push(d);
 
             // Vertical gradient, upper to lower
-            this.drawQuadBezierSpline(ctx, curve, this.backgroundLayerColor, this.middlegroundColor, 0, Math.floor(radius * 0.92), 0, Math.floor(radius));
+            this.drawQuadBezierSpline(
+                ctx, curve, this.backgroundLayerColor, this.middlegroundColor, 
+                0, Math.floor(radius * 0.92) + yOffset, 
+                0, Math.floor(radius) + yOffset
+            );
         },
 
         /**
          * Front bottom
          */
-        createWireFrontBottom: function(foreground, ctx, xOffset, radius) {
-            var startPoint = this._startPoint.set( xOffset, Math.floor(radius)); // lower
-            var endPoint = this._endPoint.set(Math.floor(-radius * 0.25) + xOffset, 0); // upper
-            var controlPoint = this._controlPoint.set(Math.floor(-radius * 0.25) + xOffset, Math.floor(radius * 0.80));
+        createWireFrontBottom: function(foreground, ctx, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(xOffset, Math.floor(radius) + yOffset); // lower
+            var endPoint = this._endPoint.set(Math.floor(-radius * 0.25) + xOffset, 0 + yOffset); // upper
+            var controlPoint = this._controlPoint.set(Math.floor(-radius * 0.25) + xOffset, Math.floor(radius * 0.80) + yOffset);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             var d = new ElectronPathDescriptor(curve, foreground, ElectronPathDescriptor.FOREGROUND);
@@ -487,18 +490,18 @@ define(function(require) {
             // Horizontal gradient, left to right
             this.drawQuadBezierSpline(
                 ctx, curve, this.foregroundLayerColor, this.middlegroundColor, 
-                Math.floor(-radius * 0.25) + xOffset, 0, 
-                Math.floor(-radius * 0.15) + xOffset, 0
+                Math.floor(-radius * 0.25) + xOffset, yOffset, 
+                Math.floor(-radius * 0.15) + xOffset, yOffset
             );
         },
 
         /**
          * Front top
          */
-        createWireFrontTop: function(foreground, ctx, loopSpacing, xOffset, radius) {
-            var startPoint = this._startPoint.set(Math.floor(-radius * 0.25) + xOffset, 0); // lower
-            var endPoint = this._endPoint.set(xOffset, Math.floor(-radius)); // upper
-            var controlPoint = this._controlPoint.set(Math.floor(-radius * 0.25) + xOffset, Math.floor(-radius * 0.80));
+        createWireFrontTop: function(foreground, ctx, loopSpacing, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(Math.floor(-radius * 0.25) + xOffset, 0 + yOffset); // lower
+            var endPoint = this._endPoint.set(xOffset, Math.floor(-radius) + yOffset); // upper
+            var controlPoint = this._controlPoint.set(Math.floor(-radius * 0.25) + xOffset, Math.floor(-radius * 0.80) + yOffset);
             var curve = new QuadBezierSpline( startPoint, controlPoint, endPoint );
 
             var d = new ElectronPathDescriptor(curve, foreground, ElectronPathDescriptor.FOREGROUND);
@@ -507,16 +510,16 @@ define(function(require) {
             // Horizontal gradient, left to right
             this.drawQuadBezierSpline(
                 ctx, curve, this.foregroundLayerColor, this.middlegroundColor, 
-                Math.floor(-radius * 0.25) + xOffset, 0, 
-                Math.floor(-radius * 0.15) + xOffset, 0
+                Math.floor(-radius * 0.25) + xOffset, yOffset, 
+                Math.floor(-radius * 0.15) + xOffset, yOffset
             );
         },
 
         /**
          * Right wire end. Returns right end point
          */
-        createWireRightEnd: function(foreground, ctx, loopSpacing, xOffset, radius) {
-            var startPoint = this._startPoint.set(xOffset, Math.floor(-radius)); // lower
+        createWireRightEnd: function(foreground, ctx, loopSpacing, xOffset, yOffset, radius) {
+            var startPoint = this._startPoint.set(xOffset, Math.floor(-radius) + yOffset); // lower
             var endPoint = this._endPoint.set(startPoint.x + 15, startPoint.y - 40); // upper
             var controlPoint = this._controlPoint.set(startPoint.x + 20, startPoint.y - 20);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
