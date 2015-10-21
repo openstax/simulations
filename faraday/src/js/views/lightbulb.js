@@ -6,6 +6,8 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
 
+    var LightRaysView = require('views/light-rays');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -45,9 +47,13 @@ define(function(require) {
             this.bulb.anchor.y = 1;
             this.bulb.y = -(this.base.texture.height + this.cap.texture.height - LightbulbView.DISTANCE_BULB_IS_SCREWED_INTO_BASE);
 
+            this.lightRaysView = new LightRaysView({ mvt: this.mvt, bulbRadius: LightbulbView.BULB_RADIUS });
+            this.lightRaysView.displayObject.y = -90;
+
             this.displayObject.addChild(this.bulb);
             this.displayObject.addChild(this.cap);
             this.displayObject.addChild(this.base);
+            this.displayObject.addChild(this.lightRaysView.displayObject);
 
             this.updateMVT(this.mvt);
         },
@@ -117,7 +123,7 @@ define(function(require) {
                 var intensity = this.model.getIntensity();
                 if (intensity != this.previousIntensity) {
                     
-                    //_raysGraphic.setIntensity( intensity );
+                    this.lightRaysView.setIntensity(intensity);
                     
                     // Modulate alpha channel of the glass to make it appear to glow
                     var alpha = (LightbulbView.GLASS_MIN_ALPHA + (this.glassGlowScale * (1 - LightbulbView.GLASS_MIN_ALPHA) * intensity));
@@ -127,8 +133,6 @@ define(function(require) {
                     this.bulb.alpha = alpha;
                     
                     this.previousIntensity = intensity;
-                    // setBoundsDirty();
-                    // repaint(); 
                 }
             }
         }

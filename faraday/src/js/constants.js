@@ -414,6 +414,34 @@ define(function (require) {
     Constants.LightbulbView = LightbulbView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           LIGHT RAYS VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightRaysView = {};
+
+    // Number of rays
+    LightRaysView.MAX_RAYS = 60;
+    LightRaysView.MIN_RAYS = 8;
+
+    // Physical dimensions, in pixels
+    LightRaysView.MAX_RAY_LENGTH = 350;
+    LightRaysView.MIN_RAY_LENGTH = 0;
+
+    // Angles
+    LightRaysView.RAYS_START_ANGLE = 135 * DEG_TO_RAD;
+    LightRaysView.RAYS_ARC_ANGLE   = 270 * DEG_TO_RAD;
+
+    // Color and strokes
+    LightRaysView.RAY_COLOR = '#ff0';
+    LightRaysView.RAY_BIG_WIDTH    = 3;
+    LightRaysView.RAY_MEDIUM_WIDTH = 2;
+    LightRaysView.RAY_SMALL_WIDTH  = 1;
+
+    Constants.LightRaysView = LightRaysView;
+
 
     return Constants;
 });
