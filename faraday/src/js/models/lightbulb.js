@@ -23,10 +23,6 @@ define(function (require) {
              * Bar Magnet) this is not the desired behavior.
              */
             this.offWhenCurrentChangesDirection = false;
-
-            // Cached objects
-            
-
         },
 
         /**

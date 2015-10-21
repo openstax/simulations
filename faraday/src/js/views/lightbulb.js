@@ -21,6 +21,7 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.glassGlowScale = LightbulbView.DEFAULT_GLASS_GLOW_SCALE;
 
             this.initGraphics();
 
@@ -52,6 +53,38 @@ define(function(require) {
         },
 
         /**
+         * Sets the scaling factor that determines how much the bulb glows.
+         * Larger values will cause the bulb to reach it's maximum glow sooner.
+         * 
+         * @param scale
+         */
+        setGlassGlowScale: function(scale) {
+            if (scale !== this.glassGlowScale) {
+                this.glassGlowScale = scale;
+                this.forceUpdate();
+            }
+        },
+        
+        /**
+         * Gets the scaling factor that determines how much the bulb glows.
+         * Larger values will cause the bulb to reach it's maximum glow sooner.
+         * 
+         * @return
+         */
+        getGlassGlowScale: function() {
+            return this.glassGlowScale;
+        },
+        
+        //----------------------------------------------------------------------------
+        // SimpleObserver implementation
+        //----------------------------------------------------------------------------
+
+        forceUpdate: function() {
+            this.previousIntensity = -1;
+            this.update();
+        },
+
+        /**
          * Updates the model-view-transform and anything that
          *   relies on it.
          */
@@ -64,12 +97,40 @@ define(function(require) {
             this.displayObject.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
+            this.update();
         },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToViewDelta(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
+        },
+
+        /**
+         * Synchronize the view with the model.
+         */
+        update: function() {
+            this.displayObject.visible = this.model.get('enabled');
+            
+            if (this.displayObject.visible) {
+                // Get the light intensity, a value in the range 0...+1.
+                var intensity = this.model.getIntensity();
+                if (intensity != this.previousIntensity) {
+                    
+                    //_raysGraphic.setIntensity( intensity );
+                    
+                    // Modulate alpha channel of the glass to make it appear to glow
+                    var alpha = (LightbulbView.GLASS_MIN_ALPHA + (this.glassGlowScale * (1 - LightbulbView.GLASS_MIN_ALPHA) * intensity));
+                    if (alpha > 1)
+                        alpha = 1;
+                    
+                    this.bulb.alpha = alpha;
+                    
+                    this.previousIntensity = intensity;
+                    // setBoundsDirty();
+                    // repaint(); 
+                }
+            }
         }
 
     }, Constants.LightbulbView);
