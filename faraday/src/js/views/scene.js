@@ -26,6 +26,8 @@ define(function(require) {
      */
     var FaradaySceneView = PixiSceneView.extend({
 
+        magnetModel: undefined,
+
         events: {
             
         },
@@ -41,7 +43,8 @@ define(function(require) {
         postRender: function() {
             PixiSceneView.prototype.postRender.apply(this, arguments);
 
-            this.initFieldMeter();
+            if (this.magnetModel)
+                this.initFieldMeter();
         },
 
         initGraphics: function() {
@@ -56,7 +59,8 @@ define(function(require) {
             this.stage.addChild(this.topLayer);
 
             this.initMVT();
-            this.initOutsideBField();
+            if (this.magnetModel)
+                this.initOutsideBField();
         },
 
         initMVT: function() {
@@ -89,7 +93,7 @@ define(function(require) {
         initOutsideBField: function() {
             this.bFieldOutsideView = new BFieldOutsideView({
                 mvt: this.mvt,
-                magnetModel: this.simulation.barMagnet,
+                magnetModel: this.magnetModel,
                 xSpacing:    Constants.GRID_SPACING, 
                 ySpacing:    Constants.GRID_SPACING,
                 needleWidth: Constants.GRID_NEEDLE_WIDTH,
@@ -103,7 +107,7 @@ define(function(require) {
             this.fieldMeterView = new FieldMeterView({
                 mvt: this.mvt,
                 model: this.simulation.fieldMeter,
-                magnetModel: this.simulation.barMagnet,
+                magnetModel: this.magnetModel,
                 dragFrame: this.ui
             });
 
@@ -119,7 +123,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            if (this.simulation.updated()) {
+            if (this.simulation.updated() && this.magnetModel /*TODO: Get rid of these magnetModel checks after all sims are implemented*/) {
                 this.bFieldOutsideView.update();
                 this.fieldMeterView.update();
             }

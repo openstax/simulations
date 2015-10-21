@@ -21,6 +21,12 @@ define(function(require) {
      */
     var PickupCoilSceneView = FaradaySceneView.extend({
 
+        initialize: function(options) {
+            FaradaySceneView.prototype.initialize.apply(this, arguments);
+
+            this.magnetModel = this.simulation.barMagnet;
+        },
+
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 
@@ -36,6 +42,7 @@ define(function(require) {
                 model: this.simulation.compass,
                 simulation: this.simulation
             });
+            this.compassView.hide();
 
             this.middleLayer.addChild(this.compassView.displayObject);
         },

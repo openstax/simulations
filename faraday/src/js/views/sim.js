@@ -18,17 +18,18 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml               = require('text!templates/sim.html');
+    var barMagnetControlsHtml = require('text!templates/bar-magnet.html');
+    var playbackControlsHtml  = require('text!templates/playback-controls.html');
 
     /**
-     * This is the umbrella view for everything in a simulation tab.
-     *   It will be extended by both the Intro module and the Charts
-     *   and contains all the common functionality between the two.
+     * 
      */
     var FaradaySimView = SimView.extend({
 
@@ -41,7 +42,9 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
+        template:                      _.template(simHtml),
+        barMagnetControlsTemplate:     _.template(barMagnetControlsHtml),
+        playbackControlsPanelTemplate: _.template(playbackControlsHtml),
 
         /**
          * Dom event listeners
@@ -53,6 +56,7 @@ define(function (require) {
             
             'click .show-field-check'       : 'toggleField',
             'click .show-field-meter-check' : 'toggleFieldMeter',
+            'click .inside-magnet-check'    : 'toggleInsideBarMagnet',
             'slide .strength-slider'        : 'changeStrength',
             'click .flip-polarity-btn'      : 'flipPolarity'
         },
@@ -66,8 +70,11 @@ define(function (require) {
             options = _.extend({
                 title: 'Faraday\'s Electromagnetic Lab',
                 name: 'faraday',
-                link: 'legacy/faraday'
+                link: 'legacy/faraday',
+                hideCompass: false
             }, options);
+
+            this.hideCompass = options.hideCompass;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -115,6 +122,39 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+        },
+
+        /**
+         * Renders the playback controls at the bottom of the screen
+         */
+        renderPlaybackControls: function() {
+            this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
+
+            this.$el.append(this.$playbackControls);
+        },
+
+        /**
+         * Renders page content.
+         */
+        renderBarMagnetControls: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                name: this.name,
+                includeEarth: this.includeEarth,
+                hideCompass: this.hideCompass
+            };
+
+            this.$('.sim-controls-wrapper').append(this.barMagnetControlsTemplate(data));
+
+            this.$('.strength-slider').noUiSlider({
+                start: 3,
+                range: {
+                    min: 1,
+                    max: 5
+                },
+                connect: 'lower'
+            });
         },
 
         /**
@@ -187,6 +227,13 @@ define(function (require) {
                 this.sceneView.showFieldMeter();
             else
                 this.sceneView.hideFieldMeter();
+        },
+
+        toggleInsideBarMagnet: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showInsideBarMagnet();
+            else
+                this.sceneView.hideInsideBarMagnet();
         },
 
         changeStrength: function(event) {

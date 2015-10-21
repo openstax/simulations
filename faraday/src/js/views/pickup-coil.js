@@ -21,14 +21,14 @@ define(function(require) {
     var PickupCoilView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd'
+            'touchstart      .foregroundLayer': 'dragStart',
+            'mousedown       .foregroundLayer': 'dragStart',
+            'touchmove       .foregroundLayer': 'drag',
+            'mousemove       .foregroundLayer': 'drag',
+            'touchend        .foregroundLayer': 'dragEnd',
+            'mouseup         .foregroundLayer': 'dragEnd',
+            'touchendoutside .foregroundLayer': 'dragEnd',
+            'mouseupoutside  .foregroundLayer': 'dragEnd'
         },
 
         /**
@@ -53,6 +53,8 @@ define(function(require) {
         initGraphics: function() {
             this.foregroundLayer = new PIXI.Container();
             this.backgroundLayer = new PIXI.Container();
+
+            this.foregroundLayer.buttonMode = true;
 
             this.initCoilView();
 
@@ -95,16 +97,16 @@ define(function(require) {
         },
 
         dragStart: function(event) {
-            if (!this.simulation.get('paused'))
+            if (this.simulation.get('paused'))
                 return;
 
-            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.foregroundLayer, this._dragOffset);
             this.dragging = true;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.foregroundLayer.parent, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
                 

@@ -20,6 +20,12 @@ define(function(require) {
      */
     var BarMagnetSceneView = FaradaySceneView.extend({
 
+        initialize: function(options) {
+            FaradaySceneView.prototype.initialize.apply(this, arguments);
+
+            this.magnetModel = this.simulation.barMagnet;
+        },
+
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 
