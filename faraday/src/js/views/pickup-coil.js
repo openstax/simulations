@@ -7,7 +7,9 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
 
-    var CoilView = require('views/coil');
+    var CoilView      = require('views/coil');
+    var LightbulbView = require('views/lightbulb');
+    var VoltmeterView = require('views/voltmeter');
 
     var Assets = require('assets');
 
@@ -57,6 +59,8 @@ define(function(require) {
             this.foregroundLayer.buttonMode = true;
 
             this.initCoilView();
+            this.initLightbulb();
+            this.initVoltmeter();
 
             this.updateMVT(this.mvt);
         },
@@ -72,6 +76,26 @@ define(function(require) {
             this.foregroundLayer.addChild(this.coilView.foregroundLayer);
         },
 
+        initLightbulb: function() {
+            this.lightbulbView = new LightbulbView({
+                mvt: this.mvt,
+                model: this.simulation.lightbulb,
+                simulation: this.simulation
+            });
+
+            this.foregroundLayer.addChild(this.lightbulbView.displayObject);
+        },
+
+        initVoltmeter: function() {
+            this.voltmeterView = new VoltmeterView({
+                mvt: this.mvt,
+                model: this.simulation.voltmeter,
+                simulation: this.simulation
+            });
+
+            this.foregroundLayer.addChild(this.voltmeterView.displayObject);
+        },
+
         update: function(time, deltaTime, paused) {
             this.coilView.update(time, deltaTime, paused);
         },
@@ -83,7 +107,12 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            
+            var x = -10;
+            var y = -(this.coilView.getHeight() / 2 );
+            this.lightbulbView.displayObject.x = x;
+            this.lightbulbView.displayObject.y = y;
+            this.voltmeterView.displayObject.x = x + 5;
+            this.voltmeterView.displayObject.y = y + 5;
 
             this.updatePosition(this.model, this.model.get('position'));
         },

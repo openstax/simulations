@@ -396,5 +396,24 @@ define(function (require) {
 
     Constants.ElectronView = ElectronView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                            LIGHTBULB VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightbulbView = {};
+
+    LightbulbView.BULB_RADIUS = 30.0; // Radius of the glass, must be aligned with image by trial & error.
+    LightbulbView.DISTANCE_BULB_IS_SCREWED_INTO_BASE = 10; // must be aligned with rays via trial & error
+    
+    LightbulbView.GLASS_MIN_ALPHA = 0.35; // alpha when the bulb is off
+    LightbulbView.DEFAULT_GLASS_GLOW_SCALE = 15;
+
+    Constants.LightbulbView = LightbulbView;
+
+
+
     return Constants;
 });

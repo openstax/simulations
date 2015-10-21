@@ -7,9 +7,12 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        BAR_MAGNET:  'bar-magnet-plain.png',
-        ELECTRON_BG: 'electron_background.png',
-        ELECTRON_FG: 'electron_foreground.png'
+        BAR_MAGNET:     'bar-magnet-plain.png',
+        ELECTRON_BG:    'electron_background.png',
+        ELECTRON_FG:    'electron_foreground.png',
+        LIGHTBULB_BULB: 'lightbulb-glass.png',
+        LIGHTBULB_CAP:  'lightbulb-cap.png',
+        LIGHTBULB_BASE: 'lightbulb-base.png'
     };
 
     Assets.SpriteSheets = {};
