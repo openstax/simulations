@@ -12,6 +12,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var DEBUG_CALIBRATION = true;
+
     /**
      * PickupCoil is the model of a pickup coil.
      * Its behavior follows Faraday's Law for electromagnetic induction.
@@ -126,7 +128,11 @@ define(function (require) {
                 // Current amplitude is proportional to emf amplitude.
                 var amplitude = clamp(-1, emf / this.calibrationEmf, +1);
                 this.set('currentAmplitude', amplitude);
+                //console.log(amplitude)
             }
+
+            if (DEBUG_CALIBRATION)
+                this.calibrateEmf();
         },
 
         /*
@@ -183,6 +189,47 @@ define(function (require) {
             var width = Constants.MIN_PICKUP_LOOP_RADIUS;
             var height = 2 * this.get('radius');
             return width * height;
+        },
+
+        /**
+         * Provides assistance for calibrating this coil.
+         * The easiest way to calibrate is to run the sim in developer mode,
+         * then follow these steps for each module that has a pickup coil.
+         *
+         * 1. Set the "Pickup calibration EMF" developer control to its smallest value.
+         * 2. Set the model parameters to their maximums, so that maximum emf will be generated.
+         * 3. Do whatever is required to generate emf (move magnet through coil, run generator, etc.)
+         * 4. Watch System.out for a message that tells you what value to use.
+         * 5. Change the value of the module's CALIBRATION_EMF constant.
+         */
+        calibrateEmf: function() {
+            var absEmf = Math.abs(this.emf);
+
+            /*
+            * Keeps track of the biggest emf seen by the pickup coil.
+            * This is useful for determining the desired value of calibrationEmf.
+            * Set DEBUG_CALIBRATION=true, run the sim, set model controls to
+            * their max values, then observe this debug output.  The largest
+            * value that you see is what you should use for calibrationEmf.
+            */
+            if (absEmf > this.biggestAbsEmf) {
+                this.biggestAbsEmf = absEmf;
+                console.log('PickupCoil.updateEmf: biggestEmf = ' + this.biggestAbsEmf);
+
+                /*
+                * If this prints, you have calibrationEmf set too low.
+                * This will cause view components to exhibit responses that are less then their maximums.
+                * For example, the voltmeter won't fully deflect, and the lightbulb won't fully light.
+                */
+                if (this.biggestAbsEmf > this.calibrationEmf)
+                    console.log('PickupCoil.updateEmf: you should recalibrate');
+            }
+
+            /*
+             * The coil could theoretically be self-calibrating. If we notice that we've exceeded calibrationEmf,
+             * then adjust calibrationEmf.  This would be OK as long as we started with a value that was in the ballpark,
+             * because we don't want the user to perceive a noticeable change in the sim's behavior.
+             */
         }
 
     });

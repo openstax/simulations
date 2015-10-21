@@ -180,8 +180,8 @@ define(function(require) {
         /**
          * Updates the view to match the model.
          */
-        update: function() {
-            if (this.displayObject.visible) {
+        update: function(time, deltaTime, paused) {
+            if (this.displayObject.visible && !paused) {
                 // Update the physical appearance of the coil.
                 if (this.coilChanged())
                     this.updateCoil();
@@ -306,8 +306,7 @@ define(function(require) {
             
             var leftEndIndex = 0;
             var rightEndIndex = this.electronPath.length - 1;
-bg.name = 'background'
-fg.name = 'foreground'
+
             // For each curve...
             for (var pathIndex = 0; pathIndex < this.electronPath.length; pathIndex++) {
                 /*
@@ -344,7 +343,6 @@ fg.name = 'foreground'
                     // View
                     var descriptor = electron.getPathDescriptor();
                     var parent = descriptor.getParent();
-console.log(parent.name)
                     var electronView = new ElectronView({
                         mvt: this.mvt,
                         model: electron 

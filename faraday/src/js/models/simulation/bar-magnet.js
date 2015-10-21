@@ -63,6 +63,8 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
+            FaradaySimulation.prototype._update.apply(this, arguments);
+            
             this.compass.update(time, deltaTime);
             this.fieldMeter.update(time, deltaTime);
         }

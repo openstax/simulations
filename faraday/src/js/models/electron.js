@@ -73,14 +73,14 @@ define(function (require) {
          *   ElectronPathDescriptor array.
          */
         update: function(time, deltaTime) {
-            if (this.get('enabled')) {
+            if (this.get('enabled') && this.get('speed') !== 0 && this.path) {
                 // Move the electron along the path.
                 var pathScale = this.path[this.pathIndex].getPathScale();
-                var delta = deltaTime * Electron.MAX_PATH_POSITION_DELTA * this.speed * this.speedScale * pathScale;
+                var delta = deltaTime * Electron.MAX_PATH_POSITION_DELTA * this.get('speed') * this.get('speedScale') * pathScale;
                 this.pathPosition -= delta;
                 
                 // Do we need to switch curves?
-                if ( this.pathPosition <= 0 || this.pathPosition >= 1 ) {
+                if (this.pathPosition <= 0 || this.pathPosition >= 1) {
                     this.switchCurves();  // sets this.pathIndex and this.pathPosition !
                 }
                 
@@ -102,8 +102,7 @@ define(function (require) {
             var newSpeedScale;
             var overshoot;
             
-            if ( this.pathPosition <= 0 ) {
-                
+            if (this.pathPosition <= 0) {
                 // We've passed the end point, so move to the next curve.
                 this.pathIndex++;
                 if (this.pathIndex > this.path.length - 1)
@@ -111,15 +110,14 @@ define(function (require) {
                 
                 // Set the position on the curve.
                 newSpeedScale = this.path[this.pathIndex].getPathScale();
-                overshoot = Math.abs( this.pathPosition * newSpeedScale / oldSpeedScale );
-                this.pathPosition = 1.0 - overshoot;
+                overshoot = Math.abs(this.pathPosition * newSpeedScale / oldSpeedScale);
+                this.pathPosition = 1 - overshoot;
                 
                 // Did we overshoot the curve?
                 if (this.pathPosition < 0)
                     this.switchCurves();
             }
             else if (this.pathPosition >= 1) {
-                
                 // We've passed the start point, so move to the previous curve.
                 this.pathIndex--;
                 if (this.pathIndex < 0)

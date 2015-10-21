@@ -70,6 +70,10 @@ define(function(require) {
             this.foregroundLayer.addChild(this.coilView.foregroundLayer);
         },
 
+        update: function(time, deltaTime, paused) {
+            this.coilView.update(time, deltaTime, paused);
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.

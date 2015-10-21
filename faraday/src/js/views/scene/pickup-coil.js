@@ -76,6 +76,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 
+            this.pickupCoilView.update(time, deltaTime, paused);
         },
 
         showInsideBarMagnet: function() {
