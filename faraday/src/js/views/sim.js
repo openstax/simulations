@@ -12,6 +12,8 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    var Assets = require('assets');
+
     require('nouislider');
     require('bootstrap');
     require('bootstrap-select');
@@ -24,9 +26,10 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml               = require('text!templates/sim.html');
-    var barMagnetControlsHtml = require('text!templates/bar-magnet.html');
-    var playbackControlsHtml  = require('text!templates/playback-controls.html');
+    var simHtml                = require('text!templates/sim.html');
+    var barMagnetControlsHtml  = require('text!templates/bar-magnet.html');
+    var pickupCoilControlsHtml = require('text!templates/pickup-coil.html');
+    var playbackControlsHtml   = require('text!templates/playback-controls.html');
 
     /**
      * 
@@ -44,6 +47,7 @@ define(function (require) {
          */
         template:                      _.template(simHtml),
         barMagnetControlsTemplate:     _.template(barMagnetControlsHtml),
+        pickupCoilControlsTemplate:    _.template(pickupCoilControlsHtml),
         playbackControlsPanelTemplate: _.template(playbackControlsHtml),
 
         /**
@@ -58,7 +62,11 @@ define(function (require) {
             'click .show-field-meter-check' : 'toggleFieldMeter',
             'click .inside-magnet-check'    : 'toggleInsideBarMagnet',
             'slide .strength-slider'        : 'changeStrength',
-            'click .flip-polarity-btn'      : 'flipPolarity'
+            'click .flip-polarity-btn'      : 'flipPolarity',
+
+            'click .indicator-icon'         : 'selectIndicator',
+            'click .add-pickup-loop-btn'    : 'addPickupLoop',
+            'click .remove-pickup-loop-btn' : 'removePickupLoop'
         },
 
         /**
@@ -134,7 +142,7 @@ define(function (require) {
         },
 
         /**
-         * Renders page content.
+         * Renders bar magnet control panel.
          */
         renderBarMagnetControls: function() {
             var data = {
@@ -155,6 +163,37 @@ define(function (require) {
                 },
                 connect: 'lower'
             });
+        },
+
+        /**
+         * Renders bar magnet control panel.
+         */
+        renderPickupCoilControls: function() {
+            this.indicators = [
+                { src: Assets.Images.ICON_LIGHTBULB, model: this.simulation.lightbulb, selected: true},
+                { src: Assets.Images.ICON_VOLTMETER, model: this.simulation.voltmeter }
+            ];
+
+            var data = {
+                Constants: Constants,
+                Assets: Assets,
+                simulation: this.simulation,
+                name: this.name,
+                indicators: this.indicators
+            };
+
+            this.$('.sim-controls-wrapper').append(this.pickupCoilControlsTemplate(data));
+
+            this.$('.loop-area-slider').noUiSlider({
+                start: 3,
+                range: {
+                    min: 1,
+                    max: 5
+                },
+                connect: 'lower'
+            });
+
+            this.listenTo(this.simulation.pickupCoil, 'change:numberOfLoops', this.numPickupLoopsChanged);
         },
 
         /**
@@ -247,6 +286,35 @@ define(function (require) {
 
         flipPolarity: function(event) {
             this.simulation.barMagnet.flipPolarity();
+        },
+
+        selectIndicator: function(event) {
+            var $icon = $(event.target).closest('.indicator-icon');
+            $icon.addClass('selected')
+            $icon.siblings().removeClass('selected');
+            var index = parseInt($icon.data('index'));
+            for (var i = 0; i < this.indicators.length; i++) {
+                if (i === index)
+                    this.indicators[i].model.set('enabled', true);
+                else
+                    this.indicators[i].model.set('enabled', false);
+            }
+        },
+
+        addPickupLoop: function() {
+            var loops = this.simulation.pickupCoil.get('numberOfLoops') + 1;
+            if (loops <= Constants.MAX_PICKUP_LOOPS)
+                this.simulation.pickupCoil.set('numberOfLoops', loops);
+        },
+
+        removePickupLoop: function() {
+            var loops = this.simulation.pickupCoil.get('numberOfLoops') - 1;
+            if (loops >= Constants.MIN_PICKUP_LOOPS)
+                this.simulation.pickupCoil.set('numberOfLoops', loops);
+        },
+
+        numPickupLoopsChanged: function(model, loops) {
+            this.$('.pickup-loop-count-value').html(loops);
         }
 
     });

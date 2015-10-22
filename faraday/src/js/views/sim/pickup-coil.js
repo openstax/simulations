@@ -55,6 +55,7 @@ define(function (require) {
             FaradaySimView.prototype.render.apply(this);
 
             this.renderBarMagnetControls();
+            this.renderPickupCoilControls();
 
             return this;
         },
