@@ -57,6 +57,7 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.endsConnected = options.endsConnected;
 
             this.electronAnimationEnabled = true;
             this.foregroundLayerColor   = CoilView.FOREGROUND_COLOR;
@@ -72,7 +73,6 @@ define(function(require) {
             this.loopSpacing   = -1; // force update
             this.current       = -1; // force update
             this.electronSpeedScale = 1;
-            this.endsConnected = false;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -287,10 +287,14 @@ define(function(require) {
 
             // Connect the ends
             if (this.endsConnected) {
+                var ox = this.width  / 2; // x offset to make sure it draws within the canvas bounds
+                var oy = this.height / 2 - this.yOffset; // y offset to make sure it draws within the canvas bounds
+
                 fgCtx.strokeStyle = this.middlegroundColor;
-                fgCtx.moveTo(leftEndPoint.x, leftEndPoint.y);
-                fgCtx.lineTo(rightEndPoint.x, rightEndPoint.y);
+                fgCtx.moveTo(leftEndPoint.x + ox, leftEndPoint.y + oy);
+                fgCtx.lineTo(rightEndPoint.x + ox, rightEndPoint.y + oy);
                 fgCtx.stroke();
+                console.log('connecting ends', leftEndPoint, rightEndPoint)
             }
 
             // Create sprites from the canvases
@@ -429,7 +433,7 @@ define(function(require) {
                 endPoint.x, yOffset
             );
             
-            return startPoint;
+            return new Vector2(startPoint);
         },
 
         /**
@@ -543,7 +547,7 @@ define(function(require) {
 
             this.drawQuadBezierSpline(ctx, curve, this.middlegroundColor);
             
-            return endPoint;
+            return new Vector2(endPoint);
         },
 
         getWidth: function() {

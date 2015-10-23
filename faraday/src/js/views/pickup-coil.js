@@ -70,7 +70,8 @@ define(function(require) {
             this.coilView = new CoilView({
                 mvt: this.mvt,
                 model: this.model,
-                simulation: this.simulation
+                simulation: this.simulation,
+                endsConnected: true
             });
 
             this.backgroundLayer.addChild(this.coilView.backgroundLayer);
