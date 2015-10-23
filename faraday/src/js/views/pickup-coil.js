@@ -46,7 +46,8 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:radius',   this.updateComponentPositions);
         },
 
         /**
@@ -108,13 +109,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            var x = -10;
-            var y = -(this.coilView.getHeight() / 2 );
-            this.lightbulbView.displayObject.x = x;
-            this.lightbulbView.displayObject.y = y;
-            this.voltmeterView.displayObject.x = x + 5;
-            this.voltmeterView.displayObject.y = y + 5;
-
+            this.updateComponentPositions();
             this.updatePosition(this.model, this.model.get('position'));
         },
 
@@ -124,6 +119,15 @@ define(function(require) {
             this.backgroundLayer.y = viewPosition.y;
             this.foregroundLayer.x = viewPosition.x;
             this.foregroundLayer.y = viewPosition.y;
+        },
+
+        updateComponentPositions: function() {
+            var x = -10;
+            var y = -(this.coilView.getHeight() / 2 );
+            this.lightbulbView.displayObject.x = x;
+            this.lightbulbView.displayObject.y = y;
+            this.voltmeterView.displayObject.x = x + 5;
+            this.voltmeterView.displayObject.y = y + 5;
         },
 
         dragStart: function(event) {

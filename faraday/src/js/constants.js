@@ -98,6 +98,10 @@ define(function (require) {
     Constants.MAX_PICKUP_LOOP_AREA = Math.PI * MAX_PICKUP_LOOP_RADIUS * MAX_PICKUP_LOOP_RADIUS;
     Constants.MIN_PICKUP_LOOP_AREA = Math.PI * MIN_PICKUP_LOOP_RADIUS * MIN_PICKUP_LOOP_RADIUS;
     Constants.DEFAULT_PICKUP_LOOP_AREA = Constants.MAX_PICKUP_LOOP_AREA / 2; 
+    Constants.LOOP_AREA_RANGE = range({
+        min: Constants.MIN_PICKUP_LOOP_AREA,
+        max: Constants.MAX_PICKUP_LOOP_AREA
+    });
     
     //----------------------------------------------------------------------------
     // Battery parameters 

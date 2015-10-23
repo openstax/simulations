@@ -198,9 +198,6 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            this.width = this.getWidth();
-            this.height = this.getHeight();
         },
 
         /**
@@ -220,6 +217,9 @@ define(function(require) {
 
             // Remove electrons from model
             this.clearElectrons();
+
+            this.width  = this.getWidth();
+            this.height = this.getHeight();
 
             // Draw the loops
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
@@ -546,9 +546,7 @@ define(function(require) {
 
         getWidth: function() {
             var numberOfLoops = this.model.get('numberOfLoops');
-            var loopSpacing = parseInt(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
-            var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
-            return (numberOfLoops * loopSpacing) * 2 + wireWidth;
+            return numberOfLoops * this.mvt.modelToViewDeltaX(30) + this.model.get('radius') * 0.58;
         },
 
         getHeight: function() {

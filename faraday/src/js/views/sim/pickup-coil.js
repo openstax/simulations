@@ -74,8 +74,7 @@ define(function (require) {
         resetComponents: function() {
             FaradaySimView.prototype.resetComponents.apply(this);
             
-        },
-
+        }
 
     });
 
