@@ -49,6 +49,8 @@ define(function(require) {
      */
     var CoilView = PixiView.extend({
 
+        yOffset: -20,
+
         /**
          * Initializes the new CoilView.
          */
@@ -298,8 +300,8 @@ define(function(require) {
             fg.addChild(fgSprite);
             bgSprite.x = -this.width / 2;
             fgSprite.x = -this.width / 2;
-            bgSprite.y = -this.height / 2;
-            fgSprite.y = -this.height / 2;
+            bgSprite.y = -this.height / 2 + this.yOffset;
+            fgSprite.y = -this.height / 2 + this.yOffset;
             
             // Add electrons to the coil.
             var speed = this.calculateElectronSpeed();
@@ -387,7 +389,7 @@ define(function(require) {
 
         drawQuadBezierSpline: function(ctx, spline, startColor, endColor, x1, y1, x2, y2) {
             var ox = this.width  / 2; // x offset to make sure it draws within the canvas bounds
-            var oy = this.height / 2; // y offset to make sure it draws within the canvas bounds
+            var oy = this.height / 2 - this.yOffset; // y offset to make sure it draws within the canvas bounds
 
             if (endColor !== undefined) {
                 var gradient = ctx.createLinearGradient(x1 + ox, y1 + oy, x2 + ox, y2 + oy);
@@ -551,7 +553,11 @@ define(function(require) {
 
         getHeight: function() {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
-            return 2 * (radius * 1.2) + 40;
+            return 2 * radius + 70;
+        },
+
+        getTopOffset: function() {
+            return this.getHeight() / 2 - this.yOffset;
         },
 
         /**

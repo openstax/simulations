@@ -123,11 +123,11 @@ define(function(require) {
 
         updateComponentPositions: function() {
             var x = -10;
-            var y = -(this.coilView.getHeight() / 2 );
+            var y = -this.coilView.getTopOffset();
             this.lightbulbView.displayObject.x = x;
-            this.lightbulbView.displayObject.y = y;
+            this.lightbulbView.displayObject.y = y + 25;
             this.voltmeterView.displayObject.x = x + 5;
-            this.voltmeterView.displayObject.y = y + 5;
+            this.voltmeterView.displayObject.y = y + 15;
         },
 
         dragStart: function(event) {

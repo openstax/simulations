@@ -447,5 +447,49 @@ define(function (require) {
     Constants.LightRaysView = LightRaysView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                           LIGHT RAYS VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var VoltmeterView = {};
+
+    // Pivot point, the point about which the needle pivots.
+    VoltmeterView.PIVOT_POINT = new Vector2(85, 82);
+    
+    // Needle
+    VoltmeterView.NEEDLE_COLOR = '#00f';
+    VoltmeterView.NEEDLE_LENGTH = 66;
+    VoltmeterView.NEEDLE_HEAD_WIDTH  = 12;
+    VoltmeterView.NEEDLE_HEAD_HEIGHT = 15;
+    VoltmeterView.NEEDLE_TAIL_WIDTH = 3;
+
+    // Screw that holds the needle in place.
+    VoltmeterView.SCREW_COLOR = '#00f';
+    VoltmeterView.SCREW_DIAMETER = 9;
+
+    // Guage
+    VoltmeterView.GUAGE_RADIUS = VoltmeterView.NEEDLE_LENGTH;
+    VoltmeterView.GUAGE_COLOR = '#000';
+    VoltmeterView.GUAGE_STROKE_WIDTH = 1;
+    
+    // Title
+    VoltmeterView.TITLE_FONT = '14px Helvetica Neue';
+    VoltmeterView.TITLE_COLOR = '#fff';
+    
+    // Tick marks
+    VoltmeterView.MINOR_TICK_SPACING = 180 / 40; // Degrees
+    VoltmeterView.MINOR_TICKS_PER_MAJOR_TICK = 4;
+    VoltmeterView.MAJOR_TICK_LENGTH = 8;
+    VoltmeterView.MINOR_TICK_LENGTH = 4;
+    VoltmeterView.MAJOR_TICK_COLOR = '#000';
+    VoltmeterView.MINOR_TICK_COLOR = '#000';
+    VoltmeterView.MAJOR_TICK_STROKE_WIDTH = 1;
+    VoltmeterView.MINOR_TICK_STROKE_WIDTH = VoltmeterView.MAJOR_TICK_STROKE_WIDTH;
+
+    Constants.VoltmeterView = VoltmeterView;
+
+
     return Constants;
 });
