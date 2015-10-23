@@ -102,7 +102,7 @@ define(function(require) {
         setElectronAnimationEnabled: function(enabled) {
             if (this.electronAnimationEnabled !== enabled){
                 this.electronAnimationEnabled = enabled;
-                this.update();
+                this.updateElectrons();
             }
         },
 

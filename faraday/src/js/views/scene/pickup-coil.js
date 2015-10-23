@@ -92,6 +92,14 @@ define(function(require) {
 
         hideInsideBarMagnet: function() {
             this.bFieldInsideView.hide();
+        },
+
+        showPickupCoilElectrons: function() {
+            this.pickupCoilView.showElectrons();
+        },
+
+        hidePickupCoilElectrons: function() {
+            this.pickupCoilView.hideElectrons();
         }
 
     });

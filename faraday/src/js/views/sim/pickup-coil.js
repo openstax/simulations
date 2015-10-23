@@ -74,6 +74,14 @@ define(function (require) {
         resetComponents: function() {
             FaradaySimView.prototype.resetComponents.apply(this);
             
+        },
+
+        showElectrons: function() {
+            this.coilView.showElectrons();
+        },
+
+        hideElectrons: function() {
+            this.coilView.hideElectrons();
         }
 
     });

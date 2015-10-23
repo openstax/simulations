@@ -67,7 +67,8 @@ define(function (require) {
             'click .indicator-icon'         : 'selectIndicator',
             'click .add-pickup-loop-btn'    : 'addPickupLoop',
             'click .remove-pickup-loop-btn' : 'removePickupLoop',
-            'slide .loop-area-slider'       : 'changeLoopArea'
+            'slide .loop-area-slider'       : 'changeLoopArea',
+            'click .show-pickup-coil-electrons-check' : 'togglePickupCoilElectrons'
         },
 
         /**
@@ -325,6 +326,13 @@ define(function (require) {
             var percent = Math.round(Constants.LOOP_AREA_RANGE.percent(loopArea) * 100);
             this.$loopArea.html(percent + '%');
             this.simulation.pickupCoil.setLoopArea(loopArea);
+        },
+
+        togglePickupCoilElectrons: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showPickupCoilElectrons();
+            else
+                this.sceneView.hidePickupCoilElectrons();
         }
 
     });

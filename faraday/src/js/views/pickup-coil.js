@@ -153,6 +153,14 @@ define(function(require) {
 
         dragEnd: function(event) {
             this.dragging = false;
+        },
+
+        showElectrons: function() {
+            this.coilView.enableElectronAnimation();
+        },
+
+        hideElectrons: function() {
+            this.coilView.disableElectronAnimation();
         }
 
     });
