@@ -456,7 +456,7 @@ define(function (require) {
     var VoltmeterView = {};
 
     // Pivot point, the point about which the needle pivots.
-    VoltmeterView.PIVOT_POINT = new Vector2(85, 82);
+    VoltmeterView.PIVOT_POINT = new Vector2(0, -72);
     
     // Needle
     VoltmeterView.NEEDLE_COLOR = '#00f';
@@ -479,7 +479,7 @@ define(function (require) {
     VoltmeterView.TITLE_COLOR = '#fff';
     
     // Tick marks
-    VoltmeterView.MINOR_TICK_SPACING = 180 / 40; // Degrees
+    VoltmeterView.MINOR_TICK_SPACING = Math.PI / 40; // Radians
     VoltmeterView.MINOR_TICKS_PER_MAJOR_TICK = 4;
     VoltmeterView.MAJOR_TICK_LENGTH = 8;
     VoltmeterView.MINOR_TICK_LENGTH = 4;

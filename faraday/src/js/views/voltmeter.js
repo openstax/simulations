@@ -5,6 +5,8 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
+    var Vector2  = require('common/math/vector2');
+    var Colors   = require('common/colors/colors');
 
     var Assets = require('assets');
 
@@ -21,6 +23,11 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.guageColor = Colors.parseHex(VoltmeterView.GUAGE_COLOR);
+
+            // Cached objects
+            this._pivot = new Vector2();
+            this._vec = new Vector2();
 
             this.initGraphics();
 
@@ -82,7 +89,54 @@ define(function(require) {
         },
 
         drawTicks: function() {
+            var pivot = this._pivot.set(this.mvt.modelToViewDelta(VoltmeterView.PIVOT_POINT));
+            var color = this.guageColor;
+            var graphics = this.ticks;
+            graphics.clear();
+            graphics.lineStyle(VoltmeterView.GUAGE_STROKE_WIDTH, color, 1);
+            graphics.x = pivot.x;
+            graphics.y = pivot.y;
 
+            // Meter guage, a 180-degree chorded arc.
+            var radius = this.mvt.modelToViewDeltaX(VoltmeterView.GUAGE_RADIUS);
+            graphics.arc(0, 0, radius, -Math.PI, 0, false);
+            graphics.lineTo(-radius, 0);
+
+            // Vertical line at zero-point of guage.
+            graphics.moveTo(0, 0);
+            graphics.lineTo(0, -radius);
+            
+            // Major and minor tick marks around the outside of the guage.
+            var angle = VoltmeterView.MINOR_TICK_SPACING;
+            var tickCount = 1;
+            var length;
+            var vec = this._vec;
+            while (angle < Math.PI / 2) {
+                // Major or minor tick mark?
+                if (tickCount % VoltmeterView.MINOR_TICKS_PER_MAJOR_TICK === 0) {
+                    graphics.lineStyle(VoltmeterView.MAJOR_TICK_STROKE_WIDTH, color, 1);
+                    length = VoltmeterView.MAJOR_TICK_LENGTH;
+                }
+                else {
+                    graphics.lineStyle(VoltmeterView.MINOR_TICK_STROKE_WIDTH, color, 1);
+                    length = VoltmeterView.MINOR_TICK_LENGTH;
+                }
+                
+                // Positive tick mark
+                vec.set(-radius, 0).rotate(angle);
+                graphics.moveTo(vec.x, vec.y);
+                vec.set(-radius + length, 0).rotate(angle);
+                graphics.lineTo(vec.x, vec.y);
+                
+                // // Negative tick mark
+                vec.set(radius, 0).rotate(-angle);
+                graphics.moveTo(vec.x, vec.y);
+                vec.set(radius - length, 0).rotate(-angle);
+                graphics.lineTo(vec.x, vec.y);
+                
+                angle += VoltmeterView.MINOR_TICK_SPACING;
+                tickCount++;
+            }
         },
 
         drawNeedle: function() {
@@ -102,6 +156,8 @@ define(function(require) {
             this.background.scale.x = scale;
             this.background.scale.y = scale;
 
+            this.drawTicks();
+
             this.updatePosition(this.model, this.model.get('position'));
         },
 
@@ -115,7 +171,7 @@ define(function(require) {
             this.displayObject.visible = enabled;
         }
 
-    });
+    }, Constants.VoltmeterView);
 
 
     return VoltmeterView;
