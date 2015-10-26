@@ -5,6 +5,9 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
+    var ElectromagnetSimulation = require('models/simulation/electromagnet');
+    var ElectromagnetSceneView  = require('views/scene/electromagnet');
+
     var FaradaySimView = require('views/sim');
 
     var Constants = require('constants');
@@ -36,12 +39,29 @@ define(function (require) {
         },
 
         /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new ElectromagnetSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new ElectromagnetSceneView({
+                simulation: this.simulation
+            });
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
             FaradaySimView.prototype.render.apply(this);
 
             this.renderPlaybackControls();
+            this.renderElectromagnetControls();
 
             return this;
         },

@@ -12,6 +12,8 @@ define(function(require) {
 
     var BFieldOutsideView = require('views/bfield/outside');
     var FieldMeterView    = require('views/field-meter');
+    var CompassView       = require('views/compass');
+    var BarMagnetView     = require('views/bar-magnet');
 
     var Assets = require('assets');
 
@@ -101,6 +103,26 @@ define(function(require) {
             });
 
             this.middleLayer.addChild(this.bFieldOutsideView.displayObject);
+        },
+
+        initCompass: function() {
+            this.compassView = new CompassView({
+                mvt: this.mvt,
+                model: this.simulation.compass,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.compassView.displayObject);
+        },
+
+        initBarMagnet: function() {
+            this.barMagnetView = new BarMagnetView({
+                mvt: this.mvt,
+                model: this.simulation.barMagnet,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.barMagnetView.displayObject);
         },
 
         initFieldMeter: function() {

@@ -26,10 +26,11 @@ define(function (require) {
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml                = require('text!templates/sim.html');
-    var barMagnetControlsHtml  = require('text!templates/bar-magnet.html');
-    var pickupCoilControlsHtml = require('text!templates/pickup-coil.html');
-    var playbackControlsHtml   = require('text!templates/playback-controls.html');
+    var simHtml                   = require('text!templates/sim.html');
+    var barMagnetControlsHtml     = require('text!templates/bar-magnet.html');
+    var pickupCoilControlsHtml    = require('text!templates/pickup-coil.html');
+    var electromagnetControlsHtml = require('text!templates/electromagnet.html');
+    var playbackControlsHtml      = require('text!templates/playback-controls.html');
 
     /**
      * 
@@ -48,6 +49,7 @@ define(function (require) {
         template:                      _.template(simHtml),
         barMagnetControlsTemplate:     _.template(barMagnetControlsHtml),
         pickupCoilControlsTemplate:    _.template(pickupCoilControlsHtml),
+        electromagnetControlsTemplate: _.template(electromagnetControlsHtml),
         playbackControlsPanelTemplate: _.template(playbackControlsHtml),
 
         /**
@@ -68,7 +70,12 @@ define(function (require) {
             'click .add-pickup-loop-btn'    : 'addPickupLoop',
             'click .remove-pickup-loop-btn' : 'removePickupLoop',
             'slide .loop-area-slider'       : 'changeLoopArea',
-            'click .show-pickup-coil-electrons-check' : 'togglePickupCoilElectrons'
+            'click .show-pickup-coil-electrons-check' : 'togglePickupCoilElectrons',
+
+            'click .current-source-icon'           : 'selectCurrentSource',
+            'click .add-electromagnet-loop-btn'    : 'addElectromagnetLoop',
+            'click .remove-electromagnet-loop-btn' : 'removeElectromagnetLoop',
+            'click .show-electromagnet-electrons-check' : 'toggleElectromagnetElectrons'
         },
 
         /**
@@ -201,6 +208,28 @@ define(function (require) {
         },
 
         /**
+         * Renders bar magnet control panel.
+         */
+        renderElectromagnetControls: function() {
+            this.currentSources = [
+                { title: 'DC', src: Assets.Images.ICON_BATTERY,  model: this.simulation.battery, selected: true },
+                { title: 'AC', src: Assets.Images.ICON_AC_POWER, model: this.simulation.acPowerSupply }
+            ];
+
+            var data = {
+                Constants: Constants,
+                Assets: Assets,
+                simulation: this.simulation,
+                name: this.name,
+                currentSources: this.currentSources
+            };
+
+            this.$('.sim-controls-wrapper').append(this.electromagnetControlsTemplate(data));
+
+            this.listenTo(this.simulation.sourceCoil, 'change:numberOfLoops', this.numElectromagnetLoopsChanged);
+        },
+
+        /**
          * Renders the scene view
          */
         renderSceneView: function() {
@@ -305,6 +334,19 @@ define(function (require) {
             }
         },
 
+        selectCurrentSource: function(event) {
+            var $icon = $(event.target).closest('.current-source-icon');
+            $icon.addClass('selected')
+            $icon.siblings().removeClass('selected');
+            var index = parseInt($icon.data('index'));
+            for (var i = 0; i < this.currentSources.length; i++) {
+                if (i === index)
+                    this.currentSources[i].model.set('enabled', true);
+                else
+                    this.currentSources[i].model.set('enabled', false);
+            }
+        },
+
         addPickupLoop: function() {
             var loops = this.simulation.pickupCoil.get('numberOfLoops') + 1;
             if (loops <= Constants.MAX_PICKUP_LOOPS)
@@ -321,6 +363,22 @@ define(function (require) {
             this.$('.pickup-loop-count-value').html(loops);
         },
 
+        addElectromagnetLoop: function() {
+            var loops = this.simulation.sourceCoil.get('numberOfLoops') + 1;
+            if (loops <= Constants.MAX_PICKUP_LOOPS)
+                this.simulation.sourceCoil.set('numberOfLoops', loops);
+        },
+
+        removeElectromagnetLoop: function() {
+            var loops = this.simulation.sourceCoil.get('numberOfLoops') - 1;
+            if (loops >= Constants.MIN_PICKUP_LOOPS)
+                this.simulation.sourceCoil.set('numberOfLoops', loops);
+        },
+
+        numElectromagnetLoopsChanged: function(model, loops) {
+            this.$('.electromagnet-loop-count-value').html(loops);
+        },
+
         changeLoopArea: function(event) {
             var loopArea = parseFloat($(event.target).val());
             var percent = Math.round(Constants.LOOP_AREA_RANGE.percent(loopArea) * 100);
@@ -333,6 +391,13 @@ define(function (require) {
                 this.sceneView.showPickupCoilElectrons();
             else
                 this.sceneView.hidePickupCoilElectrons();
+        },
+
+        toggleElectromagnetElectrons: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showElectromagnetElectrons();
+            else
+                this.sceneView.hideElectromagnetElectrons();
         }
 
     });

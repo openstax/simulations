@@ -212,6 +212,32 @@ define(function (require) {
     Constants.PickupCoilSimulation = PickupCoilSimulation;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                        PICKUP COIL SIMULATION                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElectromagnetSimulation = {};
+
+    // Locations
+    ElectromagnetSimulation.ELECTROMAGNET_LOCATION = new Vector2(400, 400);
+    ElectromagnetSimulation.COMPASS_LOCATION       = new Vector2(150, 200);
+    ElectromagnetSimulation.FIELD_METER_LOCATION   = new Vector2(150, 400);
+
+    // Battery
+    ElectromagnetSimulation.BATTERY_AMPLITUDE = 1.0;
+
+    // AC Power Supply
+    ElectromagnetSimulation.AC_MAX_AMPLITUDE = 0.5;
+    ElectromagnetSimulation.AC_FREQUENCY = 0.5;
+
+    // Source Coil
+    ElectromagnetSimulation.ELECTROMAGNET_NUMBER_OF_LOOPS = Constants.ELECTROMAGNET_LOOPS_MAX;
+    ElectromagnetSimulation.ELECTROMAGNET_LOOP_RADIUS = 50.0;  // Fixed loop radius
+    ElectromagnetSimulation.ELECTROMAGNET_DIRECTION = 0.0; // radians
+
+    Constants.ElectromagnetSimulation = ElectromagnetSimulation;
     
 
     /*************************************************************************

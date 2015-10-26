@@ -5,8 +5,6 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var FaradaySceneView  = require('views/scene');
-    var CompassView       = require('views/compass');
-    var BarMagnetView     = require('views/bar-magnet');
 
     var BFieldInsideView = require('views/bfield/inside');
 
@@ -32,26 +30,6 @@ define(function(require) {
             this.initCompass();
             this.initBarMagnet();
             this.initInsideBField();
-        },
-
-        initCompass: function() {
-            this.compassView = new CompassView({
-                mvt: this.mvt,
-                model: this.simulation.compass,
-                simulation: this.simulation
-            });
-
-            this.middleLayer.addChild(this.compassView.displayObject);
-        },
-
-        initBarMagnet: function() {
-            this.barMagnetView = new BarMagnetView({
-                mvt: this.mvt,
-                model: this.simulation.barMagnet,
-                simulation: this.simulation
-            });
-
-            this.middleLayer.addChild(this.barMagnetView.displayObject);
         },
 
         initInsideBField: function() {

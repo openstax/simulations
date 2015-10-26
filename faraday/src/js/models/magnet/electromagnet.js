@@ -6,7 +6,7 @@ define(function (require) {
 
     var clamp = require('common/math/clamp');
 
-    var CoilMagnet = require('models/coil');
+    var CoilMagnet = require('models/magnet/coil');
 
     var Constants = require('constants');
 
