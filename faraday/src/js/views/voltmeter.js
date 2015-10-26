@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
+                   require('common/v3/pixi/draw-arrow');
     var Vector2  = require('common/math/vector2');
     var Colors   = require('common/colors/colors');
 
@@ -23,7 +24,9 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
-            this.guageColor = Colors.parseHex(VoltmeterView.GUAGE_COLOR);
+            this.guageColor  = Colors.parseHex(VoltmeterView.GUAGE_COLOR);
+            this.needleColor = Colors.parseHex(VoltmeterView.NEEDLE_COLOR);
+            this.screwColor  = Colors.parseHex(VoltmeterView.SCREW_COLOR);
 
             // Cached objects
             this._pivot = new Vector2();
@@ -63,7 +66,15 @@ define(function(require) {
         },
 
         initLabel: function() {
+            var title = new PIXI.Text('voltage', {
+                font: VoltmeterView.TITLE_FONT,
+                fill: VoltmeterView.TITLE_COLOR
+            });
 
+            title.x = -Math.floor(title.width / 2);
+            title.y = -60;
+
+            this.displayObject.addChild(title);
         },
 
         initResistor: function() {
@@ -140,10 +151,27 @@ define(function(require) {
         },
 
         drawNeedle: function() {
+            var pivot = this._pivot.set(this.mvt.modelToViewDelta(VoltmeterView.PIVOT_POINT));
+            var graphics = this.needle;
+            var length     = this.mvt.modelToViewDeltaX(VoltmeterView.NEEDLE_LENGTH);
+            var headWidth  = this.mvt.modelToViewDeltaX(VoltmeterView.NEEDLE_HEAD_WIDTH);
+            var headLength = this.mvt.modelToViewDeltaX(VoltmeterView.NEEDLE_HEAD_HEIGHT);
+            var tailWidth  = this.mvt.modelToViewDeltaX(VoltmeterView.NEEDLE_TAIL_WIDTH);
+            var screwRadius = Math.floor(this.mvt.modelToViewDeltaX(VoltmeterView.SCREW_DIAMETER) / 2);
 
+            graphics.clear();
+            graphics.x = pivot.x;
+            graphics.y = pivot.y;
+
+            graphics.beginFill(this.needleColor, 1);
+            graphics.moveTo(pivot.x, pivot.y);
+            graphics.drawArrow(0, 0, 0, -length, tailWidth, headWidth, headLength);
+            graphics.endFill();
+
+            graphics.beginFill(this.screwColor, 1);
+            graphics.drawCircle(0, 0, screwRadius);
+            graphics.endFill();
         },
-
-
 
         /**
          * Updates the model-view-transform and anything that
@@ -157,6 +185,7 @@ define(function(require) {
             this.background.scale.y = scale;
 
             this.drawTicks();
+            this.drawNeedle();
 
             this.updatePosition(this.model, this.model.get('position'));
         },
@@ -169,6 +198,11 @@ define(function(require) {
 
         updateVisibility: function(model, enabled) {
             this.displayObject.visible = enabled;
+        },
+
+        update: function() {
+            var angle = this.model.get('needleAngle');
+            this.needle.rotation = angle;
         }
 
     }, Constants.VoltmeterView);

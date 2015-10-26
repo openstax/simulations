@@ -101,6 +101,7 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             this.coilView.update(time, deltaTime, paused);
             this.lightbulbView.update(time, deltaTime, paused);
+            this.voltmeterView.update(time, deltaTime, paused);
         },
 
         /**
