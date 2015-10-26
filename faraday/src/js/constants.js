@@ -475,7 +475,7 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
-     **                           LIGHT RAYS VIEW                           **
+     **                            VOLTMETER VIEW                           **
      **                                                                     **
      *************************************************************************/
 
@@ -515,6 +515,19 @@ define(function (require) {
     VoltmeterView.MINOR_TICK_STROKE_WIDTH = VoltmeterView.MAJOR_TICK_STROKE_WIDTH;
 
     Constants.VoltmeterView = VoltmeterView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                             BATTERY VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var BatteryView = {};
+
+    BatteryView.MODEL_WIDTH = 190;
+
+    Constants.BatteryView = BatteryView;
 
 
     return Constants;

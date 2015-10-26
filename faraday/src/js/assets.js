@@ -10,6 +10,8 @@ define(function (require) {
         BAR_MAGNET:            'bar-magnet-plain.png',
         ELECTRON_BG:           'electron_background.png',
         ELECTRON_FG:           'electron_foreground.png',
+
+        BATTERY:               'battery.png',
         
         LIGHTBULB_BULB:        'lightbulb-glass.png',
         LIGHTBULB_CAP:         'lightbulb-cap.png',

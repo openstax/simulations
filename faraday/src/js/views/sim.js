@@ -65,6 +65,7 @@ define(function (require) {
             'click .inside-magnet-check'    : 'toggleInsideBarMagnet',
             'slide .strength-slider'        : 'changeStrength',
             'click .flip-polarity-btn'      : 'flipPolarity',
+            'click .show-compass-check'     : 'toggleCompass',
 
             'click .indicator-icon'         : 'selectIndicator',
             'click .add-pickup-loop-btn'    : 'addPickupLoop',
@@ -306,6 +307,13 @@ define(function (require) {
                 this.sceneView.showInsideBarMagnet();
             else
                 this.sceneView.hideInsideBarMagnet();
+        },
+
+        toggleCompass: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showCompass();
+            else
+                this.sceneView.hideCompass();
         },
 
         changeStrength: function(event) {

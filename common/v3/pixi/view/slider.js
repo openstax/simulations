@@ -151,7 +151,7 @@ define(function(require) {
             this.dragOffset = dragOffset === undefined ? event.data.getLocalPosition(this.handle, this._dragOffset) : dragOffset;
             this.dragging = true;
             this.previousValue = this.value;
-            this.trigger('drag-start');
+            this.trigger('drag-start', event);
         },
 
         drag: function(event) {
@@ -189,7 +189,7 @@ define(function(require) {
 
                 this.previousValue = this.value;
                 this.value = percentage * (this.range.max - this.range.min) + this.range.min;
-                this.trigger('slide', this.value, this.previousValue);
+                this.trigger('slide', this.value, this.previousValue, event);
             }
         },
 
@@ -199,7 +199,7 @@ define(function(require) {
                 this.dragData = null;
                 this.trigger('set',    this.value, this.previousValue);
                 this.trigger('change', this.value, this.previousValue);
-                this.trigger('drag-end');    
+                this.trigger('drag-end', event);    
             }
         },
 
@@ -218,7 +218,7 @@ define(function(require) {
             this.previousValue = this.value;
             this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
             this.positionHandle();
-            this.trigger('slide', this.value, this.previousValue);
+            this.trigger('slide', this.value, this.previousValue, event);
 
             var dragOffset = this._dragOffset;
             dragOffset.x = 0;

@@ -24,7 +24,7 @@ define(function(require) {
         initialize: function(options) {
             FaradaySceneView.prototype.initialize.apply(this, arguments);
 
-            this.magnetModel = this.simulation.barMagnet;
+            this.magnetModel = this.simulation.electromagnet;
         },
 
         initGraphics: function() {

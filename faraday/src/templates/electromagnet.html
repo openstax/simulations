@@ -7,6 +7,7 @@
     <% _.each(currentSources, function(currentSource, index) { %>
         <div class="selectable-icon current-source-icon <%= currentSource.selected ? 'selected' : '' %>" data-index="<%= index %>">
             <%= Assets.createIcon(currentSource.src, 70) %>
+            <span class="selectable-icon-title"><%= currentSource.title %></span>
         </div>
     <% }); %>
     </div>

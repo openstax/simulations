@@ -98,6 +98,7 @@ define(function (require, exports, module) {
             FaradaySimulation.prototype._update.apply(this, arguments);
             
             this.compass.update(time, deltaTime);
+            this.fieldMeter.update(time, deltaTime);
             this.acPowerSupply.update(time, deltaTime);
         }
 

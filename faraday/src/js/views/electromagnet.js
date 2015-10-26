@@ -67,8 +67,7 @@ define(function(require) {
             this.coilView = new CoilView({
                 mvt: this.mvt,
                 model: this.model.get('sourceCoilModel'),
-                simulation: this.simulation,
-                endsConnected: true
+                simulation: this.simulation
             });
 
             this.backgroundLayer.addChild(this.coilView.backgroundLayer);
@@ -124,7 +123,7 @@ define(function(require) {
             var x = 0;
             var y = -this.coilView.getTopOffset();
             this.batteryView.displayObject.x = x;
-            this.batteryView.displayObject.y = y;
+            this.batteryView.displayObject.y = y + 10;
             this.acPowerSupplyView.displayObject.x = x;
             this.acPowerSupplyView.displayObject.y = y;
         },

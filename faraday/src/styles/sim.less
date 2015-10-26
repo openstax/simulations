@@ -111,6 +111,7 @@
         margin-right: 6px;
         cursor: pointer;
         border-radius: 8px;
+        position: relative;
 
         &:last-child {
             margin-right: 0;
@@ -122,6 +123,14 @@
 
         &.selected {
             background-color: fadeout(#fff, 50%);
+        }
+
+        .selectable-icon-title {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 70%;
         }
     }
 

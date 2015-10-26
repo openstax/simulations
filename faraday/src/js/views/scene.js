@@ -165,6 +165,14 @@ define(function(require) {
 
         hideFieldMeter: function() {
             this.fieldMeterView.hide();
+        },
+
+        showCompass: function() {
+            this.compassView.show();
+        },
+
+        hideCompass: function() {
+            this.compassView.hide();
         }
 
     });

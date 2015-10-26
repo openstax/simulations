@@ -32,6 +32,8 @@ define(function(require) {
             this.initBarMagnet();
             this.initInsideBField();
             this.initPickupCoil();
+
+            this.hideCompass();
         },
 
         initInsideBField: function() {
