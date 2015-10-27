@@ -25,7 +25,9 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:amplitude', this.amplitudeChanged);
+            this.listenTo(this.model, 'change:enabled',   this.enabledChanged);
         },
 
         /**
@@ -44,6 +46,8 @@ define(function(require) {
         },
 
         initControls: function() {
+            this.sliderContainer = new PIXI.Container();
+
             // Create the slider view
             this.sliderView = new SliderView({
                 start: this.model.get('maxVoltage') * this.model.get('amplitude'),
@@ -65,17 +69,50 @@ define(function(require) {
                 handleSize: 10,
                 handleColor: '#fff',
                 handleAlpha: 1,
-                handleLineColor: '#000',
+                handleLineColor: '#222',
                 handleLineWidth: 1,
             });
-            this.sliderView.displayObject.x = Math.floor(-this.sliderView.width / 2);
-            this.displayObject.addChild(this.sliderView.displayObject);
 
             // Bind events
             this.listenTo(this.sliderView, 'slide', function(voltage, prev, event) {
                 event.stopPropagation();
                 this.model.set('amplitude', voltage / this.model.get('maxVoltage'));
             });
+
+            this.sliderContainer.x = Math.floor(-this.sliderView.width / 2);
+
+            var ticks = new PIXI.Graphics();
+            var tickY = 5;
+            var tickH = 8;
+            ticks.lineStyle(2, 0xFFFFFF, 1);
+            ticks.moveTo(1, tickY);
+            ticks.lineTo(1, tickY + tickH);
+            ticks.moveTo(Math.floor(this.sliderView.width / 2), tickY);
+            ticks.lineTo(Math.floor(this.sliderView.width / 2), tickY + tickH);
+            ticks.moveTo(this.sliderView.width - 1, tickY);
+            ticks.lineTo(this.sliderView.width - 1, tickY + tickH);
+            ticks.alpha = 0.5;
+
+            var textSettings = {
+                font: '16px Helvetica Neue',
+                fill: '#fff',
+                align: 'right'
+            };
+
+            var textY = 15;
+            this.leftVoltageText  = new PIXI.Text('10 v', textSettings);
+            this.rightVoltageText = new PIXI.Text('10 v', textSettings);
+            this.leftVoltageText.anchor.x = this.rightVoltageText.anchor.x = 1;
+            this.leftVoltageText.x = Math.floor(this.leftVoltageText.width / 2);
+            this.rightVoltageText.x = this.sliderView.width + Math.floor(this.rightVoltageText.width / 2);
+            this.leftVoltageText.y = this.rightVoltageText.y = textY;
+            this.leftVoltageText.visible = false;
+
+            this.sliderContainer.addChild(ticks);
+            this.sliderContainer.addChild(this.leftVoltageText);
+            this.sliderContainer.addChild(this.rightVoltageText);
+            this.sliderContainer.addChild(this.sliderView.displayObject);
+            this.displayObject.addChild(this.sliderContainer);
         },
 
         /**
@@ -87,13 +124,14 @@ define(function(require) {
 
             var targetWidth = this.mvt.modelToViewDeltaX(BatteryView.MODEL_WIDTH);
             var scale = targetWidth / this.battery.texture.width;
+            this.batteryScale = scale;
             this.battery.scale.x = scale;
             this.battery.scale.y = scale;
 
-            this.sliderView.displayObject.y = -Math.floor(this.battery.height * 0.75);
+            this.sliderContainer.y = -Math.floor(this.battery.height * 0.75);
 
             this.updatePosition(this.model, this.model.get('position'));
-            this.update();
+            this.amplitudeChanged(this.model, this.model.get('amplitude'));
         },
 
         updatePosition: function(model, position) {
@@ -102,11 +140,27 @@ define(function(require) {
             this.displayObject.y = viewPosition.y;
         },
 
-        /**
-         * 
-         */
-        update: function() {
-            
+        enabledChanged: function(battery, enabled) {
+            this.displayObject.visible = enabled;
+        },
+
+        amplitudeChanged: function(battery, amplitude) {
+            var voltage = this.model.getVoltage();
+
+            // Update the displayed value and battery orientation
+            var text = Math.round(Math.abs(voltage)) + ' v';
+            if (voltage < 0) {
+                this.rightVoltageText.text = text;
+                this.rightVoltageText.visible = true;
+                this.leftVoltageText.visible = false;
+                this.battery.scale.x = this.batteryScale;
+            }
+            else {
+                this.leftVoltageText.text = text;
+                this.leftVoltageText.visible = true;
+                this.rightVoltageText.visible = false;
+                this.battery.scale.x = -this.batteryScale;
+            }
         }
 
     }, Constants.BatteryView);
