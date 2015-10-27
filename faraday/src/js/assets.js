@@ -12,6 +12,7 @@ define(function (require) {
         ELECTRON_FG:           'electron_foreground.png',
 
         BATTERY:               'battery.png',
+        AC_POWER_SUPPLY:       'ac-power-supply.png',
         
         LIGHTBULB_BULB:        'lightbulb-glass.png',
         LIGHTBULB_CAP:         'lightbulb-cap.png',

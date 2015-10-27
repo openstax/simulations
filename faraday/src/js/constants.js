@@ -530,5 +530,19 @@ define(function (require) {
     Constants.BatteryView = BatteryView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                         AC POWER SUPPLY VIEW                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var ACPowerSupplyView = {};
+
+    ACPowerSupplyView.MODEL_WIDTH = 237.41935483870967;
+
+    Constants.ACPowerSupplyView = ACPowerSupplyView;
+    
+
+
     return Constants;
 });

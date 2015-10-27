@@ -123,9 +123,9 @@ define(function(require) {
             var x = 0;
             var y = -this.coilView.getTopOffset();
             this.batteryView.displayObject.x = x;
-            this.batteryView.displayObject.y = y + 10;
+            this.batteryView.displayObject.y = y + 13;
             this.acPowerSupplyView.displayObject.x = x;
-            this.acPowerSupplyView.displayObject.y = y;
+            this.acPowerSupplyView.displayObject.y = y + 13;
         },
 
         dragStart: function(event) {
