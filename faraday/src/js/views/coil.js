@@ -183,7 +183,7 @@ define(function(require) {
          * Updates the view to match the model.
          */
         update: function(time, deltaTime, paused) {
-            if (this.displayObject.visible && !paused) {
+            if (this.displayObject.visible && !paused && this.simulation.updated()) {
                 // Update the physical appearance of the coil.
                 if (this.coilChanged())
                     this.updateCoil();

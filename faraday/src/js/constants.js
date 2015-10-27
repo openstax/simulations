@@ -549,6 +549,9 @@ define(function (require) {
     ACPowerSupplyView.TICK_SPACING = 10; // pixels
     ACPowerSupplyView.TICK_LENGTH = 8; // pixels
     ACPowerSupplyView.TICK_STROKE_WIDTH = ACPowerSupplyView.AXES_STROKE_WIDTH;
+    ACPowerSupplyView.CURSOR_COLOR = '#f00';
+    ACPowerSupplyView.CURSOR_STROKE_WIDTH = 1;
+    ACPowerSupplyView.CURSOR_WRAP_AROUND_TOLERANCE = 5 * DEG_TO_RAD;
 
     Constants.ACPowerSupplyView = ACPowerSupplyView;
     

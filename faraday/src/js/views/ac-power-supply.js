@@ -13,16 +13,19 @@ define(function(require) {
     var Assets = require('assets');
 
     var Constants = require('constants');
-    var WAVE_VIEWPORT_SIZE = Constants.ACPowerSupplyView.WAVE_VIEWPORT_SIZE;
-    var WAVE_ORIGIN        = Constants.ACPowerSupplyView.WAVE_ORIGIN;
-    var AXES_COLOR         = Colors.parseHex(Constants.ACPowerSupplyView.AXES_COLOR);
-    var AXES_ALPHA         = Constants.ACPowerSupplyView.AXES_ALPHA;
-    var AXES_STROKE_WIDTH  = Constants.ACPowerSupplyView.AXES_STROKE_WIDTH;
-    var TICK_COLOR         = Colors.parseHex(Constants.ACPowerSupplyView.TICK_COLOR);
-    var TICK_ALPHA         = Constants.ACPowerSupplyView.TICK_ALPHA;
-    var TICK_SPACING       = Constants.ACPowerSupplyView.TICK_SPACING;
-    var TICK_LENGTH        = Constants.ACPowerSupplyView.TICK_LENGTH;
-    var TICK_STROKE_WIDTH  = Constants.ACPowerSupplyView.TICK_STROKE_WIDTH;
+    var WAVE_VIEWPORT_SIZE           = Constants.ACPowerSupplyView.WAVE_VIEWPORT_SIZE;
+    var WAVE_ORIGIN                  = Constants.ACPowerSupplyView.WAVE_ORIGIN;
+    var AXES_COLOR                   = Colors.parseHex(Constants.ACPowerSupplyView.AXES_COLOR);
+    var AXES_ALPHA                   = Constants.ACPowerSupplyView.AXES_ALPHA;
+    var AXES_STROKE_WIDTH            = Constants.ACPowerSupplyView.AXES_STROKE_WIDTH;
+    var TICK_COLOR                   = Colors.parseHex(Constants.ACPowerSupplyView.TICK_COLOR);
+    var TICK_ALPHA                   = Constants.ACPowerSupplyView.TICK_ALPHA;
+    var TICK_SPACING                 = Constants.ACPowerSupplyView.TICK_SPACING;
+    var TICK_LENGTH                  = Constants.ACPowerSupplyView.TICK_LENGTH;
+    var TICK_STROKE_WIDTH            = Constants.ACPowerSupplyView.TICK_STROKE_WIDTH;
+    var CURSOR_COLOR                 = Colors.parseHex(Constants.ACPowerSupplyView.CURSOR_COLOR);
+    var CURSOR_STROKE_WIDTH          = Constants.ACPowerSupplyView.CURSOR_STROKE_WIDTH;
+    var CURSOR_WRAP_AROUND_TOLERANCE = Constants.ACPowerSupplyView.CURSOR_WRAP_AROUND_TOLERANCE;
 
     /**
      * 
@@ -35,6 +38,8 @@ define(function(require) {
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+
+            this.cursorAngle = 0;
 
             this.initGraphics();
 
@@ -211,8 +216,22 @@ define(function(require) {
             this.sineWaveView.displayObject.x = WAVE_ORIGIN.x;
             this.sineWaveView.displayObject.y = WAVE_ORIGIN.y;
 
+            // Cursor
+            var yOffset = WAVE_VIEWPORT_SIZE.height / 2;
+            this.cursor = new PIXI.Graphics();
+            this.cursor.lineStyle(CURSOR_STROKE_WIDTH, CURSOR_COLOR, 1);
+            this.cursor.moveTo(0, -yOffset);
+            this.cursor.lineTo(0,  yOffset);
+            // Locate at the left edge of the sine wave.
+            x = WAVE_ORIGIN.x - (WAVE_VIEWPORT_SIZE.width / 2);
+            y = WAVE_ORIGIN.y;
+            this.cursor.x = x;
+            this.cursor.y = y;
+            this.cursor.visible = false;
+
             this.displayObject.addChild(graphics);
             this.displayObject.addChild(this.sineWaveView.displayObject);
+            this.displayObject.addChild(this.cursor);
         },
 
         /**
@@ -238,14 +257,42 @@ define(function(require) {
         },
 
         updateCursor: function() {
+            var startAngle = this.sineWaveView.getStartAngle();
+            var endAngle = this.sineWaveView.getEndAngle();
+            var stepAngle = this.model.get('stepAngle');
 
+            // Add the stepAngle first, because ACPowerSupply.stepInTime adds its delta first.
+            this.cursorAngle += stepAngle;
+
+            if (this.cursorAngle < startAngle) {
+                // The cursor is to the left of the visible waveform.
+                this.cursor.visible = false;
+            }
+            else if (this.cursorAngle >= endAngle) {
+                // The cursor is to the right of the visible waveform.
+                this.cursor.visible = false;
+                // Wrap around.
+                this.cursorAngle = (this.cursorAngle % (2 * Math.PI));
+                if (this.cursorAngle > startAngle + CURSOR_WRAP_AROUND_TOLERANCE)
+                    this.cursorAngle -= (2 * Math.PI);
+            }
+
+            // This is a new if statement in case wrap around occurred.
+            if (this.cursorAngle >= startAngle && this.cursorAngle < endAngle) {
+                // The cursor is on the visible waveform.
+                this.cursor.visible = true;
+                var xStart = (WAVE_ORIGIN.x - (WAVE_VIEWPORT_SIZE.width / 2));
+                var percent = (this.cursorAngle - startAngle) / (endAngle - startAngle);
+                var x = xStart + (percent * WAVE_VIEWPORT_SIZE.width);
+                this.cursor.x = Math.floor(x);
+            }
         },
 
         /**
          * 
          */
         update: function() {
-            if (this.model.get('enabled')) {
+            if (this.model.get('enabled') && this.simulation.updated()) {
                 var amplitude    = this.model.get('amplitude');
                 var maxAmplitude = this.model.get('maxAmplitude');
                 var frequency    = this.model.get('frequency');
@@ -258,8 +305,8 @@ define(function(require) {
                     // maxAmplitude and/or frequency was changed.
 
                     // Reset the cursor.
-                    // _cursorAngle = 0.0;
-                    // _cursorGraphic.setVisible( false );
+                    this.cursorAngle = 0;
+                    this.cursor.visible = false;
 
                     // Update the sine wave.
                     this.sineWaveView.setAmplitude(maxAmplitude);
