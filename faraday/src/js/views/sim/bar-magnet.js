@@ -5,7 +5,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var FaradaySimView = require('views/sim');
+    var BarMagnetSimulation = require('models/simulation/bar-magnet');
+
+    var FaradaySimView     = require('views/sim');
+    var BarMagnetSceneView = require('views/scene/bar-magnet');
 
     var Constants = require('constants');
 
@@ -18,6 +21,13 @@ define(function (require) {
      *   and contains all the common functionality between the two.
      */
     var BarMagnetSimView = FaradaySimView.extend({
+
+        /**
+         * Dom event listeners
+         */
+        events: _.extend(FaradaySimView.prototype.events, {
+            'click .inside-magnet-check' : 'toggleInsideBarMagnet',
+        }),
 
         /**
          * Template for rendering the basic scaffolding
@@ -39,6 +49,22 @@ define(function (require) {
             this.includeEarth = options.includeEarth;
 
             FaradaySimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new BarMagnetSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new BarMagnetSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**
@@ -66,13 +92,15 @@ define(function (require) {
             this.$('.sim-controls-wrapper').append(this.controlsTemplate(data));
 
             this.$('.strength-slider').noUiSlider({
-                start: 3,
+                start: (this.simulation.barMagnet.get('strength') / Constants.BAR_MAGNET_STRENGTH_MAX) * 100,
                 range: {
-                    min: 1,
-                    max: 5
+                    min: 0,
+                    max: 100
                 },
                 connect: 'lower'
             });
+
+            this.$strengthValue = this.$('.strength-value');
         },
 
         /**
@@ -91,6 +119,12 @@ define(function (require) {
             
         },
 
+        toggleInsideBarMagnet: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showInsideBarMagnet();
+            else
+                this.sceneView.hideInsideBarMagnet();
+        },
 
     });
 

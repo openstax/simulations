@@ -2,6 +2,9 @@ define(function(require) {
     
     'use strict';
 
+    var _ = require('underscore');
+    var $ = require('jquery');
+
     var PixiAppView = require('common/v3/pixi/view/app');
 
     var BarMagnetSimView  = require('views/sim/bar-magnet');
@@ -61,6 +64,9 @@ define(function(require) {
         changeNeedleSpacing: function(event) {
             var spacing = parseInt($(event.target).val());
             this.$spacing.html(spacing);
+
+            for (var i = 0; i < this.simViews.length; i++)
+                this.simViews[i].setNeedleSpacing(spacing);
         },
 
         changeNeedleSize: function(event) {
@@ -68,6 +74,9 @@ define(function(require) {
             var height = parseInt(width / Constants.GRID_NEEDLE_ASPECT_RATIO);
 
             this.$size.html(width + 'x' + height);
+
+            for (var i = 0; i < this.simViews.length; i++)
+                this.simViews[i].setNeedleSize(width, height);
         }
 
     });

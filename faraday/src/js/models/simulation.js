@@ -2,9 +2,10 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     /**
      * Constants
@@ -14,15 +15,21 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var FaradaySimulation = Simulation.extend({
+    var FaradaySimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
 
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            options = _.extend({
+                framesPerSecond:   Constants.CLOCK_FRAME_RATE,
+                deltaTimePerFrame: Constants.CLOCK_DELAY
+            }, options);
 
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
+
+            this.electrons = new Backbone.Collection();
         },
 
         /**
@@ -32,8 +39,19 @@ define(function (require, exports, module) {
             
         },
 
+        addElectron: function(electron) {
+            this.electrons.add(electron);
+        },
+
+        clearElectrons: function() {
+            this.electrons.reset();
+        },
+
         _update: function(time, deltaTime) {
-            
+            for (var i = 0; i < this.electrons.length; i++){
+                this.electrons.at(i).update(time, deltaTime);
+                //console.log(i + ': ' + this.electrons.at(i).pathIndex)
+            }
         }
 
     });

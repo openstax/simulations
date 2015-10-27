@@ -47,7 +47,14 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'click .play-btn'   : 'play',
+            'click .pause-btn'  : 'pause',
+            'click .step-btn'   : 'step',
+            
+            'click .show-field-check'       : 'toggleField',
+            'click .show-field-meter-check' : 'toggleFieldMeter',
+            'slide .strength-slider'        : 'changeStrength',
+            'click .flip-polarity-btn'      : 'flipPolarity'
         },
 
         /**
@@ -65,6 +72,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -113,6 +123,7 @@ define(function (require) {
         renderSceneView: function() {
             this.sceneView.render();
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
+            this.$el.append(this.sceneView.$ui);
         },
 
         /**
@@ -145,6 +156,51 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        setNeedleSpacing: function(spacing) {
+            this.sceneView.setNeedleSpacing(spacing);
+        },
+
+        setNeedleSize: function(width, height) {
+            this.sceneView.setNeedleSize(width, height);
+        },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
+        toggleField: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showOutsideField();
+            else
+                this.sceneView.hideOutsideField();
+        },
+
+        toggleFieldMeter: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showFieldMeter();
+            else
+                this.sceneView.hideFieldMeter();
+        },
+
+        changeStrength: function(event) {
+            var percent = parseInt($(event.target).val());
+            var strength = Constants.BAR_MAGNET_STRENGTH_RANGE.lerp(percent / 100);
+            this.inputLock(function() {
+                this.$strengthValue.text(percent);
+                this.simulation.barMagnet.set('strength', strength);
+            });
+        },
+
+        flipPolarity: function(event) {
+            this.simulation.barMagnet.flipPolarity();
+        }
 
     });
 

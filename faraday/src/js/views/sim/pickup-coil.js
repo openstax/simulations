@@ -5,7 +5,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var FaradaySimView = require('views/sim');
+    var PickupCoilSimulation = require('models/simulation/pickup-coil');
+
+    var FaradaySimView      = require('views/sim');
+    var PickupCoilSceneView = require('views/scene/pickup-coil');
 
     var Constants = require('constants');
 
@@ -41,6 +44,22 @@ define(function (require) {
             }, options);
 
             FaradaySimView.prototype.initialize.apply(this, [options]);
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new PickupCoilSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new PickupCoilSceneView({
+                simulation: this.simulation
+            });
         },
 
         /**
