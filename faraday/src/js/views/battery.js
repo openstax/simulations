@@ -55,8 +55,6 @@ define(function(require) {
                     min: -this.model.get('maxVoltage'),
                     max:  this.model.get('maxVoltage')
                 },
-                orientation: 'horizontal',
-                direction: 'rtl',
 
                 width: 100,
                 backgroundHeight: 4,
@@ -106,7 +104,6 @@ define(function(require) {
             this.leftVoltageText.x = Math.floor(this.leftVoltageText.width / 2);
             this.rightVoltageText.x = this.sliderView.width + Math.floor(this.rightVoltageText.width / 2);
             this.leftVoltageText.y = this.rightVoltageText.y = textY;
-            this.leftVoltageText.visible = false;
 
             this.sliderContainer.addChild(ticks);
             this.sliderContainer.addChild(this.leftVoltageText);
@@ -150,16 +147,16 @@ define(function(require) {
             // Update the displayed value and battery orientation
             var text = Math.round(Math.abs(voltage)) + ' v';
             if (voltage < 0) {
-                this.rightVoltageText.text = text;
-                this.rightVoltageText.visible = true;
-                this.leftVoltageText.visible = false;
-                this.battery.scale.x = this.batteryScale;
-            }
-            else {
                 this.leftVoltageText.text = text;
                 this.leftVoltageText.visible = true;
                 this.rightVoltageText.visible = false;
                 this.battery.scale.x = -this.batteryScale;
+            }
+            else {
+                this.rightVoltageText.text = text;
+                this.rightVoltageText.visible = true;
+                this.leftVoltageText.visible = false;
+                this.battery.scale.x = this.batteryScale;
             }
         }
 
