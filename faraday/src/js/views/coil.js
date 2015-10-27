@@ -294,7 +294,6 @@ define(function(require) {
                 fgCtx.moveTo(leftEndPoint.x + ox, leftEndPoint.y + oy);
                 fgCtx.lineTo(rightEndPoint.x + ox, rightEndPoint.y + oy);
                 fgCtx.stroke();
-                console.log('connecting ends', leftEndPoint, rightEndPoint)
             }
 
             // Create sprites from the canvases

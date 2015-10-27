@@ -553,6 +553,19 @@ define(function (require) {
     Constants.ACPowerSupplyView = ACPowerSupplyView;
     
 
+    /*************************************************************************
+     **                                                                     **
+     **                            SINE WAVE VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var SineWaveView = {};
+
+    SineWaveView.LINE_WIDTH = 1;
+    SineWaveView.LINE_COLOR = '#0f0';
+
+    Constants.SineWaveView = SineWaveView;
+
 
     return Constants;
 });

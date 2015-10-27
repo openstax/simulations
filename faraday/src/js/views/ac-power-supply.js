@@ -8,6 +8,8 @@ define(function(require) {
     var SliderView = require('common/v3/pixi/view/slider');
     var Colors     = require('common/colors/colors');
 
+    var SineWaveView = require('views/sine-wave');
+
     var Assets = require('assets');
 
     var Constants = require('constants');
@@ -200,7 +202,17 @@ define(function(require) {
                 y += TICK_SPACING;
             }
 
+            this.sineWaveView = new SineWaveView({
+                viewportWidth:  WAVE_VIEWPORT_SIZE.width,
+                viewportHeight: WAVE_VIEWPORT_SIZE.height,
+                // Configure cycles so that minimum frequency shows 1 cycle.
+                maxCycles: Constants.AC_FREQUENCY_MAX / Constants.AC_FREQUENCY_MIN
+            });
+            this.sineWaveView.displayObject.x = WAVE_ORIGIN.x;
+            this.sineWaveView.displayObject.y = WAVE_ORIGIN.y;
+
             this.displayObject.addChild(graphics);
+            this.displayObject.addChild(this.sineWaveView.displayObject);
         },
 
         /**
@@ -225,11 +237,40 @@ define(function(require) {
             this.displayObject.y = viewPosition.y;
         },
 
+        updateCursor: function() {
+
+        },
+
         /**
          * 
          */
         update: function() {
-            
+            if (this.model.get('enabled')) {
+                var amplitude    = this.model.get('amplitude');
+                var maxAmplitude = this.model.get('maxAmplitude');
+                var frequency    = this.model.get('frequency');
+
+                if (maxAmplitude === this.previousMaxAmplitude && frequency === this.previousFrequency) {
+                    // Just update the moving cursor.
+                    this.updateCursor();
+                }
+                else {
+                    // maxAmplitude and/or frequency was changed.
+
+                    // Reset the cursor.
+                    // _cursorAngle = 0.0;
+                    // _cursorGraphic.setVisible( false );
+
+                    // Update the sine wave.
+                    this.sineWaveView.setAmplitude(maxAmplitude);
+                    this.sineWaveView.setFrequency(frequency);
+                    this.sineWaveView.update();
+
+                    // Save the new values.
+                    this.previousMaxAmplitude = maxAmplitude;
+                    this.previousFrequency = frequency;
+                }
+            }
         },
 
         enabledChanged: function(battery, enabled) {
