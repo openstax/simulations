@@ -373,13 +373,13 @@ define(function (require) {
 
         addElectromagnetLoop: function() {
             var loops = this.simulation.sourceCoil.get('numberOfLoops') + 1;
-            if (loops <= Constants.MAX_PICKUP_LOOPS)
+            if (loops <= Constants.ELECTROMAGNET_LOOPS_MAX)
                 this.simulation.sourceCoil.set('numberOfLoops', loops);
         },
 
         removeElectromagnetLoop: function() {
             var loops = this.simulation.sourceCoil.get('numberOfLoops') - 1;
-            if (loops >= Constants.MIN_PICKUP_LOOPS)
+            if (loops >= Constants.ELECTROMAGNET_LOOPS_MIN)
                 this.simulation.sourceCoil.set('numberOfLoops', loops);
         },
 

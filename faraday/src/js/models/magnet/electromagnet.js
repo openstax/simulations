@@ -27,6 +27,8 @@ define(function (require) {
 
             this.on('change:currentSource', this.currentSourceChanged);
             this.currentSourceChanged(this, this.get('currentSource'));
+
+            this.listenTo(this.get('sourceCoilModel'), 'change', this.update);
         },
 
         /**
