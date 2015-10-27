@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi'); require('common/pixi/extensions');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('../view');
     var Colors    = require('common/colors/colors');
     var Rectangle = require('common/math/rectangle');
 
@@ -24,8 +24,8 @@ define(function(require) {
             'touchendoutside .handle': 'dragEnd',
             'mouseupoutside  .handle': 'dragEnd',
 
-            'mousedown  .background': 'backgroundTouchStart',
-            'touchstart .background': 'backgroundTouchStart',
+            'mousedown       .background': 'backgroundTouchStart',
+            'touchstart      .background': 'backgroundTouchStart',
             'touchend        .background': 'backgroundTouchEnd',
             'mouseup         .background': 'backgroundTouchEnd',
             'touchendoutside .background': 'backgroundTouchEnd',

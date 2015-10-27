@@ -238,6 +238,40 @@ define(function (require) {
     ElectromagnetSimulation.ELECTROMAGNET_DIRECTION = 0.0; // radians
 
     Constants.ElectromagnetSimulation = ElectromagnetSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                        TRANSFORMER SIMULATION                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var TransformerSimulation = {};
+
+    // Locations
+    TransformerSimulation.ELECTROMAGNET_LOCATION = new Vector2(200, 400);
+    TransformerSimulation.COMPASS_LOCATION       = new Vector2(100, 525);
+    TransformerSimulation.FIELD_METER_LOCATION   = new Vector2(150, 400);
+    TransformerSimulation.PICKUP_COIL_LOCATION   = new Vector2(500, 400);
+    // Battery
+    TransformerSimulation.BATTERY_AMPLITUDE = 1.0;
+    // AC Power Supply
+    TransformerSimulation.AC_MAX_AMPLITUDE = 0.5;
+    TransformerSimulation.AC_FREQUENCY = 0.5;
+    // Electromagnet
+    TransformerSimulation.ELECTROMAGNET_NUMBER_OF_LOOPS = Constants.ELECTROMAGNET_LOOPS_MAX;
+    TransformerSimulation.ELECTROMAGNET_LOOP_RADIUS = 50.0;  // Fixed loop radius
+    TransformerSimulation.ELECTROMAGNET_DIRECTION = 0.0; // radians
+    // Pickup Coil
+    TransformerSimulation.PICKUP_COIL_NUMBER_OF_LOOPS = 2;
+    TransformerSimulation.PICKUP_COIL_LOOP_AREA = 0.75 * Constants.MAX_PICKUP_LOOP_AREA;
+    TransformerSimulation.PICKUP_COIL_DIRECTION = 0.0; // radians
+    TransformerSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE = 0.56; // see PickupCoil.setTransitionSmoothingScale
+    // Scaling
+    TransformerSimulation.CALIBRATION_EMF = 3500000; // see PickupCoil.calibrateEmf for calibration instructions
+    TransformerSimulation.ELECTRON_SPEED_SCALE = 2.0;
+
+    Constants.TransformerSimulation = TransformerSimulation;
     
 
     /*************************************************************************
