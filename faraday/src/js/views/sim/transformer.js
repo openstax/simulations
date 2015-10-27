@@ -32,7 +32,8 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Transformer',
-                name: 'transformer'
+                name: 'transformer',
+                hideCompass: true
             }, options);
 
             FaradaySimView.prototype.initialize.apply(this, [options]);

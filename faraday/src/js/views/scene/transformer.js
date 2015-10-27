@@ -8,11 +8,6 @@ define(function(require) {
     var CompassView       = require('views/compass');
     var ElectromagnetView = require('views/electromagnet');
 
-    var BFieldInsideView = require('views/bfield/inside');
-    var PickupCoilView   = require('views/pickup-coil');
-
-    var Assets = require('assets');
-
     // Constants
     var Constants = require('constants');
 
@@ -33,31 +28,16 @@ define(function(require) {
             this.initCompass();
             this.initFieldMeter();
             this.initElectromagnet();
-        },
+            this.initPickupCoil();
 
-        initElectromagnet: function() {
-            this.electromagnetView = new ElectromagnetView({
-                mvt: this.mvt,
-                model: this.simulation.electromagnet,
-                simulation: this.simulation
-            });
-
-            this.bottomLayer.addChild(this.electromagnetView.backgroundLayer);
-            this.topLayer.addChild(this.electromagnetView.foregroundLayer);
+            this.hideCompass();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 
             this.electromagnetView.update(time, deltaTime, paused);
-        },
-
-        showElectromagnetElectrons: function() {
-            this.electromagnetView.showElectrons();
-        },
-
-        hideElectromagnetElectrons: function() {
-            this.electromagnetView.hideElectrons();
+            this.pickupCoilView.update(time, deltaTime, paused);
         }
 
     });

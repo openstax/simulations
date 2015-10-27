@@ -222,7 +222,8 @@ define(function (require) {
                 Assets: Assets,
                 simulation: this.simulation,
                 name: this.name,
-                currentSources: this.currentSources
+                currentSources: this.currentSources,
+                hideCompass: this.hideCompass
             };
 
             this.$('.sim-controls-wrapper').append(this.electromagnetControlsTemplate(data));

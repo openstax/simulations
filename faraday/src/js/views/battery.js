@@ -85,8 +85,8 @@ define(function(require) {
             ticks.lineStyle(2, 0xFFFFFF, 1);
             ticks.moveTo(1, tickY);
             ticks.lineTo(1, tickY + tickH);
-            ticks.moveTo(Math.floor(this.sliderView.width / 2), tickY);
-            ticks.lineTo(Math.floor(this.sliderView.width / 2), tickY + tickH);
+            ticks.moveTo(Math.round(this.sliderView.width / 2), tickY);
+            ticks.lineTo(Math.round(this.sliderView.width / 2), tickY + tickH);
             ticks.moveTo(this.sliderView.width - 1, tickY);
             ticks.lineTo(this.sliderView.width - 1, tickY + tickH);
             ticks.alpha = 0.5;

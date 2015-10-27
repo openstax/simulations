@@ -11,9 +11,12 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var BFieldOutsideView = require('views/bfield/outside');
+    var BFieldInsideView  = require('views/bfield/inside');
     var FieldMeterView    = require('views/field-meter');
     var CompassView       = require('views/compass');
     var BarMagnetView     = require('views/bar-magnet');
+    var PickupCoilView    = require('views/pickup-coil');
+    var ElectromagnetView = require('views/electromagnet');
 
     var Assets = require('assets');
 
@@ -136,6 +139,40 @@ define(function(require) {
             this.$ui.append(this.fieldMeterView.render().el);
         },
 
+        initPickupCoil: function() {
+            this.pickupCoilView = new PickupCoilView({
+                mvt: this.mvt,
+                model: this.simulation.pickupCoil,
+                simulation: this.simulation
+            });
+
+            this.bottomLayer.addChild(this.pickupCoilView.backgroundLayer);
+            this.topLayer.addChild(this.pickupCoilView.foregroundLayer);
+        },
+
+        initInsideBField: function() {
+            this.bFieldInsideView = new BFieldInsideView({
+                mvt: this.mvt,
+                magnetModel: this.magnetModel,
+                needleWidth: Constants.GRID_NEEDLE_WIDTH
+            });
+
+            this.middleLayer.addChild(this.bFieldInsideView.displayObject);
+
+            this.bFieldInsideView.hide();
+        },
+
+        initElectromagnet: function() {
+            this.electromagnetView = new ElectromagnetView({
+                mvt: this.mvt,
+                model: this.simulation.electromagnet,
+                simulation: this.simulation
+            });
+
+            this.bottomLayer.addChild(this.electromagnetView.backgroundLayer);
+            this.topLayer.addChild(this.electromagnetView.foregroundLayer);
+        },
+
         setNeedleSpacing: function(spacing) {
             this.bFieldOutsideView.setNeedleSpacing(spacing);
         },
@@ -173,6 +210,22 @@ define(function(require) {
 
         hideCompass: function() {
             this.compassView.hide();
+        },
+
+        showElectromagnetElectrons: function() {
+            this.electromagnetView.showElectrons();
+        },
+
+        hideElectromagnetElectrons: function() {
+            this.electromagnetView.hideElectrons();
+        },
+
+        showPickupCoilElectrons: function() {
+            this.pickupCoilView.showElectrons();
+        },
+
+        hidePickupCoilElectrons: function() {
+            this.pickupCoilView.hideElectrons();
         }
 
     });
