@@ -6,10 +6,21 @@ define(function(require) {
 
     var PixiView   = require('common/v3/pixi/view');
     var SliderView = require('common/v3/pixi/view/slider');
+    var Colors     = require('common/colors/colors');
 
     var Assets = require('assets');
 
     var Constants = require('constants');
+    var WAVE_VIEWPORT_SIZE = Constants.ACPowerSupplyView.WAVE_VIEWPORT_SIZE;
+    var WAVE_ORIGIN        = Constants.ACPowerSupplyView.WAVE_ORIGIN;
+    var AXES_COLOR         = Colors.parseHex(Constants.ACPowerSupplyView.AXES_COLOR);
+    var AXES_ALPHA         = Constants.ACPowerSupplyView.AXES_ALPHA;
+    var AXES_STROKE_WIDTH  = Constants.ACPowerSupplyView.AXES_STROKE_WIDTH;
+    var TICK_COLOR         = Colors.parseHex(Constants.ACPowerSupplyView.TICK_COLOR);
+    var TICK_ALPHA         = Constants.ACPowerSupplyView.TICK_ALPHA;
+    var TICK_SPACING       = Constants.ACPowerSupplyView.TICK_SPACING;
+    var TICK_LENGTH        = Constants.ACPowerSupplyView.TICK_LENGTH;
+    var TICK_STROKE_WIDTH  = Constants.ACPowerSupplyView.TICK_STROKE_WIDTH;
 
     /**
      * 
@@ -125,11 +136,71 @@ define(function(require) {
         },
 
         initTitle: function() {
+            var title = new PIXI.Text('AC Current Supply', {
+                font: '15px Helvetica Neue',
+                fill: '#fff',
+                align: 'center'
+            });
 
+            title.x = -Math.round(title.width / 2);
+            title.y = -202;
+
+            this.displayObject.addChild(title);
         },
 
         initGraph: function() {
+            var graphics = new PIXI.Graphics();
+            this.graph = graphics;
+            this.graph.x = WAVE_ORIGIN.x;
+            this.graph.y = WAVE_ORIGIN.y;
 
+            // Axes
+            var xLength = WAVE_VIEWPORT_SIZE.width;
+            var yLength = WAVE_VIEWPORT_SIZE.height;
+            var x;
+            var y;
+
+            // Axes
+            graphics.lineStyle(AXES_STROKE_WIDTH, AXES_COLOR, AXES_ALPHA);
+
+            // X axis
+            graphics.moveTo(-xLength / 2, 0);
+            graphics.lineTo( xLength / 2, 0);
+
+            // Y axis
+            graphics.moveTo(0, -yLength / 2);
+            graphics.lineTo(0,  yLength / 2);
+
+            // Tick marks
+            graphics.lineStyle(TICK_STROKE_WIDTH, TICK_COLOR, TICK_ALPHA);
+
+            // X-axis tick marks -- start at the origin and move out in both directions.
+            x = TICK_SPACING;
+            y = TICK_LENGTH / 2;
+            while (x < xLength / 2) {
+                graphics.moveTo(x, -y);
+                graphics.lineTo(x,  y);
+
+                graphics.moveTo(-x, -y);
+                graphics.lineTo(-x,  y);
+
+                x += TICK_SPACING;
+            }
+
+            // Y-axis tick marks -- start at the origin and move out in both directions.
+            x = TICK_LENGTH / 2;
+            y = TICK_SPACING;
+            while ( y < yLength / 2 ) {
+                graphics.moveTo(-x, y);
+                graphics.lineTo( x, y);
+
+                graphics.moveTo(-x, -y);
+                graphics.lineTo( x, -y);
+
+                y += TICK_SPACING;
+            }
+
+            this.displayObject.addChild(graphics);
         },
 
         /**

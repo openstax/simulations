@@ -539,6 +539,16 @@ define(function (require) {
     var ACPowerSupplyView = {};
 
     ACPowerSupplyView.MODEL_WIDTH = 237.41935483870967;
+    ACPowerSupplyView.WAVE_VIEWPORT_SIZE = new Dimension(156, 122);
+    ACPowerSupplyView.WAVE_ORIGIN = new Vector2(18, -107);
+    ACPowerSupplyView.AXES_COLOR = '#fff';
+    ACPowerSupplyView.AXES_ALPHA = 0.4;
+    ACPowerSupplyView.AXES_STROKE_WIDTH = 1;
+    ACPowerSupplyView.TICK_COLOR = ACPowerSupplyView.AXES_COLOR;
+    ACPowerSupplyView.TICK_ALPHA = ACPowerSupplyView.AXES_ALPHA;
+    ACPowerSupplyView.TICK_SPACING = 10; // pixels
+    ACPowerSupplyView.TICK_LENGTH = 8; // pixels
+    ACPowerSupplyView.TICK_STROKE_WIDTH = ACPowerSupplyView.AXES_STROKE_WIDTH;
 
     Constants.ACPowerSupplyView = ACPowerSupplyView;
     
