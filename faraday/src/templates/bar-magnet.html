@@ -10,12 +10,14 @@
     <button class="btn flip-polarity-btn"><span class="fa fa-exchange"></span>&nbsp; Flip Polarity</button>
 
     <ul class="checkboxes">
+    <% if (!excludeInsideMagnet) { %>
         <li>
             <input type="checkbox" class="inside-magnet-check" id="inside-magnet-check-<%= name %>">
             <label for="inside-magnet-check-<%= name %>">See Inside Magnet</label>
         </li>
+    <% } %>
         <li>
-            <input type="checkbox" class="show-field-check" id="show-field-check-<%= name %>" checked>
+            <input type="checkbox" class="show-field-check" id="show-field-check-<%= name %>" <% if (!hideField) { %>checked<% } %>>
             <label for="show-field-check-<%= name %>">Show Field</label>
         </li>
         <li>

@@ -17,7 +17,7 @@ define(function(require) {
         initialize: function(options) {
             FaradaySceneView.prototype.initialize.apply(this, arguments);
 
-            this.magnetModel = this.simulation.barMagnet;
+            this.magnetModel = this.simulation.turbine;
         },
 
         initGraphics: function() {
@@ -27,6 +27,8 @@ define(function(require) {
             this.initPickupCoil();
             this.initTurbine();
             this.initCompass();
+
+            this.hideOutsideField();
         },
 
         initTurbine: function() {

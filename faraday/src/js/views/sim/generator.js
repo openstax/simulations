@@ -32,7 +32,9 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Generator',
-                name: 'generator'
+                name: 'generator',
+                hideField: true,
+                excludeInsideMagnet: true
             }, options);
 
             FaradaySimView.prototype.initialize.apply(this, [options]);

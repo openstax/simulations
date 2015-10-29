@@ -89,10 +89,14 @@ define(function (require) {
                 title: 'Faraday\'s Electromagnetic Lab',
                 name: 'faraday',
                 link: 'legacy/faraday',
-                hideCompass: false
+                hideCompass: false,
+                hideField: false,
+                excludeInsideMagnet: false
             }, options);
 
             this.hideCompass = options.hideCompass;
+            this.hideField = options.hideField;
+            this.excludeInsideMagnet = options.excludeInsideMagnet;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -160,7 +164,9 @@ define(function (require) {
                 simulation: this.simulation,
                 name: this.name,
                 includeEarth: this.includeEarth,
-                hideCompass: this.hideCompass
+                hideCompass: this.hideCompass,
+                hideField: this.hideField,
+                excludeInsideMagnet: this.excludeInsideMagnet
             };
 
             this.$('.sim-controls-wrapper').append(this.barMagnetControlsTemplate(data));
