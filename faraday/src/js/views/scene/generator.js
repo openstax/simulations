@@ -11,12 +11,12 @@ define(function(require) {
     /**
      *
      */
-    var TransformerSceneView = FaradaySceneView.extend({
+    var GeneratorSceneView = FaradaySceneView.extend({
 
         initialize: function(options) {
             FaradaySceneView.prototype.initialize.apply(this, arguments);
 
-            this.magnetModel = this.simulation.electromagnet;
+            this.magnetModel = this.simulation.barMagnet;
         },
 
         initGraphics: function() {
@@ -24,20 +24,16 @@ define(function(require) {
 
             this.initCompass();
             this.initFieldMeter();
-            this.initElectromagnet();
             this.initPickupCoil();
-
-            this.hideCompass();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 
-            this.electromagnetView.update(time, deltaTime, paused);
             this.pickupCoilView.update(time, deltaTime, paused);
         }
 
     });
 
-    return TransformerSceneView;
+    return GeneratorSceneView;
 });

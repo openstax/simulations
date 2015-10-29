@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var BarMagnet = require('models/magnet');
+    var BarMagnet = require('models/magnet/bar');
 
     var Constants = require('constants');
 

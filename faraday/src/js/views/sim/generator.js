@@ -5,7 +5,10 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var FaradaySimView = require('views/sim');
+    var GeneratorSimulation = require('models/simulation/generator');
+
+    var GeneratorSceneView = require('views/scene/generator');
+    var FaradaySimView     = require('views/sim');
 
     var Constants = require('constants');
 
@@ -36,12 +39,30 @@ define(function (require) {
         },
 
         /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new GeneratorSimulation();
+        },
+
+        /**
+         * Initializes the SceneView.
+         */
+        initSceneView: function() {
+            this.sceneView = new GeneratorSceneView({
+                simulation: this.simulation
+            });
+        },
+
+        /**
          * Renders everything
          */
         render: function() {
             FaradaySimView.prototype.render.apply(this);
 
             this.renderPlaybackControls();
+            this.renderBarMagnetControls();
+            this.renderPickupCoilControls();
 
             return this;
         },

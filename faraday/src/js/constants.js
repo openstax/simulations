@@ -272,6 +272,42 @@ define(function (require) {
     TransformerSimulation.ELECTRON_SPEED_SCALE = 2.0;
 
     Constants.TransformerSimulation = TransformerSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         GENERATOR SIMULATION                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var GeneratorSimulation = {};
+
+    // Locations
+    GeneratorSimulation.TURBINE_LOCATION     = new Vector2(285, 400);
+    GeneratorSimulation.PICKUP_COIL_LOCATION = new Vector2(550, GeneratorSimulation.TURBINE_LOCATION.y);
+    GeneratorSimulation.COMPASS_LOCATION     = new Vector2(350, 175);
+    GeneratorSimulation.FIELD_METER_LOCATION = new Vector2(450, 460);
+
+    // Colors
+    GeneratorSimulation.APPARATUS_BACKGROUND = '#000';
+
+    // Turbine
+    GeneratorSimulation.TURBINE_SIZE = Constants.BAR_MAGNET_SIZE;
+    GeneratorSimulation.TURBINE_STRENGTH = 0.75 * Constants.TURBINE_STRENGTH_MAX;
+    GeneratorSimulation.TURBINE_DIRECTION = 0.0; // radians
+    GeneratorSimulation.TURBINE_SPEED = 0.0;
+
+    // Pickup Coil
+    GeneratorSimulation.PICKUP_COIL_NUMBER_OF_LOOPS = 2;
+    GeneratorSimulation.PICKUP_COIL_LOOP_AREA = Constants.DEFAULT_PICKUP_LOOP_AREA;
+    GeneratorSimulation.PICKUP_COIL_DIRECTION = 0.0; // radians
+    GeneratorSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE = 1.0;  // see PickupCoil.setTransitionSmoothingScale, 1 because magnet is never inside coil
+
+    // Scaling
+    GeneratorSimulation.CALIBRATION_EMF = 26000; // see PickupCoil.calibrateEmf for calibration instructions
+    GeneratorSimulation.ELECTRON_SPEED_SCALE = 1.0;
+
+    Constants.GeneratorSimulation = GeneratorSimulation;
     
 
     /*************************************************************************
