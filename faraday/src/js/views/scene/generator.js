@@ -4,7 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var FaradaySceneView  = require('views/scene');
+    var FaradaySceneView = require('views/scene');
+    var TurbineView      = require('views/turbine');
 
     var Constants = require('constants');
 
@@ -22,15 +23,26 @@ define(function(require) {
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.initCompass();
             this.initFieldMeter();
             this.initPickupCoil();
+            this.initTurbine();
+            this.initCompass();
+        },
+
+        initTurbine: function() {
+            this.turbineView = new TurbineView({
+                mvt: this.mvt,
+                model: this.simulation.turbine,
+                simulation: this.simulation
+            });
+            this.middleLayer.addChild(this.turbineView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 
             this.pickupCoilView.update(time, deltaTime, paused);
+            this.turbineView.update(time, deltaTime, paused);
         }
 
     });

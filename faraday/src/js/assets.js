@@ -26,7 +26,11 @@ define(function (require) {
         ICON_AC_POWER:         'ac-power-supply-icon.png',
         ICON_BATTERY:          'battery-icon.png',
         ICON_LIGHTBULB:        'lightbulb-icon.png',
-        ICON_VOLTMETER:        'voltmeter-icon.png'
+        ICON_VOLTMETER:        'voltmeter-icon.png',
+
+        TURBINE_PIVOT:         'turbine-pivot.png',
+        WATER_WHEEL:           'water-wheel.png',
+        FAUCET:                'faucet.png'
     };
 
     Assets.SpriteSheets = {};
