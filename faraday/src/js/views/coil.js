@@ -226,11 +226,11 @@ define(function(require) {
             // Draw the loops
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
             var numberOfLoops = this.model.get('numberOfLoops');
-            var loopSpacing = parseInt(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
+            var loopSpacing = Math.round(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
             var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
             
             // Start at the left-most loop, keeping the coil centered.
-            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);//(loopSpacing * numberOfLoops) / 2 + wireWidth; //-(loopSpacing * (numberOfLoops - 1) / 2);
+            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);
             
             var leftEndPoint;
             var rightEndPoint;
@@ -416,8 +416,8 @@ define(function(require) {
          */
         createWireLeftEnd: function(background, ctx, loopSpacing, xOffset, yOffset, radius) {
             var endPoint = this._endPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius) + yOffset); // lower
-            var startPoint = this._startPoint.set(endPoint.x - 15, endPoint.y - 40); // upper
-            var controlPoint = this._controlPoint.set(endPoint.x - 20, endPoint.y - 20);
+            var startPoint = this._startPoint.set(endPoint.x - this.mvt.modelToViewDeltaX(15), endPoint.y - this.mvt.modelToViewDeltaX(41)); // upper
+            var controlPoint = this._controlPoint.set(endPoint.x - this.mvt.modelToViewDeltaX(20), endPoint.y - this.mvt.modelToViewDeltaX(20));
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
             
             // Scale the speed, since this curve is different than the others in the coil.
@@ -535,8 +535,8 @@ define(function(require) {
          */
         createWireRightEnd: function(foreground, ctx, loopSpacing, xOffset, yOffset, radius) {
             var startPoint = this._startPoint.set(xOffset, Math.floor(-radius) + yOffset); // lower
-            var endPoint = this._endPoint.set(startPoint.x + 15, startPoint.y - 40); // upper
-            var controlPoint = this._controlPoint.set(startPoint.x + 20, startPoint.y - 20);
+            var endPoint = this._endPoint.set(startPoint.x + this.mvt.modelToViewDeltaX(15), startPoint.y - this.mvt.modelToViewDeltaX(40)); // upper
+            var controlPoint = this._controlPoint.set(startPoint.x + this.mvt.modelToViewDeltaX(20), startPoint.y - 20);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             // Scale the speed, since this curve is different than the others in the coil.
@@ -551,12 +551,12 @@ define(function(require) {
 
         getWidth: function() {
             var numberOfLoops = this.model.get('numberOfLoops');
-            return numberOfLoops * this.mvt.modelToViewDeltaX(30) + this.model.get('radius') * 0.58;
+            return numberOfLoops * this.mvt.modelToViewDeltaX(25) + this.mvt.modelToViewDeltaX(this.model.get('radius')) * 0.72;
         },
 
         getHeight: function() {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
-            return 2 * radius + 70;
+            return 2 * radius + this.mvt.modelToViewDeltaX(72);
         },
 
         getTopOffset: function() {

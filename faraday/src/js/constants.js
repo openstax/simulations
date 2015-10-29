@@ -456,7 +456,7 @@ define(function (require) {
 
     var ElectronView = {};
 
-    ElectronView.MODEL_WIDTH = 10;
+    ElectronView.MODEL_WIDTH = 8.661654135338345;
 
     Constants.ElectronView = ElectronView;
 
