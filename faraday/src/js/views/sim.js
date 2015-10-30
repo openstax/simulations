@@ -355,8 +355,10 @@ define(function (require) {
             $icon.siblings().removeClass('selected');
             var index = parseInt($icon.data('index'));
             for (var i = 0; i < this.currentSources.length; i++) {
-                if (i === index)
+                if (i === index) {
                     this.currentSources[i].model.set('enabled', true);
+                    this.simulation.electromagnet.set('currentSource', this.currentSources[i].model);
+                }
                 else
                     this.currentSources[i].model.set('enabled', false);
             }
