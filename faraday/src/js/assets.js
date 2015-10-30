@@ -29,7 +29,7 @@ define(function (require) {
         ICON_VOLTMETER:        'voltmeter-icon.png',
 
         TURBINE_PIVOT:         'turbine-pivot-alternate.png',
-        WATER_WHEEL:           'water-wheel-alternate.png',
+        WATER_WHEEL:           'water-wheel.png',
         FAUCET:                'faucet.png'
     };
 
