@@ -24,7 +24,7 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             options = _.extend({
                 framesPerSecond:   Constants.CLOCK_FRAME_RATE,
-                deltaTimePerFrame: Constants.CLOCK_DELAY
+                deltaTimePerFrame: Constants.CLOCK_STEP
             }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);

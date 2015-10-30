@@ -92,8 +92,8 @@ define(function (require) {
         this.alpha = 0; // Angular acceleration, the change in angular velocity over time.
     };
 
-    var SENSITIVITY = 0.01 / 1000; // increase this to make the compass more sensitive to smaller fields
-    var DAMPING     = 0.08 / 1000; // increase this to make the needle wobble less
+    var SENSITIVITY = 0.01; // increase this to make the compass more sensitive to smaller fields
+    var DAMPING     = 0.08; // increase this to make the needle wobble less
     var THRESHOLD   = 0.2 * (Math.PI / 180); // angle at which the needle stops wobbling and snaps to the actual field orientation
 
     _.extend(Kinematic.prototype, baseFunctions, {
