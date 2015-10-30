@@ -15,7 +15,11 @@ define(function(require) {
     var GeneratorSceneView = FaradaySceneView.extend({
 
         initialize: function(options) {
-            FaradaySceneView.prototype.initialize.apply(this, arguments);
+            options = _.extend({
+                pickupCoilDraggable: false
+            }, options);
+
+            FaradaySceneView.prototype.initialize.apply(this, [options]);
 
             this.magnetModel = this.simulation.turbine;
         },

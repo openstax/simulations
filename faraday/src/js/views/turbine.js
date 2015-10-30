@@ -23,7 +23,6 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
-            this.simulation = options.simulation;
 
             this.waterColor = Colors.parseHex(TurbineView.WATER_COLOR);
             this.waterAlpha = TurbineView.WATER_ALPHA;

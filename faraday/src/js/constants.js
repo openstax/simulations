@@ -649,7 +649,7 @@ define(function (require) {
     var TurbineView = {};
 
     TurbineView.MAX_WATER_WIDTH = 40;
-    TurbineView.WATER_COLOR = '#fff'; // new Color( 194, 234, 255, 180 );
+    TurbineView.WATER_COLOR = '#C2EAFF';
     TurbineView.WATER_ALPHA = 0.72;
 
     Constants.TurbineView = TurbineView;

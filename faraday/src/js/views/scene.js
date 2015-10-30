@@ -38,6 +38,12 @@ define(function(require) {
         },
 
         initialize: function(options) {
+            options = _.extend({
+                pickupCoilDraggable: true
+            }, options);
+
+            this.pickupCoilDraggable = options.pickupCoilDraggable;
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -143,7 +149,8 @@ define(function(require) {
             this.pickupCoilView = new PickupCoilView({
                 mvt: this.mvt,
                 model: this.simulation.pickupCoil,
-                simulation: this.simulation
+                simulation: this.simulation,
+                draggingEnabled: this.pickupCoilDraggable
             });
 
             this.bottomLayer.addChild(this.pickupCoilView.backgroundLayer);

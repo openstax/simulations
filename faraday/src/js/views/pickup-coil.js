@@ -37,8 +37,13 @@ define(function(require) {
          * Initializes the new PickupCoilView.
          */
         initialize: function(options) {
+            options = _.extend({
+                draggingEnabled: true
+            }, options);
+
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.draggingEnabled = options.draggingEnabled;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -57,7 +62,8 @@ define(function(require) {
             this.foregroundLayer = new PIXI.Container();
             this.backgroundLayer = new PIXI.Container();
 
-            this.foregroundLayer.buttonMode = true;
+            if (this.draggingEnabled)
+                this.foregroundLayer.buttonMode = true;
 
             this.initCoilView();
             this.initLightbulb();
@@ -133,7 +139,7 @@ define(function(require) {
         },
 
         dragStart: function(event) {
-            if (this.simulation.get('paused'))
+            if (this.simulation.get('paused') || !this.draggingEnabled)
                 return;
 
             this.dragOffset = event.data.getLocalPosition(this.foregroundLayer, this._dragOffset);
