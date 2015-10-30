@@ -7,7 +7,7 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        BAR_MAGNET:            'bar-magnet-plain.png',
+        BAR_MAGNET:            'bar-magnet-alternate.png',
         ELECTRON_BG:           'electron_background.png',
         ELECTRON_FG:           'electron_foreground.png',
 
@@ -28,8 +28,8 @@ define(function (require) {
         ICON_LIGHTBULB:        'lightbulb-icon.png',
         ICON_VOLTMETER:        'voltmeter-icon.png',
 
-        TURBINE_PIVOT:         'turbine-pivot.png',
-        WATER_WHEEL:           'water-wheel.png',
+        TURBINE_PIVOT:         'turbine-pivot-alternate.png',
+        WATER_WHEEL:           'water-wheel-alternate.png',
         FAUCET:                'faucet.png'
     };
 
