@@ -91,12 +91,14 @@ define(function (require) {
                 link: 'legacy/faraday',
                 hideCompass: false,
                 hideField: false,
-                excludeInsideMagnet: false
+                excludeInsideMagnet: false,
+                excludeFlipPolarity: false
             }, options);
 
             this.hideCompass = options.hideCompass;
             this.hideField = options.hideField;
             this.excludeInsideMagnet = options.excludeInsideMagnet;
+            this.excludeFlipPolarity = options.excludeFlipPolarity;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -166,7 +168,8 @@ define(function (require) {
                 includeEarth: this.includeEarth,
                 hideCompass: this.hideCompass,
                 hideField: this.hideField,
-                excludeInsideMagnet: this.excludeInsideMagnet
+                excludeInsideMagnet: this.excludeInsideMagnet,
+                excludeFlipPolarity: this.excludeFlipPolarity
             };
 
             this.$('.sim-controls-wrapper').append(this.barMagnetControlsTemplate(data));

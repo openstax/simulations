@@ -34,7 +34,8 @@ define(function (require) {
                 title: 'Generator',
                 name: 'generator',
                 hideField: true,
-                excludeInsideMagnet: true
+                excludeInsideMagnet: true,
+                excludeFlipPolarity: true
             }, options);
 
             FaradaySimView.prototype.initialize.apply(this, [options]);

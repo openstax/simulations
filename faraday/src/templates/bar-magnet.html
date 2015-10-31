@@ -7,7 +7,9 @@
         <div class="slider strength-slider"></div>
     </div>
 
-    <button class="btn flip-polarity-btn"><span class="fa fa-exchange"></span>&nbsp; Flip Polarity</button>
+    <% if (!excludeFlipPolarity) { %>
+        <button class="btn flip-polarity-btn"><span class="fa fa-exchange"></span>&nbsp; Flip Polarity</button>
+    <% } %>
 
     <ul class="checkboxes">
     <% if (!excludeInsideMagnet) { %>
