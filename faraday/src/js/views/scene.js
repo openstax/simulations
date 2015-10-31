@@ -203,6 +203,14 @@ define(function(require) {
             this.bFieldOutsideView.hide();
         },
 
+        showInsideBarMagnet: function() {
+            this.bFieldInsideView.show();
+        },
+
+        hideInsideBarMagnet: function() {
+            this.bFieldInsideView.hide();
+        },
+
         showFieldMeter: function() {
             this.fieldMeterView.show();
         },
