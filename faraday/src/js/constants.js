@@ -206,7 +206,7 @@ define(function (require) {
     PickupCoilSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE = 0.77; // see PickupCoil.setTransitionSmoothingScale
 
     // Scaling
-    PickupCoilSimulation.CALIBRATION_EMF = 370000; // original: 2700000 // see PickupCoil.calibrateEmf for calibration instructions
+    PickupCoilSimulation.CALIBRATION_EMF = 2700000; // see PickupCoil.calibrateEmf for calibration instructions
     PickupCoilSimulation.ELECTRON_SPEED_SCALE = 3.0;
 
     Constants.PickupCoilSimulation = PickupCoilSimulation;
