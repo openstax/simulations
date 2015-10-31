@@ -176,13 +176,15 @@ define(function (require) {
             this.$('.sim-controls-wrapper').append(this.barMagnetControlsTemplate(data));
 
             this.$('.strength-slider').noUiSlider({
-                start: 3,
+                start: 75,
                 range: {
-                    min: 1,
-                    max: 5
+                    min: 0,
+                    max: 100
                 },
                 connect: 'lower'
             });
+
+            this.$strengthValue = this.$('.strength-value');
         },
 
         /**
@@ -281,6 +283,21 @@ define(function (require) {
             
         },
 
+        resetBarMagnetControls: function() {
+            this.$('.bar-magnet-controls').remove();
+            this.renderBarMagnetControls();
+        },
+
+        resetPickupCoilControls: function() {
+            this.$('.pickup-coil-controls').remove();
+            this.renderPickupCoilControls();
+        },
+
+        resetElectromagnetControls: function() {
+            this.$('.electromagnet-controls').remove();
+            this.renderElectromagnetControls();
+        },
+
         /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
@@ -346,7 +363,7 @@ define(function (require) {
             var percent = parseInt($(event.target).val());
             var strength = Constants.BAR_MAGNET_STRENGTH_RANGE.lerp(percent / 100);
             this.inputLock(function() {
-                this.$strengthValue.text(percent);
+                this.$strengthValue.text(percent + '%');
                 this.simulation.barMagnet.set('strength', strength);
             });
         },

@@ -74,6 +74,8 @@ define(function (require) {
         resetComponents: function() {
             FaradaySimView.prototype.resetComponents.apply(this);
             
+            this.resetBarMagnetControls();
+            this.resetPickupCoilControls();
         },
 
         showElectrons: function() {
