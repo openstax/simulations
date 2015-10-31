@@ -59,6 +59,7 @@ define(function (require) {
             'click .play-btn'   : 'play',
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
+            'click .reset-btn'  : 'reset',
             
             'click .show-field-check'       : 'toggleField',
             'click .show-field-meter-check' : 'toggleFieldMeter',
@@ -257,12 +258,27 @@ define(function (require) {
             this.sceneView.postRender();
         },
 
+        resetSimulation: function() {
+            // Save whether or not it was paused when we reset
+            var wasPaused = this.simulation.get('paused');
+
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+
+            // Resume normal function
+            this.updater.play();
+            if (!wasPaused)
+                this.simulation.play();
+        },
+
         /**
          * Resets all the components of the view.
          */
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            
         },
 
         /**

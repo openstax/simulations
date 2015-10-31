@@ -127,6 +127,20 @@ define(function (require, exports, module) {
             });
         },
 
+        resetComponents: function() {
+            FaradaySimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.battery.reset();
+            this.acPowerSupply.reset();
+            this.sourceCoil.reset();
+            this.electromagnet.reset();
+            this.compass.reset();
+            this.fieldMeter.reset();
+            this.pickupCoil.reset();
+            this.lightbulb.reset();
+            this.voltmeter.reset();
+        },
+
         _update: function(time, deltaTime) {
             FaradaySimulation.prototype._update.apply(this, arguments);
             

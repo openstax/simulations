@@ -28,15 +28,17 @@ define(function (require, exports, module) {
             }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            this.electrons = new Backbone.Collection();
         },
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            this.electrons = new Backbone.Collection();
+        },
+
+        resetComponents: function() {
+            this.clearElectrons();
         },
 
         addElectron: function(electron) {

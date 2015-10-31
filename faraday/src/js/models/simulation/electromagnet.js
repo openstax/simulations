@@ -94,6 +94,18 @@ define(function (require, exports, module) {
             });
         },
 
+        resetComponents: function() {
+            FaradaySimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.battery.reset();
+            this.acPowerSupply.reset();
+            this.sourceCoil.reset();
+            this.electromagnet.reset();
+            this.electromagnet.update();
+            this.compass.reset();
+            this.fieldMeter.reset();
+        },
+
         _update: function(time, deltaTime) {
             FaradaySimulation.prototype._update.apply(this, arguments);
             
