@@ -189,10 +189,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            if (this.simulation.updated() && this.magnetModel /*TODO: Get rid of these magnetModel checks after all sims are implemented*/) {
-                this.bFieldOutsideView.update();
-                this.fieldMeterView.update();
-            }
+            this.bFieldOutsideView.update();
+            this.fieldMeterView.update();
         },
 
         showOutsideField: function() {

@@ -170,7 +170,7 @@ define(function (require) {
     BarMagnetSimulation.BAR_MAGNET_LOCATION  = new Vector2(450, 300);
     BarMagnetSimulation.COMPASS_LOCATION     = new Vector2(150, 300);
     BarMagnetSimulation.FIELD_METER_LOCATION = new Vector2(150, 400);
-    BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(250, 175);
+    BarMagnetSimulation.WIGGLE_ME_LOCATION   = new Vector2(280, 175);
 
     // Bar Magnet
     BarMagnetSimulation.BAR_MAGNET_SIZE = Constants.BAR_MAGNET_SIZE;
@@ -654,6 +654,36 @@ define(function (require) {
 
     Constants.TurbineView = TurbineView;
 
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            WIGGLE ME VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var WiggleMeView = {};
+
+    // Wiggle direction
+    WiggleMeView.CLOCKWISE = 0;
+    WiggleMeView.COUNTER_CLOCKWISE = 1;
+    // Arrow "look" - see edu.colorado.phet.common.view.graphics.shapes.Arrow
+    WiggleMeView.ARROW_HEAD_HEIGHT = 15;
+    WiggleMeView.ARROW_HEAD_WIDTH = 10;
+    WiggleMeView.ARROW_TAIL_WIDTH = 3;
+    WiggleMeView.ARROW_FRACTIONAL_HEAD_HEIGHT = 100;
+    // Fonts and Colors
+    WiggleMeView.DEFAULT_TEXT_FONT_SIZE = 18;
+    WiggleMeView.DEFAULT_TEXT_COLOR = '#ff0';
+    WiggleMeView.DEFAULT_ARROW_FILL_COLOR = '#ff0';
+    // Space between the text and the arrows.
+    WiggleMeView.TEXT_MARGIN = 10;
+    // Default duration of 1 complete wiggle cycle
+    WiggleMeView.DEFAULT_CYCLE_DURATION = 0.6; // Seconds
+    // Default wiggle range.
+    WiggleMeView.DEFAULT_RANGE = new Dimension(20, 20);
+
+    Constants.WiggleMeView = WiggleMeView;
 
 
     return Constants;
