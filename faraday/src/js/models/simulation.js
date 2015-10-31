@@ -43,6 +43,15 @@ define(function (require, exports, module) {
             this.electrons.add(electron);
         },
 
+        removeElectron: function(electron) {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons[i] === electron) {
+                    this.electrons.slice(i, 1);
+                    break;
+                }
+            }
+        },
+
         clearElectrons: function() {
             this.electrons.reset();
         },

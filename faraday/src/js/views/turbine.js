@@ -182,7 +182,7 @@ define(function(require) {
          */
         updateWater: function(speed) {
             this.water.clear();
-            if (speed !== 0) {console.log(this.maxWaterWidth)
+            if (speed !== 0) {
                 var waterWidth = Math.abs(speed * this.maxWaterWidth);
                 if (waterWidth < 1)
                     waterWidth = 1; // Must be at least 1 pixel wide

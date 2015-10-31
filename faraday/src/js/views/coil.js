@@ -387,7 +387,10 @@ define(function(require) {
         },
 
         clearElectrons: function() {
-            this.simulation.clearElectrons();
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                this.simulation.removeElectron(this.electrons[i]);
+                this.electrons.splice(i, 1);
+            }
         },
 
         drawQuadBezierSpline: function(ctx, spline, startColor, endColor, x1, y1, x2, y2) {

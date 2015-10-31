@@ -130,9 +130,12 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             FaradaySimulation.prototype._update.apply(this, arguments);
             
+            this.acPowerSupply.update(time, deltaTime);
             this.compass.update(time, deltaTime);
             this.fieldMeter.update(time, deltaTime);
-            this.acPowerSupply.update(time, deltaTime);
+            this.pickupCoil.update(time, deltaTime);
+            this.lightbulb.update(time, deltaTime);
+            this.voltmeter.update(time, deltaTime);
         }
 
     }, Constants.TransformerSimulation);

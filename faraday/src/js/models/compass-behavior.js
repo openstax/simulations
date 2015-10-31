@@ -100,13 +100,11 @@ define(function (require) {
 
         setDirection: function(fieldVector, deltaTime) {
             var magnitude = fieldVector.length();
-            //var angle = fieldVector.angle();
             var angle = Math.atan2(fieldVector.y, fieldVector.x);
-// console.log(angle, this.theta)
-// console.log(deltaTime)
+
             // Difference between the field angle and the compass angle.
             var phi = ((magnitude === 0 ) ? 0.0 : (angle - this.theta));
-// console.log(phi.toFixed(5), this.alpha.toFixed(5), this.omega.toFixed(5), this.theta.toFixed(5))
+
             if (Math.abs(phi) < THRESHOLD) {
                 // When the difference between the field angle and the compass angle is insignificant,
                 // simply set the angle and consider the compass to be at rest.
@@ -120,9 +118,8 @@ define(function (require) {
 
                 // Step 1: orientation
                 var thetaOld = this.theta;
-// console.log((SENSITIVITY * Math.sin(phi) * magnitude), (DAMPING * this.omega))
                 var alphaTemp = (SENSITIVITY * Math.sin(phi) * magnitude) - (DAMPING * this.omega);
-// console.log(this.theta)
+                
                 this.theta = this.theta + (this.omega * deltaTime) + (0.5 * alphaTemp * deltaTime * deltaTime);
                 if (this.theta !== thetaOld) {
                     // Set the compass needle direction.
