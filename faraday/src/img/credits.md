@@ -11,6 +11,8 @@ Image Credits
 
 **battery-icon.png**: by Patrick Wolfert
 
+**earth.png**: by PhET, from original sim
+
 **electron_background.png**: by PhET, from original sim
 
 **electron_foreground.png**: by PhET, from original sim
