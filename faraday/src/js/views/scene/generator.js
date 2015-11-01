@@ -48,6 +48,7 @@ define(function(require) {
             FaradaySceneView.prototype.reset.apply(this, arguments);
 
             this.pickupCoilView.reset();
+            this.turbineView.reset();
             this.hideOutsideField();
         },
 

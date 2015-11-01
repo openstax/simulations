@@ -28,6 +28,12 @@ define(function (require) {
             this.maxRPMChanged(this, this.get('maxRPM'));
         },
 
+        reset: function() {
+            BarMagnet.prototype.reset.apply(this, arguments);
+
+            this.maxRPMChanged(this, this.get('maxRPM'));
+        },
+
         maxRPMChanged: function(turbine, maxRPM) {
             // Pre-compute the maximum change in angle per clock tick.
             var framesPerSecond = Constants.CLOCK_FRAME_RATE;

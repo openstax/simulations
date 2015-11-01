@@ -32,6 +32,15 @@ define(function(require) {
             this.listenTo(this.model, 'change:position', this.updatePosition);
         },
 
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.faucetSlider.val(0);
+            this.water.clear();
+            var direction = this.model.get('direction');
+            this.barMagnet.rotation = direction;
+            this.waterWheel.rotation = direction;
+        },
+
         /**
          * Initializes everything for rendering graphics
          */

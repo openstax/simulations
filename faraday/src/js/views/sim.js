@@ -271,8 +271,8 @@ define(function (require) {
 
             // Resume normal function
             this.updater.play();
-            if (!wasPaused)
-                this.simulation.play();
+            this.play();
+            this.pausedChanged();
         },
 
         /**
