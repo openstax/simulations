@@ -58,7 +58,19 @@ define(function(require) {
                 this.initFieldMeter();
         },
 
-        reset: function() {},
+        reset: function() {
+            this.showOutsideField();
+            if (this.compassView) {
+                if (this.simulation.compass.get('enabled'))
+                    this.showCompass();
+                else
+                    this.hideCompass();
+            }
+            if (this.fieldMeterView)
+                this.hideFieldMeter();
+            if (this.bFieldInsideView)
+                this.hideInsideBarMagnet();
+        },
 
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);

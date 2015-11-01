@@ -45,7 +45,10 @@ define(function(require) {
         },
 
         reset: function() {
+            FaradaySceneView.prototype.reset.apply(this, arguments);
+
             this.pickupCoilView.reset();
+            this.hideOutsideField();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

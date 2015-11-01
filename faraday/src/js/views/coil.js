@@ -99,6 +99,7 @@ define(function(require) {
         },
 
         reset: function() {
+            this.enableElectronAnimation();
             this.updateMVT(this.mvt);
             this.updateCoil();
         },
