@@ -389,6 +389,7 @@ define(function(require) {
         clearElectrons: function() {
             for (var i = this.electrons.length - 1; i >= 0; i--) {
                 this.simulation.removeElectron(this.electrons[i]);
+                this.electrons[i].destroy();
                 this.electrons.splice(i, 1);
             }
         },
