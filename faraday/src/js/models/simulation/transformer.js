@@ -4,13 +4,13 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var FaradaySimulation = require('models/simulation');
-    var Electromagnet     = require('models/magnet/electromagnet');
-    var Compass           = require('models/compass');
-    var FieldMeter        = require('models/field-meter');
-    var SourceCoil        = require('models/coil/source');
-    var ACPowerSupply     = require('models/current-source/ac-power-supply');
-    var Battery           = require('models/current-source/battery');
+    var FaradaySimulation    = require('models/simulation');
+    var Electromagnet        = require('models/magnet/electromagnet');
+    var Compass              = require('models/compass');
+    var FieldMeter           = require('models/field-meter');
+    var SourceCoil           = require('models/coil/source');
+    var ACPowerSupply        = require('models/current-source/ac-power-supply');
+    var Battery              = require('models/current-source/battery');
     var PickupCoil           = require('models/coil/pickup');
     var Lightbulb            = require('models/lightbulb');
     var Voltmeter            = require('models/voltmeter');
@@ -139,6 +139,8 @@ define(function (require, exports, module) {
             this.pickupCoil.reset();
             this.lightbulb.reset();
             this.voltmeter.reset();
+
+            this.electromagnet.update();
         },
 
         _update: function(time, deltaTime) {

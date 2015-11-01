@@ -101,9 +101,10 @@ define(function (require, exports, module) {
             this.acPowerSupply.reset();
             this.sourceCoil.reset();
             this.electromagnet.reset();
-            this.electromagnet.update();
             this.compass.reset();
             this.fieldMeter.reset();
+
+            this.electromagnet.update();
         },
 
         _update: function(time, deltaTime) {
