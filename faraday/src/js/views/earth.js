@@ -35,12 +35,6 @@ define(function(require) {
 
             this.displayObject.addChild(this.earth);
 
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 1);
-            graphics.drawCircle(0, 0, 2);
-            graphics.endFill();
-            this.displayObject.addChild(graphics);
-
             this.updateMVT(this.mvt);
         },
 
@@ -60,7 +54,7 @@ define(function(require) {
         },
 
         updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToViewDelta(position);
+            var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
         },
