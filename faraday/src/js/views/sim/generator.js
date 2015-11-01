@@ -78,7 +78,16 @@ define(function (require) {
             
             this.resetBarMagnetControls();
             this.resetPickupCoilControls();
-        }
+        },
+
+        changeStrength: function(event) {
+            var percent = parseInt($(event.target).val());
+            var strength = Constants.BAR_MAGNET_STRENGTH_RANGE.lerp(percent / 100);
+            this.inputLock(function() {
+                this.$strengthValue.text(percent + '%');
+                this.simulation.turbine.set('strength', strength);
+            });
+        },
 
     });
 
