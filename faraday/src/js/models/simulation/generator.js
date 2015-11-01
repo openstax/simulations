@@ -70,12 +70,12 @@ define(function (require, exports, module) {
                 position:                 GeneratorSimulation.PICKUP_COIL_LOCATION,
                 direction:                GeneratorSimulation.PICKUP_COIL_DIRECTION,
                 numberOfLoops:            GeneratorSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
-                transitionSmoothingScale: GeneratorSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE
+                transitionSmoothingScale: GeneratorSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE,
+                loopArea:                 GeneratorSimulation.PICKUP_COIL_LOOP_AREA
             }, {
                 magnetModel: this.turbine,
                 calibrationEmf: GeneratorSimulation.CALIBRATION_EMF
             });
-            this.pickupCoil.setLoopArea(GeneratorSimulation.PICKUP_COIL_LOOP_AREA);
 
             // Lightbulb
             this.lightbulb = new Lightbulb({

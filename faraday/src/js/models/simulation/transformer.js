@@ -104,12 +104,12 @@ define(function (require, exports, module) {
                 direction:                TransformerSimulation.PICKUP_COIL_DIRECTION,
                 numberOfLoops:            TransformerSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
                 transitionSmoothingScale: TransformerSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE,
-                samplePointsStrategy:     new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing),
+                loopArea:                 TransformerSimulation.PICKUP_COIL_LOOP_AREA,
+                samplePointsStrategy:     new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing)
             }, {
                 magnetModel: this.electromagnet,
                 calibrationEmf: TransformerSimulation.CALIBRATION_EMF
             });
-            this.pickupCoil.setLoopArea(TransformerSimulation.PICKUP_COIL_LOOP_AREA);
 
             // Lightbulb
             this.lightbulb = new Lightbulb({
