@@ -18,6 +18,12 @@ define(function (require) {
             this.on('change:wireWidth', this.wireWidthChanged);
         },
 
+        reset: function() {
+            AbstractCoil.prototype.reset.apply(this, arguments);
+
+            this.set('loopSpacing', this.get('wireWidth'));
+        },
+
         /**
          * If the wire width is changed, also change the loop spacing so
          *   that the loops remain packed close together.

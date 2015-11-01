@@ -98,6 +98,11 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.updateCoil();
+        },
+
         /**
          * Enables/disables animation of current flow.
          */

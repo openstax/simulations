@@ -44,6 +44,10 @@ define(function(require) {
             this.middleLayer.addChild(this.turbineView.displayObject);
         },
 
+        reset: function() {
+            this.pickupCoilView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 

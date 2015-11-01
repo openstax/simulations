@@ -94,6 +94,13 @@ define(function(require) {
             this.foregroundLayer.addChild(this.acPowerSupplyView.displayObject);
         },
 
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.coilView.reset();
+            this.batteryView.reset();
+            this.acPowerSupplyView.reset();
+        },
+
         update: function(time, deltaTime, paused) {
             this.coilView.update(time, deltaTime, paused);
             this.batteryView.update(time, deltaTime, paused);

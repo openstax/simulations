@@ -234,6 +234,11 @@ define(function(require) {
             this.displayObject.addChild(this.cursor);
         },
 
+        reset: function() {
+            this.amplitudeSlider.reset();
+            this.frequencySlider.reset();
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.

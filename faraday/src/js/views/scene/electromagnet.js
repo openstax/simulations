@@ -27,6 +27,10 @@ define(function(require) {
             this.magnetModel = this.simulation.electromagnet;
         },
 
+        reset: function() {
+            this.electromagnetView.reset();
+        },
+
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 

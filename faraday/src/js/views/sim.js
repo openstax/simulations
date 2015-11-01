@@ -281,6 +281,7 @@ define(function (require) {
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
             
+            this.sceneView.reset();
         },
 
         resetBarMagnetControls: function() {

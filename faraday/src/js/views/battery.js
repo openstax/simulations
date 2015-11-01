@@ -112,6 +112,10 @@ define(function(require) {
             this.displayObject.addChild(this.sliderContainer);
         },
 
+        reset: function() {
+            this.sliderView.reset();
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.

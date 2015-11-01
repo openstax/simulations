@@ -104,6 +104,11 @@ define(function(require) {
             this.foregroundLayer.addChild(this.voltmeterView.displayObject);
         },
 
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.coilView.reset();
+        },
+
         update: function(time, deltaTime, paused) {
             this.coilView.update(time, deltaTime, paused);
             this.lightbulbView.update(time, deltaTime, paused);

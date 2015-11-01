@@ -66,6 +66,7 @@ define(function(require) {
                 onSet:    function() {}
             }, options);
 
+            this.start = options.start;
             this.value = options.start;
             this.step  = options.step;
             this.range = options.range;
@@ -122,6 +123,10 @@ define(function(require) {
             this.on('slide',  options.onSlide);
             this.on('change', options.onChange);
             this.on('set',    options.onSet);
+        },
+
+        reset: function() {
+            this.val(this.start);
         },
 
         ltr: function() {

@@ -31,6 +31,10 @@ define(function(require) {
             this.hideCompass();
         },
 
+        reset: function() {
+            this.pickupCoilView.reset();
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 

@@ -58,6 +58,8 @@ define(function(require) {
                 this.initFieldMeter();
         },
 
+        reset: function() {},
+
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
