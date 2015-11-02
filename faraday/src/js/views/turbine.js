@@ -148,7 +148,7 @@ define(function(require) {
         },
 
         updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToViewDelta(position);
+            var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
         },

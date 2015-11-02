@@ -111,13 +111,10 @@ define(function(require) {
             var screenRatio = usableWidth / usableHeight;
             
             var scale = (screenRatio > simRatio) ? usableHeight / simHeight : usableWidth / simWidth;
-
-            
             
             this.viewOriginX = leftMargin + (usableWidth - (simWidth * scale)) / 2; // Center it
-            //this.viewOriginX = (usableWidth - simWidth * scale) / 2;
             this.viewOriginY = 0;
-console.log(this.viewOriginX, this.viewOriginY)
+
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
