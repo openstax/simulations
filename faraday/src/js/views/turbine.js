@@ -113,8 +113,8 @@ define(function(require) {
 
             this.rpmValue = rpmValue;
 
-            this.displayObject.addChild(rpmValue);
-            this.displayObject.addChild(rpmUnits);
+            this.turbinePivot.addChild(rpmValue);
+            this.turbinePivot.addChild(rpmUnits);
         },
 
         /**
