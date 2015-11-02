@@ -31,7 +31,7 @@ define(function (require) {
 
         TURBINE_PIVOT:         'turbine-pivot.png',
         WATER_WHEEL:           'water-wheel.png',
-        FAUCET:                'faucet.png'
+        FAUCET:                'faucet-fade.png'
     };
 
     Assets.SpriteSheets = {};
