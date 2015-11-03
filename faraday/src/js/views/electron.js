@@ -55,8 +55,8 @@ define(function(require) {
 
             var targetWidth = this.mvt.modelToViewDeltaX(ElectronView.MODEL_WIDTH);
             var scale = targetWidth / this.bgSprite.texture.width;
-            this.displayObject.scale.x = scale;
-            this.displayObject.scale.y = scale;
+            this.bgSprite.scale.x = this.fgSprite.scale.x = scale;
+            this.bgSprite.scale.y = this.fgSprite.scale.y = scale;
 
             this.updatePosition(this.model, this.model.get('position'));
         },
