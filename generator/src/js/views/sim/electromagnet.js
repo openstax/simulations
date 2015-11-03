@@ -5,9 +5,9 @@ define(function (require) {
     var ElectromagnetSimView = require('views/sim/electromagnet');
 
     /**
-     * "Magnets and Electromagnets" version of the original
+     * "Generator" version of the original
      */
-    var MEElectromagnetSimView = ElectromagnetSimView.extend({
+    var GeneratorElectromagnetSimView = ElectromagnetSimView.extend({
 
         /**
          * Inits simulation, views, and variables.
@@ -16,7 +16,7 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                link: 'magnets-and-electromagnets'
+                link: 'generator'
             }, options);
 
             ElectromagnetSimView.prototype.initialize.apply(this, [options]);
@@ -24,5 +24,5 @@ define(function (require) {
 
     });
 
-    return MEElectromagnetSimView;
+    return GeneratorElectromagnetSimView;
 });

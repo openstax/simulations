@@ -5,9 +5,9 @@ define(function (require) {
     var BarMagnetSimView = require('views/sim/bar-magnet');
 
     /**
-     * "Magnets and Electromagnets" version of the original
+     * "Generator" version of the original
      */
-    var MEBarMagnetSimView = BarMagnetSimView.extend({
+    var GeneratorBarMagnetSimView = BarMagnetSimView.extend({
 
         /**
          * Inits simulation, views, and variables.
@@ -16,8 +16,7 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                link: 'magnets-and-electromagnets',
-                includeEarth: true
+                link: 'generator'
             }, options);
 
             BarMagnetSimView.prototype.initialize.apply(this, [options]);
@@ -25,5 +24,5 @@ define(function (require) {
 
     });
 
-    return MEBarMagnetSimView;
+    return GeneratorBarMagnetSimView;
 });
