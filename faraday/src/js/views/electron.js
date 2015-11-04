@@ -62,9 +62,9 @@ define(function(require) {
         },
 
         updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToViewDelta(position);
-            this.displayObject.x = viewPosition.x;
-            this.displayObject.y = viewPosition.y;
+            // The model position is apparently already in view space!
+            this.displayObject.x = position.x;
+            this.displayObject.y = position.y;
 
             this.update();
         },

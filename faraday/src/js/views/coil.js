@@ -469,9 +469,9 @@ define(function(require) {
             var startPoint = this._startPoint.set(-loopSpacing + xOffset, Math.floor(-radius) + yOffset); // upper
             var endPoint = this._endPoint.set(Math.floor(radius * 0.25) + xOffset, yOffset); // lower
             var controlPoint = this._controlPoint.set(Math.floor(radius * 0.15) + xOffset, Math.floor(-radius * 1.20) + yOffset);
-            var curve = new QuadBezierSpline( startPoint, controlPoint, endPoint );
+            var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
-            var d = new ElectronPathDescriptor( curve, background, ElectronPathDescriptor.BACKGROUND );
+            var d = new ElectronPathDescriptor(curve, background, ElectronPathDescriptor.BACKGROUND);
             this.electronPath.push(d);
 
             // Diagonal gradient, upper left to lower right.
@@ -529,7 +529,7 @@ define(function(require) {
             var startPoint = this._startPoint.set(Math.floor(-radius * 0.25) + xOffset, 0 + yOffset); // lower
             var endPoint = this._endPoint.set(xOffset, Math.floor(-radius) + yOffset); // upper
             var controlPoint = this._controlPoint.set(Math.floor(-radius * 0.25) + xOffset, Math.floor(-radius * 0.80) + yOffset);
-            var curve = new QuadBezierSpline( startPoint, controlPoint, endPoint );
+            var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             var d = new ElectronPathDescriptor(curve, foreground, ElectronPathDescriptor.FOREGROUND);
             this.electronPath.push(d);
