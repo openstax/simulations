@@ -2,6 +2,7 @@
 @import "../../../common/styles/variables.less";
 @import "../../../common/styles/mixins/vendor-prefixes.less";
 @import "../../../common/styles/mixins/buttons.less";
+@import "variables.less";
 
 .text-button(@font-weight: bold) {
     background: transparent;
@@ -25,26 +26,20 @@
     }
 }
 
-.btn-zoom-in,
-.btn-zoom-out,
-.btn.btn-zoom-in,
-.btn.btn-zoom-out {
-    .text-button(normal);
-
-    > .fa {
-        position: relative;
-        font-size: 20px;
-
-        > .fa {
-            font-size: 10px;
-            position: absolute;
-            top: 5px;
-            left: 4px;
-        }
-    }
+.panel(@shadow-alpha: 0.25, @background: @panel-bg) {
+    background: @background;
+    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }
 
-.white-panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
-    background: fadeout(#fff, @background-fade-percent);
-    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+.header() {
+    font-size: 18px;
+    font-weight: 400;
+    color: rgba(51, 51, 51, 0.8);
+    margin-top: 0;
+    margin-bottom: 7px;
+}
+
+.panel-button() {
+    .button-variant(@link-color, @btn-bg, #fff, @link-color);
+    margin: 5px 5px 0;
 }

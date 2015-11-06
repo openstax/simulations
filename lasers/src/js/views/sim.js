@@ -18,17 +18,18 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls.less');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
+    var simHtml              = require('text!templates/sim.html');
+    var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
-     * This is the umbrella view for everything in a simulation tab.
-     *   It will be extended by both the Intro module and the Charts
-     *   and contains all the common functionality between the two.
+     * This is the umbrella view for everything in a simulation tab.  It
+     *   will be extended by both the One Atom and the Multiple Atom tab.
      */
     var LasersSimView = SimView.extend({
 
@@ -64,6 +65,9 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -90,6 +94,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
         },
@@ -104,6 +109,13 @@ define(function (require) {
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
+        },
+
+        /**
+         * Renders playback controls bar
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
         },
 
         /**
@@ -144,6 +156,16 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        }
 
     });
 
