@@ -41,8 +41,7 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            for (var i = 0; i < this.electrons.length; i++)
-                this.electrons.at(i).update(time, deltaTime);
+            
         }
 
     });
