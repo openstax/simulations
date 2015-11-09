@@ -43,7 +43,7 @@ define(function (require) {
                 this.frameAccumulator += delta;
 
                 while (this.frameAccumulator >= this.frameDuration) {
-                    this.time += this.frameDuration;
+                    this.time += this.deltaTimePerFrame;
 
                     this._update(this.time, this.deltaTimePerFrame);
                     this._updated = true;

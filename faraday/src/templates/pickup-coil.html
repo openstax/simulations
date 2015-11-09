@@ -1,0 +1,35 @@
+<div class="sim-controls pickup-coil-controls">
+
+    <h2>Pickup Coil</h2>
+
+    <label>Indicator</label>
+    <div class="indicators-wrapper">
+    <% _.each(indicators, function(indicator, index) { %>
+        <div class="selectable-icon indicator-icon <%= indicator.selected ? 'selected' : '' %>" data-index="<%= index %>">
+            <%= Assets.createIcon(indicator.src, 70) %>
+        </div>
+    <% }); %>
+    </div>
+    
+    <div class="loop-count-wrapper">
+        <label>Loops</label>
+        <span class="loop-count-value pickup-loop-count-value">2</span>
+        <div class="loop-count-btns">
+            <button class="btn add-loop-btn add-pickup-loop-btn"><span class="fa fa-plus-circle"></span></button>
+            <button class="btn remove-loop-btn remove-pickup-loop-btn"><span class="fa fa-minus-circle"></span></button>
+        </div>
+    </div>
+
+    <div class="loop-area-slider-wrapper">
+        <div class="slider-header">Loop Area <span class="slider-value loop-area-value">50%</span></div>
+        <div class="slider loop-area-slider"></div>
+    </div>
+
+    <ul class="checkboxes">
+        <li>
+            <input type="checkbox" class="show-pickup-coil-electrons-check" id="show-pickup-coil-electrons-check-<%= name %>" checked>
+            <label for="show-pickup-coil-electrons-check-<%= name %>">Show Electrons</label>
+        </li>
+    </ul>
+    
+</div>

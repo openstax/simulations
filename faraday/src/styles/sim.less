@@ -1,0 +1,201 @@
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: inherit;
+}
+
+.sim-controls-wrapper {
+    position: absolute;
+    right: @panel-margin;
+    top: @panel-margin;
+
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
+
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        .header();
+        margin-top: 0;
+        margin-bottom: 8px;
+        
+        
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+
+        .expand-icon,
+        .collapse-icon {
+            display: none;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.radios, ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        //margin-bottom: -12px;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 2px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .slider-header {
+        border-bottom: none;
+        margin-bottom: -4px;
+        font-weight: bold;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    .btn {
+        .sim-controls-button();
+
+        &:hover {
+            background: fadeout(#fff, 60%);
+            border-color: fadeout(#fff, 80%);
+        }
+
+        &:active {
+            background: fadeout(#fff, 30%);
+            border-color: #fff;
+        }
+    }
+
+    .flip-polarity-btn {
+        width: 100%;
+        margin-top: 8px;
+        margin-bottom: 12px;
+    }
+
+    .selectable-icon {
+        display: inline-block;
+        margin-right: 6px;
+        cursor: pointer;
+        border-radius: 8px;
+        position: relative;
+
+        &:last-child {
+            margin-right: 0;
+        }
+
+        &:hover {
+            background-color: fadeout(#fff, 70%);
+        }
+
+        &.selected {
+            background-color: fadeout(#fff, 50%);
+        }
+
+        .selectable-icon-title {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 70%;
+        }
+    }
+
+    .indicators-wrapper {
+
+    }
+
+    .loop-count-wrapper {
+        position: relative;
+        margin-top: 8px;
+        margin-bottom: 8px;
+
+        .loop-count-value {
+            margin-left: 34px;
+        }
+
+        .loop-count-btns {
+            width: 53px;
+            float: right;
+            margin-top: -2px;
+            display: inline-block;
+
+            .add-loop-btn,
+            .remove-loop-btn {
+                margin: 0;
+                padding: 1px 5px 1px 6px;
+            }
+
+            .remove-loop-btn {
+                float: right;
+            }
+        }
+    }
+
+}
+
+.reset-btn {
+    position: absolute;
+    right: 15px;
+    bottom: 20px;
+    z-index: 200;
+    .button-variant(@panel-btn-fg, @panel-btn-bg, @panel-btn-bg, @panel-btn-fg);
+
+    @media screen and (max-height: @short-window) {
+        right: 9px;
+        bottom: 14px;
+    }
+}

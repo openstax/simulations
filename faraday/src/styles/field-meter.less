@@ -1,0 +1,104 @@
+@import "variables.less";
+@import "mixins.less";
+
+@field-meter-width:  160px;
+@field-meter-height: 150px;
+@ring-radius: 24px;
+@ring-thickness: 8px;
+@panel-y: (@ring-radius - @ring-thickness);
+
+.field-meter-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    cursor: -webkit-grab;
+    cursor: grab;
+    .user-select(none);
+
+    .field-meter-background {
+        position: absolute;
+        opacity: 0.7;
+
+        .field-meter-ring {
+            position: absolute;
+            top: -@ring-radius;
+            left: -@ring-radius;
+            width:  (@ring-radius * 2);
+            height: (@ring-radius * 2);
+            border: @ring-thickness solid @panel-bg;
+            border-radius: 50%;
+        }
+
+        .field-meter-panel-bg {
+            position: absolute;
+            top: @panel-y;
+            left: -(@field-meter-width / 2);
+            width: @field-meter-width;
+            height: @field-meter-height;
+            background: @panel-bg;
+        }
+    }
+
+    .field-meter-content {
+        position: absolute;
+        top: @panel-y;
+        left: -(@field-meter-width / 2);
+        width: @field-meter-width;
+        padding: 10px 15px 15px 15px;
+
+        h2 {
+            .header();
+            text-align: center;
+            margin-top: 0;
+        }
+
+        div {
+            padding-left: 10px;
+            padding-right: 10px;
+
+            label {
+                display: inline-block;
+                width: 23px;
+            }
+
+            .equals {
+                display: inline-block;
+                width: 12px;
+                font-weight: bold;
+            }
+
+            .value {
+                float: right;
+                text-align: right;
+
+                .unit {
+                    text-align: left;
+                    display: inline-block;
+                    width: 16px;
+                    margin-left: 6px;
+                }
+            }            
+        }
+    }
+
+    &:before, &:after {
+        content: '';
+        position: absolute;
+        background: #fff;
+    }
+
+    &:before {
+        width: ((@ring-radius - @ring-thickness) * 2);
+        height: 2px;
+        top: -1px;
+        left: -(@ring-radius - @ring-thickness);
+    }
+
+    &:after {
+        width: 2px;
+        height: ((@ring-radius - @ring-thickness) * 2);
+        left: -1px;
+        top: -(@ring-radius - @ring-thickness);
+    }
+}

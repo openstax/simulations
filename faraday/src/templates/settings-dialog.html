@@ -1,0 +1,46 @@
+<div class="settings-btn-wrapper">
+    <button class="settings-btn" title="Field Settings" data-toggle="modal" data-target="#settings-dialog"><span class="fa fa-cogs"></span></button>
+</div>
+
+<div class="modal" id="settings-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Field Settings</h4>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row">
+                    <div class="col-xs-4">
+                        <label>Needle Spacing</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="slider" id="needle-spacing-slider"></div>
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="slider-value" id="needle-spacing-value">35</label>
+                    </div>
+                </div>
+
+                <br>
+
+                <div class="row">
+                    <div class="col-xs-4">
+                        <label>Needle Size</label>
+                    </div>
+                    <div class="col-xs-6">
+                        <div class="slider" id="needle-size-slider"></div>
+                    </div>
+                    <div class="col-xs-2">
+                        <label class="slider-value" id="needle-size-value">25x7</label>
+                    </div>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

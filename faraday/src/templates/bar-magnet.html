@@ -1,0 +1,41 @@
+<div class="sim-controls bar-magnet-controls">
+
+    <h2>Bar Magnet</h2>
+
+    <div class="strength-slider-wrapper">
+        <div class="slider-header">Strength <span class="slider-value strength-value">75%</span></div>
+        <div class="slider strength-slider"></div>
+    </div>
+
+    <% if (!excludeFlipPolarity) { %>
+        <button class="btn flip-polarity-btn"><span class="fa fa-exchange"></span>&nbsp; Flip Polarity</button>
+    <% } %>
+
+    <ul class="checkboxes">
+    <% if (!excludeInsideMagnet) { %>
+        <li>
+            <input type="checkbox" class="inside-magnet-check" id="inside-magnet-check-<%= name %>">
+            <label for="inside-magnet-check-<%= name %>">See Inside Magnet</label>
+        </li>
+    <% } %>
+        <li>
+            <input type="checkbox" class="show-field-check" id="show-field-check-<%= name %>" <% if (!hideField) { %>checked<% } %>>
+            <label for="show-field-check-<%= name %>">Show Field</label>
+        </li>
+        <li>
+            <input type="checkbox" class="show-compass-check" id="show-compass-check-<%= name %>" <% if (!hideCompass) { %>checked<% } %>>
+            <label for="show-compass-check-<%= name %>">Show Compass</label>
+        </li>
+        <li>
+            <input type="checkbox" class="show-field-meter-check" id="show-field-meter-check-<%= name %>">
+            <label for="show-field-meter-check-<%= name %>">Show Field Meter</label>
+        </li>
+    <% if (includeEarth) { %>
+        <li>
+            <input type="checkbox" class="show-planet-earth-check" id="show-planet-earth-check-<%= name %>">
+            <label for="show-planet-earth-check-<%= name %>">Show Planet Earth</label>
+        </li>
+    <% } %>
+    </ul>
+    
+</div>

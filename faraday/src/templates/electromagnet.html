@@ -1,0 +1,43 @@
+<div class="sim-controls electromagnet-controls">
+
+    <h2>Electromagnet</h2>
+
+    <label>Current Source</label>
+    <div class="current-sources-wrapper">
+    <% _.each(currentSources, function(currentSource, index) { %>
+        <div class="selectable-icon current-source-icon <%= currentSource.selected ? 'selected' : '' %>" data-index="<%= index %>">
+            <%= Assets.createIcon(currentSource.src, 70) %>
+            <span class="selectable-icon-title"><%= currentSource.title %></span>
+        </div>
+    <% }); %>
+    </div>
+    
+    <div class="loop-count-wrapper">
+        <label>Loops</label>
+        <span class="loop-count-value electromagnet-loop-count-value"><%= Constants.ElectromagnetSimulation.ELECTROMAGNET_NUMBER_OF_LOOPS %></span>
+        <div class="loop-count-btns">
+            <button class="btn add-loop-btn add-electromagnet-loop-btn"><span class="fa fa-plus-circle"></span></button>
+            <button class="btn remove-loop-btn remove-electromagnet-loop-btn"><span class="fa fa-minus-circle"></span></button>
+        </div>
+    </div>
+
+    <ul class="checkboxes">
+        <li>
+            <input type="checkbox" class="show-field-check" id="show-field-check-<%= name %>" checked>
+            <label for="show-field-check-<%= name %>">Show Field</label>
+        </li>
+        <li>
+            <input type="checkbox" class="show-compass-check" id="show-compass-check-<%= name %>" <% if (!hideCompass) { %>checked<% } %>>
+            <label for="show-compass-check-<%= name %>">Show Compass</label>
+        </li>
+        <li>
+            <input type="checkbox" class="show-field-meter-check" id="show-field-meter-check-<%= name %>">
+            <label for="show-field-meter-check-<%= name %>">Show Field Meter</label>
+        </li>
+        <li>
+            <input type="checkbox" class="show-electromagnet-electrons-check" id="show-electromagnet-electrons-check-<%= name %>" checked>
+            <label for="show-electromagnet-electrons-check-<%= name %>">Show Electrons</label>
+        </li>
+    </ul>
+    
+</div>

@@ -1,0 +1,17 @@
+@import "mixins.less";
+@import "variables.less";
+
+.scene-view {
+    width: 100%;
+    height: @scene-height;
+    //background: #000;
+    #gradient.vertical(#000; #444; 0%; 100%); //#1B0B3A; #796A96
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
+}
+
+.scene-view-ui {
+	
+}
