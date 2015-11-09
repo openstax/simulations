@@ -173,7 +173,7 @@ define(function (require) {
                 excludeFlipPolarity: this.excludeFlipPolarity
             };
 
-            this.$('.sim-controls-wrapper').append(this.barMagnetControlsTemplate(data));
+            this.$('.sim-controls-left').append(this.barMagnetControlsTemplate(data));
 
             this.$('.strength-slider').noUiSlider({
                 start: 75,
@@ -204,7 +204,7 @@ define(function (require) {
                 indicators: this.indicators
             };
 
-            this.$('.sim-controls-wrapper').append(this.pickupCoilControlsTemplate(data));
+            this.$('.sim-controls-right').append(this.pickupCoilControlsTemplate(data));
 
             this.$('.loop-area-slider').noUiSlider({
                 start: Constants.DEFAULT_PICKUP_LOOP_AREA,
@@ -238,7 +238,7 @@ define(function (require) {
                 hideCompass: this.hideCompass
             };
 
-            this.$('.sim-controls-wrapper').append(this.electromagnetControlsTemplate(data));
+            this.$('.sim-controls-left').append(this.electromagnetControlsTemplate(data));
 
             this.listenTo(this.simulation.sourceCoil, 'change:numberOfLoops', this.numElectromagnetLoopsChanged);
         },

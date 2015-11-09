@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView            = require('common/app/app');
     var PixiSceneView      = require('common/v3/pixi/view/scene');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
@@ -93,11 +94,17 @@ define(function(require) {
             var simWidth  = Constants.SCENE_WIDTH;
             var simHeight = Constants.SCENE_HEIGHT;
 
-            // ...to the usable screen space that we have
-            var controlsWidth = 220;
-            var margin = 20;
-            var rightMargin = 0; //0 + controlsWidth + margin;
-            var usableWidth = this.width - rightMargin;
+            // ...to the usable screen space that we have  
+            var leftMargin  = 0;
+            var rightMargin = 0;
+            if (AppView.windowIsShort()) {
+                var controlsWidth = 220;
+                var margin = 20;
+                leftMargin  = margin + controlsWidth;
+                rightMargin = margin + controlsWidth;
+                simWidth -= 130;
+            }
+            var usableWidth = this.width - leftMargin - rightMargin;
             var usableHeight = this.height; // - 62;
 
             var simRatio = simWidth / simHeight;
@@ -105,7 +112,7 @@ define(function(require) {
             
             var scale = (screenRatio > simRatio) ? usableHeight / simHeight : usableWidth / simWidth;
             
-            this.viewOriginX = (usableWidth - simWidth * scale) / 2; // Center it
+            this.viewOriginX = leftMargin + (usableWidth - (simWidth * scale)) / 2; // Center it
             this.viewOriginY = 0;
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(

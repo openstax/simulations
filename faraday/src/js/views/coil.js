@@ -49,7 +49,7 @@ define(function(require) {
      */
     var CoilView = PixiView.extend({
 
-        yOffset: -20,
+        Y_OFFSET: -20,
 
         /**
          * Initializes the new CoilView.
@@ -206,6 +206,8 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.yOffset = this.mvt.modelToViewDeltaY(this.Y_OFFSET);
         },
 
         /**

@@ -25,6 +25,12 @@ define(function(require) {
             this.magnetModel = this.simulation.barMagnet;
         },
 
+        reset: function() {
+            FaradaySceneView.prototype.reset.apply(this, arguments);
+            
+            this.hideEarth();
+        },
+
         initGraphics: function() {
             FaradaySceneView.prototype.initGraphics.apply(this, arguments);
 
