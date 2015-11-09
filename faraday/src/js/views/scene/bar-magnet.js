@@ -6,9 +6,11 @@ define(function(require) {
 
     var FaradaySceneView = require('views/scene');
     var WiggleMeView     = require('views/wiggle-me');
+    var EarthView        = require('views/earth');
 
-    // Constants
     var Constants = require('constants');
+
+    var Assets = require('assets');
 
     /**
      *
@@ -16,6 +18,8 @@ define(function(require) {
     var BarMagnetSceneView = FaradaySceneView.extend({
 
         initialize: function(options) {
+            this.includeEarth = options.includeEarth;
+
             FaradaySceneView.prototype.initialize.apply(this, arguments);
 
             this.magnetModel = this.simulation.barMagnet;
@@ -28,6 +32,8 @@ define(function(require) {
             this.initBarMagnet();
             this.initInsideBField();
             this.initWiggleMeView();
+            if (this.includeEarth)
+                this.initEarth();
         },
 
         initWiggleMeView: function() {
@@ -39,10 +45,30 @@ define(function(require) {
             this.topLayer.addChild(this.wiggleMeView.displayObject);
         },
 
+        initEarth: function() {
+            this.earthView = new EarthView({
+                mvt: this.mvt,
+                model: this.simulation.barMagnet
+            });
+            this.earthView.hide();
+
+            this.middleLayer.addChild(this.earthView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             FaradaySceneView.prototype._update.apply(this, arguments);
 
             this.wiggleMeView.update(time, deltaTime, paused);
+        },
+
+        showEarth: function() {
+            this.earthView.show();
+            this.bFieldInsideView.update();
+        },
+
+        hideEarth: function() {
+            this.earthView.hide();
+            this.bFieldInsideView.update();
         }
 
     });

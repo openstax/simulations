@@ -23,7 +23,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend(FaradaySimView.prototype.events, {
-            
+            'click .show-planet-earth-check' : 'toggleEarth'
         }),
 
         /**
@@ -55,7 +55,8 @@ define(function (require) {
          */
         initSceneView: function() {
             this.sceneView = new BarMagnetSceneView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                includeEarth: this.includeEarth
             });
         },
 
@@ -85,6 +86,18 @@ define(function (require) {
             FaradaySimView.prototype.resetComponents.apply(this);
             
             this.resetBarMagnetControls();
+        },
+
+        toggleEarth: function() {
+            if ($(event.target).is(':checked')) {
+                this.simulation.barMagnet.set('direction', this.simulation.barMagnet.get('direction') + Math.PI / 2);
+                this.sceneView.showEarth();
+            }
+            else {
+                this.simulation.barMagnet.set('direction', this.simulation.barMagnet.get('direction') - Math.PI / 2);
+                this.sceneView.hideEarth();
+            }
+            
         }
 
     });
