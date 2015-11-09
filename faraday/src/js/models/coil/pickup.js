@@ -12,7 +12,7 @@ define(function (require) {
 
     var Constants = require('constants');
 
-    var DEBUG_CALIBRATION = true;
+    var DEBUG_CALIBRATION = false;
 
     /**
      * PickupCoil is the model of a pickup coil.

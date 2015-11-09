@@ -49,12 +49,15 @@ define(function(require) {
      */
     var CoilView = PixiView.extend({
 
+        yOffset: -20,
+
         /**
          * Initializes the new CoilView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.endsConnected = options.endsConnected;
 
             this.electronAnimationEnabled = true;
             this.foregroundLayerColor   = CoilView.FOREGROUND_COLOR;
@@ -70,7 +73,6 @@ define(function(require) {
             this.loopSpacing   = -1; // force update
             this.current       = -1; // force update
             this.electronSpeedScale = 1;
-            this.endsConnected = false;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -96,13 +98,19 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
+        reset: function() {
+            this.enableElectronAnimation();
+            this.updateMVT(this.mvt);
+            this.updateCoil();
+        },
+
         /**
          * Enables/disables animation of current flow.
          */
         setElectronAnimationEnabled: function(enabled) {
             if (this.electronAnimationEnabled !== enabled){
                 this.electronAnimationEnabled = enabled;
-                this.update();
+                this.updateElectrons();
             }
         },
 
@@ -181,7 +189,7 @@ define(function(require) {
          * Updates the view to match the model.
          */
         update: function(time, deltaTime, paused) {
-            if (this.displayObject.visible && !paused) {
+            if (this.displayObject.visible && !paused && this.simulation.updated()) {
                 // Update the physical appearance of the coil.
                 if (this.coilChanged())
                     this.updateCoil();
@@ -198,9 +206,6 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            this.width = this.getWidth();
-            this.height = this.getHeight();
         },
 
         /**
@@ -221,14 +226,17 @@ define(function(require) {
             // Remove electrons from model
             this.clearElectrons();
 
+            this.width  = this.getWidth();
+            this.height = this.getHeight();
+
             // Draw the loops
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
             var numberOfLoops = this.model.get('numberOfLoops');
-            var loopSpacing = parseInt(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
+            var loopSpacing = Math.round(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
             var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
             
             // Start at the left-most loop, keeping the coil centered.
-            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);//(loopSpacing * numberOfLoops) / 2 + wireWidth; //-(loopSpacing * (numberOfLoops - 1) / 2);
+            var xStart = -(loopSpacing * (numberOfLoops - 1) / 2);
             
             var leftEndPoint;
             var rightEndPoint;
@@ -285,9 +293,12 @@ define(function(require) {
 
             // Connect the ends
             if (this.endsConnected) {
+                var ox = this.width  / 2; // x offset to make sure it draws within the canvas bounds
+                var oy = this.height / 2 - this.yOffset; // y offset to make sure it draws within the canvas bounds
+
                 fgCtx.strokeStyle = this.middlegroundColor;
-                fgCtx.moveTo(leftEndPoint.x, leftEndPoint.y);
-                fgCtx.lineTo(rightEndPoint.x, rightEndPoint.y);
+                fgCtx.moveTo(leftEndPoint.x + ox, leftEndPoint.y + oy);
+                fgCtx.lineTo(rightEndPoint.x + ox, rightEndPoint.y + oy);
                 fgCtx.stroke();
             }
 
@@ -298,8 +309,8 @@ define(function(require) {
             fg.addChild(fgSprite);
             bgSprite.x = -this.width / 2;
             fgSprite.x = -this.width / 2;
-            bgSprite.y = -this.height / 2;
-            fgSprite.y = -this.height / 2;
+            bgSprite.y = -this.height / 2 + this.yOffset;
+            fgSprite.y = -this.height / 2 + this.yOffset;
             
             // Add electrons to the coil.
             var speed = this.calculateElectronSpeed();
@@ -382,12 +393,16 @@ define(function(require) {
         },
 
         clearElectrons: function() {
-            this.simulation.clearElectrons();
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                this.simulation.removeElectron(this.electrons[i]);
+                this.electrons[i].destroy();
+                this.electrons.splice(i, 1);
+            }
         },
 
         drawQuadBezierSpline: function(ctx, spline, startColor, endColor, x1, y1, x2, y2) {
             var ox = this.width  / 2; // x offset to make sure it draws within the canvas bounds
-            var oy = this.height / 2; // y offset to make sure it draws within the canvas bounds
+            var oy = this.height / 2 - this.yOffset; // y offset to make sure it draws within the canvas bounds
 
             if (endColor !== undefined) {
                 var gradient = ctx.createLinearGradient(x1 + ox, y1 + oy, x2 + ox, y2 + oy);
@@ -411,8 +426,8 @@ define(function(require) {
          */
         createWireLeftEnd: function(background, ctx, loopSpacing, xOffset, yOffset, radius) {
             var endPoint = this._endPoint.set(-loopSpacing / 2 + xOffset, Math.floor(-radius) + yOffset); // lower
-            var startPoint = this._startPoint.set(endPoint.x - 15, endPoint.y - 40); // upper
-            var controlPoint = this._controlPoint.set(endPoint.x - 20, endPoint.y - 20);
+            var startPoint = this._startPoint.set(endPoint.x - this.mvt.modelToViewDeltaX(15), endPoint.y - this.mvt.modelToViewDeltaX(41)); // upper
+            var controlPoint = this._controlPoint.set(endPoint.x - this.mvt.modelToViewDeltaX(20), endPoint.y - this.mvt.modelToViewDeltaX(20));
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
             
             // Scale the speed, since this curve is different than the others in the coil.
@@ -427,7 +442,7 @@ define(function(require) {
                 endPoint.x, yOffset
             );
             
-            return startPoint;
+            return new Vector2(startPoint);
         },
 
         /**
@@ -530,8 +545,8 @@ define(function(require) {
          */
         createWireRightEnd: function(foreground, ctx, loopSpacing, xOffset, yOffset, radius) {
             var startPoint = this._startPoint.set(xOffset, Math.floor(-radius) + yOffset); // lower
-            var endPoint = this._endPoint.set(startPoint.x + 15, startPoint.y - 40); // upper
-            var controlPoint = this._controlPoint.set(startPoint.x + 20, startPoint.y - 20);
+            var endPoint = this._endPoint.set(startPoint.x + this.mvt.modelToViewDeltaX(15), startPoint.y - this.mvt.modelToViewDeltaX(40)); // upper
+            var controlPoint = this._controlPoint.set(startPoint.x + this.mvt.modelToViewDeltaX(20), startPoint.y - 20);
             var curve = new QuadBezierSpline(startPoint, controlPoint, endPoint);
 
             // Scale the speed, since this curve is different than the others in the coil.
@@ -541,19 +556,21 @@ define(function(require) {
 
             this.drawQuadBezierSpline(ctx, curve, this.middlegroundColor);
             
-            return endPoint;
+            return new Vector2(endPoint);
         },
 
         getWidth: function() {
             var numberOfLoops = this.model.get('numberOfLoops');
-            var loopSpacing = parseInt(this.mvt.modelToViewDeltaX(this.model.get('loopSpacing')));
-            var wireWidth = this.mvt.modelToViewDeltaX(this.model.get('wireWidth'));
-            return (numberOfLoops * loopSpacing) * 2 + wireWidth;
+            return numberOfLoops * this.mvt.modelToViewDeltaX(25) + this.mvt.modelToViewDeltaX(this.model.get('radius')) * 0.72;
         },
 
         getHeight: function() {
             var radius = this.mvt.modelToViewDeltaX(this.model.get('radius'));
-            return 2 * (radius * 1.2) + 40;
+            return 2 * radius + this.mvt.modelToViewDeltaX(72);
+        },
+
+        getTopOffset: function() {
+            return this.getHeight() / 2 - this.yOffset;
         },
 
         /**

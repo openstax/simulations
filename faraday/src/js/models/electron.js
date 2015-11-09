@@ -83,7 +83,7 @@ define(function (require) {
                 if (this.pathPosition <= 0 || this.pathPosition >= 1) {
                     this.switchCurves();  // sets this.pathIndex and this.pathPosition !
                 }
-                
+
                 this.updatePositionFromPath();
             }
         },

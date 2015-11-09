@@ -22,7 +22,23 @@ define(function (require) {
             loopSpacing: 25,
             // Amplitude of the current in the coil (-1...+1)
             currentAmplitude: 0,
+            // Area of the loops
+            loopArea: undefined
         }),
+
+        initialize: function(attributes, options) {
+            FaradayObject.prototype.initialize.apply(this, arguments);
+
+            if (this.get('loopArea') !== undefined)
+                this.setLoopArea(this.get('loopArea'));
+        },
+
+        reset: function() {
+            FaradayObject.prototype.reset.apply(this, arguments);
+
+            if (this._startingAttributes.loopArea !== undefined)
+                this.setLoopArea(this._startingAttributes.loopArea);
+        },
 
         /**
          * Sets the surface area of one loop.

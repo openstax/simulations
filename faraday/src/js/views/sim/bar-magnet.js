@@ -12,9 +12,6 @@ define(function (require) {
 
     var Constants = require('constants');
 
-    // HTML
-    var controlsHtml = require('text!templates/bar-magnet.html');
-
     /**
      * This is the umbrella view for everything in a simulation tab.
      *   It will be extended by both the Intro module and the Charts
@@ -26,13 +23,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: _.extend(FaradaySimView.prototype.events, {
-            'click .inside-magnet-check' : 'toggleInsideBarMagnet',
+            
         }),
-
-        /**
-         * Template for rendering the basic scaffolding
-         */
-        controlsTemplate: _.template(controlsHtml),
 
         /**
          * Inits simulation, views, and variables.
@@ -73,34 +65,9 @@ define(function (require) {
         render: function() {
             FaradaySimView.prototype.render.apply(this);
 
+            this.renderBarMagnetControls();
+
             return this;
-        },
-
-        /**
-         * Renders page content.
-         */
-        renderScaffolding: function() {
-            FaradaySimView.prototype.renderScaffolding.apply(this);
-
-            var data = {
-                Constants: Constants,
-                simulation: this.simulation,
-                name: this.name,
-                includeEarth: this.includeEarth
-            };
-
-            this.$('.sim-controls-wrapper').append(this.controlsTemplate(data));
-
-            this.$('.strength-slider').noUiSlider({
-                start: (this.simulation.barMagnet.get('strength') / Constants.BAR_MAGNET_STRENGTH_MAX) * 100,
-                range: {
-                    min: 0,
-                    max: 100
-                },
-                connect: 'lower'
-            });
-
-            this.$strengthValue = this.$('.strength-value');
         },
 
         /**
@@ -117,14 +84,8 @@ define(function (require) {
         resetComponents: function() {
             FaradaySimView.prototype.resetComponents.apply(this);
             
-        },
-
-        toggleInsideBarMagnet: function(event) {
-            if ($(event.target).is(':checked'))
-                this.sceneView.showInsideBarMagnet();
-            else
-                this.sceneView.hideInsideBarMagnet();
-        },
+            this.resetBarMagnetControls();
+        }
 
     });
 

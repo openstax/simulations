@@ -72,12 +72,12 @@ define(function (require, exports, module) {
                 direction:                PickupCoilSimulation.PICKUP_COIL_DIRECTION,
                 numberOfLoops:            PickupCoilSimulation.PICKUP_COIL_NUMBER_OF_LOOPS,
                 transitionSmoothingScale: PickupCoilSimulation.PICKUP_COIL_TRANSITION_SMOOTHING_SCALE,
+                loopArea:                 PickupCoilSimulation.PICKUP_COIL_LOOP_AREA,
                 samplePointsStrategy:     new SamplePointsStrategy.VariableNumberOfSamplePointsStrategy(ySpacing),
             }, {
                 magnetModel: this.barMagnet,
                 calibrationEmf: PickupCoilSimulation.CALIBRATION_EMF
             });
-            this.pickupCoil.setLoopArea(PickupCoilSimulation.PICKUP_COIL_LOOP_AREA);
 
             // Lightbulb
             this.lightbulb = new Lightbulb({
@@ -93,6 +93,17 @@ define(function (require, exports, module) {
             }, {
                 pickupCoilModel: this.pickupCoil
             });
+        },
+
+        resetComponents: function() {
+            FaradaySimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.barMagnet.reset();
+            this.compass.reset();
+            this.fieldMeter.reset();
+            this.pickupCoil.reset();
+            this.lightbulb.reset();
+            this.voltmeter.reset();
         },
 
         _update: function(time, deltaTime) {

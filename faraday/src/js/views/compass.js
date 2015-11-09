@@ -142,6 +142,14 @@ define(function(require) {
 
         dragEnd: function(event) {
             this.dragging = false;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     }, Constants.CompassView);

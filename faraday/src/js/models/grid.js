@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    // TODO: See if I can find a CSV parser on npm--naaaa, they're too much for too little
-
     /**
      * 
      */

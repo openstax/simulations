@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi'); require('common/pixi/extensions');
     
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('../view');
     var Colors    = require('common/colors/colors');
     var Rectangle = require('common/math/rectangle');
 
@@ -24,8 +24,8 @@ define(function(require) {
             'touchendoutside .handle': 'dragEnd',
             'mouseupoutside  .handle': 'dragEnd',
 
-            'mousedown  .background': 'backgroundTouchStart',
-            'touchstart .background': 'backgroundTouchStart',
+            'mousedown       .background': 'backgroundTouchStart',
+            'touchstart      .background': 'backgroundTouchStart',
             'touchend        .background': 'backgroundTouchEnd',
             'mouseup         .background': 'backgroundTouchEnd',
             'touchendoutside .background': 'backgroundTouchEnd',
@@ -66,6 +66,7 @@ define(function(require) {
                 onSet:    function() {}
             }, options);
 
+            this.start = options.start;
             this.value = options.start;
             this.step  = options.step;
             this.range = options.range;
@@ -124,6 +125,10 @@ define(function(require) {
             this.on('set',    options.onSet);
         },
 
+        reset: function() {
+            this.val(this.start);
+        },
+
         ltr: function() {
             return this.direction === 'ltr';
         },
@@ -151,7 +156,7 @@ define(function(require) {
             this.dragOffset = dragOffset === undefined ? event.data.getLocalPosition(this.handle, this._dragOffset) : dragOffset;
             this.dragging = true;
             this.previousValue = this.value;
-            this.trigger('drag-start');
+            this.trigger('drag-start', event);
         },
 
         drag: function(event) {
@@ -189,7 +194,7 @@ define(function(require) {
 
                 this.previousValue = this.value;
                 this.value = percentage * (this.range.max - this.range.min) + this.range.min;
-                this.trigger('slide', this.value, this.previousValue);
+                this.trigger('slide', this.value, this.previousValue, event);
             }
         },
 
@@ -199,7 +204,7 @@ define(function(require) {
                 this.dragData = null;
                 this.trigger('set',    this.value, this.previousValue);
                 this.trigger('change', this.value, this.previousValue);
-                this.trigger('drag-end');    
+                this.trigger('drag-end', event);    
             }
         },
 
@@ -218,7 +223,7 @@ define(function(require) {
             this.previousValue = this.value;
             this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
             this.positionHandle();
-            this.trigger('slide', this.value, this.previousValue);
+            this.trigger('slide', this.value, this.previousValue, event);
 
             var dragOffset = this._dragOffset;
             dragOffset.x = 0;

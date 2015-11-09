@@ -7,7 +7,9 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
 
-    var CoilView = require('views/coil');
+    var CoilView      = require('views/coil');
+    var LightbulbView = require('views/lightbulb');
+    var VoltmeterView = require('views/voltmeter');
 
     var Assets = require('assets');
 
@@ -21,22 +23,27 @@ define(function(require) {
     var PickupCoilView = PixiView.extend({
 
         events: {
-            'touchstart      .displayObject': 'dragStart',
-            'mousedown       .displayObject': 'dragStart',
-            'touchmove       .displayObject': 'drag',
-            'mousemove       .displayObject': 'drag',
-            'touchend        .displayObject': 'dragEnd',
-            'mouseup         .displayObject': 'dragEnd',
-            'touchendoutside .displayObject': 'dragEnd',
-            'mouseupoutside  .displayObject': 'dragEnd'
+            'touchstart      .foregroundLayer': 'dragStart',
+            'mousedown       .foregroundLayer': 'dragStart',
+            'touchmove       .foregroundLayer': 'drag',
+            'mousemove       .foregroundLayer': 'drag',
+            'touchend        .foregroundLayer': 'dragEnd',
+            'mouseup         .foregroundLayer': 'dragEnd',
+            'touchendoutside .foregroundLayer': 'dragEnd',
+            'mouseupoutside  .foregroundLayer': 'dragEnd'
         },
 
         /**
          * Initializes the new PickupCoilView.
          */
         initialize: function(options) {
+            options = _.extend({
+                draggingEnabled: true
+            }, options);
+
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.draggingEnabled = options.draggingEnabled;
 
             this._dragOffset   = new PIXI.Point();
             this._dragLocation = new PIXI.Point();
@@ -44,7 +51,8 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position',  this.updatePosition);
+            this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:radius',   this.updateComponentPositions);
         },
 
         /**
@@ -54,7 +62,12 @@ define(function(require) {
             this.foregroundLayer = new PIXI.Container();
             this.backgroundLayer = new PIXI.Container();
 
+            if (this.draggingEnabled)
+                this.foregroundLayer.buttonMode = true;
+
             this.initCoilView();
+            this.initLightbulb();
+            this.initVoltmeter();
 
             this.updateMVT(this.mvt);
         },
@@ -63,15 +76,43 @@ define(function(require) {
             this.coilView = new CoilView({
                 mvt: this.mvt,
                 model: this.model,
-                simulation: this.simulation
+                simulation: this.simulation,
+                endsConnected: true
             });
 
             this.backgroundLayer.addChild(this.coilView.backgroundLayer);
             this.foregroundLayer.addChild(this.coilView.foregroundLayer);
         },
 
+        initLightbulb: function() {
+            this.lightbulbView = new LightbulbView({
+                mvt: this.mvt,
+                model: this.simulation.lightbulb,
+                simulation: this.simulation
+            });
+
+            this.foregroundLayer.addChild(this.lightbulbView.displayObject);
+        },
+
+        initVoltmeter: function() {
+            this.voltmeterView = new VoltmeterView({
+                mvt: this.mvt,
+                model: this.simulation.voltmeter,
+                simulation: this.simulation
+            });
+
+            this.foregroundLayer.addChild(this.voltmeterView.displayObject);
+        },
+
+        reset: function() {
+            this.updateMVT(this.mvt);
+            this.coilView.reset();
+        },
+
         update: function(time, deltaTime, paused) {
             this.coilView.update(time, deltaTime, paused);
+            this.lightbulbView.update(time, deltaTime, paused);
+            this.voltmeterView.update(time, deltaTime, paused);
         },
 
         /**
@@ -81,8 +122,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            
-
+            this.updateComponentPositions();
             this.updatePosition(this.model, this.model.get('position'));
         },
 
@@ -94,17 +134,26 @@ define(function(require) {
             this.foregroundLayer.y = viewPosition.y;
         },
 
+        updateComponentPositions: function() {
+            var x = -10;
+            var y = -this.coilView.getTopOffset();
+            this.lightbulbView.displayObject.x = x;
+            this.lightbulbView.displayObject.y = y + 25;
+            this.voltmeterView.displayObject.x = x + 5;
+            this.voltmeterView.displayObject.y = y + 15;
+        },
+
         dragStart: function(event) {
-            if (!this.simulation.get('paused'))
+            if (this.simulation.get('paused') || !this.draggingEnabled)
                 return;
 
-            this.dragOffset = event.data.getLocalPosition(this.displayObject, this._dragOffset);
+            this.dragOffset = event.data.getLocalPosition(this.foregroundLayer, this._dragOffset);
             this.dragging = true;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                var local = event.data.getLocalPosition(this.displayObject.parent, this._dragLocation);
+                var local = event.data.getLocalPosition(this.foregroundLayer.parent, this._dragLocation);
                 var x = local.x - this.dragOffset.x;
                 var y = local.y - this.dragOffset.y;
                 
@@ -117,6 +166,14 @@ define(function(require) {
 
         dragEnd: function(event) {
             this.dragging = false;
+        },
+
+        showElectrons: function() {
+            this.coilView.enableElectronAnimation();
+        },
+
+        hideElectrons: function() {
+            this.coilView.disableElectronAnimation();
         }
 
     });

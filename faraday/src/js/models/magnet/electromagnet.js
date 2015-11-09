@@ -6,7 +6,7 @@ define(function (require) {
 
     var clamp = require('common/math/clamp');
 
-    var CoilMagnet = require('models/coil');
+    var CoilMagnet = require('models/magnet/coil');
 
     var Constants = require('constants');
 
@@ -25,7 +25,10 @@ define(function (require) {
         initialize: function(attributes, options) {
             CoilMagnet.prototype.initialize.apply(this, arguments);
 
-            this.on('change:currentSource', this.update);
+            this.on('change:currentSource', this.currentSourceChanged);
+            this.currentSourceChanged(this, this.get('currentSource'));
+
+            this.listenTo(this.get('sourceCoilModel'), 'change', this.update);
         },
 
         /**
@@ -66,6 +69,11 @@ define(function (require) {
              */
             var strength = Math.abs(amplitude) * this.get('maxStrength');
             this.set('strength', strength);
+        },
+
+        currentSourceChanged: function(model, currentSource) {
+            this.stopListening(model.previous('currentSource'));
+            this.listenTo(currentSource, 'change', this.update);
         }
 
     });

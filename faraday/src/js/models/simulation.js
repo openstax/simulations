@@ -24,23 +24,34 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             options = _.extend({
                 framesPerSecond:   Constants.CLOCK_FRAME_RATE,
-                deltaTimePerFrame: Constants.CLOCK_DELAY
+                deltaTimePerFrame: Constants.CLOCK_STEP
             }, options);
 
             FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
-
-            this.electrons = new Backbone.Collection();
         },
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            this.electrons = new Backbone.Collection();
+        },
+
+        resetComponents: function() {
+            this.clearElectrons();
         },
 
         addElectron: function(electron) {
             this.electrons.add(electron);
+        },
+
+        removeElectron: function(electron) {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons[i] === electron) {
+                    this.electrons.slice(i, 1);
+                    break;
+                }
+            }
         },
 
         clearElectrons: function() {
@@ -48,10 +59,8 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            for (var i = 0; i < this.electrons.length; i++){
+            for (var i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
-                //console.log(i + ': ' + this.electrons.at(i).pathIndex)
-            }
         }
 
     });

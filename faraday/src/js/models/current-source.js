@@ -14,7 +14,14 @@ define(function (require) {
         defaults: _.extend({}, FaradayObject.prototype.defaults, {
             maxVoltage: Number.POSITIVE_INFINITY,
             amplitude: 1 // Full strength
-        })
+        }),
+
+        /**
+         * Gets the voltage.
+         */
+        getVoltage: function() {
+            return this.get('amplitude') * this.get('maxVoltage');
+        }
 
     });
 

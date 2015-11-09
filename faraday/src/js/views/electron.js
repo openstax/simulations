@@ -26,6 +26,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'change:enabled',  this.updateVisibility);
         },
 
         /**
@@ -66,6 +67,10 @@ define(function(require) {
             this.displayObject.y = viewPosition.y;
 
             this.update();
+        },
+
+        updateVisibility: function(model, enabled) {
+            this.displayObject.visible = enabled;
         },
 
         /**

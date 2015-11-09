@@ -11,7 +11,12 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var BFieldOutsideView = require('views/bfield/outside');
+    var BFieldInsideView  = require('views/bfield/inside');
     var FieldMeterView    = require('views/field-meter');
+    var CompassView       = require('views/compass');
+    var BarMagnetView     = require('views/bar-magnet');
+    var PickupCoilView    = require('views/pickup-coil');
+    var ElectromagnetView = require('views/electromagnet');
 
     var Assets = require('assets');
 
@@ -26,11 +31,19 @@ define(function(require) {
      */
     var FaradaySceneView = PixiSceneView.extend({
 
+        magnetModel: undefined,
+
         events: {
             
         },
 
         initialize: function(options) {
+            options = _.extend({
+                pickupCoilDraggable: true
+            }, options);
+
+            this.pickupCoilDraggable = options.pickupCoilDraggable;
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -41,7 +54,22 @@ define(function(require) {
         postRender: function() {
             PixiSceneView.prototype.postRender.apply(this, arguments);
 
-            this.initFieldMeter();
+            if (this.magnetModel)
+                this.initFieldMeter();
+        },
+
+        reset: function() {
+            this.showOutsideField();
+            if (this.compassView) {
+                if (this.simulation.compass.get('enabled'))
+                    this.showCompass();
+                else
+                    this.hideCompass();
+            }
+            if (this.fieldMeterView)
+                this.hideFieldMeter();
+            if (this.bFieldInsideView)
+                this.hideInsideBarMagnet();
         },
 
         initGraphics: function() {
@@ -56,7 +84,8 @@ define(function(require) {
             this.stage.addChild(this.topLayer);
 
             this.initMVT();
-            this.initOutsideBField();
+            if (this.magnetModel)
+                this.initOutsideBField();
         },
 
         initMVT: function() {
@@ -89,7 +118,7 @@ define(function(require) {
         initOutsideBField: function() {
             this.bFieldOutsideView = new BFieldOutsideView({
                 mvt: this.mvt,
-                magnetModel: this.simulation.barMagnet,
+                magnetModel: this.magnetModel,
                 xSpacing:    Constants.GRID_SPACING, 
                 ySpacing:    Constants.GRID_SPACING,
                 needleWidth: Constants.GRID_NEEDLE_WIDTH,
@@ -99,15 +128,70 @@ define(function(require) {
             this.middleLayer.addChild(this.bFieldOutsideView.displayObject);
         },
 
+        initCompass: function() {
+            this.compassView = new CompassView({
+                mvt: this.mvt,
+                model: this.simulation.compass,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.compassView.displayObject);
+        },
+
+        initBarMagnet: function() {
+            this.barMagnetView = new BarMagnetView({
+                mvt: this.mvt,
+                model: this.simulation.barMagnet,
+                simulation: this.simulation
+            });
+
+            this.middleLayer.addChild(this.barMagnetView.displayObject);
+        },
+
         initFieldMeter: function() {
             this.fieldMeterView = new FieldMeterView({
                 mvt: this.mvt,
                 model: this.simulation.fieldMeter,
-                magnetModel: this.simulation.barMagnet,
+                magnetModel: this.magnetModel,
                 dragFrame: this.ui
             });
 
             this.$ui.append(this.fieldMeterView.render().el);
+        },
+
+        initPickupCoil: function() {
+            this.pickupCoilView = new PickupCoilView({
+                mvt: this.mvt,
+                model: this.simulation.pickupCoil,
+                simulation: this.simulation,
+                draggingEnabled: this.pickupCoilDraggable
+            });
+
+            this.bottomLayer.addChild(this.pickupCoilView.backgroundLayer);
+            this.topLayer.addChild(this.pickupCoilView.foregroundLayer);
+        },
+
+        initInsideBField: function() {
+            this.bFieldInsideView = new BFieldInsideView({
+                mvt: this.mvt,
+                magnetModel: this.magnetModel,
+                needleWidth: Constants.GRID_NEEDLE_WIDTH
+            });
+
+            this.middleLayer.addChild(this.bFieldInsideView.displayObject);
+
+            this.bFieldInsideView.hide();
+        },
+
+        initElectromagnet: function() {
+            this.electromagnetView = new ElectromagnetView({
+                mvt: this.mvt,
+                model: this.simulation.electromagnet,
+                simulation: this.simulation
+            });
+
+            this.bottomLayer.addChild(this.electromagnetView.backgroundLayer);
+            this.topLayer.addChild(this.electromagnetView.foregroundLayer);
         },
 
         setNeedleSpacing: function(spacing) {
@@ -119,10 +203,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            if (this.simulation.updated()) {
-                this.bFieldOutsideView.update();
-                this.fieldMeterView.update();
-            }
+            this.bFieldOutsideView.update();
+            this.fieldMeterView.update();
         },
 
         showOutsideField: function() {
@@ -133,12 +215,44 @@ define(function(require) {
             this.bFieldOutsideView.hide();
         },
 
+        showInsideBarMagnet: function() {
+            this.bFieldInsideView.show();
+        },
+
+        hideInsideBarMagnet: function() {
+            this.bFieldInsideView.hide();
+        },
+
         showFieldMeter: function() {
             this.fieldMeterView.show();
         },
 
         hideFieldMeter: function() {
             this.fieldMeterView.hide();
+        },
+
+        showCompass: function() {
+            this.compassView.show();
+        },
+
+        hideCompass: function() {
+            this.compassView.hide();
+        },
+
+        showElectromagnetElectrons: function() {
+            this.electromagnetView.showElectrons();
+        },
+
+        hideElectromagnetElectrons: function() {
+            this.electromagnetView.hideElectrons();
+        },
+
+        showPickupCoilElectrons: function() {
+            this.pickupCoilView.showElectrons();
+        },
+
+        hidePickupCoilElectrons: function() {
+            this.pickupCoilView.hideElectrons();
         }
 
     });

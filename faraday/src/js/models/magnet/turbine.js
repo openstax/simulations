@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var BarMagnet = require('models/magnet');
+    var BarMagnet = require('models/magnet/bar');
 
     var Constants = require('constants');
 
@@ -24,6 +24,12 @@ define(function (require) {
             BarMagnet.prototype.initialize.apply(this, arguments);
 
             this.on('change:maxRPM', this.maxRPMChanged);
+
+            this.maxRPMChanged(this, this.get('maxRPM'));
+        },
+
+        reset: function() {
+            BarMagnet.prototype.reset.apply(this, arguments);
 
             this.maxRPMChanged(this, this.get('maxRPM'));
         },

@@ -23,10 +23,6 @@ define(function (require) {
              * Bar Magnet) this is not the desired behavior.
              */
             this.offWhenCurrentChangesDirection = false;
-
-            // Cached objects
-            
-
         },
 
         /**
@@ -39,8 +35,8 @@ define(function (require) {
             var currentAmplitude = this.pickupCoilModel.get('currentAmplitude');
             
             if (this.offWhenCurrentChangesDirection && (
-                    (currentAmplitude >  0 && this.previousCurrentAmplitude <= 0 ) || 
-                    (currentAmplitude <= 0 && this.previousCurrentAmplitude >  0 )
+                    (currentAmplitude >  0 && this.previousCurrentAmplitude <= 0) || 
+                    (currentAmplitude <= 0 && this.previousCurrentAmplitude >  0)
                 )) {
                  // Current changed direction, so turn the light off.
                 intensity = 0;
