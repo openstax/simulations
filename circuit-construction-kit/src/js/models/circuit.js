@@ -5,7 +5,8 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     /**
      * This is the main class for the CCK model, providing a representation of all
@@ -28,6 +29,9 @@ define(function (require) {
             this._splitVec = new Vector2();
             this._splitDesiredDest = new Vector2();
             this._splitDestination = new Vector2();
+            this._bestDragMatchVec = new Vector2();
+            this._dragMatchObj = {};
+            this._getBranchRect = new Rectangle();
 
             this.listenTo(this.branches,  'add remove reset', this.circuitChanged);
             this.listenTo(this.junctions, 'add remove reset', this.circuitChanged);
@@ -41,6 +45,7 @@ define(function (require) {
         removeJunction: function(junction) {
             this.junctions.remove(junction);
             this.junction.destroy();
+            this.fireKirkhoffChanged();
         },
 
         getAdjacentBranches: function(junction) {
@@ -267,6 +272,57 @@ define(function (require) {
             return false;
         },
 
+        setSelection: function(branch) {
+            this.clearSelection();
+            branch.select();
+            this.fireSelectionChanged();
+        },
+
+        setSelection: function( Junction junction ) {
+            this.clearSelection();
+            junction.select();
+            this.fireSelectionChanged();
+        },
+
+        fireSelectionChanged: function() {
+            this.trigger('selection-changed');
+        },
+
+        clearSelection: function() {
+            var i;
+            for (i = 0; i < this.branches.length; i++)
+                this.branches.at(i).deselect();
+            for (i = 0; i < this.junctions.length; i++)
+                this.junctions.at(i).deselect();
+            this.fireSelectionChanged();
+        },
+
+        getSelectedBranches: function() {
+            var sel = [];
+            for (i = 0; i < this.branches.length; i++) {
+                if (this.branches.at(i).get('selected'))
+                    sel.push(this.branches.at(i));
+            }
+            return sel;
+        },
+
+        getSelectedJunctions: function() {
+            var sel = [];
+            for (i = 0; i < this.junctions.length; i++) {
+                if (this.junctions.at(i).get('selected'))
+                    sel.push(this.junctions.at(i));
+            }
+            return sel;
+        },
+
+        selectAll: function() {
+            var i;
+            for (i = 0; i < this.branches.length; i++)
+                this.branches.at(i).select();
+            for (i = 0; i < this.junctions.length; i++)
+                this.junctions.at(i).select();
+        },
+
         isDynamic: function() {
             for (var i = 0; i < this.branches.length; i++) {
                 if (this.branches.at(i) instanceof DynamicBranch)
@@ -294,6 +350,192 @@ define(function (require) {
                 if (this.branches.at(i) instanceof DynamicBranch)
                     this.branches.at(i).setTime(time);
             }
+        },
+
+        setState: function(newCircuit) {
+            this.clear();
+            newCircuit.junctions.each(this.addJunction, this);
+            newCircuit.branches.each(this.addBranch, this);
+        },
+
+        clear: function() {
+            while (this.branches.length > 0)
+                this.removeBranch(this.branches.first());
+            while (this.junctions.length > 0)
+                this.removeJunction(this.junctions.first());
+        },
+
+        wouldConnectionCauseOverlappingBranches: function(a, b) {
+            var neighborsOfA = this.getNeighbors(a);
+            var neighborsOfB = this.getNeighbors(b);
+            for (var i = 0; i < neighborsOfA.length; i++) {
+                for (var j = 0; j < neighborsOfB.length; j++) {
+                    if (neighborsOfA[i] === neighborsOfB[j])
+                        return true;
+                }
+            }
+            return false;
+        },
+
+        collapseJunctions: function(j1, j2) {
+            if (!j1.get('position').equals(j2.get('position')))
+                throw 'Junctions not at same coordinates.';
+            
+            this.removeJunction(j1);
+            this.removeJunction(j2);
+            var replacement = new Junction({ position: new Vector2(j1.get('position').x, j1.get('position').y) });
+            this.addJunction(replacement);
+            this.replaceJunction(j1, replacement);
+            this.replaceJunction(j2, replacement);
+
+            // Fire notification events so that any listeners are informed.
+            this.fireKirkhoffChanged();
+            this.trigger('junctions-collapsed', j1, j2, replacement);
+        },
+
+        getBestDragMatch: function(draggedJunctions, dx) {
+            // If draggedJunctions is actually an array of branches, interpret them as strong connections
+            if (draggedJunctions.length && draggedJunctions[0] instanceof Branch)
+                draggedJunctions = Circuit.getJunctions(draggedJunctions);
+
+            var all = this.getJunctions();
+            var potentialMatches = _.difference(all, draggedJunctions);
+
+            // Make internal nodes ungrabbable for black box, see https://phet.unfuddle.com/a#/projects/9404/tickets/by_number/3602
+            for (var i = 0; i < all.length; i++) {
+                if (all[i].fixed && this.getAdjacentBranches(all[i]) > 1) {
+                    var junctionIndex = potentialMatches.indexOf(all[i]);
+                    if (junctionIndex !== -1)
+                        potentialMatches.slice(junctionIndex, 1);
+                }
+            }
+
+            // Now we have all the junctions that are moving,
+            // And all the junctions that aren't moving, so we can look for a best match.
+            var best = null;
+            var draggedJunction;
+            var loc = this._bestDragMatchVec;
+            var source;
+            var target;
+            var distance;
+
+            for (var j = 0; j < draggedJunctions.length; j++) {
+                draggedJunction = draggedJunctions[j];
+                loc.set(draggedJunction.get('position')).add(dx);
+                var bestForJunction = this._getBestDragMatch(draggedJunction, loc, potentialMatches);
+                if (bestForJunction) {
+                    source = draggedJunction;
+                    target = bestForJunction;
+                    distance = source.getDistance(target);
+                    if (best == null || distance < best.distance) {
+                        best = this._dragMatchObj;
+                        best.source = source;
+                        best.target = target;
+                        best.distance = distance;
+                    }
+                }
+            }
+            return best;
+        },
+
+        _getBestDragMatch: function(dragging, loc, targets) {
+            var strong = this.getStrongConnections( dragging );
+            var closestJunction = null;
+            var closestValue = Number.POSITIVE_INFINITY;
+
+            for (var i = 0; i < targets.length; i++) {
+                var target = targets[i];
+                var dist = loc.distance(target.get('position'));
+                if (target !== dragging && !this.hasBranch(dragging, target) && !this.wouldConnectionCauseOverlappingBranches(dragging, target)) {
+                    if (closestJunction === null || dist < closestValue) {
+                        var legal = !this.contains(strong, target);
+                        var STICKY_THRESHOLD = 1;
+                        if (dist <= STICKY_THRESHOLD && legal) {
+                            closestValue = dist;
+                            closestJunction = target;
+                        }
+                    }
+                }
+            }
+
+            return closestJunction;
+        },
+
+        removedUnusedJunctions: function(junctions) {
+            var out = this.getAdjacentBranches(junctions);
+            if (out.length === 0)
+                this.removeJunction(junctions);
+        },
+
+        deleteSelectedBranches: function() {
+            for (var i = 0; i < this.branches.length; i++) {
+                var branch = this.branches.at(i);
+                if (branch.get('selected')) {
+                    this.removeBranch(branch);
+                    i--;
+                }
+            }
+        },
+
+        contains: function(strong, j) {
+            for (var i = 0; i < this.branches.length; i++) {
+                if (this.branches.at(i).hasJunction(j))
+                    return true;
+            }
+            return false;
+        },
+
+        getConnection: function(tipShape) {
+            throw 'not yet implemented';
+        },
+
+        getBranch: function(point) {
+            return this.detectBranch(this._getBranchRect.set(point.x, point.y, 0.001, 0.001));
+        },
+
+        detectBranch: function(shape) {
+            throw 'not yet implemented';
+        },
+
+        getWires: function() {
+            var list = [];
+            for (var i = 0; i < this.branches.length; i++) {
+                if (this.branches.at(i) instanceof Wire)
+                    list.push(this.branches.at(i));
+            }
+            return list;
+        },
+
+        detectJunction: function(tipShape) {
+            throw 'not yet implemented';
+        },
+
+        bumpAway: function(junction) {
+            for (var i = 0; i < 2; i++)
+                this.bumpOnce(junction);
+        },
+
+        bumpOnce: function(junction) {
+            var branches = this.getBranches();
+            var strongConnections = this.getStrongConnections(junction);
+            for (var i = 0; i < branches.length; i++) {
+                var branch = branches[i];
+                if (!branch.hasJunction(junction)) {
+                    if (branch.getShape().intersects(junction.getShape())) {
+                        var vec = branch.getDirectionVector();
+                        vec.set(vec.y, -vec.x); // Make it perpendicular to the original
+                        vec.normalize().scale(junction.getShape().w);
+                        var bs = new BranchSet(this, strongConnections);
+                        bs.addJunction(junction);
+                        bs.translate(vec);
+                        break;
+                    }
+                }
+            }
+        },
+
+        fireKirkhoffChanged: function() {
+            this.trigger('kirkhoff-changed');
         },
 
         circuitChanged: function() {
