@@ -28,6 +28,7 @@ define(function (require) {
             CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
             this.filament = new Filament(); throw 'not finished';
+            this.branchSet = new BranchSet();
 
             // Cached objects
             this._delta = new Vector2();
@@ -92,7 +93,7 @@ define(function (require) {
 
                 var strongConnections = circuit.getStrongConnections(this, this.get('endJunction'));
 
-                BranchSet
+                this.branchSet
                     .clear()
                     .setCircuit(circuit)
                     .addBranches(strongConnections)
@@ -139,7 +140,7 @@ define(function (require) {
             if (circuit) {
                 var strongConnections = circuit.getStrongConnections(this, this.get('endJunction'));
 
-                BranchSet
+                this.branchSet
                     .clear()
                     .setCircuit(circuit)
                     .addBranches(strongConnections)
@@ -170,7 +171,7 @@ define(function (require) {
             if (circuit) {
                 var strongConnections = circuit.getStrongConnections(this, this.get('endJunction'));
 
-                BranchSet
+                this.branchSet
                     .clear()
                     .setCircuit(circuit)
                     .addBranches(strongConnections)

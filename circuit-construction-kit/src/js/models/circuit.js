@@ -25,6 +25,9 @@ define(function (require) {
             // Solution from last update, used to look up dynamic circuit properties.
             this.solution = null;
 
+            // Create a reusable BranchSet
+            this.branchSet = new BranchSet();
+
             // Cached objects
             this._splitVec = new Vector2();
             this._splitDesiredDest = new Vector2();
@@ -145,8 +148,10 @@ define(function (require) {
                         .set(desiredDest)
                         .sub(junction.get('position'));
                     var stronglyConnected = this.getStrongConnections(newJunction);
-                    var bs = new BranchSet(this, stronglyConnected);
-                    bs.translate(translation);
+                    this.branchSet
+                        .clear()
+                        .addBranches(strongConnections)
+                        .translate(translation);
                 }
             }
 
@@ -525,9 +530,11 @@ define(function (require) {
                         var vec = branch.getDirectionVector();
                         vec.set(vec.y, -vec.x); // Make it perpendicular to the original
                         vec.normalize().scale(junction.getShape().w);
-                        var bs = new BranchSet(this, strongConnections);
-                        bs.addJunction(junction);
-                        bs.translate(vec);
+                        this.branchSet
+                            .clear()
+                            .addBranches(strongConnections)
+                            .addJunction(junction)
+                            .translate(vec);
                         break;
                     }
                 }

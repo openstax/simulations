@@ -8,11 +8,13 @@ define(function (require) {
 
     var Constants = require('constants');
 
-    var BranchSet = {
+    var BranchSet = function() {
+        this.circuit = undefined;
+        this.branches = [];
+        this.junctions = [];
+    };
 
-        circuit: undefined,
-        branches: [],
-        junctions: [],
+    _.extend(BranchSet.prototype, {
 
         clear: function() {
             this.circuit = undefined;
@@ -83,7 +85,7 @@ define(function (require) {
             return this;
         }
 
-    };
+    });
 
     return BranchSet;
 });
