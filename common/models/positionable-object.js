@@ -51,27 +51,27 @@ define(function (require) {
             this.setPosition(this.get('position').x, y);
         },
 
-        translate: function(x, y) {
+        translate: function(x, y, options) {
             var oldPosition = this.get('position');
             var newPosition = vectorPool.create().set(this.get('position'));
 
             if (x instanceof Vector2)
                 this.set('position', newPosition.add(x));
             else
-                this.set('position', newPosition.add(x, y));
+                this.set('position', newPosition.add(x, y), options);
             
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);
         },
 
-        setPosition: function(x, y) {
+        setPosition: function(x, y, options) {
             var oldPosition = this.get('position');
             //console.log(vectorPool.list.length);
             
             if (x instanceof Vector2)
                 this.set('position', vectorPool.create().set(x));
             else
-                this.set('position', vectorPool.create().set(x, y));
+                this.set('position', vectorPool.create().set(x, y), options);
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldPosition);

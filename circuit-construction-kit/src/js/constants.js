@@ -44,6 +44,11 @@ define(function (require) {
     Constants.MIN_RESISTANCE = 1E-8;
     Constants.SCH_BULB_DIST = 1;
 
+    Constants.WIRE_THICKNESS = 0.3;
+    Constants.DEFAULT_SCALE = 109.3 / 100.0;
+
+    Constants.TILT = -0.8058034940839864;
+
 
     return Constants;
 });
