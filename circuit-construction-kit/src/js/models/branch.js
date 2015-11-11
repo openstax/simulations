@@ -47,6 +47,10 @@ define(function (require) {
             return this.get('startJunction').fixed && this.get('endJunction').fixed;
         },
 
+        getVoltageDrop: function() {
+            return this.get('voltageDrop');
+        },
+
         getDirectionVector() {
             return this._directionVec.set(this.get('endJunction').get('position')).sub(this.get('startJunction').get('position'));
         },

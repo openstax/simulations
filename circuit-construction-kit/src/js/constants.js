@@ -50,5 +50,35 @@ define(function (require) {
     Constants.TILT = -0.8058034940839864;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                               INDUCTOR                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Inductor = {};
+
+    Inductor.MIN_INDUCTANCE = 10;
+    Inductor.MAX_INDUCTANCE = 100;
+    // 50 henries makes tau=L/R = 5 sec for default resistor; 
+    //   this saturates in about 5 * tau = 25 sec
+    Inductor.DEFAULT_INDUCTANCE = 50;
+
+    Constants.Inductor = Inductor;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                              CAPACITOR                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var Capacitor = {};
+
+    Capacitor.DEFAULT_CAPACITANCE = 1E-1;
+
+    Constants.Capacitor = Capacitor;
+
+
     return Constants;
 });
