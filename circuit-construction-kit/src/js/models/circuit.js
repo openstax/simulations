@@ -51,6 +51,10 @@ define(function (require) {
             this.fireKirkhoffChanged();
         },
 
+        numJunctions: function() {
+            return this.junctions.length;
+        },
+
         getAdjacentBranches: function(junction) {
             var branches = [];
             for (var i = 0; i < this.branches.length; i++) {
@@ -66,6 +70,10 @@ define(function (require) {
                     return true;
             }
             return false;
+        },
+
+        numBranches: function() {
+            return this.branches.length;
         },
 
         getJunctionNeighbors: function(junction) {

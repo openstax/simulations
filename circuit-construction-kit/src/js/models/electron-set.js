@@ -56,6 +56,14 @@ define(function (require) {
             return all;
         },
 
+        particleAt: function(i) {
+            return this.particles.at(i);
+        },
+
+        numParticles: function() {
+            return this.particles.length;
+        },
+
         update: function(time, deltaTime) {
             this.propagator.update(time, deltaTime);
         },

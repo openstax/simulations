@@ -80,5 +80,21 @@ define(function (require) {
     Constants.Capacitor = Capacitor;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                     CONSTANT-DENSITY PROPAGATOR                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var ConstantDensityPropagator = {};
+
+    ConstantDensityPropagator.FIRE_CURRENT = 10;
+    ConstantDensityPropagator.MIN_CURRENT = Math.pow(10, -10);
+    ConstantDensityPropagator.MAX_STEP = Constants.ELECTRON_DX * 0.43;
+
+    Constants.ConstantDensityPropagator = ConstantDensityPropagator;
+
+
+
     return Constants;
 });
