@@ -4,11 +4,12 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var MNAElement   = require('models/mna/elements/element');
-    var MNAResistor  = require('models/mna/elements/resistor');
-    var MNABattery   = require('models/mna/elements/battery');
-    var MNACapacitor = require('models/mna/elements/capacitor');
-    var MNAInductor  = require('models/mna/elements/inductor');
+    var Switch              = require('models/components/switch');
+    var MNAElement          = require('models/mna/elements/element');
+    var MNAResistor         = require('models/mna/elements/resistor');
+    var MNAResistiveBattery = require('models/mna/elements/battery');
+    var MNACapacitor        = require('models/mna/elements/capacitor');
+    var MNAInductor         = require('models/mna/elements/inductor');
 
     var Constants = require('constants');
 
@@ -34,32 +35,18 @@ define(function (require) {
     _.extend(MNACircuitSolver.prototype, {
 
         /**
-         * Takes a core-simulation circuit, makes a DynamicCircuit that
-         *   represents it, and returns the DynamicCircuit.
-         */
-        createDynamicCircuit: function(circuit) {
-
-        },
-
-        /**
-         * Applies the found solution to the original circuit.
-         */
-        applySolution: function(circuit, dynamicCircuit, solution) {
-
-        },
-
-        /**
-         *
+         * Solves the circuit with the modified nodal analysis algorithm and re-
+         *   applies the solution to the circuit.
          */
         solve: function(circuit, deltaTime) {
             // Create a DynamicCircuit representation of the simulation circuit
-            var dynamicCircuit = this.createDynamicCircuit(circuit);
+            var dynamicCircuit = DynamicCircuit.fromCircuit(circuit);
 
             // Find a solution for it using the MNA algorithm
             var solution = this._solveWithSubdivisions(dynamicCircuit, deltaTime);
 
             // Apply it back to the original solution
-            this.applySolution(circuit, dynamicCircuit, solution);
+            this.applySolution(circuit, solution);
 
             // Clean up
             dynamicCircuit.destroy();
@@ -145,6 +132,28 @@ define(function (require) {
             var mnaCircuit = state.dynamicCircuit.toMNACircuit(deltaTime);
             var solution = mnaCircuit.solve();
             return state.getNextState(solution);
+        },
+
+        /**
+         * Applies the found solution to the original circuit.
+         */
+        applySolution: function(circuit, solution) {
+            // Apply the values from the final state and the final solution
+            var dynamicCircuit = solution.getFinalState().dynamicCircuit;
+            dynamicCircuit.applySolution(solution);
+
+            // Zero out currents on open branches
+            for (var i = 0; i < circuit.branches.length; i++ ) {
+                if (circuit.branches.at(i) instanceof Switch) {
+                    var sw = circuit.branches.at(i);
+                    if (sw.get('closed')) {
+                        sw.set('current', 0);
+                        sw.set('voltageDrop', 0);
+                    }
+                }
+            }
+
+            circuit.set('solution', solution);
         }
 
     });

@@ -109,6 +109,20 @@ define(function (require) {
             var element = pool.create();
             element.init.apply(element, arguments);
             return element;
+        },
+
+        /**
+         * Creates a new MNAElement from the original circuit component and the circuit.
+         *   This is basically the opposite of applySolution; it is used at the beginning
+         *   to create the MNAElement, whereas applySolution applies the element's state
+         *   back to the originalComponent.
+         */
+        fromCircuitComponent: function(circuit, branch) {
+            return this.create(
+                branch, 
+                circuit.branches.indexOf(resistor.get('startJunction')), 
+                circuit.branches.indexOf(resistor.get('endJunction'))
+            );
         }
 
     });

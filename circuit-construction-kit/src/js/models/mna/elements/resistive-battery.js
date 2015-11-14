@@ -14,17 +14,17 @@ define(function (require) {
     /**
      * Battery model for the MNA circuit
      */
-    var MNABattery = function(originalComponent, node0, node1) {
+    var MNAResistiveBattery = function(originalComponent, node0, node1) {
         MNAElement.apply(this, arguments);
     };
 
     /**
      * Instance functions/properties
      */
-    _.extend(MNABattery.prototype, MNAElement.prototype, {
+    _.extend(MNAResistiveBattery.prototype, MNAElement.prototype, {
 
         /**
-         * Initializes the MNABattery's properties with provided initial values
+         * Initializes the MNAResistiveBattery's properties with provided initial values
          */
         init: function(originalComponent, node0, node1) {
             MNAElement.prototype.init.apply(this, arguments);
@@ -46,8 +46,8 @@ define(function (require) {
     /**
      * Static functions/properties
      */
-    _.extend(MNABattery, MNAElement);
+    _.extend(MNAResistiveBattery, MNAElement);
 
 
-    return MNABattery;
+    return MNAResistiveBattery;
 });
