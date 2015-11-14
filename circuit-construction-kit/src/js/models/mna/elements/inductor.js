@@ -50,6 +50,14 @@ define(function (require) {
         updateWithSolution: function(solution) {
             this.voltage = solution.getNodeVoltage(this.node1) - solution.getNodeVoltage(this.node0); 
             this.current = solution.getCurrent(this);
+        },
+
+        clone: function() {
+            var clone = MNAElement.prototype.clone.apply(this, arguments);
+            clone.current = this.current;
+            clone.voltage = this.voltage;
+            clone.inductance = this.inductance;
+            return clone;
         }
 
     });

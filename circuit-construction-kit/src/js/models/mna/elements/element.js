@@ -42,12 +42,12 @@ define(function (require) {
         },
 
         /**
-         * Applies the solution back to the original component.
+         * Applies the final DynamicSolution back to the original component.
          */
         applySolution: function(solution) {},
 
         /**
-         * Updates the element's attributes with values from a given solution.
+         * Updates the element's attributes with values from a given MNASolution.
          */
         updateWithSolution: function(solution) {},
 
@@ -68,6 +68,22 @@ define(function (require) {
                 return this.node0;
             else
                 throw 'node not found';
+        },
+
+        /**
+         * Makes a clone of this instance, applies a solution as an update, and returns it.
+         */
+        cloneWithSolution: function(solution) {
+            var clone = this.clone();
+            clone.updateWithSolution(solution);
+            return clone;
+        },
+
+        /**
+         * Returns a copy of this instance
+         */
+        clone: function() {
+            return MNAElement.create(this.originalComponent, this.node0, this.node1);
         },
 
         /**
