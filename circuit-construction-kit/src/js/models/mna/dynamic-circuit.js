@@ -5,6 +5,7 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
+    var MNACircuit   = require('models/mna/mna-circuit');
     var MNACapacitor = require('models/mna/elements/capacitor');
     var MNAInductor  = require('models/mna/elements/inductor');
     
@@ -32,6 +33,16 @@ define(function (require) {
          */
         init: function() {
             
+        },
+
+        /**
+         * Creates a new MNACircuit representation of this DynamicCircuit instance
+         *   with the given deltaTime and returns it.
+         */
+        toMNACircuit: function() {
+            var mnaCircuit;
+            // TODO: implement it
+            return mnaCircuit;
         },
 
         /**

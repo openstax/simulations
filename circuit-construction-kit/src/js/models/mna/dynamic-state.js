@@ -35,7 +35,7 @@ define(function (require) {
         /**
          * Returns a new state that uses this state's circuit and applies the given solution.
          */
-        nextState: function(solution) {
+        getNextState: function(solution) {
             var nextDynamicCircuit = this.dynamicCircuit.cloneWithSolution(solution);
             return DynamicState.create(nextDynamicCircuit, solution);
         },

@@ -54,7 +54,7 @@ define(function (require) {
         solve: function(circuit, deltaTime) {
             // Create a DynamicCircuit representation of the simulation circuit
             var dynamicCircuit = this.createDynamicCircuit(circuit);
-            
+
             // Find a solution for it using the MNA algorithm
             var solution = this._solveWithSubdivisions(dynamicCircuit, deltaTime);
 
@@ -94,7 +94,7 @@ define(function (require) {
                 if (subdivisionDeltaTime + elapsed > deltaTime)
                     subdivisionDeltaTime = deltaTime - elapsed; // Don't exceed max allowed dt
 
-                state = this.nextState(state, subdivisionDeltaTime);
+                state = this.getNextState(state, subdivisionDeltaTime);
                 dynamicSolution.addState(state, subdivisionDeltaTime);
 
                 elapsed += subdivisionDeltaTime;
@@ -119,10 +119,15 @@ define(function (require) {
             }
         },
 
+        /**
+         * Returns whether or not the error level is acceptible for the given
+         *   state and deltaTime.  Note that it does this by actually finding
+         *   the next state (three times), so it's not a trivial operation.
+         */
         errorAcceptable: function(state, deltaTime) {
-            var a  = this.nextState(state, deltaTime);
-            var b1 = this.nextState(state, deltaTime / 2);
-            var b2 = this.nextState(b1,    deltaTime / 2);
+            var a  = this.getNextState(state, deltaTime);
+            var b1 = this.getNextState(state, deltaTime / 2);
+            var b2 = this.getNextState(b1,    deltaTime / 2);
             var errorAcceptable = (this.getStateDistance(a, b2) < this.errorThreshold);
 
             a.destroy();
@@ -130,6 +135,16 @@ define(function (require) {
             b2.destroy();
 
             return errorAcceptable;
+        },
+
+        /**
+         * Solves the current state's circuit with the MNA algorithm and in order
+         *   to get the next state.  It then returns the next state.
+         */
+        getNextState: function(state, deltaTime) {
+            var mnaCircuit = state.dynamicCircuit.toMNACircuit(deltaTime);
+            var solution = mnaCircuit.solve();
+            return state.getNextState(solution);
         }
 
     });
