@@ -124,6 +124,35 @@ define(function (require) {
             return errorAcceptable;
         },
 
+        getStateDistance: function(a, b) {
+            var i;
+
+            var aCurrents = [];
+            for (i = 0; i < a.dynamicCircuit.capacitors.length; i++)
+                aCurrents.push(a.circuit.capacitors[i].current);
+            for (i = 0; i < a.dynamicCircuit.inductors.length; i++)
+                aCurrents.push(a.circuit.inductors[i].current);
+
+            var bCurrents = [];
+            for (i = 0; i < b.dynamicCircuit.capacitors.length; i++)
+                bCurrents.push(b.circuit.capacitors[i].current);
+            for (i = 0; i < b.dynamicCircuit.inductors.length; i++)
+                bCurrents.push(b.circuit.inductors[i].current); // PhET Comment: "todo: read from companion object"
+
+            return this.getEuclideanDistance(aCurrents, bCurrents);
+        },
+
+        getEuclideanDistance: function(x, y) {
+            if (x.length != y.length)
+                throw 'Vector length mismatch';
+            
+            var sumSqDiffs = 0;
+            for (var i = 0; i < x.length; i++)
+                sumSqDiffs += Math.pow(x[i] - y[i], 2);
+            
+            return Math.sqrt(sumSqDiffs);
+        },
+
         /**
          * Solves the current state's circuit with the MNA algorithm and in order
          *   to get the next state.  It then returns the next state.

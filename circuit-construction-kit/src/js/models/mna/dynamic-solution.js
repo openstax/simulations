@@ -42,6 +42,10 @@ define(function (require) {
             return this.states[this.states.length - 1];
         },
 
+        getLastTime: function() {
+            return this.times[this.times.length - 1];
+        },
+
         getTotalTime: function() {
             var total = 0;
             for (var i = 0; i < this.times.length; i++)
