@@ -18,8 +18,7 @@ define(function (require) {
      *   files if it turns out useful.
      */
     var Pooled = function() {
-        // Call init with any arguments passed to the constructor
-        this.init.apply(this, arguments);
+
     };
 
     /**
@@ -76,7 +75,7 @@ define(function (require) {
             // Get an array of the args for this function minus the first one (owner)
             var constructorArgs = Array.prototype.slice.call(arguments, 1);
             // Create the object instance
-            var pooledObject = this.create(constructorArgs);
+            var pooledObject = this.create.apply(this, constructorArgs);
             // See if this object already has an owner id, and if it doesn't, create one
             if (owner.__ownerId === undefined)
                 owner.__ownerId = this._ownerId++;
@@ -120,6 +119,43 @@ define(function (require) {
                     objects.splice(i, 1);
                 }
             }
+        },
+
+        /**
+         * Modeled somewhat after Backbone's extend function, this is a convenience
+         *   function for creating child classes of Pooled.
+         */
+        extend: function(objectConstructor, prototypeProps, staticProps) {
+            if (!_.isFunction(objectConstructor)) {
+                staticProps = prototypeProps;
+                prototypeProps = objectConstructor;
+                objectConstructor = function() {};
+            }
+
+            var parent = this;
+            var child = function() {
+                objectConstructor.apply(this, arguments);
+                parent.apply(this, arguments);
+            };
+
+            // Static functions/properties
+            _.extend(child, parent, staticProps);
+            delete child._pool;
+            delete child._ownedObjects;
+            delete child._ownerId;
+
+            _.bindAll(child, 'create', 'createWithOwner', 'initPool', 'getPoolConfig', 'destroyAllOwned');
+
+            // This piece is straight from Backbone.js. It "sets the prototype chain to inherit from parent".
+            var Surrogate = function(){ this.constructor = child; };
+            Surrogate.prototype = parent.prototype;
+            child.prototype = new Surrogate;
+
+            // Instance functions/properties
+            _.extend(child.prototype, parent.prototype, prototypeProps);
+
+            
+            return child;
         }
 
     });
