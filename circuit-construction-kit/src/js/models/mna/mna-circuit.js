@@ -4,6 +4,11 @@ define(function (require) {
 
     var _    = require('underscore');
     var Pool = require('object-pool');
+
+    var UnknownCurrent = require('models/mna/unknown-current');
+    var UnknownVoltage = require('models/mna/unknown-voltage');
+    var Term           = require('models/mna/term');
+    var Equation       = require('models/mna/equation');
     
     var pool = Pool({
         init: function() {
@@ -195,7 +200,7 @@ define(function (require) {
                 // Remove all the connected nodes from the remaining nodes
                 for (var i = remaining.length - 1; i >= 0; i--) {
                     if (connected.indexOf(remaining[i]) !== -1)
-                        remaining.slice(i, 1);
+                        remaining.splice(i, 1);
                 }
             }
 
@@ -341,6 +346,8 @@ define(function (require) {
             this.destroyElements(this.batteries);
             this.destroyElements(this.resistors);
             this.destroyElements(this.currentSources);
+
+            // TODO: Destroy all terms, equations, and unknowns
             
             pool.remove(this);
         },
@@ -351,7 +358,7 @@ define(function (require) {
         destroyElements: function(elements) {
             for (var i = elements.length - 1; i >= 0; i--) {
                 elements[i].destroy();
-                elements.slice(i, 1);
+                elements.splice(i, 1);
             }
         }
 

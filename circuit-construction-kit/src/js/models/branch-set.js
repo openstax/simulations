@@ -20,9 +20,9 @@ define(function (require) {
             this.circuit = undefined;
             var i = 0;
             for (i = this.branches.length - 1; i >= 0; i--)
-                this.branches.slice(i, 1);
+                this.branches.splice(i, 1);
             for (i = this.junctions.length - 1; i >= 0; i--)
-                this.junctions.slice(i, 1);
+                this.junctions.splice(i, 1);
             return this;
         },
 

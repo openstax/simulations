@@ -116,7 +116,7 @@ define(function (require) {
         destroyElements: function(elements) {
             for (var i = elements.length - 1; i >= 0; i--) {
                 elements[i].destroy();
-                elements.slice(i, 1);
+                elements.splice(i, 1);
             }
         }
 

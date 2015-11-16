@@ -181,7 +181,7 @@ define(function (require) {
             this._getStrongConnections(visited, junction);
 
             if (wrongDir)
-                visited.slice(visited.indexOf(wrongDir, 1));
+                visited.splice(visited.indexOf(wrongDir, 1));
 
             return visited;
         },
@@ -419,7 +419,7 @@ define(function (require) {
                 if (all[i].fixed && this.getAdjacentBranches(all[i]) > 1) {
                     var junctionIndex = potentialMatches.indexOf(all[i]);
                     if (junctionIndex !== -1)
-                        potentialMatches.slice(junctionIndex, 1);
+                        potentialMatches.splice(junctionIndex, 1);
                 }
             }
 

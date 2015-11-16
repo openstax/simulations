@@ -95,12 +95,12 @@ define(function (require) {
             // Destroy all states and clear the states array
             for (i = this.states.length - 1; i >= 0; i--) {
                 this.states[i].destroy();
-                this.states.slice(i, 1);
+                this.states.splice(i, 1);
             }
 
             // Clear the times array
             for (i = this.times.length - 1; i >= 0; i--)
-                this.times.slice(i, 1);
+                this.times.splice(i, 1);
 
             pool.remove(this);
         }
