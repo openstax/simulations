@@ -1,38 +1,38 @@
 
 describe('Pooled Objects', function(){
 
-	var Pooled;
+	var PooledObject;
 
 	before(function(done) {
-		require(['models/mna/pooled'], function(pooled) {
-			Pooled = pooled;
+		require(['pooled-object/pooled-object'], function(pooledObject) {
+			PooledObject = pooledObject;
 			done();
 		});
 	});
 
 	it('Pooled objects get added to owner\'s array', function(){
 		var owner = {};
-		var object = Pooled.createWithOwner(owner);
+		var object = PooledObject.createWithOwner(owner);
 
-		chai.expect(Pooled._ownedObjects.length).to.equal(1);
-		chai.expect(Pooled._ownedObjects[owner.__ownerId][0]).to.equal(object);
+		chai.expect(PooledObject._ownedObjects.length).to.equal(1);
+		chai.expect(PooledObject._ownedObjects[owner.__ownerId][0]).to.equal(object);
 	});
 
 	it('#destroyAllOwned destroys all objects owned by a specified object', function(){
 		var owner = {};
 		var n = 10;
 		for (var i = 0; i < n; i++)
-			Pooled.createWithOwner(owner);
+			PooledObject.createWithOwner(owner);
 
-		chai.expect(Pooled._ownedObjects[owner.__ownerId].length).to.equal(n);
+		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(n);
 
-		Pooled.destroyAllOwned(owner);
+		PooledObject.destroyAllOwned(owner);
 
-		chai.expect(Pooled._ownedObjects[owner.__ownerId].length).to.equal(0);
+		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(0);
 	});
 
 	it('#extend creates subclasses', function(){
-		var Subclass = Pooled.extend(function(name) {
+		var Subclass = PooledObject.extend(function(name) {
 			this.cachedObject = { option: 2 };
 		}, {
 			init: function(name) {
@@ -57,8 +57,8 @@ describe('Pooled Objects', function(){
 	});
 
 	it('Multiple subclasses\' pools don\'t collide', function(){
-		var SubclassA = Pooled.extend();
-		var SubclassB = Pooled.extend();
+		var SubclassA = PooledObject.extend();
+		var SubclassB = PooledObject.extend();
 
 		var owner = {};
 		var obj = SubclassB.createWithOwner(owner, 'Bob');
@@ -68,7 +68,7 @@ describe('Pooled Objects', function(){
 	});
 
 	it('#createWithOwner passes arguments to init correctly', function(){
-		var Subclass = Pooled.extend({
+		var Subclass = PooledObject.extend({
 			init: function(name) {
 				this.name = name;
 			}

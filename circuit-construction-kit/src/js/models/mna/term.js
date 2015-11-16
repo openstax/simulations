@@ -4,19 +4,12 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Pooled = require('models/mna/pooled');
+    var PooledObject = require('common/pooled-object/pooled-object');
 
     /**
      * Represents a single term in an equation
      */
-    var Term = function() {
-        Pooled.apply(this, arguments);
-    };
-
-    /**
-     * Instance functions/properties
-     */
-    _.extend(Term.prototype, Pooled.prototype, {
+    var Term = PooledObject.extend({
 
         /**
          * Initializes the Term's properties with provided initial values
@@ -27,11 +20,6 @@ define(function (require) {
         }
 
     });
-
-    /**
-     * Static functions/properties
-     */
-    _.extend(Term, Pooled);
 
 
     return Term;

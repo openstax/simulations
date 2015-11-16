@@ -17,17 +17,17 @@ define(function (require) {
      *   even sure what I'd look for.  I'll probably put this in the common
      *   files if it turns out useful.
      */
-    var Pooled = function() {
+    var PooledObject = function() {
 
     };
 
     /**
      * Instance functions/properties
      */
-    _.extend(Pooled.prototype, {
+    _.extend(PooledObject.prototype, {
 
         /**
-         * Initializes the Pooled's properties with provided initial values
+         * Initializes the PooledObject's properties with provided initial values
          */
         init: function() {},
 
@@ -43,10 +43,10 @@ define(function (require) {
     /**
      * Static functions/properties
      */
-    _.extend(Pooled, {
+    _.extend(PooledObject, {
 
         /**
-         * Initializes and returns a new Pooled instance from the object pool.
+         * Initializes and returns a new PooledObject instance from the object pool.
          *   Accepts the normal constructor parameters and passes them on to
          *   the created instance.
          */
@@ -59,7 +59,7 @@ define(function (require) {
         },
 
         /**
-         * Initializes and returns a new Pooled instance from the object pool.
+         * Initializes and returns a new PooledObject instance from the object pool.
          *   Accepts the normal constructor parameters and passes them on to
          *   the created instance.  The difference is that the first parameter
          *   is an owner object.  The new object will be added to a list of
@@ -123,7 +123,7 @@ define(function (require) {
 
         /**
          * Modeled somewhat after Backbone's extend function, this is a convenience
-         *   function for creating child classes of Pooled.
+         *   function for creating child classes of PooledObject.
          */
         extend: function(objectConstructor, prototypeProps, staticProps) {
             if (!_.isFunction(objectConstructor)) {
@@ -161,5 +161,5 @@ define(function (require) {
     });
 
 
-    return Pooled;
+    return PooledObject;
 });
