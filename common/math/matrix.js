@@ -173,12 +173,42 @@ define(function (require) {
     };
 
     Matrix.prototype.rref = function() {
-        var solutionMatrix = this.toArray();
-        rref(solutionMatrix);
-        return solutionMatrix;
+        return rref(this.toArray());
     };
 
-    Matrix.prototype.solve = Matrix.prototype.rref;
+    /**
+     * For the equation A * X = B, where X and B are single columns, solves for X and returns it.
+     */
+    Matrix.prototype.solve = function(B) {
+        if (this.length < 1)
+            throw 'Matrix must have at least one row to solve.';
+
+        if (this.length !== B.length)
+            throw 'A and B must have the same number of rows.';
+
+        // Create another column on the matrix with B's values
+        var matrix = this.toArray();
+        var r;
+        if (B instanceof Matrix) {
+            for (var r = 0; r < B.length; r++)
+                matrix[r].push(B[r][0]);
+        }
+        else {
+            for (var r = 0; r < B.length; r++)
+                matrix[r].push(B[r]);
+        }
+
+        // Solve using row reduction
+        rref(matrix);
+        var lastColumnIndex = matrix[0].length - 1;
+
+        // Put the answers in their own array.
+        var X = [];
+        for (var i = 0; i < this.length; i++)
+            X[i] = matrix[i][lastColumnIndex];
+
+        return X;
+    };
 
     return Matrix;
 

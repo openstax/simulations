@@ -615,7 +615,7 @@ describe('Matrix', function(){
 		});
 	});
 
-	it('#solve works', function() {
+	it('#rref works', function() {
 		var matrix = new Matrix([
 			[ 1, 2, -1, -4],
 			[ 2, 3, -1,-11],
@@ -623,7 +623,7 @@ describe('Matrix', function(){
 		]);
 
 		chai.expect(
-			matrix.solve()
+			matrix.rref()
 		).to.almost.eql([
 			[ 1, 0, 0, -8 ],
 			[ 0, 1, 0,  1 ],
@@ -637,12 +637,36 @@ describe('Matrix', function(){
 		]);
 
 		chai.expect(
-			matrix2.solve()
+			matrix2.rref()
 		).to.almost.eql([
 			[ 1, 0, 0,  2 ],
 			[ 0, 1, 0,  3 ],
 			[ 0, 0, 1, -1 ]
 		]);
+	});
+
+	it('#solve works', function() {
+		var A = new Matrix([
+			[ 1, 2, -1],
+			[ 2, 3, -1],
+			[-2, 0, -3]
+		]);
+
+		var B = [-4, -11, 22];
+		
+		var X = A.solve(B);
+
+		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
+
+		B = new Matrix([
+			[ -4],
+			[-11], 
+			[ 22]
+		]);
+
+		X = A.solve(B);
+
+		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
 	});
 
 });
