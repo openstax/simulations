@@ -654,7 +654,7 @@ describe('Matrix', function(){
 
 		var B = [-4, -11, 22];
 		
-		var X = A.solve(B);
+		var X = A.solve(B, true);
 
 		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
 
@@ -664,9 +664,17 @@ describe('Matrix', function(){
 			[ 22]
 		]);
 
-		X = A.solve(B);
+		X = A.solve(B, true);
 
 		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
+
+		// Should return a Matrix instead
+		X = A.solve(B);
+		chai.expect(X.toArray()).to.almost.eql([ 
+			[-8], 
+			[ 1], 
+			[-2]
+		]);
 	});
 
 });

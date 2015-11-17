@@ -127,6 +127,15 @@ define(function (require) {
         }
     };
 
+    Matrix.prototype.set = function(m, n, v) {
+        this[m][n] = v;
+        return this;
+    };
+
+    Matrix.prototype.get = function(m, n) {
+        return this[m][n];
+    };
+
     Matrix.prototype.size = function() {
         var m = 0, n = 0;
         m = this.col(0).length;
@@ -179,7 +188,7 @@ define(function (require) {
     /**
      * For the equation A * X = B, where X and B are single columns, solves for X and returns it.
      */
-    Matrix.prototype.solve = function(B) {
+    Matrix.prototype.solve = function(B, returnArray) {
         if (this.length < 1)
             throw 'Matrix must have at least one row to solve.';
 
@@ -203,9 +212,17 @@ define(function (require) {
         var lastColumnIndex = matrix[0].length - 1;
 
         // Put the answers in their own array.
-        var X = [];
-        for (var i = 0; i < this.length; i++)
-            X[i] = matrix[i][lastColumnIndex];
+        var X;
+        if (returnArray) {
+            X = [];
+            for (var i = 0; i < this.length; i++)
+                X[i] = matrix[i][lastColumnIndex];
+        } 
+        else {
+            X = new Matrix(this.length, 1);
+            for (var i = 0; i < this.length; i++)
+                X.set(i, 0, matrix[i][lastColumnIndex]);
+        }
 
         return X;
     };
