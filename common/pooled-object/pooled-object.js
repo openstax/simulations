@@ -111,7 +111,7 @@ define(function (require) {
         /**
          * Destroys all objects owned by the given owner.
          */
-        destroyAllOwned: function(owner) {
+        destroyAllOwnedBy: function(owner) {
             if (this._ownedObjects && owner.__ownerId !== undefined && this._ownedObjects[owner.__ownerId]) {
                 var objects = this._ownedObjects[owner.__ownerId];
                 for (var i = objects.length - 1; i >= 0; i--) {

@@ -127,19 +127,19 @@ define(function (require) {
 
             for (i = 0; i < batteries.length; i++) {
                 if (batteries[i].node1 === node)
-                    nodeTerms.push(Term.create(-1, UnknownCurrent.create(batteries[i])));
+                    nodeTerms.push(Term.createWithOwner(this, -1, UnknownCurrent.createWithOwner(this, batteries[i])));
             }
 
             for (i = 0; i < resistors.length; i++) {
                 // Treat resistors with R=0 as having unknown current and v1=v2
                 if (resistors[i].node1 === node && resistors[i].resistance === 0)
-                    nodeTerms.push(Term.create(-1, UnknownCurrent.create(resistors[i])));
+                    nodeTerms.push(Term.createWithOwner(this, -1, UnknownCurrent.createWithOwner(this, resistors[i])));
             }
 
             for (i = 0; i < resistors.length; i++) {
                 if (resistors[i].node1 === node && resistors[i].resistance !== 0) {
-                    nodeTerms.push(Term.create( 1 / resistors[i].resistance, UnknownVoltage.create(resistors[i].node1)));
-                    nodeTerms.push(Term.create(-1 / resistors[i].resistance, UnknownVoltage.create(resistors[i].node0)));
+                    nodeTerms.push(Term.createWithOwner(this,  1 / resistors[i].resistance, UnknownVoltage.createWithOwner(this, resistors[i].node1)));
+                    nodeTerms.push(Term.createWithOwner(this, -1 / resistors[i].resistance, UnknownVoltage.createWithOwner(this, resistors[i].node0)));
                 }
             }
             
@@ -157,19 +157,19 @@ define(function (require) {
 
             for (i = 0; i < batteries.length; i++) {
                 if (batteries[i].node0 === node)
-                    nodeTerms.push(Term.create(1, UnknownCurrent.create(batteries[i])));
+                    nodeTerms.push(Term.createWithOwner(this, 1, UnknownCurrent.createWithOwner(this, batteries[i])));
             }
 
             for (i = 0; i < resistors.length; i++) {
                 // Treat resistors with R=0 as having unknown current and v1=v2
                 if (resistors[i].node0 === node && resistors[i].resistance === 0)
-                    nodeTerms.push(Term.create(1, UnknownCurrent.create(resistors[i])));
+                    nodeTerms.push(Term.createWithOwner(this, 1, UnknownCurrent.createWithOwner(this, resistors[i])));
             }
 
             for (i = 0; i < resistors.length; i++) {
                 if (resistors[i].node0 === node && resistors[i].resistance !== 0) {
-                    nodeTerms.push(Term.create(-1 / resistors[i].resistance, UnknownVoltage.create(resistors[i].node1)));
-                    nodeTerms.push(Term.create( 1 / resistors[i].resistance, UnknownVoltage.create(resistors[i].node0)));
+                    nodeTerms.push(Term.createWithOwner(this, -1 / resistors[i].resistance, UnknownVoltage.createWithOwner(this, resistors[i].node1)));
+                    nodeTerms.push(Term.createWithOwner(this,  1 / resistors[i].resistance, UnknownVoltage.createWithOwner(this, resistors[i].node0)));
                 }
             }
 
@@ -242,19 +242,20 @@ define(function (require) {
 
             // Reference node in each connected component has a voltage of 0
             for (var i = 0; i < referenceNodes.length; i++)
-                list.push(Equation.create(0, Term.create(1, UnknownVoltage.create(referenceNodes[i]))));
+                list.push(Equation.createWithOwner(this, 0, Term.createWithOwner(this, 1, UnknownVoltage.createWithOwner(this, referenceNodes[i]))));
 
             // For each node, charge is conserved
             for (var i = 0; i < nodeSet.length; i++)
-                list.push(Equation.create(this.getRHS(nodeSet[i]), this.getCurrentConservationTerms(nodeSet[i])));
+                list.push(Equation.createWithOwner(this, this.getRHS(nodeSet[i]), this.getCurrentConservationTerms(nodeSet[i])));
 
             // For each battery, voltage drop is given
             for (var i = 0; i < batteries.length; i++) {
                 list.push(
-                    Equation.create(
+                    Equation.createWithOwner(
+                        this, 
                         batteries[i].voltage, 
-                        Term.create(-1, UnknownVoltage.create(batteries[i].node0)), 
-                        Term.create( 1, UnknownVoltage.create(batteries[i].node1))
+                        Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, batteries[i].node0)), 
+                        Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, batteries[i].node1))
                     )
                 );
             }
@@ -263,10 +264,11 @@ define(function (require) {
             for (var i = 0; i < resistors.length; i++) {
                 if (resistors[i].resistance === 0) {
                     list.push(
-                        Equation.create(
+                        Equation.createWithOwner(
+                            this, 
                             0, 
-                            Term.create( 1, UnknownVoltage.create(resistors[i].node0)), 
-                            Term.create(-1, UnknownVoltage.create(resistors[i].node1))
+                            Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, resistors[i].node0)), 
+                            Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, resistors[i].node1))
                         )
                     );    
                 }
@@ -278,19 +280,19 @@ define(function (require) {
         getUnknownVoltages: function() {
             var v = [];
             for (var i = 0; i < this.nodeSet.length; i++)
-                v.push(UnknownVoltage.create(this.nodeSet[i]));
+                v.push(UnknownVoltage.createWithOwner(this, this.nodeSet[i]));
             return v;
         },
 
         getUnknownCurrents: function() {
             var unknowns = [];
             for (var i = 0; i < this.batteries.length; i++)
-                unknowns.push(UnknownCurrent.create(this.batteries[i]));
+                unknowns.push(UnknownCurrent.createWithOwner(this, this.batteries[i]));
 
             // Treat resistors with R=0 as having unknown current and v1=v2
             for (var i = 0; i < this.resistors.length; i++) {
                 if (this.resistors[i].resistance === 0)
-                    unknowns.push(UnknownCurrent.create(this.resistors[i]));
+                    unknowns.push(UnknownCurrent.createWithOwner(this, this.resistors[i]));
             }
             
             return unknowns;
@@ -347,7 +349,11 @@ define(function (require) {
             this.destroyElements(this.resistors);
             this.destroyElements(this.currentSources);
 
-            // TODO: Destroy all terms, equations, and unknowns
+            // Destroy all terms, equations, and unknowns
+            Term.destroyAllOwnedBy(this);
+            Equation.destroyAllOwnedBy(this);
+            UnknownCurrent.destroyAllOwnedBy(this);
+            UnknownVoltage.destroyAllOwnedBy(this);
             
             pool.remove(this);
         },
