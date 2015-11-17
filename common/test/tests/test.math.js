@@ -603,3 +603,46 @@ describe('Vector3', function(){
 	});
 
 });
+
+describe('Matrix', function(){
+
+	var Matrix;
+
+	before(function(done) {
+		require(['math/matrix'], function(matrix) {
+			Matrix = matrix;
+			done();
+		});
+	});
+
+	it('#solve works', function() {
+		var matrix = new Matrix([
+			[ 1, 2, -1, -4],
+			[ 2, 3, -1,-11],
+			[-2, 0, -3, 22]
+		]);
+
+		chai.expect(
+			matrix.solve()
+		).to.almost.eql([
+			[ 1, 0, 0, -8 ],
+			[ 0, 1, 0,  1 ],
+			[ 0, 0, 1, -2 ]
+		]);
+
+		var matrix2 = new Matrix([
+			[ 2, 1, -1, 8 ],
+			[ -3, -1, 2, -11 ],
+			[ -2, 1, 2, -3 ]
+		]);
+
+		chai.expect(
+			matrix2.solve()
+		).to.almost.eql([
+			[ 1, 0, 0,  2 ],
+			[ 0, 1, 0,  3 ],
+			[ 0, 0, 1, -1 ]
+		]);
+	});
+
+});
