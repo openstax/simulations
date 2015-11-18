@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var PooledObject = require('common/pooled-object/pooled-object');
 
     /**
@@ -20,7 +18,7 @@ define(function (require) {
         },
 
         stamp: function(row, A, z, variables) {
-            z.set(row, 0, rhs);
+            z.set(row, 0, this.rhs);
             for (var i = 0; i < this.terms.length; i++) {
                 var a = this.terms[i];
                 A.set(row, variables.indexOf(a.variable), a.coefficient + A.get(row, variables.indexOf(a.variable)));

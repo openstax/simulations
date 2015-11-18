@@ -34,7 +34,7 @@ define(function (require) {
 
         getCurrent: function(element) {
             if (this.currentCompanions[element.id] !== undefined)
-                return this.currentCompanions[element.id](this.mnaSolution);
+                return this.mnaSolution.getCurrent(this.currentCompanions[element.id]);
             else 
                 return this.mnaSolution.getCurrent(element);
         },

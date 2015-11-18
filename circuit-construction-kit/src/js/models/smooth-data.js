@@ -4,9 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-
-    var Constants = require('constants');
 
     var SmoothData = function(windowSize) {
         this.data = [];
@@ -41,7 +38,7 @@ define(function (require) {
             list.sort();
             var elm = Math.floor(list.length / 2);
             return this.data[elm];
-        }
+        },
 
         dataAt: function(elm) {
             return this.data[elm];

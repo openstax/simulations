@@ -38,11 +38,11 @@ define(function (require) {
         },
 
         getNodes: function() {
-            return _.keys(nodeVoltages);
+            return _.keys(this.nodeVoltages);
         },
 
         getBranches: function() {
-            return _.keys(branchCurrents);
+            return _.keys(this.branchCurrents);
         },
 
         arraysEqual: function(a, b) {
@@ -59,14 +59,14 @@ define(function (require) {
             else {
                 var sameVoltages = true;
                 for (var node in this.nodeVoltages) {
-                    if (!this.numbersApproxEqual(nodeVoltages[node], solution.getNodeVoltage(node), delta)) {
+                    if (this.nodeVoltages.hasOwnProperty(node) && !this.numbersApproxEqual(this.nodeVoltages[node], solution.getNodeVoltage(node), delta)) {
                         sameVoltages = false;
                         break;
                     }
                 }
                 var sameCurrents = true;
                 for (var elementId in this.branchCurrents) {
-                    if (!this.numbersApproxEqual(this.branchCurrents[elementId], solution.getCurrent(elementId), delta)) {
+                    if (this.branchCurrents.hasOwnProperty(elementId) && !this.numbersApproxEqual(this.branchCurrents[elementId], solution.getCurrent(elementId), delta)) {
                         sameCurrents = false;
                         break;
                     }
@@ -100,8 +100,10 @@ define(function (require) {
             var totalNodes = 0;
             var distanceVoltage = 0;
             for (var node in this.nodeVoltages) {
-                distanceVoltage +=  Math.abs(this.nodeVoltages[node] - solution.getNodeVoltage(node));
-                totalNodes++;
+                if (this.nodeVoltages.hasOwnProperty(node)) {
+                    distanceVoltage +=  Math.abs(this.nodeVoltages[node] - solution.getNodeVoltage(node));
+                    totalNodes++;
+                }
             }
  
             var averageVoltDist = (totalNodes > 0) ? distanceVoltage / totalNodes : 0;
@@ -113,8 +115,10 @@ define(function (require) {
             var totalElements = 0;
             var c = 0;
             for (var elementId in this.branchCurrents) {
-                c += Math.abs(this.branchCurrents[elementId]);
-                totalElements++;
+                if (this.branchCurrents.hasOwnProperty(elementId)) {
+                    c += Math.abs(this.branchCurrents[elementId]);
+                    totalElements++;
+                }
             }
             return (totalElements > 0) ? c / totalElements : 0;
         },

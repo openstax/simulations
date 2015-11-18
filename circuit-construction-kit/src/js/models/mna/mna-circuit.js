@@ -5,16 +5,21 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
+    var Matrix = require('common/math/matrix');
+
     var UnknownCurrent = require('models/mna/unknown-current');
     var UnknownVoltage = require('models/mna/unknown-voltage');
     var Term           = require('models/mna/term');
     var Equation       = require('models/mna/equation');
+    var MNASolution    = require('models/mna/mna-solution');
     
     var pool = Pool({
         init: function() {
             return new MNACircuit();
         }
     });
+
+    var debug = false;
 
     /**
      * 
@@ -92,7 +97,7 @@ define(function (require) {
         sumIncomingCurrents: function(nodeIndex) {
             var sum = 0;
             for (var i = 0; i < this.currentSources.length; i++) {
-                var cs = this.currentSources.[i];
+                var cs = this.currentSources[i];
                 if (cs.node1 == nodeIndex)
                     sum += cs.current;
             }
@@ -105,7 +110,7 @@ define(function (require) {
                 var c = this.currentSources[i];
                 if (c.node1 == node) {
                     // Positive current is entering the node
-                    // PhET Comment: "TODO: these signs seem backwards, shouldn't incoming current add?""
+                    // PhET Comment: "TODO: these signs seem backwards, shouldn't incoming current add?"
                     sum = sum - c.current;
                 }
                 if (c.node0 == node) {
@@ -234,6 +239,7 @@ define(function (require) {
 
         getEquations: function() {
             var list = [];
+            var i;
 
             var referenceNodes = this.getReferenceNodes();
             var nodeSet = this.nodeSet;
@@ -241,15 +247,15 @@ define(function (require) {
             var resistors = this.resistors;
 
             // Reference node in each connected component has a voltage of 0
-            for (var i = 0; i < referenceNodes.length; i++)
+            for (i = 0; i < referenceNodes.length; i++)
                 list.push(Equation.createWithOwner(this, 0, Term.createWithOwner(this, 1, UnknownVoltage.createWithOwner(this, referenceNodes[i]))));
 
             // For each node, charge is conserved
-            for (var i = 0; i < nodeSet.length; i++)
+            for (i = 0; i < nodeSet.length; i++)
                 list.push(Equation.createWithOwner(this, this.getRHS(nodeSet[i]), this.getCurrentConservationTerms(nodeSet[i])));
 
             // For each battery, voltage drop is given
-            for (var i = 0; i < batteries.length; i++) {
+            for (i = 0; i < batteries.length; i++) {
                 list.push(
                     Equation.createWithOwner(
                         this, 
@@ -261,7 +267,7 @@ define(function (require) {
             }
 
             // If resistor has no resistance, node0 and node1 should have same voltage
-            for (var i = 0; i < resistors.length; i++) {
+            for (i = 0; i < resistors.length; i++) {
                 if (resistors[i].resistance === 0) {
                     list.push(
                         Equation.createWithOwner(
@@ -285,12 +291,14 @@ define(function (require) {
         },
 
         getUnknownCurrents: function() {
+            var i;
+
             var unknowns = [];
-            for (var i = 0; i < this.batteries.length; i++)
+            for (i = 0; i < this.batteries.length; i++)
                 unknowns.push(UnknownCurrent.createWithOwner(this, this.batteries[i]));
 
             // Treat resistors with R=0 as having unknown current and v1=v2
-            for (var i = 0; i < this.resistors.length; i++) {
+            for (i = 0; i < this.resistors.length; i++) {
                 if (this.resistors[i].resistance === 0)
                     unknowns.push(UnknownCurrent.createWithOwner(this, this.resistors[i]));
             }
@@ -317,9 +325,9 @@ define(function (require) {
 
             if (debug) {
                 console.log(equations);
-                console.log("a=", A);
-                console.log("z=", z);
-                console.log("unknowns=", this.getUnknowns());
+                console.log('a=', A);
+                console.log('z=', z);
+                console.log('unknowns=', this.getUnknowns());
             }
 
             var x = A.solve(z);
@@ -335,11 +343,11 @@ define(function (require) {
                 currentMap[unknownCurrents[c].element.id] = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
 
             if (debug) {
-                console.log("x=", x);
+                console.log('x=', x);
             }
 
             return MNASolution.create(voltageMap, currentMap);
-        }
+        },
 
         /**
          * Destroys elements and releases this instance to the object pool.

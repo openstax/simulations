@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var PooledObject = require('common/pooled-object/pooled-object');
 
     /**
@@ -22,10 +20,10 @@ define(function (require) {
             if (this === obj) 
                 return true;
             
-            if (obj == null || this.prototype !== obj.prototype)
+            if (!obj || this.prototype !== obj.prototype)
                 return false;
 
-            if (!this.element === obj.element)
+            if (this.element !== obj.element)
                 return false;
 
             return true;

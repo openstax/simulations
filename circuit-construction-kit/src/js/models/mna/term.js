@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var PooledObject = require('common/pooled-object/pooled-object');
 
     /**

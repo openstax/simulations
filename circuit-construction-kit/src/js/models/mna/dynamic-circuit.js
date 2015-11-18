@@ -5,6 +5,15 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
+    var Battery                     = require('models/components/battery');
+    var Resistor                    = require('models/components/resistor');
+    var Filament                    = require('models/components/filament');
+    var Bulb                        = require('models/components/bulb');
+    var SeriesAmmeter               = require('models/components/series-ammeter');
+    var Switch                      = require('models/components/switch');
+    var Capacitor                   = require('models/components/capacitor');
+    var Inductor                    = require('models/components/inductor');
+    var Wire                        = require('models/components/wire');
     var MNACircuit                  = require('models/mna/mna-circuit');
     var MNACapacitor                = require('models/mna/elements/capacitor');
     var MNAInductor                 = require('models/mna/elements/inductor');
@@ -101,10 +110,10 @@ define(function (require) {
             var usedNodes = [];
 
             var elements = [].concat(
-                batteries,
-                resistors,
-                resistiveBatteries,
-                currents,
+                this.batteries,
+                this.resistors,
+                this.resistiveBatteries,
+                this.currents,
                 this.capacitors,
                 this.inductors
             );
@@ -130,32 +139,34 @@ define(function (require) {
                 companionBatteries.push(idealBattery);
                 companionResistors.push(idealResistor);
                 // We need to be able to get the current for this component
-                currentCompanions[b.id] = function(solution) {
-                    return solution.getCurrent(idealBattery);
-                };
+                currentCompanions[b.id] = idealBattery;
 
                 // Increment the index for new nodes
                 newNode++;
             }
 
+            var companionResistance;
+            var companionVoltage;
+            var battery;
+            var resistor;
+            var capacitor;
+            var inductor;
+
             // Add companion models for capacitor
             for (i = 0; i < this.capacitors.length; i++) {
-                var capacitor = this.capacitors[i];
+                capacitor = this.capacitors[i];
                 // In series
 
-                var companionResistance = deltaTime / 2.0 / capacitor.capacitance;
-                var companionVoltage = capacitor.voltage - companionResistance * capacitor.current;
+                companionResistance = deltaTime / 2.0 / capacitor.capacitance;
+                companionVoltage = capacitor.voltage - companionResistance * capacitor.current;
 
-                var battery = new MNACompanionBattery(capacitor.node0, newNode, companionVoltage);
-                var resistor = new MNACompanionResistor(newNode, capacitor.node1, companionResistance);
+                battery = new MNACompanionBattery(capacitor.node0, newNode, companionVoltage);
+                resistor = new MNACompanionResistor(newNode, capacitor.node1, companionResistance);
                 companionBatteries.push(battery);
                 companionResistors.push(resistor);
 
-                // We need to be able to get the current for this component
-                currentCompanions[capacitor.id] = function(solution) {
-                    // In series, so current is same through both companion components
-                    return solution.getCurrent(battery);
-                };
+                // In series, so current is same through both companion components
+                currentCompanions[capacitor.id] = battery;
 
                 // Increment the index for new nodes
                 newNode++;
@@ -163,22 +174,19 @@ define(function (require) {
 
             // Add companion models for inductor
             for (i = 0; i < this.inductors.length; i++) {
-                var inductor = this.inductors[i];
+                inductor = this.inductors[i];
                 // In series
 
-                var companionResistance = 2 * inductor.inductance / deltaTime;
-                var companionVoltage = inductor.voltage + companionResistance * inductor.current;
+                companionResistance = 2 * inductor.inductance / deltaTime;
+                companionVoltage = inductor.voltage + companionResistance * inductor.current;
 
-                var battery = new MNACompanionBattery(newNode, inductor.node0, companionVoltage);
-                var resistor = new MNACompanionResistor(newNode, inductor.node1, companionResistance);
+                battery = new MNACompanionBattery(newNode, inductor.node0, companionVoltage);
+                resistor = new MNACompanionResistor(newNode, inductor.node1, companionResistance);
                 companionBatteries.push(battery);
                 companionResistors.push(resistor);
 
-                // We need to be able to get the current for this component
-                currentCompanions[inductor.id] = function(solution) {
-                    // In series, so current is same through both companion components
-                    return solution.getCurrent(battery);
-                };
+                // In series, so current is same through both companion components
+                currentCompanions[inductor.id] = battery;
 
                 // Increment the index for new nodes
                 newNode++;
@@ -206,7 +214,7 @@ define(function (require) {
                 updatedCapacitors.push(this.capacitors[i].cloneWithSolution(solution));
 
             var updatedInductors = [];
-            for (var i = 0; i < this.inductors.length; i++)
+            for (i = 0; i < this.inductors.length; i++)
                 updatedCapacitors.push(this.inductors[i].cloneWithSolution(solution));
 
             return this.create(
@@ -276,7 +284,7 @@ define(function (require) {
             var branches = circuit.branches;
             var branch;
             for (var i = 0; i < branches.length; i++) {
-                var branch = branches.at(i);
+                branch = branches.at(i);
 
                 if (branch instanceof Battery) {
                     batteries.push(MNAResistiveBattery.fromCircuitComponent(circuit, branch));

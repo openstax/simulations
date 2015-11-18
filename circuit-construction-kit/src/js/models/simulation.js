@@ -2,15 +2,14 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     /**
      * Constants
      */
-    var Constants = require('constants');
+    //var Constants = require('constants');
 
     /**
      * 
