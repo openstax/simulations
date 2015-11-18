@@ -5,15 +5,19 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
-    var MNACircuit   = require('models/mna/mna-circuit');
-    var MNACapacitor = require('models/mna/elements/capacitor');
-    var MNAInductor  = require('models/mna/elements/inductor');
+    var MNACircuit           = require('models/mna/mna-circuit');
+    var MNACapacitor         = require('models/mna/elements/capacitor');
+    var MNAInductor          = require('models/mna/elements/inductor');
+    var MNACompanionResistor = require('models/mna/elements/companion-resistor');
+    var MNACompanionBattery  = require('models/mna/elements/companion-battery');
     
     var pool = Pool({
         init: function() {
             return new DynamicCircuit();
         }
     });
+
+    var _parseInt = function(value) { return parseInt(value); };
 
     /**
      * 
@@ -62,13 +66,129 @@ define(function (require) {
                 this.inductors[i].applySolution(solution);
         },
 
+        solve: function(deltaTime) {
+            // Elements now have IDs, so currentCompanions can just use an element's id as the key.
+            var currentCompanions = [];
+
+            // Pass the currentCompanions array in so it can be filled
+            var mnaCircuit = this.toMNACircuit(deltaTime, currentCompanions);
+            var mnaSolution = mnaCircuit.solve();
+
+            var intermediateSolution = IntermediateDynamicSolution.create(mnaSolution, currentCompanions);
+            return intermediateSolution;
+        },
+
         /**
          * Creates a new MNACircuit representation of this DynamicCircuit instance
-         *   with the given deltaTime and returns it.
+         *   with the given deltaTime and returns it.  Also fills a given array
+         *   of currentCompanions with functions for getting currents from 
+         *   companion components.
          */
-        toMNACircuit: function() {
-            var mnaCircuit;
-            // TODO: implement it -- code found in PhET's DynamicCircuit.toMNACircuit
+        toMNACircuit: function(deltaTime, currentCompanions) {
+            var i;
+
+            var companionBatteries = [];
+            var companionResistors = [];
+            var companionCurrents  = [];
+
+            
+            // usedNodes is supposed to be a HashSet, but it's only used in this function to find
+            //   out at what number to start creating node indices for inductors and capacitors,
+            //   so I'm just going to make it an array but store the values as keys.
+            var usedNodes = [];
+
+            var elements = [].concat(
+                batteries,
+                resistors,
+                resistiveBatteries,
+                currents,
+                this.capacitors,
+                this.inductors
+            );
+
+            for (i = 0; i < elements.length; i++) {
+                usedNodes[elements[i].node0] = true;
+                usedNodes[elements[i].node1] = true;
+            }
+
+            // Get the starting index for the new nodes
+            var newNode = _.max(_.map(_.keys(b), _parseInt)) + 1;
+
+            // See also http://circsimproj.blogspot.com/2009/07/companion-models.html
+            // See najm page 279
+            // Pillage p 86
+
+            // Each resistive battery is a resistor in series with a battery
+            for (i = 0; i < this.resistiveBatteries.length; i++) {
+                var b = this.resistiveBatteries[i];
+
+                var idealBattery = MNACompanionBattery.create(b.node0, newNode, b.voltage);
+                var idealResistor = MNACompanionResistor.create(newNode, b.node1, b.resistance);
+                companionBatteries.push(idealBattery);
+                companionResistors.push(idealResistor);
+                // We need to be able to get the current for this component
+                currentCompanions[b.id] = function(solution) {
+                    return solution.getCurrent(idealBattery);
+                };
+
+                // Increment the index for new nodes
+                newNode++;
+            }
+
+            // Add companion models for capacitor
+            for (i = 0; i < this.capacitors.length; i++) {
+                var capacitor = this.capacitors[i];
+                // In series
+
+                var companionResistance = deltaTime / 2.0 / capacitor.capacitance;
+                var companionVoltage = capacitor.voltage - companionResistance * capacitor.current;
+
+                var battery = new MNACompanionBattery(capacitor.node0, newNode, companionVoltage);
+                var resistor = new MNACompanionResistor(newNode, capacitor.node1, companionResistance);
+                companionBatteries.push(battery);
+                companionResistors.push(resistor);
+
+                // We need to be able to get the current for this component
+                currentCompanions[capacitor.id] = function(solution) {
+                    // In series, so current is same through both companion components
+                    return solution.getCurrent(battery);
+                };
+
+                // Increment the index for new nodes
+                newNode++;
+            }
+
+            // Add companion models for inductor
+            for (i = 0; i < this.inductors.length; i++) {
+                var inductor = this.inductors[i];
+                // In series
+
+                var companionResistance = 2 * inductor.inductance / deltaTime;
+                var companionVoltage = inductor.voltage + companionResistance * inductor.current;
+
+                var battery = new MNACompanionBattery(newNode, inductor.node0, companionVoltage);
+                var resistor = new MNACompanionResistor(newNode, inductor.node1, companionResistance);
+                companionBatteries.push(battery);
+                companionResistors.push(resistor);
+
+                // We need to be able to get the current for this component
+                currentCompanions[inductor.id] = function(solution) {
+                    // In series, so current is same through both companion components
+                    return solution.getCurrent(battery);
+                };
+
+                // Increment the index for new nodes
+                newNode++;
+            }
+
+            // TODO: implement it --------
+
+            var mnaCircuit = MNACircuit.create(
+                this.batteries.concat(companionBatteries),
+                this.resistors.concat(companionResistors),
+                this.currents.concat(companionCurrents)
+            );
+
             return mnaCircuit;
         },
 

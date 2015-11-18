@@ -7,11 +7,6 @@ define(function (require) {
     var MNAElement = require('models/mna/elements/element');
 
     /**
-     * Constants
-     */
-    var Constants = require('constants');
-
-    /**
      * Inductor model for the MNA circuit
      */
     var MNAInductor = function(originalComponent, node0, node1) {

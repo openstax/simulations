@@ -158,8 +158,7 @@ define(function (require) {
          *   to get the next state.  It then returns the next state.
          */
         getNextState: function(state, deltaTime) {
-            var mnaCircuit = state.dynamicCircuit.toMNACircuit(deltaTime);
-            var solution = mnaCircuit.solve();
+            var solution = state.dynamicCircuit.solve(deltaTime);
             return state.getNextState(solution);
         },
 

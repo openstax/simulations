@@ -6,10 +6,6 @@ define(function (require) {
 
     var MNAElement = require('models/mna/elements/element');
 
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * Capacitor model for the MNA circuit

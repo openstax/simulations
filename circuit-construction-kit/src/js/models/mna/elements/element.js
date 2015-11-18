@@ -5,16 +5,14 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
     
+    var elementId = 0;
     var pool = Pool({
         init: function() {
-            return new MNAElement();
+            var element = new MNAElement();
+            element.id = elementId++;
+            return element;
         }
     });
-
-    /**
-     * Constants
-     */
-    var Constants = require('constants');
 
     /**
      * This class represents an Element in a circuit, such as a Battery, Resistor, Capacitor, etc.
