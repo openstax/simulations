@@ -332,7 +332,7 @@ define(function (require) {
 
             var currentMap = [];
             for (var c = 0; c < unknownCurrents.length; c++)
-                currentMap[unknownCurrents[c].element] = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
+                currentMap[unknownCurrents[c].element.id] = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
 
             if (debug) {
                 console.log("x=", x);

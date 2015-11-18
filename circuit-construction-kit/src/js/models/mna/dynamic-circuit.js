@@ -5,11 +5,14 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
-    var MNACircuit           = require('models/mna/mna-circuit');
-    var MNACapacitor         = require('models/mna/elements/capacitor');
-    var MNAInductor          = require('models/mna/elements/inductor');
-    var MNACompanionResistor = require('models/mna/elements/companion-resistor');
-    var MNACompanionBattery  = require('models/mna/elements/companion-battery');
+    var MNACircuit                  = require('models/mna/mna-circuit');
+    var MNACapacitor                = require('models/mna/elements/capacitor');
+    var MNAInductor                 = require('models/mna/elements/inductor');
+    var MNAResistiveBattery         = require('models/mna/elements/resistive-battery');
+    var MNAResistor                 = require('models/mna/elements/resistor');
+    var MNACompanionResistor        = require('models/mna/elements/companion-resistor');
+    var MNACompanionBattery         = require('models/mna/elements/companion-battery');
+    var IntermediateDynamicSolution = require('models/mna/intermediate-dynamic-solution');
     
     var pool = Pool({
         init: function() {
