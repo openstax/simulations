@@ -6,8 +6,6 @@ define(function (require) {
 
     var Battery = require('models/components/battery');
 
-    var Constants = require('constants');
-    
     /**
      * An alternating-current voltage source
      */

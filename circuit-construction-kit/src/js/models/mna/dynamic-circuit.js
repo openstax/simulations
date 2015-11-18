@@ -56,16 +56,16 @@ define(function (require) {
         applySolution: function(solution) {
             var i;
 
-            for (var i = 0; i < this.resistiveBatteries.length; i++)
+            for (i = 0; i < this.resistiveBatteries.length; i++)
                 this.resistiveBatteries[i].applySolution(solution);
 
-            for (var i = 0; i < this.resistors.length; i++)
+            for (i = 0; i < this.resistors.length; i++)
                 this.resistors[i].applySolution(solution);
 
-            for (var i = 0; i < this.capacitors.length; i++)
+            for (i = 0; i < this.capacitors.length; i++)
                 this.capacitors[i].applySolution(solution);
 
-            for (var i = 0; i < this.inductors.length; i++)
+            for (i = 0; i < this.inductors.length; i++)
                 this.inductors[i].applySolution(solution);
         },
 
@@ -115,7 +115,7 @@ define(function (require) {
             }
 
             // Get the starting index for the new nodes
-            var newNode = _.max(_.map(_.keys(b), _parseInt)) + 1;
+            var newNode = _.max(_.map(_.keys(usedNodes), _parseInt)) + 1;
 
             // See also http://circsimproj.blogspot.com/2009/07/companion-models.html
             // See najm page 279

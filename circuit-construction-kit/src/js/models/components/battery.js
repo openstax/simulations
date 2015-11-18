@@ -7,8 +7,6 @@ define(function (require) {
     var CircuitComponent = require('models/components/circuit-component');
 
     var Constants = require('constants');
-    var CURRENT_CHANGE_THRESHOLD = 0.01;
-    var DEFAULT_INTERNAL_RESISTANCE = 0.001;
 
     /**
      * A battery
@@ -38,12 +36,12 @@ define(function (require) {
 
         internalResistanceOnChanged: function(model, internalResistanceOn) {
             if (internalResistanceOn)
-                this.set('resistance', internalResistance);
+                this.set('resistance', this.get('internalResistance'));
             else
                 this.set('resistance', Constants.MIN_RESISTANCE);
         }
 
-    });
+    }, Constants.Battery);
 
     return Battery;
 });

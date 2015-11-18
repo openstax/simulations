@@ -2,10 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2   = require('common/math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     var Constants = require('constants');
 
@@ -51,7 +50,7 @@ define(function (require) {
             return this.get('voltageDrop');
         },
 
-        getDirectionVector() {
+        getDirectionVector: function() {
             return this._directionVec.set(this.get('endJunction').get('position')).sub(this.get('startJunction').get('position'));
         },
 
@@ -83,7 +82,7 @@ define(function (require) {
                 this.set('endJunction', newJ);
             else
                 throw 'No such junction.';
-        }
+        },
 
         getLength: function() {
             return this.get('startJunction').getDistance(this.get('endJunction'));

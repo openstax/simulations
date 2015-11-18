@@ -9,8 +9,6 @@ define(function (require) {
     var Branch   = require('models/branch');
     var Junction = require('models/junction');
 
-    var Constants = require('constants');
-
     /**
      * The base model for all circuit components
      */

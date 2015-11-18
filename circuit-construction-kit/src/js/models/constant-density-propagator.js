@@ -5,14 +5,12 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
-    var Vector2 = require('common/math/vector2');
-
     var SmoothData = require('models/smooth-data');
 
     var Constants = require('constants');
-    var FIRE_CURRENT = ConstantDensityPropagator.FIRE_CURRENT;
-    var MIN_CURRENT  = ConstantDensityPropagator.MIN_CURRENT;
-    var MAX_STEP     = ConstantDensityPropagator.MAX_STEP;
+    var FIRE_CURRENT = Constants.ConstantDensityPropagator.FIRE_CURRENT;
+    var MIN_CURRENT  = Constants.ConstantDensityPropagator.MIN_CURRENT;
+    var MAX_STEP     = Constants.ConstantDensityPropagator.MAX_STEP;
 
     var locationPool = Pool({
         init: function() {
@@ -32,23 +30,23 @@ define(function (require) {
 
         this.speedScale = 0.01 / 0.03;
         this.numEqualize = 2;
-        this.scale;
+        this.scale = 0;
         this.smoothData = new SmoothData(30);
-        this.timeScalingPercentValue;
+        this.timeScalingPercentValue = 0;
     };
 
     _.extend(ConstantDensityPropagator.prototype, {
 
         update: function(time, deltaTime) {
-            var maxCurrent = getMaxCurrent();
-            var maxVelocity = maxCurrent * speedScale;
+            var maxCurrent = this.getMaxCurrent();
+            var maxVelocity = maxCurrent * this.speedScale;
             var maxStep = maxVelocity * deltaTime;
             if (maxStep >= MAX_STEP)
-                scale = MAX_STEP / maxStep;
+                this.scale = MAX_STEP / maxStep;
             else
-                scale = 1;
+                this.scale = 1;
             
-            this.smoothData.addData(scale * 100);
+            this.smoothData.addData(this.scale * 100);
             this.timeScalingPercentValue = this.smoothData.getAverage();
 
             this.percent = Math.round(this.timeScalingPercentValue);
@@ -75,13 +73,14 @@ define(function (require) {
         },
 
         equalize: function(deltaTime) {
+            var i;
             var indices = [];
-            for (var i = 0; i < this.particleSet.numParticles(); i++)
+            for (i = 0; i < this.particleSet.numParticles(); i++)
                 indices.push(i);
             
             _.shuffle(indices);
 
-            for (var i = 0; i < this.particleSet.numParticles(); i++)
+            for (i = 0; i < this.particleSet.numParticles(); i++)
                 this.equalizeElectron(this.particleSet.particleAt(indices[i]), deltaTime);
         },
 
@@ -130,8 +129,8 @@ define(function (require) {
             if (current === 0 || Math.abs(current) < MIN_CURRENT)
                 return;
 
-            var speed = current * speedScale;
-            var dx = (speed * deltaTime) * scale;
+            var speed = current * this.speedScale;
+            var dx = (speed * deltaTime) * this.scale;
             var newX = x + dx;
 
             var branch = e.get('branch');
@@ -188,7 +187,7 @@ define(function (require) {
         },
 
         getDensity: function(circuitLocation) {
-            return particleSet.getDensity(circuitLocation.branch);
+            return this.particleSet.getDensity(circuitLocation.branch);
         },
 
         getLocations: function(e, overshoot, under) {
@@ -211,8 +210,9 @@ define(function (require) {
                 else if (current < -FIRE_CURRENT)
                     current = -FIRE_CURRENT;
                 
+                var distAlongNew;
                 if (current > 0 && neighbor.get('startJunction') == jroot) { // Start near the beginning.
-                    var distAlongNew = overshoot;
+                    distAlongNew = overshoot;
                     if ( distAlongNew > neighbor.getLength() ) {
                         distAlongNew = neighbor.getLength();
                     }
@@ -226,7 +226,7 @@ define(function (require) {
                     all.push(location);
                 }
                 else if (current < 0 && neighbor.get('endJunction') == jroot) {
-                    var distAlongNew = neighbor.getLength() - overshoot;
+                    distAlongNew = neighbor.getLength() - overshoot;
                     if (distAlongNew > neighbor.getLength())
                         distAlongNew = neighbor.getLength();
                     else if (distAlongNew < 0)

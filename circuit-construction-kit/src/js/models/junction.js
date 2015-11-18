@@ -2,13 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var PositionableObject = require('common/models/positionable-object');
-    var Vector2            = require('common/math/vector2');
-
-    var Constants = require('constants');
 
     var silent = { silent: true };
 
@@ -26,8 +22,6 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
-
-            
         },
 
         translateSilent: function(x, y) {

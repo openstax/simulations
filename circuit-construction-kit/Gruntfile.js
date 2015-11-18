@@ -132,7 +132,7 @@ module.exports = function(grunt) {
 				strict: true,
 				trailing: true,
 				//maxlen: 120,
-				maxcomplexity: 10,
+				//maxcomplexity: 10,
 
 				// Relaxing Options
 				camelcase: false,
@@ -162,7 +162,7 @@ module.exports = function(grunt) {
 				
 				// Environments
 				browser: true,
-				devel: false
+				devel: true
 			},
 			source: [
 				'src/**/*.js',

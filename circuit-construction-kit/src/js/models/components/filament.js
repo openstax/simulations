@@ -52,15 +52,15 @@ define(function (require) {
         },
 
         getPoint: function(east, north) {
-            var e = this._e.set(eastDir).scale(east);
-            var n = this._n.set(northDir).scale(north);
+            var e = this._e.set(this.eastDir).scale(east);
+            var n = this._n.set(this.northDir).scale(north);
             var sum = e.add(n);
             return sum.add(this.pin);
         },
 
         getVector: function(east, north) {
-            var e = this._e.set(eastDir).scale(east);
-            var n = this._n.set(northDir).scale(north);
+            var e = this._e.set(this.eastDir).scale(east);
+            var n = this._n.set(this.northDir).scale(north);
             return e.add(n);
         },
 

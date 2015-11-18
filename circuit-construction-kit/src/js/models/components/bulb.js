@@ -27,7 +27,7 @@ define(function (require) {
         initialize: function(attributes, options) {
             CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
-            this.filament = new Filament(); throw 'not finished';
+            this.filament = new Filament(); throw 'not finished'; //kl, getStartJunction(), getEndJunction(), 3, height * filamentHeightScale, width * .8, height * .061
             this.branchSet = new BranchSet();
 
             // Cached objects
@@ -122,7 +122,7 @@ define(function (require) {
             this.filament.recompute();
         },
 
-        isSchematicChanged(model, isSchematic) {
+        isSchematicChanged: function(model, isSchematic) {
             // Move junctions if necessary.
             if (isSchematic)
                 this.expandToSchematic();

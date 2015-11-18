@@ -6,8 +6,6 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Constants = require('constants');
-
     var BranchSet = function() {
         this.circuit = undefined;
         this.branches = [];
@@ -63,9 +61,9 @@ define(function (require) {
 
             var i;
 
-            var junctionSet = junctions.slice();
-            for (i = 0; i < branches.size(); i++) {
-                var branch = branches[i];
+            var junctionSet = this.junctions.slice();
+            for (i = 0; i < this.branches.length; i++) {
+                var branch = this.branches[i];
 
                 if (junctionSet.indexOf(branch.get('startJunction')) === -1)
                     junctionSet.push(branch.get('startJunction'));

@@ -8,8 +8,6 @@ define(function (require) {
 
     var Branch = require('models/branch');
 
-    var Constants = require('constants');
-
     /**
      * A branch made up of smaller, linear segments
      */
@@ -62,12 +60,12 @@ define(function (require) {
         },
 
         reset: function(start, next) {
-            segments.clear();
-            segments.add(new Segment(new Vector2(start), new Vector2(next)));
+            this.segments = [];
+            this.segments.push(new Segment(new Vector2(start), new Vector2(next)));
         },
 
         addPoint: function(position) {
-            segments.add(new Segment(new Vector2(this.lastPoint()), new Vector2(position)));
+            this.segments.push(new Segment(new Vector2(this.lastPoint()), new Vector2(position)));
         },
 
         lastPoint: function() {
@@ -83,7 +81,7 @@ define(function (require) {
         if (isNaN(start.x) || isNaN(start.y))
             throw 'Start was NaN: ' + start;
         if (isNaN(end.x) || isNaN(end.y))
-            throw 'end was NaN: ' + end);
+            throw 'end was NaN: ' + end;
 
         this.start = start;
         this.end = end;

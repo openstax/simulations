@@ -17,7 +17,7 @@ define(function (require) {
     var Switch = CircuitComponent.extend({
 
         defaults: _.extend({}, CircuitComponent.prototype.defaults, {
-            closed: undefined
+            closed: undefined,
             handleAngle: DEFAULT_HANDLE_ANGLE_OPEN
         }),
 
@@ -39,7 +39,7 @@ define(function (require) {
         },
 
         handleAngleChanged: function(model, handleAngle) {
-            if (angle === HANDLE_ANGLE_CLOSED)
+            if (handleAngle === HANDLE_ANGLE_CLOSED)
                 this.set('closed', true);
             else
                 this.set('closed', false);

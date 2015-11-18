@@ -5,11 +5,7 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
-
     var ConstantDensityPropagator = require('models/constant-density-propagator');
-
-    var Constants = require('constants');
 
     var ElectronSet = function(circuit) {
         this.circuit = circuit;
@@ -86,7 +82,7 @@ define(function (require) {
                 }
             }
             return upper;
-        }
+        },
 
         getLowerNeighborInBranch: function(myElectron) {
             var branchElectrons = this.getParticles(myElectron.get('branch'));

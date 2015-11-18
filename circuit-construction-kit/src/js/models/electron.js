@@ -5,9 +5,6 @@ define(function (require) {
     var _ = require('underscore');
 
     var PositionableObject = require('common/models/positionable-object');
-    var Vector2            = require('common/math/vector2');
-
-    var Constants = require('constants');
 
     /**
      * An electron which moves along a branch

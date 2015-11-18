@@ -5,13 +5,9 @@ define(function (require) {
     var _ = require('underscore');
 
     var Switch              = require('models/components/switch');
-    var MNAElement          = require('models/mna/elements/element');
-    var MNAResistor         = require('models/mna/elements/resistor');
-    var MNAResistiveBattery = require('models/mna/elements/battery');
-    var MNACapacitor        = require('models/mna/elements/capacitor');
-    var MNAInductor         = require('models/mna/elements/inductor');
-
-    var Constants = require('constants');
+    var DynamicCircuit      = require('models/mna/dynamic-circuit');
+    var DynamicState        = require('models/mna/dynamic-state');
+    var DynamicSolution     = require('models/mna/dynamic-solution');
 
     /**
      * Solves for unknowns in resistive circuits using the Modified Nodal Analysis (MNA) method.

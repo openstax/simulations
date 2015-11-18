@@ -6,8 +6,6 @@ define(function (require) {
 
     var CircuitComponent = require('models/components/circuit-component');
 
-    var Constants = require('constants');
-
     /**
      * A resistor
      */

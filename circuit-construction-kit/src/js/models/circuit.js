@@ -8,6 +8,15 @@ define(function (require) {
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
 
+    var Branch           = require('models/branch');
+    var BranchSet        = require('models/branch-set');
+    var Junction         = require('models/junction');
+    var CircuitComponent = require('models/components/circuit-component');
+    var Switch           = require('models/components/switch');
+    var Wire             = require('models/components/wire');
+    
+    var Constants = require('constants');
+
     /**
      * This is the main class for the CCK model, providing a representation of all
      *   the branches and junctions, and a way of updating the physics.
@@ -42,7 +51,7 @@ define(function (require) {
 
         addJunction: function(junction) {
             if (!this.junctions.contains(junction))
-                junctions.add(junction);
+                this.junctions.add(junction);
         },
 
         removeJunction: function(junction) {
@@ -155,7 +164,7 @@ define(function (require) {
                     var translation = this._splitTranslation
                         .set(desiredDest)
                         .sub(junction.get('position'));
-                    var stronglyConnected = this.getStrongConnections(newJunction);
+                    var strongConnections = this.getStrongConnections(newJunction);
                     this.branchSet
                         .clear()
                         .addBranches(strongConnections)
@@ -203,17 +212,15 @@ define(function (require) {
         getConnectedSubgraph: function(junction) {
             var visited = [];
             this._getConnectedSubgraph(visited, junction);
-            return visited;;
+            return visited;
         },
 
         _getConnectedSubgraph: function(visited, junction) {
             var adj = this.getAdjacentBranches(junction);
             for (var i = 0; i < adj.length; i++) {
                 var branch = adj[i];
-                if (branch instanceof Switch && !branch.isClosed()) {
-                    // Skip this one.
-                }
-                else {
+                // Skip open branches
+                if (!(branch instanceof Switch && !branch.isClosed())) {
                     var opposite = branch.opposite(junction);
                     if (visited.indexOf(branch) === -1) {
                         visited.push(branch);
@@ -224,7 +231,7 @@ define(function (require) {
         },
 
         removeBranch: function(branch) {
-            branches.remove(branch);
+            this.branches.remove(branch);
             
             this.removeIfOrphaned(branch.get('startJunction'));
             this.removeIfOrphaned(branch.get('endJunction'));
@@ -242,17 +249,13 @@ define(function (require) {
                 components[i].translate(translation);
         },
 
-        getJunctions: function() {
-            return this.junctions;
-        },
-
         getJunctions: function(branches) {
             var list = [];
             for (var i = 0; i < branches.length; i++) {
                 var branch = branches[i];
-                if (list.indexOf(branch.get('startJunction') === -1)
+                if (list.indexOf(branch.get('startJunction')) === -1)
                     list.push(branch.get('startJunction'));
-                if (list.indexOf(branch.get('endJunction') === -1)
+                if (list.indexOf(branch.get('endJunction')) === -1)
                     list.push(branch.get('endJunction'));
             }
             return list;
@@ -269,8 +272,8 @@ define(function (require) {
                 var va = a.getVoltageAddon();
                 var vb = -b.getVoltageAddon();//this has to be negative, because on the path VA->A->B->VB, the the VB computation is VB to B.
                 //used for displaying values e.g. in voltmeter and charts, so use average node voltages instead of instantaneous, see #2270 
-                var avgVoltageA = solution.getAverageNodeVoltage(this.junctions.indexOf(a.getJunction()));
-                var avgVoltageB = solution.getAverageNodeVoltage(this.junctions.indexOf(b.getJunction()));
+                var avgVoltageA = this.get('solution').getAverageNodeVoltage(this.junctions.indexOf(a.getJunction()));
+                var avgVoltageB = this.get('solution').getAverageNodeVoltage(this.junctions.indexOf(b.getJunction()));
                 var junctionAnswer = avgVoltageB - avgVoltageA;
                 return junctionAnswer + va + vb;
             }
@@ -285,15 +288,9 @@ define(function (require) {
             return false;
         },
 
-        setSelection: function(branch) {
+        setSelection: function(component) {
             this.clearSelection();
-            branch.select();
-            this.fireSelectionChanged();
-        },
-
-        setSelection: function( Junction junction ) {
-            this.clearSelection();
-            junction.select();
+            component.select();
             this.fireSelectionChanged();
         },
 
@@ -312,7 +309,7 @@ define(function (require) {
 
         getSelectedBranches: function() {
             var sel = [];
-            for (i = 0; i < this.branches.length; i++) {
+            for (var i = 0; i < this.branches.length; i++) {
                 if (this.branches.at(i).get('selected'))
                     sel.push(this.branches.at(i));
             }
@@ -321,7 +318,7 @@ define(function (require) {
 
         getSelectedJunctions: function() {
             var sel = [];
-            for (i = 0; i < this.junctions.length; i++) {
+            for (var i = 0; i < this.junctions.length; i++) {
                 if (this.junctions.at(i).get('selected'))
                     sel.push(this.junctions.at(i));
             }
@@ -338,7 +335,7 @@ define(function (require) {
 
         isDynamic: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i) instanceof DynamicBranch)
+                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
                     return true;
             }
             return false;
@@ -346,21 +343,21 @@ define(function (require) {
 
         update: function(time, deltaTime) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i) instanceof DynamicBranch)
+                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
                     this.branches.at(i).update(time, deltaTime);
             }
         },
 
         resetDynamics: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i) instanceof DynamicBranch)
+                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
                     this.branches.at(i).resetDynamics();
             }
         },
 
         setTime: function(time) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i) instanceof DynamicBranch)
+                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
                     this.branches.at(i).setTime(time);
             }
         },
@@ -411,7 +408,7 @@ define(function (require) {
             if (draggedJunctions.length && draggedJunctions[0] instanceof Branch)
                 draggedJunctions = Circuit.getJunctions(draggedJunctions);
 
-            var all = this.getJunctions();
+            var all = this.junctions.models;
             var potentialMatches = _.difference(all, draggedJunctions);
 
             // Make internal nodes ungrabbable for black box, see https://phet.unfuddle.com/a#/projects/9404/tickets/by_number/3602
@@ -440,7 +437,7 @@ define(function (require) {
                     source = draggedJunction;
                     target = bestForJunction;
                     distance = source.getDistance(target);
-                    if (best == null || distance < best.distance) {
+                    if (best === null || distance < best.distance) {
                         best = this._dragMatchObj;
                         best.source = source;
                         best.target = target;
