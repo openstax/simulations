@@ -2,10 +2,24 @@
 describe('Modified Nodal Analysis', function(){
 
 	var Term;
+	var MNACircuit;
+	var MNASolution;
+	var MNACompanionBattery;
+	var MNACompanionResistor;
 
 	before(function(done) {
-		require(['models/mna/term'], function(term) {
+		require([
+			'models/mna/term', 
+			'models/mna/mna-circuit', 
+			'models/mna/mna-solution',
+			'models/mna/elements/companion-battery',
+			'models/mna/elements/companion-resistor'
+		], function(term, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor) {
 			Term = term;
+			MNACircuit = mnaCircuit;
+			MNASolution = mnaSolution;
+			MNACompanionBattery = mnaCompanionBattery
+			MNACompanionResistor = mnaCompanionResistor
 			done();
 		});
 	});
@@ -19,11 +33,29 @@ describe('Modified Nodal Analysis', function(){
 		chai.expect(obj.variable).to.equal('x');
 		chai.expect(Term._pool.list.length).to.equal(1);
 
-		Term.destroyAllOwned(owner);
+		Term.destroyAllOwnedBy(owner);
 
 		chai.expect(Term._ownedObjects[owner.__ownerId].length).to.equal(0);
 		chai.expect(Term._pool.reserve.length).to.equal(1);
 		chai.expect(Term._pool.list.length).to.equal(0);
+	});
+
+	it('MNACircuit should give correct solution for simple circuits', function(){
+		var battery = MNACompanionBattery.create(0, 1, 4.0);
+		var resistor = MNACompanionResistor.create(1, 0, 4.0);
+		var circuit = MNACircuit.create([ battery ], [ resistor ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0.0;
+		voltageMap[1] = 4.0;
+
+		var desiredSolution = new MNASolution.create(voltageMap, [ battery ]);
+		var solution = circuit.solve();
+
+		chai.expect(solution.approxEquals(desiredSolution, equal)).to.be.true;
+
+		var currentThroughResistor = solution.getCurrent(resistor);
+		chai.expect(currentThroughResistor).almost.eql(1.0) // Should be flowing forward through resistor
 	});
 	
 });

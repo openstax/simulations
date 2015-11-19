@@ -18,7 +18,7 @@ describe('Pooled Objects', function(){
 		chai.expect(PooledObject._ownedObjects[owner.__ownerId][0]).to.equal(object);
 	});
 
-	it('#destroyAllOwned destroys all objects owned by a specified object', function(){
+	it('#destroyAllOwnedBy destroys all objects owned by a specified object', function(){
 		var owner = {};
 		var n = 10;
 		for (var i = 0; i < n; i++)
@@ -26,7 +26,7 @@ describe('Pooled Objects', function(){
 
 		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(n);
 
-		PooledObject.destroyAllOwned(owner);
+		PooledObject.destroyAllOwnedBy(owner);
 
 		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(0);
 	});

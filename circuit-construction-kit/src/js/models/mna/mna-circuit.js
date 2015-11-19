@@ -26,7 +26,8 @@ define(function (require) {
      */
     var MNACircuit = function(batteries, resistors, currentSources) {
         // Call init with any arguments passed to the constructor
-        this.init.apply(this, arguments);
+        if (batteries !== undefined)
+            this.init.apply(this, arguments);
     };
 
     /**
@@ -50,7 +51,7 @@ define(function (require) {
         },
 
         getNodeCount: function() {
-            return this.nodeSet.length;
+            return this.getNodeSet().length;
         },
 
         getCurrentCount: function() {
@@ -193,7 +194,7 @@ define(function (require) {
          * Obtain one node for each connected component to have the reference voltage of 0
          */
         getReferenceNodes: function() {
-            var remaining = this.nodeSet.slice();
+            var remaining = this.getNodeSet().slice();
             var referenceNodes = [];
 
             remaining.sort();
@@ -242,7 +243,7 @@ define(function (require) {
             var i;
 
             var referenceNodes = this.getReferenceNodes();
-            var nodeSet = this.nodeSet;
+            var nodeSet = this.getNodeSet();
             var batteries = this.batteries;
             var resistors = this.resistors;
 
@@ -284,9 +285,10 @@ define(function (require) {
         },
 
         getUnknownVoltages: function() {
+            var nodeSet = this.getNodeSet();
             var v = [];
-            for (var i = 0; i < this.nodeSet.length; i++)
-                v.push(UnknownVoltage.createWithOwner(this, this.nodeSet[i]));
+            for (var i = 0; i < nodeSet.length; i++)
+                v.push(UnknownVoltage.createWithOwner(this, nodeSet[i]));
             return v;
         },
 

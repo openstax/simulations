@@ -144,7 +144,10 @@ define(function (require) {
             delete child._ownedObjects;
             delete child._ownerId;
 
-            _.bindAll(child, 'create', 'createWithOwner', 'initPool', 'getPoolConfig', 'destroyAllOwned');
+            for (var key in child) {
+                if (child.hasOwnProperty(key) && _.isFunction(child[key]))
+                    _.bindAll(child, key);
+            }
 
             // This piece is straight from Backbone.js. It "sets the prototype chain to inherit from parent".
             var Surrogate = function(){ this.constructor = child; };
