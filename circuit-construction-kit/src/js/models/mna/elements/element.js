@@ -4,15 +4,10 @@ define(function (require) {
 
     var _    = require('underscore');
     var Pool = require('object-pool');
+
+    var PooledObject = require('common/pooled-object/pooled-object');
     
     var elementId = 0;
-    var pool = Pool({
-        init: function() {
-            var element = new MNAElement();
-            element.id = elementId++;
-            return element;
-        }
-    });
 
     /**
      * This class represents an Element in a circuit, such as a Battery, Resistor, Capacitor, etc.
@@ -20,15 +15,11 @@ define(function (require) {
      *   the object, since, e.g., two identical resistors may connect the same nodes, and they
      *   should not be treated as the same resistor.
      */
-    var MNAElement = function(originalComponent, node0, node1) {
-        // Call init with any arguments passed to the constructor
-        this.init.apply(this, arguments);
-    };
+    var MNAElement = PooledObject.extend({
 
     /**
      * Instance functions/properties
      */
-    _.extend(MNAElement.prototype, {
 
         /**
          * Initializes the MNAElement's properties with provided initial values
@@ -82,31 +73,27 @@ define(function (require) {
          */
         clone: function() {
             return MNAElement.create(this.originalComponent, this.node0, this.node1);
-        },
-
-        /**
-         * Releases this instance to the object pool.
-         */
-        destroy: function() {
-            pool.remove(this);
         }
 
-    });
+    }, {
 
     /**
      * Static functions/properties
      */
-    _.extend(MNAElement, {
 
         /**
-         * Initializes and returns a new MNAElement instance from the object pool.
-         *   Accepts the normal constructor parameters and passes them on to
-         *   the created instance.
+         * Returns the configuration to pass to the Pool constructor. This is meant
+         *   to be overriden by child classes if necessary.
          */
-        create: function() {
-            var element = pool.create();
-            element.init.apply(element, arguments);
-            return element;
+        getPoolConfig: function() {
+            var Constructor = this;
+            return {
+                init: function() {
+                    var element = new Constructor();
+                    element.id = elementId++;
+                    return element;
+                }
+            };
         },
 
         /**

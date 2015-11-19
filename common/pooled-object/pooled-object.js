@@ -134,8 +134,8 @@ define(function (require) {
 
             var parent = this;
             var child = function() {
-                objectConstructor.apply(this, arguments);
                 parent.apply(this, arguments);
+                objectConstructor.apply(this, arguments);
             };
 
             // Static functions/properties
@@ -144,9 +144,15 @@ define(function (require) {
             delete child._ownedObjects;
             delete child._ownerId;
 
-            for (var key in child) {
-                if (child.hasOwnProperty(key) && _.isFunction(child[key]))
-                    _.bindAll(child, key);
+            // If this were the parent instead of PooledObject, it wouldn't work
+            //   because binding a function can only happen once, and if we tried
+            //   to create a wrapper function that used function.apply, it would
+            //   call the parent's wrapper next in the chain, which would bind the
+            //   parent's context instead of the child's, so it would be pointless.
+            for (var key in PooledObject) {
+                if (child.hasOwnProperty(key) && _.isFunction(child[key])) {
+                    child[key] = PooledObject[key].bind(child);
+                }
             }
 
             // This piece is straight from Backbone.js. It "sets the prototype chain to inherit from parent".
@@ -156,7 +162,6 @@ define(function (require) {
 
             // Instance functions/properties
             _.extend(child.prototype, parent.prototype, prototypeProps);
-
             
             return child;
         }
