@@ -76,6 +76,10 @@ define(function (require) {
             return this.nodeSet;
         },
 
+        getNumVars: function() {
+            return this.getNodeCount() + this.getCurrentCount();
+        },
+
         sumConductances: function(nodeIndex) {
             var sum = 0;
             for (var i = this.resistors.length - 1; i >= 0; i--) {
@@ -285,27 +289,35 @@ define(function (require) {
         },
 
         getUnknownVoltages: function() {
-            var nodeSet = this.getNodeSet();
-            var v = [];
-            for (var i = 0; i < nodeSet.length; i++)
-                v.push(UnknownVoltage.createWithOwner(this, nodeSet[i]));
-            return v;
+            if (!this.unknownVoltages) {
+                var nodeSet = this.getNodeSet();
+                var v = [];
+                for (var i = 0; i < nodeSet.length; i++)
+                    v.push(UnknownVoltage.createWithOwner(this, nodeSet[i]));
+                this.unknownVoltages = v;
+            }
+            
+            return this.unknownVoltages;
         },
 
         getUnknownCurrents: function() {
-            var i;
+            if (!this.unknownCurrents) {
+                var i;
 
-            var unknowns = [];
-            for (i = 0; i < this.batteries.length; i++)
-                unknowns.push(UnknownCurrent.createWithOwner(this, this.batteries[i]));
+                var unknowns = [];
+                for (i = 0; i < this.batteries.length; i++)
+                    unknowns.push(UnknownCurrent.createWithOwner(this, this.batteries[i]));
 
-            // Treat resistors with R=0 as having unknown current and v1=v2
-            for (i = 0; i < this.resistors.length; i++) {
-                if (this.resistors[i].resistance === 0)
-                    unknowns.push(UnknownCurrent.createWithOwner(this, this.resistors[i]));
+                // Treat resistors with R=0 as having unknown current and v1=v2
+                for (i = 0; i < this.resistors.length; i++) {
+                    if (this.resistors[i].resistance === 0)
+                        unknowns.push(UnknownCurrent.createWithOwner(this, this.resistors[i]));
+                }
+
+                this.unknownCurrents = unknowns;
             }
             
-            return unknowns;
+            return this.unknownCurrents;
         },
 
         getUnknowns: function() {
