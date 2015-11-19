@@ -151,7 +151,7 @@ define(function (require) {
             //   parent's context instead of the child's, so it would be pointless.
             for (var key in PooledObject) {
                 if (child.hasOwnProperty(key) && _.isFunction(PooledObject[key]) && !(staticProps && staticProps[key])) {
-                    child[key] = PooledObject[key].bind(child);
+                    child[key] = _.bind(PooledObject[key], child);
                 }
             }
 
