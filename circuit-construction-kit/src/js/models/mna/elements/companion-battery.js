@@ -18,8 +18,6 @@ define(function (require) {
             this.voltage = voltage;
         }
 
-    }, {
-        hey: 'you'
     });
 
 

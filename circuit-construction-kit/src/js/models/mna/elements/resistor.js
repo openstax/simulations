@@ -2,21 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var MNAElement = require('models/mna/elements/element');
 
     /**
      * Resistor model for the MNA circuit
      */
-    var MNAResistor = function(originalComponent, node0, node1) {
-        MNAElement.apply(this, arguments);
-    };
-
-    /**
-     * Instance functions/properties
-     */
-    _.extend(MNAResistor.prototype, MNAElement.prototype, {
+    var MNAResistor = MNAElement.extend({
 
         /**
          * Initializes the MNAResistor's properties with provided initial values
@@ -38,11 +29,6 @@ define(function (require) {
         }
 
     });
-
-    /**
-     * Static functions/properties
-     */
-    _.extend(MNAResistor, MNAElement);
 
 
     return MNAResistor;

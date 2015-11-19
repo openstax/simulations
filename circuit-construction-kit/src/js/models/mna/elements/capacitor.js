@@ -2,22 +2,13 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var MNAElement = require('models/mna/elements/element');
 
 
     /**
      * Capacitor model for the MNA circuit
      */
-    var MNACapacitor = function(originalComponent, node0, node1) {
-        MNAElement.apply(this, arguments);
-    };
-
-    /**
-     * Instance functions/properties
-     */
-    _.extend(MNACapacitor.prototype, MNAElement.prototype, {
+    var MNACapacitor = MNAElement.extend({
 
         /**
          * Initializes the MNACapacitor's properties with provided initial values
@@ -57,11 +48,6 @@ define(function (require) {
         }
 
     });
-
-    /**
-     * Static functions/properties
-     */
-    _.extend(MNACapacitor, MNAElement);
 
 
     return MNACapacitor;
