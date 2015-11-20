@@ -7,6 +7,8 @@ describe('Modified Nodal Analysis', function(){
 	var MNACompanionBattery;
 	var MNACompanionResistor;
 
+	var THRESHOLD = 1E-6;
+
 	before(function(done) {
 		require([
 			'models/mna/term', 
@@ -52,10 +54,10 @@ describe('Modified Nodal Analysis', function(){
 		var desiredSolution = new MNASolution.create(voltageMap, [ battery ]);
 		var solution = circuit.solve();
 
-		chai.expect(solution.approxEquals(desiredSolution, equal)).to.be.true;
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 
 		var currentThroughResistor = solution.getCurrent(resistor);
-		chai.expect(currentThroughResistor).almost.eql(1.0) // Should be flowing forward through resistor
+		chai.expect(currentThroughResistor).almost.eql(1.0, THRESHOLD) // Should be flowing forward through resistor
 	});
 	
 });

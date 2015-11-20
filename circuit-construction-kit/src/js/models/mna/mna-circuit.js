@@ -19,6 +19,14 @@ define(function (require) {
         }
     });
 
+    var indexOfEquivalentUnknown = function(unknowns, unknown) {
+        for (var i = 0; i < unknowns.length; i++) {
+            if (unknowns[i].equals(unknown))
+                return i;
+        }
+        return -1;
+    };
+
     var debug = false;
 
     /**
@@ -296,7 +304,7 @@ define(function (require) {
                     v.push(UnknownVoltage.createWithOwner(this, nodeSet[i]));
                 this.unknownVoltages = v;
             }
-            
+
             return this.unknownVoltages;
         },
 
@@ -333,9 +341,14 @@ define(function (require) {
 
             var A = new Matrix(equations.length, this.getNumVars());
             var z = new Matrix(equations.length, 1);
+
             var unknowns = this.getUnknowns(); // Store the unknown list for index lookup
+            var indexOfUnknown = function(unknown) {
+                return indexOfEquivalentUnknown(unknowns, unknown);
+            };
+
             for (var i = 0; i < equations.length; i++)
-                equations[i].stamp(i, A, z, unknowns); // TODO: Instead of passing in a function for looking up the index, I'm just going to pass the array, because this is the only place where the stamp function is called anyway
+                equations[i].stamp(i, A, z, indexOfUnknown); // TODO: Instead of passing in a function for looking up the index, I'm just going to pass the array, because this is the only place where the stamp function is called anyway
 
             if (debug) {
                 console.log(equations);
@@ -352,15 +365,17 @@ define(function (require) {
             for (var v = 0; v < unknownVoltages.length; v++)
                 voltageMap[unknownVoltages[v].node] = x.get(unknowns.indexOf(unknownVoltages[v]), 0);
 
-            var currentMap = [];
-            for (var c = 0; c < unknownCurrents.length; c++)
-                currentMap[unknownCurrents[c].element.id] = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
+            var currentSolutions = [];
+            for (var c = 0; c < unknownCurrents.length; c++) {
+                unknownCurrents[c].currentSolution = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
+                currentSolutions[unknownCurrents[c].element.id] = unknownCurrents[c].element;
+            }
 
             if (debug) {
                 console.log('x=', x);
             }
 
-            return MNASolution.create(voltageMap, currentMap);
+            return MNASolution.create(voltageMap, currentSolutions);
         },
 
         /**

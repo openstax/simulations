@@ -24,6 +24,11 @@ define(function (require) {
      */
     _.extend(MNASolution.prototype, {
 
+        /**
+         * nodeVoltages is an array of voltage solutions indexed by the node number.
+         * branchCurrents is an array of arrays that hold the element and the current
+         *   solution, in that order.
+         */
         init: function(nodeVoltages, branchCurrents) {
             this.nodeVoltages = nodeVoltages;
             this.branchCurrents = branchCurrents;
@@ -42,7 +47,7 @@ define(function (require) {
         },
 
         getBranches: function() {
-            return _.keys(this.branchCurrents);
+            return this.branchCurrents;
         },
 
         arraysEqual: function(a, b) {
@@ -59,14 +64,26 @@ define(function (require) {
             else {
                 var sameVoltages = true;
                 for (var node in this.nodeVoltages) {
-                    if (this.nodeVoltages.hasOwnProperty(node) && !this.numbersApproxEqual(this.nodeVoltages[node], solution.getNodeVoltage(node), delta)) {
+                    if (this.nodeVoltages.hasOwnProperty(node) && 
+                        !this.numbersApproxEqual(
+                            this.nodeVoltages[node], 
+                            solution.getNodeVoltage(node), 
+                            delta
+                        )
+                    ) {
                         sameVoltages = false;
                         break;
                     }
                 }
                 var sameCurrents = true;
                 for (var elementId in this.branchCurrents) {
-                    if (this.branchCurrents.hasOwnProperty(elementId) && !this.numbersApproxEqual(this.branchCurrents[elementId], solution.getCurrent(elementId), delta)) {
+                    if (this.branchCurrents.hasOwnProperty(elementId) && 
+                        !this.numbersApproxEqual(
+                            this.branchCurrents[elementId].currentSolution, 
+                            solution.getCurrent(this.branchCurrents[elementId]), 
+                            delta
+                        )
+                    ) {
                         sameCurrents = false;
                         break;
                     }
@@ -142,6 +159,7 @@ define(function (require) {
          */
         create: function() {
             var solution = pool.create();
+            solution.init.apply(solution, arguments);
             return solution;
         }
 

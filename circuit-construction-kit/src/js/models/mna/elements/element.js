@@ -81,6 +81,12 @@ define(function (require) {
      * Static functions/properties
      */
 
+        extend: function() {
+            var child = PooledObject.extend.apply(this, arguments);
+            child.getPoolConfig = _.bind(this.getPoolConfig, child);
+            return child;
+        },
+
         /**
          * Returns the configuration to pass to the Pool constructor. This is meant
          *   to be overriden by child classes if necessary.
