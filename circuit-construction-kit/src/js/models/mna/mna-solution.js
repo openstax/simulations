@@ -100,7 +100,7 @@ define(function (require) {
         getCurrent: function(e) {
             // If it was a battery or resistor (of R=0), look up the answer
             if (this.branchCurrents[e.id] !== undefined) {
-                return this.branchCurrents[e.id];
+                return this.branchCurrents[e.id].currentSolution;
             }
             // Else compute based on V=IR
             else {

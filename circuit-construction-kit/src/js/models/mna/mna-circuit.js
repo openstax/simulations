@@ -273,8 +273,10 @@ define(function (require) {
                     Equation.createWithOwner(
                         this, 
                         batteries[i].voltage, 
-                        Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, batteries[i].node0)), 
-                        Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, batteries[i].node1))
+                        [
+                            Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, batteries[i].node0)), 
+                            Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, batteries[i].node1))
+                        ]
                     )
                 );
             }
@@ -286,8 +288,11 @@ define(function (require) {
                         Equation.createWithOwner(
                             this, 
                             0, 
-                            Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, resistors[i].node0)), 
-                            Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, resistors[i].node1))
+                            [
+                                Term.createWithOwner(this,  1, UnknownVoltage.createWithOwner(this, resistors[i].node0)), 
+                                Term.createWithOwner(this, -1, UnknownVoltage.createWithOwner(this, resistors[i].node1))
+                            ]
+                            
                         )
                     );    
                 }
@@ -367,8 +372,9 @@ define(function (require) {
 
             var currentSolutions = [];
             for (var c = 0; c < unknownCurrents.length; c++) {
-                unknownCurrents[c].currentSolution = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
-                currentSolutions[unknownCurrents[c].element.id] = unknownCurrents[c].element;
+                var element = unknownCurrents[c].element;
+                element.currentSolution = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
+                currentSolutions[element.id] = element;
             }
 
             if (debug) {
