@@ -46,6 +46,12 @@ describe('Modified Nodal Analysis', function(){
 		chai.expect(Term._pool.list.length).to.equal(0);
 	});
 
+	/**
+	 * Circuit-solving unit tests beyond this point are from PhET's newest version of
+	 *   the sim which is currently under development.
+	 *   https://github.com/phetsims/circuit-construction-kit-basics/
+	 */
+
 	it('MNACircuit should give correct solution for simple circuits', function(){
 		var battery = MNACompanionBattery.create(0, 1, 4.0);
 		var resistor = MNACompanionResistor.create(1, 0, 4.0);
@@ -280,6 +286,33 @@ describe('Modified Nodal Analysis', function(){
 		var branchCurrents = [];
 		branchCurrents[solutionBattery.id] = solutionBattery;
 		branchCurrents[solutionResistor.id] = solutionResistor;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('resistors in parallel should have harmonic mean of resistance', function(){
+		var V = 9.0;
+		var R1 = 5.0;
+		var R2 = 5.0;
+		var Req = 1 / ( 1 / R1 + 1 / R2 );
+
+		var battery   = MNACompanionBattery.create( 0, 1, V);
+		var resistor1 = MNACompanionResistor.create(1, 0, R1);
+		var resistor2 = MNACompanionResistor.create(1, 0, R2);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = V - FUDGE;
+
+		var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = V / Req;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
 
 		var solution = circuit.solve();
 		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
