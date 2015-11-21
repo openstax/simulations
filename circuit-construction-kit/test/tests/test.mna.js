@@ -189,5 +189,101 @@ describe('Modified Nodal Analysis', function(){
 
 		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 	});
-	
+
+	it('two resistors in series should have resistance added', function(){
+		var battery   = MNACompanionBattery.create( 0, 1,  5);
+		var resistor1 = MNACompanionResistor.create(1, 2, 10);
+		var resistor2 = MNACompanionResistor.create(2, 0, 10);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 5;
+		voltageMap[2] = 2.5 + FUDGE;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 5 / 20;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('a resistor with one node unconnected shouldn\'t cause problems', function(){
+		var battery   = MNACompanionBattery.create( 0, 1,   4);
+		var resistor1 = MNACompanionResistor.create(1, 0,   4);
+		var resistor2 = MNACompanionResistor.create(0, 2, 100);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 4;
+		voltageMap[2] = 0 - FUDGE;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 1;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('an unconnected resistor shouldn\'t cause problems', function(){
+		var battery   = MNACompanionBattery.create( 0, 1,   4);
+		var resistor1 = MNACompanionResistor.create(1, 0,   4);
+		var resistor2 = MNACompanionResistor.create(2, 3, 100);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 4;
+		voltageMap[2] = 0;
+		voltageMap[3] = 0;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 1;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('should handle resistor with no resistance', function(){
+		var battery   = MNACompanionBattery.create( 0, 1,  5);
+		var resistor1 = MNACompanionResistor.create(1, 2, 10);
+		var resistor2 = MNACompanionResistor.create(2, 0,  0);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 5;
+		voltageMap[2] = 0;
+
+		var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		var solutionResistor = MNACompanionBattery.create(resistor2.node0, resistor2.node1, resistor2.voltage);
+		solutionBattery.currentSolution  = 5 / 10;
+		solutionResistor.currentSolution = 5 / 10;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+		branchCurrents[solutionResistor.id] = solutionResistor;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
 });
