@@ -79,5 +79,52 @@ describe('Modified Nodal Analysis', function(){
 
 		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 	});
+
+	it('returned MNASolution should be able to obtain the current of a given resistor', function(){
+		var battery = MNACompanionBattery.create(0, 1, 4.0);
+		var resistor = MNACompanionResistor.create(1, 0, 2.0);
+		var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 4;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 2;
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+
+		var currentThroughResistor = solution.getCurrent(resistor);
+		// Same magnitude as battery: positive because current flows from node 1 to 0
+		chai.expect(currentThroughResistor).almost.eql(2.0, THRESHOLD)
+	});
+
+	it('an unconnected resistor should not cause problems for MNACircuit', function(){
+		var battery   = MNACompanionBattery.create( 0, 1, 4.0);
+		var resistor1 = MNACompanionResistor.create(1, 0, 4.0);
+		var resistor2 = MNACompanionResistor.create(2, 3, 100);
+
+		var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = 4;
+		voltageMap[2] = 0;
+		voltageMap[3] = 0;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 1;
+
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
 	
 });

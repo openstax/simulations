@@ -239,10 +239,9 @@ define(function (require) {
                 visited.push(n);
 
                 for (var i = 0; i < elements.length; i++) {
-                    var opposite = elements[i].getOpposite(n);
                     // Only add connected nodes that we haven't visited yet or don't yet plan to
-                    if (elements[i].containsNode(n) && visited.indexOf(opposite) === -1 && toVisit.indexOf(opposite) === -1)
-                        toVisit.push(opposite);
+                    if (elements[i].containsNode(n) && visited.indexOf(elements[i].getOpposite(n)) === -1 && toVisit.indexOf(elements[i].getOpposite(n)) === -1)
+                        toVisit.push(elements[i].getOpposite(n));
                 }
                 
                 toVisit.shift();
