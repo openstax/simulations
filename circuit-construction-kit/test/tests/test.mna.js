@@ -6,6 +6,7 @@ describe('Modified Nodal Analysis', function(){
 	var MNASolution;
 	var MNACompanionBattery;
 	var MNACompanionResistor;
+	var MNACurrentSource;
 
 	var THRESHOLD = 1E-6;
 
@@ -15,13 +16,15 @@ describe('Modified Nodal Analysis', function(){
 			'models/mna/mna-circuit', 
 			'models/mna/mna-solution',
 			'models/mna/elements/companion-battery',
-			'models/mna/elements/companion-resistor'
-		], function(term, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor) {
+			'models/mna/elements/companion-resistor',
+			'models/mna/elements/current-source'
+		], function(term, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource) {
 			Term = term;
 			MNACircuit = mnaCircuit;
 			MNASolution = mnaSolution;
-			MNACompanionBattery = mnaCompanionBattery
-			MNACompanionResistor = mnaCompanionResistor
+			MNACompanionBattery = mnaCompanionBattery;
+			MNACompanionResistor = mnaCompanionResistor;
+			MNACurrentSource = mnaCurrentSource;
 			done();
 		});
 	});
@@ -124,6 +127,21 @@ describe('Modified Nodal Analysis', function(){
 
 		var solution = circuit.solve();
 		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('current sources given to MNACircuit\'s constructor should provide current', function(){
+		var currentSource = MNACurrentSource.create(0, 1, 10);
+		var resistor  = MNACompanionResistor.create(1, 0, 4.0);
+
+		var circuit = MNACircuit.create([], [ resistor ], [ currentSource ]);
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = -40 // This is negative since traversing across the resistor should yield a negative voltage, see http://en.wikipedia.org/wiki/Current_source;
+
+		var solution = circuit.solve();
+		var desiredSolution = new MNASolution.create(voltageMap, []);
 		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 	});
 	
