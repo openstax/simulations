@@ -60,6 +60,17 @@ define(function (require) {
         },
 
         /**
+         * Returns whether a given element is equivalent to this element.
+         */
+        equivalentTo: function(element) {
+            if (this.node0 !== element.node0 || this.node1 !== element.node1)
+                return false;
+            if (this.currentSolution !== element.currentSolution)
+                return false;
+            return true;
+        },
+
+        /**
          * Makes a clone of this instance, applies a solution as an update, and returns it.
          */
         cloneWithSolution: function(solution) {

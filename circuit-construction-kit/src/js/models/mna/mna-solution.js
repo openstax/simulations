@@ -47,18 +47,45 @@ define(function (require) {
         },
 
         getBranches: function() {
-            return this.branchCurrents;
+            return _.values(this.branchCurrents);
         },
 
         arraysEqual: function(a, b) {
             return _.difference(a, b).length === 0;
         },
 
+        branchArraysEqual: function(a, b) {
+            var i;
+            for (i = 0; i < a.length; i++) {
+                if (!this.arrayContainsBranch(b, a[i]))
+                    return false;
+            }
+            for (i = 0; i < b.length; i++) {
+                if (!this.arrayContainsBranch(a, b[i]))
+                    return false;
+            }
+            return true;
+        },
+
+        arrayContainsBranch: function(array, branch) {
+            return (this.indexOfEquivalentBranch(array, branch) !== -1);
+        },
+
+        indexOfEquivalentBranch: function(array, branch) {
+            for (var i in array) {
+                if (array.hasOwnProperty(i) && array[i].equivalentTo(branch))
+                    return i;
+            }
+            return -1;
+        },
+
         approxEquals: function(solution, delta) {
             if (delta === undefined)
                 delta = 1E-6;
 
-            if (!this.arraysEqual(this.getNodes(), solution.getNodes()) || !this.arraysEqual(this.getBranches(), solution.getBranches())) {
+            if (!this.arraysEqual(this.getNodes(), solution.getNodes()) || 
+                !this.branchArraysEqual(this.getBranches(), solution.getBranches())
+            ) {
                 return false;
             }
             else {
@@ -99,8 +126,9 @@ define(function (require) {
 
         getCurrent: function(e) {
             // If it was a battery or resistor (of R=0), look up the answer
-            if (this.branchCurrents[e.id] !== undefined) {
-                return this.branchCurrents[e.id].currentSolution;
+            var branchIndex = this.indexOfEquivalentBranch(this.branchCurrents, e);
+            if (branchIndex !== -1) {
+                return this.branchCurrents[branchIndex].currentSolution;
             }
             // Else compute based on V=IR
             else {

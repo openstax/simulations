@@ -59,5 +59,25 @@ describe('Modified Nodal Analysis', function(){
 		var currentThroughResistor = solution.getCurrent(resistor);
 		chai.expect(currentThroughResistor).almost.eql(1.0, THRESHOLD) // Should be flowing forward through resistor
 	});
+
+	it('MNACircuit should give correct solution for simple circuits (2)', function(){
+		var battery = MNACompanionBattery.create(0, 1, 4.0);
+		var resistor = MNACompanionResistor.create(1, 0, 2.0);
+		var circuit = MNACircuit.create([ battery ], [ resistor ], []);
+
+		var voltageMap = [];
+		voltageMap[0] = 0.0;
+		voltageMap[1] = 4.0;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = 2.0;
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+		var solution = circuit.solve();
+
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
 	
 });
