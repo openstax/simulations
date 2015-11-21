@@ -9,6 +9,7 @@ describe('Modified Nodal Analysis', function(){
 	var MNACurrentSource;
 
 	var THRESHOLD = 1E-6;
+	var FUDGE = THRESHOLD - 8E-7;
 
 	before(function(done) {
 		require([
@@ -142,6 +143,50 @@ describe('Modified Nodal Analysis', function(){
 
 		var solution = circuit.solve();
 		var desiredSolution = new MNASolution.create(voltageMap, []);
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('current should be reversed when voltage is reversed', function(){
+		var battery  = MNACompanionBattery.create( 0, 1, -4.0);
+		var resistor = MNACompanionResistor.create(1, 0,  2.0);
+		var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
+
+		var voltageMap = [];
+		voltageMap[0] = 0;
+		voltageMap[1] = -4;
+
+		var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+		solutionBattery.currentSolution = -2;
+		var branchCurrents = [];
+		branchCurrents[solutionBattery.id] = solutionBattery;
+
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+
+		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+	});
+
+	it('two batteries in series should have voltage added', function(){
+		var battery1 = MNACompanionBattery.create( 0, 1, -4);
+		var battery2 = MNACompanionBattery.create( 1, 2, -4);
+		var resistor = MNACompanionResistor.create(2, 0,  2);
+
+		var solution = MNACircuit.create([ battery1, battery2 ], [ resistor ], []).solve();
+
+		var voltageMap = [];
+		voltageMap[0] =  0 + FUDGE;
+		voltageMap[1] = -4 + FUDGE;
+		voltageMap[2] = -8 + FUDGE;
+
+		var solutionBattery1 = MNACompanionBattery.create(battery1.node0, battery1.node1, battery1.voltage);
+		var solutionBattery2 = MNACompanionBattery.create(battery2.node0, battery2.node1, battery2.voltage);
+		solutionBattery1.currentSolution = -4;
+		solutionBattery2.currentSolution = -4;
+		var branchCurrents = [];
+		branchCurrents[solutionBattery1.id] = solutionBattery1;
+		branchCurrents[solutionBattery2.id] = solutionBattery2;
+
+		var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+
 		chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 	});
 	

@@ -39,7 +39,7 @@ define(function (require) {
         },
 
         numbersApproxEqual: function(a, b, delta) {
-            return Math.abs(a - b) < delta;
+            return Math.abs(a - b) <= delta;
         },
 
         getNodes: function() {
