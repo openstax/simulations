@@ -37,7 +37,7 @@ define(function (require) {
 	Constants.INDUCTOR_DIM             = new Dimension(2.5 * SCALE, 0.6 * SCALE);
 	Constants.BULB_DIMENSION           = new Dimension(bulbLength * SCALE * bulbScale, bulbHeight * SCALE * bulbScale);
 	Constants.BULB_DISTANCE_BETWEEN_JUNCTIONS = bulbDistJ * SCALE * bulbScale;
-    Constants.WIRE_LENGTH = Constants.BATTERY_DIMENSION.getLength() * 1.2;
+    Constants.WIRE_LENGTH = Constants.BATTERY_DIMENSION.width * 1.2;
     Constants.JUNCTION_GRAPHIC_STROKE_WIDTH = 0.015;
     Constants.JUNCTION_RADIUS = 0.162;
     Constants.MIN_RESISTANCE = 1E-8;

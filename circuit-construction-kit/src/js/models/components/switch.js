@@ -33,9 +33,9 @@ define(function (require) {
 
         closedChanged: function(model, closed) {
             if (closed)
-                super.set('resistance', Constants.MIN_RESISTANCE); // A resistance change fires a kirkhoff update.
+                this.set('resistance', Constants.MIN_RESISTANCE); // A resistance change fires a kirkhoff update.
             else
-                super.set('resistance', OPEN_RESISTANCE);
+                this.set('resistance', OPEN_RESISTANCE);
         },
 
         handleAngleChanged: function(model, handleAngle) {

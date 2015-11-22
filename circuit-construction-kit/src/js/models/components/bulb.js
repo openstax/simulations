@@ -27,7 +27,15 @@ define(function (require) {
         initialize: function(attributes, options) {
             CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
-            this.filament = new Filament(); throw 'not finished'; //kl, getStartJunction(), getEndJunction(), 3, height * filamentHeightScale, width * .8, height * .061
+            this.filament = new Filament({
+                tailJunction: getStartJunction(), 
+                shellJunction: getEndJunction(), 
+                numPeaks: 3, 
+                pivotToResistorDY: this.get('height') * filamentHeightScale, 
+                resistorWidth: this.get('width') * .8, 
+                zigHeight: this.get('height') * .061
+            });
+
             this.branchSet = new BranchSet();
 
             // Cached objects
@@ -48,7 +56,7 @@ define(function (require) {
                 return this.filament.getPosition(x);
             }
             else {
-                if (Number.isNaN(this.getLength()))
+                if (isNaN(this.getLength()))
                     throw 'Length was NaN.';
                 
                 // This occurs when dragging the bulb after splitting.  maybe splitting needs to relayout.

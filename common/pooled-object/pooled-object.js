@@ -5,6 +5,8 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
+    var subclasses = 0;
+
     /**
      * I wanted to come up with a general solution for this problem of having
      *   a bunch of pooled objects, and I also wanted to add some extra
@@ -35,7 +37,8 @@ define(function (require) {
          * Releases this instance to the object pool.
          */
         destroy: function() {
-            this.constructor._pool.remove(this);
+            if (this.constructor._pool)
+                this.constructor._pool.remove(this);
         }
 
     });
@@ -77,15 +80,23 @@ define(function (require) {
             // Create the object instance
             var pooledObject = this.create.apply(this, constructorArgs);
             // See if this object already has an owner id, and if it doesn't, create one
-            if (owner.__ownerId === undefined)
-                owner.__ownerId = this._ownerId++;
+            if (this._getOwnerId(owner) === undefined)
+                this._setOwnerId(owner, this._ownerId++);
             // Create the array for this owner's objects if it doesn't yet exist
-            if (this._ownedObjects[owner.__ownerId] === undefined)
-                this._ownedObjects[owner.__ownerId] = [];
+            if (this._ownedObjects[this._getOwnerId(owner)] === undefined)
+                this._ownedObjects[this._getOwnerId(owner)] = [];
             // Add this new object to the object's owner array
-            this._ownedObjects[owner.__ownerId].push(pooledObject);
+            this._ownedObjects[this._getOwnerId(owner)].push(pooledObject);
             // Then return it!
             return pooledObject;
+        },
+
+        _getOwnerId: function(owner) {
+            return owner['__ownerId_' + this._subclassId];
+        },
+
+        _setOwnerId: function(owner, id) {
+            owner['__ownerId_' + this._subclassId] = id;
         },
 
         /**
@@ -112,14 +123,16 @@ define(function (require) {
          * Destroys all objects owned by the given owner.
          */
         destroyAllOwnedBy: function(owner) {
-            if (this._ownedObjects && owner.__ownerId !== undefined && this._ownedObjects[owner.__ownerId]) {
-                var objects = this._ownedObjects[owner.__ownerId];
+            if (this._ownedObjects && this._getOwnerId(owner) !== undefined && this._ownedObjects[this._getOwnerId(owner)]) {
+                var objects = this._ownedObjects[this._getOwnerId(owner)];
                 for (var i = objects.length - 1; i >= 0; i--) {
                     objects[i].destroy();
                     objects.splice(i, 1);
                 }
             }
         },
+
+        _subclassId: subclasses,
 
         /**
          * Modeled somewhat after Backbone's extend function, this is a convenience
@@ -143,6 +156,7 @@ define(function (require) {
             delete child._pool;
             delete child._ownedObjects;
             delete child._ownerId;
+            child._subclassId = subclasses++;
 
             // If this were the parent instead of PooledObject, it wouldn't work
             //   because binding a function can only happen once, and if we tried

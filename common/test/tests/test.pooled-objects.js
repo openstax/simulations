@@ -15,7 +15,7 @@ describe('Pooled Objects', function(){
 		var object = PooledObject.createWithOwner(owner);
 
 		chai.expect(PooledObject._ownedObjects.length).to.equal(1);
-		chai.expect(PooledObject._ownedObjects[owner.__ownerId][0]).to.equal(object);
+		chai.expect(PooledObject._ownedObjects[PooledObject._getOwnerId(owner)][0]).to.equal(object);
 	});
 
 	it('#destroyAllOwnedBy destroys all objects owned by a specified object', function(){
@@ -24,11 +24,11 @@ describe('Pooled Objects', function(){
 		for (var i = 0; i < n; i++)
 			PooledObject.createWithOwner(owner);
 
-		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(n);
+		chai.expect(PooledObject._ownedObjects[PooledObject._getOwnerId(owner)].length).to.equal(n);
 
 		PooledObject.destroyAllOwnedBy(owner);
 
-		chai.expect(PooledObject._ownedObjects[owner.__ownerId].length).to.equal(0);
+		chai.expect(PooledObject._ownedObjects[PooledObject._getOwnerId(owner)].length).to.equal(0);
 	});
 
 	it('#extend creates subclasses', function(){
