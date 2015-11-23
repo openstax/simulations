@@ -20,17 +20,19 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            options = _.extend({
-                startJunction: new Junction({
-                    position: options.start
-                }),
-                endJunction: new Junction({
-                    position: new Vector2(options.direction)
-                        .normalize()
-                        .scale(this.get('length'))
-                        .add(options.start)
-                })
-            }, options);
+            if (options && options.start !== undefined && options.direction !== undefined) {
+                options = _.extend({
+                    startJunction: new Junction({
+                        position: options.start
+                    }),
+                    endJunction: new Junction({
+                        position: new Vector2(options.direction)
+                            .normalize()
+                            .scale(this.get('length'))
+                            .add(options.start)
+                    })
+                }, options);
+            }
 
             Branch.prototype.initialize.apply(this, [attributes, options]);
         },

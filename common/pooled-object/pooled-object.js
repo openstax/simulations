@@ -176,6 +176,8 @@ define(function (require) {
 
             // Instance functions/properties
             _.extend(child.prototype, parent.prototype, prototypeProps);
+
+            child.prototype.constructor = child;
             
             return child;
         }

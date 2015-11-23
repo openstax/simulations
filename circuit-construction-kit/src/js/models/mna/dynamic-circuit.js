@@ -34,10 +34,7 @@ define(function (require) {
     /**
      * 
      */
-    var DynamicCircuit = function(batteries, resistors, currents, resistiveBatteries, capacitors, inductors) {
-        // Call init with any arguments passed to the constructor
-        this.init.apply(this, arguments);
-    };
+    var DynamicCircuit = function() {};
 
     /**
      * Instance functions/properties

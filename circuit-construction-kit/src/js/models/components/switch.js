@@ -27,7 +27,7 @@ define(function (require) {
             this.on('change:closed', this.closedChanged);
             this.on('change:handleAngle', this.handleAngleChanged);
 
-            this.closeChanged(this, this.get('closed'));
+            this.closedChanged(this, this.get('closed'));
             this.set('handleAngle', this.get('closed') ? HANDLE_ANGLE_CLOSED : DEFAULT_HANDLE_ANGLE_OPEN);
         },
 

@@ -122,8 +122,8 @@ define(function (require) {
         fromCircuitComponent: function(circuit, branch) {
             return this.create(
                 branch, 
-                circuit.branches.indexOf(branch.get('startJunction')), 
-                circuit.branches.indexOf(branch.get('endJunction'))
+                circuit.junctions.indexOf(branch.get('startJunction')), 
+                circuit.junctions.indexOf(branch.get('endJunction'))
             );
         }
 

@@ -6,6 +6,10 @@ define(function (require, exports, module) {
 
     var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
+    var Circuit          = require('models/circuit');
+    var ElectronSet      = require('models/electron-set');
+    var MNACircuitSolver = require('models/mna/circuit-solver');
+
     /**
      * Constants
      */
@@ -32,7 +36,9 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            this.circuit = new Circuit();
+            this.solver = new MNACircuitSolver();
+            this.particleSet = new ElectronSet(this.circuit);
         },
 
         resetComponents: function() {
