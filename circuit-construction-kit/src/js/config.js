@@ -3,13 +3,14 @@
 
     var config = {
         paths: {
-            jquery:     '../../bower_components/jquery/dist/jquery',
-            underscore: '../../bower_components/underscore/underscore',
-            backbone:   '../../bower_components/backbone/backbone',
-            bootstrap:  '../../bower_components/bootstrap/dist/js/bootstrap.min',
-            text:       '../../bower_components/requirejs-text/text',
-            pixi:       '../../bower_components/pixi/bin/pixi',
-            nouislider: '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+            jquery:       '../../bower_components/jquery/dist/jquery',
+            underscore:   '../../bower_components/underscore/underscore',
+            backbone:     '../../bower_components/backbone/backbone',
+            bootstrap:    '../../bower_components/bootstrap/dist/js/bootstrap.min',
+            text:         '../../bower_components/requirejs-text/text',
+            pixi:         '../../bower_components/pixi/bin/pixi',
+            nouislider:   '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+            'file-saver': '../../bower_components/file-saver/FileSaver',
 
             'vector2-node':          '../../node_modules/vector2-node-shimmed/index',
             'object-pool':           '../../node_modules/object-pool-shimmed/index',

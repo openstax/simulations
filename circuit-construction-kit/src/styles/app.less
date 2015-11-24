@@ -1,0 +1,33 @@
+@import "../../node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "mixins.less";
+
+.global-buttons-wrapper {
+    position: absolute;
+    top: 0;
+    right: 30px;
+
+    > button {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 14px;
+        padding: 0 10px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+    }
+}
+
+.file-input-wrapper {
+    display: none;
+}
