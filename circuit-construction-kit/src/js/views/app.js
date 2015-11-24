@@ -13,7 +13,7 @@ define(function(require) {
     require('less!styles/font-awesome');
     require('less!styles/app');
 
-    var settingsDialogHtml = require('text!templates/save-load.html');
+    var settingsDialogHtml = require('text!templates/app-buttons.html');
 
     var FaradayAppView = PixiAppView.extend({
 
