@@ -214,14 +214,12 @@ describe('Modified Nodal Analysis - Object Pooling', function(){
         var dynamicCircuit = DynamicCircuit.fromCircuit(circuit);
 
         chai.expect(MNACapacitor._pool.list.length).to.above(0);
-        //chai.expect(MNAInductor._pool.list.length).to.above(0);
         chai.expect(MNAResistiveBattery._pool.list.length).to.above(0);
         chai.expect(MNAResistor._pool.list.length).to.above(0);
         
         dynamicCircuit.destroy();
 
         chai.expect(MNACapacitor._pool.list.length).to.equal(0);
-        //chai.expect(MNAInductor._pool.list.length).to.equal(0);
         chai.expect(MNAResistiveBattery._pool.list.length).to.equal(0);
         chai.expect(MNAResistor._pool.list.length).to.equal(0);
     });
