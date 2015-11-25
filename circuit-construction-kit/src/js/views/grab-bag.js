@@ -56,16 +56,6 @@ define(function(require) {
 
         hide: function() {
             this.displayObject.visible = false;
-        },
-
-        parentOf: function(displayObject) {
-            var parent = displayObject.parent;
-            while (parent) {
-                if (parent === this.displayObject)
-                    return true;
-                parent = parent.parent;
-            }
-            return false;
         }
 
     });

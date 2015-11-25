@@ -79,15 +79,23 @@ define(function(require) {
         },
 
         initGrabBagButton: function() {
-            this.grabBagButton = new GrabBagButton({
+            var grabBagButton = new GrabBagButton({
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
                 icons: []
             });
-            this.grabBagButton.displayObject.x = 20;
-            this.grabBagButton.displayObject.y = this.height - 62 - 20;
-            this.stage.addChild(this.grabBagButton.displayObject);
+            grabBagButton.displayObject.x = 20;
+            grabBagButton.displayObject.y = this.height - 62 - 20;
+            this.stage.addChild(grabBagButton.displayObject);
+
+            this.grabBagButton = grabBagButton;
+
+            // this.stage.click = function(event) {
+            //     if (!grabBagButton.parentOf(event.target))
+            //         grabBagButton.hideGrabBagMenu();
+            // };
+            // this.stage.interactive = true;
         },
 
         initMVT: function() {

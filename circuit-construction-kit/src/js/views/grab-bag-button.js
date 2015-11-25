@@ -20,9 +20,9 @@ define(function(require) {
     var GrabBagButton = PixiView.extend({
 
         events: {
-            'click     .displayObject' : 'click',
-            'mouseover .displayObject' : 'hover',
-            'mouseout  .displayObject' : 'unhover',
+            'click     .background' : 'click',
+            'mouseover .background' : 'hover',
+            'mouseout  .background' : 'unhover',
         },
 
         initialize: function(options) {
@@ -64,8 +64,6 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.displayObject.buttonMode = true;
-
             this.initBackground();
             this.initIcon();
             this.initLabel();
@@ -77,6 +75,7 @@ define(function(require) {
 
         initBackground: function() {
             this.background = new PIXI.Graphics();
+            this.background.buttonMode = true;
             this.displayObject.addChild(this.background);
         },
 
@@ -159,6 +158,16 @@ define(function(require) {
 
         unhover: function(event) {
             this.background.alpha = 1;
+        },
+
+        parentOf: function(displayObject) {
+            var parent = displayObject.parent;
+            while (parent) {
+                if (parent === this.displayObject)
+                    return true;
+                parent = parent.parent;
+            }
+            return false;
         },
 
         hideGrabBagMenu: function() {
