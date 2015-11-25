@@ -5,7 +5,7 @@
 
 .panel(@shadow-alpha: 0.15, @background-fade-percent: 30%) {
     background: fadeout(#fff, @background-fade-percent);
-    box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
+    //box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }
 
 .header() {
@@ -18,4 +18,42 @@
 
 .panel-button() {
     .button-variant(@link-color, @btn-bg, #fff, @link-color);
+}
+
+.text-button(@font-weight: bold) {
+    background: transparent;
+    padding: 0;
+    opacity: 0.8;
+    font-weight: @font-weight;
+
+    &:focus {
+        outline: none;
+        color: inherit;
+    }
+
+    &:hover {
+        color: inherit;
+        opacity: 1;
+    }
+
+    &:active {
+        color: inherit;
+        .box-shadow(none);
+    }
+}
+
+.zoom-button() {
+    .text-button(normal);
+
+    > .fa {
+        position: relative;
+        font-size: 20px;
+
+        > .fa {
+            font-size: 10px;
+            position: absolute;
+            top: 4px;
+            left: 4px;
+        }
+    }
 }

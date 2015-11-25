@@ -103,3 +103,22 @@
     }
 
 }
+
+.zoom-controls {
+    position: absolute;
+    bottom: 82px;
+    right: 20px;
+    color: #fff;
+
+    @media screen and (max-height: @short-window) {
+        left: 20px;
+        right: inherit;
+    }
+
+    .btn-zoom-in,
+    .btn-zoom-out,
+    .btn.btn-zoom-in,
+    .btn.btn-zoom-out {
+        .zoom-button();
+    }
+}
