@@ -7,7 +7,7 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        
+        GRAB_BAG: 'grab-bag.png'
     };
 
     Assets.SpriteSheets = {};
