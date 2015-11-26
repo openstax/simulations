@@ -90,6 +90,7 @@ define(function(require) {
             };
 
             var label = new PIXI.Text(this.labelText, textSettings);
+            label.resolution = 2;
             label.anchor.x = 0.5;
             label.anchor.y = -0.11;
             label.x = this.width / 2;
