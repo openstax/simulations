@@ -209,7 +209,7 @@ define(function(require) {
             var outlineRect = this.outlineRect;
             var pxPerUnit = this.pxPerUnit;
             var xAnchor = 0.5;
-            var yAnchor = 0.38;
+            var yAnchor = 0.41;
             var style;
             var label;
             for (var i = 0; i < this.labels.length; i++) {
@@ -222,6 +222,7 @@ define(function(require) {
                     for (var d = this.labels[i].at; d < this.rulerMeasureUnits; d += this.labels[i].at) {
                         if (this.labels[i].endAt === undefined || d <= this.labels[i].endAt) {
                             label = new PIXI.Text(d, style);
+                            label.resolution = this.getResolution();
                             label.anchor.x = xAnchor;
                             label.anchor.y = yAnchor;
                             label.x = outlineRect.x + outlineRect.width / 2;
@@ -235,6 +236,7 @@ define(function(require) {
                     for (var d = this.labels[i].at; d < this.rulerMeasureUnits; d += this.labels[i].at) {
                         if (this.labels[i].endAt === undefined || d <= this.labels[i].endAt) {
                             label = new PIXI.Text(d, style);
+                            label.resolution = this.getResolution();
                             label.anchor.x = xAnchor;
                             label.anchor.y = yAnchor;
                             label.x = outlineRect.x + d * pxPerUnit;
@@ -252,6 +254,7 @@ define(function(require) {
                 };
 
             label = new PIXI.Text(this.units, style);
+            label.resolution = this.getResolution();
             label.anchor.x = 1;
             label.anchor.y = yAnchor;
             label.x = outlineRect.x + outlineRect.width - 6;

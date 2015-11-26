@@ -210,6 +210,7 @@ define(function(require) {
             this.readout = new PIXI.Text(this.value, {
                 font: this.readoutFont
             });
+            this.readout.resolution = this.getResolution();
             this.readout.x = this.gaugeCenter.x;
             this.readout.y = this.gaugeCenter.y + this.radius - this.readout.height * 0.9;
             this.readout.anchor.x = 0.5;
@@ -219,6 +220,7 @@ define(function(require) {
             this.units = new PIXI.Text(this.units, {
                 font: this.unitsFont
             });
+            this.units.resolution = this.getResolution();
             this.units.x = this.readout.x;
             this.units.y = this.readout.y;
             this.units.anchor.x = 0.5;
@@ -228,6 +230,7 @@ define(function(require) {
                 font: this.overloadFont,
                 fill: this.overloadColor
             });
+            this.overload.resolution = this.getResolution();
             this.overload.x = this.readout.x;
             this.overload.y = this.readout.y;
             this.overload.anchor.x = 0.5;
