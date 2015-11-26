@@ -81,8 +81,9 @@ define(function(require) {
                     ResistorToolboxIcon,
                     BatteryToolboxIcon,
                     LightBulbToolboxIcon,
-                    ACToolboxIcon,
-                    SwitchToolboxIcon
+                    SwitchToolboxIcon,
+                    ACToolboxIcon
+                    
                 ]
             });
             this.componentToolbox.displayObject.x = 20;
