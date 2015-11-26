@@ -9,7 +9,11 @@ define(function (require) {
     Assets.Images = {   
         GRAB_BAG: 'grab-bag.png',
         BULB_ON:  'bulb-on.png',
-        BULB_OFF: 'bulb-off.png'
+        BULB_OFF: 'bulb-off.png',
+        RESISTOR: 'resistor.png',
+        BATTERY:  'battery.png',
+        AC:       'ac.png',
+        SWITCH_ICON: 'switch-icon.png'
     };
 
     Assets.SpriteSheets = {};

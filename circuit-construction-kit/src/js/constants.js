@@ -50,7 +50,7 @@ define(function (require) {
 
     Constants.TOOLBOX_WIDTH = 80;
     Constants.TOOLBOX_PADDING = 15;
-    Constants.TOOLBOX_ITEM_SPACING = 10;
+    Constants.TOOLBOX_ITEM_SPACING = 15;
     Constants.TOOLBOX_LABEL_FONT = '12px Helvetica Neue';
     Constants.TOOLBOX_LABEL_COLOR = '#000';
 

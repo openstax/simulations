@@ -10,9 +10,14 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var GrabBagButton    = require('views/grab-bag-button');
-    var ComponentToolbox = require('views/component-toolbox');
+    var GrabBagButton        = require('views/grab-bag-button');
+    var ComponentToolbox     = require('views/component-toolbox');
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
+    var ResistorToolboxIcon  = require('views/toolbox-icons/resistor');
+    var BatteryToolboxIcon   = require('views/toolbox-icons/battery');
+    var LightBulbToolboxIcon = require('views/toolbox-icons/light-bulb');
+    var ACToolboxIcon        = require('views/toolbox-icons/ac');
+    var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -72,7 +77,13 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
-                icons: [ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon]
+                icons: [
+                    ResistorToolboxIcon,
+                    BatteryToolboxIcon,
+                    LightBulbToolboxIcon,
+                    ACToolboxIcon,
+                    SwitchToolboxIcon
+                ]
             });
             this.componentToolbox.displayObject.x = 20;
             this.componentToolbox.displayObject.y = 20;

@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Rectangle = require('common/math/rectangle');
 
     var Constants = require('constants');
@@ -178,7 +178,7 @@ define(function(require) {
         },
 
         hover: function(event) {
-            this.displayObject.alpha = 0.8;
+            this.displayObject.alpha = 0.7;
         },
 
         unhover: function(event) {
