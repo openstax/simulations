@@ -94,10 +94,10 @@ define(function(require) {
             };
 
             var label = new PIXI.Text(this.labelText, textSettings);
+            label.resolution = this.getResolution();
             label.anchor.x = 0.5;
             label.x = this.width / 2;
             label.y = -this.paddingBottom + 5;
-            label.resolution = 2;
 
             this.label = label;
 

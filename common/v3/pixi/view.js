@@ -126,6 +126,10 @@ define(function(require) {
                 parentDisplayObject.removeChild(this.displayObject);
             if (this.model)
                 this.stopListening(this.model);
+        },
+
+        getResolution: function() {
+            return window.devicePixelRatio ? window.devicePixelRatio : 1;
         }
 
     });

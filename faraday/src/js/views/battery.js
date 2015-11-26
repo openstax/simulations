@@ -100,9 +100,10 @@ define(function(require) {
             var textY = 15;
             this.leftVoltageText  = new PIXI.Text('10 v', textSettings);
             this.rightVoltageText = new PIXI.Text('10 v', textSettings);
+            this.leftVoltageText.resolution = this.rightVoltageText.resolution = this.getResolution();
             this.leftVoltageText.anchor.x = this.rightVoltageText.anchor.x = 1;
-            this.leftVoltageText.x = Math.floor(this.leftVoltageText.width / 2);
-            this.rightVoltageText.x = this.sliderView.width + Math.floor(this.rightVoltageText.width / 2);
+            this.leftVoltageText.x = this.leftVoltageText.width / 2;
+            this.rightVoltageText.x = this.sliderView.width + this.rightVoltageText.width / 2;
             this.leftVoltageText.y = this.rightVoltageText.y = textY;
 
             this.sliderContainer.addChild(ticks);

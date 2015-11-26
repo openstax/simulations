@@ -71,7 +71,8 @@ define(function(require) {
                 fill: VoltmeterView.TITLE_COLOR
             });
 
-            title.x = -Math.floor(title.width / 2);
+            title.resolution = this.getResolution();
+            title.anchor.x = 0.5;
             title.y = -60;
 
             this.displayObject.addChild(title);
