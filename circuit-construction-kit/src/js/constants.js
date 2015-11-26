@@ -48,7 +48,7 @@ define(function (require) {
 
     Constants.TILT = -0.8058034940839864;
 
-    Constants.TOOLBOX_WIDTH = 90;
+    Constants.TOOLBOX_WIDTH = 80;
     Constants.TOOLBOX_PADDING = 15;
     Constants.TOOLBOX_ITEM_SPACING = 10;
     Constants.TOOLBOX_LABEL_FONT = '12px Helvetica Neue';

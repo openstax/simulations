@@ -22,7 +22,7 @@ define(function(require) {
         events: {
             'click     .background' : 'click',
             'mouseover .background' : 'hover',
-            'mouseout  .background' : 'unhover',
+            'mouseout  .background' : 'unhover'
         },
 
         initialize: function(options) {
@@ -97,6 +97,8 @@ define(function(require) {
             label.x = Math.round(this.width / 2 - label.width / 2);
             label.y = -this.paddingBottom + 5;
 
+            this.label = label;
+
             this.displayObject.addChild(label);
         },
 
@@ -153,11 +155,11 @@ define(function(require) {
         },
 
         hover: function(event) {
-            this.background.alpha = 0.9;
+            this.background.alpha = this.icon.alpha = this.label.alpha = 0.9;
         },
 
         unhover: function(event) {
-            this.background.alpha = 1;
+            this.background.alpha = this.icon.alpha = this.label.alpha = 1;
         },
 
         parentOf: function(displayObject) {

@@ -67,8 +67,9 @@ define(function(require) {
 
         initIcons: function() {
             this.iconsContainer = new PIXI.Container();
-            this.iconsContainer.y = this.padding;
+            this.iconsContainer.y = this.topToBottom ? this.padding : -this.padding;
             this.iconsContainer.x = this.padding;
+            this.displayObject.addChild(this.iconsContainer);
 
             this.icons = [];
             for (var i = 0; i < this.iconConstructors.length; i++) {
@@ -92,7 +93,7 @@ define(function(require) {
         updateLayout: function() {
             this.displayObject.x = this.x;
             this.displayObject.y = this.y;
-            
+
             var i;
             var lastY;
             var lastH;
@@ -106,10 +107,10 @@ define(function(require) {
             else {
                 lastY = 0;
                 for (i = 0; i < this.icons.length; i++) {
-                    var iconH = this.icons[i].height;
-                    this.icons[i].displayObject.y = lastY - iconH - this.spacing;
+                    var iconH = this.icons[i].displayObject.height;
+                    this.icons[i].displayObject.y = lastY - iconH;
 
-                    lastY = this.icons[i].displayObject.y;
+                    lastY = this.icons[i].displayObject.y - this.spacing;
                 }
             }
 

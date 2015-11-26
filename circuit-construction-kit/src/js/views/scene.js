@@ -12,6 +12,7 @@ define(function(require) {
 
     var GrabBagButton    = require('views/grab-bag-button');
     var ComponentToolbox = require('views/component-toolbox');
+    var ComponentToolboxIcon = require('views/component-toolbox-icon');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -71,7 +72,7 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
-                icons: []
+                icons: [ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon]
             });
             this.componentToolbox.displayObject.x = 20;
             this.componentToolbox.displayObject.y = 20;
@@ -83,7 +84,7 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
-                icons: []
+                icons: [ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon]
             });
             grabBagButton.displayObject.x = 20;
             grabBagButton.displayObject.y = this.height - 62 - 20;

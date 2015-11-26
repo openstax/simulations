@@ -8,9 +8,8 @@ define(function(require) {
     var PixiView  = require('common/pixi/view');
     var Rectangle = require('common/math/rectangle');
 
-    var ReservoirObjectView = require('views/reservoir-object');
-
     var Constants = require('constants');
+    var Assets    = require('assets');
 
     /**
      * A visual representation of some kind of object supply.  The
@@ -29,7 +28,9 @@ define(function(require) {
             'touchend        .icon': 'dragEnd',
             'mouseup         .icon': 'dragEnd',
             'touchendoutside .icon': 'dragEnd',
-            'mouseupoutside  .icon': 'dragEnd'
+            'mouseupoutside  .icon': 'dragEnd',
+            'mouseover       .icon': 'hover',
+            'mouseout        .icon': 'unhover'
         },
 
         initialize: function(options) {
@@ -62,8 +63,24 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
+        /**
+         * This should be overwritten by child classes to use perhaps the
+         *   actual kind of view for the model type with maybe a static
+         *   MVT that isn't bound to the scene's MVT.
+         */
         initIcon: function() {
-
+            this.icon = Assets.createSprite(Assets.Images.BULB_ON);
+            this.icon.anchor.x = 0.5;
+            this.icon.x = this.width / 2;
+            var scale;
+            if (this.icon.texture.width > this.icon.texture.height)
+                scale = this.width / this.icon.texture.width;
+            else
+                scale = this.width / this.icon.texture.height;
+            this.icon.scale.x = scale;
+            this.icon.scale.y = scale;
+            this.icon.buttonMode = true;
+            this.displayObject.addChild(this.icon);
         },
 
         initLabel: function() {
@@ -76,7 +93,7 @@ define(function(require) {
             label.anchor.x = 0.5;
             label.anchor.y = -0.11;
             label.x = this.width / 2;
-            label.y = this.thickness;
+            label.y = this.icon.height;
 
             this.displayObject.addChild(label);
         },
@@ -89,17 +106,7 @@ define(function(require) {
          *   object after the user drops it.
          */
         createDummyObject: function() {
-            var model = new Charge();
-            var view = new ReservoirObjectView({
-                model: model,
-                mvt: this.mvt,
-                interactive: false
-            });
-            return view;
-        },
-
-        destroyObject: function(object) {
-            object.destroy();
+            
         },
 
         /**
@@ -168,6 +175,14 @@ define(function(require) {
         contains: function(x, y) {
             return this.getBounds().contains(x, y);
         },
+
+        hover: function(event) {
+            this.displayObject.alpha = 0.8;
+        },
+
+        unhover: function(event) {
+            this.displayObject.alpha = 1;
+        }
 
     });
 
