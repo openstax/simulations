@@ -7,7 +7,7 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        GRAB_BAG: 'grab-bag.png',
+        GRAB_BAG: 'grab-bag2.png',
         BULB_ON:  'bulb-on.png',
         BULB_OFF: 'bulb-off.png',
         RESISTOR: 'resistor.png',
