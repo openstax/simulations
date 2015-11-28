@@ -18,6 +18,7 @@ define(function(require) {
     var LightBulbToolboxIcon = require('views/toolbox-icons/light-bulb');
     var ACToolboxIcon        = require('views/toolbox-icons/ac');
     var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
+    var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -82,8 +83,8 @@ define(function(require) {
                     BatteryToolboxIcon,
                     LightBulbToolboxIcon,
                     SwitchToolboxIcon,
-                    ACToolboxIcon
-                    
+                    ACToolboxIcon,
+                    InductorToolboxIcon
                 ]
             });
             this.componentToolbox.displayObject.x = 20;

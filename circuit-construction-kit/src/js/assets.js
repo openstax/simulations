@@ -13,7 +13,8 @@ define(function (require) {
         RESISTOR: 'resistor.png',
         BATTERY:  'battery.png',
         AC:       'ac.png',
-        SWITCH_ICON: 'switch-icon.png'
+        SWITCH_ICON: 'switch-icon.png',
+        INDUCTOR: 'inductor.png'
     };
 
     Assets.SpriteSheets = {};

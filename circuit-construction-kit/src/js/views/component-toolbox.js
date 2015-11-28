@@ -71,10 +71,14 @@ define(function(require) {
             this.iconsContainer.x = this.padding;
             this.displayObject.addChild(this.iconsContainer);
 
+            var iconWidth = this.width - this.padding * 2;
+            var maxHeight = Math.floor(iconWidth * 0.8);
+
             this.icons = [];
             for (var i = 0; i < this.iconConstructors.length; i++) {
                 var icon = new this.iconConstructors[i]({
-                    width: this.width - this.padding * 2,
+                    width: iconWidth,
+                    maxHeight: maxHeight,
                     mvt: this.mvt,
                     simulation: this.simulation,
                     dummyLayer: this.dummyLayer

@@ -17,11 +17,11 @@ define(function(require) {
      *   while dragging an existing object back onto this view
      *   destroys it.
      */
-    var LightBulbToolboxIcon = ComponentToolboxIcon.extend({
+    var InductorToolboxIcon = ComponentToolboxIcon.extend({
 
         initialize: function(options) {
             options = _.extend({
-                labelText: 'Light Bulb'
+                labelText: 'Inductor'
             }, options);
 
             ComponentToolboxIcon.prototype.initialize.apply(this, [options]);
@@ -33,14 +33,14 @@ define(function(require) {
          *   MVT that isn't bound to the scene's MVT.
          */
         initIcon: function() {
-            this.icon = Assets.createSprite(Assets.Images.BULB_OFF);
+            this.icon = Assets.createSprite(Assets.Images.INDUCTOR);
             this.icon.anchor.x = 0.5;
             this.icon.x = this.width / 2;
             var scale;
             if (this.icon.texture.width > this.icon.texture.height)
                 scale = this.width / this.icon.texture.width;
             else
-                scale = this.maxHeight / this.icon.texture.height;
+                scale = this.width / this.icon.texture.height;
             this.icon.scale.x = scale;
             this.icon.scale.y = scale;
             this.icon.buttonMode = true;
@@ -50,5 +50,5 @@ define(function(require) {
     });
 
 
-    return LightBulbToolboxIcon;
+    return InductorToolboxIcon;
 });

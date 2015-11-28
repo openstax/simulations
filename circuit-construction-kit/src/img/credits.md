@@ -8,3 +8,9 @@ Image Credits
 **resistor.png**: original by by Gerald_G from https://openclipart.org/detail/8281/resistors, modified by Patrick Wolfert
 
 **battery.png**: created by Patrick Wolfert
+
+**switch-*.png**: created by Patrick Wolfert
+
+**ac.png**: created by Patrick Wolfert
+
+**inductor.png**: created by Patrick Wolfert

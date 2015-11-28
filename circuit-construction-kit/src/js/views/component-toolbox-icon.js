@@ -36,6 +36,7 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 width:  50,
+                maxHeight: undefined,
                 labelText: 'Component',
                 labelFont: Constants.TOOLBOX_LABEL_FONT,
                 labelColor: Constants.TOOLBOX_LABEL_COLOR
@@ -46,6 +47,7 @@ define(function(require) {
             this.dummyLayer = options.dummyLayer;
 
             this.width = options.width;
+            this.maxHeight = (options.maxHeight !== undefined) ? options.maxHeight : this.width;
             this.labelText = options.labelText;
             this.labelFont = options.labelFont;
             this.labelColor = options.labelColor;
@@ -76,7 +78,7 @@ define(function(require) {
             if (this.icon.texture.width > this.icon.texture.height)
                 scale = this.width / this.icon.texture.width;
             else
-                scale = this.width / this.icon.texture.height;
+                scale = this.maxHeight / this.icon.texture.height;
             this.icon.scale.x = scale;
             this.icon.scale.y = scale;
             this.icon.buttonMode = true;
