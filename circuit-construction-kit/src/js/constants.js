@@ -127,7 +127,20 @@ define(function (require) {
 
     Constants.ConstantDensityPropagator = ConstantDensityPropagator;
 
+    /*************************************************************************
+     **                                                                     **
+     **                              WIRE VIEW                              **
+     **                                                                     **
+     *************************************************************************/
 
+    var WireView = {};
+
+    WireView.OUTER_COLOR = '#d69d72';
+    WireView.INNER_COLOR = '#d5d5d5';
+    WireView.OUTER_WIDTH = 22;
+    WireView.INNER_WIDTH = 14;
+
+    Constants.WireView = WireView;
 
     return Constants;
 });

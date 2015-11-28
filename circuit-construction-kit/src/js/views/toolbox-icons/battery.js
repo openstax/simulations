@@ -32,19 +32,8 @@ define(function(require) {
          *   actual kind of view for the model type with maybe a static
          *   MVT that isn't bound to the scene's MVT.
          */
-        initIcon: function() {
-            this.icon = Assets.createSprite(Assets.Images.BATTERY);
-            this.icon.anchor.x = 0.5;
-            this.icon.x = this.width / 2;
-            var scale;
-            if (this.icon.texture.width > this.icon.texture.height)
-                scale = this.width / this.icon.texture.width;
-            else
-                scale = this.width / this.icon.texture.height;
-            this.icon.scale.x = scale;
-            this.icon.scale.y = scale;
-            this.icon.buttonMode = true;
-            this.displayObject.addChild(this.icon);
+        createIconSprite: function() {
+            return Assets.createSprite(Assets.Images.BATTERY);
         }
 
     });

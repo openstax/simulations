@@ -115,6 +115,23 @@ define(function (require) {
     _.extend(ModelViewTransform, {
 
         /**
+         * Creates a ModelViewTransform that just has a scale, such that
+         *   view = model * scale
+         *
+         * @param xScale the scale to map model to view in the x-dimension
+         * @param yScale the scale to map model to view in the y-dimension
+         */
+        createScaleMapping: function(xScale, yScale) {
+            if (yScale === undefined)
+                yScale = xScale;
+
+            return new ModelViewTransform([
+                xScale, 0,      0,
+                0,      yScale, 0
+            ]);
+        },
+
+        /**
          * Creates a ModelViewTransform that has the specified scale 
          *   and offset such that
          *   view = model * scale + offset

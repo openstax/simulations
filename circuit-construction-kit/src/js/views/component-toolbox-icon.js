@@ -65,13 +65,8 @@ define(function(require) {
             this.updateMVT(this.mvt);
         },
 
-        /**
-         * This should be overwritten by child classes to use perhaps the
-         *   actual kind of view for the model type with maybe a static
-         *   MVT that isn't bound to the scene's MVT.
-         */
         initIcon: function() {
-            this.icon = Assets.createSprite(Assets.Images.BULB_ON);
+            this.icon = this.createIconSprite();
             this.icon.anchor.x = 0.5;
             this.icon.x = this.width / 2;
             var scale;
@@ -83,6 +78,16 @@ define(function(require) {
             this.icon.scale.y = scale;
             this.icon.buttonMode = true;
             this.displayObject.addChild(this.icon);
+        },
+
+        /**
+         * This should be overwritten by child classes to use perhaps the
+         *   actual kind of view for the model type with maybe a static
+         *   MVT that isn't bound to the scene's MVT.
+         */
+        createIconSprite: function() {
+            var icon = Assets.createSprite(Assets.Images.BULB_ON);
+            return icon;
         },
 
         initLabel: function() {

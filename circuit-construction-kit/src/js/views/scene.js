@@ -13,6 +13,7 @@ define(function(require) {
     var GrabBagButton        = require('views/grab-bag-button');
     var ComponentToolbox     = require('views/component-toolbox');
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
+    var WireToolboxIcon      = require('views/toolbox-icons/wire');
     var ResistorToolboxIcon  = require('views/toolbox-icons/resistor');
     var BatteryToolboxIcon   = require('views/toolbox-icons/battery');
     var LightBulbToolboxIcon = require('views/toolbox-icons/light-bulb');
@@ -79,6 +80,7 @@ define(function(require) {
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
                 icons: [
+                    WireToolboxIcon,
                     ResistorToolboxIcon,
                     BatteryToolboxIcon,
                     LightBulbToolboxIcon,
