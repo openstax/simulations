@@ -20,6 +20,7 @@ define(function(require) {
     var ACToolboxIcon        = require('views/toolbox-icons/ac');
     var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
     var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
+    var CircuitView          = require('views/circuit');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -69,10 +70,20 @@ define(function(require) {
             }
 
             this.initMVT();
+            this.initCircuitView();
             this.initComponentToolbox();
             this.initGrabBagButton();
 
             this.stage.addChild(this.dummyLayer);
+        },
+
+        initCircuitView: function() {
+            this.circuitView = new CircuitView({
+                mvt: this.mvt,
+                model: this.simulation.circuit,
+                simulation: this.simulation
+            });
+            this.stage.addChild(this.circuitView.displayObject);
         },
 
         initComponentToolbox: function() {

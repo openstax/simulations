@@ -104,6 +104,10 @@ define(function (require) {
             return this.get('endJunction').get('position');
         },
 
+        hasJunction: function(junction) {
+            return this.get('endJunction') == junction || this.get('startJunction') == junction;
+        },
+
         translate: function(dx, dy) {
             this.get('startJunction').translate(dx, dy);
             this.get('endJunction').translate(dx, dy);

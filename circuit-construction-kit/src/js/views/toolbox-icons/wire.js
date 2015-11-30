@@ -59,7 +59,7 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObject: function(x, y) {
+        createComponentView: function(x, y) {
             var wireModel = new Wire({
                 startJunction: new Junction({ position: new Vector2(-80, 0) }),
                 endJunction:   new Junction({ position: new Vector2( 80, 0) })

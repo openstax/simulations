@@ -128,6 +128,17 @@ define(function(require) {
                 this.stopListening(this.model);
         },
 
+        detach: function() {
+            if (this.displayObject.parent)
+                this.displayObject.parent.removeChild(this.displayObject);
+        },
+
+        remove: function() {
+            this.detach();
+            if (this.model)
+                this.stopListening(this.model);
+        },
+
         getResolution: function() {
             return window.devicePixelRatio ? window.devicePixelRatio : 1;
         }

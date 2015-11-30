@@ -5,8 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/v3/pixi/view');
-    var Rectangle = require('common/math/rectangle');
+    var PixiView = require('common/v3/pixi/view');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -53,7 +52,7 @@ define(function(require) {
             this.labelColor = options.labelColor;
 
             // Cached objects
-            this._bounds = new Rectangle();
+            this._point = new PIXI.Point();
 
             this.initGraphics();
         },
@@ -113,9 +112,7 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObject: function(x, y) {
-            
-        },
+        createComponentView: function(x, y) {},
 
         setJunctionPositions: function(dummyModel, x, y) {
             var x = this.mvt.viewToModelX(x);
@@ -125,12 +122,6 @@ define(function(require) {
             dummyModel.get('startJunction').setPosition(x - dx / 2, y - dy / 2);
             dummyModel.get('endJunction').setPosition(  x + dx / 2, y + dy / 2);
         },
-
-        /**
-         * Creates the actual object based off of the position of the
-         *   dummy object and adds it to the simulation/scene.
-         */
-        createAndAddComponent: function(dummyModel) {},
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
@@ -145,8 +136,9 @@ define(function(require) {
         dragStart: function(event) {
             this.dragging = true;
             
-            this.dummyObject = this.createDummyObject(event.data.global.x, event.data.global.y);
-            this.dummyLayer.addChild(this.dummyObject.displayObject);
+            this.componentView = this.createComponentView(event.data.global.x, event.data.global.y);
+            this.simulation.circuit.addBranch(this.componentView.model);
+            this.dummyLayer.addChild(this.componentView.displayObject);
 
             this.lastX = event.data.global.x;
             this.lastY = event.data.global.y;
@@ -157,7 +149,7 @@ define(function(require) {
                 var dx = this.mvt.viewToModelDeltaX(event.data.global.x - this.lastX);
                 var dy = this.mvt.viewToModelDeltaY(event.data.global.y - this.lastY);
                 
-                this.dummyObject.model.translate(dx, dy);
+                this.componentView.model.translate(dx, dy);
 
                 this.lastX = event.data.global.x;
                 this.lastY = event.data.global.y;
@@ -167,36 +159,17 @@ define(function(require) {
         dragEnd: function(event) {
             this.dragging = false;
 
-            if (this.dummyObject) {
-                var x = this.dummyObject.displayObject.x;
-                var y = this.dummyObject.displayObject.y;
+            if (this.componentView) {
+                var relativePoint = event.data.getLocalPosition(this.displayObject.parent, this._point);
 
-                if (!this.contains(x, y)) {
-                    // Create a real object and add it to the sim
-                    this.createAndAddComponent(this.dummyObject.model);
+                if (this.displayObject.parent.getLocalBounds().contains(relativePoint.x, relativePoint.y)) {
+                    // Remove the model from the sim because it never left the toolbox
+                    this.simulation.circuit.removeBranch(this.componentView.model);
                 }
 
-                this.dummyObject.removeFrom(this.dummyLayer);
-                this.dummyObject.model.destroy();
-                this.dummyObject = null;
+                this.componentView.remove();
+                this.componentView = null;
             }
-        },
-
-        getBounds: function() {
-            return this._bounds.set(
-                this.displayObject.x,
-                this.displayObject.y,
-                this.width,
-                this.height
-            );
-        },
-
-        /**
-         * Returns whether or not a point on the screen lies inside the
-         *   reservoir's bounds.
-         */
-        contains: function(x, y) {
-            return this.getBounds().contains(x, y);
         },
 
         hover: function(event) {
