@@ -64,7 +64,8 @@ define(function(require) {
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
-                this.viewOriginY = Math.round(this.height / 2);    
+                this.viewOriginY = Math.round(this.height / 2);
+                this.zoomScale = 1;  
             }
 
             this.initMVT();

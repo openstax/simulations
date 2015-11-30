@@ -8,12 +8,27 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
 
+    var ComponentView = require('views/component');
+
     var Constants = require('constants');
 
     /**
      * A view that represents an atom
      */
-    var WireView = PixiView.extend({
+    var WireView = ComponentView.extend({
+
+        events: {
+            'touchstart      .displayObject': 'dragStart',
+            'mousedown       .displayObject': 'dragStart',
+            'touchmove       .displayObject': 'drag',
+            'mousemove       .displayObject': 'drag',
+            'touchend        .displayObject': 'dragEnd',
+            'mouseup         .displayObject': 'dragEnd',
+            'touchendoutside .displayObject': 'dragEnd',
+            'mouseupoutside  .displayObject': 'dragEnd',
+            'mouseover       .displayObject': 'hover',
+            'mouseout        .displayObject': 'unhover'
+        },
 
         /**
          * Overrides PixiView's initializeDisplayObject function
@@ -29,7 +44,16 @@ define(function(require) {
             this.outerColor = Colors.parseHex(WireView.OUTER_COLOR);
             this.innerColor = Colors.parseHex(WireView.INNER_COLOR);
 
-            this.updateMVT(options.mvt);
+            ComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.draw);
+        },
+
+        initGraphics: function() {
+            this.displayObject.buttonMode = true;
+            this.displayObject.defaultCursor = 'move';
+
+            ComponentView.prototype.initGraphics.apply(this, arguments);
         },
 
         /**
@@ -80,6 +104,28 @@ define(function(require) {
             this.mvt = mvt;
 
             this.draw();
+        },
+
+        dragStart: function(event) {
+            this.dragging = true;
+        },
+
+        drag: function(event) {
+            if (this.dragging) {
+                console.log('dragging')
+            }
+        },
+
+        dragEnd: function(event) {
+            this.dragging = false;
+        },
+
+        hover: function() {
+
+        },
+
+        unhover: function() {
+
         }
 
     }, Constants.WireView);

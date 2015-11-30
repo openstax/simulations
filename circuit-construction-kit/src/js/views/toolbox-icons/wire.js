@@ -50,6 +50,27 @@ define(function(require) {
                 model: wireModel
             });
             return new PIXI.Sprite(wireView.displayObject.generateTexture());
+        },
+
+        /**
+         * Creates a new object (of whatever this reservoir contains)
+         *   and returns it so it can be added to the scene as a
+         *   dummy object.  Note the dummy object will not be added
+         *   to the simulation until it gets turned into a real
+         *   object after the user drops it.
+         */
+        createDummyObject: function(x, y) {
+            var wireModel = new Wire({
+                startJunction: new Junction({ position: new Vector2(-80, 0) }),
+                endJunction:   new Junction({ position: new Vector2( 80, 0) })
+            });
+            this.setJunctionPositions(wireModel, x, y);
+
+            var wireView = new WireView({
+                mvt: this.mvt,
+                model: wireModel
+            });
+            return wireView;
         }
 
     });

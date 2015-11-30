@@ -40,6 +40,32 @@ define(function (require) {
             this._directionVec = new Vector2();
             this._angleVec = new Vector2();
             this._centerVec = new Vector2();
+
+            this.on('change:startJunction', this.startJunctionChanged);
+            this.on('change:endJunction',   this.endJunctionChanged);
+
+            this.startJunctionChanged(this, this.get('startJunction'));
+            this.endJunctionChanged(this, this.get('endJunction'));
+        },
+
+        startJunctionChanged: function(model, startJunction) {
+            if (this.previous('startJunction'))
+                this.stopListening(this.previous('startJunction'));
+            this.listenTo(startJunction, 'change', this._startJunctionChanged);
+        },
+
+        endJunctionChanged: function(model, endJunction) {
+            if (this.previous('endJunction'))
+                this.stopListening(this.previous('endJunction'));
+            this.listenTo(endJunction, 'change', this._endJunctionChanged);
+        },
+
+        _startJunctionChanged: function() {
+            this.trigger('start-junction-changed');
+        },
+
+        _endJunctionChanged: function() {
+            this.trigger('end-junction-changed');
         },
 
         isFixed: function() {
@@ -55,24 +81,32 @@ define(function (require) {
         },
 
         getX1: function() {
-            return this.get('startJunction').getX();
+            return this.get('startJunction').get('position').x;
         },
 
         getY1: function() {
-            return this.get('startJunction').getY();
+            return this.get('startJunction').get('position').y;
         },
 
         getX2: function() {
-            return this.get('endJunction').getX();
+            return this.get('endJunction').get('position').x;
         },
 
         getY2: function() {
-            return this.get('endJunction').getY();
+            return this.get('endJunction').get('position').y;
+        },
+
+        getStartPoint: function() {
+            return this.get('startJunction').get('position');
+        },
+
+        getEndPoint: function() {
+            return this.get('endJunction').get('position');
         },
 
         translate: function(dx, dy) {
-            this.get('startJunction').translate( dx, dy );
-            this.get('endJunction').translate( dx, dy );
+            this.get('startJunction').translate(dx, dy);
+            this.get('endJunction').translate(dx, dy);
         },
 
         replaceJunction: function(junction, newJ) {

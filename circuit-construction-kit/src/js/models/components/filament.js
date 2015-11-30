@@ -35,18 +35,17 @@ define(function (require) {
             this._e = new Vector2();
             this._n = new Vector2();
 
-            this.on('change:startJunction', this.startJunctionChanged);
-            this.on('change:endJunction',   this.endJunctionChanged);
-
             this.recompute();
         },
 
         startJunctionChanged: function(models, startJunction) {
+            PathBranch.prototype.startJunctionChanged.apply(this, arguments);
             this.get('tailJunction').set(startJunction);
             this.recompute();
         },
 
         endJunctionChanged: function(models, endJunction) {
+            PathBranch.prototype.endJunctionChanged.apply(this, arguments);
             this.get('shellJunction').set(endJunction);
             this.recompute();
         },

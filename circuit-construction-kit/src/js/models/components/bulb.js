@@ -42,8 +42,6 @@ define(function (require) {
             this._delta = new Vector2();
             this._vec   = new Vector2();
 
-            this.on('change:startJunction', this.startJunctionChanged);
-            this.on('change:endJunction',   this.endJunctionChanged);
             this.on('change:isSchematic',   this.isSchematicChanged);
             this.on('change:connectAtLeft', this.connectAtLeftChanged);
         },
@@ -110,16 +108,14 @@ define(function (require) {
             }
         },
 
-        startJunctionChanged: function(model, startJunction) {
-            if (this.previous('startJunction'))
-                this.stopListening(this.previous('startJunction'));
-            this.listenTo(startJunction, 'change', this.updateFilament);
+        _startJunctionChanged: function(model, startJunction) {
+            CircuitComponent.prototype._startJunctionChanged.apply(this, arguments);
+            this.updateFilament();
         },
 
-        endJunctionChanged: function(model, endJunction) {
-            if (this.previous('endJunction'))
-                this.stopListening(this.previous('endJunction'));
-            this.listenTo(endJunction, 'change', this.updateFilament);
+        _endJunctionChanged: function(model, endJunction) {
+            CircuitComponent.prototype._endJunctionChanged.apply(this, arguments);
+            this.updateFilament();
         },
 
         connectAtLeftChanged: function(model, connectAtLeft) {

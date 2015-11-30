@@ -113,8 +113,17 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObject: function() {
+        createDummyObject: function(x, y) {
             
+        },
+
+        setJunctionPositions: function(dummyModel, x, y) {
+            var x = this.mvt.viewToModelX(x);
+            var y = this.mvt.viewToModelY(y);
+            var dx = dummyModel.getX2() - dummyModel.getX1();
+            var dy = dummyModel.getY2() - dummyModel.getY1();
+            dummyModel.get('startJunction').setPosition(x - dx / 2, y - dy / 2);
+            dummyModel.get('endJunction').setPosition(  x + dx / 2, y + dy / 2);
         },
 
         /**
@@ -135,17 +144,23 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
-
-            this.dummyObject = this.createDummyObject();
+            
+            this.dummyObject = this.createDummyObject(event.data.global.x, event.data.global.y);
             this.dummyLayer.addChild(this.dummyObject.displayObject);
+
+            this.lastX = event.data.global.x;
+            this.lastY = event.data.global.y;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                this.dummyObject.setPosition(
-                    event.data.global.x,
-                    event.data.global.y
-                );
+                var dx = this.mvt.viewToModelDeltaX(event.data.global.x - this.lastX);
+                var dy = this.mvt.viewToModelDeltaY(event.data.global.y - this.lastY);
+                
+                this.dummyObject.model.translate(dx, dy);
+
+                this.lastX = event.data.global.x;
+                this.lastY = event.data.global.y;
             }
         },
 
