@@ -54,6 +54,9 @@ define(function (require) {
     Constants.TOOLBOX_LABEL_FONT = '12px Helvetica Neue';
     Constants.TOOLBOX_LABEL_COLOR = '#000';
 
+    Constants.SELECTION_COLOR = '#21366b';
+    Constants.SELECTION_AURA_ALPHA = 0.2;
+
 
     /*************************************************************************
      **                                                                     **

@@ -56,7 +56,7 @@ define(function (require) {
 
         removeJunction: function(junction) {
             this.junctions.remove(junction);
-            this.junction.destroy();
+            junction.destroy();
             this.fireKirkhoffChanged();
         },
 
