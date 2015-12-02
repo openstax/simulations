@@ -74,11 +74,11 @@ define(function (require) {
 
             for (i = 0; i < junctionSet.length; i++) {
                 // Can't do one-at-a-time, because intermediate notifications get inconsistent data.
-                junctionSet[i].translateSilent(x, y);
+                junctionSet[i].get('position').add(x, y);
             }
 
             for (i = 0; i < junctionSet.length; i++)
-                junctionSet[i].trigger('change:position', junctionSet[i], junctionSet[i].get('position'));
+                junctionSet[i].setPosition(junctionSet[i].get('position'));
             
             return this;
         }

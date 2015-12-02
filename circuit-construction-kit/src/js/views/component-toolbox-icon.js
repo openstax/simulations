@@ -140,26 +140,26 @@ define(function(require) {
             this.simulation.circuit.addBranch(this.componentView.model);
             this.dummyLayer.addChild(this.componentView.displayObject);
 
-            this.lastX = event.data.global.x;
-            this.lastY = event.data.global.y;
+            this.componentView.dragStart(event);
+
+            // this.lastX = event.data.global.x;
+            // this.lastY = event.data.global.y;
         },
 
         drag: function(event) {
-            if (this.dragging) {
-                var dx = this.mvt.viewToModelDeltaX(event.data.global.x - this.lastX);
-                var dy = this.mvt.viewToModelDeltaY(event.data.global.y - this.lastY);
+            // if (this.dragging) {
+            //     var dx = this.mvt.viewToModelDeltaX(event.data.global.x - this.lastX);
+            //     var dy = this.mvt.viewToModelDeltaY(event.data.global.y - this.lastY);
                 
-                this.componentView.model.translate(dx, dy);
+            //     this.componentView.model.translate(dx, dy);
 
-                this.lastX = event.data.global.x;
-                this.lastY = event.data.global.y;
-            }
+            //     this.lastX = event.data.global.x;
+            //     this.lastY = event.data.global.y;
+            // }
         },
 
         dragEnd: function(event) {
-            this.dragging = false;
-
-            if (this.componentView) {
+            if (this.componentView && this.dragging) {
                 var relativePoint = event.data.getLocalPosition(this.displayObject.parent, this._point);
 
                 if (this.displayObject.parent.getLocalBounds().contains(relativePoint.x, relativePoint.y)) {
@@ -170,6 +170,8 @@ define(function(require) {
                 this.componentView.remove();
                 this.componentView = null;
             }
+
+            this.dragging = false;
         },
 
         hover: function(event) {

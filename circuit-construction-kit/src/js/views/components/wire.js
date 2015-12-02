@@ -9,6 +9,8 @@ define(function(require) {
     var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
+    var CircuitInteraction = require('models/circuit-interaction');
+
     var ComponentView = require('views/component');
 
     var Constants = require('constants');
@@ -52,6 +54,7 @@ define(function(require) {
             this._start     = new Vector2();
             this._end       = new Vector2();
             this._direction = new Vector2();
+            this._point     = new Vector2();
 
             this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.junctionsUpdated);
         },
@@ -97,13 +100,8 @@ define(function(require) {
             handle.interactive = true;
             handle.buttonMode = true;
             handle.defaultCursor = 'move';
-
-            // var self = this;
-            // var lineHoverGraphics = this.lineHandle.hoverGraphics;
             handle.on('mouseover', function() {
                 hoverGraphics.visible = true;
-                // if (self.lineHovering)
-                // lineHoverGraphics.visible = false;
             });
             handle.on('mouseout', function() {
                 hoverGraphics.visible = false;
@@ -221,23 +219,56 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
+
+            this.lastX = event.data.global.x;
+            this.lastY = event.data.global.y;
         },
 
         drag: function(event) {
             if (this.dragging) {
-                console.log('dragging')
+                this._point.set(event.data.global.x, event.data.global.y);
+                var modelPoint = this.mvt.viewToModel(this._point);
+ 
+                CircuitInteraction.dragBranch(this.model, modelPoint);
+
+                this.lastX = event.data.global.x;
+                this.lastY = event.data.global.y;
             }
         },
 
         dragEnd: function(event) {
-            this.dragging = false;
+            if (this.dragging) {
+                this.dragging = false;
+
+                CircuitInteraction.dropBranch(this.model);
+
+                if (!this.hovering)
+                    this.hideHoverGraphics();
+            }
         },
 
+
+        // ------------------------------------------------------------------------------------------------------------
+        // TODO: Do the same thing for the junctions, and this can all go in a parent class to be used for all branches
+        // ------------------------------------------------------------------------------------------------------------
+
+
         hover: function() {
-            this.lineHandle.hoverGraphics.visible = true;
+            this.hovering = true;
+            this.showHoverGraphics();
         },
 
         unhover: function() {
+            this.hovering = false;
+            if (!this.dragging)
+                this.hideHoverGraphics();
+        },
+
+        showHoverGraphics: function() {
+            this.lineHandle.hoverGraphics.visible = true;
+        },
+
+        hideHoverGraphics: function() {
             this.lineHandle.hoverGraphics.visible = false;
         }
 

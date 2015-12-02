@@ -108,6 +108,15 @@ define(function (require) {
             return this.get('endJunction') == junction || this.get('startJunction') == junction;
         },
 
+        opposite: function(junction) {
+            if (this.get('startJunction') == junction)
+                return this.get('endJunction');
+            else if (this.get('endJunction') == junction)
+                return this.get('startJunction');
+            else
+                throw 'No such junction: ' + junction;
+        },
+
         translate: function(dx, dy) {
             this.get('startJunction').translate(dx, dy);
             this.get('endJunction').translate(dx, dy);

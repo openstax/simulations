@@ -4,6 +4,7 @@ define(function (require) {
 
     var _        = require('underscore');
     var Backbone = require('backbone');
+    var Pool     = require('object-pool');
 
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
@@ -16,6 +17,24 @@ define(function (require) {
     var Wire             = require('models/components/wire');
     
     var Constants = require('constants');
+
+    var matchPool = Pool({
+        init: function() {
+            return {
+                target: undefined,
+                source: undefined,
+                distance: 0,
+                getVector: function() {
+                    if (this._vec)
+                        this._vec = new Vector2();
+                    return this._vec.set(this.target).sub(this.source);
+                },
+                destroy: function() {
+                    matchPool.remove(this);
+                }
+            };
+        }
+    });
 
     /**
      * This is the main class for the CCK model, providing a representation of all
@@ -42,7 +61,6 @@ define(function (require) {
             this._splitDesiredDest = new Vector2();
             this._splitDestination = new Vector2();
             this._bestDragMatchVec = new Vector2();
-            this._dragMatchObj = {};
             this._getBranchRect = new Rectangle();
 
             this.listenTo(this.branches,  'add remove reset', this.circuitChanged);
@@ -376,8 +394,8 @@ define(function (require) {
         },
 
         wouldConnectionCauseOverlappingBranches: function(a, b) {
-            var neighborsOfA = this.getNeighbors(a);
-            var neighborsOfB = this.getNeighbors(b);
+            var neighborsOfA = this.getJunctionNeighbors(a);
+            var neighborsOfB = this.getJunctionNeighbors(b);
             for (var i = 0; i < neighborsOfA.length; i++) {
                 for (var j = 0; j < neighborsOfB.length; j++) {
                     if (neighborsOfA[i] === neighborsOfB[j])
@@ -438,7 +456,8 @@ define(function (require) {
                     target = bestForJunction;
                     distance = source.getDistance(target);
                     if (best === null || distance < best.distance) {
-                        best = this._dragMatchObj;
+                        if (best === null)
+                            best = matchPool.create();
                         best.source = source;
                         best.target = target;
                         best.distance = distance;
@@ -526,10 +545,10 @@ define(function (require) {
         },
 
         bumpOnce: function(junction) {
-            var branches = this.getBranches();
+            var branches = this.branches;
             var strongConnections = this.getStrongConnections(junction);
             for (var i = 0; i < branches.length; i++) {
-                var branch = branches[i];
+                var branch = branches.at(i);
                 if (!branch.hasJunction(junction)) {
                     if (branch.getShape().intersects(junction.getShape())) {
                         var vec = branch.getDirectionVector();
