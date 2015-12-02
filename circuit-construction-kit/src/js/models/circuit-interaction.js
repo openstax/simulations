@@ -88,7 +88,7 @@ define(function (require, exports, module) {
 
                 this.startMatch = this.circuit.getBestDragMatch(startSources, startDx);
                 this.endMatch = this.circuit.getBestDragMatch(endSources, endDx);
-
+console.log(this.startMatch, this.endMatch)
                 if (this.endMatch && this.startMatch && this.endMatch.target == this.startMatch.target) {
                     this.endMatch.destroy();
                     this.endMatch = null;
@@ -203,6 +203,7 @@ define(function (require, exports, module) {
                         .translate(dx);
                 }
                 else {
+                    console.log(match.getVector())
                     this.branchSet
                         .clear()
                         .addBranches(sc)

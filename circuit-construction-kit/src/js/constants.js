@@ -15,6 +15,8 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
+    Constants.EPSILON = 1E-6;
+
     var aspectRatio = 1.2;
     var SCALE = 0.5;
     var modelWidth = 10;

@@ -219,9 +219,6 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
-
-            this.lastX = event.data.global.x;
-            this.lastY = event.data.global.y;
         },
 
         drag: function(event) {
@@ -230,9 +227,6 @@ define(function(require) {
                 var modelPoint = this.mvt.viewToModel(this._point);
  
                 CircuitInteraction.dragBranch(this.model, modelPoint);
-
-                this.lastX = event.data.global.x;
-                this.lastY = event.data.global.y;
             }
         },
 

@@ -25,9 +25,11 @@ define(function (require) {
                 source: undefined,
                 distance: 0,
                 getVector: function() {
-                    if (this._vec)
+                    if (!this._vec)
                         this._vec = new Vector2();
-                    return this._vec.set(this.target).sub(this.source);
+                    return this._vec
+                        .set(this.target.get('position'))
+                        .sub(this.source.get('position'));
                 },
                 destroy: function() {
                     matchPool.remove(this);
@@ -406,7 +408,7 @@ define(function (require) {
         },
 
         collapseJunctions: function(j1, j2) {
-            if (!j1.get('position').equals(j2.get('position')))
+            if (!j1.get('position').equals(j2.get('position'), Constants.EPSILON))
                 throw 'Junctions not at same coordinates.';
             
             this.removeJunction(j1);
@@ -478,7 +480,7 @@ define(function (require) {
                 if (target !== dragging && !this.hasBranch(dragging, target) && !this.wouldConnectionCauseOverlappingBranches(dragging, target)) {
                     if (closestJunction === null || dist < closestValue) {
                         var legal = !this.contains(strong, target);
-                        var STICKY_THRESHOLD = 1;
+                        var STICKY_THRESHOLD = 50;
                         if (dist <= STICKY_THRESHOLD && legal) {
                             closestValue = dist;
                             closestJunction = target;
@@ -506,9 +508,9 @@ define(function (require) {
             }
         },
 
-        contains: function(strong, j) {
-            for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasJunction(j))
+        contains: function(branches, j) {
+            for (var i = 0; i < branches.length; i++) {
+                if (branches[i].hasJunction(j))
                     return true;
             }
             return false;
