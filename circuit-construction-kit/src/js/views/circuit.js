@@ -39,6 +39,12 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.componentLayer = new PIXI.Container();
+            this.junctionLayer = new PIXI.Container();
+
+            this.displayObject.addChild(this.componentLayer);
+            this.displayObject.addChild(this.junctionLayer);
+
             this.updateMVT(this.mvt);
         },
 
@@ -119,7 +125,8 @@ define(function(require) {
                 model: branch
             });
 
-            this.displayObject.addChild(branchView.displayObject);
+            this.componentLayer.addChild(branchView.displayObject);
+            this.junctionLayer.addChild(branchView.junctionLayer);
             this.branchViews.push(branchView);
         }
 

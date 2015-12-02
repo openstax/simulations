@@ -100,7 +100,7 @@ console.log(this.startMatch, this.endMatch)
                 }
 
                 if (this.startMatch && this.endMatch) {
-                    var branches = this.cricuit.branches;
+                    var branches = this.circuit.branches;
                     for (var i = 0; i < branches.length; i++) {
                         var b = branches.at(i);
                         if (b.hasJunction(this.startMatch.target) && wire.hasJunction(this.endMatch.target)) {

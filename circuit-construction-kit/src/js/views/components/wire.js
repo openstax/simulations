@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiView = require('common/v3/pixi/view');
+    var PixiToImage = require('common/v3/pixi/pixi-to-image');
     var Colors   = require('common/colors/colors');
     var Vector2  = require('common/math/vector2');
 
@@ -44,8 +45,8 @@ define(function(require) {
          * Initializes the new WireView.
          */
         initialize: function(options) {
-            this.outerColor = Colors.parseHex(WireView.OUTER_COLOR);
-            this.innerColor = Colors.parseHex(WireView.INNER_COLOR);
+            this.wireColor = Colors.parseHex(WireView.WIRE_COLOR);
+            this.endColor  = Colors.parseHex(WireView.END_COLOR);
             this.selectColor = Colors.parseHex(Constants.SELECTION_COLOR);
 
             ComponentView.prototype.initialize.apply(this, [options]);
@@ -59,7 +60,18 @@ define(function(require) {
             this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.junctionsUpdated);
         },
 
+        detach: function() {
+            ComponentView.prototype.detach.apply(this, arguments);
+
+            if (this.junctionLayer.parent)
+                this.junctionLayer.parent.removeChild(this.junctionLayer);
+        },
+
         initGraphics: function() {
+            this.junctionLayer = new PIXI.Container();
+            this.junctionGraphics = new PIXI.Graphics();
+            this.junctionLayer.addChild(this.junctionGraphics);
+
             this.initLineHandle();
             this.initJunctionHandles();
 
@@ -86,8 +98,8 @@ define(function(require) {
             this.startJunction = this.createJunctionHandle();
             this.endJunction = this.createJunctionHandle();
 
-            this.displayObject.addChild(this.startJunction);
-            this.displayObject.addChild(this.endJunction);
+            this.junctionLayer.addChild(this.startJunction);
+            this.junctionLayer.addChild(this.endJunction);
         },
 
         createJunctionHandle: function() {
@@ -113,20 +125,7 @@ define(function(require) {
          * Draws the wire patch
          */
         draw: function() {
-            var graphics = this.displayObject;
-            graphics.clear();
-
-            // Do a pass for the outer color and inner color
-            this.drawWire(WireView.OUTER_WIDTH, this.outerColor);
-            this.drawWire(WireView.INNER_WIDTH, this.innerColor);
-        },
-
-        /**
-         * Draws the wire segments at a certain wire width and color
-         */
-        drawWire: function(width, color) {
-            var width = Math.round(this.mvt.modelToViewDeltaX(width));
-            var graphics = this.displayObject;
+            var width = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH));
             
             var point;
             point = this.mvt.modelToView(this.model.get('startJunction').get('position'));
@@ -137,14 +136,18 @@ define(function(require) {
             var y1 = point.y;
 
             // Draw the base lines
-            graphics.lineStyle(width, color, 1);
+            var graphics = this.displayObject;
+            graphics.clear();
+            graphics.lineStyle(width, this.wireColor, 1);
             graphics.moveTo(x0, y0);
             graphics.lineTo(x1, y1);
 
             // Then round the edges by drawing circles over the connection points
             var radius = width / 2;
+            graphics = this.junctionGraphics;
+            graphics.clear();
             graphics.lineStyle(0, 0, 0);
-            graphics.beginFill(color, 1);
+            graphics.beginFill(this.endColor, 1);
             graphics.drawCircle(x0, y0, radius);
             graphics.drawCircle(x1, y1, radius);
             graphics.endFill();
@@ -157,7 +160,7 @@ define(function(require) {
         },
 
         updateLineHandle: function() {
-            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.OUTER_WIDTH) / 2);
+            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
             var start = this._start.set(this.mvt.modelToView(this.model.get('startJunction').get('position')));
             var end = this._end.set(this.mvt.modelToView(this.model.get('endJunction').get('position')));
             var direction = this._direction.set(end).sub(start).normalize().scale(radius);
@@ -191,7 +194,7 @@ define(function(require) {
         },
 
         updateJunctionHandle: function(handle, junctionModel) {
-            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.OUTER_WIDTH) / 2);
+            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
             handle.hoverGraphics.clear();
             handle.hoverGraphics.beginFill(this.selectColor, 1);
             handle.hoverGraphics.drawCircle(0, 0, radius);
@@ -264,6 +267,23 @@ define(function(require) {
 
         hideHoverGraphics: function() {
             this.lineHandle.hoverGraphics.visible = false;
+        },
+
+        generateTexture: function() {
+            var container = new PIXI.Container();
+            container.addChild(this.displayObject);
+            container.addChild(this.junctionLayer);
+            // var graphics = new PIXI.Graphics();
+            // graphics.lineStyle(10, 0, 1);
+            // graphics.moveTo(-20, -20);
+            // graphics.lineTo(20, 20);
+            // graphics.lineTo(-20, 20);
+            // graphics.lineTo(20, -20);
+            // container.addChild(graphics);
+            var texture = PixiToImage.displayObjectToTexture(container);
+            // container.removeChild(this.displayObject);
+            // container.removeChild(this.junctionLayer);
+            return texture;
         }
 
     }, Constants.WireView);

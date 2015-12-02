@@ -49,7 +49,7 @@ define(function(require) {
                 mvt: mvt,
                 model: wireModel
             });
-            return new PIXI.Sprite(wireView.displayObject.generateTexture());
+            return new PIXI.Sprite(wireView.generateTexture());
         },
 
         /**
