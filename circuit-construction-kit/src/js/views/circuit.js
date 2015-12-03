@@ -22,12 +22,18 @@ define(function(require) {
      */
     var CircuitView = PixiView.extend({
 
+        events: {
+            'click .background' : 'clicked'
+        },
+
         /**
          * Initializes the new CircuitView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
+            this.width = options.width;
+            this.height = options.height;
 
             this.branchViews = [];
 
@@ -39,11 +45,15 @@ define(function(require) {
         },
 
         initGraphics: function() {
+            this.background = new PIXI.Container();
             this.componentLayer = new PIXI.Container();
             this.junctionLayer = new PIXI.Container();
 
+            this.displayObject.addChild(this.background);
             this.displayObject.addChild(this.componentLayer);
             this.displayObject.addChild(this.junctionLayer);
+
+            this.background.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
 
             this.updateMVT(this.mvt);
         },
@@ -129,6 +139,10 @@ define(function(require) {
             this.componentLayer.addChild(branchView.displayObject);
             this.junctionLayer.addChild(branchView.junctionLayer);
             this.branchViews.push(branchView);
+        },
+
+        clicked: function(event) {
+            this.model.clearSelection();
         }
 
     });

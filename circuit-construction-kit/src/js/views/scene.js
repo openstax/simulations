@@ -81,7 +81,9 @@ define(function(require) {
             this.circuitView = new CircuitView({
                 mvt: this.mvt,
                 model: this.simulation.circuit,
-                simulation: this.simulation
+                simulation: this.simulation,
+                width: this.width,
+                height: this.height
             });
             this.stage.addChild(this.circuitView.displayObject);
         },
