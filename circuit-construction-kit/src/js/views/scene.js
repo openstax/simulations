@@ -21,6 +21,7 @@ define(function(require) {
     var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
     var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
     var CircuitView          = require('views/circuit');
+    var ElectronsView        = require('views/electrons');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -71,6 +72,7 @@ define(function(require) {
 
             this.initMVT();
             this.initCircuitView();
+            this.initElectronsView();
             this.initComponentToolbox();
             this.initGrabBagButton();
 
@@ -86,6 +88,14 @@ define(function(require) {
                 height: this.height
             });
             this.stage.addChild(this.circuitView.displayObject);
+        },
+
+        initElectronsView: function() {
+            this.electronsView = new ElectronsView({
+                mvt: this.mvt,
+                electronSet: this.simulation.particleSet
+            });
+            this.stage.addChild(this.electronsView.displayObject);
         },
 
         initComponentToolbox: function() {
@@ -142,7 +152,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            
+            if (this.simulation.updated())
+                this.electronsView.draw();
         },
 
         zoomIn: function() {

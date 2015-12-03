@@ -146,5 +146,20 @@ define(function (require) {
 
     Constants.WireView = WireView;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                            ELECTRONS VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var ElectronsView = {};
+
+    ElectronsView.COLOR = '#25b5fd';
+    ElectronsView.RADIUS = 8;
+
+    Constants.ElectronsView = ElectronsView;
+
+
     return Constants;
 });

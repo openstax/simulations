@@ -6,8 +6,8 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var BranchSet = function() {
-        this.circuit = undefined;
+    var BranchSet = function(circuit) {
+        this.circuit = circuit;
         this.branches = [];
         this.junctions = [];
     };
@@ -15,7 +15,6 @@ define(function (require) {
     _.extend(BranchSet.prototype, {
 
         clear: function() {
-            this.circuit = undefined;
             var i = 0;
             for (i = this.branches.length - 1; i >= 0; i--)
                 this.branches.splice(i, 1);
@@ -60,6 +59,7 @@ define(function (require) {
             }
 
             var i;
+            var j;
 
             var junctionSet = this.junctions.slice();
             for (i = 0; i < this.branches.length; i++) {
@@ -72,13 +72,24 @@ define(function (require) {
                     junctionSet.push(branch.get('endJunction'));
             }
 
+            var branchesToNotify = this.branches.slice();
             for (i = 0; i < junctionSet.length; i++) {
                 // Can't do one-at-a-time, because intermediate notifications get inconsistent data.
                 junctionSet[i].get('position').add(x, y);
+
+                // Populate branchesToNotify array
+                var neighbors = this.circuit.getAdjacentBranches(junctionSet[i]);
+                for (j = 0; j < neighbors.length; j++) {
+                    var neighbor = neighbors[j];
+                    if (branchesToNotify.indexOf(neighbor) === -1)
+                        branchesToNotify.push(neighbor);
+                }
             }
 
             for (i = 0; i < junctionSet.length; i++)
                 junctionSet[i].setPosition(junctionSet[i].get('position'));
+
+            this.circuit.fireBranchesMoved(branchesToNotify);
             
             return this;
         }

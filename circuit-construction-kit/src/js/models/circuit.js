@@ -56,7 +56,7 @@ define(function (require) {
             this.solution = null;
 
             // Create a reusable BranchSet
-            this.branchSet = new BranchSet();
+            this.branchSet = new BranchSet(this);
 
             // Cached objects
             this._splitVec = new Vector2();
@@ -543,6 +543,10 @@ define(function (require) {
 
         fireKirkhoffChanged: function() {
             this.trigger('kirkhoff-changed');
+        },
+
+        fireBranchesMoved: function(branches) {
+            this.trigger('branches-moved', branches);
         },
 
         circuitChanged: function() {

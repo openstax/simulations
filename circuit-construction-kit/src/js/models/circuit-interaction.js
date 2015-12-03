@@ -22,10 +22,14 @@ define(function (require, exports, module) {
         setModel: function(model) {
             this.model = model;
             this.circuit = model.circuit;
+
             this.BranchInteraction.model = model;
             this.BranchInteraction.circuit = model.circuit;
+            this.BranchInteraction.branchSet = new BranchSet(model.circuit);
+
             this.JunctionInteraction.model = model;
             this.JunctionInteraction.circuit = model.circuit;
+            this.JunctionInteraction.branchSet = new BranchSet(model.circuit);
         },
 
         dragJunction: function(junction, target) {
@@ -53,8 +57,6 @@ define(function (require, exports, module) {
 
             draggingBranch: false,
             branchDragMatch: undefined,
-
-            branchSet: new BranchSet(),
 
             dragBranch: function(branch, dragPt) {
                 if (!this.draggingBranch) {
@@ -215,8 +217,6 @@ define(function (require, exports, module) {
 
             _dx:  new Vector2(),
             _vec: new Vector2(),
-
-            branchSet: new BranchSet(),
 
             getSoleComponent: function(j) {
                 if (this.circuit.getAdjacentBranches(j).length == 1 && 
