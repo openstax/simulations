@@ -22,8 +22,6 @@ define(function(require) {
         events: {
             'touchstart      .icon': 'dragStart',
             'mousedown       .icon': 'dragStart',
-            'touchmove       .icon': 'drag',
-            'mousemove       .icon': 'drag',
             'touchend        .icon': 'dragEnd',
             'mouseup         .icon': 'dragEnd',
             'touchendoutside .icon': 'dragEnd',
@@ -142,21 +140,6 @@ define(function(require) {
             this.dummyLayer.addChild(this.componentView.junctionLayer);
 
             this.componentView.dragStart(event);
-
-            // this.lastX = event.data.global.x;
-            // this.lastY = event.data.global.y;
-        },
-
-        drag: function(event) {
-            // if (this.dragging) {
-            //     var dx = this.mvt.viewToModelDeltaX(event.data.global.x - this.lastX);
-            //     var dy = this.mvt.viewToModelDeltaY(event.data.global.y - this.lastY);
-                
-            //     this.componentView.model.translate(dx, dy);
-
-            //     this.lastX = event.data.global.x;
-            //     this.lastY = event.data.global.y;
-            // }
         },
 
         dragEnd: function(event) {
@@ -166,6 +149,9 @@ define(function(require) {
                 if (this.displayObject.parent.getLocalBounds().contains(relativePoint.x, relativePoint.y)) {
                     // Remove the model from the sim because it never left the toolbox
                     this.simulation.circuit.removeBranch(this.componentView.model);
+                }
+                else {
+                    this.componentView.dragEnd(event);
                 }
 
                 this.componentView.remove();
