@@ -270,6 +270,7 @@ define(function(require) {
         },
 
         generateTexture: function() {
+            return this.displayObject.generateTexture();
             var container = new PIXI.Container();
             container.addChild(this.displayObject);
             container.addChild(this.junctionLayer);

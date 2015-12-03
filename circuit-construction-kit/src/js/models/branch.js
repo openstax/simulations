@@ -170,10 +170,6 @@ define(function (require) {
             return center;
         },
 
-        getShape: function() {
-            throw 'Not implemented.';
-        },
-
         currentChanged: function(model, current) {
             var shouldBeOnFire = Math.abs(current) > 10;
             if (shouldBeOnFire != this.get('isOnFire')) {

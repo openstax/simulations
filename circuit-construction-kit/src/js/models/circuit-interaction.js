@@ -181,10 +181,6 @@ console.log(this.startMatch, this.endMatch)
                         this.endMatch.destroy();
                     }
                 }
-                if (branch) {
-                    this.circuit.bumpAway(branch.get('startJunction'));
-                    this.circuit.bumpAway(branch.get('endJunction'));
-                }
             },
 
             getSources: function(sc, j) {

@@ -30,11 +30,6 @@ define(function (require) {
 
         getDistance: function(junction) {
             return this.get('position').distance(junction.get('position'));
-        },
-
-        getShape: function() {
-            //return createCircle( CCKModel.JUNCTION_RADIUS * 1.1 );
-            throw 'Not implemented.';
         }
 
     });
