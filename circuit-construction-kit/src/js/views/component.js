@@ -66,10 +66,15 @@ define(function(require) {
 
             if (this.junctionLayer.parent)
                 this.junctionLayer.parent.removeChild(this.junctionLayer);
+
+            if (this.junctionHoverLayer.parent)
+                this.junctionHoverLayer.parent.removeChild(this.junctionHoverLayer);
         },
 
         initGraphics: function() {
             this.junctionLayer = new PIXI.Container();
+            this.junctionHoverLayer = new PIXI.Container();
+
             this.junctionGraphics = new PIXI.Graphics();
             this.junctionLayer.addChild(this.junctionGraphics);
 
@@ -84,30 +89,37 @@ define(function(require) {
 
             this.junctionLayer.addChild(this.startJunction);
             this.junctionLayer.addChild(this.endJunction);
+
+            this.junctionHoverLayer.addChild(this.startJunction.hoverGraphics);
+            this.junctionHoverLayer.addChild(this.endJunction.hoverGraphics);
         },
 
         createJunctionHandle: function(junctionModel) {
             var handle = new PIXI.Container();
+
             var hoverGraphics = new PIXI.Graphics();
             hoverGraphics.visible = false;
-            handle.model = junctionModel;
-            handle.addChild(hoverGraphics);
+
             handle.hoverGraphics = hoverGraphics;
+            handle.model = junctionModel;
             handle.hitArea = new PIXI.Circle(0, 0, 1);
             handle.interactive = true;
             handle.buttonMode = true;
             handle.defaultCursor = 'move';
+
             handle.on('mouseover', function() {
                 if (handle.dragging || !someComponentIsDragging) {
                     handle.hovering = true;
                     hoverGraphics.visible = true;    
                 }
             });
+
             handle.on('mouseout', function() {
                 handle.hovering = false;
                 if (!handle.dragging && !handle.model.get('selected'))
                     hoverGraphics.visible = false;
             });
+
             return handle;
         },
 
@@ -125,6 +137,11 @@ define(function(require) {
 
         updateJunctionHandle: function(handle, junctionModel) {
             var radius = Math.round(this.mvt.modelToViewDeltaX(Constants.WireView.WIRE_WIDTH) / 2);
+            var viewPosition = this.mvt.modelToView(junctionModel.get('position'));
+            handle.x = viewPosition.x;
+            handle.y = viewPosition.y;
+            handle.hitArea.radius = radius;
+
             handle.hoverGraphics.clear();
             handle.hoverGraphics.beginFill(this.selectionColor, 1);
             handle.hoverGraphics.drawCircle(0, 0, radius);
@@ -132,11 +149,8 @@ define(function(require) {
             handle.hoverGraphics.beginFill(this.selectionColor, Constants.SELECTION_AURA_ALPHA);
             handle.hoverGraphics.drawCircle(0, 0, radius * 2);
             handle.hoverGraphics.endFill();
-            handle.hitArea.radius = radius;
-
-            var viewPosition = this.mvt.modelToView(junctionModel.get('position'));
-            handle.x = viewPosition.x;
-            handle.y = viewPosition.y;
+            handle.hoverGraphics.x = viewPosition.x;
+            handle.hoverGraphics.y = viewPosition.y;
         },
 
         updateJunctionSelection: function(handle, selected) {
