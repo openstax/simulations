@@ -133,12 +133,6 @@ define(function(require) {
 
             var graphics = this.lineHandle.hoverGraphics;
             graphics.clear();
-            graphics.lineStyle(radius * 2 * 2, this.selectionColor, Constants.SELECTION_AURA_ALPHA);
-            graphics.moveTo(start.x, start.y);
-            graphics.lineTo(end.x, end.y);
-            // This is a little workaround for a current Pixi 3 bug:
-            if (graphics.currentPath && graphics.currentPath.shape)
-                graphics.currentPath.shape.closed = false;
             graphics.lineStyle(radius * 2, this.selectionColor, 1);
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);

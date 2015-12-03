@@ -122,6 +122,7 @@ define(function(require) {
 
             var branchView = new viewConstructor({
                 mvt: this.mvt,
+                circuit: this.model,
                 model: branch
             });
 

@@ -30,6 +30,14 @@ define(function (require) {
 
         getDistance: function(junction) {
             return this.get('position').distance(junction.get('position'));
+        },
+
+        select: function() {
+            this.set('selected', true);
+        },
+
+        deselect: function() {
+            this.set('selected', false);
         }
 
     });

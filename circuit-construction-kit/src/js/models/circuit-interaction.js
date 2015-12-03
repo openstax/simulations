@@ -199,7 +199,6 @@ define(function (require, exports, module) {
                         .translate(dx);
                 }
                 else {
-                    console.log(match.getVector())
                     this.branchSet
                         .clear()
                         .addBranches(sc)

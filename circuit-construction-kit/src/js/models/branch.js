@@ -170,6 +170,14 @@ define(function (require) {
             return center;
         },
 
+        select: function() {
+            this.set('selected', true);
+        },
+
+        deselect: function() {
+            this.set('selected', false);
+        },
+
         currentChanged: function(model, current) {
             var shouldBeOnFire = Math.abs(current) > 10;
             if (shouldBeOnFire != this.get('isOnFire')) {

@@ -49,6 +49,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.circuit = options.circuit;
 
             // Cached objects
             this._direction = new Vector2();
@@ -57,6 +58,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.junctionsUpdated);
+            this.listenTo(this.model, 'change:selected', this.updateSelection);
         },
 
         detach: function() {
@@ -77,17 +79,18 @@ define(function(require) {
         },
 
         initJunctionHandles: function() {
-            this.startJunction = this.createJunctionHandle();
-            this.endJunction = this.createJunctionHandle();
+            this.startJunction = this.createJunctionHandle(this.model.get('startJunction'));
+            this.endJunction   = this.createJunctionHandle(this.model.get('endJunction'));
 
             this.junctionLayer.addChild(this.startJunction);
             this.junctionLayer.addChild(this.endJunction);
         },
 
-        createJunctionHandle: function() {
+        createJunctionHandle: function(junctionModel) {
             var handle = new PIXI.Container();
             var hoverGraphics = new PIXI.Graphics();
             hoverGraphics.visible = false;
+            handle.model = junctionModel;
             handle.addChild(hoverGraphics);
             handle.hoverGraphics = hoverGraphics;
             handle.hitArea = new PIXI.Circle(0, 0, 1);
@@ -102,7 +105,7 @@ define(function(require) {
             });
             handle.on('mouseout', function() {
                 handle.hovering = false;
-                if (!handle.dragging)
+                if (!handle.dragging && !handle.model.get('selected'))
                     hoverGraphics.visible = false;
             });
             return handle;
@@ -110,6 +113,9 @@ define(function(require) {
 
         junctionsUpdated: function() {
             this.updateJunctionHandles();
+
+            this.updateJunctionSelection(this.startJunction, this.model.get('startJunction').get('selected'));
+            this.updateJunctionSelection(this.endJunction,   this.model.get('endJunction').get('selected'));
         },
 
         updateJunctionHandles: function() {
@@ -133,6 +139,20 @@ define(function(require) {
             handle.y = viewPosition.y;
         },
 
+        updateJunctionSelection: function(handle, selected) {
+            if (selected)
+                handle.hoverGraphics.visible = true;
+            else if (!handle.hovering && !handle.dragging)
+                handle.hoverGraphics.visible = false;
+        },
+
+        updateSelection: function(model, selected) {
+            if (selected)
+                this.showHoverGraphics();
+            else if (!this.hovering && !this.dragging)
+                this.hideHoverGraphics();
+        },
+
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.
@@ -145,15 +165,20 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
+            this.dragged = false;
             someComponentIsDragging = true;
         },
 
         drag: function(event) {
             if (this.dragging) {
+                this.dragged = true;
+
                 this._point.set(event.data.global.x, event.data.global.y);
                 var modelPoint = this.mvt.viewToModel(this._point);
  
                 CircuitInteraction.dragBranch(this.model, modelPoint);
+
+                this.circuit.clearSelection();
             }
         },
 
@@ -162,7 +187,12 @@ define(function(require) {
                 this.dragging = false;
                 someComponentIsDragging = false;
 
-                CircuitInteraction.dropBranch(this.model);
+                if (!this.dragged) {
+                    this.clicked();
+                }
+                else {
+                    CircuitInteraction.dropBranch(this.model);
+                }
 
                 if (!this.hovering)
                     this.hideHoverGraphics();
@@ -170,27 +200,37 @@ define(function(require) {
         },
 
         dragStartJunctionStart: function(event) {
-            someComponentIsDragging = true;
-            this.draggingJunction = true;
             this.currentHandle = this.startJunction;
             this.currentHandle.dragging = true;
             this.currentJunctionModel = this.model.get('startJunction');
+
+            this.dragJunctionStart(event);
         },
 
         dragEndJunctionStart: function(event) {
-            someComponentIsDragging = true;
-            this.draggingJunction = true;
             this.currentHandle = this.endJunction;
             this.currentHandle.dragging = true;
             this.currentJunctionModel = this.model.get('endJunction');
+
+            this.dragJunctionStart(event);
+        },
+
+        dragJunctionStart: function(event) {
+            someComponentIsDragging = true;
+            this.draggingJunction = true;
+            this.junctionDragged = false;
         },
 
         dragJunction: function(event) {
             if (this.draggingJunction) {
+                this.junctionDragged = true;
+
                 this._point.set(event.data.global.x, event.data.global.y);
                 var modelPoint = this.mvt.viewToModel(this._point);
         
                 CircuitInteraction.dragJunction(this.currentJunctionModel, modelPoint);
+
+                this.circuit.clearSelection();
             }
         },
 
@@ -199,7 +239,15 @@ define(function(require) {
                 this.draggingJunction = false;
                 someComponentIsDragging = false;
 
-                CircuitInteraction.dropJunction(this.currentJunctionModel);
+                if (!this.junctionDragged) {
+                    if (this.currentHandle === this.startJunction)
+                        this.startJunctionClicked();
+                    else
+                        this.endJunctionClicked();
+                }
+                else {
+                    CircuitInteraction.dropJunction(this.currentJunctionModel);
+                }
 
                 if (!this.currentHandle.hovering)
                     this.currentHandle.hoverGraphics.visible = false;
@@ -219,13 +267,42 @@ define(function(require) {
 
         unhover: function() {
             this.hovering = false;
-            if (!this.dragging)
+            if (!this.dragging && !this.model.get('selected'))
                 this.hideHoverGraphics();
         },
 
         showHoverGraphics: function() {},
 
         hideHoverGraphics: function() {},
+
+        clicked: function() {
+            if (this.model.get('selected'))
+                this.showContextMenu();
+            else
+                this.circuit.setSelection(this.model);
+        },
+
+        showContextMenu: function() {
+            console.log('context menu');
+        },
+
+        startJunctionClicked: function() {
+            if (this.model.get('startJunction').get('selected'))
+                this.showJunctionContextMenu(this.model.get('startJunction'));
+            else
+                this.circuit.setSelection(this.model.get('startJunction'));
+        },
+
+        endJunctionClicked: function() {
+            if (this.model.get('endJunction').get('selected'))
+                this.showJunctionContextMenu(this.model.get('endJunction'));
+            else
+                this.circuit.setSelection(this.model.get('endJunction'));
+        },
+
+        showJunctionContextMenu: function(junctionModel) {
+            console.log('junction context menu');
+        },
 
         generateTexture: function() {
             return PIXI.Texture.EMPTY;
