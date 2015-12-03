@@ -5,28 +5,21 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
     
-    var PixiView = require('common/v3/pixi/view');
+    var PixiView    = require('common/v3/pixi/view');
     var PixiToImage = require('common/v3/pixi/pixi-to-image');
-    var Colors   = require('common/colors/colors');
-    var Vector2  = require('common/math/vector2');
-
-    var CircuitInteraction = require('models/circuit-interaction');
+    var Colors      = require('common/colors/colors');
+    var Vector2     = require('common/math/vector2');
 
     var ComponentView = require('views/component');
 
     var Constants = require('constants');
 
     /**
-     * We don't want the hover overlays visible on any object while another object is dragging.
-     */
-    var someComponentIsDragging = false;
-
-    /**
      * A view that represents an atom
      */
     var WireView = ComponentView.extend({
 
-        events: {
+        events: _.extend({}, ComponentView.prototype.events, {
             'touchstart      .lineHandle': 'dragStart',
             'mousedown       .lineHandle': 'dragStart',
             'touchmove       .lineHandle': 'drag',
@@ -36,26 +29,8 @@ define(function(require) {
             'touchendoutside .lineHandle': 'dragEnd',
             'mouseupoutside  .lineHandle': 'dragEnd',
             'mouseover       .lineHandle': 'hover',
-            'mouseout        .lineHandle': 'unhover',
-
-            'touchstart      .startJunction': 'dragStartJunctionStart',
-            'mousedown       .startJunction': 'dragStartJunctionStart',
-            'touchmove       .startJunction': 'dragJunction',
-            'mousemove       .startJunction': 'dragJunction',
-            'touchend        .startJunction': 'dragJunctionEnd',
-            'mouseup         .startJunction': 'dragJunctionEnd',
-            'touchendoutside .startJunction': 'dragJunctionEnd',
-            'mouseupoutside  .startJunction': 'dragJunctionEnd',
-
-            'touchstart      .endJunction': 'dragEndJunctionStart',
-            'mousedown       .endJunction': 'dragEndJunctionStart',
-            'touchmove       .endJunction': 'dragJunction',
-            'mousemove       .endJunction': 'dragJunction',
-            'touchend        .endJunction': 'dragJunctionEnd',
-            'mouseup         .endJunction': 'dragJunctionEnd',
-            'touchendoutside .endJunction': 'dragJunctionEnd',
-            'mouseupoutside  .endJunction': 'dragJunctionEnd'
-        },
+            'mouseout        .lineHandle': 'unhover'
+        }),
 
         /**
          * Overrides PixiView's initializeDisplayObject function
@@ -70,33 +45,16 @@ define(function(require) {
         initialize: function(options) {
             this.wireColor = Colors.parseHex(WireView.WIRE_COLOR);
             this.endColor  = Colors.parseHex(WireView.END_COLOR);
-            this.selectColor = Colors.parseHex(Constants.SELECTION_COLOR);
-
-            ComponentView.prototype.initialize.apply(this, [options]);
 
             // Cached objects
             this._start     = new Vector2();
             this._end       = new Vector2();
-            this._direction = new Vector2();
-            this._point     = new Vector2();
 
-            this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.junctionsUpdated);
-        },
-
-        detach: function() {
-            ComponentView.prototype.detach.apply(this, arguments);
-
-            if (this.junctionLayer.parent)
-                this.junctionLayer.parent.removeChild(this.junctionLayer);
+            ComponentView.prototype.initialize.apply(this, [options]);
         },
 
         initGraphics: function() {
-            this.junctionLayer = new PIXI.Container();
-            this.junctionGraphics = new PIXI.Graphics();
-            this.junctionLayer.addChild(this.junctionGraphics);
-
             this.initLineHandle();
-            this.initJunctionHandles();
 
             ComponentView.prototype.initGraphics.apply(this, arguments);
         },
@@ -110,43 +68,12 @@ define(function(require) {
             this.lineHandle.hitArea = new PIXI.Polygon(points);
             this.lineHandle.buttonMode    = true;
             this.lineHandle.defaultCursor = 'move';
-            this.displayObject.addChild(this.lineHandle);
 
             this.lineHandle.hoverGraphics = new PIXI.Graphics();
             this.lineHandle.hoverGraphics.visible = false;
             this.lineHandle.addChild(this.lineHandle.hoverGraphics);
-        },
 
-        initJunctionHandles: function() {
-            this.startJunction = this.createJunctionHandle();
-            this.endJunction = this.createJunctionHandle();
-
-            this.junctionLayer.addChild(this.startJunction);
-            this.junctionLayer.addChild(this.endJunction);
-        },
-
-        createJunctionHandle: function() {
-            var handle = new PIXI.Container();
-            var hoverGraphics = new PIXI.Graphics();
-            hoverGraphics.visible = false;
-            handle.addChild(hoverGraphics);
-            handle.hoverGraphics = hoverGraphics;
-            handle.hitArea = new PIXI.Circle(0, 0, 1);
-            handle.interactive = true;
-            handle.buttonMode = true;
-            handle.defaultCursor = 'move';
-            handle.on('mouseover', function() {
-                if (handle.dragging || !someComponentIsDragging) {
-                    handle.hovering = true;
-                    hoverGraphics.visible = true;    
-                }
-            });
-            handle.on('mouseout', function() {
-                handle.hovering = false;
-                if (!handle.dragging)
-                    hoverGraphics.visible = false;
-            });
-            return handle;
+            this.displayObject.addChild(this.lineHandle);
         },
 
         /**
@@ -182,9 +109,10 @@ define(function(require) {
         },
 
         junctionsUpdated: function() {
+            ComponentView.prototype.junctionsUpdated.apply(this, arguments);
+
             this.draw();
             this.updateLineHandle();
-            this.updateJunctionHandles();
         },
 
         updateLineHandle: function() {
@@ -205,36 +133,15 @@ define(function(require) {
 
             var graphics = this.lineHandle.hoverGraphics;
             graphics.clear();
-            graphics.lineStyle(radius * 2 * 2, this.selectColor, Constants.SELECTION_AURA_ALPHA);
+            graphics.lineStyle(radius * 2 * 2, this.selectionColor, Constants.SELECTION_AURA_ALPHA);
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);
             // This is a little workaround for a current Pixi 3 bug:
             if (graphics.currentPath && graphics.currentPath.shape)
                 graphics.currentPath.shape.closed = false;
-            graphics.lineStyle(radius * 2, this.selectColor, 1);
+            graphics.lineStyle(radius * 2, this.selectionColor, 1);
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);
-        },
-
-        updateJunctionHandles: function() {
-            this.updateJunctionHandle(this.startJunction, this.model.get('startJunction'));
-            this.updateJunctionHandle(this.endJunction, this.model.get('endJunction'));
-        },
-
-        updateJunctionHandle: function(handle, junctionModel) {
-            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
-            handle.hoverGraphics.clear();
-            handle.hoverGraphics.beginFill(this.selectColor, 1);
-            handle.hoverGraphics.drawCircle(0, 0, radius);
-            handle.hoverGraphics.endFill();
-            handle.hoverGraphics.beginFill(this.selectColor, Constants.SELECTION_AURA_ALPHA);
-            handle.hoverGraphics.drawCircle(0, 0, radius * 2);
-            handle.hoverGraphics.endFill();
-            handle.hitArea.radius = radius;
-
-            var viewPosition = this.mvt.modelToView(junctionModel.get('position'));
-            handle.x = viewPosition.x;
-            handle.y = viewPosition.y;
         },
 
         /**
@@ -242,95 +149,9 @@ define(function(require) {
          *   relies on it.
          */
         updateMVT: function(mvt) {
-            this.mvt = mvt;
+            ComponentView.prototype.updateMVT.apply(this, arguments);
 
             this.draw();
-            this.updateJunctionHandles();
-        },
-
-        dragStart: function(event) {
-            this.dragging = true;
-            someComponentIsDragging = true;
-        },
-
-        drag: function(event) {
-            if (this.dragging) {
-                this._point.set(event.data.global.x, event.data.global.y);
-                var modelPoint = this.mvt.viewToModel(this._point);
- 
-                CircuitInteraction.dragBranch(this.model, modelPoint);
-            }
-        },
-
-        dragEnd: function(event) {
-            if (this.dragging) {
-                this.dragging = false;
-                someComponentIsDragging = false;
-
-                CircuitInteraction.dropBranch(this.model);
-
-                if (!this.hovering)
-                    this.hideHoverGraphics();
-            }
-        },
-
-        dragStartJunctionStart: function(event) {
-            someComponentIsDragging = true;
-            this.draggingJunction = true;
-            this.currentHandle = this.startJunction;
-            this.currentHandle.dragging = true;
-            this.currentJunctionModel = this.model.get('startJunction');
-        },
-
-        dragEndJunctionStart: function(event) {
-            someComponentIsDragging = true;
-            this.draggingJunction = true;
-            this.currentHandle = this.endJunction;
-            this.currentHandle.dragging = true;
-            this.currentJunctionModel = this.model.get('endJunction');
-        },
-
-        dragJunction: function(event) {
-            if (this.draggingJunction) {
-                this._point.set(event.data.global.x, event.data.global.y);
-                var modelPoint = this.mvt.viewToModel(this._point);
-        
-                CircuitInteraction.dragJunction(this.currentJunctionModel, modelPoint);
-            }
-        },
-
-        dragJunctionEnd: function(event) {
-            if (this.draggingJunction) {
-                this.draggingJunction = false;
-                someComponentIsDragging = false;
-
-                CircuitInteraction.dropJunction(this.currentJunctionModel);
-
-                if (!this.currentHandle.hovering)
-                    this.currentHandle.hoverGraphics.visible = false;
-
-                this.currentHandle.dragging = false;
-                this.currentJunctionModel = null;
-                this.currentHandle = null;
-            }
-        },
-
-        // ------------------------------------------------------------------------------------------------------------
-        // TODO: Do the same thing for the junctions, and this can all go in a parent class to be used for all branches
-        // ------------------------------------------------------------------------------------------------------------
-
-
-        hover: function() {
-            if (!someComponentIsDragging) {
-                this.hovering = true;
-                this.showHoverGraphics();    
-            }
-        },
-
-        unhover: function() {
-            this.hovering = false;
-            if (!this.dragging)
-                this.hideHoverGraphics();
         },
 
         showHoverGraphics: function() {
