@@ -41,6 +41,10 @@ define(function (require) {
             return this.get('length');
         },
 
+        getComponentLength: function() {
+            return this.getLength();
+        },
+
         getShape: function() {
             throw 'Not yet implemented.';
         }

@@ -17,6 +17,11 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
+     * We don't want the hover overlays visible on any object while another object is dragging.
+     */
+    var someComponentIsDragging = false;
+
+    /**
      * A view that represents an atom
      */
     var WireView = ComponentView.extend({
@@ -31,7 +36,25 @@ define(function(require) {
             'touchendoutside .lineHandle': 'dragEnd',
             'mouseupoutside  .lineHandle': 'dragEnd',
             'mouseover       .lineHandle': 'hover',
-            'mouseout        .lineHandle': 'unhover'
+            'mouseout        .lineHandle': 'unhover',
+
+            'touchstart      .startJunction': 'dragStartJunctionStart',
+            'mousedown       .startJunction': 'dragStartJunctionStart',
+            'touchmove       .startJunction': 'dragJunction',
+            'mousemove       .startJunction': 'dragJunction',
+            'touchend        .startJunction': 'dragJunctionEnd',
+            'mouseup         .startJunction': 'dragJunctionEnd',
+            'touchendoutside .startJunction': 'dragJunctionEnd',
+            'mouseupoutside  .startJunction': 'dragJunctionEnd',
+
+            'touchstart      .endJunction': 'dragEndJunctionStart',
+            'mousedown       .endJunction': 'dragEndJunctionStart',
+            'touchmove       .endJunction': 'dragJunction',
+            'mousemove       .endJunction': 'dragJunction',
+            'touchend        .endJunction': 'dragJunctionEnd',
+            'mouseup         .endJunction': 'dragJunctionEnd',
+            'touchendoutside .endJunction': 'dragJunctionEnd',
+            'mouseupoutside  .endJunction': 'dragJunctionEnd'
         },
 
         /**
@@ -113,11 +136,16 @@ define(function(require) {
             handle.buttonMode = true;
             handle.defaultCursor = 'move';
             handle.on('mouseover', function() {
-                hoverGraphics.visible = true;
+                if (handle.dragging || !someComponentIsDragging) {
+                    handle.hovering = true;
+                    hoverGraphics.visible = true;    
+                }
             });
             handle.on('mouseout', function() {
-                hoverGraphics.visible = false;
-            })
+                handle.hovering = false;
+                if (!handle.dragging)
+                    hoverGraphics.visible = false;
+            });
             return handle;
         },
 
@@ -222,6 +250,7 @@ define(function(require) {
 
         dragStart: function(event) {
             this.dragging = true;
+            someComponentIsDragging = true;
         },
 
         drag: function(event) {
@@ -236,6 +265,7 @@ define(function(require) {
         dragEnd: function(event) {
             if (this.dragging) {
                 this.dragging = false;
+                someComponentIsDragging = false;
 
                 CircuitInteraction.dropBranch(this.model);
 
@@ -244,6 +274,46 @@ define(function(require) {
             }
         },
 
+        dragStartJunctionStart: function(event) {
+            someComponentIsDragging = true;
+            this.draggingJunction = true;
+            this.currentHandle = this.startJunction;
+            this.currentHandle.dragging = true;
+            this.currentJunctionModel = this.model.get('startJunction');
+        },
+
+        dragEndJunctionStart: function(event) {
+            someComponentIsDragging = true;
+            this.draggingJunction = true;
+            this.currentHandle = this.endJunction;
+            this.currentHandle.dragging = true;
+            this.currentJunctionModel = this.model.get('endJunction');
+        },
+
+        dragJunction: function(event) {
+            if (this.draggingJunction) {
+                this._point.set(event.data.global.x, event.data.global.y);
+                var modelPoint = this.mvt.viewToModel(this._point);
+        
+                CircuitInteraction.dragJunction(this.currentJunctionModel, modelPoint);
+            }
+        },
+
+        dragJunctionEnd: function(event) {
+            if (this.draggingJunction) {
+                this.draggingJunction = false;
+                someComponentIsDragging = false;
+
+                CircuitInteraction.dropJunction(this.currentJunctionModel);
+
+                if (!this.currentHandle.hovering)
+                    this.currentHandle.hoverGraphics.visible = false;
+
+                this.currentHandle.dragging = false;
+                this.currentJunctionModel = null;
+                this.currentHandle = null;
+            }
+        },
 
         // ------------------------------------------------------------------------------------------------------------
         // TODO: Do the same thing for the junctions, and this can all go in a parent class to be used for all branches
@@ -251,8 +321,10 @@ define(function(require) {
 
 
         hover: function() {
-            this.hovering = true;
-            this.showHoverGraphics();
+            if (!someComponentIsDragging) {
+                this.hovering = true;
+                this.showHoverGraphics();    
+            }
         },
 
         unhover: function() {

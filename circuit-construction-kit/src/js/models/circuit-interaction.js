@@ -88,7 +88,7 @@ define(function (require, exports, module) {
 
                 this.startMatch = this.circuit.getBestDragMatch(startSources, startDx);
                 this.endMatch = this.circuit.getBestDragMatch(endSources, endDx);
-console.log(this.startMatch, this.endMatch)
+
                 if (this.endMatch && this.startMatch && this.endMatch.target == this.startMatch.target) {
                     this.endMatch.destroy();
                     this.endMatch = null;
@@ -212,68 +212,81 @@ console.log(this.startMatch, this.endMatch)
 
         JunctionInteraction: {
 
+            junctionDragMatch: undefined,
 
+            _dx:  new Vector2(),
+            _vec: new Vector2(),
+
+            branchSet: new BranchSet(),
+
+            getSoleComponent: function(j) {
+                if (this.circuit.getAdjacentBranches(j).length == 1 && 
+                    this.circuit.getAdjacentBranches(j)[0] instanceof CircuitComponent
+                ) {
+                    return this.circuit.getAdjacentBranches(j)[0];
+                }
+                else {
+                    return null;
+                }
+            },
+
+            dragJunction: function(junction, target) {
+                this.drag(junction, target);
+            },
+
+            drag: function(junction, target) {
+                if (this.getSoleComponent(junction))
+                    this.rotateComponent(junction, target);
+                else
+                    this.translateJunction(junction, target);
+            },
+
+            translateJunction: function(junction, target) {
+                var strongConnections = this.circuit.getStrongConnections(junction);
+                var junctions = this.circuit.getJunctions(strongConnections);
+                if (junctions.indexOf(junction) === -1)
+                    junctions.push(junction);
+
+                var dx = this._dx.set(target).sub(junction.get('position'));
+                this.junctionDragMatch = this.circuit.getBestDragMatch(junctions, dx);
+                if (this.junctionDragMatch)
+                    dx = this.junctionDragMatch.getVector();
+
+                this.branchSet
+                    .clear()
+                    .addBranches(strongConnections)
+                    .addJunction(junction)
+                    .translate(dx);
+
+                var subgraph = this.circuit.getConnectedSubgraph( junction );
+                this.model.layoutElectrons(subgraph);
+            },
+
+            rotateComponent: function(junction, target) {
+                var branch = this.getSoleComponent(junction);
+                var opposite = branch.opposite(junction);
+
+                var vec = this._vec
+                    .set(target)
+                    .sub(opposite.get('position'))
+                    .normalize()
+                    .scale(branch.getComponentLength());
+
+                var destination = vec.add(opposite.get('position'));
+                junction.setPosition(destination.x, destination.y);
+            },
+
+            dropJunction: function(junction) {
+                if (this.junctionDragMatch) {
+                    this.circuit.collapseJunctions(junction, this.junctionDragMatch.target);
+                    this.junctionDragMatch.destroy();
+                }
+                this.junctionDragMatch = null;
+            }
 
         }
 
     };
-
-
-    // var CircuitInteraction = function(model) {
-    //     this.model = model;
-    //     this.circuit = model.circuit;
-
-    //     this.junctionInteraction = new JunctionInteraction(model);
-    //     this.branchInteraction = new BranchInteraction(model);
-    // };
-
-    // _.extend(CircuitInteraction.prototype, {
-
-    //     dragJunction: function(circuit, junction, target) {
-    //         this.junctionInteraction.dragJunction(circuit, junction, target);
-    //     },
-
-    //     dropJunction: function(circuit, junction) {
-    //         this.junctionInteraction.dropJunction(circuit, junction);
-    //     },
-
-    //     translate: function(circuit, wire, pt) {
-    //         this.branchInteraction.translate(circuit, wire, pt);
-    //     },
-
-    //     dropBranch: function(circuit, wire) {
-    //         this.branchInteraction.dropBranch(circuit, wire);
-    //     },
-
-    //     translate: function(circuit, branch, location) {
-    //         this.branchInteraction.translate(circuit, branch, location);
-    //     },
-
-    //     dropBranch: function(circuit, branch) {
-    //         this.branchInteraction.dropBranch(circuit, branch);
-    //     }
-
-    // };
-
-    // BranchInteraction = function(model) {
-    //     this.model = model;
-    //     this.circuit = model.circuit;
-    // };
-
-    // _.extend(BranchInteraction.prototype, {
-
-        
-        
-    // });
-
-    // JunctionInteraction = function(model) {
-    //     this.model = model;
-    //     this.circuit = model.circuit;
-    // };
-
-    // _.extend(JunctionInteraction.prototype, {
-
-    // });
 
     return CircuitInteraction;
 });
