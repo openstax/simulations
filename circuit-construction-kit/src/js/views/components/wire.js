@@ -98,7 +98,7 @@ define(function(require) {
             graphics.lineTo(x1, y1);
 
             // Then round the edges by drawing circles over the connection points
-            var radius = width / 2;
+            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
             graphics = this.junctionGraphics;
             graphics.clear();
             graphics.lineStyle(0, 0, 0);
@@ -116,6 +116,7 @@ define(function(require) {
         },
 
         updateLineHandle: function() {
+            var width = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH));
             var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
             var start = this._start.set(this.mvt.modelToView(this.model.get('startJunction').get('position')));
             var end = this._end.set(this.mvt.modelToView(this.model.get('endJunction').get('position')));
@@ -133,7 +134,7 @@ define(function(require) {
 
             var graphics = this.lineHandle.hoverGraphics;
             graphics.clear();
-            graphics.lineStyle(radius * 2, this.selectionColor, 1);
+            graphics.lineStyle(width, this.selectionColor, 1);
             graphics.moveTo(start.x, start.y);
             graphics.lineTo(end.x, end.y);
         },
