@@ -142,7 +142,7 @@ define(function (require) {
 
     WireView.WIRE_COLOR = '#d1996d';
     WireView.END_COLOR  = '#c5865a';
-    WireView.WIRE_WIDTH = 20;
+    WireView.WIRE_WIDTH = Constants.WIRE_THICKNESS;
 
     Constants.WireView = WireView;
 
@@ -156,7 +156,7 @@ define(function (require) {
     var ElectronsView = {};
 
     ElectronsView.COLOR = '#25b5fd';
-    ElectronsView.RADIUS = 8;
+    ElectronsView.RADIUS = 0.2;
 
     Constants.ElectronsView = ElectronsView;
 

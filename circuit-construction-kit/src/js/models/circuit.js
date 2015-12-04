@@ -480,7 +480,7 @@ define(function (require) {
                 if (target !== dragging && !this.hasBranch(dragging, target) && !this.wouldConnectionCauseOverlappingBranches(dragging, target)) {
                     if (closestJunction === null || dist < closestValue) {
                         var legal = !this.contains(strong, target);
-                        var STICKY_THRESHOLD = 50;
+                        var STICKY_THRESHOLD = 0.5;
                         if (dist <= STICKY_THRESHOLD && legal) {
                             closestValue = dist;
                             closestJunction = target;

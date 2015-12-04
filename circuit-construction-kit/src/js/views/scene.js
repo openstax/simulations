@@ -62,12 +62,12 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 230) / 2);
                 this.viewOriginY = Math.round((this.height - 62) / 2);
-                this.zoomScale = 1;
+                this.zoomScale = 1 * 65;
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
                 this.viewOriginY = Math.round(this.height / 2);
-                this.zoomScale = 1;  
+                this.zoomScale = 1 * 65;  
             }
 
             this.initMVT();
