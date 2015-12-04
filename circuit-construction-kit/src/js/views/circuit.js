@@ -15,7 +15,8 @@ define(function(require) {
     var Inductor      = require('models/components/inductor');
     var Wire          = require('models/components/wire');
 
-    var WireView = require('views/components/wire');
+    var JunctionView = require('views/junction');
+    var WireView     = require('views/components/wire');
 
     /**
      * A view that represents a circuit
@@ -36,12 +37,17 @@ define(function(require) {
             this.height = options.height;
 
             this.branchViews = [];
+            this.junctionViews = [];
 
             this.initGraphics();
 
             this.listenTo(this.model.branches, 'add',    this.branchAdded);
             this.listenTo(this.model.branches, 'remove', this.branchRemoved);
             this.listenTo(this.model.branches, 'reset',  this.branchesReset);
+
+            this.listenTo(this.model.junctions, 'add',    this.junctionAdded);
+            this.listenTo(this.model.junctions, 'remove', this.junctionRemoved);
+            this.listenTo(this.model.junctions, 'reset',  this.junctionsReset);
         },
 
         initGraphics: function() {
@@ -139,9 +145,47 @@ define(function(require) {
             });
 
             this.componentLayer.addChild(branchView.displayObject);
-            this.junctionLayer.addChild(branchView.junctionLayer);
-            this.junctionHoverLayer.addChild(branchView.junctionHoverLayer);
+            this.junctionHoverLayer.addChild(branchView.hoverLayer);
             this.branchViews.push(branchView);
+        },
+
+        junctionsReset: function(junctions) {
+            // Remove old junction views
+            for (var i = this.junctionViews.length - 1; i >= 0; i--) {
+                this.junctionViews[i].remove();
+                this.junctionViews.splice(i, 1);
+            }
+
+            // Add new junction views
+            junctions.each(function(junction) {
+                this.createAndAddJunctionView(junction);
+            }, this);
+        },
+
+        junctionAdded: function(junction, junctions) {
+            this.createAndAddJunctionView(junction);
+        },
+
+        junctionRemoved: function(junction, junctions) {
+            for (var i = this.junctionViews.length - 1; i >= 0; i--) {
+                if (this.junctionViews[i].model === junction) {
+                    this.junctionViews[i].remove();
+                    this.junctionViews.splice(i, 1);
+                    break;
+                }
+            }
+        },
+
+        createAndAddJunctionView: function(junction) {
+            var junctionView = new JunctionView({
+                mvt: this.mvt,
+                circuit: this.model,
+                model: junction
+            });
+
+            this.junctionLayer.addChild(junctionView.displayObject);
+            this.junctionHoverLayer.addChild(junctionView.hoverLayer);
+            this.junctionViews.push(junctionView);
         },
 
         clicked: function(event) {

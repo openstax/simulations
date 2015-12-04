@@ -137,7 +137,7 @@ define(function(require) {
             this.componentView = this.createComponentView(event.data.global.x, event.data.global.y);
             this.simulation.circuit.addBranch(this.componentView.model);
             this.dummyLayer.addChild(this.componentView.displayObject);
-            this.dummyLayer.addChild(this.componentView.junctionLayer);
+            this.dummyLayer.addChild(this.componentView.hoverLayer);
 
             this.componentView.dragStart(event);
         },
