@@ -426,7 +426,7 @@ define(function (require) {
         getBestDragMatch: function(draggedJunctions, dx) {
             // If draggedJunctions is actually an array of branches, interpret them as strong connections
             if (draggedJunctions.length && draggedJunctions[0] instanceof Branch)
-                draggedJunctions = Circuit.getJunctions(draggedJunctions);
+                draggedJunctions = this.getJunctions(draggedJunctions);
 
             var all = this.junctions.models;
             var potentialMatches = _.difference(all, draggedJunctions);
@@ -549,7 +549,7 @@ define(function (require) {
         bumpOnce: function(junction) {
             console.log('we\'re not ready for the bump functionality yet');
             return;
-            
+
             var branches = this.branches;
             var strongConnections = this.getStrongConnections(junction);
             for (var i = 0; i < branches.length; i++) {

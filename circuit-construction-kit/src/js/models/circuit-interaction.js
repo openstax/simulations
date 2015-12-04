@@ -146,16 +146,16 @@ define(function (require, exports, module) {
                     this.toStart.set(startJ).sub(dragPt);
                 }
 
-                var newStartPosition = this._newStart(this.toStart).add(dragPt);
-                var startDx = newStartPosition.sub(wire.getStartPoint());
-                var strongComponent = circuit.getStrongConnections(cc.get('startJunction'));
+                var newStartPosition = this._newStart.set(this.toStart).add(dragPt);
+                var startDx = newStartPosition.sub(cc.getStartPoint());
+                var strongComponent = this.circuit.getStrongConnections(cc.get('startJunction'));
 
-                this.branchDragMatch = this.circuit.getBestDragMatch(strongComponent, dx);
+                this.branchDragMatch = this.circuit.getBestDragMatch(strongComponent, startDx);
                 this.branchSet
                     .clear()
                     .addBranches(strongComponent)
                     .translate(this.branchDragMatch == null ? 
-                        dx : 
+                        startDx : 
                         this.branchDragMatch.getVector()
                     );
             },

@@ -17,6 +17,7 @@ define(function(require) {
 
     var JunctionView = require('views/junction');
     var WireView     = require('views/components/wire');
+    var ResistorView = require('views/components/resistor');
 
     /**
      * A view that represents a circuit
@@ -108,7 +109,7 @@ define(function(require) {
                 viewConstructor = BatteryView;
             }
             else if (branch instanceof Resistor) {
-
+                viewConstructor = ResistorView;
             }
             else if (branch instanceof Wire) {
                 viewConstructor = WireView;

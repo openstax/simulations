@@ -104,11 +104,7 @@ define(function(require) {
         },
 
         /**
-         * Creates a new object (of whatever this reservoir contains)
-         *   and returns it so it can be added to the scene as a
-         *   dummy object.  Note the dummy object will not be added
-         *   to the simulation until it gets turned into a real
-         *   object after the user drops it.
+         * Creates a new object of whatever this icon represents
          */
         createComponentView: function(x, y) {},
 

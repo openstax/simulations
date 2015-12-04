@@ -84,7 +84,6 @@ define(function(require) {
             hoverGraphics.beginFill(this.selectionColor, Constants.SELECTION_AURA_ALPHA);
             hoverGraphics.drawCircle(0, 0, radius * 2);
             hoverGraphics.endFill();
-            console.log(radius)
         },
 
         updateMVT: function(mvt) {

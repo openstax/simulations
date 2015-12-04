@@ -5,7 +5,12 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var Vector2            = require('common/math/vector2');
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
+    var ResistorView         = require('views/components/resistor');
+
+    var Resistor = require('models/components/resistor');
+    var Junction = require('models/junction');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -34,6 +39,30 @@ define(function(require) {
          */
         createIconSprite: function() {
             return Assets.createSprite(Assets.Images.RESISTOR);
+        },
+
+        /**
+         * Creates a new object of whatever this icon represents
+         */
+        createComponentView: function(x, y) {
+            var L = Constants.RESISTOR_DIMENSION.width * 1.3 * 1.3;
+            var H = Constants.RESISTOR_DIMENSION.height * 1.3 * 1.3;
+
+            var model = new Resistor({
+                startJunction: new Junction({ position: new Vector2(0, 0) }),
+                endJunction:   new Junction({ position: new Vector2(L, 0) }),
+                length: L,
+                height: H,
+                resistance: 10
+            });
+            this.setJunctionPositions(model, x, y);
+
+            var view = new ResistorView({
+                mvt: this.mvt,
+                circuit: this.simulation.circuit,
+                model: model
+            });
+            return view;
         }
 
     });
