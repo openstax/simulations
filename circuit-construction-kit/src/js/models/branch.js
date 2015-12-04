@@ -178,6 +178,10 @@ define(function (require) {
             this.set('selected', false);
         },
 
+        getShape: function() {
+            throw 'Not implemented.';
+        },
+
         currentChanged: function(model, current) {
             var shouldBeOnFire = Math.abs(current) > 10;
             if (shouldBeOnFire != this.get('isOnFire')) {

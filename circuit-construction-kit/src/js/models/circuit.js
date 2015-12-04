@@ -541,6 +541,35 @@ define(function (require) {
             throw 'not yet implemented';
         },
 
+        bumpAway: function(junction) {
+            for (var i = 0; i < 2; i++)
+                this.bumpOnce(junction);
+        },
+
+        bumpOnce: function(junction) {
+            console.log('we\'re not ready for the bump functionality yet');
+            return;
+            
+            var branches = this.branches;
+            var strongConnections = this.getStrongConnections(junction);
+            for (var i = 0; i < branches.length; i++) {
+                var branch = branches.at(i);
+                if (!branch.hasJunction(junction)) {
+                    if (branch.getShape().intersects(junction.getShape())) {
+                        var vec = branch.getDirectionVector();
+                        vec.set(vec.y, -vec.x); // Make it perpendicular to the original
+                        vec.normalize().scale(junction.getShape().w);
+                        this.branchSet
+                            .clear()
+                            .addBranches(strongConnections)
+                            .addJunction(junction)
+                            .translate(vec);
+                        break;
+                    }
+                }
+            }
+        },
+
         fireKirkhoffChanged: function() {
             this.trigger('kirkhoff-changed');
         },

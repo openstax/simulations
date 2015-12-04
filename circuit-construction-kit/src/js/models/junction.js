@@ -38,6 +38,11 @@ define(function (require) {
 
         deselect: function() {
             this.set('selected', false);
+        },
+
+        getShape: function() {
+            //return createCircle( CCKModel.JUNCTION_RADIUS * 1.1 );
+            throw 'Not implemented.';
         }
 
     });
