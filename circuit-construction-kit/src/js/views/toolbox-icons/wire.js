@@ -41,8 +41,8 @@ define(function(require) {
          */
         createIconSprite: function() {
             var wireModel = new Wire({
-                startJunction: new Junction({ position: new Vector2(-0.75, 0) }),
-                endJunction:   new Junction({ position: new Vector2( 0.75, 0) })
+                startJunction: new Junction({ position: new Vector2(-0.5, 0) }),
+                endJunction:   new Junction({ position: new Vector2( 0.5, 0) })
             });
             var mvt = ModelViewTransform.createScaleMapping(65);
             var wireView = new WireView({

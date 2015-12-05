@@ -7,10 +7,10 @@ define(function(require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Battery  = require('models/components/battery');
+    var ACVoltageSource = require('models/components/ac-voltage-source');
     var Junction = require('models/junction');
 
-    var BatteryView          = require('views/components/battery');
+    var ACSourceView         = require('views/components/ac-source');
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
 
     var Constants = require('constants');
@@ -23,11 +23,11 @@ define(function(require) {
      *   while dragging an existing object back onto this view
      *   destroys it.
      */
-    var BatteryToolboxIcon = ComponentToolboxIcon.extend({
+    var ACSourceToolboxIcon = ComponentToolboxIcon.extend({
 
         initialize: function(options) {
             options = _.extend({
-                labelText: 'Battery'
+                labelText: 'AC Voltage'
             }, options);
 
             ComponentToolboxIcon.prototype.initialize.apply(this, [options]);
@@ -39,7 +39,7 @@ define(function(require) {
          *   MVT that isn't bound to the scene's MVT.
          */
         createIconSprite: function() {
-            return Assets.createSprite(Assets.Images.BATTERY);
+            return Assets.createSprite(Assets.Images.AC);
         },
 
         /**
@@ -47,20 +47,20 @@ define(function(require) {
          */
         createComponentView: function(x, y) {
             var batteryScale = 0.75;
-            var L = 1.6 * batteryScale;
-            var H = 1.8;
+            var L = 1;
+            var H = 1;
 
-            var model = new Battery({
+            var model = new ACVoltageSource({
                 startJunction: new Junction({ position: new Vector2(0, 0) }),
                 endJunction:   new Junction({ position: new Vector2(L, 0) }),
                 length: L,
                 height: H,
-                internalResistance: 1E-4,
+                internalResistance: 0.01,
                 internalResistanceOn: true
             });
             this.setJunctionPositions(model, x, y);
 
-            var view = new BatteryView({
+            var view = new ACSourceView({
                 mvt: this.mvt,
                 circuit: this.simulation.circuit,
                 model: model
@@ -71,5 +71,5 @@ define(function(require) {
     });
 
 
-    return BatteryToolboxIcon;
+    return ACSourceToolboxIcon;
 });

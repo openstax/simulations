@@ -5,19 +5,22 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
     var Vector2  = require('common/math/vector2');
 
-    var Battery       = require('models/components/battery');
-    var Resistor      = require('models/components/resistor');
-    var Filament      = require('models/components/filament');
-    var Bulb          = require('models/components/bulb');
-    var SeriesAmmeter = require('models/components/series-ammeter');
-    var Switch        = require('models/components/switch');
-    var Capacitor     = require('models/components/capacitor');
-    var Inductor      = require('models/components/inductor');
-    var Wire          = require('models/components/wire');
+    var Battery         = require('models/components/battery');
+    var Resistor        = require('models/components/resistor');
+    var Filament        = require('models/components/filament');
+    var Bulb            = require('models/components/bulb');
+    var SeriesAmmeter   = require('models/components/series-ammeter');
+    var Switch          = require('models/components/switch');
+    var Capacitor       = require('models/components/capacitor');
+    var Inductor        = require('models/components/inductor');
+    var Wire            = require('models/components/wire');
+    var ACVoltageSource = require('models/components/ac-voltage-source');
 
     var JunctionView = require('views/junction');
     var WireView     = require('views/components/wire');
     var ResistorView = require('views/components/resistor');
+    var BatteryView  = require('views/components/battery');
+    var ACSourceView = require('views/components/ac-source');
 
     /**
      * A view that represents a circuit
@@ -53,11 +56,13 @@ define(function(require) {
 
         initGraphics: function() {
             this.background = new PIXI.Container();
+            this.solderLayer = new PIXI.Container();
             this.componentLayer = new PIXI.Container();
             this.junctionLayer = new PIXI.Container();
             this.junctionHoverLayer = new PIXI.Container();
 
             this.displayObject.addChild(this.background);
+            this.displayObject.addChild(this.solderLayer);
             this.displayObject.addChild(this.componentLayer);
             this.displayObject.addChild(this.junctionLayer);
             this.displayObject.addChild(this.junctionHoverLayer);
@@ -105,7 +110,10 @@ define(function(require) {
         createAndAddBranchView: function(branch) {
             var viewConstructor;
 
-            if (branch instanceof Battery) {
+            if (branch instanceof ACVoltageSource) {
+                viewConstructor = ACSourceView;
+            }
+            else if (branch instanceof Battery) {
                 viewConstructor = BatteryView;
             }
             else if (branch instanceof Resistor) {
@@ -117,12 +125,6 @@ define(function(require) {
             else if (branch instanceof Filament) {
 
             } 
-            else if (branch instanceof Filament) {
-
-            } 
-            else if (branch instanceof Bulb) {
-
-            }
             else if (branch instanceof Bulb) {
 
             }
@@ -184,6 +186,7 @@ define(function(require) {
                 model: junction
             });
 
+            this.solderLayer.addChild(junctionView.solderLayer);
             this.junctionLayer.addChild(junctionView.displayObject);
             this.junctionHoverLayer.addChild(junctionView.hoverLayer);
             this.junctionViews.push(junctionView);

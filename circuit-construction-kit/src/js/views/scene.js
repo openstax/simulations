@@ -17,7 +17,7 @@ define(function(require) {
     var ResistorToolboxIcon  = require('views/toolbox-icons/resistor');
     var BatteryToolboxIcon   = require('views/toolbox-icons/battery');
     var LightBulbToolboxIcon = require('views/toolbox-icons/light-bulb');
-    var ACToolboxIcon        = require('views/toolbox-icons/ac');
+    var ACSourceToolboxIcon  = require('views/toolbox-icons/ac-source');
     var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
     var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
     var CircuitView          = require('views/circuit');
@@ -67,7 +67,7 @@ define(function(require) {
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
                 this.viewOriginY = Math.round(this.height / 2);
-                this.zoomScale = 1 * 60;  
+                this.zoomScale = 1 * 76;  
             }
 
             this.initMVT();
@@ -109,7 +109,7 @@ define(function(require) {
                     BatteryToolboxIcon,
                     LightBulbToolboxIcon,
                     SwitchToolboxIcon,
-                    ACToolboxIcon,
+                    ACSourceToolboxIcon,
                     InductorToolboxIcon
                 ]
             });

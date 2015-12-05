@@ -45,7 +45,7 @@ define(function (require) {
     Constants.MIN_RESISTANCE = 1E-8;
     Constants.SCH_BULB_DIST = 1;
 
-    Constants.WIRE_THICKNESS = 0.3;
+    Constants.WIRE_THICKNESS = 0.22; // Original: 0.3
     Constants.DEFAULT_SCALE = 109.3 / 100.0;
 
     Constants.TILT = -0.8058034940839864;
@@ -159,6 +159,21 @@ define(function (require) {
     ElectronsView.RADIUS = 0.2;
 
     Constants.ElectronsView = ElectronsView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            JUNCTION VIEW                            **
+     **                                                                     **
+     *************************************************************************/
+
+    var JunctionView = {};
+
+    JunctionView.RADIUS = (Constants.WIRE_THICKNESS / 2);
+    JunctionView.SOLDER_COLOR = '#aaa';
+    JunctionView.SOLDER_RADIUS = JunctionView.RADIUS * 1.5;
+
+    Constants.JunctionView = JunctionView;
 
 
     return Constants;

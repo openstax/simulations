@@ -10,10 +10,12 @@ define(function (require) {
         GRAB_BAG:      'grab-bag.png',
         BULB_ON:       'bulb-on.png',
         BULB_OFF:      'bulb-off.png',
-        RESISTOR:      'resistor5.png',
-        RESISTOR_MASK: 'resistor5-mask.png',
+        RESISTOR:      'resistor.png',
+        RESISTOR_MASK: 'resistor-mask.png',
         BATTERY:       'battery.png',
+        BATTERY_MASK:  'battery-mask.png',
         AC:            'ac.png',
+        AC_MASK:       'ac-mask.png',
         SWITCH_ICON:   'switch-icon.png',
         INDUCTOR:      'inductor.png'
     };

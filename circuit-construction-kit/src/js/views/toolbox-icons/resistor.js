@@ -5,7 +5,8 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var Vector2            = require('common/math/vector2');
+    var Vector2 = require('common/math/vector2');
+
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
     var ResistorView         = require('views/components/resistor');
 

@@ -34,7 +34,7 @@ define(function(require) {
          * Initializes the new JunctionView.
          */
         initialize: function(options) {
-            this.color = Colors.parseHex(Constants.WireView.END_COLOR);
+            this.color = Colors.parseHex(JunctionView.SOLDER_COLOR);
 
             // Cached objects
             this._point = new Vector2();
@@ -44,10 +44,19 @@ define(function(require) {
             this.listenTo(this.model, 'change:position', this.updatePosition);
         },
 
+        detach: function() {
+            Draggable.prototype.detach.apply(this, arguments);
+
+            if (this.solderLayer.parent)
+                this.solderLayer.parent.removeChild(this.solderLayer);
+        },
+
         initGraphics: function() {
             this.displayObject.hitArea = new PIXI.Circle(0, 0, 1);
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
+
+            this.solderLayer = new PIXI.Graphics();
 
             this.hoverGraphics = new PIXI.Graphics();
             this.hoverLayer.addChild(this.hoverGraphics);
@@ -60,6 +69,9 @@ define(function(require) {
             var viewX = viewPosition.x;
             var viewY = viewPosition.y;
 
+            this.solderLayer.x = viewX;
+            this.solderLayer.y = viewY;
+
             this.displayObject.x = viewX;
             this.displayObject.y = viewY;
             this.displayObject.hitArea.radius = this.getRadius();
@@ -70,11 +82,13 @@ define(function(require) {
 
         draw: function() {
             var radius = this.getRadius();
-            var graphics = this.displayObject;
-            graphics.clear();
-            graphics.beginFill(this.color, 1);
-            graphics.drawCircle(0, 0, radius);
-            graphics.endFill();
+            var solderRadius = this.getSolderRadius();
+
+            var solderGraphics = this.solderLayer;
+            solderGraphics.clear();
+            solderGraphics.beginFill(this.color, 1);
+            solderGraphics.drawCircle(0, 0, solderRadius);
+            solderGraphics.endFill();
 
             var hoverGraphics = this.hoverGraphics;
             hoverGraphics.clear();
@@ -94,7 +108,11 @@ define(function(require) {
         },
 
         getRadius: function() {
-            return Math.round(this.mvt.modelToViewDeltaX(Constants.WireView.WIRE_WIDTH) / 2);
+            return Math.round(this.mvt.modelToViewDeltaX(JunctionView.RADIUS));
+        },
+
+        getSolderRadius: function() {
+            return Math.round(this.mvt.modelToViewDeltaX(JunctionView.SOLDER_RADIUS));
         },
 
         _drag: function(event) {
@@ -114,7 +132,7 @@ define(function(require) {
             console.log('junction context menu');
         }
 
-    });
+    }, Constants.JunctionView);
 
     return JunctionView;
 });
