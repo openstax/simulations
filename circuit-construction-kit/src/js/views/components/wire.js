@@ -60,7 +60,8 @@ define(function(require) {
          * Draws the wire patch
          */
         draw: function() {
-            var width = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH));
+            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
+            var width = radius * 2;
             
             var point;
             point = this.mvt.modelToView(this.model.get('startJunction').get('position'));
@@ -78,7 +79,6 @@ define(function(require) {
             graphics.lineTo(x1, y1);
 
             // Then round the edges by drawing circles over the connection points
-            var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
             graphics.lineStyle(0, 0, 0);
             graphics.beginFill(this.endColor, 1);
             graphics.drawCircle(x0, y0, radius);

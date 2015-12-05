@@ -5,6 +5,12 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var Vector2 = require('common/math/vector2');
+
+    var Inductor = require('models/components/inductor');
+    var Junction = require('models/junction');
+
+    var InductorView         = require('views/components/inductor');
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
 
     var Constants = require('constants');
@@ -34,6 +40,29 @@ define(function(require) {
          */
         createIconSprite: function() {
             return Assets.createSprite(Assets.Images.INDUCTOR);
+        },
+
+        /**
+         * Creates a new object of whatever this icon represents
+         */
+        createComponentView: function(x, y) {
+            var L = 1.2;
+            var H = 0.4;
+
+            var model = new Inductor({
+                startJunction: new Junction({ position: new Vector2(0, 0) }),
+                endJunction:   new Junction({ position: new Vector2(L, 0) }),
+                length: L,
+                height: H
+            });
+            this.setJunctionPositions(model, x, y);
+
+            var view = new InductorView({
+                mvt: this.mvt,
+                circuit: this.simulation.circuit,
+                model: model
+            });
+            return view;
         }
 
     });

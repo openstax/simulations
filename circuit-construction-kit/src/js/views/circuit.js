@@ -20,6 +20,7 @@ define(function(require) {
     var WireView     = require('views/components/wire');
     var ResistorView = require('views/components/resistor');
     var BatteryView  = require('views/components/battery');
+    var InductorView = require('views/components/inductor');
     var ACSourceView = require('views/components/ac-source');
 
     /**
@@ -138,7 +139,7 @@ define(function(require) {
                 
             }
             else if (branch instanceof Inductor) {
-                
+                viewConstructor = InductorView;
             }
 
             var branchView = new viewConstructor({

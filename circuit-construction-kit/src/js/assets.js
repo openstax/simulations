@@ -17,7 +17,8 @@ define(function (require) {
         AC:            'ac.png',
         AC_MASK:       'ac-mask.png',
         SWITCH_ICON:   'switch-icon.png',
-        INDUCTOR:      'inductor.png'
+        INDUCTOR:      'inductor.png',
+        INDUCTOR_MASK: 'inductor-mask.png'
     };
 
     Assets.SpriteSheets = {};
