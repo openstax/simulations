@@ -23,6 +23,8 @@ define(function (require) {
 
             this.on('change:distAlongWire', this.updatePosition);
             this.on('change:branch',        this.branchChanged);
+
+            this.updatePosition();
         },
 
         setLocation: function(branch, x) {
@@ -38,7 +40,7 @@ define(function (require) {
         updatePosition: function() {
             var pt = this.get('branch').getPosition(this.get('distAlongWire'));
 
-            if (isNaN(pt))
+            if (this.isNaN(pt))
                 throw 'Point was NaN, pt=' + pt + ', dist=' + this.get('distAlongWire') + ', wire length=' + this.get('branch').getLength();
             
             this.setPosition(pt);

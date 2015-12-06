@@ -61,13 +61,13 @@ define(function (require) {
             var dx = 1 / density;
             if (density === 0)
                 integralNumberParticles = 0;
-console.log(integralNumberParticles)
-            // for (var i = 0; i < integralNumberParticles; i++) {
-            //     this.particleSet.addParticle(new Electron({
-            //         branch: branch,
-            //         distAlongWire: i * dx + offset
-            //     }));
-            // }
+// console.log(integralNumberParticles)
+            for (var i = 0; i < integralNumberParticles; i++) {
+                this.particleSet.addParticle(new Electron({
+                    branch: branch,
+                    distAlongWire: i * dx + offset
+                }));
+            }
         }
 
     });

@@ -38,8 +38,9 @@ define(function (require) {
             
             // Cached objects
             this._directionVec = new Vector2();
-            this._angleVec = new Vector2();
-            this._centerVec = new Vector2();
+            this._angleVec     = new Vector2();
+            this._centerVec    = new Vector2();
+            this._position     = new Vector2();
 
             this.on('change:startJunction', this.startJunctionChanged);
             this.on('change:endJunction',   this.endJunctionChanged);
@@ -142,7 +143,7 @@ define(function (require) {
             var vec = this._position
                 .set(this.get('endJunction').get('position'))
                 .sub(this.get('startJunction').get('position'))
-                .normalize
+                .normalize()
                 .scale(x)
                 .add(this.get('startJunction').get('position'));
 

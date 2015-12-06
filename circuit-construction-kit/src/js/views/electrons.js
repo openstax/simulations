@@ -41,6 +41,12 @@ define(function(require) {
         },
 
         draw: function() {
+
+            // TODO: Actually, change this to using sprites, but the number of sprites just
+            //       needs to match the number of electrons; we don't have to have each
+            //       sprite persistently keeping track of the same electron.
+
+
             var graphics = this.displayObject;
             graphics.clear();
             graphics.beginFill(COLOR, 1);

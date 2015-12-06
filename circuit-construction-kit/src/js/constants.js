@@ -156,7 +156,7 @@ define(function (require) {
     var ElectronsView = {};
 
     ElectronsView.COLOR = '#25b5fd';
-    ElectronsView.RADIUS = 0.2;
+    ElectronsView.RADIUS = 0.06;
 
     Constants.ElectronsView = ElectronsView;
 
