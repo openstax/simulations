@@ -153,7 +153,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated())
-                this.electronsView.draw();
+                this.electronsView.update();
         },
 
         zoomIn: function() {

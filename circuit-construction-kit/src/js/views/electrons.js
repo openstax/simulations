@@ -11,23 +11,21 @@ define(function(require) {
     var Constants = require('constants');
     var COLOR = Colors.parseHex(Constants.ElectronsView.COLOR);
 
+    var Assets = require('assets');
+
     /**
      * A view that represents a circuit
      */
     var ElectronsView = PixiView.extend({
 
         /**
-         * Overrides PixiView's initializeDisplayObject function
-         */
-        initializeDisplayObject: function() {
-            this.displayObject = new PIXI.Graphics();
-        },
-
-        /**
          * Initializes the new ElectronsView.
          */
         initialize: function(options) {
             this.electronSet = options.electronSet;
+
+            this.texture = Assets.Texture(Assets.Images.ELECTRON);
+            this.sprites = [];
 
             this.updateMVT(options.mvt);
         },
@@ -38,31 +36,45 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            var targetWidth = this.mvt.modelToViewDeltaX(ElectronsView.RADIUS * 2);
+            this.spriteScale = targetWidth / this.texture.width;
+
+            this.update();
         },
 
-        draw: function() {
-
-            // TODO: Actually, change this to using sprites, but the number of sprites just
-            //       needs to match the number of electrons; we don't have to have each
-            //       sprite persistently keeping track of the same electron.
-
-
-            var graphics = this.displayObject;
-            graphics.clear();
-            graphics.beginFill(COLOR, 1);
-
+        update: function() {
             var mvt = this.mvt;
-            var radius = mvt.modelToViewDeltaX(ElectronsView.RADIUS);
-
+            var sprites = this.sprites;
             var electrons = this.electronSet.particles.models;
             for (var i = 0; i < electrons.length; i++) {
                 var pos = electrons[i].get('position');
                 var x = mvt.modelToViewX(pos.x);
                 var y = mvt.modelToViewY(pos.y);
-                graphics.drawCircle(x, y, radius);
+
+                if (i === sprites.length)
+                    this.createSprite();
+
+                sprites[i].visible = true;
+                sprites[i].x = x;
+                sprites[i].y = y;
+                sprites[i].scale.x = this.spriteScale;
+                sprites[i].scale.y = this.spriteScale;
             }
 
-            graphics.endFill();
+            if (sprites.length > electrons.length) {
+                for (var i = electrons.length; i < sprites.length; i++)
+                    sprites[i].visible = false;
+            }
+        },
+
+        createSprite: function() {
+            var sprite = new PIXI.Sprite(this.texture);
+            sprite.anchor.x = 0.5;
+            sprite.anchor.y = 0.5;
+            this.sprites.push(sprite);
+            this.displayObject.addChild(sprite);
+            return sprite;
         }
 
     }, Constants.ElectronsView);
