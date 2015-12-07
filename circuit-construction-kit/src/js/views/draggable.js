@@ -35,10 +35,7 @@ define(function(require) {
             'mouseout        .displayObject': 'unhover'
         },
 
-        contextMenuContent: 
-            '<ul class="context-menu">' +
-                '<li><a><span class="fa fa-trash"></span>&nbsp; Remove</a></li>' +
-            '</ul>',
+        contextMenuContent: '<ul class="context-menu"></ul>',
 
         selectionColor: Colors.parseHex(Constants.SELECTION_COLOR),
 
@@ -161,12 +158,14 @@ define(function(require) {
             this.$contextMenuAnchor.popover('show');
             this.$contextMenu = $('.scene-view-ui').children().last();
 
+            this.initContextMenu(this.$contextMenu);
+
             this.originalEvent = originalEvent;
         },
 
         hideContextMenu: function(event) {
             var $closestPopover = $(event.target).closest('.popover');
-            
+
             if (this.$contextMenu && 
                 Math.abs(event.originalEvent.timeStamp - this.originalEvent.timeStamp) > 30 && 
                 ($closestPopover.length === 0 || $closestPopover[0] !== this.$contextMenu[0])
@@ -180,7 +179,9 @@ define(function(require) {
             this.$contextMenuAnchor.remove();
             this.$contextMenuAnchor = null;
             this.$contextMenu = null;
-        }
+        },
+
+        initContextMenu: function($contextMenu) {}
 
     });
 

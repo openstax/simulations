@@ -23,6 +23,11 @@ define(function(require) {
      */
     var JunctionView = Draggable.extend({
 
+        contextMenuContent: 
+            '<ul class="context-menu">' +
+                '<li><a class="split-btn"><span class="fa fa-exchange"></span>&nbsp; Split Junction</a></li>' +
+            '</ul>',
+
         /**
          * Overrides Draggable's initializeDisplayObject function
          */
@@ -126,6 +131,20 @@ define(function(require) {
 
         _drop: function(event) {
             CircuitInteraction.dropJunction(this.model);
+        },
+
+        initContextMenu: function($contextMenu) {
+            $contextMenu.on('click', '.split-btn', _.bind(this.split, this));
+            if (this.circuit.getAdjacentBranches(this.model).length <= 1) {
+                $contextMenu
+                    .find('.split-btn')
+                    .attr('disabled', 'disabled')
+                    .addClass('disabled');
+            }
+        },
+         
+        split: function() {
+            console.log('splitting')
         }
 
     }, Constants.JunctionView);

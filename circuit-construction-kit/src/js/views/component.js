@@ -23,6 +23,11 @@ define(function(require) {
      */
     var ComponentView = Draggable.extend({
 
+        contextMenuContent: 
+            '<ul class="context-menu">' +
+                '<li><a class="remove-btn"><span class="fa fa-trash"></span>&nbsp; Remove</a></li>' +
+            '</ul>',
+
         /**
          * Initializes the new ComponentView.
          */
@@ -59,6 +64,15 @@ define(function(require) {
 
         _drop: function(event) {
             CircuitInteraction.dropBranch(this.model);
+        },
+
+        initContextMenu: function($contextMenu) {
+            $contextMenu.on('click', '.remove-btn', _.bind(this.destroy, this));
+        },
+
+        destroy: function() {
+            this.circuit.removeBranch(this.model);
+            this.destroyContextMenu();
         },
 
         generateTexture: function() {
