@@ -92,6 +92,9 @@ define(function(require) {
             this.mvt = mvt;
 
             this.updateLayout();
+
+            for (var i = 0; i < this.icons.length; i++)
+                this.icons[i].updateMVT(mvt);
         },
 
         updateLayout: function() {

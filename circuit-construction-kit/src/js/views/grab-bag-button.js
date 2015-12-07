@@ -130,7 +130,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            
+            this.grabBag.updateMVT(mvt);
         },
 
         updateSize: function() {
@@ -147,6 +147,11 @@ define(function(require) {
         setWidth: function(width) {
             this.width = width;
             this.updateSize();
+        },
+
+        setPosition: function(x, y) {
+            this.displayObject.x = x;
+            this.displayObject.y = y;
         },
 
         click: function(event) {

@@ -79,6 +79,12 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            for (var i = this.branchViews.length - 1; i >= 0; i--)
+                this.branchViews[i].updateMVT(mvt);
+
+            for (var i = this.junctionViews.length - 1; i >= 0; i--)
+                this.junctionViews[i].updateMVT(mvt);
         },
 
         branchesReset: function(branches) {

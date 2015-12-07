@@ -50,10 +50,12 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .play-btn'   : 'play',
-            'click .pause-btn'  : 'pause',
-            'click .step-btn'   : 'step',
-            'click .reset-btn'  : 'reset'
+            'click .play-btn'     : 'play',
+            'click .pause-btn'    : 'pause',
+            'click .step-btn'     : 'step',
+            'click .reset-btn'    : 'reset',
+            'click .zoom-in-btn'  : 'zoomIn',
+            'click .zoom-out-btn' : 'zoomOut'
         },
 
         /**
@@ -190,6 +192,14 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
         }
 
     });

@@ -62,13 +62,15 @@ define(function(require) {
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 230) / 2);
                 this.viewOriginY = Math.round((this.height - 62) / 2);
-                this.zoomScale = 1 * 40;
+                this.baseScale = 40;
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
                 this.viewOriginY = Math.round(this.height / 2);
-                this.zoomScale = 1 * 76;  
+                this.baseScale = 76;  
             }
+
+            this.zoomScale = 1;
 
             this.initMVT();
             this.initCircuitView();
@@ -113,8 +115,7 @@ define(function(require) {
                     InductorToolboxIcon
                 ]
             });
-            this.componentToolbox.displayObject.x = 20;
-            this.componentToolbox.displayObject.y = 20;
+            this.componentToolbox.setPosition(20, 20);
             this.stage.addChild(this.componentToolbox.displayObject);
         },
 
@@ -125,30 +126,27 @@ define(function(require) {
                 dummyLayer: this.dummyLayer,
                 icons: [ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon]
             });
-            grabBagButton.displayObject.x = 20;
-            grabBagButton.displayObject.y = this.height - 62 - 20;
+            grabBagButton.setPosition(20, this.height - 62 - 20);
             this.stage.addChild(grabBagButton.displayObject);
 
             this.grabBagButton = grabBagButton;
-
-            // this.stage.click = function(event) {
-            //     if (!grabBagButton.parentOf(event.target))
-            //         grabBagButton.hideGrabBagMenu();
-            // };
-            // this.stage.interactive = true;
         },
 
         initMVT: function() {
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                this.zoomScale
+                this.baseScale * this.zoomScale
             );
         },
 
         updateMVTs: function() {
-            var mvt = this.mvt;
+            this.initMVT();
 
+            this.circuitView.updateMVT(this.mvt);
+            this.electronsView.updateMVT(this.mvt);
+            this.componentToolbox.updateMVT(this.mvt);
+            this.grabBagButton.updateMVT(this.mvt);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
@@ -157,8 +155,8 @@ define(function(require) {
         },
 
         zoomIn: function() {
-            var zoom = this.zoomScale + 0.4;
-            if (zoom < Constants.SceneView.MAX_SCALE) {
+            var zoom = this.zoomScale + 0.25;
+            if (zoom <= Constants.MAX_SCALE) {
                 this.zoomScale = zoom;
                 this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                     new Vector2(0, 0),
@@ -170,8 +168,8 @@ define(function(require) {
         },
 
         zoomOut: function() {
-            var zoom = this.zoomScale - 0.4;
-            if (zoom > Constants.SceneView.MIN_SCALE) {
+            var zoom = this.zoomScale - 0.25;
+            if (zoom >= Constants.MIN_SCALE) {
                 this.zoomScale = zoom;
                 this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                     new Vector2(0, 0),

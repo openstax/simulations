@@ -59,6 +59,9 @@ define(function (require) {
     Constants.SELECTION_COLOR = '#21366b';
     Constants.SELECTION_AURA_ALPHA = 0.2;
 
+    Constants.MIN_SCALE = 0.5;
+    Constants.MAX_SCALE = 2;
+
 
     /*************************************************************************
      **                                                                     **
