@@ -20,7 +20,7 @@ define(function(require) {
     /**
      * A view that represents a circuit component
      */
-    var ComponentView = PixiView.extend({
+    var Draggable = PixiView.extend({
 
         events: {
             'touchstart      .displayObject': 'dragStart',
@@ -35,10 +35,15 @@ define(function(require) {
             'mouseout        .displayObject': 'unhover'
         },
 
+        contextMenuContent: 
+            '<ul class="context-menu">' +
+                '<li><a><span class="fa fa-trash"></span>&nbsp; Remove</a></li>' +
+            '</ul>',
+
         selectionColor: Colors.parseHex(Constants.SELECTION_COLOR),
 
         /**
-         * Initializes the new ComponentView.
+         * Initializes the new Draggable.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
@@ -93,7 +98,7 @@ define(function(require) {
                 someComponentIsDragging = false;
 
                 if (!this.dragged) {
-                    this.clicked();
+                    this.clicked(event);
                 }
                 else {
                     this._drop(event);
@@ -129,18 +134,55 @@ define(function(require) {
             this.hoverLayer.visible = false;
         },
 
-        clicked: function() {
+        clicked: function(event) {
             if (this.model.get('selected'))
-                this.showContextMenu(this.model);
+                this.showContextMenu(event.data.global.x, event.data.global.y, this.model, event.data.originalEvent);
             else
                 this.circuit.setSelection(this.model);
         },
 
-        showContextMenu: function(model) {
-            console.log('context menu');
+        showContextMenu: function(x, y, model, originalEvent) {
+            if (this.$contextMenuAnchor)
+                this.destroyContextMenu();
+
+            this.$contextMenuAnchor = $('<div data-toggle="popover" data-placement="right"></div>');
+            this.$contextMenuAnchor.css({
+                position: 'absolute',
+                top:  y + 'px',
+                left: x + 'px'
+            });
+            $('.scene-view-ui').append(this.$contextMenuAnchor);
+
+            this.$contextMenuAnchor.popover({
+                content: this.contextMenuContent,
+                trigger: 'focus',
+                html: true
+            });
+            this.$contextMenuAnchor.popover('show');
+            this.$contextMenu = $('.scene-view-ui').children().last();
+
+            this.originalEvent = originalEvent;
+        },
+
+        hideContextMenu: function(event) {
+            var $closestPopover = $(event.target).closest('.popover');
+            
+            if (this.$contextMenu && 
+                Math.abs(event.originalEvent.timeStamp - this.originalEvent.timeStamp) > 30 && 
+                ($closestPopover.length === 0 || $closestPopover[0] !== this.$contextMenu[0])
+            ) {
+                this.destroyContextMenu();
+            }
+        },
+
+        destroyContextMenu: function() {
+            this.$contextMenuAnchor.popover('destroy');
+            this.$contextMenuAnchor.remove();
+            this.$contextMenuAnchor = null;
+            this.$contextMenu = null;
         }
 
     });
 
-    return ComponentView;
+    return Draggable;
 });

@@ -126,10 +126,6 @@ define(function(require) {
 
         _drop: function(event) {
             CircuitInteraction.dropJunction(this.model);
-        },
-
-        showContextMenu: function(model) {
-            console.log('junction context menu');
         }
 
     }, Constants.JunctionView);

@@ -53,6 +53,8 @@ define(function(require) {
             this.listenTo(this.model.junctions, 'add',    this.junctionAdded);
             this.listenTo(this.model.junctions, 'remove', this.junctionRemoved);
             this.listenTo(this.model.junctions, 'reset',  this.junctionsReset);
+
+            $('body').on('click', _.bind(this.bodyClicked, this));
         },
 
         initGraphics: function() {
@@ -201,6 +203,14 @@ define(function(require) {
 
         clicked: function(event) {
             this.model.clearSelection();
+        },
+
+        bodyClicked: function(event) {
+            for (var i = this.branchViews.length - 1; i >= 0; i--)
+                this.branchViews[i].hideContextMenu(event);
+
+            for (var i = this.junctionViews.length - 1; i >= 0; i--)
+                this.junctionViews[i].hideContextMenu(event);
         }
 
     });
