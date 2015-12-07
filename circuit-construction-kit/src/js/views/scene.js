@@ -180,6 +180,15 @@ define(function(require) {
             }
         },
 
+        showElectrons: function() {
+            this.electronsView.show();
+        },
+
+        hideElectrons: function() {
+            this.electronsView.hide();
+        },
+
+
     });
 
     return CCKSceneView;

@@ -44,6 +44,9 @@ define(function(require) {
         },
 
         update: function() {
+            if (!this.displayObject.visible)
+                return;
+
             var mvt = this.mvt;
             var sprites = this.sprites;
             var electrons = this.electronSet.particles.models;
@@ -75,6 +78,15 @@ define(function(require) {
             this.sprites.push(sprite);
             this.displayObject.addChild(sprite);
             return sprite;
+        },
+
+        show: function() {
+            this.update();
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     }, Constants.ElectronsView);

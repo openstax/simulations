@@ -54,6 +54,9 @@ define(function (require) {
             'click .pause-btn'    : 'pause',
             'click .step-btn'     : 'step',
             'click .reset-btn'    : 'reset',
+
+            'click #show-electrons-check' : 'toggleElectrons',
+
             'click .zoom-in-btn'  : 'zoomIn',
             'click .zoom-out-btn' : 'zoomOut'
         },
@@ -192,6 +195,13 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        toggleElectrons: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showElectrons();
+            else
+                this.sceneView.hideElectrons();
         },
 
         zoomIn: function() {
