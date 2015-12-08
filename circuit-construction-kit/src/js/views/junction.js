@@ -44,6 +44,9 @@ define(function(require) {
             Draggable.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.circuit, 'junctions-collapsed junction-split', this.updateSolder);
+            this.listenTo(this.circuit.branches, 'add remove reset', this.updateSolder);
+            this.listenTo(this.circuit.junctions, 'add remove reset', this.updateSolder);
         },
 
         detach: function() {
@@ -107,6 +110,14 @@ define(function(require) {
 
             this.draw();
             this.updatePosition(this.model, this.model.get('position'));
+            this.updateSolder();
+        },
+
+        updateSolder: function(j1, j2, replacement) {
+            if (this.isConnected())
+                this.solderLayer.visible = true;
+            else
+                this.solderLayer.visible = false;
         },
 
         getRadius: function() {
@@ -143,6 +154,10 @@ define(function(require) {
         split: function() {
             this.circuit.split(this.model);
             this.destroyContextMenu();
+        },
+
+        isConnected: function() {
+            return (this.circuit.getJunctionNeighbors(this.model).length > 1);
         }
 
     }, Constants.JunctionView);
