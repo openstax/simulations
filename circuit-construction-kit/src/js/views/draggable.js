@@ -133,52 +133,71 @@ define(function(require) {
 
         clicked: function(event) {
             if (this.model.get('selected'))
-                this.showContextMenu(event.data.global.x, event.data.global.y, this.model, event.data.originalEvent);
+                this.showContextMenu(event.data.global.x, event.data.global.y, event.data.originalEvent);
             else
                 this.circuit.setSelection(this.model);
         },
 
-        showContextMenu: function(x, y, model, originalEvent) {
-            if (this.$contextMenuAnchor)
-                this.destroyContextMenu();
+        showContextMenu: function(x, y, originalEvent) {
+            var content = '<ul class="context-menu">' + this.contextMenuContent + '</ul>';
+            var $contextMenu = this.showPopover(x, y, originalEvent, '', content, 'right');
+            this.initContextMenu($contextMenu);
+        },
 
-            this.$contextMenuAnchor = $('<div data-toggle="popover" data-placement="right"></div>');
-            this.$contextMenuAnchor.css({
+        showPopover: function(x, y, originalEvent, title, content, placement) {
+            if (this.$popoverAnchor)
+                this.hidePopover();
+
+            if (placement === undefined) {
+                // Determine which side is appropriate based on where the point is in the scene
+                var height = $('.scene-view').height();
+                if (y > (height / 2))
+                    placement = 'top'; 
+                else
+                    placement = 'bottom'; 
+            }
+
+            this.$popoverAnchor = $('<div data-toggle="popover"></div>');
+            this.$popoverAnchor.css({
                 position: 'absolute',
                 top:  y + 'px',
                 left: x + 'px'
             });
-            $('.scene-view-ui').append(this.$contextMenuAnchor);
+            $('.scene-view-ui').append(this.$popoverAnchor);
 
-            this.$contextMenuAnchor.popover({
-                content: '<ul class="context-menu">' + this.contextMenuContent + '</ul>',
+            this.$popoverAnchor.popover({
+                title: title,
+                content: content,
+                placement: placement,
                 trigger: 'focus',
                 html: true
             });
-            this.$contextMenuAnchor.popover('show');
-            this.$contextMenu = $('.scene-view-ui').children().last();
-
-            this.initContextMenu(this.$contextMenu);
+            this.$popoverAnchor.popover('show');
+            this.$popover = $('.scene-view-ui').children().last();
 
             this.originalEvent = originalEvent;
+
+            return this.$popover;
         },
 
-        hideContextMenu: function(event) {
+        hidePopovers: function(event) {
             var $closestPopover = $(event.target).closest('.popover');
 
-            if (this.$contextMenu && 
+            if (this.$popover && 
                 Math.abs(event.originalEvent.timeStamp - this.originalEvent.timeStamp) > 30 && 
-                ($closestPopover.length === 0 || $closestPopover[0] !== this.$contextMenu[0])
+                ($closestPopover.length === 0 || $closestPopover[0] !== this.$popover[0])
             ) {
-                this.destroyContextMenu();
+                this.hidePopover();
             }
         },
 
-        destroyContextMenu: function() {
-            this.$contextMenuAnchor.popover('destroy');
-            this.$contextMenuAnchor.remove();
-            this.$contextMenuAnchor = null;
-            this.$contextMenu = null;
+        hidePopover: function() {
+            if (this.$popoverAnchor) {
+                this.$popoverAnchor.popover('destroy');
+                this.$popoverAnchor.remove();
+                this.$popoverAnchor = null;
+                this.$popover = null;
+            }
         },
 
         initContextMenu: function($contextMenu) {}

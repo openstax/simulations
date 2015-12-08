@@ -20,7 +20,7 @@ define(function (require) {
             selected: false,
             kirkhoffEnabled: true,
             isOnFire: false,
-            editing: false,
+            showReadout: false,
             // Average current (averaged over timestep subdivisions for one subdivided
             //   stepInTime) for display in an ammeter or chart
             current: 0, 

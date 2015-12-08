@@ -23,7 +23,7 @@ define(function(require) {
      */
     var JunctionView = Draggable.extend({
 
-        contextMenuContent: '<li><a class="split-btn"><span class="fa fa-arrows-h"></span>&nbsp; Split Junction</a></li>',
+        contextMenuContent: '<li><a class="split-btn"><span class="fa fa-chain-broken"></span>&nbsp; Split Junction</a></li>',
 
         /**
          * Overrides Draggable's initializeDisplayObject function
@@ -153,7 +153,7 @@ define(function(require) {
          
         split: function() {
             this.circuit.split(this.model);
-            this.destroyContextMenu();
+            this.hidePopover();
         },
 
         isConnected: function() {

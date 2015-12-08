@@ -207,10 +207,10 @@ define(function(require) {
 
         bodyClicked: function(event) {
             for (var i = this.branchViews.length - 1; i >= 0; i--)
-                this.branchViews[i].hideContextMenu(event);
+                this.branchViews[i].hidePopovers(event);
 
             for (var i = this.junctionViews.length - 1; i >= 0; i--)
-                this.junctionViews[i].hideContextMenu(event);
+                this.junctionViews[i].hidePopovers(event);
         }
 
     });

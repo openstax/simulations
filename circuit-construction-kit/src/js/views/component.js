@@ -67,14 +67,43 @@ define(function(require) {
             $contextMenu.on('click', '.remove-btn', _.bind(this.destroy, this));
         },
 
+        initShowValueMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.show-value-btn', _.bind(this.toggleValue, this));
+
+            if (this.model.get('showReadout')) {
+                $contextMenu
+                    .find('.show-value-btn .fa-square-o')
+                    .removeClass('fa-square-o')
+                    .addClass('fa-check-square-o');
+            }
+        },
+
+        initChangeResistanceMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.change-resistance-btn', _.bind(this.showResistanceMenu, this));
+        },
+
         destroy: function() {
             this.circuit.removeBranch(this.model);
-            this.destroyContextMenu();
+            this.hidePopover();
         },
 
         generateTexture: function() {
             return PIXI.Texture.EMPTY;
-        }
+        },
+
+        toggleValue: function() {
+            this.model.set('showReadout', !this.model.get('showReadout'));
+            this.hidePopover();
+        },
+
+        showResistanceMenu: function(event) {
+            var content = '<div style="height: 100px; width: 200px"></div>';
+            var $anchor = this.$popoverAnchor;
+            var x = parseInt($anchor.css('left'));
+            var y = parseInt($anchor.css('top'));
+            var $popover = this.showPopover(x, y, event.originalEvent, 'Change Resistance', content);
+            
+        },
 
     });
 
