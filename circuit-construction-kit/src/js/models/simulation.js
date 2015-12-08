@@ -44,6 +44,8 @@ define(function (require, exports, module) {
             this.layout = new ContstantDensityLayout(this.particleSet, this.circuit);
 
             CircuitInteraction.setModel(this);
+
+            this.listenTo(this.circuit, 'junction-split', this.junctionSplit);
         },
 
         resetComponents: function() {
@@ -59,6 +61,11 @@ define(function (require, exports, module) {
                 branches = this.circuit.branches.models;
 
             this.layout.layoutElectrons(branches);
+        },
+
+        junctionSplit: function(junction, newJunctions) {
+            console.log('split')
+            this.layout.layoutElectrons(this.circuit.branches.models);
         }
 
     });

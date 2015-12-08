@@ -25,7 +25,7 @@ define(function(require) {
 
         contextMenuContent: 
             '<ul class="context-menu">' +
-                '<li><a class="split-btn"><span class="fa fa-exchange"></span>&nbsp; Split Junction</a></li>' +
+                '<li><a class="split-btn"><span class="fa fa-arrows-h"></span>&nbsp; Split Junction</a></li>' +
             '</ul>',
 
         /**
@@ -144,7 +144,8 @@ define(function(require) {
         },
          
         split: function() {
-            console.log('splitting')
+            this.circuit.split(this.model);
+            this.destroyContextMenu();
         }
 
     }, Constants.JunctionView);

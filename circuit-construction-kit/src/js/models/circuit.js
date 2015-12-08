@@ -170,19 +170,20 @@ define(function (require) {
                 var newLength = Math.abs(curLength - Constants.JUNCTION_RADIUS * 1.5);
                 vec.normalize().scale(newLength);
 
-                var desiredDest = this._splitDesiredDest.set(opposite.get('position')).add(vec);
-                var destination = this._splitDestination.set(desiredDest);
+                var destination = this._splitDesiredDest.set(opposite.get('position')).add(vec);
                 if (branch instanceof CircuitComponent)
                     destination.set(junction.get('position'));
 
-                var newJunction = new Junction(destination.x, destination.y);
+                var newJunction = new Junction({
+                    position: new Vector2(destination.x, destination.y)
+                });
                 branch.replaceJunction(junction, newJunction);
                 this.addJunction(newJunction);
                 newJunctions.push(newJunction);
 
                 if (branch instanceof CircuitComponent) {
                     var translation = this._splitTranslation
-                        .set(desiredDest)
+                        .set(destination)
                         .sub(junction.get('position'));
                     var strongConnections = this.getStrongConnections(newJunction);
                     this.branchSet
@@ -195,8 +196,8 @@ define(function (require) {
             // Remove what used to be the junction
             this.removeJunction(junction);
 
-            // Trigger the junctions-split event
-            this.trigger('junctions-split', junction, newJunctions);
+            // Trigger the junction-split event
+            this.trigger('junction-split', junction, newJunctions);
 
             return newJunctions;
         },
