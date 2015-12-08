@@ -35,7 +35,7 @@ define(function(require) {
             'mouseout        .displayObject': 'unhover'
         },
 
-        contextMenuContent: '<ul class="context-menu"></ul>',
+        contextMenuContent: '',
 
         selectionColor: Colors.parseHex(Constants.SELECTION_COLOR),
 
@@ -151,7 +151,7 @@ define(function(require) {
             $('.scene-view-ui').append(this.$contextMenuAnchor);
 
             this.$contextMenuAnchor.popover({
-                content: this.contextMenuContent,
+                content: '<ul class="context-menu">' + this.contextMenuContent + '</ul>',
                 trigger: 'focus',
                 html: true
             });

@@ -23,10 +23,7 @@ define(function(require) {
      */
     var JunctionView = Draggable.extend({
 
-        contextMenuContent: 
-            '<ul class="context-menu">' +
-                '<li><a class="split-btn"><span class="fa fa-arrows-h"></span>&nbsp; Split Junction</a></li>' +
-            '</ul>',
+        contextMenuContent: '<li><a class="split-btn"><span class="fa fa-arrows-h"></span>&nbsp; Split Junction</a></li>',
 
         /**
          * Overrides Draggable's initializeDisplayObject function

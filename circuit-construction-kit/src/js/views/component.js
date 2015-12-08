@@ -23,10 +23,7 @@ define(function(require) {
      */
     var ComponentView = Draggable.extend({
 
-        contextMenuContent: 
-            '<ul class="context-menu">' +
-                '<li><a class="remove-btn"><span class="fa fa-trash"></span>&nbsp; Remove</a></li>' +
-            '</ul>',
+        contextMenuContent: '<li><a class="remove-btn"><span class="fa fa-trash"></span>&nbsp; Remove</a></li>',
 
         /**
          * Initializes the new ComponentView.

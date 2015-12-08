@@ -60,8 +60,8 @@ define(function (require) {
 
             // Cached objects
             this._splitVec = new Vector2();
-            this._splitDesiredDest = new Vector2();
             this._splitDestination = new Vector2();
+            this._splitTranslation = new Vector2();
             this._bestDragMatchVec = new Vector2();
             this._getBranchRect = new Rectangle();
 
@@ -170,7 +170,7 @@ define(function (require) {
                 var newLength = Math.abs(curLength - Constants.JUNCTION_RADIUS * 1.5);
                 vec.normalize().scale(newLength);
 
-                var destination = this._splitDesiredDest.set(opposite.get('position')).add(vec);
+                var destination = this._splitDestination.set(opposite.get('position')).add(vec);
                 if (branch instanceof CircuitComponent)
                     destination.set(junction.get('position'));
 
