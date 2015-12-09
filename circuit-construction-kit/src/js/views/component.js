@@ -102,6 +102,8 @@ define(function(require) {
         },
 
         showResistanceMenu: function(event) {
+            this.model.set('selected', false);
+
             var content = resistanceControlsHtml;
             var $anchor = this.$popoverAnchor;
             var x = parseInt($anchor.css('left'));
