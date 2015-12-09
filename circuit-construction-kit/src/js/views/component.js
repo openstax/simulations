@@ -4,14 +4,19 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Vector2  = require('common/math/vector2');
-    var Colors   = require('common/colors/colors');
+    var Vector2                = require('common/math/vector2');
+    var Colors                 = require('common/colors/colors');
+    var defineInputUpdateLocks = require('common/locks/define-locks');
 
     var CircuitInteraction = require('models/circuit-interaction');
 
     var Draggable = require('views/draggable');
 
     var Constants = require('constants');
+
+    var resistanceControlsHtml = require('text!templates/resistance-controls.html');
+
+    require('less!styles/resistance-controls');
 
     /**
      * We don't want the hover overlays visible on any object while another object is dragging.
@@ -97,15 +102,51 @@ define(function(require) {
         },
 
         showResistanceMenu: function(event) {
-            var content = '<div style="height: 100px; width: 200px"></div>';
+            var content = resistanceControlsHtml;
             var $anchor = this.$popoverAnchor;
             var x = parseInt($anchor.css('left'));
             var y = parseInt($anchor.css('top'));
-            var $popover = this.showPopover(x, y, event.originalEvent, 'Change Resistance', content);
-            
+            var $popover = this.showPopover(x, y, event.originalEvent, 'Resistance', content);
+
+            var $slider = $popover.find('.resistance-slider');
+            $slider.noUiSlider({
+                start: this.model.get('resistance'),
+                connect: 'lower',
+                range: {
+                    'min': Constants.MIN_RESISTANCE,
+                    'max': 100
+                }
+            });
+            $slider.on('slide', _.bind(this.resistanceSliderChanged, this));
+
+            var $text = $popover.find('.resistance-text');
+            $text.val(this.model.get('resistance'));
+            $text.on('keyup', _.bind(this.resistanceTextChanged, this));
+
+            this.$resistanceSlider = $slider;
+            this.$resistanceText = $text;
         },
 
+        resistanceTextChanged: function(event) {
+            var resistance = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$resistanceSlider.val(resistance);
+                this.model.set('resistance', resistance);
+            });
+        },
+
+        resistanceSliderChanged: function(event) {
+            var resistance = parseFloat($(event.target).val());
+            this.inputLock(function() {
+                this.$resistanceText.val(resistance.toFixed(2));
+                this.model.set('resistance', resistance);
+            });
+        }
+
     });
+
+    // Add input/update locking functionality to the prototype
+    defineInputUpdateLocks(ComponentView);
 
     return ComponentView;
 });

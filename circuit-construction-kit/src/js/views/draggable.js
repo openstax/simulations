@@ -12,6 +12,8 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    require('less!styles/context-menu');
+
     /**
      * We don't want the hover overlays visible on any object while another object is dragging.
      */
@@ -141,6 +143,7 @@ define(function(require) {
         showContextMenu: function(x, y, originalEvent) {
             var content = '<ul class="context-menu">' + this.contextMenuContent + '</ul>';
             var $contextMenu = this.showPopover(x, y, originalEvent, '', content, 'right');
+            $contextMenu.addClass('context-menu-popover');
             this.initContextMenu($contextMenu);
         },
 
