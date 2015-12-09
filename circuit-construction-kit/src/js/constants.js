@@ -43,6 +43,7 @@ define(function (require) {
     Constants.JUNCTION_GRAPHIC_STROKE_WIDTH = 0.015;
     Constants.JUNCTION_RADIUS = 0.162;
     Constants.MIN_RESISTANCE = 1E-8;
+    Constants.MAX_RESISTANCE = 100;
     Constants.SCH_BULB_DIST = 1;
 
     Constants.WIRE_THICKNESS = 0.22; // Original: 0.3
@@ -61,6 +62,9 @@ define(function (require) {
 
     Constants.MIN_SCALE = 0.5;
     Constants.MAX_SCALE = 2;
+
+    Constants.MAX_BATTERY_VOLTAGE = 100;
+    Constants.MAX_HUGE_BATTERY_VOLTAGE = 100000;
 
 
     /*************************************************************************

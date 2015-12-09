@@ -1,0 +1,53 @@
+@import "mixins.less";
+@import "variables.less";
+
+.property-controls {
+    width: 200px;
+
+    .property-slider {
+        margin-top: 12px;
+        margin-bottom: 36px;
+
+        .noUi-background {
+            background: #E0E0E0;
+        }
+
+        .noUi-pips {
+            width: 198px;
+            height: 30px;
+            padding: 0;
+            left: 1px;
+
+            .noUi-value-horizontal {
+                padding-top: 10px;
+            }
+
+            .noUi-marker-horizontal.noUi-marker {
+                height: 2px;
+                background: #E0E0E0;
+            }
+
+            .noUi-marker-horizontal.noUi-marker-large {
+                height: 8px;
+                background: #E0E0E0;
+            }
+        }
+    }
+
+    .property-text-wrapper {
+        padding-bottom: 4px;
+
+        .property-text {
+            text-align: right;
+            display: inline-block;
+            width: 70%;
+        }
+
+        .property-text-label {
+            font-weight: bold;
+            line-height: 34px;
+            padding-left: 10px;
+            display: inline-block;
+        }
+    }
+}

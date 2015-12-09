@@ -55,6 +55,12 @@ define(function(require) {
             this.initChangeResistanceMenuItem($contextMenu);
         },
 
+        showResistanceControls: function(event) {
+            this.model.set('selected', false);
+
+            RectangularComponentView.prototype.showResistanceControls.apply(this, arguments);
+        },
+
         getBandHeight: function() {
             return Math.floor((this.sprite.height - 1) / 2) * 2;
         },
