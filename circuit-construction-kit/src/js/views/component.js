@@ -114,57 +114,65 @@ define(function(require) {
             return this.showPopover(x, y, originalEvent, title, content);
         },
 
-        showResistanceControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Resistance', resistanceControlsHtml);
-
+        initPropertyControls: function($popover, modelProperty, min, max, rebuild, noPips) {
             var $slider = $popover.find('.property-slider');
-            $slider
-                .noUiSlider({
-                    start: this.model.get('resistance'),
-                    connect: 'lower',
-                    range: {
-                        'min': Constants.MIN_RESISTANCE,
-                        'max': Constants.MAX_RESISTANCE
-                    }
-                }).noUiSlider_pips({
+            var $text   = $popover.find('.property-text');
+            
+            $slider.noUiSlider({
+                start: this.model.get(modelProperty),
+                connect: 'lower',
+                range: {
+                    'min': min,
+                    'max': max
+                }
+            }, rebuild);
+
+            if (!noPips) {
+                $slider.noUiSlider_pips({
                     mode: 'count',
                     values: 5,
                     density: 4
-                })
-                .on('slide', _.bind(this.resistanceSliderChanged, this));
+                });    
+            }
 
-            var $text = $popover.find('.property-text');
-            $text.val(this.model.get('resistance'));
-            $text.on('keyup', _.bind(this.resistanceTextChanged, this));
+            $slider.bind('slide', _.bind(function(event){
+                var value = parseFloat($(event.target).val());
+                this.inputLock(function() {
+                    $text.val(value.toFixed(2));
+                    this.model.set(modelProperty, value);
+                });
+            }, this));
 
-            this.$resistanceSlider = $slider;
-            this.$resistanceText = $text;
+            $text.val(this.model.get(modelProperty));
+            $text.bind('keyup', _.bind(function(event) {
+                var value = parseFloat($(event.target).val());
+                var clamped = false;
+                if (value > max) {
+                    value = max;
+                    clamped = true;
+                }
+                if (value < min) {
+                    value = min;
+                    clamped = true;
+                }
+
+                this.inputLock(function() {
+                    this.$slider.val(value);
+                    this.model.set(modelProperty, value);
+
+                    if (clamped)
+                        this.$text.val(value);
+                });
+            }, this));
         },
 
-        resistanceTextChanged: function(event) {
-            var resistance = parseFloat($(event.target).val());
-            if (resistance > Constants.MAX_RESISTANCE)
-                resistance = Constants.MAX_RESISTANCE;
-            if (resistance < Constants.MIN_RESISTANCE)
-                resistance = Constants.MIN_RESISTANCE;
+        showResistanceControls: function(event) {
+            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Resistance', resistanceControlsHtml);
 
-            this.inputLock(function() {
-                this.$resistanceSlider.val(resistance);
-                this.model.set('resistance', resistance);
-            });
-        },
-
-        resistanceSliderChanged: function(event) {
-            var resistance = parseFloat($(event.target).val());
-            this.inputLock(function() {
-                this.$resistanceText.val(resistance.toFixed(2));
-                this.model.set('resistance', resistance);
-            });
+            this.initPropertyControls($popover, 'resistance', Constants.MIN_RESISTANCE, Constants.MAX_RESISTANCE);
         },
 
         showVoltageControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Voltage', voltageControlsHtml);
-
             if (this.moreVoltsOptionEnabled) {
                 this.maxVoltage = (this.model.get('voltageDrop') <= Constants.MAX_BATTERY_VOLTAGE) ?
                     Constants.MAX_BATTERY_VOLTAGE : 
@@ -174,58 +182,30 @@ define(function(require) {
                 this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
             }
 
-            var $slider = $popover.find('.property-slider');
-            $slider
-                .noUiSlider({
-                    start: this.model.get('voltageDrop'),
-                    connect: 'lower',
-                    range: {
-                        'min': 0,
-                        'max': this.maxVoltage
-                    }
-                }).noUiSlider_pips({
-                    mode: 'count',
-                    values: 5,
-                    density: 4
-                })
-                .on('slide', _.bind(this.voltageSliderChanged, this));
-
-            var $text = $popover.find('.property-text');
-            $text.val(this.model.get('voltage'));
-            $text.on('keyup', _.bind(this.voltageTextChanged, this));
-
-            this.$voltageSlider = $slider;
-            this.$voltageText = $text;
+            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Voltage', voltageControlsHtml);
+            this.initVoltageControls($popover);
         },
 
-        voltageTextChanged: function(event) {
-            var voltage = parseFloat($(event.target).val());
-            var clamped = false;
-            if (voltage > Constants.MAX_RESISTANCE) {
-                voltage = Constants.MAX_RESISTANCE;
-                clamped = true;
+        initVoltageControls: function($popover, rebuild) {
+            var noPips = (this.maxVoltage === Constants.MAX_HUGE_BATTERY_VOLTAGE);
+            this.initPropertyControls($popover, 'voltageDrop', 0, this.maxVoltage, rebuild, noPips);
+
+            if (this.moreVoltsOptionEnabled) {
+                $popover.find('.more-volts-check').bind('click', _.bind(function(event) {
+                    var checked = $(event.target).is(':checked');
+                    if (checked)
+                        this.maxVoltage = Constants.MAX_HUGE_BATTERY_VOLTAGE;
+                    else
+                        this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
+
+                    $popover.find('.popover-content').html(voltageControlsHtml);
+                    this.initVoltageControls($popover, true);
+                    $popover.find('.more-volts-check').prop('checked', checked);
+
+                    return false;
+                }, this));
             }
-            if (voltage < Constants.MIN_RESISTANCE) {
-                voltage = Constants.MIN_RESISTANCE;
-                clamped = true;
-            }
-
-            this.inputLock(function() {
-                this.$voltageSlider.val(voltage);
-                this.model.set('voltageDrop', voltage);
-
-                if (clamped)
-                    this.$voltageText.val(voltage);
-            });
-        },
-
-        voltageSliderChanged: function(event) {
-            var voltage = parseFloat($(event.target).val());
-            this.inputLock(function() {
-                this.$voltageText.val(voltage.toFixed(2));
-                this.model.set('voltageDrop', voltage);
-            });
-        },
+        }
 
     });
 
