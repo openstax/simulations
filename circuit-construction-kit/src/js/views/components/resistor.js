@@ -27,6 +27,7 @@ define(function(require) {
         contextMenuContent: 
             '<li><a class="change-resistance-btn"><span class="fa fa-bolt"></span>&nbsp; Change Resistance</a></li>' +
             '<li><a class="show-value-btn"><span class="fa fa-square-o"></span>&nbsp; Show Value</a></li>' +
+            '<hr>' +
             RectangularComponentView.prototype.contextMenuContent,
 
         /**

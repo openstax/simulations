@@ -19,11 +19,28 @@ define(function(require) {
         imagePath:     Assets.Images.AC,
         maskImagePath: Assets.Images.AC_MASK,
 
+        contextMenuContent: 
+            '<li><a class="change-voltage-btn"><span class="fa fa-bolt"></span>&nbsp; Change Voltage</a></li>' +
+            '<li><a class="change-internal-resistance-btn"><span class="fa fa-bolt"></span>&nbsp; Change Internal Resistance</a></li>' +
+            '<li><a class="change-frequency-btn"><span class="fa fa-signal"></span>&nbsp; Change Frequency</a></li>' +
+            '<li><a class="reverse-btn"><span class="fa fa-arrows-h"></span>&nbsp; Reverse</a></li>' +
+            '<li><a class="show-value-btn"><span class="fa fa-square-o"></span>&nbsp; Show Value</a></li>' +
+            '<hr>' +
+            RectangularComponentView.prototype.contextMenuContent,
+
         /**
          * Initializes the new ACSourceView.
          */
         initialize: function(options) {
             RectangularComponentView.prototype.initialize.apply(this, [options]);
+        },
+
+        initContextMenu: function($contextMenu) {
+            RectangularComponentView.prototype.initContextMenu.apply(this, arguments);
+
+            this.initShowValueMenuItem($contextMenu);
+            this.initChangeVoltageMenuItem($contextMenu);
+            this.initChangeInternalResistanceMenuItem($contextMenu);
         },
 
     });

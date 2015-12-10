@@ -93,6 +93,14 @@ define(function(require) {
             this.moreVoltsOptionEnabled = moreVoltsOptionEnabled;
         },
 
+        initChangeInternalResistanceMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.change-internal-resistance-btn', _.bind(this.showInternalResistanceControls, this));
+        },
+
+        initReverseMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.reverse-btn', _.bind(this.reverse, this));
+        },
+
         destroy: function() {
             this.circuit.removeBranch(this.model);
             this.hidePopover();
@@ -205,6 +213,19 @@ define(function(require) {
                     return false;
                 }, this));
             }
+            else {
+                $popover.find('.more-volts-wrapper').hide();
+            }
+        },
+
+        showInternalResistanceControls: function(event) {
+            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Internal Resistance', resistanceControlsHtml);
+
+            this.initPropertyControls($popover, 'internalResistance', Constants.MIN_RESISTANCE, 9);
+        },
+
+        reverse: function() {
+            this.hidePopover();
         }
 
     });

@@ -21,7 +21,10 @@ define(function(require) {
 
         contextMenuContent: 
             '<li><a class="change-voltage-btn"><span class="fa fa-bolt"></span>&nbsp; Change Voltage</a></li>' +
+            '<li><a class="change-internal-resistance-btn"><span class="fa fa-bolt"></span>&nbsp; Change Internal Resistance</a></li>' +
+            '<li><a class="reverse-btn"><span class="fa fa-arrows-h"></span>&nbsp; Reverse</a></li>' +
             '<li><a class="show-value-btn"><span class="fa fa-square-o"></span>&nbsp; Show Value</a></li>' +
+            '<hr>' +
             RectangularComponentView.prototype.contextMenuContent,
 
         /**
@@ -36,6 +39,7 @@ define(function(require) {
 
             this.initShowValueMenuItem($contextMenu);
             this.initChangeVoltageMenuItem($contextMenu, true);
+            this.initChangeInternalResistanceMenuItem($contextMenu);
         },
 
     });

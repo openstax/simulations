@@ -10,3 +10,24 @@
         height: @short-scene-height;
     }
 }
+
+@popover-bg: fadeout(#fff, 30%);
+
+.scene-view-ui .popover {
+    background: @popover-bg;
+
+    &.bottom > .arrow:after { border-bottom-color: @popover-bg; }
+    &.top    > .arrow:after { border-top-color:    @popover-bg; }
+    &.left   > .arrow:after { border-left-color:   @popover-bg; }
+    &.right  > .arrow:after { border-right-color:  @popover-bg; }
+
+    .popover-title {
+        background-color: fadeout(#fff, 80%);
+        border-bottom-color: fadeout(#000, 93%);
+    }
+
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.38);
+        border-color: rgba(10, 10, 10, 0.18);
+    }
+}
