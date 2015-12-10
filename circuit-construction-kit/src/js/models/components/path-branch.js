@@ -30,7 +30,7 @@ define(function (require) {
 
         getPosition: function(x) {
             var segStartsAt = 0;
-            for (var i = 0; i < this.segments; i++ ) {
+            for (var i = 0; i < this.segments.length; i++) {
                 var seg = this.segments[i];
                 var segStopsAt = segStartsAt + seg.getLength();
                 if (x <= segStopsAt) {

@@ -28,12 +28,12 @@ define(function (require) {
             CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
             this.filament = new Filament({
-                tailJunction: getStartJunction(), 
-                shellJunction: getEndJunction(), 
+                tailJunction: this.get('startJunction'), 
+                shellJunction: this.get('endJunction'), 
                 numPeaks: 3, 
-                pivotToResistorDY: this.get('height') * filamentHeightScale, 
-                resistorWidth: this.get('width') * .8, 
-                zigHeight: this.get('height') * .061
+                pivotToResistorDY: this.get('height') * 1, 
+                resistorWidth: this.get('width') * 0.8, 
+                zigHeight: this.get('height') * 0.061
             });
 
             this.branchSet = new BranchSet();
@@ -72,7 +72,7 @@ define(function (require) {
             if (this.get('isSchematic'))
                 return this.getLength();
             else
-                return CircuitComponent.prototype.apply.getLength(this);
+                return CircuitComponent.prototype.getLength.apply(this);
         },
 
         getIntensity: function() {

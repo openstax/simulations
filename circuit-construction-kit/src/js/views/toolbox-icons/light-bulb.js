@@ -5,6 +5,12 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var Vector2 = require('common/math/vector2');
+
+    var Bulb = require('models/components/bulb');
+
+    var LightBulbView = require('views/components/light-bulb');
+
     var ComponentToolboxIcon = require('views/component-toolbox-icon');
 
     var Constants = require('constants');
@@ -34,6 +40,35 @@ define(function(require) {
          */
         createIconSprite: function() {
             return Assets.createSprite(Assets.Images.BULB_OFF);
+        },
+
+        /**
+         * Creates a new object of whatever this icon represents
+         */
+        createComponentView: function(x, y) {
+            // Bulb dummyBulb = new Bulb( model.getCircuitChangeListener(), new Junction( 0, 0 ), new Junction( 1, 0 ), 1, 1, 0.01, true );
+            // double tilt = BulbComponentNode.getTiltValue( dummyBulb );
+            // Bulb bulb = new Bulb( new Point(), Vector2D.createPolar( 1, -tilt - Math.PI / 2 ), 0.43, 1, 1, model.getCircuitChangeListener() );
+            // bulb.flip( null );
+
+            var angle = -Math.PI / 2;
+
+            var model = new Bulb({
+                length: 0.43,
+                width:  1,
+                height: 1
+            }, {
+                start: new Vector2(),
+                direction: new Vector2(Math.cos(angle), Math.sin(angle))
+            });
+            this.setJunctionPositions(model, x, y);
+
+            var view = new LightBulbView({
+                mvt: this.mvt,
+                circuit: this.simulation.circuit,
+                model: model
+            });
+            return view;
         }
 
     });

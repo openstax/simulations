@@ -16,6 +16,7 @@ define(function(require) {
 
     var resistanceControlsHtml = require('text!templates/resistance-controls.html');
     var voltageControlsHtml    = require('text!templates/voltage-controls.html');
+    var frequencyControlsHtml  = require('text!templates/frequency-controls.html');
 
     require('less!styles/component-controls');
 
@@ -99,6 +100,10 @@ define(function(require) {
 
         initReverseMenuItem: function($contextMenu) {
             $contextMenu.on('click', '.reverse-btn', _.bind(this.reverse, this));
+        },
+
+        initChangeFrequencyMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.change-frequency-btn', _.bind(this.showFrequencyControls, this));
         },
 
         destroy: function() {
@@ -224,8 +229,15 @@ define(function(require) {
             this.initPropertyControls($popover, 'internalResistance', Constants.MIN_RESISTANCE, 9);
         },
 
+        showFrequencyControls: function(event) {
+            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Frequency', frequencyControlsHtml);
+
+            this.initPropertyControls($popover, 'frequency', 0, 2);
+        },
+
         reverse: function() {
             this.hidePopover();
+            this.model.reverse();
         }
 
     });

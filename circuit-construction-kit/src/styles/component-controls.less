@@ -1,6 +1,9 @@
 @import "mixins.less";
 @import "variables.less";
 
+
+@slider-bg: #ACB5BD;
+
 .property-controls {
     width: 200px;
 
@@ -9,7 +12,7 @@
         margin-bottom: 36px;
 
         .noUi-background {
-            background: #C1C8CE;
+            background: @slider-bg;
         }
 
         .noUi-pips {
@@ -24,12 +27,12 @@
 
             .noUi-marker-horizontal.noUi-marker {
                 height: 2px;
-                background: #C1C8CE;
+                background: @slider-bg;
             }
 
             .noUi-marker-horizontal.noUi-marker-large {
                 height: 8px;
-                background: #C1C8CE;
+                background: @slider-bg;
             }
         }
     }

@@ -39,6 +39,13 @@ define(function (require) {
                 this.set('resistance', this.get('internalResistance'));
             else
                 this.set('resistance', Constants.MIN_RESISTANCE);
+        },
+
+        reverse: function() {
+            var start = this.get('startJunction');
+            var end = this.get('endJunction');
+            this.set('startJunction', end);
+            this.set('endJunction', start);
         }
 
     }, Constants.Battery);

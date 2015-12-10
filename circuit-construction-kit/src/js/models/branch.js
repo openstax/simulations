@@ -52,14 +52,16 @@ define(function (require) {
         startJunctionChanged: function(model, startJunction) {
             if (this.previous('startJunction'))
                 this.stopListening(this.previous('startJunction'));
-            this.listenTo(startJunction, 'change', this._startJunctionChanged);
+            if (startJunction)
+                this.listenTo(startJunction, 'change', this._startJunctionChanged);
             this.trigger('start-junction-changed');
         },
 
         endJunctionChanged: function(model, endJunction) {
             if (this.previous('endJunction'))
                 this.stopListening(this.previous('endJunction'));
-            this.listenTo(endJunction, 'change', this._endJunctionChanged);
+            if (endJunction)
+                this.listenTo(endJunction, 'change', this._endJunctionChanged);
             this.trigger('end-junction-changed');
         },
 

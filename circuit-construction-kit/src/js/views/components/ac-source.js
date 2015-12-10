@@ -41,6 +41,8 @@ define(function(require) {
             this.initShowValueMenuItem($contextMenu);
             this.initChangeVoltageMenuItem($contextMenu);
             this.initChangeInternalResistanceMenuItem($contextMenu);
+            this.initChangeFrequencyMenuItem($contextMenu);
+            this.initReverseMenuItem($contextMenu);
         },
 
     });

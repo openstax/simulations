@@ -16,12 +16,13 @@ define(function(require) {
     var Wire            = require('models/components/wire');
     var ACVoltageSource = require('models/components/ac-voltage-source');
 
-    var JunctionView = require('views/junction');
-    var WireView     = require('views/components/wire');
-    var ResistorView = require('views/components/resistor');
-    var BatteryView  = require('views/components/battery');
-    var InductorView = require('views/components/inductor');
-    var ACSourceView = require('views/components/ac-source');
+    var JunctionView  = require('views/junction');
+    var WireView      = require('views/components/wire');
+    var ResistorView  = require('views/components/resistor');
+    var BatteryView   = require('views/components/battery');
+    var InductorView  = require('views/components/inductor');
+    var ACSourceView  = require('views/components/ac-source');
+    var LightBulbView = require('views/components/light-bulb');
 
     /**
      * A view that represents a circuit
@@ -135,7 +136,7 @@ define(function(require) {
 
             } 
             else if (branch instanceof Bulb) {
-
+                viewConstructor = LightBulbView;
             }
             else if (branch instanceof SeriesAmmeter) {
                 

@@ -10,6 +10,7 @@ define(function (require) {
         GRAB_BAG:      'grab-bag.png',
         BULB_ON:       'bulb-on.png',
         BULB_OFF:      'bulb-off.png',
+        BULB_MASK:     'bulb-mask.png',
         RESISTOR:      'resistor.png',
         RESISTOR_MASK: 'resistor-mask.png',
         BATTERY:       'battery.png',

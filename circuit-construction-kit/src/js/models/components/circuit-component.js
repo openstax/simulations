@@ -21,17 +21,19 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             if (options && options.start !== undefined && options.direction !== undefined) {
-                options = _.extend({
-                    startJunction: new Junction({
+                if (!attributes.startJunction) {
+                    this.set('startJunction', new Junction({
                         position: options.start
-                    }),
-                    endJunction: new Junction({
+                    }));
+                }
+                if (!attributes.endJunction) {
+                    this.set('endJunction', new Junction({
                         position: new Vector2(options.direction)
                             .normalize()
                             .scale(this.get('length'))
                             .add(options.start)
-                    })
-                }, options);
+                    }));
+                }
             }
 
             Branch.prototype.initialize.apply(this, [attributes, options]);

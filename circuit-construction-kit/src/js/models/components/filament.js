@@ -25,8 +25,6 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            PathBranch.prototype.initialize.apply(this, [attributes, options]);
-
             this.northDir = new Vector2();
             this.eastDir  = new Vector2();
             this.pin      = new Vector2();
@@ -34,6 +32,8 @@ define(function (require) {
             // Cached objects
             this._e = new Vector2();
             this._n = new Vector2();
+
+            PathBranch.prototype.initialize.apply(this, [attributes, options]);
 
             this.recompute();
         },
@@ -98,20 +98,20 @@ define(function (require) {
             if (!this.get('connectAtRight'))
                 this.eastDir.scale(-1);
             
-            if (isNaN(this.northDir) || isNaN(this.eastDir)) {
+            if (this.isNaN(this.northDir) || this.isNaN(this.eastDir)) {
                 console.error('Bulb basis set is not a number.');
                 return;
             }
 
             this.pin.set(this.get('shellJunction').get('position'));
 
-            var pt = this.getPoint(-this.resistorWidth / 2, this.resistorDY);
+            var pt = this.getPoint(-this.get('resistorWidth') / 2, this.get('pivotToResistorDY'));
             if (isNaN(pt.x) || isNaN(pt.y))
                 throw 'Point was nan: ' + pt;
             
             this.reset(this.get('tailJunction').get('position'), pt);
-            this.addPoint(this.getVector(-this.resistorWidth / 4, Constants.BULB_DIMENSION.height * 0.2));
-            this.addPoint(this.getVector(this.resistorWidth * 0.68, 0));
+            this.addPoint(this.getVector(-this.get('resistorWidth') / 4, Constants.BULB_DIMENSION.height * 0.2));
+            this.addPoint(this.getVector(this.get('resistorWidth') * 0.68, 0));
             this.addPoint(this.pin);
         },
 
