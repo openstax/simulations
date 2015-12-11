@@ -66,7 +66,7 @@ define(function (require) {
             var branches = this.circuit.branches;
             var max = 0;
             for (var i = 0; i < branches.length; i++) {
-                var current = branches[i].get('current');
+                var current = branches.at(i).get('current');
                 max = Math.max(max, Math.abs(current));
             }
             return max;

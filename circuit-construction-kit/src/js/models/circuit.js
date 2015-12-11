@@ -573,6 +573,7 @@ define(function (require) {
 
         fireKirkhoffChanged: function() {
             this.trigger('kirkhoff-changed');
+            this.circuitChanged();
         },
 
         fireBranchesMoved: function(branches) {

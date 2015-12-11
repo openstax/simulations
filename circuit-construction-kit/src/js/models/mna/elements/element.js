@@ -120,11 +120,13 @@ define(function (require) {
          *   back to the originalComponent.
          */
         fromCircuitComponent: function(circuit, branch) {
-            return this.create(
+            console.log(circuit.junctions.indexOf(branch.get('startJunction')), circuit.junctions.indexOf(branch.get('endJunction')))
+            var element = this.create(
                 branch, 
                 circuit.junctions.indexOf(branch.get('startJunction')), 
                 circuit.junctions.indexOf(branch.get('endJunction'))
             );
+            return element;
         }
 
     });

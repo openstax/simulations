@@ -45,7 +45,8 @@ define(function (require, exports, module) {
 
             CircuitInteraction.setModel(this);
 
-            this.listenTo(this.circuit, 'junction-split', this.junctionSplit);
+            this.listenTo(this.circuit, 'junction-split',  this.junctionSplit);
+            this.listenTo(this.circuit, 'circuit-changed', this.circuitChanged);
         },
 
         resetComponents: function() {
@@ -53,7 +54,13 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
+            if (this.circuit.isDynamic() || this.modelChanged) {
+                this.circuit.update(time, deltaTime);
+                this.solver.solve(this.circuit, deltaTime);
+                this.modelChanged = false;
+            }
             
+            this.particleSet.update(time, deltaTime);
         },
 
         layoutElectrons: function(branches) {
@@ -66,6 +73,10 @@ define(function (require, exports, module) {
         junctionSplit: function(junction, newJunctions) {
             console.log('split')
             this.layout.layoutElectrons(this.circuit.branches.models);
+        },
+
+        circuitChanged: function() {
+            this.modelChanged = true;
         }
 
     });
