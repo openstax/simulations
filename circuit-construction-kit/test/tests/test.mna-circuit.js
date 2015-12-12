@@ -1,28 +1,50 @@
 
 describe('Modified Nodal Analysis - MNACircuit', function(){
 
+    var MNACircuitSolver;
     var MNACircuit;
     var MNASolution;
     var MNACompanionBattery;
     var MNACompanionResistor;
     var MNACurrentSource;
 
+    var Junction;
+    var Battery;
+    var Resistor;
+    var Circuit;
+
+    var Vector2;
+
     var THRESHOLD = 1E-6;
     var FUDGE = THRESHOLD - 8E-7;
 
     before(function(done) {
         require([
+            'models/mna/circuit-solver',
             'models/mna/mna-circuit', 
             'models/mna/mna-solution',
             'models/mna/elements/companion-battery',
             'models/mna/elements/companion-resistor',
-            'models/mna/elements/current-source'
-        ], function(mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource) {
+            'models/mna/elements/current-source',
+            'models/junction',
+            'models/components/battery',
+            'models/components/resistor',
+            'models/circuit',
+            'common/math/vector2'
+        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2) {
+            MNACircuitSolver = mnaCircuitSolver;
             MNACircuit = mnaCircuit;
             MNASolution = mnaSolution;
             MNACompanionBattery = mnaCompanionBattery;
             MNACompanionResistor = mnaCompanionResistor;
             MNACurrentSource = mnaCurrentSource;
+
+            Junction = junction;
+            Battery = battery;
+            Resistor = resistor;
+            Circuit = circuit;
+
+            Vector2 = vector2;
             
             done();
         });
@@ -299,6 +321,44 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         var solution = circuit.solve();
         var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
         chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    });
+
+    it('MNACircuitSolver should convert and solve simple core circuits', function(){
+        var junction0 = new Junction({ position: new Vector2(0, 0) });
+        var junction1 = new Junction({ position: new Vector2(1, 0) });
+        var junction2 = new Junction({ position: new Vector2(0, 1) });
+
+        var battery = new Battery({
+            startJunction: junction0,
+            endJunction: junction1,
+            voltageDrop: 5,
+            internalResistance: 0,
+            internalResistanceOn: true
+        });
+
+        var resistor1 = new Resistor({
+            startJunction: junction1,
+            endJunction: junction2,
+            resistance: 10
+        });
+
+        var resistor2 = new Resistor({
+            startJunction: junction2,
+            endJunction: junction0,
+            resistance: 10
+        });
+
+        var circuit = new Circuit();
+        circuit.addBranch(battery);
+        circuit.addBranch(resistor1);
+        circuit.addBranch(resistor2);
+
+        var solver = new MNACircuitSolver();
+        solver.solve(circuit, 1 / 30);
+
+        var batterySolutionCurrent = 5 / 20;
+
+        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
     });
 
 });

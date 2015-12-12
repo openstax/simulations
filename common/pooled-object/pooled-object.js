@@ -59,6 +59,7 @@ define(function (require) {
             if (!this._pool)
                 this.initPool();
             var pooledObject = this._pool.create();
+            pooledObject.destroyed = false;
             pooledObject.init.apply(pooledObject, arguments);
             return pooledObject;
         },
@@ -117,9 +118,6 @@ define(function (require) {
             return {
                 init: function() {
                     return new Constructor();
-                },
-                enable: function(object) {
-                    object.destroyed = false;
                 }
             };
         },

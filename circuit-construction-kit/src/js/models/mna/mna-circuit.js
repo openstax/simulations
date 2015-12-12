@@ -27,7 +27,7 @@ define(function (require) {
         return -1;
     };
 
-    var debug = false;
+    var debug = true;
 
     /**
      * 
@@ -65,7 +65,7 @@ define(function (require) {
         getCurrentCount: function() {
             var zeroResistors = 0;
             for (var i = this.resistors.length - 1; i >= 0; i--) {
-                if (this.resistors[i] === 0)
+                if (this.resistors[i].resistance === 0)
                     zeroResistors++;
             }
             return this.batteries.length + zeroResistors;
@@ -356,8 +356,8 @@ define(function (require) {
 
             if (debug) {
                 console.log(equations);
-                console.log('a=', A);
-                console.log('z=', z);
+                console.log('a=', _.map(A, function(row){ return row.join(',') }).join('\n'));
+                console.log('z=', _.map(z, function(row){ return row.join(',') }).join('\n'));
                 console.log('unknowns=', this.getUnknowns());
             }
 
