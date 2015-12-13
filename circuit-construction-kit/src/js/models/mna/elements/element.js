@@ -120,7 +120,6 @@ define(function (require) {
          *   back to the originalComponent.
          */
         fromCircuitComponent: function(circuit, branch) {
-            console.log('nodes: ' + circuit.junctions.indexOf(branch.get('startJunction')), circuit.junctions.indexOf(branch.get('endJunction')))
             var element = this.create(
                 branch, 
                 circuit.junctions.indexOf(branch.get('startJunction')), 

@@ -25,7 +25,6 @@ define(function (require) {
         applySolution: function(solution) {
             this.originalComponent.set('mnaCurrent', solution.getInstantaneousCurrent(this));
             this.originalComponent.set('current',    solution.getTimeAverageCurrent(this));
-            console.log('current: ' + solution.getInstantaneousCurrent(this) + ', ' + solution.getTimeAverageCurrent(this) + '; voltageDrop: ' + solution.getTimeAverageVoltage(this))
         }
 
     });

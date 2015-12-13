@@ -160,21 +160,26 @@ define(function(require) {
             $text.bind('keyup', _.bind(function(event) {
                 var value = parseFloat($(event.target).val());
                 var clamped = false;
-                if (value > max) {
-                    value = max;
-                    clamped = true;
+                if (isNaN(value)) {
+                    value = min
                 }
-                if (value < min) {
-                    value = min;
-                    clamped = true;
+                else {
+                    if (value > max) {
+                        value = max;
+                        clamped = true;
+                    }
+                    if (value < min) {
+                        value = min;
+                        clamped = true;
+                    }
                 }
 
                 this.inputLock(function() {
-                    this.$slider.val(value);
+                    $slider.val(value);
                     this.model.set(modelProperty, value);
 
                     if (clamped)
-                        this.$text.val(value);
+                        $text.val(value);
                 });
             }, this));
         },

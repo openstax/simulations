@@ -357,7 +357,7 @@ define(function (require) {
             if (debug) {
                 console.log(equations);
                 console.log('a=', _.map(A, function(row){ return row.join(',') }).join('\n'));
-                console.log('z=', _.map(z, function(row){ return row.join(',') }).join('\n'));
+                console.log('z=', _.map(z, function(row){ return row.join(',') }).join(','));
                 console.log('unknowns=', this.getUnknowns());
             }
 
@@ -377,7 +377,7 @@ define(function (require) {
             }
 
             if (debug) {
-                console.log('x=', x);
+                console.log('x=', _.map(x, function(row){ return row.join(',') }).join(','));
             }
 
             return MNASolution.create(voltageMap, currentSolutions);

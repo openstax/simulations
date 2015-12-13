@@ -361,4 +361,42 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
     });
 
+    it('MNACircuitSolver should convert and solve core circuits with resistive batteries', function(){
+        var junction0 = new Junction({ position: new Vector2(0, 0) });
+        var junction1 = new Junction({ position: new Vector2(1, 0) });
+        var junction2 = new Junction({ position: new Vector2(0, 1) });
+
+        var battery = new Battery({
+            startJunction: junction0,
+            endJunction: junction1,
+            voltageDrop: 10,
+            internalResistance: 5,
+            internalResistanceOn: true
+        });
+
+        var resistor1 = new Resistor({
+            startJunction: junction1,
+            endJunction: junction2,
+            resistance: 10
+        });
+
+        var resistor2 = new Resistor({
+            startJunction: junction2,
+            endJunction: junction0,
+            resistance: 10
+        });
+
+        var circuit = new Circuit();
+        circuit.addBranch(battery);
+        circuit.addBranch(resistor1);
+        circuit.addBranch(resistor2);
+
+        var solver = new MNACircuitSolver();
+        solver.solve(circuit, 1 / 30);
+
+        var batterySolutionCurrent = 10 / 20;
+
+        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    });
+
 });
