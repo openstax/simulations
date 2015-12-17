@@ -180,6 +180,29 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                              BULB VIEW                              **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightBulbView = {};
+
+    /**
+     * The percent of the image width/height that would equal the offset from the
+     *   origin (the start junction) to the end junction
+     */
+    LightBulbView.END_POINT_OFFSET_PERCENT_X = (25 / 125);
+    LightBulbView.END_POINT_OFFSET_PERCENT_Y = (40 / 213);
+    /**
+     * Ratio of the length of the vector from start to end junction in pixels to
+     *   width of the image in pixels
+     */
+    LightBulbView.LENGTH_TO_WIDTH_RATIO = Math.sqrt(25 * 25 + 40 * 40) / 125;
+
+    Constants.LightBulbView = LightBulbView;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                            ELECTRONS VIEW                           **
      **                                                                     **
      *************************************************************************/

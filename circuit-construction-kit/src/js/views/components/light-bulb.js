@@ -25,18 +25,6 @@ define(function(require) {
             ComponentView.prototype.contextMenuContent,
 
         /**
-         * The percent of the image width/height that would equal the offset from the
-         *   origin (the start junction) to the end junction
-         */
-        endPointOffsetPercentX: (25 / 125), 
-        endPointOffsetPercentY: (40 / 213),
-        /**
-         * Ratio of the length of the vector from start to end junction in pixels to
-         *   width of the image in pixels
-         */
-        lengthToWidthRatio: Math.sqrt(25 * 25 + 40 * 40) / 125,
-
-        /**
          * Initializes the new LightBulbView.
          */
         initialize: function(options) {
@@ -99,12 +87,13 @@ define(function(require) {
 
             var modelLength = vec.length();
             var viewLength = this.mvt.modelToViewDeltaX(modelLength);
-            var viewWidth = viewLength / this.lengthToWidthRatio;
+            var viewWidth = viewLength / LightBulbView.LENGTH_TO_WIDTH_RATIO;
             var imageWidth = this.onSprite.texture.width;
             var scale = viewWidth / imageWidth;
 
-            var angle = vec.angle();
+            var angle = -Math.atan2(vec.y, vec.x);
             angle += LightBulbView.getRotationOffset(this.model.get('connectAtLeft'));
+            angle += Math.PI / 2;
 
             if (Math.abs(scale) > 1E-4) {
                 this.displayObject.scale.x = scale;
@@ -130,6 +119,17 @@ define(function(require) {
 
             this.initShowValueMenuItem($contextMenu);
             this.initChangeResistanceMenuItem($contextMenu);
+            this.initFlipMenuItem($contextMenu);
+        },
+
+        initFlipMenuItem: function($contextMenu) {
+            $contextMenu.on('click', '.flip-btn', _.bind(this.flip, this));
+        },
+
+        flip: function() {
+            this.model.flip();
+            this.update();
+            this.hidePopover();
         },
 
         generateTexture: function() {
@@ -137,16 +137,16 @@ define(function(require) {
             return texture;
         }
 
-    }, {
+    }, _.extend({
 
         getRotationOffset: function(connectAtLeft) {
-            var x = this.endPointOffsetPercentX;
-            var y = this.endPointOffsetPercentY;
+            var x = LightBulbView.END_POINT_OFFSET_PERCENT_X;
+            var y = LightBulbView.END_POINT_OFFSET_PERCENT_Y;
             var sign = connectAtLeft ? 1 : -1;
             return -Math.atan2(x, y) * sign;
         }
 
-    });
+    }, Constants.LightBulbView));
 
     return LightBulbView;
 });
