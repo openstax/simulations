@@ -22,8 +22,10 @@ define(function (require) {
         stamp: function(row, A, z, indexOfVariable) {
             z.set(row, 0, this.rhs);
             for (var i = 0; i < this.terms.length; i++) {
-                var a = this.terms[i];
-                A.set(row, indexOfVariable(a.variable), a.coefficient + A.get(row, indexOfVariable(a.variable)));
+                var term = this.terms[i];
+                var index = indexOfVariable(term.variable);
+                console.log(row, index)
+                A.set(row, index, term.coefficient + A.get(row, index));
             }
         }
 

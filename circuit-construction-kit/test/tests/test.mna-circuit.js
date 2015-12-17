@@ -224,7 +224,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
     });
 
     it('wacky node order won\'t break things', function(){
-        var battery   = MNACompanionBattery.create( 0, 3,  5);
+        var battery   = MNACompanionBattery.create( 0, 3, 10);
         var resistor1 = MNACompanionResistor.create(1, 2, 10);
         var resistor2 = MNACompanionResistor.create(2, 0, 10);
         var resistor3 = MNACompanionResistor.create(3, 1,  5);
@@ -233,7 +233,22 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
 
         var solution = circuit.solve();
 
-        var batterySolutionCurrent = 5 / 25;
+        var batterySolutionCurrent = 10 / 25;
+
+        chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
+    });
+
+    it('wacky node order won\'t break things - control', function(){
+        var battery   = MNACompanionBattery.create( 0, 1, 10);
+        var resistor1 = MNACompanionResistor.create(1, 2, 10);
+        var resistor2 = MNACompanionResistor.create(2, 3, 10);
+        var resistor3 = MNACompanionResistor.create(3, 0,  5);
+
+        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
+
+        var solution = circuit.solve();
+
+        var batterySolutionCurrent = 10 / 25;
 
         chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
     });
@@ -377,44 +392,6 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
     });
 
     it('MNACircuitSolver should convert and solve core circuits with resistive batteries', function(){
-        // var junction0 = new Junction({ position: new Vector2(0, 0) });
-        // var junction1 = new Junction({ position: new Vector2(1, 0) });
-        // var junction2 = new Junction({ position: new Vector2(0, 1) });
-        // var junction3 = new Junction({ position: new Vector2(1, 1) });
-
-        // var battery = new Battery({
-        //     startJunction: junction0,
-        //     endJunction: junction3,
-        //     voltageDrop: 10,
-        //     internalResistance: 0,
-        //     internalResistanceOn: true
-        // });
-
-        // var resistor1 = new Resistor({
-        //     startJunction: junction1,
-        //     endJunction: junction2,
-        //     resistance: 10
-        // });
-
-        // var resistor2 = new Resistor({
-        //     startJunction: junction2,
-        //     endJunction: junction0,
-        //     resistance: 10
-        // });
-
-        // var resistor3 = new Resistor({
-        //     startJunction: junction3,
-        //     endJunction: junction1,
-        //     resistance: 5
-        // });
-
-        // var circuit = new Circuit();
-        // circuit.addBranch(battery);
-        // circuit.addBranch(resistor1);
-        // circuit.addBranch(resistor2);
-        // circuit.addBranch(resistor3);
-
-        // Works -------------------
         var junction0 = new Junction({ position: new Vector2(0, 0) });
         var junction1 = new Junction({ position: new Vector2(1, 0) });
         var junction2 = new Junction({ position: new Vector2(0, 1) });
@@ -422,7 +399,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
 
         var battery = new Battery({
             startJunction: junction0,
-            endJunction: junction1,
+            endJunction: junction3,
             voltageDrop: 10,
             internalResistance: 0,
             internalResistanceOn: true
@@ -436,13 +413,13 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
 
         var resistor2 = new Resistor({
             startJunction: junction2,
-            endJunction: junction3,
+            endJunction: junction0,
             resistance: 10
         });
 
         var resistor3 = new Resistor({
             startJunction: junction3,
-            endJunction: junction0,
+            endJunction: junction1,
             resistance: 5
         });
 
@@ -451,6 +428,44 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         circuit.addBranch(resistor1);
         circuit.addBranch(resistor2);
         circuit.addBranch(resistor3);
+
+        // Works -------------------
+        // var junction0 = new Junction({ position: new Vector2(0, 0) });
+        // var junction1 = new Junction({ position: new Vector2(1, 0) });
+        // var junction2 = new Junction({ position: new Vector2(0, 1) });
+        // var junction3 = new Junction({ position: new Vector2(1, 1) });
+
+        // var battery = new Battery({
+        //     startJunction: junction0,
+        //     endJunction: junction1,
+        //     voltageDrop: 10,
+        //     internalResistance: 0,
+        //     internalResistanceOn: true
+        // });
+
+        // var resistor1 = new Resistor({
+        //     startJunction: junction1,
+        //     endJunction: junction2,
+        //     resistance: 10
+        // });
+
+        // var resistor2 = new Resistor({
+        //     startJunction: junction2,
+        //     endJunction: junction3,
+        //     resistance: 10
+        // });
+
+        // var resistor3 = new Resistor({
+        //     startJunction: junction3,
+        //     endJunction: junction0,
+        //     resistance: 5
+        // });
+
+        // var circuit = new Circuit();
+        // circuit.addBranch(battery);
+        // circuit.addBranch(resistor1);
+        // circuit.addBranch(resistor2);
+        // circuit.addBranch(resistor3);
 
         var solver = new MNACircuitSolver();
         solver.solve(circuit, 1 / 30);
