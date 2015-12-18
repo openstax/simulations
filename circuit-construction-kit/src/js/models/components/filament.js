@@ -17,8 +17,6 @@ define(function (require) {
     var Filament = PathBranch.extend({
 
         defaults: _.extend({}, PathBranch.prototype.defaults, {
-            shellJunction: undefined,
-            tailJunction: undefined,
             pivotToResistorDY: undefined, // The pin is the assumed origin.
             resistorWidth: undefined,
             connectAtRight: true
@@ -40,13 +38,11 @@ define(function (require) {
 
         startJunctionChanged: function(models, startJunction) {
             PathBranch.prototype.startJunctionChanged.apply(this, arguments);
-            this.get('tailJunction').set(startJunction);
             this.recompute();
         },
 
         endJunctionChanged: function(models, endJunction) {
             PathBranch.prototype.endJunctionChanged.apply(this, arguments);
-            this.get('shellJunction').set(endJunction);
             this.recompute();
         },
 
@@ -78,7 +74,7 @@ define(function (require) {
         },
 
         recompute: function() {
-            if (!this.get('tailJunction') || !this.get('shellJunction'))
+            if (!this.get('startJunction') || !this.get('endJunction'))
                 return;
             
             var tilt = Constants.TILT;
@@ -86,8 +82,8 @@ define(function (require) {
                 tilt = -tilt;
             
             this.northDir
-                .set(this.get('shellJunction').get('position'))
-                .sub(this.get('tailJunction').get('position'))
+                .set(this.get('endJunction').get('position'))
+                .sub(this.get('startJunction').get('position'))
                 .normalize()
                 .rotate(-tilt);
 
@@ -103,16 +99,18 @@ define(function (require) {
                 return;
             }
 
-            this.pin.set(this.get('shellJunction').get('position'));
+            this.pin.set(this.get('endJunction').get('position'));
 
             var pt = this.getPoint(-this.get('resistorWidth') / 2, this.get('pivotToResistorDY'));
             if (isNaN(pt.x) || isNaN(pt.y))
                 throw 'Point was nan: ' + pt;
             
-            this.reset(this.get('tailJunction').get('position'), pt);
+            this.reset(this.get('startJunction').get('position'), pt);
             this.addPoint(this.getVector(-this.get('resistorWidth') / 4, Constants.BULB_DIMENSION.height * 0.2));
             this.addPoint(this.getVector(this.get('resistorWidth') * 0.68, 0));
             this.addPoint(this.pin);
+
+            this.trigger('recomputed');
         },
 
         indexOf: function(seg) {

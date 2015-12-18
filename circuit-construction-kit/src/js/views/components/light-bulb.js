@@ -8,6 +8,7 @@ define(function(require) {
     var Vector2     = require('common/math/vector2');
 
     var ComponentView = require('views/component');
+    var FilamentView  = require('views/components/filament');
 
     var Constants = require('constants');
     var Assets    = require('assets');
@@ -37,13 +38,23 @@ define(function(require) {
         },
 
         initComponentGraphics: function() {
+            this.spriteLayer = new PIXI.Container();
+
             this.offSprite = Assets.createSprite(Assets.Images.BULB_OFF);
             this.onSprite  = Assets.createSprite(Assets.Images.BULB_ON);
             this.offSprite.anchor.x = this.onSprite.anchor.x = 0.5;
             this.offSprite.anchor.y = this.onSprite.anchor.y = 1;
             this.onSprite.alpha = 0;
-            this.displayObject.addChild(this.offSprite);
-            this.displayObject.addChild(this.onSprite);
+            this.spriteLayer.addChild(this.offSprite);
+            this.spriteLayer.addChild(this.onSprite);
+
+            this.filamentView = new FilamentView({
+                mvt: this.mvt,
+                model: this.model.filament
+            });
+
+            this.displayObject.addChild(this.filamentView.displayObject);
+            this.displayObject.addChild(this.spriteLayer);
             
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
@@ -77,6 +88,7 @@ define(function(require) {
             ComponentView.prototype.updateMVT.apply(this, arguments);
 
             this.update();
+            this.filamentView.updateMVT(mvt);
         },
 
         update: function() {
@@ -96,19 +108,19 @@ define(function(require) {
             angle += Math.PI / 2;
 
             if (Math.abs(scale) > 1E-4) {
-                this.displayObject.scale.x = scale;
-                this.displayObject.scale.y = scale;
+                this.spriteLayer.scale.x = scale;
+                this.spriteLayer.scale.y = scale;
                 
                 this.hoverLayer.scale.x = scale;
                 this.hoverLayer.scale.y = scale;
             }
 
-            this.displayObject.rotation = angle;
+            this.spriteLayer.rotation = angle;
             this.hoverLayer.rotation = angle;
 
             var viewStartPosition = this.mvt.modelToView(this.model.getStartPoint());
-            this.displayObject.x = viewStartPosition.x;
-            this.displayObject.y = viewStartPosition.y;
+            this.spriteLayer.x = viewStartPosition.x;
+            this.spriteLayer.y = viewStartPosition.y;
 
             this.hoverLayer.x = viewStartPosition.x;
             this.hoverLayer.y = viewStartPosition.y;

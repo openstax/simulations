@@ -13,14 +13,8 @@ define(function (require) {
      */
     var PathBranch = Branch.extend({
 
-        defaults: _.extend({}, Branch.prototype.defaults, {
-            startPoint: undefined
-        }),
-
         initialize: function(attributes, options) {
             Branch.prototype.initialize.apply(this, [attributes, options]);
-
-            this.set('startPoint', new Vector2(this.get('startPoint')));
 
             this.segments = [];
 

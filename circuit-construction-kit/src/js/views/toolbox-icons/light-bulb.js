@@ -46,13 +46,7 @@ define(function(require) {
          * Creates a new object of whatever this icon represents
          */
         createComponentView: function(x, y) {
-            // Bulb dummyBulb = new Bulb( model.getCircuitChangeListener(), new Junction( 0, 0 ), new Junction( 1, 0 ), 1, 1, 0.01, true );
-            // double tilt = BulbComponentNode.getTiltValue( dummyBulb );
-            // Bulb bulb = new Bulb( new Point(), Vector2D.createPolar( 1, -tilt - Math.PI / 2 ), 0.43, 1, 1, model.getCircuitChangeListener() );
-            // bulb.flip( null );
-
             var angle = LightBulbView.getDefaultRotation();
-            console.log(angle)
 
             var model = new Bulb({
                 length: 0.43,

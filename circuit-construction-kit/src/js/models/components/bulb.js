@@ -27,16 +27,16 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
-
             this.filament = new Filament({
-                tailJunction: this.get('startJunction'), 
-                shellJunction: this.get('endJunction'), 
+                startJunction: this.get('startJunction'), 
+                endJunction: this.get('endJunction'), 
                 numPeaks: 3, 
                 pivotToResistorDY: this.get('height') * 1, 
                 resistorWidth: this.get('width') * 0.8, 
                 zigHeight: this.get('height') * 0.061
             });
+
+            CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
             this.branchSet = new BranchSet();
 
@@ -104,6 +104,16 @@ define(function (require) {
                     .addJunction(this.get('endJunction'))
                     .translate(delta);
             }
+        },
+
+        startJunctionChanged: function(model, startJunction) {
+            CircuitComponent.prototype.startJunctionChanged.apply(this, arguments);
+            this.filament.set('startJunction', startJunction);
+        },
+
+        endJunctionChanged: function(model, endJunction) {
+            CircuitComponent.prototype.endJunctionChanged.apply(this, arguments);
+            this.filament.set('endJunction', endJunction);
         },
 
         _startJunctionChanged: function(model, startJunction) {
