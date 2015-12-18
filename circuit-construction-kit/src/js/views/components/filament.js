@@ -36,7 +36,7 @@ define(function(require) {
         draw: function() {
             var graphics = this.displayObject;
             graphics.clear();
-            graphics.lineStyle(8, 0x555555, 1);
+            graphics.lineStyle(4, this.getColor(), 1);
 
             var segments = this.model.segments;
             if (segments.length) {
@@ -51,6 +51,10 @@ define(function(require) {
                 if (graphics.currentPath && graphics.currentPath.shape)
                     graphics.currentPath.shape.closed = false;
             }
+        },
+
+        getColor: function() {
+            return 0x555555;
         },
 
         updateMVT: function(mvt) {

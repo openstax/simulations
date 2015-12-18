@@ -189,8 +189,12 @@ define(function (require) {
      * For the equation A * X = B, where X and B are single columns, solves for X and returns it.
      */
     Matrix.prototype.solve = function(B, returnArray) {
-        if (this.length < 1)
-            throw 'Matrix must have at least one row to solve.';
+        if (this.length < 1) {
+            if (returnArray)
+                return [];
+            else
+                return new Matrix(0, 0);
+        }
 
         if (this.length !== B.length)
             throw 'A and B must have the same number of rows.';

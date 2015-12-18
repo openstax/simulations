@@ -106,7 +106,7 @@ define(function (require) {
                 throw 'Point was nan: ' + firstPoint;
             
             var origin = this.get('startJunction').get('position');
-            this.reset(this.getVector(0.02, 0.04).add(origin), firstPoint);
+            this.reset(this.getVector(0.01, 0.04).add(origin), firstPoint);
             this.appendPointFromVector(this.getVector(-this.get('resistorWidth') * 0.15,  Constants.BULB_DIMENSION.height * 0.25));
             this.appendPointFromVector(this.getVector( this.get('resistorWidth') * 0.68, -Constants.BULB_DIMENSION.height * 0.05));
             this.appendPointFromVector(this.getVector(-this.get('resistorWidth') * 0.35, -Constants.BULB_DIMENSION.height * 0.58));

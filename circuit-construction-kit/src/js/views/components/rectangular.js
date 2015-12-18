@@ -23,6 +23,9 @@ define(function(require) {
         imagePath:     Assets.Images.RESISTOR,
         maskImagePath: Assets.Images.RESISTOR_MASK,
 
+        anchorX: 0,
+        anchorY: 0.5,
+
         /**
          * Initializes the new RectangularComponentView.
          */
@@ -35,7 +38,8 @@ define(function(require) {
 
         initComponentGraphics: function() {
             this.sprite = Assets.createSprite(this.imagePath);
-            this.sprite.anchor.y = 0.5;
+            this.sprite.anchor.x = this.anchorX;
+            this.sprite.anchor.y = this.anchorY;
             this.displayObject.addChild(this.sprite);
             
             this.displayObject.buttonMode = true;
@@ -44,7 +48,8 @@ define(function(require) {
 
         initHoverGraphics: function() {
             var mask = Assets.createSprite(this.maskImagePath);
-            mask.anchor.y = 0.5;
+            mask.anchor.x = this.anchorX;
+            mask.anchor.y = this.anchorY;
 
             var bounds = mask.getLocalBounds();
             var hoverGraphics = new PIXI.Graphics();
