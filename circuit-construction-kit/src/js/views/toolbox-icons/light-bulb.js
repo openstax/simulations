@@ -51,7 +51,7 @@ define(function(require) {
             // Bulb bulb = new Bulb( new Point(), Vector2D.createPolar( 1, -tilt - Math.PI / 2 ), 0.43, 1, 1, model.getCircuitChangeListener() );
             // bulb.flip( null );
 
-            var angle = LightBulbView.getRotationOffset();
+            var angle = LightBulbView.getDefaultRotation();
             console.log(angle)
 
             var model = new Bulb({

@@ -144,6 +144,12 @@ define(function(require) {
             var y = LightBulbView.END_POINT_OFFSET_PERCENT_Y;
             var sign = connectAtLeft ? 1 : -1;
             return -Math.atan2(x, y) * sign;
+        },
+
+        getDefaultRotation: function() {
+            var x = LightBulbView.END_POINT_OFFSET_PERCENT_X;
+            var y = LightBulbView.END_POINT_OFFSET_PERCENT_Y;
+            return Math.atan2(y, x);
         }
 
     }, Constants.LightBulbView));

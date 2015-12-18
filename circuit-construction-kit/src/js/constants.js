@@ -190,13 +190,15 @@ define(function (require) {
      * The percent of the image width/height that would equal the offset from the
      *   origin (the start junction) to the end junction
      */
-    LightBulbView.END_POINT_OFFSET_PERCENT_X = (25 / 125);
-    LightBulbView.END_POINT_OFFSET_PERCENT_Y = (40 / 213);
+    var offsetX = 18;
+    var offsetY = 40;
+    LightBulbView.END_POINT_OFFSET_PERCENT_X = (offsetX / 125);
+    LightBulbView.END_POINT_OFFSET_PERCENT_Y = (offsetY / 213);
     /**
      * Ratio of the length of the vector from start to end junction in pixels to
      *   width of the image in pixels
      */
-    LightBulbView.LENGTH_TO_WIDTH_RATIO = Math.sqrt(25 * 25 + 40 * 40) / 125;
+    LightBulbView.LENGTH_TO_WIDTH_RATIO = Math.sqrt(offsetX * offsetX + offsetY * offsetY) / 125;
 
     Constants.LightBulbView = LightBulbView;
 
