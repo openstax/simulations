@@ -242,6 +242,9 @@ define(function (require, exports, module) {
                     this.rotateComponent(junction, target);
                 else
                     this.translateJunction(junction, target);
+
+                var subgraph = this.circuit.getConnectedSubgraph( junction );
+                this.model.layoutElectrons(subgraph);
             },
 
             translateJunction: function(junction, target) {
@@ -260,9 +263,6 @@ define(function (require, exports, module) {
                     .addBranches(strongConnections)
                     .addJunction(junction)
                     .translate(dx);
-
-                var subgraph = this.circuit.getConnectedSubgraph( junction );
-                this.model.layoutElectrons(subgraph);
             },
 
             rotateComponent: function(junction, target) {
