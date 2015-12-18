@@ -101,14 +101,16 @@ define(function (require) {
 
             this.pin.set(this.get('endJunction').get('position'));
 
-            var pt = this.getPoint(-this.get('resistorWidth') / 2, this.get('pivotToResistorDY'));
-            if (isNaN(pt.x) || isNaN(pt.y))
-                throw 'Point was nan: ' + pt;
+            var firstPoint = new Vector2(this.getPoint(-this.get('resistorWidth') * 0.35, Constants.BULB_DIMENSION.height * 0.4));
+            if (isNaN(firstPoint.x) || isNaN(firstPoint.y))
+                throw 'Point was nan: ' + firstPoint;
             
-            this.reset(this.get('startJunction').get('position'), pt);
-            this.addPoint(this.getVector(-this.get('resistorWidth') / 4, Constants.BULB_DIMENSION.height * 0.2));
-            this.addPoint(this.getVector(this.get('resistorWidth') * 0.68, 0));
-            this.addPoint(this.pin);
+            var origin = this.get('startJunction').get('position');
+            this.reset(this.getVector(0.02, 0.04).add(origin), firstPoint);
+            this.appendPointFromVector(this.getVector(-this.get('resistorWidth') * 0.15,  Constants.BULB_DIMENSION.height * 0.25));
+            this.appendPointFromVector(this.getVector( this.get('resistorWidth') * 0.68, -Constants.BULB_DIMENSION.height * 0.05));
+            this.appendPointFromVector(this.getVector(-this.get('resistorWidth') * 0.35, -Constants.BULB_DIMENSION.height * 0.58));
+            this.appendPoint(this.pin);
 
             this.trigger('recomputed');
         },

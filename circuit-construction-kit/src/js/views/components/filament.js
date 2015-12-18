@@ -39,11 +39,17 @@ define(function(require) {
             graphics.lineStyle(8, 0x555555, 1);
 
             var segments = this.model.segments;
-            for (var i = 0; i < segments.length; i++) {
+            if (segments.length) {
                 var start = this.mvt.modelToView(segments[0].start);
                 graphics.moveTo(start.x, start.y);
-                var end = this.mvt.modelToView(segments[0].end);
-                graphics.lineTo(end.x, end.y);
+
+                for (var i = 0; i < segments.length; i++) {
+                    var end = this.mvt.modelToView(segments[i].end);
+                    graphics.lineTo(end.x, end.y);
+                }
+
+                if (graphics.currentPath && graphics.currentPath.shape)
+                    graphics.currentPath.shape.closed = false;
             }
         },
 

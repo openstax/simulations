@@ -31,7 +31,7 @@ define(function (require) {
                 startJunction: this.get('startJunction'), 
                 endJunction: this.get('endJunction'), 
                 numPeaks: 3, 
-                pivotToResistorDY: this.get('height') * 1, 
+                pivotToResistorDY: this.get('height') * 0.8, 
                 resistorWidth: this.get('width') * 0.8, 
                 zigHeight: this.get('height') * 0.061
             });

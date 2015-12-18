@@ -58,8 +58,13 @@ define(function (require) {
             this.segments.push(new Segment(new Vector2(start), new Vector2(next)));
         },
 
-        addPoint: function(position) {
+        appendPoint: function(position) {
             this.segments.push(new Segment(new Vector2(this.lastPoint()), new Vector2(position)));
+        },
+
+        appendPointFromVector: function(vec) {
+            var point = vec.add(this.lastPoint());
+            this.appendPoint(point);
         },
 
         lastPoint: function() {
