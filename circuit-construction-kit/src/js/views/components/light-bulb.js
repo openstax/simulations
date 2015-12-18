@@ -127,7 +127,8 @@ define(function(require) {
         },
 
         flip: function() {
-            this.model.flip();
+            this.model.flip(this.circuit);
+            this.model.set('selected', false);
             this.update();
             this.hidePopover();
         },

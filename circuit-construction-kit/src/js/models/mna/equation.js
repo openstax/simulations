@@ -24,7 +24,7 @@ define(function (require) {
             for (var i = 0; i < this.terms.length; i++) {
                 var term = this.terms[i];
                 var index = indexOfVariable(term.variable);
-                console.log(row, index)
+                // console.log(row, index)
                 A.set(row, index, term.coefficient + A.get(row, index));
             }
         }

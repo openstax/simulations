@@ -10,6 +10,8 @@ define(function (require) {
     var Filament         = require('models/components/filament');
     var BranchSet        = require('models/branch-set');
 
+    var LightBulbView = require('views/components/light-bulb');
+
     var Constants = require('constants');
 
     /**
@@ -84,16 +86,12 @@ define(function (require) {
             return Math.pow(power / maxPower, 0.354);
         },
 
-        flip: function() {
-            var circuit = this.get('circuit');
-
+        flip: function(circuit) {
             this.set('connectAtLeft', !this.get('connectAtLeft'));
 
             if (circuit) {
-                var sign = (this.get('connectAtLeft')) ? 1 : -1;
-                
-                var tilt = Constants.TILT;
-                var vector = this.getDirectionVector().rotate(tilt * 2 * sign);
+                var tilt = LightBulbView.getRotationOffset(this.get('connectAtLeft'));
+                var vector = this.getDirectionVector().rotate(tilt * 2);
                 var target = vector.add(this.get('startJunction').get('position'));
                 var delta = this._delta.set(target).sub(this.get('endJunction').get('position'));
 
