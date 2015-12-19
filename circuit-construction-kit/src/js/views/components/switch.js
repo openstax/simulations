@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
     
     var PixiToImage = require('common/v3/pixi/pixi-to-image');
+    var Vector2     = require('common/math/vector2');
 
     var RectangularComponentView = require('views/components/rectangular');
 
@@ -38,7 +39,11 @@ define(function(require) {
          * Initializes the new SwitchView.
          */
         initialize: function(options) {
+            this._pivotToPointer = new Vector2();
+
             RectangularComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:handleAngle', this.updateHandleAngle);
         },
 
         initComponentGraphics: function() {
@@ -82,6 +87,10 @@ define(function(require) {
             this.hideHandleHoverGraphics();
         },
 
+        updateHandleAngle: function(model, handleAngle) {
+            this.handle.rotation = handleAngle;
+        },
+
         showHoverGraphics: function() {
             RectangularComponentView.prototype.showHoverGraphics.apply(this, arguments);
 
@@ -96,23 +105,54 @@ define(function(require) {
         },
 
         handleDragStart: function(event) {
-            SwitchView.setSomeComponentIsDragging(true);
+            SwitchView.setSomeComponentDragging(true);
             this.handleDragging = true;
             event.stopPropagation();
-            console.log('hey')
         },
 
         handleDrag: function(event) {
             if (this.handleDragging) {
-                
+
+                // TODO:
+                // Instead of keeping track of starting angle and everything, let's just
+                //   use the dot product between the component's direction vector and
+                //   the vector from the pivot to our pointer.
+                //
+                //   A dot B = |A| * |B| * cos(t)
+                //   cos(t) = (A dot B) / (|A| * |B|)
+                //   t = acos((A dot B) / (|A| * |B|))
+
+                // var pivot = this._pivot
+                //     .set(this.displayObject.x, this.displayObject.y)
+                //     .add(this.handle.x, this.handle.y);
+
+                // var pivotToPointer = this._pivotToPointer
+                //     .set(event.data.global.x, event.data.global.y)
+                //     .sub(pivot);
+
+                var pivotToPointer = event.data.getLocalPosition(this.displayObject, this._pivotToPointer).sub(this.handle.x, this.handle.y);
+                var componentDirection = this._direction.set(this.model.getStartPoint()).sub(this.model.getEndPoint());
+console.log(pivotToPointer)
+                var theta = 0;
+                var magProduct = pivotToPointer.length() * componentDirection.length();
+                if (magProduct)
+                    theta = Math.acos(pivotToPointer.dot(componentDirection) / magProduct);
+
+                if (theta > Math.PI)
+                    theta = Math.PI;
+                if (theta < 0)
+                    theta = 0;
+
+                this.model.set('handleAngle', theta);
+                console.log(theta);
             }
         },
 
         handleDragEnd: function(event) {
             if (this.handleDragging) {
-                SwitchView.setSomeComponentIsDragging(false);
+                this.handleDragging = false;
 
-                console.log('dragging handle')
+                SwitchView.setSomeComponentDragging(false);
 
                 if (!this.handleHovering)
                     this.hideHandleHoverGraphics();

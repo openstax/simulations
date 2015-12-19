@@ -8,8 +8,8 @@ define(function (require) {
 
     var Constants = require('constants');
     var OPEN_RESISTANCE = 1E11;
-    var DEFAULT_HANDLE_ANGLE_OPEN = 5;
-    var HANDLE_ANGLE_CLOSED = Math.PI;
+    var DEFAULT_HANDLE_ANGLE_OPEN = Math.PI;
+    var HANDLE_ANGLE_CLOSED = 0;
 
     /**
      * A switch
