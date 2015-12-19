@@ -241,7 +241,7 @@ define(function (require) {
             for (var i = 0; i < adj.length; i++) {
                 var branch = adj[i];
                 // Skip open branches
-                if (!(branch instanceof Switch && !branch.isClosed())) {
+                if (!(branch instanceof Switch && !branch.get('closed'))) {
                     var opposite = branch.opposite(junction);
                     if (visited.indexOf(branch) === -1) {
                         visited.push(branch);

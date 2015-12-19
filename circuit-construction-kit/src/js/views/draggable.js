@@ -205,6 +205,16 @@ define(function(require) {
 
         initContextMenu: function($contextMenu) {}
 
+    }, {
+
+        someComponentIsDragging: function() {
+            return someComponentIsDragging;
+        },
+
+        setSomeComponentDragging: function(dragging) {
+            someComponentIsDragging = dragging;
+        }
+
     });
 
     return Draggable;

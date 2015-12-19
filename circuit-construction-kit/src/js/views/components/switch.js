@@ -21,6 +21,19 @@ define(function(require) {
 
         anchorY: 0.68,
 
+        // events: {
+        //     'touchstart      .handle': 'handleDragStart',
+        //     'mousedown       .handle': 'handleDragStart',
+        //     'touchmove       .handle': 'handleDrag',
+        //     'mousemove       .handle': 'handleDrag',
+        //     'touchend        .handle': 'handleDragEnd',
+        //     'mouseup         .handle': 'handleDragEnd',
+        //     'touchendoutside .handle': 'handleDragEnd',
+        //     'mouseupoutside  .handle': 'handleDragEnd',
+        //     'mouseover       .handle': 'handleHover',
+        //     'mouseout        .handle': 'handleUnhover'
+        // },
+
         /**
          * Initializes the new SwitchView.
          */
@@ -46,6 +59,84 @@ define(function(require) {
 
             this.sprite.addChild(this.handle);
             this.sprite.addChild(this.pivot);
+
+            this.initHandleHoverGraphics();
+        },
+
+        initHandleHoverGraphics: function() {
+            var mask = Assets.createSprite(Assets.Images.SWITCH_HANDLE_MASK);
+            mask.anchor.x = this.handle.anchor.x;
+            mask.anchor.y = this.handle.anchor.y;
+
+            var bounds = mask.getLocalBounds();
+            var hoverGraphics = new PIXI.Graphics();
+            hoverGraphics.beginFill(this.selectionColor, 1);
+            hoverGraphics.drawRect(bounds.x - 4, bounds.y - 4, bounds.width + 8, bounds.height + 8);
+            hoverGraphics.endFill();
+            hoverGraphics.mask = mask;
+
+            this.handle.addChild(mask);
+            this.handle.addChild(hoverGraphics);
+
+            this.handleHoverGraphics = hoverGraphics;
+            this.hideHandleHoverGraphics();
+        },
+
+        showHoverGraphics: function() {
+            RectangularComponentView.prototype.showHoverGraphics.apply(this, arguments);
+
+            this.handleHoverGraphics.visible = true; 
+        },
+
+        hideHoverGraphics: function() {
+            RectangularComponentView.prototype.hideHoverGraphics.apply(this, arguments);
+
+            this.handleHoverGraphics.visible = false;
+        },
+
+        handleDragStart: function(event) {
+            SwitchView.setSomeComponentIsDragging(true);
+            this.handleDragging = true;
+            event.stopPropagation();
+            console.log('hey')
+        },
+
+        handleDrag: function(event) {
+            if (this.handleDragging) {
+                
+            }
+        },
+
+        handleDragEnd: function(event) {
+            if (this.handleDragging) {
+                SwitchView.setSomeComponentIsDragging(false);
+
+                console.log('dragging handle')
+
+                if (!this.handleHovering)
+                    this.hideHandleHoverGraphics();
+            }
+        },
+
+        handleHover: function(event) {
+            // if (this.handleDragging || !SwitchView.someComponentIsDragging()) {
+            //     this.handleHovering = true;
+            //     this.showHandleHoverGraphics(); 
+            // }
+        },
+
+        handleUnhover: function(event) {
+            // this.handleHovering = false;
+            // if (!this.handleDragging && !this.model.get('selected'))
+            //     this.hideHandleHoverGraphics();
+        },
+
+        showHandleHoverGraphics: function() {
+            this.handleHoverGraphics.visible = true; 
+        },
+
+        hideHandleHoverGraphics: function() {
+            this.handleHoverGraphics.visible = false;
         },
 
     });
