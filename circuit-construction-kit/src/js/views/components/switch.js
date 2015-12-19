@@ -21,18 +21,18 @@ define(function(require) {
 
         anchorY: 0.68,
 
-        // events: {
-        //     'touchstart      .handle': 'handleDragStart',
-        //     'mousedown       .handle': 'handleDragStart',
-        //     'touchmove       .handle': 'handleDrag',
-        //     'mousemove       .handle': 'handleDrag',
-        //     'touchend        .handle': 'handleDragEnd',
-        //     'mouseup         .handle': 'handleDragEnd',
-        //     'touchendoutside .handle': 'handleDragEnd',
-        //     'mouseupoutside  .handle': 'handleDragEnd',
-        //     'mouseover       .handle': 'handleHover',
-        //     'mouseout        .handle': 'handleUnhover'
-        // },
+        events: _.extend({}, RectangularComponentView.prototype.events, {
+            'touchstart      .handle': 'handleDragStart',
+            'mousedown       .handle': 'handleDragStart',
+            'touchmove       .handle': 'handleDrag',
+            'mousemove       .handle': 'handleDrag',
+            'touchend        .handle': 'handleDragEnd',
+            'mouseup         .handle': 'handleDragEnd',
+            'touchendoutside .handle': 'handleDragEnd',
+            'mouseupoutside  .handle': 'handleDragEnd',
+            'mouseover       .handle': 'handleHover',
+            'mouseout        .handle': 'handleUnhover'
+        }),
 
         /**
          * Initializes the new SwitchView.
@@ -85,13 +85,14 @@ define(function(require) {
         showHoverGraphics: function() {
             RectangularComponentView.prototype.showHoverGraphics.apply(this, arguments);
 
-            this.handleHoverGraphics.visible = true; 
+            this.showHandleHoverGraphics();
         },
 
         hideHoverGraphics: function() {
             RectangularComponentView.prototype.hideHoverGraphics.apply(this, arguments);
 
-            this.handleHoverGraphics.visible = false;
+            if (!this.handleHovering)
+                this.hideHandleHoverGraphics();
         },
 
         handleDragStart: function(event) {
@@ -118,17 +119,31 @@ define(function(require) {
             }
         },
 
+        hover: function() {
+            if (this.dragging || !SwitchView.someComponentIsDragging()) {
+                this.hovering = true;
+                if (!this.handleHovering)
+                    this.showHoverGraphics();    
+            }
+        },
+
         handleHover: function(event) {
-            // if (this.handleDragging || !SwitchView.someComponentIsDragging()) {
-            //     this.handleHovering = true;
-            //     this.showHandleHoverGraphics(); 
-            // }
+            if (this.handleDragging || !SwitchView.someComponentIsDragging()) {
+                this.handleHovering = true;
+                this.hideHoverGraphics();
+                this.showHandleHoverGraphics();
+            }
         },
 
         handleUnhover: function(event) {
-            // this.handleHovering = false;
-            // if (!this.handleDragging && !this.model.get('selected'))
-            //     this.hideHandleHoverGraphics();
+            this.handleHovering = false;
+            if (!this.handleDragging && !this.model.get('selected')) {
+                if (!this.hovering && !this.dragging)
+                    this.hideHandleHoverGraphics();
+                else
+                    this.showHoverGraphics();
+            }
+                
         },
 
         showHandleHoverGraphics: function() {
