@@ -116,39 +116,17 @@ define(function(require) {
         handleDrag: function(event) {
             if (this.handleDragging) {
 
-                // TODO:
-                // Instead of keeping track of starting angle and everything, let's just
-                //   use the dot product between the component's direction vector and
-                //   the vector from the pivot to our pointer.
-                //
-                //   A dot B = |A| * |B| * cos(t)
-                //   cos(t) = (A dot B) / (|A| * |B|)
-                //   t = acos((A dot B) / (|A| * |B|))
-
-                // var pivot = this._pivot
-                //     .set(this.displayObject.x, this.displayObject.y)
-                //     .add(this.handle.x, this.handle.y);
-
-                // var pivotToPointer = this._pivotToPointer
-                //     .set(event.data.global.x, event.data.global.y)
-                //     .sub(pivot);
-
                 var pivotToPointer = this.handleWrapper.toLocal(event.data.global);
-                pivotToPointer = this._pivotToPointer.set(pivotToPointer.x, pivotToPointer.y);
-                // var pivotToPointer = event.data.getLocalPosition(this.handleWrapper, this._pivotToPointer);
-                var componentDirection = this._direction.set(this.model.getStartPoint()).sub(this.model.getEndPoint());
+                var pivotToPointerAngle = this._pivotToPointer.set(pivotToPointer.x, pivotToPointer.y).angle();
 
-                var theta = 0;
-                var magProduct = pivotToPointer.length() * componentDirection.length();
-                if (magProduct)
-                    theta = Math.acos(pivotToPointer.dot(componentDirection) / magProduct);
+                var angle = pivotToPointerAngle - Math.PI;
 
-                if (theta > Math.PI)
-                    theta = Math.PI;
-                if (theta < 0)
-                    theta = 0;
+                if (angle > Math.PI || angle < -Math.PI / 2)
+                    angle = Math.PI;
+                else if (angle < 0)
+                    angle = 0;
 
-                this.model.set('handleAngle', theta);
+                this.model.set('handleAngle', angle);
             }
         },
 
