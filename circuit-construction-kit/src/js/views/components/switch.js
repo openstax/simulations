@@ -52,17 +52,20 @@ define(function(require) {
             this.handle = Assets.createSprite(Assets.Images.SWITCH_HANDLE);
             this.handle.anchor.x = 1;
             this.handle.anchor.y = 0.5;
-            this.handle.x = 305;
-            this.handle.y = -61;
             this.handle.buttonMode = true;
             this.handle.defaultCursor = 'move';
+
+            this.handleWrapper = new PIXI.Container();
+            this.handleWrapper.x = 305;
+            this.handleWrapper.y = -61;
+            this.handleWrapper.addChild(this.handle);
 
             this.pivot = Assets.createSprite(Assets.Images.SWITCH_BASE_PIVOT);
             this.pivot.anchor.y = 1;
             this.pivot.x = 290;
             this.pivot.y = -31;
 
-            this.sprite.addChild(this.handle);
+            this.sprite.addChild(this.handleWrapper);
             this.sprite.addChild(this.pivot);
 
             this.initHandleHoverGraphics();
@@ -130,9 +133,11 @@ define(function(require) {
                 //     .set(event.data.global.x, event.data.global.y)
                 //     .sub(pivot);
 
-                var pivotToPointer = event.data.getLocalPosition(this.displayObject, this._pivotToPointer).sub(this.handle.x, this.handle.y);
+                var pivotToPointer = this.handleWrapper.toLocal(event.data.global);
+                pivotToPointer = this._pivotToPointer.set(pivotToPointer.x, pivotToPointer.y);
+                // var pivotToPointer = event.data.getLocalPosition(this.handleWrapper, this._pivotToPointer);
                 var componentDirection = this._direction.set(this.model.getStartPoint()).sub(this.model.getEndPoint());
-console.log(pivotToPointer)
+
                 var theta = 0;
                 var magProduct = pivotToPointer.length() * componentDirection.length();
                 if (magProduct)
@@ -144,7 +149,6 @@ console.log(pivotToPointer)
                     theta = 0;
 
                 this.model.set('handleAngle', theta);
-                console.log(theta);
             }
         },
 
