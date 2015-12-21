@@ -26,7 +26,10 @@ define(function (require) {
         INDUCTOR:           'inductor.png',
         INDUCTOR_MASK:      'inductor-mask.png',
         ELECTRON:           'electron.png',
-        PENCIL:             'grab-bag/pencil.png'
+        DOG:                'grab-bag/dog.png',
+        HAND:               'grab-bag/hand.png',
+        PENCIL:             'grab-bag/pencil.png',
+        PAPER_CLIP:         'grab-bag/paper-clip.png'
     };
 
     Assets.SpriteSheets = {};
