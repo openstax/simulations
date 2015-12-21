@@ -127,6 +127,23 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                               SWITCH                                **
+     **                                                                     **
+     *************************************************************************/
+
+    var Switch = {};
+
+    Switch.OPEN_RESISTANCE = 1E11;
+    Switch.MAX_HANDLE_ANGLE = Math.PI * 0.6;
+    Switch.DEFAULT_HANDLE_ANGLE_OPEN = Switch.MAX_HANDLE_ANGLE;
+    Switch.HANDLE_ANGLE_CLOSED = 0;
+
+    Constants.Switch = Switch;
+    
+
+
+    /*************************************************************************
+     **                                                                     **
      **                     CONSTANT-DENSITY PROPAGATOR                     **
      **                                                                     **
      *************************************************************************/

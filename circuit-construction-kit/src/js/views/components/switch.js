@@ -44,6 +44,7 @@ define(function(require) {
             RectangularComponentView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:handleAngle', this.updateHandleAngle);
+            this.updateHandleAngle(this.model, this.model.get('handleAngle'));
         },
 
         initComponentGraphics: function() {
@@ -121,8 +122,8 @@ define(function(require) {
 
                 var angle = pivotToPointerAngle - Math.PI;
 
-                if (angle > Math.PI || angle < -Math.PI / 2)
-                    angle = Math.PI;
+                if (angle > Constants.Switch.MAX_HANDLE_ANGLE || angle < -Math.PI / 2)
+                    angle = Constants.Switch.MAX_HANDLE_ANGLE;
                 else if (angle < 0)
                     angle = 0;
 
