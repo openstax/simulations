@@ -123,8 +123,7 @@ define(function(require) {
             var grabBagButton = new GrabBagButton({
                 mvt: this.mvt,
                 simulation: this.simulation,
-                dummyLayer: this.dummyLayer,
-                icons: [ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon,ComponentToolboxIcon]
+                dummyLayer: this.dummyLayer
             });
             grabBagButton.setPosition(20, this.height - 62 - 20);
             this.stage.addChild(grabBagButton.displayObject);

@@ -25,7 +25,8 @@ define(function (require) {
         SWITCH_MASK:        'switch-mask.png',
         INDUCTOR:           'inductor.png',
         INDUCTOR_MASK:      'inductor-mask.png',
-        ELECTRON:           'electron.png'
+        ELECTRON:           'electron.png',
+        PENCIL:             'grab-bag/pencil.png'
     };
 
     Assets.SpriteSheets = {};

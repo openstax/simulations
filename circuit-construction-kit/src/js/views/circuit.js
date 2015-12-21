@@ -15,15 +15,17 @@ define(function(require) {
     var Inductor        = require('models/components/inductor');
     var Wire            = require('models/components/wire');
     var ACVoltageSource = require('models/components/ac-voltage-source');
+    var GrabBagResistor = require('models/components/grab-bag-resistor');
 
-    var JunctionView  = require('views/junction');
-    var WireView      = require('views/components/wire');
-    var ResistorView  = require('views/components/resistor');
-    var BatteryView   = require('views/components/battery');
-    var SwitchView    = require('views/components/switch');
-    var InductorView  = require('views/components/inductor');
-    var ACSourceView  = require('views/components/ac-source');
-    var LightBulbView = require('views/components/light-bulb');
+    var JunctionView        = require('views/junction');
+    var WireView            = require('views/components/wire');
+    var ResistorView        = require('views/components/resistor');
+    var BatteryView         = require('views/components/battery');
+    var SwitchView          = require('views/components/switch');
+    var InductorView        = require('views/components/inductor');
+    var ACSourceView        = require('views/components/ac-source');
+    var LightBulbView       = require('views/components/light-bulb');
+    var GrabBagResistorView = require('views/components/grab-bag-resistor');
 
     /**
      * A view that represents a circuit
@@ -60,10 +62,10 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            this.background = new PIXI.Container();
-            this.solderLayer = new PIXI.Container();
-            this.componentLayer = new PIXI.Container();
-            this.junctionLayer = new PIXI.Container();
+            this.background         = new PIXI.Container();
+            this.solderLayer        = new PIXI.Container();
+            this.componentLayer     = new PIXI.Container();
+            this.junctionLayer      = new PIXI.Container();
             this.junctionHoverLayer = new PIXI.Container();
 
             this.displayObject.addChild(this.background);
@@ -126,6 +128,9 @@ define(function(require) {
             }
             else if (branch instanceof Battery) {
                 viewConstructor = BatteryView;
+            }
+            else if (branch instanceof GrabBagResistor) {
+                viewConstructor = GrabBagResistorView;
             }
             else if (branch instanceof Resistor) {
                 viewConstructor = ResistorView;

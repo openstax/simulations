@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var ComponentToolbox = require('views/component-toolbox');
+    var GrabBagIcon      = require('views/toolbox-icons/grab-bag');
 
     var Constants = require('constants');
 
@@ -19,7 +20,8 @@ define(function(require) {
                 topToBottom: false,
                 anchorX: 0,
                 anchorY: 0,
-                anchorArrowWidth: 20
+                anchorArrowWidth: 20,
+                icons: []
             }, options);
 
             this.anchorX = options.anchorX;
@@ -27,6 +29,27 @@ define(function(require) {
             this.anchorArrowWidth = options.anchorArrowWidth;
 
             ComponentToolbox.prototype.initialize.apply(this, [options]);
+        },
+
+        initIcons: function() {
+            var iconWidth = this.getIconWidth();
+            var maxHeight = this.getIconMaxHeight();
+
+            var items = this.simulation.grabBagItems;
+
+            this.icons = [];
+            for (var i = 0; i < items.length; i++) {
+                var icon = new GrabBagIcon({
+                    grabBagItem: items[i],
+                    width: iconWidth,
+                    maxHeight: maxHeight,
+                    mvt: this.mvt,
+                    simulation: this.simulation,
+                    dummyLayer: this.dummyLayer
+                });
+                this.icons.push(icon);
+                this.iconsContainer.addChild(icon.displayObject);
+            }
         },
 
         updateLayout: function() {

@@ -55,6 +55,7 @@ define(function(require) {
 
         initGraphics: function() {
             this.initBackground();
+            this.initIconsContainer();
             this.initIcons();
 
             this.updateMVT(this.mvt);
@@ -65,14 +66,16 @@ define(function(require) {
             this.displayObject.addChild(this.background);
         },
 
-        initIcons: function() {
+        initIconsContainer: function() {
             this.iconsContainer = new PIXI.Container();
             this.iconsContainer.y = this.topToBottom ? this.padding : -this.padding;
             this.iconsContainer.x = this.padding;
             this.displayObject.addChild(this.iconsContainer);
+        },
 
-            var iconWidth = this.width - this.padding * 2;
-            var maxHeight = Math.floor(iconWidth * 0.8);
+        initIcons: function() {
+            var iconWidth = this.getIconWidth();
+            var maxHeight = this.getIconMaxHeight();
 
             this.icons = [];
             for (var i = 0; i < this.iconConstructors.length; i++) {
@@ -86,6 +89,14 @@ define(function(require) {
                 this.icons.push(icon);
                 this.iconsContainer.addChild(icon.displayObject);
             }
+        },
+
+        getIconWidth: function() {
+            return this.width - this.padding * 2;
+        },
+
+        getIconMaxHeight: function() {
+            return Math.floor(this.getIconWidth() * 0.8);
         },
 
         updateMVT: function(mvt) {
