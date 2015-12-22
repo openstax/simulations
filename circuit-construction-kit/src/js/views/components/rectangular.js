@@ -54,7 +54,7 @@ define(function(require) {
             var bounds = mask.getLocalBounds();
             var hoverGraphics = new PIXI.Graphics();
             hoverGraphics.beginFill(this.selectionColor, 1);
-            hoverGraphics.drawRect(bounds.x - 4, bounds.y - 4, bounds.width + 8, bounds.height + 8);
+            hoverGraphics.drawRect(bounds.x - 7, bounds.y - 7, bounds.width + 14, bounds.height + 14);
             hoverGraphics.endFill();
             hoverGraphics.mask = mask;
 
