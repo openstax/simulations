@@ -10,3 +10,5 @@ Image Credits
 **pencil.png**: created by Patrick Wolfert
 
 **eraser.png**: created by Patrick Wolfert
+
+**penny.png**: from https://upload.wikimedia.org/wikipedia/commons/2/2e/US_One_Cent_Obv.png, public domain

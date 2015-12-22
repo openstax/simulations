@@ -38,7 +38,13 @@ define(function(require) {
          *   MVT that isn't bound to the scene's MVT.
          */
         createIconSprite: function() {
-            return Assets.createSprite(this.grabBagItem.imagePath);
+            var sprite = Assets.createSprite(this.grabBagItem.imagePath);
+            if (this.grabBagItem.imagePath === Assets.Images.PENCIL) {
+                var cropArea = new PIXI.Rectangle(0, 0, 200, 80);
+                var croppedTexture = new PIXI.Texture(sprite.texture.baseTexture, null, cropArea, cropArea);
+                sprite.texture = croppedTexture;
+            }
+            return sprite;
         },
 
         /**

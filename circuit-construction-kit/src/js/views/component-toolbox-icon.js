@@ -34,6 +34,7 @@ define(function(require) {
             options = _.extend({
                 width:  50,
                 maxHeight: undefined,
+                minHeight: 20,
                 labelText: 'Component',
                 labelFont: Constants.TOOLBOX_LABEL_FONT,
                 labelColor: Constants.TOOLBOX_LABEL_COLOR
@@ -45,6 +46,7 @@ define(function(require) {
 
             this.width = options.width;
             this.maxHeight = (options.maxHeight !== undefined) ? options.maxHeight : this.width;
+            this.minHeight = options.minHeight;
             this.labelText = options.labelText;
             this.labelFont = options.labelFont;
             this.labelColor = options.labelColor;
@@ -63,16 +65,29 @@ define(function(require) {
         },
 
         initIcon: function() {
-            this.icon = this.createIconSprite();
-            this.icon.anchor.x = 0.5;
-            this.icon.x = this.width / 2;
-            var scale;
-            if (this.icon.texture.width > this.icon.texture.height)
-                scale = this.width / this.icon.texture.width;
+            var sprite = this.createIconSprite();
+            sprite.anchor.x = 0.5;
+            sprite.x = this.width / 2;
+            var scale;    
+            if (sprite.texture.width > sprite.texture.height)
+                scale = this.width / sprite.texture.width;
             else
-                scale = this.maxHeight / this.icon.texture.height;
-            this.icon.scale.x = scale;
-            this.icon.scale.y = scale;
+                scale = this.maxHeight / sprite.texture.height;
+            sprite.scale.x = scale;
+            sprite.scale.y = scale;
+            // if (sprite.height < this.minHeight) {
+            //     // Pad the icon with some invisible graphics
+            //     this.icon = new PIXI.Container();
+            //     var graphics = new PIXI.Graphics();
+            //     graphics.beginFill(0, 0);
+            //     graphics.drawRect(0, 0, 2, this.minHeight);
+            //     graphics.endFill();
+            //     sprite.y = (this.minHeight - sprite.height) / 2;
+            //     this.icon.addChild(graphics);
+            //     this.icon.addChild(sprite);
+            // }
+            // else
+                this.icon = sprite;
             this.icon.buttonMode = true;
             this.displayObject.addChild(this.icon);
         },
