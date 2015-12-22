@@ -8,3 +8,5 @@ Image Credits
 **paper-clip.png**: created by Patrick Wolfert
 
 **pencil.png**: created by Patrick Wolfert
+
+**eraser.png**: created by Patrick Wolfert

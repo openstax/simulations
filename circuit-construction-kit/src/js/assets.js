@@ -27,9 +27,17 @@ define(function (require) {
         INDUCTOR_MASK:      'inductor-mask.png',
         ELECTRON:           'electron.png',
         DOG:                'grab-bag/dog.png',
+        DOG_MASK:           'grab-bag/dog-mask.png',
+        ERASER:             'grab-bag/eraser.png',
+        ERASER_MASK:        'grab-bag/eraser-mask.png',
         HAND:               'grab-bag/hand.png',
+        HAND_MASK:          'grab-bag/hand-mask.png',
+        PAPER_CLIP:         'grab-bag/paper-clip.png',
+        PAPER_CLIP_MASK:    'grab-bag/paper-clip-mask.png',
         PENCIL:             'grab-bag/pencil.png',
-        PAPER_CLIP:         'grab-bag/paper-clip.png'
+        PENCIL_MASK:        'grab-bag/pencil-mask.png',
+        PENNY:              'grab-bag/penny.png',
+        PENNY_MASK:         'grab-bag/penny-mask.png'
     };
 
     Assets.SpriteSheets = {};

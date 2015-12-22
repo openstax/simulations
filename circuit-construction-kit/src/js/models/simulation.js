@@ -57,15 +57,16 @@ define(function (require, exports, module) {
         initGrabBag: function() {
             var scale = 1.3;
             var MIN_RESISTANCE = Constants.MIN_RESISTANCE;
+            var Images = Assets.Images;
 
             this.grabBagItems = [
-                new GrabBagItem(Assets.Images.DOG,        'Dog',         Math.pow(10, 9),  2.5 * scale),
-                new GrabBagItem(Assets.Images.HAND,       'Hand',        Math.pow(10, 6),  1.0 * scale),
-                new GrabBagItem(Assets.Images.PENCIL,     'Pencil Lead', 300,              3.5 * scale),
-                new GrabBagItem(Assets.Images.BULB_ON,    'Eraser',      Math.pow(10, 9),  0.7 * scale),
-                new GrabBagItem(Assets.Images.BULB_ON,    'Penny',       MIN_RESISTANCE,   0.6 * scale),
-                new GrabBagItem(Assets.Images.PAPER_CLIP, 'Paper Clip',  MIN_RESISTANCE,   0.7 * scale),
-                new GrabBagItem(Assets.Images.BULB_ON,    'Dollar Bill', Math.pow(10, 9),  1.0 * scale)
+                new GrabBagItem(Images.DOG,        Images.DOG_MASK,        'Dog',         Math.pow(10, 9),  2.5 * scale),
+                new GrabBagItem(Images.HAND,       Images.HAND_MASK,       'Hand',        Math.pow(10, 6),  1.0 * scale),
+                new GrabBagItem(Images.PENCIL,     Images.PENCIL_MASK,     'Pencil Lead', 300,              3.5 * scale),
+                new GrabBagItem(Images.ERASER,     Images.ERASER_MASK,     'Eraser',      Math.pow(10, 9),  0.7 * scale),
+                new GrabBagItem(Images.PENNY,      Images.PENNY_MASK,      'Penny',       MIN_RESISTANCE,   0.6 * scale),
+                new GrabBagItem(Images.PAPER_CLIP, Images.PAPER_CLIP_MASK, 'Paper Clip',  MIN_RESISTANCE,   0.7 * scale),
+                new GrabBagItem(Images.BULB_ON,    Images.BULB_ON_MASK,    'Dollar Bill', Math.pow(10, 9),  1.0 * scale)
             ];
         },
 
