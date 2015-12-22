@@ -66,7 +66,7 @@ define(function (require, exports, module) {
                 new GrabBagItem(Images.ERASER,     Images.ERASER_MASK,     'Eraser',      Math.pow(10, 9),  0.7 * scale),
                 new GrabBagItem(Images.PENNY,      Images.PENNY_MASK,      'Penny',       MIN_RESISTANCE,   0.6 * scale),
                 new GrabBagItem(Images.PAPER_CLIP, Images.PAPER_CLIP_MASK, 'Paper Clip',  MIN_RESISTANCE,   0.7 * scale),
-                new GrabBagItem(Images.BULB_ON,    Images.BULB_ON_MASK,    'Dollar Bill', Math.pow(10, 9),  1.0 * scale)
+                new GrabBagItem(Images.DOLLAR,     Images.BULB_ON_MASK,    'Dollar Bill', Math.pow(10, 9),  1.0 * scale)
             ];
         },
 

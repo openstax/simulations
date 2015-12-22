@@ -28,6 +28,7 @@ define(function (require) {
         ELECTRON:           'electron.png',
         DOG:                'grab-bag/dog.png',
         DOG_MASK:           'grab-bag/dog-mask.png',
+        DOLLAR:             'grab-bag/dollar.png',
         ERASER:             'grab-bag/eraser.png',
         ERASER_MASK:        'grab-bag/eraser-mask.png',
         HAND:               'grab-bag/hand.png',
