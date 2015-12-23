@@ -8,7 +8,8 @@ define(function(require) {
 
     var CCKSimView = require('views/sim');
 
-    var Assets = require('assets');
+    var Assets      = require('assets');
+    var Persistence = require('persistence');
 
     require('less!styles/font-awesome');
     require('less!styles/app');
@@ -58,7 +59,8 @@ define(function(require) {
         },
 
         loadXML: function(contents) {
-            console.log(contents);
+            var circuit = Persistence.parseXML(contents);
+            
         },
 
         saveXML: function() {
