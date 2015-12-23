@@ -84,7 +84,8 @@ module.exports = function(grunt) {
 		},
 		uglify: {
 			options: {
-				banner: BANNER_TEMPLATE_STRING
+				banner: BANNER_TEMPLATE_STRING,
+				ascii_only: true
 			},
 			dist: {
 				files: {
