@@ -16,7 +16,7 @@ define(function(require) {
 
     var settingsDialogHtml = require('text!templates/app-buttons.html');
 
-    var FaradayAppView = PixiAppView.extend({
+    var CCKAppView = PixiAppView.extend({
 
         assets: Assets.getAssetList(),
 
@@ -55,20 +55,23 @@ define(function(require) {
                     self.loadXML(event.target.result);
                 };
                 reader.readAsText(file);
+
+                $('#file').val('');
             }
         },
 
         loadXML: function(contents) {
             var circuit = Persistence.parseXML(contents);
-            
+            this.simViews[0].simulation.setCircuit(circuit);
         },
 
         saveXML: function() {
-            var blob = new Blob(["Hello, world!"], {type: "text/xml;charset=utf-8"});
+            var xml = Persistence.toXML(this.simViews[0].simulation.circuit);
+            var blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
             saveAs(blob, "circuit.xml");
         }
 
     });
 
-    return FaradayAppView;
+    return CCKAppView;
 });

@@ -74,6 +74,11 @@ define(function (require, exports, module) {
             
         },
 
+        setCircuit: function(circuit) {
+            this.circuit.junctions.reset(circuit.junctions.models);
+            this.circuit.branches.reset(circuit.branches.models);
+        },
+
         _update: function(time, deltaTime) {
             if (this.circuit.isDynamic() || this.modelChanged) {
                 this.circuit.update(time, deltaTime);

@@ -6,9 +6,19 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Circuit  = require('models/circuit');
-    var Branch   = require('models/branch');
-    var Junction = require('models/junction');
+    var Circuit         = require('models/circuit');
+    var Branch          = require('models/branch');
+    var Junction        = require('models/junction');
+    var Switch          = require('models/components/switch');
+    var Wire            = require('models/components/wire');
+    var Resistor        = require('models/components/resistor');
+    var ACVoltageSource = require('models/components/ac-voltage-source');
+    var Battery         = require('models/components/battery');
+    var Capacitor       = require('models/components/capacitor');
+    var Bulb            = require('models/components/bulb');
+    var SeriesAmmeter   = require('models/components/series-ammeter');
+    var GrabBagResistor = require('models/components/grab-bag-resistor');
+    var Inductor        = require('models/components/inductor');
 
     /**
      * Parses an XML string and creates and returns a circuit object.
@@ -29,7 +39,7 @@ define(function (require) {
             var junction = new Junction({
                 position: new Vector2(x, y)
             });
-            circuit.addJunction(j);
+            circuit.addJunction(junction);
         });
 
         $branches.each(function() {
@@ -45,102 +55,130 @@ define(function (require) {
             else
                 console.error('Bad File: Branch exists with no junctions!');
         });
-        
+
         return circuit;
     };
 
     var toBranch = function(startJunction, endJunction, $xml) {
-        String type = xml.getAttribute( "type", "null" );
-        type = updateToLatestVersion( type );
-        if ( type.equals( Wire.class.getName() ) ) {
-            return new Wire( kl, startJunction, endJunction );
+        var type = getComponentType($xml.attr('type'));
+        
+        if (type === 'Wire') {
+            return new Wire({
+                startJunction: startJunction,
+                endJunction: endJunction
+            });
         }
-        double length = Double.parseDouble( xml.getAttribute( "length", "-1" ) );
-        double height = Double.parseDouble( xml.getAttribute( "height", "-1" ) );
+        
+        var length = parseFloat($xml.attr('length'));
+        var height = parseFloat($xml.attr('height'));
 
-        if ( type.equals( Resistor.class.getName() ) ) {
-            Resistor res = new Resistor( kl, startJunction, endJunction, length, height );
-            String resVal = xml.getAttribute( "resistance", Double.NaN + "" );
-            double val = Double.parseDouble( resVal );
-            res.setResistance( val );
-            return res;
+        if (type === 'Resistor') {
+            return new Resistor({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                resistance: parseFloat($xml.attr('resistance'))
+            });
         }
-        else if ( type.equals( ACVoltageSource.class.getName() ) ) {
-            double amplitude = Double.parseDouble( xml.getAttribute( "amplitude", Double.NaN + "" ) );
-            double freq = Double.parseDouble( xml.getAttribute( "frequency", Double.NaN + "" ) );
-            double internalResistance = Double.parseDouble( xml.getAttribute( "internalResistance", Double.NaN + "" ) );
-            ACVoltageSource voltageSource = new ACVoltageSource( kl, startJunction, endJunction, length, height, CCKModel.MIN_RESISTANCE, CCKModel.INTERNAL_RESISTANCE_ON );
-            voltageSource.setInternalResistance( internalResistance );
-            voltageSource.setAmplitude( amplitude );
-            voltageSource.setFrequency( freq );
-            return voltageSource;
+        else if (type === 'ACVoltageSource') {
+            return new ACVoltageSource({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                internalResistance: parseFloat($xml.attr('internalResistance')), 
+                internalResistanceOn: true,
+                amplitude: parseFloat($xml.attr('amplitude')),
+                frequency: parseFloat($xml.attr('frequency'))
+            });
         }
-        else if ( type.equals( Capacitor.class.getName() ) ) {
-            Capacitor capacitor = new Capacitor( kl, startJunction, endJunction, length, height );
-            capacitor.setVoltageDrop( Double.parseDouble( xml.getAttribute( "voltage", Double.NaN + "" ) ) );
-            capacitor.setCurrent( Double.parseDouble( xml.getAttribute( "current", Double.NaN + "" ) ) );
-            capacitor.setCapacitance( Double.parseDouble( xml.getAttribute( "capacitance", Double.NaN + "" ) ) );
-            return capacitor;
+        else if (type === 'Capacitor') {
+            return new Capacitor({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                voltageDrop: parseFloat($xml.attr('voltage')),
+                current:     parseFloat($xml.attr('current')),
+                capacitance: parseFloat($xml.attr('capacitance'))
+            });
         }
-        else if ( type.equals( Battery.class.getName() ) ) {
-            double internalResistance = Double.parseDouble( xml.getAttribute( "internalResistance", Double.NaN + "" ) );
-            Battery batt = new Battery( kl, startJunction, endJunction, length, height, CCKModel.MIN_RESISTANCE, CCKModel.INTERNAL_RESISTANCE_ON );
-            batt.setInternalResistance( internalResistance );
-            String voltVal = xml.getAttribute( "voltage", Double.NaN + "" );
-            double val = Double.parseDouble( voltVal );
-            batt.setVoltageDrop( val );
-            return batt;
+        else if (type === 'Battery') {
+            return new Battery({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                internalResistance: parseFloat($xml.attr('internalResistance')), 
+                internalResistanceOn: true,
+                voltageDrop: parseFloat($xml.attr('voltage'))
+            });
         }
-        else if ( type.equals( Switch.class.getName() ) ) {
-            String closedVal = xml.getAttribute( "closed", "false" );
-            boolean closed = closedVal != null && closedVal.equals( new Boolean( true ).toString() );
-            return new Switch( kl, startJunction, endJunction, closed, length, height );
+        else if (type === 'Switch') {
+            return new Switch({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                closed: ($xml.attr('closed') && $xml.attr('closed') === 'true')
+            });
         }
-        else if ( type.equals( Bulb.class.getName() ) ) {
-            String widthStr = xml.getAttribute( "width", Double.NaN + "" );
-            double width = Double.parseDouble( widthStr );
-            boolean schematic = !module.isLifelike();
-            Bulb bulb = new Bulb( kl, startJunction, endJunction, width, length, height, schematic );
-            String resVal = xml.getAttribute( "resistance", Double.NaN + "" );
-            double val = Double.parseDouble( resVal );
-            bulb.setResistance( val );
-            String connectAtLeftStr = xml.getAttribute( "connectAtLeft", "true" );
-            boolean connectAtLeft = connectAtLeftStr != null && connectAtLeftStr.equals( new Boolean( true ).toString() );
-            bulb.setConnectAtLeftXML( connectAtLeft );
-            return bulb;
+        else if (type === 'Bulb') {
+            return new Bulb({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                width: parseFloat($xml.attr('width')),
+                resistance: parseFloat($xml.attr('resistance')),
+                connectAtLeft: ($xml.attr('connectAtLeft') && $xml.attr('connectAtLeft') === 'true')
+            });
         }
-        else if ( type.equals( SeriesAmmeter.class.getName() ) ) {
-            return new SeriesAmmeter( kl, startJunction, endJunction, length, height );
+        else if (type === 'SeriesAmmeter') {
+            return new SeriesAmmeter({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height
+            });
         }
-        else if ( type.equals( GrabBagResistor.class.getName() ) ) {
-            Resistor res = new Resistor( kl, startJunction, endJunction, length, height );
-            String resVal = xml.getAttribute( "resistance", Double.NaN + "" );
-            double val = Double.parseDouble( resVal );
-            res.setResistance( val );
-            return res;
+        else if (type === 'GrabBagResistor') {
+            return new GrabBagResistor({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                resistance: parseFloat($xml.attr('resistance'))
+            });
         }
-        else if ( type.equals( Inductor.class.getName() ) ) {
-            Inductor inductor = new Inductor( kl, startJunction, endJunction, length, height );
-            inductor.setVoltageDrop( Double.parseDouble( xml.getAttribute( "voltage", Double.NaN + "" ) ) );
-            inductor.setCurrent( Double.parseDouble( xml.getAttribute( "current", Double.NaN + "" ) ) );
-            inductor.setInductance( Double.parseDouble( xml.getAttribute( "inductance", Double.NaN + "" ) ) );
-            return inductor;
+        else if (type === 'Inductor') {
+            return new Inductor({
+                startJunction: startJunction,
+                endJunction: endJunction,
+                length: length,
+                height: height,
+                voltageDrop: parseFloat($xml.attr('voltage')),
+                current:     parseFloat($xml.attr('current')),
+                inductance:  parseFloat($xml.attr('inductance'))
+            });
         }
-        else if ( type.equals( Wire.class.getName() ) ) {
-            Wire res = new Wire( kl, startJunction, endJunction );
-            String resVal = xml.getAttribute( "resistance", Double.NaN + "" );
-            double val = Double.parseDouble( resVal );
-            res.setResistance( val );
-            return res;
-        }
+        
         return null;
+    };
+
+    var getComponentType = function(type) {
+        if (type == 'edu.colorado.phet.cck3.circuit.Branch')
+            return 'Wire';
+        
+        return type.substr(type.lastIndexOf('.') + 1);
     };
 
     /**
      * Converts a circuit object into an XML string and returns it.
      */
     var toXML = function(circuit) {
-
+        return '';
     };
 
 
