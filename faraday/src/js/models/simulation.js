@@ -48,7 +48,7 @@ define(function (require, exports, module) {
         removeElectron: function(electron) {
             for (var i = this.electrons.length - 1; i >= 0; i--) {
                 if (this.electrons[i] === electron) {
-                    this.electrons.slice(i, 1);
+                    this.electrons.splice(i, 1);
                     break;
                 }
             }

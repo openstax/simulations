@@ -603,3 +603,78 @@ describe('Vector3', function(){
 	});
 
 });
+
+describe('Matrix', function(){
+
+	var Matrix;
+
+	before(function(done) {
+		require(['math/matrix'], function(matrix) {
+			Matrix = matrix;
+			done();
+		});
+	});
+
+	it('#rref works', function() {
+		var matrix = new Matrix([
+			[ 1, 2, -1, -4],
+			[ 2, 3, -1,-11],
+			[-2, 0, -3, 22]
+		]);
+
+		chai.expect(
+			matrix.rref()
+		).to.almost.eql([
+			[ 1, 0, 0, -8 ],
+			[ 0, 1, 0,  1 ],
+			[ 0, 0, 1, -2 ]
+		]);
+
+		var matrix2 = new Matrix([
+			[ 2, 1, -1, 8 ],
+			[ -3, -1, 2, -11 ],
+			[ -2, 1, 2, -3 ]
+		]);
+
+		chai.expect(
+			matrix2.rref()
+		).to.almost.eql([
+			[ 1, 0, 0,  2 ],
+			[ 0, 1, 0,  3 ],
+			[ 0, 0, 1, -1 ]
+		]);
+	});
+
+	it('#solve works', function() {
+		var A = new Matrix([
+			[ 1, 2, -1],
+			[ 2, 3, -1],
+			[-2, 0, -3]
+		]);
+
+		var B = [-4, -11, 22];
+		
+		var X = A.solve(B, true);
+
+		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
+
+		B = new Matrix([
+			[ -4],
+			[-11], 
+			[ 22]
+		]);
+
+		X = A.solve(B, true);
+
+		chai.expect(X).to.almost.eql([ -8, 1, -2 ]);
+
+		// Should return a Matrix instead
+		X = A.solve(B);
+		chai.expect(X.toArray()).to.almost.eql([ 
+			[-8], 
+			[ 1], 
+			[-2]
+		]);
+	});
+
+});
