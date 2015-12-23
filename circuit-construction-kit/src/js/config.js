@@ -17,6 +17,8 @@
             'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
+            'pixl-xml':              '../../node_modules/pixl-xml-shimmed/xml',
+            'fs': '../js/fs-dummy',
 
             views:      '../js/views',
             models:     '../js/models',

@@ -29,6 +29,7 @@ define(function (require) {
         DOG:                'grab-bag/dog.png',
         DOG_MASK:           'grab-bag/dog-mask.png',
         DOLLAR:             'grab-bag/dollar.png',
+        DOLLAR_MASK:        'grab-bag/dollar-mask.png',
         ERASER:             'grab-bag/eraser.png',
         ERASER_MASK:        'grab-bag/eraser-mask.png',
         HAND:               'grab-bag/hand.png',

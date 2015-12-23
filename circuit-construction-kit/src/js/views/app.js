@@ -24,23 +24,44 @@ define(function(require) {
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
-            'click .load-btn' : 'loadFile',
-            'click .save-btn' : 'saveFile'
+            'click .load-btn' : 'loadBtnClicked',
+            'click .save-btn' : 'saveBtnClicked',
+            'change #file' : 'fileSelected'
         }),
 
         render: function() {
             PixiAppView.prototype.render.apply(this);
 
             this.$el.append(settingsDialogHtml);
-
-            
         },
 
-        loadFile: function(event) {
+        loadBtnClicked: function(event) {
             $('#file').click();
         },
 
-        saveFile: function(event) {
+        saveBtnClicked: function(event) {
+            this.saveXML();
+        },
+
+        fileSelected: function(event) {
+            var files = event.target.files;
+            var reader = new FileReader();
+            if (files.length > 0) {
+                var file = files[0];
+                var self = this;
+
+                reader.onload = function(event) {
+                    self.loadXML(event.target.result);
+                };
+                reader.readAsText(file);
+            }
+        },
+
+        loadXML: function(contents) {
+            console.log(contents);
+        },
+
+        saveXML: function() {
             var blob = new Blob(["Hello, world!"], {type: "text/xml;charset=utf-8"});
             saveAs(blob, "circuit.xml");
         }
