@@ -205,7 +205,8 @@ define(function (require) {
             var className;
 
             if (branch instanceof CircuitComponent) {
-                attrs.push(['length', branch.get('length')]);
+                var length = ['length', branch.get('length')]
+                attrs.push(length);
                 attrs.push(['height', branch.get('height')]);
             }
 
@@ -233,9 +234,9 @@ define(function (require) {
 
                 attrs.push(['resistance', branch.get('resistance')]);
                 attrs.push(['width', branch.get('width')]);
-                attrs.push(['length', branch.get('startJunction').getDistance(branch.get('endJunction'))]);
                 attrs.push(['schematic', branch.get('isSchematic')]);
                 attrs.push(['connectAtLeft', branch.get('connectAtLeft')]);
+                length[1] = branch.get('startJunction').getDistance(branch.get('endJunction'));
             }
             else if (branch instanceof Switch) {
                 className = 'Switch';
