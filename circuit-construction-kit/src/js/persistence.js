@@ -183,12 +183,13 @@ define(function (require) {
         xml += '<circuit>\n';
 
         circuit.junctions.each(function(junction, index) {
-            var $junction = $('<junction>')
-                .attr('index', index)
-                .attr('x', junction.get('position').x)
-                .attr('y', junction.get('position').y);
+            var attrs = [];
 
-            xml += $junction[0].outerHTML + '\n';
+            attrs.push(['index', index]);
+            attrs.push(['x', junction.get('position').x]);
+            attrs.push(['y', junction.get('position').y]);
+
+            xml += '    ' + renderElement('junction', attrs) + '\n';
         });
 
         circuit.branches.each(function(branch, index) {
@@ -267,14 +268,7 @@ define(function (require) {
 
             attrs.push(['type', expandComponentType(className)]);
 
-            // Output it
-            var attributesString = _.map(attrs, function(attr) {
-                return attr[0] + '="' + attr[1] + '"';
-            }).join(' ');
-
-            var branchXML = '<branch ' + attributesString + ' />';
-
-            xml += branchXML + '\n';
+            xml += '    ' + renderElement('branch', attrs) + '\n';
         });
 
         xml += '</circuit>';
@@ -285,6 +279,14 @@ define(function (require) {
         var prefix = 'edu.colorado.phet.circuitconstructionkit.model.components.';
         return prefix + className;
     };
+
+    var renderElement = function(name, attrs) {
+        var attributesString = _.map(attrs, function(attr) {
+            return attr[0] + '="' + attr[1] + '"';
+        }).join(' ');
+
+        return '<' + name + ' ' + attributesString + ' />';
+    }
 
 
     var Persistence = {
