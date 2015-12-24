@@ -192,69 +192,68 @@ define(function (require) {
         });
 
         circuit.branches.each(function(branch, index) {
-            var $branch = $('<branch>');
-
+            var attrs = {};
+            
             var startIndex = circuit.junctions.indexOf(branch.get('startJunction'));
             var endIndex   = circuit.junctions.indexOf(branch.get('endJunction'));
 
-            $branch
-                .attr('index', index)
-                .attr('startJunction', startIndex)
-                .attr('endJunction', endIndex);
+            attrs['index'] = index;
+            attrs['startJunction'] = startIndex;
+            attrs['endJunction'] = endIndex;
 
             var className;
 
             if (branch instanceof CircuitComponent) {
-                $branch.attr('length', branch.get('length'));
-                $branch.attr('height', branch.get('height'));
+                attrs['length'] = branch.get('length');
+                attrs['height'] = branch.get('height');
             }
 
             if (branch instanceof ACVoltageSource) {
                 className = 'ACVoltageSource';
 
-                $branch.attr('amplitude', branch.get('amplitude'));
-                $branch.attr('frequency', branch.get('frequency'));
-                $branch.attr('internalResistance', branch.get('internalResistance'));
+                attrs['amplitude'] = branch.get('amplitude');
+                attrs['frequency'] = branch.get('frequency');
+                attrs['internalResistance'] = branch.get('internalResistance');
             }
             else if (branch instanceof Battery) {
                 className = 'Battery';
 
-                $branch.attr('voltage', branch.get('voltageDrop'));
-                $branch.attr('resistance', branch.get('resistance'));
-                $branch.attr('internalResistance', branch.get('internalResistance'));
+                attrs['voltage'] = branch.get('voltageDrop');
+                attrs['resistance'] = branch.get('resistance');
+                attrs['internalResistance'] = branch.get('internalResistance');
             }
             else if (branch instanceof Resistor) {
                 className = 'Resistor';
 
-                $branch.attr('resistance', branch.get('resistance'));
+                attrs['resistance'] = branch.get('resistance');
             }
             else if (branch instanceof Bulb) {
                 className = 'Bulb';
 
-                $branch.attr('resistance', branch.get('resistance'));
-                $branch.attr('width', bulb.get('width'));
-                $branch.attr('length', branch.get('startJunction').getDistance(branch.get('endJunction')));
-                $branch.attr('schematic', bulb.get('isSchematic'));
-                $branch.attr('connectAtLeft', bulb.get('connectAtLeft'));
+                attrs['resistance'] = branch.get('resistance');
+                attrs['width'] = bulb.get('width');
+                attrs['length'] = branch.get('startJunction').getDistance(branch.get('endJunction'));
+                attrs['schematic'] = bulb.get('isSchematic');
+                attrs['connectAtLeft'] = bulb.get('connectAtLeft');
             }
             else if (branch instanceof Switch) {
                 className = 'Switch';
 
-                $branch.attr('closed', branch.get('closed'));
+                attrs['closed'] = branch.get('closed');
             }
             else if (branch instanceof Capacitor) {
                 className = 'Capacitor';
 
-                $branch.attr('capacitance', branch.get('capacitance'));
-                $branch.attr('voltage', branch.get('voltageDrop'));
-                $branch.attr('current', branch.get('current'));
+                attrs['capacitance'] = branch.get('capacitance');
+                attrs['voltage'] = branch.get('voltageDrop');
+                attrs['current'] = branch.get('current');
             }
             else if (branch instanceof Inductor) {
                 className = 'Inductor';
 
-                $branch.attr('inductance', branch.get('inductance'));
-                $branch.attr('voltage', branch.get('voltageDrop'));
-                $branch.attr('current', branch.get('current'));
+                attrs['inductance'] = branch.get('inductance');
+                attrs['voltage'] = branch.get('voltageDrop');
+                attrs['current'] = branch.get('current');
             }
             else if (branch instanceof SeriesAmmeter) {
                 className = 'SeriesAmmeter';
@@ -266,9 +265,15 @@ define(function (require) {
                 className = 'GrabBagResistor';
             }
 
-            $branch.attr('type', expandComponentType(className));
+            attrs['type'] = expandComponentType(className);
 
-            xml += $branch[0].outerHTML + '\n';
+            var attributesString = _.map(attrs, function(value, key) {
+                return key + '="' + value + '"';
+            }).join(' ');
+
+            var branchXML = '<branch ' + attributesString + ' />';
+
+            xml += branchXML + '\n';
         });
 
         xml += '</circuit>';
