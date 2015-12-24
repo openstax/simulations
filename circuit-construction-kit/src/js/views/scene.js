@@ -132,8 +132,9 @@ define(function(require) {
         },
 
         initMVT: function() {
+            // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-                new Vector2(0, 0),
+                new Vector2(7.5, 5),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.baseScale * this.zoomScale
             );
