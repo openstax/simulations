@@ -192,68 +192,68 @@ define(function (require) {
         });
 
         circuit.branches.each(function(branch, index) {
-            var attrs = {};
-            
+            var attrs = [];
+
             var startIndex = circuit.junctions.indexOf(branch.get('startJunction'));
             var endIndex   = circuit.junctions.indexOf(branch.get('endJunction'));
 
-            attrs['index'] = index;
-            attrs['startJunction'] = startIndex;
-            attrs['endJunction'] = endIndex;
+            attrs.push(['index', index]);
+            attrs.push(['startJunction', startIndex]);
+            attrs.push(['endJunction', endIndex]);
 
             var className;
 
             if (branch instanceof CircuitComponent) {
-                attrs['length'] = branch.get('length');
-                attrs['height'] = branch.get('height');
+                attrs.push(['length', branch.get('length')]);
+                attrs.push(['height', branch.get('height')]);
             }
 
             if (branch instanceof ACVoltageSource) {
                 className = 'ACVoltageSource';
 
-                attrs['amplitude'] = branch.get('amplitude');
-                attrs['frequency'] = branch.get('frequency');
-                attrs['internalResistance'] = branch.get('internalResistance');
+                attrs.push(['amplitude', branch.get('amplitude')]);
+                attrs.push(['frequency', branch.get('frequency')]);
+                attrs.push(['internalResistance', branch.get('internalResistance')]);
             }
             else if (branch instanceof Battery) {
                 className = 'Battery';
 
-                attrs['voltage'] = branch.get('voltageDrop');
-                attrs['resistance'] = branch.get('resistance');
-                attrs['internalResistance'] = branch.get('internalResistance');
+                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['resistance', branch.get('resistance')]);
+                attrs.push(['internalResistance', branch.get('internalResistance')]);
             }
             else if (branch instanceof Resistor) {
                 className = 'Resistor';
 
-                attrs['resistance'] = branch.get('resistance');
+                attrs.push(['resistance', branch.get('resistance')]);
             }
             else if (branch instanceof Bulb) {
                 className = 'Bulb';
 
-                attrs['resistance'] = branch.get('resistance');
-                attrs['width'] = bulb.get('width');
-                attrs['length'] = branch.get('startJunction').getDistance(branch.get('endJunction'));
-                attrs['schematic'] = bulb.get('isSchematic');
-                attrs['connectAtLeft'] = bulb.get('connectAtLeft');
+                attrs.push(['resistance', branch.get('resistance')]);
+                attrs.push(['width', bulb.get('width')]);
+                attrs.push(['length', branch.get('startJunction').getDistance(branch.get('endJunction'))]);
+                attrs.push(['schematic', bulb.get('isSchematic')]);
+                attrs.push(['connectAtLeft', bulb.get('connectAtLeft')]);
             }
             else if (branch instanceof Switch) {
                 className = 'Switch';
 
-                attrs['closed'] = branch.get('closed');
+                attrs.push(['closed', branch.get('closed')]);
             }
             else if (branch instanceof Capacitor) {
                 className = 'Capacitor';
 
-                attrs['capacitance'] = branch.get('capacitance');
-                attrs['voltage'] = branch.get('voltageDrop');
-                attrs['current'] = branch.get('current');
+                attrs.push(['capacitance', branch.get('capacitance')]);
+                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['current', branch.get('current')]);
             }
             else if (branch instanceof Inductor) {
                 className = 'Inductor';
 
-                attrs['inductance'] = branch.get('inductance');
-                attrs['voltage'] = branch.get('voltageDrop');
-                attrs['current'] = branch.get('current');
+                attrs.push(['inductance', branch.get('inductance')]);
+                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['current', branch.get('current')]);
             }
             else if (branch instanceof SeriesAmmeter) {
                 className = 'SeriesAmmeter';
@@ -265,10 +265,11 @@ define(function (require) {
                 className = 'GrabBagResistor';
             }
 
-            attrs['type'] = expandComponentType(className);
+            attrs.push(['type', expandComponentType(className)]);
 
-            var attributesString = _.map(attrs, function(value, key) {
-                return key + '="' + value + '"';
+            // Output it
+            var attributesString = _.map(attrs, function(attr) {
+                return attr[0] + '="' + attr[1] + '"';
             }).join(' ');
 
             var branchXML = '<branch ' + attributesString + ' />';
