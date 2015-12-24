@@ -145,7 +145,7 @@ define(function (require) {
             });
         }
         else if (type === 'GrabBagResistor') {
-            return new GrabBagResistor({
+            return new Resistor({
                 startJunction: startJunction,
                 endJunction: endJunction,
                 length: length,
@@ -232,10 +232,10 @@ define(function (require) {
                 className = 'Bulb';
 
                 attrs.push(['resistance', branch.get('resistance')]);
-                attrs.push(['width', bulb.get('width')]);
+                attrs.push(['width', branch.get('width')]);
                 attrs.push(['length', branch.get('startJunction').getDistance(branch.get('endJunction'))]);
-                attrs.push(['schematic', bulb.get('isSchematic')]);
-                attrs.push(['connectAtLeft', bulb.get('connectAtLeft')]);
+                attrs.push(['schematic', branch.get('isSchematic')]);
+                attrs.push(['connectAtLeft', branch.get('connectAtLeft')]);
             }
             else if (branch instanceof Switch) {
                 className = 'Switch';
