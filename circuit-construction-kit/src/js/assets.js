@@ -25,7 +25,7 @@ define(function (require) {
         SWITCH_MASK:        'switch-mask.png',
         INDUCTOR:           'inductor.png',
         INDUCTOR_MASK:      'inductor-mask.png',
-        ELECTRON:           'electron.png',
+        ELECTRON:           'electron-dark.png',
         DOG:                'grab-bag/dog.png',
         DOG_MASK:           'grab-bag/dog-mask.png',
         DOLLAR:             'grab-bag/dollar.png',

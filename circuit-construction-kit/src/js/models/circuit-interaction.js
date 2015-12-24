@@ -243,7 +243,7 @@ define(function (require, exports, module) {
                 else
                     this.translateJunction(junction, target);
 
-                var subgraph = this.circuit.getConnectedSubgraph( junction );
+                var subgraph = this.circuit.getConnectedSubgraph(junction);
                 this.model.layoutElectrons(subgraph);
             },
 
