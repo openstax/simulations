@@ -13,6 +13,7 @@ define(function (require) {
         this.propagator = new ConstantDensityPropagator(this, circuit);
 
         this.listenTo(circuit.branches, 'remove', this.removeParticles);
+        this.listenTo(circuit.branches, 'reset',  this.clear);
     };
 
     _.extend(ElectronSet.prototype, Backbone.Events, {

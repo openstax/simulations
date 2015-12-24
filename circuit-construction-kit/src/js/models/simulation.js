@@ -77,6 +77,7 @@ define(function (require, exports, module) {
         setCircuit: function(circuit) {
             this.circuit.junctions.reset(circuit.junctions.models);
             this.circuit.branches.reset(circuit.branches.models);
+            this.layoutElectrons();
         },
 
         _update: function(time, deltaTime) {
@@ -97,7 +98,6 @@ define(function (require, exports, module) {
         },
 
         junctionSplit: function(junction, newJunctions) {
-            console.log('split')
             this.layout.layoutElectrons(this.circuit.branches.models);
         },
 
