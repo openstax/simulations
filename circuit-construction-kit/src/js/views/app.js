@@ -68,7 +68,7 @@ define(function(require) {
         saveXML: function() {
             var xml = Persistence.toXML(this.simViews[0].simulation.circuit);
             var blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-            saveAs(blob, "circuit.xml");
+            saveAs(blob, "circuit.cck");
         }
 
     });

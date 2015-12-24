@@ -6,19 +6,20 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Circuit         = require('models/circuit');
-    var Branch          = require('models/branch');
-    var Junction        = require('models/junction');
-    var Switch          = require('models/components/switch');
-    var Wire            = require('models/components/wire');
-    var Resistor        = require('models/components/resistor');
-    var ACVoltageSource = require('models/components/ac-voltage-source');
-    var Battery         = require('models/components/battery');
-    var Capacitor       = require('models/components/capacitor');
-    var Bulb            = require('models/components/bulb');
-    var SeriesAmmeter   = require('models/components/series-ammeter');
-    var GrabBagResistor = require('models/components/grab-bag-resistor');
-    var Inductor        = require('models/components/inductor');
+    var Circuit          = require('models/circuit');
+    var Branch           = require('models/branch');
+    var Junction         = require('models/junction');
+    var Switch           = require('models/components/switch');
+    var Wire             = require('models/components/wire');
+    var Resistor         = require('models/components/resistor');
+    var ACVoltageSource  = require('models/components/ac-voltage-source');
+    var Battery          = require('models/components/battery');
+    var Capacitor        = require('models/components/capacitor');
+    var Bulb             = require('models/components/bulb');
+    var SeriesAmmeter    = require('models/components/series-ammeter');
+    var GrabBagResistor  = require('models/components/grab-bag-resistor');
+    var Inductor         = require('models/components/inductor');
+    var CircuitComponent = require('models/components/circuit-component');
 
     /**
      * Parses an XML string and creates and returns a circuit object.
@@ -60,7 +61,7 @@ define(function (require) {
     };
 
     var toBranch = function(startJunction, endJunction, $xml) {
-        var type = getComponentType($xml.attr('type'));
+        var type = trimComponentType($xml.attr('type'));
         
         if (type === 'Wire') {
             return new Wire({
@@ -167,7 +168,7 @@ define(function (require) {
         return null;
     };
 
-    var getComponentType = function(type) {
+    var trimComponentType = function(type) {
         if (type == 'edu.colorado.phet.cck3.circuit.Branch')
             return 'Wire';
         
@@ -178,7 +179,105 @@ define(function (require) {
      * Converts a circuit object into an XML string and returns it.
      */
     var toXML = function(circuit) {
-        return '';
+        var xml = '<?xml version="1.0" encoding="UTF-8"?>\n';
+        xml += '<circuit>\n';
+
+        circuit.junctions.each(function(junction, index) {
+            var $junction = $('<junction>')
+                .attr('index', index)
+                .attr('x', junction.get('position').x)
+                .attr('y', junction.get('position').y);
+
+            xml += $junction[0].outerHTML + '\n';
+        });
+
+        circuit.branches.each(function(branch, index) {
+            var $branch = $('<branch>');
+
+            var startIndex = circuit.junctions.indexOf(branch.get('startJunction'));
+            var endIndex   = circuit.junctions.indexOf(branch.get('endJunction'));
+
+            $branch
+                .attr('index', index)
+                .attr('startJunction', startIndex)
+                .attr('endJunction', endIndex);
+
+            var className;
+
+            if (branch instanceof CircuitComponent) {
+                $branch.attr('length', branch.get('length'));
+                $branch.attr('height', branch.get('height'));
+            }
+
+            if (branch instanceof ACVoltageSource) {
+                className = 'ACVoltageSource';
+
+                $branch.attr('amplitude', branch.get('amplitude'));
+                $branch.attr('frequency', branch.get('frequency'));
+                $branch.attr('internalResistance', branch.get('internalResistance'));
+            }
+            else if (branch instanceof Battery) {
+                className = 'Battery';
+
+                $branch.attr('voltage', branch.get('voltageDrop'));
+                $branch.attr('resistance', branch.get('resistance'));
+                $branch.attr('internalResistance', branch.get('internalResistance'));
+            }
+            else if (branch instanceof Resistor) {
+                className = 'Resistor';
+
+                $branch.attr('resistance', branch.get('resistance'));
+            }
+            else if (branch instanceof Bulb) {
+                className = 'Bulb';
+
+                $branch.attr('resistance', branch.get('resistance'));
+                $branch.attr('width', bulb.get('width'));
+                $branch.attr('length', branch.get('startJunction').getDistance(branch.get('endJunction')));
+                $branch.attr('schematic', bulb.get('isSchematic'));
+                $branch.attr('connectAtLeft', bulb.get('connectAtLeft'));
+            }
+            else if (branch instanceof Switch) {
+                className = 'Switch';
+
+                $branch.attr('closed', branch.get('closed'));
+            }
+            else if (branch instanceof Capacitor) {
+                className = 'Capacitor';
+
+                $branch.attr('capacitance', branch.get('capacitance'));
+                $branch.attr('voltage', branch.get('voltageDrop'));
+                $branch.attr('current', branch.get('current'));
+            }
+            else if (branch instanceof Inductor) {
+                className = 'Inductor';
+
+                $branch.attr('inductance', branch.get('inductance'));
+                $branch.attr('voltage', branch.get('voltageDrop'));
+                $branch.attr('current', branch.get('current'));
+            }
+            else if (branch instanceof SeriesAmmeter) {
+                className = 'SeriesAmmeter';
+            }
+            else if (branch instanceof Wire) {
+                className = 'Wire';
+            }
+            else if (branch instanceof GrabBagResistor) {
+                className = 'GrabBagResistor';
+            }
+
+            $branch.attr('type', expandComponentType(className));
+
+            xml += $branch[0].outerHTML + '\n';
+        });
+
+        xml += '</circuit>';
+        return xml;
+    };
+
+    var expandComponentType = function(className) {
+        var prefix = 'edu.colorado.phet.circuitconstructionkit.model.components.';
+        return prefix + className;
     };
 
 
