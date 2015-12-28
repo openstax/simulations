@@ -52,6 +52,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:selected', this.updateSelection);
+            this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         detach: function() {
@@ -203,7 +204,9 @@ define(function(require) {
             }
         },
 
-        initContextMenu: function($contextMenu) {}
+        initContextMenu: function($contextMenu) {},
+
+        schematicModeChanged: function(circuit, schematic) {}
 
     }, {
 

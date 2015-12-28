@@ -61,7 +61,23 @@ define(function(require) {
          */
         draw: function() {
             var radius = Math.round(this.mvt.modelToViewDeltaX(WireView.WIRE_WIDTH) / 2);
-            var width = radius * 2;
+            var width;
+            var wireColor;
+            var endRadius;
+            var endColor;
+
+            if (this.circuit.get('schematic')) {
+                width = Math.round(this.mvt.modelToViewDeltaX(WireView.SCHEMATIC_WIRE_WIDTH) / 2);
+                wireColor = 0x000000;
+                endRadius = width;
+                endColor = wireColor;
+            }
+            else {
+                width = radius * 2;
+                wireColor = this.wireColor;
+                endRadius = radius;
+                endColor = this.endColor;
+            }
             
             var point;
             point = this.mvt.modelToView(this.model.get('startJunction').get('position'));
@@ -74,15 +90,15 @@ define(function(require) {
             // Draw the base lines
             var graphics = this.displayObject;
             graphics.clear();
-            graphics.lineStyle(width, this.wireColor, 1);
+            graphics.lineStyle(width, wireColor, 1);
             graphics.moveTo(x0, y0);
             graphics.lineTo(x1, y1);
 
             // Then round the edges by drawing circles over the connection points
             graphics.lineStyle(0, 0, 0);
-            graphics.beginFill(this.endColor, 1);
-            graphics.drawCircle(x0, y0, radius);
-            graphics.drawCircle(x1, y1, radius);
+            graphics.beginFill(endColor, 1);
+            graphics.drawCircle(x0, y0, endRadius);
+            graphics.drawCircle(x1, y1, endRadius);
             graphics.endFill();
 
             // Update the hit area
@@ -141,6 +157,10 @@ define(function(require) {
             // container.removeChild(this.displayObject);
             // container.removeChild(this.junctionLayer);
             return texture;
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            this.draw();
         }
 
     }, Constants.WireView);

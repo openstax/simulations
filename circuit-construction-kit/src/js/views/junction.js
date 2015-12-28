@@ -47,7 +47,6 @@ define(function(require) {
             this.listenTo(this.circuit, 'junctions-collapsed junction-split', this.updateSolder);
             this.listenTo(this.circuit.branches, 'add remove reset', this.updateSolder);
             this.listenTo(this.circuit.junctions, 'add remove reset', this.updateSolder);
-            this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         detach: function() {

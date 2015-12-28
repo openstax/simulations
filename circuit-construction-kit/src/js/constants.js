@@ -167,6 +167,7 @@ define(function (require) {
     WireView.WIRE_COLOR = '#d1996d';
     WireView.END_COLOR  = '#c5865a'; //c5865a
     WireView.WIRE_WIDTH = Constants.WIRE_THICKNESS;
+    WireView.SCHEMATIC_WIRE_WIDTH = 0.08;
 
     Constants.WireView = WireView;
 

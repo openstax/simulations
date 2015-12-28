@@ -47,6 +47,7 @@ define(function(require) {
             var mvt = ModelViewTransform.createScaleMapping(65);
             var wireView = new WireView({
                 mvt: mvt,
+                circuit: this.simulation.circuit,
                 model: wireModel
             });
             return new PIXI.Sprite(wireView.generateTexture());

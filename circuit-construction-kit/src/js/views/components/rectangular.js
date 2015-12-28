@@ -42,8 +42,6 @@ define(function(require) {
             this._direction = new Vector2();
 
             ComponentView.prototype.initialize.apply(this, [options]);
-
-            this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         initComponentGraphics: function() {
