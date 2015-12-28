@@ -19,6 +19,9 @@ define(function(require) {
         imagePath:     Assets.Images.AC,
         maskImagePath: Assets.Images.AC_MASK,
 
+        schematicImagePath:     Assets.Images.SCHEMATIC_AC,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_AC_MASK,
+
         contextMenuContent: 
             '<li><a class="change-voltage-btn"><span class="fa fa-bolt"></span>&nbsp; Change Voltage</a></li>' +
             '<li><a class="change-internal-resistance-btn"><span class="fa fa-bolt"></span>&nbsp; Change Internal Resistance</a></li>' +

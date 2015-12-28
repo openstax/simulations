@@ -47,6 +47,7 @@ define(function(require) {
             this.listenTo(this.circuit, 'junctions-collapsed junction-split', this.updateSolder);
             this.listenTo(this.circuit.branches, 'add remove reset', this.updateSolder);
             this.listenTo(this.circuit.junctions, 'add remove reset', this.updateSolder);
+            this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         detach: function() {
@@ -60,6 +61,10 @@ define(function(require) {
             this.displayObject.hitArea = new PIXI.Circle(0, 0, 1);
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
+
+            this.schematicGraphics = new PIXI.Graphics();
+            this.schematicGraphics.visible = false;
+            this.displayObject.addChild(this.schematicGraphics);
 
             this.solderLayer = new PIXI.Graphics();
 
@@ -94,6 +99,12 @@ define(function(require) {
             solderGraphics.beginFill(this.color, 1);
             solderGraphics.drawCircle(0, 0, solderRadius);
             solderGraphics.endFill();
+
+            var schematicGraphics = this.schematicGraphics;
+            schematicGraphics.clear();
+            schematicGraphics.beginFill();
+            schematicGraphics.drawCircle(0, 0, radius * 0.5);
+            schematicGraphics.endFill();
 
             var hoverGraphics = this.hoverGraphics;
             hoverGraphics.clear();
@@ -158,6 +169,11 @@ define(function(require) {
 
         isConnected: function() {
             return (this.circuit.getJunctionNeighbors(this.model).length > 1);
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            this.solderLayer.visible = !schematic;
+            this.schematicGraphics.visible = schematic;
         }
 
     }, Constants.JunctionView);

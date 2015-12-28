@@ -23,6 +23,9 @@ define(function(require) {
         imagePath:     Assets.Images.RESISTOR,
         maskImagePath: Assets.Images.RESISTOR_MASK,
 
+        schematicImagePath:     undefined,
+        schematicMaskImagePath: undefined,
+
         anchorX: 0,
         anchorY: 0.5,
 
@@ -30,24 +33,30 @@ define(function(require) {
          * Initializes the new RectangularComponentView.
          */
         initialize: function(options) {
+            if (!this.schematicImagePath)
+                this.schematicImagePath = this.imagePath;
+            if (!this.schematicMaskImagePath)
+                this.schematicMaskImagePath = this.maskImagePath;
+
             // Cached objects
             this._direction = new Vector2();
 
             ComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         initComponentGraphics: function() {
-            this.sprite = Assets.createSprite(this.imagePath);
-            this.sprite.anchor.x = this.anchorX;
-            this.sprite.anchor.y = this.anchorY;
-            this.displayObject.addChild(this.sprite);
+            this.updateComponentGraphics();
             
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
         },
 
         initHoverGraphics: function() {
-            var mask = Assets.createSprite(this.maskImagePath);
+            var mask = this.circuit.get('schematic') ?
+                Assets.createSprite(this.schematicMaskImagePath) :
+                Assets.createSprite(this.maskImagePath);
             mask.anchor.x = this.anchorX;
             mask.anchor.y = this.anchorY;
 
@@ -64,6 +73,24 @@ define(function(require) {
 
         junctionsChanged: function() {
             this.update();
+        },
+
+        updateComponentGraphics: function() {
+            if (this.sprite)
+                this.displayObject.removeChild(this.sprite);
+
+            this.sprite = this.circuit.get('schematic') ?
+                Assets.createSprite(this.schematicImagePath) :
+                Assets.createSprite(this.imagePath);
+            this.sprite.anchor.x = this.anchorX;
+            this.sprite.anchor.y = this.anchorY;
+
+            this.displayObject.addChild(this.sprite);
+        },
+
+        updateHoverGraphics: function() {
+            this.hoverLayer.removeChildren();
+            this.initHoverGraphics();
         },
 
         /**
@@ -110,6 +137,12 @@ define(function(require) {
         generateTexture: function() {
             var texture = PIXI.Texture.EMPTY;
             return texture;
+        },
+
+        schematicModeChanged: function() {
+            this.updateComponentGraphics();
+            this.updateHoverGraphics();
+            this.update();
         }
 
     });
