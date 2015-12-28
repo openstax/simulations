@@ -70,8 +70,6 @@ define(function(require) {
             this.hoverGraphics = new PIXI.Graphics();
             this.hoverLayer.addChild(this.hoverGraphics);
 
-            this.schematicModeChanged(this.circuit, this.circuit.get('schematic'));
-
             Draggable.prototype.initGraphics.apply(this, arguments);
         },
 

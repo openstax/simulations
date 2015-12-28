@@ -43,6 +43,13 @@ define(function(require) {
         },
 
         /**
+         * Returns the schematic-mode icon sprite
+         */
+        createSchematicIconSprite: function() {
+            return Assets.createSprite(Assets.Images.SCHEMATIC_RESISTOR);
+        },
+
+        /**
          * Creates a new object of whatever this icon represents
          */
         createComponentView: function(x, y) {

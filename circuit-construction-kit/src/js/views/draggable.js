@@ -53,6 +53,8 @@ define(function(require) {
 
             this.listenTo(this.model, 'change:selected', this.updateSelection);
             this.listenTo(this.circuit, 'change:schematic', this.schematicModeChanged);
+
+            this.schematicModeChanged(this.circuit, this.circuit.get('schematic'));
         },
 
         detach: function() {

@@ -24,6 +24,9 @@ define(function(require) {
         imagePath:     Assets.Images.RESISTOR,
         maskImagePath: Assets.Images.RESISTOR_MASK,
 
+        schematicImagePath:     Assets.Images.SCHEMATIC_RESISTOR,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_RESISTOR_MASK,
+
         contextMenuContent: 
             '<li><a class="change-resistance-btn"><span class="fa fa-bolt"></span>&nbsp; Change Resistance</a></li>' +
             '<li><a class="show-value-btn"><span class="fa fa-square-o"></span>&nbsp; Show Value</a></li>' +
@@ -140,6 +143,12 @@ define(function(require) {
 
         resistanceChanged: function(model, resistance) {
             this.drawColorBands();
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            RectangularComponentView.prototype.schematicModeChanged.apply(this, arguments);
+
+            this.colorBands.visible = !schematic;
         }
 
     }, Constants.ResistorView);
