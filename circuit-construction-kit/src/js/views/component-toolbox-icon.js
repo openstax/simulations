@@ -55,6 +55,8 @@ define(function(require) {
             this._point = new PIXI.Point();
 
             this.initGraphics();
+
+            this.listenTo(this.simulation.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         initGraphics: function() {
@@ -65,7 +67,13 @@ define(function(require) {
         },
 
         initIcon: function() {
-            var sprite = this.createIconSprite();
+            var sprite;
+
+            if (this.simulation.circuit.get('schematic'))
+                sprite = this.createSchematicIconSprite();
+            else
+                sprite = this.createIconSprite();
+
             sprite.anchor.x = 0.5;
             sprite.x = this.width / 2;
             var scale;    
@@ -75,19 +83,8 @@ define(function(require) {
                 scale = this.maxHeight / sprite.texture.height;
             sprite.scale.x = scale;
             sprite.scale.y = scale;
-            // if (sprite.height < this.minHeight) {
-            //     // Pad the icon with some invisible graphics
-            //     this.icon = new PIXI.Container();
-            //     var graphics = new PIXI.Graphics();
-            //     graphics.beginFill(0, 0);
-            //     graphics.drawRect(0, 0, 2, this.minHeight);
-            //     graphics.endFill();
-            //     sprite.y = (this.minHeight - sprite.height) / 2;
-            //     this.icon.addChild(graphics);
-            //     this.icon.addChild(sprite);
-            // }
-            // else
-                this.icon = sprite;
+
+            this.icon = sprite;
             this.icon.buttonMode = true;
             this.displayObject.addChild(this.icon);
         },
@@ -100,6 +97,15 @@ define(function(require) {
         createIconSprite: function() {
             var icon = Assets.createSprite(Assets.Images.BULB_ON);
             return icon;
+        },
+
+        /**
+         * This should be overwritten by child classes to use perhaps the
+         *   actual kind of view for the model type with maybe a static
+         *   MVT that isn't bound to the scene's MVT.
+         */
+        createSchematicIconSprite: function() {
+            return Assets.createSprite(Assets.Images.BULB_ON);
         },
 
         initLabel: function() {
@@ -178,6 +184,11 @@ define(function(require) {
 
         unhover: function(event) {
             this.displayObject.alpha = 1;
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            this.displayObject.removeChild(this.icon);
+            this.initIcon();
         }
 
     });

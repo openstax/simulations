@@ -45,7 +45,7 @@ define(function (require) {
     var Circuit = Backbone.Model.extend({
 
         defaults: {
-            
+            schematic: false
         },
 
         initialize: function(attributes, options) {

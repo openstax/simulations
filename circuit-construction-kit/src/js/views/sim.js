@@ -56,6 +56,7 @@ define(function (require) {
             'click .reset-btn'    : 'reset',
 
             'click #show-electrons-check' : 'toggleElectrons',
+            'click #show-schematic-check' : 'toggleSchematic',
 
             'click .zoom-in-btn'  : 'zoomIn',
             'click .zoom-out-btn' : 'zoomOut'
@@ -202,6 +203,10 @@ define(function (require) {
                 this.sceneView.showElectrons();
             else
                 this.sceneView.hideElectrons();
+        },
+
+        toggleSchematic: function() {
+            this.simulation.circuit.set('schematic', $(event.target).is(':checked'));
         },
 
         zoomIn: function() {
