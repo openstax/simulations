@@ -55,8 +55,6 @@ define(function(require) {
             this._point = new PIXI.Point();
 
             this.initGraphics();
-
-            this.listenTo(this.simulation.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         initGraphics: function() {
@@ -67,6 +65,16 @@ define(function(require) {
         },
 
         initIcon: function() {
+            this.icon = new PIXI.Container();
+            this.icon.buttonMode = true;
+            this.displayObject.addChild(this.icon);
+
+            this.updateIconSprite();
+        },
+
+        updateIconSprite: function() {
+            this.icon.removeChildren();
+
             var sprite;
 
             if (this.simulation.circuit.get('schematic'))
@@ -84,9 +92,7 @@ define(function(require) {
             sprite.scale.x = scale;
             sprite.scale.y = scale;
 
-            this.icon = sprite;
-            this.icon.buttonMode = true;
-            this.displayObject.addChild(this.icon);
+            this.icon.addChild(sprite);
         },
 
         /**
@@ -105,7 +111,7 @@ define(function(require) {
          *   MVT that isn't bound to the scene's MVT.
          */
         createSchematicIconSprite: function() {
-            return Assets.createSprite(Assets.Images.BULB_ON);
+            return this.createIconSprite();
         },
 
         initLabel: function() {
@@ -120,6 +126,8 @@ define(function(require) {
             label.anchor.y = -0.11;
             label.x = this.width / 2;
             label.y = this.icon.height;
+
+            this.label = label;
 
             this.displayObject.addChild(label);
         },
@@ -186,9 +194,9 @@ define(function(require) {
             this.displayObject.alpha = 1;
         },
 
-        schematicModeChanged: function(circuit, schematic) {
-            this.displayObject.removeChild(this.icon);
-            this.initIcon();
+        updateIcon: function() {
+            this.updateIconSprite();
+            this.label.y = this.icon.height;
         }
 
     });

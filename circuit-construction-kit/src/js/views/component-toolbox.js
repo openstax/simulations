@@ -51,6 +51,8 @@ define(function(require) {
             this._bounds = new Rectangle();
 
             this.initGraphics();
+
+            this.listenTo(this.simulation.circuit, 'change:schematic', this.schematicModeChanged);
         },
 
         initGraphics: function() {
@@ -147,6 +149,13 @@ define(function(require) {
         setPosition: function(x, y) {
             this.x = x;
             this.y = y;
+            this.updateLayout();
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            for (var i = 0; i < this.icons.length; i++)
+                this.icons[i].updateIcon();
+
             this.updateLayout();
         }
 

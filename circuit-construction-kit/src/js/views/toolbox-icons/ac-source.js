@@ -34,12 +34,17 @@ define(function(require) {
         },
 
         /**
-         * This should be overwritten by child classes to use perhaps the
-         *   actual kind of view for the model type with maybe a static
-         *   MVT that isn't bound to the scene's MVT.
+         * Returns the icon sprite
          */
         createIconSprite: function() {
             return Assets.createSprite(Assets.Images.AC);
+        },
+
+        /**
+         * Returns the schematic-mode icon sprite
+         */
+        createSchematicIconSprite: function() {
+            return Assets.createSprite(Assets.Images.SCHEMATIC_AC);
         },
 
         /**
