@@ -71,6 +71,8 @@ define(function(require) {
             this.hoverGraphics = new PIXI.Graphics();
             this.hoverLayer.addChild(this.hoverGraphics);
 
+            this.schematicModeChanged(this.circuit, this.circuit.get('schematic'));
+
             Draggable.prototype.initGraphics.apply(this, arguments);
         },
 
@@ -125,7 +127,7 @@ define(function(require) {
         },
 
         updateSolder: function(j1, j2, replacement) {
-            if (this.isConnected())
+            if (this.isConnected() && !this.circuit.get('schematic'))
                 this.solderLayer.visible = true;
             else
                 this.solderLayer.visible = false;
