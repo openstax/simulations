@@ -19,8 +19,8 @@ define(function(require) {
         imagePath:     Assets.Images.CAPACITOR,
         maskImagePath: Assets.Images.CAPACITOR_MASK,
 
-        // schematicImagePath:     Assets.Images.SCHEMATIC_CAPACITOR,
-        // schematicMaskImagePath: Assets.Images.SCHEMATIC_CAPACITOR_MASK,
+        schematicImagePath:     Assets.Images.SCHEMATIC_CAPACITOR,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_CAPACITOR_MASK,
 
         /**
          * Initializes the new CapacitorView.
