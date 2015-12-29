@@ -20,7 +20,12 @@ define(function(require) {
         imagePath:     Assets.Images.SWITCH_BASE,
         maskImagePath: Assets.Images.SWITCH_MASK,
 
+        schematicImagePath:     Assets.Images.SCHEMATIC_SWITCH_BASE,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_SWITCH_MASK,
+
         anchorY: 0.68,
+        schematicAnchorY: 0.5,
+        schematicAngleOffset: 0.21,
 
         events: _.extend({}, RectangularComponentView.prototype.events, {
             'touchstart      .handle': 'handleDragStart',
@@ -41,6 +46,8 @@ define(function(require) {
         initialize: function(options) {
             this._pivotToPointer = new Vector2();
 
+            this.defaultAnchorY = this.anchorY;
+
             RectangularComponentView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.model, 'change:handleAngle', this.updateHandleAngle);
@@ -50,15 +57,14 @@ define(function(require) {
         initComponentGraphics: function() {
             RectangularComponentView.prototype.initComponentGraphics.apply(this, arguments);
 
-            this.handle = Assets.createSprite(Assets.Images.SWITCH_HANDLE);
-            this.handle.anchor.x = 1;
-            this.handle.anchor.y = 0.5;
+            this.handleTexture          = Assets.Texture(Assets.Images.SWITCH_HANDLE);
+            this.schematicHandleTexture = Assets.Texture(Assets.Images.SCHEMATIC_SWITCH_HANDLE);
+
+            this.handle = new PIXI.Sprite(this.handleTexture);
             this.handle.buttonMode = true;
             this.handle.defaultCursor = 'move';
 
             this.handleWrapper = new PIXI.Container();
-            this.handleWrapper.x = 305;
-            this.handleWrapper.y = -61;
             this.handleWrapper.addChild(this.handle);
 
             this.pivot = Assets.createSprite(Assets.Images.SWITCH_BASE_PIVOT);
@@ -73,7 +79,11 @@ define(function(require) {
         },
 
         initHandleHoverGraphics: function() {
-            var mask = Assets.createSprite(Assets.Images.SWITCH_HANDLE_MASK);
+            var mask = Assets.createSprite(
+                this.circuit.get('schematic') ? 
+                    Assets.Images.SCHEMATIC_SWITCH_HANDLE_MASK : 
+                    Assets.Images.SWITCH_HANDLE_MASK
+            );
             mask.anchor.x = this.handle.anchor.x;
             mask.anchor.y = this.handle.anchor.y;
 
@@ -92,7 +102,10 @@ define(function(require) {
         },
 
         updateHandleAngle: function(model, handleAngle) {
-            this.handle.rotation = handleAngle;
+            if (this.circuit.get('schematic'))
+                this.handle.rotation = handleAngle + this.schematicAngleOffset;
+            else
+                this.handle.rotation = handleAngle;
         },
 
         showHoverGraphics: function() {
@@ -121,6 +134,9 @@ define(function(require) {
                 var pivotToPointerAngle = this._pivotToPointer.set(pivotToPointer.x, pivotToPointer.y).angle();
 
                 var angle = pivotToPointerAngle - Math.PI;
+
+                if (this.circuit.get('schematic'))
+                    angle -= this.schematicAngleOffset;
 
                 if (angle > Constants.Switch.MAX_HANDLE_ANGLE || angle < -Math.PI / 2)
                     angle = Constants.Switch.MAX_HANDLE_ANGLE;
@@ -165,8 +181,7 @@ define(function(require) {
                     this.hideHandleHoverGraphics();
                 else
                     this.showHoverGraphics();
-            }
-                
+            }  
         },
 
         showHandleHoverGraphics: function() {
@@ -175,6 +190,35 @@ define(function(require) {
 
         hideHandleHoverGraphics: function() {
             this.handleHoverGraphics.visible = false;
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            if (schematic) {
+                this.pivot.visible = false;
+                this.handleWrapper.x = 255;
+                this.handleWrapper.y = 0;
+                this.handle.texture = this.schematicHandleTexture;
+                this.handle.anchor.x = (164 / 190);
+                this.handle.anchor.y = (26 / 52);
+                this.anchorY = this.sprite.anchor.y = this.schematicAnchorY;
+            }
+            else {
+                this.pivot.visible = true;
+                this.handleWrapper.x = 305;
+                this.handleWrapper.y = -61;
+                this.handle.texture = this.handleTexture;
+                this.handle.anchor.x = 1;
+                this.handle.anchor.y = 0.5;
+                this.anchorY = this.sprite.anchor.y = this.defaultAnchorY;
+            }
+
+            this.handle.removeChild(this.handleHoverGraphics.mask);
+            this.handle.removeChild(this.handleHoverGraphics);
+
+            RectangularComponentView.prototype.schematicModeChanged.apply(this, arguments);
+
+            this.initHandleHoverGraphics();
+            this.updateHandleAngle(this.model, this.model.get('handleAngle'));
         },
 
     });
