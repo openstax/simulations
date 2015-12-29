@@ -19,6 +19,9 @@ define(function(require) {
         imagePath:     Assets.Images.INDUCTOR,
         maskImagePath: Assets.Images.INDUCTOR_MASK,
 
+        schematicImagePath:     Assets.Images.SCHEMATIC_INDUCTOR,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_INDUCTOR_MASK,
+
         /**
          * Initializes the new InductorView.
          */

@@ -42,8 +42,8 @@ define(function (require) {
         SCHEMATIC_SWITCH_MASK:        'components/schematic/switch-mask.png',
         SCHEMATIC_SWITCH_HANDLE:      'components/schematic/switch-handle.png',
         SCHEMATIC_SWITCH_HANDLE_MASK: 'components/schematic/switch-handle-mask.png',
-        // SCHEMATIC_INDUCTOR:           'components/schematic/inductor.png',
-        // SCHEMATIC_INDUCTOR_MASK:      'components/schematic/inductor-mask.png',
+        SCHEMATIC_INDUCTOR:           'components/schematic/inductor.png',
+        SCHEMATIC_INDUCTOR_MASK:      'components/schematic/inductor-mask.png',
         
         DOG:                'components/grab-bag/dog.png',
         DOG_MASK:           'components/grab-bag/dog-mask.png',
