@@ -45,7 +45,14 @@ define(function(require) {
         },
 
         initComponentGraphics: function() {
-            this.updateComponentGraphics();
+            this.texture          = Assets.Texture(this.imagePath);
+            this.schematicTexture = Assets.Texture(this.schematicImagePath);
+
+            this.sprite = new PIXI.Sprite(this.texture);
+            this.sprite.anchor.x = this.anchorX;
+            this.sprite.anchor.y = this.anchorY;
+
+            this.displayObject.addChild(this.sprite);
             
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
@@ -74,16 +81,7 @@ define(function(require) {
         },
 
         updateComponentGraphics: function() {
-            if (this.sprite)
-                this.displayObject.removeChild(this.sprite);
-
-            this.sprite = this.circuit.get('schematic') ?
-                Assets.createSprite(this.schematicImagePath) :
-                Assets.createSprite(this.imagePath);
-            this.sprite.anchor.x = this.anchorX;
-            this.sprite.anchor.y = this.anchorY;
-
-            this.displayObject.addChild(this.sprite);
+            this.sprite.texture = this.circuit.get('schematic') ? this.schematicTexture : this.texture;
         },
 
         updateHoverGraphics: function() {
