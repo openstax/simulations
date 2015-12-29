@@ -83,7 +83,7 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             if (this.circuit.isDynamic() || this.modelChanged) {
                 this.circuit.update(time, deltaTime);
-                this.solver.solve(this.circuit, deltaTime);
+                // this.solver.solve(this.circuit, deltaTime);
                 this.modelChanged = false;
             }
             

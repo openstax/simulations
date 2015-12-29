@@ -23,6 +23,7 @@ define(function(require) {
     var BatteryView         = require('views/components/battery');
     var SwitchView          = require('views/components/switch');
     var InductorView        = require('views/components/inductor');
+    var CapacitorView       = require('views/components/capacitor');
     var ACSourceView        = require('views/components/ac-source');
     var LightBulbView       = require('views/components/light-bulb');
     var GrabBagResistorView = require('views/components/grab-bag-resistor');
@@ -151,7 +152,7 @@ define(function(require) {
                 viewConstructor = SwitchView;
             }
             else if (branch instanceof Capacitor) {
-                
+                viewConstructor = CapacitorView;
             }
             else if (branch instanceof Inductor) {
                 viewConstructor = InductorView;

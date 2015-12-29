@@ -20,6 +20,7 @@ define(function(require) {
     var ACSourceToolboxIcon  = require('views/toolbox-icons/ac-source');
     var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
     var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
+    var CapacitorToolboxIcon = require('views/toolbox-icons/capacitor');
     var CircuitView          = require('views/circuit');
     var ElectronsView        = require('views/electrons');
 
@@ -112,7 +113,8 @@ define(function(require) {
                     LightBulbToolboxIcon,
                     SwitchToolboxIcon,
                     ACSourceToolboxIcon,
-                    InductorToolboxIcon
+                    InductorToolboxIcon,
+                    CapacitorToolboxIcon
                 ]
             });
             this.componentToolbox.setPosition(20, 20);

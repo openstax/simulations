@@ -27,6 +27,8 @@ define(function (require) {
         SWITCH_MASK:        'components/normal/switch-mask.png',
         INDUCTOR:           'components/normal/inductor.png',
         INDUCTOR_MASK:      'components/normal/inductor-mask.png',
+        CAPACITOR:          'components/normal/capacitor.png',
+        CAPACITOR_MASK:     'components/normal/capacitor-mask.png',
 
         SCHEMATIC_BULB_ON:            'components/schematic/bulb-on.png',
         SCHEMATIC_BULB_OFF:           'components/schematic/bulb-off.png',
