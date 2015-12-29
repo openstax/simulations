@@ -40,11 +40,18 @@ define(function(require) {
         initComponentGraphics: function() {
             this.spriteLayer = new PIXI.Container();
 
-            this.offSprite = Assets.createSprite(Assets.Images.BULB_OFF);
-            this.onSprite  = Assets.createSprite(Assets.Images.BULB_ON);
+            this.offTexture = Assets.Texture(Assets.Images.BULB_OFF);
+            this.onTexture  = Assets.Texture(Assets.Images.BULB_ON);
+
+            this.schematicOffTexture = Assets.Texture(Assets.Images.SCHEMATIC_BULB_OFF);
+            this.schematicOnTexture  = Assets.Texture(Assets.Images.SCHEMATIC_BULB_ON);
+
+            this.offSprite = new PIXI.Sprite(this.offTexture);
+            this.onSprite  = new PIXI.Sprite(this.onTexture);
             this.offSprite.anchor.x = this.onSprite.anchor.x = 0.5;
             this.offSprite.anchor.y = this.onSprite.anchor.y = 1;
             this.onSprite.alpha = 0;
+
             this.spriteLayer.addChild(this.offSprite);
             this.spriteLayer.addChild(this.onSprite);
 
@@ -61,7 +68,9 @@ define(function(require) {
         },
 
         initHoverGraphics: function() {
-            var mask = Assets.createSprite(Assets.Images.BULB_MASK);
+            this.hoverLayer.removeChildren();
+
+            var mask = Assets.createSprite(this.circuit.get('schematic') ? Assets.Images.SCHEMATIC_BULB_MASK : Assets.Images.BULB_MASK);
             mask.anchor.x = 0.5;
             mask.anchor.y = 1;
 
@@ -126,6 +135,19 @@ define(function(require) {
             this.hoverLayer.y = viewStartPosition.y;
         },
 
+        updateSprites: function() {
+            if (this.circuit.get('schematic')) {
+                this.onSprite.texture = this.schematicOnTexture;
+                this.offSprite.texture = this.schematicOffTexture;
+            }
+            else {
+                this.onSprite.texture = this.onTexture;
+                this.offSprite.texture = this.offTexture;
+            }
+            this.initHoverGraphics();
+            this.update();
+        },
+
         initContextMenu: function($contextMenu) {
             ComponentView.prototype.initContextMenu.apply(this, arguments);
 
@@ -148,6 +170,12 @@ define(function(require) {
         generateTexture: function() {
             var texture = PIXI.Texture.EMPTY;
             return texture;
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            ComponentView.prototype.schematicModeChanged.apply(this, arguments);
+
+            this.updateSprites();
         }
 
     }, _.extend({

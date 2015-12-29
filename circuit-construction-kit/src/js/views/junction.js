@@ -171,7 +171,7 @@ define(function(require) {
         },
 
         schematicModeChanged: function(circuit, schematic) {
-            this.solderLayer.visible = !schematic;
+            this.updateSolder();
             this.schematicGraphics.visible = schematic;
         }
 

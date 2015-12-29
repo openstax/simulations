@@ -28,9 +28,9 @@ define(function (require) {
         INDUCTOR:           'components/normal/inductor.png',
         INDUCTOR_MASK:      'components/normal/inductor-mask.png',
 
-        // SCHEMATIC_BULB_ON:            'components/schematic/bulb-on.png',
-        // SCHEMATIC_BULB_OFF:           'components/schematic/bulb-off.png',
-        // SCHEMATIC_BULB_MASK:          'components/schematic/bulb-mask.png',
+        SCHEMATIC_BULB_ON:            'components/schematic/bulb-on.png',
+        SCHEMATIC_BULB_OFF:           'components/schematic/bulb-off.png',
+        SCHEMATIC_BULB_MASK:          'components/schematic/bulb-mask.png',
         SCHEMATIC_RESISTOR:           'components/schematic/resistor.png',
         SCHEMATIC_RESISTOR_MASK:      'components/schematic/resistor-mask.png',
         SCHEMATIC_BATTERY:            'components/schematic/battery.png',
