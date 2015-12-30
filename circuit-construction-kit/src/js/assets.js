@@ -36,6 +36,8 @@ define(function (require) {
         SCHEMATIC_BULB_MASK:          'components/schematic/bulb-mask.png',
         SCHEMATIC_RESISTOR:           'components/schematic/resistor.png',
         SCHEMATIC_RESISTOR_MASK:      'components/schematic/resistor-mask.png',
+        SCHEMATIC_LARGE_RESISTOR:     'components/schematic/resistor-large.png',
+        SCHEMATIC_LARGE_RESISTOR_MASK:'components/schematic/resistor-large-mask.png',
         SCHEMATIC_BATTERY:            'components/schematic/battery.png',
         SCHEMATIC_BATTERY_MASK:       'components/schematic/battery-mask.png',
         SCHEMATIC_AC:                 'components/schematic/ac.png',
