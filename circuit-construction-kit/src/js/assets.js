@@ -8,6 +8,7 @@ define(function (require) {
 
     Assets.Images = {   
         GRAB_BAG:           'grab-bag.png',
+        SCHEMATIC_GRAB_BAG: 'grab-bag-schematic.png',
         ELECTRON:           'electron-dark.png',
 
         BULB_ON:            'components/normal/bulb-on.png',

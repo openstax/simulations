@@ -61,6 +61,10 @@ define(function(require) {
             this._bounds = new Rectangle();
 
             this.initGraphics();
+
+            this.listenTo(this.simulation.circuit, 'change:schematic', this.schematicModeChanged);
+
+            this.schematicModeChanged(this.simulation.circuit, this.simulation.circuit.get('schematic'));
         },
 
         initGraphics: function() {
@@ -80,7 +84,9 @@ define(function(require) {
         },
 
         initIcon: function() {
-            this.icon = Assets.createSprite(Assets.Images.GRAB_BAG);
+            this.iconTexture          = Assets.Texture(Assets.Images.GRAB_BAG);
+            this.schematicIconTexture = Assets.Texture(Assets.Images.SCHEMATIC_GRAB_BAG);
+            this.icon = new PIXI.Sprite(this.iconTexture);
             this.icon.anchor.y = 1;
             this.icon.x = this.padding;
             this.icon.y = -this.paddingBottom;
@@ -181,6 +187,13 @@ define(function(require) {
 
         hideGrabBagMenu: function() {
             this.grabBag.hide();
+        },
+
+        schematicModeChanged: function(circuit, schematic) {
+            if (schematic)
+                this.icon.texture = this.schematicIconTexture;
+            else
+                this.icon.texture = this.iconTexture;
         }
 
     });
