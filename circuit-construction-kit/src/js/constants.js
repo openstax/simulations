@@ -250,5 +250,21 @@ define(function (require) {
     Constants.JunctionView = JunctionView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            VOLTMETER VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var VoltmeterView = {};
+
+    VoltmeterView.HEIGHT = 4; // In sim units
+    VoltmeterView.PROBE_HEIGHT = VoltmeterView.HEIGHT * 0.8; // In sim units
+    VoltmeterView.RED_COLOR   = '#ff0000';
+    VoltmeterView.BLACK_COLOR = '#111111';
+
+    Constants.VoltmeterView = VoltmeterView;
+
+
     return Constants;
 });

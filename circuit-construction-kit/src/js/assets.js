@@ -7,9 +7,12 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {   
-        GRAB_BAG:           'grab-bag.png',
-        SCHEMATIC_GRAB_BAG: 'grab-bag-schematic.png',
-        ELECTRON:           'electron-dark.png',
+        GRAB_BAG:              'grab-bag.png',
+        SCHEMATIC_GRAB_BAG:    'grab-bag-schematic.png',
+        ELECTRON:              'electron-dark.png',
+        VOLTMETER_PROBE:       'voltmeter.png',
+        VOLTMETER_PROBE_BLACK: 'voltmeter-probe-black.png',
+        VOLTMETER_PROBE_RED:   'voltmeter-probe-red.png',
 
         BULB_ON:            'components/normal/bulb-on.png',
         BULB_OFF:           'components/normal/bulb-off.png',
