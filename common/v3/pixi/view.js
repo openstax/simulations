@@ -141,6 +141,14 @@ define(function(require) {
 
         getResolution: function() {
             return window.devicePixelRatio ? window.devicePixelRatio : 1;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     });

@@ -57,6 +57,8 @@ define(function (require) {
 
             'click #show-electrons-check' : 'toggleElectrons',
             'click #show-schematic-check' : 'toggleSchematic',
+            'click #show-voltmeter-check' : 'toggleVoltmeter',
+            'click #show-ammeter-check'   : 'toggleAmmeter',
 
             'click .zoom-in-btn'  : 'zoomIn',
             'click .zoom-out-btn' : 'zoomOut'
@@ -207,6 +209,20 @@ define(function (require) {
 
         toggleSchematic: function() {
             this.simulation.circuit.set('schematic', $(event.target).is(':checked'));
+        },
+
+        toggleVoltmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltmeter();
+            else
+                this.sceneView.hideVoltmeter();
+        },
+
+        toggleAmmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showAmmeter();
+            else
+                this.sceneView.hideAmmeter();
         },
 
         zoomIn: function() {

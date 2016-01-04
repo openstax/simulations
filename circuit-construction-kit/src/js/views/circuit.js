@@ -27,6 +27,7 @@ define(function(require) {
     var ACSourceView        = require('views/components/ac-source');
     var LightBulbView       = require('views/components/light-bulb');
     var GrabBagResistorView = require('views/components/grab-bag-resistor');
+    var SeriesAmmeterView   = require('views/components/series-ammeter');
 
     /**
      * A view that represents a circuit
@@ -68,6 +69,7 @@ define(function(require) {
             this.componentLayer     = new PIXI.Container();
             this.junctionLayer      = new PIXI.Container();
             this.junctionHoverLayer = new PIXI.Container();
+            this.topLayer           = new PIXI.Container();
 
             this.displayObject.addChild(this.background);
             this.displayObject.addChild(this.solderLayer);
@@ -146,7 +148,7 @@ define(function(require) {
                 viewConstructor = LightBulbView;
             }
             else if (branch instanceof SeriesAmmeter) {
-                
+                viewConstructor = SeriesAmmeterView;
             }
             else if (branch instanceof Switch) {
                 viewConstructor = SwitchView;
@@ -166,6 +168,9 @@ define(function(require) {
 
             this.componentLayer.addChild(branchView.displayObject);
             this.junctionHoverLayer.addChild(branchView.hoverLayer);
+            if (branchView.topLayer)
+                this.topLayer.addChild(branchView.topLayer);
+
             this.branchViews.push(branchView);
         },
 

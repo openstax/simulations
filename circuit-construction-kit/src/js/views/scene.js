@@ -10,20 +10,21 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var GrabBagButton        = require('views/grab-bag-button');
-    var ComponentToolbox     = require('views/component-toolbox');
-    var ComponentToolboxIcon = require('views/component-toolbox-icon');
-    var WireToolboxIcon      = require('views/toolbox-icons/wire');
-    var ResistorToolboxIcon  = require('views/toolbox-icons/resistor');
-    var BatteryToolboxIcon   = require('views/toolbox-icons/battery');
-    var LightBulbToolboxIcon = require('views/toolbox-icons/light-bulb');
-    var ACSourceToolboxIcon  = require('views/toolbox-icons/ac-source');
-    var SwitchToolboxIcon    = require('views/toolbox-icons/switch');
-    var InductorToolboxIcon  = require('views/toolbox-icons/inductor');
-    var CapacitorToolboxIcon = require('views/toolbox-icons/capacitor');
-    var CircuitView          = require('views/circuit');
-    var ElectronsView        = require('views/electrons');
-    var VoltmeterView        = require('views/voltmeter');
+    var GrabBagButton            = require('views/grab-bag-button');
+    var ComponentToolbox         = require('views/component-toolbox');
+    var ComponentToolboxIcon     = require('views/component-toolbox-icon');
+    var WireToolboxIcon          = require('views/toolbox-icons/wire');
+    var ResistorToolboxIcon      = require('views/toolbox-icons/resistor');
+    var BatteryToolboxIcon       = require('views/toolbox-icons/battery');
+    var LightBulbToolboxIcon     = require('views/toolbox-icons/light-bulb');
+    var ACSourceToolboxIcon      = require('views/toolbox-icons/ac-source');
+    var SwitchToolboxIcon        = require('views/toolbox-icons/switch');
+    var InductorToolboxIcon      = require('views/toolbox-icons/inductor');
+    var CapacitorToolboxIcon     = require('views/toolbox-icons/capacitor');
+    var SeriesAmmeterToolboxIcon = require('views/toolbox-icons/series-ammeter');
+    var CircuitView              = require('views/circuit');
+    var ElectronsView            = require('views/electrons');
+    var VoltmeterView            = require('views/voltmeter');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -60,6 +61,7 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.dummyLayer = new PIXI.Container();
+            this.topLayer = new PIXI.Container();
 
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 230) / 2);
@@ -80,7 +82,9 @@ define(function(require) {
             this.initComponentToolbox();
             this.initGrabBagButton();
             this.initVoltmeter();
+            this.initAmmeter();
 
+            this.stage.addChild(this.topLayer);
             this.stage.addChild(this.dummyLayer);
         },
 
@@ -93,6 +97,7 @@ define(function(require) {
                 height: this.height
             });
             this.stage.addChild(this.circuitView.displayObject);
+            this.topLayer.addChild(this.circuitView.topLayer);
         },
 
         initElectronsView: function() {
@@ -143,8 +148,23 @@ define(function(require) {
             });
 
             this.voltmeterView.setPosition(500, 300);
+            this.voltmeterView.hide();
 
             this.stage.addChild(this.voltmeterView.displayObject);
+        },
+
+        initAmmeter: function() {
+            this.ammeterToolbox = new ComponentToolbox({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                dummyLayer: this.dummyLayer,
+                icons: [
+                    SeriesAmmeterToolboxIcon
+                ]
+            });
+            this.ammeterToolbox.setPosition(100, 20);
+            this.ammeterToolbox.hide();
+            this.stage.addChild(this.ammeterToolbox.displayObject);
         },
 
         initMVT: function() {
@@ -204,6 +224,21 @@ define(function(require) {
             this.electronsView.hide();
         },
 
+        showVoltmeter: function() {
+            this.voltmeterView.show();
+        },
+
+        hideVoltmeter: function() {
+            this.voltmeterView.hide();
+        },
+
+        showAmmeter: function() {
+            this.ammeterToolbox.show();
+        },
+
+        hideAmmeter: function() {
+            this.ammeterToolbox.hide();
+        },
 
     });
 
