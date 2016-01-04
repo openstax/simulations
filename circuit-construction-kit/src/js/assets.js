@@ -10,7 +10,7 @@ define(function (require) {
         GRAB_BAG:              'grab-bag.png',
         SCHEMATIC_GRAB_BAG:    'grab-bag-schematic.png',
         ELECTRON:              'electron-dark.png',
-        VOLTMETER_PROBE:       'voltmeter.png',
+        VOLTMETER:             'voltmeter.png',
         VOLTMETER_PROBE_BLACK: 'voltmeter-probe-black.png',
         VOLTMETER_PROBE_RED:   'voltmeter-probe-red.png',
 

@@ -23,6 +23,7 @@ define(function(require) {
     var CapacitorToolboxIcon = require('views/toolbox-icons/capacitor');
     var CircuitView          = require('views/circuit');
     var ElectronsView        = require('views/electrons');
+    var VoltmeterView        = require('views/voltmeter');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -78,6 +79,7 @@ define(function(require) {
             this.initElectronsView();
             this.initComponentToolbox();
             this.initGrabBagButton();
+            this.initVoltmeter();
 
             this.stage.addChild(this.dummyLayer);
         },
@@ -131,6 +133,18 @@ define(function(require) {
             this.stage.addChild(grabBagButton.displayObject);
 
             this.grabBagButton = grabBagButton;
+        },
+
+        initVoltmeter: function() {
+            this.voltmeterView = new VoltmeterView({
+                mvt: this.mvt,
+                scene: this,
+                simulation: this.simulation
+            });
+
+            this.voltmeterView.setPosition(500, 300);
+
+            this.stage.addChild(this.voltmeterView.displayObject);
         },
 
         initMVT: function() {
