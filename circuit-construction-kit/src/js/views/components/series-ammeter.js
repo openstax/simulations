@@ -63,6 +63,16 @@ define(function(require) {
             this.topLayer.rotation = this.displayObject.rotation;
         },
 
+        showHoverGraphics: function() {
+            RectangularComponentView.prototype.showHoverGraphics.apply(this, arguments);
+            this.topLayer.visible = false; 
+        },
+
+        hideHoverGraphics: function() {
+            RectangularComponentView.prototype.hideHoverGraphics.apply(this, arguments);
+            this.topLayer.visible = true; 
+        },
+
     });
 
     return SeriesAmmeterView;
