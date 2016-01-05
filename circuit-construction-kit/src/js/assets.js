@@ -49,6 +49,8 @@ define(function (require) {
         SCHEMATIC_BATTERY_MASK:       'components/schematic/battery-mask.png',
         SCHEMATIC_AC:                 'components/schematic/ac.png',
         SCHEMATIC_AC_MASK:            'components/schematic/ac-mask.png',
+        SCHEMATIC_SERIES_AMMETER:     'components/schematic/series-ammeter.png',
+        SCHEMATIC_SERIES_AMMETER_MASK:'components/schematic/series-ammeter-mask.png',
         SCHEMATIC_SWITCH_ICON:        'components/schematic/switch-icon.png',
         SCHEMATIC_SWITCH_BASE:        'components/schematic/switch-base.png',
         SCHEMATIC_SWITCH_MASK:        'components/schematic/switch-mask.png',

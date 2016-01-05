@@ -44,7 +44,7 @@ define(function(require) {
          * Returns the schematic-mode icon sprite
          */
         createSchematicIconSprite: function() {
-            return Assets.createSprite(Assets.Images.SCHEMATIC_BATTERY);
+            return Assets.createSprite(Assets.Images.SCHEMATIC_SERIES_AMMETER);
         },
 
         /**

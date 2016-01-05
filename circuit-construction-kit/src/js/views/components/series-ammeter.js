@@ -20,8 +20,8 @@ define(function(require) {
         maskImagePath: Assets.Images.SERIES_AMMETER_MASK,
         topImagePath:  Assets.Images.SERIES_AMMETER_TOP,
 
-        schematicImagePath:     Assets.Images.SCHEMATIC_BATTERY,
-        schematicMaskImagePath: Assets.Images.SCHEMATIC_BATTERY_MASK,
+        schematicImagePath:     Assets.Images.SCHEMATIC_SERIES_AMMETER,
+        schematicMaskImagePath: Assets.Images.SCHEMATIC_SERIES_AMMETER_MASK,
 
         /**
          * Initializes the new SeriesAmmeterView.
@@ -80,7 +80,8 @@ define(function(require) {
         },
 
         updateComponentGraphics: function() {
-            // this.sprite.texture = this.circuit.get('schematic') ? this.schematicTexture : this.texture;
+            this.topLayer.visible = !this.circuit.get('schematic');
+
             RectangularComponentView.prototype.updateComponentGraphics.apply(this, arguments);
         },
 
@@ -101,7 +102,7 @@ define(function(require) {
 
         hideHoverGraphics: function() {
             RectangularComponentView.prototype.hideHoverGraphics.apply(this, arguments);
-            this.topLayer.visible = true; 
+            this.topLayer.visible = !this.circuit.get('schematic'); 
         },
 
     });
