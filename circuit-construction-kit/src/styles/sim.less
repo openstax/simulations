@@ -122,3 +122,21 @@
         .zoom-button();
     }
 }
+
+.sim-view .stopwatch-view {
+    .panel();
+    .box-shadow(none);
+
+    &:before {
+        content: '';
+        display: inline-block;
+        height: 32px;
+        width: 5px;
+        border: 1px solid fadeout(#000, 85%);
+        border-top: none;
+        border-bottom: none;
+        padding: 0;
+        margin-right: 15px;
+        vertical-align: middle;
+    }
+}

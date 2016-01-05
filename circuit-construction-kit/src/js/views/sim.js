@@ -5,7 +5,9 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var AppView       = require('common/v3/app/app');
+    var SimView       = require('common/v3/app/sim');
+    var StopwatchView = require('common/v3/tools/stopwatch');
 
     var CCKSimulation = require('models/simulation');
     var CCKSceneView  = require('views/scene');
@@ -59,6 +61,7 @@ define(function (require) {
             'click #show-schematic-check' : 'toggleSchematic',
             'click #show-voltmeter-check' : 'toggleVoltmeter',
             'click #show-ammeter-check'   : 'toggleAmmeter',
+            'click #show-stopwatch-check' : 'toggleStopwatch',
 
             'click .zoom-in-btn'  : 'zoomIn',
             'click .zoom-out-btn' : 'zoomOut'
@@ -109,6 +112,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+            this.renderStopwatchView();
 
             return this;
         },
@@ -144,11 +148,33 @@ define(function (require) {
         },
 
         /**
+         * Renders the stopwatch view
+         */
+        renderStopwatchView: function() {
+            this.stopwatchView = new StopwatchView({
+                dragFrame: this.el,
+                units : 'sec',
+                unitRatio: 1,
+                decimals: 4,
+                position: {
+                    x : AppView.windowIsShort() ? 630 : 622,
+                    y : AppView.windowIsShort() ? 326 : 398 
+                }
+            });
+
+            this.stopwatchView.render();
+            this.stopwatchView.hide();
+
+            this.$el.append(this.stopwatchView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.stopwatchView.postRender();
         },
 
         resetSimulation: function() {
@@ -188,6 +214,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         /**
@@ -223,6 +250,13 @@ define(function (require) {
                 this.sceneView.showAmmeter();
             else
                 this.sceneView.hideAmmeter();
+        },
+
+        toggleStopwatch: function() {
+            if ($(event.target).is(':checked'))
+                this.stopwatchView.show();
+            else
+                this.stopwatchView.hide();
         },
 
         zoomIn: function() {
