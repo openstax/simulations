@@ -26,6 +26,7 @@ define(function (require) {
         SERIES_AMMETER:     'components/normal/series-ammeter.png',
         SERIES_AMMETER_TOP: 'components/normal/series-ammeter-top.png',
         SERIES_AMMETER_MASK:'components/normal/series-ammeter-mask.png',
+        SERIES_AMMETER_ICON:'components/normal/series-ammeter-icon.png',
         SWITCH_ICON:        'components/normal/switch-icon.png',
         SWITCH_BASE:        'components/normal/switch-base.png',
         SWITCH_BASE_PIVOT:  'components/normal/switch-base-pivot.png',

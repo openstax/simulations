@@ -37,7 +37,7 @@ define(function(require) {
          * Returns the icon sprite
          */
         createIconSprite: function() {
-            return Assets.createSprite(Assets.Images.SERIES_AMMETER);
+            return Assets.createSprite(Assets.Images.SERIES_AMMETER_ICON);
         },
 
         /**
