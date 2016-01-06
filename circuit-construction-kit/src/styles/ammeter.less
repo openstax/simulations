@@ -11,6 +11,8 @@
 @panel-padding: 15px;
 @crosshairs-color: @panel-bg;
 @crosshairs-opacity: @panel-opacity;
+@crosshairs-thickness: 2px;
+@active-color: @link-color;
 
 .ammeter-view {
     position: absolute;
@@ -53,6 +55,28 @@
             height: (@ring-radius * 2);
             border: @ring-thickness solid @panel-bg;
         }
+
+        .ammeter-crosshairs {
+            &:before, &:after {
+                content: '';
+                position: absolute;
+                background: @crosshairs-color;
+            }
+
+            &:before {
+                width: ((@ring-radius - @ring-thickness) * 2);
+                height: @crosshairs-thickness;
+                top: -(@crosshairs-thickness / 2);
+                left: -(@ring-radius - @ring-thickness);
+            }
+
+            &:after {
+                width: @crosshairs-thickness;
+                height: ((@ring-radius - @ring-thickness) * 2);
+                left: -(@crosshairs-thickness / 2);
+                top: -(@ring-radius - @ring-thickness);
+            }
+        }
     }
 
     .ammeter-content {
@@ -64,35 +88,42 @@
         padding: @panel-padding;
         line-height: (@ammeter-height - @panel-padding * 2);
         text-align: right;
-
-        // div {
-        //     padding-left: 10px;
-        //     padding-right: 10px;
-
-        //     label {
-        //         display: inline-block;
-        //     }         
-        // }
     }
 
-    &:before, &:after {
-        content: '';
+    .ammeter-active-overlay {
         position: absolute;
-        background: @crosshairs-color;
-        opacity: @crosshairs-opacity;
-    }
+        display: none;
 
-    &:before {
-        width: ((@ring-radius - @ring-thickness) * 2);
-        height: 2px;
-        top: -1px;
-        left: -(@ring-radius - @ring-thickness);
-    }
+        @active-radius: (@ring-radius - (@ring-thickness - @crosshairs-thickness));
 
-    &:after {
-        width: 2px;
-        height: ((@ring-radius - @ring-thickness) * 2);
-        left: -1px;
-        top: -(@ring-radius - @ring-thickness);
+        .ammeter-active-ring {
+            position: absolute;
+            top:  -@active-radius;
+            left: -@active-radius;
+            width:  (@active-radius * 2);
+            height: (@active-radius * 2);
+            border: @crosshairs-thickness solid @active-color;
+            border-radius: 50%;    
+        }
+        
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            background: @active-color;
+        }
+
+        &:before {
+            width: (@active-radius * 2);
+            height: @crosshairs-thickness;
+            top: -(@crosshairs-thickness / 2);
+            left: -@active-radius;
+        }
+
+        &:after {
+            width: @crosshairs-thickness;
+            height: (@active-radius * 2);
+            left: -(@crosshairs-thickness / 2);
+            top: -@active-radius;
+        }
     }
 }

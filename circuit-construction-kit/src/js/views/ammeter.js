@@ -51,6 +51,7 @@ define(function (require) {
             this.$el.html(this.template());
 
             this.$amperage = this.$('.amperage');
+            this.$activeOverlay = this.$('.ammeter-active-overlay');
         },
 
         update: function(time, delta, paused, timeScale) {
@@ -68,7 +69,15 @@ define(function (require) {
 
         updateValues: function() {
             // Get the current from the circuit at this location
-            this.$amperage.html();
+            var branch = null;
+            if (branch) {
+                this.$activeOverlay.show();
+                this.$amperage.html();
+            }
+            else {
+                this.$activeOverlay.hide();
+                this.$amperage.html();
+            }
         },
 
         dragStart: function(event) {
