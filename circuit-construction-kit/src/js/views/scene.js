@@ -25,6 +25,7 @@ define(function(require) {
     var CircuitView              = require('views/circuit');
     var ElectronsView            = require('views/electrons');
     var VoltmeterView            = require('views/voltmeter');
+    var AmmeterView              = require('views/ammeter');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -82,6 +83,7 @@ define(function(require) {
             this.initComponentToolbox();
             this.initGrabBagButton();
             this.initVoltmeter();
+            this.initSeriesAmmeter();
             this.initAmmeter();
 
             this.stage.addChild(this.topLayer);
@@ -153,7 +155,7 @@ define(function(require) {
             this.stage.addChild(this.voltmeterView.displayObject);
         },
 
-        initAmmeter: function() {
+        initSeriesAmmeter: function() {
             this.ammeterToolbox = new ComponentToolbox({
                 mvt: this.mvt,
                 simulation: this.simulation,
@@ -165,6 +167,18 @@ define(function(require) {
             this.ammeterToolbox.setPosition(100, 20);
             this.ammeterToolbox.hide();
             this.stage.addChild(this.ammeterToolbox.displayObject);
+        },
+
+        initAmmeter: function() {
+            this.ammeterView = new AmmeterView({
+                mvt: this.mvt,
+                simulation: this.simulation,
+                dragFrame: this.ui
+            });
+
+            this.ammeterView.setPosition(200, 400);
+
+            this.$ui.append(this.ammeterView.render().el);
         },
 
         initMVT: function() {
@@ -188,6 +202,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated())
                 this.electronsView.update();
+            this.ammeterView.update();
         },
 
         zoomIn: function() {
@@ -239,6 +254,14 @@ define(function(require) {
         hideAmmeter: function() {
             this.ammeterToolbox.hide();
         },
+
+        showNonContactAmmeter: function() {
+            this.ammeterView.show();
+        },
+
+        hideNonContactAmmeter: function() {
+            this.ammeterView.hide();
+        }
 
     });
 

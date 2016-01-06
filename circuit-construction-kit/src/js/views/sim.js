@@ -57,11 +57,12 @@ define(function (require) {
             'click .step-btn'     : 'step',
             'click .reset-btn'    : 'reset',
 
-            'click #show-electrons-check' : 'toggleElectrons',
-            'click #show-schematic-check' : 'toggleSchematic',
-            'click #show-voltmeter-check' : 'toggleVoltmeter',
-            'click #show-ammeter-check'   : 'toggleAmmeter',
-            'click #show-stopwatch-check' : 'toggleStopwatch',
+            'click #show-electrons-check'           : 'toggleElectrons',
+            'click #show-schematic-check'           : 'toggleSchematic',
+            'click #show-voltmeter-check'           : 'toggleVoltmeter',
+            'click #show-ammeter-check'             : 'toggleAmmeter',
+            'click #show-non-contact-ammeter-check' : 'toggleNonContactAmmeter',
+            'click #show-stopwatch-check'           : 'toggleStopwatch',
 
             'click .zoom-in-btn'  : 'zoomIn',
             'click .zoom-out-btn' : 'zoomOut'
@@ -250,6 +251,13 @@ define(function (require) {
                 this.sceneView.showAmmeter();
             else
                 this.sceneView.hideAmmeter();
+        },
+
+        toggleNonContactAmmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showNonContactAmmeter();
+            else
+                this.sceneView.hideNonContactAmmeter();
         },
 
         toggleStopwatch: function() {
