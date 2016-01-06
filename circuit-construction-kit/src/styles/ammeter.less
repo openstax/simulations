@@ -85,9 +85,22 @@
         left: @panel-x;
         width: @ammeter-width;
         height: @ammeter-height;
-        padding: @panel-padding;
-        line-height: (@ammeter-height - @panel-padding * 2);
-        text-align: right;
+
+        .ammeter-readout {
+            padding: @panel-padding;
+            line-height: (@ammeter-height - @panel-padding * 2);
+            text-align: right;
+            display: none;
+
+            .amps {
+                margin-left: 8px;
+            }
+        }
+
+        .ammeter-hint {
+            padding: 8px 8px 8px 10px;
+            font-size: 13px;
+        }
     }
 
     .ammeter-active-overlay {

@@ -50,7 +50,9 @@ define(function (require) {
         renderFieldMeter: function() {
             this.$el.html(this.template());
 
-            this.$amperage = this.$('.amperage');
+            this.$readout       = this.$('.ammeter-readout');
+            this.$hint          = this.$('.ammeter-hint');
+            this.$amperage      = this.$('.amperage');
             this.$activeOverlay = this.$('.ammeter-active-overlay');
         },
 
@@ -72,10 +74,14 @@ define(function (require) {
             var branch = null;
             if (branch) {
                 this.$activeOverlay.show();
+                this.$readout.show();
+                this.$hint.hide();
                 this.$amperage.html();
             }
             else {
                 this.$activeOverlay.hide();
+                this.$readout.hide();
+                this.$hint.show();
                 this.$amperage.html();
             }
         },
