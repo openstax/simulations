@@ -51,12 +51,14 @@ define(function (require) {
         },
 
         initShape: function(width, height) {
-            this.shape = (new SAT.Box(new SAT.Vector(0, -height / 2), width, height)).toPolygon();
+            this.shape = (new SAT.Box(new SAT.Vector(0, 0), width, height)).toPolygon();
+            this.shape.translate(0, -height / 2);
         },
 
         updateShape: function() {
             var start = this.getStartPoint();
-            this.shape.setOffset(start.x, start.y);
+            this.shape.pos.x = start.x;
+            this.shape.pos.y = start.y;
             this.shape.setAngle(this.getAngle());
         },
 
@@ -67,6 +69,10 @@ define(function (require) {
 
         intersectsPolygon: function(polygon) {
             return SAT.testPolygonPolygon(polygon, this.getShape());
+        },
+
+        containsPoint: function(point) {
+            return SAT.pointInPolygon(point, this.getShape());
         },
 
         startJunctionChanged: function(model, startJunction) {
@@ -201,10 +207,6 @@ define(function (require) {
 
         deselect: function() {
             this.set('selected', false);
-        },
-
-        getShape: function() {
-            throw 'Not implemented.';
         },
 
         currentChanged: function(model, current) {

@@ -5,6 +5,7 @@ define(function (require) {
     var _        = require('underscore');
     var Backbone = require('backbone');
     var Pool     = require('object-pool');
+    var SAT      = require('sat');
 
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
@@ -589,10 +590,21 @@ define(function (require) {
          */
         getIntersectingBranch: function(polygon) {
             var branches = this.branches;
-            for (var i = 0; i < branches.length; i++) {
-                if (branches.at(i).intersectsPolygon(polygon))
-                    return branches.at(i);
+
+            if (polygon instanceof SAT.Vector) {
+                var point = polygon;
+                for (var i = 0; i < branches.length; i++) {
+                    if (branches.at(i).containsPoint(point))
+                        return branches.at(i);
+                }
             }
+            else {
+                for (var i = 0; i < branches.length; i++) {
+                    if (branches.at(i).intersectsPolygon(polygon))
+                        return branches.at(i);
+                }
+            }
+            
             return null;
         }
 

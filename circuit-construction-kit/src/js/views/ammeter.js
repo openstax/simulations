@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _   = require('underscore');
+    var SAT = require('sat');
 
     var Draggable = require('common/tools/draggable');
     var Vector2   = require('common/math/vector2');
@@ -31,10 +32,12 @@ define(function (require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
-            Draggable.prototype.initialize.apply(this, [options]);
-
+            this.visible = true;
+            this.point = new SAT.Vector();
             this.position = new Vector2();
             this.lastFieldVector = new Vector2();
+
+            Draggable.prototype.initialize.apply(this, [options]);
         },
 
         render: function() {
@@ -70,8 +73,16 @@ define(function (require) {
         },
 
         updateValues: function() {
+            if (!this.visible)
+                return;
+
+            // Calculate the current position in model space
+            var modelPoint = this.mvt.viewToModel(this.position);
+            this.point.x = modelPoint.x;
+            this.point.y = modelPoint.y;
+
             // Get the current from the circuit at this location
-            var branch = null;
+            var branch = this.simulation.circuit.getIntersectingBranch(this.point);
             if (branch) {
                 this.$activeOverlay.show();
                 this.$readout.show();
@@ -125,16 +136,19 @@ define(function (require) {
 
         setPosition: function(x, y) {
             this.position.set(x, y);
+
             this.updateOnNextFrame = true;
         },
 
         show: function() {
             this.update();
             this.$el.show();
+            this.visible = true;
         },
 
         hide: function() {
             this.$el.hide();
+            this.visible = false;
         }
 
     });

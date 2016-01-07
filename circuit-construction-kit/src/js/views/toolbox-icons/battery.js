@@ -53,7 +53,7 @@ define(function(require) {
         createComponentView: function(x, y) {
             var batteryScale = 0.75;
             var L = 1.6 * batteryScale;
-            var H = 1.8;
+            var H = L * (240 / 720); // Original: 1.8, which is taller than it is long, which doesn't make sense
 
             var model = new Battery({
                 startJunction: new Junction({ position: new Vector2(0, 0) }),

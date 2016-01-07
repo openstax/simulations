@@ -12,6 +12,7 @@
             nouislider:   '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
             'file-saver': '../../bower_components/file-saver/FileSaver',
 
+            sat:                     '../../node_modules/sat/SAT',
             'vector2-node':          '../../node_modules/vector2-node-shimmed/index',
             'object-pool':           '../../node_modules/object-pool-shimmed/index',
             'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
