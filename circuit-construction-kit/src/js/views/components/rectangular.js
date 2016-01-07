@@ -114,15 +114,10 @@ define(function(require) {
                 this.hoverLayer.scale.y = scale;
             }
 
-            this.displayObject.rotation = angle;
-            this.hoverLayer.rotation = angle;
+            this.setRotation(angle);
 
             var viewStartPosition = this.mvt.modelToView(this.model.getStartPoint());
-            this.displayObject.x = viewStartPosition.x;
-            this.displayObject.y = viewStartPosition.y;
-
-            this.hoverLayer.x = viewStartPosition.x;
-            this.hoverLayer.y = viewStartPosition.y;
+            this.setPosition(viewStartPosition.x, viewStartPosition.y);
 
             // flameNode.setOffset( 0, -flameNode.getFullBounds().getHeight() + this.sprite.texture.height / 2 );
             // if ( getParent() != null && getParent().getChildrenReference().indexOf( flameNode ) != getParent().getChildrenReference().size() - 1 ) {

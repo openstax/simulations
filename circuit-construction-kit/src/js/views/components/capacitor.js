@@ -29,6 +29,10 @@ define(function(require) {
             RectangularComponentView.prototype.initialize.apply(this, [options]);
         },
 
+        getLabelText: function() {
+            return this.model.get('capacitance').toFixed(2) + ' Farads';
+        }
+
     });
 
     return CapacitorView;

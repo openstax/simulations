@@ -108,6 +108,13 @@ define(function(require) {
                 this.handle.rotation = handleAngle;
         },
 
+        getLabelText: function() {
+            if (!this.model.get('closed'))
+                return '∞ Ohms';
+            else
+                return RectangularComponentView.prototype.getLabelText.apply(this, arguments);
+        },
+
         showHoverGraphics: function() {
             RectangularComponentView.prototype.showHoverGraphics.apply(this, arguments);
 

@@ -38,6 +38,7 @@ define(function(require) {
         initialize: function(options) {
             // Cached objects
             this._point = new Vector2();
+            this._center = new Vector2();
 
             Draggable.prototype.initialize.apply(this, arguments);
 
@@ -47,6 +48,7 @@ define(function(require) {
         initGraphics: function() {
             this.initComponentGraphics();
             this.initHoverGraphics();
+            this.initValuesLabel();
 
             Draggable.prototype.initGraphics.apply(this, arguments);
         },
@@ -54,6 +56,21 @@ define(function(require) {
         initComponentGraphics: function() {},
 
         initHoverGraphics: function() {},
+
+        initValuesLabel: function() {
+            var label = new PIXI.Text('Test', {
+                font: '14px Helvetica Neue',
+                fill: '#000'
+            });
+            label.resolution = this.getResolution();
+            label.anchor.x = 0.5;
+            label.anchor.y = 0.5;
+
+            this.label = label;
+
+            this.labelLayer = new PIXI.Container();
+            this.labelLayer.addChild(this.label);
+        },
 
         junctionsChanged: function() {},
 
@@ -68,6 +85,88 @@ define(function(require) {
 
         _drop: function(event) {
             CircuitInteraction.dropBranch(this.model);
+        },
+
+        setPosition: function(x, y) {
+            this.displayObject.x = x;
+            this.displayObject.y = y;
+
+            this.hoverLayer.x = x;
+            this.hoverLayer.y = y;
+        },
+
+        setRotation: function(rotation) {
+            this.displayObject.rotation = rotation;
+            this.hoverLayer.rotation = rotation;
+        },
+
+        updateLabel: function() {
+            this.label.text = this.getLabelText();
+
+            this.positionLabel();
+
+            // htmlNode.setHtml( toHTML( getText() ) );
+            // Shape shape = branch.getShape();
+            // Point2D pt = new Point2D.Double( shape.getBounds2D().getCenterX() - htmlNode.getFullBounds().getWidth() / 2,
+            //                                  shape.getBounds2D().getY() - htmlNode.getFullBounds().getHeight() );
+            // if ( isVertical() ) {
+            //     pt = new Point2D.Double( shape.getBounds2D().getMaxX(), shape.getBounds2D().getCenterY() - htmlNode.getFullBounds().getHeight() / 2 );
+            // }
+            // htmlNode.setOffset( pt );
+            // Point2D ctr = new Point2D.Double( shape.getBounds2D().getCenterX(), shape.getBounds2D().getCenterY() );
+            // double distToCenter = pt.distance( ctr );
+            // linePNode.setVisible( distToCenter > 1.0 );
+            // Point2D textSource = new Point2D.Double( htmlNode.getFullBounds().getCenterX(), htmlNode.getFullBounds().getMaxY() );
+            // if ( isVertical() ) {
+            //     textSource = new Point2D.Double( htmlNode.getFullBounds().getX(), htmlNode.getFullBounds().getCenterY() );
+            // }
+            // linePNode.setPathTo( new Line2D.Double( textSource, ctr ) );
+
+
+            
+        },
+
+        positionLabel: function() {
+            var x;
+            var y;
+            var center = this._center.set(this.mvt.modelToView(
+                this._center
+                    .set(this.model.getEndPoint())
+                    .sub(this.model.getStartPoint())
+                    .scale(0.5)
+                    .add(this.model.getStartPoint())
+            ));
+            var bounds = this.displayObject.getBounds();
+
+            if (this.isVertical()) {
+                x = center.x + bounds.width / 2 + this.label.width / 2;
+                y = center.y;
+                console.log('vertical')
+            }
+            else {
+                x = center.x;
+                y = center.y - bounds.height / 2 - this.label.height / 2;
+            }
+
+            this.label.x = x;
+            this.label.y = y;
+        },
+
+        getLabelText: function() {
+            var resistance = this.model.get('resistance');
+            return resistance.toFixed(2) + ' Ohms';
+        },
+
+        isVertical: function() {
+            var angle = this.model.get('angle');
+            while (angle < 0)
+                angle += Math.PI * 2;
+            while (angle > Math.PI * 2)
+                angle -= Math.PI * 2;
+
+            var up = angle > Math.PI / 4 && angle < 3 / 4 * Math.PI;
+            var down = angle > 5 / 4 * Math.PI && angle < 7 / 4 * Math.PI;
+            return up || down;
         },
 
         initContextMenu: function($contextMenu) {

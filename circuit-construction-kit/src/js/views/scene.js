@@ -62,7 +62,8 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.dummyLayer = new PIXI.Container();
-            this.topLayer = new PIXI.Container();
+            this.topLayer   = new PIXI.Container();
+            this.labelLayer = new PIXI.Container();
 
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round((this.width - 230) / 2);
@@ -87,6 +88,7 @@ define(function(require) {
             this.initAmmeter();
 
             this.stage.addChild(this.topLayer);
+            this.stage.addChild(this.labelLayer);
             this.stage.addChild(this.dummyLayer);
         },
 
@@ -100,6 +102,7 @@ define(function(require) {
             });
             this.stage.addChild(this.circuitView.displayObject);
             this.topLayer.addChild(this.circuitView.topLayer);
+            this.labelLayer.addChild(this.circuitView.labelLayer);
         },
 
         initElectronsView: function() {
@@ -203,6 +206,7 @@ define(function(require) {
             if (this.simulation.updated())
                 this.electronsView.update();
             this.ammeterView.update();
+            this.circuitView.updateLabels();
         },
 
         zoomIn: function() {

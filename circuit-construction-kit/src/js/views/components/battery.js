@@ -46,6 +46,16 @@ define(function(require) {
             this.initReverseMenuItem($contextMenu);
         },
 
+        getLabelText: function() {
+            var voltage = Math.abs(this.model.get('voltageDrop')).toFixed(2);
+            var text = voltage + ' Volts';
+
+            if (this.model.get('internalResistanceOn'))
+                return text + '\n' + RectangularComponentView.prototype.getLabelText.apply(this, arguments);
+            else
+                return text;
+        }
+
     });
 
     return BatteryView;

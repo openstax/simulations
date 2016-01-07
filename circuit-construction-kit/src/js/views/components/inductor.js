@@ -29,6 +29,10 @@ define(function(require) {
             RectangularComponentView.prototype.initialize.apply(this, [options]);
         },
 
+        getLabelText: function() {
+            return this.model.get('inductance').toFixed(2) + ' Henries';
+        }
+
     });
 
     return InductorView;
