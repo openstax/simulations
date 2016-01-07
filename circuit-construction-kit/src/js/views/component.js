@@ -54,9 +54,6 @@ define(function(require) {
             this.initHoverGraphics();
             this.initValuesLabel();
 
-            this._debugGraphics = new PIXI.Graphics();
-            this.labelLayer.addChild(this._debugGraphics);
-
             Draggable.prototype.initGraphics.apply(this, arguments);
         },
 
@@ -104,28 +101,6 @@ define(function(require) {
 
             this.hoverLayer.x = x;
             this.hoverLayer.y = y;
-
-            this.drawDebugGraphics();
-        },
-
-        drawDebugGraphics: function() {
-            var shape = this.model.getShape();
-            var graphics = this._debugGraphics;
-            graphics.clear();
-            graphics.beginFill(0xFF0000, 0.5);
-            var modelPoint = this.mvt.modelToViewDelta(this._point.set(shape.points[0].x, shape.points[0].y));
-            graphics.moveTo(modelPoint.x, modelPoint.y);
-            for (var i = 1; i < shape.points.length; i++) {
-
-                modelPoint = this.mvt.modelToViewDelta(this._point.set(shape.points[i].x, shape.points[i].y));
-                //console.log(this._point)
-                graphics.lineTo(modelPoint.x, modelPoint.y);
-            }
-            graphics.endFill();
-            modelPoint = this.mvt.modelToView(this._point.set(shape.pos.x, shape.pos.y));
-            graphics.x = modelPoint.x;
-            graphics.y = modelPoint.y;
-            graphics.rotation = -shape.angle;
         },
 
         setRotation: function(rotation) {

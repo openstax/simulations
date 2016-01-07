@@ -13,6 +13,7 @@ define(function (require) {
     var Branch           = require('models/branch');
     var BranchSet        = require('models/branch-set');
     var Junction         = require('models/junction');
+    var Connection       = require('models/connection');
     var CircuitComponent = require('models/components/circuit-component');
     var Switch           = require('models/components/switch');
     var Wire             = require('models/components/wire');
@@ -284,9 +285,43 @@ define(function (require) {
         },
 
         /**
+         * Gets voltage between components touching two polygons.
+         */
+        getVoltage: function(polygonA, polyonB) {
+            if (SAT.testPolygonPolygon(polygonA, polygonB)) {
+                // They touch each other, short-circuiting it.
+                return 0;
+            }
+            else {
+                var connectionA = this.getConnection(polygonA);
+                var connectionB = this.getConnection(polygonB);
+
+                //Ignore wires & components loaded into a black box.
+                // if (connectionA  && connectionA.isBlackBox())
+                //     connectionA = null;
+                // if (connectionB && connectionB.isBlackBox())
+                //     connectionB = null;
+
+                var voltage;
+
+                if (!connectionA || !connectionB)
+                    voltage = NaN;
+                else
+                    voltage = this._getVoltage(connectionA, connectionB); // dfs from one branch to the other, counting the voltage drop.
+
+                if (connectionA)
+                    connectionA.destroy();
+                if (connectionB)
+                    connectionB.destroy();
+
+                return voltage;
+            }
+        },
+
+        /**
          * Gets voltage between two connections.
          */
-        getVoltage: function(a, b) {
+        _getVoltage: function(a, b) {
             if (a.equals(b) || !this.getSameComponent(a.getJunction(), b.getJunction())) {
                 return 0;
             }
@@ -519,15 +554,26 @@ define(function (require) {
         },
 
         getConnection: function(tipShape) {
-            throw 'not yet implemented';
-        },
+            // If we're on a junction, that's ideal, so take that option first
+            var junction = this.getIntersectingJunction(tipShape);
+            if (junction)
+                return Connection.JunctionConnection.create(junction);
 
-        getBranch: function(point) {
-            return this.detectBranch(this._getBranchRect.set(point.x, point.y, 0.001, 0.001));
-        },
+            // If we're on a wire, that's a little more complex of a problem
+            var wire = this.getIntersectingWire(tipShape);
+            if (wire) {
+                // PhET: We could choose the closest junction, but we want a potentiometer.
 
-        detectBranch: function(shape) {
-            throw 'not yet implemented';
+                // Patrick: I'm going to stray a bit from the original to simplify, because I
+                //   don't even think this specialized code is being taken advantage of anyway.
+                var tipPosition = this._tipPosition
+                    .set(tipShape.pos.x, tipShape.pos.y)
+                    .scale(1 / Constants.SAT_SCALE);
+
+                var dist = tipPosition.distance(wire.getStartPosition());
+
+                return Connection.BranchConnection.create(branch, dist);
+            }
         },
 
         getWires: function() {
@@ -537,10 +583,6 @@ define(function (require) {
                     list.push(this.branches.at(i));
             }
             return list;
-        },
-
-        detectJunction: function(tipShape) {
-            throw 'not yet implemented';
         },
 
         bumpAway: function(junction) {
@@ -586,7 +628,7 @@ define(function (require) {
         },
 
         /**
-         * Returns the first branch that intersects with the given SAT.Polygon object.
+         * Returns the first branch that intersects with the given SAT.Polygon or SAT.Vector object.
          */
         getIntersectingBranch: function(polygon) {
             var branches = this.branches;
@@ -603,6 +645,28 @@ define(function (require) {
                     if (branches.at(i).intersectsPolygon(polygon))
                         return branches.at(i);
                 }
+            }
+            
+            return null;
+        },
+
+        getIntersectingWire: function(polygon) {
+            var branches = this.branches;
+
+            for (var i = 0; i < branches.length; i++) {
+                if (branches.at(i) instanceof Wire && branches.at(i).intersectsPolygon(polygon))
+                    return branches.at(i);
+            }
+            
+            return null;
+        },
+
+        getIntersectingJunction: function(polygon) {
+            var junctions = this.junctions;
+
+            for (var i = 0; i < junctions.length; i++) {
+                if (junctions.at(i).intersectsPolygon(polygon))
+                    return junctions.at(i);
             }
             
             return null;

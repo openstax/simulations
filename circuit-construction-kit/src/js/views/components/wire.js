@@ -127,8 +127,6 @@ define(function(require) {
             graphics.drawCircle(x0, y0, radius);
             graphics.drawCircle(x1, y1, radius);
             graphics.endFill();
-
-            this.drawDebugGraphics();
         },
 
         junctionsChanged: function() {

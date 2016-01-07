@@ -2,13 +2,14 @@ define(function(require) {
 
     'use strict';
 
-    // var SAT  = require('sat');
+    var SAT  = require('sat');
     var PIXI = require('pixi');
     require('common/v3/pixi/extensions');
 
     var AppView  = require('common/v3/app/app');
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
+    var Vector2  = require('common/math/vector2');
 
     var Constants = require('constants');
 
@@ -54,6 +55,7 @@ define(function(require) {
             this.blackColor = Colors.parseHex(VoltmeterView.BLACK_COLOR);
 
             this.lastPosition = new PIXI.Point();
+            this._probePosition = new Vector2();
 
             this.initGraphics();
             this.updateMVT(this.mvt);
@@ -126,8 +128,7 @@ define(function(require) {
             this.displayObject.addChild(this.redProbe);
             this.displayObject.addChild(this.blackProbe);
 
-            // this.redProbePolygon   = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector(), new SAT.Vector(), new SAT.Vector() ]);
-            // this.blackProbePolygon = new SAT.Polygon(new SAT.Vector(), [ new SAT.Vector(), new SAT.Vector(), new SAT.Vector(), new SAT.Vector() ]);
+            this.probePolygon = (new SAT.Box(new SAT.Vector(0, 0), width, height)).toPolygon();
         },
 
         drawWires: function() {
@@ -172,8 +173,7 @@ define(function(require) {
 
             this.drawWires();
 
-            // this.updateProbePolygon(this.redProbe,   this.redProbePolygon);
-            // this.updateProbePolygon(this.blackProbe, this.blackProbePolygon);
+            this.updateProbePolygon();
         },
 
         updateVoltage: function() {
@@ -193,35 +193,40 @@ define(function(require) {
             // }
         },
 
-        getVoltageFromView: function(view, polygon) {
-            // if (view instanceof CapacitorView)
-            //     return this.scene.simulation.get('circuit').getVoltageAt(view.model, view.intersectsTopPlate(polygon));
-            // if (view instanceof BatteryView)
-            //     return this.scene.simulation.get('circuit').getVoltageAt(view.model, true);
-            // else
-            //     return this.scene.simulation.get('circuit').getVoltageAt(view.model);
+        getVoltage: function(polygon) {
+            var wire = this.simulation.circuit.getIntersectingWire(polygon);
+            if (wire)
+                return wire.get('dropVoltage');
+            else
+                return null;
         },
 
-        updateProbePolygon: function(probe, polygon) {
-            var thickness = probe.width * (7 / 29);
-            var length = probe.height * (23 / 202);
+        getPositionedProbePolygon: function(probeSprite) {
+            var probePosition = this._probePosition
+                .set(probeSprite.x, probeSprite.y)
+                .sub(0, probeSprite.height);
 
-            var xOffset = Math.cos(probe.rotation) * thickness / 2;
-            var yOffset = Math.sin(probe.rotation) * thickness / 2;
+            var modelPosition = this.mvt.viewToModel(probePosition);
 
-            var x0 = probe.x;
-            var y0 = probe.y;
-            var x1 = x0 - Math.cos(probe.rotation) * length;
-            var y1 = y0 + Math.sin(probe.rotation) * length;
+            this.probePolygon.pos.x = modelPosition.x * Constants.SAT_SCALE;
+            this.probePolygon.pos.y = modelPosition.y * Constants.SAT_SCALE;
 
-            polygon.points[0].x = x0 - xOffset;
-            polygon.points[0].y = y0 - yOffset;
-            polygon.points[1].x = x0 + xOffset;
-            polygon.points[1].y = y0 + yOffset;
-            polygon.points[2].x = x1 + xOffset;
-            polygon.points[2].y = y1 + yOffset;
-            polygon.points[3].x = x1 - xOffset;
-            polygon.points[3].y = y1 - yOffset;
+            return this.probePolygon;
+        },
+
+        updateProbePolygon: function() {
+            var polygon = this.probePolygon;
+            var thickness = this.mvt.viewToModelDelta(this.redProbe.width  * (18 /  75)) * Constants.SAT_SCALE;
+            var length    = this.mvt.viewToModelDelta(this.redProbe.height * (23 / 202)) * Constants.SAT_SCALE;
+
+            polygon.points[0].x = -thickness / 2;
+            polygon.points[0].y = 0;
+            polygon.points[1].x = thickness / 2;
+            polygon.points[1].y = 0;
+            polygon.points[2].x = thickness / 2;
+            polygon.points[2].y = length;
+            polygon.points[3].x = -thickness / 2;
+            polygon.points[3].y = length;
 
             polygon.setPoints(polygon.points);
         },

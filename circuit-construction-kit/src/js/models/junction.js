@@ -22,6 +22,27 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
+
+            this.initShape();
+        },
+
+        initShape: function() {
+            var radius = Constants.JUNCTION_RADIUS * 1.1;
+            this.shape = new SAT.Circle(new SAT.Vector(0, 0), radius * Constants.SAT_SCALE);
+        },
+
+        updateShape: function() {
+            this.shape.pos.x = this.get('position').x * Constants.SAT_SCALE;
+            this.shape.pos.y = this.get('position').y * Constants.SAT_SCALE;
+        },
+
+        getShape: function() {
+            this.updateShape();
+            return this.shape;
+        },
+
+        intersectsPolygon: function(polygon) {
+            return SAT.testPolygonCircle(polygon, this.getShape());
         },
 
         translateSilent: function(x, y) {
