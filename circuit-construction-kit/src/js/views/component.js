@@ -44,6 +44,9 @@ define(function(require) {
             Draggable.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.model, 'start-junction-changed end-junction-changed', this.junctionsChanged);
+            this.listenTo(this.model, 'change:showReadout', this.showReadoutChanged);
+
+            this.showReadoutChanged(this.model, this.model.get('showReadout'));
         },
 
         initGraphics: function() {
@@ -139,7 +142,7 @@ define(function(require) {
 
             var graphics = this.labelConnectionGraphics;
             graphics.clear();
-            graphics.lineStyle(2, 0, 1);
+            graphics.lineStyle(2, this.labelConnectionColor, 1);
             graphics.moveTo(x, y);
             graphics.dashTo(center.x, center.y, this.labelConnectionDashStyle);
         },
@@ -334,6 +337,10 @@ define(function(require) {
         reverse: function() {
             this.hidePopover();
             this.model.reverse();
+        },
+
+        showReadoutChanged: function(model, showReadout) {
+            this.labelLayer.visible = showReadout;
         }
 
     });

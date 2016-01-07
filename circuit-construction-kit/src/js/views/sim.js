@@ -59,6 +59,7 @@ define(function (require) {
 
             'click #show-electrons-check'           : 'toggleElectrons',
             'click #show-schematic-check'           : 'toggleSchematic',
+            'click #show-values-check'              : 'toggleValues',
             'click #show-voltmeter-check'           : 'toggleVoltmeter',
             'click #show-ammeter-check'             : 'toggleAmmeter',
             'click #show-non-contact-ammeter-check' : 'toggleNonContactAmmeter',
@@ -237,6 +238,19 @@ define(function (require) {
 
         toggleSchematic: function() {
             this.simulation.circuit.set('schematic', $(event.target).is(':checked'));
+        },
+
+        toggleValues: function() {
+            if ($(event.target).is(':checked')) {
+                this.simulation.circuit.branches.each(function(branch) {
+                    branch.set('showReadout', true);
+                });
+            }
+            else {
+                this.simulation.circuit.branches.each(function(branch) {
+                    branch.set('showReadout', false);
+                });
+            }
         },
 
         toggleVoltmeter: function() {
