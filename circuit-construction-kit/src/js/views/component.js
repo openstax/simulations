@@ -130,22 +130,19 @@ define(function(require) {
             var x;
             var y;
             var center = this._center.set(this.mvt.modelToView(
-                this._center
-                    .set(this.model.getEndPoint())
-                    .sub(this.model.getStartPoint())
+                this.model.getDirectionVector()
                     .scale(0.5)
                     .add(this.model.getStartPoint())
             ));
             var bounds = this.displayObject.getBounds();
 
             if (this.isVertical()) {
-                x = center.x + bounds.width / 2 + this.label.width / 2;
+                x = center.x + bounds.width / 2 + this.label.width / 2 + 4;
                 y = center.y;
-                console.log('vertical')
             }
             else {
                 x = center.x;
-                y = center.y - bounds.height / 2 - this.label.height / 2;
+                y = center.y - bounds.height / 2 - this.label.height / 2 - 4;
             }
 
             this.label.x = x;
@@ -158,7 +155,7 @@ define(function(require) {
         },
 
         isVertical: function() {
-            var angle = this.model.get('angle');
+            var angle = this.model.getAngle();
             while (angle < 0)
                 angle += Math.PI * 2;
             while (angle > Math.PI * 2)
