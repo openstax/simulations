@@ -24,8 +24,8 @@ define(function (require) {
         },
 
         updateShape: function() {
-            var height = this.get('thickness');
-            var length = this.getDirectionVector().length();
+            var height = this.get('thickness') * Constants.SAT_SCALE;
+            var length = this.getDirectionVector().length() * Constants.SAT_SCALE;
 
             this.shape.points[0].x = 0;
             this.shape.points[0].y = -height / 2;

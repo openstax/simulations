@@ -51,14 +51,16 @@ define(function (require) {
         },
 
         initShape: function(width, height) {
+            width  *= Constants.SAT_SCALE;
+            height *= Constants.SAT_SCALE;
             this.shape = (new SAT.Box(new SAT.Vector(0, 0), width, height)).toPolygon();
             this.shape.translate(0, -height / 2);
         },
 
         updateShape: function() {
             var start = this.getStartPoint();
-            this.shape.pos.x = start.x;
-            this.shape.pos.y = start.y;
+            this.shape.pos.x = start.x * Constants.SAT_SCALE;
+            this.shape.pos.y = start.y * Constants.SAT_SCALE;
             this.shape.setAngle(this.getAngle());
         },
 

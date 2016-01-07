@@ -606,14 +606,6 @@ define(function (require) {
             }
             
             return null;
-        },
-
-        testIntersections: function() {
-            for (var i = 0; i < this.branches.length; i++) {
-                var intersectingBranch = this.getIntersectingBranch(this.branches.at(i).getShape());
-                if (intersectingBranch !== this.branches.at(i))
-                    console.log('intersection!');
-            }
         }
 
     });

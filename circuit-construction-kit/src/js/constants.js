@@ -46,6 +46,8 @@ define(function (require) {
     Constants.MAX_RESISTANCE = 100;
     Constants.SCH_BULB_DIST = 1;
 
+    Constants.SAT_SCALE = 1000; // Used to scale shapes and coordinates for SAT collision detection
+
     Constants.WIRE_THICKNESS = 0.22; // Original: 0.3
     Constants.DEFAULT_SCALE = 109.3 / 100.0;
 

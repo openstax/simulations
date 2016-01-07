@@ -8,6 +8,8 @@ define(function (require) {
     var Draggable = require('common/tools/draggable');
     var Vector2   = require('common/math/vector2');
 
+    var Constants = require('constants');
+
     var html = require('text!templates/ammeter.html');
 
     require('less!styles/ammeter');
@@ -77,7 +79,7 @@ define(function (require) {
                 return;
 
             // Calculate the current position in model space
-            var modelPoint = this.mvt.viewToModel(this.position);
+            var modelPoint = this.mvt.viewToModel(this.position).scale(Constants.SAT_SCALE);
             this.point.x = modelPoint.x;
             this.point.y = modelPoint.y;
 
