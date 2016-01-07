@@ -26,17 +26,15 @@ define(function (require) {
         updateShape: function() {
             var height = this.get('thickness');
             var length = this.getDirectionVector().length();
-            var x = this.getStartPoint().x;
-            var y = this.getStartPoint().y;
 
-            this.shape.points[0].x = x ;
-            this.shape.points[0].y = y - height / 2;
-            this.shape.points[1].x = x + length;
-            this.shape.points[1].y = y - height / 2;
-            this.shape.points[2].x = x + length;
-            this.shape.points[2].y = y + height / 2;
-            this.shape.points[3].x = x;
-            this.shape.points[3].y = y + height / 2;
+            this.shape.points[0].x = 0;
+            this.shape.points[0].y = -height / 2;
+            this.shape.points[1].x = length;
+            this.shape.points[1].y = -height / 2;
+            this.shape.points[2].x = length;
+            this.shape.points[2].y = height / 2;
+            this.shape.points[3].x = 0 
+            this.shape.points[3].y = height / 2;
 
             this.shape.setPoints(this.shape.points);
 

@@ -87,7 +87,7 @@ define(function (require, exports, module) {
                 this.solver.solve(this.circuit, deltaTime);
                 this.modelChanged = false;
             }
-            
+            this.circuit.testIntersections();
             this.particleSet.update(time, deltaTime);
         },
 
