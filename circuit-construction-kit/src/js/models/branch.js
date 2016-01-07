@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var SAT      = require('sat');
 
     var Vector2 = require('common/math/vector2');
 
@@ -47,6 +48,25 @@ define(function (require) {
 
             this.startJunctionChanged(this, this.get('startJunction'));
             this.endJunctionChanged(this, this.get('endJunction'));
+        },
+
+        initShape: function(width, height) {
+            this.shape = (new SAT.Box(new SAT.Vector(0, -height / 2), width, height)).toPolygon();
+        },
+
+        updateShape: function() {
+            var start = this.getStartPoint();
+            this.shape.setOffset(start.x, start.y);
+            this.shape.setAngle(this.getAngle());
+        },
+
+        getShape: function() {
+            this.updateShape();
+            return this.shape;
+        },
+
+        intersectsPolygon: function(polygon) {
+            return SAT.testPolygonPolygon(polygon, this.getShape());
         },
 
         startJunctionChanged: function(model, startJunction) {

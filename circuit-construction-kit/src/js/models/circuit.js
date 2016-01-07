@@ -582,6 +582,18 @@ define(function (require) {
 
         circuitChanged: function() {
             this.trigger('circuit-changed');
+        },
+
+        /**
+         * Returns the first branch that intersects with the given SAT.Polygon object.
+         */
+        getIntersectingBranch: function(polygon) {
+            var branches = this.branches;
+            for (var i = 0; i < branches.length; i++) {
+                if (branches.at(i).intersectsPolygon(polygon))
+                    return branches.at(i);
+            }
+            return null;
         }
 
     });

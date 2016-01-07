@@ -37,6 +37,8 @@ define(function (require) {
             }
 
             Branch.prototype.initialize.apply(this, [attributes, options]);
+
+            this.initShape(this.get('length'), this.get('height'));
         },
 
         getLength: function() {
@@ -45,10 +47,6 @@ define(function (require) {
 
         getComponentLength: function() {
             return this.getLength();
-        },
-
-        getShape: function() {
-            throw 'Not yet implemented.';
         }
 
     });
