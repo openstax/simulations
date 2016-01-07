@@ -54,7 +54,7 @@ define(function (require) {
                 this.stopListening(this.previous('startJunction'));
             if (startJunction)
                 this.listenTo(startJunction, 'change', this._startJunctionChanged);
-            this.trigger('start-junction-changed');
+            this.trigger('start-junction-changed', this, this.get('startJunction'));
         },
 
         endJunctionChanged: function(model, endJunction) {
@@ -62,15 +62,15 @@ define(function (require) {
                 this.stopListening(this.previous('endJunction'));
             if (endJunction)
                 this.listenTo(endJunction, 'change', this._endJunctionChanged);
-            this.trigger('end-junction-changed');
+            this.trigger('end-junction-changed', this, this.get('endJunction'));
         },
 
         _startJunctionChanged: function() {
-            this.trigger('start-junction-changed');
+            this.trigger('start-junction-changed', this, this.get('startJunction'));
         },
 
         _endJunctionChanged: function() {
-            this.trigger('end-junction-changed');
+            this.trigger('end-junction-changed', this, this.get('endJunction'));
         },
 
         isFixed: function() {

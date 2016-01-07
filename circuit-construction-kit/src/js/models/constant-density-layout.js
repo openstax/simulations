@@ -37,6 +37,18 @@ define(function (require) {
             this.layoutElectrons(torelayout);
         },
 
+        layoutConnectedElectrons: function(branch) {
+            this.branchSet
+                .clear()
+                .addBranch(branch)
+
+            this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('startJunction')));
+            this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('endJunction')));
+            
+            var torelayout = this.branchSet.branches;
+            this.layoutElectrons(torelayout);
+        },
+
         layoutElectrons: function(branches) {
             if (_.isArray(branches)) {
                 for (var i = 0; i < branches.length; i++) {

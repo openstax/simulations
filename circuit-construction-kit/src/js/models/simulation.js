@@ -52,6 +52,7 @@ define(function (require, exports, module) {
 
             this.listenTo(this.circuit, 'junction-split',  this.junctionSplit);
             this.listenTo(this.circuit, 'circuit-changed', this.circuitChanged);
+            this.listenTo(this.circuit.branches, 'start-junction-changed end-junction-changed', this.branchJunctionChanged);
         },
 
         initGrabBag: function() {
@@ -97,12 +98,20 @@ define(function (require, exports, module) {
             this.layout.layoutElectrons(branches);
         },
 
+        layoutConnectedElectrons: function(branch) {
+            this.layout.layoutConnectedElectrons(branch);
+        },
+
         junctionSplit: function(junction, newJunctions) {
             this.layout.layoutElectrons(this.circuit.branches.models);
         },
 
         circuitChanged: function() {
             this.modelChanged = true;
+        },
+
+        branchJunctionChanged: function(branch) {
+            this.layoutConnectedElectrons(branch);
         }
 
     });
