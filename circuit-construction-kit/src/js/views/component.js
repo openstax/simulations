@@ -7,6 +7,7 @@ define(function(require) {
     var Vector2                = require('common/math/vector2');
     var Colors                 = require('common/colors/colors');
     var defineInputUpdateLocks = require('common/locks/define-locks');
+                                 require('common/v3/pixi/dash-to');
 
     var CircuitInteraction = require('models/circuit-interaction');
 
@@ -60,16 +61,20 @@ define(function(require) {
         initValuesLabel: function() {
             var label = new PIXI.Text('Test', {
                 font: '14px Helvetica Neue',
-                fill: '#000'
+                fill: Constants.VALUE_LABEL_COLOR
             });
             label.resolution = this.getResolution();
             label.anchor.x = 0.5;
             label.anchor.y = 0.5;
 
             this.label = label;
+            this.labelConnectionGraphics = new PIXI.Graphics();
+            this.labelConnectionDashStyle = [2, 2];
+            this.labelConnectionColor = Colors.parseHex(Constants.VALUE_LABEL_COLOR);
 
             this.labelLayer = new PIXI.Container();
             this.labelLayer.addChild(this.label);
+            this.labelLayer.addChild(this.labelConnectionGraphics);
         },
 
         junctionsChanged: function() {},
@@ -103,30 +108,10 @@ define(function(require) {
         updateLabel: function() {
             this.label.text = this.getLabelText();
 
-            this.positionLabel();
-
-            // htmlNode.setHtml( toHTML( getText() ) );
-            // Shape shape = branch.getShape();
-            // Point2D pt = new Point2D.Double( shape.getBounds2D().getCenterX() - htmlNode.getFullBounds().getWidth() / 2,
-            //                                  shape.getBounds2D().getY() - htmlNode.getFullBounds().getHeight() );
-            // if ( isVertical() ) {
-            //     pt = new Point2D.Double( shape.getBounds2D().getMaxX(), shape.getBounds2D().getCenterY() - htmlNode.getFullBounds().getHeight() / 2 );
-            // }
-            // htmlNode.setOffset( pt );
-            // Point2D ctr = new Point2D.Double( shape.getBounds2D().getCenterX(), shape.getBounds2D().getCenterY() );
-            // double distToCenter = pt.distance( ctr );
-            // linePNode.setVisible( distToCenter > 1.0 );
-            // Point2D textSource = new Point2D.Double( htmlNode.getFullBounds().getCenterX(), htmlNode.getFullBounds().getMaxY() );
-            // if ( isVertical() ) {
-            //     textSource = new Point2D.Double( htmlNode.getFullBounds().getX(), htmlNode.getFullBounds().getCenterY() );
-            // }
-            // linePNode.setPathTo( new Line2D.Double( textSource, ctr ) );
-
-
-            
+            this.updateLabelPosition();
         },
 
-        positionLabel: function() {
+        updateLabelPosition: function() {
             var x;
             var y;
             var center = this._center.set(this.mvt.modelToView(
@@ -137,16 +122,26 @@ define(function(require) {
             var bounds = this.displayObject.getBounds();
 
             if (this.isVertical()) {
-                x = center.x + bounds.width / 2 + this.label.width / 2 + 4;
+                x = center.x + bounds.width / 2;
                 y = center.y;
+                this.label.anchor.x = -0.1;
+                this.label.anchor.y = 0.5;
             }
             else {
                 x = center.x;
-                y = center.y - bounds.height / 2 - this.label.height / 2 - 4;
+                y = center.y - bounds.height / 2;
+                this.label.anchor.x = 0.5;
+                this.label.anchor.y = 1.1;
             }
 
             this.label.x = x;
             this.label.y = y;
+
+            var graphics = this.labelConnectionGraphics;
+            graphics.clear();
+            graphics.lineStyle(2, 0, 1);
+            graphics.moveTo(x, y);
+            graphics.dashTo(center.x, center.y, this.labelConnectionDashStyle);
         },
 
         getLabelText: function() {
