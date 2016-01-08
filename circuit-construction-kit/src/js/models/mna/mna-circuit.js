@@ -327,8 +327,8 @@ define(function (require) {
 
             if (debug) {
                 console.log(equations);
-                console.log('a=', _.map(A, function(row){ return row.join(',') }).join('\n'));
-                console.log('z=', _.map(z, function(row){ return row.join(',') }).join(','));
+                console.log('A =', A.toString());
+                console.log('z =', z.toString());
                 console.log('unknowns=', this.getUnknowns());
             }
 
@@ -337,7 +337,7 @@ define(function (require) {
             var unknownCurrents = this.getUnknownCurrents();
 
             if (debug) {
-                console.log('x=', _.map(x, function(row){ return row.join(',') }).join(','));
+                console.log('x =', x.toString());
                 console.log('------------------------');
             }
 

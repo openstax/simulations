@@ -231,6 +231,22 @@ define(function (require) {
         return X;
     };
 
+    Matrix.prototype.toString = function() {
+        var out = '[\n';
+        for (var i = 0; i < this.length; i++) {
+            for (var j = 0; j < this[i].length; j++) {
+                if (j > 0)
+                    out += ', ';
+
+                var num = (Math.abs(this[i][j]) >= 1000) ? this[i][j].toExponential(2) : this[i][j].toFixed(2);
+                out += ('        ' + num).slice(-8);
+            }
+            out += '\n';
+        }
+        out += ']';
+        return out;
+    };
+
     return Matrix;
 
 });
