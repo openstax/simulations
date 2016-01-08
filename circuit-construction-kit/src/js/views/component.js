@@ -49,6 +49,13 @@ define(function(require) {
             this.showReadoutChanged(this.model, this.model.get('showReadout'));
         },
 
+        detach: function() {
+            Draggable.prototype.detach.apply(this, arguments);
+
+            if (this.labelLayer.parent)
+                this.labelLayer.parent.removeChild(this.labelLayer);
+        },
+
         initGraphics: function() {
             this.initComponentGraphics();
             this.initHoverGraphics();
