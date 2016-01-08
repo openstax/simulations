@@ -173,9 +173,13 @@ define(function (require) {
                 var newLength = Math.abs(curLength - Constants.JUNCTION_RADIUS * 1.5);
                 vec.normalize().scale(newLength);
 
-                var destination = this._splitDestination.set(opposite.get('position')).add(vec);
+                var desiredDest = this._splitDestination.set(opposite.get('position')).add(vec);
+
+                var destination;
                 if (branch instanceof CircuitComponent)
-                    destination.set(junction.get('position'));
+                    destination = junction.get('position');
+                else
+                    destination = desiredDest;
 
                 var newJunction = new Junction({
                     position: new Vector2(destination.x, destination.y)
@@ -186,7 +190,7 @@ define(function (require) {
 
                 if (branch instanceof CircuitComponent) {
                     var translation = this._splitTranslation
-                        .set(destination)
+                        .set(desiredDest)
                         .sub(junction.get('position'));
                     var strongConnections = this.getStrongConnections(newJunction);
                     this.branchSet
