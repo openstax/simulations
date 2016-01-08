@@ -49,7 +49,6 @@ define(function (require) {
 
             // Clean up
             dynamicCircuit.destroy();
-            solution.destroy();
         },
 
         /**
@@ -179,6 +178,10 @@ define(function (require) {
                     }
                 }
             }
+
+            // Destroy the old solution if it exists
+            if (circuit.get('solution'))
+                circuit.get('solution').destroy();
 
             circuit.set('solution', solution);
         }

@@ -205,6 +205,7 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated())
                 this.electronsView.update();
+            this.voltmeterView.update();
             this.ammeterView.update();
             this.circuitView.updateLabels();
         },

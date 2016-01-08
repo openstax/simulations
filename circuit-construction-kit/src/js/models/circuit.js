@@ -65,6 +65,7 @@ define(function (require) {
             this._splitDestination = new Vector2();
             this._splitTranslation = new Vector2();
             this._bestDragMatchVec = new Vector2();
+            this._tipPosition      = new Vector2();
             this._getBranchRect = new Rectangle();
 
             this.listenTo(this.branches,  'add remove reset', this.circuitChanged);
@@ -287,7 +288,7 @@ define(function (require) {
         /**
          * Gets voltage between components touching two polygons.
          */
-        getVoltage: function(polygonA, polyonB) {
+        getVoltage: function(polygonA, polygonB) {
             if (SAT.testPolygonPolygon(polygonA, polygonB)) {
                 // They touch each other, short-circuiting it.
                 return 0;
@@ -570,9 +571,9 @@ define(function (require) {
                     .set(tipShape.pos.x, tipShape.pos.y)
                     .scale(1 / Constants.SAT_SCALE);
 
-                var dist = tipPosition.distance(wire.getStartPosition());
+                var dist = tipPosition.distance(wire.getStartPoint());
 
-                return Connection.BranchConnection.create(branch, dist);
+                return Connection.BranchConnection.create(wire, dist);
             }
         },
 

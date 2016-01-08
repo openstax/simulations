@@ -2,9 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _   = require('underscore');
+    var SAT = require('sat');
 
     var PositionableObject = require('common/models/positionable-object');
+
+    var Constants = require('constants');
 
     var silent = { silent: true };
 
@@ -59,11 +62,6 @@ define(function (require) {
 
         deselect: function() {
             this.set('selected', false);
-        },
-
-        getShape: function() {
-            //return createCircle( CCKModel.JUNCTION_RADIUS * 1.1 );
-            throw 'Not implemented.';
         }
 
     });

@@ -128,7 +128,8 @@ define(function(require) {
             this.displayObject.addChild(this.redProbe);
             this.displayObject.addChild(this.blackProbe);
 
-            this.probePolygon = (new SAT.Box(new SAT.Vector(0, 0), width, height)).toPolygon();
+            this.redProbePolygon   = (new SAT.Box(new SAT.Vector(0, 0), 1, 1)).toPolygon();
+            this.blackProbePolygon = (new SAT.Box(new SAT.Vector(0, 0), 1, 1)).toPolygon();
         },
 
         drawWires: function() {
@@ -173,51 +174,37 @@ define(function(require) {
 
             this.drawWires();
 
-            this.updateProbePolygon();
+            this.updateProbePolygon(this.redProbePolygon);
+            this.updateProbePolygon(this.blackProbePolygon);
         },
 
         updateVoltage: function() {
-            // var viewTouchingRed   = this.scene.getIntersectingComponentView(this.redProbePolygon);
-            // var viewTouchingBlack = this.scene.getIntersectingComponentView(this.blackProbePolygon);
+            var redProbePolygon   = this.getPositionedProbePolygon(this.redProbePolygon,   this.redProbe);
+            var blackProbePolygon = this.getPositionedProbePolygon(this.blackProbePolygon, this.blackProbe);
 
-            // if (viewTouchingRed && viewTouchingBlack) {
-            //     var redVoltage   = this.getVoltageFromView(viewTouchingRed,   this.redProbePolygon);
-            //     var blackVoltage = this.getVoltageFromView(viewTouchingBlack, this.blackProbePolygon);
-
-            //     var voltage = redVoltage - blackVoltage;
-
-            //     this.voltageLabel.setText(voltage.toFixed(3) + ' V');
-            // }
-            // else {
-            //     this.voltageLabel.setText('-- V');
-            // }
-        },
-
-        getVoltage: function(polygon) {
-            var wire = this.simulation.circuit.getIntersectingWire(polygon);
-            if (wire)
-                return wire.get('dropVoltage');
+            var voltage = this.simulation.circuit.getVoltage(redProbePolygon, blackProbePolygon);
+            if (isNaN(voltage))
+                this.voltageLabel.text = '-- V';
             else
-                return null;
+                this.voltageLabel.text = voltage.toFixed(3) + ' V';
         },
 
-        getPositionedProbePolygon: function(probeSprite) {
+        getPositionedProbePolygon: function(probePolygon, probeSprite) {
             var probePosition = this._probePosition
                 .set(probeSprite.x, probeSprite.y)
                 .sub(0, probeSprite.height);
 
             var modelPosition = this.mvt.viewToModel(probePosition);
 
-            this.probePolygon.pos.x = modelPosition.x * Constants.SAT_SCALE;
-            this.probePolygon.pos.y = modelPosition.y * Constants.SAT_SCALE;
+            probePolygon.pos.x = modelPosition.x * Constants.SAT_SCALE;
+            probePolygon.pos.y = modelPosition.y * Constants.SAT_SCALE;
 
-            return this.probePolygon;
+            return probePolygon;
         },
 
-        updateProbePolygon: function() {
-            var polygon = this.probePolygon;
-            var thickness = this.mvt.viewToModelDelta(this.redProbe.width  * (18 /  75)) * Constants.SAT_SCALE;
-            var length    = this.mvt.viewToModelDelta(this.redProbe.height * (23 / 202)) * Constants.SAT_SCALE;
+        updateProbePolygon: function(polygon) {
+            var thickness = this.mvt.viewToModelDeltaX(this.redProbe.width  * (18 /  75)) * Constants.SAT_SCALE;
+            var length    = this.mvt.viewToModelDeltaX(this.redProbe.height * (23 / 202)) * Constants.SAT_SCALE;
 
             polygon.points[0].x = -thickness / 2;
             polygon.points[0].y = 0;
