@@ -183,10 +183,10 @@ define(function (require, exports, module) {
                         this.endMatch.destroy();
                     }
                 }
-                if (branch) {
-                    this.circuit.bumpAway(branch.get('startJunction'));
-                    this.circuit.bumpAway(branch.get('endJunction'));
-                }
+                // if (branch) {
+                //     this.circuit.bumpAway(branch.get('startJunction'));
+                //     this.circuit.bumpAway(branch.get('endJunction'));
+                // }
             },
 
             getSources: function(sc, j) {

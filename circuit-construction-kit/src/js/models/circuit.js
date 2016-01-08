@@ -592,18 +592,15 @@ define(function (require) {
         },
 
         bumpOnce: function(junction) {
-            console.log('we\'re not ready for the bump functionality yet');
-            return;
-
             var branches = this.branches;
             var strongConnections = this.getStrongConnections(junction);
             for (var i = 0; i < branches.length; i++) {
                 var branch = branches.at(i);
                 if (!branch.hasJunction(junction)) {
-                    if (branch.getShape().intersects(junction.getShape())) {
+                    if (junction.intersectsPolygon(branch.getShape())) {
                         var vec = branch.getDirectionVector();
                         vec.set(vec.y, -vec.x); // Make it perpendicular to the original
-                        vec.normalize().scale(junction.getShape().w);
+                        vec.normalize().scale(junction.getRadius() * 2);
                         this.branchSet
                             .clear()
                             .addBranches(strongConnections)

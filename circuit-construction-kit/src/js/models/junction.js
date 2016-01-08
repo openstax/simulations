@@ -30,8 +30,7 @@ define(function (require) {
         },
 
         initShape: function() {
-            var radius = Constants.JUNCTION_RADIUS * 1.1;
-            this.shape = new SAT.Circle(new SAT.Vector(0, 0), radius * Constants.SAT_SCALE);
+            this.shape = new SAT.Circle(new SAT.Vector(0, 0), this.getRadius() * Constants.SAT_SCALE);
         },
 
         updateShape: function() {
@@ -42,6 +41,10 @@ define(function (require) {
         getShape: function() {
             this.updateShape();
             return this.shape;
+        },
+
+        getRadius: function() {
+            return Constants.JUNCTION_RADIUS * 1.1;
         },
 
         intersectsPolygon: function(polygon) {
