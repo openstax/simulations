@@ -44,6 +44,48 @@ define(function (require) {
         return A;
     };
 
+    // var rref = function(A) {
+    //     var rows = A.length;
+    //     var cols = A[0].length;
+
+    //     var lead = 0;
+    //     for (var r = 0; r < rows; r++) {
+    //         if (cols <= lead)
+    //             return;
+
+    //         var i = r;
+    //         while (A[i][lead] == 0) {
+    //             i++;
+    //             if (rows == i) {
+    //                 i = r;
+    //                 lead++;
+    //                 if (cols == lead)
+    //                     return;
+    //             }
+    //         }
+     
+    //         var tmp = A[i];
+    //         A[i] = A[r];
+    //         A[r] = tmp;
+     
+    //         var val = A[r][lead];
+    //         for (var j = 0; j < cols; j++) {
+    //             A[r][j] /= val;
+    //         }
+     
+    //         for (var i = 0; i < rows; i++) {
+    //             if (i == r)
+    //                 continue;
+    //             val = A[i][lead];
+    //             for (var j = 0; j < cols; j++) {
+    //                 A[i][j] -= val * A[r][j];
+    //             }
+    //         }
+    //         lead++;
+    //     }
+    //     return A;
+    // };
+
     /**
      * The following source is a fork of https://github.com/geastwood/matrix
      *   I've added the solving functionality through the use of a Gaussian-
@@ -211,6 +253,12 @@ define(function (require) {
                 matrix[r].push(B[r]);
         }
 
+        if (matrix.length === matrix[0].length) {
+            console.log('solve LU Decomposition')
+        }
+        else {
+            console.log('solve QR Decomposition')
+        }
         // Solve using row reduction
         rref(matrix);
         var lastColumnIndex = matrix[0].length - 1;
