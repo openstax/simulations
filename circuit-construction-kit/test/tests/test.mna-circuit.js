@@ -30,8 +30,9 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             'models/components/battery',
             'models/components/resistor',
             'models/circuit',
-            'common/math/vector2'
-        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2) {
+            'common/math/vector2',
+            'common/math/m4th'
+        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _m4th) {
             MNACircuitSolver = mnaCircuitSolver;
             MNACircuit = mnaCircuit;
             MNASolution = mnaSolution;
@@ -45,6 +46,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             Circuit = circuit;
 
             Vector2 = vector2;
+            m4th = _m4th;
             
             done();
         });
@@ -473,6 +475,43 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         var batterySolutionCurrent = 10 / 25;
 
         chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    });
+
+    it('LU decomposition works', function() {
+
+        var A = new m4th.matrix(6, [
+             0.00,     1.00,     0.00,     0.00,     0.00,
+             1.00,     0.10,     0.00,    -0.10,     0.00,
+             0.00,     0.00,     0.30,    -0.10,    -0.20,
+             0.00,    -0.10,    -0.10,     0.20,     0.00,
+            -1.00,     0.00,    -0.20,     0.00,     0.20,
+             0.00,    -1.00,     0.00,     0.00,     1.00
+        ]);
+
+        var B = new m4th.matrix(6, [
+             0,
+             0,
+             0,
+             0,
+             0,
+            10
+        ]);
+
+        // LU decompose matrix A           
+        var LU = m4th.lu(A); // node.js: require('m4th/lu')(A); 
+        // calculate solution for: B = A*X
+        var X = LU.solve(B);
+        // invert matrix A 
+        var Ainv = LU.getInverse();
+
+        chai.expect(X).to.almost.eql([
+            0.4,
+            0,
+            8,
+            4,
+            10,
+            0
+        ]);
     });
 
 });

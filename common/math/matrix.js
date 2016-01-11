@@ -257,26 +257,25 @@ define(function (require) {
             console.log('solve LU Decomposition')
         }
         else {
-            console.log('solve QR Decomposition')
-        }
-        // Solve using row reduction
-        rref(matrix);
-        var lastColumnIndex = matrix[0].length - 1;
+            // Solve using row reduction
+            rref(matrix);
+            var lastColumnIndex = matrix[0].length - 1;
 
-        // Put the answers in their own array.
-        var X;
-        if (returnArray) {
-            X = [];
-            for (var i = 0; i < this.length; i++)
-                X[i] = matrix[i][lastColumnIndex];
-        } 
-        else {
-            X = new Matrix(this.length, 1);
-            for (var i = 0; i < this.length; i++)
-                X.set(i, 0, matrix[i][lastColumnIndex]);
-        }
+            // Put the answers in their own array.
+            var X;
+            if (returnArray) {
+                X = [];
+                for (var i = 0; i < this.length; i++)
+                    X[i] = matrix[i][lastColumnIndex];
+            } 
+            else {
+                X = new Matrix(this.length, 1);
+                for (var i = 0; i < this.length; i++)
+                    X.set(i, 0, matrix[i][lastColumnIndex]);
+            }
 
-        return X;
+            return X;
+        }
     };
 
     Matrix.prototype.toString = function() {
