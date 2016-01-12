@@ -62,10 +62,10 @@ define(function (require) {
         /**
          * Returns whether a given element is equivalent to this element.
          */
-        equivalentTo: function(element) {
+        equivalentTo: function(element, epsilon) {
             if (this.node0 !== element.node0 || this.node1 !== element.node1)
                 return false;
-            if (this.currentSolution !== element.currentSolution)
+            if (Math.abs(this.currentSolution - element.currentSolution) > epsilon)
                 return false;
             return true;
         },

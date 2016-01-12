@@ -5,7 +5,8 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
-    var Matrix = require('common/math/matrix');
+    var Matrix = require('common/math/matrix.luqr');
+                 // require('common/math/matrix.luqr');
 
     var UnknownCurrent = require('models/mna/unknown-current');
     var UnknownVoltage = require('models/mna/unknown-voltage');

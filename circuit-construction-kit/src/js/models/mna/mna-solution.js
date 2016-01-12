@@ -14,6 +14,8 @@ define(function (require) {
         }
     });
 
+    var DEFAULT_EPSILON = 1E-6;
+
     /**
      * 
      */
@@ -38,8 +40,8 @@ define(function (require) {
             return this.nodeVoltages[node];
         },
 
-        numbersApproxEqual: function(a, b, delta) {
-            return Math.abs(a - b) <= delta;
+        numbersApproxEqual: function(a, b, epsilon) {
+            return Math.abs(a - b) <= epsilon;
         },
 
         getNodes: function() {
@@ -54,37 +56,37 @@ define(function (require) {
             return _.difference(a, b).length === 0;
         },
 
-        branchArraysEqual: function(a, b) {
+        branchArraysEqual: function(a, b, epsilon) {
             var i;
             for (i = 0; i < a.length; i++) {
-                if (!this.arrayContainsBranch(b, a[i]))
+                if (!this.arrayContainsBranch(b, a[i], epsilon))
                     return false;
             }
             for (i = 0; i < b.length; i++) {
-                if (!this.arrayContainsBranch(a, b[i]))
+                if (!this.arrayContainsBranch(a, b[i], epsilon))
                     return false;
             }
             return true;
         },
 
-        arrayContainsBranch: function(array, branch) {
-            return (this.indexOfEquivalentBranch(array, branch) !== -1);
+        arrayContainsBranch: function(array, branch, epsilon) {
+            return (this.indexOfEquivalentBranch(array, branch, epsilon) !== -1);
         },
 
-        indexOfEquivalentBranch: function(array, branch) {
+        indexOfEquivalentBranch: function(array, branch, epsilon) {
             for (var i in array) {
-                if (array.hasOwnProperty(i) && array[i].equivalentTo(branch))
+                if (array.hasOwnProperty(i) && array[i].equivalentTo(branch, epsilon))
                     return i;
             }
             return -1;
         },
 
-        approxEquals: function(solution, delta) {
-            if (delta === undefined)
-                delta = 1E-6;
+        approxEquals: function(solution, epsilon) {
+            if (epsilon === undefined)
+                epsilon = DEFAULT_EPSILON;
 
             if (!this.arraysEqual(this.getNodes(), solution.getNodes()) || 
-                !this.branchArraysEqual(this.getBranches(), solution.getBranches())
+                !this.branchArraysEqual(this.getBranches(), solution.getBranches(), epsilon)
             ) {
                 return false;
             }
@@ -95,7 +97,7 @@ define(function (require) {
                         !this.numbersApproxEqual(
                             this.nodeVoltages[node], 
                             solution.getNodeVoltage(node), 
-                            delta
+                            epsilon
                         )
                     ) {
                         sameVoltages = false;
@@ -108,7 +110,7 @@ define(function (require) {
                         !this.numbersApproxEqual(
                             this.branchCurrents[elementId].currentSolution, 
                             solution.getCurrent(this.branchCurrents[elementId]), 
-                            delta
+                            epsilon
                         )
                     ) {
                         sameCurrents = false;
@@ -126,7 +128,7 @@ define(function (require) {
 
         getCurrent: function(e) {
             // If it was a battery or resistor (of R=0), look up the answer
-            var branchIndex = this.indexOfEquivalentBranch(this.branchCurrents, e);
+            var branchIndex = this.indexOfEquivalentBranch(this.branchCurrents, e, DEFAULT_EPSILON);
             if (branchIndex !== -1) {
                 return this.branchCurrents[branchIndex].currentSolution;
             }

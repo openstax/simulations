@@ -10,7 +10,7 @@
             text:         '../../bower_components/requirejs-text/text',
             pixi:         '../../bower_components/pixi/bin/pixi',
             nouislider:   '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
-            luqr:         '../../bower_components/luqr/luqr.min',
+            //luqr:         '../../bower_components/luqr/luqr.min',
             'file-saver': '../../bower_components/file-saver/FileSaver',
 
             sat:                     '../../node_modules/sat/SAT',
