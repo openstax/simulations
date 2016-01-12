@@ -14,6 +14,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
     var Circuit;
 
     var Vector2;
+    var numeric;
 
     var THRESHOLD = 1E-6;
     var FUDGE = THRESHOLD - 8E-7;
@@ -31,8 +32,8 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             'models/components/resistor',
             'models/circuit',
             'common/math/vector2',
-            'common/math/m4th'
-        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _m4th) {
+            'common/math/numeric-shimmed'
+        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _numeric) {
             MNACircuitSolver = mnaCircuitSolver;
             MNACircuit = mnaCircuit;
             MNASolution = mnaSolution;
@@ -46,7 +47,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             Circuit = circuit;
 
             Vector2 = vector2;
-            m4th = _m4th;
+            numeric = _numeric;
             
             done();
         });
@@ -58,451 +59,453 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
      *   https://github.com/phetsims/circuit-construction-kit-basics/
      */
 
-    it('MNACircuit should give correct solution for simple circuits', function(){
-        var battery = MNACompanionBattery.create(0, 1, 4.0);
-        var resistor = MNACompanionResistor.create(1, 0, 4.0);
-        var circuit = MNACircuit.create([ battery ], [ resistor ], []);
+    // it('MNACircuit should give correct solution for simple circuits', function(){
+    //     var battery = MNACompanionBattery.create(0, 1, 4.0);
+    //     var resistor = MNACompanionResistor.create(1, 0, 4.0);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor ], []);
 
-        var voltageMap = [];
-        voltageMap[0] = 0.0;
-        voltageMap[1] = 4.0;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0.0;
+    //     voltageMap[1] = 4.0;
 
-        var desiredSolution = new MNASolution.create(voltageMap, [ battery ]);
-        var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, [ battery ]);
+    //     var solution = circuit.solve();
 
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-
-        var currentThroughResistor = solution.getCurrent(resistor);
-        chai.expect(currentThroughResistor).almost.eql(1.0, THRESHOLD) // Should be flowing forward through resistor
-    });
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+
+    //     var currentThroughResistor = solution.getCurrent(resistor);
+    //     chai.expect(currentThroughResistor).almost.eql(1.0, THRESHOLD) // Should be flowing forward through resistor
+    // });
 
-    it('MNACircuit should give correct solution for simple circuits (2)', function(){
-        var battery = MNACompanionBattery.create(0, 1, 4.0);
-        var resistor = MNACompanionResistor.create(1, 0, 2.0);
-        var circuit = MNACircuit.create([ battery ], [ resistor ], []);
+    // it('MNACircuit should give correct solution for simple circuits (2)', function(){
+    //     var battery = MNACompanionBattery.create(0, 1, 4.0);
+    //     var resistor = MNACompanionResistor.create(1, 0, 2.0);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor ], []);
 
-        var voltageMap = [];
-        voltageMap[0] = 0.0;
-        voltageMap[1] = 4.0;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0.0;
+    //     voltageMap[1] = 4.0;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 2.0;
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 2.0;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     var solution = circuit.solve();
 
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
-
-    it('returned MNASolution should be able to obtain the current of a given resistor', function(){
-        var battery = MNACompanionBattery.create(0, 1, 4.0);
-        var resistor = MNACompanionResistor.create(1, 0, 2.0);
-        var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
+
+    // it('returned MNASolution should be able to obtain the current of a given resistor', function(){
+    //     var battery = MNACompanionBattery.create(0, 1, 4.0);
+    //     var resistor = MNACompanionResistor.create(1, 0, 2.0);
+    //     var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 4;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 4;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 2;
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 2;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
 
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
 
-        var currentThroughResistor = solution.getCurrent(resistor);
-        // Same magnitude as battery: positive because current flows from node 1 to 0
-        chai.expect(currentThroughResistor).almost.eql(2.0, THRESHOLD)
-    });
+    //     var currentThroughResistor = solution.getCurrent(resistor);
+    //     // Same magnitude as battery: positive because current flows from node 1 to 0
+    //     chai.expect(currentThroughResistor).almost.eql(2.0, THRESHOLD)
+    // });
 
-    it('an unconnected resistor should not cause problems for MNACircuit', function(){
-        var battery   = MNACompanionBattery.create( 0, 1, 4.0);
-        var resistor1 = MNACompanionResistor.create(1, 0, 4.0);
-        var resistor2 = MNACompanionResistor.create(2, 3, 100);
+    // it('an unconnected resistor should not cause problems for MNACircuit', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1, 4.0);
+    //     var resistor1 = MNACompanionResistor.create(1, 0, 4.0);
+    //     var resistor2 = MNACompanionResistor.create(2, 3, 100);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 4;
-        voltageMap[2] = 0;
-        voltageMap[3] = 0;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 4;
+    //     voltageMap[2] = 0;
+    //     voltageMap[3] = 0;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 1;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 1;
 
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('current sources given to MNACircuit\'s constructor should provide current', function(){
-        var currentSource = MNACurrentSource.create(0, 1, 10);
-        var resistor  = MNACompanionResistor.create(1, 0, 4.0);
+    // it('current sources given to MNACircuit\'s constructor should provide current', function(){
+    //     var currentSource = MNACurrentSource.create(0, 1, 10);
+    //     var resistor  = MNACompanionResistor.create(1, 0, 4.0);
 
-        var circuit = MNACircuit.create([], [ resistor ], [ currentSource ]);
+    //     var circuit = MNACircuit.create([], [ resistor ], [ currentSource ]);
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = -40 // This is negative since traversing across the resistor should yield a negative voltage, see http://en.wikipedia.org/wiki/Current_source;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = -40 // This is negative since traversing across the resistor should yield a negative voltage, see http://en.wikipedia.org/wiki/Current_source;
 
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, []);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, []);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('current should be reversed when voltage is reversed', function(){
-        var battery  = MNACompanionBattery.create( 0, 1, -4.0);
-        var resistor = MNACompanionResistor.create(1, 0,  2.0);
-        var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
+    // it('current should be reversed when voltage is reversed', function(){
+    //     var battery  = MNACompanionBattery.create( 0, 1, -4.0);
+    //     var resistor = MNACompanionResistor.create(1, 0,  2.0);
+    //     var solution = MNACircuit.create([ battery ], [ resistor ], []).solve();
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = -4;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = -4;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = -2;
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = -2;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
 
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('two batteries in series should have voltage added', function(){
-        var battery1 = MNACompanionBattery.create( 0, 1, -4);
-        var battery2 = MNACompanionBattery.create( 1, 2, -4);
-        var resistor = MNACompanionResistor.create(2, 0,  2);
+    // it('two batteries in series should have voltage added', function(){
+    //     var battery1 = MNACompanionBattery.create( 0, 1, -4);
+    //     var battery2 = MNACompanionBattery.create( 1, 2, -4);
+    //     var resistor = MNACompanionResistor.create(2, 0,  2);
 
-        var solution = MNACircuit.create([ battery1, battery2 ], [ resistor ], []).solve();
+    //     var solution = MNACircuit.create([ battery1, battery2 ], [ resistor ], []).solve();
 
-        var voltageMap = [];
-        voltageMap[0] =  0 + FUDGE;
-        voltageMap[1] = -4 + FUDGE;
-        voltageMap[2] = -8 + FUDGE;
+    //     var voltageMap = [];
+    //     voltageMap[0] =  0 + FUDGE;
+    //     voltageMap[1] = -4 + FUDGE;
+    //     voltageMap[2] = -8 + FUDGE;
 
-        var solutionBattery1 = MNACompanionBattery.create(battery1.node0, battery1.node1, battery1.voltage);
-        var solutionBattery2 = MNACompanionBattery.create(battery2.node0, battery2.node1, battery2.voltage);
-        solutionBattery1.currentSolution = -4;
-        solutionBattery2.currentSolution = -4;
-        var branchCurrents = [];
-        branchCurrents[solutionBattery1.id] = solutionBattery1;
-        branchCurrents[solutionBattery2.id] = solutionBattery2;
+    //     var solutionBattery1 = MNACompanionBattery.create(battery1.node0, battery1.node1, battery1.voltage);
+    //     var solutionBattery2 = MNACompanionBattery.create(battery2.node0, battery2.node1, battery2.voltage);
+    //     solutionBattery1.currentSolution = -4;
+    //     solutionBattery2.currentSolution = -4;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery1.id] = solutionBattery1;
+    //     branchCurrents[solutionBattery2.id] = solutionBattery2;
 
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
 
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('two resistors in series should have resistance added', function(){
-        var battery   = MNACompanionBattery.create( 0, 1,  5);
-        var resistor1 = MNACompanionResistor.create(1, 2, 10);
-        var resistor2 = MNACompanionResistor.create(2, 0, 10);
+    // it('two resistors in series should have resistance added', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1,  5);
+    //     var resistor1 = MNACompanionResistor.create(1, 2, 10);
+    //     var resistor2 = MNACompanionResistor.create(2, 0, 10);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 5;
-        voltageMap[2] = 2.5 + FUDGE;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 5;
+    //     voltageMap[2] = 2.5 + FUDGE;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 5 / 20;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 5 / 20;
 
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('wacky node order won\'t break things', function(){
-        var battery   = MNACompanionBattery.create( 0, 3, 10);
-        var resistor1 = MNACompanionResistor.create(1, 2, 10);
-        var resistor2 = MNACompanionResistor.create(2, 0, 10);
-        var resistor3 = MNACompanionResistor.create(3, 1,  5);
+    // it('wacky node order won\'t break things', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 3, 10);
+    //     var resistor1 = MNACompanionResistor.create(1, 2, 10);
+    //     var resistor2 = MNACompanionResistor.create(2, 0, 10);
+    //     var resistor3 = MNACompanionResistor.create(3, 1,  5);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
 
-        var solution = circuit.solve();
+    //     var solution = circuit.solve();
 
-        var batterySolutionCurrent = 10 / 25;
+    //     var batterySolutionCurrent = 10 / 25;
 
-        chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
-    });
+    //     chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
+    // });
 
-    it('wacky node order won\'t break things - control', function(){
-        var battery   = MNACompanionBattery.create( 0, 1, 10);
-        var resistor1 = MNACompanionResistor.create(1, 2, 10);
-        var resistor2 = MNACompanionResistor.create(2, 3, 10);
-        var resistor3 = MNACompanionResistor.create(3, 0,  5);
+    // it('wacky node order won\'t break things - control', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1, 10);
+    //     var resistor1 = MNACompanionResistor.create(1, 2, 10);
+    //     var resistor2 = MNACompanionResistor.create(2, 3, 10);
+    //     var resistor3 = MNACompanionResistor.create(3, 0,  5);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
 
-        var solution = circuit.solve();
+    //     var solution = circuit.solve();
 
-        var batterySolutionCurrent = 10 / 25;
+    //     var batterySolutionCurrent = 10 / 25;
 
-        chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
-    });
+    //     chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
+    // });
 
-    it('a resistor with one node unconnected shouldn\'t cause problems', function(){
-        var battery   = MNACompanionBattery.create( 0, 1,   4);
-        var resistor1 = MNACompanionResistor.create(1, 0,   4);
-        var resistor2 = MNACompanionResistor.create(0, 2, 100);
+    // it('a resistor with one node unconnected shouldn\'t cause problems', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1,   4);
+    //     var resistor1 = MNACompanionResistor.create(1, 0,   4);
+    //     var resistor2 = MNACompanionResistor.create(0, 2, 100);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
 
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 4;
-        voltageMap[2] = 0 - FUDGE;
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 4;
+    //     voltageMap[2] = 0 - FUDGE;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 1;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 1;
 
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('an unconnected resistor shouldn\'t cause problems', function(){
-        var battery   = MNACompanionBattery.create( 0, 1,   4);
-        var resistor1 = MNACompanionResistor.create(1, 0,   4);
-        var resistor2 = MNACompanionResistor.create(2, 3, 100);
+    // it('an unconnected resistor shouldn\'t cause problems', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1,   4);
+    //     var resistor1 = MNACompanionResistor.create(1, 0,   4);
+    //     var resistor2 = MNACompanionResistor.create(2, 3, 100);
 
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
-
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 4;
-        voltageMap[2] = 0;
-        voltageMap[3] = 0;
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 4;
+    //     voltageMap[2] = 0;
+    //     voltageMap[3] = 0;
 
-        var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = 1;
+    //     var solutionBattery = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = 1;
 
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
 
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
 
-    it('should handle resistor with no resistance', function(){
-        var battery   = MNACompanionBattery.create( 0, 1,  5);
-        var resistor1 = MNACompanionResistor.create(1, 2, 10);
-        var resistor2 = MNACompanionResistor.create(2, 0,  0);
-
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
-
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = 5;
-        voltageMap[2] = 0;
-
-        var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        var solutionResistor = MNACompanionBattery.create(resistor2.node0, resistor2.node1, resistor2.voltage);
-        solutionBattery.currentSolution  = 5 / 10;
-        solutionResistor.currentSolution = 5 / 10;
-
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
-        branchCurrents[solutionResistor.id] = solutionResistor;
-
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
-
-    it('resistors in parallel should have harmonic mean of resistance', function(){
-        var V = 9.0;
-        var R1 = 5.0;
-        var R2 = 5.0;
-        var Req = 1 / ( 1 / R1 + 1 / R2 );
-
-        var battery   = MNACompanionBattery.create( 0, 1, V);
-        var resistor1 = MNACompanionResistor.create(1, 0, R1);
-        var resistor2 = MNACompanionResistor.create(1, 0, R2);
-
-        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
-
-        var voltageMap = [];
-        voltageMap[0] = 0;
-        voltageMap[1] = V - FUDGE;
-
-        var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
-        solutionBattery.currentSolution = V / Req;
-
-        var branchCurrents = [];
-        branchCurrents[solutionBattery.id] = solutionBattery;
-
-        var solution = circuit.solve();
-        var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
-        chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
-    });
-
-    it('MNACircuitSolver should convert and solve simple core circuits', function(){
-        var junction0 = new Junction({ position: new Vector2(0, 0) });
-        var junction1 = new Junction({ position: new Vector2(1, 0) });
-        var junction2 = new Junction({ position: new Vector2(0, 1) });
-
-        var battery = new Battery({
-            startJunction: junction0,
-            endJunction: junction1,
-            voltageDrop: 5,
-            internalResistance: 0,
-            internalResistanceOn: true
-        });
-
-        var resistor1 = new Resistor({
-            startJunction: junction1,
-            endJunction: junction2,
-            resistance: 10
-        });
-
-        var resistor2 = new Resistor({
-            startJunction: junction2,
-            endJunction: junction0,
-            resistance: 10
-        });
-
-        var circuit = new Circuit();
-        circuit.addBranch(battery);
-        circuit.addBranch(resistor1);
-        circuit.addBranch(resistor2);
-
-        var solver = new MNACircuitSolver();
-        solver.solve(circuit, 1 / 30);
-
-        var batterySolutionCurrent = 5 / 20;
-
-        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
-    });
-
-    it('MNACircuitSolver should convert and solve core circuits with resistive batteries', function(){
-        var junction0 = new Junction({ position: new Vector2(0, 0) });
-        var junction1 = new Junction({ position: new Vector2(1, 0) });
-        var junction2 = new Junction({ position: new Vector2(0, 1) });
-        var junction3 = new Junction({ position: new Vector2(1, 1) });
-
-        var battery = new Battery({
-            startJunction: junction0,
-            endJunction: junction3,
-            voltageDrop: 10,
-            internalResistance: 0,
-            internalResistanceOn: true
-        });
-
-        var resistor1 = new Resistor({
-            startJunction: junction1,
-            endJunction: junction2,
-            resistance: 10
-        });
-
-        var resistor2 = new Resistor({
-            startJunction: junction2,
-            endJunction: junction0,
-            resistance: 10
-        });
-
-        var resistor3 = new Resistor({
-            startJunction: junction3,
-            endJunction: junction1,
-            resistance: 5
-        });
-
-        var circuit = new Circuit();
-        circuit.addBranch(battery);
-        circuit.addBranch(resistor1);
-        circuit.addBranch(resistor2);
-        circuit.addBranch(resistor3);
-
-        // Works -------------------
-        // var junction0 = new Junction({ position: new Vector2(0, 0) });
-        // var junction1 = new Junction({ position: new Vector2(1, 0) });
-        // var junction2 = new Junction({ position: new Vector2(0, 1) });
-        // var junction3 = new Junction({ position: new Vector2(1, 1) });
-
-        // var battery = new Battery({
-        //     startJunction: junction0,
-        //     endJunction: junction1,
-        //     voltageDrop: 10,
-        //     internalResistance: 0,
-        //     internalResistanceOn: true
-        // });
-
-        // var resistor1 = new Resistor({
-        //     startJunction: junction1,
-        //     endJunction: junction2,
-        //     resistance: 10
-        // });
-
-        // var resistor2 = new Resistor({
-        //     startJunction: junction2,
-        //     endJunction: junction3,
-        //     resistance: 10
-        // });
-
-        // var resistor3 = new Resistor({
-        //     startJunction: junction3,
-        //     endJunction: junction0,
-        //     resistance: 5
-        // });
-
-        // var circuit = new Circuit();
-        // circuit.addBranch(battery);
-        // circuit.addBranch(resistor1);
-        // circuit.addBranch(resistor2);
-        // circuit.addBranch(resistor3);
-
-        var solver = new MNACircuitSolver();
-        solver.solve(circuit, 1 / 30);
-
-        var batterySolutionCurrent = 10 / 25;
-
-        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
-    });
+    // it('should handle resistor with no resistance', function(){
+    //     var battery   = MNACompanionBattery.create( 0, 1,  5);
+    //     var resistor1 = MNACompanionResistor.create(1, 2, 10);
+    //     var resistor2 = MNACompanionResistor.create(2, 0,  0);
+
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = 5;
+    //     voltageMap[2] = 0;
+
+    //     var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     var solutionResistor = MNACompanionBattery.create(resistor2.node0, resistor2.node1, resistor2.voltage);
+    //     solutionBattery.currentSolution  = 5 / 10;
+    //     solutionResistor.currentSolution = 5 / 10;
+
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
+    //     branchCurrents[solutionResistor.id] = solutionResistor;
+
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
+
+    // it('resistors in parallel should have harmonic mean of resistance', function(){
+    //     var V = 9.0;
+    //     var R1 = 5.0;
+    //     var R2 = 5.0;
+    //     var Req = 1 / ( 1 / R1 + 1 / R2 );
+
+    //     var battery   = MNACompanionBattery.create( 0, 1, V);
+    //     var resistor1 = MNACompanionResistor.create(1, 0, R1);
+    //     var resistor2 = MNACompanionResistor.create(1, 0, R2);
+
+    //     var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2 ], []);
+
+    //     var voltageMap = [];
+    //     voltageMap[0] = 0;
+    //     voltageMap[1] = V - FUDGE;
+
+    //     var solutionBattery  = MNACompanionBattery.create(battery.node0, battery.node1, battery.voltage);
+    //     solutionBattery.currentSolution = V / Req;
+
+    //     var branchCurrents = [];
+    //     branchCurrents[solutionBattery.id] = solutionBattery;
+
+    //     var solution = circuit.solve();
+    //     var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
+    //     chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    // });
+
+    // it('MNACircuitSolver should convert and solve simple core circuits', function(){
+    //     var junction0 = new Junction({ position: new Vector2(0, 0) });
+    //     var junction1 = new Junction({ position: new Vector2(1, 0) });
+    //     var junction2 = new Junction({ position: new Vector2(0, 1) });
+
+    //     var battery = new Battery({
+    //         startJunction: junction0,
+    //         endJunction: junction1,
+    //         voltageDrop: 5,
+    //         internalResistance: 0,
+    //         internalResistanceOn: true
+    //     });
+
+    //     var resistor1 = new Resistor({
+    //         startJunction: junction1,
+    //         endJunction: junction2,
+    //         resistance: 10
+    //     });
+
+    //     var resistor2 = new Resistor({
+    //         startJunction: junction2,
+    //         endJunction: junction0,
+    //         resistance: 10
+    //     });
+
+    //     var circuit = new Circuit();
+    //     circuit.addBranch(battery);
+    //     circuit.addBranch(resistor1);
+    //     circuit.addBranch(resistor2);
+
+    //     var solver = new MNACircuitSolver();
+    //     solver.solve(circuit, 1 / 30);
+
+    //     var batterySolutionCurrent = 5 / 20;
+
+    //     chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    // });
+
+    // it('MNACircuitSolver should convert and solve core circuits with resistive batteries', function(){
+    //     var junction0 = new Junction({ position: new Vector2(0, 0) });
+    //     var junction1 = new Junction({ position: new Vector2(1, 0) });
+    //     var junction2 = new Junction({ position: new Vector2(0, 1) });
+    //     var junction3 = new Junction({ position: new Vector2(1, 1) });
+
+    //     var battery = new Battery({
+    //         startJunction: junction0,
+    //         endJunction: junction3,
+    //         voltageDrop: 10,
+    //         internalResistance: 0,
+    //         internalResistanceOn: true
+    //     });
+
+    //     var resistor1 = new Resistor({
+    //         startJunction: junction1,
+    //         endJunction: junction2,
+    //         resistance: 10
+    //     });
+
+    //     var resistor2 = new Resistor({
+    //         startJunction: junction2,
+    //         endJunction: junction0,
+    //         resistance: 10
+    //     });
+
+    //     var resistor3 = new Resistor({
+    //         startJunction: junction3,
+    //         endJunction: junction1,
+    //         resistance: 5
+    //     });
+
+    //     var circuit = new Circuit();
+    //     circuit.addBranch(battery);
+    //     circuit.addBranch(resistor1);
+    //     circuit.addBranch(resistor2);
+    //     circuit.addBranch(resistor3);
+
+    //     // Works -------------------
+    //     // var junction0 = new Junction({ position: new Vector2(0, 0) });
+    //     // var junction1 = new Junction({ position: new Vector2(1, 0) });
+    //     // var junction2 = new Junction({ position: new Vector2(0, 1) });
+    //     // var junction3 = new Junction({ position: new Vector2(1, 1) });
+
+    //     // var battery = new Battery({
+    //     //     startJunction: junction0,
+    //     //     endJunction: junction1,
+    //     //     voltageDrop: 10,
+    //     //     internalResistance: 0,
+    //     //     internalResistanceOn: true
+    //     // });
+
+    //     // var resistor1 = new Resistor({
+    //     //     startJunction: junction1,
+    //     //     endJunction: junction2,
+    //     //     resistance: 10
+    //     // });
+
+    //     // var resistor2 = new Resistor({
+    //     //     startJunction: junction2,
+    //     //     endJunction: junction3,
+    //     //     resistance: 10
+    //     // });
+
+    //     // var resistor3 = new Resistor({
+    //     //     startJunction: junction3,
+    //     //     endJunction: junction0,
+    //     //     resistance: 5
+    //     // });
+
+    //     // var circuit = new Circuit();
+    //     // circuit.addBranch(battery);
+    //     // circuit.addBranch(resistor1);
+    //     // circuit.addBranch(resistor2);
+    //     // circuit.addBranch(resistor3);
+
+    //     var solver = new MNACircuitSolver();
+    //     solver.solve(circuit, 1 / 30);
+
+    //     var batterySolutionCurrent = 10 / 25;
+
+    //     chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    // });
 
     it('LU decomposition works', function() {
 
-        var A = new m4th.matrix(6, [
-             0.00,     1.00,     0.00,     0.00,     0.00,
-             1.00,     0.10,     0.00,    -0.10,     0.00,
-             0.00,     0.00,     0.30,    -0.10,    -0.20,
-             0.00,    -0.10,    -0.10,     0.20,     0.00,
-            -1.00,     0.00,    -0.20,     0.00,     0.20,
-             0.00,    -1.00,     0.00,     0.00,     1.00
+        var A = new numeric.cLU([
+            [ 0.00,     1.00,     0.00,     0.00,     0.00],
+            [ 1.00,     0.10,     0.00,    -0.10,     0.00],
+            [ 0.00,     0.00,     0.30,    -0.10,    -0.20],
+            [ 0.00,    -0.10,    -0.10,     0.20,     0.00],
+            [-1.00,     0.00,    -0.20,     0.00,     0.20],
+            [ 0.00,    -1.00,     0.00,     0.00,     1.00]
         ]);
 
-        var B = new m4th.matrix(6, [
+        var B = [
              0,
              0,
              0,
              0,
              0,
             10
-        ]);
+        ];
 
-        // LU decompose matrix A           
-        var LU = m4th.lu(A); // node.js: require('m4th/lu')(A); 
-        // calculate solution for: B = A*X
-        var X = LU.solve(B);
-        // invert matrix A 
-        var Ainv = LU.getInverse();
+        var X = numeric.cLU(A, B);
+
+        // // LU decompose matrix A           
+        // var LU = m4th.lu(A); // node.js: require('m4th/lu')(A); 
+        // // calculate solution for: B = A*X
+        // var X = LU.solve(B);
+        // // invert matrix A 
+        // var Ainv = LU.getInverse();
 
         chai.expect(X).to.almost.eql([
             0.4,
