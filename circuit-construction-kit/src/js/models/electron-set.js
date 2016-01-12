@@ -65,6 +65,11 @@ define(function (require) {
             this.propagator.update(time, deltaTime);
         },
 
+        getDensity: function(branch) {
+            var electrons = this.getParticles(branch);
+            return electrons.length / branch.getLength();
+        },
+
         getUpperNeighborInBranch: function(myElectron) {
             var branchElectrons = this.getParticles(myElectron.get('branch'));
             var upper = null;
