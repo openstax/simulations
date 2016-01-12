@@ -10,6 +10,7 @@
             text:         '../../bower_components/requirejs-text/text',
             pixi:         '../../bower_components/pixi/bin/pixi',
             nouislider:   '../../bower_components/nouislider/distribute/jquery.nouislider.all.min',
+            luqr:         '../../bower_components/luqr/luqr.min',
             'file-saver': '../../bower_components/file-saver/FileSaver',
 
             sat:                     '../../node_modules/sat/SAT',
@@ -18,8 +19,6 @@
             'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
-            'm4th':                  '../../node_modules/m4th-shimmed/index',
-            'ut1l':                  '../../node_modules/m4th-shimmed/node_modules/ut1l/index',
 
             views:      '../js/views',
             models:     '../js/models',

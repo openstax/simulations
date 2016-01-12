@@ -14,7 +14,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
     var Circuit;
 
     var Vector2;
-    var numeric;
+    var luqr;
 
     var THRESHOLD = 1E-6;
     var FUDGE = THRESHOLD - 8E-7;
@@ -32,8 +32,8 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             'models/components/resistor',
             'models/circuit',
             'common/math/vector2',
-            'common/math/numeric-shimmed'
-        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _numeric) {
+            'luqr'
+        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _luqr) {
             MNACircuitSolver = mnaCircuitSolver;
             MNACircuit = mnaCircuit;
             MNASolution = mnaSolution;
@@ -47,7 +47,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             Circuit = circuit;
 
             Vector2 = vector2;
-            numeric = _numeric;
+            luqr = _luqr.luqr;
             
             done();
         });
@@ -480,7 +480,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
 
     it('LU decomposition works', function() {
 
-        var A = new numeric.cLU([
+        var A = [
             [ 0.00,     1.00,     0.00,     0.00,     0.00],
             [ 1.00,     0.10,     0.00,    -0.10,     0.00],
             [ 0.00,     0.00,     0.30,    -0.10,    -0.20],
@@ -498,7 +498,7 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
             10
         ];
 
-        var X = numeric.cLU(A, B);
+        var X = luqr.solve(A, B);
 
         // // LU decompose matrix A           
         // var LU = m4th.lu(A); // node.js: require('m4th/lu')(A); 
