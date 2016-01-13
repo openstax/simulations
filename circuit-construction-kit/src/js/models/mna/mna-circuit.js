@@ -28,7 +28,7 @@ define(function (require) {
         return -1;
     };
 
-    var debug = true;
+    var debug = false;
 
     /**
      * 

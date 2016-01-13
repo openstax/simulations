@@ -77,7 +77,7 @@ define(function(require) {
         },
 
         junctionsChanged: function() {
-            this.update();
+            this.updateGraphics();
         },
 
         updateComponentGraphics: function() {
@@ -96,10 +96,10 @@ define(function(require) {
         updateMVT: function(mvt) {
             ComponentView.prototype.updateMVT.apply(this, arguments);
 
-            this.update();
+            this.updateGraphics();
         },
 
-        update: function() {
+        updateGraphics: function() {
             var modelLength = this.model.getStartPoint().distance(this.model.getEndPoint());
             var viewLength = this.mvt.modelToViewDeltaX(modelLength);
             var imageLength = this.sprite.texture.width;
@@ -133,7 +133,7 @@ define(function(require) {
         schematicModeChanged: function() {
             this.updateComponentGraphics();
             this.updateHoverGraphics();
-            this.update();
+            this.updateGraphics();
         }
 
     });

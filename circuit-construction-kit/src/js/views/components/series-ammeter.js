@@ -28,6 +28,8 @@ define(function(require) {
          */
         initialize: function(options) {
             RectangularComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:current', this.updateAmperage);
         },
 
         initGraphics: function() {
@@ -65,7 +67,7 @@ define(function(require) {
             this.topLayer.addChild(ammeter);
 
             var amperage = new PIXI.Text('0.00 AMPS', {
-                font: 'bold 42px Helvetica Neue',
+                font: 'bold 40px Helvetica Neue',
                 fill: '#000'
             });
             amperage.resolution = this.getResolution();
@@ -85,14 +87,24 @@ define(function(require) {
             RectangularComponentView.prototype.updateComponentGraphics.apply(this, arguments);
         },
 
-        update: function() {
-            RectangularComponentView.prototype.update.apply(this, arguments);
+        updateGraphics: function() {
+            RectangularComponentView.prototype.updateGraphics.apply(this, arguments);
 
             this.topLayer.scale.x = this.displayObject.scale.x;
             this.topLayer.scale.y = this.displayObject.scale.y;
             this.topLayer.x = this.displayObject.x;
             this.topLayer.y = this.displayObject.y;
             this.topLayer.rotation = this.displayObject.rotation;
+        },
+
+        updateAmperage: function(model, current) {
+            if (Math.abs(current) > 9999)
+                current = current.toFixed(0);
+            else if (Math.abs(current) > 999)
+                current = current.toFixed(1);
+            else
+                current = current.toFixed(2);
+            this.amperage.text = current + ' AMPS';
         },
 
         showHoverGraphics: function() {

@@ -86,7 +86,7 @@ define(function(require) {
         },
 
         junctionsChanged: function() {
-            this.update();
+            this.updateGraphics();
         },
 
         /**
@@ -96,11 +96,11 @@ define(function(require) {
         updateMVT: function(mvt) {
             ComponentView.prototype.updateMVT.apply(this, arguments);
 
-            this.update();
+            this.updateGraphics();
             this.filamentView.updateMVT(mvt);
         },
 
-        update: function() {
+        updateGraphics: function() {
             // Direction vector from start to end junctions in model space
             var vec = this._vec
                 .set(this.model.getEndPoint())
@@ -145,7 +145,7 @@ define(function(require) {
                 this.offSprite.texture = this.offTexture;
             }
             this.initHoverGraphics();
-            this.update();
+            this.updateGraphics();
         },
 
         initContextMenu: function($contextMenu) {
@@ -163,7 +163,7 @@ define(function(require) {
         flip: function() {
             this.model.flip(this.circuit);
             this.model.set('selected', false);
-            this.update();
+            this.updateGraphics();
             this.hidePopover();
         },
 
