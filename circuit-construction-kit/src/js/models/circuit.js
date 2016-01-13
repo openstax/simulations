@@ -61,7 +61,7 @@ define(function (require) {
             this.branchSet = new BranchSet(this);
 
             // Cached objects
-            this._splitVec = new Vector2();
+            this._splitVec         = new Vector2();
             this._splitDestination = new Vector2();
             this._splitTranslation = new Vector2();
             this._bestDragMatchVec = new Vector2();

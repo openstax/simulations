@@ -17,33 +17,31 @@ define(function (require) {
         this.particleSet = particleSet;
         this.circuit = circuit;
         this.branchSet = new BranchSet(circuit);
-
-        this.listenTo(circuit, 'branches-moved', this.branchesMoved);
     };
 
     _.extend(ConstantDensityLayout.prototype, Backbone.Events, {
 
-        branchesMoved: function(branches) {
-            this.branchSet
-                .clear()
-                .addBranches(branches);
-
-            for (var i = 0; i < branches.length; i++) {
-                this.branchSet.addBranches(this.circuit.getStrongConnections(branches[i].get('startJunction')));
-                this.branchSet.addBranches(this.circuit.getStrongConnections(branches[i].get('endJunction')));
-            }
-            
-            var torelayout = this.branchSet.branches;
-            this.layoutElectrons(torelayout);
-        },
-
         layoutConnectedElectrons: function(branch) {
-            this.branchSet
-                .clear()
-                .addBranch(branch)
+            if (_.isArray(branch)) {
+                var branches = branch;
 
-            this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('startJunction')));
-            this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('endJunction')));
+                this.branchSet
+                    .clear()
+                    .addBranches(branches);
+
+                for (var i = 0; i < branches.length; i++) {
+                    this.branchSet.addBranches(this.circuit.getStrongConnections(branches[i].get('startJunction')));
+                    this.branchSet.addBranches(this.circuit.getStrongConnections(branches[i].get('endJunction')));
+                }
+            }
+            else {
+                this.branchSet
+                    .clear()
+                    .addBranch(branch)
+
+                this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('startJunction')));
+                this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('endJunction')));
+            }
             
             var torelayout = this.branchSet.branches;
             this.layoutElectrons(torelayout);
