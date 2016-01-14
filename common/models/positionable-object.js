@@ -56,7 +56,7 @@ define(function (require) {
             var newPosition = vectorPool.create().set(this.get('position'));
 
             if (x instanceof Vector2)
-                this.set('position', newPosition.add(x), y);
+                this.set('position', newPosition.add(x));
             else
                 this.set('position', newPosition.add(x, y), options);
             
@@ -66,9 +66,10 @@ define(function (require) {
 
         setPosition: function(x, y, options) {
             var oldPosition = this.get('position');
+            //console.log(vectorPool.list.length);
             
             if (x instanceof Vector2)
-                this.set('position', vectorPool.create().set(x), y);
+                this.set('position', vectorPool.create().set(x));
             else
                 this.set('position', vectorPool.create().set(x, y), options);
 

@@ -40,7 +40,7 @@ define(function (require) {
         updatePosition: function() {
             var pt = this.get('branch').getPosition(this.get('distAlongWire'));
 
-            if (this.isNaN(pt)) //{console.error('Point was NaN, pt=' + pt + ', dist=' + this.get('distAlongWire') + ', wire length=' + this.get('branch').getLength());return}
+            if (this.isNaN(pt))
                 throw 'Point was NaN, pt=' + pt + ', dist=' + this.get('distAlongWire') + ', wire length=' + this.get('branch').getLength();
             
             this.setPosition(pt);

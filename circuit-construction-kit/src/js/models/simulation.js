@@ -8,7 +8,6 @@ define(function (require, exports, module) {
 
     var Circuit                = require('models/circuit');
     var ElectronSet            = require('models/electron-set');
-    var BranchSet              = require('models/branch-set');
     var MNACircuitSolver       = require('models/mna/circuit-solver');
     var CircuitInteraction     = require('models/circuit-interaction');
     var ContstantDensityLayout = require('models/constant-density-layout');
@@ -46,7 +45,6 @@ define(function (require, exports, module) {
             this.solver = new MNACircuitSolver();
             this.particleSet = new ElectronSet(this.circuit);
             this.layout = new ContstantDensityLayout(this.particleSet, this.circuit);
-            this.changedBranchSet = new BranchSet(this.circuit);
 
             this.initGrabBag();
 
@@ -54,7 +52,6 @@ define(function (require, exports, module) {
 
             this.listenTo(this.circuit, 'junction-split',  this.junctionSplit);
             this.listenTo(this.circuit, 'circuit-changed', this.circuitChanged);
-            this.listenTo(this.circuit, 'branches-moved',  this.branchesMoved);
             this.listenTo(this.circuit.branches, 'start-junction-changed end-junction-changed', this.branchJunctionChanged);
         },
 
@@ -90,10 +87,6 @@ define(function (require, exports, module) {
                 this.solver.solve(this.circuit, deltaTime);
                 this.modelChanged = false;
             }
-
-            if (this.changedBranchSet.branches.length)
-                this.layoutConnectedElectrons(this.changedBranchSet.branches);
-            this.changedBranchSet.clear();
             
             this.particleSet.update(time, deltaTime);
         },
@@ -118,11 +111,7 @@ define(function (require, exports, module) {
         },
 
         branchJunctionChanged: function(branch) {
-            this.changedBranchSet.addBranch(branch);
-        },
-
-        branchesMoved: function(branches) {
-            this.changedBranchSet.addBranches(branches);
+            this.layoutConnectedElectrons(branch);
         }
 
     });

@@ -42,10 +42,10 @@ define(function (require) {
         },
 
         reverse: function() {
-            this.set({
-                startJunction: this.get('endJunction'),
-                endJunction: this.get('startJunction')
-            });
+            var start = this.get('startJunction');
+            var end = this.get('endJunction');
+            this.set('startJunction', end);
+            this.set('endJunction', start);
         }
 
     }, Constants.Battery);
