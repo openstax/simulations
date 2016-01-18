@@ -27,11 +27,6 @@ define(function (require) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
             this.initShape();
-
-            this.on('change:position', function(model, position) {
-                if (position.x == 0 || position.y == 0)
-                    throw '0,0!'
-            })
         },
 
         initShape: function() {

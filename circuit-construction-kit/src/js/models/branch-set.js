@@ -73,13 +73,9 @@ define(function (require) {
             }
 
             var branchesToNotify = this.branches.slice();
-            var newPositions = [];
             for (i = 0; i < junctionSet.length; i++) {
-                // if (new Vector2(junctionSet[i].get('position')).add(x, y).equals(0, 0, 0.0001))
-                //     throw 'setting it to 0, 0!';
                 // Can't do one-at-a-time, because intermediate notifications get inconsistent data.
                 junctionSet[i].get('position').add(x, y);
-                // newPositions[i] = new Vector2(junctionSet[i].get('position'));
 
                 // Populate branchesToNotify array
                 var neighbors = this.circuit.getAdjacentBranches(junctionSet[i]);
@@ -91,8 +87,6 @@ define(function (require) {
             }
 
             for (i = 0; i < junctionSet.length; i++)
-                // junctionSet[i].trigger('change:position', junctionSet[i], junctionSet[i].get('position'));
-                // junctionSet[i].setPosition(newPositions[i]);
                 junctionSet[i].setPosition(junctionSet[i].get('position'));
 
             this.circuit.fireBranchesMoved(branchesToNotify);

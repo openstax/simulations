@@ -82,11 +82,6 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            // console.log('--------------')
-            // for (var k = 0; k < this.circuit.junctions.length; k++) {
-            //     console.log(this.circuit.junctions.at(k).get('position').toString());
-            // }
-
             if (this.circuit.isDynamic() || this.modelChanged) {
                 this.circuit.update(time, deltaTime);
                 this.solver.solve(this.circuit, deltaTime);

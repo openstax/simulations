@@ -26,7 +26,6 @@ define(function (require) {
             this._attrs = {};
 
             this.on('change:distAlongWire', this.updatePosition);
-            // this.on('change:branch',        this.branchChanged);
 
             this.updatePosition();
         },
@@ -40,28 +39,15 @@ define(function (require) {
             this._attrs.branch = branch;
             this._attrs.distAlongWire = x;
             this.set(this._attrs);
-            // this.set('branch', branch);
-            // this.set('distAlongWire', x);
         },
 
         updatePosition: function() {
-            // console.log('before/start: ', this.get('branch').getStartPoint())
-            // console.log('before/end: '  , this.get('branch').getEndPoint())
             var pt = this.get('branch').getPosition(this.get('distAlongWire'));
 
             if (this.isNaN(pt))
                 throw 'Point was NaN, pt=' + pt + ', dist=' + this.get('distAlongWire') + ', wire length=' + this.get('branch').getLength();
             
             this.setPosition(pt);
-            // console.log('after/start: ' , this.get('branch').getStartPoint())
-            // console.log('after/end: '   , this.get('branch').getEndPoint())
-        },
-
-        branchChanged: function(model, branch) {
-            if (this.previous('branch'))
-                this.stopListening(this.previous('branch'));
-            // this.listenTo(branch, 'start-junction-changed end-junction-changed', this.updatePosition);
-            this.updatePosition();
         },
 
         isNaN: function(vector) {
