@@ -40,7 +40,7 @@ define(function (require) {
         layoutConnectedElectrons: function(branch) {
             this.branchSet
                 .clear()
-                .addBranch(branch)
+                .addBranch(branch);
 
             this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('startJunction')));
             this.branchSet.addBranches(this.circuit.getStrongConnections(branch.get('endJunction')));

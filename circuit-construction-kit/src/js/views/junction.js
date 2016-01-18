@@ -140,7 +140,7 @@ define(function(require) {
 
         _drag: function(event) {
             this._point.set(event.data.global.x, event.data.global.y);
-            var modelPoint = this.mvt.viewToModel(this._point);
+            var modelPoint = this._point.set(this.mvt.viewToModel(this._point));
             
             CircuitInteraction.dragJunction(this.model, modelPoint);
 

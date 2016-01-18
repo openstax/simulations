@@ -223,7 +223,7 @@ module.exports = function(grunt) {
 	]);
 
 	grunt.registerTask('test', [
-		//'jshint:source',
+		'jshint:source',
 		'build_tests',
 		'mocha'
 	]);

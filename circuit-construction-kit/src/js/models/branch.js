@@ -82,7 +82,7 @@ define(function (require) {
                 this.stopListening(this.previous('startJunction'));
             if (startJunction)
                 this.listenTo(startJunction, 'change', this._startJunctionChanged);
-            this.trigger('start-junction-changed', this, this.get('startJunction'));
+            this._startJunctionChanged();
         },
 
         endJunctionChanged: function(model, endJunction) {
@@ -90,7 +90,7 @@ define(function (require) {
                 this.stopListening(this.previous('endJunction'));
             if (endJunction)
                 this.listenTo(endJunction, 'change', this._endJunctionChanged);
-            this.trigger('end-junction-changed', this, this.get('endJunction'));
+            this._endJunctionChanged();
         },
 
         _startJunctionChanged: function() {
@@ -170,7 +170,7 @@ define(function (require) {
 
         getPosition: function(x) {
             if (this.getLength() === 0)
-                return this.get('startJunction').get('position');
+                return this._position.set(this.get('startJunction').get('position'));
     
             var vec = this._position
                 .set(this.get('endJunction').get('position'))

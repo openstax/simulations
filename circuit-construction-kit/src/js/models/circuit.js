@@ -185,6 +185,7 @@ define(function (require) {
                 var newJunction = new Junction({
                     position: new Vector2(destination.x, destination.y)
                 });
+
                 branch.replaceJunction(junction, newJunction);
                 this.addJunction(newJunction);
                 newJunctions.push(newJunction);
