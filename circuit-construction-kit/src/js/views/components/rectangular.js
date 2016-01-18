@@ -104,7 +104,7 @@ define(function(require) {
             var viewLength = this.mvt.modelToViewDeltaX(modelLength);
             var imageLength = this.sprite.texture.width;
             var scale = viewLength / imageLength;
-            var angle = -this._direction.set(this.model.getEndPoint()).sub(this.model.getStartPoint()).angle();
+            var angle = this._direction.set(this.model.getEndPoint()).sub(this.model.getStartPoint()).angle();
 
             if (Math.abs(scale) > 1E-4) {
                 this.displayObject.scale.x = scale;
