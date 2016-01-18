@@ -172,7 +172,7 @@ define(function (require) {
             for (var i = 0; i < circuit.branches.length; i++ ) {
                 if (circuit.branches.at(i) instanceof Switch) {
                     var sw = circuit.branches.at(i);
-                    if (sw.get('closed')) {
+                    if (!sw.get('closed')) {
                         sw.set('current', 0);
                         sw.set('voltageDrop', 0);
                     }
