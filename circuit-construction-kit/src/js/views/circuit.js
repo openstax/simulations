@@ -68,17 +68,17 @@ define(function(require) {
             this.solderLayer        = new PIXI.Container();
             this.componentLayer     = new PIXI.Container();
             this.junctionLayer      = new PIXI.Container();
-            this.junctionHoverLayer = new PIXI.Container();
             this.topLayer           = new PIXI.Container();
             this.effectsLayer       = new PIXI.Container();
+            this.hoverLayer         = new PIXI.Container();
             this.labelLayer         = new PIXI.Container();
 
             this.displayObject.addChild(this.background);
             this.displayObject.addChild(this.solderLayer);
             this.displayObject.addChild(this.componentLayer);
             this.displayObject.addChild(this.junctionLayer);
-            this.displayObject.addChild(this.junctionHoverLayer);
             this.displayObject.addChild(this.effectsLayer);
+            this.displayObject.addChild(this.hoverLayer);
 
             this.background.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
 
@@ -175,7 +175,7 @@ define(function(require) {
             });
 
             this.componentLayer.addChild(branchView.displayObject);
-            this.junctionHoverLayer.addChild(branchView.hoverLayer);
+            this.hoverLayer.addChild(branchView.hoverLayer);
             if (branchView.topLayer)
                 this.topLayer.addChild(branchView.topLayer);
             this.labelLayer.addChild(branchView.labelLayer);
@@ -220,7 +220,7 @@ define(function(require) {
 
             this.solderLayer.addChild(junctionView.solderLayer);
             this.junctionLayer.addChild(junctionView.displayObject);
-            this.junctionHoverLayer.addChild(junctionView.hoverLayer);
+            this.hoverLayer.addChild(junctionView.hoverLayer);
             this.junctionViews.push(junctionView);
         },
 

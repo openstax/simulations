@@ -55,7 +55,7 @@ define(function(require) {
             this.glow = Assets.createSprite(Assets.Images.BULB_GLOW);
             this.glow.anchor.x = 0.5;
             this.glow.anchor.y = 0.5;
-            this.glow.y = -this.onTexture.height / 2;
+            this.glow.y = -140;
             this.glow.alpha = 0;
 
             this.spriteLayer.addChild(this.offSprite);
