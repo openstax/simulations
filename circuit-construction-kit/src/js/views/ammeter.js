@@ -84,7 +84,7 @@ define(function (require) {
             this.point.y = modelPoint.y;
 
             // Get the current from the circuit at this location
-            var branch = this.simulation.circuit.getIntersectingBranch(this.point);
+            var branch = this.simulation.circuit.getIntersectingWire(this.point);
             if (branch) {
                 var current = branch.get('current');
                 var amperage = Math.abs(current).toFixed(2);
