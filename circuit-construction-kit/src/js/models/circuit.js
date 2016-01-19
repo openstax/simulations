@@ -68,7 +68,7 @@ define(function (require) {
             this._tipPosition      = new Vector2();
             this._getBranchRect = new Rectangle();
 
-            this.listenTo(this.branches, 'change:closed', this.circuitChanged);
+            this.listenTo(this.branches, 'change:closed reversed', this.circuitChanged);
             this.listenTo(this.branches,  'add remove reset', this.circuitChanged);
             this.listenTo(this.junctions, 'add remove reset', this.circuitChanged);
         },

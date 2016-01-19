@@ -45,7 +45,8 @@ define(function (require) {
             this.set({
                 startJunction: this.get('endJunction'),
                 endJunction: this.get('startJunction')
-            })
+            });
+            this.trigger('reversed');
         }
 
     }, Constants.Battery);

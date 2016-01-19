@@ -45,6 +45,7 @@ define(function (require) {
 
             this.on('change:startJunction', this.startJunctionChanged);
             this.on('change:endJunction',   this.endJunctionChanged);
+            this.on('change:current',       this.currentChanged);
 
             this.startJunctionChanged(this, this.get('startJunction'));
             this.endJunctionChanged(this, this.get('endJunction'));
@@ -213,13 +214,7 @@ define(function (require) {
 
         currentChanged: function(model, current) {
             var shouldBeOnFire = Math.abs(current) > 10;
-            if (shouldBeOnFire != this.get('isOnFire')) {
-                this.set('isOnFire', shouldBeOnFire);
-                if (this.get('isOnFire'))
-                    this.trigger('flame-finished');
-                else
-                    this.trigger('flame-started');
-            }
+            this.set('isOnFire', shouldBeOnFire);
         }
 
     });
