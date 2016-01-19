@@ -157,7 +157,7 @@ define(function(require) {
 
         isOnFireChanged: function(model, isOnFire) {
             if (isOnFire)
-                this.flame.gotoAndPlay(0);
+                this.flame.gotoAndPlay((this.flame.totalFrames - 1) * Math.random());
             else
                 this.flame.stop();
 
