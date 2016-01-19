@@ -21,6 +21,7 @@ define(function (require) {
 
         defaults: _.extend({}, CircuitComponent.prototype.defaults, {
             width: 0,
+            resistance: 10,
             isSchematic: false,
             connectAtLeft: true,
             circuit: undefined
