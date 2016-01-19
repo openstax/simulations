@@ -137,6 +137,8 @@ define(function(require) {
 
             var viewStartPosition = this.mvt.modelToView(this.model.getStartPoint());
             this.setPosition(viewStartPosition.x, viewStartPosition.y);
+
+            this.effectsLayer.visible = !this.circuit.get('schematic');
         },
 
         updateFlame: function() {

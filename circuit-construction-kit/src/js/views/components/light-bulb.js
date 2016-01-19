@@ -148,6 +148,7 @@ define(function(require) {
 
             this.effectsLayer.x = viewStartPosition.x;
             this.effectsLayer.y = viewStartPosition.y;
+            this.effectsLayer.visible = !this.circuit.get('schematic');
         },
 
         updateSprites: function() {
