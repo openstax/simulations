@@ -42,6 +42,8 @@ define(function(require) {
             this._direction = new Vector2();
 
             ComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:isOnFire', this.isOnFireChanged);
         },
 
         initComponentGraphics: function() {
@@ -56,6 +58,15 @@ define(function(require) {
             
             this.displayObject.buttonMode = true;
             this.displayObject.defaultCursor = 'move';
+
+            this.flame = Assets.createMovieClip(Assets.Animations.FLAME);
+            this.flame.anchor.x = 0.5;
+            this.flame.anchor.y = 0.65;
+            this.flame.x = this.sprite.width / 2;
+            this.flame.animationSpeed = 0.25;
+            this.flame.visible = false;
+
+            this.effectsLayer.addChild(this.flame);
         },
 
         initHoverGraphics: function() {
@@ -115,17 +126,22 @@ define(function(require) {
 
                 this.effectsLayer.scale.x = scale;
                 this.effectsLayer.scale.y = scale;
+
+                var flameScale = this.mvt.modelToViewDeltaX(0.005);
+                this.flame.scale.x = (1 / scale) * flameScale;
+                this.flame.scale.y = (1 / scale) * flameScale;
             }
 
             this.setRotation(angle);
 
             var viewStartPosition = this.mvt.modelToView(this.model.getStartPoint());
             this.setPosition(viewStartPosition.x, viewStartPosition.y);
+        },
 
-            // flameNode.setOffset( 0, -flameNode.getFullBounds().getHeight() + this.sprite.texture.height / 2 );
-            // if ( getParent() != null && getParent().getChildrenReference().indexOf( flameNode ) != getParent().getChildrenReference().size() - 1 ) {
-            //     flameNode.moveToFront();
-            // }
+        setRotation: function(rotation) {
+            ComponentView.prototype.setRotation.apply(this, arguments);
+
+            this.flame.rotation = -rotation;
         },
 
         generateTexture: function() {
@@ -137,6 +153,15 @@ define(function(require) {
             this.updateComponentGraphics();
             this.updateHoverGraphics();
             this.updateGraphics();
+        },
+
+        isOnFireChanged: function(model, isOnFire) {
+            if (isOnFire)
+                this.flame.gotoAndPlay(0);
+            else
+                this.flame.stop();
+
+            this.flame.visible = isOnFire;
         }
 
     });

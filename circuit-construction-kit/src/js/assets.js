@@ -75,10 +75,37 @@ define(function (require) {
         PENCIL:             'components/grab-bag/pencil.png',
         PENCIL_MASK:        'components/grab-bag/pencil-mask.png',
         PENNY:              'components/grab-bag/penny.png',
-        PENNY_MASK:         'components/grab-bag/penny-mask.png'
+        PENNY_MASK:         'components/grab-bag/penny-mask.png',
+
+        FLAME_1: 'flame_a_0001.png',
+        FLAME_2: 'flame_a_0002.png',
+        FLAME_3: 'flame_a_0003.png',
+        FLAME_4: 'flame_a_0004.png',
+        FLAME_5: 'flame_a_0005.png',
+        FLAME_6: 'flame_a_0006.png'
     };
 
-    Assets.SpriteSheets = {};
+    Assets.SpriteSheets = {
+        'flame.json': [
+            Assets.Images.FLAME_1,
+            Assets.Images.FLAME_2,
+            Assets.Images.FLAME_3,
+            Assets.Images.FLAME_4,
+            Assets.Images.FLAME_5,
+            Assets.Images.FLAME_6
+        ]
+    };
+
+    Assets.Animations = {
+        FLAME: Assets.SpriteSheets['flame.json']
+    };
+
+    Assets.createMovieClip = function(imagePaths) {
+        var textures = [];
+        for (var i = 0; i < imagePaths.length; i++)
+            textures.push(Assets.Texture(imagePaths[i]));
+        return new PIXI.extras.MovieClip(textures);
+    };
 
     return Assets;
 });
