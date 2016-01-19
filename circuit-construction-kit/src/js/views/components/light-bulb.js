@@ -112,9 +112,9 @@ define(function(require) {
             var imageWidth = this.onSprite.texture.width;
             var scale = viewWidth / imageWidth;
 
-            var angle = -Math.atan2(vec.y, vec.x);
-            angle += LightBulbView.getRotationOffset(this.model.get('connectAtLeft'));
-            angle += Math.PI / 2;
+            var angle = Math.atan2(vec.y, vec.x);
+            angle -= LightBulbView.getRotationOffset(this.model.get('connectAtLeft'));
+            angle -= Math.PI / 2;
 
             if (Math.abs(scale) > 1E-4) {
                 this.spriteLayer.scale.x = scale;
@@ -184,13 +184,13 @@ define(function(require) {
             var x = LightBulbView.END_POINT_OFFSET_PERCENT_X;
             var y = LightBulbView.END_POINT_OFFSET_PERCENT_Y;
             var sign = connectAtLeft ? 1 : -1;
-            return -Math.atan2(x, y) * sign;
+            return -Math.atan2(x, -y) * sign;
         },
 
         getDefaultRotation: function() {
             var x = LightBulbView.END_POINT_OFFSET_PERCENT_X;
             var y = LightBulbView.END_POINT_OFFSET_PERCENT_Y;
-            return Math.atan2(y, x);
+            return Math.atan2(-y, x);
         }
 
     }, Constants.LightBulbView));

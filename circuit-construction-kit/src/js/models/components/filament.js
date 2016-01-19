@@ -88,7 +88,7 @@ define(function (require) {
                 .rotate(-tilt);
 
             this.eastDir
-                .set(this.northDir.y, -this.northDir.x) // Perpendicular to northDir
+                .set(-this.northDir.y, this.northDir.x) // Perpendicular to northDir
                 .normalize();
 
             if (!this.get('connectAtRight'))

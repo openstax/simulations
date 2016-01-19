@@ -51,7 +51,7 @@ define(function (require) {
     Constants.WIRE_THICKNESS = 0.22; // Original: 0.3
     Constants.DEFAULT_SCALE = 109.3 / 100.0;
 
-    Constants.TILT = -0.8058034940839864;
+    Constants.TILT = -0.8058034940839864 + Math.PI / 2;
 
     Constants.TOOLBOX_WIDTH = 68;
     Constants.TOOLBOX_PADDING = 10;
