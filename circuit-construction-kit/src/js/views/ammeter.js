@@ -86,10 +86,13 @@ define(function (require) {
             // Get the current from the circuit at this location
             var branch = this.simulation.circuit.getIntersectingBranch(this.point);
             if (branch) {
+                var current = branch.get('current');
+                var amperage = Math.abs(current).toFixed(2);
+
                 this.$activeOverlay.show();
                 this.$readout.show();
                 this.$hint.hide();
-                this.$amperage.html();
+                this.$amperage.html(amperage);
             }
             else {
                 this.$activeOverlay.hide();
