@@ -17,6 +17,7 @@ define(function (require) {
         BULB_ON:            'components/normal/bulb-on.png',
         BULB_OFF:           'components/normal/bulb-off.png',
         BULB_MASK:          'components/normal/bulb-mask.png',
+        BULB_GLOW:          'components/normal/bulb-glow.png',
         RESISTOR:           'components/normal/resistor.png',
         RESISTOR_MASK:      'components/normal/resistor-mask.png',
         BATTERY:            'components/normal/battery.png',

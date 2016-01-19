@@ -54,9 +54,14 @@ define(function(require) {
 
             if (this.labelLayer.parent)
                 this.labelLayer.parent.removeChild(this.labelLayer);
+
+            if (this.effectsLayer.parent)
+                this.effectsLayer.parent.removeChild(this.effectsLayer);
         },
 
         initGraphics: function() {
+            this.effectsLayer = new PIXI.Container();
+
             this.initComponentGraphics();
             this.initHoverGraphics();
             this.initValuesLabel();
@@ -108,11 +113,15 @@ define(function(require) {
 
             this.hoverLayer.x = x;
             this.hoverLayer.y = y;
+
+            this.effectsLayer.x = x;
+            this.effectsLayer.y = y;
         },
 
         setRotation: function(rotation) {
             this.displayObject.rotation = rotation;
             this.hoverLayer.rotation = rotation;
+            this.effectsLayer.rotation = rotation;
         },
 
         updateLabel: function() {

@@ -112,6 +112,9 @@ define(function(require) {
                 
                 this.hoverLayer.scale.x = scale;
                 this.hoverLayer.scale.y = scale;
+
+                this.effectsLayer.scale.x = scale;
+                this.effectsLayer.scale.y = scale;
             }
 
             this.setRotation(angle);

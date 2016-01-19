@@ -70,6 +70,7 @@ define(function(require) {
             this.junctionLayer      = new PIXI.Container();
             this.junctionHoverLayer = new PIXI.Container();
             this.topLayer           = new PIXI.Container();
+            this.effectsLayer       = new PIXI.Container();
             this.labelLayer         = new PIXI.Container();
 
             this.displayObject.addChild(this.background);
@@ -77,6 +78,7 @@ define(function(require) {
             this.displayObject.addChild(this.componentLayer);
             this.displayObject.addChild(this.junctionLayer);
             this.displayObject.addChild(this.junctionHoverLayer);
+            this.displayObject.addChild(this.effectsLayer);
 
             this.background.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
 
@@ -177,6 +179,7 @@ define(function(require) {
             if (branchView.topLayer)
                 this.topLayer.addChild(branchView.topLayer);
             this.labelLayer.addChild(branchView.labelLayer);
+            this.effectsLayer.addChild(branchView.effectsLayer);
 
             this.branchViews.push(branchView);
         },

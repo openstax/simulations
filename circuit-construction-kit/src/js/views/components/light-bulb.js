@@ -32,9 +32,9 @@ define(function(require) {
             // Cached objects
             this._vec = new Vector2();
 
-            this.defaultOffsetLengthToWidthRatio = 
-
             ComponentView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.model, 'change:current change:voltageDrop', this.updateIntensity);
         },
 
         initComponentGraphics: function() {
@@ -52,8 +52,16 @@ define(function(require) {
             this.offSprite.anchor.y = this.onSprite.anchor.y = 1;
             this.onSprite.alpha = 0;
 
+            this.glow = Assets.createSprite(Assets.Images.BULB_GLOW);
+            this.glow.anchor.x = 0.5;
+            this.glow.anchor.y = 0.5;
+            this.glow.y = -this.onTexture.height / 2;
+            this.glow.alpha = 0;
+
             this.spriteLayer.addChild(this.offSprite);
             this.spriteLayer.addChild(this.onSprite);
+
+            this.effectsLayer.addChild(this.glow);
 
             this.filamentView = new FilamentView({
                 mvt: this.mvt,
@@ -133,6 +141,9 @@ define(function(require) {
 
             this.hoverLayer.x = viewStartPosition.x;
             this.hoverLayer.y = viewStartPosition.y;
+
+            this.effectsLayer.x = viewStartPosition.x;
+            this.effectsLayer.y = viewStartPosition.y;
         },
 
         updateSprites: function() {
@@ -146,6 +157,16 @@ define(function(require) {
             }
             this.initHoverGraphics();
             this.updateGraphics();
+        },
+
+        updateIntensity: function(time, deltaTime) {
+            var intensity = this.model.getIntensity();
+
+            if (isNaN(intensity))
+                throw 'intensity NaN';
+            
+            this.onSprite.alpha = intensity;
+            this.glow.alpha = intensity;
         },
 
         initContextMenu: function($contextMenu) {
