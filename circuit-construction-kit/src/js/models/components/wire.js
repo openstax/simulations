@@ -28,13 +28,13 @@ define(function (require) {
             var length = this.getDirectionVector().length() * Constants.SAT_SCALE;
 
             this.shape.points[0].x = 0;
-            this.shape.points[0].y = -height / 2;
+            this.shape.points[0].y = height / 2;
             this.shape.points[1].x = length;
-            this.shape.points[1].y = -height / 2;
+            this.shape.points[1].y = height / 2;
             this.shape.points[2].x = length;
-            this.shape.points[2].y = height / 2;
+            this.shape.points[2].y = -height / 2;
             this.shape.points[3].x = 0 
-            this.shape.points[3].y = height / 2;
+            this.shape.points[3].y = -height / 2;
 
             this.shape.setPoints(this.shape.points);
 
