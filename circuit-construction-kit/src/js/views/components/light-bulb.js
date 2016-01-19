@@ -55,7 +55,7 @@ define(function(require) {
             this.glow = Assets.createSprite(Assets.Images.BULB_GLOW);
             this.glow.anchor.x = 0.5;
             this.glow.anchor.y = 0.5;
-            this.glow.y = -140;
+            this.glow.y = -160;
             this.glow.alpha = 0;
 
             this.spriteLayer.addChild(this.offSprite);
@@ -130,10 +130,14 @@ define(function(require) {
                 
                 this.hoverLayer.scale.x = scale;
                 this.hoverLayer.scale.y = scale;
+
+                this.effectsLayer.scale.x = scale;
+                this.effectsLayer.scale.y = scale;
             }
 
             this.spriteLayer.rotation = angle;
             this.hoverLayer.rotation = angle;
+            this.effectsLayer.rotation = angle;
 
             var viewStartPosition = this.mvt.modelToView(this.model.getStartPoint());
             this.spriteLayer.x = viewStartPosition.x;
