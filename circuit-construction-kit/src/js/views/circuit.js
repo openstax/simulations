@@ -170,6 +170,7 @@ define(function(require) {
 
             var branchView = new viewConstructor({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.model,
                 model: branch
             });
@@ -214,6 +215,7 @@ define(function(require) {
         createAndAddJunctionView: function(junction) {
             var junctionView = new JunctionView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.model,
                 model: junction
             });

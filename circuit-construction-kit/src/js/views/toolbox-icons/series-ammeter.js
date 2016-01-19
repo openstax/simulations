@@ -64,6 +64,7 @@ define(function(require) {
 
             var view = new SeriesAmmeterView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.simulation.circuit,
                 model: model
             });

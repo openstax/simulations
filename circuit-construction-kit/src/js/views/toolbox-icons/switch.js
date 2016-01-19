@@ -62,6 +62,7 @@ define(function(require) {
 
             var view = new SwitchView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.simulation.circuit,
                 model: model
             });

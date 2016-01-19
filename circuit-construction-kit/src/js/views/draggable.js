@@ -46,6 +46,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
             this.circuit = options.circuit;
 
             this.hoverLayer = new PIXI.Container();

@@ -67,6 +67,7 @@ define(function(require) {
 
             var view = new ACSourceView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.simulation.circuit,
                 model: model
             });

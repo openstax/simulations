@@ -66,6 +66,7 @@ define(function(require) {
 
             var view = new InductorView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.simulation.circuit,
                 model: model
             });

@@ -65,6 +65,7 @@ define(function(require) {
 
             var wireView = new WireView({
                 mvt: this.mvt,
+                simulation: this.simulation,
                 circuit: this.simulation.circuit,
                 model: wireModel
             });

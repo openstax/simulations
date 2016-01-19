@@ -43,7 +43,8 @@ define(function(require) {
 
             ComponentView.prototype.initialize.apply(this, [options]);
 
-            this.listenTo(this.model, 'change:isOnFire', this.isOnFireChanged);
+            this.listenTo(this.model, 'change:isOnFire', this.updateFlame);
+            this.listenTo(this.simulation, 'change:paused', this.updateFlame);
         },
 
         initComponentGraphics: function() {
@@ -138,6 +139,15 @@ define(function(require) {
             this.setPosition(viewStartPosition.x, viewStartPosition.y);
         },
 
+        updateFlame: function() {
+            if (this.model.get('isOnFire') && !this.simulation.get('paused'))
+                this.flame.gotoAndPlay((this.flame.totalFrames - 1) * Math.random());
+            else
+                this.flame.stop();
+            
+            this.flame.visible = this.model.get('isOnFire');
+        },
+
         setRotation: function(rotation) {
             ComponentView.prototype.setRotation.apply(this, arguments);
 
@@ -153,15 +163,6 @@ define(function(require) {
             this.updateComponentGraphics();
             this.updateHoverGraphics();
             this.updateGraphics();
-        },
-
-        isOnFireChanged: function(model, isOnFire) {
-            if (isOnFire)
-                this.flame.gotoAndPlay((this.flame.totalFrames - 1) * Math.random());
-            else
-                this.flame.stop();
-
-            this.flame.visible = isOnFire;
         }
 
     });
