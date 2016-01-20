@@ -212,7 +212,7 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            if (this.simulation.updated())
+            if (this.simulation.updated() || paused)
                 this.electronsView.update();
             this.voltmeterView.update();
             this.ammeterView.update();
