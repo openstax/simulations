@@ -302,7 +302,7 @@ define(function(require) {
 
         showVoltageControls: function(event) {
             if (this.moreVoltsOptionEnabled) {
-                this.maxVoltage = (getVoltageDrop() <= Constants.MAX_BATTERY_VOLTAGE) ?
+                this.maxVoltage = (this.model.getVoltageDrop() <= Constants.MAX_BATTERY_VOLTAGE) ?
                     Constants.MAX_BATTERY_VOLTAGE : 
                     Constants.MAX_HUGE_BATTERY_VOLTAGE
             }
