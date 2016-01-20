@@ -165,14 +165,13 @@ define(function (require) {
                 e.setLocation(chosen.branch, Math.abs(chosen.x));
 
                 // Clean up
-                locationPool.remove(chosen);
                 for (var i = 0; i < locations.length; i++)
                     locationPool.remove(locations[i]);
             }
         },
 
         chooseDestinationBranch: function(locations) {
-            for (var i = 0; i < locations.length; i++) 
+            for (var i = 0; i < locations.length; i++)
                 locations[i].density = this.getDensity(locations[i]);
             
             if (!this._densitySortFunction) {
@@ -213,12 +212,10 @@ define(function (require) {
                 var distAlongNew;
                 if (current > 0 && neighbor.get('startJunction') == jroot) { // Start near the beginning.
                     distAlongNew = overshoot;
-                    if ( distAlongNew > neighbor.getLength() ) {
+                    if (distAlongNew > neighbor.getLength())
                         distAlongNew = neighbor.getLength();
-                    }
-                    else if ( distAlongNew < 0 ) {
+                    else if (distAlongNew < 0)
                         distAlongNew = 0;
-                    }
 
                     location = locationPool.create();
                     location.branch = neighbor;
