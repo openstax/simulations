@@ -49,8 +49,10 @@
                 </li>
             </ul>
 
-            <button class="btn current-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Current Chart</button>
-            <button class="btn voltage-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Voltage Chart</button>
+            <% if (!dcOnly) { %>
+                <button class="btn current-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Current Chart</button>
+                <button class="btn voltage-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Voltage Chart</button>
+            <% } %>
         </div>
     </div>
 </div>

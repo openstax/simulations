@@ -78,8 +78,11 @@ define(function (require) {
             options = _.extend({
                 title: 'Circuit Construction Kit',
                 name: 'cck',
-                link: 'circuit-construction-kit-ac'
+                link: 'circuit-construction-kit-ac',
+                dcOnly: false
             }, options);
+
+            this.dcOnly = options.dcOnly;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -101,7 +104,8 @@ define(function (require) {
          */
         initSceneView: function() {
             this.sceneView = new CCKSceneView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                dcOnly: this.dcOnly
             });
         },
 
@@ -125,7 +129,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                dcOnly: this.dcOnly
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -135,7 +140,10 @@ define(function (require) {
          * Renders the playback controls at the bottom of the screen
          */
         renderPlaybackControls: function() {
-            this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
+            this.$playbackControls = $(this.playbackControlsPanelTemplate({ 
+                unique: this.cid,
+                dcOnly: this.dcOnly
+            }));
 
             this.$el.append(this.$playbackControls);
         },

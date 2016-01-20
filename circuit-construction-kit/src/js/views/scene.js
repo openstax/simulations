@@ -43,6 +43,8 @@ define(function(require) {
         },
 
         initialize: function(options) {
+            this.dcOnly = options.dcOnly;
+
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },
 
@@ -114,20 +116,27 @@ define(function(require) {
         },
 
         initComponentToolbox: function() {
+            var icons = [
+                WireToolboxIcon,
+                ResistorToolboxIcon,
+                BatteryToolboxIcon,
+                LightBulbToolboxIcon,
+                SwitchToolboxIcon
+            ];
+
+            if (!this.dcOnly) {
+                icons = icons.concat(
+                    ACSourceToolboxIcon,
+                    InductorToolboxIcon,
+                    CapacitorToolboxIcon
+                );
+            }
+
             this.componentToolbox = new ComponentToolbox({
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
-                icons: [
-                    WireToolboxIcon,
-                    ResistorToolboxIcon,
-                    BatteryToolboxIcon,
-                    LightBulbToolboxIcon,
-                    SwitchToolboxIcon,
-                    ACSourceToolboxIcon,
-                    InductorToolboxIcon,
-                    CapacitorToolboxIcon
-                ]
+                icons: icons
             });
             this.componentToolbox.setPosition(20, 20);
             this.stage.addChild(this.componentToolbox.displayObject);
