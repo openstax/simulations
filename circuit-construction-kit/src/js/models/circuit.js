@@ -399,7 +399,7 @@ define(function (require) {
 
         isDynamic: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     return true;
             }
             return false;
@@ -407,21 +407,21 @@ define(function (require) {
 
         update: function(time, deltaTime) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).update(time, deltaTime);
             }
         },
 
         resetDynamics: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).resetDynamics();
             }
         },
 
         setTime: function(time) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).setTime(time);
             }
         },

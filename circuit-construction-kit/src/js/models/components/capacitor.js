@@ -34,7 +34,7 @@ define(function (require) {
         },
 
         getCharge: function() {
-            return this.get('capacitance') * this.get('voltageDrop');
+            return this.get('capacitance') * this.getVoltageDrop();
         },
 
         resetDynamics: function() {

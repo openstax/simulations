@@ -47,7 +47,7 @@ define(function(require) {
         },
 
         getLabelText: function() {
-            var voltage = Math.abs(this.model.get('voltageDrop')).toFixed(2);
+            var voltage = Math.abs(this.model.getVoltageDrop()).toFixed(2);
             var text = voltage + ' Volts';
 
             if (this.model.get('internalResistanceOn'))

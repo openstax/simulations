@@ -31,7 +31,7 @@ define(function (require) {
         },
 
         getEffectiveVoltageDrop: function() {
-            return this.get('voltageDrop') - this.get('current') * this.get('resistance');
+            return this.getVoltageDrop() - this.get('current') * this.get('resistance');
         },
 
         internalResistanceOnChanged: function(model, internalResistanceOn) {

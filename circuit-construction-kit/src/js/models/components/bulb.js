@@ -79,7 +79,7 @@ define(function (require) {
         },
 
         getIntensity: function() {
-            var power = Math.abs(this.get('current') * this.get('voltageDrop'));
+            var power = Math.abs(this.get('current') * this.getVoltageDrop());
             var maxPower = 60;
             if (power > maxPower)
                 power = maxPower;

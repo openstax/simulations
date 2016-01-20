@@ -220,7 +220,7 @@ define(function (require) {
             else if (branch instanceof Battery) {
                 className = 'Battery';
 
-                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['voltage', branch.getVoltageDrop()]);
                 attrs.push(['resistance', branch.get('resistance')]);
                 attrs.push(['internalResistance', branch.get('internalResistance')]);
             }
@@ -247,14 +247,14 @@ define(function (require) {
                 className = 'Capacitor';
 
                 attrs.push(['capacitance', branch.get('capacitance')]);
-                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['voltage', branch.getVoltageDrop()]);
                 attrs.push(['current', branch.get('current')]);
             }
             else if (branch instanceof Inductor) {
                 className = 'Inductor';
 
                 attrs.push(['inductance', branch.get('inductance')]);
-                attrs.push(['voltage', branch.get('voltageDrop')]);
+                attrs.push(['voltage', branch.getVoltageDrop()]);
                 attrs.push(['current', branch.get('current')]);
             }
             else if (branch instanceof SeriesAmmeter) {
