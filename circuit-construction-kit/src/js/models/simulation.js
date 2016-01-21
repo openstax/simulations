@@ -74,7 +74,10 @@ define(function (require, exports, module) {
         },
 
         resetComponents: function() {
-            
+            this.circuit.junctions.reset();
+            this.circuit.branches.reset();
+            this.circuit.set('schematic', false);
+            this.layoutElectrons();
         },
 
         setCircuit: function(circuit) {

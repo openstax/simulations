@@ -195,6 +195,7 @@ define(function (require) {
             this.updater.pause();
             this.updater.reset();
             this.resetComponents();
+            this.resetControls();
 
             // Resume normal function
             this.updater.play();
@@ -209,6 +210,21 @@ define(function (require) {
             SimView.prototype.resetComponents.apply(this);
             
             this.sceneView.reset();
+            this.stopwatchView.hide();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('#show-schematic-check').prop('checked', false);
+            this.$('#show-values-check').prop('checked', false);
+            this.$('#show-electrons-check').prop('checked', true);
+
+            this.$('#show-voltmeter-check').prop('checked', false);
+            this.$('#show-ammeter-check').prop('checked', false);
+            this.$('#show-non-contact-ammeter-check').prop('checked', false);
+            this.$('#show-stopwatch-check').prop('checked', false);
         },
 
         /**

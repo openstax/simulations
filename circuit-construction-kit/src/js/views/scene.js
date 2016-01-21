@@ -58,7 +58,14 @@ define(function(require) {
         },
 
         reset: function() {
-            
+            this.electronsView.show();
+
+            this.voltmeterView.hide();
+            this.ammeterView.hide();
+            this.ammeterToolbox.hide();
+
+            this.zoomScale = 1;
+            this.updateMVTs();
         },
 
         initGraphics: function() {
