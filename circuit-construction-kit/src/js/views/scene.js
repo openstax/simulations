@@ -76,9 +76,9 @@ define(function(require) {
             this.labelLayer = new PIXI.Container();
 
             if (AppView.windowIsShort()) {
-                this.viewOriginX = Math.round((this.width - 230) / 2);
-                this.viewOriginY = Math.round((this.height - 62) / 2);
-                this.baseScale = 40;
+                this.viewOriginX = Math.round((this.width - 78 - 230) / 2 + 78);
+                this.viewOriginY = Math.round(this.height / 2);
+                this.baseScale = 48;
             }
             else {
                 this.viewOriginX = Math.round(this.width  / 2);
@@ -145,9 +145,15 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 dummyLayer: this.dummyLayer,
-                icons: icons
+                icons: icons,
+                width: this.getToolboxWidth()
             });
-            this.componentToolbox.setPosition(20, 20);
+
+            if (AppView.windowIsShort())
+                this.componentToolbox.setPosition(12, 12);
+            else
+                this.componentToolbox.setPosition(20, 20);
+
             this.stage.addChild(this.componentToolbox.displayObject);
         },
 
@@ -155,9 +161,15 @@ define(function(require) {
             var grabBagButton = new GrabBagButton({
                 mvt: this.mvt,
                 simulation: this.simulation,
-                dummyLayer: this.dummyLayer
+                dummyLayer: this.dummyLayer,
+                width: this.getToolboxWidth()
             });
-            grabBagButton.setPosition(20, this.height - 62 - 20);
+
+            if (AppView.windowIsShort())
+                grabBagButton.setPosition(12, this.height - 50 - 12);
+            else
+                grabBagButton.setPosition(20, this.height - 62 - 20);
+
             this.stage.addChild(grabBagButton.displayObject);
 
             this.grabBagButton = grabBagButton;
@@ -183,9 +195,16 @@ define(function(require) {
                 dummyLayer: this.dummyLayer,
                 icons: [
                     SeriesAmmeterToolboxIcon
-                ]
+                ],
+                width: this.getToolboxWidth()
             });
-            this.ammeterToolbox.setPosition(100, 20);
+
+            if (AppView.windowIsShort())
+                this.ammeterToolbox.setPosition(12 + this.ammeterToolbox.width + 12, 12);
+            else
+                this.ammeterToolbox.setPosition(20 + this.ammeterToolbox.width + 20, 20);
+
+            
             this.ammeterToolbox.hide();
             this.stage.addChild(this.ammeterToolbox.displayObject);
         },
@@ -236,6 +255,10 @@ define(function(require) {
             this.ammeterView.update();
             this.timeScaleMessageView.update();
             this.circuitView.updateLabels();
+        },
+
+        getToolboxWidth: function() {
+            return AppView.windowIsShort() ? Constants.TOOLBOX_SHORT_SCREEN_WIDTH : Constants.TOOLBOX_WIDTH;
         },
 
         zoomIn: function() {
