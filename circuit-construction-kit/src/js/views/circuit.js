@@ -196,6 +196,7 @@ define(function(require) {
                 this.topLayer.addChild(branchView.topLayer);
             this.labelLayer.addChild(branchView.labelLayer);
             this.effectsLayer.addChild(branchView.effectsLayer);
+            this.topLayer.addChild(branchView.helpLayer);
 
             this.branchViews.push(branchView);
         },
@@ -203,7 +204,7 @@ define(function(require) {
         updateComponentHelp: function() {
             this.componentHelpView.remove();
             if (this.branchViews.length)
-                this.componentHelpView.attachTo(this.branchViews[0]);
+                this.componentHelpView.attachTo(this.branchViews[0].helpLayer);
             else
                 this.componentHelpView.attachTo(null);
         },

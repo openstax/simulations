@@ -57,10 +57,14 @@ define(function(require) {
 
             if (this.effectsLayer.parent)
                 this.effectsLayer.parent.removeChild(this.effectsLayer);
+
+            if (this.helpLayer.parent)
+                this.helpLayer.parent.removeChild(this.helpLayer);
         },
 
         initGraphics: function() {
             this.effectsLayer = new PIXI.Container();
+            this.helpLayer = new PIXI.Container();
 
             this.initComponentGraphics();
             this.initHoverGraphics();
@@ -116,6 +120,10 @@ define(function(require) {
 
             this.effectsLayer.x = x;
             this.effectsLayer.y = y;
+
+            var center = this.getCenter();
+            this.helpLayer.x = center.x;
+            this.helpLayer.y = center.y;
         },
 
         setRotation: function(rotation) {
@@ -133,11 +141,7 @@ define(function(require) {
         updateLabelPosition: function() {
             var x;
             var y;
-            var center = this._center.set(this.mvt.modelToView(
-                this.model.getDirectionVector()
-                    .scale(0.5)
-                    .add(this.model.getStartPoint())
-            ));
+            var center = this.getCenter();
             var bounds = this.displayObject.getBounds();
 
             if (this.isVertical()) {
@@ -166,6 +170,14 @@ define(function(require) {
         getLabelText: function() {
             var resistance = this.model.get('resistance');
             return resistance.toFixed(2) + ' Ohms';
+        },
+
+        getCenter: function() {
+            return this._center.set(this.mvt.modelToView(
+                this.model.getDirectionVector()
+                    .scale(0.5)
+                    .add(this.model.getStartPoint())
+            ));
         },
 
         isVertical: function() {
