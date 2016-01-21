@@ -105,8 +105,6 @@ define(function(require) {
             CircuitInteraction.dragBranch(this.model, modelPoint);
 
             this.circuit.clearSelection();
-
-            this.hover();
         },
 
         _drop: function(event) {
