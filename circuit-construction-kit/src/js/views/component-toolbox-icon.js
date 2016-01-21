@@ -203,7 +203,7 @@ define(function(require) {
         },
 
         updateHitArea: function() {
-            this.icon.hitArea = new PIXI.Rectangle(0, 0, this.icon.width, this.icon.height + this.label.height);
+            this.icon.hitArea = new PIXI.Rectangle(0, 0, this.width, this.icon.height + this.label.height);
         }
 
     });
