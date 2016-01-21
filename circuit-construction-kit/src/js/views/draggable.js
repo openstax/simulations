@@ -86,6 +86,7 @@ define(function(require) {
             someComponentIsDragging = true;
             this.dragging = true;
             this.dragged = false;
+            this.showHoverGraphics();
         },
 
         drag: function(event) {
