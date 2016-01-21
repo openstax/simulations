@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView   = require('common/v3/app/app');
     var PixiView  = require('common/v3/pixi/view');
     var Colors    = require('common/colors/colors');
     var Rectangle = require('common/math/rectangle');
@@ -118,7 +119,9 @@ define(function(require) {
                 icons: this.icons,
                 mvt: this.mvt,
                 simulation: this.simulation,
-                dummyLayer: this.dummyLayer
+                dummyLayer: this.dummyLayer,
+                width: AppView.windowIsShort() ? Constants.TOOLBOX_SHORT_SCREEN_WIDTH : Constants.TOOLBOX_WIDTH,
+                columns: AppView.windowIsShort() ? 2 : 1
             });
             this.grabBag.hide();
             this.displayObject.addChild(this.grabBag.displayObject);

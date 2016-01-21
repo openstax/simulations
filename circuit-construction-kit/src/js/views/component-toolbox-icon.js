@@ -37,6 +37,7 @@ define(function(require) {
                 minHeight: 20,
                 labelText: 'Component',
                 labelFont: Constants.TOOLBOX_LABEL_FONT,
+                labelFontSize: Constants.TOOLBOX_LABEL_FONT_SIZE,
                 labelColor: Constants.TOOLBOX_LABEL_COLOR
             }, options);
 
@@ -49,6 +50,7 @@ define(function(require) {
             this.minHeight = options.minHeight;
             this.labelText = options.labelText;
             this.labelFont = options.labelFont;
+            this.labelFontSize = options.labelFontSize;
             this.labelColor = options.labelColor;
 
             // Cached objects
@@ -116,7 +118,7 @@ define(function(require) {
 
         initLabel: function() {
             var textSettings = {
-                font: this.labelFont,
+                font: this.labelFontSize + 'px ' + this.labelFont,
                 fill: this.labelColor
             };
 

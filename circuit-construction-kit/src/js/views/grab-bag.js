@@ -5,6 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
+    var AppView          = require('common/v3/app/app');
     var ComponentToolbox = require('views/component-toolbox');
     var GrabBagIcon      = require('views/toolbox-icons/grab-bag');
 
@@ -43,6 +44,7 @@ define(function(require) {
                     grabBagItem: items[i],
                     width: iconWidth,
                     maxHeight: maxHeight,
+                    labelFontSize: AppView.windowIsShort() ? Constants.TOOLBOX_SHORT_SCREEN_LABEL_FONT_SIZE : Constants.TOOLBOX_LABEL_FONT_SIZE,
                     mvt: this.mvt,
                     simulation: this.simulation,
                     dummyLayer: this.dummyLayer

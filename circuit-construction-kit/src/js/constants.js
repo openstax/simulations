@@ -57,10 +57,12 @@ define(function (require) {
     Constants.TILT = -0.8058034940839864 + Math.PI / 2;
 
     Constants.TOOLBOX_WIDTH = 68;
-    Constants.TOOLBOX_SHORT_SCREEN_WIDTH = 64;
+    Constants.TOOLBOX_SHORT_SCREEN_WIDTH = 66;
     Constants.TOOLBOX_PADDING = 10;
     Constants.TOOLBOX_ITEM_SPACING = 12;
-    Constants.TOOLBOX_LABEL_FONT = '12px Helvetica Neue';
+    Constants.TOOLBOX_LABEL_FONT_SIZE = 12;
+    Constants.TOOLBOX_SHORT_SCREEN_LABEL_FONT_SIZE = 11;
+    Constants.TOOLBOX_LABEL_FONT = 'Helvetica Neue';
     Constants.TOOLBOX_LABEL_COLOR = '#000';
 
     Constants.SELECTION_COLOR = '#21366b';
