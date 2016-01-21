@@ -35,11 +35,15 @@
 .scene-view-ui .time-scale-message-view {
     position: absolute;
     bottom: 67px;
+    width: 600px;
+    left: 50%;
+    margin-left: -300px;
     line-height: 56px;
     text-align: center;
-    width: 100%;
     font-size: 16px;
     color: #fff;
+    .user-select(none);
+    pointer-events: none;
 
     @media screen and (max-height: @short-window) {
         bottom: 55px;
