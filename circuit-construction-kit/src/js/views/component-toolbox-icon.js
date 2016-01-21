@@ -149,7 +149,7 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            
+            this.updateHitArea();
         },
 
         setWidth: function(width) {
@@ -197,6 +197,11 @@ define(function(require) {
         updateIcon: function() {
             this.updateIconSprite();
             this.label.y = this.icon.height;
+            this.updateHitArea();
+        },
+
+        updateHitArea: function() {
+            this.icon.hitArea = new PIXI.Rectangle(0, 0, this.icon.width, this.icon.height + this.label.height);
         }
 
     });
