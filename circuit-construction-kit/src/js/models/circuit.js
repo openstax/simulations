@@ -683,6 +683,10 @@ define(function (require) {
             }
             
             return null;
+        },
+
+        hasProblematicConfiguration: function() {
+            throw 'not yet implemented';
         }
 
     });

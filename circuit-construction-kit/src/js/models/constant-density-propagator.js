@@ -50,8 +50,8 @@ define(function (require) {
             this.timeScalingPercentValue = this.smoothData.getAverage();
 
             this.percent = Math.round(this.timeScalingPercentValue);
-            if (this.percent === '0')
-                this.percent = '1';
+            if (this.percent === 0)
+                this.percent = 1;
             
             // Todo add test for change before notify
             for (var i = 0; i < this.particleSet.numParticles(); i++)
@@ -60,6 +60,10 @@ define(function (require) {
 
             for (var j = 0; j < this.numEqualize; j++)
                 this.equalize(deltaTime);
+        },
+
+        getTimeScalingPercentPercent: function() {
+            return this.percent;
         },
 
         getMaxCurrent: function() {

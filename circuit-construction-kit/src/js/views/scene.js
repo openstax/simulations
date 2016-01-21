@@ -26,6 +26,7 @@ define(function(require) {
     var ElectronsView            = require('views/electrons');
     var VoltmeterView            = require('views/voltmeter');
     var AmmeterView              = require('views/ammeter');
+    var TimeScaleMessageView     = require('views/time-scale-message');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -88,6 +89,7 @@ define(function(require) {
             this.initVoltmeter();
             this.initSeriesAmmeter();
             this.initAmmeter();
+            this.initTimeScaleMessage();
 
             this.stage.addChild(this.topLayer);
             this.stage.addChild(this.labelLayer);
@@ -193,6 +195,15 @@ define(function(require) {
             this.$ui.append(this.ammeterView.render().el);
         },
 
+        initTimeScaleMessage: function() {
+            this.timeScaleMessageView = new TimeScaleMessageView({
+                simulation: this.simulation,
+                electronsView: this.electronsView
+            });
+
+            this.$ui.append(this.timeScaleMessageView.render().el);
+        },
+
         initMVT: function() {
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
@@ -216,6 +227,7 @@ define(function(require) {
                 this.electronsView.update();
             this.voltmeterView.update();
             this.ammeterView.update();
+            this.timeScaleMessageView.update();
             this.circuitView.updateLabels();
         },
 

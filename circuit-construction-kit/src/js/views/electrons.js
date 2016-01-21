@@ -87,6 +87,10 @@ define(function(require) {
 
         hide: function() {
             this.displayObject.visible = false;
+        },
+
+        visible: function() {
+            return this.displayObject.visible;
         }
 
     }, Constants.ElectronsView);
