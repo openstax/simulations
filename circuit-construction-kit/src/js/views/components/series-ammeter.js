@@ -32,6 +32,13 @@ define(function(require) {
             this.listenTo(this.model, 'change:current', this.updateAmperage);
         },
 
+        detach: function() {
+            RectangularComponentView.prototype.detach.apply(this, arguments);
+
+            if (this.topLayer.parent)
+                this.topLayer.parent.removeChild(this.topLayer);
+        },
+
         initGraphics: function() {
             this.topLayer = new PIXI.Container();
 
