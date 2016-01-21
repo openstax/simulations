@@ -127,6 +127,10 @@ define(function(require) {
             graphics.drawCircle(x0, y0, radius);
             graphics.drawCircle(x1, y1, radius);
             graphics.endFill();
+
+            var center = this.getCenter();
+            this.helpLayer.x = center.x;
+            this.helpLayer.y = center.y;
         },
 
         junctionsChanged: function() {

@@ -11,32 +11,32 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * Hovers by the first component in the scene and gives instructions for manipulating it
+     * Hovers by the wire icon in the toolbox until the user starts dragging a component
      */
-    var ComponentHelpView = HelpLabelView.extend({
+    var GrabAWireHelpView = HelpLabelView.extend({
 
         /**
-         * Initializes the new ComponentHelpView.
+         * Initializes the new GrabAWireHelpView.
          */
         initialize: function(options) {
             options = _.extend({
                 color: Constants.HELP_LABEL_COLOR,
                 font:  Constants.HELP_LABEL_FONT,
-                position: {
-                    x: 0,
-                    y: -50
-                },
                 anchor: {
-                    x: 0.5,
-                    y: 1
+                    x: 0,
+                    y: 0.55
                 },
                 style: {
-                    align: 'center'
+                    align: 'left'
                 },
-                title : 'Drag to move or press\ntwice for other actions'
+                title : 'Grab a wire'
             }, options);
 
             HelpLabelView.prototype.initialize.apply(this, [options]);
+
+            this.simulation = options.simulation;
+
+            this.listenTo(this.simulation.circuit.branches, 'add', this.hide);
 
             this.render();
         },
@@ -46,12 +46,12 @@ define(function(require) {
 
             var graphics = new PIXI.Graphics();
             graphics.lineStyle(Constants.HELP_LABEL_ARROW_LINE_WIDTH, Colors.parseHex(Constants.HELP_LABEL_COLOR), 1);
-            graphics.drawStickArrow(0, 6, 0, -this.position.y - 12, Constants.HELP_LABEL_ARROW_HEAD_WIDTH, Constants.HELP_LABEL_ARROW_HEAD_LENGTH);
+            graphics.drawStickArrow(-6, 0, -50 + 12, 0, Constants.HELP_LABEL_ARROW_HEAD_WIDTH, Constants.HELP_LABEL_ARROW_HEAD_LENGTH);
 
             this.displayObject.addChild(graphics);
         }
 
     });
 
-    return ComponentHelpView;
+    return GrabAWireHelpView;
 });

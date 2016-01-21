@@ -27,6 +27,7 @@ define(function(require) {
     var VoltmeterView            = require('views/voltmeter');
     var AmmeterView              = require('views/ammeter');
     var TimeScaleMessageView     = require('views/time-scale-message');
+    var GrabAWireHelpView        = require('views/grab-a-wire-help');
 
     var Assets    = require('assets');
     var Constants = require('constants');
@@ -64,6 +65,8 @@ define(function(require) {
             this.ammeterView.hide();
             this.ammeterToolbox.hide();
 
+            this.grabAWireHelpView.show();
+
             this.zoomScale = 1;
             this.updateMVTs();
         },
@@ -97,6 +100,7 @@ define(function(require) {
             this.initSeriesAmmeter();
             this.initAmmeter();
             this.initTimeScaleMessage();
+            this.initGrabAWireHelpView();
 
             this.stage.addChild(this.topLayer);
             this.stage.addChild(this.labelLayer);
@@ -228,6 +232,19 @@ define(function(require) {
             });
 
             this.$ui.append(this.timeScaleMessageView.render().el);
+        },
+
+        initGrabAWireHelpView: function() {
+            this.grabAWireHelpView = new GrabAWireHelpView({
+                simulation: this.simulation,
+                attachTo: this.componentToolbox.displayObject,
+                position: {
+                    x: 50 + this.componentToolbox.width,
+                    y: 20
+                },
+            });
+
+            this.grabAWireHelpView.show();
         },
 
         initMVT: function() {

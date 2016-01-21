@@ -70,7 +70,11 @@ define(function(require) {
         },
 
         attachTo: function(target) {
-            this.attachTarget = target.displayObject || target;
+            if (target)
+                this.attachTarget = target.displayObject || target;
+            else
+                this.attachTarget = target;
+            
             if (this.showing && this.attachTarget)
                 this._attach();
         },
@@ -100,7 +104,7 @@ define(function(require) {
         },
 
         resize: function(){
-            this.displayObject.y = (this.position.y)? this.position.y : this.attachTarget.height;
+            this.displayObject.y = (this.position.y !== undefined) ? this.position.y : this.attachTarget.height;
             this.displayObject.y = Math.round(this.displayObject.y);
 
             if (this.position.x){
