@@ -16,12 +16,6 @@ module.exports = function(grunt) {
 				src: 'bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
-			audio: {
-				expand: true, // required when using cwd
-				cwd: '../faraday/src/audio/',
-				src: '**',
-				dest: 'dist/audio/'
-			},
 			fonts: {
 				expand: true,
 				filter: 'isFile',
@@ -29,19 +23,11 @@ module.exports = function(grunt) {
 				src: ['../faraday/node_modules/font-awesome/fonts/**'],
 				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
-			common: {
-				src: [
-					'../common/**/*.{eot,svg,ttf,woff,otf}',
-					'../common/img/**/*.{png,jpg,jpeg,gif}',
-					'!../common/**/docs/**/*'
-				],
-				dest: 'dist/common/'
-			},
 			faraday: {
-				src: [
-					'../faraday/src/img/**/*.{png,jpg,jpeg,gif}'
-				],
-				dest: 'dist/faraday/src/'
+				expand: true, // required when using cwd
+				cwd: '../faraday/src/img/',
+				src: '**',
+				dest: 'dist/img/'
 			},
 			screenshot: {
 				src: 'src/screenshot.png',
@@ -71,11 +57,8 @@ module.exports = function(grunt) {
 					name: 'main',
 					out: 'src/optimized.js',
 
-					less: {
-						modifyVars: {
-							//'fa-font-path': '"../node_modules/font-awesome/fonts/"',
-							'assets': '"../../faraday/src/js/assets"'
-						}
+					paths: {
+						assets: '../../../faraday/src/js/assets'
 					}
 
 					// Doing it this way doesn't work:

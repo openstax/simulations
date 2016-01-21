@@ -21,7 +21,7 @@ define(function(require) {
                 outlineWidth: 2,
                 outlineAlpha: 1,
 
-                labelText: '–' // Note that this character is a dash, not a hyphen
+                labelText: '-' // Note that this character is a dash, not a hyphen
             }, options);
 
             ReservoirObjectView.prototype.initialize.apply(this, [options]);

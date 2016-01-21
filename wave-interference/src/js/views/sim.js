@@ -125,6 +125,7 @@ define(function (require) {
 			this.heatmapBrightness = options.heatmapBrightness;
 			this.title = options.title;
 			this.name  = options.name;
+			this.link = options.link;
 			this.segmentPotentialName = options.segmentPotentialName;
 			this.detectorYLabel = options.detectorYLabel;
 
