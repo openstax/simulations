@@ -28,6 +28,8 @@ define(function(require) {
     var LightBulbView       = require('views/components/light-bulb');
     var GrabBagResistorView = require('views/components/grab-bag-resistor');
     var SeriesAmmeterView   = require('views/components/series-ammeter');
+    var JunctionHelpView    = require('views/junction-help');
+    var ComponentHelpView   = require('views/component-help');
 
     /**
      * A view that represents a circuit
@@ -80,9 +82,16 @@ define(function(require) {
             this.displayObject.addChild(this.effectsLayer);
             this.displayObject.addChild(this.hoverLayer);
 
+            this.initHelp();
+
             this.background.hitArea = new PIXI.Rectangle(0, 0, this.width, this.height);
 
             this.updateMVT(this.mvt);
+        },
+
+        initHelp: function() {
+            this.junctionHelpView = new JunctionHelpView();
+            this.componentHelpView = new ComponentHelpView();
         },
 
         /**
@@ -115,10 +124,14 @@ define(function(require) {
             branches.each(function(branch) {
                 this.createAndAddBranchView(branch);
             }, this);
+
+            this.updateComponentHelp();
         },
 
         branchAdded: function(branch, branches) {
             this.createAndAddBranchView(branch);
+
+            this.updateComponentHelp();
         },
 
         branchRemoved: function(branch, branches) {
@@ -129,6 +142,8 @@ define(function(require) {
                     break;
                 }
             }
+
+            this.updateComponentHelp();
         },
 
         createAndAddBranchView: function(branch) {
@@ -185,6 +200,14 @@ define(function(require) {
             this.branchViews.push(branchView);
         },
 
+        updateComponentHelp: function() {
+            this.componentHelpView.remove();
+            if (this.branchViews.length)
+                this.componentHelpView.attachTo(this.branchViews[0]);
+            else
+                this.componentHelpView.attachTo(null);
+        },
+
         junctionsReset: function(junctions) {
             // Remove old junction views
             for (var i = this.junctionViews.length - 1; i >= 0; i--) {
@@ -196,10 +219,14 @@ define(function(require) {
             junctions.each(function(junction) {
                 this.createAndAddJunctionView(junction);
             }, this);
+
+            this.updateJunctionHelp();
         },
 
         junctionAdded: function(junction, junctions) {
             this.createAndAddJunctionView(junction);
+
+            this.updateJunctionHelp();
         },
 
         junctionRemoved: function(junction, junctions) {
@@ -210,6 +237,8 @@ define(function(require) {
                     break;
                 }
             }
+
+            this.updateJunctionHelp();
         },
 
         createAndAddJunctionView: function(junction) {
@@ -217,13 +246,22 @@ define(function(require) {
                 mvt: this.mvt,
                 simulation: this.simulation,
                 circuit: this.model,
-                model: junction
+                model: junction,
+                circuitView: this
             });
 
             this.solderLayer.addChild(junctionView.solderLayer);
             this.junctionLayer.addChild(junctionView.displayObject);
             this.hoverLayer.addChild(junctionView.hoverLayer);
             this.junctionViews.push(junctionView);
+        },
+
+        updateJunctionHelp: function() {
+            this.junctionHelpView.remove();
+            if (this.junctionViews.length)
+                this.junctionHelpView.attachTo(this.junctionViews[0]);
+            else
+                this.junctionHelpView.attachTo(null);
         },
 
         clicked: function(event) {
@@ -236,6 +274,16 @@ define(function(require) {
 
             for (var i = this.junctionViews.length - 1; i >= 0; i--)
                 this.junctionViews[i].hidePopovers(event);
+        },
+
+        showHelp: function() {
+            this.junctionHelpView.show();
+            this.componentHelpView.show();
+        },
+
+        hideHelp: function() {
+            this.junctionHelpView.hide();
+            this.componentHelpView.hide();
         }
 
     });

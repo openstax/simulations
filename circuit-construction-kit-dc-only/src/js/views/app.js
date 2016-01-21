@@ -2,13 +2,13 @@ define(function(require) {
     
     'use strict';
 
-    var DCOnlyAppView = require('views/app');
+    var CCKAppView = require('views/app');
     
     var DCOnlySimView = require('./sim');
 
     var Assets = require('assets');
 
-    var DCOnlyAppView = DCOnlyAppView.extend({
+    var DCOnlyAppView = CCKAppView.extend({
 
         assets: Assets.getAssetList(),
 

@@ -317,6 +317,14 @@ define(function(require) {
 
         hideNonContactAmmeter: function() {
             this.ammeterView.hide();
+        },
+
+        showHelp: function() {
+            this.circuitView.showHelp();
+        },
+
+        hideHelp: function() {
+            this.circuitView.hideHelp();
         }
 
     });

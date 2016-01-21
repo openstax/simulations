@@ -311,6 +311,14 @@ define(function (require) {
 
         zoomOut: function() {
             this.sceneView.zoomOut();
+        },
+
+        showHelp: function() {
+            this.sceneView.showHelp();
+        },
+
+        hideHelp: function() {
+            this.sceneView.hideHelp();
         }
 
     });

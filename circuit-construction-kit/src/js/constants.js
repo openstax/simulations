@@ -70,6 +70,12 @@ define(function (require) {
 
     Constants.VALUE_LABEL_COLOR = '#fff';
 
+    Constants.HELP_LABEL_COLOR = '#fff';
+    Constants.HELP_LABEL_FONT = '12pt Helvetica Neue';
+    Constants.HELP_LABEL_ARROW_LINE_WIDTH = 2;
+    Constants.HELP_LABEL_ARROW_HEAD_WIDTH = 16;
+    Constants.HELP_LABEL_ARROW_HEAD_LENGTH = 10;
+
     Constants.MIN_SCALE = 0.5;
     Constants.MAX_SCALE = 2;
 

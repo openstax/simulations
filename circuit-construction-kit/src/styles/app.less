@@ -17,13 +17,17 @@
         height: 28px;
         text-align: center;
 
-        &:hover {
-            opacity: 0.9;
-        }
-
-        &:active {
+        &:active, &:active:hover, &.active {
             background: @link-color;
             color: #fff;
+        }
+
+        &.active:hover{
+            background: fade(@link-color, 75%);
+        }
+
+        &:hover {
+            opacity: 0.9;
         }
     }
 }

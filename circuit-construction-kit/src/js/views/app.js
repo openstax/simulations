@@ -25,6 +25,7 @@ define(function(require) {
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
+            'click .help-btn' : 'toggleHelp',
             'click .load-btn' : 'loadBtnClicked',
             'click .save-btn' : 'saveBtnClicked',
             'change #file' : 'fileSelected'
@@ -34,6 +35,15 @@ define(function(require) {
             PixiAppView.prototype.render.apply(this);
 
             this.$el.append(settingsDialogHtml);
+        },
+
+        toggleHelp: function() {
+            this.$('.help-btn').toggleClass('active');
+            
+            if (this.$('.help-btn').hasClass('active'))
+                this.simViews[0].showHelp();
+            else
+                this.simViews[0].hideHelp();
         },
 
         loadBtnClicked: function(event) {
