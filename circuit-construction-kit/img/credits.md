@@ -14,3 +14,5 @@ Image Credits
 **ac.png**: created by Patrick Wolfert
 
 **inductor.png**: created by Patrick Wolfert
+
+**flame.png**: spritesheet created from sources by Pow Studios, given under an attribution license; found at http://powstudios.com/content/fire-animation-pack-1
