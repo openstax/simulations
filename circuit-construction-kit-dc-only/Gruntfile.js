@@ -18,7 +18,7 @@ module.exports = function(grunt) {
 			},
 			audio: {
 				expand: true, // required when using cwd
-				cwd: '../faraday/src/audio/',
+				cwd: '../circuit-construction-kit/src/audio/',
 				src: '**',
 				dest: 'dist/audio/'
 			},
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['../faraday/node_modules/font-awesome/fonts/**'],
+				src: ['../circuit-construction-kit/node_modules/font-awesome/fonts/**'],
 				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
@@ -37,11 +37,11 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/common/'
 			},
-			faraday: {
+			circuit_construction_kit: {
 				src: [
-					'../faraday/src/img/**/*.{png,jpg,jpeg,gif}'
+					'../circuit-construction-kit/src/img/**/*.{png,jpg,jpeg,gif}'
 				],
-				dest: 'dist/faraday/src/'
+				dest: 'dist/circuit-construction-kit/src/'
 			},
 			screenshot: {
 				src: 'src/screenshot.png',
@@ -74,7 +74,7 @@ module.exports = function(grunt) {
 					less: {
 						modifyVars: {
 							//'fa-font-path': '"../node_modules/font-awesome/fonts/"',
-							'assets': '"../../faraday/src/js/assets"'
+							'assets': '"../../circuit-construction-kit/src/js/assets"'
 						}
 					}
 
