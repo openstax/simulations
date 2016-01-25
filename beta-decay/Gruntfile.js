@@ -16,6 +16,12 @@ module.exports = function(grunt) {
 				src: 'bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
+			images: {
+				expand: true, // required when using cwd
+				cwd: 'src/img/',
+				src: '**',
+				dest: 'dist/img/'
+			},
 			audio: {
 				expand: true, // required when using cwd
 				cwd: '../nuclear-physics/src/audio/',
@@ -37,7 +43,7 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/common/'
 			},
-			nuclear-physics: {
+			nuclear_physics: {
 				src: [
 					'../nuclear-physics/src/img/**/*.{png,jpg,jpeg,gif}'
 				],
