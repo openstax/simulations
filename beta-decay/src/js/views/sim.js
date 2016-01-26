@@ -2,8 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var CCKSimView = require('views/sim');
-    var BetaDecaySceneView = require('./scene');
+    var NuclearPhysicsSimView = require('views/sim');
+    var BetaDecaySceneView = require('beta-decay/views/scene');
 
     var Constants = require('constants');
 
@@ -13,7 +13,7 @@ define(function (require) {
     /**
      * This is a placeholder for now, because I don't think we'll actually want to extend the nuclear-physics sim view to make these tabs
      */
-    var BetaDecaySimView = CCKSimView.extend({
+    var BetaDecaySimView = NuclearPhysicsSimView.extend({
 
         /**
          * Template for rendering the basic scaffolding
@@ -27,13 +27,11 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                link: 'beta-decay',
-                dcOnly: true
+                title: 'Beta Decay',
+                link: 'beta-decay'
             }, options);
 
-            CCKSimView.prototype.initialize.apply(this, [options]);
-
-            console.log(Constants.CENTRAL_CONSTANT, Constants.LOCAL_CONSTANT);
+            NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);
         },
 
         /**
