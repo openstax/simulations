@@ -12,7 +12,7 @@ define(function (require, exports, module) {
     var Constants = require('constants');
 
     /**
-     * Wraps the update function in 
+     * Base simulation model for nuclear physics
      */
     var NuclearPhysicsSimulation = Simulation.extend({
 

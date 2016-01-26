@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
     var HalfLifeInfo = require('models/half-life-info');
-    
+
     var Constants = {}; 
 
     /*************************************************************************
@@ -114,6 +114,21 @@ define(function (require) {
     Constants.ANTINEUTRINO_COLOR = '#00C800';
     
     Constants.DEFAULT_CUSTOM_NUCLEUS_HALF_LIFE = HalfLifeInfo.convertYearsToMs(100E3);
+
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                   MULTI-NUCLEUS DECAY SIMULATION                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var MultiNucleusDecaySimulation = {};
+
+    MultiNucleusDecaySimulation.DEFAULT_JITTER_LENGTH = 1;
+    MultiNucleusDecaySimulation.FRAMES_PER_JITTER = 2;
+
+    Constants.MultiNucleusDecaySimulation = MultiNucleusDecaySimulation;
 
 
     /*************************************************************************
