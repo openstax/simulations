@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
 
-    var Constants = {}; 
+    var Constants = require('nuclear-physics/constants'); 
 
     /*************************************************************************
      **                                                                     **
@@ -14,7 +14,7 @@ define(function (require) {
     Constants.FRAME_RATE = 25;
     Constants.DELTA_TIME_PER_FRAME = 5;
 
-    Constants.CENTRAL_CONSTANT = 'yo';
+    Constants.LOCAL_CONSTANT = 'HEY';
 
     return Constants;
 });

@@ -3,7 +3,7 @@
 
     // Load the config
     require(['config'], function () {
-        require(['jquery', 'local/views/app'], function($, BetaDecayAppView) {
+        require(['jquery', 'beta-decay/views/app'], function($, BetaDecayAppView) {
 
             $(function(){
                 var appView = new BetaDecayAppView();

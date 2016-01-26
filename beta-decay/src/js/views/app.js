@@ -4,7 +4,7 @@ define(function(require) {
 
     var CCKAppView = require('views/app');
     
-    var BetaDecaySimView = require('./sim');
+    var BetaDecaySimView = require('beta-decay/views/sim');
 
     var Assets = require('assets');
 

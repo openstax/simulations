@@ -10,25 +10,25 @@
             text:         '../../../nuclear-physics/bower_components/requirejs-text/text',
             pixi:         '../../../nuclear-physics/bower_components/pixi/bin/pixi',
             nouislider:   '../../../nuclear-physics/bower_components/nouislider/distribute/jquery.nouislider.all.min',
-            'file-saver': '../../../nuclear-physics/bower_components/file-saver/FileSaver',
+            buzz:         '../../../nuclear-physics/bower_components/buzz/dist/buzz.min',
 
             'vector2-node':          '../../../nuclear-physics/node_modules/vector2-node-shimmed/index',
             'object-pool':           '../../../nuclear-physics/node_modules/object-pool-shimmed/index',
             'circular-list':         '../../../nuclear-physics/node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../../nuclear-physics/node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../../nuclear-physics/node_modules/bootstrap-select/less/bootstrap-select',
-            'sat':                   '../../../nuclear-physics/node_modules/sat/SAT',
 
-            local:            './',
-            views:            '../../../nuclear-physics/src/js/views',
-            models:           '../../../nuclear-physics/src/js/models',
-            persistence:      '../../../nuclear-physics/src/js/persistence',
-            assets:           '../js/assets',
-            'nuclear-physics-assets': '../../../nuclear-physics/src/js/assets',
-            constants:        '../../../nuclear-physics/src/js/constants',
-            templates:        '../../../nuclear-physics/src/templates',
-            styles:           '../../../nuclear-physics/src/styles',
-            common:           '../../../common'
+            views:                  '../../../nuclear-physics/src/js/views',
+            models:                 '../../../nuclear-physics/src/js/models',
+            assets:                 '../js/assets',
+            constants:              '../js/constants',
+            templates:              '../../../nuclear-physics/src/templates',
+            styles:                 '../../../nuclear-physics/src/styles',
+            common:                 '../../../common',
+            'nuclear-physics':      '../../../nuclear-physics/src/js/',
+            'beta-decay':           '.',
+            'beta-decay/templates': '../templates',
+            'beta-decay/styles':    '../styles'
         },
 
         packages: [{

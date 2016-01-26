@@ -29,11 +29,11 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
-            var nuclearPhysicsSprite = Assets.createSprite(Assets.Images.SPHERE);
-            var betaDecaySprite = Assets.createSprite(Assets.Images.MUSHROOM_CLOUD);
+            var sphere = Assets.createSprite(Assets.Images.SPHERE);
+            sphere.tint = 0xFF0000;
+            sphere.scale.x = sphere.scale.y = 0.25;
 
-            this.stage.addChild(betaDecaySprite);
-            this.stage.addChild(nuclearPhysicsSprite);
+            this.stage.addChild(sphere);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
