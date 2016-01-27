@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var HelpLabelView = require('common/v3/help-label/help-label-pixi');

@@ -140,8 +140,8 @@ define(function(require) {
         createComponentView: function(x, y) {},
 
         setJunctionPositions: function(dummyModel, x, y) {
-            var x = this.mvt.viewToModelX(x);
-            var y = this.mvt.viewToModelY(y);
+            x = this.mvt.viewToModelX(x);
+            y = this.mvt.viewToModelY(y);
             var dx = dummyModel.getX2() - dummyModel.getX1();
             var dy = dummyModel.getY2() - dummyModel.getY1();
             dummyModel.get('startJunction').setPosition(x - dx / 2, y - dy / 2);
@@ -165,6 +165,11 @@ define(function(require) {
             this.simulation.circuit.addBranch(this.componentView.model);
             this.dummyLayer.addChild(this.componentView.displayObject);
             this.dummyLayer.addChild(this.componentView.hoverLayer);
+            if (this.componentView.topLayer)
+                this.dummyLayer.addChild(this.componentView.topLayer);
+            this.dummyLayer.addChild(this.componentView.labelLayer);
+            this.dummyLayer.addChild(this.componentView.effectsLayer);
+            this.dummyLayer.addChild(this.componentView.helpLayer);
 
             this.componentView.dragStart(event);
         },

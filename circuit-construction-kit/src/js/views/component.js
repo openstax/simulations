@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var $    = require('jquery');
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var Vector2                = require('common/math/vector2');
@@ -20,11 +22,6 @@ define(function(require) {
     var frequencyControlsHtml  = require('text!templates/frequency-controls.html');
 
     require('less!styles/component-controls');
-
-    /**
-     * We don't want the hover overlays visible on any object while another object is dragging.
-     */
-    var someComponentIsDragging = false;
 
     /**
      * A view that represents a circuit component
@@ -283,7 +280,7 @@ define(function(require) {
                 var value = parseFloat($(event.target).val());
                 var clamped = false;
                 if (isNaN(value)) {
-                    value = min
+                    value = min;
                 }
                 else {
                     if (value > max) {
@@ -316,7 +313,7 @@ define(function(require) {
             if (this.moreVoltsOptionEnabled) {
                 this.maxVoltage = (this.model.getVoltageDrop() <= Constants.MAX_BATTERY_VOLTAGE) ?
                     Constants.MAX_BATTERY_VOLTAGE : 
-                    Constants.MAX_HUGE_BATTERY_VOLTAGE
+                    Constants.MAX_HUGE_BATTERY_VOLTAGE;
             }
             else {
                 this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;

@@ -2,6 +2,8 @@ define(function(require) {
     
     'use strict';
 
+    var $ = require('jquery');
+    var _ = require('underscore');
     require('file-saver');
 
     var PixiAppView = require('common/v3/pixi/view/app');
@@ -77,8 +79,8 @@ define(function(require) {
 
         saveXML: function() {
             var xml = Persistence.toXML(this.simViews[0].simulation.circuit);
-            var blob = new Blob([xml], {type: "text/xml;charset=utf-8"});
-            saveAs(blob, "circuit.cck");
+            var blob = new Blob([xml], {type: 'text/xml;charset=utf-8'});
+            window.saveAs(blob, 'circuit.cck');
         }
 
     });

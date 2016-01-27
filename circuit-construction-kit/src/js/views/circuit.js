@@ -2,8 +2,11 @@ define(function(require) {
 
     'use strict';
 
+    var $    = require('jquery');
+    var _    = require('underscore');
+    var PIXI = require('pixi');
+
     var PixiView = require('common/v3/pixi/view');
-    var Vector2  = require('common/math/vector2');
 
     var Battery         = require('models/components/battery');
     var Resistor        = require('models/components/resistor');
@@ -101,10 +104,12 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            for (var i = this.branchViews.length - 1; i >= 0; i--)
+            var i;
+
+            for (i = this.branchViews.length - 1; i >= 0; i--)
                 this.branchViews[i].updateMVT(mvt);
 
-            for (var i = this.junctionViews.length - 1; i >= 0; i--)
+            for (i = this.junctionViews.length - 1; i >= 0; i--)
                 this.junctionViews[i].updateMVT(mvt);
         },
 
@@ -164,9 +169,6 @@ define(function(require) {
             else if (branch instanceof Wire) {
                 viewConstructor = WireView;
             }
-            else if (branch instanceof Filament) {
-
-            } 
             else if (branch instanceof Bulb) {
                 viewConstructor = LightBulbView;
             }
@@ -270,10 +272,12 @@ define(function(require) {
         },
 
         bodyClicked: function(event) {
-            for (var i = this.branchViews.length - 1; i >= 0; i--)
+            var i;
+
+            for (i = this.branchViews.length - 1; i >= 0; i--)
                 this.branchViews[i].hidePopovers(event);
 
-            for (var i = this.junctionViews.length - 1; i >= 0; i--)
+            for (i = this.junctionViews.length - 1; i >= 0; i--)
                 this.junctionViews[i].hidePopovers(event);
         },
 

@@ -14,11 +14,6 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * We don't want the hover overlays visible on any object while another object is dragging.
-     */
-    var someComponentIsDragging = false;
-
-    /**
      * A view that represents a circuit component
      */
     var JunctionView = Draggable.extend({

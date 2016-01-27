@@ -636,16 +636,17 @@ define(function (require) {
          */
         getIntersectingBranch: function(polygon) {
             var branches = this.branches;
+            var i;
 
             if (polygon instanceof SAT.Vector) {
                 var point = polygon;
-                for (var i = 0; i < branches.length; i++) {
+                for (i = 0; i < branches.length; i++) {
                     if (branches.at(i).containsPoint(point))
                         return branches.at(i);
                 }
             }
             else {
-                for (var i = 0; i < branches.length; i++) {
+                for (i = 0; i < branches.length; i++) {
                     if (branches.at(i).intersectsPolygon(polygon))
                         return branches.at(i);
                 }
@@ -656,16 +657,17 @@ define(function (require) {
 
         getIntersectingWire: function(polygon) {
             var branches = this.branches;
+            var i;
 
             if (polygon instanceof SAT.Vector) {
                 var point = polygon;
-                for (var i = 0; i < branches.length; i++) {
+                for (i = 0; i < branches.length; i++) {
                     if (branches.at(i) instanceof Wire && branches.at(i).containsPoint(point))
                         return branches.at(i);
                 }
             }
             else {
-                for (var i = 0; i < branches.length; i++) {
+                for (i = 0; i < branches.length; i++) {
                     if (branches.at(i) instanceof Wire && branches.at(i).intersectsPolygon(polygon))
                         return branches.at(i);
                 }

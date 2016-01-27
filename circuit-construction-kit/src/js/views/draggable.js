@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var $    = require('jquery');
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
@@ -83,6 +84,9 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            if (someComponentIsDragging)
+                return;
+            
             someComponentIsDragging = true;
             this.dragging = true;
             this.dragged = false;
