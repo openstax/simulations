@@ -49,6 +49,18 @@ define(function(require) {
             graphics.drawStickArrow(-6, 0, -50 + 12, 0, Constants.HELP_LABEL_ARROW_HEAD_WIDTH, Constants.HELP_LABEL_ARROW_HEAD_LENGTH);
 
             this.displayObject.addChild(graphics);
+        },
+
+        show: function(){
+            if (!this.displayObject.parent && this.attachTarget)
+                this._attach();
+            this.displayObject.visible = true;
+            this.showing = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
+            this.showing = false;
         }
 
     });

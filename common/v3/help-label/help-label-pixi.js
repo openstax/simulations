@@ -91,8 +91,8 @@ define(function(require) {
         },
 
         hide: function() {
-            if (this.attachTarget)
-                this.attachTarget.removeChild(this.displayObject);
+            if (this.displayObject.parent && this.displayObject.parent.children.indexOf(this.displayObject) !== -1)
+                this.displayObject.parent.removeChild(this.displayObject);
             this.showing = false;
         },
 
