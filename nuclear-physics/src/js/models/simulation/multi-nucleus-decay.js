@@ -7,8 +7,10 @@ define(function (require, exports, module) {
 
     var Vector2 = require('common/math/vector2');
 
-    var NuclearPhysicsSimulation = require('models/simulation');
-    var NucleusType              = require('models/nucleus-type');
+    var NuclearPhysicsSimulation       = require('models/simulation');
+    var NucleusType                    = require('models/nucleus-type');
+    var Polonium211Nucleus             = require('models/nucleus/polonium-211');
+    var HeavyAdjustableHalfLifeNucleus = require('models/nucleus/heavy-adjustable-half-life');
 
     /**
      * Constants
