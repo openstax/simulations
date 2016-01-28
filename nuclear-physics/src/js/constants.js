@@ -150,5 +150,21 @@ define(function (require) {
     Constants.Nucleon = Nucleon;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                            ATOMIC NUCLEUS                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var AtomicNucleus = {};
+
+    // Radius at which the repulsive electrical force overwhelms the strong
+    // force.
+    AtomicNucleus.DEFAULT_TUNNELING_REGION_RADIUS = 15;
+    AtomicNucleus.MAX_TUNNELING_REGION_RADIUS = 200;
+
+    Constants.AtomicNucleus = AtomicNucleus;
+
+
     return Constants;
 });
