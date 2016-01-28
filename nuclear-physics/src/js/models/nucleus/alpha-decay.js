@@ -21,7 +21,7 @@ define(function (require) {
             AtomicNucleus.prototype.decay.apply(this, arguments);
             
             this.set('numNeutrons', this.get('numNeutrons') - 2);
-            this.set('numProtons', this.get('numProtons') - 2);
+            this.set('numProtons',  this.get('numProtons')  - 2);
 
             var byProducts = [
                 new AlphaParticle({

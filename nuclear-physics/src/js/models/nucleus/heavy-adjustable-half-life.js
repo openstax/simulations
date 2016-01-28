@@ -32,7 +32,14 @@ define(function (require) {
             this.decayTime = 0;
             this.activatedLifetime = 0;
 
-            this.triggerNucleusChange(null);
+            if ((this.get('numNeutrons') !== this.originalNumNeutrons) || (this.get('numProtons') !== this.originalNumProtons)) {
+                // Decay had occurred prior to reset.
+                this.set('numNeutrons', this.originalNumNeutrons);
+                this.set('numProtons', this.originalNumProtons);
+
+                // Notify all listeners of the change to our atomic weight.
+                this.triggerNucleusChange(null);
+            }
         }
 
     });
