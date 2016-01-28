@@ -166,5 +166,44 @@ define(function (require) {
     Constants.AtomicNucleus = AtomicNucleus;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                  HEAVY ADJUSTABLE-HALF-LIFE NUCLEUS                 **
+     **                                                                     **
+     *************************************************************************/
+
+    var HeavyAdjustableHalfLifeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.  The
+    // values below are for Bismuth 208.
+    HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_PROTONS = 83;
+    HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_NEUTRONS = 125;
+
+    // Random number generator used for calculating decay time based on half life.
+    HeavyAdjustableHalfLifeNucleus.DEFAULT_HALF_LIFE = 1100;  // In milliseconds.
+
+    Constants.HeavyAdjustableHalfLifeNucleus = HeavyAdjustableHalfLifeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         POLONIUM 211 NUCLEUS                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var Polonium211Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.  The
+    // values below are for Bismuth 208.
+    Polonium211Nucleus.ORIGINAL_NUM_PROTONS = 84;
+    Polonium211Nucleus.ORIGINAL_NUM_NEUTRONS = 127;
+
+    // Random number generator used for calculating decay time based on half life.
+    Polonium211Nucleus.HALF_LIFE = 516;  // In milliseconds.
+
+    Constants.Polonium211Nucleus = Polonium211Nucleus;
+
+
+
     return Constants;
 });
