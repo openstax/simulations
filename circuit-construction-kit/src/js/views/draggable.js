@@ -114,6 +114,8 @@ define(function(require) {
 
                 if (!this.hovering)
                     this.hideHoverGraphics();
+
+                // event.stopPropagation();
             }
         },
 
@@ -193,6 +195,9 @@ define(function(require) {
         },
 
         hidePopovers: function(event) {
+            if (!this.originalEvent)
+                return;
+
             var $closestPopover = $(event.target).closest('.popover');
 
             if (this.$popover && 

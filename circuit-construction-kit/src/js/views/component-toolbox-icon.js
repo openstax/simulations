@@ -165,11 +165,6 @@ define(function(require) {
             this.simulation.circuit.addBranch(this.componentView.model);
             this.dummyLayer.addChild(this.componentView.displayObject);
             this.dummyLayer.addChild(this.componentView.hoverLayer);
-            if (this.componentView.topLayer)
-                this.dummyLayer.addChild(this.componentView.topLayer);
-            this.dummyLayer.addChild(this.componentView.labelLayer);
-            this.dummyLayer.addChild(this.componentView.effectsLayer);
-            this.dummyLayer.addChild(this.componentView.helpLayer);
 
             this.componentView.dragStart(event);
         },
