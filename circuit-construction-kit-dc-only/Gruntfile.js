@@ -38,10 +38,10 @@ module.exports = function(grunt) {
 				dest: 'dist/common/'
 			},
 			circuit_construction_kit: {
-				src: [
-					'../circuit-construction-kit/src/img/**/*.{png,jpg,jpeg,gif}'
-				],
-				dest: 'dist/circuit-construction-kit/src/'
+				expand: true, // required when using cwd
+				cwd: '../circuit-construction-kit/src/img/',
+				src: '**',
+				dest: 'dist/img/'
 			},
 			screenshot: {
 				src: 'src/screenshot.png',
@@ -71,10 +71,13 @@ module.exports = function(grunt) {
 					name: 'main',
 					out: 'src/optimized.js',
 
+					paths: {
+						assets: '../../../circuit-construction-kit/src/js/assets'
+					},
+
 					less: {
 						modifyVars: {
-							//'fa-font-path': '"../node_modules/font-awesome/fonts/"',
-							'assets': '"../../circuit-construction-kit/src/js/assets"'
+							//'fa-font-path': '"../node_modules/font-awesome/fonts/"'
 						}
 					}
 
