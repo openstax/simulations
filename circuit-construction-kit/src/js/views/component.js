@@ -239,13 +239,6 @@ define(function(require) {
             this.hidePopover();
         },
 
-        showPopoverAtSameLocation: function(originalEvent, title, content) {
-            var $anchor = this.$popoverAnchor;
-            var x = parseInt($anchor.css('left'));
-            var y = parseInt($anchor.css('top'));
-            return this.showPopover(x, y, originalEvent, title, content);
-        },
-
         initPropertyControls: function($popover, modelProperty, min, max, rebuild, noPips) {
             var $slider = $popover.find('.property-slider');
             var $text   = $popover.find('.property-text');
@@ -304,7 +297,7 @@ define(function(require) {
         },
 
         showResistanceControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Resistance', resistanceControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Resistance', resistanceControlsHtml);
 
             this.initPropertyControls($popover, 'resistance', Constants.MIN_RESISTANCE, Constants.MAX_RESISTANCE);
         },
@@ -319,7 +312,7 @@ define(function(require) {
                 this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
             }
 
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Voltage', voltageControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Voltage', voltageControlsHtml);
             this.initVoltageControls($popover);
         },
 
@@ -348,13 +341,13 @@ define(function(require) {
         },
 
         showInternalResistanceControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Internal Resistance', resistanceControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Internal Resistance', resistanceControlsHtml);
 
             this.initPropertyControls($popover, 'internalResistance', Constants.MIN_RESISTANCE, 9);
         },
 
         showFrequencyControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Frequency', frequencyControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Frequency', frequencyControlsHtml);
 
             this.initPropertyControls($popover, 'frequency', 0, 2);
         },
