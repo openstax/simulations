@@ -72,12 +72,13 @@ module.exports = function(grunt) {
 					out: 'src/optimized.js',
 
 					paths: {
-						assets: '../../../circuit-construction-kit/src/js/assets'
+						assets: '../../../circuit-construction-kit/src/js/assets',
+						'styles/font-awesome' : '../styles/font-awesome'
 					},
 
 					less: {
 						modifyVars: {
-							//'fa-font-path': '"../node_modules/font-awesome/fonts/"'
+							'fa-font-path': '"../node_modules/font-awesome/fonts/"'
 						}
 					}
 
