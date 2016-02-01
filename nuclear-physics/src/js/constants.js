@@ -26,7 +26,7 @@ define(function (require) {
     Constants.LEAD_LABEL_COLOR = '#000';
     
     // Color for label used for the Custom nucleus (pre-decay).
-    Constants.CUSTOM_NUCLEUS_LABEL_COLOR = new Color '#99ffff';
+    Constants.CUSTOM_NUCLEUS_LABEL_COLOR = '#99ffff';
     
     // Color for label used for the Decayed Custom nucleus.
     Constants.CUSTOM_NUCLEUS_POST_DECAY_LABEL_COLOR = '#000';
@@ -184,6 +184,34 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                     BETA DECAY COMPOSITE NUCLEUS                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var BetaDecayCompositeNucleus = {};
+
+    BetaDecayCompositeNucleus.ANTINEUTRINO_EMISSION_SPEED = 0.8; // Femtometers per clock tick.  Weird, I know.
+    BetaDecayCompositeNucleus.ELECTRON_EMISSION_SPEED     = 0.4; // Femtometers per clock tick.  Weird, I know.
+
+    Constants.BetaDecayCompositeNucleus = BetaDecayCompositeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                     ABSTRACT BETA DECAY NUCLEUS                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var AbstractBetaDecayNucleus = {};
+
+    AbstractBetaDecayNucleus.ANTINEUTRINO_EMISSION_SPEED = 1.5; // Femtometers per clock tick.  Weird, I know.
+    AbstractBetaDecayNucleus.ELECTRON_EMISSION_SPEED     = 0.8; // Femtometers per clock tick.  Weird, I know.
+
+    Constants.AbstractBetaDecayNucleus = AbstractBetaDecayNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                  HEAVY ADJUSTABLE-HALF-LIFE NUCLEUS                 **
      **                                                                     **
      *************************************************************************/
@@ -219,6 +247,68 @@ define(function (require) {
 
     Constants.Polonium211Nucleus = Polonium211Nucleus;
 
+
+    /*************************************************************************
+     **                                                                     **
+     **                          CARBON 14 NUCLEUS                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var Carbon14Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Carbon14Nucleus.PROTONS  = 6;
+    Carbon14Nucleus.NEUTRONS = 8;
+
+    // Half life for Carbon 14.
+    Carbon14Nucleus.HALF_LIFE = HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.CARBON_14);
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    Carbon14Nucleus.DECAY_TIME_SCALING_FACTOR = 1500 / Carbon14Nucleus.HALF_LIFE;
+
+    Constants.Carbon14Nucleus = Carbon14Nucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                         HYDROGEN 3 NUCLEUS                          **
+     **                                                                     **
+     *************************************************************************/
+
+    var Hydrogen3Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Hydrogen3Nucleus.PROTONS  = 1;
+    Hydrogen3Nucleus.NEUTRONS = 2;
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    Hydrogen3Nucleus.DECAY_TIME_SCALING_FACTOR = 1500 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.HYDROGEN_3);
+
+    Constants.Hydrogen3Nucleus = Hydrogen3Nucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                 LIGHT ADJUSTABLE-HALF-LIFE NUCLEUS                  **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightAdjustableHalfLifeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    LightAdjustableHalfLifeNucleus.PROTONS  = 8;
+    LightAdjustableHalfLifeNucleus.NEUTRONS = 8;
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    LightAdjustableHalfLifeNucleus.DECAY_TIME_SCALING_FACTOR = 1500 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.LIGHT_CUSTOM);
+
+    Constants.LightAdjustableHalfLifeNucleus = LightAdjustableHalfLifeNucleus;
 
 
     return Constants;

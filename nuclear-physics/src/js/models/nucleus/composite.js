@@ -6,9 +6,9 @@ define(function (require) {
 
     var range = require('common/math/range');
 
-    var AbstractAlphaDecayNucleus = require('models/nucleus/alpha-decay');
-    var Nucleon                   = require('models/nucleon');
-    var AlphaParticle             = require('models/alpha-particle');
+    var AtomicNucleus = require('models/atomic-nucleus');
+    var Nucleon       = require('models/nucleon');
+    var AlphaParticle = require('models/alpha-particle');
 
     var Constants = require('constants');
 
@@ -24,14 +24,10 @@ define(function (require) {
      *   bunch of smaller particles (i.e. nucleons and alpha particles), hence the
      *   "Composite" portion of the name.
      */
-    var CompositeAtomNucleus = AbstractAlphaDecayNucleus.extend({
-
-        defaults: _.extend(AbstractAlphaDecayNucleus.prototype.defaults, {
-
-        }),
+    var CompositeAtomNucleus = AtomicNucleus.extend({
 
         initialize: function(attributes, options) {
-            AbstractAlphaDecayNucleus.prototype.initialize.apply(this, [attributes, options]);
+            AtomicNucleus.prototype.initialize.apply(this, [attributes, options]);
 
             // List of the constituent particles that comprise this nucleus.
             this.constituents = [];
@@ -39,7 +35,7 @@ define(function (require) {
             //   appear to be in constant dynamic motion.
             this.agitationCount = 0;
             // Amount of agitation exhibited by nucleus, from 0 to 9.
-            this.agitationFactor = AbstractAlphaDecayNucleus.DEFAULT_AGITATION_FACTOR;
+            this.agitationFactor = AtomicNucleus.DEFAULT_AGITATION_FACTOR;
             // The number of alpha particles that will be part of the constituents
             //   of this nucleus.
             this.numAlphas = 0;
@@ -94,7 +90,7 @@ define(function (require) {
             if (this.get('paused'))
                 return;
 
-            AbstractAlphaDecayNucleus.prototype.update.apply(this, arguments);
+            AtomicNucleus.prototype.update.apply(this, arguments);
 
             if ((this.get('velocity').x !== 0) || (this.get('velocity').y !== 0)) {
                 // Move the constituent particles by the velocity amount.
