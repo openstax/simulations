@@ -273,6 +273,61 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                     CARBON 14 COMPOSITE NUCLEUS                     **
+     **                                                                     **
+     *************************************************************************/
+
+    var Carbon14CompositeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Carbon14CompositeNucleus.PROTONS  = Carbon14Nucleus.PROTONS;
+    Carbon14CompositeNucleus.NEUTRONS = Carbon14Nucleus.NEUTRONS;
+
+    // Half life for Carbon 14.
+    Carbon14CompositeNucleus.HALF_LIFE = Carbon14Nucleus.HALF_LIFE;
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    Carbon14CompositeNucleus.DECAY_TIME_SCALING_FACTOR = 700 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.CARBON_14);
+
+    // The "agitation factor" for the various types of nucleus.  The amount of
+    //   agitation controls how dynamic the nucleus looks on the canvas. Values
+    //   must be in the range 0-9.
+    Carbon14CompositeNucleus.CARBON_14_AGITATION_FACTOR = 8;
+    Carbon14CompositeNucleus.NITROGEN_14_AGITATION_FACTOR = 2;
+
+    Constants.Carbon14CompositeNucleus = Carbon14CompositeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                     HYDROGEN 3 COMPOSITE NUCLEUS                    **
+     **                                                                     **
+     *************************************************************************/
+
+    var Hydrogen3CompositeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Hydrogen3CompositeNucleus.PROTONS  = 1;
+    Hydrogen3CompositeNucleus.NEUTRONS = 2;
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    // don't really have to wait around thousands of years.  Smaller values
+    // cause quicker decay.
+    Hydrogen3CompositeNucleus.DECAY_TIME_SCALING_FACTOR = 500 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.HYDROGEN_3);
+
+    // The "agitation factor" for the various types of nucleus.  The amount of
+    //   agitation controls how dynamic the nucleus looks on the canvas. Values
+    //   must be in the range 0-9.
+    Hydrogen3CompositeNucleus.HYDROGEN_3_AGITATION_FACTOR = 8;
+    Hydrogen3CompositeNucleus.HELIUM_3_AGITATION_FACTOR   = 2;
+
+    Constants.Hydrogen3CompositeNucleus = Hydrogen3CompositeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                         HYDROGEN 3 NUCLEUS                          **
      **                                                                     **
      *************************************************************************/
@@ -309,6 +364,34 @@ define(function (require) {
     LightAdjustableHalfLifeNucleus.DECAY_TIME_SCALING_FACTOR = 1500 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.LIGHT_CUSTOM);
 
     Constants.LightAdjustableHalfLifeNucleus = LightAdjustableHalfLifeNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                 LIGHT ADJUSTABLE COMPOSITE NUCLEUS                  **
+     **                                                                     **
+     *************************************************************************/
+
+    var LightAdjustableCompositeNucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction. The
+    //   values below are for Oxygen-16, which by convention in this sim is
+    //   the light nucleus with adjustable half life.
+    LightAdjustableCompositeNucleus.PROTONS  = 8;
+    LightAdjustableCompositeNucleus.NEUTRONS = 8;
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    LightAdjustableCompositeNucleus.DECAY_TIME_SCALING_FACTOR = 700 / HalfLifeInfo.getHalfLifeForNucleusType(NucleusType.LIGHT_CUSTOM);
+
+    // The "agitation factor" for the various types of nucleus.  The amount of
+    //   agitation controls how dynamic the nucleus looks on the canvas. Values
+    //   must be in the range 0-9.
+    LightAdjustableCompositeNucleus.PRE_DECAY_AGITATION_FACTOR = 8;
+    LightAdjustableCompositeNucleus.POST_DECAY_AGITATION_FACTOR = 2;
+
+    Constants.LightAdjustableCompositeNucleus = LightAdjustableCompositeNucleus;
 
 
     return Constants;
