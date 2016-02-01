@@ -16,7 +16,8 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                link: 'circuit-construction-kit-dc'
+                link: 'circuit-construction-kit-dc',
+                dcOnly: true
             }, options);
 
             CCKSimView.prototype.initialize.apply(this, [options]);

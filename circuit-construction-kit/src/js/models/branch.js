@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var SAT      = require('sat');
 
     var Vector2 = require('common/math/vector2');
 
@@ -20,7 +21,7 @@ define(function (require) {
             selected: false,
             kirkhoffEnabled: true,
             isOnFire: false,
-            editing: false,
+            showReadout: false,
             // Average current (averaged over timestep subdivisions for one subdivided
             //   stepInTime) for display in an ammeter or chart
             current: 0, 
@@ -38,8 +39,67 @@ define(function (require) {
             
             // Cached objects
             this._directionVec = new Vector2();
-            this._angleVec = new Vector2();
-            this._centerVec = new Vector2();
+            this._angleVec     = new Vector2();
+            this._centerVec    = new Vector2();
+            this._position     = new Vector2();
+
+            this.on('change:startJunction', this.startJunctionChanged);
+            this.on('change:endJunction',   this.endJunctionChanged);
+            this.on('change:current',       this.currentChanged);
+
+            this.startJunctionChanged(this, this.get('startJunction'));
+            this.endJunctionChanged(this, this.get('endJunction'));
+        },
+
+        initShape: function(width, height) {
+            width  *= Constants.SAT_SCALE;
+            height *= Constants.SAT_SCALE;
+            this.shape = (new SAT.Box(new SAT.Vector(0, 0), width, height)).toPolygon();
+            this.shape.translate(0, -height / 2);
+        },
+
+        updateShape: function() {
+            var start = this.getStartPoint();
+            this.shape.pos.x = start.x * Constants.SAT_SCALE;
+            this.shape.pos.y = start.y * Constants.SAT_SCALE;
+            this.shape.setAngle(this.getAngle());
+        },
+
+        getShape: function() {
+            this.updateShape();
+            return this.shape;
+        },
+
+        intersectsPolygon: function(polygon) {
+            return SAT.testPolygonPolygon(polygon, this.getShape());
+        },
+
+        containsPoint: function(point) {
+            return SAT.pointInPolygon(point, this.getShape());
+        },
+
+        startJunctionChanged: function(model, startJunction) {
+            if (this.previous('startJunction'))
+                this.stopListening(this.previous('startJunction'));
+            if (startJunction)
+                this.listenTo(startJunction, 'change', this._startJunctionChanged);
+            this._startJunctionChanged();
+        },
+
+        endJunctionChanged: function(model, endJunction) {
+            if (this.previous('endJunction'))
+                this.stopListening(this.previous('endJunction'));
+            if (endJunction)
+                this.listenTo(endJunction, 'change', this._endJunctionChanged);
+            this._endJunctionChanged();
+        },
+
+        _startJunctionChanged: function() {
+            this.trigger('start-junction-changed', this, this.get('startJunction'));
+        },
+
+        _endJunctionChanged: function() {
+            this.trigger('end-junction-changed', this, this.get('endJunction'));
         },
 
         isFixed: function() {
@@ -55,24 +115,45 @@ define(function (require) {
         },
 
         getX1: function() {
-            return this.get('startJunction').getX();
+            return this.get('startJunction').get('position').x;
         },
 
         getY1: function() {
-            return this.get('startJunction').getY();
+            return this.get('startJunction').get('position').y;
         },
 
         getX2: function() {
-            return this.get('endJunction').getX();
+            return this.get('endJunction').get('position').x;
         },
 
         getY2: function() {
-            return this.get('endJunction').getY();
+            return this.get('endJunction').get('position').y;
+        },
+
+        getStartPoint: function() {
+            return this.get('startJunction').get('position');
+        },
+
+        getEndPoint: function() {
+            return this.get('endJunction').get('position');
+        },
+
+        hasJunction: function(junction) {
+            return this.get('endJunction') == junction || this.get('startJunction') == junction;
+        },
+
+        opposite: function(junction) {
+            if (this.get('startJunction') == junction)
+                return this.get('endJunction');
+            else if (this.get('endJunction') == junction)
+                return this.get('startJunction');
+            else
+                throw 'No such junction: ' + junction;
         },
 
         translate: function(dx, dy) {
-            this.get('startJunction').translate( dx, dy );
-            this.get('endJunction').translate( dx, dy );
+            this.get('startJunction').translate(dx, dy);
+            this.get('endJunction').translate(dx, dy);
         },
 
         replaceJunction: function(junction, newJ) {
@@ -90,12 +171,12 @@ define(function (require) {
 
         getPosition: function(x) {
             if (this.getLength() === 0)
-                return this.get('startJunction').get('position');
+                return this._position.set(this.get('startJunction').get('position'));
     
             var vec = this._position
                 .set(this.get('endJunction').get('position'))
                 .sub(this.get('startJunction').get('position'))
-                .normalize
+                .normalize()
                 .scale(x)
                 .add(this.get('startJunction').get('position'));
 
@@ -123,19 +204,17 @@ define(function (require) {
             return center;
         },
 
-        getShape: function() {
-            throw 'Not implemented.';
+        select: function() {
+            this.set('selected', true);
+        },
+
+        deselect: function() {
+            this.set('selected', false);
         },
 
         currentChanged: function(model, current) {
             var shouldBeOnFire = Math.abs(current) > 10;
-            if (shouldBeOnFire != this.get('isOnFire')) {
-                this.set('isOnFire', shouldBeOnFire);
-                if (this.get('isOnFire'))
-                    this.trigger('flame-finished');
-                else
-                    this.trigger('flame-started');
-            }
+            this.set('isOnFire', shouldBeOnFire);
         }
 
     });

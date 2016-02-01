@@ -126,6 +126,29 @@ define(function(require) {
                 parentDisplayObject.removeChild(this.displayObject);
             if (this.model)
                 this.stopListening(this.model);
+        },
+
+        detach: function() {
+            if (this.displayObject.parent)
+                this.displayObject.parent.removeChild(this.displayObject);
+        },
+
+        remove: function() {
+            this.detach();
+            if (this.model)
+                this.stopListening(this.model);
+        },
+
+        getResolution: function() {
+            return window.devicePixelRatio ? window.devicePixelRatio : 1;
+        },
+
+        show: function() {
+            this.displayObject.visible = true;
+        },
+
+        hide: function() {
+            this.displayObject.visible = false;
         }
 
     });

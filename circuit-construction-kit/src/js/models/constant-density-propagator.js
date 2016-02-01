@@ -50,8 +50,8 @@ define(function (require) {
             this.timeScalingPercentValue = this.smoothData.getAverage();
 
             this.percent = Math.round(this.timeScalingPercentValue);
-            if (this.percent === '0')
-                this.percent = '1';
+            if (this.percent === 0)
+                this.percent = 1;
             
             // Todo add test for change before notify
             for (var i = 0; i < this.particleSet.numParticles(); i++)
@@ -62,11 +62,15 @@ define(function (require) {
                 this.equalize(deltaTime);
         },
 
+        getTimeScalingPercentPercent: function() {
+            return this.percent;
+        },
+
         getMaxCurrent: function() {
             var branches = this.circuit.branches;
             var max = 0;
             for (var i = 0; i < branches.length; i++) {
-                var current = branches[i].get('current');
+                var current = branches.at(i).get('current');
                 max = Math.max(max, Math.abs(current));
             }
             return max;
@@ -165,14 +169,13 @@ define(function (require) {
                 e.setLocation(chosen.branch, Math.abs(chosen.x));
 
                 // Clean up
-                locationPool.remove(chosen);
                 for (var i = 0; i < locations.length; i++)
                     locationPool.remove(locations[i]);
             }
         },
 
         chooseDestinationBranch: function(locations) {
-            for (var i = 0; i < locations.length; i++) 
+            for (var i = 0; i < locations.length; i++)
                 locations[i].density = this.getDensity(locations[i]);
             
             if (!this._densitySortFunction) {
@@ -213,12 +216,10 @@ define(function (require) {
                 var distAlongNew;
                 if (current > 0 && neighbor.get('startJunction') == jroot) { // Start near the beginning.
                     distAlongNew = overshoot;
-                    if ( distAlongNew > neighbor.getLength() ) {
+                    if (distAlongNew > neighbor.getLength())
                         distAlongNew = neighbor.getLength();
-                    }
-                    else if ( distAlongNew < 0 ) {
+                    else if (distAlongNew < 0)
                         distAlongNew = 0;
-                    }
 
                     location = locationPool.create();
                     location.branch = neighbor;

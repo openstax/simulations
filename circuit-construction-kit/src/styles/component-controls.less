@@ -1,0 +1,61 @@
+@import "mixins.less";
+@import "variables.less";
+
+
+@slider-bg: #ACB5BD;
+
+.property-controls {
+    width: 200px;
+
+    .property-slider {
+        margin-top: 12px;
+        margin-bottom: 36px;
+
+        .noUi-background {
+            background: @slider-bg;
+        }
+
+        .noUi-pips {
+            width: 198px;
+            height: 30px;
+            padding: 0;
+            left: 1px;
+
+            .noUi-value-horizontal {
+                padding-top: 10px;
+            }
+
+            .noUi-marker-horizontal.noUi-marker {
+                height: 2px;
+                background: @slider-bg;
+            }
+
+            .noUi-marker-horizontal.noUi-marker-large {
+                height: 8px;
+                background: @slider-bg;
+            }
+        }
+    }
+
+    .property-text-wrapper {
+        padding-bottom: 4px;
+
+        .property-text {
+            text-align: right;
+            display: inline-block;
+            width: 70%;
+        }
+
+        .property-text-label {
+            font-weight: bold;
+            line-height: 34px;
+            padding-left: 10px;
+            display: inline-block;
+        }
+    }
+
+    .more-volts-wrapper {
+        margin-top: 10px;
+        margin-bottom: 4px;
+    }
+}

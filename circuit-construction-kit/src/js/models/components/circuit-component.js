@@ -21,28 +21,32 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             if (options && options.start !== undefined && options.direction !== undefined) {
-                options = _.extend({
-                    startJunction: new Junction({
+                if (!attributes.startJunction) {
+                    this.set('startJunction', new Junction({
                         position: options.start
-                    }),
-                    endJunction: new Junction({
+                    }));
+                }
+                if (!attributes.endJunction) {
+                    this.set('endJunction', new Junction({
                         position: new Vector2(options.direction)
                             .normalize()
                             .scale(this.get('length'))
                             .add(options.start)
-                    })
-                }, options);
+                    }));
+                }
             }
 
             Branch.prototype.initialize.apply(this, [attributes, options]);
+
+            this.initShape(this.get('length'), this.get('height'));
         },
 
         getLength: function() {
             return this.get('length');
         },
 
-        getShape: function() {
-            throw 'Not yet implemented.';
+        getComponentLength: function() {
+            return this.getLength();
         }
 
     });

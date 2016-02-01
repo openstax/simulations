@@ -35,6 +35,9 @@ define(function (require) {
          *   applies the solution to the circuit.
          */
         solve: function(circuit, deltaTime) {
+            if (!circuit.branches.length)
+                return;
+            
             // Create a DynamicCircuit representation of the simulation circuit
             var dynamicCircuit = DynamicCircuit.fromCircuit(circuit);
 
@@ -46,7 +49,6 @@ define(function (require) {
 
             // Clean up
             dynamicCircuit.destroy();
-            solution.destroy();
         },
 
         /**
@@ -125,15 +127,15 @@ define(function (require) {
 
             var aCurrents = [];
             for (i = 0; i < a.dynamicCircuit.capacitors.length; i++)
-                aCurrents.push(a.circuit.capacitors[i].current);
+                aCurrents.push(a.dynamicCircuit.capacitors[i].current);
             for (i = 0; i < a.dynamicCircuit.inductors.length; i++)
-                aCurrents.push(a.circuit.inductors[i].current);
+                aCurrents.push(a.dynamicCircuit.inductors[i].current);
 
             var bCurrents = [];
             for (i = 0; i < b.dynamicCircuit.capacitors.length; i++)
-                bCurrents.push(b.circuit.capacitors[i].current);
+                bCurrents.push(b.dynamicCircuit.capacitors[i].current);
             for (i = 0; i < b.dynamicCircuit.inductors.length; i++)
-                bCurrents.push(b.circuit.inductors[i].current); // PhET Comment: "todo: read from companion object"
+                bCurrents.push(b.dynamicCircuit.inductors[i].current); // PhET Comment: "todo: read from companion object"
 
             return this.getEuclideanDistance(aCurrents, bCurrents);
         },
@@ -170,12 +172,16 @@ define(function (require) {
             for (var i = 0; i < circuit.branches.length; i++ ) {
                 if (circuit.branches.at(i) instanceof Switch) {
                     var sw = circuit.branches.at(i);
-                    if (sw.get('closed')) {
+                    if (!sw.get('closed')) {
                         sw.set('current', 0);
                         sw.set('voltageDrop', 0);
                     }
                 }
             }
+
+            // Destroy the old solution if it exists
+            if (circuit.get('solution'))
+                circuit.get('solution').destroy();
 
             circuit.set('solution', solution);
         }

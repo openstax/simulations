@@ -5,7 +5,9 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var AppView       = require('common/v3/app/app');
+    var SimView       = require('common/v3/app/sim');
+    var StopwatchView = require('common/v3/tools/stopwatch');
 
     var CCKSimulation = require('models/simulation');
     var CCKSceneView  = require('views/scene');
@@ -50,10 +52,21 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'click .play-btn'   : 'play',
-            'click .pause-btn'  : 'pause',
-            'click .step-btn'   : 'step',
-            'click .reset-btn'  : 'reset'
+            'click .play-btn'     : 'play',
+            'click .pause-btn'    : 'pause',
+            'click .step-btn'     : 'step',
+            'click .reset-btn'    : 'reset',
+
+            'click #show-electrons-check'           : 'toggleElectrons',
+            'click #show-schematic-check'           : 'toggleSchematic',
+            'click #show-values-check'              : 'toggleValues',
+            'click #show-voltmeter-check'           : 'toggleVoltmeter',
+            'click #show-ammeter-check'             : 'toggleAmmeter',
+            'click #show-non-contact-ammeter-check' : 'toggleNonContactAmmeter',
+            'click #show-stopwatch-check'           : 'toggleStopwatch',
+
+            'click .zoom-in-btn'  : 'zoomIn',
+            'click .zoom-out-btn' : 'zoomOut'
         },
 
         /**
@@ -65,8 +78,11 @@ define(function (require) {
             options = _.extend({
                 title: 'Circuit Construction Kit',
                 name: 'cck',
-                link: 'circuit-construction-kit-ac'
+                link: 'circuit-construction-kit-ac',
+                dcOnly: false
             }, options);
+
+            this.dcOnly = options.dcOnly;
 
             SimView.prototype.initialize.apply(this, [options]);
 
@@ -88,7 +104,8 @@ define(function (require) {
          */
         initSceneView: function() {
             this.sceneView = new CCKSceneView({
-                simulation: this.simulation
+                simulation: this.simulation,
+                dcOnly: this.dcOnly
             });
         },
 
@@ -100,6 +117,8 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
+            this.renderStopwatchView();
 
             return this;
         },
@@ -110,7 +129,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                dcOnly: this.dcOnly
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
@@ -120,7 +140,10 @@ define(function (require) {
          * Renders the playback controls at the bottom of the screen
          */
         renderPlaybackControls: function() {
-            this.$playbackControls = $(this.playbackControlsPanelTemplate({ unique: this.cid }));
+            this.$playbackControls = $(this.playbackControlsPanelTemplate({ 
+                unique: this.cid,
+                dcOnly: this.dcOnly
+            }));
 
             this.$el.append(this.$playbackControls);
         },
@@ -135,11 +158,33 @@ define(function (require) {
         },
 
         /**
+         * Renders the stopwatch view
+         */
+        renderStopwatchView: function() {
+            this.stopwatchView = new StopwatchView({
+                dragFrame: this.el,
+                units : 'sec',
+                unitRatio: 1,
+                decimals: 4,
+                position: {
+                    x : AppView.windowIsShort() ? 630 : 622,
+                    y : AppView.windowIsShort() ? 326 : 398 
+                }
+            });
+
+            this.stopwatchView.render();
+            this.stopwatchView.hide();
+
+            this.$el.append(this.stopwatchView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.stopwatchView.postRender();
         },
 
         resetSimulation: function() {
@@ -150,6 +195,7 @@ define(function (require) {
             this.updater.pause();
             this.updater.reset();
             this.resetComponents();
+            this.resetControls();
 
             // Resume normal function
             this.updater.play();
@@ -164,6 +210,21 @@ define(function (require) {
             SimView.prototype.resetComponents.apply(this);
             
             this.sceneView.reset();
+            this.stopwatchView.hide();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('#show-schematic-check').prop('checked', false);
+            this.$('#show-values-check').prop('checked', false);
+            this.$('#show-electrons-check').prop('checked', true);
+
+            this.$('#show-voltmeter-check').prop('checked', false);
+            this.$('#show-ammeter-check').prop('checked', false);
+            this.$('#show-non-contact-ammeter-check').prop('checked', false);
+            this.$('#show-stopwatch-check').prop('checked', false);
         },
 
         /**
@@ -179,6 +240,7 @@ define(function (require) {
 
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
+            this.stopwatchView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
         /**
@@ -189,6 +251,74 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
+        },
+
+        toggleElectrons: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showElectrons();
+            else
+                this.sceneView.hideElectrons();
+        },
+
+        toggleSchematic: function() {
+            this.simulation.circuit.set('schematic', $(event.target).is(':checked'));
+        },
+
+        toggleValues: function() {
+            if ($(event.target).is(':checked')) {
+                this.simulation.circuit.branches.each(function(branch) {
+                    branch.set('showReadout', true);
+                });
+            }
+            else {
+                this.simulation.circuit.branches.each(function(branch) {
+                    branch.set('showReadout', false);
+                });
+            }
+        },
+
+        toggleVoltmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showVoltmeter();
+            else
+                this.sceneView.hideVoltmeter();
+        },
+
+        toggleAmmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showAmmeter();
+            else
+                this.sceneView.hideAmmeter();
+        },
+
+        toggleNonContactAmmeter: function() {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showNonContactAmmeter();
+            else
+                this.sceneView.hideNonContactAmmeter();
+        },
+
+        toggleStopwatch: function() {
+            if ($(event.target).is(':checked'))
+                this.stopwatchView.show();
+            else
+                this.stopwatchView.hide();
+        },
+
+        zoomIn: function() {
+            this.sceneView.zoomIn();
+        },
+
+        zoomOut: function() {
+            this.sceneView.zoomOut();
+        },
+
+        showHelp: function() {
+            this.sceneView.showHelp();
+        },
+
+        hideHelp: function() {
+            this.sceneView.hideHelp();
         }
 
     });

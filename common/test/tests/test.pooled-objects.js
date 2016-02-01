@@ -10,6 +10,13 @@ describe('Pooled Objects', function(){
 		});
 	});
 
+	it('#create creates unique objects', function(){
+		var object1 = PooledObject.create();
+		var object2 = PooledObject.create();
+
+		chai.expect(object1).to.not.equal(object2);
+	});
+
 	it('Pooled objects get added to owner\'s array', function(){
 		var owner = {};
 		var object = PooledObject.createWithOwner(owner);
@@ -54,6 +61,14 @@ describe('Pooled Objects', function(){
 		chai.expect(obj.name).to.equal('Bob');
 		chai.expect(obj.cachedObject).to.deep.equal({ option: 2 });
 		chai.expect(obj.instanceFunction()).to.equal('Bob is special.');
+	});
+
+	it('subclass #create creates unique objects', function(){
+		var Subclass = PooledObject.extend();
+		var object1 = Subclass.create();
+		var object2 = Subclass.create();
+
+		chai.expect(object1).to.not.equal(object2);
 	});
 
 	it('Multiple subclasses\' pools don\'t collide', function(){

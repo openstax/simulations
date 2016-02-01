@@ -50,7 +50,8 @@ define(function(require) {
                 font: WiggleMeView.DEFAULT_TEXT_FONT_SIZE + 'px Helvetica Neue',
                 fill: WiggleMeView.DEFAULT_TEXT_COLOR
             });
-            this.text.x = -Math.round(this.text.width / 2);
+            this.text.anchor.x = 0.5;
+            this.text.resolution = this.getResolution();
             this.displayObject.addChild(this.text);
         },
 

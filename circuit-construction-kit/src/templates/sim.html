@@ -1,7 +1,58 @@
 
 <span class="scene-view-placeholder"></span>
 
+<div class="zoom-controls">
+    <button class="btn zoom-in-btn"><span class="fa fa-search"><span class="fa fa-plus"></span></span></button>
+    <button class="btn zoom-out-btn"><span class="fa fa-search"><span class="fa fa-minus"></span></span></button>
+</div>
+
 <div class="sim-controls-wrapper">
     <div class="sim-controls-left"></div>
-    <div class="sim-controls-right"></div>
+    <div class="sim-controls-right">
+        <div class="sim-controls tools-panel">
+            <h2>Visual Options</h2>
+
+            <ul class="checkboxes">
+                <li>
+                    <input type="checkbox" class="show-schematic-check" id="show-schematic-check">
+                    <label for="show-schematic-check">Schematic View</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="show-values-check" id="show-values-check">
+                    <label for="show-values-check">Show Values</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="show-electrons-check" id="show-electrons-check" checked>
+                    <label for="show-electrons-check">Show Electrons</label>
+                </li>
+            </ul>
+        </div>
+        <div class="sim-controls tools-panel">
+            <h2>Tools</h2>
+
+            <ul class="checkboxes">
+                <li>
+                    <input type="checkbox" class="show-voltmeter-check" id="show-voltmeter-check">
+                    <label for="show-voltmeter-check">Voltmeter</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="show-ammeter-check" id="show-ammeter-check">
+                    <label for="show-ammeter-check">Ammeter</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="show-non-contact-ammeter-check" id="show-non-contact-ammeter-check">
+                    <label for="show-non-contact-ammeter-check">Non-Contact Ammeter</label>
+                </li>
+                <li>
+                    <input type="checkbox" class="show-stopwatch-check" id="show-stopwatch-check">
+                    <label for="show-stopwatch-check">Stopwatch</label>
+                </li>
+            </ul>
+
+            <% if (!dcOnly) { %>
+                <button class="btn current-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Current Chart</button>
+                <button class="btn voltage-chart-btn"><span class="fa fa-plus"></span>&nbsp; Add Voltage Chart</button>
+            <% } %>
+        </div>
+    </div>
 </div>

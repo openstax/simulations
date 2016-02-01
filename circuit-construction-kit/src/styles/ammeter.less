@@ -1,0 +1,142 @@
+@import "variables.less";
+@import "mixins.less";
+
+@ring-radius: 26px;
+@ring-thickness: 8px;
+@ammeter-width:  120px;
+@ammeter-height: (@ring-radius * 2);
+@panel-x: (@ring-radius - @ring-thickness);
+@panel-bg: #fff;
+@panel-opacity: 0.7;
+@panel-padding: 15px;
+@crosshairs-color: @panel-bg;
+@crosshairs-opacity: @panel-opacity;
+@crosshairs-thickness: 2px;
+@active-color: @link-color;
+
+.ammeter-view {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 200;
+    cursor: -webkit-grab;
+    cursor: grab;
+    .user-select(none);
+
+    .ammeter-background {
+        position: absolute;
+        opacity: @panel-opacity;
+
+        .ammeter-ring {
+            position: absolute;
+            top: -@ring-radius;
+            left: -@ring-radius;
+            width:  (@ring-radius * 2);
+            height: (@ring-radius * 2);
+            border: @ring-thickness solid @panel-bg;
+            border-radius: 50%;
+        }
+
+        .ammeter-panel-bg {
+            position: absolute;
+            top: -(@ammeter-height / 2);
+            left: @panel-x;
+            width: @ammeter-width;
+            height: @ammeter-height;
+            background: @panel-bg;
+        }
+
+        &:before {
+            content: '';
+            position: absolute;
+            top: -@ring-radius;
+            left: -@ring-radius;
+            width:  (@ring-radius * 2);
+            height: (@ring-radius * 2);
+            border: @ring-thickness solid @panel-bg;
+        }
+
+        .ammeter-crosshairs {
+            &:before, &:after {
+                content: '';
+                position: absolute;
+                background: @crosshairs-color;
+            }
+
+            &:before {
+                width: ((@ring-radius - @ring-thickness) * 2);
+                height: @crosshairs-thickness;
+                top: -(@crosshairs-thickness / 2);
+                left: -(@ring-radius - @ring-thickness);
+            }
+
+            &:after {
+                width: @crosshairs-thickness;
+                height: ((@ring-radius - @ring-thickness) * 2);
+                left: -(@crosshairs-thickness / 2);
+                top: -(@ring-radius - @ring-thickness);
+            }
+        }
+    }
+
+    .ammeter-content {
+        position: absolute;
+        top: -(@ammeter-height / 2);
+        left: @panel-x;
+        width: @ammeter-width;
+        height: @ammeter-height;
+
+        .ammeter-readout {
+            padding: @panel-padding;
+            line-height: (@ammeter-height - @panel-padding * 2);
+            text-align: right;
+            display: none;
+
+            .amps {
+                margin-left: 8px;
+            }
+        }
+
+        .ammeter-hint {
+            padding: 8px 8px 8px 10px;
+            font-size: 13px;
+        }
+    }
+
+    .ammeter-active-overlay {
+        position: absolute;
+        display: none;
+
+        @active-radius: (@ring-radius - (@ring-thickness - @crosshairs-thickness));
+
+        .ammeter-active-ring {
+            position: absolute;
+            top:  -@active-radius;
+            left: -@active-radius;
+            width:  (@active-radius * 2);
+            height: (@active-radius * 2);
+            border: @crosshairs-thickness solid @active-color;
+            border-radius: 50%;    
+        }
+        
+        &:before, &:after {
+            content: '';
+            position: absolute;
+            background: @active-color;
+        }
+
+        &:before {
+            width: (@active-radius * 2);
+            height: @crosshairs-thickness;
+            top: -(@crosshairs-thickness / 2);
+            left: -@active-radius;
+        }
+
+        &:after {
+            width: @crosshairs-thickness;
+            height: (@active-radius * 2);
+            left: -(@crosshairs-thickness / 2);
+            top: -@active-radius;
+        }
+    }
+}

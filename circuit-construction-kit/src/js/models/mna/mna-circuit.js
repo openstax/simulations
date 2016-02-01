@@ -5,7 +5,8 @@ define(function (require) {
     var _    = require('underscore');
     var Pool = require('object-pool');
 
-    var Matrix = require('common/math/matrix');
+    var Matrix = require('common/math/matrix.luqr');
+                 // require('common/math/matrix.luqr');
 
     var UnknownCurrent = require('models/mna/unknown-current');
     var UnknownVoltage = require('models/mna/unknown-voltage');
@@ -65,7 +66,7 @@ define(function (require) {
         getCurrentCount: function() {
             var zeroResistors = 0;
             for (var i = this.resistors.length - 1; i >= 0; i--) {
-                if (this.resistors[i] === 0)
+                if (this.resistors[i].resistance === 0)
                     zeroResistors++;
             }
             return this.batteries.length + zeroResistors;
@@ -86,35 +87,6 @@ define(function (require) {
 
         getNumVars: function() {
             return this.getNodeCount() + this.getCurrentCount();
-        },
-
-        sumConductances: function(nodeIndex) {
-            var sum = 0;
-            for (var i = this.resistors.length - 1; i >= 0; i--) {
-                if (this.resistors[i].containsNode(nodeIndex))
-                    sum += this.resistors[i].conductance;
-            }
-            return sum;
-        },
-
-        getConductance: function(node1, node2) {
-            // Conductances sum:
-            var sum = 0;
-            for (var i = this.resistors.length - 1; i >= 0; i--) {
-                if (this.resistors[i].containsNode(node1) && this.resistors[i].containsNode(node2))
-                    sum += this.resistors[i].conductance;
-            }
-            return sum;
-        },
-
-        sumIncomingCurrents: function(nodeIndex) {
-            var sum = 0;
-            for (var i = 0; i < this.currentSources.length; i++) {
-                var cs = this.currentSources[i];
-                if (cs.node1 == nodeIndex)
-                    sum += cs.current;
-            }
-            return sum;
         },
 
         getRHS: function(node) {
@@ -356,14 +328,19 @@ define(function (require) {
 
             if (debug) {
                 console.log(equations);
-                console.log('a=', A);
-                console.log('z=', z);
+                console.log('A =', A.toString());
+                console.log('z =', z.toString());
                 console.log('unknowns=', this.getUnknowns());
             }
 
             var x = A.solve(z);
             var unknownVoltages = this.getUnknownVoltages();
             var unknownCurrents = this.getUnknownCurrents();
+
+            if (debug) {
+                console.log('x =', x.toString());
+                console.log('------------------------');
+            }
 
             var voltageMap = [];
             for (var v = 0; v < unknownVoltages.length; v++)
@@ -374,10 +351,6 @@ define(function (require) {
                 var element = unknownCurrents[c].element;
                 element.currentSolution = x.get(unknowns.indexOf(unknownCurrents[c]), 0);
                 currentSolutions[element.id] = element;
-            }
-
-            if (debug) {
-                console.log('x=', x);
             }
 
             return MNASolution.create(voltageMap, currentSolutions);

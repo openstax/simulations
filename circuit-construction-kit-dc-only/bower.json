@@ -1,5 +1,5 @@
 {
-  "name": "circuit-construction-kit-dc-only",
+  "name": "circuit-construction-kit",
   "version": "1.0.0",
   "homepage": "https://github.com/Connexions/simulations",
   "private": true,
@@ -24,7 +24,9 @@
     "mocha": "~1.21.4",
     "chai": "~1.9.1",
     "nouislider": "~7.0.3 >=7.0.3",
-    "pixi": "~3.0.7",
-    "buzz": "~1.1.7"
-  }
+    "pixi": "=3.0.7",
+    "buzz": "~1.1.7",
+    "file-saver": "*"
+  },
+  "devDependencies": {}
 }

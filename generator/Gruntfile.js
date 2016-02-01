@@ -58,7 +58,8 @@ module.exports = function(grunt) {
 					out: 'src/optimized.js',
 
 					paths: {
-						assets: '../../../faraday/src/js/assets'
+						assets: '../../../faraday/src/js/assets',
+						'styles/font-awesome' : '../styles/font-awesome'
 					}
 					
 					// Doing it this way doesn't work:

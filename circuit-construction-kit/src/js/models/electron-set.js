@@ -13,6 +13,7 @@ define(function (require) {
         this.propagator = new ConstantDensityPropagator(this, circuit);
 
         this.listenTo(circuit.branches, 'remove', this.removeParticles);
+        this.listenTo(circuit.branches, 'reset',  this.clear);
     };
 
     _.extend(ElectronSet.prototype, Backbone.Events, {
@@ -62,6 +63,11 @@ define(function (require) {
 
         update: function(time, deltaTime) {
             this.propagator.update(time, deltaTime);
+        },
+
+        getDensity: function(branch) {
+            var electrons = this.getParticles(branch);
+            return electrons.length / branch.getLength();
         },
 
         getUpperNeighborInBranch: function(myElectron) {

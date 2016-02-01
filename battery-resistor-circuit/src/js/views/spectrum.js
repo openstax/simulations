@@ -61,6 +61,7 @@ define(function(require) {
                 fill: '#000'
             });
 
+            hot.resolution = cold.resolution = this.getResolution();
             hot.anchor.x = 1;
             hot.anchor.y = cold.anchor.y = 0.5;
 

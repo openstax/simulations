@@ -214,7 +214,7 @@ define(function (require) {
             for (i = 0; i < this.inductors.length; i++)
                 updatedCapacitors.push(this.inductors[i].cloneWithSolution(solution));
 
-            return this.create(
+            return DynamicCircuit.create(
                 this.batteries, 
                 this.resistors, 
                 this.currents, 

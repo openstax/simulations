@@ -2,8 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var Pool = require('object-pool');
+    var _ = require('underscore');
 
     var PooledObject = require('common/pooled-object/pooled-object');
     
@@ -62,10 +61,10 @@ define(function (require) {
         /**
          * Returns whether a given element is equivalent to this element.
          */
-        equivalentTo: function(element) {
+        equivalentTo: function(element, epsilon) {
             if (this.node0 !== element.node0 || this.node1 !== element.node1)
                 return false;
-            if (this.currentSolution !== element.currentSolution)
+            if (Math.abs(this.currentSolution - element.currentSolution) > epsilon)
                 return false;
             return true;
         },
@@ -120,11 +119,12 @@ define(function (require) {
          *   back to the originalComponent.
          */
         fromCircuitComponent: function(circuit, branch) {
-            return this.create(
+            var element = this.create(
                 branch, 
                 circuit.junctions.indexOf(branch.get('startJunction')), 
                 circuit.junctions.indexOf(branch.get('endJunction'))
             );
+            return element;
         }
 
     });

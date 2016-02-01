@@ -129,6 +129,7 @@ define(function(require) {
 
             this.amplitudeText = new PIXI.Text('50%', textSettings);
             this.frequencyText = new PIXI.Text('50%', textSettings);
+            this.amplitudeText.resolution = this.frequencyText.resolution = this.getResolution();
 
             this.amplitudeText.anchor.x = 1;
             this.amplitudeText.x = -68;
@@ -149,6 +150,7 @@ define(function(require) {
                 align: 'center'
             });
 
+            title.resolution = this.getResolution();
             title.x = -Math.round(title.width / 2);
             title.y = -202;
 

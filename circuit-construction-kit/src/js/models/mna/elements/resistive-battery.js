@@ -16,7 +16,7 @@ define(function (require) {
             MNAElement.prototype.init.apply(this, arguments);
 
             this.resistance = originalComponent.get('resistance');
-            this.voltage    = originalComponent.get('voltageDrop');
+            this.voltage    = originalComponent.getVoltageDrop();
         },
 
         /**

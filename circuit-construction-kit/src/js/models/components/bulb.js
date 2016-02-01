@@ -10,6 +10,8 @@ define(function (require) {
     var Filament         = require('models/components/filament');
     var BranchSet        = require('models/branch-set');
 
+    var LightBulbView = require('views/components/light-bulb');
+
     var Constants = require('constants');
 
     /**
@@ -19,22 +21,23 @@ define(function (require) {
 
         defaults: _.extend({}, CircuitComponent.prototype.defaults, {
             width: 0,
+            resistance: 10,
             isSchematic: false,
             connectAtLeft: true,
             circuit: undefined
         }),
 
         initialize: function(attributes, options) {
-            CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
-
             this.filament = new Filament({
-                tailJunction: getStartJunction(), 
-                shellJunction: getEndJunction(), 
+                startJunction: this.get('startJunction'), 
+                endJunction: this.get('endJunction'), 
                 numPeaks: 3, 
-                pivotToResistorDY: this.get('height') * filamentHeightScale, 
-                resistorWidth: this.get('width') * .8, 
-                zigHeight: this.get('height') * .061
+                pivotToResistorDY: this.get('height') * 0.8, 
+                resistorWidth: this.get('width') * 0.8, 
+                zigHeight: this.get('height') * 0.061
             });
+
+            CircuitComponent.prototype.initialize.apply(this, [attributes, options]);
 
             this.branchSet = new BranchSet();
 
@@ -42,8 +45,6 @@ define(function (require) {
             this._delta = new Vector2();
             this._vec   = new Vector2();
 
-            this.on('change:startJunction', this.startJunctionChanged);
-            this.on('change:endJunction',   this.endJunctionChanged);
             this.on('change:isSchematic',   this.isSchematicChanged);
             this.on('change:connectAtLeft', this.connectAtLeftChanged);
         },
@@ -74,11 +75,11 @@ define(function (require) {
             if (this.get('isSchematic'))
                 return this.getLength();
             else
-                return CircuitComponent.prototype.apply.getLength(this);
+                return CircuitComponent.prototype.getLength.apply(this);
         },
 
         getIntensity: function() {
-            var power = Math.abs(this.get('current') * this.get('voltageDrop'));
+            var power = Math.abs(this.get('current') * this.getVoltageDrop());
             var maxPower = 60;
             if (power > maxPower)
                 power = maxPower;
@@ -86,16 +87,12 @@ define(function (require) {
             return Math.pow(power / maxPower, 0.354);
         },
 
-        flip: function() {
-            var circuit = this.get('circuit');
-
+        flip: function(circuit) {
             this.set('connectAtLeft', !this.get('connectAtLeft'));
 
             if (circuit) {
-                var sign = (this.get('connectAtLeft')) ? 1 : -1;
-                
-                var tilt = Constants.TILT;
-                var vector = this.getDirectionVector().rotate(tilt * 2 * sign);
+                var tilt = LightBulbView.getRotationOffset(this.get('connectAtLeft'));
+                var vector = this.getDirectionVector().rotate(tilt * 2);
                 var target = vector.add(this.get('startJunction').get('position'));
                 var delta = this._delta.set(target).sub(this.get('endJunction').get('position'));
 
@@ -111,15 +108,23 @@ define(function (require) {
         },
 
         startJunctionChanged: function(model, startJunction) {
-            if (this.previous('startJunction'))
-                this.stopListening(this.previous('startJunction'));
-            this.listenTo(startJunction, 'change', this.updateFilament);
+            CircuitComponent.prototype.startJunctionChanged.apply(this, arguments);
+            this.filament.set('startJunction', startJunction);
         },
 
         endJunctionChanged: function(model, endJunction) {
-            if (this.previous('endJunction'))
-                this.stopListening(this.previous('endJunction'));
-            this.listenTo(endJunction, 'change', this.updateFilament);
+            CircuitComponent.prototype.endJunctionChanged.apply(this, arguments);
+            this.filament.set('endJunction', endJunction);
+        },
+
+        _startJunctionChanged: function(model, startJunction) {
+            CircuitComponent.prototype._startJunctionChanged.apply(this, arguments);
+            this.updateFilament();
+        },
+
+        _endJunctionChanged: function(model, endJunction) {
+            CircuitComponent.prototype._endJunctionChanged.apply(this, arguments);
+            this.updateFilament();
         },
 
         connectAtLeftChanged: function(model, connectAtLeft) {

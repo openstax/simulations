@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var Vector2 = require('common/math/vector2');
 
     var Branch = require('models/branch');
@@ -13,14 +11,8 @@ define(function (require) {
      */
     var PathBranch = Branch.extend({
 
-        defaults: _.extend({}, Branch.prototype.defaults, {
-            startPoint: undefined
-        }),
-
         initialize: function(attributes, options) {
             Branch.prototype.initialize.apply(this, [attributes, options]);
-
-            this.set('startPoint', new Vector2(this.get('startPoint')));
 
             this.segments = [];
 
@@ -30,7 +22,7 @@ define(function (require) {
 
         getPosition: function(x) {
             var segStartsAt = 0;
-            for (var i = 0; i < this.segments; i++ ) {
+            for (var i = 0; i < this.segments.length; i++) {
                 var seg = this.segments[i];
                 var segStopsAt = segStartsAt + seg.getLength();
                 if (x <= segStopsAt) {
@@ -64,8 +56,13 @@ define(function (require) {
             this.segments.push(new Segment(new Vector2(start), new Vector2(next)));
         },
 
-        addPoint: function(position) {
+        appendPoint: function(position) {
             this.segments.push(new Segment(new Vector2(this.lastPoint()), new Vector2(position)));
+        },
+
+        appendPointFromVector: function(vec) {
+            var point = vec.add(this.lastPoint());
+            this.appendPoint(point);
         },
 
         lastPoint: function() {

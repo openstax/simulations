@@ -2,9 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _   = require('underscore');
+    var SAT = require('sat');
 
     var PositionableObject = require('common/models/positionable-object');
+
+    var Constants = require('constants');
 
     var silent = { silent: true };
 
@@ -22,6 +25,30 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
+
+            this.initShape();
+        },
+
+        initShape: function() {
+            this.shape = new SAT.Circle(new SAT.Vector(0, 0), this.getRadius() * Constants.SAT_SCALE);
+        },
+
+        updateShape: function() {
+            this.shape.pos.x = this.get('position').x * Constants.SAT_SCALE;
+            this.shape.pos.y = this.get('position').y * Constants.SAT_SCALE;
+        },
+
+        getShape: function() {
+            this.updateShape();
+            return this.shape;
+        },
+
+        getRadius: function() {
+            return Constants.JUNCTION_RADIUS * 1.1;
+        },
+
+        intersectsPolygon: function(polygon) {
+            return SAT.testPolygonCircle(polygon, this.getShape());
         },
 
         translateSilent: function(x, y) {
@@ -32,9 +59,12 @@ define(function (require) {
             return this.get('position').distance(junction.get('position'));
         },
 
-        getShape: function() {
-            //return createCircle( CCKModel.JUNCTION_RADIUS * 1.1 );
-            throw 'Not implemented.';
+        select: function() {
+            this.set('selected', true);
+        },
+
+        deselect: function() {
+            this.set('selected', false);
         }
 
     });

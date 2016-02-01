@@ -14,9 +14,7 @@ define(function (require) {
     /**
      * 
      */
-    var IntermediateDynamicSolution = function() {
-
-    };
+    var IntermediateDynamicSolution = function() {};
 
     /**
      * Instance functions/properties
@@ -62,6 +60,7 @@ define(function (require) {
          */
         create: function() {
             var solution = pool.create();
+            solution.init.apply(solution, arguments);
             return solution;
         }
 

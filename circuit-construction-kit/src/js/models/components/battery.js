@@ -31,7 +31,7 @@ define(function (require) {
         },
 
         getEffectiveVoltageDrop: function() {
-            return this.get('voltageDrop') - this.get('current') * this.get('resistance');
+            return this.getVoltageDrop() - this.get('current') * this.get('resistance');
         },
 
         internalResistanceOnChanged: function(model, internalResistanceOn) {
@@ -39,6 +39,14 @@ define(function (require) {
                 this.set('resistance', this.get('internalResistance'));
             else
                 this.set('resistance', Constants.MIN_RESISTANCE);
+        },
+
+        reverse: function() {
+            this.set({
+                startJunction: this.get('endJunction'),
+                endJunction: this.get('startJunction')
+            });
+            this.trigger('reversed');
         }
 
     }, Constants.Battery);

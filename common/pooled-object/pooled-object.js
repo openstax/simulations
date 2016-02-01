@@ -37,8 +37,10 @@ define(function (require) {
          * Releases this instance to the object pool.
          */
         destroy: function() {
-            if (this.constructor._pool)
+            if (!this.destroyed && this.constructor._pool) {
                 this.constructor._pool.remove(this);
+                this.destroyed = true;
+            }
         }
 
     });
@@ -57,6 +59,7 @@ define(function (require) {
             if (!this._pool)
                 this.initPool();
             var pooledObject = this._pool.create();
+            pooledObject.destroyed = false;
             pooledObject.init.apply(pooledObject, arguments);
             return pooledObject;
         },

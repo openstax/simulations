@@ -4,6 +4,8 @@ define(function (require) {
 
     var _        = require('underscore');
     var Backbone = require('backbone');
+    var Pool     = require('object-pool');
+    var SAT      = require('sat');
 
     var Vector2   = require('common/math/vector2');
     var Rectangle = require('common/math/rectangle');
@@ -11,11 +13,32 @@ define(function (require) {
     var Branch           = require('models/branch');
     var BranchSet        = require('models/branch-set');
     var Junction         = require('models/junction');
+    var Connection       = require('models/connection');
     var CircuitComponent = require('models/components/circuit-component');
     var Switch           = require('models/components/switch');
     var Wire             = require('models/components/wire');
     
     var Constants = require('constants');
+
+    var matchPool = Pool({
+        init: function() {
+            return {
+                target: undefined,
+                source: undefined,
+                distance: 0,
+                getVector: function() {
+                    if (!this._vec)
+                        this._vec = new Vector2();
+                    return this._vec
+                        .set(this.target.get('position'))
+                        .sub(this.source.get('position'));
+                },
+                destroy: function() {
+                    matchPool.remove(this);
+                }
+            };
+        }
+    });
 
     /**
      * This is the main class for the CCK model, providing a representation of all
@@ -24,7 +47,7 @@ define(function (require) {
     var Circuit = Backbone.Model.extend({
 
         defaults: {
-            
+            schematic: false
         },
 
         initialize: function(attributes, options) {
@@ -35,16 +58,17 @@ define(function (require) {
             this.solution = null;
 
             // Create a reusable BranchSet
-            this.branchSet = new BranchSet();
+            this.branchSet = new BranchSet(this);
 
             // Cached objects
             this._splitVec = new Vector2();
-            this._splitDesiredDest = new Vector2();
             this._splitDestination = new Vector2();
+            this._splitTranslation = new Vector2();
             this._bestDragMatchVec = new Vector2();
-            this._dragMatchObj = {};
+            this._tipPosition      = new Vector2();
             this._getBranchRect = new Rectangle();
 
+            this.listenTo(this.branches, 'change:closed reversed', this.circuitChanged);
             this.listenTo(this.branches,  'add remove reset', this.circuitChanged);
             this.listenTo(this.junctions, 'add remove reset', this.circuitChanged);
         },
@@ -56,7 +80,7 @@ define(function (require) {
 
         removeJunction: function(junction) {
             this.junctions.remove(junction);
-            this.junction.destroy();
+            junction.destroy();
             this.fireKirkhoffChanged();
         },
 
@@ -150,12 +174,18 @@ define(function (require) {
                 var newLength = Math.abs(curLength - Constants.JUNCTION_RADIUS * 1.5);
                 vec.normalize().scale(newLength);
 
-                var desiredDest = this._splitDesiredDest.set(opposite.get('position')).add(vec);
-                var destination = this._splitDestination.set(desiredDest);
-                if (branch instanceof CircuitComponent)
-                    destination.set(junction.get('position'));
+                var desiredDest = this._splitDestination.set(opposite.get('position')).add(vec);
 
-                var newJunction = new Junction(destination.x, destination.y);
+                var destination;
+                if (branch instanceof CircuitComponent)
+                    destination = junction.get('position');
+                else
+                    destination = desiredDest;
+
+                var newJunction = new Junction({
+                    position: new Vector2(destination.x, destination.y)
+                });
+
                 branch.replaceJunction(junction, newJunction);
                 this.addJunction(newJunction);
                 newJunctions.push(newJunction);
@@ -175,8 +205,8 @@ define(function (require) {
             // Remove what used to be the junction
             this.removeJunction(junction);
 
-            // Trigger the junctions-split event
-            this.trigger('junctions-split', junction, newJunctions);
+            // Trigger the junction-split event
+            this.trigger('junction-split', junction, newJunctions);
 
             return newJunctions;
         },
@@ -220,7 +250,7 @@ define(function (require) {
             for (var i = 0; i < adj.length; i++) {
                 var branch = adj[i];
                 // Skip open branches
-                if (!(branch instanceof Switch && !branch.isClosed())) {
+                if (!(branch instanceof Switch && !branch.get('closed'))) {
                     var opposite = branch.opposite(junction);
                     if (visited.indexOf(branch) === -1) {
                         visited.push(branch);
@@ -262,9 +292,43 @@ define(function (require) {
         },
 
         /**
+         * Gets voltage between components touching two polygons.
+         */
+        getVoltage: function(polygonA, polygonB) {
+            if (SAT.testPolygonPolygon(polygonA, polygonB)) {
+                // They touch each other, short-circuiting it.
+                return 0;
+            }
+            else {
+                var connectionA = this.getConnection(polygonA);
+                var connectionB = this.getConnection(polygonB);
+
+                //Ignore wires & components loaded into a black box.
+                // if (connectionA  && connectionA.isBlackBox())
+                //     connectionA = null;
+                // if (connectionB && connectionB.isBlackBox())
+                //     connectionB = null;
+
+                var voltage;
+
+                if (!connectionA || !connectionB)
+                    voltage = NaN;
+                else
+                    voltage = this._getVoltage(connectionA, connectionB); // dfs from one branch to the other, counting the voltage drop.
+
+                if (connectionA)
+                    connectionA.destroy();
+                if (connectionB)
+                    connectionB.destroy();
+
+                return voltage;
+            }
+        },
+
+        /**
          * Gets voltage between two connections.
          */
-        getVoltage: function(a, b) {
+        _getVoltage: function(a, b) {
             if (a.equals(b) || !this.getSameComponent(a.getJunction(), b.getJunction())) {
                 return 0;
             }
@@ -335,7 +399,7 @@ define(function (require) {
 
         isDynamic: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     return true;
             }
             return false;
@@ -343,21 +407,21 @@ define(function (require) {
 
         update: function(time, deltaTime) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).update(time, deltaTime);
             }
         },
 
         resetDynamics: function() {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).resetDynamics();
             }
         },
 
         setTime: function(time) {
             for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasOwnProperty('resetDynamics'))
+                if (typeof this.branches.at(i).resetDynamics === 'function')
                     this.branches.at(i).setTime(time);
             }
         },
@@ -376,8 +440,8 @@ define(function (require) {
         },
 
         wouldConnectionCauseOverlappingBranches: function(a, b) {
-            var neighborsOfA = this.getNeighbors(a);
-            var neighborsOfB = this.getNeighbors(b);
+            var neighborsOfA = this.getJunctionNeighbors(a);
+            var neighborsOfB = this.getJunctionNeighbors(b);
             for (var i = 0; i < neighborsOfA.length; i++) {
                 for (var j = 0; j < neighborsOfB.length; j++) {
                     if (neighborsOfA[i] === neighborsOfB[j])
@@ -388,7 +452,7 @@ define(function (require) {
         },
 
         collapseJunctions: function(j1, j2) {
-            if (!j1.get('position').equals(j2.get('position')))
+            if (!j1.get('position').equals(j2.get('position'), Constants.EPSILON))
                 throw 'Junctions not at same coordinates.';
             
             this.removeJunction(j1);
@@ -406,7 +470,7 @@ define(function (require) {
         getBestDragMatch: function(draggedJunctions, dx) {
             // If draggedJunctions is actually an array of branches, interpret them as strong connections
             if (draggedJunctions.length && draggedJunctions[0] instanceof Branch)
-                draggedJunctions = Circuit.getJunctions(draggedJunctions);
+                draggedJunctions = this.getJunctions(draggedJunctions);
 
             var all = this.junctions.models;
             var potentialMatches = _.difference(all, draggedJunctions);
@@ -438,7 +502,8 @@ define(function (require) {
                     target = bestForJunction;
                     distance = source.getDistance(target);
                     if (best === null || distance < best.distance) {
-                        best = this._dragMatchObj;
+                        if (best === null)
+                            best = matchPool.create();
                         best.source = source;
                         best.target = target;
                         best.distance = distance;
@@ -459,7 +524,7 @@ define(function (require) {
                 if (target !== dragging && !this.hasBranch(dragging, target) && !this.wouldConnectionCauseOverlappingBranches(dragging, target)) {
                     if (closestJunction === null || dist < closestValue) {
                         var legal = !this.contains(strong, target);
-                        var STICKY_THRESHOLD = 1;
+                        var STICKY_THRESHOLD = 0.5;
                         if (dist <= STICKY_THRESHOLD && legal) {
                             closestValue = dist;
                             closestJunction = target;
@@ -487,24 +552,35 @@ define(function (require) {
             }
         },
 
-        contains: function(strong, j) {
-            for (var i = 0; i < this.branches.length; i++) {
-                if (this.branches.at(i).hasJunction(j))
+        contains: function(branches, j) {
+            for (var i = 0; i < branches.length; i++) {
+                if (branches[i].hasJunction(j))
                     return true;
             }
             return false;
         },
 
         getConnection: function(tipShape) {
-            throw 'not yet implemented';
-        },
+            // If we're on a junction, that's ideal, so take that option first
+            var junction = this.getIntersectingJunction(tipShape);
+            if (junction)
+                return Connection.JunctionConnection.create(junction);
 
-        getBranch: function(point) {
-            return this.detectBranch(this._getBranchRect.set(point.x, point.y, 0.001, 0.001));
-        },
+            // If we're on a wire, that's a little more complex of a problem
+            var wire = this.getIntersectingWire(tipShape);
+            if (wire) {
+                // PhET: We could choose the closest junction, but we want a potentiometer.
 
-        detectBranch: function(shape) {
-            throw 'not yet implemented';
+                // Patrick: I'm going to stray a bit from the original to simplify, because I
+                //   don't even think this specialized code is being taken advantage of anyway.
+                var tipPosition = this._tipPosition
+                    .set(tipShape.pos.x, tipShape.pos.y)
+                    .scale(1 / Constants.SAT_SCALE);
+
+                var dist = tipPosition.distance(wire.getStartPoint());
+
+                return Connection.BranchConnection.create(wire, dist);
+            }
         },
 
         getWires: function() {
@@ -516,25 +592,21 @@ define(function (require) {
             return list;
         },
 
-        detectJunction: function(tipShape) {
-            throw 'not yet implemented';
-        },
-
         bumpAway: function(junction) {
             for (var i = 0; i < 2; i++)
                 this.bumpOnce(junction);
         },
 
         bumpOnce: function(junction) {
-            var branches = this.getBranches();
+            var branches = this.branches;
             var strongConnections = this.getStrongConnections(junction);
             for (var i = 0; i < branches.length; i++) {
-                var branch = branches[i];
+                var branch = branches.at(i);
                 if (!branch.hasJunction(junction)) {
-                    if (branch.getShape().intersects(junction.getShape())) {
+                    if (junction.intersectsPolygon(branch.getShape())) {
                         var vec = branch.getDirectionVector();
                         vec.set(vec.y, -vec.x); // Make it perpendicular to the original
-                        vec.normalize().scale(junction.getShape().w);
+                        vec.normalize().scale(junction.getRadius() * 2);
                         this.branchSet
                             .clear()
                             .addBranches(strongConnections)
@@ -548,10 +620,75 @@ define(function (require) {
 
         fireKirkhoffChanged: function() {
             this.trigger('kirkhoff-changed');
+            this.circuitChanged();
+        },
+
+        fireBranchesMoved: function(branches) {
+            this.trigger('branches-moved', branches);
         },
 
         circuitChanged: function() {
             this.trigger('circuit-changed');
+        },
+
+        /**
+         * Returns the first branch that intersects with the given SAT.Polygon or SAT.Vector object.
+         */
+        getIntersectingBranch: function(polygon) {
+            var branches = this.branches;
+            var i;
+
+            if (polygon instanceof SAT.Vector) {
+                var point = polygon;
+                for (i = 0; i < branches.length; i++) {
+                    if (branches.at(i).containsPoint(point))
+                        return branches.at(i);
+                }
+            }
+            else {
+                for (i = 0; i < branches.length; i++) {
+                    if (branches.at(i).intersectsPolygon(polygon))
+                        return branches.at(i);
+                }
+            }
+            
+            return null;
+        },
+
+        getIntersectingWire: function(polygon) {
+            var branches = this.branches;
+            var i;
+
+            if (polygon instanceof SAT.Vector) {
+                var point = polygon;
+                for (i = 0; i < branches.length; i++) {
+                    if (branches.at(i) instanceof Wire && branches.at(i).containsPoint(point))
+                        return branches.at(i);
+                }
+            }
+            else {
+                for (i = 0; i < branches.length; i++) {
+                    if (branches.at(i) instanceof Wire && branches.at(i).intersectsPolygon(polygon))
+                        return branches.at(i);
+                }
+            }
+            
+            return null;
+        },
+
+        getIntersectingJunction: function(polygon) {
+            var junctions = this.junctions;
+
+            for (var i = 0; i < junctions.length; i++) {
+                if (junctions.at(i).intersectsPolygon(polygon))
+                    return junctions.at(i);
+            }
+            
+            return null;
+        },
+
+        hasProblematicConfiguration: function() {
+            throw 'not yet implemented';
         }
 
     });

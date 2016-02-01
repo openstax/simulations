@@ -1,28 +1,53 @@
 
 describe('Modified Nodal Analysis - MNACircuit', function(){
 
+    var MNACircuitSolver;
     var MNACircuit;
     var MNASolution;
     var MNACompanionBattery;
     var MNACompanionResistor;
     var MNACurrentSource;
 
+    var Junction;
+    var Battery;
+    var Resistor;
+    var Circuit;
+
+    var Vector2;
+    var luqr;
+
     var THRESHOLD = 1E-6;
     var FUDGE = THRESHOLD - 8E-7;
 
     before(function(done) {
         require([
+            'models/mna/circuit-solver',
             'models/mna/mna-circuit', 
             'models/mna/mna-solution',
             'models/mna/elements/companion-battery',
             'models/mna/elements/companion-resistor',
-            'models/mna/elements/current-source'
-        ], function(mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource) {
+            'models/mna/elements/current-source',
+            'models/junction',
+            'models/components/battery',
+            'models/components/resistor',
+            'models/circuit',
+            'common/math/vector2',
+            'common/math/luqr'
+        ], function(mnaCircuitSolver, mnaCircuit, mnaSolution, mnaCompanionBattery, mnaCompanionResistor, mnaCurrentSource, junction, battery, resistor, circuit, vector2, _luqr) {
+            MNACircuitSolver = mnaCircuitSolver;
             MNACircuit = mnaCircuit;
             MNASolution = mnaSolution;
             MNACompanionBattery = mnaCompanionBattery;
             MNACompanionResistor = mnaCompanionResistor;
             MNACurrentSource = mnaCurrentSource;
+
+            Junction = junction;
+            Battery = battery;
+            Resistor = resistor;
+            Circuit = circuit;
+
+            Vector2 = vector2;
+            luqr = _luqr.luqr;
             
             done();
         });
@@ -201,6 +226,36 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
     });
 
+    it('wacky node order won\'t break things', function(){
+        var battery   = MNACompanionBattery.create( 0, 3, 10);
+        var resistor1 = MNACompanionResistor.create(1, 2, 10);
+        var resistor2 = MNACompanionResistor.create(2, 0, 10);
+        var resistor3 = MNACompanionResistor.create(3, 1,  5);
+
+        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
+
+        var solution = circuit.solve();
+
+        var batterySolutionCurrent = 10 / 25;
+
+        chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
+    });
+
+    it('wacky node order won\'t break things - control', function(){
+        var battery   = MNACompanionBattery.create( 0, 1, 10);
+        var resistor1 = MNACompanionResistor.create(1, 2, 10);
+        var resistor2 = MNACompanionResistor.create(2, 3, 10);
+        var resistor3 = MNACompanionResistor.create(3, 0,  5);
+
+        var circuit = MNACircuit.create([ battery ], [ resistor1, resistor2, resistor3 ], []);
+
+        var solution = circuit.solve();
+
+        var batterySolutionCurrent = 10 / 25;
+
+        chai.expect(solution.branchCurrents[battery.id].currentSolution).to.almost.equal(batterySolutionCurrent);
+    });
+
     it('a resistor with one node unconnected shouldn\'t cause problems', function(){
         var battery   = MNACompanionBattery.create( 0, 1,   4);
         var resistor1 = MNACompanionResistor.create(1, 0,   4);
@@ -299,6 +354,160 @@ describe('Modified Nodal Analysis - MNACircuit', function(){
         var solution = circuit.solve();
         var desiredSolution = new MNASolution.create(voltageMap, branchCurrents);
         chai.expect(solution.approxEquals(desiredSolution, THRESHOLD)).to.be.true;
+    });
+
+    it('MNACircuitSolver should convert and solve simple core circuits', function(){
+        var junction0 = new Junction({ position: new Vector2(0, 0) });
+        var junction1 = new Junction({ position: new Vector2(1, 0) });
+        var junction2 = new Junction({ position: new Vector2(0, 1) });
+
+        var battery = new Battery({
+            startJunction: junction0,
+            endJunction: junction1,
+            voltageDrop: 5,
+            internalResistance: 0,
+            internalResistanceOn: true
+        });
+
+        var resistor1 = new Resistor({
+            startJunction: junction1,
+            endJunction: junction2,
+            resistance: 10
+        });
+
+        var resistor2 = new Resistor({
+            startJunction: junction2,
+            endJunction: junction0,
+            resistance: 10
+        });
+
+        var circuit = new Circuit();
+        circuit.addBranch(battery);
+        circuit.addBranch(resistor1);
+        circuit.addBranch(resistor2);
+
+        var solver = new MNACircuitSolver();
+        solver.solve(circuit, 1 / 30);
+
+        var batterySolutionCurrent = 5 / 20;
+
+        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    });
+
+    it('MNACircuitSolver should convert and solve core circuits with resistive batteries', function(){
+        var junction0 = new Junction({ position: new Vector2(0, 0) });
+        var junction1 = new Junction({ position: new Vector2(1, 0) });
+        var junction2 = new Junction({ position: new Vector2(0, 1) });
+        var junction3 = new Junction({ position: new Vector2(1, 1) });
+
+        var battery = new Battery({
+            startJunction: junction0,
+            endJunction: junction3,
+            voltageDrop: 10,
+            internalResistance: 0,
+            internalResistanceOn: true
+        });
+
+        var resistor1 = new Resistor({
+            startJunction: junction1,
+            endJunction: junction2,
+            resistance: 10
+        });
+
+        var resistor2 = new Resistor({
+            startJunction: junction2,
+            endJunction: junction0,
+            resistance: 10
+        });
+
+        var resistor3 = new Resistor({
+            startJunction: junction3,
+            endJunction: junction1,
+            resistance: 5
+        });
+
+        var circuit = new Circuit();
+        circuit.addBranch(battery);
+        circuit.addBranch(resistor1);
+        circuit.addBranch(resistor2);
+        circuit.addBranch(resistor3);
+
+        // Works -------------------
+        // var junction0 = new Junction({ position: new Vector2(0, 0) });
+        // var junction1 = new Junction({ position: new Vector2(1, 0) });
+        // var junction2 = new Junction({ position: new Vector2(0, 1) });
+        // var junction3 = new Junction({ position: new Vector2(1, 1) });
+
+        // var battery = new Battery({
+        //     startJunction: junction0,
+        //     endJunction: junction1,
+        //     voltageDrop: 10,
+        //     internalResistance: 0,
+        //     internalResistanceOn: true
+        // });
+
+        // var resistor1 = new Resistor({
+        //     startJunction: junction1,
+        //     endJunction: junction2,
+        //     resistance: 10
+        // });
+
+        // var resistor2 = new Resistor({
+        //     startJunction: junction2,
+        //     endJunction: junction3,
+        //     resistance: 10
+        // });
+
+        // var resistor3 = new Resistor({
+        //     startJunction: junction3,
+        //     endJunction: junction0,
+        //     resistance: 5
+        // });
+
+        // var circuit = new Circuit();
+        // circuit.addBranch(battery);
+        // circuit.addBranch(resistor1);
+        // circuit.addBranch(resistor2);
+        // circuit.addBranch(resistor3);
+
+        var solver = new MNACircuitSolver();
+        solver.solve(circuit, 1 / 30);
+
+        var batterySolutionCurrent = 10 / 25;
+
+        chai.expect(battery.get('current')).to.almost.equal(batterySolutionCurrent);
+    });
+
+    it('LU decomposition works', function() {
+
+        var A = [
+            [ 0.00,     1.00,     0.00,     0.00,     0.00],
+            [ 1.00,     0.10,     0.00,    -0.10,     0.00],
+            [ 0.00,     0.00,     0.30,    -0.10,    -0.20],
+            [ 0.00,    -0.10,    -0.10,     0.20,     0.00],
+            [-1.00,     0.00,    -0.20,     0.00,     0.20],
+            [ 0.00,    -1.00,     0.00,     0.00,     1.00]
+        ];
+
+        var B = [
+             0,
+             0,
+             0,
+             0,
+             0,
+            10
+        ];
+
+        var X = luqr.solve(A, B);
+
+        chai.expect(X).to.almost.eql([
+            0.4,
+            0,
+            8,
+            4,
+            10,
+            0
+        ]);
     });
 
 });

@@ -6,6 +6,8 @@ define(function (require) {
 
     var PositionableObject = require('common/models/positionable-object');
 
+    // var silent = {silent: true };
+
     /**
      * An electron which moves along a branch
      */
@@ -21,8 +23,11 @@ define(function (require) {
         initialize: function(attributes, options) {
             PositionableObject.prototype.initialize.apply(this, arguments);
 
+            this._attrs = {};
+
             this.on('change:distAlongWire', this.updatePosition);
-            this.on('change:branch',        this.branchChanged);
+
+            this.updatePosition();
         },
 
         setLocation: function(branch, x) {
@@ -31,29 +36,23 @@ define(function (require) {
             else if (!branch.containsScalarLocation(x)) 
                 throw 'No location in branch.';
             
-            this.set('branch', branch);
-            this.set('distAlongWire', x);
+            this._attrs.branch = branch;
+            this._attrs.distAlongWire = x;
+            this.set(this._attrs);
         },
 
         updatePosition: function() {
             var pt = this.get('branch').getPosition(this.get('distAlongWire'));
 
-            if (isNaN(pt))
+            if (this.isNaN(pt))
                 throw 'Point was NaN, pt=' + pt + ', dist=' + this.get('distAlongWire') + ', wire length=' + this.get('branch').getLength();
             
             this.setPosition(pt);
         },
 
-        branchChanged: function(model, branch) {
-            if (this.previous('branch'))
-                this.stopListening(this.previous('branch'));
-            this.listenTo(branch, 'change', this.updatePosition);
-            this.updatePosition();
-        },
-
         isNaN: function(vector) {
             return isNaN(vector.x) || isNaN(vector.y);
-        },
+        }
 
     });
 

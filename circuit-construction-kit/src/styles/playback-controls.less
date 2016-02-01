@@ -49,8 +49,8 @@
             }
 
             &:active {
-                background: @panel-btn-fg;
-                color: @panel-btn-bg;
+                background: @link-color;
+                color: #fff;
             }
 
             &.pause-btn {
@@ -74,6 +74,20 @@
                 padding-left: 10px;
             }
         }
+    }
+
+    .btn-normal {
+        margin: 5px 5px 0;
+    }
+
+    .reset-btn {
+        .panel-button();
+        float: right;
+    }
+
+    .reset-dynamics-btn {
+        .panel-button();
+        float: left;
     }
 
 }

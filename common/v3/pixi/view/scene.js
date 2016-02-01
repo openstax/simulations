@@ -70,6 +70,7 @@ define(function(require) {
                 this.$el.width(),  // Width
                 this.$el.height(), // Height
                 {
+                    resolution:  window.devicePixelRatio ? window.devicePixelRatio : 1,
                     view:        this.el, // Canvas element
                     transparent: true,    // Transparent background
                     antialias:   true     // Antialiasing

@@ -22,6 +22,46 @@ define(function(require) {
          *   and generates and returns an image data URI.
          */
         displayObjectToDataURI: function(displayObject, padding) {
+            var wrapper = this._wrapDisplayObject(displayObject, padding);
+            stage.addChild(wrapper);
+
+            // Render to the canvas
+            renderer.render(stage);
+
+            // Set the displayObject loose again
+            wrapper.removeChild(displayObject);
+            stage.removeChild(wrapper);
+
+            // Return the image imprinted on the canvas
+            return canvas.toDataURL('image/png');
+        },
+
+        displayObjectToTexture: function(displayObject, padding) {
+            // var wrapper = this._wrapDisplayObject(displayObject, padding);
+            // stage.addChild(wrapper);
+
+            // var resolution = window.devicePixelRatio ? window.devicePixelRatio : 1;
+            // var renderTexture = new PIXI.RenderTexture(renderer, renderer.width, renderer.height, null, resolution);
+
+            // renderTexture.render(stage);
+
+            // // Set the displayObject loose again
+            // wrapper.removeChild(displayObject);
+            // stage.removeChild(wrapper);
+
+            // return renderTexture;
+            if (padding === undefined)
+                padding = 0;
+
+            renderer.resize(
+                displayObject.width + padding * 2,
+                displayObject.height + padding * 2
+            );
+
+            return displayObject.generateTexture(renderer);
+        },
+
+        _wrapDisplayObject: function(displayObject, padding) {
             if (padding === undefined)
                 padding = 0;
             
@@ -40,17 +80,8 @@ define(function(require) {
             wrapper.addChild(displayObject);
             wrapper.x = xShift;
             wrapper.y = yShift;
-            stage.addChild(wrapper);
-
-            // Render to the canvas
-            renderer.render(stage);
-
-            // Set the displayObject loose again
-            wrapper.removeChild(displayObject);
-            stage.removeChild(wrapper);
-
-            // Return the image imprinted on the canvas
-            return canvas.toDataURL('image/png');
+            
+            return wrapper;
         }
 
     };
