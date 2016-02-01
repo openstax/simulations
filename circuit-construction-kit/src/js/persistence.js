@@ -3,11 +3,11 @@ define(function (require) {
     'use strict';
 
     var $ = require('jquery');
+    var _ = require('underscore');
 
     var Vector2 = require('common/math/vector2');
 
     var Circuit          = require('models/circuit');
-    var Branch           = require('models/branch');
     var Junction         = require('models/junction');
     var Switch           = require('models/components/switch');
     var Wire             = require('models/components/wire');
@@ -202,14 +202,14 @@ define(function (require) {
             attrs.push(['startJunction', startIndex]);
             attrs.push(['endJunction', endIndex]);
 
-            var className;
-
+            var length;
             if (branch instanceof CircuitComponent) {
-                var length = ['length', branch.get('length')]
+                length = ['length', branch.get('length')];
                 attrs.push(length);
                 attrs.push(['height', branch.get('height')]);
             }
 
+            var className;
             if (branch instanceof ACVoltageSource) {
                 className = 'ACVoltageSource';
 
@@ -287,8 +287,7 @@ define(function (require) {
         }).join(' ');
 
         return '<' + name + ' ' + attributesString + ' />';
-    }
-
+    };
 
     var Persistence = {
         parseXML: parseXML,

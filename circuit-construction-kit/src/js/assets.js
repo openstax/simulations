@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var PIXI = require('pixi');
+
     var Assets = require('common/v3/pixi/assets');
 
     Assets.Path = 'img/';

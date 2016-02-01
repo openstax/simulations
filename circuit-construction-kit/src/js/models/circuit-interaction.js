@@ -2,8 +2,6 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var Vector2          = require('common/math/vector2');
     var Wire             = require('models/components/wire');
     var CircuitComponent = require('models/components/circuit-component');
@@ -154,7 +152,7 @@ define(function (require, exports, module) {
                 this.branchSet
                     .clear()
                     .addBranches(strongComponent)
-                    .translate(this.branchDragMatch == null ? 
+                    .translate(this.branchDragMatch === null ? 
                         startDx : 
                         this.branchDragMatch.getVector()
                     );

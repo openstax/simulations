@@ -33,7 +33,7 @@ define(function (require) {
             this.shape.points[1].y = height / 2;
             this.shape.points[2].x = length;
             this.shape.points[2].y = -height / 2;
-            this.shape.points[3].x = 0 
+            this.shape.points[3].x = 0;
             this.shape.points[3].y = -height / 2;
 
             this.shape.setPoints(this.shape.points);

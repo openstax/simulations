@@ -2,6 +2,7 @@ define(function(require) {
 
     'use strict';
 
+    var $    = require('jquery');
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
@@ -83,6 +84,9 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            if (someComponentIsDragging)
+                return;
+            
             someComponentIsDragging = true;
             this.dragging = true;
             this.dragged = false;
@@ -138,23 +142,31 @@ define(function(require) {
             this.hoverLayer.visible = false;
         },
 
+        getCenter: function() {
+            return this.displayObject.position;
+        },
+
         clicked: function(event) {
             if (this.model.get('selected'))
-                this.showContextMenu(event.data.global.x, event.data.global.y, event.data.originalEvent);
+                this.showContextMenu(event.data.originalEvent);
             else
                 this.circuit.setSelection(this.model);
         },
 
-        showContextMenu: function(x, y, originalEvent) {
+        showContextMenu: function(originalEvent) {
             var content = '<ul class="context-menu">' + this.contextMenuContent + '</ul>';
-            var $contextMenu = this.showPopover(x, y, originalEvent, '', content, 'right');
+            var $contextMenu = this.showPopover(originalEvent, '', content, 'right');
             $contextMenu.addClass('context-menu-popover');
             this.initContextMenu($contextMenu);
         },
 
-        showPopover: function(x, y, originalEvent, title, content, placement) {
+        showPopover: function(originalEvent, title, content, placement) {
             if (this.$popoverAnchor)
                 this.hidePopover();
+
+            var center = this.getCenter();
+            var x = center.x;
+            var y = center.y;
 
             if (placement === undefined) {
                 // Determine which side is appropriate based on where the point is in the scene
@@ -168,8 +180,10 @@ define(function(require) {
             this.$popoverAnchor = $('<div data-toggle="popover"></div>');
             this.$popoverAnchor.css({
                 position: 'absolute',
-                top:  y + 'px',
-                left: x + 'px'
+                top:  (y - 6) + 'px',
+                left: x + 'px',
+                height: '12px',
+                width: '2px'
             });
             $('.scene-view-ui').append(this.$popoverAnchor);
 
@@ -182,6 +196,7 @@ define(function(require) {
             });
             this.$popoverAnchor.popover('show');
             this.$popover = $('.scene-view-ui').children().last();
+            // this.$popover.css('top', parseInt(this.$popover.css('top')) + 16 + 'px');
 
             this.originalEvent = originalEvent;
 
@@ -189,6 +204,9 @@ define(function(require) {
         },
 
         hidePopovers: function(event) {
+            if (!this.originalEvent)
+                return;
+
             var $closestPopover = $(event.target).closest('.popover');
 
             if (this.$popover && 

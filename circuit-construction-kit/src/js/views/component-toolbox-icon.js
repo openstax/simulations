@@ -140,8 +140,8 @@ define(function(require) {
         createComponentView: function(x, y) {},
 
         setJunctionPositions: function(dummyModel, x, y) {
-            var x = this.mvt.viewToModelX(x);
-            var y = this.mvt.viewToModelY(y);
+            x = this.mvt.viewToModelX(x);
+            y = this.mvt.viewToModelY(y);
             var dx = dummyModel.getX2() - dummyModel.getX1();
             var dy = dummyModel.getY2() - dummyModel.getY1();
             dummyModel.get('startJunction').setPosition(x - dx / 2, y - dy / 2);

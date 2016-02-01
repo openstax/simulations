@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var $    = require('jquery');
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
     var Vector2                = require('common/math/vector2');
@@ -20,11 +22,6 @@ define(function(require) {
     var frequencyControlsHtml  = require('text!templates/frequency-controls.html');
 
     require('less!styles/component-controls');
-
-    /**
-     * We don't want the hover overlays visible on any object while another object is dragging.
-     */
-    var someComponentIsDragging = false;
 
     /**
      * A view that represents a circuit component
@@ -242,13 +239,6 @@ define(function(require) {
             this.hidePopover();
         },
 
-        showPopoverAtSameLocation: function(originalEvent, title, content) {
-            var $anchor = this.$popoverAnchor;
-            var x = parseInt($anchor.css('left'));
-            var y = parseInt($anchor.css('top'));
-            return this.showPopover(x, y, originalEvent, title, content);
-        },
-
         initPropertyControls: function($popover, modelProperty, min, max, rebuild, noPips) {
             var $slider = $popover.find('.property-slider');
             var $text   = $popover.find('.property-text');
@@ -283,7 +273,7 @@ define(function(require) {
                 var value = parseFloat($(event.target).val());
                 var clamped = false;
                 if (isNaN(value)) {
-                    value = min
+                    value = min;
                 }
                 else {
                     if (value > max) {
@@ -307,7 +297,7 @@ define(function(require) {
         },
 
         showResistanceControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Resistance', resistanceControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Resistance', resistanceControlsHtml);
 
             this.initPropertyControls($popover, 'resistance', Constants.MIN_RESISTANCE, Constants.MAX_RESISTANCE);
         },
@@ -316,13 +306,13 @@ define(function(require) {
             if (this.moreVoltsOptionEnabled) {
                 this.maxVoltage = (this.model.getVoltageDrop() <= Constants.MAX_BATTERY_VOLTAGE) ?
                     Constants.MAX_BATTERY_VOLTAGE : 
-                    Constants.MAX_HUGE_BATTERY_VOLTAGE
+                    Constants.MAX_HUGE_BATTERY_VOLTAGE;
             }
             else {
                 this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
             }
 
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Voltage', voltageControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Voltage', voltageControlsHtml);
             this.initVoltageControls($popover);
         },
 
@@ -351,13 +341,13 @@ define(function(require) {
         },
 
         showInternalResistanceControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Internal Resistance', resistanceControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Internal Resistance', resistanceControlsHtml);
 
             this.initPropertyControls($popover, 'internalResistance', Constants.MIN_RESISTANCE, 9);
         },
 
         showFrequencyControls: function(event) {
-            var $popover = this.showPopoverAtSameLocation(event.originalEvent, 'Frequency', frequencyControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Frequency', frequencyControlsHtml);
 
             this.initPropertyControls($popover, 'frequency', 0, 2);
         },
