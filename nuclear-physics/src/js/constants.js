@@ -168,6 +168,22 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                       COMPOSITE ATOMIC NUCLEUS                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var CompositeAtomicNucleus = {};
+
+    // Default value for agitation.
+    CompositeAtomicNucleus.DEFAULT_AGITATION_FACTOR = 5;
+    // Maximum value for agitation.
+    CompositeAtomicNucleus.MAX_AGITATION_FACTOR = 9;
+
+    Constants.CompositeAtomicNucleus = CompositeAtomicNucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                  HEAVY ADJUSTABLE-HALF-LIFE NUCLEUS                 **
      **                                                                     **
      *************************************************************************/
