@@ -36,8 +36,8 @@ define(function (require, exports, module) {
             this._jitterOffsets = [];
             this._jitterOffsetCount = 0;
 
-            this.on('change:nucleus', this.nucleusTypeChanged);
-            this.on('change:halfLife', this.halfLifeChanged);
+            this.on('change:nucleusType', this.nucleusTypeChanged);
+            this.on('change:halfLife',    this.halfLifeChanged);
         },
 
         /**
@@ -220,7 +220,7 @@ define(function (require, exports, module) {
             
             // Set the new half life value.
             for (var i = 0; i < this.atomicNuclei.length; i++)
-                this.atomicNuclei.at(i).setHalfLife(halfLife);
+                this.atomicNuclei.at(i).set('halfLife', halfLife);
         },
 
         /**

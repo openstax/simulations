@@ -37,7 +37,7 @@ define(function (require) {
         /**
          * Moves this particle based on its current velocity and acceleration.
          */
-        updatePositionAndVelocity: function() {
+        update: function() {
             // Update the position.
             this.setPosition(this.get('position').add(this.get('velocity')));
             

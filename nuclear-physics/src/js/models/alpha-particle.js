@@ -118,8 +118,8 @@ define(function (require) {
         
         /**
          * This method tells the particle to take its next step in moving away
-         * from the nucleus, and is only applicable when the particle is in the
-         * process of tunneling out of the nucleus.
+         *   from the nucleus, and is only applicable when the particle is in
+         *   the process of tunneling out of the nucleus.
          */
         moveOut: function() {
             if (this.tunnelingState != AlphaParticle.TUNNELING_OUT_OF_NUCLEUS)
@@ -132,7 +132,7 @@ define(function (require) {
             }
             
             // Move based on current pos/vel/acc settings.
-            this.updatePositionAndVelocity();
+            this.update();
         }
         
         /**
