@@ -152,6 +152,27 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                            ALPHA PARTICLE                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var AlphaParticle = {};
+
+    AlphaParticle.MAX_AUTO_TRANSLATE_AMT = 0.75;
+    
+    // Possible states for tunneling.
+    AlphaParticle.IN_NUCLEUS               = 0;
+    AlphaParticle.TUNNELING_OUT_OF_NUCLEUS = 1;
+    AlphaParticle.TUNNELED_OUT_OF_NUCLEUS  = 2;
+    
+    // Distance at which we consider the particle done tunneling, in fm.
+    AlphaParticle.MAX_TUNNELING_DISTANCE = 1000;
+
+    Constants.AlphaParticle = AlphaParticle;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                            ATOMIC NUCLEUS                           **
      **                                                                     **
      *************************************************************************/
