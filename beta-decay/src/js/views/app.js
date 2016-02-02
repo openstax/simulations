@@ -2,18 +2,20 @@ define(function(require) {
     
     'use strict';
 
-    var CCKAppView = require('views/app');
+    var NuclearPhysicsAppView = require('views/app');
     
-    var BetaDecaySimView = require('beta-decay/views/sim');
+    var MultiNucleusBetaDecaySimView  = require('beta-decay/views/sim/multiple');
+    var SingleNucleusBetaDecaySimView = require('beta-decay/views/sim/single');
 
     var Assets = require('assets');
 
-    var BetaDecayAppView = CCKAppView.extend({
+    var BetaDecayAppView = NuclearPhysicsAppView.extend({
 
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            BetaDecaySimView
+            MultiNucleusBetaDecaySimView,
+            SingleNucleusBetaDecaySimView
         ]
 
     });

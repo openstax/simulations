@@ -44,10 +44,10 @@ module.exports = function(grunt) {
 				dest: 'dist/common/'
 			},
 			nuclear_physics: {
-				src: [
-					'../nuclear-physics/src/img/**/*.{png,jpg,jpeg,gif}'
-				],
-				dest: 'dist/nuclear-physics/src/'
+				expand: true, // required when using cwd
+				cwd: '../nuclear-physics/src/img/',
+				src: '**',
+				dest: 'dist/img/'
 			},
 			screenshot: {
 				src: 'src/screenshot.png',
@@ -77,10 +77,14 @@ module.exports = function(grunt) {
 					name: 'main',
 					out: 'src/optimized.js',
 
+					paths: {
+						'assets': '"assets-dist"'
+						'styles/font-awesome' : '../styles/font-awesome'
+					},
+
 					less: {
 						modifyVars: {
-							//'fa-font-path': '"../node_modules/font-awesome/fonts/"',
-							'assets': '"assets-dist"'
+							'fa-font-path': '"../node_modules/font-awesome/fonts/"',
 						}
 					}
 
