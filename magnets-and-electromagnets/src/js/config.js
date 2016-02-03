@@ -41,6 +41,7 @@
 
         less: {
             logLevel: 1,
+            async: true,
 
             globalVars: {
                 dependencyDir: '"../faraday/bower_components"'

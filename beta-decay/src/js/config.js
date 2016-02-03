@@ -43,6 +43,7 @@
 
         less: {
             logLevel: 1,
+            async: true,
 
             globalVars: {
                 dependencyDir: '"../nuclear-physics/bower_components"'
