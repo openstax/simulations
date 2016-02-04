@@ -60,12 +60,6 @@ module.exports = function(grunt) {
 					paths: {
 						assets: '../../../faraday/src/js/assets',
 						'styles/font-awesome' : '../styles/font-awesome'
-					},
-
-					less: {
-						modifyVars: {
-							'fa-font-path': '"../node_modules/font-awesome/fonts/"'
-						}
 					}
 
 					// Doing it this way doesn't work:
