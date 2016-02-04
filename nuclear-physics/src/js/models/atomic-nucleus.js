@@ -16,7 +16,7 @@ define(function (require) {
      */
     var AtomicNucleus = MotionObject.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend({}, MotionObject.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: undefined,
             numProtons: undefined,
@@ -42,8 +42,8 @@ define(function (require) {
             this.originalPosition = new Vector2(this.get('position'));
             // Original number of neutrons and protons, needed for resets and possibly
             //   for determining whether decay has occurred.
-            this.originalNumNeutrons = this.get('numProtons');
-            this.originalNumProtons;
+            this.originalNumProtons = this.get('numProtons');
+            this.originalNumNeutrons = this.get('numNeutrons');
 
             // Variables that describe and control the decay of the nucleus.
             this.decayTime = 0;              // Time at which nucleus should decay - in sim time.

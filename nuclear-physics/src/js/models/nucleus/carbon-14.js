@@ -15,10 +15,10 @@ define(function (require) {
      */
     var Carbon14Nucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
+        defaults: _.extend({}, AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.Carbon14Nucleus.PROTONS,
-            numProtons:  Constants.Carbon14Nucleus.NEUTRONS,
+            numProtons:  Constants.Carbon14Nucleus.PROTONS,
+            numNeutrons: Constants.Carbon14Nucleus.NEUTRONS,
             // Carbon-14 half-life
             halfLife:    Constants.Carbon14Nucleus.HALF_LIFE,
             // Different decay-time scaling factor for carbon-14

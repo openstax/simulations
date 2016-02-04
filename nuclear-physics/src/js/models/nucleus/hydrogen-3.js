@@ -14,10 +14,10 @@ define(function (require) {
      */
     var Hydrogen3Nucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
+        defaults: _.extend({}, AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.Hydrogen3Nucleus.PROTONS,
-            numProtons:  Constants.Hydrogen3Nucleus.NEUTRONS,
+            numProtons:  Constants.Hydrogen3Nucleus.PROTONS,
+            numNeutrons: Constants.Hydrogen3Nucleus.NEUTRONS,
             // Different decay-time scaling factor for carbon-14
             decayTimeScalingFactor: Constants.Hydrogen3Nucleus.DECAY_TIME_SCALING_FACTOR
         }),

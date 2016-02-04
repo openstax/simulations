@@ -16,10 +16,10 @@ define(function (require) {
      */
     var LightAdjustableHalfLifeNucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
+        defaults: _.extend({}, AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.LightAdjustableHalfLifeNucleus.PROTONS,
-            numProtons:  Constants.LightAdjustableHalfLifeNucleus.NEUTRONS,
+            numProtons:  Constants.LightAdjustableHalfLifeNucleus.PROTONS,
+            numNeutrons: Constants.LightAdjustableHalfLifeNucleus.NEUTRONS,
             // Different decay-time scaling factor for carbon-14
             decayTimeScalingFactor: Constants.LightAdjustableHalfLifeNucleus.DECAY_TIME_SCALING_FACTOR
         }),

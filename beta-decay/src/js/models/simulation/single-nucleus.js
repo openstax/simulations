@@ -23,7 +23,7 @@ define(function (require, exports, module) {
      */
     var SingleNucleusBetaDecaySimulation = NuclearPhysicsSimulation.extend({
 
-        defaults: _.extend(NuclearPhysicsSimulation.prototype.defaults, {
+        defaults: _.extend({}, NuclearPhysicsSimulation.prototype.defaults, {
             nucleusType: Constants.SingleNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE,
             halfLife: undefined
         }),

@@ -9,15 +9,15 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     *  This class defines the behavior of the nucleus of Carbon 14, which
+     *  This class defines the behavior of the nucleus of Hydrogen 3, which
      *    exhibits beta decay behavior.
      */
     var Hydrogen3CompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
+        defaults: _.extend({}, BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.Hydrogen3CompositeNucleus.PROTONS,
-            numProtons:  Constants.Hydrogen3CompositeNucleus.NEUTRONS,
+            numProtons:  Constants.Hydrogen3CompositeNucleus.PROTONS,
+            numNeutrons: Constants.Hydrogen3CompositeNucleus.NEUTRONS,
             // Carbon-14 half-life
             halfLife:    Constants.Hydrogen3CompositeNucleus.HALF_LIFE,
             // Different decay-time scaling factor for carbon-14

@@ -14,10 +14,10 @@ define(function (require) {
      */
     var HeavyAdjustableHalfLifeNucleus = AbstractAlphaDecayNucleus.extend({
 
-        defaults: _.extend(AbstractAlphaDecayNucleus.prototype.defaults, {
+        defaults: _.extend({}, AbstractAlphaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_PROTONS,
-            numProtons: Constants.HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_NEUTRONS,
+            numProtons:  Constants.HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_PROTONS,
+            numNeutrons: Constants.HeavyAdjustableHalfLifeNucleus.ORIGINAL_NUM_NEUTRONS,
             halfLife: Constants.HeavyAdjustableHalfLifeNucleus.DEFAULT_HALF_LIFE
         }),
 

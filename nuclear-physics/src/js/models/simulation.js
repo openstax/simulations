@@ -16,7 +16,7 @@ define(function (require, exports, module) {
      */
     var NuclearPhysicsSimulation = Simulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend({}, Simulation.prototype.defaults, {
 
         }),
         

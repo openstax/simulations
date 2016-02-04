@@ -9,15 +9,15 @@ define(function (require) {
     var Constants = require('constants');
 
     /**
-     *  This class defines the behavior of the nucleus of Carbon 14, which
-     *    exhibits beta decay behavior.
+     *  This class defines the behavior of a composite nucleus that exhibits beta
+     *   decay and that has an adjustable half life.
      */
     var LightAdjustableCompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
+        defaults: _.extend({}, BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.LightAdjustableCompositeNucleus.PROTONS,
-            numProtons:  Constants.LightAdjustableCompositeNucleus.NEUTRONS,
+            numProtons:  Constants.LightAdjustableCompositeNucleus.PROTONS,
+            numNeutrons: Constants.LightAdjustableCompositeNucleus.NEUTRONS,
             // Carbon-14 half-life
             halfLife:    Constants.LightAdjustableCompositeNucleus.HALF_LIFE,
             // Different decay-time scaling factor for carbon-14

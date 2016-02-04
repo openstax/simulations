@@ -14,10 +14,10 @@ define(function (require) {
      */
     var Carbon14CompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
+        defaults: _.extend({}, BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.Carbon14CompositeNucleus.PROTONS,
-            numProtons:  Constants.Carbon14CompositeNucleus.NEUTRONS,
+            numProtons:  Constants.Carbon14CompositeNucleus.PROTONS,
+            numNeutrons: Constants.Carbon14CompositeNucleus.NEUTRONS,
             // Carbon-14 half-life
             halfLife:    Constants.Carbon14CompositeNucleus.HALF_LIFE,
             // Different decay-time scaling factor for carbon-14

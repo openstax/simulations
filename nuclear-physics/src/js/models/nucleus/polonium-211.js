@@ -14,10 +14,10 @@ define(function (require) {
      */
     var Polonium211Nucleus = AbstractAlphaDecayNucleus.extend({
 
-        defaults: _.extend(AbstractAlphaDecayNucleus.prototype.defaults, {
+        defaults: _.extend({}, AbstractAlphaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
-            numNeutrons: Constants.Polonium211Nucleus.ORIGINAL_NUM_PROTONS,
-            numProtons: Constants.Polonium211Nucleus.ORIGINAL_NUM_NEUTRONS,
+            numProtons:  Constants.Polonium211Nucleus.ORIGINAL_NUM_PROTONS,
+            numNeutrons: Constants.Polonium211Nucleus.ORIGINAL_NUM_NEUTRONS,
             halfLife: Constants.Polonium211Nucleus.HALF_LIFE
         }),
 
