@@ -20,31 +20,31 @@ define(function (require) {
 
             switch (nucleusType) {
 
-                case HYDROGEN_3:
+                case NucleusType.HYDROGEN_3:
                     halfLife = HalfLifeInfo.convertDaysToMs( 4500 );
                     break;
 
-                case CARBON_14:
+                case NucleusType.CARBON_14:
                     halfLife = HalfLifeInfo.convertYearsToMs( 5730 );
                     break;
 
-                case LIGHT_CUSTOM:
+                case NucleusType.LIGHT_CUSTOM:
                     halfLife = HalfLifeInfo.convertYearsToMs( 11 ); // Arbitrary value for sake of this sim.
                     break;
 
-                case POLONIUM_211:
+                case NucleusType.POLONIUM_211:
                     halfLife = 516;
                     break;
 
-                case URANIUM_235:
+                case NucleusType.URANIUM_235:
                     halfLife = HalfLifeInfo.convertYearsToMs( 703800000 );
                     break;
 
-                case URANIUM_238:
+                case NucleusType.URANIUM_238:
                     halfLife = HalfLifeInfo.convertYearsToMs( 4.46E9 );
                     break;
 
-                case HEAVY_CUSTOM:
+                case NucleusType.HEAVY_CUSTOM:
                     halfLife = 900;
                     break;
 

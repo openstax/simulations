@@ -3,6 +3,7 @@ define(function (require) {
     'use strict';
 
     var HalfLifeInfo = require('models/half-life-info');
+    var NucleusType  = require('models/nucleus-type');
 
     var Constants = {}; 
 

@@ -26,7 +26,7 @@ define(function (require) {
     MultiNucleusBetaDecaySimulation.BUCKET_ORIGIN_X = 16;
     MultiNucleusBetaDecaySimulation.BUCKET_ORIGIN_Y = 18;
     MultiNucleusBetaDecaySimulation.BUCKET_WIDTH = 18;
-    MultiNucleusBetaDecaySimulation.BUCKET_HEIGHT = BUCKET_WIDTH * 0.65;
+    MultiNucleusBetaDecaySimulation.BUCKET_HEIGHT = MultiNucleusBetaDecaySimulation.BUCKET_WIDTH * 0.65;
     MultiNucleusBetaDecaySimulation.BUCKET_RECT = new Rectangle(
         MultiNucleusBetaDecaySimulation.BUCKET_ORIGIN_X, MultiNucleusBetaDecaySimulation.BUCKET_ORIGIN_Y, 
         MultiNucleusBetaDecaySimulation.BUCKET_WIDTH, MultiNucleusBetaDecaySimulation.BUCKET_HEIGHT

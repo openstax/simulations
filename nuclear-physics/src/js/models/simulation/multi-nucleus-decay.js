@@ -31,10 +31,10 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
-
             this._jitterOffsets = [];
             this._jitterOffsetCount = 0;
+
+            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:nucleusType', this.nucleusTypeChanged);
             this.on('change:halfLife',    this.halfLifeChanged);

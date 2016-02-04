@@ -14,7 +14,7 @@ define(function (require) {
      */
     var LightAdjustableCompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.LightAdjustableCompositeNucleus.PROTONS,
             numProtons:  Constants.LightAdjustableCompositeNucleus.NEUTRONS,

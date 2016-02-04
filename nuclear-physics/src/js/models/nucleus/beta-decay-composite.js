@@ -6,7 +6,6 @@ define(function (require) {
 
     var CompositeAtomNucleus = require('models/nucleus/composite');
     var Nucleon              = require('models/nucleon');
-    var NucleonType          = require('models/nucleon-type');
 
     var Constants = require('constants');
 
@@ -38,8 +37,8 @@ define(function (require) {
                 //   way that construction works.
                 for (var i = this.constituents.length - 1; i >= 0; i--) {
                     var nucleon = this.constituents[i];
-                    if (nucleon instanceof Nucleon && nucleon.get('type') === NucleonType.PROTON) {
-                        nucleon.set('type', NucleonType.NEUTRON);
+                    if (nucleon instanceof Nucleon && nucleon.get('type') === Nucleon.PROTON) {
+                        nucleon.set('type', Nucleon.NEUTRON);
                         break;
                     }
                 }
@@ -68,8 +67,8 @@ define(function (require) {
             //   way that construction works.
             for (var i = this.constituents.length - 1; i >= 0; i--){
                 var nucleon = this.constituents[i];
-                if (nucleon instanceof Nucleon && nucleon.get('type') === NucleonType.NEUTRON) {
-                    nucleon.set('type', NucleonType.PROTON);
+                if (nucleon instanceof Nucleon && nucleon.get('type') === Nucleon.NEUTRON) {
+                    nucleon.set('type', Nucleon.PROTON);
                     break;
                 }
             }

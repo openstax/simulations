@@ -9,6 +9,9 @@ define(function (require, exports, module) {
 
     var MultiNucleusDecaySimulation    = require('models/simulation/multi-nucleus-decay');
     var NucleusType                    = require('models/nucleus-type');
+    var Hydrogen3Nucleus               = require('models/nucleus/hydrogen-3');
+    var Carbon14Nucleus                = require('models/nucleus/carbon-14');
+    var LightAdjustableHalfLifeNucleus = require('models/nucleus/light-adjustable-half-life');
 
     /**
      * Constants
@@ -56,7 +59,7 @@ define(function (require, exports, module) {
 
             var newNucleus;
             
-            for (int i = 0; i < this.get('maxNuclei'); i++) {
+            for (var i = 0; i < this.get('maxNuclei'); i++) {
                 if (this.get('nucleusType') == NucleusType.HYDROGEN_3)
                     newNucleus = new Hydrogen3Nucleus();
                 else if (this.get('nucleusType') == NucleusType.CARBON_14)

@@ -14,7 +14,7 @@ define(function (require) {
      */
     var Carbon14CompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.Carbon14CompositeNucleus.PROTONS,
             numProtons:  Constants.Carbon14CompositeNucleus.NEUTRONS,

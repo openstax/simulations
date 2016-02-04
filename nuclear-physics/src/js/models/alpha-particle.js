@@ -114,7 +114,7 @@ define(function (require) {
             
             // Change our tunneling state.
             this.tunnelingState = AlphaParticle.TUNNELING_OUT_OF_NUCLEUS;
-        }
+        },
         
         /**
          * This method tells the particle to take its next step in moving away
@@ -133,7 +133,7 @@ define(function (require) {
             
             // Move based on current pos/vel/acc settings.
             this.update();
-        }
+        },
         
         /**
          * This method returns to the nucleus a particle that is in the process

@@ -16,7 +16,7 @@ define(function (require) {
      */
     var LightAdjustableHalfLifeNucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.LightAdjustableHalfLifeNucleus.PROTONS,
             numProtons:  Constants.LightAdjustableHalfLifeNucleus.NEUTRONS,

@@ -299,7 +299,7 @@ define(function (require) {
 
         tunnelingRegionRadiusChanged: function(model, tunnelingRegionRadius) {
             if (tunnelingRegionRadius >= this.get('diameter') / 2)
-                this.set('tunnelingRegionRadius', Math.min(tunnelingRegionRadius, AtomicNucleus.MAX_TUNNELING_REGION_RADIUS);
+                this.set('tunnelingRegionRadius', Math.min(tunnelingRegionRadius, AtomicNucleus.MAX_TUNNELING_REGION_RADIUS));
         },
 
         /**

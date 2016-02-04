@@ -14,7 +14,7 @@ define(function (require) {
      */
     var Hydrogen3CompositeNucleus = BetaDecayCompositeNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(BetaDecayCompositeNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.Hydrogen3CompositeNucleus.PROTONS,
             numProtons:  Constants.Hydrogen3CompositeNucleus.NEUTRONS,

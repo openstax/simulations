@@ -14,7 +14,7 @@ define(function (require) {
      */
     var Hydrogen3Nucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.Hydrogen3Nucleus.PROTONS,
             numProtons:  Constants.Hydrogen3Nucleus.NEUTRONS,

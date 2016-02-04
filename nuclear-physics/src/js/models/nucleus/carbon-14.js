@@ -15,7 +15,7 @@ define(function (require) {
      */
     var Carbon14Nucleus = AbstractBetaDecayNucleus.extend({
 
-        defaults: _.extend(MotionObject.prototype.defaults, {
+        defaults: _.extend(AbstractBetaDecayNucleus.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: Constants.Carbon14Nucleus.PROTONS,
             numProtons:  Constants.Carbon14Nucleus.NEUTRONS,
@@ -53,7 +53,7 @@ define(function (require) {
          */
         updateDiameter: function() {
             if (this.get('enlarged'))
-                this.set('diameter', 1.6 * Math.pow(100, 0.362); // Return an artificially large value.
+                this.set('diameter', 1.6 * Math.pow(100, 0.362)); // Return an artificially large value.
             else
                 AbstractBetaDecayNucleus.prototype.updateDiameter.apply(this, arguments);
         }

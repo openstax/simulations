@@ -67,10 +67,10 @@ define(function (require) {
                     this.constituents.push(new AlphaParticle());
                 }
                 if (i < numFreeProtons) {
-                    this.constituents.push(new Nucleon({ type: NucleonType.PROTON, tunnelingEnabled: true }));
+                    this.constituents.push(new Nucleon({ type: Nucleon.PROTON, tunnelingEnabled: true }));
                 }
                 if (i < numFreeNeutrons) {
-                    this.constituents.push(new Nucleon({ type: NucleonType.NEUTRON, tunnelingEnabled: true }));
+                    this.constituents.push(new Nucleon({ type: Nucleon.NEUTRON, tunnelingEnabled: true }));
                 }
             }
             
@@ -167,7 +167,7 @@ define(function (require) {
                 var numberOfNucleiPlaced = 0;
                 while (numberOfNucleiPlaced < this.constituents.length) {
                     for (var i = 0; i < numberToPlacePerCycle; i++){
-                        var particle = this.constituents.get(this.constituents.length - 1 - numberOfNucleiPlaced);
+                        var particle = this.constituents[this.constituents.length - 1 - numberOfNucleiPlaced];
                         this.placeNucleon(particle, this.get('position'), minDistance, maxDistance, this.getNextPlacementZone());
                         numberOfNucleiPlaced++;
                         if (numberOfNucleiPlaced >= this.constituents.length)
