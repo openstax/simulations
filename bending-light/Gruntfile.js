@@ -13,7 +13,7 @@ module.exports = function(grunt) {
 		},
 		copy: {
 			require: {
-				src: 'bower_components/requirejs/require.js',
+				src: '../common/bower_components/requirejs/require.js',
 				dest: 'dist/js/require.js'
 			},
 			images: {
@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['node_modules/font-awesome/fonts/**'],
+				src: ['../node_modules/font-awesome/fonts/**'],
 				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
