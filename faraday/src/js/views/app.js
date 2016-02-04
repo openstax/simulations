@@ -22,6 +22,7 @@ define(function(require) {
     require('less!styles/app');
 
     var settingsDialogHtml = require('text!templates/settings-dialog.html');
+    var settingsButtonHtml = require('text!templates/settings-button.html');
 
     var FaradayAppView = PixiAppView.extend({
 
@@ -35,17 +36,17 @@ define(function(require) {
             GeneratorSimView
         ],
 
-        events: _.extend({}, PixiAppView.prototype.events, {
-            'slide #needle-spacing-slider' : 'changeNeedleSpacing',
-            'slide #needle-size-slider'    : 'changeNeedleSize'
-        }),
-
         render: function() {
             PixiAppView.prototype.render.apply(this);
 
-            this.$el.append(settingsDialogHtml);
+            this.$el.append(settingsButtonHtml);
 
-            this.$('#needle-spacing-slider').noUiSlider({
+            var $dialog = $(settingsDialogHtml);
+
+            $dialog.find('#needle-spacing-slider').on('slide', _.bind(this.changeNeedleSpacing, this));
+            $dialog.find('#needle-size-slider'   ).on('slide', _.bind(this.changeNeedleSize,    this));
+
+            $dialog.find('#needle-spacing-slider').noUiSlider({
                 start: Constants.GRID_SPACING,
                 range: {
                     min: Constants.GRID_SPACING_MIN,
@@ -54,7 +55,7 @@ define(function(require) {
                 step: 1
             });
 
-            this.$('#needle-size-slider').noUiSlider({
+            $dialog.find('#needle-size-slider').noUiSlider({
                 start: Constants.GRID_NEEDLE_WIDTH,
                 range: {
                     min: Constants.GRID_NEEDLE_WIDTH_MIN,
@@ -63,8 +64,10 @@ define(function(require) {
                 step: 1
             });
 
-            this.$spacing = this.$('#needle-spacing-value');
-            this.$size    = this.$('#needle-size-value');
+            this.$spacing = $dialog.find('#needle-spacing-value');
+            this.$size    = $dialog.find('#needle-size-value');
+
+            $('body').append($dialog);
         },
 
         changeNeedleSpacing: function(event) {

@@ -35,6 +35,7 @@
 
         less: {
             logLevel: 1,
+            async: true,
 
             globalVars: {
                 dependencyDir: '"/bower_components"'

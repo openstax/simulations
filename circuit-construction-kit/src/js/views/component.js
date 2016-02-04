@@ -23,6 +23,8 @@ define(function(require) {
 
     require('less!styles/component-controls');
 
+    var voltageControlsTemplate = _.template(voltageControlsHtml);
+
     /**
      * A view that represents a circuit component
      */
@@ -312,7 +314,7 @@ define(function(require) {
                 this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
             }
 
-            var $popover = this.showPopover(event.originalEvent, 'Voltage', voltageControlsHtml);
+            var $popover = this.showPopover(event.originalEvent, 'Voltage', voltageControlsTemplate({ moreVoltsChecked: this.moreVoltsChecked }));
             this.initVoltageControls($popover);
         },
 
@@ -323,12 +325,16 @@ define(function(require) {
             if (this.moreVoltsOptionEnabled) {
                 $popover.find('.more-volts-check').bind('click', _.bind(function(event) {
                     var checked = $(event.target).is(':checked');
-                    if (checked)
+                    if (checked) {
+                        this.moreVoltsChecked = true;
                         this.maxVoltage = Constants.MAX_HUGE_BATTERY_VOLTAGE;
-                    else
+                    }
+                    else {
+                        this.moreVoltsChecked = false;
                         this.maxVoltage = Constants.MAX_BATTERY_VOLTAGE;
+                    }
 
-                    $popover.find('.popover-content').html(voltageControlsHtml);
+                    $popover.find('.popover-content').html(voltageControlsTemplate({ moreVoltsChecked: this.moreVoltsChecked }));
                     this.initVoltageControls($popover, true);
                     $popover.find('.more-volts-check').prop('checked', checked);
 
