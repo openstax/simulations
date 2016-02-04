@@ -23,6 +23,10 @@ define(function (require, exports, module) {
      */
     var MultiNucleusBetaDecaySimulation = MultiNucleusDecaySimulation.extend({
 
+        defaults: _.extend({}, MultiNucleusDecaySimulation.prototype.defaults, {
+            nucleusType: Constants.MultiNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE
+        }),
+
         /**
          * Initializes the models used in the simulation
          */

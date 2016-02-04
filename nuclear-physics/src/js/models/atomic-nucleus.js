@@ -114,16 +114,16 @@ define(function (require) {
             //   bit to work for the purpose of this family of sims.
             switch (this.getAtomicWeight()) {
                 case 1:
-                    diameter = NuclearPhysicsConstants.NUCLEON_DIAMETER;
+                    diameter = Constants.NUCLEON_DIAMETER;
                     break;
                 case 2:
-                    diameter = 2 * NuclearPhysicsConstants.NUCLEON_DIAMETER;
+                    diameter = 2 * Constants.NUCLEON_DIAMETER;
                     break;
                 case 3:
-                    diameter = 2 * NuclearPhysicsConstants.NUCLEON_DIAMETER;  // Not correct, but works better.
+                    diameter = 2 * Constants.NUCLEON_DIAMETER;  // Not correct, but works better.
                     break;
                 case 4:
-                    diameter = 3.5 * NuclearPhysicsConstants.NUCLEON_DIAMETER;
+                    diameter = 3.5 * Constants.NUCLEON_DIAMETER;
                     break;
                 default:
                     diameter = (1.6 * Math.pow(this.getAtomicWeight(), 0.362));
