@@ -9,6 +9,9 @@ define(function(require) {
 
     var Assets = require('assets');
 
+    // CSS
+    require('less!beta-decay/styles/scene');
+
     /**
      *
      */

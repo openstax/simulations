@@ -6,6 +6,9 @@ define(function (require) {
 
     var Constants = require('constants');
 
+    // CSS
+    require('less!beta-decay/styles/sim');
+
     // HTML
     var simHtml = require('text!beta-decay/templates/sim.html');
 
