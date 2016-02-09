@@ -32,6 +32,17 @@ define(function (require) {
          */
         jitter: function() {
             // Does nothing in the base class.
+        },
+
+        /**
+         * Moves this particle based on its current velocity and acceleration.
+         */
+        update: function() {
+            // Update the position.
+            this.setPosition(this.get('position').add(this.get('velocity')));
+            
+            // Update the velocity.
+            this.setVelocity(this.get('velocity').add(this.get('acceleration')));
         }
 
     });

@@ -8,6 +8,8 @@ define(function (require) {
 
     var SubatomicParticle = require('models/subatomic-particle');
 
+    var Constants = require('constants');
+
     /**
      * A nucleon, which is either a neutron or a proton
      */

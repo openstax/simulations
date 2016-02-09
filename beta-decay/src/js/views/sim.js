@@ -3,7 +3,6 @@ define(function (require) {
     'use strict';
 
     var NuclearPhysicsSimView = require('views/sim');
-    var BetaDecaySceneView = require('beta-decay/views/scene');
 
     var Constants = require('constants');
 
@@ -32,15 +31,6 @@ define(function (require) {
             }, options);
 
             NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);
-        },
-
-        /**
-         * Initializes the SceneView.
-         */
-        initSceneView: function() {
-            this.sceneView = new BetaDecaySceneView({
-                simulation: this.simulation
-            });
         }
 
     });
