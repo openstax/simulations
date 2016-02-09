@@ -49,6 +49,9 @@ define(function(require) {
 
             var nucleus = this.simulation.atomicNucleus;
             var nucleusSprite = NucleusSpriteGenerator.generate(nucleus, this.mvt);
+            var viewPosition = this.mvt.modelToView(nucleus.get('position'));
+            nucleusSprite.x = viewPosition.x;
+            nucleusSprite.y = viewPosition.y;
 
             this.stage.addChild(nucleusSprite);
         },
