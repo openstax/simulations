@@ -5,7 +5,7 @@ define(function (require) {
     var SingleNucleusBetaDecaySimulation = require('beta-decay/models/simulation/single-nucleus');
 
     var BetaDecaySimView = require('beta-decay/views/sim');
-    var BetaDecaySceneView = require('beta-decay/views/scene');
+    var SingleNucleusBetaDecaySceneView = require('beta-decay/views/scene/single');
 
     var Constants = require('constants');
 
@@ -39,7 +39,7 @@ define(function (require) {
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new BetaDecaySceneView({
+            this.sceneView = new SingleNucleusBetaDecaySceneView({
                 simulation: this.simulation
             });
         }

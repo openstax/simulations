@@ -104,14 +104,14 @@ define(function (require) {
     //----------------------------------------------------------------------------
     // Misc Constants Shared within the Sim
     //----------------------------------------------------------------------------
-    Constants.NUCLEON_DIAMETER        = 1.6; // In femtometers.
-    Constants.ALPHA_PARTICLE_DIAMETER = 3.2; // In femtometers.
-    Constants.ELECTRON_DIAMETER = 0.75; // In femtometers, not to scale, or even close.
-    Constants.ANTINEUTRINO_DIAMETER = 0.3; // In femtometers, not to scale, or even close.
+    Constants.NUCLEON_DIAMETER        = 1.6;  // In femtometers.
+    Constants.ALPHA_PARTICLE_DIAMETER = 3.2;  // In femtometers.
+    Constants.ELECTRON_DIAMETER       = 0.75; // In femtometers, not to scale, or even close.
+    Constants.ANTINEUTRINO_DIAMETER   = 0.3;  // In femtometers, not to scale, or even close.
 
-    Constants.PROTON_COLOR = '#f00';
-    Constants.NEUTRON_COLOR = '#888';
-    Constants.ELECTRON_COLOR = '#069EC7';
+    Constants.PROTON_COLOR       = '#f00';
+    Constants.NEUTRON_COLOR      = '#888';
+    Constants.ELECTRON_COLOR     = '#069EC7';
     Constants.ANTINEUTRINO_COLOR = '#00C800';
     
     Constants.DEFAULT_CUSTOM_NUCLEUS_HALF_LIFE = HalfLifeInfo.convertYearsToMs(100E3);

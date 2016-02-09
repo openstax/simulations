@@ -5,7 +5,11 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/v3/pixi/view/scene');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+
+    var NucleusSpriteGenerator = require('views/nucleus-sprite-generator');
 
     var Assets = require('assets');
 
@@ -27,16 +31,6 @@ define(function(require) {
 
         renderContent: function() {
             
-        },
-
-        initGraphics: function() {
-            PixiSceneView.prototype.initGraphics.apply(this, arguments);
-
-            var sphere = Assets.createSprite(Assets.Images.SPHERE);
-            sphere.tint = 0xFF0000;
-            sphere.scale.x = sphere.scale.y = 0.25;
-
-            this.stage.addChild(sphere);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
