@@ -1,0 +1,49 @@
+.voltageSliderContainer {
+  float: left;
+  transform: translate(365px, -125px);
+  width: 75px;
+  text-align: center;
+
+  & > .voltageSlider {
+    background: none;
+    box-shadow: none;
+    border: none;
+    height: 12px;
+
+    .noUi-handle {
+      border-radius: 0px;
+      height: 12px;
+      border: none;
+      box-shadow: none;
+      transform: translateY(5px);
+      background-image: url('../img/sliderKnob.png');
+      &::before, &::after { display: none; }
+    }
+
+    .noUi-pips {
+      transform: translateY(-18px);
+      .noUi-value { display: none; }
+    }
+  }
+  & > .voltageSliderLabel {
+    display: block;
+    margin-top: 20px;
+  }
+}
+
+.currentContainer {
+  border: 1px solid black;
+  background-color: yellow;
+  float: left;
+  transform: translate(15px, -151px);
+  height: 30px;
+  width: 130px;
+  padding: 3px;
+
+  .currentLabel {
+    display: block;
+    border: 1px solid black;
+    background-color: white;
+    padding-left: 3px;
+  }
+}

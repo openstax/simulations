@@ -1,0 +1,37 @@
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: inherit;
+}
+
+.sound-btn-wrapper {
+    position: absolute;
+    top: -36px;
+    right: 30px;
+
+    > .sound-btn {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover {
+            opacity: 0.9;
+        }
+
+        &:active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.sound-btn-mute,
+        &.sound-btn-low {
+            display: none;
+        }
+    }
+}

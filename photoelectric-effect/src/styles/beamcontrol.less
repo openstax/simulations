@@ -1,0 +1,73 @@
+.wavelengthSliderContainer {
+  float: left;
+  transform: translate(388px, -509px);
+  width: 274px;
+  height: 21px;
+  background-color: #5b5b5b;
+
+  > .wavelengthSlider {
+    border: none;
+    background-color: red;
+    box-shadow: none;
+    height: 21px;
+  }
+  > .wavelengthSliderLabel {
+    background-color: white;
+    padding: 1px 5px;
+    font-size: 11px;
+    float: left;
+    transform: translate(111px, 4px);
+  }
+}
+
+.intensitySliderContainer {
+  float: left;
+  transform: translate(173px, -568px);
+  width: 155px;
+  height: 27px;
+  background-color: #5b5b5b;
+
+  > .intensitySlider {
+    border: none;
+    background-color: red;
+    box-shadow: none;
+    height: 100%;
+
+    .noUi-handle { height: 40px; }
+  }
+  > .intensitySliderLabel {
+    float: left;
+    transform: translate(164px, -23px);
+    background-color: white;
+    padding: 2px;
+    text-align: right;
+    font-size: 11px;
+    width: 53px;
+  }
+}
+
+.uvLabel, .irLabel {
+  font-size: 11px;
+  color: white;
+  float: left;
+}
+.uvLabel { transform: translate(-140px, -502px); }
+.irLabel { transform: translate(58px, -502px); }
+
+.wavelengthSliderContainer, .intensitySliderContainer {
+  .noUi-horizontal .noUi-origin .noUi-handle { width: 4px; }
+}
+
+.wavelengthSlider, .intensitySlider {
+  .noUi-handle::before, .noUi-handle::after { display: none; }
+}
+
+.noUi-horizontal.noUi-extended {
+  padding-right: 32px;
+}
+.noUi-horizontal.noUi-extended .noUi-handle {
+  left: -1px;
+}
+.noUi-horizontal.noUi-extended .noUi-origin  {
+  right: -32px;
+}
