@@ -75,8 +75,8 @@ define(function(require) {
             //   move it and fit it in the canvas.
             var wrapper = new PIXI.Container();
             var bounds = displayObject.getBounds();
-            var xShift = 0 - bounds.x + padding;
-            var yShift = 0 - bounds.y + padding;
+            var xShift = 0 - bounds.x * displayObject.scale.x + padding;
+            var yShift = 0 - bounds.y * displayObject.scale.y + padding;
             wrapper.addChild(displayObject);
             wrapper.x = xShift;
             wrapper.y = yShift;

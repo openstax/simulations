@@ -59,8 +59,8 @@ define(function (require) {
         /**
          * Renders everything
          */
-        render: function() {
-            BetaDecaySimView.prototype.render.apply(this, arguments);
+        postRender: function() {
+            BetaDecaySimView.prototype.postRender.apply(this, arguments);
 
             this.renderLegend();
             this.renderNucleusChooser();

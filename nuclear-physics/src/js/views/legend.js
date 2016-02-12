@@ -33,7 +33,6 @@ define(function(require) {
             this.scale = options.scale;
 
             this.initMVT();
-            this.initItems();
         },
 
         /**
@@ -58,6 +57,8 @@ define(function(require) {
          * Renders content and canvas for heatmap
          */
         render: function() {
+            this.initItems();
+
             var items = _.map(this.items, function(item) {
                 return {
                     label: item.label,
