@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var $        = require('jquery');
+    var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
 
     var PixiToImage        = require('common/v3/pixi/pixi-to-image');
@@ -26,24 +27,41 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                items: [],
-                scale: 
+                scale: 1
             }, options);
 
-            this.items = options.items;
             this.scale = options.scale;
 
-            this.mvt = new ModelViewTransform.createSinglePointScaleMapping(new Vector2(0, 0), new Vector2(0, 0), this.scale);
+            this.initMVT();
+            this.initItems();
+        },
+
+        /**
+         * Initializes the MVT to be used for rendering the items
+         */
+        initMVT: function() {
+            this.mvt = new ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0), 
+                new Vector2(0, 0), 
+                this.scale
+            );
+        },
+
+        /**
+         * Creates the views and labels that will be used to render the legend
+         */
+        initItems: function() {
+            this.items = [];
         },
 
         /**
          * Renders content and canvas for heatmap
          */
         render: function() {
-            var items = _.maps(this.items, function(item) {
+            var items = _.map(this.items, function(item) {
                 return {
                     label: item.label,
-                    img: PixiToImage.displayObjectToDataURI(item.view)
+                    img: PixiToImage.displayObjectToDataURI(item.displayObject)
                 };
             });
 

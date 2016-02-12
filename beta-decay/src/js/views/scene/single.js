@@ -9,7 +9,7 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var NucleusSpriteGenerator = require('views/nucleus-sprite-generator');
+    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     var BetaDecaySceneView = require('beta-decay/views/scene');
 
@@ -48,12 +48,21 @@ define(function(require) {
             this.initMVT();
 
             var nucleus = this.simulation.atomicNucleus;
-            var nucleusSprite = NucleusSpriteGenerator.generate(nucleus, this.mvt);
+            var nucleusSprite = ParticleGraphicsGenerator.generateNucleus(nucleus, this.mvt);
             var viewPosition = this.mvt.modelToView(nucleus.get('position'));
             nucleusSprite.x = viewPosition.x;
             nucleusSprite.y = viewPosition.y;
 
-            this.stage.addChild(nucleusSprite);
+            var particle = ParticleGraphicsGenerator.generateElectron(this.mvt)
+            particle.x = 200;
+            particle.y = 200;
+            this.stage.addChild(particle);
+            // this.stage.addChild()
+            // this.stage.addChild(ParticleGraphicsGenerator.generateProton(this.mvt))
+            // this.stage.addChild(ParticleGraphicsGenerator.generateElectron(this.mvt))
+            // this.stage.addChild(ParticleGraphicsGenerator.generateAntineutrino(this.mvt))
+
+            //this.stage.addChild(nucleusSprite);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {

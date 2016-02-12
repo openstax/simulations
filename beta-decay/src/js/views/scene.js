@@ -9,10 +9,6 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var NucleusSpriteGenerator = require('views/nucleus-sprite-generator');
-
-    var Assets = require('assets');
-
     // CSS
     require('less!beta-decay/styles/scene');
 

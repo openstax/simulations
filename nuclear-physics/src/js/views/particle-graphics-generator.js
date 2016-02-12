@@ -26,12 +26,12 @@ define(function(require) {
     /**
      * A view that represents a circuit
      */
-    var NucleusSpriteGenerator = {
+    var ParticleGraphicsGenerator = {
 
         /**
          * Create the image that will be used to visually represent this nucleus.
          */
-        generate: function(nucleus, mvt, hideNucleons) {
+        generateNucleus: function(nucleus, mvt, hideNucleons) {
             var container;
             
             // Create a graphical image that will represent this nucleus in the view.
@@ -43,7 +43,7 @@ define(function(require) {
                 container.addChild(sprite);
             }
             else {
-                container = this._generateWithNucleons(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
+                container = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
 
                 // Scale the image to the appropriate size.  Note that this is tweaked
                 // a little bit in order to make it look better.
@@ -61,7 +61,7 @@ define(function(require) {
             return wrapper;
         },
 
-        _generateWithNucleons: function(numProtons, numNeutrons, mvt) {
+        createNucleusSprite: function(numProtons, numNeutrons, mvt) {
             var container = new PIXI.Container();
 
             // Determine the size of the nucleus in femtometers.
@@ -186,15 +186,47 @@ define(function(require) {
             return container;
         },
 
+        generateProton: function(mvt) {
+            var container = this.createProtonSprite(mvt);
+            container.scale.x = container.scale.y = 2;
+            var wrapper = new PIXI.Container();
+            wrapper.addChild(container);
+            wrapper.cacheAsBitmap = true;
+            wrapper.scale.x = wrapper.scale.y = 0.5;
+            return wrapper;
+        },
+
         createProtonSprite: function(mvt) {
             var sprite = this.createSphereSprite(Constants.NUCLEON_DIAMETER, mvt);
             sprite.tint = PROTON_COLOR;
             return sprite;
         },
 
+        generateNeutron: function(mvt) {
+            var container = this.createNeutronSprite(mvt);
+            container.scale.x = container.scale.y = 2;
+            var wrapper = new PIXI.Container();
+            wrapper.addChild(container);
+            wrapper.cacheAsBitmap = true;
+            wrapper.scale.x = wrapper.scale.y = 0.5;
+            return wrapper;
+        },
+
         createNeutronSprite: function(mvt) {
             var sprite = this.createSphereSprite(Constants.NUCLEON_DIAMETER, mvt);
             sprite.tint = NEUTRON_COLOR;
+            return sprite;
+        },
+
+        generateElectron: function(mvt) {
+            var sprite = this.createSphereSprite(Constants.ELECTRON_DIAMETER, mvt);
+            sprite.tint = ELECTRON_COLOR;
+            return sprite;
+        },
+
+        generateAntineutrino: function(mvt) {
+            var sprite = this.createSphereSprite(Constants.ANTINEUTRINO_DIAMETER, mvt);
+            sprite.tint = ANTINEUTRINO_COLOR;
             return sprite;
         },
 
@@ -281,5 +313,5 @@ define(function(require) {
 
     };
 
-    return NucleusSpriteGenerator;
+    return ParticleGraphicsGenerator;
 });
