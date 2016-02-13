@@ -59,10 +59,17 @@ define(function(require) {
         render: function() {
             this.initItems();
 
+            var widestItem = _.max(this.items, function(item) {
+                return item.displayObject.width;
+            });
+
             var items = _.map(this.items, function(item) {
                 return {
                     label: item.label,
-                    img: PixiToImage.displayObjectToDataURI(item.displayObject, 1)
+                    img: PixiToImage.displayObjectToDataURI(item.displayObject, 1),
+                    width: item.displayObject.width,
+                    height: item.displayObject.height,
+                    containerWidth: widestItem.displayObject.width
                 };
             });
 
