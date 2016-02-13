@@ -32,33 +32,23 @@ define(function(require) {
          * Create the image that will be used to visually represent this nucleus.
          */
         generateNucleus: function(nucleus, mvt, hideNucleons) {
-            var container;
+            var sprite;
             
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
                 // Show as a single sphere
                 var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
                 sprite.tint = this.getColorForElement(nucleus);
-                container = new PIXI.Container();
-                container.addChild(sprite);
             }
             else {
-                container = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
+                sprite = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
 
                 // Scale the image to the appropriate size.  Note that this is tweaked
                 // a little bit in order to make it look better.
                 // newImage.scale( (nucleus.getDiameter()/1.2)/((newImage.getWidth() + newImage.getHeight()) / 2));
             }
 
-            // Because this seems to snap it at a lower resolution (lower than the native density),
-            //   maybe I should scale up the contents of these and then snap it and scale down afterward
-            container.scale.x = container.scale.y = 2;
-            var wrapper = new PIXI.Container();
-            wrapper.addChild(container);
-            wrapper.cacheAsBitmap = true;
-            wrapper.scale.x = wrapper.scale.y = 0.5;
-            
-            return wrapper;
+            return this.wrapSprite(sprite);
         },
 
         createNucleusSprite: function(numProtons, numNeutrons, mvt) {
@@ -150,9 +140,7 @@ define(function(require) {
         },
 
         generateAlphaParticle: function(mvt) {
-            var container = this.createAlphaParticleSprite(mvt);
-            container.cacheAsBitmap = true;
-            return container;
+            return this.wrapSprite(this.createAlphaParticleSprite(mvt));
         },
 
         createAlphaParticleSprite: function(mvt) {
@@ -187,13 +175,7 @@ define(function(require) {
         },
 
         generateProton: function(mvt) {
-            var container = this.createProtonSprite(mvt);
-            container.scale.x = container.scale.y = 2;
-            var wrapper = new PIXI.Container();
-            wrapper.addChild(container);
-            wrapper.cacheAsBitmap = true;
-            wrapper.scale.x = wrapper.scale.y = 0.5;
-            return wrapper;
+            return this.wrapSprite(this.createProtonSprite(mvt));
         },
 
         createProtonSprite: function(mvt) {
@@ -203,13 +185,7 @@ define(function(require) {
         },
 
         generateNeutron: function(mvt) {
-            var container = this.createNeutronSprite(mvt);
-            container.scale.x = container.scale.y = 2;
-            var wrapper = new PIXI.Container();
-            wrapper.addChild(container);
-            wrapper.cacheAsBitmap = true;
-            wrapper.scale.x = wrapper.scale.y = 0.5;
-            return wrapper;
+            return this.wrapSprite(this.createNeutronSprite(mvt));
         },
 
         createNeutronSprite: function(mvt) {
@@ -219,12 +195,20 @@ define(function(require) {
         },
 
         generateElectron: function(mvt) {
+            return this.wrapSprite(this.createElectron(mvt));
+        },
+
+        createElectron: function(mvt) {
             var sprite = this.createSphereSprite(Constants.ELECTRON_DIAMETER, mvt);
             sprite.tint = ELECTRON_COLOR;
             return sprite;
         },
 
         generateAntineutrino: function(mvt) {
+            return this.wrapSprite(this.createAntineutrino(mvt));
+        },
+
+        createAntineutrino: function(mvt) {
             var sprite = this.createSphereSprite(Constants.ANTINEUTRINO_DIAMETER, mvt);
             sprite.tint = ANTINEUTRINO_COLOR;
             return sprite;
@@ -236,6 +220,20 @@ define(function(require) {
             sprite.anchor.x = sprite.anchor.y = 0.5;
 
             return sprite;
+        },
+
+        wrapSprite: function(sprite) {
+            var scaleUpWrapper   = new PIXI.Container();
+            var scaleDownWrapper = new PIXI.Container();
+            
+            scaleUpWrapper.addChild(sprite);
+            scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
+
+            scaleDownWrapper.addChild(scaleUpWrapper);
+            scaleDownWrapper.cacheAsBitmap = true;
+            scaleDownWrapper.scale.x = scaleDownWrapper.scale.y = 0.5;
+
+            return scaleDownWrapper;
         },
 
         getSphereTexture: function() {

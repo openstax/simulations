@@ -54,7 +54,7 @@ define(function(require) {
                 padding = 0;
 
             renderer.resize(
-                displayObject.width + padding * 2,
+                displayObject.width  + padding * 2,
                 displayObject.height + padding * 2
             );
 

@@ -16,7 +16,7 @@ define(function(require) {
                 scale: 16
             }, options);
 
-            LegendView.prototype.initialize.apply(this, arguments);
+            LegendView.prototype.initialize.apply(this, [options]);
         },
 
         /**

@@ -62,7 +62,7 @@ define(function(require) {
             var items = _.map(this.items, function(item) {
                 return {
                     label: item.label,
-                    img: PixiToImage.displayObjectToDataURI(item.displayObject)
+                    img: PixiToImage.displayObjectToDataURI(item.displayObject, 1)
                 };
             });
 
