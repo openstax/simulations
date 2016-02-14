@@ -1,9 +1,10 @@
 <ul class="nucleus-chooser">
 <% _.each(items, function(item) { %>
-    <li>
+    <% var halfHeight = (item.start.height + item.end.height + 26) / 2; %>
+    <li style="margin-top: <%= halfHeight %>px; padding-bottom: <%= halfHeight / 2 %>px">
         <input type="radio" name="nucleus-chooser-<%= unique %>" value="<%= item.nucleusType %>" id="nucleus-<%= item.nucleusType %>-<%= unique %>" <% if (item.isDefault) { %>checked<% } %>>
         <label for="nucleus-<%= item.nucleusType %>-<%= unique %>">
-            <div class="nucleus-chooser-start">
+            <div class="nucleus-chooser-start" style="margin-top: <%= -halfHeight + 8 %>px">
                 <div class="nucleus-chooser-img-wrapper" style="width: <%= imageContainerWidth %>px">
                     <img src="<%= item.start.img %>" width="<%= item.start.width %>" height="<%= item.start.height %>">
                 </div>
