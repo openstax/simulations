@@ -4,8 +4,12 @@ define(function (require) {
 
     var _ = require('underscore');
 
+    var Vector2 = require('common/math/vector2');
+
     var CompositeAtomNucleus = require('models/nucleus/composite');
     var Nucleon              = require('models/nucleon');
+    var Electron             = require('models/electron');
+    var Antineutrino         = require('models/antineutrino');
 
     var Constants = require('constants');
 
@@ -54,7 +58,7 @@ define(function (require) {
         /**
          * Take the actions that simulate beta decay.
          */
-        decay: function(clockEvent) {
+        decay: function() {
             CompositeAtomNucleus.prototype.decay.apply(this, arguments);
 
             // Update the numerical nucleus configuration.

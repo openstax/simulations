@@ -7,6 +7,7 @@ define(function (require) {
     var BetaDecaySimView                = require('beta-decay/views/sim');
     var SingleNucleusBetaDecaySceneView = require('beta-decay/views/scene/single');
     var BetaDecayLegendView             = require('beta-decay/views/legend');
+    var BetaDecayNucleusChooserView     = require('beta-decay/views/nucleus-chooser');
 
     var Constants = require('constants');
 
@@ -53,7 +54,7 @@ define(function (require) {
         },
 
         initNucleusChooser: function() {
-
+            this.nucleusChooserView = new BetaDecayNucleusChooserView();
         },
 
         /**
@@ -74,7 +75,8 @@ define(function (require) {
         },
 
         renderNucleusChooser: function() {
-
+            this.nucleusChooserView.render();
+            this.$('.choose-nucleus-panel').append(this.nucleusChooserView.el);
         }
 
     });

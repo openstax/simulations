@@ -33,7 +33,7 @@ define(function (require) {
         /**
          * Take the actions that simulate beta decay.
          */
-        decay: function(clockEvent) {
+        decay: function() {
             CompositeAtomNucleus.prototype.decay.apply(this, arguments);
 
             // Update the numerical nucleus configuration.

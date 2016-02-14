@@ -53,16 +53,7 @@ define(function(require) {
             nucleusSprite.x = viewPosition.x;
             nucleusSprite.y = viewPosition.y;
 
-            var particle = ParticleGraphicsGenerator.generateElectron(this.mvt)
-            particle.x = 200;
-            particle.y = 200;
-            this.stage.addChild(particle);
-            // this.stage.addChild()
-            // this.stage.addChild(ParticleGraphicsGenerator.generateProton(this.mvt))
-            // this.stage.addChild(ParticleGraphicsGenerator.generateElectron(this.mvt))
-            // this.stage.addChild(ParticleGraphicsGenerator.generateAntineutrino(this.mvt))
-
-            //this.stage.addChild(nucleusSprite);
+            this.stage.addChild(nucleusSprite);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
