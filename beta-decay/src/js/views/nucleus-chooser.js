@@ -55,6 +55,29 @@ define(function(require) {
                 }
             });
 
+            // Carbon-14 to Nitrogen-14
+            var carbon14 = new Carbon14CompositeNucleus();
+            var nitrogen14 = new Carbon14CompositeNucleus();
+            nitrogen14.decay(); // Decay from Carbon-14 into Nitrogen-14
+
+            items.push({
+                nucleusType: NucleusType.CARBON_14,
+                start: {
+                    label: 'Carbon-14',
+                    displayObject: new NucleusView({
+                        model: carbon14,
+                        mvt: this.mvt
+                    }).displayObject
+                },
+                end: {
+                    label: 'Nitrogen-14',
+                    displayObject: new NucleusView({
+                        model: nitrogen14,
+                        mvt: this.mvt
+                    }).displayObject
+                }
+            });
+
             this.items = items;
         }
 
