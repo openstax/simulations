@@ -54,7 +54,9 @@ define(function (require) {
         },
 
         initNucleusChooser: function() {
-            this.nucleusChooserView = new BetaDecayNucleusChooserView();
+            this.nucleusChooserView = new BetaDecayNucleusChooserView({
+                simulation: this.simulation
+            });
         },
 
         /**

@@ -25,12 +25,17 @@ define(function(require) {
 
         template: _.template(templateHtml),
 
+        events: {
+            'click input' : 'itemClicked'
+        },
+
         initialize: function(options) {
             options = _.extend({
                 scale: 1
             }, options);
 
             this.scale = options.scale;
+            this.simulation = options.simulation;
 
             this.initMVT();
         },
@@ -118,6 +123,12 @@ define(function(require) {
 
         getMVT: function() {
             return this.mvt;
+        },
+
+        itemClicked: function(event) {
+            var $radio = $(event.target).closest('input[type="radio"]');
+            var nucleusType = parseInt($radio.val());
+            this.simulation.set('nucleusType', nucleusType);
         }
 
     });
