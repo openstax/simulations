@@ -17,7 +17,7 @@ define(function(require) {
     /**
      *
      */
-    var SingleNucleusBetaDecaySceneView = BetaDecaySceneView.extend({
+    var MultiNucleusBetaDecaySceneView = BetaDecaySceneView.extend({
 
         initialize: function(options) {
             BetaDecaySceneView.prototype.initialize.apply(this, arguments);
@@ -64,5 +64,5 @@ define(function(require) {
 
     });
 
-    return SingleNucleusBetaDecaySceneView;
+    return MultiNucleusBetaDecaySceneView;
 });
