@@ -52,7 +52,8 @@ define(function(require) {
 
         initNucleusDecayChart: function() {
             this.nucleusDecayChart = new NucleusDecayChart({
-                simulation: this.simulation
+                simulation: this.simulation,
+                width: this.getWidthBetweenPanels()
             });
 
             this.stage.addChild(this.nucleusDecayChart.displayObject);

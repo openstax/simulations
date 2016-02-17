@@ -416,5 +416,45 @@ define(function (require) {
     Constants.LightAdjustableCompositeNucleus = LightAdjustableCompositeNucleus;
 
 
+
+    var NucleusDecayChart = {};
+
+    // Total amount of time in milliseconds represented by this chart.
+    NucleusDecayChart.DEFAULT_TIME_SPAN = 3200;
+
+    // Minimum allowable half life.
+    NucleusDecayChart.MIN_HALF_LIFE = 10; // In milliseconds.
+
+    // Constants for controlling the appearance of the chart.
+    NucleusDecayChart.AXIS_LABEL_FONT  = 'bold 14px Helvetica Neue';
+    NucleusDecayChart.AXIS_LABEL_COLOR = '#000';
+    NucleusDecayChart.AXIS_LINE_WIDTH = 2;
+    NucleusDecayChart.AXIS_LINE_COLOR = '#000';
+    NucleusDecayChart.TICK_MARK_LENGTH = 3;
+    NucleusDecayChart.TICK_MARK_WIDTH = 2;
+    NucleusDecayChart.TICK_MARK_COLOR = NucleusDecayChart.AXIS_LINE_COLOR;
+    NucleusDecayChart.SMALL_LABEL_FONT = '12px Helvetica Neue';
+    NucleusDecayChart.LARGE_LABEL_FONT = '14px Helvetica Neue';
+
+    NucleusDecayChart.HALF_LIFE_LINE_WIDTH = 2;
+    NucleusDecayChart.HALF_LIFE_LINE_DASHES = [3, 3];
+    NucleusDecayChart.HALF_LIFE_LINE_COLOR = '#f00';
+    NucleusDecayChart.HALF_LIFE_LINE_ALPHA = 1;
+    NucleusDecayChart.HALF_LIFE_TEXT_COLOR = '#f00';
+    NucleusDecayChart.HALF_LIFE_TEXT_ALPHA = 1;
+    NucleusDecayChart.HALF_LIFE_TEXT_FONT  = 'bold 16px Helvetica Neue';
+
+    // Tweakable values that can be used to adjust where the nuclei appear on
+    // the chart.
+    NucleusDecayChart.TIME_ZERO_OFFSET = 100; // In milliseconds
+    NucleusDecayChart.INITIAL_FALL_COUNT = 5; // Number of clock ticks for nucleus to fall from upper to lower line.
+    NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION = 0.05; // Proportion of total time span
+
+    // Constants that control the way the nuclei look.
+    NucleusDecayChart.NUCLEUS_SIZE_PROPORTION = 0.15;  // Fraction of the overall height of the chart.
+
+    Constants.NucleusDecayChart = NucleusDecayChart;
+
+
     return Constants;
 });
