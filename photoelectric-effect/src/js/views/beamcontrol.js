@@ -2,18 +2,19 @@ define(function(require) {
 
     'use strict';
 
-    var $ = require('jquery');
-    var PIXI = require('pixi');
-    var PixiView = require('common/v3/pixi/view');
+    var $          = require('jquery');
+    var PIXI       = require('pixi');
     var NoUiSlider = require('nouislider');
-    var WavelengthColors = require('../../../../common/colors/wavelength');
-    require('../../../node_modules/wnumb/wNumb');
+                     require('wnumb');
 
-    var Assets = require('assets');
+    var PixiView         = require('common/v3/pixi/view');
+    var WavelengthColors = require('common/colors/wavelength');
+
+    var Assets    = require('assets');
     var Constants = require('constants');
 
     // CSS
-    require('css!../../../bower_components/nouislider/distribute/nouislider.min.css');
+    // require('css!../../../bower_components/nouislider/distribute/nouislider.min.css');
     require('less!styles/beamcontrol.less');
 
     var BeamControlView = PixiView.extend({
