@@ -17,6 +17,7 @@
             'circular-list':         '../../node_modules/object-pool-shimmed/node_modules/circular-list/index',
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
+            'wnumb':                 '../../node_modules/wnumb/wNumb',
 
             views:      '../js/views',
             models:     '../js/models',

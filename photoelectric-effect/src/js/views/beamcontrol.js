@@ -2,24 +2,27 @@ define(function(require) {
 
     'use strict';
 
-    var $ = require('jquery');
-    var PIXI = require('pixi');
-    var PixiView = require('common/pixi/view');
+    var $          = require('jquery');
+    var PIXI       = require('pixi');
     var NoUiSlider = require('nouislider');
-    var WavelengthColors = require('../../../../common/colors/wavelength');
-    require('../../../node_modules/wnumb/wNumb');
+                     require('wnumb');
 
-    var Assets = require('assets');
+    var PixiView         = require('common/v3/pixi/view');
+    var WavelengthColors = require('common/colors/wavelength');
+
+    var Assets    = require('assets');
     var Constants = require('constants');
 
     // CSS
-    require('css!../../../bower_components/nouislider/distribute/nouislider.min.css');
+    // require('css!../../../bower_components/nouislider/distribute/nouislider.min.css');
     require('less!styles/beamcontrol.less');
 
     var BeamControlView = PixiView.extend({
         events: {},
 
-        initialize: function() {
+        initialize: function(options) {
+            this.mvt = options.mvt;
+
             this.initBeamControl();
             this.initGraphics();
 
@@ -55,17 +58,19 @@ define(function(require) {
                 $('.intensitySlider').css('background', 'linear-gradient(to right, #000000 0%, ' +
                                           WavelengthColors.nmToHex(wavelength) + ' 100%)');
             });
-            $('.wavelengthSlider').css('background', 'linear-gradient(to right, #5b5b5b 0%, ' +
-                                                                              '#5b5b5b 30%, ' +
-                                       WavelengthColors.nmToHex(380) + ' 30%, ' +
-                                       WavelengthColors.nmToHex(415) + ' 35%, ' +
-                                       WavelengthColors.nmToHex(435) + ' 40%, ' +
-                                       WavelengthColors.nmToHex(485) + ' 46%, ' +
-                                       WavelengthColors.nmToHex(515) + ' 51%, ' +
-                                       WavelengthColors.nmToHex(575) + ' 57%, ' +
-                                       WavelengthColors.nmToHex(650) + ' 65%, ' +
-                                       WavelengthColors.nmToHex(780) + ' 80%, ' +
-                                       '#5b5b5b 80%, #5b5b5b 100%)');
+            $('.wavelengthSlider').css(
+                'background', 
+                'linear-gradient(to right, #5b5b5b 0%, ' + '#5b5b5b 30%, ' +
+                    WavelengthColors.nmToHex(380) + ' 30%, ' +
+                    WavelengthColors.nmToHex(415) + ' 35%, ' +
+                    WavelengthColors.nmToHex(435) + ' 40%, ' +
+                    WavelengthColors.nmToHex(485) + ' 46%, ' +
+                    WavelengthColors.nmToHex(515) + ' 51%, ' +
+                    WavelengthColors.nmToHex(575) + ' 57%, ' +
+                    WavelengthColors.nmToHex(650) + ' 65%, ' +
+                    WavelengthColors.nmToHex(780) + ' 80%, ' +
+                    '#5b5b5b 80%, #5b5b5b 100%)'
+            );
 
             NoUiSlider.create(intensitySlider, {
                 start: 0,
@@ -78,6 +83,7 @@ define(function(require) {
                     'postfix': '%'
                 })
             });
+
             intensitySlider.noUiSlider.on('update', function(values, handle) {
                 model.set('intensity', values[handle].replace(/(^\d+)(.+$)/i,'$1'));
                 intensitySliderLabel.innerHTML = values[handle];
@@ -91,7 +97,7 @@ define(function(require) {
             this.beamControlBackground = beamControlBackground;
             this.displayObject.addChild(this.beamControlBackground);
 
-            this.lightLayer = new PIXI.DisplayObjectContainer();
+            this.lightLayer = new PIXI.Container();
             this.lightLayer.x = 380;
             this.lightLayer.y = 48;
             this.displayObject.addChild(this.lightLayer);
@@ -102,8 +108,16 @@ define(function(require) {
             this.flashlight = flashlight;
             this.lightLayer.addChild(this.flashlight);
 
-
             this.lightLayer.rotation = -3.98
+
+            this.updateMVT(this.mvt);
+        },
+
+        /**
+         * Updates the model-view-transform and anything that relies on it.
+         */
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
 
             this.drawLightRect();
         },

@@ -5,33 +5,99 @@
     min-height: inherit;
 }
 
-.sound-btn-wrapper {
+.sim-controls-wrapper {
     position: absolute;
-    top: -36px;
-    right: 30px;
+    right: @panel-margin;
+    top: @panel-margin;
 
-    > .sound-btn {
-        background: @gray-lightest;
-        color: @link-color;
-        outline: none;
-        border: none;
-        border-radius: 50%;
-        width: 28px;
-        height: 28px;
-        text-align: center;
+    @media screen and (max-height: @short-window) {
+        right: (@short-screen-panel-margin + 1);
+        top: @short-screen-panel-margin;
+    }
+}
 
-        &:hover {
-            opacity: 0.9;
+@media screen and (max-height: @short-window) {
+    .sim-controls-wrapper {
+        position: inherit;
+        top: auto;
+        right: auto;
+    }
+
+    .sim-controls-left {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        left: (@short-screen-panel-margin + 1);
+    }
+
+    .sim-controls-right {
+        position: absolute;
+        top: @short-screen-panel-margin;
+        right: (@short-screen-panel-margin + 1);
+    }
+}
+
+.sim-controls {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+    width: @sim-controls-panel-width;
+
+    h2 {
+        .header();
+        margin-top: 0;
+        margin-bottom: 8px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
         }
 
-        &:active {
-            background: @link-color;
-            color: #fff;
-        }
-
-        &.sound-btn-mute,
-        &.sound-btn-low {
+        .expand-icon,
+        .collapse-icon {
             display: none;
         }
     }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 8px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .bootstrap-select {
+        width: 100% !important;
+    }
+
+    .target-select-wrapper {
+        margin-bottom: 16px;
+    }
+
 }
