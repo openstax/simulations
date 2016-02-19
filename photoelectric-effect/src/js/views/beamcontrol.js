@@ -20,7 +20,9 @@ define(function(require) {
     var BeamControlView = PixiView.extend({
         events: {},
 
-        initialize: function() {
+        initialize: function(options) {
+            this.mvt = options.mvt;
+
             this.initBeamControl();
             this.initGraphics();
 
@@ -56,17 +58,19 @@ define(function(require) {
                 $('.intensitySlider').css('background', 'linear-gradient(to right, #000000 0%, ' +
                                           WavelengthColors.nmToHex(wavelength) + ' 100%)');
             });
-            $('.wavelengthSlider').css('background', 'linear-gradient(to right, #5b5b5b 0%, ' +
-                                                                              '#5b5b5b 30%, ' +
-                                       WavelengthColors.nmToHex(380) + ' 30%, ' +
-                                       WavelengthColors.nmToHex(415) + ' 35%, ' +
-                                       WavelengthColors.nmToHex(435) + ' 40%, ' +
-                                       WavelengthColors.nmToHex(485) + ' 46%, ' +
-                                       WavelengthColors.nmToHex(515) + ' 51%, ' +
-                                       WavelengthColors.nmToHex(575) + ' 57%, ' +
-                                       WavelengthColors.nmToHex(650) + ' 65%, ' +
-                                       WavelengthColors.nmToHex(780) + ' 80%, ' +
-                                       '#5b5b5b 80%, #5b5b5b 100%)');
+            $('.wavelengthSlider').css(
+                'background', 
+                'linear-gradient(to right, #5b5b5b 0%, ' + '#5b5b5b 30%, ' +
+                    WavelengthColors.nmToHex(380) + ' 30%, ' +
+                    WavelengthColors.nmToHex(415) + ' 35%, ' +
+                    WavelengthColors.nmToHex(435) + ' 40%, ' +
+                    WavelengthColors.nmToHex(485) + ' 46%, ' +
+                    WavelengthColors.nmToHex(515) + ' 51%, ' +
+                    WavelengthColors.nmToHex(575) + ' 57%, ' +
+                    WavelengthColors.nmToHex(650) + ' 65%, ' +
+                    WavelengthColors.nmToHex(780) + ' 80%, ' +
+                    '#5b5b5b 80%, #5b5b5b 100%)'
+            );
 
             NoUiSlider.create(intensitySlider, {
                 start: 0,
@@ -79,6 +83,7 @@ define(function(require) {
                     'postfix': '%'
                 })
             });
+
             intensitySlider.noUiSlider.on('update', function(values, handle) {
                 model.set('intensity', values[handle].replace(/(^\d+)(.+$)/i,'$1'));
                 intensitySliderLabel.innerHTML = values[handle];
@@ -103,8 +108,16 @@ define(function(require) {
             this.flashlight = flashlight;
             this.lightLayer.addChild(this.flashlight);
 
-
             this.lightLayer.rotation = -3.98
+
+            this.updateMVT(this.mvt);
+        },
+
+        /**
+         * Updates the model-view-transform and anything that relies on it.
+         */
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
 
             this.drawLightRect();
         },

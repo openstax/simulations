@@ -7,12 +7,14 @@ define(function (require) {
     Assets.Path = 'img/';
 
     Assets.Images = {
-      CIRCUITA:              'circuit-A.png',
-      CIRCUITB:              'circuit-B.png',
-      CIRCUITEND:            'circuit-end.png',
-      CIRCUITENDLEFT:        'circuit-end-L.png',
-      CIRCUITBACKGROUNDLOOP: 'background-loop.png',
-      FLASHLIGHT:            'flashlight.png',
+      CIRCUIT_A:               'circuit-A.png',
+      CIRCUIT_B:               'circuit-B.png',
+      CIRCUIT_END:             'circuit-end.png',
+      CIRCUIT_END_LEFT:        'circuit-end-L.png',
+      CIRCUIT_BACKGROUND_LOOP: 'background-loop.png',
+      FLASHLIGHT:              'flashlight.png',
+
+      // Going to get rid of this in a bit
       PEBEAMCONTROL:         'photoelectric-beam-control.png',
       SLIDERKNOB:            'sliderKnob.png',
     };
