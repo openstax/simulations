@@ -1,40 +1,48 @@
 
 <span class="scene-view-placeholder"></span>
 <div class="voltageSliderContainer">
-  <div class="voltageSlider"></div>
-  <span class="voltageSliderLabel"></span>
+    <div class="voltageSlider"></div>
+    <span class="voltageSliderLabel"></span>
 </div>
 
 <div class="wavelengthSliderContainer">
-  <div class="wavelengthSlider noUi-extended"></div>
-  <span class="wavelengthSliderLabel"></span>
+    <div class="wavelengthSlider noUi-extended"></div>
+    <span class="wavelengthSliderLabel"></span>
 </div>
 
 <div class="intensitySliderContainer">
-  <div class="intensitySlider noUi-extended"></div>
-  <span class="intensitySliderLabel"></span>
+    <div class="intensitySlider noUi-extended"></div>
+    <span class="intensitySliderLabel"></span>
 </div>
 
 <div class="currentContainer">
-  <span class="currentLabel">Current: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000</span>
+    <span class="currentLabel">Current: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000</span>
 </div>
 
 <div class="uvLabel">UV</div>
 <div class="irLabel">IR</div>
 
 <div class="options">
-  <div>
-    <span>Target</span>
-    <select>
-      <option value="0">Sodium</option>
-      <option value="1">Zinc</option>
-      <option value="2">Copper</option>
-      <option value="3">Platinum</option>
-      <option value="4">Calcium</option>
-    </select>
-  </div>
-  <div>
-    <input type="checkbox" name="show-photons" value="show-photons" /> Show photons<br />
-    <input type="checkbox" name="high-energy" value="high-energy" /> Show only highest energy photons<br />
-  </div>
+    <div>
+        <span>Target</span>
+        <select>
+            <option value="0">Sodium</option>
+            <option value="1">Zinc</option>
+            <option value="2">Copper</option>
+            <option value="3">Platinum</option>
+            <option value="4">Calcium</option>
+        </select>
+    </div>
+    <div>
+        <input type="checkbox" name="show-photons" value="show-photons" /> Show photons<br />
+        <input type="checkbox" name="high-energy" value="high-energy" /> Show only highest energy photons<br />
+    </div>
+</div>
+
+<div class="playback-controls-wrapper">
+    <div class="playback-center-buttons-wrapper">
+        <button class="playback-btn play-btn"   title="Resume"><span class="fa fa-play"></span></button>
+        <button class="playback-btn pause-btn"  title="Pause"><span class="fa fa-pause"></span></button>
+        <button class="playback-btn step-btn"   title="Step"><span class="fa fa-step-forward"></span></button>
+    </div>
 </div>
