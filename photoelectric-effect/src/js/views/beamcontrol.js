@@ -4,7 +4,7 @@ define(function(require) {
 
     var $ = require('jquery');
     var PIXI = require('pixi');
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var NoUiSlider = require('nouislider');
     var WavelengthColors = require('../../../../common/colors/wavelength');
     require('../../../node_modules/wnumb/wNumb');
@@ -91,7 +91,7 @@ define(function(require) {
             this.beamControlBackground = beamControlBackground;
             this.displayObject.addChild(this.beamControlBackground);
 
-            this.lightLayer = new PIXI.DisplayObjectContainer();
+            this.lightLayer = new PIXI.Container();
             this.lightLayer.x = 380;
             this.lightLayer.y = 48;
             this.displayObject.addChild(this.lightLayer);

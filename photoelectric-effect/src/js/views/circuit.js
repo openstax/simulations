@@ -4,7 +4,7 @@ define(function(require) {
 
     var $ = require('jquery');
     var PIXI = require('pixi');
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var NoUiSlider = require('nouislider');
     require('../../../node_modules/wnumb/wNumb');
 
