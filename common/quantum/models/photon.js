@@ -6,7 +6,8 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Particle = require('./particle');
+    var Particle    = require('./particle');
+    var PhysicsUtil = require('./physics-util');
 
     /**
      * This model represents a photon and includes functionality that was previously
@@ -47,6 +48,13 @@ define(function (require) {
             this.prevVelocity.set(this.get('acceleration'));
 
             Particle.prototype.setVelocity.apply(this, arguments);
+        },
+
+        /**
+         * Converts wavelength to energy and returns it.
+         */
+        getEnergy: funciton() {
+            return PhysicsUtil.wavelengthToEnergy(this.get('wavelength'));
         }
 
     }, {
