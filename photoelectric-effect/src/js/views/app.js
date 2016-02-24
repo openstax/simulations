@@ -9,6 +9,9 @@ define(function(require) {
     var Assets = require('assets');
 
     require('less!styles/font-awesome');
+    require('less!styles/app');
+
+    var settingsDialogHtml = require('text!templates/settings-dialog.html');
 
     var PEffectAppView = PixiAppView.extend({
 
@@ -16,7 +19,13 @@ define(function(require) {
 
         simViewConstructors: [
             PEffectSimView
-        ]
+        ],
+
+        render: function() {
+            PixiAppView.prototype.render.apply(this);
+
+            this.$el.append(settingsDialogHtml);
+        }
 
     });
 

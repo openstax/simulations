@@ -44,9 +44,9 @@ define(function(require) {
         },
 
         initLayers: function() {
-            this.photonElectronLayer = new PIXI.DisplayObjectContainer();
-            this.backgroundLayer = new PIXI.DisplayObjectContainer();
-            this.foregroundLayer = new PIXI.DisplayObjectContainer();
+            this.photonElectronLayer = new PIXI.Container();
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
 
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.foregroundLayer);

@@ -44,7 +44,15 @@
     }
 }
 
-.white-panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
+.header() {
+    font-size: 16px;
+    font-weight: 400;
+    color: fadeout(#222, 35%);
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.09);
+}
+
+.panel(@shadow-alpha: 0.25, @background-fade-percent: 80%) {
     background: fadeout(#fff, @background-fade-percent);
     box-shadow: 0 0 11px rgba(0, 0, 0, @shadow-alpha);
 }

@@ -4,7 +4,7 @@ define(function(require) {
 
     var $ = require('jquery');
     var PIXI = require('pixi');
-    var PixiView = require('common/pixi/view');
+    var PixiView = require('common/v3/pixi/view');
     var NoUiSlider = require('nouislider');
     require('../../../node_modules/wnumb/wNumb');
 
@@ -18,7 +18,9 @@ define(function(require) {
     var CircuitView = PixiView.extend({
         events: {},
 
-        initialize: function() {
+        initialize: function(options) {
+            this.mvt = options.mvt;
+
             this.initCircuit();
             this.initGraphics();
 
@@ -56,14 +58,14 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            var circuitA = Assets.createSprite(Assets.Images.CIRCUITA);
+            var circuitA = Assets.createSprite(Assets.Images.CIRCUIT_A);
             circuitA.x = 60;
             circuitA.y = 180;
             circuitA.scale = new PIXI.Point(.85, .85);
             this.circuitA = circuitA;
             this.displayObject.addChild(this.circuitA);
 
-            var circuitB = Assets.createSprite(Assets.Images.CIRCUITB);
+            var circuitB = Assets.createSprite(Assets.Images.CIRCUIT_B);
             circuitB.x = 60;
             circuitB.y = 180;
             circuitB.scale = new PIXI.Point(.85, .85);
@@ -71,29 +73,39 @@ define(function(require) {
             this.circuitB = circuitB;
             this.displayObject.addChild(this.circuitB);
 
-            var circuitEndL = Assets.createSprite(Assets.Images.CIRCUITENDLEFT);
+            var circuitEndL = Assets.createSprite(Assets.Images.CIRCUIT_END_LEFT);
             circuitEndL.x = 160;
             circuitEndL.y = 175;
             this.circuitEndL = circuitEndL;
             this.displayObject.addChild(this.circuitEndL);
 
-            var circuitEnd = Assets.createSprite(Assets.Images.CIRCUITEND);
+            var circuitEnd = Assets.createSprite(Assets.Images.CIRCUIT_END);
             circuitEnd.x = 620;
             circuitEnd.y = 175;
             this.circuitEnd = circuitEnd;
             this.displayObject.addChild(this.circuitEnd);
 
-            var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUITBACKGROUNDLOOP);
+            var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUIT_BACKGROUND_LOOP);
             circuitBackgroundLoop.x = 131;
             circuitBackgroundLoop.y = 165;
             this.circuitBackgroundLoop = circuitBackgroundLoop;
             this.displayObject.addChild(this.circuitBackgroundLoop);
+
+            this.updateMVT(this.mvt);
+        },
+
+        /**
+         * Updates the model-view-transform and anything that relies on it.
+         */
+        updateMVT: function(mvt) {
+            this.mvt = mvt;
         },
 
         updateCircuitState: function(model, circuitIsPositive) {
             this.circuitA.visible = circuitIsPositive;
             this.circuitB.visible = !circuitIsPositive;
         }
+
     }, Constants.CircuitView);
 
     return CircuitView;
