@@ -1,0 +1,53 @@
+<div class="settings-btn-wrapper">
+    <button class="settings-btn" title="Options" data-toggle="modal" data-target="#settings-dialog"><span class="fa fa-cogs"></span></button>
+</div>
+
+<div class="modal" id="settings-dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title">Options</h4>
+            </div>
+            <div class="modal-body">
+                
+                <div class="row">
+                    <div class="col-xs-6">
+                        <label>Measure temperature in</label>
+                    </div>
+                    <div class="col-xs-6 control-column">
+                        <input type="radio" name="temperature-setting" id="temperature-kelvin" checked>
+                        <label for="temperature-kelvin">Kelvin</label>
+
+                        <input type="radio" name="temperature-setting" id="temperature-celsius">
+                        <label for="temperature-celsius">Celsius</label>
+                    </div>
+                </div>
+
+                <div class="row">
+                    Show all simulated emissions
+                </div>
+
+                <div class="row">
+                    Adjust simulated likelyhood
+                </div>
+
+                <div class="row">
+                    Photon diameter
+                </div>
+
+                <div class="row">
+                    Pair separation
+                </div>
+
+                <div class="row">
+                    Show photons as comets
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
