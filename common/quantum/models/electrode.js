@@ -27,9 +27,16 @@ define(function (require) {
 
             this.set('point1', new Vector2(this.get('point1')));
             this.set('point2', new Vector2(this.get('point2')));
+
+            this.listenTo('change:point1 change:point2', this.endpointsChanged);
         },
 
-        
+        endpointsChanged: function(electrode, point) {
+            this.setPosition(
+                (this.get('point1').x + this.get('point2').x) / 2, 
+                (this.get('point1').y + this.get('point2').y) / 2
+            );
+        }
 
     });
 

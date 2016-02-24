@@ -152,6 +152,10 @@ define(function (require) {
         //   will basically squish everything so the ellipse
         //   becomes a circle--a unit circle centered on the origin
         //   --and then it becomes easy to solve.
+        //
+        // Credit for this nice shortcut goes to Byron Nelson in
+        //   this forum post: 
+        //   http://xboxforums.create.msdn.com/forums/t/84095.aspx
 
         // Use a cached rectangle object
         if (!this._transformedRect)
