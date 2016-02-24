@@ -9,7 +9,7 @@ describe('Rectangle', function(){
 		});
 	});
 
-	it('#overlapsCircle should determine if a circle of a given radius overlaps rectangle', function(){
+	it('#overlapsCircle should determine if a circle overlaps rectangle', function(){
 		var rect = new Rectangle(0, 0, 1, 1);
 
 		chai.expect(rect.overlapsCircle( 1,     1, 0.5)).to.be.true;
@@ -20,6 +20,30 @@ describe('Rectangle', function(){
 		chai.expect(rect.overlapsCircle( 0,  -0.5, 0.2)).to.be.false;
 		chai.expect(rect.overlapsCircle( 2,   2,   1.5)).to.be.true;
 		chai.expect(rect.overlapsCircle(-1,   2,   1.5)).to.be.true;
+	});
+
+	it('#overlapsEllipse should determine if an ellipse overlaps rectangle', function(){
+		var rect = new Rectangle(0, 0, 2, 2);
+
+		chai.expect(rect.overlapsEllipse( 1, 1, 1,   1)).to.be.true;
+		chai.expect(rect.overlapsEllipse( 2, 2, 1,   1)).to.be.true;
+		chai.expect(rect.overlapsEllipse( 3, 3, 1,   1)).to.be.false;
+		chai.expect(rect.overlapsEllipse( 0, 3, 1,   2)).to.be.true;
+		chai.expect(rect.overlapsEllipse(-1, 0, 0.1, 2)).to.be.false;
+		chai.expect(rect.overlapsEllipse(-1, 0, 2,   2)).to.be.true;
+
+		var rectB = new Rectangle(1, 1, 1, 1);
+		chai.expect(rectB.overlapsEllipse( 0, 0, 1, 1)).to.be.false;
+		chai.expect(rectB.overlapsEllipse( 0, 0, 2, 2)).to.be.true;
+		chai.expect(rectB.overlapsEllipse( 1, 0, 1, 2)).to.be.true;
+		chai.expect(rectB.overlapsEllipse( 1,-1, 1, 1)).to.be.false;
+
+		var rectC = new Rectangle(2, 7, 2, 2);
+		chai.expect(rectC.overlapsEllipse( 0, 7, 1, 1)).to.be.false;
+		chai.expect(rectC.overlapsEllipse( 0, 7, 3, 1)).to.be.true;
+		chai.expect(rectC.overlapsEllipse( 2, 7, 1, 1)).to.be.true;
+		chai.expect(rectC.overlapsEllipse( 2, 0, 1, 8)).to.be.true;
+		chai.expect(rectC.overlapsEllipse( 2, 0, 1, 6)).to.be.false;
 	});
 
 });

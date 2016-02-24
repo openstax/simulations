@@ -116,7 +116,9 @@ define(function (require) {
     };
 
     /**
-     * Finds out if the rectangle overlaps with a circle.
+     * Returns whether or not the rectangle overlaps with a
+     *   circle, defined by its position and radius.
+     *
      *   Algorithm from this Stack Overflow response:
      *   http://stackoverflow.com/a/402010/4085004
      */
@@ -136,6 +138,36 @@ define(function (require) {
             Math.pow(distanceY - this.h / 2, 2);
 
         return (cornerDistanceSquared <= (radius * radius));
+    };
+
+    /**
+     * Returns whether or not the rectangle overlaps with an
+     *   ellipse, defined by its position and major and minor
+     *   radii.
+     */
+    Rectangle.prototype.overlapsEllipse = function(x, y, a, b) {
+        // In order to solve for collision with an ellipse, we need
+        //   to transform the rectangle relative to the dimensions
+        //   and position of the ellipse as if it were a circle. We
+        //   will basically squish everything so the ellipse
+        //   becomes a circle--a unit circle centered on the origin
+        //   --and then it becomes easy to solve.
+
+        // Use a cached rectangle object
+        if (!this._transformedRect)
+            this._transformedRect = new Rectangle();
+
+        var transformedRect = this._transformedRect.set(this.x, this.y, this.w, this.h);
+        // Translate by the inverse of the ellipse's position (assumes no rotation)
+        transformedRect.x -= x;
+        transformedRect.y -= y;
+        // Scale position and dimensions to be relative to the ellipse's radii
+        transformedRect.x /= a;
+        transformedRect.y /= b;
+        transformedRect.w /= a;
+        transformedRect.h /= b;
+
+        return transformedRect.overlapsCircle(0, 0, 1);
     };
 
     /**

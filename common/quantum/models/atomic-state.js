@@ -192,9 +192,18 @@ define(function (require) {
          */
         getWavelength: function() {
             return PhysicsUtil.energyToWavelength(this.get('energyLevel'));
+        },
+
+        getNextLowerEnergyState: function() {
+            return this.get('nextLowerState');
+        },
+
+        getNextHigherEnergyState: function() {
+            return this.get('nextHigherState');
         }
 
     }, _.extend({}, constants, {
+        
         /**
          * Sets the next-higher and next-lower attributes for an array of AtomicStates
          *
@@ -208,6 +217,7 @@ define(function (require) {
 
             states[states.length - 1].set('nextHigherState', AtomicState.MaxEnergyState.instance());
         }
+
     });
 
 
@@ -257,6 +267,10 @@ define(function (require) {
         }
 
     });
+
+
+    AtomicState.MaxEnergyState = MaxEnergyState;
+    AtomicState.MinEnergyState = MinEnergyState;
 
 
     return AtomicState;

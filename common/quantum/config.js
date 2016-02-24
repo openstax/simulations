@@ -15,5 +15,7 @@ define(function (require) {
     QuantumConfig.MIN_WAVELENGTH = VisibleColor.MIN_WAVELENGTH;
     QuantumConfig.MAX_WAVELENGTH = VisibleColor.MAX_WAVELENGTH;
 
+    QuantumConfig.PIXELS_PER_NM = 1E6;
+
     return QuantumConfig;
 });

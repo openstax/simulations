@@ -9,27 +9,9 @@ define(function (require) {
     var Particle = require('./particle');
 
     /**
-     * Because Backbone models only see shallow changes, we need to
-     *   create new objects when assigning a new value to an attribute
-     *   if we want the event system to pick up the change.  Creating
-     *   and destroying objects is expensive in a real-time system,
-     *   especially when it's happening each frame on a lot of objects,
-     *   so we're going to use an object pool to reuse old objects
-     *   instead of just throwing them away.
-     */
-    var vectorPool = Pool({
-        init: function() {
-            return new Vector2();
-        },
-        enable: function(vector) {
-            vector.set(0, 0);
-        }
-    });
-
-    /**
      * A body with mass and momentum
      */
-    var Photon = Particle.extend({
+    var Body = Particle.extend({
 
         defaults: _.extend({}, Particle.prototype.defaults, {
             lastColidedBody: null,
@@ -37,14 +19,13 @@ define(function (require) {
             omega: undefined,
             alpha: undefined,
             prevAlpha: undefined,
-            mass: undefined,
-            momentum: undefined
+            mass: undefined
         }),
 
         initialize: function(attributes, options) {
             Particle.prototype.initialize.apply(this, [attributes, options]);
 
-            this.set('momentum', vectorPool.create().set(this.get('momentum')));
+            this._momentum = new Vector2();
         },
 
         /**
@@ -61,11 +42,6 @@ define(function (require) {
             this.set('prevAlpha', alpha);
 
             Particle.prototype.update.apply(this, arguments);
-
-            this.setMomentum(
-                this.get('velocity').x * this.get('mass'),
-                this.get('velocity').y * this.get('mass')
-            );
         },
 
         getCM: function() {
@@ -89,20 +65,22 @@ define(function (require) {
             );
         },
 
+        getMomentum: function() {
+            return this._momentum.set(
+                this.get('velocity').x * this.get('mass'),
+                this.get('velocity').y * this.get('mass')
+            );
+        },
+
         /**
          * Function that facilitates setting the momentum vector 
          *   while still triggering a change event.
          */
         setMomentum: function(x, y, options) {
-            var oldMomentum = this.get('momentum');
-            
             if (x instanceof Vector2)
-                this.set('momentum', vectorPool.create().set(x), y);
+                this.setVelocity(x.x / this.get('mass'), x.y / this.get('mass'), y);
             else
-                this.set('momentum', vectorPool.create().set(x, y), options);
-
-            // Only remove it at the end or we might be given the same one
-            vectorPool.remove(oldMomentum);
+                this.setVelocity(x / this.get('mass'), y / this.get('mass'), options);
         },
 
         /** 
@@ -115,5 +93,5 @@ define(function (require) {
 
     });
 
-    return Photon;
+    return Body;
 });

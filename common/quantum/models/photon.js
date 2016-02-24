@@ -50,6 +50,14 @@ define(function (require) {
             Particle.prototype.setVelocity.apply(this, arguments);
         },
 
+        getPreviousPosition: function() {
+            return this.prevPosition;
+        },
+
+        getPreviousVelocity: function() {
+            return this.prevVelocity;
+        },
+
         /**
          * Converts wavelength to energy and returns it.
          */
