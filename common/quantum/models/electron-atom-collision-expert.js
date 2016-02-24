@@ -2,24 +2,19 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var Rectangle = require('common/math/rectangle');
 
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/vector2');
-
-    var Photon = require('./photon');
+    var Atom     = require('./atom');
+    var Electron = require('./electron');
 
     // Cached objects
     var electronPath = new Rectangle();
 
     /**
-     * 
+     * Detects and handles collisions between two bodies if one is an electron and one is an atom
      */
     var ElectronAtomCollisionExpert = {
 
-        /**
-         * 
-         */
         detectAndDoCollision: function(body1, body2) {
             var electron;
             var atom;
