@@ -4,9 +4,13 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/vector2');
 
     var Photon = require('./photon');
+
+    // Cached objects
+    var electronPath = new Rectangle();
 
     /**
      * 
@@ -32,9 +36,9 @@ define(function (require) {
 
             if (atom && electron) {
                 // Do simple check
-                var prevDistSq = electron.getPreviousPosition().distanceSq( atom.get('position') );
-                var distSq = electron.get('position').distanceSq( atom.get('position') );
+                var prevDistSq = electron.getPreviousPosition().distanceSq(atom.get('position'));
                 var atomRadSq = Math.pow(atom.get('radius') + electron.get('radius'), 2);
+                var distSq = electron.get('position').distanceSq(atom.get('position'));
                 if (distSq <= atomRadSq && prevDistSq > atomRadSq) {
                     atom.collideWithElectron( electron );
                     return false;
@@ -42,22 +46,23 @@ define(function (require) {
 
                 // Do more complicated check that will detect if the electron passed through the atom during
                 // the time step, but isn't currently within the atom
-                
+                electronPath.set(
+                    electron.getPreviousPosition().x,
+                    electron.getPreviousPosition().y,
+                    electron.getX() - electron.getPreviousPosition().x,
+                    1
+                );
 
-                
-                atomArea.setFrame( atom.getX() - atom.getBaseRadius(),
-                                   atom.getY() - atom.getBaseRadius(),
-                                   atom.getBaseRadius() * 2,
-                                   atom.getBaseRadius() * 2 );
-                electronPath.setRect( electron.getPreviousPosition().x,
-                                      electron.getPreviousPosition().y,
-                                      electron.getX() - electron.getPreviousPosition().x,
-                                      1 );
-                if ( atomArea.intersects( electronPath ) ) {
-                    atom.collideWithElectron( electron );
+                var x = atom.getX() - atom.get('radius');
+                var y = atom.getY() - atom.get('radius');
+                var r = atom.get('radius') * 2;
+
+                if (electronPath.overlapsCircle(x, y, r)) {
+                    atom.collideWithElectron(electron);
                     return false;
                 }
             }
+
             return false;
         }
 
