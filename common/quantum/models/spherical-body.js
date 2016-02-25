@@ -32,6 +32,10 @@ define(function (require) {
             return this.get('mass') * this.get('radius') * this.get('radius') * 2 / 5;
         },
 
+        getCenter: function() {
+            return this.get('position');
+        },
+
         /**
          * Overrides setPosition function to keep track of the previous position
          */
