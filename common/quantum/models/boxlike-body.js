@@ -14,6 +14,8 @@ define(function (require) {
      */
     var BoxlikeBody = Body.extend({
 
+        collidable: true,
+
         defaults: _.extend({}, Body.prototype.defaults, {
             mass: Number.POSITIVE_INFINITY,
             minimumWidth: 100,

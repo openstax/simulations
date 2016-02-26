@@ -13,6 +13,8 @@ define(function (require) {
      */
     var SphericalBody = Body.extend({
 
+        collidable: true,
+
         defaults: _.extend({}, Body.prototype.defaults, {
             radius: 0
         }),

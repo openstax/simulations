@@ -89,6 +89,10 @@ define(function (require) {
             return this._offsetPosition.set(this.get('position')).add(offset);
         },
 
+        getPosition: function() {
+            return this.get('position');
+        },
+
         /**
          * We need to make sure we release the model's vector
          *   back into the vector pool or we get memory leaks,

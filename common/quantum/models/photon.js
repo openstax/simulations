@@ -15,6 +15,8 @@ define(function (require) {
      */
     var Photon = Particle.extend({
 
+        collidable: true,
+
         defaults: _.extend({}, Particle.prototype.defaults, {
             wavelength: undefined,
             // If this photon was produced by the stimulation of another, this
