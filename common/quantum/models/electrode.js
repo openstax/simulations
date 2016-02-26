@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Particle = require('./particle');
+    var Particle = require('common/mechanics/models/particle');
 
     /**
      * An electrode is a line between two endpoints. Its location is considered to be

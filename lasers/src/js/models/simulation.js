@@ -9,8 +9,15 @@ define(function (require, exports, module) {
     var QuantumSimulation = require('common/quantum/models/simulation');
     var Photon            = require('common/quantum/models/photon');
     var Atom              = require('common/quantum/models/atom');
+    var Tube              = require('common/quantum/models/tube');
+    var Beam              = require('common/quantum/models/beam');
     var PhysicsUtil       = require('common/quantum/models/physics-util');
     var Rectangle         = require('common/math/rectangle');
+
+    var SphereSphereExpert         = require('common/mechanics/models/sphere-sphere-collision-expert');
+    var SphereBoxExpert            = require('common/mechanics/models/sphere-box-collision-expert');
+    var PhotonAtomCollisonExpert   = require('common/quantum/models/photon-atom-collision-expert');
+    var PhotonMirrorCollisonExpert = require('./photon-mirror-collision-expert');
 
     // Local dependencies need to be referenced by relative paths
     //   so we can use this in other projects.
@@ -52,6 +59,8 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
+            QuantumSimulation.prototype.initComponents.apply(this, arguments);
+
             this.models = [];
 
             this.stimulatingBeam = null;
@@ -65,12 +74,11 @@ define(function (require, exports, module) {
             this.lasingPhotons = new Backbone.Collection();
             
             // Set up the system of collision experts
-            this.photonAtomExpert = new PhotonAtomCollisonExpert();
             this.collisionExperts = [];
-            this.collisionExperts.push(new SphereSphereExpert());
-            this.collisionExperts.push(this.photonAtomExpert);
-            this.collisionExperts.push(new SphereBoxExpert());
-            this.collisionExperts.push(new PhotonMirrorCollisonExpert());
+            this.collisionExperts.push(SphereSphereExpert;
+            this.collisionExperts.push(PhotonAtomCollisonExpert);
+            this.collisionExperts.push(SphereBoxExpert);
+            this.collisionExperts.push(PhotonMirrorCollisonExpert);
 
             
             this.angleWindow = LasersConfig.PHOTON_CHEAT_ANGLE;
@@ -86,6 +94,24 @@ define(function (require, exports, module) {
 
             this.listenTo(this.photons, 'remove', this.bodyRemoved);
             this.listenTo(this.atoms,   'remove', this.bodyRemoved);
+        },
+
+        resetComponents: function() {
+            QuantumSimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.getPumpingBeam().set('photonsPerSecond', 0);
+            this.getSeedBeam().set('photonsPerSecond', 0);
+
+            // Reset atoms to the ground state
+            var groundState = this.getGroundState();
+            for (var i = 0; i < this.atoms.length; i++)
+                this.atoms.at(i).setCurrentState(groundState);
+            
+            // Clear all photons
+            for (var k = this.photons.length - 1; k >= 0; k--)
+                this.photons.at(k).destroy();
+            
+            this.numPhotons = 0;
         },
 
         _update: function(time, deltaTime) {
@@ -151,12 +177,12 @@ define(function (require, exports, module) {
             // If the photon is moving nearly horizontally and is equal in energy to the
             //   transition between the middle and ground states, consider it to be lasing
             if (this.isLasingPhoton(photon)) {
-                this.lasingPhotons.push(photon);
+                this.lasingPhotons.add(photon);
             }
         },
 
         addAtom: function(atom) {
-
+            this.atoms.add(atom);
         },
 
         bodyRemoved: function(collection, body) {
@@ -331,7 +357,7 @@ define(function (require, exports, module) {
                         var atom = atoms[j];
                         var s1 = atom.getCurrentState();
                         var s2 = atom.getCurrentState();
-                        this.photonAtomExpert.detectAndDoCollision(photon, atom);
+                        PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);
                         if (s1 != s2)
                             break;
                     }

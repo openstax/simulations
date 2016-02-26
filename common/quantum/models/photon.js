@@ -4,9 +4,9 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-
-    var Particle    = require('./particle');
+    var Vector2  = require('common/math/vector2');
+    var Particle = require('common/mechanics/models/particle');
+    
     var PhysicsUtil = require('./physics-util');
 
     /**
