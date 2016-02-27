@@ -21,7 +21,8 @@ define(function (require, exports, module) {
 
     // Local dependencies need to be referenced by relative paths
     //   so we can use this in other projects.
-
+    var TwoLevelElementProperties   = require('./element-properties/two-level');
+    var ThreeLevelElementProperties = require('./element-properties/three-level');
 
     /**
      * Constants
