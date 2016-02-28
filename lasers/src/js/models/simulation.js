@@ -27,7 +27,7 @@ define(function (require, exports, module) {
     /**
      * Constants
      */
-    var Constants = require('constants');
+    var Constants = require('../constants');
 
     /**
      * 

@@ -101,7 +101,7 @@ define(function (require) {
                 }
             }
             return lowestState;
-        }
+        },
 
         /**
          * Returns the state the atom will be in if it emits a photon. By default,

@@ -23,14 +23,14 @@ define(function (require) {
          * 
          */
         initialize: function(attributes, options) {
-            options = _.extend({
+            this.set({
                 position: this.get('origin'),
                 corner1: this.get('origin'),
                 corner2: new Vector2(
                     this.get('origin').x + this.get('width'), 
                     this.get('origin').y + this.get('height')
                 )
-            }, options);
+            };
 
             BoxlikeBody.prototype.initialize.apply(this, [attributes, options]);
 

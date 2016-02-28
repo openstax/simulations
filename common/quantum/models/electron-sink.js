@@ -57,6 +57,20 @@ define(function (require) {
                     this.electrons.splice(i, 1);
                 }
             }
+        },
+
+        addElectron: function(electron) {
+            this.electrons.push(electron);
+        },
+
+        removeElectron: function(electron) {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons[i] === electron) {
+                    this.electrons.splice(i, 1);
+                    return true;
+                }
+            }
+            return false;
         }
 
     });
