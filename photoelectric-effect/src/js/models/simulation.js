@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var DischargeLampsSimulation = require('discharge-lamps/models/simulation');
 
     var Circuit = require('models/circuit');
     var BeamControl = require('models/beamcontrol');
@@ -17,14 +17,14 @@ define(function (require, exports, module) {
     /**
      * Wraps the update function in 
      */
-    var PEffectSimulation = Simulation.extend({
+    var PEffectSimulation = DischargeLampsSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
             circuitIsPositive: true
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            DischargeLampsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
         },
 
@@ -48,7 +48,7 @@ define(function (require, exports, module) {
             
         }
 
-    });
+    }, Constants.PEffectSimulation);
 
     return PEffectSimulation;
 });
