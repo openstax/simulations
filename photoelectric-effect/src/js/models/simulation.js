@@ -4,18 +4,20 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
+    var Vector2     = require('common/math/vector2');
     var Beam        = require('common/quantum/models/beam');
     var Photon      = require('common/quantum/models/photon');
     var PhysicsUtil = require('common/quantum/models/physics-util');
+    var Plate       = require('common/quantum/models/plate');
 
     var DischargeLampsSimulation = require('discharge-lamps/models/simulation');
     var DischargeLampsConstants  = require('discharge-lamps/constants');
 
-    var Ammeter             = require('models/ammeter');
-    var Circuit             = require('models/circuit');
-    var BeamIntensityMeter  = require('models/beam-intensity-meter');
-    var BeamControl         = require('models/beamcontrol');
-    var PhotoelectricTarget = require('models/photoelectric-target');
+    var Ammeter                       = require('models/ammeter');
+    var Circuit                       = require('models/circuit');
+    var BeamIntensityMeter            = require('models/beam-intensity-meter');
+    var BeamControl                   = require('models/beamcontrol');
+    var PhotoelectricTarget           = require('models/photoelectric-target');
     var MetalEnergyAbsorptionStrategy = require('models/metal-energy-absorption-strategy');
 
     /**
@@ -86,11 +88,11 @@ define(function (require, exports, module) {
             this.listenTo(this.beam, 'photon-produced', this.photonProduced);
 
             // Create the target plate.
-            var this.target = new PhotoelectricTarget({
+            this.target = new PhotoelectricTarget({
                 simulation: this,
                 electromotiveForce: this,
                 point1: DischargeLampsConstants.ANODE_START,
-                point1: DischargeLampsConstants.ANODE_END,
+                point2: DischargeLampsConstants.ANODE_END,
                 potential: PEffectSimulation.DEFAULT_TARGET_POTENTIAL
             });
 
@@ -127,8 +129,10 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             DischargeLampsSimulation.prototype._update.apply(this, arguments);
 
+            var i;
+
             // Check for photons hitting the cathode
-            for (var i = 0; i < this.photons.length; i++) {
+            for (i = 0; i < this.photons.length; i++) {
                 var photon = this.photons.at(i);
                 if (this.target.isHitByPhoton(photon)) {
                     this.target.handlePhotonCollision(photon);
@@ -148,7 +152,7 @@ define(function (require, exports, module) {
 
             // Check for electrons that get out of the tube (Only matters if the
             // electrons leave the target at an angle)
-            for (var i = this.electrons.length - 1; i >= 0; i--) {
+            for (i = this.electrons.length - 1; i >= 0; i--) {
                 var electron = this.electrons.at(i);
                 if (!this.getTube().getBounds().contains(electron.getPosition()))
                     electron.destroy();
@@ -186,6 +190,8 @@ define(function (require, exports, module) {
         getCurrentForVoltage: function(voltage) {
             var electronsPerSecondFromTarget = 0;
             var electronsPerSecondToAnode = 0;
+            var retardingVoltage;
+
             if (this.target.getMaterial().getEnergyAbsorptionStrategy() instanceof MetalEnergyAbsorptionStrategy) {
                 // The fraction of collisions that will kick off an electron is equal to the amount of energy each
                 //   photon has that is greater than the work function, divided by the absorption strategy's
@@ -196,7 +202,7 @@ define(function (require, exports, module) {
                     1
                 );
                 electronsPerSecondFromTarget = electronRateAsFractionOfPhotonRate * this.beam.get('photonsPerSecond');
-                var retardingVoltage = voltage < 0 ? -voltage : 0;
+                retardingVoltage = voltage < 0 ? -voltage : 0;
                 var fractionOfPhotonsMoreEnergeticThanRetardingVoltage = Math.max(
                     0,
                     Math.min(
@@ -212,7 +218,7 @@ define(function (require, exports, module) {
                 //   Otherwise, there is no current
                 electronsPerSecondFromTarget = this.beam.get('photonsPerSecond');
                 electronsPerSecondToAnode = electronsPerSecondFromTarget;
-                var retardingVoltage = voltage < 0 ? voltage : 0;
+                retardingVoltage = voltage < 0 ? voltage : 0;
                 electronsPerSecondToAnode = this.getStoppingVoltage() < retardingVoltage ? electronsPerSecondFromTarget : 0;
             }
             // #3281: Any number of electrons <1 is effectively zero. This presents non-zero current readings when no electrons are reaching the anode.
@@ -220,7 +226,7 @@ define(function (require, exports, module) {
                 electronsPerSecondToAnode = 0;
             
             return electronsPerSecondToAnode * PEffectSimulation.CURRENT_JIMMY_FACTOR;
-        }
+        },
 
         /**
          * Returns the stopping voltage for electrons kicked off the current target material
@@ -274,7 +280,7 @@ define(function (require, exports, module) {
                 this.electrons.at(i).setAcceleration(this.electronAcceleration);
 
             // Calling setCurrent() ensures that the current flows in the correct direction
-            this.setCurrent(current);
+            this.setCurrent(this.get('current'));
         },
 
     }, Constants.PEffectSimulation);

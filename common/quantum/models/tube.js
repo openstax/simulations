@@ -30,7 +30,7 @@ define(function (require) {
                     this.get('origin').x + this.get('width'), 
                     this.get('origin').y + this.get('height')
                 )
-            };
+            });
 
             BoxlikeBody.prototype.initialize.apply(this, [attributes, options]);
 

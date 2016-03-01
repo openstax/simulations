@@ -63,7 +63,7 @@ define(function (require) {
         /**
          * Converts wavelength to energy and returns it.
          */
-        getEnergy: funciton() {
+        getEnergy: function() {
             return PhysicsUtil.wavelengthToEnergy(this.get('wavelength'));
         }
 

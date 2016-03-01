@@ -2,17 +2,18 @@ define(function (require) {
 
     'use strict';
 
-    var Backbone = require('backbone');
-
+    var _ = require('underscore');
+    
     /**
-     * Emission strategy for atomic states
+     * Strategy for atoms emitting energy
      */
-    var EnergyEmissionStrategy = Backbone.Model.extend({
+    var EnergyEmissionStrategy = function() {};
+
+    _.extend(EnergyEmissionStrategy.prototype, {
 
         emitEnergy: function(atom) {}
 
     });
-
 
     return EnergyEmissionStrategy;
 });

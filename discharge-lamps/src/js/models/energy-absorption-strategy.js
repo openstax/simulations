@@ -30,8 +30,6 @@ define(function (require) {
          */
         getElectronEnergyAtCollision: function(atom,  electron) {
             var energy = 0;
-            var prevDistSq = electron.getPreviousPosition().distanceSq(atom.getPosition());
-            var atomRadSq = Math.pow(atom.get('radius') + electron.get('radius'), 2);
             var prevDist = electron.getPreviousPosition().distance(atom.getPosition()) - electron.get('radius') - atom.get('radius');
             var collisionDist = prevDist;
 
@@ -54,5 +52,5 @@ define(function (require) {
     });
 
 
-    return InitialElectronSpeedStrategy;
+    return EnergyAbsorptionStrategy;
 });

@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var PhysicsUtil = require('common/quantum/models/physics-util');
-
     var EnergyAbsorptionStrategy = require('discharge-lamps/models/energy-absorption-strategy');
 
     var Constants = require('constants');

@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
 
     var Constants = {}; 
 
@@ -22,7 +23,7 @@ define(function (require) {
 
     Constants.CATHODE_X_LOCATION = 130;
     Constants.CATHODE_LOCATION = new Vector2(Constants.CATHODE_X_LOCATION, Constants.ELECTRODE_Y_LOCATION);
-    Constants.CATHODE_LENGTH = ELECTRODE_LENGTH;
+    Constants.CATHODE_LENGTH = Constants.ELECTRODE_LENGTH;
     Constants.CATHODE_START = new Vector2(
 		Constants.CATHODE_LOCATION.x,
 		Constants.CATHODE_LOCATION.y - Constants.CATHODE_LENGTH / 2

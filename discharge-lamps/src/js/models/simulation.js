@@ -8,9 +8,7 @@ define(function (require, exports, module) {
     var LasersSimulation = require('lasers/models/simulation');
 
     var Vector2                     = require('common/math/vector2');
-    var Atom                        = require('common/quantum/models/atom');
     var Tube                        = require('common/quantum/models/tube');
-    var Electrode                   = require('common/quantum/models/electrode');
     var Electron                    = require('common/quantum/models/electron');
     var ElectronSink                = require('common/quantum/models/electron-sink');
     var ElectronSource              = require('common/quantum/models/electron-source');
@@ -140,7 +138,7 @@ define(function (require, exports, module) {
             LasersSimulation.prototype.removeModel.apply(this, arguments);
 
             if (model instanceof Electron)
-                electrons.remove(model);
+                this.electrons.remove(model);
         },
 
         setVoltage: function(voltage) {
@@ -276,7 +274,7 @@ define(function (require, exports, module) {
                 this.electrons.at(i).setAcceleration(this.electronAcceleration);
 
             // Calling setCurrent() ensures that the current flows in the correct direction
-            this.setCurrent(current);
+            this.setCurrent(this.get('current'));
         },
 
         currentChanged: function(simulation, current) {

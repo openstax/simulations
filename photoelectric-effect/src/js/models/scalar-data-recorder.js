@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var PhysicsUtil = require('common/quantum/models/physics-util');
-
 
     var ScalarDataRecorder = function() {
         this.values = [];
@@ -62,8 +60,8 @@ define(function (require) {
 
             // Calculate total
             this.total = 0;
-            this.minVal = Double.MAX_VALUE;
-            this.maxVal = Double.MIN_VALUE;
+            this.minVal = Number.MAX_VALUE;
+            this.maxVal = Number.MIN_VALUE;
             for (var i = 0; i < this.getDataLength(); i++) {
                 var value = this.values[i];
                 this.total += value;
@@ -91,7 +89,7 @@ define(function (require) {
          */
         addDataRecord: function(time, value) {
             this.values.push(time);
-            this.times.push(values);
+            this.times.push(value);
         },
 
         removeDataRecordAtIndex: function(index) {
@@ -104,7 +102,7 @@ define(function (require) {
         },
 
         getSimulationTimeWindow: function() {
-            this.timeWindow;
+            return this.timeWindow;
         }
 
     });

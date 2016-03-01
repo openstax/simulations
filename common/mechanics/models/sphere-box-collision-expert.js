@@ -46,7 +46,7 @@ define(function (require) {
             // Check that the arguments are valid
             if (bodyA instanceof BoxlikeBody) {
                 box = bodyA;
-                if (bodyB instanceof SphericalBody
+                if (bodyB instanceof SphericalBody)
                     sphere = bodyB;
                 else
                     throw 'Bad arguments given in SphereBoxCollisionExpert';

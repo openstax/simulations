@@ -7,6 +7,7 @@ define(function (require) {
     var Vector2          = require('common/math/vector2');
     var LineIntersection = require('common/math/line-intersection');
     var Plate            = require('common/quantum/models/plate');
+    var Electron         = require('common/quantum/models/electron');
     
     var TargetMaterials               = require('models/target-materials');
     var InitialElectronSpeedStrategy  = require('models/initial-electron-speed-strategy');
@@ -40,7 +41,7 @@ define(function (require) {
             this.initialElectronSpeedStrategy = this.uniformInitialElectronSpeedStrategy;
 
             // Cached objects
-            this._newElectronVelocity = new Vector2;
+            this._newElectronVelocity = new Vector2();
         },
 
         /**
@@ -70,7 +71,7 @@ define(function (require) {
                     // Offset the electron to the right of the plate. Ths keeps the plate from
                     // thinking the electron hit it in the electron's first time step.
                     var offset = 1;
-                    electron.setPosition(p.x + offset, p.y);
+                    electron.setPosition(point.x + offset, point.y);
 
                     // Determine the speed of the new electron
                     var velocity = this.determineNewElectronVelocity(de);
