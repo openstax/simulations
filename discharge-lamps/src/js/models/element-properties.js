@@ -6,7 +6,9 @@ define(function (require) {
 
     var ElementProperties = require('common/quantum/models/element-properties');
 
-    var DischargeLampAtom = require('./atom');
+    var LevelSpecificEnergyEmissionStrategy = require('./level-specific-energy-emission-strategy');
+    var EqualLikelihoodAbsorptionStrategy   = require('./equal-likelihood-absorption-strategy');
+    var DischargeLampAtom                   = require('./atom');
 
     /**
      * A place to store element properties

@@ -165,6 +165,13 @@ define(function (require) {
         },
 
         /**
+         * Returns a string that can be used to identify this state
+         */
+        hashCode: function() {
+            return '' + this.get('energyLevel') + this.get('meanLifetime');
+        },
+
+        /**
          * Searches through the states of a specified atom for one whose energy differential
          *   between it and a specified energy matches the energy in a specified photon. The
          *   reason the energy needs to be specified as a parameter is that the GroundState
