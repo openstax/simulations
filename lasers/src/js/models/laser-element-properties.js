@@ -2,9 +2,9 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var ElementProperties = require('common/quantum/models/element-properties');
 
-    var AtomicState = require('common/quantum/models/atomic-state');
+    var Constants = require('../constants');
 
     /**
      * A place to store element properties in the laser simulation

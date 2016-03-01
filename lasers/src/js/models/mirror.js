@@ -2,10 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
-    var Vector2 = require('common/math/vector2');
-    var Wall    = require('common/mechanics/models/wall');
+    var Wall      = require('common/mechanics/models/wall');
+    var Rectangle = require('common/math/rectangle');
 
     /**
      * This class represents various sorts of mirrors. The mirror is conditioned

@@ -10,7 +10,6 @@ define(function (require, exports, module) {
     var Photon            = require('common/quantum/models/photon');
     var Atom              = require('common/quantum/models/atom');
     var Tube              = require('common/quantum/models/tube');
-    var Beam              = require('common/quantum/models/beam');
     var PhysicsUtil       = require('common/quantum/models/physics-util');
     var Rectangle         = require('common/math/rectangle');
 
@@ -23,6 +22,7 @@ define(function (require, exports, module) {
     //   so we can use this in other projects.
     var TwoLevelElementProperties   = require('./element-properties/two-level');
     var ThreeLevelElementProperties = require('./element-properties/three-level');
+    var Mirror                      = require('./mirror');
 
     /**
      * Constants
@@ -76,13 +76,13 @@ define(function (require, exports, module) {
             
             // Set up the system of collision experts
             this.collisionExperts = [];
-            this.collisionExperts.push(SphereSphereExpert;
+            this.collisionExperts.push(SphereSphereExpert);
             this.collisionExperts.push(PhotonAtomCollisonExpert);
             this.collisionExperts.push(SphereBoxExpert);
             this.collisionExperts.push(PhotonMirrorCollisonExpert);
 
             
-            this.angleWindow = LasersConfig.PHOTON_CHEAT_ANGLE;
+            this.angleWindow = LasersSimulation.PHOTON_CHEAT_ANGLE;
 
             this.numPhotons = 0;
 
@@ -128,11 +128,11 @@ define(function (require, exports, module) {
 
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
-            for (var i = 0; i < this.bodies.length; i++ ) {
+            for (i = 0; i < this.bodies.length; i++ ) {
                 var body = this.bodies[i];
                 if (body instanceof Photon) {
                     this.numPhotons++;
-                    if (!boundingRectangle.contains(body.getPosition())) {
+                    if (!this.boundingRectangle.contains(body.getPosition())) {
                         // Old PhET note: We don't need to remove the element right now. The photon will
                         //   fire an event that we will catch
                         // Patrick: I've changed it to just destroy it now
@@ -163,7 +163,7 @@ define(function (require, exports, module) {
 
         removeModel: function(model) {
             for (var i = this.models.length - 1; i >= 0; i--) {
-                if (this.models[i] === models) {
+                if (this.models[i] === model) {
                     this.models.splice(i, 1);
                     return true;
                 }
@@ -210,7 +210,7 @@ define(function (require, exports, module) {
             }
 
             // Set the available states of all the atoms
-            for (i = 0; i < atoms.length; i++) {
+            for (i = 0; i < this.atoms.length; i++) {
                 this.atoms.at(i).setStates(this.getCurrentElementProperties().getStates());
             }
 
@@ -220,8 +220,8 @@ define(function (require, exports, module) {
             this.numHighStateAtoms = 0;
 
             var elementProperties = this.getCurrentElementProperties();
-            for (var i = 0; i < atoms.length; i++) {
-                var atom = atoms.at(i);
+            for (i = 0; i < this.atoms.length; i++) {
+                var atom = this.atoms.at(i);
 
                 if (atom.getCurrentState() == elementProperties.getGroundState())
                     this.numGroundStateAtoms++;
@@ -257,7 +257,7 @@ define(function (require, exports, module) {
         },
 
         getPumpingBeam: function() {
-            return pumpingBeam;
+            return this.pumpingBeam;
         },
 
         setPumpingBeam: function(pumpingBeam) {
@@ -354,8 +354,8 @@ define(function (require, exports, module) {
                     || (this.tube.getBounds().contains(photon.get('position'))) 
                     || (this.tube.getBounds().contains(photon.getPreviousPosition()))
                 ) {
-                    for (var j = 0; j < atoms.length; j++) {
-                        var atom = atoms[j];
+                    for (var j = 0; j < this.atoms.length; j++) {
+                        var atom = this.atoms[j];
                         var s1 = atom.getCurrentState();
                         var s2 = atom.getCurrentState();
                         PhotonAtomCollisonExpert.detectAndDoCollision(photon, atom);
@@ -391,7 +391,7 @@ define(function (require, exports, module) {
                     }
                 }
             }
-        }
+        },
 
         /*
          * Detects and computes collisions between the items in a list of collidables and a specified
@@ -419,7 +419,7 @@ define(function (require, exports, module) {
             );
         }
 
-    });
+    }, Constants.LasersSimulation);
 
     return LasersSimulation;
 });

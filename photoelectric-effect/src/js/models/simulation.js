@@ -269,7 +269,7 @@ define(function (require, exports, module) {
             var potentialDiff = this.target.getPotential() - this.rightHandPlate.getPotential();
 
             // Determine the acceleration that electrons will experience
-            this.setElectronAcceleration( potentialDiff );
+            this.setElectronAcceleration(potentialDiff);
             for (var i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).setAcceleration(this.electronAcceleration);
 
