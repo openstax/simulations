@@ -2,12 +2,12 @@ define(function (require) {
 
     'use strict';
 
-    var Zinc      = require('models/zinc');
-    var Copper    = require('models/copper');
-    var Sodium    = require('models/sodium');
-    var Platinum  = require('models/platinum');
-    var Calcium   = require('models/calcium');
-    var Magnesium = require('models/magnesium');
+    var Zinc      = require('models/element-properties/zinc');
+    var Copper    = require('models/element-properties/copper');
+    var Sodium    = require('models/element-properties/sodium');
+    var Platinum  = require('models/element-properties/platinum');
+    var Calcium   = require('models/element-properties/calcium');
+    var Magnesium = require('models/element-properties/magnesium');
 
     var TargetMaterials = {};
 

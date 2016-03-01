@@ -74,7 +74,7 @@ define(function (require) {
         initStates: function() {
             var energyLevels = this.get('energyLevels');
             this.states[0] = new GroundState();
-            this.states[0].setEnergyLevel(energyLevels[0]);
+            this.states[0].set('energyLevel', energyLevels[0]);
 
             for (var i = 1; i < energyLevels.length; i++) {
                 this.states[i] = new AtomicState();

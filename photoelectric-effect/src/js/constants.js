@@ -21,26 +21,67 @@ define(function (require) {
     var CircuitView = {};
     Constants.CircuitView = CircuitView;
 
+
     var Calcium = {};
+
+    Calcium.NAME = 'Calcium';
+    Calcium.ENERGY_LEVELS = [ -13.6 ];
+    Calcium.WORK_FUNCTION = 2.9;
+
     Constants.Calcium = Calcium;
 
+
     var Copper = {};
+
+    Copper.NAME = 'Copper';
+    Copper.ENERGY_LEVELS = [ -13.6 ];
+    Copper.WORK_FUNCTION = 4.7;
+
     Constants.Copper = Copper;
 
+
+    var Magnesium = {};
+
+    Magnesium.NAME = 'Magnesium';
+    Magnesium.ENERGY_LEVELS = [ -13.6 ];
+    Magnesium.WORK_FUNCTION = 3.7;
+    
+    Constants.Magnesium = Magnesium;
+
+
     var Platinum = {};
+
+    Platinum.NAME = 'Platinum';
+    Platinum.ENERGY_LEVELS = [ -13.6 ];
+    Platinum.WORK_FUNCTION = 6.3;
+
     Constants.Platinum = Platinum;
 
+
     var Sodium = {};
+
+    Sodium.NAME = 'Sodium';
+    Sodium.ENERGY_LEVELS = [
+        -5.14
+        -3.03
+        -1.95
+        -1.52
+        -1.39
+        -1.02
+        -0.86
+    ];
+    Sodium.WORK_FUNCTION = 2.3;
+
     Constants.Sodium = Sodium;
 
+
     var Zinc = {};
+
+    Zinc.NAME = 'Zinc';
+    Zinc.ENERGY_LEVELS = [ -13.6 ];
+    Zinc.WORK_FUNCTION = 4.3;
+
     Constants.Zinc = Zinc;
-
-    var Photon = {};
-    Constants.Photon = Photon;
-
-    var Electron = {};
-    Constants.Electron = Electron;
 
 
     /*************************************************************************

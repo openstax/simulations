@@ -12,8 +12,8 @@ define(function (require) {
     // Tolerances used to determine if a photon matches with an atomic state energy
     QuantumConfig.ENERGY_TOLERANCE = 0.05;
 
-    QuantumConfig.MIN_WAVELENGTH = VisibleColor.MIN_WAVELENGTH;
-    QuantumConfig.MAX_WAVELENGTH = VisibleColor.MAX_WAVELENGTH;
+    QuantumConfig.MIN_WAVELENGTH = WavelengthColors.MIN_WAVELENGTH;
+    QuantumConfig.MAX_WAVELENGTH = WavelengthColors.MAX_WAVELENGTH;
 
     QuantumConfig.PIXELS_PER_NM = 1E6;
 

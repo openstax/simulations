@@ -46,7 +46,7 @@ define(function (require) {
                 return true;
             else
                 return false;
-        }
+        },
 
         /**
          * This check returns false if the two bodies were in contact during the previous

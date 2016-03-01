@@ -4,7 +4,7 @@ define(function (require) {
 
     var Backbone = require('backbone');
 
-    var Vector2 = require('../math/vector2');
+    var Vector2 = require('common/math/vector2');
 
     var QuantumConfig = require('../config');
 
@@ -225,7 +225,7 @@ define(function (require) {
             states[states.length - 1].set('nextHigherState', AtomicState.MaxEnergyState.instance());
         }
 
-    });
+    }));
 
 
     /**

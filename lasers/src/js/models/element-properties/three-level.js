@@ -16,7 +16,11 @@ define(function (require) {
     /**
      * Emission strategy just for this
      */
-    var EmissionStrategy = EnergyEmissionStrategy.extend({
+    var EmissionStrategy = function() {
+        EnergyEmissionStrategy.apply(this, arguments);
+    };
+
+    _.extend(EmissionStrategy.prototype, EnergyEmissionStrategy.prototype, {
 
         emitEnergy: function(atom) {
             return atom.getCurrentState().getNextLowerEnergyState();

@@ -62,6 +62,7 @@ module.exports = function(grunt){
             },
             source: [
                 '**/*.js',
+                '!bower_components/**/*.js'
                 '!node_modules/**/*.js',
                 '!test/**/*.js',
                 '!*.js',

@@ -15,10 +15,10 @@ define(function (require) {
      */
     var DischargeLampElementProperties = ElementProperties.extend({
 
-        defaults: {
+        defaults: _.extend({}, ElementProperties.prototype.defaults, {
             energyAbsorptionStrategy: null,
             meanStateLifetime: DischargeLampAtom.DEFAULT_STATE_LIFETIME
-        },
+        }),
         
         /**
          * 

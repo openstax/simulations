@@ -19,7 +19,7 @@ define(function (require) {
         defaults: _.extend({}, Body.prototype.defaults, {
             mass: Number.POSITIVE_INFINITY,
             minimumWidth: 100,
-            leftWallVx: 0
+            leftWallVx: 0,
             corner1: undefined,
             corner2: undefined
         }),
