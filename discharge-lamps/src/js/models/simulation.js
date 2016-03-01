@@ -70,23 +70,19 @@ define(function (require, exports, module) {
             this.listenTo(this.battery, 'change:voltage', this.batteryVoltageChanged);
 
             // Make the plates
-            this.leftHandPlate = new Plate({
+            this.setLeftHandPlate(new Plate({
                 simulation: this,
                 electromotiveForce: this,
                 point1: Constants.CATHODE_START,
                 point2: Constants.CATHODE_END
-            });
-            this.listenTo(this.leftHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.leftHandPlate, 'electron-produced', this.electronProduced);
+            }));
 
-            this.rightHandPlate = new Plate({
+            this.setRightHandPlate(new Plate({
                 simulation: this,
                 electromotiveForce: this,
                 point1: Constants.ANODE_START,
                 point2: Constants.ANODE_END
-            });
-            this.listenTo(this.rightHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.rightHandPlate, 'electron-produced', this.electronProduced);
+            }));
 
             // Make the heating elements
             this.leftHandHeatingElement = new HeatingElement({
@@ -178,7 +174,11 @@ define(function (require, exports, module) {
         },
 
         setLeftHandPlate: function(plate) {
+            if (this.leftHandPlate)
+                this.stopListening(this.leftHandPlate);
             this.leftHandPlate = plate;
+            this.listenTo(this.leftHandPlate, 'change', this.potentialChanged);
+            this.listenTo(this.leftHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getLeftHandPlate: function() {
@@ -186,7 +186,11 @@ define(function (require, exports, module) {
         },
 
         setRightHandPlate: function(plate) {
+            if (this.rightHandPlate)
+                this.stopListening(this.rightHandPlate);
             this.rightHandPlate = plate;
+            this.listenTo(this.rightHandPlate, 'change', this.potentialChanged);
+            this.listenTo(this.rightHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getRightHandPlate: function() {
@@ -238,11 +242,10 @@ define(function (require, exports, module) {
         },
 
         setCurrent: function(value, factor) {
-            this.set('current', value * factor);
-        },
-
-        setCurrent: function(value) {
-            this.set('current', value);
+            if (factor !== undefined)
+                this.set('current', value * factor);
+            else
+                this.set('current', value);
         },
 
         getCurrent: function() {

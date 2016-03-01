@@ -2,6 +2,7 @@ define(function (require) {
 
     'use strict';
 
+    var DEG_TO_RAD = Math.PI / 180;
 
     var Constants = {}; 
 
@@ -66,6 +67,15 @@ define(function (require) {
     PEffectSimulation.MAX_WAVELENGTH = 800;
     PEffectSimulation.MAX_PHOTONS_PER_SECOND = 500;
     PEffectSimulation.MAX_CURRENT = PEffectSimulation.MAX_PHOTONS_PER_SECOND * PEffectSimulation.CURRENT_JIMMY_FACTOR / 8;
+
+    PEffectSimulation.DEFAULT_BEAM_WAVELENGTH = 400;
+    PEffectSimulation.BEAM_WIDTH  =   80;
+    PEffectSimulation.BEAM_HEIGHT = 1000;
+    PEffectSimulation.BEAM_SOURCE_TO_TARGET_DISTANCE = 260;
+    PEffectSimulation.BEAM_ANGLE = 130 * DEG_TO_RAD;
+    PEffectSimulation.BEAM_FANOUT =  5 * DEG_TO_RAD;
+
+    PEffectSimulation.DEFAULT_TARGET_POTENTIAL = 0;
 
     Constants.PEffectSimulation = PEffectSimulation;
 

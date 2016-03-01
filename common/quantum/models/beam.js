@@ -50,6 +50,9 @@ define(function (require) {
             // The rate at which the beam produces photons
             this.timeSinceLastPhotonProduced = 0;
 
+            if (options && options.direction)
+                this.setVelocity(this.get('velocity').set(options.direction).normalize().scale(this.get('speed')));
+
             // Cached objects
             this._direction = new Vector2();
             this._generatedPosition = new Vector2();
