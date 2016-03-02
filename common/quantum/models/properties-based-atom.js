@@ -42,14 +42,6 @@ define(function (require) {
         },
 
         /**
-         * Returns the state the atom will be in if it emits a photon. By default,
-         *   this is the next lower energy state
-         */
-        getEnergyStateAfterEmission: function() {
-            return this.get('currentState').getNextLowerEnergyState();
-        },
-
-        /**
          * Returns the state the atom will be in after it emits a photon. By default,
          *   this is the ground state.
          *

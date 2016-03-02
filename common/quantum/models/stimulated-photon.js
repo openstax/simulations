@@ -34,7 +34,7 @@ define(function (require) {
                 wavelength: stimulatingPhoton.get('wavelength'), 
                 position: location,
                 velocity: stimulatingPhoton.get('velocity')
-            );
+            });
 
             var idx = 1;
             var yOffset = StimulatedPhoton.separation;
@@ -45,8 +45,8 @@ define(function (require) {
             var newX = stimulatingPhoton.getX() + dx;
 
             // Keep the photon inside the cavity.
-            var minY = stimulationBounds.bottom() + Photon.RADIUS;
-            var maxY = stimulationBounds.top();
+            var minY = StimulatedPhoton.stimulationBounds.bottom() + Photon.RADIUS;
+            var maxY = StimulatedPhoton.stimulationBounds.top();
             if (newY < minY || newY > maxY) {
                 newY = atom.getY();
                 newX = atom.getX() - Photon.RADIUS;

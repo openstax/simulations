@@ -81,24 +81,26 @@ define(function (require) {
                 this.states[i].set('energyLevel', 0);
             }
 
-            AtomicState.linkStates(states);
+            AtomicState.linkStates(this.states);
 
             this.updateStates();
         },
 
         updateStates: function() {
+            var i;
+
             // Copy the energies into a new array, sort and normalize them
             var energyLevels = this.get('energyLevels');
             var energies = [];
-            for (var i = 0; i < energyLevels.length; i++)
+            for (i = 0; i < energyLevels.length; i++)
                 energies[i] = energyLevels[i];
             
             energies.sort();
 
-            states[0].set('energyLevel', energies[0]);
-            for (var i = 1; i < states.length; i++) {
-                states[i].set('energyLevel', energies[i]);
-                states[i].setMeanLifetime(this.get('meanStateLifetime'));
+            this.states[0].set('energyLevel', energies[0]);
+            for (i = 1; i < this.states.length; i++) {
+                this.states[i].set('energyLevel', energies[i]);
+                this.states[i].setMeanLifetime(this.get('meanStateLifetime'));
             }
         },
 

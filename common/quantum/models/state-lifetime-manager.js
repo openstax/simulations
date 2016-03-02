@@ -49,7 +49,7 @@ define(function (require) {
             else {
                 // Assign a deathtime based on an exponential distribution
                 // The square root pushes the distribution toward 1.
-                this.deathTime = Math.pow(-Math.log(temp), 0.5) * state.get('meanLifetime');
+                this.deathTime = Math.pow(-Math.log(temp), 0.5) * this.state.get('meanLifetime');
             }
 
             // Initialize the field that tracks the state's lifetime
@@ -68,7 +68,7 @@ define(function (require) {
          */
         update: function(time, deltaTime) {
             this.lifeTime += deltaTime;
-            if (this.lifeTime >= deathTime) {
+            if (this.lifeTime >= this.deathTime) {
                 var nextState = this.atom.getEnergyStateAfterEmission();
 
                 if (this.emitOnStateChange) {

@@ -34,6 +34,8 @@ define(function (require) {
         update: function(deltaTime) {
             var alpha = this.get('alpha');
             var omega = this.get('omega');
+            var prevAlpha = this.get('prevAlpha');
+            
             // New orientation
             this.set('theta', this.get('theta') + deltaTime * omega + deltaTime * deltaTime * alpha / 2);
             // New angular velocity
@@ -81,14 +83,6 @@ define(function (require) {
                 this.setVelocity(x.x / this.get('mass'), x.y / this.get('mass'), y);
             else
                 this.setVelocity(x / this.get('mass'), y / this.get('mass'), options);
-        },
-
-        /** 
-         * Avoid memory leaks from the pool.
-         */
-        destroy: function(options) {
-            Particle.prototype.destroy.apply(this, [options]);
-            vectorPool.remove(this.get('momentum'));
         }
 
     });

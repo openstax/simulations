@@ -7,11 +7,6 @@ define(function (require) {
     var Vector2          = require('common/math/vector2');
     var LineIntersection = require('common/math/line-intersection');
 
-    var QuantumConfig = require('../config');
-
-    var Electron    = require('./electron');
-    var PhysicsUtil = require('./physics-util');
-
     /**
      * Absorbs electrons along a line between two points
      */

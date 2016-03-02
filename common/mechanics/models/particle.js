@@ -2,8 +2,6 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var Vector2      = require('common/math/vector2');
     var MotionObject = require('common/models/motion-object');
 

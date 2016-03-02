@@ -8,6 +8,8 @@ define(function (require) {
     var Vector2            = require('common/math/vector2');
     var PositionableObject = require('common/models/positionable-object');
 
+    var Photon = require('./photon');
+
     /**
      * A PhotonSource of photons that all have identical speeds. Their directions can
      *   vary by a specified fanout angle.
@@ -72,7 +74,7 @@ define(function (require) {
             if (this.get('enabled')) {
                 this.timeSinceLastPhotonProduced += deltaTime;
                 if (this.nextTimeToProducePhoton < this.timeSinceLastPhotonProduced) {
-                    var nPhotons = Math.floor(this.timeSinceLastPhotonProduced * getPhotonsPerSecond() / 1E3);
+                    var nPhotons = Math.floor(this.timeSinceLastPhotonProduced * this.get('photonsPerSecond') / 1E3);
                     for (var i = 0; i < nPhotons; i++) {
                         // Set the photon's velocity to a fanout angle proportional to its distance from
                         //   the center of the beam
@@ -93,10 +95,10 @@ define(function (require) {
                             velocity: photonVelocity
                         });
 
-                        this.trigger('photon-emitted', this, newPhoton)
+                        this.trigger('photon-emitted', this, newPhoton);
                     }
                     
-                    this.nextTimeToProducePhoton = getNextTimeToProducePhoton();
+                    this.nextTimeToProducePhoton = this.getNextTimeToProducePhoton();
                     this.timeSinceLastPhotonProduced = 0;
                 }
             }

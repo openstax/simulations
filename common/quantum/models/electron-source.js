@@ -6,10 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var QuantumConfig = require('../config');
-
     var Electron    = require('./electron');
-    var PhysicsUtil = require('./physics-util');
 
     /**
      * Emits electrons along a line between two points
@@ -36,7 +33,7 @@ define(function (require) {
         },
 
         update: function(time, deltaTime) {
-            this.timeSincelastElectronEmitted += dt;
+            this.timeSincelastElectronEmitted += deltaTime;
 
             // Note that we only produce one electron at a time. Otherwise, we get a bunch of
             // electrons produced if the electronsPerSecond is suddently increased, especially

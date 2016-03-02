@@ -44,7 +44,7 @@ define(function (require) {
         setPosition: function(x, y, options) {
             this.prevPosition.set(this.get('acceleration'));
 
-            Particle.prototype.setPosition.apply(this, arguments);
+            Body.prototype.setPosition.apply(this, arguments);
         },
 
         /**
@@ -53,7 +53,7 @@ define(function (require) {
         setVelocity: function(x, y, options) {
             this.prevVelocity.set(this.get('acceleration'));
 
-            Particle.prototype.setVelocity.apply(this, arguments);
+            Body.prototype.setVelocity.apply(this, arguments);
         },
 
         getPreviousPosition: function() {

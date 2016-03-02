@@ -2,14 +2,16 @@ define(function (require) {
 
     'use strict';
 
+    var _        = require('underscore');
     var Backbone = require('backbone');
 
     var Vector2 = require('common/math/vector2');
 
     var QuantumConfig = require('../config');
 
-    var Photon      = require('./photon');
-    var PhysicsUtil = require('./physics-util');
+    var Photon           = require('./photon');
+    var StimulatedPhoton = require('./stimulated-photon');
+    var PhysicsUtil      = require('./physics-util');
 
 
     var constants = {};
@@ -186,7 +188,7 @@ define(function (require) {
         getElevatedState: function(atom, photon, energy) {
             var result = null;
             var states = atom.getStates();
-            for (var stateIdx = states.length - 1; stateIdx >= 0 && states[stateIdx] != this && result == null; stateIdx--) {
+            for (var stateIdx = states.length - 1; stateIdx >= 0 && states[stateIdx] != this && result === null; stateIdx--) {
                 var de = photon.getEnergy() - (states[stateIdx].get('energyLevel') - energy);
                 if (Math.abs(de) <= QuantumConfig.ENERGY_TOLERANCE)
                     result = states[stateIdx];

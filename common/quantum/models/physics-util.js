@@ -26,6 +26,14 @@ define(function (require) {
      */
     var PhysicsUtil = {
 
+        PLANCK: PLANCK,
+        LIGHT_SPEED: LIGHT_SPEED,
+        ELECTRON_MASS: ELECTRON_MASS,
+        JOULES_PER_EV: JOULES_PER_EV,
+        EV_PER_JOULE: EV_PER_JOULE,
+        NM_PER_M: NM_PER_M,
+        AVOGADRO: AVOGADRO,
+
         /**
          * Determines the energy, in EV, of radiation with a specified wavelength
          *

@@ -4,8 +4,6 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
-
     var Electrode      = require('./electrode');
     var ElectronSource = require('./electron-source');
     var ElectronSink   = require('./electron-sink');
@@ -27,16 +25,16 @@ define(function (require) {
             Electrode.prototype.initialize.apply(this, [attributes, options]);
 
             this.source = new ElectronSource({
-                electromotiveForce: emf, 
-                point1: p1, 
-                point2: p2, 
+                electromotiveForce: this.get('electromotiveForce'), 
+                point1: this.get('point1'), 
+                point2: this.get('point2'), 
                 plate: this
             });
             
             this.sink = new ElectronSink({
                 simulation: this.get('simulation'), 
-                point1: p1, 
-                point2: p2
+                point1: this.get('point1'), 
+                point2: this.get('point2')
             });
 
             this.get('simulation').addModel(this.source);

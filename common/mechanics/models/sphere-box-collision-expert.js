@@ -5,9 +5,6 @@ define(function (require) {
     var SphericalBody = require('./spherical-body');
     var BoxlikeBody   = require('./boxlike-body');
 
-    var Vector2    = require('common/math/vector2');
-    var Reflection = require('common/math/reflection');
-
     /**
      * Detects and handles collisions between two bodies if one is a photon and one is an atom
      */

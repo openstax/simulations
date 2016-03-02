@@ -12,7 +12,7 @@ define(function (require) {
     var _contactPoint  = new Vector2();
     var _vRel          = new Vector2();
     var _n             = new Vector2();
-    var _tangendVector = new Vector2();
+    var _tangentVector = new Vector2();
     var _linePtA       = new Vector2();
     var _linePtB       = new Vector2();
     var _vA            = new Vector2();
@@ -81,9 +81,6 @@ define(function (require) {
         },
 
         doCollision: function(sphereA, sphereB, loa, contactPt ) {
-            // Get the total energy of the two objects, so we can conserve it
-            var totalEnergy0 = sphereA.getKineticEnergy() + sphereB.getKineticEnergy();
-
             // Get the unit vector along the line of action
             _n.set(loa);
             _n.normalize();
@@ -94,7 +91,7 @@ define(function (require) {
             _vRel.sub(sphereB.get('velocity'));
 
             // Compute correct position of the bodies following the collision
-            _tangendVector.set(loa.y, -loa.x);
+            _tangentVector.set(loa.y, -loa.x);
 
             // Determine the proper positions of the bodies following the collision
             var previousDistance = sphereB.getPreviousPosition().distance(sphereA.getPreviousPosition());
@@ -122,9 +119,6 @@ define(function (require) {
                 contactPt.x - (contactPt.x - prevPosA.x) * sA,
                 contactPt.y - (contactPt.y - prevPosA.y) * sA
             );
-            var offsetA = -sphereA.get('radius');
-            var offsetXA = _n.x * offsetA;
-            var offsetYA = _n.y * offsetA;
             var positionA = Reflection.reflectPointAcrossLine(
                 sphereA.get('position'), 
                 _linePtA,
@@ -133,7 +127,7 @@ define(function (require) {
             sphereA.setPosition(positionA);
 
             // Compute the relative velocities of the contact points
-            var vr = _vRel.dot(n);
+            var vr = _vRel.dot(_n);
 
             // Assume the coefficient of restitution is 1
             var e = 1;

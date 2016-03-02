@@ -62,11 +62,13 @@ module.exports = function(grunt){
             },
             source: [
                 '**/*.js',
-                '!bower_components/**/*.js'
+                '!bower_components/**/*.js',
                 '!node_modules/**/*.js',
                 '!test/**/*.js',
                 '!*.js',
-                '!binarysearch/binarysearch.js'
+                '!binarysearch/binarysearch.js',
+                '!v3/node_modules/**/*.js',
+                '!v3/bower_components/**/*.js'
             ],
             test: [
                 'test/**/*.js'
