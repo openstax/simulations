@@ -17,7 +17,7 @@ define(function (require) {
             // Set the mean lifetimes of the states
             var states = this.states;
             for (var i = 1; i < states.length; i++)
-                states[i].setMeanLifetime(Constants.MAXIMUM_STATE_LIFETIME / 2);
+                states[i].set('meanLifetime', Constants.MAXIMUM_STATE_LIFETIME / 2);
         },
 
         getMiddleEnergyState: function() {

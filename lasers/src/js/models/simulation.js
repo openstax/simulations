@@ -269,11 +269,11 @@ define(function (require, exports, module) {
         },
 
         setHighEnergyMeanLifetime: function(time) {
-            this.getHighEnergyState().setMeanLifetime(time);
+            this.getHighEnergyState().set('meanLifetime', time);
         },
 
         setMiddleEnergyMeanLifetime: function(time) {
-            this.getMiddleEnergyState().setMeanLifetime(time);
+            this.getMiddleEnergyState().set('meanLifetime', time);
         },
 
         getNumGroundStateAtoms: function() {

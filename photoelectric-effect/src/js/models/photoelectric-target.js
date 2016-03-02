@@ -116,6 +116,10 @@ define(function (require) {
 
         setRandomizedInitialElectronSpeedStrategy: function() {
             this.initialElectronSpeedStrategy = this.randomInitialElectronSpeedStrategy;
+        },
+
+        getMaterial: function() {
+            return this.get('targetMaterial');
         }
 
     }, _.extend({}, Constants.PhotoelectricTarget, TargetMaterials));

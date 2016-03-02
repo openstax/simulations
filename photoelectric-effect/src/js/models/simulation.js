@@ -19,6 +19,7 @@ define(function (require, exports, module) {
     var BeamControl                   = require('models/beamcontrol');
     var PhotoelectricTarget           = require('models/photoelectric-target');
     var MetalEnergyAbsorptionStrategy = require('models/metal-energy-absorption-strategy');
+    var TargetMaterials               = require('models/target-materials');
 
     /**
      * Constants
@@ -44,6 +45,8 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
+            DischargeLampsSimulation.prototype.initComponents.apply(this, arguments);
+
             var circuit = new Circuit({
                 voltage: 0,
                 wavelength: PEffectSimulation.DEFAULT_BEAM_WAVELENGTH
@@ -93,7 +96,8 @@ define(function (require, exports, module) {
                 electromotiveForce: this,
                 point1: DischargeLampsConstants.ANODE_START,
                 point2: DischargeLampsConstants.ANODE_END,
-                potential: PEffectSimulation.DEFAULT_TARGET_POTENTIAL
+                potential: PEffectSimulation.DEFAULT_TARGET_POTENTIAL,
+                targetMaterial: TargetMaterials.SODIUM
             });
 
             // Create the right-hand plate
@@ -147,7 +151,7 @@ define(function (require, exports, module) {
             if (this.getVoltage() !== this.get('voltage'))
                 this.set('voltage', this.getVoltage());
             
-            if (this.beam.getWavelength() !== this.get('wavelength'))
+            if (this.beam.get('wavelength') !== this.get('wavelength'))
                 this.set('wavelength', this.getVoltage());
 
             // Check for electrons that get out of the tube (Only matters if the
@@ -196,7 +200,7 @@ define(function (require, exports, module) {
                 // The fraction of collisions that will kick off an electron is equal to the amount of energy each
                 //   photon has that is greater than the work function, divided by the absorption strategy's
                 //   total energy depth, with a ceiling of 1.
-                var photonEnergyBeyondWorkFunction = PhysicsUtil.wavelengthToEnergy(this.beam.getWavelength()) - this.target.getMaterial().getWorkFunction();
+                var photonEnergyBeyondWorkFunction = PhysicsUtil.wavelengthToEnergy(this.beam.get('wavelength')) - this.target.getMaterial().getWorkFunction();
                 var electronRateAsFractionOfPhotonRate = Math.min(
                     photonEnergyBeyondWorkFunction / MetalEnergyAbsorptionStrategy.TOTAL_ENERGY_DEPTH,
                     1
@@ -235,7 +239,7 @@ define(function (require, exports, module) {
          * @return The stopping voltage
          */
         getStoppingVoltage: function() {
-            var photonEnergy = PhysicsUtil.wavelengthToEnergy(this.beam.getWavelength());
+            var photonEnergy = PhysicsUtil.wavelengthToEnergy(this.beam.get('wavelength'));
             var stoppingVoltage = this.getWorkFunction() - photonEnergy;
             return stoppingVoltage;
         },
@@ -245,7 +249,7 @@ define(function (require, exports, module) {
         },
 
         getWavelength: function() {
-            return this.beam.getWavelength();
+            return this.beam.get('wavelength');
         },
 
         setElectronAcceleration: function(potentialDiff, plateSeparation) {

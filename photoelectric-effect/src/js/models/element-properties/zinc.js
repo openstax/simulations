@@ -18,11 +18,11 @@ define(function (require) {
     var Zinc = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Zinc.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Zinc.WORK_FUNCTION),
+            name: Constants.Zinc.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Zinc.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Zinc.WORK_FUNCTION,
-            energyLevels: Zinc.ENERGY_LEVELS
+            workFunction: Constants.Zinc.WORK_FUNCTION,
+            energyLevels: Constants.Zinc.ENERGY_LEVELS
         })
 
     }, Constants.Zinc);

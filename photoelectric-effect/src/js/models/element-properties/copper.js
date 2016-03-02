@@ -18,11 +18,11 @@ define(function (require) {
     var Copper = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Copper.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Copper.WORK_FUNCTION),
+            name: Constants.Copper.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Copper.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Copper.WORK_FUNCTION,
-            energyLevels: Copper.ENERGY_LEVELS
+            workFunction: Constants.Copper.WORK_FUNCTION,
+            energyLevels: Constants.Copper.ENERGY_LEVELS
         })
 
     }, Constants.Copper);

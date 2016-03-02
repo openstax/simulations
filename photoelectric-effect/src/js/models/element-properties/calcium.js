@@ -18,11 +18,11 @@ define(function (require) {
     var Calcium = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Calcium.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Calcium.WORK_FUNCTION),
+            name: Constants.Calcium.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Calcium.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Calcium.WORK_FUNCTION,
-            energyLevels: Calcium.ENERGY_LEVELS
+            workFunction: Constants.Calcium.WORK_FUNCTION,
+            energyLevels: Constants.Calcium.ENERGY_LEVELS
         })
 
     }, Constants.Calcium);

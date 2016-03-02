@@ -18,11 +18,11 @@ define(function (require) {
     var Platinum = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Platinum.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Platinum.WORK_FUNCTION),
+            name: Constants.Platinum.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Platinum.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Platinum.WORK_FUNCTION,
-            energyLevels: Platinum.ENERGY_LEVELS
+            workFunction: Constants.Platinum.WORK_FUNCTION,
+            energyLevels: Constants.Platinum.ENERGY_LEVELS
         })
 
     }, Constants.Platinum);

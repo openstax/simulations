@@ -34,11 +34,11 @@ define(function (require) {
     var Sodium = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Sodium.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Sodium.WORK_FUNCTION),
+            name: Constants.Sodium.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Sodium.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Sodium.WORK_FUNCTION,
-            energyLevels: Sodium.ENERGY_LEVELS
+            workFunction: Constants.Sodium.WORK_FUNCTION,
+            energyLevels: Constants.Sodium.ENERGY_LEVELS
         }),
 
         /**

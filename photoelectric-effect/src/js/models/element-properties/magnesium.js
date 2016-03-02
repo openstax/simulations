@@ -18,11 +18,11 @@ define(function (require) {
     var Magnesium = DischargeLampElementProperties.extend({
 
         defaults: _.extend({}, DischargeLampElementProperties.prototype.defaults, {
-            name: Magnesium.NAME,
-            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Magnesium.WORK_FUNCTION),
+            name: Constants.Magnesium.NAME,
+            energyAbsorptionStrategy: new MetalEnergyAbsorptionStrategy(Constants.Magnesium.WORK_FUNCTION),
             energyEmissionStrategy: new DefaultEnergyEmissionStrategy(),
-            workFunction: Magnesium.WORK_FUNCTION,
-            energyLevels: Magnesium.ENERGY_LEVELS
+            workFunction: Constants.Magnesium.WORK_FUNCTION,
+            energyLevels: Constants.Magnesium.ENERGY_LEVELS
         })
 
     }, Constants.Magnesium);

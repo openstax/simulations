@@ -5,8 +5,8 @@ define(function (require) {
     var _           = require('underscore');
     var gaussRandom = require('gauss-random');
 
-    var Vector2            = require('common/math/vector2');
-    var PositionableObject = require('common/models/positionable-object');
+    var Vector2  = require('common/math/vector2');
+    var Particle = require('common/mechanics/models/particle');
 
     var Photon = require('./photon');
 
@@ -18,14 +18,10 @@ define(function (require) {
      *   beamWidth.
      *
      * Its position is at the midpoint of that beamWidth.
-     *
-     * The original Beam object extended Particle, but there's no reason for it to have
-     *   motion capabilities or implement the Verlet method, so I'm limiting it to being
-     *   positionable.
      */
-    var Beam = PositionableObject.extend({
+    var Beam = Particle.extend({
 
-        defaults: _.extend({}, PositionableObject.prototype.defaults, {
+        defaults: _.extend({}, Particle.prototype.defaults, {
             wavelength: undefined,
             // Used to deterimine when photons should be produced
             photonsPerSecond: 0,
@@ -46,7 +42,7 @@ define(function (require) {
         }),
 
         initialize: function(attributes, options) {
-            PositionableObject.prototype.initialize.apply(this, [attributes, options]);
+            Particle.prototype.initialize.apply(this, [attributes, options]);
 
             this.nextTimeToProducePhoton = 0;
             // The rate at which the beam produces photons
@@ -68,7 +64,7 @@ define(function (require) {
          * 
          */
         update: function(deltaTime) {
-            PositionableObject.prototype.update.apply(this, arguments);
+            Particle.prototype.update.apply(this, arguments);
 
             // Produce photons
             if (this.get('enabled')) {

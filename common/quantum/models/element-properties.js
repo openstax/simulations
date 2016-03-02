@@ -100,7 +100,7 @@ define(function (require) {
             this.states[0].set('energyLevel', energies[0]);
             for (i = 1; i < this.states.length; i++) {
                 this.states[i].set('energyLevel', energies[i]);
-                this.states[i].setMeanLifetime(this.get('meanStateLifetime'));
+                this.states[i].set('meanLifetime', this.get('meanStateLifetime'));
             }
         },
 
