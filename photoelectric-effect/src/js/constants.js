@@ -42,7 +42,7 @@ define(function (require) {
 
     var Magnesium = {};
 
-    Magnesium.NAME = 'Magnesium';
+    Magnesium.NAME = '?????';
     Magnesium.ENERGY_LEVELS = [ -13.6 ];
     Magnesium.WORK_FUNCTION = 3.7;
     

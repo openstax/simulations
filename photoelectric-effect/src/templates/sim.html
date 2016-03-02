@@ -33,11 +33,9 @@
             <div class="target-select-wrapper">
                 <label>Target Material</label>
                 <select>
-                    <option value="0">Sodium</option>
-                    <option value="1">Zinc</option>
-                    <option value="2">Copper</option>
-                    <option value="3">Platinum</option>
-                    <option value="4">Calcium</option>
+                <% _.each(targetMaterials, function(material, index) { %>
+                    <option value="<%= index %>"><%= material %></option>
+                <% }) %>
                 </select>
             </div>
 

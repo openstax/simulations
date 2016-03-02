@@ -8,6 +8,7 @@ define(function (require) {
     var SimView = require('common/v3/app/sim');
 
     var PEffectSimulation = require('models/simulation');
+    var TargetMaterials   = require('models/target-materials');
     var PEffectSceneView  = require('views/scene');
 
     var Constants = require('constants');
@@ -101,7 +102,10 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                targetMaterials: _.map(TargetMaterials.TARGET_MATERIALS, function(material) {
+                    return material.get('name');
+                })
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
