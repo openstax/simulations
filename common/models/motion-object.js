@@ -143,6 +143,10 @@ define(function (require) {
             vectorPool.remove(oldVelocity);
         },
 
+        getVelocity: function() {
+            return this.get('velocity');
+        },
+
         /**
          * Function that facilitates setting the acceleration vector 
          *   while still triggering a change event.
@@ -157,6 +161,10 @@ define(function (require) {
 
             // Only remove it at the end or we might be given the same one
             vectorPool.remove(oldAcceleration);
+        },
+
+        getAcceleration: function() {
+            return this.get('acceleration');
         },
 
         /** 

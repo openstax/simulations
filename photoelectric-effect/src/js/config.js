@@ -18,7 +18,11 @@
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
             'wnumb':                 '../../node_modules/wnumb/wNumb',
+            'gauss-random':          '../../node_modules/gauss-random-shimmed/sample',
 
+            'lasers':          '../../../lasers/src/js',
+            'discharge-lamps': '../../../discharge-lamps/src/js',
+            
             views:      '../js/views',
             models:     '../js/models',
             assets:     '../js/assets',
