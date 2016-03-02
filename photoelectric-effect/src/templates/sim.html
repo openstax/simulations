@@ -32,7 +32,7 @@
 
             <div class="target-select-wrapper">
                 <label>Target Material</label>
-                <select>
+                <select id="target-material">
                 <% _.each(targetMaterials, function(material, index) { %>
                     <option value="<%= index %>"><%= material %></option>
                 <% }) %>

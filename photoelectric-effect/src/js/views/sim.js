@@ -49,7 +49,7 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-
+            'change #target-material' : 'changeTargetMaterial'
         },
 
         /**
@@ -149,6 +149,12 @@ define(function (require) {
             // Update the scene
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
+
+        changeTargetMaterial: function(event) {
+            var materialIndex = parseInt(event.target.value);
+            var material = TargetMaterials.TARGET_MATERIALS[materialIndex];
+            this.simulation.target.set('targetMaterial', material);
+        }
 
     });
 
