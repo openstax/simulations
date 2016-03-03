@@ -2,11 +2,16 @@ define(function(require) {
 
     'use strict';
 
-    var $ = require('jquery');
-    var PIXI = require('pixi');
-    var PixiView = require('common/v3/pixi/view');
+    var $          = require('jquery');
+    var PIXI       = require('pixi');
     var NoUiSlider = require('nouislider');
-    require('../../../node_modules/wnumb/wNumb');
+    require('wnumb');
+
+    var PixiView = require('common/v3/pixi/view');
+    
+    var DischargeLampsConstants = require('discharge-lamps/constants');
+
+    var BatteryView = require('views/battery');
 
     var Assets = require('assets');
     var Constants = require('constants');
@@ -20,78 +25,56 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
-            this.initCircuit();
             this.initGraphics();
 
             this.listenTo(this.model, 'change:circuitIsPositive', this.updateCircuitState);
         },
 
-        initCircuit: function() {
-            var slider = $('.voltageSlider')[0];
-            var voltageLabel = $('.voltageSliderLabel')[0];
-            var model = this.model;
-
-            NoUiSlider.create(slider, {
-                start: 0,
-                step: .20,
-                range: {
-                    'min': -8,
-                    'max': 8
-                },
-                pips: {
-                    mode: 'positions',
-                    values: [0, 50, 100],
-                    density: 1
-                },
-                format: wNumb({
-                    'decimals': 2,
-                    'postfix': ' V'
-                })
-            });
-
-            slider.noUiSlider.on('update', function(values, handle) {
-                voltageLabel.innerHTML = values[handle];
-                // the .replace is to undo the string formatting,'7.5 V' -> 7.5
-                model.set('circuitIsPositive', (values[handle].replace(/(^\d+)(.+$)/i,'$1')>=0));
-            });
-        },
-
         initGraphics: function() {
-            var circuitA = Assets.createSprite(Assets.Images.CIRCUIT_A);
-            circuitA.x = 60;
-            circuitA.y = 180;
-            circuitA.scale = new PIXI.Point(.85, .85);
-            this.circuitA = circuitA;
-            this.displayObject.addChild(this.circuitA);
+            var wires = Assets.createSprite(Assets.Images.WIRES);
+            // wires.x = 400;
+            // wires.y = 258;
+            wires.anchor.x = 0.5;
+            wires.scale = new PIXI.Point(0.42, 0.42);
+            this.wires = wires;
+            this.displayObject.addChild(wires);
 
-            var circuitB = Assets.createSprite(Assets.Images.CIRCUIT_B);
-            circuitB.x = 60;
-            circuitB.y = 180;
-            circuitB.scale = new PIXI.Point(.85, .85);
-            circuitB.visible = false;
-            this.circuitB = circuitB;
-            this.displayObject.addChild(this.circuitB);
+            this.wireWidth = wires.height * (42 / 548);
 
-            var circuitEndL = Assets.createSprite(Assets.Images.CIRCUIT_END_LEFT);
-            circuitEndL.x = 160;
-            circuitEndL.y = 175;
+            var circuitEndL = Assets.createSprite(Assets.Images.PLATE);
+            circuitEndL.x = -240;
+            circuitEndL.y = -75;
             this.circuitEndL = circuitEndL;
             this.displayObject.addChild(this.circuitEndL);
 
-            var circuitEnd = Assets.createSprite(Assets.Images.CIRCUIT_END);
-            circuitEnd.x = 620;
-            circuitEnd.y = 175;
+            var circuitEnd = Assets.createSprite(Assets.Images.PLATE);
+            circuitEnd.x = 220;
+            circuitEnd.y = -75;
             this.circuitEnd = circuitEnd;
             this.displayObject.addChild(this.circuitEnd);
 
             var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUIT_BACKGROUND_LOOP);
-            circuitBackgroundLoop.x = 131;
-            circuitBackgroundLoop.y = 165;
+            circuitBackgroundLoop.x = -269;
+            circuitBackgroundLoop.y = -85;
             this.circuitBackgroundLoop = circuitBackgroundLoop;
             this.displayObject.addChild(this.circuitBackgroundLoop);
 
+            this.initBattery();
+
             this.updateMVT(this.mvt);
+        },
+
+        initBattery: function() {
+            this.batteryView = new BatteryView({
+                model: this.simulation.battery,
+                mvt: this.mvt
+            });
+
+            this.batteryView.setPosition(0, this.wires.height - this.wireWidth / 2);
+
+            this.displayObject.addChild(this.batteryView.displayObject);
         },
 
         /**
@@ -99,6 +82,12 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            this.batteryView.updateMVT(mvt);
+            console.log(mvt.modelToViewDeltaX(DischargeLampsConstants.CATHODE_LENGTH));
+
+            this.displayObject.x = mvt.modelToViewX(400);
+            this.displayObject.y = mvt.modelToViewY(250);
         },
 
         updateCircuitState: function(model, circuitIsPositive) {

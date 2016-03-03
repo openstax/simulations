@@ -5,7 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
 
     var CircuitView = require('views/circuit');
     var BeamControlView = require('views/beamcontrol');
@@ -39,8 +42,30 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initMVT();
             this.initLayers();
             this.initBackground();
+        },
+
+        initMVT: function() {
+            var scale;
+
+            if (AppView.windowIsShort()) {
+                this.viewOriginX = 0;
+                this.viewOriginY = 0;
+                scale = 0.75;
+            }
+            else {
+                this.viewOriginX = 0;
+                this.viewOriginY = 0;
+                scale = 1; 
+            }
+
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                scale
+            );
         },
 
         initLayers: function() {
@@ -61,7 +86,9 @@ define(function(require) {
             this.backgroundLayer.addChild(this.beamControlView.displayObject);
 
             var circuitView = new CircuitView({
-                model: this.simulation.circuit
+                model: this.simulation.circuit,
+                simulation: this.simulation,
+                mvt: this.mvt
             });
             this.circuitView = circuitView;
             this.backgroundLayer.addChild(this.circuitView.displayObject);

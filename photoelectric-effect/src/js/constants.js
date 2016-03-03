@@ -12,6 +12,9 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
+    Constants.BATTERY_WIDTH = 200;
+
+
     var Circuit = {};
     Constants.Circuit = Circuit;
 
