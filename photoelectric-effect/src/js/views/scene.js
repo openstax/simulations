@@ -85,12 +85,13 @@ define(function(require) {
             this.beamControlView = beamControlView;
             this.backgroundLayer.addChild(this.beamControlView.displayObject);
 
-            var circuitView = new CircuitView({
+            this.circuitView = new CircuitView({
                 model: this.simulation.circuit,
                 simulation: this.simulation,
                 mvt: this.mvt
             });
-            this.circuitView = circuitView;
+            this.circuitView.displayObject.x = this.mvt.modelToViewX(380);
+            this.circuitView.displayObject.y = this.mvt.modelToViewY(280);
             this.backgroundLayer.addChild(this.circuitView.displayObject);
         },
 

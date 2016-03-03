@@ -33,7 +33,7 @@ define(function (require, exports, module) {
     var PEffectSimulation = DischargeLampsSimulation.extend({
 
         defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
-            circuitIsPositive: true
+            
         }),
         
         initialize: function(attributes, options) {

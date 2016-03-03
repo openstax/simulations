@@ -8,7 +8,7 @@ define(function (require) {
 
     Assets.Images = {
         WIRES:                   'wires.png',
-        PLATE:                   'plate.png',
+        ELECTRODE:               'electrode.png',
         BATTERY:                 'battery.png',
         CIRCUIT_A:               'circuit-A.png',
         CIRCUIT_B:               'circuit-B.png',
