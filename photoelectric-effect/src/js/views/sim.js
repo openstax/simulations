@@ -5,7 +5,8 @@ define(function (require) {
     var $ = require('jquery');
     var _ = require('underscore');
 
-    var SimView = require('common/v3/app/sim');
+    var SimView              = require('common/v3/app/sim');
+    var WavelengthSliderView = require('common/controls/wavelength-slider');
 
     var PEffectSimulation = require('models/simulation');
     var TargetMaterials   = require('models/target-materials');
@@ -49,7 +50,8 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
-            'change #target-material' : 'changeTargetMaterial'
+            'change #target-material'  : 'changeTargetMaterial',
+            'slide .wavelength-slider' : 'changeWavelength',
         },
 
         /**
@@ -66,6 +68,7 @@ define(function (require) {
             SimView.prototype.initialize.apply(this, [options]);
 
             this.initSceneView();
+            this.initWavelengthSliderView();
         },
 
         /**
@@ -84,6 +87,14 @@ define(function (require) {
             });
         },
 
+        initWavelengthSliderView: function() {
+            this.wavelengthSliderView = new WavelengthSliderView({
+                defaultWavelength: this.simulation.beam.get('wavelength'), // Convert between SI and nanometers
+                minWavelength: Constants.MIN_WAVELENGTH,
+                maxWavelength: Constants.MAX_WAVELENGTH
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -92,6 +103,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderWavelengthView();
 
             return this;
         },
@@ -120,11 +132,22 @@ define(function (require) {
         },
 
         /**
+         * Renders the wavelength view
+         */
+        renderWavelengthView: function() {
+            this.wavelengthSliderView.render();
+            this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
+
+            this.$wavelengthValue = this.$('.wavelength-value');
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+            this.wavelengthSliderView.postRender();
         },
 
         /**
@@ -154,7 +177,15 @@ define(function (require) {
             var materialIndex = parseInt(event.target.value);
             var material = TargetMaterials.TARGET_MATERIALS[materialIndex];
             this.simulation.target.set('targetMaterial', material);
-        }
+        },
+
+        changeWavelength: function(event) {
+            this.inputLock(function() {
+                var wavelength = parseInt($(event.target).val());
+                this.$wavelengthValue.text(wavelength + 'nm');
+                this.simulation.set('wavelength', wavelength);
+            });
+        },
 
     });
 

@@ -72,7 +72,7 @@ define(function (require, exports, module) {
             );
 
             this.beam = new Beam({
-                wavelength:          PEffectSimulation.defaultBeamWavelength,
+                wavelength:          PEffectSimulation.DEFAULT_BEAM_WAVELENGTH,
                 position:            beamPosition,
                 length:              PEffectSimulation.BEAM_HEIGHT,
                 beamWidth:           PEffectSimulation.BEAM_WIDTH,

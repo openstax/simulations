@@ -92,6 +92,15 @@
         }
     }
 
+    .slider-header {
+        display: block;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
     .bootstrap-select {
         width: 100% !important;
     }
@@ -100,4 +109,38 @@
         margin-bottom: 16px;
     }
 
+    &.beam-controls {
+        width: auto;
+        position: absolute;
+        top: @panel-margin;
+        right: (@sim-controls-panel-width + @panel-margin * 2);
+
+        .wavelength-slider-wrapper {
+            position: relative;
+
+            .wavelength-slider {
+                width: 200px;
+            }
+
+            .uv-label,
+            .ir-label {
+                position: absolute;
+                top: -6px;
+                .user-select(none);
+                pointer-events: none;
+                font-size: 10px;
+            }
+
+            .uv-label {
+                left: 34px;
+            }
+
+            .ir-label {
+                right: 4px;
+            }
+        }
+        
+    }
+
 }
+

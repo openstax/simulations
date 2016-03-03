@@ -2,6 +2,10 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
+    var DischargeLampsConstants = require('discharge-lamps/constants');
+
     var DEG_TO_RAD = Math.PI / 180;
 
     var Constants = {}; 
@@ -13,6 +17,15 @@ define(function (require) {
      *************************************************************************/
 
     Constants.BATTERY_WIDTH = 200;
+
+    // View parameters
+    Constants.GRAPH_DOT_RADIUS = 5;
+    //Constants.CHART_SIZE = new Dimension(170, 94);
+    Constants.BEAM_CONTROL_LOCATION = new Vector2(DischargeLampsConstants.CATHODE_X_LOCATION + 290, 20);
+
+    // Model related fields
+    Constants.MIN_WAVELENGTH = 100;
+    Constants.MAX_WAVELENGTH = 850;
 
 
     var Circuit = {};

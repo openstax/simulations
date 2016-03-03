@@ -12,8 +12,8 @@ define(function(require) {
 
     var TubeView = require('lasers/views/tube');
 
-    var CircuitView     = require('views/circuit');
-    var BeamControlView = require('views/beamcontrol');
+    var CircuitView = require('views/circuit');
+    var BeamView    = require('views/beam');
 
     var Assets = require('assets');
 
@@ -81,11 +81,11 @@ define(function(require) {
         },
 
         initBackground: function() {
-            var beamControlView = new BeamControlView({
-                model: this.simulation.beamControl
+            this.beamView = new BeamView({
+                model: this.simulation.beamControl,
+                mvt: this.mvt
             });
-            this.beamControlView = beamControlView;
-            this.backgroundLayer.addChild(this.beamControlView.displayObject);
+            this.backgroundLayer.addChild(this.beamView.displayObject);
 
             this.circuitView = new CircuitView({
                 model: this.simulation.circuit,
@@ -98,11 +98,11 @@ define(function(require) {
                 model: this.simulation.tube,
                 mvt: this.mvt
             });
-
             this.backgroundLayer.addChild(this.tubeView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
+
         },
 
     });
