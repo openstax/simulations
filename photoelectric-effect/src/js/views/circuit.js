@@ -5,7 +5,7 @@ define(function(require) {
     var $          = require('jquery');
     var PIXI       = require('pixi');
     var NoUiSlider = require('nouislider');
-    require('wnumb');
+                     require('wnumb');
 
     var PixiView = require('common/v3/pixi/view');
     
@@ -13,12 +13,9 @@ define(function(require) {
 
     var BatteryView = require('views/battery');
 
-    var Assets = require('assets');
+    var Assets    = require('assets');
     var Constants = require('constants');
 
-    // CSS
-    require('css!../../../bower_components/nouislider/distribute/nouislider.min.css');
-    require('less!styles/circuit.less');
 
     var CircuitView = PixiView.extend({
         events: {},
@@ -46,11 +43,11 @@ define(function(require) {
             this.displayObject.addChild(this.leftElectrode);
             this.displayObject.addChild(this.rightElectrode);
 
-            var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUIT_BACKGROUND_LOOP);
-            circuitBackgroundLoop.x = -269;
-            circuitBackgroundLoop.y = -85;
-            this.circuitBackgroundLoop = circuitBackgroundLoop;
-            this.displayObject.addChild(this.circuitBackgroundLoop);
+            // var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUIT_BACKGROUND_LOOP);
+            // circuitBackgroundLoop.x = -269;
+            // circuitBackgroundLoop.y = -85;
+            // this.circuitBackgroundLoop = circuitBackgroundLoop;
+            // this.displayObject.addChild(this.circuitBackgroundLoop);
 
             this.initBattery();
             this.initAmmeter();
@@ -119,6 +116,8 @@ define(function(require) {
 
             this.ammeter.x = mvt.modelToViewDeltaX(130);
             this.ammeter.y = this.wires.height - this.wireWidth / 2 - this.ammeter.height / 2;
+
+            this.updatePosition();
         },
 
         updateWireGraphics: function() {
@@ -146,6 +145,13 @@ define(function(require) {
             this.rightElectrode.x = gap / 2;
 
             this.leftElectrode.y = this.rightElectrode.y = this.wireWidth / 2;
+        },
+
+        updatePosition: function() {
+            // Use the cathode position as our point of reference for positioning the whole circuit
+            var cathodeViewPosition = this.mvt.modelToView(DischargeLampsConstants.CATHODE_LOCATION);
+            this.displayObject.x = cathodeViewPosition.x - this.leftElectrode.x;
+            this.displayObject.y = cathodeViewPosition.y - this.leftElectrode.y;
         },
 
         getElectrodeGap: function() {

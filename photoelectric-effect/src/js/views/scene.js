@@ -10,7 +10,9 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var CircuitView = require('views/circuit');
+    var TubeView = require('lasers/views/tube');
+
+    var CircuitView     = require('views/circuit');
     var BeamControlView = require('views/beamcontrol');
 
     var Assets = require('assets');
@@ -51,13 +53,13 @@ define(function(require) {
             var scale;
 
             if (AppView.windowIsShort()) {
-                this.viewOriginX = 0;
+                this.viewOriginX = 50;
                 this.viewOriginY = 0;
                 scale = 0.75;
             }
             else {
-                this.viewOriginX = 0;
-                this.viewOriginY = 0;
+                this.viewOriginX = 32;
+                this.viewOriginY = 30;
                 scale = 1; 
             }
 
@@ -90,9 +92,14 @@ define(function(require) {
                 simulation: this.simulation,
                 mvt: this.mvt
             });
-            this.circuitView.displayObject.x = this.mvt.modelToViewX(380);
-            this.circuitView.displayObject.y = this.mvt.modelToViewY(280);
             this.backgroundLayer.addChild(this.circuitView.displayObject);
+
+            this.tubeView = new TubeView({
+                model: this.simulation.tube,
+                mvt: this.mvt
+            });
+
+            this.backgroundLayer.addChild(this.tubeView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
