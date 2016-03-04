@@ -1,28 +1,21 @@
 
 <span class="scene-view-placeholder"></span>
 
-<div class="beam-controls">
-    <div class="voltageSliderContainer">
-        <div class="voltageSlider"></div>
-        <span class="voltageSliderLabel"></span>
+<div class="sim-controls beam-controls">
+    <div class="intensity-slider-container">
+        <label class="slider-header">Intensity <span class="slider-value intensity-value">0%</span></label>
+        <div class="intensity-slider-wrapper">
+            <div class="slider intensity-slider"></div>
+        </div>
     </div>
 
-    <div class="wavelengthSliderContainer">
-        <div class="wavelengthSlider noUi-extended"></div>
-        <span class="wavelengthSliderLabel"></span>
+    <div class="wavelength-slider-container">
+        <label class="slider-header">Wavelength <span class="slider-value wavelength-value">400nm</span></label>
+        <div class="wavelength-slider-wrapper">
+            <div class="uv-label">UV</div>
+            <div class="ir-label">IR</div>
+        </div>
     </div>
-
-    <div class="intensitySliderContainer">
-        <div class="intensitySlider noUi-extended"></div>
-        <span class="intensitySliderLabel"></span>
-    </div>
-
-    <div class="currentContainer">
-        <span class="currentLabel">Current: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;0.000</span>
-    </div>
-
-    <div class="uvLabel">UV</div>
-    <div class="irLabel">IR</div>
 </div>
 
 <div class="sim-controls-wrapper">
@@ -32,12 +25,10 @@
 
             <div class="target-select-wrapper">
                 <label>Target Material</label>
-                <select>
-                    <option value="0">Sodium</option>
-                    <option value="1">Zinc</option>
-                    <option value="2">Copper</option>
-                    <option value="3">Platinum</option>
-                    <option value="4">Calcium</option>
+                <select id="target-material">
+                <% _.each(targetMaterials, function(material, index) { %>
+                    <option value="<%= index %>"><%= material %></option>
+                <% }) %>
                 </select>
             </div>
 

@@ -7,7 +7,7 @@ define(function(require) {
     var Backbone = require('backbone'); Backbone.$ = $;
 
     var defineInputUpdateLocks = require('../locks/define-locks');
-    var WavelengthColors = require('../colors/wavelength');
+    var WavelengthColors       = require('../colors/wavelength');
     
     require('nouislider');
     require('less!./wavelength-slider');
@@ -36,12 +36,16 @@ define(function(require) {
             options = _.extend({
                 minWavelength: WavelengthColors.MIN_WAVELENGTH,
                 maxWavelength: WavelengthColors.MAX_WAVELENGTH,
-                defaultWavelength: Math.floor((WavelengthColors.MAX_WAVELENGTH - WavelengthColors.MIN_WAVELENGTH) / 2) + WavelengthColors.MIN_WAVELENGTH
+                defaultWavelength: Math.floor((WavelengthColors.MAX_WAVELENGTH - WavelengthColors.MIN_WAVELENGTH) / 2) + WavelengthColors.MIN_WAVELENGTH,
+                invisibleSpectrumAlpha: 1,
+                invisibleSpectrumColor: '#bbb'
             }, options);
 
             this.minWavelength = options.minWavelength;
             this.maxWavelength = options.maxWavelength;
             this.defaultWavelength = options.defaultWavelength;
+            this.invisibleSpectrumAlpha = options.invisibleSpectrumAlpha;
+            this.invisibleSpectrumColor = options.invisibleSpectrumColor;
         },
 
         reset: function() {
@@ -114,7 +118,14 @@ define(function(require) {
 
                 // Convert wavelength to rgb and apply to fill style
                 color = WavelengthColors.nmToHex(wavelength);
-                ctx.fillStyle = color;
+                if (color === '#000000') {
+                    ctx.globalAlpha = this.invisibleSpectrumAlpha;
+                    ctx.fillStyle   = this.invisibleSpectrumColor;
+                }
+                else {
+                    ctx.globalAlpha = 1;
+                    ctx.fillStyle = color;
+                }
                 ctx.fillRect(i, 0, 1, height);
             }
         },

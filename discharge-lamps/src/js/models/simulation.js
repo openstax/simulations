@@ -39,6 +39,11 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                framesPerSecond: Constants.FPS,
+                deltaTimePerFrame: Constants.DT
+            }, options);
+            
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:elementProperties', this.elementPropertiesChanged);
@@ -144,12 +149,12 @@ define(function (require, exports, module) {
         setVoltage: function(voltage) {
             // Set the potential of the plates
             if (voltage > 0) {
-                this.leftHandPlate.setPotential(voltage);
-                this.rightHandPlate.setPotential(0);
+                this.leftHandPlate.set('potential', voltage);
+                this.rightHandPlate.set('potential', 0);
             }
             else {
-                this.leftHandPlate.setPotential(0);
-                this.rightHandPlate.setPotential(-voltage);
+                this.leftHandPlate.set('potential', 0);
+                this.rightHandPlate.set('potential', -voltage);
             }
             
             this.trigger('voltage-changed', this, voltage);

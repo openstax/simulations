@@ -5,10 +5,15 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiSceneView = require('common/v3/pixi/view/scene');
+    var AppView            = require('common/v3/app/app');
+    var PixiSceneView      = require('common/v3/pixi/view/scene');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+
+    var TubeView = require('lasers/views/tube');
 
     var CircuitView = require('views/circuit');
-    var BeamControlView = require('views/beamcontrol');
+    var BeamView    = require('views/beam');
 
     var Assets = require('assets');
 
@@ -39,8 +44,30 @@ define(function(require) {
         initGraphics: function() {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.initMVT();
             this.initLayers();
             this.initBackground();
+        },
+
+        initMVT: function() {
+            var scale;
+
+            if (AppView.windowIsShort()) {
+                this.viewOriginX = 50;
+                this.viewOriginY = 0;
+                scale = 0.75;
+            }
+            else {
+                this.viewOriginX = 32;
+                this.viewOriginY = 30;
+                scale = 1; 
+            }
+
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                scale
+            );
         },
 
         initLayers: function() {
@@ -54,20 +81,28 @@ define(function(require) {
         },
 
         initBackground: function() {
-            var beamControlView = new BeamControlView({
-                model: this.simulation.beamControl
+            this.beamView = new BeamView({
+                model: this.simulation.beam,
+                mvt: this.mvt
             });
-            this.beamControlView = beamControlView;
-            this.backgroundLayer.addChild(this.beamControlView.displayObject);
+            this.backgroundLayer.addChild(this.beamView.displayObject);
 
-            var circuitView = new CircuitView({
-                model: this.simulation.circuit
+            this.circuitView = new CircuitView({
+                model: this.simulation.circuit,
+                simulation: this.simulation,
+                mvt: this.mvt
             });
-            this.circuitView = circuitView;
             this.backgroundLayer.addChild(this.circuitView.displayObject);
+
+            this.tubeView = new TubeView({
+                model: this.simulation.tube,
+                mvt: this.mvt
+            });
+            this.backgroundLayer.addChild(this.tubeView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
+
         },
 
     });

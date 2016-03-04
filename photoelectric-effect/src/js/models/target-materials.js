@@ -19,9 +19,9 @@ define(function (require) {
     TargetMaterials.MAGNESIUM = new Magnesium();
     
     TargetMaterials.TARGET_MATERIALS = [
+        TargetMaterials.SODIUM,
         TargetMaterials.ZINC,
         TargetMaterials.COPPER,
-        TargetMaterials.SODIUM,
         TargetMaterials.PLATINUM,
         TargetMaterials.CALCIUM,
         TargetMaterials.MAGNESIUM

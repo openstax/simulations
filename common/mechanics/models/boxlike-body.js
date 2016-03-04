@@ -33,14 +33,12 @@ define(function (require) {
             this.corner2 = this.get('corner2');
             this.center  = new Vector2();
 
-            this.minX = Number.NEGATIVE_INFINITY;
-            this.minY = Number.NEGATIVE_INFINITY;
-            this.maxX = Number.POSITIVE_INFINITY;
-            this.maxY = Number.POSITIVE_INFINITY;
             this.bounds = new Rectangle();
 
             this.prevPosition = new Vector2(this.get('position'));
             this.prevVelocity = new Vector2(this.get('velocity'));
+
+            this.setState(this.corner1, this.corner2);
         },
 
         getCM: function() {
