@@ -52,6 +52,7 @@ define(function (require) {
         events: {
             'change #target-material'  : 'changeTargetMaterial',
             'slide .wavelength-slider' : 'changeWavelength',
+            'slide .intensity-slider'  : 'changeIntensity',
         },
 
         /**
@@ -103,7 +104,7 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
-            this.renderWavelengthView();
+            this.renderWavelengthSliderView();
 
             return this;
         },
@@ -120,6 +121,18 @@ define(function (require) {
                 })
             };
             this.$el.html(this.template(data));
+
+            this.$('.intensity-slider').noUiSlider({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: this.simulation.beam.get('maxPhotonsPerSecond')
+                },
+                connect: 'lower'
+            });
+
+            this.$intensityValue = this.$('.intensity-value');
+
             this.$('select').selectpicker();
         },
 
@@ -134,7 +147,7 @@ define(function (require) {
         /**
          * Renders the wavelength view
          */
-        renderWavelengthView: function() {
+        renderWavelengthSliderView: function() {
             this.wavelengthSliderView.render();
             this.$('.wavelength-slider-wrapper').prepend(this.wavelengthSliderView.el);
 
@@ -183,9 +196,27 @@ define(function (require) {
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
                 this.$wavelengthValue.text(wavelength + 'nm');
-                this.simulation.set('wavelength', wavelength);
+                this.simulation.beam.set('wavelength', wavelength);
             });
         },
+
+        changeIntensity: function(event) {
+            this.inputLock(function() {
+                var value = parseInt($(event.target).val());
+                var percent = Math.round(value / this.simulation.beam.get('maxPhotonsPerSecond') * 100);
+                var photonsPerSecond = this.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                this.$intensityValue.text(percent + '%');
+                this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
+            });
+        },
+
+        intensityToPhotonRate: function(intensity, wavelength) {
+            return intensity * wavelength / Constants.MAX_WAVELENGTH;
+        },
+
+        photonRateToIntensity: function(photonRate, wavelength) {
+            return photonRate * Constants.MAX_WAVELENGTH / wavelength;
+        }
 
     });
 

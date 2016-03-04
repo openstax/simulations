@@ -46,6 +46,11 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                framesPerSecond: Constants.FPS,
+                deltaTimePerFrame: Constants.DT
+            }, options);
+
             QuantumSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             var minX = Math.floor(this.get('originX') - 50);

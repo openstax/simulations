@@ -5,8 +5,9 @@ define(function (require) {
     var _           = require('underscore');
     var gaussRandom = require('gauss-random');
 
-    var Vector2  = require('common/math/vector2');
-    var Particle = require('common/mechanics/models/particle');
+    var Vector2        = require('common/math/vector2');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Particle       = require('common/mechanics/models/particle');
 
     var Photon = require('./photon');
 
@@ -109,6 +110,10 @@ define(function (require) {
             this.setVelocity(this._direction);
         },
 
+        getDirection: function() {
+            return this.get('velocity').angle();
+        },
+
         generatePosition: function() {
             var r = Math.random();
             var inset = 10;  // inset from the edges of the "beam" that photons are emitted
@@ -121,6 +126,29 @@ define(function (require) {
         getNextTimeToProducePhoton: function() {
             var temp = this.get('photonProductionIsGaussian') ? (gaussRandom() + 1.0) : 1;
             return temp / (this.get('photonsPerSecond') / 1000);
+        },
+
+        getBounds: function() {
+            var alpha = this.get('fanout') / 2;
+            var x = this.getX();
+            var y = this.getY();
+            var length = this.get('length');
+            var beamWidth = this.get('beamWidth');
+
+            var curve = new PiecewiseCurve();
+            curve.moveTo(x, y);
+            curve.lineTo(x + 0,                        y - beamWidth / 2);
+            curve.lineTo(x + length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
+            curve.lineTo(x + 0,                        y + beamWidth + length * Math.sin(alpha));
+            curve.lineTo(x - length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
+            curve.lineTo(x, y);
+
+            // Rotate it around the position
+            curve.translate(-x, -y);
+            curve.rotate(this.getDirection());
+            curve.translate(x, y);
+
+            return curve;
         },
 
         photonsPerSecondChanged: function(photon, photonsPerSecond) {

@@ -87,7 +87,6 @@ define(function (require, exports, module) {
 
             this.addModel(this.beam);
 
-            this.listenTo(this.beam, 'change:photonsPerSecond', this.beamIntensityChanged);
             this.listenTo(this.beam, 'photon-produced', this.photonProduced);
 
             // Create the target plate.
@@ -150,9 +149,6 @@ define(function (require, exports, module) {
             
             if (this.getVoltage() !== this.get('voltage'))
                 this.set('voltage', this.getVoltage());
-            
-            if (this.beam.get('wavelength') !== this.get('wavelength'))
-                this.set('wavelength', this.getVoltage());
 
             // Check for electrons that get out of the tube (Only matters if the
             // electrons leave the target at an angle)
@@ -266,10 +262,6 @@ define(function (require, exports, module) {
 
         photonProduced: function(source, photon) {
             this.addModel(photon);
-        },
-
-        beamIntensityChanged: function(beam, photonsPerSecond) {
-            this.trigger('beam-intensity-changed', this, photonsPerSecond);
         },
 
         /**

@@ -82,7 +82,7 @@ define(function(require) {
 
         initBackground: function() {
             this.beamView = new BeamView({
-                model: this.simulation.beamControl,
+                model: this.simulation.beam,
                 mvt: this.mvt
             });
             this.backgroundLayer.addChild(this.beamView.displayObject);

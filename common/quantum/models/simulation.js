@@ -4,14 +4,14 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     /**
      * Base simulation model for quantum physics simulations
      */
-    var QuantumSimulation = Simulation.extend({
+    var QuantumSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend(Simulation.prototype.defaults, {
+        defaults: _.extend(FixedIntervalSimulation.prototype.defaults, {
             photonSpeedScale: 1,
             currentElementProperties: undefined
         }),

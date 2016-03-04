@@ -42,12 +42,6 @@ define(function(require) {
             this.displayObject.addChild(this.leftElectrode);
             this.displayObject.addChild(this.rightElectrode);
 
-            // var circuitBackgroundLoop = Assets.createSprite(Assets.Images.CIRCUIT_BACKGROUND_LOOP);
-            // circuitBackgroundLoop.x = -269;
-            // circuitBackgroundLoop.y = -85;
-            // this.circuitBackgroundLoop = circuitBackgroundLoop;
-            // this.displayObject.addChild(this.circuitBackgroundLoop);
-
             this.initBattery();
             this.initAmmeter();
 

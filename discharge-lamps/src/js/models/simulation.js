@@ -39,6 +39,11 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
+            options = _.extend({
+                framesPerSecond: Constants.FPS,
+                deltaTimePerFrame: Constants.DT
+            }, options);
+            
             LasersSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:elementProperties', this.elementPropertiesChanged);
