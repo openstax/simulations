@@ -35,7 +35,7 @@ define(function (require) {
             var y2 = this.get('point2').y;
 
             // Look for electrons that should be absorbed
-            for (var i = this.electrons.length; i >= 0; i--) {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
                 var electron = this.electrons[i];
 
                 var hits = LineIntersection.linesIntersect(

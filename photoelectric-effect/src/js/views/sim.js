@@ -203,7 +203,7 @@ define(function (require) {
         changeIntensity: function(event) {
             this.inputLock(function() {
                 var value = parseInt($(event.target).val());
-                var percent = Math.round(value / this.simulation.beam.get('maxPhotonsPerSecond') * 100);
+                var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
                 var photonsPerSecond = this.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);

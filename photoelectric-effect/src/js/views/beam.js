@@ -59,7 +59,7 @@ define(function(require) {
         drawLight: function() {
             var graphics = this.lightGraphics;
             var beam = this.model;
-            var color = Colors.parseHex(WavelengthColors.nmToHex(this.model.get('wavelength')));
+            var color = Colors.parseHex(WavelengthColors.nmToHex(beam.get('wavelength')));
             var minLevel = 200;
             var colorMax = 255;
             // The power function here controls the ramp-up of actualColor intensity
@@ -69,7 +69,7 @@ define(function(require) {
             graphics.clear();
             // Draw light beam
             graphics.beginFill(color, alpha);
-            //graphics.drawPiecewiseCurve(this.lightCurve);
+            // graphics.drawPiecewiseCurve(this.lightCurve);
             graphics.drawPolygon(
                 new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
                                -(this.flashlight.height/2)),
@@ -89,17 +89,6 @@ define(function(require) {
                 5.5, (this.flashlight.height/2)
             );
             graphics.endFill();
-        },
-
-        /**
-         * Determines the color to paint the rectangle.
-         */
-        getActualColor: function(baseColor, level) {
-            // double grayRefLevel = MakeDuotoneImageOp.getGrayLevel( baseColor );
-            // int newRGB = MakeDuotoneImageOp.getDuoToneRGB( level, level, level, colorMax, grayRefLevel, baseColor );
-            // return new Color( newRGB );
-            console.log(baseColor, level);
-            return 0x000000;
         }
 
     }, Constants.BeamView);

@@ -134,6 +134,9 @@ define(function (require) {
 
     PEffectSimulation.DEFAULT_TARGET_POTENTIAL = 0;
 
+    PEffectSimulation.BEAM_VIEW = 1;
+    PEffectSimulation.PHOTON_VIEW = 2;
+
     Constants.PEffectSimulation = PEffectSimulation;
 
 

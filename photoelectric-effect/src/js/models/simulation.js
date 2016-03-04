@@ -4,11 +4,12 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Vector2     = require('common/math/vector2');
-    var Beam        = require('common/quantum/models/beam');
-    var Photon      = require('common/quantum/models/photon');
-    var PhysicsUtil = require('common/quantum/models/physics-util');
-    var Plate       = require('common/quantum/models/plate');
+    var Vector2          = require('common/math/vector2');
+    var LineIntersection = require('common/math/line-intersection');
+    var Beam             = require('common/quantum/models/beam');
+    var Photon           = require('common/quantum/models/photon');
+    var PhysicsUtil      = require('common/quantum/models/physics-util');
+    var Plate            = require('common/quantum/models/plate');
 
     var DischargeLampsSimulation = require('discharge-lamps/models/simulation');
     var DischargeLampsConstants  = require('discharge-lamps/constants');
@@ -33,7 +34,7 @@ define(function (require, exports, module) {
     var PEffectSimulation = DischargeLampsSimulation.extend({
 
         defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
-            
+            viewMode: Constants.PEffectSimulation.BEAM_VIEW
         }),
         
         initialize: function(attributes, options) {
@@ -262,6 +263,31 @@ define(function (require, exports, module) {
 
         photonProduced: function(source, photon) {
             this.addModel(photon);
+
+            // When we're in beam-view mode, modify the initial placement of photons to be very near
+            //   the target. This prevents the delay in response of the target when the wavelength
+            //   or intensity of the beam is changed.
+            if (this.get('viewMode') === PEffectSimulation.BEAM_VIEW) {
+                var x = photon.getX();
+                var y = photon.getY();
+                var velocity = photon.getVelocity();
+                var point1 = this.target.get('point1');
+                var point2 = this.target.get('point2');
+                
+                var intersection = LineIntersection.lineIntersection(
+                    x, y,
+                    x + velocity.x, y + velocity.y,
+                    point1.x, point1.y,
+                    point2.x, point2.y
+                );
+
+                if (intersection instanceof Vector2) {
+                    photon.setPosition(
+                        intersection.x - velocity.x,
+                        intersection.y - velocity.y
+                    );
+                }
+            }
         },
 
         /**

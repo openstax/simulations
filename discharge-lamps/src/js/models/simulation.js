@@ -127,6 +127,8 @@ define(function (require, exports, module) {
         },
 
         addModel: function(model) {
+            LasersSimulation.prototype.addModel.apply(this, arguments);
+            
             if (model instanceof Electron) {
                 model.setAcceleration(this.getElectronAcceleration());
                 this.electrons.add(model);

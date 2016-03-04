@@ -64,7 +64,7 @@ define(function (require) {
         /**
          * 
          */
-        update: function(deltaTime) {
+        update: function(time, deltaTime) {
             Particle.prototype.update.apply(this, arguments);
 
             // Produce photons
@@ -78,8 +78,8 @@ define(function (require) {
                         var photonLoc = this.generatePosition();
                         var angle = (photonLoc.distance(this.get('position')) / this.get('beamWidth') / 2) * this.get('fanout');
                         var angleToPhoton = Math.atan2(
-                            photonLoc.getY() - this.getY(),
-                            photonLoc.getX() - this.getX()
+                            photonLoc.y - this.getY(),
+                            photonLoc.x - this.getX()
                         );
                         var alpha = this.get('velocity').angle() - angleToPhoton;
                         if (alpha > 0)
@@ -141,7 +141,7 @@ define(function (require) {
             curve.lineTo(x + length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
             curve.lineTo(x + 0,                        y + beamWidth + length * Math.sin(alpha));
             curve.lineTo(x - length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
-            curve.lineTo(x, y);
+            curve.close();
 
             // Rotate it around the position
             curve.translate(-x, -y);
