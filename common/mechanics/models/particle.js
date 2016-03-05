@@ -19,7 +19,7 @@ define(function (require) {
         /**
          * Determines the new state of the body using the Verlet method
          */
-        update: function(deltaTime) {
+        update: function(time, deltaTime) {
             // New position
             var xNew = this.getX()
                 + deltaTime * this.get('velocity').x
