@@ -88,7 +88,7 @@ define(function (require, exports, module) {
 
             this.addModel(this.beam);
 
-            this.listenTo(this.beam, 'photon-produced', this.photonProduced);
+            this.listenTo(this.beam, 'photon-emitted', this.photonEmitted);
 
             // Create the target plate.
             this.target = new PhotoelectricTarget({
@@ -261,8 +261,8 @@ define(function (require, exports, module) {
             }
         },
 
-        photonProduced: function(source, photon) {
-            this.addModel(photon);
+        photonEmitted: function(source, photon) {
+            this.addPhoton(photon);
 
             // When we're in beam-view mode, modify the initial placement of photons to be very near
             //   the target. This prevents the delay in response of the target when the wavelength
@@ -273,7 +273,7 @@ define(function (require, exports, module) {
                 var velocity = photon.getVelocity();
                 var point1 = this.target.get('point1');
                 var point2 = this.target.get('point2');
-                
+
                 var intersection = LineIntersection.lineIntersection(
                     x, y,
                     x + velocity.x, y + velocity.y,

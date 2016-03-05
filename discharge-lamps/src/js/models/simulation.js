@@ -60,6 +60,8 @@ define(function (require, exports, module) {
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
 
+            this.listenTo(this.electrons, 'remove', this.modelRemoved);
+
             this.listenTo(this.electronSources, 'electron-produced', this.electronProducedFromSource);
 
             this.spectrometer = new Spectrometer();
@@ -109,6 +111,13 @@ define(function (require, exports, module) {
             this.addModel(this.tube);
         },
 
+        updateModels: function(time, deltaTime) {
+            LasersSimulation.prototype.updateModels.apply(this, arguments);
+
+            for (var i = 0; i < this.electrons.length; i++)
+                this.electrons.at(i).update(time, deltaTime);
+        },
+
         checkCollisions: function(deltaTime) {
             LasersSimulation.prototype.checkCollisions.apply(this, arguments);
 
@@ -128,11 +137,6 @@ define(function (require, exports, module) {
 
         addModel: function(model) {
             LasersSimulation.prototype.addModel.apply(this, arguments);
-            
-            if (model instanceof Electron) {
-                model.setAcceleration(this.getElectronAcceleration());
-                this.electrons.add(model);
-            }
 
             if (model instanceof ElectronSink)
                 this.electronSinks.add(model);
@@ -146,6 +150,12 @@ define(function (require, exports, module) {
 
             if (model instanceof Electron)
                 this.electrons.remove(model);
+        },
+
+        addElectron: function(electron) {
+            electron.setAcceleration(this.getElectronAcceleration());
+            this.electrons.add(electron);
+            this.bodies.add(electron);
         },
 
         setVoltage: function(voltage) {
@@ -307,7 +317,7 @@ define(function (require, exports, module) {
         },
 
         electronProduced: function(source, electron) {
-            this.addModel(electron);
+            this.addElectron(electron);
         },
 
         electronProducedFromSource: function(source, electron) {

@@ -80,8 +80,8 @@ define(function(require) {
 
         updateSprite: function(sprite, model) {
             var pos = model.get('position');
-            var x = mvt.modelToViewX(pos.x);
-            var y = mvt.modelToViewY(pos.y);
+            var x = this.mvt.modelToViewX(pos.x);
+            var y = this.mvt.modelToViewY(pos.y);
             sprite.visible = true;
             sprite.x = x;
             sprite.y = y;

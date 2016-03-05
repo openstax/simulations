@@ -44,7 +44,7 @@ define(function(require) {
         },
 
         updateSprite: function(sprite, model) {
-            SpriteCollectionView.prototype.apply(this, arguments);
+            SpriteCollectionView.prototype.updateSprite.apply(this, arguments);
             
             sprite.tint = this.getColorFromWavelength(model.get('wavelength'));
         },
