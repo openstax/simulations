@@ -10,6 +10,8 @@ define(function(require) {
     var WavelengthColors = require('common/colors/wavelength');
     var Colors           = require('common/colors/colors');
 
+    var PEffectSimulation = require('models/simulation');
+
     var Assets    = require('assets');
     var Constants = require('constants');
 
@@ -17,29 +19,34 @@ define(function(require) {
 
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.simulation = options.simulation;
 
             this.initGraphics();
 
             this.listenTo(this.model, 'change:wavelength',       this.drawLight);
             this.listenTo(this.model, 'change:photonsPerSecond', this.drawLight);
+
+            this.listenTo(this.simulation, 'change:viewMode', this.drawLight);
         },
 
         initGraphics: function() {
-            this.lightLayer = new PIXI.Container();
-            this.lightLayer.x = 380;
-            this.lightLayer.y = 48;
-            this.displayObject.addChild(this.lightLayer);
+            this.beamLightGraphics = new PIXI.Graphics();
+            this.lampLightGraphics = new PIXI.Graphics();
 
-            this.lightGraphics = new PIXI.Graphics();
-            this.lightLayer.addChild(this.lightGraphics);
+            this.flashlight = Assets.createSprite(Assets.Images.FLASHLIGHT);
+            this.flashlight.anchor.x = 0.5;
+            this.flashlight.anchor.y = 0.5;
+            
+            this.flashlightLayer = new PIXI.Container();
+            this.flashlightLayer.x = 380;
+            this.flashlightLayer.y = 48;
+            this.flashlightLayer.rotation = -3.98;
 
-            var flashlight = Assets.createSprite(Assets.Images.FLASHLIGHT);
-            flashlight.anchor.x = 0.5;
-            flashlight.anchor.y = 0.5;
-            this.flashlight = flashlight;
-            this.lightLayer.addChild(this.flashlight);
-
-            this.lightLayer.rotation = -3.98;
+            this.flashlightLayer.addChild(this.lampLightGraphics);
+            this.flashlightLayer.addChild(this.flashlight);
+            
+            this.displayObject.addChild(this.beamLightGraphics);
+            this.displayObject.addChild(this.flashlightLayer);
 
             this.updateMVT(this.mvt);
         },
@@ -66,29 +73,33 @@ define(function(require) {
             var level = Math.max(minLevel, colorMax - Math.floor((colorMax - minLevel) * Math.pow((beam.get('photonsPerSecond') / beam.get('maxPhotonsPerSecond')), 0.3)));
             var alpha = (colorMax - level) / colorMax;
 
-            graphics.clear();
-            // Draw light beam
-            graphics.beginFill(color, alpha);
-            // graphics.drawPiecewiseCurve(this.lightCurve);
-            graphics.drawPolygon(
-                new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
-                               -(this.flashlight.height/2)),
-                new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 275,
-                               -(this.flashlight.height/2)),
-                new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 200,
-                               (this.flashlight.height/2)),
-                new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
-                               (this.flashlight.height/2))
-            );
-            graphics.endFill();
+            this.beamLightGraphics.clear();
+            this.lampLightGraphics.clear();
+
+            if (this.simulation.get('viewMode') === PEffectSimulation.BEAM_VIEW) {
+                // Draw light beam
+                this.beamLightGraphics.beginFill(color, alpha);
+                this.beamLightGraphics.drawPiecewiseCurve(this.lightCurve);
+                // this.beamLightGraphics.drawPolygon(
+                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
+                //                    -(this.flashlight.height/2)),
+                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 275,
+                //                    -(this.flashlight.height/2)),
+                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 200,
+                //                    (this.flashlight.height/2)),
+                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
+                //                    (this.flashlight.height/2))
+                // );
+                this.beamLightGraphics.endFill();
+            }
 
             // Draw the ellipse filling the flashlight with full saturation.
-            graphics.beginFill(color, 1);
-            graphics.drawEllipse(
+            this.lampLightGraphics.beginFill(color, 1);
+            this.lampLightGraphics.drawEllipse(
                 (this.flashlight.x + (this.flashlight.width / 2) - 5.5), 0,
                 5.5, (this.flashlight.height/2)
             );
-            graphics.endFill();
+            this.lampLightGraphics.endFill();
         }
 
     }, Constants.BeamView);

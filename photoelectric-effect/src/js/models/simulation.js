@@ -48,19 +48,6 @@ define(function (require, exports, module) {
         initComponents: function() {
             DischargeLampsSimulation.prototype.initComponents.apply(this, arguments);
 
-            var circuit = new Circuit({
-                voltage: 0,
-                wavelength: PEffectSimulation.DEFAULT_BEAM_WAVELENGTH
-            });
-            this.circuit = circuit;
-
-            var beamControl = new BeamControl({
-                wavelength: 400,
-                intensity: 100
-            });
-            this.beamControl = beamControl;
-
-
             // Set the max and min voltage of the battery
             this.battery.set('maxVoltage', PEffectSimulation.MAX_VOLTAGE);
             this.battery.set('minVoltage', PEffectSimulation.MIN_VOLTAGE);

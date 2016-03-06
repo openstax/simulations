@@ -87,6 +87,7 @@ define(function(require) {
         initBackground: function() {
             this.beamView = new BeamView({
                 model: this.simulation.beam,
+                simulation: this.simulation,
                 mvt: this.mvt
             });
             this.backgroundLayer.addChild(this.beamView.displayObject);
@@ -108,6 +109,7 @@ define(function(require) {
         initPhotons: function() {
             this.photonsView = new PhotonCollectionView({
                 collection: this.simulation.photons,
+                simulation: this.simulation,
                 mvt: this.mvt
             });
 
@@ -116,7 +118,7 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated()) {
-                //if (this.simulation.get('viewMode') === PEffectSimulation.PHOTON_VIEW)
+                if (this.simulation.get('viewMode') === PEffectSimulation.PHOTON_VIEW)
                     this.photonsView.update();
             }
         },

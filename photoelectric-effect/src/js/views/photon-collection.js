@@ -8,6 +8,8 @@ define(function(require) {
     var WavelengthColors     = require('common/colors/wavelength');
     var Colors               = require('common/colors/colors');
 
+    var PEffectSimulation = require('models/simulation');
+
     var Assets = require('assets');
 
     /**
@@ -20,6 +22,10 @@ define(function(require) {
             this.colors = {};
             
             SpriteCollectionView.prototype.initialize.apply(this, arguments);
+
+            this.simulation = options.simulation;
+
+            this.listenTo(this.simulation, 'change:viewMode', this.viewModeChanged);
         },
 
         /**
@@ -49,7 +55,12 @@ define(function(require) {
             sprite.tint = this.getColorFromWavelength(model.get('wavelength'));
         },
 
-
+        viewModeChanged: function(simulation, viewMode) {
+            if (viewMode === PEffectSimulation.PHOTON_VIEW)
+                this.show();
+            else
+                this.hide();
+        }
 
     });
 

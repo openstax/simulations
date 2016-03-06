@@ -137,10 +137,10 @@ define(function (require) {
 
             var curve = new PiecewiseCurve();
             curve.moveTo(x, y);
-            curve.lineTo(x + 0,                        y - beamWidth / 2);
-            curve.lineTo(x + length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
-            curve.lineTo(x + 0,                        y + beamWidth + length * Math.sin(alpha));
-            curve.lineTo(x - length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
+            curve.lineToRelative(0, -beamWidth / 2);
+            curve.lineToRelative(length * Math.cos(alpha), -length * Math.sin(alpha) / 2);
+            curve.lineToRelative(0, beamWidth + length * Math.sin(alpha));
+            curve.lineToRelative(-length * Math.cos(alpha), -length * Math.sin(alpha) / 2);
             curve.close();
 
             // Rotate it around the position
