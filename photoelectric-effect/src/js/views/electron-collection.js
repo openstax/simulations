@@ -6,6 +6,8 @@ define(function(require) {
 
     var SpriteCollectionView = require('common/v3/pixi/view/sprite-collection');
 
+    var Assets = require('assets');
+
     /**
      * A view that renders electron sprites for every electron in the sim
      */
@@ -15,7 +17,7 @@ define(function(require) {
          * Returns texture used for sprites.  Override in child classes.
          */
         getTexture: function() {
-            return PIXI.Texture.EMPTY;
+            return Assets.Texture(Assets.Images.ELECTRON);
         },
 
         /**

@@ -81,8 +81,8 @@ define(function (require, exports, module) {
             this.target = new PhotoelectricTarget({
                 simulation: this,
                 electromotiveForce: this,
-                point1: DischargeLampsConstants.ANODE_START,
-                point2: DischargeLampsConstants.ANODE_END,
+                point1: DischargeLampsConstants.CATHODE_START,
+                point2: DischargeLampsConstants.CATHODE_END,
                 potential: PEffectSimulation.DEFAULT_TARGET_POTENTIAL,
                 targetMaterial: TargetMaterials.SODIUM
             });
@@ -91,8 +91,8 @@ define(function (require, exports, module) {
             var rightHandPlate = new Plate({
                 simulation: this,
                 electromotiveForce: this,
-                point1: Constants.CATHODE_START,
-                point2: Constants.CATHODE_END
+                point1: Constants.ANODE_START,
+                point2: Constants.ANODE_END
             });
 
             this.setLeftHandPlate(this.target);
@@ -112,7 +112,7 @@ define(function (require, exports, module) {
             // Add an intensity meter for the beam
             this.beamIntensityMeter = new BeamIntensityMeter();
             this.addModel(this.beamIntensityMeter);
-            this.listenTo(this.beam, 'photon-produced', function(beam, photon) {
+            this.listenTo(this.beam, 'photon-emitted', function(beam, photon) {
                 this.beamIntensityMeter.recordPhoton();
             });
         },

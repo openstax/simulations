@@ -11,7 +11,8 @@ define(function (require) {
         ELECTRODE:  'electrode.png',
         BATTERY:    'battery.png',
         FLASHLIGHT: 'flashlight.png',
-        PHOTON:     'photon.png'
+        PHOTON:     'photon.png',
+        ELECTRON:   'electron-dark.png'
     };
 
     Assets.SpriteSheets = {};

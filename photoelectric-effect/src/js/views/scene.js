@@ -12,9 +12,10 @@ define(function(require) {
 
     var TubeView = require('lasers/views/tube');
 
-    var CircuitView          = require('views/circuit');
-    var BeamView             = require('views/beam');
-    var PhotonCollectionView = require('views/photon-collection');
+    var CircuitView            = require('views/circuit');
+    var BeamView               = require('views/beam');
+    var PhotonCollectionView   = require('views/photon-collection');
+    var ElectronCollectionView = require('views/photon-collection');
 
     var PEffectSimulation = require('models/simulation');
 
@@ -51,6 +52,7 @@ define(function(require) {
             this.initLayers();
             this.initBackground();
             this.initPhotons();
+            this.initElectrons();
         },
 
         initMVT: function() {
@@ -116,10 +118,21 @@ define(function(require) {
             this.photonElectronLayer.addChild(this.photonsView.displayObject);
         },
 
+        initElectrons: function() {
+            this.electronsView = new ElectronCollectionView({
+                collection: this.simulation.electrons,
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+
+            this.photonElectronLayer.addChild(this.electronsView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             if (this.simulation.updated()) {
                 if (this.simulation.get('viewMode') === PEffectSimulation.PHOTON_VIEW)
                     this.photonsView.update();
+                this.electronsView.update();
             }
         },
 
