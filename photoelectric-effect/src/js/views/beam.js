@@ -80,16 +80,6 @@ define(function(require) {
                 // Draw light beam
                 this.beamLightGraphics.beginFill(color, alpha);
                 this.beamLightGraphics.drawPiecewiseCurve(this.lightCurve);
-                // this.beamLightGraphics.drawPolygon(
-                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
-                //                    -(this.flashlight.height/2)),
-                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 275,
-                //                    -(this.flashlight.height/2)),
-                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)) + 200,
-                //                    (this.flashlight.height/2)),
-                //     new PIXI.Point((this.flashlight.x+((this.flashlight.width/2)-5)),
-                //                    (this.flashlight.height/2))
-                // );
                 this.beamLightGraphics.endFill();
             }
 

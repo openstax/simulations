@@ -120,7 +120,7 @@ define(function (require, exports, module) {
             }
 
             LasersSimulation.prototype.updateModels.apply(this, arguments);
-
+console.log(this.electrons.length)
             for (i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
         },
@@ -160,7 +160,7 @@ define(function (require, exports, module) {
         },
 
         addElectron: function(electron) {
-            electron.setAcceleration(this.getElectronAcceleration());
+            electron.setAcceleration(this.electronAcceleration);
             this.electrons.add(electron);
             this.bodies.add(electron);
         },
@@ -200,7 +200,6 @@ define(function (require, exports, module) {
                 this.stopListening(this.leftHandPlate);
             this.leftHandPlate = plate;
             this.listenTo(this.leftHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.leftHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getLeftHandPlate: function() {
@@ -212,7 +211,6 @@ define(function (require, exports, module) {
                 this.stopListening(this.rightHandPlate);
             this.rightHandPlate = plate;
             this.listenTo(this.rightHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.rightHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getRightHandPlate: function() {
@@ -323,11 +321,8 @@ define(function (require, exports, module) {
             }
         },
 
-        electronProduced: function(source, electron) {
-            this.addElectron(electron);
-        },
-
         electronProducedFromSource: function(source, electron) {
+            this.addElectron(electron);
             for (var i = 0; i < this.electronSinks.length; i++)
                 this.electronSinks.at(i).addElectron(electron);
         },
