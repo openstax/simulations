@@ -48,7 +48,7 @@ define(function (require) {
                 if (hits) {
                     this.get('simulation').removeModel(electron);
                     this.trigger('electron-absorbed', this, electron);
-                    electron.destroy();
+                    electron.markForDestruction();
                     this.electrons.splice(i, 1);
                 }
             }

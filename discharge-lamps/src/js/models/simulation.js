@@ -112,9 +112,16 @@ define(function (require, exports, module) {
         },
 
         updateModels: function(time, deltaTime) {
+            var i;
+            // First, destroy any electrons that have been marked for destruction
+            for (i = 0; i < this.electrons.length; i++) {
+                if (this.electrons.at(i).markedForDestruction())
+                    this.electrons.at(i).destroy();
+            }
+
             LasersSimulation.prototype.updateModels.apply(this, arguments);
 
-            for (var i = 0; i < this.electrons.length; i++)
+            for (i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
         },
 

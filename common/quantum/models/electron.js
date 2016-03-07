@@ -32,6 +32,20 @@ define(function (require) {
         },
 
         /**
+         * Sets a flag for the electron to be destroyed on the next loop
+         */
+        markForDestruction: function() {
+            this._markedForDestruction = true;
+        },
+
+        /**
+         * Returns whether the electron has been marked for destruction
+         */
+        markedForDestruction: function() {
+            return this._markedForDestruction;
+        },
+
+        /**
          * Returns the the energy of the electron in Joules
          *
          * @return

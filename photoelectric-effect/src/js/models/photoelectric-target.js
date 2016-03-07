@@ -102,13 +102,6 @@ define(function (require) {
          * Tells if the target has been hit by a specified photon in the last time step
          */
         isHitByPhoton: function(photon) {
-            console.log(
-                photon.cid, ': ',
-                this.get('point1').x, this.get('point1').y,
-                this.get('point2').x, this.get('point2').y,
-                ' | ',
-                photon.getPosition().x, photon.getPosition().y,
-                photon.getPreviousPosition().x, photon.getPreviousPosition().y);
             return LineIntersection.linesIntersect(
                 this.get('point1').x, this.get('point1').y,
                 this.get('point2').x, this.get('point2').y,
