@@ -133,7 +133,6 @@ define(function(require) {
                 if (this.simulation.get('viewMode') === PEffectSimulation.PHOTON_VIEW)
                     this.photonsView.update();
                 this.electronsView.update();
-                this.circuitView.update();
             }
         },
 

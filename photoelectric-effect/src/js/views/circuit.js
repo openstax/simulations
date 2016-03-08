@@ -7,8 +7,11 @@ define(function(require) {
     var NoUiSlider = require('nouislider');
 
     var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/colors/colors');
     
     var DischargeLampsConstants = require('discharge-lamps/constants');
+
+    var TargetMaterials = require('models/target-materials');
 
     var BatteryView = require('views/battery');
 
@@ -33,8 +36,8 @@ define(function(require) {
             this.leftElectrode  = Assets.createSprite(Assets.Images.ELECTRODE);
             this.rightElectrode = Assets.createSprite(Assets.Images.ELECTRODE);
 
-            this.leftElectrode.anchor.x = 0.9;
-            this.rightElectrode.anchor.x = 0.1;
+            this.leftElectrode.anchor.x = 1;
+            this.rightElectrode.anchor.x = 0;
             this.leftElectrode.anchor.y = this.rightElectrode.anchor.y = 0.5;
 
             this.displayObject.addChild(this.wires);
@@ -43,6 +46,7 @@ define(function(require) {
 
             this.initBattery();
             this.initAmmeter();
+            this.initTargetMaterial();
 
             this.updateMVT(this.mvt);
         },
@@ -94,10 +98,13 @@ define(function(require) {
             this.displayObject.addChild(this.ammeter);
 
             this.listenTo(this.simulation, 'change:current', this.updateCurrent);
+            this.listenTo(this.simulation.target, 'change:targetMaterial', this.updateTargetMaterialGraphics);
         },
 
-        update: function() {
-            // this.currentValue.text = this.simulation.ammeter.getCurrent().toFixed(3);
+        initTargetMaterial: function() {
+            // Add a layer on top of the electrode to represent the target material
+            this.targetMaterialGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.targetMaterialGraphics);
         },
 
         /**
@@ -108,6 +115,7 @@ define(function(require) {
 
             this.updateWireGraphics();
             this.updateElectrodeGraphics();
+            this.updateTargetMaterialGraphics();
 
             this.batteryView.setPosition(0, this.wires.height - this.wireWidth / 2);
             this.batteryView.updateMVT(mvt);
@@ -143,6 +151,24 @@ define(function(require) {
             this.rightElectrode.x = gap / 2;
 
             this.leftElectrode.y = this.rightElectrode.y = this.wireWidth / 2;
+        },
+
+        updateTargetMaterialGraphics: function() {
+            var graphics = this.targetMaterialGraphics;
+
+            var gap = this.getElectrodeGap();
+            graphics.x = -gap / 2;
+            graphics.y = this.leftElectrode.y;
+
+            graphics.clear();
+
+            var offsetY   = this.mvt.modelToViewDeltaY(10);
+            var thickness = this.mvt.modelToViewDeltaX(7);
+            var height = this.leftElectrode.height - offsetY * 2;
+            var color = Colors.parseHex(TargetMaterials.getColor(this.simulation.target.getMaterial()));
+            graphics.beginFill(color, 1);
+            graphics.drawRect(0, -height / 2, thickness, height);
+            graphics.endFill();
         },
 
         updatePosition: function() {
