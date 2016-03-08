@@ -92,10 +92,12 @@ define(function(require) {
             this.ammeter.addChild(currentValue);
 
             this.displayObject.addChild(this.ammeter);
+
+            this.listenTo(this.simulation, 'change:current', this.updateCurrent);
         },
 
         update: function() {
-            this.currentValue.text = this.simulation.ammeter.getCurrent().toFixed(3);
+            // this.currentValue.text = this.simulation.ammeter.getCurrent().toFixed(3);
         },
 
         /**
@@ -148,6 +150,10 @@ define(function(require) {
             var cathodeViewPosition = this.mvt.modelToView(DischargeLampsConstants.CATHODE_LOCATION);
             this.displayObject.x = cathodeViewPosition.x - this.leftElectrode.x;
             this.displayObject.y = cathodeViewPosition.y - this.leftElectrode.y;
+        },
+
+        updateCurrent: function(simulation, current) {
+            this.currentValue.text = current.toFixed(3);
         },
 
         getElectrodeGap: function() {
