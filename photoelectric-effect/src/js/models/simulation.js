@@ -113,7 +113,7 @@ define(function (require, exports, module) {
             this.beamIntensityMeter = new BeamIntensityMeter();
             this.addModel(this.beamIntensityMeter);
             this.listenTo(this.beam, 'photon-emitted', function(beam, photon) {
-                this.beamIntensityMeter.recordPhoton();
+                this.beamIntensityMeter.recordPhoton(this.time);
             });
         },
 
@@ -149,9 +149,9 @@ define(function (require, exports, module) {
 
         setRightHandPlate: function(plate) {
             DischargeLampsSimulation.prototype.setRightHandPlate.apply(this, arguments);
-console.log(this.rightHandPlate.cid)
+
             this.listenTo(this.rightHandPlate, 'electron-absorbed', function(plate, electron) {
-                this.ammeter.recordElectron();
+                this.ammeter.recordElectron(this.time);
             });
         },
 

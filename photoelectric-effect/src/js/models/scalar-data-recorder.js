@@ -22,8 +22,8 @@ define(function (require) {
 
     _.extend(ScalarDataRecorder.prototype, {
 
-        timeWindow: 1,
-        updateInterval: 0.5,
+        timeWindow: 1000,
+        updateInterval: 500,
 
         clear: function() {
             for (var i = this.values.length - 1; i >= 0; i--) {
@@ -88,8 +88,8 @@ define(function (require) {
          * Records a data point
          */
         addDataRecord: function(time, value) {
-            this.values.push(time);
-            this.times.push(value);
+            this.values.push(value);
+            this.times.push(time);
         },
 
         removeDataRecordAtIndex: function(index) {
