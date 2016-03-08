@@ -120,7 +120,7 @@ define(function (require, exports, module) {
             }
 
             LasersSimulation.prototype.updateModels.apply(this, arguments);
-console.log(this.electrons.length)
+
             for (i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
         },

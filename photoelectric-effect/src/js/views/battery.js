@@ -54,8 +54,9 @@ define(function(require) {
                     min: -this.model.get('maxVoltage'),
                     max:  this.model.get('maxVoltage')
                 },
+                step: 0.1,
 
-                width: 100,
+                width: 120,
                 backgroundHeight: 4,
                 backgroundColor: '#fff',
                 backgroundAlpha: 1,
@@ -67,7 +68,7 @@ define(function(require) {
                 handleColor: '#fff',
                 handleAlpha: 1,
                 handleLineColor: '#222',
-                handleLineWidth: 1,
+                handleLineWidth: 1
             });
 
             // Bind events
@@ -97,8 +98,8 @@ define(function(require) {
             };
 
             var textY = 15;
-            this.leftVoltageText  = new PIXI.Text('10 v', textSettings);
-            this.rightVoltageText = new PIXI.Text('10 v', textSettings);
+            this.leftVoltageText  = new PIXI.Text('0.00 v', textSettings);
+            this.rightVoltageText = new PIXI.Text('0.00 v', textSettings);
             this.leftVoltageText.resolution = this.rightVoltageText.resolution = this.getResolution();
             this.leftVoltageText.anchor.x = this.rightVoltageText.anchor.x = 1;
             this.leftVoltageText.x = this.leftVoltageText.width / 2;
@@ -147,7 +148,7 @@ define(function(require) {
             var voltage = this.model.get('voltage');
 
             // Update the displayed value and battery orientation
-            var text = Math.round(voltage) + ' v';
+            var text = voltage.toFixed(1) + ' v';
             if (voltage < 0) {
                 this.leftVoltageText.text = text;
                 this.leftVoltageText.visible = true;

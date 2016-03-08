@@ -15,7 +15,7 @@ define(function(require) {
     var CircuitView            = require('views/circuit');
     var BeamView               = require('views/beam');
     var PhotonCollectionView   = require('views/photon-collection');
-    var ElectronCollectionView = require('views/photon-collection');
+    var ElectronCollectionView = require('views/electron-collection');
 
     var PEffectSimulation = require('models/simulation');
 
@@ -81,9 +81,9 @@ define(function(require) {
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
 
+            this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.foregroundLayer);
-            this.stage.addChild(this.photonElectronLayer);
         },
 
         initBackground: function() {

@@ -35,7 +35,8 @@ define(function(require) {
             this.leftElectrode  = Assets.createSprite(Assets.Images.ELECTRODE);
             this.rightElectrode = Assets.createSprite(Assets.Images.ELECTRODE);
 
-            this.leftElectrode.anchor.x = this.rightElectrode.anchor.x = 0.5;
+            this.leftElectrode.anchor.x = 0.9;
+            this.rightElectrode.anchor.x = 0.1;
             this.leftElectrode.anchor.y = this.rightElectrode.anchor.y = 0.5;
 
             this.displayObject.addChild(this.wires);
