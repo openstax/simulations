@@ -17,7 +17,7 @@ define(function (require) {
     _.extend(Ammeter.prototype, ScalarDataRecorder.prototype, {
 
         recordElectron: function(time) {
-            this.recordPhotons(time, 1);
+            this.recordElectrons(time, 1);
         },
 
         recordElectrons: function(time, numElectrons) {

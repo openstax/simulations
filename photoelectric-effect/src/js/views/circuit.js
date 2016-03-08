@@ -24,8 +24,6 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.initGraphics();
-
-            this.listenTo(this.simulation, 'change:current', this.currentChanged);
         },
 
         initGraphics: function() {
@@ -96,6 +94,10 @@ define(function(require) {
             this.displayObject.addChild(this.ammeter);
         },
 
+        update: function() {
+            this.currentValue.text = this.simulation.ammeter.getCurrent().toFixed(3);
+        },
+
         /**
          * Updates the model-view-transform and anything that relies on it.
          */
@@ -152,10 +154,6 @@ define(function(require) {
             var modelElectrodeGap = DischargeLampsConstants.ANODE_X_LOCATION - DischargeLampsConstants.CATHODE_X_LOCATION;
             var viewElectrodeGap = this.mvt.modelToViewDeltaX(modelElectrodeGap);
             return viewElectrodeGap;
-        },
-
-        currentChanged: function(simulation, current) {
-            this.currentValue.text = current.toFixed(3);
         }
 
     }, Constants.CircuitView);

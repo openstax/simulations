@@ -155,8 +155,11 @@ define(function (require, exports, module) {
         removeModel: function(model) {
             LasersSimulation.prototype.removeModel.apply(this, arguments);
 
-            if (model instanceof Electron)
-                this.electrons.remove(model);
+            if (model instanceof ElectronSink)
+                this.electronSinks.remove(model);
+
+            if (model instanceof ElectronSource)
+                this.electronSources.remove(model);
         },
 
         addElectron: function(electron) {
@@ -196,8 +199,10 @@ define(function (require, exports, module) {
         },
 
         setLeftHandPlate: function(plate) {
-            if (this.leftHandPlate)
+            if (this.leftHandPlate) {
                 this.stopListening(this.leftHandPlate);
+                this.leftHandPlate.destroy();
+            }
             this.leftHandPlate = plate;
             this.listenTo(this.leftHandPlate, 'change', this.potentialChanged);
         },
@@ -207,8 +212,10 @@ define(function (require, exports, module) {
         },
 
         setRightHandPlate: function(plate) {
-            if (this.rightHandPlate)
+            if (this.rightHandPlate) {
                 this.stopListening(this.rightHandPlate);
+                this.rightHandPlate.destroy();
+            }
             this.rightHandPlate = plate;
             this.listenTo(this.rightHandPlate, 'change', this.potentialChanged);
         },

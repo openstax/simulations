@@ -91,8 +91,8 @@ define(function (require, exports, module) {
             var rightHandPlate = new Plate({
                 simulation: this,
                 electromotiveForce: this,
-                point1: Constants.ANODE_START,
-                point2: Constants.ANODE_END
+                point1: DischargeLampsConstants.ANODE_START,
+                point2: DischargeLampsConstants.ANODE_END
             });
 
             this.setLeftHandPlate(this.target);
@@ -149,8 +149,8 @@ define(function (require, exports, module) {
 
         setRightHandPlate: function(plate) {
             DischargeLampsSimulation.prototype.setRightHandPlate.apply(this, arguments);
-
-            this.listenTo(this.rightHandPlate, 'electron-produced', function(plate, electron) {
+console.log(this.rightHandPlate.cid)
+            this.listenTo(this.rightHandPlate, 'electron-absorbed', function(plate, electron) {
                 this.ammeter.recordElectron();
             });
         },
