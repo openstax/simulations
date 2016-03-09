@@ -50,7 +50,7 @@ define(function (require) {
             this.timeSinceLastPhotonProduced = 0;
 
             if (options && options.direction)
-                this.setVelocity(this.get('velocity').set(options.direction).normalize().scale(this.get('speed')));
+                this.photonVelocity = new Vector2(options.direction).normalize().scale(this.get('speed'));
 
             // Cached objects
             this._direction = new Vector2();
@@ -64,7 +64,7 @@ define(function (require) {
         /**
          * 
          */
-        update: function(deltaTime) {
+        update: function(time, deltaTime) {
             Particle.prototype.update.apply(this, arguments);
 
             // Produce photons
@@ -78,14 +78,14 @@ define(function (require) {
                         var photonLoc = this.generatePosition();
                         var angle = (photonLoc.distance(this.get('position')) / this.get('beamWidth') / 2) * this.get('fanout');
                         var angleToPhoton = Math.atan2(
-                            photonLoc.getY() - this.getY(),
-                            photonLoc.getX() - this.getX()
+                            photonLoc.y - this.getY(),
+                            photonLoc.x - this.getX()
                         );
-                        var alpha = this.get('velocity').angle() - angleToPhoton;
+                        var alpha = this.photonVelocity.angle() - angleToPhoton;
                         if (alpha > 0)
                             angle *= -1;
                         
-                        var photonVelocity = this._photonVelocity.set(this.get('velocity')).rotate(angle);
+                        var photonVelocity = this._photonVelocity.set(this.photonVelocity).rotate(angle);
                         var newPhoton = new Photon({
                             wavelength: this.get('wavelength'),
                             position: photonLoc,
@@ -107,19 +107,19 @@ define(function (require) {
                 .normalize()
                 .scale(this.get('speed'));
 
-            this.setVelocity(this._direction);
+            this.photonVelocity.set(this._direction);
         },
 
         getDirection: function() {
-            return this.get('velocity').angle();
+            return this.photonVelocity.angle();
         },
 
         generatePosition: function() {
             var r = Math.random();
             var inset = 10;  // inset from the edges of the "beam" that photons are emitted
             var d = r * ((this.get('beamWidth') - inset) / 2) * (Math.random() < 0.5 ? 1 : -1);
-            var dx =  d * Math.sin(this.get('velocity').angle());
-            var dy = -d * Math.cos(this.get('velocity').angle());
+            var dx =  d * Math.sin(this.photonVelocity.angle());
+            var dy = -d * Math.cos(this.photonVelocity.angle());
             return this._generatedPosition.set(this.getX() + dx, this.getY() + dy);
         },
 
@@ -137,11 +137,11 @@ define(function (require) {
 
             var curve = new PiecewiseCurve();
             curve.moveTo(x, y);
-            curve.lineTo(x + 0,                        y - beamWidth / 2);
-            curve.lineTo(x + length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
-            curve.lineTo(x + 0,                        y + beamWidth + length * Math.sin(alpha));
-            curve.lineTo(x - length * Math.cos(alpha), y - length * Math.sin(alpha) / 2);
-            curve.lineTo(x, y);
+            curve.lineToRelative(0, -beamWidth / 2);
+            curve.lineToRelative(length * Math.cos(alpha), -length * Math.sin(alpha) / 2);
+            curve.lineToRelative(0, beamWidth + length * Math.sin(alpha));
+            curve.lineToRelative(-length * Math.cos(alpha), -length * Math.sin(alpha) / 2);
+            curve.close();
 
             // Rotate it around the position
             curve.translate(-x, -y);

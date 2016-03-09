@@ -50,6 +50,9 @@ define(function (require) {
          * Dom event listeners
          */
         events: {
+            'click .play-btn'  : 'play',
+            'click .pause-btn' : 'pause',
+
             'change #target-material'  : 'changeTargetMaterial',
             'slide .wavelength-slider' : 'changeWavelength',
             'slide .intensity-slider'  : 'changeIntensity',
@@ -70,6 +73,9 @@ define(function (require) {
 
             this.initSceneView();
             this.initWavelengthSliderView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -186,6 +192,16 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
         changeTargetMaterial: function(event) {
             var materialIndex = parseInt(event.target.value);
             var material = TargetMaterials.TARGET_MATERIALS[materialIndex];
@@ -203,7 +219,7 @@ define(function (require) {
         changeIntensity: function(event) {
             this.inputLock(function() {
                 var value = parseInt($(event.target).val());
-                var percent = Math.round(value / this.simulation.beam.get('maxPhotonsPerSecond') * 100);
+                var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
                 var photonsPerSecond = this.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
@@ -216,6 +232,14 @@ define(function (require) {
 
         photonRateToIntensity: function(photonRate, wavelength) {
             return photonRate * Constants.MAX_WAVELENGTH / wavelength;
+        },
+
+        showPhotons: function() {
+            this.simulation.set('viewMode', PEffectSimulation.PHOTON_VIEW);
+        },
+
+        hidePhotons: function() {
+            this.simulation.set('viewMode', PEffectSimulation.BEAM_VIEW);
         }
 
     });

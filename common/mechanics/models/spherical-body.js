@@ -42,7 +42,7 @@ define(function (require) {
          * Overrides setPosition function to keep track of the previous position
          */
         setPosition: function(x, y, options) {
-            this.prevPosition.set(this.get('acceleration'));
+            this.prevPosition.set(this.get('position'));
 
             Body.prototype.setPosition.apply(this, arguments);
         },
@@ -51,7 +51,7 @@ define(function (require) {
          * Overrides setVelocity function to keep track of the previous velocity
          */
         setVelocity: function(x, y, options) {
-            this.prevVelocity.set(this.get('acceleration'));
+            this.prevVelocity.set(this.get('velocity'));
 
             Body.prototype.setVelocity.apply(this, arguments);
         },

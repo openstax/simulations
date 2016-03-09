@@ -33,8 +33,10 @@ define(function (require) {
             var emissionStrategy = new LevelSpecificEnergyEmissionStrategy(options.transitionEntries);
             emissionStrategy.setStates(this.getStates());
 
-            this.set('energyEmissionStrategy', emissionStrategy);
-            this.set('energyAbsorptionStrategy', new EqualLikelihoodAbsorptionStrategy());
+            if (!this.get('energyEmissionStrategy'))
+                this.set('energyEmissionStrategy', emissionStrategy);
+            if (!this.get('energyAbsorptionStrategy'))
+                this.set('energyAbsorptionStrategy', new EqualLikelihoodAbsorptionStrategy());
         },
 
         getEnergyAbsorptionStrategy: function() {

@@ -15,11 +15,11 @@ define(function (require) {
 
         defaults: _.extend({}, Particle.prototype.defaults, {
             lastColidedBody: null,
-            theta: undefined,
-            omega: undefined,
-            alpha: undefined,
-            prevAlpha: undefined,
-            mass: undefined
+            theta: 0,
+            omega: 0,
+            alpha: 0,
+            prevAlpha: 0,
+            mass: 0
         }),
 
         initialize: function(attributes, options) {

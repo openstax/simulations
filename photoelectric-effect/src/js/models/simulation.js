@@ -4,11 +4,12 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Vector2     = require('common/math/vector2');
-    var Beam        = require('common/quantum/models/beam');
-    var Photon      = require('common/quantum/models/photon');
-    var PhysicsUtil = require('common/quantum/models/physics-util');
-    var Plate       = require('common/quantum/models/plate');
+    var Vector2          = require('common/math/vector2');
+    var LineIntersection = require('common/math/line-intersection');
+    var Beam             = require('common/quantum/models/beam');
+    var Photon           = require('common/quantum/models/photon');
+    var PhysicsUtil      = require('common/quantum/models/physics-util');
+    var Plate            = require('common/quantum/models/plate');
 
     var DischargeLampsSimulation = require('discharge-lamps/models/simulation');
     var DischargeLampsConstants  = require('discharge-lamps/constants');
@@ -33,7 +34,7 @@ define(function (require, exports, module) {
     var PEffectSimulation = DischargeLampsSimulation.extend({
 
         defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
-            
+            viewMode: Constants.PEffectSimulation.BEAM_VIEW
         }),
         
         initialize: function(attributes, options) {
@@ -46,19 +47,6 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             DischargeLampsSimulation.prototype.initComponents.apply(this, arguments);
-
-            var circuit = new Circuit({
-                voltage: 0,
-                wavelength: PEffectSimulation.DEFAULT_BEAM_WAVELENGTH
-            });
-            this.circuit = circuit;
-
-            var beamControl = new BeamControl({
-                wavelength: 400,
-                intensity: 100
-            });
-            this.beamControl = beamControl;
-
 
             // Set the max and min voltage of the battery
             this.battery.set('maxVoltage', PEffectSimulation.MAX_VOLTAGE);
@@ -87,14 +75,14 @@ define(function (require, exports, module) {
 
             this.addModel(this.beam);
 
-            this.listenTo(this.beam, 'photon-produced', this.photonProduced);
+            this.listenTo(this.beam, 'photon-emitted', this.photonEmitted);
 
             // Create the target plate.
             this.target = new PhotoelectricTarget({
                 simulation: this,
                 electromotiveForce: this,
-                point1: DischargeLampsConstants.ANODE_START,
-                point2: DischargeLampsConstants.ANODE_END,
+                point1: DischargeLampsConstants.CATHODE_START,
+                point2: DischargeLampsConstants.CATHODE_END,
                 potential: PEffectSimulation.DEFAULT_TARGET_POTENTIAL,
                 targetMaterial: TargetMaterials.SODIUM
             });
@@ -103,15 +91,14 @@ define(function (require, exports, module) {
             var rightHandPlate = new Plate({
                 simulation: this,
                 electromotiveForce: this,
-                point1: Constants.CATHODE_START,
-                point2: Constants.CATHODE_END
+                point1: DischargeLampsConstants.ANODE_START,
+                point2: DischargeLampsConstants.ANODE_END
             });
 
             this.setLeftHandPlate(this.target);
             this.setRightHandPlate(rightHandPlate);
 
             this.addModel(this.target);
-
 
             //----------------------------------------------------------------
             // Intrumentation
@@ -124,8 +111,8 @@ define(function (require, exports, module) {
             // Add an intensity meter for the beam
             this.beamIntensityMeter = new BeamIntensityMeter();
             this.addModel(this.beamIntensityMeter);
-            this.listenTo(this.beam, 'photon-produced', function(beam, photon) {
-                this.beamIntensityMeter.recordPhoton();
+            this.listenTo(this.beam, 'photon-emitted', function(beam, photon) {
+                this.beamIntensityMeter.recordPhoton(this.time);
             });
         },
 
@@ -155,15 +142,15 @@ define(function (require, exports, module) {
             for (i = this.electrons.length - 1; i >= 0; i--) {
                 var electron = this.electrons.at(i);
                 if (!this.getTube().getBounds().contains(electron.getPosition()))
-                    electron.destroy();
+                    electron.markForDestruction();
             }
         },
 
         setRightHandPlate: function(plate) {
             DischargeLampsSimulation.prototype.setRightHandPlate.apply(this, arguments);
 
-            this.listenTo(this.rightHandPlate, 'electron-produced', function(plate, electron) {
-                this.ammeter.recordElectron();
+            this.listenTo(this.rightHandPlate, 'electron-absorbed', function(plate, electron) {
+                this.ammeter.recordElectron(this.time);
             });
         },
 
@@ -260,8 +247,33 @@ define(function (require, exports, module) {
             }
         },
 
-        photonProduced: function(source, photon) {
-            this.addModel(photon);
+        photonEmitted: function(source, photon) {
+            this.addPhoton(photon);
+
+            // When we're in beam-view mode, modify the initial placement of photons to be very near
+            //   the target. This prevents the delay in response of the target when the wavelength
+            //   or intensity of the beam is changed.
+            if (this.get('viewMode') === PEffectSimulation.BEAM_VIEW) {
+                var x = photon.getX();
+                var y = photon.getY();
+                var velocity = photon.getVelocity();
+                var point1 = this.target.get('point1');
+                var point2 = this.target.get('point2');
+
+                var intersection = LineIntersection.lineIntersection(
+                    x, y,
+                    x + velocity.x, y + velocity.y,
+                    point1.x, point1.y,
+                    point2.x, point2.y
+                );
+
+                if (intersection instanceof Vector2) {
+                    photon.setPosition(
+                        intersection.x - velocity.x,
+                        intersection.y - velocity.y
+                    );
+                }
+            }
         },
 
         /**

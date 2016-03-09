@@ -193,7 +193,7 @@ define(function(require) {
                     percentage = 1 - percentage;
 
                 this.previousValue = this.value;
-                this.value = percentage * (this.range.max - this.range.min) + this.range.min;
+                this.value = this._round(percentage * (this.range.max - this.range.min) + this.range.min);
                 this.trigger('slide', this.value, this.previousValue, event);
             }
         },
@@ -221,7 +221,7 @@ define(function(require) {
                 percentage = 1 - percentage;
 
             this.previousValue = this.value;
-            this.value = (percentage * (this.range.max - this.range.min) + this.range.min);
+            this.value = this._round(percentage * (this.range.max - this.range.min) + this.range.min);
             this.positionHandle();
             this.trigger('slide', this.value, this.previousValue, event);
 
@@ -242,12 +242,19 @@ define(function(require) {
         val: function(val) {
             if (val !== undefined) {
                 this.previousValue = this.value;
-                this.value = val;
+                this.value = this._round(val);
                 this.positionHandle();
                 this.trigger('set', this.value, this.previousValue);
             }
             else
                 return this.value;
+        },
+
+        _round: function(value) {
+            if (this.step)
+                return Math.round(value / this.step) * this.step;
+            else
+                return value;
         }
 
     });

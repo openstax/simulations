@@ -41,6 +41,7 @@ define(function (require) {
             this.initialElectronSpeedStrategy = this.uniformInitialElectronSpeedStrategy;
 
             // Cached objects
+            this._newElectronPosition = new Vector2();
             this._newElectronVelocity = new Vector2();
         },
 
@@ -67,11 +68,13 @@ define(function (require) {
                 );
 
                 if (point instanceof Vector2) {
-                    var electron = new Electron();
                     // Offset the electron to the right of the plate. Ths keeps the plate from
                     // thinking the electron hit it in the electron's first time step.
                     var offset = 1;
-                    electron.setPosition(point.x + offset, point.y);
+
+                    var electron = new Electron({
+                        position: this._newElectronPosition.set(point.x + offset, point.y)
+                    });
 
                     // Determine the speed of the new electron
                     var velocity = this.determineNewElectronVelocity(de);

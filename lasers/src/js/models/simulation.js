@@ -73,7 +73,7 @@ define(function (require, exports, module) {
             this.pumpingBeam = null;
             this.tube = null;
 
-            this.bodies = [];
+            this.bodies = new Backbone.Collection();
             this.photons = new Backbone.Collection();
             this.atoms = new Backbone.Collection();
             this.mirrors = [];
@@ -97,9 +97,6 @@ define(function (require, exports, module) {
             this.numHighStateAtoms = 0;
 
             this.set('currentElementProperties', this.twoLevelProperties);
-
-            this.listenTo(this.photons, 'remove', this.bodyRemoved);
-            this.listenTo(this.atoms,   'remove', this.bodyRemoved);
         },
 
         resetComponents: function() {
@@ -127,14 +124,12 @@ define(function (require, exports, module) {
             this.checkCollisions(deltaTime);
 
             // Update all the models in the system
-            var i;
-            for (i = 0; i < this.models.length; i++)
-                this.models[i].update(time, deltaTime);
+            this.updateModels(time, deltaTime);
 
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
-            for (i = 0; i < this.bodies.length; i++ ) {
-                var body = this.bodies[i];
+            for (var i = 0; i < this.bodies.length; i++) {
+                var body = this.bodies.at(i);
                 if (body instanceof Photon) {
                     this.numPhotons++;
                     if (!this.boundingRectangle.contains(body.getPosition())) {
@@ -147,17 +142,23 @@ define(function (require, exports, module) {
             }
         },
 
+        updateModels: function(time, deltaTime) {
+            var i;
+            for (i = 0; i < this.models.length; i++)
+                this.models[i].update(time, deltaTime);
+
+            for (i = 0; i < this.photons.length; i++)
+                this.photons.at(i).update(time, deltaTime);
+
+            for (i = 0; i < this.atoms.length; i++)
+                this.atoms.at(i).update(time, deltaTime);
+        },
+
         addModel: function(model) {
             this.models.push(model);
 
             if (model.collidable) 
-                this.bodies.push(model);
-            
-            if (model instanceof Photon)
-                this.addPhoton(model);
-
-            if (model instanceof Atom)
-                this.addAtom(model);
+                this.bodies.add(model);
             
             if (model instanceof Mirror)
                 this.mirrors.push(model);
@@ -167,34 +168,27 @@ define(function (require, exports, module) {
         },
 
         removeModel: function(model) {
-            for (var i = this.models.length - 1; i >= 0; i--) {
-                if (this.models[i] === model) {
-                    this.models.splice(i, 1);
-                    return true;
-                }
+            var index = this.models.indexOf(model);
+            if (index !== -1) {
+                this.models.splice(index, 1);
+                return true;
             }
-
             return false;
         },
 
         addPhoton: function(photon) {
             this.photons.add(photon);
+            this.bodies.add(photon);
 
             // If the photon is moving nearly horizontally and is equal in energy to the
             //   transition between the middle and ground states, consider it to be lasing
-            if (this.isLasingPhoton(photon)) {
+            if (this.isLasingPhoton(photon))
                 this.lasingPhotons.add(photon);
-            }
         },
 
         addAtom: function(atom) {
             this.atoms.add(atom);
-        },
-
-        bodyRemoved: function(collection, body) {
-            var index = this.bodies.indexOf(body);
-            if (index !== -1)
-                this.bodies.splice(index, 1);
+            this.bodies.add(atom);
         },
 
         setNumEnergyLevels: function(numLevels) {
@@ -419,7 +413,7 @@ define(function (require, exports, module) {
         isLasingPhoton: function(photon) {
             var middleToGroundEnergyDiff = this.getMiddleEnergyState().get('energyLevel') - this.getGroundState().get('energyLevel');
             return (
-                Math.abs(photon.getVelocity().getAngle() % Math.PI) < this.angleWindow && 
+                Math.abs(photon.getVelocity().angle() % Math.PI) < this.angleWindow && 
                 Math.abs(photon.getEnergy() - middleToGroundEnergyDiff) <= QuantumConfig.ENERGY_TOLERANCE
             );
         }

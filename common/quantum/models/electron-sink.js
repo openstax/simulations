@@ -22,7 +22,7 @@ define(function (require) {
             this.set('point1', new Vector2(this.get('point1')));
             this.set('point2', new Vector2(this.get('point2')));
 
-            this.electrons = [];
+            this.electrons = new Backbone.Collection();
         },
 
         /**
@@ -35,8 +35,8 @@ define(function (require) {
             var y2 = this.get('point2').y;
 
             // Look for electrons that should be absorbed
-            for (var i = this.electrons.length; i >= 0; i--) {
-                var electron = this.electrons[i];
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                var electron = this.electrons.at(i);
 
                 var hits = LineIntersection.linesIntersect(
                     x1, y1, 
@@ -46,26 +46,18 @@ define(function (require) {
                 );
                 
                 if (hits) {
-                    this.get('simulation').removeModel(electron);
                     this.trigger('electron-absorbed', this, electron);
-                    electron.destroy();
-                    this.electrons.splice(i, 1);
+                    electron.markForDestruction();
                 }
             }
         },
 
         addElectron: function(electron) {
-            this.electrons.push(electron);
+            this.electrons.add(electron);
         },
 
         removeElectron: function(electron) {
-            for (var i = this.electrons.length - 1; i >= 0; i--) {
-                if (this.electrons[i] === electron) {
-                    this.electrons.splice(i, 1);
-                    return true;
-                }
-            }
-            return false;
+            this.electrons.remove(electron);
         }
 
     });

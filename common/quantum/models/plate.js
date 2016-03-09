@@ -39,6 +39,10 @@ define(function (require) {
 
             this.get('simulation').addModel(this.source);
             this.get('simulation').addModel(this.sink);
+
+            this.listenTo(this.sink, 'electron-absorbed', function(model, electron) {
+                this.trigger('electron-absorbed', model, electron);
+            });
         },
 
         setCurrent: function(current) {
@@ -55,6 +59,19 @@ define(function (require) {
 
         produceElectron: function() {
             return this.source.produceElectron();
+        },
+
+        destroy: function() {
+            Electrode.prototype.destroy.apply(this, arguments);
+
+            this.stopListening(this.source);
+            this.stopListening(this.sink);
+
+            this.get('simulation').removeModel(this.source);
+            this.get('simulation').removeModel(this.sink);
+
+            this.source.destroy();
+            this.sink.destroy();
         }
 
     });

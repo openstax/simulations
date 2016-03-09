@@ -60,6 +60,8 @@ define(function (require, exports, module) {
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
 
+            this.listenTo(this.electrons, 'remove', this.modelRemoved);
+
             this.listenTo(this.electronSources, 'electron-produced', this.electronProducedFromSource);
 
             this.spectrometer = new Spectrometer();
@@ -109,6 +111,20 @@ define(function (require, exports, module) {
             this.addModel(this.tube);
         },
 
+        updateModels: function(time, deltaTime) {
+            var i;
+            // First, destroy any electrons that have been marked for destruction
+            for (i = 0; i < this.electrons.length; i++) {
+                if (this.electrons.at(i).markedForDestruction())
+                    this.electrons.at(i).destroy();
+            }
+
+            LasersSimulation.prototype.updateModels.apply(this, arguments);
+
+            for (i = 0; i < this.electrons.length; i++)
+                this.electrons.at(i).update(time, deltaTime);
+        },
+
         checkCollisions: function(deltaTime) {
             LasersSimulation.prototype.checkCollisions.apply(this, arguments);
 
@@ -127,10 +143,7 @@ define(function (require, exports, module) {
         },
 
         addModel: function(model) {
-            if (model instanceof Electron) {
-                model.setAcceleration(this.getElectronAcceleration());
-                this.electrons.add(model);
-            }
+            LasersSimulation.prototype.addModel.apply(this, arguments);
 
             if (model instanceof ElectronSink)
                 this.electronSinks.add(model);
@@ -142,8 +155,17 @@ define(function (require, exports, module) {
         removeModel: function(model) {
             LasersSimulation.prototype.removeModel.apply(this, arguments);
 
-            if (model instanceof Electron)
-                this.electrons.remove(model);
+            if (model instanceof ElectronSink)
+                this.electronSinks.remove(model);
+
+            if (model instanceof ElectronSource)
+                this.electronSources.remove(model);
+        },
+
+        addElectron: function(electron) {
+            electron.setAcceleration(this.electronAcceleration);
+            this.electrons.add(electron);
+            this.bodies.add(electron);
         },
 
         setVoltage: function(voltage) {
@@ -177,11 +199,12 @@ define(function (require, exports, module) {
         },
 
         setLeftHandPlate: function(plate) {
-            if (this.leftHandPlate)
+            if (this.leftHandPlate) {
                 this.stopListening(this.leftHandPlate);
+                this.leftHandPlate.destroy();
+            }
             this.leftHandPlate = plate;
             this.listenTo(this.leftHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.leftHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getLeftHandPlate: function() {
@@ -189,11 +212,12 @@ define(function (require, exports, module) {
         },
 
         setRightHandPlate: function(plate) {
-            if (this.rightHandPlate)
+            if (this.rightHandPlate) {
                 this.stopListening(this.rightHandPlate);
+                this.rightHandPlate.destroy();
+            }
             this.rightHandPlate = plate;
             this.listenTo(this.rightHandPlate, 'change', this.potentialChanged);
-            this.listenTo(this.rightHandPlate, 'electron-produced', this.electronProduced);
         },
 
         getRightHandPlate: function() {
@@ -304,11 +328,8 @@ define(function (require, exports, module) {
             }
         },
 
-        electronProduced: function(source, electron) {
-            this.addModel(electron);
-        },
-
         electronProducedFromSource: function(source, electron) {
+            this.addElectron(electron);
             for (var i = 0; i < this.electronSinks.length; i++)
                 this.electronSinks.at(i).addElectron(electron);
         },

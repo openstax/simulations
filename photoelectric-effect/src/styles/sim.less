@@ -6,34 +6,21 @@
 }
 
 .sim-controls-wrapper {
-    position: absolute;
-    right: @panel-margin;
-    top: @panel-margin;
-
-    @media screen and (max-height: @short-window) {
-        right: (@short-screen-panel-margin + 1);
-        top: @short-screen-panel-margin;
-    }
+    position: inherit;
+    top: auto;
+    right: auto;
 }
 
-@media screen and (max-height: @short-window) {
-    .sim-controls-wrapper {
-        position: inherit;
-        top: auto;
-        right: auto;
-    }
+.sim-controls-left {
+    position: absolute;
+    top: @panel-margin;
+    left: (@panel-margin + 1);
+}
 
-    .sim-controls-left {
-        position: absolute;
-        top: @short-screen-panel-margin;
-        left: (@short-screen-panel-margin + 1);
-    }
-
-    .sim-controls-right {
-        position: absolute;
-        top: @short-screen-panel-margin;
-        right: (@short-screen-panel-margin + 1);
-    }
+.sim-controls-right {
+    position: absolute;
+    top: @panel-margin;
+    right: (@panel-margin + 1);
 }
 
 .sim-controls {
@@ -42,7 +29,6 @@
     padding: 15px;
     position: relative;
     margin-bottom: 12px;
-    width: @sim-controls-panel-width;
 
     h2 {
         .header();
@@ -113,7 +99,7 @@
         width: auto;
         position: absolute;
         top: @panel-margin;
-        right: (@sim-controls-panel-width + @panel-margin * 2);
+        right: (@graphs-panel-width + @panel-margin * 2);
 
         .intensity-slider-wrapper {
             padding-left: 8px;
@@ -145,6 +131,14 @@
             }
         }
         
+    }
+
+    &.graphs-panel {
+        width: @graphs-panel-width;
+    }
+
+    &.options-panel {
+        width: @options-panel-width;
     }
 
 }

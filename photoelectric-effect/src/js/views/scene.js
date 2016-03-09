@@ -12,8 +12,12 @@ define(function(require) {
 
     var TubeView = require('lasers/views/tube');
 
-    var CircuitView = require('views/circuit');
-    var BeamView    = require('views/beam');
+    var CircuitView            = require('views/circuit');
+    var BeamView               = require('views/beam');
+    var PhotonCollectionView   = require('views/photon-collection');
+    var ElectronCollectionView = require('views/electron-collection');
+
+    var PEffectSimulation = require('models/simulation');
 
     var Assets = require('assets');
 
@@ -47,6 +51,8 @@ define(function(require) {
             this.initMVT();
             this.initLayers();
             this.initBackground();
+            this.initPhotons();
+            this.initElectrons();
         },
 
         initMVT: function() {
@@ -58,7 +64,7 @@ define(function(require) {
                 scale = 0.75;
             }
             else {
-                this.viewOriginX = 32;
+                this.viewOriginX = 12;
                 this.viewOriginY = 30;
                 scale = 1; 
             }
@@ -75,14 +81,15 @@ define(function(require) {
             this.backgroundLayer = new PIXI.Container();
             this.foregroundLayer = new PIXI.Container();
 
+            this.stage.addChild(this.photonElectronLayer);
             this.stage.addChild(this.backgroundLayer);
             this.stage.addChild(this.foregroundLayer);
-            this.stage.addChild(this.photonElectronLayer);
         },
 
         initBackground: function() {
             this.beamView = new BeamView({
                 model: this.simulation.beam,
+                simulation: this.simulation,
                 mvt: this.mvt
             });
             this.backgroundLayer.addChild(this.beamView.displayObject);
@@ -101,8 +108,32 @@ define(function(require) {
             this.backgroundLayer.addChild(this.tubeView.displayObject);
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {
+        initPhotons: function() {
+            this.photonsView = new PhotonCollectionView({
+                collection: this.simulation.photons,
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
 
+            this.photonElectronLayer.addChild(this.photonsView.displayObject);
+        },
+
+        initElectrons: function() {
+            this.electronsView = new ElectronCollectionView({
+                collection: this.simulation.electrons,
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+
+            this.photonElectronLayer.addChild(this.electronsView.displayObject);
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            if (this.simulation.updated()) {
+                if (this.simulation.get('viewMode') === PEffectSimulation.PHOTON_VIEW)
+                    this.photonsView.update();
+                this.electronsView.update();
+            }
         },
 
     });

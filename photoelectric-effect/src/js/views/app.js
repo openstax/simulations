@@ -21,10 +21,21 @@ define(function(require) {
             PEffectSimView
         ],
 
+        events: _.extend({}, PixiAppView.prototype.events, {
+            'click #show-photons-check' : 'togglePhotons'
+        }),
+
         render: function() {
             PixiAppView.prototype.render.apply(this);
 
             this.$el.append(settingsDialogHtml);
+        },
+
+        togglePhotons: function() {
+            if ($(event.target).is(':checked'))
+                this.simViews[0].showPhotons();
+            else
+                this.simViews[0].hidePhotons();
         }
 
     });
