@@ -29,6 +29,7 @@ define(function (require) {
             this.set('point2', new Vector2(this.get('point2')));
 
             this.on('change:point1 change:point2', this.endpointsChanged);
+            this.endpointsChanged();
         },
 
         endpointsChanged: function(electrode, point) {

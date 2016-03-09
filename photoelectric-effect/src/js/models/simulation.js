@@ -100,7 +100,6 @@ define(function (require, exports, module) {
 
             this.addModel(this.target);
 
-
             //----------------------------------------------------------------
             // Intrumentation
             //----------------------------------------------------------------
@@ -143,7 +142,7 @@ define(function (require, exports, module) {
             for (i = this.electrons.length - 1; i >= 0; i--) {
                 var electron = this.electrons.at(i);
                 if (!this.getTube().getBounds().contains(electron.getPosition()))
-                    electron.destroy();
+                    electron.markForDestruction();
             }
         },
 
