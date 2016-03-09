@@ -1,11 +1,12 @@
 @import "mixins.less";
 @import "variables.less";
 
-@padding: 15px;
+@horizontal-padding: 15px;
+@vertical-padding: 11px;
 
 .graph-accordion-view {
-    margin-left: (-@padding);
-    margin-right: (-@padding);
+    margin-left: (-@horizontal-padding);
+    margin-right: (-@horizontal-padding);
 
     .graph-accordion-item {
         margin-bottom: 2px;
@@ -15,8 +16,8 @@
             background: fadeout(#000, 94%);
             font-weight: bold;
             cursor: pointer;
-            padding: @padding;
-            padding-right: @padding * 2;
+            padding: @vertical-padding @horizontal-padding;
+            padding-right: @horizontal-padding * 2;
 
             &:hover {
                 background-color: @link-color;
@@ -26,8 +27,8 @@
             &:after {
                 content: '+';
                 position: absolute;
-                right: @padding;
-                top: @padding;
+                right: @horizontal-padding;
+                top: @vertical-padding;
             }
         }
 
