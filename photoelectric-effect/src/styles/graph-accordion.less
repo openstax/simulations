@@ -12,21 +12,13 @@
 
         .graph-accordion-title {
             position: relative;
-            background-color: fadeout(#000, 94%);
+            background: fadeout(#000, 94%);
             font-weight: bold;
             cursor: pointer;
             padding: @padding;
             padding-right: @padding * 2;
 
             &:hover {
-                opacity: 0.7;
-                opacity: 1;
-                background-color: @link-color;
-                color: #fff;
-            }
-
-            &:active {
-                opacity: 1;
                 background-color: @link-color;
                 color: #fff;
             }
@@ -44,8 +36,17 @@
         }
 
         &.open {
-            .graph-accordion-title:after {
-                content: '-';
+            .graph-accordion-title {
+                background: transparent;
+
+                &:hover {
+                    background-color: @link-color;
+                    color: #fff;
+                }
+
+                &:after {
+                    content: '-';
+                }
             }
         }
     }

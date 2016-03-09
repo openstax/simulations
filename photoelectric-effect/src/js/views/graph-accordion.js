@@ -20,7 +20,7 @@ define(function(require) {
         template: _.template(html),
 
         events: {
-
+            'click .graph-accordion-title': 'titleClicked'
         },
 
         initialize: function(options) {
@@ -56,6 +56,11 @@ define(function(require) {
         postRender: function() {
             // for (var i = 0; i < this.graphs.length; i++)
             //     this.graphs[i].postRender();
+        },
+
+        titleClicked: function(event) {
+            var $item = $(event.target).closest('.graph-accordion-item');
+            $item.toggleClass('open');
         }
 
     });
