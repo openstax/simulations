@@ -64,7 +64,7 @@ define(function(require) {
                 scale = 0.75;
             }
             else {
-                this.viewOriginX = 32;
+                this.viewOriginX = 12;
                 this.viewOriginY = 30;
                 scale = 1; 
             }

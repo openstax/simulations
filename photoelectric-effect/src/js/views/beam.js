@@ -34,14 +34,10 @@ define(function(require) {
             this.lampLightGraphics = new PIXI.Graphics();
 
             this.flashlight = Assets.createSprite(Assets.Images.FLASHLIGHT);
-            this.flashlight.anchor.x = 0.5;
+            this.flashlight.anchor.x = 1;
             this.flashlight.anchor.y = 0.5;
             
             this.flashlightLayer = new PIXI.Container();
-            this.flashlightLayer.x = 380;
-            this.flashlightLayer.y = 48;
-            this.flashlightLayer.rotation = -3.98;
-
             this.flashlightLayer.addChild(this.lampLightGraphics);
             this.flashlightLayer.addChild(this.flashlight);
             
@@ -57,10 +53,31 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            // Position and rotation of the flashlight layer
+            this.updatePosition(this.model, this.model.get('position'));
+            this.updateRotation();
+
+            // Update the flashlight position and scale relative to the flashlight layer
+            var targetWidth = this.mvt.modelToViewDeltaX(161);
+            var scale = targetWidth / this.flashlight.width;
+            this.flashlight.scale.x = scale;
+            this.flashlight.scale.y = scale;
+            this.flashlight.x = this.getLampRadiusA();
+
             // Transform the light-beam piecewise curve into view space and save it
             this.lightCurve = mvt.modelToView(this.model.getBounds());
 
             this.drawLight();
+        },
+
+        updatePosition: function(model, position) {
+            var viewPosition = this.mvt.modelToView(position);
+            this.flashlightLayer.x = viewPosition.x;
+            this.flashlightLayer.y = viewPosition.y;
+        },
+
+        updateRotation: function() {
+            this.flashlightLayer.rotation = this.model.getDirection();
         },
 
         drawLight: function() {
@@ -84,12 +101,14 @@ define(function(require) {
             }
 
             // Draw the ellipse filling the flashlight with full saturation.
+            var radiusA = this.getLampRadiusA();
             this.lampLightGraphics.beginFill(color, 1);
-            this.lampLightGraphics.drawEllipse(
-                (this.flashlight.x + (this.flashlight.width / 2) - 5.5), 0,
-                5.5, (this.flashlight.height/2)
-            );
+            this.lampLightGraphics.drawEllipse(0, 0, radiusA, this.flashlight.height / 2);
             this.lampLightGraphics.endFill();
+        },
+
+        getLampRadiusA: function() {
+            return this.flashlight.width * (6 / 161);
         }
 
     }, Constants.BeamView);
