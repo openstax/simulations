@@ -58,6 +58,10 @@ define(function(require) {
             //     this.graphs[i].postRender();
         },
 
+        takeSnapshot: function() {
+            console.log('snapshot');
+        },
+
         titleClicked: function(event) {
             var $item = $(event.target).closest('.graph-accordion-item');
             $item.toggleClass('open');

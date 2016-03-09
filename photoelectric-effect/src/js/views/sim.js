@@ -58,6 +58,7 @@ define(function (require) {
             'change #target-material'  : 'changeTargetMaterial',
             'slide .wavelength-slider' : 'changeWavelength',
             'slide .intensity-slider'  : 'changeIntensity',
+            'click .snapshot-btn'      : 'takeSnapshot'
         },
 
         /**
@@ -251,6 +252,10 @@ define(function (require) {
 
         photonRateToIntensity: function(photonRate, wavelength) {
             return photonRate * Constants.MAX_WAVELENGTH / wavelength;
+        },
+
+        takeSnapshot: function() {
+            this.graphAccordionView.takeSnapshot();
         },
 
         showPhotons: function() {
