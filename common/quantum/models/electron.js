@@ -58,8 +58,6 @@ define(function (require) {
 
         /**
          * Sets the energy of the electron, in EV
-         *
-         * @param e
          */
         setEnergy: function(e) {
             var ke = e * PhysicsUtil.JOULES_PER_EV;
@@ -68,7 +66,6 @@ define(function (require) {
             var sNew = Math.sqrt(2 * ke / this.get('mass'));
             var sCurr = this.get('velocity').length();
             this.setVelocity(this._velocity.set(this.get('velocity')).scale(sNew / sCurr / QuantumConfig.PIXELS_PER_NM));
-            this.trigger('energyChanged');
         }
 
     });
