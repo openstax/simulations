@@ -10,7 +10,9 @@ define(function (require) {
 
     var PEffectSimulation = require('models/simulation');
     var TargetMaterials   = require('models/target-materials');
-    var PEffectSceneView  = require('views/scene');
+
+    var PEffectSceneView   = require('views/scene');
+    var GraphAccordionView = require('views/graph-accordion');
 
     var Constants = require('constants');
 
@@ -73,6 +75,7 @@ define(function (require) {
 
             this.initSceneView();
             this.initWavelengthSliderView();
+            this.initGraphAccordionView();
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
@@ -102,6 +105,12 @@ define(function (require) {
             });
         },
 
+        initGraphAccordionView: function() {
+            this.graphAccordionView = new GraphAccordionView({
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -111,6 +120,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderWavelengthSliderView();
+            this.renderGraphAccordionView();
 
             return this;
         },
@@ -161,12 +171,21 @@ define(function (require) {
         },
 
         /**
+         * Renders the scene view
+         */
+        renderGraphAccordionView: function() {
+            this.graphAccordionView.render();
+            this.$('.graphs-panel').append(this.graphAccordionView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
             this.wavelengthSliderView.postRender();
+            this.graphAccordionView.postRender();
         },
 
         /**
