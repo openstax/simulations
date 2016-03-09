@@ -33,6 +33,8 @@
 
         .graph-accordion-content {
             height: 0;
+            overflow: hidden;
+            .transition(~"height 200ms");
         }
 
         &.open {
@@ -47,6 +49,10 @@
                 &:after {
                     content: '-';
                 }
+            }
+
+            .graph-accordion-content {
+                height: 130px;
             }
         }
     }

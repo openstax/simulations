@@ -89,6 +89,18 @@
 
     .bootstrap-select {
         width: 100% !important;
+
+        .dropdown-toggle {
+            background: fadeout(#fff, 70%);
+
+            &:focus {
+                outline: 0;
+            }
+        }
+
+        li > a {
+            outline: 0;
+        }
     }
 
     .target-select-wrapper {

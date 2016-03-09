@@ -1,0 +1,26 @@
+@import "mixins.less";
+@import "variables.less";
+
+.graph-view {
+    position: relative;
+    width: 100%;
+    height: 100%;
+
+    canvas {
+        width: 100%;
+        height: 100%;
+    }
+
+    .graph-zoom-btns {
+        @height: 60px;
+        position: absolute;
+        height: @height;
+        right: 4px;
+        top: 50%;
+        margin-top: -(@height / 2);
+
+        button {
+            .zoom-button();
+        }
+    }
+}
