@@ -27,6 +27,10 @@ define(function(require) {
         paddingTop: 6,
         paddingBottom: 40,
 
+        zoomFactor: 0.2,
+        minZoom: 0.2,
+        maxZoom: 4,
+
         initialize: function(options) {
             // Default values
             options = _.extend({
@@ -34,15 +38,15 @@ define(function(require) {
 
                 x: {
                     start: -8,
-                    end: 100,
-                    step: 10,
+                    end: 8,
+                    step: 2,
                     label: 'X Axis',
                     showNumbers: true
                 },
                 y: {
                     start: 0,
-                    end: 100,
-                    step: 10,
+                    end: 8,
+                    step: 2,
                     label: 'Y Axis',
                     showNumbers: false
                 },
@@ -64,6 +68,8 @@ define(function(require) {
 
             this.x = options.x;
             this.y = options.y;
+            this.yEnd = this.y.end; // Because of zooming, the y-end changes
+            this.yScale = 1;
 
             this.elementWidth = options.width;
             this.elementHeight = options.height;
@@ -180,7 +186,9 @@ define(function(require) {
         },
 
         drawData: function() {
+            // Draw the data points
 
+            // Draw a circle on the current data point
         },
 
         getGraphWidth: function() {
@@ -196,7 +204,10 @@ define(function(require) {
          *   level and the y-axis step size.
          */
         getRowHeight: function() {
-            return 20;
+            var yEnd = this.y.end * this.yScale;
+            var numVisibleSteps = Math.floor(yEnd / this.y.step);
+            var pixelsPerUnit = Math.round(this.getGraphHeight() / yEnd);
+            return pixelsPerUnit * this.y.step;
         },
 
         getResolution: function() {
@@ -204,11 +215,19 @@ define(function(require) {
         },
 
         zoomIn: function() {
-
+            var zoom = this.yScale + this.zoomFactor;
+            if (zoom <= this.maxZoom) {
+                this.yScale = zoom;
+                this.draw();
+            }
         },
 
         zoomOut: function() {
-
+            var zoom = this.yScale - this.zoomFactor;
+            if (zoom >= this.minZoom) {
+                this.yScale = zoom;
+                this.draw();
+            }
         }
 
     });
