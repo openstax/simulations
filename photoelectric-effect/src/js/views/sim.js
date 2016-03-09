@@ -256,6 +256,24 @@ define(function (require) {
 
         takeSnapshot: function() {
             this.graphAccordionView.takeSnapshot();
+
+            // Create a little flash effect
+            var $panel = this.$('.graphs-panel');
+            var $snapshotOverlay = $('<div>');
+            
+            $snapshotOverlay
+                .css({
+                    width:  $panel.outerWidth(),
+                    height: $panel.outerHeight(),
+                    background: '#fff',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                })
+                .appendTo($panel)
+                .fadeOut(300, function() {
+                    $snapshotOverlay.remove();
+                });
         },
 
         showPhotons: function() {

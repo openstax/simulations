@@ -74,6 +74,12 @@ define(function(require) {
 
         takeSnapshot: function() {
             console.log('snapshot');
+
+            // To create the snapshot, update all graph views and then get images
+            //   from the canvases and composite them together with the tabular
+            //   data.  This way, it'll show all of the canvases even if we can't
+            //   view all of them at once on the screen.
+            // TODO
         },
 
         titleClicked: function(event) {
