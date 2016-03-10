@@ -247,6 +247,14 @@ define(function (require, exports, module) {
             }
         },
 
+        intensityToPhotonRate: function(intensity, wavelength) {
+            return intensity * wavelength / Constants.MAX_WAVELENGTH;
+        },
+
+        photonRateToIntensity: function(photonRate, wavelength) {
+            return photonRate * Constants.MAX_WAVELENGTH / wavelength;
+        },
+
         photonEmitted: function(source, photon) {
             this.addPhoton(photon);
 

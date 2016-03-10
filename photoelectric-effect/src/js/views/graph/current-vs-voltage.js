@@ -45,6 +45,13 @@ define(function(require) {
             this.listenTo(this.simulation.target, 'change:targetMaterial', this.targetMaterialChanged);
         },
 
+        /**
+         * Updates the graph
+         */
+        update: function() {
+            this.updateCurrentPoint();
+        },
+
         addPoint: function() {
             var simulation = this.simulation;
             var voltage = simulation.getVoltage();

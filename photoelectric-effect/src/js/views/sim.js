@@ -240,18 +240,10 @@ define(function (require) {
             this.inputLock(function() {
                 var value = parseInt($(event.target).val());
                 var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
-                var photonsPerSecond = this.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                var photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
             });
-        },
-
-        intensityToPhotonRate: function(intensity, wavelength) {
-            return intensity * wavelength / Constants.MAX_WAVELENGTH;
-        },
-
-        photonRateToIntensity: function(photonRate, wavelength) {
-            return photonRate * Constants.MAX_WAVELENGTH / wavelength;
         },
 
         takeSnapshot: function() {

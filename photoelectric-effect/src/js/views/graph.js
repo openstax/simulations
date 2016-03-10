@@ -147,6 +147,8 @@ define(function(require) {
             // Get the canvas context
             this.ctx = canvas.getContext('2d');
 
+            this.update();
+
             return this;
         },
 
@@ -327,6 +329,12 @@ define(function(require) {
             var yToPx = this.getPixelsPerUnitY();
             var xZeroOffset = (0 - this.x.start) * (width / (this.x.end - this.x.start));
 
+            // Save the context state and then clip to the graph area
+            ctx.save();
+            ctx.beginPath();
+            ctx.rect(originX, originY - height, width, height);
+            ctx.clip();
+
             ctx.globalAlpha = this.lineAlpha;
 
             if (this.pointsDisjoint) {
@@ -362,6 +370,9 @@ define(function(require) {
             ctx.arc(originX + currentPoint.x * xToPx + xZeroOffset, originY - currentPoint.y * yToPx, radius, 0, 2 * Math.PI);
             ctx.fillStyle = this.lineColor;
             ctx.fill();
+
+            // Restore the context state before we did the clipping
+            ctx.restore();
         },
 
         createPoint: function(x, y) {
