@@ -276,14 +276,21 @@ define(function(require) {
             // Draw axis labels
             ctx.font = this.axisLabelFont;
             ctx.textAlign = 'center';
+
+            var xOffset = originX + width / 2;
+            var yOffset = this.height - this.axisLabelMargin;
+            if (!this.x.showNumbers)
+                yOffset -= 12;
             ctx.textBaseline = 'bottom';
+            ctx.fillText(this.x.label, xOffset, yOffset);
 
-            ctx.fillText(this.x.label, originX + width / 2, this.height - this.axisLabelMargin);
-
-            var yOffset = originY - height / 2;
+            yOffset = originY - height / 2;
+            xOffset = this.axisLabelMargin;
+            if (!this.y.showNumbers)
+                xOffset += 8;
             ctx.textBaseline = 'top';
             ctx.rotate(-Math.PI / 2);
-            ctx.fillText(this.y.label, -yOffset, this.axisLabelMargin);
+            ctx.fillText(this.y.label, -yOffset, xOffset);
             ctx.rotate(Math.PI / 2);
 
             // Draw border
