@@ -4,6 +4,8 @@ define(function(require) {
 
     var _ = require('underscore');
 
+    require('common/math/polyfills');
+
     var PEffectSimulation = require('models/simulation');
 
     var GraphView = require('views/graph');
@@ -44,10 +46,17 @@ define(function(require) {
         },
 
         addPoint: function() {
-            this.points.push(this.createPoint(
-                this.simulation.getVoltage(), 
-                this.simulation.getCurrent()
-            ));
+            var simulation = this.simulation;
+            var voltage = simulation.getVoltage();
+            var current = simulation.getCurrent();
+
+            // Do some shenanigans to handle moving too quickly through the stopping voltage
+            var dv = 0.1 * Math.sign(voltage - this.lastVoltageRecorded);
+            for (var v = this.lastVoltageRecorded + dv; Math.abs(v - voltage) > Math.abs(dv); v += dv)
+                this.points.push(this.createPoint(v, simulation.getCurrentForVoltage(v)));
+            
+            this.points.push(this.createPoint(voltage, current));
+            this.lastVoltageRecorded = voltage;
 
             this.draw();
         },

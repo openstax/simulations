@@ -48,6 +48,7 @@ define(function(require) {
             options = _.extend({
                 title: 'Value',
                 points: [],
+                pointsDisjoint: false,
 
                 x: {
                     start: -8,
@@ -89,6 +90,7 @@ define(function(require) {
 
             this.title = options.title;
             this.points = options.points;
+            this.pointsDisjoint = options.pointsDisjoint;
 
             this.x = options.x;
             this.y = options.y;
@@ -325,17 +327,32 @@ define(function(require) {
             var yToPx = this.getPixelsPerUnitY();
             var xZeroOffset = (0 - this.x.start) * (width / (this.x.end - this.x.start));
 
-            ctx.beginPath();
-            ctx.moveTo(originX + points[0].x * xToPx + xZeroOffset, originY - points[0].y * yToPx);
-
-            for (i = 1; i < this.points.length; i++)
-                ctx.lineTo(originX + points[i].x * xToPx + xZeroOffset, originY - points[i].y * yToPx);
-
-            ctx.lineWidth = this.lineThickness;
-            ctx.lineJoin = 'round';
             ctx.globalAlpha = this.lineAlpha;
-            ctx.strokeStyle = this.lineColor;
-            ctx.stroke();
+
+            if (this.pointsDisjoint) {
+                ctx.fillStyle = this.lineColor;
+                var twoPi = 2 * Math.PI;
+                var r = this.lineThickness / 2;
+
+                for (i = 0; i < this.points.length; i++) {
+                    ctx.beginPath();
+                    ctx.arc(originX + points[i].x * xToPx + xZeroOffset, originY - points[i].y * yToPx, r, 0, twoPi);
+                    ctx.fill();
+                }
+            }
+            else {
+                ctx.beginPath();
+                ctx.moveTo(originX + points[0].x * xToPx + xZeroOffset, originY - points[0].y * yToPx);
+
+                for (i = 1; i < this.points.length; i++)
+                    ctx.lineTo(originX + points[i].x * xToPx + xZeroOffset, originY - points[i].y * yToPx);
+
+                ctx.lineWidth = this.lineThickness;
+                ctx.lineJoin = 'round';
+                ctx.strokeStyle = this.lineColor;
+                ctx.stroke();
+            }
+            
             ctx.globalAlpha = 1;
 
             // Draw a circle on the current data point
