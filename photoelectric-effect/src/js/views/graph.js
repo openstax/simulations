@@ -5,6 +5,18 @@ define(function(require) {
     var $        = require('jquery');
     var _        = require('underscore');
     var Backbone = require('backbone'); Backbone.$ = $;
+    var Pool     = require('object-pool');
+
+    var Vector2 = require('common/math/vector2');
+
+    var vectorPool = Pool({
+        init: function() {
+            return new Vector2();
+        },
+        enable: function(vector) {
+            vector.set(0, 0);
+        }
+    });
 
     var html = require('text!templates/graph.html');
     
@@ -29,12 +41,13 @@ define(function(require) {
 
         zoomFactor: 0.2,
         minZoom: 0.2,
-        maxZoom: 4,
+        maxZoom: 2.6,
 
         initialize: function(options) {
             // Default values
             options = _.extend({
                 title: 'Value',
+                points: [],
 
                 x: {
                     start: -8,
@@ -54,12 +67,16 @@ define(function(require) {
                 width: 240,
                 height: 130,
 
-                lineThickness: 5,
-                lineColor: '#000',
+
+                lineThickness: 3,
+                lineColor: '#f00',
+                lineAlpha: 0.4,
                 gridColor: '#ddd',
                 gridThickness: 1,
-                borderWidth: 1,
-                axisWidth: 2,
+                borderColor: '#000',
+                borderThickness: 1,
+                axisColor: '#000',
+                axisThickness: 2,
                 tickLength: 6,
                 axisLabelMargin: 4,
 
@@ -70,6 +87,12 @@ define(function(require) {
             this.simulation = options.simulation;
 
             this.title = options.title;
+            this.points = options.points;
+            this.points = [
+                this.createPoint(-4, 2),
+                this.createPoint(0, 6),
+                this.createPoint(6, 2)
+            ]
 
             this.x = options.x;
             this.y = options.y;
@@ -89,10 +112,13 @@ define(function(require) {
 
             this.lineThickness = options.lineThickness * resolution;
             this.lineColor = options.lineColor;
+            this.lineAlpha = options.lineAlpha;
             this.gridColor = options.gridColor;
             this.gridThickness = options.gridThickness * resolution;
-            this.borderWidth = options.borderWidth * resolution;
-            this.axisWidth = options.axisWidth * resolution;
+            this.borderColor = options.borderColor;
+            this.borderThickness = options.borderThickness * resolution;
+            this.axisColor = options.axisColor;
+            this.axisThickness = options.axisThickness * resolution;
             this.tickLength = options.tickLength * resolution;
             this.axisLabelMargin = options.axisLabelMargin;
 
@@ -190,8 +216,8 @@ define(function(require) {
             ctx.moveTo(originX + xZeroOffset, originY - height);
             ctx.lineTo(originX + xZeroOffset, originY);
 
-            ctx.lineWidth = this.axisWidth;
-            ctx.strokeStyle = this.lineColor;
+            ctx.lineWidth = this.axisThickness;
+            ctx.strokeStyle = this.axisColor;
             ctx.stroke();
 
             // Draw ticks
@@ -213,13 +239,13 @@ define(function(require) {
                 }
             }
 
-            ctx.lineWidth = this.axisWidth;
-            ctx.strokeStyle = this.lineColor;
+            ctx.lineWidth = this.axisThickness;
+            ctx.strokeStyle = this.axisColor;
             ctx.stroke();
 
             // Draw numbers
             ctx.font = this.numberFont;
-            ctx.fillStyle = this.lineColor;
+            ctx.fillStyle = this.axisColor;
             
             if (this.x.showNumbers) {
                 ctx.textAlign = 'center';
@@ -259,15 +285,61 @@ define(function(require) {
             // Draw border
             ctx.beginPath();
             ctx.rect(this.paddingLeft, this.paddingTop, width, height);
-            ctx.lineWidth = this.borderWidth;
-            ctx.strokeStyle = this.lineColor;
+            ctx.lineWidth = this.borderThickness;
+            ctx.strokeStyle = this.borderColor;
             ctx.stroke();
         },
 
         drawData: function() {
+            if (this.points.length === 0)
+                return;
+
             // Draw the data points
+            var ctx = this.ctx;
+            var points = this.points;
+            var width = this.getGraphWidth();
+            var height = this.getGraphHeight();
+            var originX = this.paddingLeft;
+            var originY = this.paddingTop + height;
+            var xToPx = this.getPixelsPerUnitX();
+            var yToPx = this.getPixelsPerUnitY();
+            var xZeroOffset = (0 - this.x.start) * (width / (this.x.end - this.x.start));
+
+            ctx.beginPath();
+            ctx.moveTo(originX + points[0].x * xToPx + xZeroOffset, originY - points[0].y * yToPx);
+
+            for (i = 1; i < this.points.length; i++)
+                ctx.lineTo(originX + points[i].x * xToPx + xZeroOffset, originY - points[i].y * yToPx);
+
+            ctx.lineWidth = this.lineThickness;
+            ctx.lineJoin = 'round';
+            ctx.globalAlpha = this.lineAlpha;
+            ctx.strokeStyle = this.lineColor;
+            ctx.stroke();
+            ctx.globalAlpha = 1;
 
             // Draw a circle on the current data point
+            var currentPoint = this.points[this.points.length - 1];
+            var radius = this.lineThickness;
+            ctx.beginPath();
+            ctx.arc(originX + currentPoint.x * xToPx + xZeroOffset, originY - currentPoint.y * yToPx, radius, 0, 2 * Math.PI);
+            ctx.fillStyle = this.lineColor;
+            ctx.fill();
+        },
+
+        createPoint: function(x, y) {
+            return vectorPool.create().set(x, y);
+        },
+
+        destroyPoint: function(point) {
+            vectorPool.remove(point);
+        },
+
+        clearPoints: function() {
+            for (var i = this.points.length - 1; i >= 0; i--) {
+                vectorPool.remove(this.points[i]);
+                this.points.splice(i, 1);
+            }
         },
 
         getGraphWidth: function() {
@@ -278,15 +350,22 @@ define(function(require) {
             return this.height - this.paddingTop - this.paddingBottom;
         },
 
+        getPixelsPerUnitX: function() {
+            return this.getGraphWidth() / (this.x.end - this.x.start);
+        },
+
+        getPixelsPerUnitY: function() {
+            var yEnd = this.y.end * this.yScale;
+            var pixelsPerUnit = this.getGraphHeight() / yEnd;
+            return pixelsPerUnit;
+        },
+
         /**
          * Calculates and returns the height of each grid row based on the zoom
          *   level and the y-axis step size.
          */
         getRowHeight: function() {
-            var yEnd = this.y.end * this.yScale;
-            var numVisibleSteps = Math.floor(yEnd / this.y.step);
-            var pixelsPerUnit = Math.round(this.getGraphHeight() / yEnd);
-            return pixelsPerUnit * this.y.step;
+            return Math.round(this.getPixelsPerUnitY()) * this.y.step;
         },
 
         getResolution: function() {
