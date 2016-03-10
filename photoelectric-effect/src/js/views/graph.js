@@ -278,17 +278,26 @@ define(function(require) {
             ctx.textAlign = 'center';
 
             var xOffset = originX + width / 2;
-            var yOffset = this.height - this.axisLabelMargin;
-            if (!this.x.showNumbers)
-                yOffset -= 12;
-            ctx.textBaseline = 'bottom';
+            var yOffset;
+            if (!this.x.showNumbers) {
+                yOffset = this.height - (this.paddingBottom / 2);
+                ctx.textBaseline = 'middle';
+            }
+            else {
+                yOffset = this.height - this.axisLabelMargin;
+                ctx.textBaseline = 'bottom';
+            }
             ctx.fillText(this.x.label, xOffset, yOffset);
 
             yOffset = originY - height / 2;
-            xOffset = this.axisLabelMargin;
-            if (!this.y.showNumbers)
-                xOffset += 8;
-            ctx.textBaseline = 'top';
+            if (!this.y.showNumbers) {
+                xOffset = this.paddingLeft / 2;
+                ctx.textBaseline = 'middle';
+            }
+            else {
+                xOffset = this.axisLabelMargin;
+                ctx.textBaseline = 'top';
+            }
             ctx.rotate(-Math.PI / 2);
             ctx.fillText(this.y.label, -yOffset, xOffset);
             ctx.rotate(Math.PI / 2);
