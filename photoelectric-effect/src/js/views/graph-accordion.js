@@ -76,7 +76,7 @@ define(function(require) {
             this.closeItemsAsNecessary();
         },
 
-        takeSnapshot: function() {
+        takeSnapshot: function(linkElement) {
             // To create the snapshot, update all graph views and then get images
             //   from the canvases and composite them together with the tabular
             //   data.  This way, it'll show all of the canvases even if we can't
@@ -92,13 +92,14 @@ define(function(require) {
                 this._snapshotCanvas = document.createElement('canvas');
                 this._snapshotCanvas.width = graphWidth;
                 this._snapshotCanvas.height = this.graphs.length * (graphHeight + graphMargin) + headerHeight;
-$('body').append(this._snapshotCanvas)
+
                 this._snapshotCtx = this._snapshotCanvas.getContext('2d');
             }
 
+            var canvas = this._snapshotCanvas;
             var ctx = this._snapshotCtx;
-            var width  = this._snapshotCanvas.width;
-            var height = this._snapshotCanvas.height;
+            var width  = canvas.width;
+            var height = canvas.height;
             var leftPadding = 8;
             var bottomPadding = 2;
 
@@ -164,6 +165,10 @@ $('body').append(this._snapshotCanvas)
                 ctx.textAlign = 'right';
                 ctx.fillText(params[j][1], width - leftPadding, y);
             }
+
+            // Then download it
+            linkElement.href = canvas.toDataURL();
+            linkElement.download = 'Photoelectric Effect - Snapshot ' + this.simulation.time + '.png';
         },
 
         titleClicked: function(event) {

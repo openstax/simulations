@@ -246,8 +246,9 @@ define(function (require) {
             });
         },
 
-        takeSnapshot: function() {
-            this.graphAccordionView.takeSnapshot();
+        takeSnapshot: function(event) {
+            var linkElement = $(event.target).closest('a')[0];
+            this.graphAccordionView.takeSnapshot(linkElement);
 
             // Create a little flash effect
             var $panel = this.$('.graphs-panel');
