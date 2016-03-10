@@ -43,13 +43,76 @@ define(function(require) {
             }, options);
 
             GraphView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.simulation, 'voltage-changed', this.voltageChanged);
+            this.listenTo(this.simulation.beam, 'change:wavelength', this.wavelengthChanged);
+            this.listenTo(this.simulation.beam, 'change:photonsPerSecond', this.beamIntensityChanged);
+            this.listenTo(this.simulation.target, 'change:targetMaterial', this.targetMaterialChanged);
         },
 
         /**
          * Updates the graph
          */
         update: function() {
+            this.updateGraph();
+        },
+
+        updateGraph: function() {
+            if (this.beamOn) {
+                var wavelength = this.simulation.getWavelength();
+                var frequency = PhysicsUtil.wavelengthToFrequency(wavelength) * FREQUENCY_MULTIPLIER;
+                var workFunction = this.simulation.target.getMaterial().getWorkFunction();
+                var energy = Math.max(0, PhysicsUtil.wavelengthToEnergy(wavelength) - workFunction);
+
+                if ((this.lastFrequencyRecorded < this.kneeFrequency && frequency > this.kneeFrequency) ||
+                    (this.lastFrequencyRecorded > this.kneeFrequency && frequency < this.kneeFrequency)
+                ) {
+                    this.points.push(this.createPoint(
+                        this.kneeFrequency, 
+                        0
+                    ));
+                }
+
+                this.points.push(this.createPoint(
+                    frequency, 
+                    energy
+                ));
+
+                this.lastFrequencyRecorded = frequency;
+            }
+
             this.draw();
+        },
+
+        determineKneeFrequency() {
+            return PhysicsUtil.wavelengthToFrequency(PhysicsUtil.energyToWavelength(this.simulation.getWorkFunction()));
+        },
+
+        targetMaterialChanged: function() {
+            this.kneeFrequency = this.determineKneeFrequency() * FREQUENCY_MULTIPLIER;
+            this.clearPoints();
+            this.updateGraph();
+        },
+
+        voltageChanged: function() {
+            this.kneeFrequency = this.determineKneeFrequency() * FREQUENCY_MULTIPLIER;
+            this.updateGraph();
+        },
+
+        wavelengthChanged: function() {
+            this.updateGraph();
+        },
+
+        beamIntensityChanged: function() {
+            if (this.simulation.beam.get('photonsPerSecond') === 0) {
+                this.beamOn = false;
+                this.clearPoints();
+                this.updateGraph();
+            }
+            else {
+                this.beamOn = true;
+                this.updateGraph();
+            }
         }
 
     });
