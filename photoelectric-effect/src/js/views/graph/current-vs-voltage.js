@@ -35,13 +35,54 @@ define(function(require) {
             }, options);
 
             GraphView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.simulation, 'change:current', this.currentChanged);
+            this.listenTo(this.simulation, 'voltage-changed', this.voltageChanged);
+            this.listenTo(this.simulation.beam, 'change:wavelength', this.wavelengthChanged);
+            this.listenTo(this.simulation.beam, 'change:photonsPerSecond', this.beamIntensityChanged);
+            this.listenTo(this.simulation.target, 'change:targetMaterial', this.targetMaterialChanged);
         },
 
-        /**
-         * Updates the graph
-         */
-        update: function() {
+        addPoint: function() {
+            this.points.push(this.createPoint(
+                this.simulation.getVoltage(), 
+                this.simulation.getCurrent()
+            ));
+
             this.draw();
+        },
+
+        updateCurrentPoint: function() {
+            if (this.points.length === 0)
+                this.points.push(this.createPoint());
+
+            this.points[this.points.length - 1].set(
+                this.simulation.getVoltage(), 
+                this.simulation.getCurrent()
+            );
+
+            this.draw();
+        },
+
+        currentChanged: function() {
+            this.updateCurrentPoint();
+        },
+
+        voltageChanged: function() {
+            this.addPoint();
+        },
+
+        wavelengthChanged: function() {
+            this.clearPoints();
+            this.updateCurrentPoint();
+        },
+
+        beamIntensityChanged: function() {
+            this.clearPoints();
+        },
+
+        targetMaterialChanged: function() {
+            this.clearPoints();
         }
 
     });
