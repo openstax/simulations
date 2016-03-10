@@ -37,7 +37,7 @@ define(function(require) {
         paddingLeft: 30,
         paddingRight: 30,
         paddingTop: 6,
-        paddingBottom: 40,
+        paddingBottom: 34,
 
         zoomFactor: 0.2,
         minZoom: 0.2,
@@ -54,19 +54,20 @@ define(function(require) {
                     end: 8,
                     step: 2,
                     label: 'X Axis',
-                    showNumbers: true
+                    showNumbers: true,
+                    decimals: undefined
                 },
                 y: {
                     start: 0,
                     end: 8,
                     step: 2,
                     label: 'Y Axis',
-                    showNumbers: true
+                    showNumbers: true,
+                    decimals: undefined
                 },
 
                 width: 240,
-                height: 130,
-
+                height: 124,
 
                 lineThickness: 3,
                 lineColor: '#f00',
@@ -88,11 +89,6 @@ define(function(require) {
 
             this.title = options.title;
             this.points = options.points;
-            this.points = [
-                this.createPoint(-4, 2),
-                this.createPoint(0, 6),
-                this.createPoint(6, 2)
-            ]
 
             this.x = options.x;
             this.y = options.y;
@@ -183,6 +179,7 @@ define(function(require) {
 
             var c;
             var y;
+            var n;
 
             // Draw background
             ctx.fillStyle = '#fff';
@@ -253,8 +250,12 @@ define(function(require) {
                 var startX = this.x.start;
                 var stepX = this.x.step;
 
-                for (c = 0; c <= cols; c++)
-                    ctx.fillText(startX + (c * stepX), originX + gridCellWidth * c, originY + halfTick);
+                for (c = 0; c <= cols; c++) {
+                    n = startX + (c * stepX);
+                    if (this.x.decimals !== undefined)
+                        n = n.toFixed(this.x.decimals);
+                    ctx.fillText(n, originX + gridCellWidth * c, originY + halfTick);
+                }
             }
 
             if (this.y.showNumbers) {
@@ -264,7 +265,10 @@ define(function(require) {
                 var yValue = this.y.start;
 
                 for (y = originY; y >= originY - height; y -= gridCellHeight) {
-                    ctx.fillText(yValue, originX - halfTick, y);
+                    n = yValue;
+                    if (this.y.decimals !== undefined)
+                        n = n.toFixed(this.y.decimals);
+                    ctx.fillText(n, originX - halfTick, y);
                     yValue += stepY;
                 }
             }

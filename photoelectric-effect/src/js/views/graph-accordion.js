@@ -8,7 +8,9 @@ define(function(require) {
 
     var AppView = require('common/app/app');
 
-    var GraphView = require('views/graph');
+    var CurrentVsVoltageGraphView   = require('views/graph/current-vs-voltage');
+    var CurrentVsIntensityGraphView = require('views/graph/current-vs-intensity');
+    var EnergyVsFrequencyGraphView  = require('views/graph/energy-vs-frequency');
 
     var html = require('text!templates/graph-accordion.html');
     
@@ -39,9 +41,9 @@ define(function(require) {
         initDefaultGraphViews: function() {
             this.graphs = [];
 
-            this.graphs.push(new GraphView({ title: 'Current vs Battery Voltage' }));
-            this.graphs.push(new GraphView({ title: 'Current vs Light Intensity' }));
-            this.graphs.push(new GraphView({ title: 'Electron Energy vs Light Frequency' }));
+            this.graphs.push(new CurrentVsVoltageGraphView({   simulation: this.simulation }));
+            this.graphs.push(new CurrentVsIntensityGraphView({ simulation: this.simulation }));
+            this.graphs.push(new EnergyVsFrequencyGraphView({  simulation: this.simulation }));
         },
 
         /**
