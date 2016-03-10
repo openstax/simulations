@@ -34,7 +34,8 @@ define(function (require, exports, module) {
     var PEffectSimulation = DischargeLampsSimulation.extend({
 
         defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
-            viewMode: Constants.PEffectSimulation.BEAM_VIEW
+            viewMode: Constants.PEffectSimulation.BEAM_VIEW,
+            controlMode: Constants.PEffectSimulation.INTENSITY
         }),
         
         initialize: function(attributes, options) {

@@ -8,6 +8,8 @@ define(function(require) {
 
     var AppView = require('common/app/app');
 
+    var PEffectSimulation = require('models/simulation');
+
     var CurrentVsVoltageGraphView   = require('views/graph/current-vs-voltage');
     var CurrentVsIntensityGraphView = require('views/graph/current-vs-intensity');
     var EnergyVsFrequencyGraphView  = require('views/graph/energy-vs-frequency');
@@ -75,13 +77,93 @@ define(function(require) {
         },
 
         takeSnapshot: function() {
-            console.log('snapshot');
-
             // To create the snapshot, update all graph views and then get images
             //   from the canvases and composite them together with the tabular
             //   data.  This way, it'll show all of the canvases even if we can't
             //   view all of them at once on the screen.
-            // TODO
+
+            var headerHeight = 100;
+            var graphMargin = 30;
+            var graphWidth  = this.graphs[0].elementWidth;
+            var graphHeight = this.graphs[0].elementHeight;
+            var y;
+
+            if (!this._snapshotCtx) {
+                this._snapshotCanvas = document.createElement('canvas');
+                this._snapshotCanvas.width = graphWidth;
+                this._snapshotCanvas.height = this.graphs.length * (graphHeight + graphMargin) + headerHeight;
+$('body').append(this._snapshotCanvas)
+                this._snapshotCtx = this._snapshotCanvas.getContext('2d');
+            }
+
+            var ctx = this._snapshotCtx;
+            var width  = this._snapshotCanvas.width;
+            var height = this._snapshotCanvas.height;
+            var leftPadding = 8;
+            var bottomPadding = 2;
+
+            ctx.clearRect(0, 0, width, height);
+
+            // Draw the titles and graphs
+            ctx.font = 'bold 12px Helvetica Neue';
+            ctx.textAlign = 'left';
+            ctx.fillStyle = '#777';
+
+            ctx.textBaseline = 'bottom';
+            for (var i = 0; i < this.graphs.length; i++) {
+                y = headerHeight + i * (graphHeight + graphMargin) + graphMargin;
+
+                ctx.fillText(this.graphs[i].title, leftPadding, y - bottomPadding);
+                ctx.drawImage(
+                    this.graphs[i].canvas,
+                    0, 0,                                                      // Source (x, y)
+                    this.graphs[i].canvas.width, this.graphs[i].canvas.height, // Source width, height
+                    0, y,                                                      // Dest (x, y)
+                    graphWidth, graphHeight                                    // Dest width, height
+                );
+            }
+
+            // Draw the experimental parameters
+            ctx.textBaseline = 'top';
+            ctx.fillText('Experimental Parameters', leftPadding, leftPadding);
+
+            ctx.fillStyle = '#000';
+            
+            var intensityTitle;
+            var intensityPercent;
+
+            if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY) {
+                intensityTitle = 'Intensity';
+                intensityPercent = this.simulation.photonRateToIntensity( 
+                    this.simulation.beam.get('photonsPerSecond') / PEffectSimulation.MAX_PHOTONS_PER_SECOND,
+                    this.simulation.getWavelength()
+                );
+            }
+            else {
+                intensityTitle = 'Photon Rate';
+                intensityPercent = this.simulation.beam.get('photonsPerSecond') / PEffectSimulation.MAX_PHOTONS_PER_SECOND;
+            }
+
+            var params = [
+                ['Material', this.simulation.target.getMaterial().get('name')],
+                ['Wavelength', this.simulation.getWavelength() + 'nm'],
+                [intensityTitle, Math.round(intensityPercent * 100) + '%'],
+                ['Voltage', this.simulation.getVoltage().toFixed(2) + 'V']
+            ];
+            var paramLineHeight = 18;
+            var paramsStartY = 26;
+
+            for (var j = 0; j < params.length; j++) {
+                y = paramsStartY + (j * paramLineHeight);
+
+                ctx.font = 'bold 14px Helvetica Neue';
+                ctx.textAlign = 'left';
+                ctx.fillText(params[j][0], leftPadding, y);
+
+                ctx.font = '14px Helvetica Neue';
+                ctx.textAlign = 'right';
+                ctx.fillText(params[j][1], width - leftPadding, y);
+            }
         },
 
         titleClicked: function(event) {

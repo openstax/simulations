@@ -146,6 +146,7 @@ define(function(require) {
 
             // Get the canvas context
             this.ctx = canvas.getContext('2d');
+            this.canvas = canvas;
 
             this.update();
 
