@@ -48,18 +48,23 @@ define(function(require) {
                     end: 8,
                     step: 2,
                     label: 'Y Axis',
-                    showNumbers: false
+                    showNumbers: true
                 },
 
                 width: 240,
                 height: 130,
 
-                centeredOnZero: true,
-
                 lineThickness: 5,
                 lineColor: '#000',
                 gridColor: '#ddd',
-                borderWidth: 1
+                gridThickness: 1,
+                borderWidth: 1,
+                axisWidth: 2,
+                tickLength: 6,
+                axisLabelMargin: 4,
+
+                numberFontSize: 10,
+                axisLabelFontSize: 14
             }, options);
 
             this.simulation = options.simulation;
@@ -82,10 +87,17 @@ define(function(require) {
             this.paddingTop    *= resolution;
             this.paddingBottom *= resolution;
 
-            this.lineThickness = options.lineThickness;
+            this.lineThickness = options.lineThickness * resolution;
             this.lineColor = options.lineColor;
             this.gridColor = options.gridColor;
-            this.borderWidth = options.borderWidth;
+            this.gridThickness = options.gridThickness * resolution;
+            this.borderWidth = options.borderWidth * resolution;
+            this.axisWidth = options.axisWidth * resolution;
+            this.tickLength = options.tickLength * resolution;
+            this.axisLabelMargin = options.axisLabelMargin;
+
+            this.numberFont = options.numberFontSize * resolution + 'px Helvetica Neue';
+            this.axisLabelFont = options.axisLabelFontSize * resolution + 'px Helvetica Neue';
         },
 
         /**
@@ -138,6 +150,11 @@ define(function(require) {
             var originX = this.paddingLeft;
             var originY = this.paddingTop + height;
 
+            var cols = (this.x.end - this.x.start) / this.x.step;
+            var gridCellWidth  = width / cols;
+            var gridCellHeight = this.getRowHeight();
+            var xZeroOffset = (0 - this.x.start) * (width / (this.x.end - this.x.start));
+
             var c;
             var y;
 
@@ -148,10 +165,6 @@ define(function(require) {
             // Draw Grid
             ctx.beginPath();
             
-            var cols = (this.x.end - this.x.start) / this.x.step;
-            var gridCellWidth  = width / cols;
-            var gridCellHeight = this.getRowHeight();
-
             // Draw longitudinal grid lines
             for (c = 0; c <= cols; c++) {
                 ctx.moveTo(originX + gridCellWidth * c, originY);
@@ -164,18 +177,84 @@ define(function(require) {
                 ctx.lineTo(originX + width, y);
             }
 
-            ctx.lineWidth = 1;
+            ctx.lineWidth = this.gridThickness;
             ctx.strokeStyle = this.gridColor;
             ctx.stroke();
 
             // Draw axis lines
+            ctx.beginPath();
+            ctx.moveTo(originX, originY);
+            ctx.lineTo(originX + width, originY);
 
-                // If we're centered on zero, draw a bold axis line down the center at x=0 too
+            // Draw the y-axis line at x = 0
+            ctx.moveTo(originX + xZeroOffset, originY - height);
+            ctx.lineTo(originX + xZeroOffset, originY);
 
-            // Draw ticks and numbers
+            ctx.lineWidth = this.axisWidth;
+            ctx.strokeStyle = this.lineColor;
+            ctx.stroke();
+
+            // Draw ticks
+            var halfTick = this.tickLength / 2;
+            
+            if (this.x.showNumbers) {
+                for (c = 0; c <= cols; c++) {
+                    ctx.moveTo(originX + gridCellWidth * c, originY + halfTick);
+                    ctx.lineTo(originX + gridCellWidth * c, originY - halfTick);
+                }
+            }
+
+            if (this.y.showNumbers) {
+                var startY = this.y.start;
+                var stepY = this.y.step;
+                for (y = originY; y >= originY - height; y -= gridCellHeight) {
+                    ctx.moveTo(originX + xZeroOffset - halfTick,   y);
+                    ctx.lineTo(originX + xZeroOffset + halfTick, y);
+                }
+            }
+
+            ctx.lineWidth = this.axisWidth;
+            ctx.strokeStyle = this.lineColor;
+            ctx.stroke();
+
+            // Draw numbers
+            ctx.font = this.numberFont;
+            ctx.fillStyle = this.lineColor;
+            
+            if (this.x.showNumbers) {
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'top';
+                var startX = this.x.start;
+                var stepX = this.x.step;
+
+                for (c = 0; c <= cols; c++)
+                    ctx.fillText(startX + (c * stepX), originX + gridCellWidth * c, originY + halfTick);
+            }
+
+            if (this.y.showNumbers) {
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                var stepY = this.y.step;
+                var yValue = this.y.start;
+
+                for (y = originY; y >= originY - height; y -= gridCellHeight) {
+                    ctx.fillText(yValue, originX - halfTick, y);
+                    yValue += stepY;
+                }
+            }
 
             // Draw axis labels
+            ctx.font = this.axisLabelFont;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
 
+            ctx.fillText(this.x.label, originX + width / 2, this.height - this.axisLabelMargin);
+
+            var yOffset = originY - height / 2;
+            ctx.textBaseline = 'top';
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText(this.y.label, -yOffset, this.axisLabelMargin);
+            ctx.rotate(Math.PI / 2);
 
             // Draw border
             ctx.beginPath();
