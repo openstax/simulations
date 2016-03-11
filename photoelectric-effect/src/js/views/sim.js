@@ -54,6 +54,7 @@ define(function (require) {
         events: {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step',
 
             'change #target-material'  : 'changeTargetMaterial',
             'click #high-energy-check' : 'toggleHighEnergyElectronsOnly',
@@ -111,6 +112,14 @@ define(function (require) {
             this.graphAccordionView = new GraphAccordionView({
                 simulation: this.simulation
             });
+        },
+
+        /**
+         * Overrides step to make sure we calculate the right step time.
+         */
+        step: function() {
+            this.play();
+            setTimeout(this._stepFinished, this.simulation.frameDuration * 1000);
         },
 
         /**
