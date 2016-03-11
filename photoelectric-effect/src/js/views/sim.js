@@ -82,6 +82,8 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+
+            this.listenTo(this.simulation, 'change:controlMode', this.controlModeChanged);
         },
 
         /**
@@ -255,12 +257,29 @@ define(function (require) {
 
         changeIntensity: function(event) {
             this.inputLock(function() {
-                var value = parseInt($(event.target).val());
+                var value = parseInt(this.$('.intensity-slider').val());
                 var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
-                var photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                var photonsPerSecond;
+                // If we're in intensity mode, then the photons/sec is proportional to
+                //   the energy of each photon
+                if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY)
+                    photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                else
+                    photonsPerSecond = value;
+
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
             });
+        },
+
+        controlModeChanged: function(simulation, controlMode) {
+            this.changeIntensity();
+
+            // Change label
+            if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY)
+                this.$('.intensity-title').html('Intensity');
+            else
+                this.$('.intensity-title').html('Number of Photons');
         },
 
         takeSnapshot: function(event) {
@@ -292,6 +311,14 @@ define(function (require) {
 
         hidePhotons: function() {
             this.simulation.set('viewMode', PEffectSimulation.BEAM_VIEW);
+        },
+
+        setPhotonCountControlMode: function() {
+            this.simulation.set('controlMode', PEffectSimulation.RATE);
+        },
+
+        setIntensityControlMode: function() {
+            this.simulation.set('controlMode', PEffectSimulation.INTENSITY);
         }
 
     });

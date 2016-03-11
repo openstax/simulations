@@ -22,7 +22,8 @@ define(function(require) {
         ],
 
         events: _.extend({}, PixiAppView.prototype.events, {
-            'click #show-photons-check' : 'togglePhotons'
+            'click #show-photons-check' : 'togglePhotons',
+            'click #control-photon-count-check' : 'togglePhotonControl'
         }),
 
         render: function() {
@@ -36,6 +37,13 @@ define(function(require) {
                 this.simViews[0].showPhotons();
             else
                 this.simViews[0].hidePhotons();
+        },
+
+        togglePhotonControl: function() {
+            if ($(event.target).is(':checked'))
+                this.simViews[0].setPhotonCountControlMode();
+            else
+                this.simViews[0].setIntensityControlMode();
         }
 
     });

@@ -40,7 +40,6 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             DischargeLampsSimulation.prototype.initialize.apply(this, [attributes, options]);
-
         },
 
         /**
@@ -298,7 +297,7 @@ define(function (require, exports, module) {
 
             // Calling setCurrent() ensures that the current flows in the correct direction
             this.setCurrent(this.get('current'));
-        },
+        }
 
     }, Constants.PEffectSimulation);
 
