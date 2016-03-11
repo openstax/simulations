@@ -4,6 +4,7 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
+    var AppView    = require('common/v3/app/app');
     var PixiView   = require('common/v3/pixi/view');
     var SliderView = require('common/v3/pixi/view/slider');
 
@@ -56,7 +57,7 @@ define(function(require) {
                 },
                 step: 0.1,
 
-                width: 120,
+                width: AppView.windowIsShort() ? 90 : 120,
                 backgroundHeight: 4,
                 backgroundColor: '#fff',
                 backgroundAlpha: 1,
@@ -92,7 +93,7 @@ define(function(require) {
             ticks.alpha = 0.5;
 
             var textSettings = {
-                font: '16px Helvetica Neue',
+                font: AppView.windowIsShort() ? '14px Helvetica Neue' : '16px Helvetica Neue',
                 fill: '#fff',
                 align: 'right'
             };
