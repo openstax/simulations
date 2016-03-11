@@ -56,6 +56,7 @@ define(function (require) {
             'click .pause-btn' : 'pause',
 
             'change #target-material'  : 'changeTargetMaterial',
+            'click #high-energy-check' : 'toggleHighEnergyElectronsOnly',
             'slide .wavelength-slider' : 'changeWavelength',
             'slide .intensity-slider'  : 'changeIntensity',
             'click .snapshot-btn'      : 'takeSnapshot'
@@ -226,6 +227,13 @@ define(function (require) {
             var materialIndex = parseInt(event.target.value);
             var material = TargetMaterials.TARGET_MATERIALS[materialIndex];
             this.simulation.target.set('targetMaterial', material);
+        },
+
+        toggleHighEnergyElectronsOnly: function(event) {
+            if ($(event.target).is(':checked'))
+                TargetMaterials.setSimpleElectronModel();
+            else
+                TargetMaterials.setRealisticElectronModel();
         },
 
         changeWavelength: function(event) {

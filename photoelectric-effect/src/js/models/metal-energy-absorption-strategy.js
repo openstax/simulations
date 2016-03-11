@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var EnergyAbsorptionStrategy = require('discharge-lamps/models/energy-absorption-strategy');
+    var EnergyAbsorptionStrategy = require('common/quantum/models/energy-absorption-strategy');
 
     var Constants = require('constants');
 
@@ -18,13 +18,12 @@ define(function (require) {
      *   The energy required to dislodge an electron is the material's work function plus
      *   the energy associated with the depth of the sub-level.
      */
-    var MetalEnergyAbsorptionStrategy = function(workFunction) {
-        EnergyAbsorptionStrategy.apply(this, arguments);
+    var MetalEnergyAbsorptionStrategy = EnergyAbsorptionStrategy.extend({
 
-        this.workFunction = workFunction;
-    };
-
-    _.extend(MetalEnergyAbsorptionStrategy.prototype, EnergyAbsorptionStrategy.prototype, {
+        constructor: function(workFunction) {
+            EnergyAbsorptionStrategy.apply(this, arguments);
+            this.workFunction = workFunction;
+        },
 
         collideWithElectron: function(atom, electron) {
             throw 'Not implemented';
@@ -38,9 +37,7 @@ define(function (require) {
             return photon.getEnergy() - energyRequired;
         }
 
-    });
-
-    _.extend(MetalEnergyAbsorptionStrategy, Constants.MetalEnergyAbsorptionStrategy);
+    }, Constants.MetalEnergyAbsorptionStrategy);
 
 
     return MetalEnergyAbsorptionStrategy;

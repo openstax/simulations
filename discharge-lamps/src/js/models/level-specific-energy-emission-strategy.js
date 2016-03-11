@@ -2,27 +2,23 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
-
     var ProbabilisticChooser   = require('common/math/probabilistic-chooser');
     var EnergyEmissionStrategy = require('common/quantum/models/energy-emission-strategy');
-
-    var Constants = require('constants');
   
     /**
      * An energy emission strategy in which the probability of the atom going from
      *   one state to another is different for the transition from each level to
      *   every lower level.
      */
-    var LevelSpecificEnergyEmissionStrategy = function(transitionEntries) {
-        EnergyEmissionStrategy.apply(this, arguments);
+    var LevelSpecificEnergyEmissionStrategy = EnergyEmissionStrategy.extend({
 
-        this.transitionEntries = transitionEntries;
-        this.originStateToTargetStates = {}; // States stored by their .hashCode()
-        this.statesSet = false;
-    };
+        constructor: function(transitionEntries) {
+            EnergyEmissionStrategy.apply(this, arguments);
 
-    _.extend(LevelSpecificEnergyEmissionStrategy.prototype, EnergyEmissionStrategy.prototype, {
+            this.transitionEntries = transitionEntries;
+            this.originStateToTargetStates = {}; // States stored by their .hashCode()
+            this.statesSet = false;
+        },
 
         emitEnergy: function(atom) {
             var newState = this.getTargetState(atom.getCurrentState());

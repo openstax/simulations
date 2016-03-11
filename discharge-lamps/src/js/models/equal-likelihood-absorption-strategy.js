@@ -2,12 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var EnergyAbsorptionStrategy = require('common/quantum/models/energy-absorption-strategy');
 
-    var EnergyAbsorptionStrategy = require('./energy-absorption-strategy');
-
-    var Constants = require('constants');
-  
     /**
      * Pick a state between that of the next higher energy state and the highest energy state
      *   that could be reached given the energy of the electron hitting the atom. The 
@@ -15,11 +11,7 @@ define(function (require) {
      * 
      * Assumes that the atom's array of states is sorted in ascending order of energy.
      */
-    var EqualLikelihoodAbsorptionStrategy = function() {
-        EnergyAbsorptionStrategy.apply(this, arguments);
-    };
-
-    _.extend(EqualLikelihoodAbsorptionStrategy.prototype, EnergyAbsorptionStrategy.prototype, {
+    var EqualLikelihoodAbsorptionStrategy = EnergyAbsorptionStrategy.extend({
 
         /**
          * If the electron's energy is greater than the difference between the atom's current energy and one of

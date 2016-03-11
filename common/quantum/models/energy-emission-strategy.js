@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
     
     /**
      * Strategy for atoms emitting energy
@@ -14,6 +15,8 @@ define(function (require) {
         emitEnergy: function(atom) {}
 
     });
+
+    EnergyEmissionStrategy.extend = Backbone.Model.extend;
 
     return EnergyEmissionStrategy;
 });
