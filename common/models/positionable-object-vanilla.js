@@ -4,18 +4,10 @@ define(function (require) {
 
     var _    = require('underscore');
     var Pool = require('object-pool');
-    var Vector2      = require('common/math/vector2');
-    var PooledObject = require('common/pooled-object/pooled-object');
 
-    /**
-     * Because Backbone models only see shallow changes, we need to
-     *   create new objects when assigning a new value to an attribute
-     *   if we want the event system to pick up the change.  Creating
-     *   and destroying objects is expensive in a real-time system,
-     *   especially when it's happening each frame on a lot of objects,
-     *   so we're going to use an object pool to reuse old objects
-     *   instead of just throwing them away.
-     */
+    var Vector2     = require('../math/vector2');
+    var PooledModel = require('./pooled-model');
+
     var vectorPool = Pool({
         init: function() {
             return new Vector2();
@@ -25,77 +17,88 @@ define(function (require) {
         }
     });
 
+
     /**
      * Represents an object in 2D space and provides some helper functions
      *   for changing a position vector in a way that leverages Backbone's
      *   event system.
      */
-    var VanillaPositionableObject = PooledObject.extend({
+    var VanillaPositionableObject = PooledModel.extend({
 
-        /**
-         * Initializes the VanillaPositionableObject's properties with provided initial values
-         */
-        init: function(attributes, options) {
-            this.position = vectorPool.create().set(attributes.position);
+        init: function() {
+            PooledModel.prototype.init.apply(this, arguments);
 
-            this._offsetPosition = vectorPool.create();
+            this._offsetPosition = new Vector2();
         },
 
-        get: function(key) {
-            return this[key];
+        defaults: {
+            velocity: null,
+            acceleration: null
+        },
+
+        /**
+         * Called on the instance after 'create' is called to set initial values
+         */
+        onCreate: function(attributes, options) {
+            this.set('position', this.createVector2().set(this.get('position')));
+        },
+
+        toJSON: function(options) {
+            return _.clone(this.attributes);
+        },
+
+        createVector2: function() {
+            return vectorPool.create();
+        },
+
+        removeVector2: function(vec) {
+            vectorPool.remove(vec);
         },
 
         getX: function(x) {
-            return this.position.x;
+            return this.get('position').x;
         },
 
         getY: function(y) {
-            return this.position.y;
+            return this.get('position').y;
         },
 
         setX: function(x) {
-            this.setPosition(x, this.position.y);
+            this.setPosition(x, this.get('position').y);
         },
 
         setY: function(y) {
-            this.setPosition(this.position.x, y);
+            this.setPosition(this.get('position').x, y);
         },
 
         translate: function(x, y) {
             if (x instanceof Vector2)
-                this.position.add(x);
+                this.get('position').add(x);
             else
-                this.position.add(x, y);
+                this.get('position').add(x, y);
         },
 
-        setPosition: function(x, y, options) {
+        setPosition: function(x, y) {
             if (x instanceof Vector2)
-                this.position.set(x);
+                this.get('position').set(x);
             else
-                this.position.set(x, y);
+                this.get('position').set(x, y);
         },
 
         offsetPosition: function(offset) {
-            return this._offsetPosition.set(this.position).add(offset);
+            return this._offsetPosition.set(this.get('position')).add(offset);
         },
 
         getPosition: function() {
-            return this.position;
+            return this.get('position');
         },
 
-        /**
-         * We need to make sure we release the model's vector
-         *   back into the vector pool or we get memory leaks,
-         *   so destroy must be called on all positionable
-         *   objects when we're done with them.
-         */
-        destroy: function(options) {
+        destroy: function() {
             // Make sure the collection knows we destroyed it
             if (this.collection)
                 this.collection.alertDestroyed(this);
 
-            vectorPool.remove(this.position);
-            vectorPool.remove(this._offsetPosition);
+            this.removeVector2(this.get('position'));
         }
 
     });
