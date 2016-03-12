@@ -4,7 +4,7 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var PooledObject = require('../pooled-object/pooled-object2');
+    var PooledObject = require('./pooled-object2');
 
 
     /**

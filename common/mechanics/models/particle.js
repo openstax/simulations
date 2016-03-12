@@ -2,8 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2      = require('common/math/vector2');
-    var MotionObject = require('common/models/motion-object');
+    var Vector2      = require('../../math/vector2');
+    var MotionObject = require('../../models/motion-object');
 
     /**
      * A particle that moves according to the Verlet method

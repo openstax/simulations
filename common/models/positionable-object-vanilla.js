@@ -6,7 +6,7 @@ define(function (require) {
     var Pool = require('object-pool');
 
     var Vector2     = require('../math/vector2');
-    var PooledModel = require('./pooled-model');
+    var PooledModel = require('../pooled-object/model');
 
     var vectorPool = Pool({
         init: function() {

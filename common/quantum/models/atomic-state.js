@@ -9,14 +9,14 @@ define(function (require) {
 
     var QuantumConfig = require('../config');
 
-    var Photon           = require('./photon');
-    var StimulatedPhoton = require('./stimulated-photon');
-    var PhysicsUtil      = require('./physics-util');
+    var VanillaPhoton           = require('./photon-vanilla');
+    var VanillaStimulatedPhoton = require('./stimulated-photon-vanilla');
+    var PhysicsUtil             = require('./physics-util');
 
 
     var constants = {};
-    constants.minWavelength = Photon.BLUE - 20;
-    constants.maxWavelength = Photon.GRAY;
+    constants.minWavelength = VanillaPhoton.BLUE - 20;
+    constants.maxWavelength = VanillaPhoton.GRAY;
     constants.minEnergy = PhysicsUtil.wavelengthToEnergy(constants.maxWavelength);
     constants.maxEnergy = PhysicsUtil.wavelengthToEnergy(constants.minWavelength);
     constants.STIMULATION_LIKELIHOOD = QuantumConfig.STIMULATION_LIKELIHOOD;
@@ -144,7 +144,7 @@ define(function (require) {
                 );
                 photon.setPosition(position);
 
-                var emittedPhoton = StimulatedPhoton.createStimulated(photon, position, atom);
+                var emittedPhoton = VanillaStimulatedPhoton.createStimulated(photon, position, atom);
                 atom.emitPhoton(emittedPhoton);
 
                 // Change state

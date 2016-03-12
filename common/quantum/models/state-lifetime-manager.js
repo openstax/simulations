@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Photon = require('./photon');
+    var VanillaPhoton = require('./photon-vanilla');
 
     /**
      * An object that manages the lifetime of an AtomicEnergyState.
@@ -72,13 +72,13 @@ define(function (require) {
                 var nextState = this.atom.getEnergyStateAfterEmission();
 
                 if (this.emitOnStateChange) {
-                    var speed = Photon.DEFAULT_SPEED * this.get('photonSpeedScale');
+                    var speed = VanillaPhoton.DEFAULT_SPEED * this.get('photonSpeedScale');
                     var theta = this.getEmissionDirection();
                     var x = speed * Math.cos(theta);
                     var y = speed * Math.sin(theta);
 
                     if (nextState != this.atom.getCurrentState()) {
-                        var emittedPhoton = new Photon({
+                        var emittedPhoton = VanillaPhoton.create({
                             wavelength: this.state.determineEmittedPhotonWavelength(nextState),
                             position: this.atom.get('position'),
                             velocity: this._velocity.set(x, y)
