@@ -7,7 +7,6 @@ define(function (require) {
 
     var setOptions = { add: true, remove: true, merge: true };
     var addOptions = { add: true, remove: false, merge: false };
-    var pushOptions = _.extend({ at: this.length }, addOptions);
     var unshiftOptions = _.extend({ at: 0 }, addOptions);
     var emptyOptions = {};
     var silentOptions = { silent: true };
@@ -50,7 +49,9 @@ define(function (require) {
      */
     _.extend(VanillaCollection.prototype, Backbone.Events, {
 
-        initialize: function() {},
+        initialize: function() {
+            this._pushOptions = _.extend({ at: this.length }, addOptions);
+        },
 
         add: function(models, options) {
             if (options)
@@ -62,10 +63,11 @@ define(function (require) {
         push: function(model, options) {
             // Calling `set` instead of `add` is a design decision.  I've pre-combined the
             //   'push' and 'add' options to avoid calling `extend` if it's unnecessary.
+            this._pushOptions.at = this.length;
             if (options)
-                return this.set(model, _.extend(pushOptions, options));
+                return this.set(model, _.extend(this._pushOptions, options));
             else
-                return this.set(model, pushOptions);
+                return this.set(model, this._pushOptions);
         },
 
         pop: function(options) {
@@ -156,17 +158,16 @@ define(function (require) {
                 for (i = 0; i < toAdd.length; i++) {
                     if (at != null) options.index = at + i;
                     model = toAdd[i];
-                    model.trigger('add', model, this, options);
+                    this.trigger('add', model, this, options);
                 }
 
                 if (sort) 
                     this.trigger('sort', this, options);
 
-                if (toAdd.length || toRemove.length || toMerge.length) {
+                if (toAdd.length || toRemove.length) {
                     options.changes = {
                         added: toAdd,
-                        removed: toRemove,
-                        merged: toMerge
+                        removed: toRemove
                     };
                     this.trigger('update', this, options);
                 }
@@ -206,7 +207,7 @@ define(function (require) {
                 if (obj === this.models[i])
                     return obj;
             }
-            return obj;
+            return null;
         },
 
         at: function(index) {
@@ -245,7 +246,7 @@ define(function (require) {
 
                 if (!options.silent) {
                     options.index = index;
-                    model.trigger('remove', model, this, options);
+                    this.trigger('remove', model, this, options);
                 }
 
                 removed.push(model);

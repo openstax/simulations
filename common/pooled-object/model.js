@@ -25,7 +25,7 @@ define(function (require) {
             this.set(attributes, options);
         },
 
-        set: function(key, val) {
+        set: function(key, val, options) {
             var attrs;
             if (typeof key === 'object') {
                 attrs = key;
