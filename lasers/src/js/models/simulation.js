@@ -129,13 +129,13 @@ define(function (require, exports, module) {
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
             for (var i = 0; i < this.photons.length; i++) {
-                var body = this.photons.at(i);
+                var photon = this.photons.at(i);
                 this.numPhotons++;
-                if (!this.boundingRectangle.contains(body.getPosition())) {
+                if (!this.boundingRectangle.contains(photon.getPosition())) {
                     // Old PhET note: We don't need to remove the element right now. The photon will
                     //   fire an event that we will catch
                     // Patrick: I've changed it to just destroy it now
-                    body.destroy();
+                    photon.destroy();
                 }
             }
         },
@@ -393,8 +393,8 @@ define(function (require, exports, module) {
             for (var i = 0; i < collidablesA.length; i++) {
                 var collidable1 = collidablesA[i];
                 if (!(collidable1 instanceof Photon)
-                     || this.tube.getBounds().contains(collidable1.getPosition())
-                     || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
+                    || this.tube.getBounds().contains(collidable1.getPosition())
+                    || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
                 ) {
                     for (var k = 0; k < this.collisionExperts.length; k++) {
                         this.collisionExperts[k].detectAndDoCollision(collidable1, body);
