@@ -5,9 +5,10 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
+    var VanillaCollection = require('common/collections/vanilla');
     var QuantumConfig     = require('common/quantum/config');
     var QuantumSimulation = require('common/quantum/models/simulation');
-    var Photon            = require('common/quantum/models/photon');
+    var Photon            = require('common/quantum/models/photon-vanilla');
     var Atom              = require('common/quantum/models/atom');
     var Tube              = require('common/quantum/models/tube');
     var PhysicsUtil       = require('common/quantum/models/physics-util');
@@ -74,7 +75,7 @@ define(function (require, exports, module) {
             this.tube = null;
 
             this.bodies = new Backbone.Collection();
-            this.photons = new Backbone.Collection();
+            this.photons = new VanillaCollection();
             this.atoms = new Backbone.Collection();
             this.mirrors = [];
             this.lasingPhotons = new Backbone.Collection();

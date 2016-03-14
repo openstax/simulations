@@ -40,6 +40,8 @@ define(function (require) {
          * Called on the instance after 'create' is called to set initial values
          */
         onCreate: function(attributes, options) {
+            PooledModel.prototype.onCreate.apply(this, [attributes, options]);
+
             this.set('position', this.createVector2().set(this.get('position')));
         },
 
@@ -94,6 +96,8 @@ define(function (require) {
         },
 
         destroy: function() {
+            PooledModel.prototype.destroy.apply(this, arguments);
+            
             // Make sure the collection knows we destroyed it
             if (this.collection)
                 this.collection.alertDestroyed(this);

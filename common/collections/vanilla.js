@@ -269,6 +269,10 @@ define(function (require) {
                 delete model.collection;
         },
 
+        alertDestroyed: function(model) {
+            this.remove(model);
+        },
+
         // Underscore methods
         forEach:     Backbone.Collection.prototype.forEach,
         each:        Backbone.Collection.prototype.each,

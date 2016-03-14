@@ -47,6 +47,8 @@ define(function (require) {
         },
 
         destroy: function() {
+            PooledObject.prototype.destroy.apply(this, arguments);
+            
             // Make sure the collection knows we destroyed it
             if (this.collection)
                 this.collection.alertDestroyed(this);

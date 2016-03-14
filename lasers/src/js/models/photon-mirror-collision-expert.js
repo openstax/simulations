@@ -4,7 +4,7 @@ define(function (require) {
 
     require('common/math/polyfills');
     var LineIntersection = require('common/math/line-intersection');
-    var Photon           = require('common/quantum/models/photon');
+    var Photon           = require('common/quantum/models/photon-vanilla');
 
     var Mirror = require('./mirror');
 
