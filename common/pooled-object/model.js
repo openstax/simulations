@@ -48,10 +48,12 @@ define(function (require) {
 
         destroy: function() {
             PooledObject.prototype.destroy.apply(this, arguments);
-            
+
             // Make sure the collection knows we destroyed it
-            if (this.collection)
-                this.collection.alertDestroyed(this);
+            if (this.collections) {
+                for (var i = 0; i < this.collections.length; i++)
+                    this.collections[i].alertDestroyed(this);
+            }
         }
 
     });

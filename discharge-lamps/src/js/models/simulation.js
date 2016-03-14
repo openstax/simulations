@@ -165,7 +165,6 @@ define(function (require, exports, module) {
         addElectron: function(electron) {
             electron.setAcceleration(this.electronAcceleration);
             this.electrons.add(electron);
-            this.bodies.add(electron);
         },
 
         setVoltage: function(voltage) {

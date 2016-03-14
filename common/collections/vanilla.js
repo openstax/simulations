@@ -262,11 +262,23 @@ define(function (require) {
 
         _addReference: function(model) {
             model.collection = this;
+            // Add this collection to a list of collections in the model, because
+            //   the model could belong to multiple collections
+            if (!model.collections)
+                model.collections = [];
+            if (model.collections.indexOf(this) === -1)
+                model.collections.push(this);
         },
 
         _removeReference: function(model) {
             if (this === model.collection) 
                 delete model.collection;
+
+            if (model.collections) {
+                var index = model.collections.indexOf(this);
+                if (index !== -1)
+                    model.collections.splice(index, 1);
+            }
         },
 
         alertDestroyed: function(model) {
