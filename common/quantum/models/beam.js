@@ -66,8 +66,7 @@ define(function (require) {
          */
         update: function(time, deltaTime) {
             Particle.prototype.update.apply(this, arguments);
-if (VanillaPhoton._pool)
-    console.log(VanillaPhoton._pool.list.length)
+            
             // Produce photons
             if (this.get('enabled')) {
                 this.timeSinceLastPhotonProduced += deltaTime;
