@@ -32,6 +32,7 @@ define(function(require) {
         initGraphics: function() {
             this.beamLightGraphics = new PIXI.Graphics();
             this.lampLightGraphics = new PIXI.Graphics();
+            this.mask = new PIXI.Graphics();
 
             this.flashlight = Assets.createSprite(Assets.Images.FLASHLIGHT);
             this.flashlight.anchor.x = 1;
@@ -40,9 +41,12 @@ define(function(require) {
             this.flashlightLayer = new PIXI.Container();
             this.flashlightLayer.addChild(this.lampLightGraphics);
             this.flashlightLayer.addChild(this.flashlight);
-            
+
             this.displayObject.addChild(this.beamLightGraphics);
             this.displayObject.addChild(this.flashlightLayer);
+            this.displayObject.addChild(this.mask);
+
+            this.displayObject.mask = this.mask;
 
             this.updateMVT(this.mvt);
         },
@@ -52,6 +56,12 @@ define(function(require) {
          */
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            // Update mask
+            this.mask.clear();
+            this.mask.beginFill();
+            this.mask.drawRect(this.mvt.modelToViewX(this.simulation.leftHandPlate.getX()), 0, 2000, 2000);
+            this.mask.endFill();
 
             // Position and rotation of the flashlight layer
             this.updatePosition(this.model, this.model.get('position'));
