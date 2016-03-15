@@ -19,13 +19,12 @@ define(function (require) {
             mass: 1
         }),
 
-        initialize: function(attributes, options) {
-            VanillaMotionObject.prototype.initialize.apply(this, [attributes, options]);
+        onCreate: function(attributes, options) {
+            VanillaMotionObject.prototype.onCreate.apply(this, [attributes, options]);
 
             // Create new vectors
             this.set('force', this.createVector2().set(this.get('force')));
         },
-
 
         /**
          * Updates acceleration from force and mass.
@@ -83,7 +82,7 @@ define(function (require) {
          * Avoid memory leaks from the pool.
          */
         destroy: function(options) {
-            VanillaMotionObject.prototype.destroy.apply(this, [options]);
+            VanillaMotionObject.prototype.destroy.apply(this, arguments);
             this.removeVector2(this.get('force'));
         }
 

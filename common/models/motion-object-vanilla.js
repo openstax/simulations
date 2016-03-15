@@ -142,9 +142,12 @@ define(function (require) {
          * Avoid memory leaks from the pool.
          */
         destroy: function(options) {
-            VanillaPositionableObject.prototype.destroy.apply(this, [options]);
-            this.removeVector2(this.get('velocity'));
-            this.removeVector2(this.get('acceleration'));
+            if (!this.destroyed) {
+                this.removeVector2(this.get('velocity'));
+                this.removeVector2(this.get('acceleration'));
+            }
+
+            VanillaPositionableObject.prototype.destroy.apply(this, arguments);
         }
 
     });

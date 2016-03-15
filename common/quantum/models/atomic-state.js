@@ -125,7 +125,7 @@ define(function (require) {
             // See if the photon knocks the atom to a higher state
             var newState = this.getElevatedState(atom, photon, this.get('energyLevel'));
             if (newState) {
-                photon.destroy();
+                photon.markForDestruction();
                 atom.setCurrState(newState);
                 return;
             }

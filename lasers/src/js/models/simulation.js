@@ -128,7 +128,7 @@ define(function (require, exports, module) {
 
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
-            for (var i = 0; i < this.photons.length; i++) {
+            for (var i = this.photons.length - 1; i >= 0; i--) {
                 var photon = this.photons.at(i);
                 this.numPhotons++;
                 if (!this.boundingRectangle.contains(photon.getPosition())) {
@@ -336,6 +336,11 @@ define(function (require, exports, module) {
             this.checkPhotonElectronCollisions();
             this.checkCollisionsBetweenTwoLists(this.photons.models, this.mirrors);
             this.checkCollisionsBetweenListAndBody(this.atoms.models, this.tube);
+
+            for (var i = this.photons.length - 1; i >= 0; i--) {
+                if (this.photons.at(i).markedForDestruction())
+                    this.photons.at(i).destroy();
+            }
         },
 
         checkPhotonElectronCollisions: function() {

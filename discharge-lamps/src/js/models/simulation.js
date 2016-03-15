@@ -61,6 +61,7 @@ define(function (require, exports, module) {
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
 
+            this.listenTo(this.electrons, 'remove', this.removeModel);
             this.listenTo(this.electronSources, 'electron-produced', this.electronProducedFromSource);
 
             this.spectrometer = new Spectrometer();
@@ -113,9 +114,12 @@ define(function (require, exports, module) {
         updateModels: function(time, deltaTime) {
             var i;
             // First, destroy any electrons that have been marked for destruction
-            for (i = 0; i < this.electrons.length; i++) {
-                if (this.electrons.at(i).markedForDestruction())
-                    this.electrons.at(i).destroy();
+            for (i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons.at(i).markedForDestruction()) {var before = this.electrons.length;
+                    this.electrons.at(i).destroy(); 
+                    if (before === this.electrons.length) 
+                        console.log('failed to removed from collection')
+                }
             }
 
             LasersSimulation.prototype.updateModels.apply(this, arguments);

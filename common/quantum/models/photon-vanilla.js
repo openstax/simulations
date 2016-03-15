@@ -34,11 +34,27 @@ define(function (require) {
             childPhoton: null
         }),
 
-        initialize: function(attributes, options) {
-            VanillaParticle.prototype.initialize.apply(this, [attributes, options]);
+        onCreate: function(attributes, options) {
+            VanillaParticle.prototype.onCreate.apply(this, [attributes, options]);
 
             this.prevPosition.set(this.get('position'));
             this.prevVelocity.set(this.get('velocity'));
+
+            this._markedForDestruction = false;
+        },
+
+        /**
+         * Sets a flag for the electron to be destroyed on the next loop
+         */
+        markForDestruction: function() {
+            this._markedForDestruction = true;
+        },
+
+        /**
+         * Returns whether the electron has been marked for destruction
+         */
+        markedForDestruction: function() {
+            return this._markedForDestruction;
         },
 
         /**
