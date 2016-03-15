@@ -7,9 +7,10 @@ define(function (require, exports, module) {
 
     var LasersSimulation = require('lasers/models/simulation');
 
+    var VanillaCollection           = require('common/collections/vanilla');
     var Vector2                     = require('common/math/vector2');
     var Tube                        = require('common/quantum/models/tube');
-    var Electron                    = require('common/quantum/models/electron');
+    var Electron                    = require('common/quantum/models/electron-vanilla');
     var ElectronSink                = require('common/quantum/models/electron-sink');
     var ElectronSource              = require('common/quantum/models/electron-source');
     var ElectronAtomCollisionExpert = require('common/quantum/models/electron-atom-collision-expert');
@@ -55,13 +56,12 @@ define(function (require, exports, module) {
         initComponents: function() {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.electrons = new Backbone.Collection();
+            this.electrons = new VanillaCollection();
             this.electronSources = new Backbone.Collection();
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
 
-            this.listenTo(this.electrons, 'remove', this.modelRemoved);
-
+            this.listenTo(this.electrons, 'remove', this.removeModel);
             this.listenTo(this.electronSources, 'electron-produced', this.electronProducedFromSource);
 
             this.spectrometer = new Spectrometer();
@@ -112,23 +112,28 @@ define(function (require, exports, module) {
         },
 
         updateModels: function(time, deltaTime) {
-            var i;
             // First, destroy any electrons that have been marked for destruction
-            for (i = 0; i < this.electrons.length; i++) {
-                if (this.electrons.at(i).markedForDestruction())
-                    this.electrons.at(i).destroy();
-            }
+            this.removeDeadElectrons();
 
             LasersSimulation.prototype.updateModels.apply(this, arguments);
 
-            for (i = 0; i < this.electrons.length; i++)
+            for (var i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
+        },
+
+        removeDeadElectrons: function() {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons.at(i).markedForDestruction())
+                    this.electrons.at(i).destroy();
+            }
         },
 
         checkCollisions: function(deltaTime) {
             LasersSimulation.prototype.checkCollisions.apply(this, arguments);
 
             this.checkElectronAtomCollisions();
+
+            this.removeDeadElectrons();
         },
 
         checkElectronAtomCollisions: function() {

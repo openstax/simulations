@@ -4,8 +4,9 @@ define(function (require) {
 
     var Backbone = require('backbone');
 
-    var Vector2          = require('common/math/vector2');
-    var LineIntersection = require('common/math/line-intersection');
+    var Vector2           = require('common/math/vector2');
+    var LineIntersection  = require('common/math/line-intersection');
+    var VanillaCollection = require('common/collections/vanilla');
 
     /**
      * Absorbs electrons along a line between two points
@@ -22,7 +23,7 @@ define(function (require) {
             this.set('point1', new Vector2(this.get('point1')));
             this.set('point2', new Vector2(this.get('point2')));
 
-            this.electrons = new Backbone.Collection();
+            this.electrons = new VanillaCollection();
         },
 
         /**

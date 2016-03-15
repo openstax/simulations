@@ -122,7 +122,7 @@ define(function (require, exports, module) {
             var i;
 
             // Check for photons hitting the cathode
-            for (i = 0; i < this.photons.length; i++) {
+            for (var i = this.photons.length - 1; i >= 0; i--) {
                 var photon = this.photons.at(i);
                 if (this.target.isHitByPhoton(photon)) {
                     this.target.handlePhotonCollision(photon);

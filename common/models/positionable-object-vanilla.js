@@ -17,7 +17,7 @@ define(function (require) {
         }
     });
 
-
+var counter = 0;
     /**
      * Represents an object in 2D space and provides some helper functions
      *   for changing a position vector in a way that leverages Backbone's
@@ -96,13 +96,9 @@ define(function (require) {
         },
 
         destroy: function() {
+            if (!this.destroyed) 
+                this.removeVector2(this.get('position'));
             PooledModel.prototype.destroy.apply(this, arguments);
-            
-            // Make sure the collection knows we destroyed it
-            if (this.collection)
-                this.collection.alertDestroyed(this);
-
-            this.removeVector2(this.get('position'));
         }
 
     });
