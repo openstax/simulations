@@ -329,6 +329,7 @@ define(function(require) {
             var xToPx = this.getPixelsPerUnitX();
             var yToPx = this.getPixelsPerUnitY();
             var xZeroOffset = (0 - this.x.start) * (width / (this.x.end - this.x.start));
+            var i;
 
             // Save the context state and then clip to the graph area
             ctx.save();
