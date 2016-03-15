@@ -1,0 +1,183 @@
+@import "variables.less";
+@import "mixins.less";
+
+.sims .sim-content {
+    min-height: inherit;
+}
+
+.sim-controls-wrapper {
+    position: inherit;
+    top: auto;
+    right: auto;
+}
+
+.sim-controls-left {
+    position: absolute;
+    top: @panel-margin;
+    left: (@panel-margin + 1);
+}
+
+.sim-controls-right {
+    position: absolute;
+    top: @panel-margin;
+    right: (@panel-margin + 1);
+}
+
+.sim-controls {
+    .panel();
+    .user-select(none);
+    padding: 15px;
+    position: relative;
+    margin-bottom: 12px;
+
+    h2 {
+        .header();
+        margin-top: 0;
+        margin-bottom: 8px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: -2px;
+            margin-bottom: 6px;
+        }
+
+        .expand-icon,
+        .collapse-icon {
+            display: none;
+        }
+    }
+
+    h2:not(:first-child) {
+        margin-top: 20px;
+
+        @media screen and (max-height: @short-window) {
+            margin-top: 14px;
+        }
+    }
+
+    label {
+        color: fadeout(#222, 20%);
+    }
+
+    ul.checkboxes {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
+        li {
+            text-align: left;
+            list-style-image: none;
+            margin-bottom: 8px;
+
+            label{
+                font-weight: bold;
+            }
+
+            &:last-child {
+                margin-bottom: 0;
+            }
+        }
+    }
+
+    .slider-header {
+        display: block;
+
+        .slider-value {
+            float: right;
+            font-weight: normal;
+        }
+    }
+
+    .bootstrap-select {
+        width: 100% !important;
+
+        .dropdown-toggle {
+            background: fadeout(#fff, 70%);
+
+            &:focus {
+                outline: 0;
+            }
+        }
+
+        li > a {
+            outline: 0;
+        }
+    }
+
+    .target-select-wrapper {
+        margin-bottom: 16px;
+    }
+
+    &.beam-controls {
+        width: auto;
+        position: absolute;
+        top: @panel-margin;
+        right: (@graphs-panel-width + @panel-margin * 2);
+
+        .intensity-slider-wrapper {
+            padding-left: 8px;
+            padding-right: 8px;
+        }
+
+        .wavelength-slider-wrapper {
+            position: relative;
+
+            .wavelength-slider {
+                width: 200px;
+            }
+
+            .uv-label,
+            .ir-label {
+                position: absolute;
+                top: -6px;
+                .user-select(none);
+                pointer-events: none;
+                font-size: 10px;
+            }
+
+            .uv-label {
+                left: 34px;
+            }
+
+            .ir-label {
+                right: 4px;
+            }
+        }
+        
+    }
+
+    &.graphs-panel {
+        width: @graphs-panel-width;
+        position: relative;
+
+        .graph-accordion-view {
+            margin-top: 15px;
+        }
+
+        .snapshot-btn {
+            position: absolute;
+            top: 7px;
+            right: 9px;
+            padding: 4px 6px 3px;
+            background: transparent;
+            color: @link-color;
+            outline: none;
+            border: none;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            text-align: center;
+            font-size: 16px;
+
+            &:hover {
+                background: @link-color;
+                color: #fff;
+            }
+        }
+    }
+
+    &.options-panel {
+        width: @options-panel-width;
+    }
+
+}
+

@@ -1,0 +1,62 @@
+@import "mixins.less";
+@import "variables.less";
+
+@horizontal-padding: 15px;
+@vertical-padding: 11px;
+@graph-height: 124px;
+
+.graph-accordion-view {
+    margin-left: (-@horizontal-padding);
+    margin-right: (-@horizontal-padding);
+
+    .graph-accordion-item {
+        margin-bottom: 2px;
+
+        .graph-accordion-title {
+            position: relative;
+            background: fadeout(#000, 94%);
+            font-weight: bold;
+            cursor: pointer;
+            padding: @vertical-padding @horizontal-padding;
+            padding-right: @horizontal-padding * 2;
+
+            &:hover {
+                background-color: @link-color;
+                color: #fff;
+            }
+
+            &:after {
+                content: '+';
+                position: absolute;
+                right: @horizontal-padding;
+                top: @vertical-padding;
+            }
+        }
+
+        .graph-accordion-content {
+            height: 0;
+            overflow: hidden;
+            .transition(~"height 200ms");
+        }
+
+        &.open {
+            .graph-accordion-title {
+                background: transparent;
+
+                &:hover {
+                    background-color: @link-color;
+                    color: #fff;
+                }
+
+                &:after {
+                    content: '-';
+                }
+            }
+
+            .graph-accordion-content {
+                height: @graph-height;
+            }
+        }
+    }
+}
+

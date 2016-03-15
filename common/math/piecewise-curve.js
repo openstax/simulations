@@ -277,9 +277,32 @@ define(function (require) {
             this.yPoints[this.index++] = y;
             return this;
         },
+
+        /**
+         * Adds a new point to a path.
+         * 
+         * @param dx  the relative x-coordinate.
+         * @param dy  the relative y-coordinate.
+         */
+        moveToRelative: function(dx, dy) {
+            if (dx instanceof Vector2) {
+                dy = dx.y;
+                dx = dx.x;
+            }
+            
+            var lastX = 0;
+            var lastY = 0;
+            if (this.index > 0) {
+                lastX = this.xPoints[this.index - 1];
+                lastY = this.yPoints[this.index - 1];
+            }
+
+            return this.moveTo(lastX + dx, lastY + dy);
+        },
         
         /**
          * Appends a straight line to the current path.
+         *
          * @param x x coordinate of the line endpoint.
          * @param y y coordinate of the line endpoint.
          */
@@ -293,9 +316,32 @@ define(function (require) {
             this.yPoints[this.index++] = y;
             return this;
         },
+
+        /**
+         * Appends a straight line to the current path.
+         * 
+         * @param dx  the relative x-coordinate.
+         * @param dy  the relative y-coordinate.
+         */
+        lineToRelative: function(dx, dy) {
+            if (dx instanceof Vector2) {
+                dy = dx.y;
+                dx = dx.x;
+            }
+
+            var lastX = 0;
+            var lastY = 0;
+            if (this.index > 0) {
+                lastX = this.xPoints[this.index - 1];
+                lastY = this.yPoints[this.index - 1];
+            }
+
+            return this.lineTo(lastX + dx, lastY + dy);
+        },
         
         /**
          * Appends a quadratic Bezier curve to the current path.
+         *
          * @param x1 x coordinate of the control point
          * @param y1 y coordinate of the control point
          * @param x2 x coordinate of the curve endpoint.
