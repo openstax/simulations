@@ -28,6 +28,12 @@ define(function (require) {
             this._velocity = new Vector2();
         },
 
+        onCreate: function(attributes, options) {
+            VanillaSphericalBody.prototype.onCreate.apply(this, [attributes, options]);
+
+            this._markedForDestruction = false;
+        },
+
         /**
          * Sets a flag for the electron to be destroyed on the next loop
          */

@@ -61,8 +61,6 @@ define(function (require, exports, module) {
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
 
-            this.listenTo(this.electrons, 'remove', this.modelRemoved);
-
             this.listenTo(this.electronSources, 'electron-produced', this.electronProducedFromSource);
 
             this.spectrometer = new Spectrometer();
@@ -119,8 +117,7 @@ define(function (require, exports, module) {
                 if (this.electrons.at(i).markedForDestruction())
                     this.electrons.at(i).destroy();
             }
-if (Electron._pool)
-console.log(Electron._pool.list.length)
+
             LasersSimulation.prototype.updateModels.apply(this, arguments);
 
             for (i = 0; i < this.electrons.length; i++)
