@@ -20,13 +20,17 @@ define(function(require) {
 
 
     var CircuitView = PixiView.extend({
-        events: {},
 
         initialize: function(options) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
 
+            this.positiveColor = Colors.parseHex('#f00');
+            this.negativeColor = Colors.parseHex('#00f');
+
             this.initGraphics();
+
+            this.listenTo(this.simulation, 'voltage-changed', this.voltageChanged);
         },
 
         initGraphics: function() {
@@ -35,6 +39,7 @@ define(function(require) {
 
             this.leftElectrode  = Assets.createSprite(Assets.Images.ELECTRODE);
             this.rightElectrode = Assets.createSprite(Assets.Images.ELECTRODE);
+            this.symbolGraphics = new PIXI.Graphics();
 
             this.leftElectrode.anchor.x = 1;
             this.rightElectrode.anchor.x = 0;
@@ -43,6 +48,7 @@ define(function(require) {
             this.displayObject.addChild(this.wires);
             this.displayObject.addChild(this.leftElectrode);
             this.displayObject.addChild(this.rightElectrode);
+            this.displayObject.addChild(this.symbolGraphics);
 
             this.initBattery();
             this.initAmmeter();
@@ -116,6 +122,7 @@ define(function(require) {
             this.updateWireGraphics();
             this.updateElectrodeGraphics();
             this.updateTargetMaterialGraphics();
+            this.updateElectrodeSymbols();
 
             this.batteryView.setPosition(0, this.wires.height - this.wireWidth / 2);
             this.batteryView.updateMVT(mvt);
@@ -153,6 +160,48 @@ define(function(require) {
             this.leftElectrode.y = this.rightElectrode.y = this.wireWidth / 2;
         },
 
+        updateElectrodeSymbols: function() {
+            var leftX = this.leftElectrode.x - this.leftElectrode.width / 2;
+            var rightX = this.rightElectrode.x + this.rightElectrode.width / 2;
+            var topY = this.leftElectrode.y - this.leftElectrode.height / 2 + this.leftElectrode.width / 2;
+            var length = this.leftElectrode.height - this.leftElectrode.width;
+            var symbolWidth = Math.floor(this.leftElectrode.width * 0.3);
+            var graphics = this.symbolGraphics;
+
+            graphics.clear();
+            // Decide which side is positive and which side is negative, and then draw the symbols
+            if (this.simulation.getVoltage() > 0) {
+                this.drawSymbols(graphics, leftX,  topY, length, symbolWidth, this.negativeColor, this.drawMinus);
+                this.drawSymbols(graphics, rightX, topY, length, symbolWidth, this.positiveColor, this.drawPlus);
+            }
+            else {
+                this.drawSymbols(graphics, leftX,  topY, length, symbolWidth, this.positiveColor, this.drawPlus);
+                this.drawSymbols(graphics, rightX, topY, length, symbolWidth, this.negativeColor, this.drawMinus);
+            }
+        },
+
+        drawSymbols: function(graphics, x, y, length, width, color, drawFunction) {
+            var numChargeIndicators = Math.floor(Math.abs(this.simulation.getVoltage() * 10));
+            var indicatorSpacing = length / (numChargeIndicators + 1);
+
+            graphics.lineStyle(1, color, 1);
+
+            for (var i = 0; i < numChargeIndicators; i++)
+                drawFunction(graphics, x, y + indicatorSpacing * (i + 1), width);
+        },
+
+        drawPlus: function(graphics, x, y, width) {
+            graphics.moveTo(x - width / 2, y);
+            graphics.lineTo(x + width / 2, y);
+            graphics.moveTo(x, y - width / 2);
+            graphics.lineTo(x, y + width / 2);
+        },
+
+        drawMinus: function(graphics, x, y, width) {
+            graphics.moveTo(x - width / 2, y);
+            graphics.lineTo(x + width / 2, y);
+        },
+
         updateTargetMaterialGraphics: function() {
             var graphics = this.targetMaterialGraphics;
 
@@ -180,6 +229,10 @@ define(function(require) {
 
         updateCurrent: function(simulation, current) {
             this.currentValue.text = current.toFixed(3);
+        },
+
+        voltageChanged: function() {
+            this.updateElectrodeSymbols();
         },
 
         getElectrodeGap: function() {
