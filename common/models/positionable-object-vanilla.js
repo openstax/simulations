@@ -50,7 +50,6 @@ var counter = 0;
         },
 
         createVector2: function() {
-            // console.log(vectorPool.list.length)
             return vectorPool.create();
         },
 
@@ -99,8 +98,6 @@ var counter = 0;
         destroy: function() {
             if (!this.destroyed) 
                 this.removeVector2(this.get('position'));
-            // if (this.destroyed) 
-            //     console.log('already destroyed')
             PooledModel.prototype.destroy.apply(this, arguments);
         }
 

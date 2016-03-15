@@ -112,26 +112,28 @@ define(function (require, exports, module) {
         },
 
         updateModels: function(time, deltaTime) {
-            var i;
             // First, destroy any electrons that have been marked for destruction
-            for (i = this.electrons.length - 1; i >= 0; i--) {
-                if (this.electrons.at(i).markedForDestruction()) {var before = this.electrons.length;
-                    this.electrons.at(i).destroy(); 
-                    if (before === this.electrons.length) 
-                        console.log('failed to removed from collection')
-                }
-            }
+            this.removeDeadElectrons();
 
             LasersSimulation.prototype.updateModels.apply(this, arguments);
 
-            for (i = 0; i < this.electrons.length; i++)
+            for (var i = 0; i < this.electrons.length; i++)
                 this.electrons.at(i).update(time, deltaTime);
+        },
+
+        removeDeadElectrons: function() {
+            for (var i = this.electrons.length - 1; i >= 0; i--) {
+                if (this.electrons.at(i).markedForDestruction())
+                    this.electrons.at(i).destroy();
+            }
         },
 
         checkCollisions: function(deltaTime) {
             LasersSimulation.prototype.checkCollisions.apply(this, arguments);
 
             this.checkElectronAtomCollisions();
+
+            this.removeDeadElectrons();
         },
 
         checkElectronAtomCollisions: function() {
