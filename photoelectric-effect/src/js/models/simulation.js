@@ -34,7 +34,8 @@ define(function (require, exports, module) {
     var PEffectSimulation = DischargeLampsSimulation.extend({
 
         defaults: _.extend(DischargeLampsSimulation.prototype.defaults, {
-            viewMode: Constants.PEffectSimulation.BEAM_VIEW
+            viewMode: Constants.PEffectSimulation.BEAM_VIEW,
+            controlMode: Constants.PEffectSimulation.INTENSITY
         }),
         
         initialize: function(attributes, options) {
@@ -245,6 +246,14 @@ define(function (require, exports, module) {
                     this.target.getPosition().distance(this.rightHandPlate.getPosition())
                 ]);
             }
+        },
+
+        intensityToPhotonRate: function(intensity, wavelength) {
+            return intensity * wavelength / Constants.MAX_WAVELENGTH;
+        },
+
+        photonRateToIntensity: function(photonRate, wavelength) {
+            return photonRate * Constants.MAX_WAVELENGTH / wavelength;
         },
 
         photonEmitted: function(source, photon) {

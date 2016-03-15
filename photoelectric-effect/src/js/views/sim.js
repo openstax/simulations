@@ -10,7 +10,9 @@ define(function (require) {
 
     var PEffectSimulation = require('models/simulation');
     var TargetMaterials   = require('models/target-materials');
-    var PEffectSceneView  = require('views/scene');
+
+    var PEffectSceneView   = require('views/scene');
+    var GraphAccordionView = require('views/graph-accordion');
 
     var Constants = require('constants');
 
@@ -56,6 +58,7 @@ define(function (require) {
             'change #target-material'  : 'changeTargetMaterial',
             'slide .wavelength-slider' : 'changeWavelength',
             'slide .intensity-slider'  : 'changeIntensity',
+            'click .snapshot-btn'      : 'takeSnapshot'
         },
 
         /**
@@ -73,6 +76,7 @@ define(function (require) {
 
             this.initSceneView();
             this.initWavelengthSliderView();
+            this.initGraphAccordionView();
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
@@ -102,6 +106,12 @@ define(function (require) {
             });
         },
 
+        initGraphAccordionView: function() {
+            this.graphAccordionView = new GraphAccordionView({
+                simulation: this.simulation
+            });
+        },
+
         /**
          * Renders everything
          */
@@ -111,6 +121,7 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderWavelengthSliderView();
+            this.renderGraphAccordionView();
 
             return this;
         },
@@ -161,12 +172,21 @@ define(function (require) {
         },
 
         /**
+         * Renders the scene view
+         */
+        renderGraphAccordionView: function() {
+            this.graphAccordionView.render();
+            this.$('.graphs-panel').append(this.graphAccordionView.el);
+        },
+
+        /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
             this.wavelengthSliderView.postRender();
+            this.graphAccordionView.postRender();
         },
 
         /**
@@ -220,18 +240,33 @@ define(function (require) {
             this.inputLock(function() {
                 var value = parseInt($(event.target).val());
                 var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
-                var photonsPerSecond = this.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                var photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
             });
         },
 
-        intensityToPhotonRate: function(intensity, wavelength) {
-            return intensity * wavelength / Constants.MAX_WAVELENGTH;
-        },
+        takeSnapshot: function(event) {
+            var linkElement = $(event.target).closest('a')[0];
+            this.graphAccordionView.takeSnapshot(linkElement);
 
-        photonRateToIntensity: function(photonRate, wavelength) {
-            return photonRate * Constants.MAX_WAVELENGTH / wavelength;
+            // Create a little flash effect
+            var $panel = this.$('.graphs-panel');
+            var $snapshotOverlay = $('<div>');
+            
+            $snapshotOverlay
+                .css({
+                    width:  $panel.outerWidth(),
+                    height: $panel.outerHeight(),
+                    background: '#fff',
+                    position: 'absolute',
+                    top: 0,
+                    left: 0
+                })
+                .appendTo($panel)
+                .fadeOut(300, function() {
+                    $snapshotOverlay.remove();
+                });
         },
 
         showPhotons: function() {

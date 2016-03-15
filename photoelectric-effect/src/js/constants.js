@@ -137,6 +137,9 @@ define(function (require) {
     PEffectSimulation.BEAM_VIEW = 1;
     PEffectSimulation.PHOTON_VIEW = 2;
 
+    PEffectSimulation.INTENSITY = 1;
+    PEffectSimulation.RATE = 2;
+
     Constants.PEffectSimulation = PEffectSimulation;
 
 
