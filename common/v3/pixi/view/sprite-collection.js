@@ -21,7 +21,7 @@ define(function(require) {
          * Initializes the new SpriteCollectionView.
          */
         initialize: function(options) {
-            this.models = (options.collection instanceof Backbone.Collection) ? 
+            this.models = (options.collection.models) ? 
                 options.collection.models : 
                 options.collection;
 

@@ -9,7 +9,7 @@ define(function (require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
     var Particle       = require('common/mechanics/models/particle');
 
-    var Photon = require('./photon');
+    var VanillaPhoton = require('./photon-vanilla');
 
     /**
      * A PhotonSource of photons that all have identical speeds. Their directions can
@@ -66,7 +66,7 @@ define(function (require) {
          */
         update: function(time, deltaTime) {
             Particle.prototype.update.apply(this, arguments);
-
+            
             // Produce photons
             if (this.get('enabled')) {
                 this.timeSinceLastPhotonProduced += deltaTime;
@@ -86,7 +86,7 @@ define(function (require) {
                             angle *= -1;
                         
                         var photonVelocity = this._photonVelocity.set(this.photonVelocity).rotate(angle);
-                        var newPhoton = new Photon({
+                        var newPhoton = VanillaPhoton.create({
                             wavelength: this.get('wavelength'),
                             position: photonLoc,
                             velocity: photonVelocity

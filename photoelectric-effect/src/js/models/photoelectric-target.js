@@ -64,7 +64,8 @@ define(function (require) {
                     this.get('point1').x, this.get('point1').y,
                     this.get('point2').x, this.get('point2').y,
                     photon.getPosition().x, photon.getPosition().y,
-                    photon.getPreviousPosition().x, photon.getPreviousPosition().y
+                    this.get('simulation').beam.getX(), this.get('simulation').beam.getY()
+                    //photon.getPreviousPosition().x, photon.getPreviousPosition().y
                 );
 
                 if (point instanceof Vector2) {
@@ -109,7 +110,8 @@ define(function (require) {
                 this.get('point1').x, this.get('point1').y,
                 this.get('point2').x, this.get('point2').y,
                 photon.getPosition().x, photon.getPosition().y,
-                photon.getPreviousPosition().x, photon.getPreviousPosition().y
+                this.get('simulation').beam.getX(), this.get('simulation').beam.getY()
+               // photon.getPreviousPosition().x, photon.getPreviousPosition().y
             );
         },
 

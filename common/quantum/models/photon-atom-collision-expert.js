@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var Photon = require('./photon');
+    var Photon = require('./photon-vanilla');
     var Atom   = require('./atom');
 
     /**

@@ -2,18 +2,24 @@ define(function (require) {
 
     'use strict';
 
-    var Vector2      = require('../../math/vector2');
-    var MotionObject = require('../../models/motion-object');
+    var Vector2             = require('../../math/vector2');
+    var VanillaMotionObject = require('../../models/motion-object-vanilla');
 
     /**
      * A particle that moves according to the Verlet method
      */
-    var Particle = MotionObject.extend({
+    var VanillaParticle = VanillaMotionObject.extend({
 
-        initialize: function(attributes, options) {
-            MotionObject.prototype.initialize.apply(this, [attributes, options]);
+        init: function() {
+            VanillaMotionObject.prototype.init.apply(this, arguments);
 
-            this.prevAcceleration = new Vector2(this.get('acceleration'));
+            this.prevAcceleration = new Vector2();
+        },
+
+        onCreate: function(attributes, options) {
+            VanillaMotionObject.prototype.onCreate.apply(this, [attributes, options]);
+
+            this.prevAcceleration.set(this.get('acceleration'));
         },
 
         /**
@@ -45,7 +51,7 @@ define(function (require) {
         setAcceleration: function(x, y, options) {
             this.prevAcceleration.set(this.get('acceleration'));
 
-            MotionObject.prototype.setAcceleration.apply(this, arguments);
+            VanillaMotionObject.prototype.setAcceleration.apply(this, arguments);
         },
 
         getSpeed: function() {
@@ -54,5 +60,5 @@ define(function (require) {
 
     });
 
-    return Particle;
+    return VanillaParticle;
 });

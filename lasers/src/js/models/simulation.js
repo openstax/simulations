@@ -5,9 +5,10 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
+    var VanillaCollection = require('common/collections/vanilla');
     var QuantumConfig     = require('common/quantum/config');
     var QuantumSimulation = require('common/quantum/models/simulation');
-    var Photon            = require('common/quantum/models/photon');
+    var Photon            = require('common/quantum/models/photon-vanilla');
     var Atom              = require('common/quantum/models/atom');
     var Tube              = require('common/quantum/models/tube');
     var PhysicsUtil       = require('common/quantum/models/physics-util');
@@ -73,11 +74,10 @@ define(function (require, exports, module) {
             this.pumpingBeam = null;
             this.tube = null;
 
-            this.bodies = new Backbone.Collection();
-            this.photons = new Backbone.Collection();
+            this.photons = new VanillaCollection();
+            this.lasingPhotons = new VanillaCollection();
             this.atoms = new Backbone.Collection();
             this.mirrors = [];
-            this.lasingPhotons = new Backbone.Collection();
             
             // Set up the system of collision experts
             this.collisionExperts = [];
@@ -128,16 +128,14 @@ define(function (require, exports, module) {
 
             // Check to see if any photons need to be taken out of the system
             this.numPhotons = 0;
-            for (var i = 0; i < this.bodies.length; i++) {
-                var body = this.bodies.at(i);
-                if (body instanceof Photon) {
-                    this.numPhotons++;
-                    if (!this.boundingRectangle.contains(body.getPosition())) {
-                        // Old PhET note: We don't need to remove the element right now. The photon will
-                        //   fire an event that we will catch
-                        // Patrick: I've changed it to just destroy it now
-                        body.destroy();
-                    }
+            for (var i = 0; i < this.photons.length; i++) {
+                var photon = this.photons.at(i);
+                this.numPhotons++;
+                if (!this.boundingRectangle.contains(photon.getPosition())) {
+                    // Old PhET note: We don't need to remove the element right now. The photon will
+                    //   fire an event that we will catch
+                    // Patrick: I've changed it to just destroy it now
+                    photon.destroy();
                 }
             }
         },
@@ -156,9 +154,6 @@ define(function (require, exports, module) {
 
         addModel: function(model) {
             this.models.push(model);
-
-            if (model.collidable) 
-                this.bodies.add(model);
             
             if (model instanceof Mirror)
                 this.mirrors.push(model);
@@ -178,7 +173,6 @@ define(function (require, exports, module) {
 
         addPhoton: function(photon) {
             this.photons.add(photon);
-            this.bodies.add(photon);
 
             // If the photon is moving nearly horizontally and is equal in energy to the
             //   transition between the middle and ground states, consider it to be lasing
@@ -188,7 +182,6 @@ define(function (require, exports, module) {
 
         addAtom: function(atom) {
             this.atoms.add(atom);
-            this.bodies.add(atom);
         },
 
         setNumEnergyLevels: function(numLevels) {
@@ -340,12 +333,12 @@ define(function (require, exports, module) {
         },
 
         checkCollisions: function(deltaTime) {
-            this.checkPhotonPhotonCollisions();
+            this.checkPhotonElectronCollisions();
             this.checkCollisionsBetweenTwoLists(this.photons.models, this.mirrors);
             this.checkCollisionsBetweenListAndBody(this.atoms.models, this.tube);
         },
 
-        checkPhotonPhotonCollisions: function() {
+        checkPhotonElectronCollisions: function() {
             // Test each photon against the atoms in the section the photon is in
             for (var i = 0; i < this.photons.length; i++) {
                 var photon = this.photons[i];
@@ -400,8 +393,8 @@ define(function (require, exports, module) {
             for (var i = 0; i < collidablesA.length; i++) {
                 var collidable1 = collidablesA[i];
                 if (!(collidable1 instanceof Photon)
-                     || this.tube.getBounds().contains(collidable1.getPosition())
-                     || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
+                    || this.tube.getBounds().contains(collidable1.getPosition())
+                    || this.tube.getBounds().contains(collidable1.getPreviousPosition()) 
                 ) {
                     for (var k = 0; k < this.collisionExperts.length; k++) {
                         this.collisionExperts[k].detectAndDoCollision(collidable1, body);
