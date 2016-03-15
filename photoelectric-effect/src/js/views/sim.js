@@ -72,6 +72,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Photoelectric Effect',
                 name: 'photoelectric-effect',
+                link: 'photoelectric'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);

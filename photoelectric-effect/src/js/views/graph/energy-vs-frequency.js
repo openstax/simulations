@@ -84,7 +84,7 @@ define(function(require) {
             this.draw();
         },
 
-        determineKneeFrequency() {
+        determineKneeFrequency: function() {
             return PhysicsUtil.wavelengthToFrequency(PhysicsUtil.energyToWavelength(this.simulation.getWorkFunction()));
         },
 
