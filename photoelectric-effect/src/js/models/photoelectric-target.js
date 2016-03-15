@@ -7,7 +7,7 @@ define(function (require) {
     var Vector2          = require('common/math/vector2');
     var LineIntersection = require('common/math/line-intersection');
     var Plate            = require('common/quantum/models/plate');
-    var Electron         = require('common/quantum/models/electron');
+    var Electron         = require('common/quantum/models/electron-vanilla');
     
     var TargetMaterials               = require('models/target-materials');
     var InitialElectronSpeedStrategy  = require('models/initial-electron-speed-strategy');
@@ -73,7 +73,7 @@ define(function (require) {
                     // thinking the electron hit it in the electron's first time step.
                     var offset = 1;
 
-                    var electron = new Electron({
+                    var electron = Electron.create({
                         position: this._newElectronPosition.set(point.x + offset, point.y)
                     });
 

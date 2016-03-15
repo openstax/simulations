@@ -7,9 +7,10 @@ define(function (require, exports, module) {
 
     var LasersSimulation = require('lasers/models/simulation');
 
+    var VanillaCollection           = require('common/collections/vanilla');
     var Vector2                     = require('common/math/vector2');
     var Tube                        = require('common/quantum/models/tube');
-    var Electron                    = require('common/quantum/models/electron');
+    var Electron                    = require('common/quantum/models/electron-vanilla');
     var ElectronSink                = require('common/quantum/models/electron-sink');
     var ElectronSource              = require('common/quantum/models/electron-source');
     var ElectronAtomCollisionExpert = require('common/quantum/models/electron-atom-collision-expert');
@@ -55,7 +56,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             LasersSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.electrons = new Backbone.Collection();
+            this.electrons = new VanillaCollection();
             this.electronSources = new Backbone.Collection();
             this.electronSinks = new Backbone.Collection();
             this.electronAcceleration = new Vector2();
@@ -118,7 +119,8 @@ define(function (require, exports, module) {
                 if (this.electrons.at(i).markedForDestruction())
                     this.electrons.at(i).destroy();
             }
-
+if (Electron._pool)
+console.log(Electron._pool.list.length)
             LasersSimulation.prototype.updateModels.apply(this, arguments);
 
             for (i = 0; i < this.electrons.length; i++)

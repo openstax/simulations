@@ -6,7 +6,7 @@ define(function (require) {
 
     var Vector2 = require('common/math/vector2');
 
-    var Electron    = require('./electron');
+    var Electron = require('./electron-vanilla');
 
     /**
      * Emits electrons along a line between two points
@@ -56,7 +56,7 @@ define(function (require) {
             var electron = null;
 
             if (this.get('plate').get('potential') > 0) {
-                electron = new Electron();
+                electron = Electron.create();
 
                 // Determine where the electron will be emitted from
                 var x = Math.random() * (this.get('point2').x - this.get('point1').x) + this.get('point1').x;
