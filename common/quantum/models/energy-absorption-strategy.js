@@ -2,12 +2,13 @@ define(function (require) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
     var PhysicsUtil    = require('common/quantum/models/physics-util');
     var quadraticRoots = require('common/math/quadratic-roots');
 
-    var Constants = require('../constants');
+    var QuantumConfig = require('../config');
     
     /**
      * Strategy for atoms absorbing energy
@@ -44,12 +45,14 @@ define(function (require) {
             }
             else {
                 var v = electron.getPreviousVelocity().length() + electron.getAcceleration().length() * t;
-                energy = Constants.PIXELS_PER_NM * Constants.PIXELS_PER_NM * v * v * electron.get('mass') / 2 * PhysicsUtil.EV_PER_JOULE;
+                energy = QuantumConfig.PIXELS_PER_NM * QuantumConfig.PIXELS_PER_NM * v * v * electron.get('mass') / 2 * PhysicsUtil.EV_PER_JOULE;
             }
             return energy;
         }
 
     });
+
+    EnergyAbsorptionStrategy.extend = Backbone.Model.extend;
 
 
     return EnergyAbsorptionStrategy;

@@ -54,8 +54,10 @@ define(function (require) {
         events: {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
+            'click .step-btn'  : 'step',
 
             'change #target-material'  : 'changeTargetMaterial',
+            'click #high-energy-check' : 'toggleHighEnergyElectronsOnly',
             'slide .wavelength-slider' : 'changeWavelength',
             'slide .intensity-slider'  : 'changeIntensity',
             'click .snapshot-btn'      : 'takeSnapshot'
@@ -80,6 +82,8 @@ define(function (require) {
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+
+            this.listenTo(this.simulation, 'change:controlMode', this.controlModeChanged);
         },
 
         /**
@@ -110,6 +114,14 @@ define(function (require) {
             this.graphAccordionView = new GraphAccordionView({
                 simulation: this.simulation
             });
+        },
+
+        /**
+         * Overrides step to make sure we calculate the right step time.
+         */
+        step: function() {
+            this.play();
+            setTimeout(this._stepFinished, this.simulation.frameDuration * 1000);
         },
 
         /**
@@ -228,6 +240,13 @@ define(function (require) {
             this.simulation.target.set('targetMaterial', material);
         },
 
+        toggleHighEnergyElectronsOnly: function(event) {
+            if ($(event.target).is(':checked'))
+                TargetMaterials.setSimpleElectronModel();
+            else
+                TargetMaterials.setRealisticElectronModel();
+        },
+
         changeWavelength: function(event) {
             this.inputLock(function() {
                 var wavelength = parseInt($(event.target).val());
@@ -238,12 +257,29 @@ define(function (require) {
 
         changeIntensity: function(event) {
             this.inputLock(function() {
-                var value = parseInt($(event.target).val());
+                var value = parseInt(this.$('.intensity-slider').val());
                 var percent = Math.round((value / this.simulation.beam.get('maxPhotonsPerSecond')) * 100);
-                var photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                var photonsPerSecond;
+                // If we're in intensity mode, then the photons/sec is proportional to
+                //   the energy of each photon
+                if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY)
+                    photonsPerSecond = this.simulation.intensityToPhotonRate(value, this.simulation.beam.get('wavelength'));
+                else
+                    photonsPerSecond = value;
+
                 this.$intensityValue.text(percent + '%');
                 this.simulation.beam.set('photonsPerSecond', photonsPerSecond);
             });
+        },
+
+        controlModeChanged: function(simulation, controlMode) {
+            this.changeIntensity();
+
+            // Change label
+            if (this.simulation.get('controlMode') === PEffectSimulation.INTENSITY)
+                this.$('.intensity-title').html('Intensity');
+            else
+                this.$('.intensity-title').html('Number of Photons');
         },
 
         takeSnapshot: function(event) {
@@ -275,6 +311,14 @@ define(function (require) {
 
         hidePhotons: function() {
             this.simulation.set('viewMode', PEffectSimulation.BEAM_VIEW);
+        },
+
+        setPhotonCountControlMode: function() {
+            this.simulation.set('controlMode', PEffectSimulation.RATE);
+        },
+
+        setIntensityControlMode: function() {
+            this.simulation.set('controlMode', PEffectSimulation.INTENSITY);
         }
 
     });

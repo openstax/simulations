@@ -2,6 +2,9 @@ define(function (require) {
 
     'use strict';
 
+    var MetalEnergyAbsorptionStrategy  = require('models/metal-energy-absorption-strategy');
+    var SimpleEnergyAbsorptionStrategy = require('models/simple-energy-absorption-strategy');
+
     var Zinc      = require('models/element-properties/zinc');
     var Copper    = require('models/element-properties/copper');
     var Sodium    = require('models/element-properties/sodium');
@@ -42,6 +45,22 @@ define(function (require) {
         return '#000';
     };
     
+    TargetMaterials.setSimpleElectronModel = function() {
+        for (var i = 0; i < TargetMaterials.TARGET_MATERIALS.length; i++) {
+            var targetMaterial = TargetMaterials.TARGET_MATERIALS[i];
+            var energyAbsorptionStrategy = new SimpleEnergyAbsorptionStrategy(targetMaterial.getWorkFunction());
+            targetMaterial.setEnergyAbsorptionStrategy(energyAbsorptionStrategy);
+        }
+    };
+
+    TargetMaterials.setRealisticElectronModel = function() {
+        for (var i = 0; i < TargetMaterials.TARGET_MATERIALS.length; i++) {
+            var targetMaterial = TargetMaterials.TARGET_MATERIALS[i];
+            var energyAbsorptionStrategy = new MetalEnergyAbsorptionStrategy(targetMaterial.getWorkFunction());
+            targetMaterial.setEnergyAbsorptionStrategy(energyAbsorptionStrategy);
+        }
+    };
+
 
     return TargetMaterials;
 
