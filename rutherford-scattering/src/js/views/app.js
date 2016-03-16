@@ -4,7 +4,8 @@ define(function(require) {
 
     var PixiAppView = require('common/v3/pixi/view/app');
 
-    var RutherfordScatteringSimView = require('views/sim');
+    var RutherfordAtomSimView  = require('views/sim/rutherford');
+    var PlumPuddingSimView = require('views/sim/plum-pudding');
 
     var Assets = require('assets');
 
@@ -15,7 +16,8 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            RutherfordScatteringSimView
+            RutherfordAtomSimView,
+            PlumPuddingSimView
         ]
 
     });
