@@ -111,9 +111,6 @@ define(function(require) {
             this.initXAxis();
             this.initYAxis();
             this.initHalfLifeBar();
-
-            this.debugGraphics = new PIXI.Graphics();
-            this.displayObject.addChild(this.debugGraphics);
         },
 
         initMVT: function() {
@@ -408,11 +405,6 @@ define(function(require) {
             );
             this.xAxisLabel.visible = !(this._axisLabelRect.overlaps(this._halfLifeTextRect));
 
-            this.debugGraphics.clear();
-            this.debugGraphics.lineStyle(1, 0x00FF00, 1);
-            this.debugGraphics.drawRect(this._axisLabelRect.x, this._axisLabelRect.y, this._axisLabelRect.w, this._axisLabelRect.h);
-            this.debugGraphics.lineStyle(1, 0x0000FF, 1);
-            this.debugGraphics.drawRect(this._halfLifeTextRect.x, this._halfLifeTextRect.y, this._halfLifeTextRect.w, this._halfLifeTextRect.h);
             // Position the infinity marker, set its scale, and set its visibility.
             // _halfLifeInfinityText.setScale( 1 );
             // if ( _halfLifeMarkerLine.getFullBoundsReference().height > 0 &&
@@ -464,6 +456,7 @@ define(function(require) {
 
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
+            this.updateTimeSpan();
         },
 
         halfLifeChanged: function(simulation, halfLife) {
