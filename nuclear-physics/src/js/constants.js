@@ -36,7 +36,7 @@ define(function (require) {
     Constants.HYDROGEN_3_LABEL_COLOR = '#7FFF00';
     
     // Color for label used for the Helium 3 nucleus.
-    Constants.HELIUM_3_LABEL_COLOR = '#FFC0CB';
+    Constants.HELIUM_3_LABEL_COLOR = '#dfa7fd';
     
     // Color for label used for the Carbon 14 nucleus.
     Constants.CARBON_14_LABEL_COLOR = '#ff0';
