@@ -15,8 +15,11 @@ define(function(require) {
     var PiecewiseCurve = require('common/math/piecewise-curve');
     var Rectangle      = require('common/math/rectangle');
 
-    var HalfLifeInfo = require('models/half-life-info');
-    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo  = require('models/half-life-info');
+    var NucleusType   = require('models/nucleus-type');
+    var AtomicNucleus = require('models/atomic-nucleus');
+
+    var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
     var Constants = require('constants');
     var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR);
@@ -88,6 +91,7 @@ define(function(require) {
             this.initGraphics();
 
             this.updateTimeSpan();
+            this.updateIsotopes();
 
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
             this.listenTo(this.simulation, 'change:halfLife',    this.halfLifeChanged);
@@ -178,7 +182,39 @@ define(function(require) {
         },
 
         initYAxis: function() {
+            var isotopeLabelThickness = 42;
 
+            var label = new PIXI.Text(this.yAxisLabelText, {
+                font: Constants.NucleusDecayChart.AXIS_LABEL_FONT,
+                fill: Constants.NucleusDecayChart.AXIS_LABEL_COLOR
+            });
+            label.resolution = this.getResolution();
+            label.x = this.graphOriginX - isotopeLabelThickness;
+            label.y = this.graphOriginY - this.graphHeight / 2;
+            label.anchor.x = 0.5;
+            label.anchor.y = 1;
+            label.rotation = -Math.PI / 2;
+
+            var tickLength = NucleusDecayChart.TICK_MARK_LENGTH;
+            var isotope1Y = this.graphOriginY - this.graphHeight * 0.8;
+            var isotope2Y = this.graphOriginY - this.graphHeight * 0.2;
+            this.yAxisIsotope1 = new PIXI.Container();
+            this.yAxisIsotope2 = new PIXI.Container();
+            this.yAxisIsotope1.x = this.yAxisIsotope2.x = this.graphOriginX - tickLength * 2;
+            this.yAxisIsotope1.y = isotope1Y;
+            this.yAxisIsotope2.y = isotope2Y;
+
+            var yAxisTicks = new PIXI.Graphics();
+            yAxisTicks.lineStyle(NucleusDecayChart.TICK_MARK_WIDTH, this.tickColor, 1);
+            yAxisTicks.moveTo(this.graphOriginX,              isotope1Y);
+            yAxisTicks.lineTo(this.graphOriginX - tickLength, isotope1Y);
+            yAxisTicks.moveTo(this.graphOriginX,              isotope2Y);
+            yAxisTicks.lineTo(this.graphOriginX - tickLength, isotope2Y);
+
+            this.displayObject.addChild(yAxisTicks);
+            this.displayObject.addChild(this.yAxisIsotope1);
+            this.displayObject.addChild(this.yAxisIsotope2);
+            this.displayObject.addChild(label);
         },
 
         /**
@@ -444,6 +480,20 @@ define(function(require) {
             }
         },
 
+        updateIsotopes: function() {
+            var nucleusType = this.simulation.get('nucleusType');
+            var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
+
+            var isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            var isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+
+            this.yAxisIsotope1.removeChildren();
+            this.yAxisIsotope2.removeChildren();
+
+            this.yAxisIsotope1.addChild(isotope1Text);
+            this.yAxisIsotope2.addChild(isotope2Text);
+        },
+
         setTimeSpan: function(timeSpan) {
             this.timeSpan = timeSpan;
             this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
@@ -457,6 +507,7 @@ define(function(require) {
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
             this.updateTimeSpan();
+            this.updateIsotopes();
         },
 
         halfLifeChanged: function(simulation, halfLife) {

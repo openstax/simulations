@@ -8,6 +8,7 @@ define(function (require) {
     var MotionObject = require('common/models/motion-object');
 
     var HalfLifeInfo = require('models/half-life-info');
+    var NucleusType  = require('models/nucleus-type');
 
     var Constants = require('constants');
 
@@ -196,54 +197,6 @@ define(function (require) {
         },
 
         /**
-         * Convenience method for obtaining the nucleus or nuclei that the
-         * specified nucleus type will decay into.  Note that the return values
-         * are NOT NECESSARILY what always happens in the real world - they
-         * represent the way this simulation behaves, which is a simplification of
-         * real-world behavior.  Also note that this method may sometimes consider
-         * something like an alpha particle as a helium nucleus and list it here,
-         * or sometimes as and emitted particle, and thus NOT list it here.  It
-         * all depends on the needs of the other portions of the sim.
-         */
-        getPostDecayNuclei: function(preDecayNucleus) {
-            var decayProducts = [];
-
-            switch (preDecayNucleus) {
-
-                case HYDROGEN_3:
-                    decayProducts.push(NucleusType.HELIUM_3);
-                    break;
-
-                case CARBON_14:
-                    decayProducts.push(NucleusType.NITROGEN_14);
-                    break;
-
-                case URANIUM_238:
-                    decayProducts.push(NucleusType.LEAD_206);
-                    break;
-
-                case POLONIUM_211:
-                    decayProducts.push(NucleusType.LEAD_207);
-                    break;
-
-                case LIGHT_CUSTOM:
-                    decayProducts.push(NucleusType.LIGHT_CUSTOM_POST_DECAY);
-                    break;
-
-                case HEAVY_CUSTOM:
-                    decayProducts.push(NucleusType.HEAVY_CUSTOM_POST_DECAY);
-                    break;
-
-                default:
-                    console.warning('Warning: No decay product information available for requested nucleus, returning original value, nucleus = ', preDecayNucleus);
-                    decayProducts.push(preDecayNucleus);
-                    break;
-            }
-
-            return decayProducts;
-        },
-
-        /**
          * This method is called when decay occurs, and it defines the behavior
          *   exhibited by the nucleus when it decays.  This method should be
          *   implemented by all subclasses that exhibit decay behavior..
@@ -313,7 +266,57 @@ define(function (require) {
             this.trigger('nucleus-change', this, byProducts);
         }
 
-    }, Constants.AtomicNucleus);
+    }, _.extend({
+
+        /**
+         * Convenience method for obtaining the nucleus or nuclei that the specified
+         *   nucleus type will decay into.  Note that the return values are NOT 
+         *   NECESSARILY what always happens in the real world - they represent the
+         *   way this simulation behaves, which is a simplification of real-world
+         *   behavior.  Also note that this method may sometimes consider something
+         *   like an alpha particle as a helium nucleus and list it here, or
+         *   sometimes as and emitted particle, and thus NOT list it here.  It all
+         *   depends on the needs of the other portions of the sim.
+         */
+        getPostDecayNuclei: function(preDecayNucleusType) {
+            var decayProducts = [];
+
+            switch (preDecayNucleusType) {
+
+                case NucleusType.HYDROGEN_3:
+                    decayProducts.push(NucleusType.HELIUM_3);
+                    break;
+
+                case NucleusType.CARBON_14:
+                    decayProducts.push(NucleusType.NITROGEN_14);
+                    break;
+
+                case NucleusType.URANIUM_238:
+                    decayProducts.push(NucleusType.LEAD_206);
+                    break;
+
+                case NucleusType.POLONIUM_211:
+                    decayProducts.push(NucleusType.LEAD_207);
+                    break;
+
+                case NucleusType.LIGHT_CUSTOM:
+                    decayProducts.push(NucleusType.LIGHT_CUSTOM_POST_DECAY);
+                    break;
+
+                case NucleusType.HEAVY_CUSTOM:
+                    decayProducts.push(NucleusType.HEAVY_CUSTOM_POST_DECAY);
+                    break;
+
+                default:
+                    console.warning('Warning: No decay product information available for requested nucleus, returning original value, nucleus = ', preDecayNucleus);
+                    decayProducts.push(preDecayNucleus);
+                    break;
+            }
+
+            return decayProducts;
+        },
+
+    }, Constants.AtomicNucleus));
 
     return AtomicNucleus;
 });

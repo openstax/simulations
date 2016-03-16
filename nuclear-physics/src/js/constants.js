@@ -435,6 +435,7 @@ define(function (require) {
     NucleusDecayChart.TICK_MARK_COLOR = NucleusDecayChart.AXIS_LINE_COLOR;
     NucleusDecayChart.SMALL_LABEL_FONT = '12px Helvetica Neue';
     NucleusDecayChart.LARGE_LABEL_FONT = '14px Helvetica Neue';
+    NucleusDecayChart.ISOTOPE_FONT_SIZE = 18;
 
     NucleusDecayChart.HALF_LIFE_LINE_WIDTH = 2;
     NucleusDecayChart.HALF_LIFE_LINE_DASHES = [3, 3];

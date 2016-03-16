@@ -24,9 +24,15 @@ define(function(require) {
     var Assets = require('assets');
 
     /**
-     * A view that represents a circuit
+     * A utility class for generating nucleus and subatomic-particle graphics
      */
     var ParticleGraphicsGenerator = {
+
+        // TODO: It might be good at some point in the future when there are a lot of nuclei being
+        //   rendered on the screen to check memory usage.  If memory usage keeps climbing, I would
+        //   think that all the nucleus graphics with cacheAsBitmap=true are not clearing their
+        //   textures when garbage collected.  If that's the case, maybe try explicitly setting
+        //   cacheAsBitmap to null when we're done with them.
 
         /**
          * Create the image that will be used to visually represent this nucleus.
