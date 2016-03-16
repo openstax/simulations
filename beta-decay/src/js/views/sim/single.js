@@ -24,6 +24,7 @@ define(function (require) {
         initialize: function(options) {
             options = _.extend({
                 title: 'Single Atom',
+                name: 'single-atom',
                 link: 'beta-decay'
             }, options);
 

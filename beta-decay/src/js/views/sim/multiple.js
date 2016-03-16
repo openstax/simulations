@@ -21,7 +21,9 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Multiple Atoms'
+                title: 'Multiple Atoms',
+                name: 'multiple-atoms',
+                link: 'beta-decay'
             }, options);
 
             BetaDecaySimView.prototype.initialize.apply(this, [options]);

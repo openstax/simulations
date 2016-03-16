@@ -126,6 +126,8 @@ define(function (require, exports, module) {
                     this.atomicNucleus = new LightAdjustableCompositeNucleus();
                     break;
             }
+
+            this.set('halfLife', this.atomicNucleus.get('halfLife'), { silent: true });
             
             // Register as a listener for the nucleus so we can handle the
             //   particles thrown off by beta decay.

@@ -7,14 +7,19 @@ define(function(require) {
 
                          require('common/v3/pixi/extensions');
                          require('common/v3/pixi/draw-stick-arrow');
+                         require('common/v3/pixi/dash-to');
     var AppView        = require('common/v3/app/app');
     var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
 
     var HalfLifeInfo = require('models/half-life-info');
+    var NucleusType  = require('models/nucleus-type');
 
     var Constants = require('constants');
+    var HALF_LIFE_LINE_COLOR = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR);
+    var HALF_LIFE_LINE_WIDTH = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
+    var HALF_LIFE_LINE_ALPHA = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
@@ -34,6 +39,7 @@ define(function(require) {
                 paddingLeft: 220, // Number of pixels on the left before the chart starts
                 paddingBottom: 46,
                 paddingRight: 15,
+                paddingTop: 15,
                 bgColor: '#FF9797',
                 bgAlpha: 1,
 
@@ -52,17 +58,23 @@ define(function(require) {
             this.paddingLeft    = options.paddingLeft;
             this.paddingBottom  = options.paddingBottom;
             this.paddingRight   = options.paddingRight;
+            this.paddingTop     = options.paddingTop;
+            this.graphWidth     = this.width - this.paddingLeft - this.paddingRight;
+            this.graphHeight    = this.height - this.paddingTop - this.paddingBottom;
+            this.graphOriginX   = this.paddingLeft;
+            this.graphOriginY   = this.height - this.paddingBottom;
             this.bgColor        = Colors.parseHex(options.bgColor);
             this.bgAlpha        = options.bgAlpha;
             this.xAxisLabelText = options.xAxisLabelText;
             this.yAxisLabelText = options.yAxisLabelText;
-            this.setTimeSpan(options.timeSpan);
 
             this.axisLineColor = Colors.parseHex(NucleusDecayChart.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(NucleusDecayChart.TICK_MARK_COLOR);
 
             // Initialize the graphics
             this.initGraphics();
+
+            this.updateTimeSpan();
         },
 
         /**
@@ -123,8 +135,8 @@ define(function(require) {
             var axisLine = new PIXI.Graphics();
             axisLine.lineStyle(NucleusDecayChart.AXIS_LINE_WIDTH, this.axisLineColor, 1);
             axisLine.drawStickArrow(
-                this.paddingLeft,               this.height - this.paddingBottom,
-                this.width - this.paddingRight, this.height - this.paddingBottom,
+                this.graphOriginX,                   this.graphOriginY,
+                this.graphOriginX + this.graphWidth, this.graphOriginY,
                 8, 6
             );
 
@@ -134,14 +146,13 @@ define(function(require) {
                 fill: Constants.NucleusDecayChart.AXIS_LABEL_COLOR
             });
             label.resolution = this.getResolution();
-            label.x = this.paddingLeft;
-            label.y = this.height - this.paddingBottom + 10;
+            label.x = this.graphOriginX;
+            label.y = this.graphOriginY + 14;
             this.xAxisLabel = label;
 
             // Create ticks
             this.xAxisTicks = new PIXI.Graphics();
             this.xAxisTickLabels = new PIXI.Container();
-            this.drawXAxisTicks();
 
             // Add everything
             this.displayObject.addChild(axisLine);
@@ -154,8 +165,30 @@ define(function(require) {
 
         },
 
+        /**
+         * Initializes the vertical line that illustrates where the half-life is on the timeline
+         */
         initHalfLifeBar: function() {
+            var height = this.graphHeight + 16;
 
+            this.halfLifeMarker = new PIXI.Graphics();
+            this.halfLifeMarker.lineStyle(HALF_LIFE_LINE_WIDTH, HALF_LIFE_LINE_COLOR, HALF_LIFE_LINE_ALPHA);
+            this.halfLifeMarker.moveTo(0, 0);
+            this.halfLifeMarker.dashTo(0, height, NucleusDecayChart.HALF_LIFE_LINE_DASHES);
+            this.halfLifeMarker.y = this.paddingTop;
+
+            var text = new PIXI.Text('Half Life', {
+                font: Constants.NucleusDecayChart.HALF_LIFE_TEXT_FONT,
+                fill: Constants.NucleusDecayChart.HALF_LIFE_TEXT_COLOR
+            });
+            text.resolution = this.getResolution();
+            text.alpha = NucleusDecayChart.HALF_LIFE_TEXT_ALPHA;
+            text.anchor.x = 0.5;
+            text.y = height;
+
+            this.halfLifeMarker.addChild(text);
+
+            this.displayObject.addChild(this.halfLifeMarker);
         },
 
         drawXAxisTicks: function() {
@@ -201,7 +234,7 @@ define(function(require) {
             var timeZeroPosX = this.paddingLeft + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan * this.msToPixelsFactor);
             var y = this.height - this.paddingBottom;
             var x = timeZeroPosX + (time * this.msToPixelsFactor);
-            var length = NucleusDecayChart.TICK_MARK_LENGTH
+            var length = NucleusDecayChart.TICK_MARK_LENGTH;
             
             this.xAxisTicks.moveTo(x, y);
             this.xAxisTicks.lineTo(x, y - length);
@@ -212,22 +245,103 @@ define(function(require) {
             });
 
             label.x = x;
-            label.y = y - length;
+            label.y = y;
             label.anchor.x = 0.5;
-            label.anchor.y = 1;
+            label.anchor.y = 0;
             label.resolution = this.getResolution();
 
             this.xAxisTickLabels.addChild(label);
         },
 
         update: function() {
+            this.drawXAxisTicks();
+            this.updateHalfLifeMarker();
+        },
 
+        /**
+         * Position the half life marker on the chart based on the values of the
+         *   half life for the nucleus in the model.
+         */
+        updateHalfLifeMarker: function() {
+            // Position the marker for the half life.
+            var halfLife = this.simulation.get('halfLife');
+            var halfLifeMarkerX = 0;
+
+            if (this.getExponentialMode()) {
+                if (halfLife == Number.POSITIVE_INFINITY) {
+                    halfLifeMarkerX = this.graphOriginX + this.graphWidth;
+                }
+                else {
+                    // halfLifeMarkerX = _exponentialTimeLine.mapTimeToHorizPixels( halfLife ) + _graphOriginX +
+                    //                      ( TIME_ZERO_OFFSET * _msToPixelsFactor );
+                    // halfLifeMarkerX = Math.min( halfLifeMarkerX, _xAxisOfGraph.getFullBoundsReference().getMaxX() );
+                }
+            }
+            else {
+                halfLifeMarkerX = this.graphOriginX + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan + halfLife) * this.msToPixelsFactor;
+            }
+
+            this.halfLifeMarker.x = halfLifeMarkerX;
+
+            // Position the textual label for the half life.
+            // _halfLifeLabel.setOffset( _halfLifeMarkerLine.getX() - ( _halfLifeLabel.getFullBoundsReference().width / 2 ),
+            //                           (float) ( _graphOriginY + ( ( _usableHeight - _graphOriginY ) * 0.5 ) ) );
+
+            // Hide the x axis label if there is overlap with the half life label.
+            // if ( _xAxisLabel.getFullBoundsReference().intersects( _halfLifeLabel.getFullBoundsReference() ) ) {
+            //     _xAxisLabel.setVisible( false );
+            // }
+            // else {
+            //     _xAxisLabel.setVisible( true );
+            // }
+
+            // Position the infinity marker, set its scale, and set its visibility.
+            // _halfLifeInfinityText.setScale( 1 );
+            // if ( _halfLifeMarkerLine.getFullBoundsReference().height > 0 &&
+            //      _halfLifeInfinityText.getFullBoundsReference().height > 0 ) {
+
+            //     // Tweak the multiplier on the following line as needed.
+            //     double desiredHeight = _halfLifeMarkerLine.getFullBoundsReference().height * 0.7;
+
+            //     _halfLifeInfinityText.setScale( desiredHeight / _halfLifeInfinityText.getFullBoundsReference().height );
+            // }
+
+            // _halfLifeInfinityText.setOffset(
+            //         _halfLifeMarkerLine.getX() - _halfLifeInfinityText.getFullBoundsReference().width,
+            //         _halfLifeMarkerLine.getFullBoundsReference().getMinY() -
+            //         _halfLifeInfinityText.getFullBoundsReference().height * 0.4 );
+
+            // _halfLifeInfinityText.setVisible( _model.getHalfLife() == Double.POSITIVE_INFINITY );
+        },
+
+        updateTimeSpan: function() {
+            var nucleusType = this.simulation.get('nucleusType');
+
+            // Set the time span of the chart based on the nucleus type.
+            switch (nucleusType) {
+                case NucleusType.HEAVY_CUSTOM:
+                    this.setTimeSpan(5000); // Set the chart for five seconds of real time.
+                    break;
+                case NucleusType.CARBON_14:
+                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 2.6);
+                    break;
+                case NucleusType.HYDROGEN_3:
+                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 3.2);
+                    break;
+                default:
+                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 2.5);
+                    break;
+            }
         },
 
         setTimeSpan: function(timeSpan) {
             this.timeSpan = timeSpan;
             this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
             this.update();
+        },
+
+        getExponentialMode: function() {
+            return (this.simulation.get('nucleusType') === NucleusType.HEAVY_CUSTOM);
         }
 
     }, Constants.NucleusDecayChart);
