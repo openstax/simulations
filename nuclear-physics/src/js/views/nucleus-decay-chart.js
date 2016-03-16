@@ -111,6 +111,9 @@ define(function(require) {
             this.initXAxis();
             this.initYAxis();
             this.initHalfLifeBar();
+
+            this.debugGraphics = new PIXI.Graphics();
+            this.displayObject.addChild(this.debugGraphics);
         },
 
         initMVT: function() {
@@ -216,7 +219,7 @@ define(function(require) {
             this.displayObject.addChild(this.halfLifeMarker);
 
             this._axisLabelRect = new Rectangle();
-            this._halfLifeMarkerRect = new Rectangle();
+            this._halfLifeTextRect = new Rectangle();
         },
 
         drawHalfLifeMarker: function(graphics, height, color) {
@@ -391,20 +394,25 @@ define(function(require) {
             this.halfLifeMarker.x = halfLifeMarkerX;
 
             // Hide the x axis label if there is overlap with the half life label.
-            var alBounds = this.xAxisLabel.getBounds();
-            var hlBounds = this.halfLifeMarkerText.getBounds();
-            var hlX = this.halfLifeMarkerText.x + this.halfLifeMarker.x;
-            var hlY = this.halfLifeMarkerText.y + this.halfLifeMarker.y;
+            var al = this.xAxisLabel;
+            var hl = this.halfLifeMarkerText;
+            var hlX = this.halfLifeMarker.x;
+            var hlY = this.halfLifeMarker.y;
             this._axisLabelRect.set(
-                alBounds.x + this.xAxisLabel.x, alBounds.y + this.xAxisLabel.y, 
-                alBounds.width, alBounds.height
+                al.x - al.width * al.anchor.x, al.y - al.height * al.anchor.y, 
+                al.width, al.height
             );
-            this._halfLifeMarkerRect.set(
-                hlBounds.x + hlX, hlBounds.y + hlY, 
-                hlBounds.width, hlBounds.height
+            this._halfLifeTextRect.set(
+                hl.x - hl.width * hl.anchor.x + hlX, hl.y - hl.height * hl.anchor.y + hlY, 
+                hl.width, hl.height
             );
-            this.xAxisLabel.visible = !(this._axisLabelRect.overlaps(this._halfLifeMarkerRect));
+            this.xAxisLabel.visible = !(this._axisLabelRect.overlaps(this._halfLifeTextRect));
 
+            this.debugGraphics.clear();
+            this.debugGraphics.lineStyle(1, 0x00FF00, 1);
+            this.debugGraphics.drawRect(this._axisLabelRect.x, this._axisLabelRect.y, this._axisLabelRect.w, this._axisLabelRect.h);
+            this.debugGraphics.lineStyle(1, 0x0000FF, 1);
+            this.debugGraphics.drawRect(this._halfLifeTextRect.x, this._halfLifeTextRect.y, this._halfLifeTextRect.w, this._halfLifeTextRect.h);
             // Position the infinity marker, set its scale, and set its visibility.
             // _halfLifeInfinityText.setScale( 1 );
             // if ( _halfLifeMarkerLine.getFullBoundsReference().height > 0 &&
