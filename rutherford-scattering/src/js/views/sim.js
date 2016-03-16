@@ -18,12 +18,14 @@ define(function (require) {
 
     // CSS
     require('less!styles/sim');
+    require('less!styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
     var simHtml = require('text!templates/sim.html');
+    var playbackControlsHtml = require('text!templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -90,8 +92,16 @@ define(function (require) {
 
             this.renderScaffolding();
             this.renderSceneView();
+            this.renderPlaybackControls();
 
             return this;
+        },
+
+        /**
+         * Renders playback controls
+         */
+        renderPlaybackControls: function() {
+            this.$el.append(playbackControlsHtml);
         },
 
         /**
@@ -100,7 +110,8 @@ define(function (require) {
         renderScaffolding: function() {
             var data = {
                 Constants: Constants,
-                simulation: this.simulation
+                simulation: this.simulation,
+                showAtomProperties: this.showAtomProperties
             };
             this.$el.html(this.template(data));
             this.$('select').selectpicker();
