@@ -7,19 +7,22 @@ define(function(require) {
 
                          require('common/v3/pixi/extensions');
                          require('common/v3/pixi/draw-stick-arrow');
+                         require('common/v3/pixi/draw-arrow');
                          require('common/v3/pixi/dash-to');
     var AppView        = require('common/v3/app/app');
     var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Rectangle      = require('common/math/rectangle');
 
     var HalfLifeInfo = require('models/half-life-info');
     var NucleusType  = require('models/nucleus-type');
 
     var Constants = require('constants');
-    var HALF_LIFE_LINE_COLOR = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR);
-    var HALF_LIFE_LINE_WIDTH = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
-    var HALF_LIFE_LINE_ALPHA = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
+    var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR);
+    var HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
+    var HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
+    var HALF_LIFE_HOVER_COLOR = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_HOVER_COLOR);
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
@@ -27,7 +30,17 @@ define(function(require) {
     var NucleusDecayChart = PixiView.extend({
 
         events: {
-            
+            'touchstart      .halfLifeHandle': 'dragHalfLifeStart',
+            'mousedown       .halfLifeHandle': 'dragHalfLifeStart',
+            'touchmove       .halfLifeHandle': 'dragHalfLife',
+            'mousemove       .halfLifeHandle': 'dragHalfLife',
+            'touchend        .halfLifeHandle': 'dragHalfLifeEnd',
+            'mouseup         .halfLifeHandle': 'dragHalfLifeEnd',
+            'touchendoutside .halfLifeHandle': 'dragHalfLifeEnd',
+            'mouseupoutside  .halfLifeHandle': 'dragHalfLifeEnd',
+
+            'mouseover       .halfLifeHandle': 'halfLifeHover',
+            'mouseout        .halfLifeHandle': 'halfLifeUnhover'
         },
 
         /**
@@ -75,6 +88,9 @@ define(function(require) {
             this.initGraphics();
 
             this.updateTimeSpan();
+
+            this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
+            this.listenTo(this.simulation, 'change:halfLife',    this.halfLifeChanged);
         },
 
         /**
@@ -172,23 +188,69 @@ define(function(require) {
             var height = this.graphHeight + 16;
 
             this.halfLifeMarker = new PIXI.Graphics();
-            this.halfLifeMarker.lineStyle(HALF_LIFE_LINE_WIDTH, HALF_LIFE_LINE_COLOR, HALF_LIFE_LINE_ALPHA);
-            this.halfLifeMarker.moveTo(0, 0);
-            this.halfLifeMarker.dashTo(0, height, NucleusDecayChart.HALF_LIFE_LINE_DASHES);
             this.halfLifeMarker.y = this.paddingTop;
 
+            this.halfLifeMarkerHover = new PIXI.Graphics();
+            this.halfLifeMarkerHover.alpha = 0;
+
+            this.drawHalfLifeMarker(this.halfLifeMarker, height, HALF_LIFE_LINE_COLOR);
+            this.drawHalfLifeMarker(this.halfLifeMarkerHover,  height, HALF_LIFE_HOVER_COLOR);
+            
+            this.halfLifeMarkerText = this.createHalfLifeText(height, NucleusDecayChart.HALF_LIFE_TEXT_COLOR);
+            this.halfLifeMarkerHover.addChild(this.createHalfLifeText(height, NucleusDecayChart.HALF_LIFE_HOVER_COLOR));
+
+            this.halfLifeHandle = new PIXI.Graphics();
+            this.halfLifeHandle.defaultCursor = 'ew-resize';
+            this.halfLifeHandle.buttonMode = true;
+            this.halfLifeHandle.visible = false;
+
+            var halfLifeHandleHover = new PIXI.Graphics();
+            this.halfLifeMarkerHover.addChild(halfLifeHandleHover);
+
+            this.drawHalfLifeHandles(this.halfLifeHandle, HALF_LIFE_LINE_COLOR);
+            this.drawHalfLifeHandles(halfLifeHandleHover, HALF_LIFE_HOVER_COLOR);
+            
+            this.halfLifeMarker.addChild(this.halfLifeHandle);
+            this.halfLifeMarker.addChild(this.halfLifeMarkerText);
+            this.halfLifeMarker.addChild(this.halfLifeMarkerHover);
+            this.displayObject.addChild(this.halfLifeMarker);
+
+            this._axisLabelRect = new Rectangle();
+            this._halfLifeMarkerRect = new Rectangle();
+        },
+
+        drawHalfLifeMarker: function(graphics, height, color) {
+            graphics.lineStyle(HALF_LIFE_LINE_WIDTH, color, HALF_LIFE_LINE_ALPHA);
+            graphics.moveTo(0, 0);
+            graphics.dashTo(0, height, NucleusDecayChart.HALF_LIFE_LINE_DASHES);
+        },
+
+        createHalfLifeText: function(y, colorString) {
             var text = new PIXI.Text('Half Life', {
                 font: Constants.NucleusDecayChart.HALF_LIFE_TEXT_FONT,
-                fill: Constants.NucleusDecayChart.HALF_LIFE_TEXT_COLOR
+                fill: colorString
             });
             text.resolution = this.getResolution();
             text.alpha = NucleusDecayChart.HALF_LIFE_TEXT_ALPHA;
             text.anchor.x = 0.5;
-            text.y = height;
+            text.y = y;
 
-            this.halfLifeMarker.addChild(text);
+            return text;
+        },
 
-            this.displayObject.addChild(this.halfLifeMarker);
+        drawHalfLifeHandles: function(graphics, color) {
+            var y = this.graphHeight / 2;
+            var length     = NucleusDecayChart.HALF_LIFE_ARROW_LENGTH;
+            var tailWidth  = NucleusDecayChart.HALF_LIFE_ARROW_TAIL_WIDTH;
+            var headWidth  = NucleusDecayChart.HALF_LIFE_ARROW_HEAD_WIDTH;
+            var headLength = NucleusDecayChart.HALF_LIFE_ARROW_HEAD_LENGTH;
+
+            graphics.beginFill(color, 1);
+            graphics.moveTo(0, 0);
+            graphics.drawArrow(0, y,  length, y, tailWidth, headWidth, headLength);
+            graphics.moveTo(0, 0);
+            graphics.drawArrow(0, y, -length, y, tailWidth, headWidth, headLength);
+            graphics.endFill();
         },
 
         drawXAxisTicks: function() {
@@ -253,6 +315,51 @@ define(function(require) {
             this.xAxisTickLabels.addChild(label);
         },
 
+        dragHalfLifeStart: function(event) {
+            this.lastDragX = event.data.global.x;
+            this.draggingHalfLifeHandle = true;
+            this.halfLifeMarkerHover.alpha = 1;
+        },
+
+        dragHalfLife: function(event) {
+            if (this.draggingHalfLifeHandle) {
+                var dx = event.data.global.x - this.lastDragX;
+
+                var deltaMilliseconds = dx / this.msToPixelsFactor;
+
+                var newHalfLife = this.simulation.get('halfLife') + deltaMilliseconds;
+                if (newHalfLife < NucleusDecayChart.MIN_HALF_LIFE)
+                    newHalfLife = NucleusDecayChart.MIN_HALF_LIFE;
+                if (newHalfLife > (this.timeSpan * 0.95))
+                    newHalfLife = (this.timeSpan * 0.95);
+
+                if (newHalfLife !== this.simulation.get('halfLife')) {
+                    this.simulation.set('halfLife', newHalfLife);
+                    this.lastDragX = event.data.global.x;
+                }
+            }
+        },
+
+        dragHalfLifeEnd: function(event) {
+            this.draggingHalfLifeHandle = false;
+            if (!this.halfLifeHovering)
+                this.halfLifeUnhover();
+        },
+
+        halfLifeHover: function() {
+            this.halfLifeHovering = true;
+
+            this.halfLifeMarkerHover.alpha = 1;
+        },
+
+        halfLifeUnhover: function() {
+            this.halfLifeHovering = false;
+
+            if (!this.draggingHalfLifeHandle) {
+                this.halfLifeMarkerHover.alpha = 0;
+            }
+        },
+
         update: function() {
             this.drawXAxisTicks();
             this.updateHalfLifeMarker();
@@ -283,17 +390,20 @@ define(function(require) {
 
             this.halfLifeMarker.x = halfLifeMarkerX;
 
-            // Position the textual label for the half life.
-            // _halfLifeLabel.setOffset( _halfLifeMarkerLine.getX() - ( _halfLifeLabel.getFullBoundsReference().width / 2 ),
-            //                           (float) ( _graphOriginY + ( ( _usableHeight - _graphOriginY ) * 0.5 ) ) );
-
             // Hide the x axis label if there is overlap with the half life label.
-            // if ( _xAxisLabel.getFullBoundsReference().intersects( _halfLifeLabel.getFullBoundsReference() ) ) {
-            //     _xAxisLabel.setVisible( false );
-            // }
-            // else {
-            //     _xAxisLabel.setVisible( true );
-            // }
+            var alBounds = this.xAxisLabel.getBounds();
+            var hlBounds = this.halfLifeMarkerText.getBounds();
+            var hlX = this.halfLifeMarkerText.x + this.halfLifeMarker.x;
+            var hlY = this.halfLifeMarkerText.y + this.halfLifeMarker.y;
+            this._axisLabelRect.set(
+                alBounds.x + this.xAxisLabel.x, alBounds.y + this.xAxisLabel.y, 
+                alBounds.width, alBounds.height
+            );
+            this._halfLifeMarkerRect.set(
+                hlBounds.x + hlX, hlBounds.y + hlY, 
+                hlBounds.width, hlBounds.height
+            );
+            this.xAxisLabel.visible = !(this._axisLabelRect.overlaps(this._halfLifeMarkerRect));
 
             // Position the infinity marker, set its scale, and set its visibility.
             // _halfLifeInfinityText.setScale( 1 );
@@ -342,6 +452,14 @@ define(function(require) {
 
         getExponentialMode: function() {
             return (this.simulation.get('nucleusType') === NucleusType.HEAVY_CUSTOM);
+        },
+
+        nucleusTypeChanged: function(simulation, nucleusType) {
+            this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
+        },
+
+        halfLifeChanged: function(simulation, halfLife) {
+            this.updateHalfLifeMarker();
         }
 
     }, Constants.NucleusDecayChart);

@@ -443,6 +443,11 @@ define(function (require) {
     NucleusDecayChart.HALF_LIFE_TEXT_COLOR = '#f00';
     NucleusDecayChart.HALF_LIFE_TEXT_ALPHA = 1;
     NucleusDecayChart.HALF_LIFE_TEXT_FONT  = 'bold 16px Helvetica Neue';
+    NucleusDecayChart.HALF_LIFE_ARROW_LENGTH = 28;
+    NucleusDecayChart.HALF_LIFE_ARROW_TAIL_WIDTH = 8;
+    NucleusDecayChart.HALF_LIFE_ARROW_HEAD_WIDTH = 24;
+    NucleusDecayChart.HALF_LIFE_ARROW_HEAD_LENGTH = 18;
+    NucleusDecayChart.HALF_LIFE_HOVER_COLOR = '#fff';
 
     // Tweakable values that can be used to adjust where the nuclei appear on
     // the chart.
