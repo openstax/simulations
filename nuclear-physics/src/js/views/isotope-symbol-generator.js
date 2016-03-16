@@ -27,6 +27,11 @@ define(function(require) {
             var chemicalSymbol = this.getChemicalSymbol(nucleusType);
             var isotopeNumber = this.getIsotopeNumber(nucleusType);
             var color = this.getLabelColor(nucleusType);
+            
+            return this.createSymbol(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY);
+        },
+
+        createSymbol: function(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY) {
             var numberFontSize = (fontSize > 4) ? Math.floor(fontSize * 0.75) : 2;
             var resolution = PixiView.prototype.getResolution();
             var fontStart = 'bold ';
@@ -34,7 +39,9 @@ define(function(require) {
 
             var symbol = new PIXI.Text(chemicalSymbol, {
                 font: fontStart + fontSize + fontEnd,
-                fill: color
+                fill: color,
+                dropShadow: true,
+                dropShadowDistance: 1
             });
             symbol.resolution = resolution;
             symbol.anchor.x = (anchorX !== undefined) ? anchorX : 0.5;
@@ -42,7 +49,9 @@ define(function(require) {
 
             var number = new PIXI.Text(isotopeNumber, {
                 font: fontStart + numberFontSize + fontEnd,
-                fill: color
+                fill: color,
+                dropShadow: true,
+                dropShadowDistance: 1
             });
             number.resolution = resolution;
             number.anchor.x = 1.1;
