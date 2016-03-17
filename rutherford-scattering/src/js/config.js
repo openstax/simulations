@@ -22,16 +22,11 @@
             constants:  '../js/constants',
             common:     '../../../common',
 
-            // views:      '../js/views',
-            // models:     '../js/models',
-            // templates:  '../templates',
-            // styles:     '../styles',
-
-            'views':        '../../../nuclear-physics/src/js/views',
-            'models':       '../../../nuclear-physics/src/js/models',
-            'templates':    '../../../nuclear-physics/src/templates',
-            'styles':       '../../../nuclear-physics/src/styles',
-            'nuclear-physics':              '../../../nuclear-physics/src/js/',
+            'views':            '../../../nuclear-physics/src/js/views',
+            'models':           '../../../nuclear-physics/src/js/models',
+            'templates':        '../../../nuclear-physics/src/templates',
+            'styles':           '../../../nuclear-physics/src/styles',
+            'nuclear-physics':  '../../../nuclear-physics/src/js/',
 
             'rutherford-scattering/views':        '../js/views',
             'rutherford-scattering/models':       '../js/models',
