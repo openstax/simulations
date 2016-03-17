@@ -4,7 +4,8 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Colors   = require('common/colors/colors');
+    var Colors      = require('common/colors/colors');
+    var PixiToImage = require('common/v3/pixi/pixi-to-image');
 
     var Constants = require('constants');
 
@@ -33,12 +34,45 @@ define(function(require) {
         //   think that all the nucleus graphics with cacheAsBitmap=true are not clearing their
         //   textures when garbage collected.  If that's the case, maybe try explicitly setting
         //   cacheAsBitmap to null when we're done with them.
+        _nucleusCache: {},
+        minCachedTextureCount: 5,
+
+        getCachedNucleusTextures: function(numProtons, numNeutrons, mvt) {
+            var scale = mvt.getXScale();
+            var cache = this._nucleusCache;
+
+            if (cache[scale] && 
+                cache[scale][numProtons] && 
+                cache[scale][numProtons][numNeutrons]
+            ) {
+                return cache[scale][numProtons][numNeutrons];
+            }
+                
+            return null;
+        },
+
+        addCachedNucleusTexture: function(numProtons, numNeutrons, mvt, texture) {
+            var scale = mvt.getXScale();
+            var cache = this._nucleusCache;
+
+            if (!cache[scale])
+                cache[scale] = [];
+
+            if (!cache[scale][numProtons])
+                cache[scale][numProtons] = [];
+
+            if (!cache[scale][numProtons][numNeutrons])
+                cache[scale][numProtons][numNeutrons] = [];
+
+            cache[scale][numProtons][numNeutrons].push(texture);
+        },
 
         /**
          * Create the image that will be used to visually represent this nucleus.
          */
         generateNucleus: function(nucleus, mvt, hideNucleons) {
             var sprite;
+            var noCachingAsBitmap = false;
             
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
@@ -47,14 +81,32 @@ define(function(require) {
                 sprite.tint = this.getColorForElement(nucleus);
             }
             else {
-                sprite = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
+                noCachingAsBitmap = true;
+
+                var numProtons = nucleus.get('numProtons');
+                var numNeutrons = nucleus.get('numNeutrons');
+
+                var texture;
+
+                var cachedTextures = this.getCachedNucleusTextures(numProtons, numNeutrons, mvt);
+                if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
+                    texture = this.createTexture(this.createNucleusSprite(numProtons, numNeutrons, mvt));
+                    this.addCachedNucleusTexture(numProtons, numNeutrons, mvt, texture);
+                }
+                else {
+                    texture = _.sample(cachedTextures);
+                }
+
+                sprite = new PIXI.Sprite(texture);
+                sprite.anchor.x = 0.5;
+                sprite.anchor.y = 0.5;
 
                 // Scale the image to the appropriate size.  Note that this is tweaked
                 // a little bit in order to make it look better.
                 // newImage.scale( (nucleus.getDiameter()/1.2)/((newImage.getWidth() + newImage.getHeight()) / 2));
             }
 
-            return this.wrapSprite(sprite);
+            return this.wrapSprite(sprite, noCachingAsBitmap);
         },
 
         createNucleusSprite: function(numProtons, numNeutrons, mvt) {
@@ -228,7 +280,7 @@ define(function(require) {
             return sprite;
         },
 
-        wrapSprite: function(sprite) {
+        wrapSprite: function(sprite, noCachingAsBitmap) {
             var scaleUpWrapper   = new PIXI.Container();
             var scaleDownWrapper = new PIXI.Container();
             
@@ -236,10 +288,21 @@ define(function(require) {
             scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
 
             scaleDownWrapper.addChild(scaleUpWrapper);
-            scaleDownWrapper.cacheAsBitmap = true;
+            scaleDownWrapper.cacheAsBitmap = !noCachingAsBitmap;
             scaleDownWrapper.scale.x = scaleDownWrapper.scale.y = 0.5;
 
             return scaleDownWrapper;
+        },
+
+        createTexture: function(sprite) {
+            var scaleUpWrapper   = new PIXI.Container();
+            
+            scaleUpWrapper.addChild(sprite);
+            scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
+
+            var texture = PixiToImage.displayObjectToTexture(scaleUpWrapper, 2);
+
+            return texture;
         },
 
         getSphereTexture: function() {
