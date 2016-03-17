@@ -4,7 +4,7 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var RutherfordScattering = require('views/sim');
+    var RutherfordScattering = require('rutherford-scattering/views/sim');
     /**
      * Extends the functionality of the RutherfordScattering to create
      *   the Rutherford Atom tab.
