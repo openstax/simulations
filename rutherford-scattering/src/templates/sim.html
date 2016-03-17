@@ -11,12 +11,10 @@
         <div class="sim-controls alpha-particle-properties-panel">
             <h2>Alpha Particle Properties</h2>
         </div>
+        <% if(showAtomProperties){ %>
+            <div class="sim-controls atom-properties-panel">
+                <h2>Atom Properties</h2>
+            </div>
+        <% } %>
     </div>
-    <% if(showAtomProperties){ %>
-    <div class="sim-controls-right">
-        <div class="sim-controls atom-properties-panel">
-            <h2>Atom Properties</h2>
-        </div>
-    </div>
-    <% } %>
 </div>
