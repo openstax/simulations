@@ -7,8 +7,9 @@ define(function (require) {
 
     var SimView = require('common/v3/app/sim');
 
-    var RutherfordScatteringSimulation = require('models/simulation');
-    var RutherfordScatteringSceneView  = require('views/scene');
+    var RutherfordScatteringSimulation = require('rutherford-scattering/models/simulation');
+    var RutherfordScatteringSceneView  = require('rutherford-scattering/views/scene');
+    var RutherfordScatteringLegendView = require('rutherford-scattering/views/legend');
 
     var Constants = require('constants');
 
@@ -17,15 +18,15 @@ define(function (require) {
     require('bootstrap-select');
 
     // CSS
-    require('less!styles/sim');
-    require('less!styles/playback-controls');
+    require('less!rutherford-scattering/styles/sim');
+    require('less!rutherford-scattering/styles/playback-controls');
     require('less!common/styles/slider');
     require('less!common/styles/radio');
     require('less!bootstrap-select-less');
 
     // HTML
-    var simHtml = require('text!templates/sim.html');
-    var playbackControlsHtml = require('text!templates/playback-controls.html');
+    var simHtml = require('text!rutherford-scattering/templates/sim.html');
+    var playbackControlsHtml = require('text!rutherford-scattering/templates/playback-controls.html');
 
     /**
      * This is the umbrella view for everything in a simulation tab.
@@ -65,6 +66,7 @@ define(function (require) {
 
             SimView.prototype.initialize.apply(this, [options]);
 
+            this.initLegend();
             this.initSceneView();
         },
 
@@ -82,6 +84,10 @@ define(function (require) {
             this.sceneView = new RutherfordScatteringSceneView({
                 simulation: this.simulation
             });
+        },
+
+        initLegend: function() {
+            this.legendView = new RutherfordScatteringLegendView();
         },
 
         /**
@@ -125,12 +131,19 @@ define(function (require) {
             this.$('.scene-view-placeholder').replaceWith(this.sceneView.el);
         },
 
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
         /**
          * Called after every component on the page has rendered to make sure
          *   things like widths and heights and offsets are correct.
          */
         postRender: function() {
             this.sceneView.postRender();
+
+            this.renderLegend();
         },
 
         /**

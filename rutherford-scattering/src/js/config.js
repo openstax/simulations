@@ -18,13 +18,26 @@
             'bootstrap-select':      '../../node_modules/bootstrap-select/js/bootstrap-select',
             'bootstrap-select-less': '../../node_modules/bootstrap-select/less/bootstrap-select',
 
-            views:      '../js/views',
-            models:     '../js/models',
             assets:     '../js/assets',
             constants:  '../js/constants',
-            templates:  '../templates',
-            styles:     '../styles',
-            common:     '../../../common'
+            common:     '../../../common',
+
+            // views:      '../js/views',
+            // models:     '../js/models',
+            // templates:  '../templates',
+            // styles:     '../styles',
+
+            'views':        '../../../nuclear-physics/src/js/views',
+            'models':       '../../../nuclear-physics/src/js/models',
+            'templates':    '../../../nuclear-physics/src/templates',
+            'styles':       '../../../nuclear-physics/src/styles',
+            'nuclear-physics':              '../../../nuclear-physics/src/js/',
+
+            'rutherford-scattering/views':        '../js/views',
+            'rutherford-scattering/models':       '../js/models',
+            'rutherford-scattering/templates':    '../templates',
+            'rutherford-scattering/styles':       '../styles',
+            'rutherford-scattering':              '.'
         },
 
         packages: [{

@@ -3,7 +3,7 @@
 
     // Load the config
     require(['config'], function () {
-        require(['jquery', 'views/app'], function($, RutherfordScatteringAppView) {
+        require(['jquery', 'rutherford-scattering/views/app'], function($, RutherfordScatteringAppView) {
 
             $(function(){
                 var appView = new RutherfordScatteringAppView();
