@@ -10,7 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var NucleusDecayChart         = require('views/nucleus-decay-chart');
+    var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
 
     var BetaDecaySceneView = require('beta-decay/views/scene');
 
@@ -51,7 +51,7 @@ define(function(require) {
         },
 
         initNucleusDecayChart: function() {
-            this.nucleusDecayChart = new NucleusDecayChart({
+            this.nucleusDecayChart = new SingleNucleusDecayChart({
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels()
             });

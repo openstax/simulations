@@ -13,12 +13,12 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * 
+     * Generates isotope symbols from nucleus models and nucleus types
      */
     var IsotopeSymbolGenerator = {
 
         /**
-         * 
+         * Generates an isotope symbol from either a nucleus type or a nucleus model
          */
         generate: function(nucleusType, fontSize, anchorX, anchorY) {
             // If they pass in a nucleus model instead of a nucleus type, get the nucleus type

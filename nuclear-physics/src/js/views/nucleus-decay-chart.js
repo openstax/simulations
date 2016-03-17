@@ -5,15 +5,16 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                         require('common/v3/pixi/extensions');
-                         require('common/v3/pixi/draw-stick-arrow');
-                         require('common/v3/pixi/draw-arrow');
-                         require('common/v3/pixi/dash-to');
-    var AppView        = require('common/v3/app/app');
-    var PixiView       = require('common/v3/pixi/view');
-    var Colors         = require('common/colors/colors');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-    var Rectangle      = require('common/math/rectangle');
+                             require('common/v3/pixi/extensions');
+                             require('common/v3/pixi/draw-stick-arrow');
+                             require('common/v3/pixi/draw-arrow');
+                             require('common/v3/pixi/dash-to');
+    var AppView            = require('common/v3/app/app');
+    var PixiView           = require('common/v3/pixi/view');
+    var Colors             = require('common/colors/colors');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var PiecewiseCurve     = require('common/math/piecewise-curve');
+    var Rectangle          = require('common/math/rectangle');
 
     var HalfLifeInfo  = require('models/half-life-info');
     var NucleusType   = require('models/nucleus-type');
@@ -115,10 +116,17 @@ define(function(require) {
             this.initXAxis();
             this.initYAxis();
             this.initHalfLifeBar();
+            this.initNucleusContainer();
         },
 
         initMVT: function() {
             // Creates an MVT that will scale the nucleus graphics
+            var nucleus = this.getSampleNucleus();
+            var modelDiameter = nucleus.get('diameter');
+            var viewDiameter = this.height * NucleusDecayChart.NUCLEUS_SIZE_PROPORTION;
+            var scale = viewDiameter / modelDiameter;
+
+            this.mvt = ModelViewTransform.createScaleMapping(scale, scale);
         },
 
         initPanel: function() {
@@ -289,6 +297,13 @@ define(function(require) {
             graphics.endFill();
         },
 
+        initNucleusContainer: function() {
+            this.nucleusContainer = new PIXI.Container();
+            this.nucleusContainer.x = this.graphOriginX;
+            this.nucleusContainer.y = this.graphOriginY - this.graphHeight;
+            this.displayObject.addChild(this.nucleusContainer);
+        },
+
         drawXAxisTicks: function() {
             this.xAxisTicks.clear();
             this.xAxisTicks.lineStyle(NucleusDecayChart.TICK_MARK_WIDTH, this.tickColor, 1);
@@ -394,6 +409,14 @@ define(function(require) {
             if (!this.draggingHalfLifeHandle) {
                 this.halfLifeMarkerHover.alpha = 0;
             }
+        },
+
+        clearNuclei: function() {
+
+        },
+
+        addNucleus: function(nucleus) {
+            console.log('nucleus added')
         },
 
         update: function() {
@@ -504,10 +527,15 @@ define(function(require) {
             return (this.simulation.get('nucleusType') === NucleusType.HEAVY_CUSTOM);
         },
 
+        getSampleNucleus: function() {
+            return this.simulation.createNucleus();
+        },
+
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
             this.updateTimeSpan();
             this.updateIsotopes();
+            this.initMVT();
         },
 
         halfLifeChanged: function(simulation, halfLife) {
