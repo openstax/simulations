@@ -3,7 +3,7 @@ define(function (require) {
     'use strict';
 
 
-    var Constants = {}; 
+    var Constants = require('nuclear-physics/constants'); 
 
     /*************************************************************************
      **                                                                     **
