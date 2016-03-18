@@ -5,16 +5,15 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-                             require('common/v3/pixi/extensions');
-                             require('common/v3/pixi/draw-stick-arrow');
-                             require('common/v3/pixi/draw-arrow');
-                             require('common/v3/pixi/dash-to');
-    var AppView            = require('common/v3/app/app');
-    var PixiView           = require('common/v3/pixi/view');
-    var Colors             = require('common/colors/colors');
-    var ModelViewTransform = require('common/math/model-view-transform');
-    var PiecewiseCurve     = require('common/math/piecewise-curve');
-    var Rectangle          = require('common/math/rectangle');
+                         require('common/v3/pixi/extensions');
+                         require('common/v3/pixi/draw-stick-arrow');
+                         require('common/v3/pixi/draw-arrow');
+                         require('common/v3/pixi/dash-to');
+    var AppView        = require('common/v3/app/app');
+    var PixiView       = require('common/v3/pixi/view');
+    var Colors         = require('common/colors/colors');
+    var PiecewiseCurve = require('common/math/piecewise-curve');
+    var Rectangle      = require('common/math/rectangle');
 
     var HalfLifeInfo  = require('models/half-life-info');
     var NucleusType   = require('models/nucleus-type');
@@ -92,11 +91,10 @@ define(function(require) {
             // Initialize the graphics
             this.initGraphics();
 
-            this.updateTimeSpan();
-            this.updateIsotopes();
-
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
             this.listenTo(this.simulation, 'change:halfLife',    this.halfLifeChanged);
+
+            this.nucleusTypeChanged(this.simulation, this.simulation.get('nucleusType'));
         },
 
         /**
@@ -292,11 +290,10 @@ define(function(require) {
                 simulation: this.simulation,
                 width: this.graphWidth,
                 height: this.graphHeight,
-                isotope1Y: this.yAxisIsotope1.y,
-                isotope2Y: this.yAxisIsotope2.y
+                isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
+                isotope2Y: this.yAxisIsotope2.y - this.paddingTop
             });
 
-            this.nucleiView.displayObject.x = this.graphOriginX + this.getTimeZeroXOffset();
             this.nucleiView.displayObject.y = this.graphOriginY - this.graphHeight;
 
             this.displayObject.addChild(this.nucleiView.displayObject);
@@ -527,7 +524,10 @@ define(function(require) {
         setTimeSpan: function(timeSpan) {
             this.timeSpan = timeSpan;
             this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
+
             this.nucleiView.setMillisecondsToPixels(this.msToPixelsFactor);
+            this.nucleiView.displayObject.x = this.graphOriginX + this.getTimeZeroXOffset();
+
             this.drawXAxisTicks();
             this.updateHalfLifeMarker();
         },
@@ -546,6 +546,7 @@ define(function(require) {
 
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
+
             this.updateTimeSpan();
             this.updateIsotopes();
             this.updateNucleusScale();

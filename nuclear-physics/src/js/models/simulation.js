@@ -4,7 +4,7 @@ define(function (require, exports, module) {
 
     var _ = require('underscore');
 
-    var Simulation = require('common/simulation/simulation');
+    var FixedIntervalSimulation = require('common/simulation/fixed-interval-simulation');
 
     /**
      * Constants
@@ -14,14 +14,19 @@ define(function (require, exports, module) {
     /**
      * Base simulation model for nuclear physics
      */
-    var NuclearPhysicsSimulation = Simulation.extend({
+    var NuclearPhysicsSimulation = FixedIntervalSimulation.extend({
 
-        defaults: _.extend({}, Simulation.prototype.defaults, {
+        defaults: _.extend({}, FixedIntervalSimulation.prototype.defaults, {
 
         }),
         
         initialize: function(attributes, options) {
-            Simulation.prototype.initialize.apply(this, [attributes, options]);
+            options = _.extend({
+                framesPerSecond: Constants.FRAME_RATE,
+                deltaTimePerFrame: Constants.DELTA_TIME_PER_FRAME
+            }, options);
+
+            FixedIntervalSimulation.prototype.initialize.apply(this, [attributes, options]);
 
         },
 

@@ -32,7 +32,6 @@ define(function (require) {
             // Variables that describe and control the decay of the nucleus.
             
             halfLife: 0,
-            paused: false,
             decayTimeScalingFactor: 1
         }),
         
@@ -70,9 +69,6 @@ define(function (require) {
             //   until something changes.
             this.decayTime = 0;
             this.activatedLifetime = 0;
-
-            // Make sure we are not paused.
-            this.set('paused', false);
         },
 
         getAtomicWeight: function() {
@@ -85,21 +81,15 @@ define(function (require) {
             this.updatePositionFromVelocity(deltaTime);
 
             // Take any action necessary related to decay.
-            if (this.decayTime !== 0) {
-                if (!this.get('paused')) {
-                    // See if decay should occur.
-                    if (this.isTimeToDecay(time)) {
-                        // It is time to decay.
-                        this.decay(deltaTime);
-                    }
-                    else {
-                        // Not decaying yet, so updated the activated lifetime.
-                        this.activatedLifetime += deltaTime;
-                    }
+            if (this.isDecayActive()) {
+                // See if decay should occur.
+                if (this.isTimeToDecay(time)) {
+                    // It is time to decay.
+                    this.decay(deltaTime);
                 }
                 else {
-                    // This atom is currently paused, so extend the decay time.
-                    this.decayTime += deltaTime;
+                    // Not decaying yet, so updated the activated lifetime.
+                    this.activatedLifetime += deltaTime;
                 }
             }
         },
@@ -139,7 +129,7 @@ define(function (require) {
          */
         activateDecay: function(simulationTime) {
             // Only allow activation if the nucleus hasn't already decayed.
-            if (this.get('numNeutrons') === this.originalNumNeutrons) {
+            if (!this.hasDecayed()) {
                 this.totalUndecayedLifetime = this.calculateDecayTime();
                 this.decayTime = simulationTime + (this.totalUndecayedLifetime * this.get('decayTimeScalingFactor'));
             }
@@ -202,6 +192,7 @@ define(function (require) {
          *   implemented by all subclasses that exhibit decay behavior..
          */
         decay: function(deltaTime) {
+            console.log('decayed')
             // Set the final value of the time that this nucleus existed prior to
             // decaying.
             this.activatedLifetime += deltaTime;

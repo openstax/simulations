@@ -37,8 +37,18 @@ define(function(require) {
             this.addNucleus(this.simulation.atomicNucleus);
         },
 
+        update: function(time, deltaTime, paused) {
+            if (this._nucleusAdded) {
+                this.clearNuclei();
+                this.addNucleus(this.simulation.atomicNucleus);
+                this._nucleusAdded = false;
+            }
+
+            NucleusDecayChart.prototype.update.apply(this, arguments);
+        },
+
         nucleusAdded: function(nucleus) {
-            this.addNucleus(nucleus);
+            this._nucleusAdded = true;
         }
 
     });

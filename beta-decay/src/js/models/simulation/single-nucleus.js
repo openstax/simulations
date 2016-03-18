@@ -71,6 +71,9 @@ define(function (require, exports, module) {
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {
+            if (this.atomicNucleus)
+                this.atomicNucleus.update(time, deltaTime);
+            
             // Move any emitted particles that have been produced by decay events.
             for (var i = 0; i < this.emittedParticles.length; i++)
                 this.emittedParticles.at(i).update();
@@ -124,7 +127,7 @@ define(function (require, exports, module) {
             
             // In this model, the nucleus is activated (so that it is moving
             //   towards decay) right away.
-            this.atomicNucleus.activateDecay();
+            this.atomicNucleus.activateDecay(this.time);
             
             // Inform any listeners of the changes.
             this.trigger('nucleus-added', this.atomicNucleus);
