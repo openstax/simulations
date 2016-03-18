@@ -4,14 +4,16 @@ define(function(require) {
 
     var _ = require('underscore');
 
-    var RutherfordScattering = require('rutherford-scattering/views/sim');
+    var RutherfordScatteringSimView    = require('rutherford-scattering/views/sim');
+    var PlumPuddingSceneView    = require('rutherford-scattering/views/scene/plum-pudding');
+
     /**
      * Extends the functionality of the RutherfordScattering to create
      *   the Rutherford Atom tab.
      */
-    var PlumPuddingView = RutherfordScattering.extend({
+    var PlumPuddingView = RutherfordScatteringSimView.extend({
 
-        events: _.extend(RutherfordScattering.prototype.events, {
+        events: _.extend(RutherfordScatteringSimView.prototype.events, {
             
         }),
 
@@ -23,23 +25,32 @@ define(function(require) {
 
             this.showAtomProperties = false;
             
-            RutherfordScattering.prototype.initialize.apply(this, [ options ]);
+            RutherfordScatteringSimView.prototype.initialize.apply(this, [ options ]);
 
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
         },
 
         /**
-         * Renders everything
+         * Initializes the SceneView.
          */
-        render: function() {
-            RutherfordScattering.prototype.render.apply(this);
+        initSceneView: function() {
+            this.sceneView = new PlumPuddingSceneView({
+                simulation: this.simulation
+            });
+        },
 
-            this.renderPlaybackControls();
+        // /**
+        //  * Renders everything
+        //  */
+        // render: function() {
+        //     RutherfordScatteringSimView.prototype.render.apply(this);
 
-            this.simulation.trigger('change:paused');
+        //     this.renderPlaybackControls();
 
-            return this;
-        }
+        //     this.simulation.trigger('change:paused');
+
+        //     return this;
+        // }
 
     });
 

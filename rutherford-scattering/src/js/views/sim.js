@@ -57,7 +57,7 @@ define(function (require) {
 
             'click .show-traces-check'  : 'toggleTraces',
 
-            'slide .energy-slider'    : 'changeEnergy',
+            'slide .alpha-energy-slider'    : 'changeAlphaEnergy',
             'slide .protons-slider'   : 'changeProtons',
             'slide .neutrons-slider'  : 'changeNeutrons',
         },
@@ -103,15 +103,24 @@ define(function (require) {
             this.controls = {};
 
             this.controls.energy = {
-                $slider: this.$('.energy-slider')
+                $slider: this.$('.alpha-energy-slider'),
+                min: Constants.MIN_ALPHA_ENERGY,
+                max: Constants.MAX_ALPHA_ENERGY,
+                initial: Constants.DEFAULT_ALPHA_ENERGY
             };
             this.controls.protons = {
                 $slider: this.$('.protons-slider'),
-                $value: this.$('.protons-value')
+                $value: this.$('.protons-value'),
+                min: Constants.MIN_PROTON_COUNT,
+                max: Constants.MAX_PROTON_COUNT,
+                initial: Constants.DEFAULT_PROTON_COUNT
             };
             this.controls.neutrons = {
                 $slider: this.$('.neutrons-slider'),
-                $value: this.$('.neutrons-value')
+                $value: this.$('.neutrons-value'),
+                min: Constants.MIN_NEUTRON_COUNT,
+                max: Constants.MAX_NEUTRON_COUNT,
+                initial: Constants.DEFAULT_NEUTRON_COUNT
             };
         },
 
@@ -169,13 +178,16 @@ define(function (require) {
 
             _.each(this.controls, function(control, controlOf){
                 control.$slider.noUiSlider({
-                    start: 0,
+                    start: control.initial,
                     range: {
-                        min: 20,
-                        max: 150
+                        min: control.min,
+                        max: control.max
                     },
                     connect: 'lower'
                 });
+                if (control.$value) {
+                    control.$value.text(control.initial);
+                }
             });
         },
 
@@ -221,7 +233,7 @@ define(function (require) {
                 // this.sceneView.hideTraces();
         },
 
-        changeEnergy: function(event) {
+        changeAlphaEnergy: function(event) {
             var value = parseInt($(event.target).val());
             // set model value
             console.info('change energy');

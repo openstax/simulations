@@ -10,13 +10,8 @@ define(function (require) {
       Assets.Images[key] = '../../../nuclear-physics/src/img/' + value;
     });
 
-    Assets.Path = 'img/';
-
-    // Assets.Images = {   
-    //     // THE_IMAGE: 'the-image.png'
-    // };
-
-    Assets.SpriteSheets = {};
+    // Add our local project images
+    _.extend(Assets.Images, require('./assets-images'));
 
     return Assets;
 });
