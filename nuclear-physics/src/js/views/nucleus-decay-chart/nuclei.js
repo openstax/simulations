@@ -84,6 +84,7 @@ define(function(require) {
 
                 if (nucleus.isDecayActive()) {
                     sprite.y = isotope1Y;
+                    sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx;
                 }
                 else if (nucleus.hasDecayed()) {
                     sprite.y = isotope2Y;

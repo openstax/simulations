@@ -142,7 +142,7 @@ define(function (require, exports, module) {
                 var nucleus = this.atomicNuclei.at(i);
                 if (nucleus.isDecayActive() || nucleus.hasDecayed()){
                     nucleus.reset();
-                    nucleus.activateDecay();
+                    nucleus.activateDecay(this.time);
                     resetCount++;
                 }
             }

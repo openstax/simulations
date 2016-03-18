@@ -192,7 +192,6 @@ define(function (require) {
          *   implemented by all subclasses that exhibit decay behavior..
          */
         decay: function(deltaTime) {
-            console.log('decayed')
             // Set the final value of the time that this nucleus existed prior to
             // decaying.
             this.activatedLifetime += deltaTime;
@@ -211,7 +210,7 @@ define(function (require) {
          */
         calculateDecayTime: function() {
             var decayTime;
-
+//console.log('halflife: ' + this.get('halfLife'));
             if (this.get('halfLife') <= 0) {
                 decayTime = 0;
             }
@@ -228,7 +227,7 @@ define(function (require) {
                 }
                 decayTime = -(Math.log(1 - randomValue) / decayConstant);
             }
-
+console.log('decay time: ' + decayTime);
             return decayTime;
         },
 

@@ -87,7 +87,7 @@ define(function (require, exports, module) {
             this.atomicNucleus.reset();
             
             // Activate decay right away.
-            this.atomicNucleus.activateDecay();
+            this.atomicNucleus.activateDecay(this.time);
         },
 
         removeCurrentNucleus: function() {
