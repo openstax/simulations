@@ -9,6 +9,9 @@ define(function(require) {
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
+    var Constants = require('constants');
+    var FALL_TIME = Constants.NucleusDecayChart.FALL_TIME;
+
     /**
      * 
      */
@@ -26,6 +29,7 @@ define(function(require) {
 
             this.nuclei = [];
             this.sprites = [];
+            this.decayedSprites = [];
 
             this.initGraphics();
         },
@@ -34,7 +38,13 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-
+            var rightBuffer = 20;
+            var mask = new PIXI.Graphics();
+            mask.beginFill();
+            mask.drawRect(-rightBuffer, 0, this.width + rightBuffer, this.height);
+            mask.endFill();
+            this.displayObject.addChild(mask);
+            this.displayObject.mask = mask;
         },
 
         addNucleus: function(nucleus) {
@@ -56,11 +66,19 @@ define(function(require) {
         },
 
         clear: function() {
-            for (var i = this.nuclei.length - 1; i >= 0; i--) {
+            var i;
+
+            for (i = this.nuclei.length - 1; i >= 0; i--) {
                 this.displayObject.removeChild(this.sprites[i]);
 
                 this.nuclei.splice(i, 1);
                 this.sprites.splice(i, 1);
+            }
+
+            for (i = this.decayedSprites.length - 1; i >= 0; i--) {
+                this.displayObject.removeChild(this.decayedSprites[i]);
+
+                this.decayedSprites.splice(i, 1);
             }
         },
 
@@ -75,10 +93,12 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             var isotope1Y = this.isotope1Y;
             var isotope2Y = this.isotope2Y;
+            var ySpan = isotope2Y - isotope1Y;
             var nucleus;
             var sprite;
+            var i;
 
-            for (var i = 0; i < this.nuclei.length; i++) {
+            for (i = this.nuclei.length - 1; i >= 0; i--) {
                 nucleus = this.nuclei[i];
                 sprite = this.sprites[i];
 
@@ -87,11 +107,23 @@ define(function(require) {
                     sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx;
                 }
                 else if (nucleus.hasDecayed()) {
+                    sprite.decayTime = 0;
+                    this.sprites.splice(i, 1);
+                    this.decayedSprites.push(sprite);
+                    this.nuclei.splice(i, 1);
+                    
+                }
+            }
+
+            for (i = this.decayedSprites.length - 1; i >= 0; i--) {
+                sprite = this.decayedSprites[i];
+
+                if (sprite.decayTime < FALL_TIME)
+                    sprite.y = isotope1Y + (sprite.decayTime / FALL_TIME) * ySpan;
+                else
                     sprite.y = isotope2Y;
-                }
-                else {
-                    sprite.y = isotope1Y;
-                }
+
+                sprite.decayTime += deltaTime;
             }
         }
 

@@ -210,7 +210,7 @@ define(function (require) {
          */
         calculateDecayTime: function() {
             var decayTime;
-//console.log('halflife: ' + this.get('halfLife'));
+
             if (this.get('halfLife') <= 0) {
                 decayTime = 0;
             }
@@ -227,7 +227,7 @@ define(function (require) {
                 }
                 decayTime = -(Math.log(1 - randomValue) / decayConstant);
             }
-console.log('decay time: ' + decayTime);
+
             return decayTime;
         },
 

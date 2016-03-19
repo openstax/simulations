@@ -412,7 +412,7 @@ define(function (require) {
     // Tweakable values that can be used to adjust where the nuclei appear on
     // the chart.
     NucleusDecayChart.TIME_ZERO_OFFSET = 100; // In milliseconds
-    NucleusDecayChart.INITIAL_FALL_COUNT = 5; // Number of clock ticks for nucleus to fall from upper to lower line.
+    NucleusDecayChart.FALL_TIME = 0.2; // Time in seconds for nucleus to fall from upper to lower line.
     NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION = 0.05; // Proportion of total time span
 
     // Constants that control the way the nuclei look.

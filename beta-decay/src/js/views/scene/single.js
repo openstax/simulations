@@ -21,6 +21,18 @@ define(function(require) {
 
         initialize: function(options) {
             BetaDecaySceneView.prototype.initialize.apply(this, arguments);
+
+            this.renderUI();
+        },
+
+        renderUI: function() {
+            var self = this;
+            this.$resetButton = $('<button class="btn btn-lg reset-nucleus-btn">Reset Nucleus</button>');
+            this.$resetButton.on('click', function() {
+                self.resetNucleus();
+            });
+
+            this.$ui.append(this.$resetButton);
         },
 
         initMVT: function() {
@@ -61,6 +73,10 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.nucleusDecayChart.update(time, deltaTime, paused);
+        },
+
+        resetNucleus: function() {
+            this.simulation.resetNucleus();
         }
 
     });

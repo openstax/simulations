@@ -63,6 +63,15 @@ define(function (require) {
         },
 
         /**
+         * Renders the scene view
+         */
+        renderSceneView: function() {
+            NuclearPhysicsSimView.prototype.renderSceneView.apply(this, arguments);
+
+            this.$el.append(this.sceneView.ui);
+        },
+
+        /**
          * Renders playback controls
          */
         renderPlaybackControls: function() {

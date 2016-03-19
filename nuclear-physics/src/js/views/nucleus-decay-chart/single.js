@@ -33,13 +33,13 @@ define(function(require) {
             NucleusDecayChart.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.simulation, 'nucleus-added', this.nucleusAdded);
+            this.listenTo(this.simulation, 'nucleus-reset', this.nucleusAdded);
 
-            this.addNucleus(this.simulation.atomicNucleus);
+            this.nucleusAdded(this.simulation.atomicNucleus);
         },
 
         update: function(time, deltaTime, paused) {
             if (this._nucleusAdded) {
-                this.clearNuclei();
                 this.addNucleus(this.simulation.atomicNucleus);
                 this._nucleusAdded = false;
             }
@@ -49,7 +49,13 @@ define(function(require) {
 
         nucleusAdded: function(nucleus) {
             this._nucleusAdded = true;
-        }
+        },
+
+        nucleusTypeChanged: function(simulation, nucleusType) {
+            this.clearNuclei();
+            
+            NucleusDecayChart.prototype.nucleusTypeChanged.apply(this, arguments);
+        },
 
     });
 
