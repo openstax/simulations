@@ -409,6 +409,10 @@ define(function (require) {
     NucleusDecayChart.HALF_LIFE_ARROW_HEAD_LENGTH = 18;
     NucleusDecayChart.HALF_LIFE_HOVER_COLOR = '#fff';
 
+    NucleusDecayChart.BUTTON_BG_COLOR = '#21366b';
+    NucleusDecayChart.BUTTON_FG_COLOR = '#fff';
+    NucleusDecayChart.BUTTON_HOVER_ALPHA = 0.9;
+
     // Tweakable values that can be used to adjust where the nuclei appear on
     // the chart.
     NucleusDecayChart.TIME_ZERO_OFFSET = 100; // In milliseconds

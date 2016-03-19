@@ -57,6 +57,7 @@ define(function(require) {
                 paddingBottom: 46,
                 paddingRight: 15,
                 paddingTop: 15,
+                padding: 15,
                 bgColor: '#FF9797',
                 bgAlpha: 1,
 
@@ -76,6 +77,7 @@ define(function(require) {
             this.paddingBottom  = options.paddingBottom;
             this.paddingRight   = options.paddingRight;
             this.paddingTop     = options.paddingTop;
+            this.padding        = options.padding;
             this.graphWidth     = this.width - this.paddingLeft - this.paddingRight;
             this.graphHeight    = this.height - this.paddingTop - this.paddingBottom;
             this.graphOriginX   = this.paddingLeft;
