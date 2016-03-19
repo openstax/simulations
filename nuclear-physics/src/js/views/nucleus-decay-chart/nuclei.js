@@ -66,16 +66,18 @@ define(function(require) {
         },
 
         clear: function() {
-            var i;
-
-            for (i = this.nuclei.length - 1; i >= 0; i--) {
+            for (var i = this.nuclei.length - 1; i >= 0; i--) {
                 this.displayObject.removeChild(this.sprites[i]);
 
                 this.nuclei.splice(i, 1);
                 this.sprites.splice(i, 1);
             }
 
-            for (i = this.decayedSprites.length - 1; i >= 0; i--) {
+            this.clearDecayed();
+        },
+
+        clearDecayed: function() {
+            for (var i = this.decayedSprites.length - 1; i >= 0; i--) {
                 this.displayObject.removeChild(this.decayedSprites[i]);
 
                 this.decayedSprites.splice(i, 1);

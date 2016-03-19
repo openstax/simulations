@@ -412,6 +412,11 @@ define(function (require) {
     NucleusDecayChart.BUTTON_BG_COLOR = '#21366b';
     NucleusDecayChart.BUTTON_FG_COLOR = '#fff';
     NucleusDecayChart.BUTTON_HOVER_ALPHA = 0.9;
+    NucleusDecayChart.BUTTON_FONT = '500 14px Helvetica Neue';
+
+    NucleusDecayChart.DECAY_LABEL_COLOR = NucleusDecayChart.AXIS_LABEL_COLOR;
+    NucleusDecayChart.DECAY_LABEL_FONT = NucleusDecayChart.AXIS_LABEL_FONT;
+    NucleusDecayChart.DECAY_VALUE_FONT = '14px Helvetica Neue';
 
     // Tweakable values that can be used to adjust where the nuclei appear on
     // the chart.
