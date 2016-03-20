@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
+    var AppView = require('common/v3/app/app');
 
     var NuclearPhysicsSimulation        = require('models/simulation');
     var NucleusType                     = require('models/nucleus-type');

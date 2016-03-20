@@ -10,28 +10,35 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var NucleusDecayChart         = require('views/nucleus-decay-chart');
+    var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
+    var ExplodingNucleusView      = require('views/nucleus/exploding');
 
     var NuclearPhysicsSceneView = require('views/scene');
 
     /**
      *
      */
-    var MultiNucleusBetaDecaySceneView = NuclearPhysicsSceneView.extend({
+    var SingleNucleusSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
+
+            this.listenTo(this.simulation.emittedParticles, 'add', this.particleEmitted);
+        },
+
+        renderContent: function() {
+            var self = this;
+            this.$resetButton = $('<button class="btn btn-lg reset-nucleus-btn">Reset Nucleus</button>');
+            this.$resetButton.on('click', function() {
+                self.resetNucleus();
+            });
+
+            this.$ui.append(this.$resetButton);
         },
 
         initMVT: function() {
-            if (AppView.windowIsShort()) {
-                this.viewOriginX = Math.round((this.width - 200) / 2);
-                this.viewOriginY = Math.round(this.height / 2);
-            }
-            else {
-                this.viewOriginX = Math.round(this.width  / 2);
-                this.viewOriginY = Math.round(this.height / 2);
-            }
+            this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
+            this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;
 
             var pixelsPerFemtometer = 25;
 
@@ -47,25 +54,33 @@ define(function(require) {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
-            this.initNucleusDecayChart();
+            this.initNucleus();
         },
 
-        initNucleusDecayChart: function() {
-            this.nucleusDecayChart = new NucleusDecayChart({
-                simulation: this.simulation,
-                width: this.getWidthBetweenPanels()
+        initNucleus: function() {
+            this.nucleusView = new ExplodingNucleusView({
+                model: this.simulation.atomicNucleus,
+                mvt: this.mvt
             });
 
-            this.stage.addChild(this.nucleusDecayChart.displayObject);
+            this.stage.addChild(this.nucleusView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
-            
-            this.nucleusDecayChart.update(time, deltaTime, paused);
+
+            this.nucleusView.update(time, deltaTime, paused);
+        },
+
+        resetNucleus: function() {
+            this.simulation.resetNucleus();
+        },
+
+        particleEmitted: function(particle) {
+
         }
 
     });
 
-    return MultiNucleusBetaDecaySceneView;
+    return SingleNucleusSceneView;
 });
