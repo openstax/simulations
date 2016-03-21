@@ -73,8 +73,8 @@ define(function(require) {
             this.triggerButton.scale.x = scale;
             this.triggerButton.scale.y = scale;
             // offset trigger from center
-            this.triggerButton.x = -19 * scale;
-            this.triggerButton.y = 12 * scale;
+            this.triggerButton.x = -20 * scale;
+            this.triggerButton.y = 20 * scale;
 
             this.displayObject.x = Math.floor(this.mvt.modelToViewX(center.x));
             this.displayObject.y = Math.floor(this.mvt.modelToViewY(center.y));
