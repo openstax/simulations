@@ -12,9 +12,6 @@ define(function(require) {
     // Constants
     var Constants = require('constants');
 
-    // CSS
-    require('less!styles/scene');
-
     /**
      *
      */

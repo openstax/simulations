@@ -1,0 +1,36 @@
+@import "../../../nuclear-physics/node_modules/bootstrap/less/mixins/vendor-prefixes.less";
+@import "variables.less";
+@import "../../../nuclear-physics/src/styles/mixins.less";
+
+.scene-view {
+    width: 100%;
+    height: @scene-height;
+
+    #gradient.vertical(#FF6A6A; #FFF4F4; 0%; 85%);
+
+    @media screen and (max-height: @short-window) {
+        height: @short-scene-height;
+    }
+}
+
+.scene-view-ui {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0;
+
+    .reset-nucleus-btn {
+        position: absolute;
+        right: 268px;
+        top: 190px;
+        background-color: @link-color;
+        color: #fff;
+
+        &:hover {
+            opacity: 0.9;
+            // color: #fff;
+            // background-color: darken(@link-color, 5%);
+        }
+    }
+}

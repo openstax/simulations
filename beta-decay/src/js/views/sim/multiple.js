@@ -4,8 +4,8 @@ define(function (require) {
 
     var MultiNucleusBetaDecaySimulation = require('beta-decay/models/simulation/multi-nucleus');
 
-    var BetaDecaySimView   = require('beta-decay/views/sim');
-    var BetaDecaySceneView = require('beta-decay/views/scene');
+    var BetaDecaySimView               = require('beta-decay/views/sim');
+    var MultiNucleusBetaDecaySceneView = require('beta-decay/views/scene/multiple');
 
     var Constants = require('constants');
 
@@ -21,7 +21,9 @@ define(function (require) {
          */
         initialize: function(options) {
             options = _.extend({
-                title: 'Multiple Atoms'
+                title: 'Multiple Atoms',
+                name: 'multiple-atoms',
+                link: 'beta-decay'
             }, options);
 
             BetaDecaySimView.prototype.initialize.apply(this, [options]);
@@ -38,7 +40,7 @@ define(function (require) {
          * Initializes the SceneView.
          */
         initSceneView: function() {
-            this.sceneView = new BetaDecaySceneView({
+            this.sceneView = new MultiNucleusBetaDecaySceneView({
                 simulation: this.simulation
             });
         }

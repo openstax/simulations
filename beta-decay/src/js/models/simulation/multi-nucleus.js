@@ -64,21 +64,26 @@ define(function (require, exports, module) {
             var newNucleus;
             
             for (var i = 0; i < this.get('maxNuclei'); i++) {
-                if (this.get('nucleusType') == NucleusType.HYDROGEN_3)
-                    newNucleus = new Hydrogen3Nucleus();
-                else if (this.get('nucleusType') == NucleusType.CARBON_14)
-                    newNucleus = new Carbon14Nucleus();
-                else if (this.get('nucleusType') == NucleusType.LIGHT_CUSTOM)
-                    newNucleus = new LightAdjustableHalfLifeNucleus(_clock);
-                else
-                    throw 'Other nuclei not yet implemented.';
-
+                newNucleus = this.createNucleus();
                 newNucleus.setPosition(inBucketPosX, inBucketPosY);
                 
                 this.atomicNuclei.add(newNucleus);
 
                 this._jitterOffsets[i] = new Vector2();
             }
+        },
+
+        /**
+         * Creates and returns a nucleus of the current type
+         */
+        createNucleus: function() {
+            switch (this.get('nucleusType')) {
+                case NucleusType.HYDROGEN_3: return new Hydrogen3Nucleus();
+                case NucleusType.CARBON_14:  return new Carbon14Nucleus();
+                case NucleusType.LIGHT_CUSTOM: return new LightAdjustableHalfLifeNucleus();
+            }
+
+            throw 'Other nuclei not yet implemented.';
         },
 
         nucleusChanged: function(nucleus, numProtons, numNeutrons, byProducts) {

@@ -135,6 +135,14 @@ define(function (require) {
             }
 
             return nucleusType;
+        },
+
+        isCustomizable: function(nucleusType) {
+            if (nucleusType === NucleusType.LIGHT_CUSTOM || nucleusType === NucleusType.LIGHT_CUSTOM_POST_DECAY)
+                return true;
+            if (nucleusType === NucleusType.HEAVY_CUSTOM || nucleusType === NucleusType.HEAVY_CUSTOM_POST_DECAY)
+                return true;
+            return false;
         }
 
     };

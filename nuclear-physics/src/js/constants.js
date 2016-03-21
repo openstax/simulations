@@ -19,75 +19,34 @@ define(function (require) {
     //----------------------------------------------------------------------------
     // Paints and Colors
     //----------------------------------------------------------------------------
+    var defaultColor   = '#ff0';
+    var decayedColor   = '#fff';
+    var alternateColor = '#0f0';
+
+    // Color for the isotope labels used for the nucleus views.
+    Constants.POLONIUM_LABEL_COLOR                  = defaultColor;
+    Constants.LEAD_LABEL_COLOR                      = decayedColor;
+    Constants.CUSTOM_NUCLEUS_LABEL_COLOR            = defaultColor;
+    Constants.CUSTOM_NUCLEUS_POST_DECAY_LABEL_COLOR = decayedColor;
+    Constants.HYDROGEN_3_LABEL_COLOR                = defaultColor;
+    Constants.HELIUM_3_LABEL_COLOR                  = decayedColor;
+    Constants.CARBON_14_LABEL_COLOR                 = defaultColor;
+    Constants.NITROGEN_14_LABEL_COLOR               = decayedColor;
+    Constants.URANIUM_235_LABEL_COLOR               = '#0f0';
+    Constants.URANIUM_236_LABEL_COLOR               = '#f80';
+    Constants.URANIUM_238_LABEL_COLOR               = '#ff0';
+    Constants.URANIUM_239_LABEL_COLOR               = '#fff';
     
-    // Color for the label used for the Polonium nucleus.
-    Constants.POLONIUM_LABEL_COLOR = '#ff0';
-    
-    // Color for label used for the Lead nucleus.
-    Constants.LEAD_LABEL_COLOR = '#000';
-    
-    // Color for label used for the Custom nucleus (pre-decay).
-    Constants.CUSTOM_NUCLEUS_LABEL_COLOR = '#99ffff';
-    
-    // Color for label used for the Decayed Custom nucleus.
-    Constants.CUSTOM_NUCLEUS_POST_DECAY_LABEL_COLOR = '#000';
-    
-    // Color for label used for the Hydrogen 3 nucleus.
-    Constants.HYDROGEN_3_LABEL_COLOR = '#7FFF00';
-    
-    // Color for label used for the Helium 3 nucleus.
-    Constants.HELIUM_3_LABEL_COLOR = '#FFC0CB';
-    
-    // Color for label used for the Carbon 14 nucleus.
-    Constants.CARBON_14_LABEL_COLOR = '#ff0';
-    
-    // Color for label used for the Uranium 235 nucleus.
-    Constants.NITROGEN_14_LABEL_COLOR = '#f80';
-    
-    // Color for label used for the Uranium 235 nucleus.
-    Constants.URANIUM_235_LABEL_COLOR = '#0f0';
-    
-    // Color for label used for the Uranium 236 nucleus.
-    Constants.URANIUM_236_LABEL_COLOR = '#f80';
-    
-    // Color for label used for the Uranium 238 nucleus.
-    Constants.URANIUM_238_LABEL_COLOR = '#ff0';
-    
-    // Color for label used for the Uranium 239 nucleus.
-    Constants.URANIUM_239_LABEL_COLOR = '#fff';
-    
-    // Color for hydrogen when represented as a circle or sphere.
+    // Color for nuclei when represented as a circle or sphere.
     Constants.HYDROGEN_COLOR = '#FFC0DB';
-    
-    // Color for helium when represented as a circle or sphere.
     Constants.HELIUM_COLOR = '#0ff';
-    
-    // Color for carbon when represented as a circle or sphere.
     Constants.CARBON_COLOR = '#C80000';
-    
-    // Color for nitrogen when represented as a circle or sphere.
     Constants.NITROGEN_COLOR = '#0E56C8';
-    
-    // Color for Uranium when represented as a circle or sphere.
     Constants.URANIUM_COLOR = '#969600';
-    
-    // Color for Lead when represented as a circle or sphere.
     Constants.LEAD_COLOR = '#61757E';
-    
-    // Color for Polonium when represented as a circle or sphere.
     Constants.POLONIUM_COLOR = '#f80';
-    
-    // Color for pre-decay custom nucleus when represented as a circle or sphere.
     Constants.CUSTOM_NUCLEUS_PRE_DECAY_COLOR = '#9B612A';
-    
-    // Color for post-decay custom nucleus when represented as a circle or sphere.
     Constants.CUSTOM_NUCLEUS_POST_DECAY_COLOR = '#368237';
-    
-    // Color of the chart background for the alpha decay application.
-    Constants.CHART_BACKGROUND_COLOR = '#F6F2AF';
-    
-    // Color of the reset button that appears on many of the canvases.
-    Constants.CANVAS_RESET_BUTTON_COLOR = '#ff9900';
     
     // Colors for the strata in the Radioactive Dating Game, assumed to go
     // from top to bottom.
@@ -104,14 +63,14 @@ define(function (require) {
     //----------------------------------------------------------------------------
     // Misc Constants Shared within the Sim
     //----------------------------------------------------------------------------
-    Constants.NUCLEON_DIAMETER        = 1.6; // In femtometers.
-    Constants.ALPHA_PARTICLE_DIAMETER = 3.2; // In femtometers.
-    Constants.ELECTRON_DIAMETER = 0.75; // In femtometers, not to scale, or even close.
-    Constants.ANTINEUTRINO_DIAMETER = 0.3; // In femtometers, not to scale, or even close.
+    Constants.NUCLEON_DIAMETER        = 1.6;  // In femtometers.
+    Constants.ALPHA_PARTICLE_DIAMETER = 3.2;  // In femtometers.
+    Constants.ELECTRON_DIAMETER       = 0.75; // In femtometers, not to scale, or even close.
+    Constants.ANTINEUTRINO_DIAMETER   = 0.3;  // In femtometers, not to scale, or even close.
 
-    Constants.PROTON_COLOR = '#f00';
-    Constants.NEUTRON_COLOR = '#888';
-    Constants.ELECTRON_COLOR = '#069EC7';
+    Constants.PROTON_COLOR       = '#f00';
+    Constants.NEUTRON_COLOR      = '#888';
+    Constants.ELECTRON_COLOR     = '#069EC7';
     Constants.ANTINEUTRINO_COLOR = '#00C800';
     
     Constants.DEFAULT_CUSTOM_NUCLEUS_HALF_LIFE = HalfLifeInfo.convertYearsToMs(100E3);
@@ -414,6 +373,61 @@ define(function (require) {
     LightAdjustableCompositeNucleus.POST_DECAY_AGITATION_FACTOR = 2;
 
     Constants.LightAdjustableCompositeNucleus = LightAdjustableCompositeNucleus;
+
+
+
+    var NucleusDecayChart = {};
+
+    // Total amount of time in milliseconds represented by this chart.
+    NucleusDecayChart.DEFAULT_TIME_SPAN = 3200;
+
+    // Minimum allowable half life.
+    NucleusDecayChart.MIN_HALF_LIFE = 10; // In milliseconds.
+
+    // Constants for controlling the appearance of the chart.
+    NucleusDecayChart.AXIS_LABEL_FONT  = 'bold 14px Helvetica Neue';
+    NucleusDecayChart.AXIS_LABEL_COLOR = '#000';
+    NucleusDecayChart.AXIS_LINE_WIDTH = 2;
+    NucleusDecayChart.AXIS_LINE_COLOR = '#000';
+    NucleusDecayChart.TICK_MARK_LENGTH = 3;
+    NucleusDecayChart.TICK_MARK_WIDTH = 2;
+    NucleusDecayChart.TICK_MARK_COLOR = NucleusDecayChart.AXIS_LINE_COLOR;
+    NucleusDecayChart.SMALL_LABEL_FONT = '12px Helvetica Neue';
+    NucleusDecayChart.LARGE_LABEL_FONT = '14px Helvetica Neue';
+    NucleusDecayChart.ISOTOPE_FONT_SIZE = 18;
+
+    NucleusDecayChart.HALF_LIFE_LINE_WIDTH = 2;
+    NucleusDecayChart.HALF_LIFE_LINE_DASHES = [3, 3];
+    NucleusDecayChart.HALF_LIFE_LINE_COLOR = '#f00';
+    NucleusDecayChart.HALF_LIFE_LINE_ALPHA = 1;
+    NucleusDecayChart.HALF_LIFE_TEXT_COLOR = '#f00';
+    NucleusDecayChart.HALF_LIFE_TEXT_ALPHA = 1;
+    NucleusDecayChart.HALF_LIFE_TEXT_FONT  = 'bold 16px Helvetica Neue';
+    NucleusDecayChart.HALF_LIFE_ARROW_LENGTH = 28;
+    NucleusDecayChart.HALF_LIFE_ARROW_TAIL_WIDTH = 8;
+    NucleusDecayChart.HALF_LIFE_ARROW_HEAD_WIDTH = 24;
+    NucleusDecayChart.HALF_LIFE_ARROW_HEAD_LENGTH = 18;
+    NucleusDecayChart.HALF_LIFE_HOVER_COLOR = '#fff';
+
+    NucleusDecayChart.BUTTON_BG_COLOR = '#21366b';
+    NucleusDecayChart.BUTTON_FG_COLOR = '#fff';
+    NucleusDecayChart.BUTTON_HOVER_ALPHA = 0.9;
+    NucleusDecayChart.BUTTON_FONT = '500 14px Helvetica Neue';
+
+    NucleusDecayChart.DECAY_LABEL_COLOR = NucleusDecayChart.AXIS_LABEL_COLOR;
+    NucleusDecayChart.DECAY_LABEL_FONT = NucleusDecayChart.AXIS_LABEL_FONT;
+    NucleusDecayChart.DECAY_VALUE_FONT = '14px Helvetica Neue';
+
+    // Tweakable values that can be used to adjust where the nuclei appear on
+    // the chart.
+    NucleusDecayChart.TIME_ZERO_OFFSET = 100; // In milliseconds
+    NucleusDecayChart.FALL_TIME = 0.2; // Time in seconds for nucleus to fall from upper to lower line.
+    NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION = 0.05; // Proportion of total time span
+
+    // Constants that control the way the nuclei look.
+    NucleusDecayChart.NUCLEUS_SIZE_PROPORTION = 0.15;  // Fraction of the overall height of the chart.
+
+    Constants.NucleusDecayChart = NucleusDecayChart;
 
 
     return Constants;

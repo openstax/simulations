@@ -3,17 +3,29 @@ define(function (require) {
 
 	'use strict';
 
+	// Regex from http://stackoverflow.com/a/5624139, http://stackoverflow.com/a/5624139
+	var hexRegex = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i;
+	var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+	var _replaceShorthandFunction = function(m, r, g, b) {
+		return r + r + g + g + b + b;
+	};
+
+	/**
+	 * Expands shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+	 */
+	var replaceShorthand = function(hex) {
+		return hex.replace(shorthandRegex, _replaceShorthandFunction);
+	};
+
+
 	var Colors = {
 
 		/**
-		 * Regex from http://stackoverflow.com/a/5624139
+		 * 
 		 */
 		parseHex: function(string) {
 			// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-			var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-			var fullHex = string.replace(shorthandRegex, function(m, r, g, b) {
-				return r + r + g + g + b + b;
-			});
+			var fullHex = replaceShorthand(string);
 
 			// Remove the hash sign on the front
 			var numbers = fullHex.replace('#', '');
@@ -50,18 +62,24 @@ define(function (require) {
 		 * http://stackoverflow.com/a/5624139
 		 */
 		hexToRgb: function(hex) {
-			// Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-			var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-			hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-				return r + r + g + g + b + b;
-			});
+			hex = replaceShorthand(hex);
 
-			var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+			var result = hexRegex.exec(hex);
 			return result ? {
 				r: parseInt(result[1], 16),
 				g: parseInt(result[2], 16),
 				b: parseInt(result[3], 16)
 			} : null;
+		},
+
+		/**
+		 * 
+		 */
+		hexToValue: function(hex) {
+			hex = replaceShorthand(hex);
+
+			var result = hexRegex.exec(hex);
+			return parseInt(result[1], 16) + parseInt(result[2], 16) + parseInt(result[3], 16);
 		},
 
 		/**
