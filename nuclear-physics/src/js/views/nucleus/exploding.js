@@ -24,8 +24,10 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
-                
+                showNucleus: true
             }, options);
+
+            this.showNucleus = options.showNucleus;
 
             NucleusView.prototype.initialize.apply(this, [options]);
 
@@ -51,6 +53,11 @@ define(function(require) {
             NucleusView.prototype.updateMVT.apply(this, arguments);
 
 
+        },
+
+        updateSprite: function() {
+            if (this.showNucleus)
+                NucleusView.prototype.updateSprite.apply(this, arguments);
         },
 
         update: function(time, deltaTime, paused) {
