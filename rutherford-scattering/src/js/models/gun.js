@@ -11,7 +11,11 @@ define(function (require) {
             on: false,
             dtSinceGunFired: 0,
             dtPerGunFired: 0,
-            particles: []
+            particles: [],
+            center: {
+                x: 0,
+                y: 0
+            }
         },
 
         initialize: function(attributes, options) {
