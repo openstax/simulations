@@ -6,6 +6,8 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
+    var RayGun = require('./gun')
+
     /**
      * Constants
      */
@@ -29,7 +31,7 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            
+            this.rayGun = new RayGun();
         },
 
         _update: function(time, deltaTime) {

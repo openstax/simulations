@@ -88,12 +88,7 @@ define(function(require) {
         initRayGunView: function() {
             this.rayGunView = new RayGunView({
                 mvt: this.rayGunMVT,
-                model: {
-                    center: {
-                        x: 0,
-                        y: 0
-                    }
-                }
+                model: this.simulation.rayGun
             });
 
             this.bottomLayer.addChild(this.rayGunView.displayObject);

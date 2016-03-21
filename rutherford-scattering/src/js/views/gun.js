@@ -16,13 +16,21 @@ define(function(require) {
      */
     var RayGunView = PixiView.extend({
 
+        events: {
+            'touchstart      .triggerButton': 'toggle',
+            'mousedown       .triggerButton': 'toggle'
+        },
+
         /**
          * Initializes the new RayGunView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
 
+            this.initTriggers();
             this.initGraphics();
+
+            this.listenTo(this.model, 'change:on', this.updateTrigger);
         },
 
         /**
@@ -35,38 +43,69 @@ define(function(require) {
             this.rayGun.anchor.x = 0.5;
             this.rayGun.anchor.y = 0.5;
 
+            this.triggerButton = Assets.createSprite(this.getTrigger());
+            this.triggerButton.buttonMode = true;
+            this.triggerButton.defaultCursor = 'pointer';
+            this.triggerButton.anchor.x = 0.5;
+            this.triggerButton.anchor.y = 0.5;
+
             // this.displayObject.addChild(this.ray);
             this.displayObject.addChild(this.rayGun);
+            this.displayObject.addChild(this.triggerButton);
 
             this.updateMVT(this.mvt);
         },
-
-        // drawStick: function() {
-        //     var width  = Math.round(this.mvt.modelToViewDeltaX(RayGunView.STICK_WIDTH) / 2) * 2;
-        //     var height = Math.round(this.mvt.modelToViewDeltaY(RayGunView.STICK_HEIGHT));
-        //     var graphics = this.stick;
-        //     graphics.clear();
-        //     graphics.beginFill(STICK_COLOR, 1);
-        //     graphics.drawRect(-width / 2, 0, width, height);
-        //     graphics.endFill();
-        // },
 
         /**
          * Updates the model-view-transform and anything that
          *   relies on it.
          */
         updateMVT: function(mvt) {
+            var center = this.model.get('center');
             this.mvt = mvt;
 
             var targetWidth = Math.round(this.mvt.modelToViewDeltaX(20));
             var scale = targetWidth / this.rayGun.texture.width;
+
             this.rayGun.scale.x = scale;
             this.rayGun.scale.y = scale;
 
-            this.displayObject.x = Math.floor(this.mvt.modelToViewX(this.model.center.x));
-            this.displayObject.y = Math.floor(this.mvt.modelToViewY(this.model.center.y));
+            this.triggerButton.scale.x = scale;
+            this.triggerButton.scale.y = scale;
+            // offset trigger from center
+            this.triggerButton.x = -19 * scale;
+            this.triggerButton.y = 12 * scale;
+
+            this.displayObject.x = Math.floor(this.mvt.modelToViewX(center.x));
+            this.displayObject.y = Math.floor(this.mvt.modelToViewY(center.y));
 
             this.update();
+        },
+
+        update: function(){
+            this.updateTrigger();
+        },
+
+        toggle: function() {
+            this.model.set('on', !this.model.get('on'));
+        },
+
+        initTriggers: function() {
+            this.triggers = {};
+            this.triggers.on = Assets.Images.GUN_ON_BUTTON;
+            this.triggers.off = Assets.Images.GUN_OFF_BUTTON;
+        },
+
+        getTrigger: function() {
+            if(this.model.get('on')){
+                return this.triggers.on;
+            } else {
+                return this.triggers.off;
+            }
+        },
+
+        updateTrigger: function() {
+            this.triggerButton.texture = Assets.Texture(this.getTrigger());
         }
 
     }, {});
