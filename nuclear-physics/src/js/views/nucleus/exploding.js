@@ -30,8 +30,6 @@ define(function(require) {
             this.showNucleus = options.showNucleus;
 
             NucleusView.prototype.initialize.apply(this, [options]);
-
-            this.listenTo(this.model, 'nucleus-change', this.nucleusChanged);
         },
 
         /**
@@ -92,6 +90,8 @@ define(function(require) {
         },
 
         nucleusChanged: function(nucleus, byProducts) {
+            NucleusView.prototype.nucleusChanged.apply(this, arguments);
+            
             if (nucleus.hasDecayed()) {
                 // Kick off the explosion graphic.
                 this.explosionGraphics.clear();
