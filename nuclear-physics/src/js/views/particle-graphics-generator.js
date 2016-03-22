@@ -172,7 +172,7 @@ define(function(require) {
             return this.wrapSprite(sprite);
         },
 
-        createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt) {
+        createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt, tunnelingRegionRadius) {
             var container = new PIXI.Container();
 
             // Determine the size of the nucleus in femtometers.
@@ -199,6 +199,49 @@ define(function(require) {
                 nucleons[i].x = vec.x;
                 nucleons[i].y = vec.y;
                 container.addChild(nucleons[i]);
+            }
+
+            if (nucleons.length == 3) {
+                // This is a special case of a 3-neucleon nucleus.  Position all
+                //   nucleons to be initially visible.
+                var rotationOffset = Math.PI;  // In radians, arbitrary and just for looks.
+                var distanceFromCenter = viewNucleusRadius / Math.cos(Math.PI / 6);
+                for (var i = 0; i < 3; i++) {
+                    var angle = (Math.PI * 2 / 3) * i + rotationOffset;
+                    var xOffset = Math.sin(angle) * distanceFromCenter;
+                    var yOffset = Math.cos(angle) * distanceFromCenter;
+                    nucleons[i].x = xOffset; 
+                    nucleons[i].y = yOffset;
+                }
+            }
+            else if (nucleons.length < 28) {
+                // Arrange the nuclei in such a way that the nucleus as a whole
+                //   ends up looking pretty round.
+                var nucleonDiameter = mvt.modelToViewDeltaX(Constants.NUCLEON_DIAMETER);
+                var minDistance = nucleonDiameter / 4;
+                var maxDistance = nucleonDiameter / 2;
+                var distanceIncrement = nucleonDiameter / 5;
+                var numberToPlacePerCycle = 2;
+                var numberOfNucleiPlaced = 0;
+                while (numberOfNucleiPlaced < nucleons.length) {
+                    for (var i = 0; i < numberToPlacePerCycle; i++){
+                        var particle = nucleons[nucleons.length - 1 - numberOfNucleiPlaced];
+                        this.placeNucleon(particle, this.get('position'), minDistance, maxDistance, this.getNextPlacementZone());
+                        numberOfNucleiPlaced++;
+                        if (numberOfNucleiPlaced >= nucleons.length)
+                            break;
+                    }
+                    minDistance += distanceIncrement;
+                    maxDistance += distanceIncrement;
+                    numberToPlacePerCycle += 6;
+                }
+            }
+            else {
+                // This is a relatively large nucleus.  Have each particle place
+                //   itself randomly somewhere within the radius of the nucleus.
+                var tunnelingRegion = mvt.modelToViewDeltaX(Math.min(tunnelingRegionRadius, viewNucleusRadius * 3));
+                for (var j = 0; j < nucleons.length; j++)
+                    nucleons[j].tunnel(this.get('position'), 0, this.get('diameter') / 2, tunnelingRegion);
             }
 
             return container;
