@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var Hydrogen3Nucleus               = require('models/nucleus/hydrogen-3');
     var Carbon14Nucleus                = require('models/nucleus/carbon-14');
     var LightAdjustableHalfLifeNucleus = require('models/nucleus/light-adjustable-half-life');
+    var SubatomicParticle              = require('models/subatomic-particle');
 
     /**
      * Constants
@@ -86,7 +87,7 @@ define(function (require, exports, module) {
             throw 'Other nuclei not yet implemented.';
         },
 
-        nucleusChanged: function(nucleus, numProtons, numNeutrons, byProducts) {
+        nucleusChanged: function(nucleus, byProducts) {
             if (byProducts) {
                 // There are some byproducts of this event that need to be
                 //   managed by this object.

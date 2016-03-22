@@ -2,12 +2,8 @@ define(function(require) {
 
     'use strict';
 
-    var _    = require('underscore');
-    var PIXI = require('pixi');
-
+    var AppView       = require('common/v3/app/app');
     var PixiSceneView = require('common/v3/pixi/view/scene');
-
-    var Assets = require('assets');
 
     // Constants
     var Constants = require('constants');
@@ -17,24 +13,50 @@ define(function(require) {
      */
     var NuclearPhysicsSceneView = PixiSceneView.extend({
 
-        events: {
-            
-        },
-
         initialize: function(options) {
-            PixiSceneView.prototype.initialize.apply(this, arguments);
+            PixiSceneView.prototype.initialize.apply(this, [options]);
         },
 
-        renderContent: function() {
-            
+        /**
+         * Calculates and returns the width from the space left between the other panels
+         */
+        getWidthBetweenPanels: function() {
+            if (AppView.windowIsShort())
+                return this.width - this.getLeftPadding() - this.getRightPadding() - 12 * 2;
+            else
+                return this.width - this.getRightPadding() - 20 * 2;
         },
 
-        initGraphics: function() {
-            PixiSceneView.prototype.initGraphics.apply(this, arguments);
+        getLeftPadding: function() {
+            var $leftPanel = this.$el.parents('.sim-view').find('.sim-controls-left');
+            if (AppView.windowIsShort())
+                return $leftPanel.outerWidth() + 12;
+            else
+                return 0;
         },
 
-        _update: function(time, deltaTime, paused, timeScale) {
-            
+        getRightPadding: function() {
+            var $rightPanel = this.$el.parents('.sim-view').find('.sim-controls-right');
+            if (AppView.windowIsShort())
+                return $rightPanel.outerWidth() + 12;
+            else
+                return $rightPanel.outerWidth() + 20;
+        },
+
+        getTopPadding: function() {
+            return 0;
+        },
+
+        getBottomPadding: function() {
+            return 0;
+        },
+
+        getAvailableWidth: function() {
+            return this.width - this.getLeftPadding() - this.getRightPadding();
+        },
+
+        getAvailableHeight: function() {
+            return this.height - this.getTopPadding() - this.getBottomPadding();
         },
 
     });

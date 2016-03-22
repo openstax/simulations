@@ -430,5 +430,23 @@ define(function (require) {
     Constants.NucleusDecayChart = NucleusDecayChart;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                        EXPLODING NUCLEUS VIEW                       **
+     **                                                                     **
+     *************************************************************************/
+
+    var ExplodingNucleusView = {};
+
+    ExplodingNucleusView.EXPLOSION_TIME = 0.4; // Seconds
+    ExplodingNucleusView.EXPLOSION_OUTLINE_WIDTH = 14;
+    ExplodingNucleusView.EXPLOSION_OUTLINE_COLOR = '#ffff33';
+    ExplodingNucleusView.EXPLOSION_FILL_COLOR = '#ffff33';
+    ExplodingNucleusView.EXPLOSION_MAX_ALPHA = 0.4;
+    ExplodingNucleusView.EXPLOSION_RADIUS_SCALE = 5;
+
+    Constants.ExplodingNucleusView = ExplodingNucleusView;
+
+
     return Constants;
 });

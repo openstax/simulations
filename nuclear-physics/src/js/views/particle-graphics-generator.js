@@ -6,6 +6,7 @@ define(function(require) {
 
     var Colors      = require('common/colors/colors');
     var PixiToImage = require('common/v3/pixi/pixi-to-image');
+    var Vector2     = require('common/math/vector2');
 
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
@@ -30,6 +31,8 @@ define(function(require) {
      * A utility class for generating nucleus and subatomic-particle graphics
      */
     var ParticleGraphicsGenerator = {
+
+        _vec2: new Vector2(),
 
         // TODO: It might be good at some point in the future when there are a lot of nuclei being
         //   rendered on the screen to check memory usage.  If memory usage keeps climbing, I would
@@ -167,6 +170,81 @@ define(function(require) {
             }
 
             return this.wrapSprite(sprite);
+        },
+
+        createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt, tunnelingRegionRadius) {
+            var container = new PIXI.Container();
+
+            // Determine the size of the nucleus in femtometers.
+            var nucleusRadius = this.getDiameterFromAtomicWeight(numProtons + numNeutrons) / 2;
+            var viewNucleusRadius = mvt.modelToViewDeltaX(nucleusRadius);
+
+            // Populate an array with all the nucleon sprites
+            var nucleons = [];
+            var i;
+            for (i = 0; i < numProtons; i++)
+                nucleons.push(this.createProtonSprite(mvt));
+            for (i = 0; i < numNeutrons; i++)
+                nucleons.push(this.createNeutronSprite(mvt));
+
+            // Shuffle it
+            nucleons = _.shuffle(nucleons);
+
+            // Now arrange them randomly so they all fit within the nucleus radius
+            var rotationStep = (Math.PI * 2) / nucleons.length;
+            var vec = this._vec2;
+            for (i = 0; i < nucleons.length; i++) {
+                vec.set(Math.random() * (viewNucleusRadius - nucleons[i].width / 2), 0);
+                vec.rotate(i * rotationStep);
+                nucleons[i].x = vec.x;
+                nucleons[i].y = vec.y;
+                container.addChild(nucleons[i]);
+            }
+
+            if (nucleons.length == 3) {
+                // This is a special case of a 3-neucleon nucleus.  Position all
+                //   nucleons to be initially visible.
+                var rotationOffset = Math.PI;  // In radians, arbitrary and just for looks.
+                var distanceFromCenter = viewNucleusRadius / Math.cos(Math.PI / 6);
+                for (var i = 0; i < 3; i++) {
+                    var angle = (Math.PI * 2 / 3) * i + rotationOffset;
+                    var xOffset = Math.sin(angle) * distanceFromCenter;
+                    var yOffset = Math.cos(angle) * distanceFromCenter;
+                    nucleons[i].x = xOffset; 
+                    nucleons[i].y = yOffset;
+                }
+            }
+            else if (nucleons.length < 28) {
+                // Arrange the nuclei in such a way that the nucleus as a whole
+                //   ends up looking pretty round.
+                var nucleonDiameter = mvt.modelToViewDeltaX(Constants.NUCLEON_DIAMETER);
+                var minDistance = nucleonDiameter / 4;
+                var maxDistance = nucleonDiameter / 2;
+                var distanceIncrement = nucleonDiameter / 5;
+                var numberToPlacePerCycle = 2;
+                var numberOfNucleiPlaced = 0;
+                while (numberOfNucleiPlaced < nucleons.length) {
+                    for (var i = 0; i < numberToPlacePerCycle; i++){
+                        var particle = nucleons[nucleons.length - 1 - numberOfNucleiPlaced];
+                        this.placeNucleon(particle, this.get('position'), minDistance, maxDistance, this.getNextPlacementZone());
+                        numberOfNucleiPlaced++;
+                        if (numberOfNucleiPlaced >= nucleons.length)
+                            break;
+                    }
+                    minDistance += distanceIncrement;
+                    maxDistance += distanceIncrement;
+                    numberToPlacePerCycle += 6;
+                }
+            }
+            else {
+                // This is a relatively large nucleus.  Have each particle place
+                //   itself randomly somewhere within the radius of the nucleus.
+                var tunnelingRegion = mvt.modelToViewDeltaX(Math.min(tunnelingRegionRadius, viewNucleusRadius * 3));
+                for (var j = 0; j < nucleons.length; j++)
+                    nucleons[j].tunnel(this.get('position'), 0, this.get('diameter') / 2, tunnelingRegion);
+            }
+
+            return container;
         },
 
         createNucleusSprite: function(numProtons, numNeutrons, mvt) {
@@ -345,10 +423,12 @@ define(function(require) {
             var scaleDownWrapper = new PIXI.Container();
             
             scaleUpWrapper.addChild(sprite);
-            scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
+            if (!noCachingAsBitmap)
+                scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
 
             scaleDownWrapper.addChild(scaleUpWrapper);
-            scaleDownWrapper.cacheAsBitmap = !noCachingAsBitmap;
+            if (!noCachingAsBitmap)
+                scaleDownWrapper.cacheAsBitmap = true;
             scaleDownWrapper.scale.x = scaleDownWrapper.scale.y = 0.5;
 
             return scaleDownWrapper;

@@ -24,7 +24,7 @@ define(function (require) {
      *   bunch of smaller particles (i.e. nucleons and alpha particles), hence the
      *   "Composite" portion of the name.
      */
-    var CompositeAtomNucleus = AtomicNucleus.extend({
+    var CompositeAtomicNucleus = AtomicNucleus.extend({
 
         initialize: function(attributes, options) {
             AtomicNucleus.prototype.initialize.apply(this, [attributes, options]);
@@ -130,7 +130,7 @@ define(function (require) {
                     // Having a small number of nucleons tunneling looks too weird,
                     //   so these nucleons just vibrate a little instead.
                     if (this.agitationFactor > 0) {
-                        agitationIncrement = CompositeAtomNucleus.MAX_AGITATION_FACTOR - this.agitationFactor + 1;
+                        agitationIncrement = CompositeAtomicNucleus.MAX_AGITATION_FACTOR - this.agitationFactor + 1;
                         
                         for (i = this.agitationCount; i < this.constituents.length; i += agitationIncrement)
                             this.constituents[i].jitter();
@@ -198,9 +198,13 @@ define(function (require) {
         getNextPlacementZone: function() {
             this._currentPlacementZoneIndex = (this._currentPlacementZoneIndex + 1 + _placementZoneAngleRanges.length / 2) % _placementZoneAngleRanges.length;
             return _placementZoneAngleRanges[this._currentPlacementZoneIndex];
+        },
+
+        getConstituents: function() {
+            return this.constituents;
         }
 
-    }, Constants.CompositeAtomNucleus);
+    }, Constants.CompositeAtomicNucleus);
 
-    return CompositeAtomNucleus;
+    return CompositeAtomicNucleus;
 });

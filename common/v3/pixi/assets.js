@@ -100,10 +100,10 @@ define(function (require) {
      *   part of a sprite sheet.
      */
     Assets.Texture = function(filename) {
-        if (filename in PIXI.utils.TextureCache)
-            return PIXI.utils.TextureCache[filename];
-        if (this.Path + filename in PIXI.utils.TextureCache)
-            return PIXI.utils.TextureCache[this.Path + filename];
+        if (filename in PIXI.loader.resources)
+            return PIXI.loader.resources[filename].texture;
+        if (this.Path + filename in PIXI.loader.resources)
+            return PIXI.loader.resources[this.Path + filename].texture;
 
         var spriteSheet;
         _.each(this.SpriteSheets, function(images, key) {
@@ -120,7 +120,7 @@ define(function (require) {
         if (spriteSheet)
             return PIXI.Texture.fromFrame(filename);
         else
-            return PIXI.Texture.fromImage(this.Path + filename);
+            return PIXI.loader.resources[this.Path + filename].texture;
     };
 
     /**

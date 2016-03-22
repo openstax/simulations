@@ -35,10 +35,6 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             
-        },
-
-        _update: function(time, deltaTime) {
-            
         }
 
     });

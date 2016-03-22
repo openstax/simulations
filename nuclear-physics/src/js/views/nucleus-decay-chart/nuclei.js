@@ -32,19 +32,18 @@ define(function(require) {
             this.decayedSprites = [];
 
             this.initGraphics();
+
+            if (this.width)
+                this.setWidth(this.width);
         },
 
         /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            var rightBuffer = 20;
-            var mask = new PIXI.Graphics();
-            mask.beginFill();
-            mask.drawRect(-rightBuffer, 0, this.width + rightBuffer, this.height);
-            mask.endFill();
-            this.displayObject.addChild(mask);
-            this.displayObject.mask = mask;
+            this.mask = new PIXI.Graphics();
+            this.displayObject.addChild(this.mask);
+            this.displayObject.mask = this.mask;
         },
 
         addNucleus: function(nucleus) {
@@ -90,6 +89,15 @@ define(function(require) {
 
         setMillisecondsToPixels: function(msToPx) {
             this.msToPx = msToPx;
+        },
+
+        setWidth: function(width) {
+            this.width = width;
+
+            var rightBuffer = 20;
+            this.mask.beginFill();
+            this.mask.drawRect(-rightBuffer, 0, this.width + rightBuffer, this.height);
+            this.mask.endFill();
         },
 
         update: function(time, deltaTime, paused) {

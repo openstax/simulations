@@ -290,7 +290,6 @@ define(function(require) {
         initNucleiView: function() {
             this.nucleiView = new NucleusDecayChartNucleiView({
                 simulation: this.simulation,
-                width: this.graphWidth,
                 height: this.graphHeight,
                 isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
                 isotope2Y: this.yAxisIsotope2.y - this.paddingTop
@@ -528,6 +527,7 @@ define(function(require) {
             this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
 
             this.nucleiView.setMillisecondsToPixels(this.msToPixelsFactor);
+            this.nucleiView.setWidth(this.graphWidth - this.getTimeZeroXOffset());
             this.nucleiView.displayObject.x = this.graphOriginX + this.getTimeZeroXOffset();
 
             this.drawXAxisTicks();

@@ -108,7 +108,7 @@ define(function (require) {
             this.triggerNucleusChange(byProducts);
         }
 
-    });
+    }, Constants.BetaDecayCompositeNucleus);
 
     return BetaDecayCompositeNucleus;
 });

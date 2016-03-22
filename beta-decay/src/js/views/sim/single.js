@@ -16,6 +16,10 @@ define(function (require) {
      */
     var SingleNucleusBetaDecaySimView = BetaDecaySimView.extend({
 
+        events: _.extend({}, BetaDecaySimView.prototype.events, {
+            'click .show-labels-check' : 'toggleLabels'
+        }),
+
         /**
          * Inits simulation, views, and variables.
          *
@@ -80,7 +84,14 @@ define(function (require) {
         renderNucleusChooser: function() {
             this.nucleusChooserView.render();
             this.$('.choose-nucleus-panel').append(this.nucleusChooserView.el);
-        }
+        },
+
+        toggleLabels: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showLabels();
+            else
+                this.sceneView.hideLabels();
+        },
 
     });
 

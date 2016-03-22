@@ -216,6 +216,11 @@ define(function(require) {
         },
 
         clearNuclei: function() {
+            this.nucleiView.clear();
+            this.decayTimeValueText.text = '';
+        },
+
+        clearDecayedNuclei: function() {
             this.nucleiView.clearDecayed();
             this.decayTimeValueText.text = '';
         },
@@ -231,7 +236,7 @@ define(function(require) {
         },
 
         clearChartClicked: function() {
-            this.clearNuclei();
+            this.clearDecayedNuclei();
         },
 
         clearChartHover: function() {

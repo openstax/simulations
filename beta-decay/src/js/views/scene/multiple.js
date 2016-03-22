@@ -12,15 +12,15 @@ define(function(require) {
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
     var NucleusDecayChart         = require('views/nucleus-decay-chart');
 
-    var BetaDecaySceneView = require('beta-decay/views/scene');
+    var NuclearPhysicsSceneView = require('views/scene');
 
     /**
      *
      */
-    var MultiNucleusBetaDecaySceneView = BetaDecaySceneView.extend({
+    var MultiNucleusBetaDecaySceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
-            BetaDecaySceneView.prototype.initialize.apply(this, arguments);
+            NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
         },
 
         initMVT: function() {
@@ -44,7 +44,7 @@ define(function(require) {
         },
 
         initGraphics: function() {
-            BetaDecaySceneView.prototype.initGraphics.apply(this, arguments);
+            NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.initMVT();
             this.initNucleusDecayChart();
@@ -60,6 +60,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
+            NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
+            
             this.nucleusDecayChart.update(time, deltaTime, paused);
         }
 

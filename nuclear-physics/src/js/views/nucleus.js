@@ -30,6 +30,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.model, 'change:position', this.updatePosition);
+            this.listenTo(this.model, 'nucleus-change', this.nucleusChanged);
         },
 
         /**
@@ -48,29 +49,49 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            this.updateSprite();
+            this.updateSymbol();
+            this.updatePosition(this.model, this.model.get('position'));
+        },
+
+        updateSprite: function() {
             if (this.nucleusSprite)
                 this.displayObject.removeChild(this.nucleusSprite);
 
             this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt);
             this.displayObject.addChild(this.nucleusSprite);
+        },
+
+        updateSymbol: function() {
+            if (this.symbol)
+                this.displayObject.removeChild(this.symbol);
 
             if (this.showSymbol) {
-                if (this.symbol)
-                    this.displayObject.removeChild(this.symbol);
-
-                var smallerDimension = (this.nucleusSprite.height > this.nucleusSprite.width) ? this.nucleusSprite.width : this.nucleusSprite.height;
-                var fontSize = this.symbolSize ? this.symbolSize : Math.floor(smallerDimension * 0.75);
+                var fontSize = this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
                 this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize, 0.35);
                 this.displayObject.addChild(this.symbol);
             }
-
-            this.updatePosition(this.model, this.model.get('position'));
         },
 
         updatePosition: function(model, position) {
             var viewPosition = this.mvt.modelToView(position);
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
+        },
+
+        nucleusChanged: function() {
+            this.updateSprite();
+            this.updateSymbol();
+        },
+
+        showLabel: function() {
+            this.showSymbol = true;
+            this.updateSymbol();
+        },
+
+        hideLabel: function() {
+            this.showSymbol = false;
+            this.updateSymbol();
         }
 
     });

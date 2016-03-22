@@ -37,28 +37,34 @@ define(function(require) {
         },
 
         displayObjectToTexture: function(displayObject, padding) {
-            // var wrapper = this._wrapDisplayObject(displayObject, padding);
-            // stage.addChild(wrapper);
+            var wrapper = this._wrapDisplayObject(displayObject, padding);
+            stage.addChild(wrapper);
 
-            // var resolution = window.devicePixelRatio ? window.devicePixelRatio : 1;
-            // var renderTexture = new PIXI.RenderTexture(renderer, renderer.width, renderer.height, null, resolution);
-
-            // renderTexture.render(stage);
-
-            // // Set the displayObject loose again
-            // wrapper.removeChild(displayObject);
-            // stage.removeChild(wrapper);
-
-            // return renderTexture;
-            if (padding === undefined)
-                padding = 0;
-
-            renderer.resize(
+            var resolution = window.devicePixelRatio ? window.devicePixelRatio : 1;
+            var renderTexture = new PIXI.RenderTexture(
+                renderer, 
                 displayObject.width  + padding * 2,
-                displayObject.height + padding * 2
+                displayObject.height + padding * 2,
+                null, 
+                resolution
             );
 
-            return displayObject.generateTexture(renderer);
+            renderTexture.render(stage);
+
+            // Set the displayObject loose again
+            wrapper.removeChild(displayObject);
+            stage.removeChild(wrapper);
+
+            return renderTexture;
+            // if (padding === undefined)
+            //     padding = 0;
+
+            // renderer.resize(
+            //     displayObject.width  + padding * 2,
+            //     displayObject.height + padding * 2
+            // );
+
+            // return displayObject.generateTexture(renderer);
         },
 
         _wrapDisplayObject: function(displayObject, padding) {
