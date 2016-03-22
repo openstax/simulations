@@ -6,6 +6,7 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
+    require('common/v3/pixi/dash-to');
     
     var Assets = require('assets');
     var Constants = require('constants');
@@ -44,9 +45,11 @@ define(function(require) {
             this.ray = new PIXI.Graphics();
             this.drawRay();
 
-            this.rayTarget = new PIXI.Graphics();
-            this.rayCap = new PIXI.Graphics();
-            this.drawRayTargetCap();
+            this.rayCap = new PIXI.Container();
+            this.drawRayCap();
+
+            this.projectionLines = new PIXI.Graphics();
+            this.drawProjectionLines();
 
             this.triggerButton = Assets.createSprite(this.getTrigger());
             this.triggerButton.buttonMode = true;
@@ -55,10 +58,10 @@ define(function(require) {
             this.triggerButton.anchor.y = 0;
 
             this.displayObject.addChild(this.ray);
-            this.displayObject.addChild(this.rayTarget);
             this.displayObject.addChild(this.rayCap);
             this.displayObject.addChild(this.rayGun);
             this.displayObject.addChild(this.triggerButton);
+            this.displayObject.addChild(this.projectionLines);
 
             this.updateMVT(this.mvt);
         },
@@ -77,10 +80,9 @@ define(function(require) {
             this.ray.scale.x = scale;
             this.ray.scale.y = scale;
 
-            this.rayTarget.scale.x = scale;
-            this.rayTarget.scale.y = scale;
             this.rayCap.scale.x = scale;
             this.rayCap.scale.y = scale;
+            this.rayCap.y = - this.rayHeight - this.rayTargetHeight / 2;
 
             this.rayGun.scale.x = scale;
             this.rayGun.scale.y = scale;
@@ -107,24 +109,52 @@ define(function(require) {
             this.ray.endFill();
         },
 
-        drawRayTargetCap: function() {
+        drawRayCap: function() {
+            this.rayTarget = new PIXI.Graphics();
+            this.rayTargetCap = new PIXI.Graphics();
+            this.rayView = new PIXI.Graphics();
+
             this.rayTargetWidth = 1.4 * this.rayWidth;
             this.rayTargetHeight = 18;
-            this.rayTargetTop = -1 * this.rayHeight - 0.5 * this.rayGun.texture.height;
             this.rayTargetLeft = -0.5 * this.rayTargetWidth;
             this.rayTargetRight = 0.5 * this.rayTargetWidth;
 
             this.rayTarget.beginFill(Colors.parseHex('3E5FFF'), 1);
-            this.rayTarget.drawRect(this.rayTargetLeft, this.rayTargetTop, this.rayTargetWidth, this.rayTargetHeight);
+            this.rayTarget.drawRect(this.rayTargetLeft, 0, this.rayTargetWidth, this.rayTargetHeight);
             this.rayTarget.endFill();
 
-            this.rayCapHeight = 12;
-            this.rayCap.beginFill(Colors.parseHex('3E5FFF'), 0.5);
-            this.rayCap.moveTo(this.rayTargetLeft, this.rayTargetTop);
-            this.rayCap.lineTo(-0.4 * this.rayTargetWidth, this.rayTargetTop - this.rayCapHeight);
-            this.rayCap.lineTo(0.4 * this.rayTargetWidth, this.rayTargetTop - this.rayCapHeight);
-            this.rayCap.lineTo(this.rayTargetRight, this.rayTargetTop);
-            this.rayCap.endFill();
+            this.rayTargetCapHeight = 12;
+            this.rayTargetCap.beginFill(Colors.parseHex('3E5FFF'), 0.5);
+            this.rayTargetCap.moveTo(this.rayTargetLeft, 0);
+            this.rayTargetCap.lineTo(-0.4 * this.rayTargetWidth, -this.rayTargetCapHeight);
+            this.rayTargetCap.lineTo(0.4 * this.rayTargetWidth, -this.rayTargetCapHeight);
+            this.rayTargetCap.lineTo(this.rayTargetRight, 0);
+            this.rayTargetCap.endFill();
+
+            this.rayViewWidth = 0.2 * this.rayWidth;
+            this.rayViewHeight = this.rayViewWidth;
+            this.rayViewLeft = this.rayTargetRight - 3 * this.rayViewWidth;
+            this.rayViewTop = (this.rayTargetHeight - this.rayViewHeight) / 2;
+
+            this.rayView.beginFill(Colors.parseHex('000'), 1);
+            this.rayView.drawRect(this.rayViewLeft, this.rayViewTop, this.rayViewWidth, this.rayViewHeight);
+            this.rayView.endFill();
+
+            this.rayCap.addChild(this.rayTarget);
+            this.rayCap.addChild(this.rayTargetCap);
+            this.rayCap.addChild(this.rayView);
+        },
+
+        drawProjectionLines: function() {
+            var rayViewTop = - this.rayHeight - this.rayTargetHeight / 2;
+            var rayViewDashStyle = [10, 6];
+
+            this.projectionLines.lineStyle(1, 0xFFFFFF, 1);
+            this.projectionLines.moveTo(this.rayViewLeft, rayViewTop);
+            this.projectionLines.dashTo(150, -260, rayViewDashStyle);
+            this.projectionLines.moveTo(this.rayViewLeft, rayViewTop + this.rayViewHeight);
+            this.projectionLines.dashTo(150, 200, rayViewDashStyle);
+
         },
 
         toggle: function() {
