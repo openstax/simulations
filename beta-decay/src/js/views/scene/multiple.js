@@ -101,8 +101,8 @@ define(function(require) {
                 mvt: this.mvt
             });
 
-            this.atomCanisterView.displayObject.x = 600;
-            this.atomCanisterView.displayObject.y = 300;
+            this.atomCanisterView.displayObject.x = 534;
+            this.atomCanisterView.displayObject.y = 420;
 
             this.stage.addChild(this.atomCanisterView.displayObject);
         },
@@ -111,6 +111,7 @@ define(function(require) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
             
             this.nucleusDecayChart.update(time, deltaTime, paused);
+            this.atomCanisterView.update(time, deltaTime, paused);
         },
 
         nucleusAdded: function(nucleus) {

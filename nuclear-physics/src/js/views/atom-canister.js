@@ -5,7 +5,7 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/pixi/view');
+    var PixiView  = require('common/v3/pixi/view');
     var Rectangle = require('common/math/rectangle');
     var Vector2   = require('common/math/vector2');
 
@@ -46,7 +46,7 @@ define(function(require) {
                 labelColor: '#000',
                 labelAlpha: 1,
 
-                overlayAlpha: 0.25,
+                overlayAlpha: 0.4,
 
                 showHints: true
             }, options);
@@ -72,6 +72,8 @@ define(function(require) {
             this._bounds = new Rectangle();
 
             this.initGraphics();
+
+            this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
         },
 
         initGraphics: function() {
@@ -82,6 +84,8 @@ define(function(require) {
             this.displayObject.addChild(this.backgroundLayer);
             this.displayObject.addChild(this.foregroundLayer);
             this.displayObject.addChild(this.hoverLayer);
+
+            this.backgroundLayer.buttonMode = true;
 
             this.initSprites();
             this.initDecorativeDummyObjects();
@@ -213,7 +217,7 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             if (this._showingDragHint)
                 this.oscillateDragOverlayAlpha(time);
-            
+
             if (!paused)
                 this.oscillateGlow(time);
         },
@@ -223,11 +227,11 @@ define(function(require) {
          */
         oscillateDragOverlayAlpha: function(time) {
             if (!this.hovering)
-                this.dragOverlay.alpha = Math.sin(time) * this.overlayAlpha;
+                this.dragOverlay.alpha = (Math.sin(3 * time) * 0.25 + 0.5) * this.overlayAlpha;
         },
 
         oscillateGlow: function(time) {
-            this.glowSprite.alpha = Math.sin(time) * this.overlayAlpha;
+            this.glowSprite.alpha = Math.sin(2 * time) * 0.5 + 0.5;
         },
 
         dragStart: function(data) {
@@ -266,14 +270,12 @@ define(function(require) {
 
         hover: function(event) {
             this.hovering = true;
-
-            // Only show it if we aren't currently holding down a mouse button
-            if (event.data.originalEvent.button === -1)
-                this.dragOverlay.alpha = this.overlayAlpha;
+            this.dragOverlay.alpha = this.overlayAlpha;
         },
 
         unhover: function(event) {
             this.hovering = false;
+            this.dragOverlay.alpha = 0;
         },
 
         getBounds: function() {
