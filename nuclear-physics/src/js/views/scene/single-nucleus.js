@@ -30,6 +30,8 @@ define(function(require) {
     var SingleNucleusSceneView = NuclearPhysicsSceneView.extend({
 
         initialize: function(options) {
+            this.showingLabels = true;
+
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
             this.listenTo(this.simulation.emittedParticles, 'add', this.particleEmitted);
@@ -114,7 +116,8 @@ define(function(require) {
             this.nucleusView = new ExplodingNucleusView({
                 model: this.simulation.atomicNucleus,
                 mvt: this.mvt,
-                showNucleus: false
+                showNucleus: false,
+                showSymbol: this.showingLabels
             });
             this.nucleusLayer.addChild(this.nucleusView.displayObject);
         },
@@ -142,6 +145,16 @@ define(function(require) {
 
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.updateNucleusView();
+        },
+
+        showLabels: function() {
+            this.nucleusView.showLabel();
+            this.showingLabels = true;
+        },
+
+        hideLabels: function() {
+            this.nucleusView.hideLabel();
+            this.showingLabels = false;
         }
 
     });

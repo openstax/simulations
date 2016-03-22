@@ -63,10 +63,10 @@ define(function(require) {
         },
 
         updateSymbol: function() {
-            if (this.showSymbol) {
-                if (this.symbol)
-                    this.displayObject.removeChild(this.symbol);
+            if (this.symbol)
+                this.displayObject.removeChild(this.symbol);
 
+            if (this.showSymbol) {
                 var fontSize = this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
                 this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize, 0.35);
                 this.displayObject.addChild(this.symbol);
@@ -81,6 +81,16 @@ define(function(require) {
 
         nucleusChanged: function() {
             this.updateSprite();
+            this.updateSymbol();
+        },
+
+        showLabel: function() {
+            this.showSymbol = true;
+            this.updateSymbol();
+        },
+
+        hideLabel: function() {
+            this.showSymbol = false;
             this.updateSymbol();
         }
 
