@@ -6,8 +6,6 @@ define(function (require) {
 
     var BetaDecaySimView                = require('beta-decay/views/sim');
     var SingleNucleusBetaDecaySceneView = require('beta-decay/views/scene/single');
-    var BetaDecayLegendView             = require('beta-decay/views/legend');
-    var BetaDecayNucleusChooserView     = require('beta-decay/views/nucleus-chooser');
 
     var Constants = require('constants');
 
@@ -33,9 +31,6 @@ define(function (require) {
             }, options);
 
             BetaDecaySimView.prototype.initialize.apply(this, [options]);
-
-            this.initLegend();
-            this.initNucleusChooser();
         },
 
         /**
@@ -52,38 +47,6 @@ define(function (require) {
             this.sceneView = new SingleNucleusBetaDecaySceneView({
                 simulation: this.simulation
             });
-        },
-
-        initLegend: function() {
-            this.legendView = new BetaDecayLegendView();
-        },
-
-        initNucleusChooser: function() {
-            this.nucleusChooserView = new BetaDecayNucleusChooserView({
-                simulation: this.simulation
-            });
-        },
-
-        /**
-         * Renders everything
-         */
-        postRender: function() {
-            BetaDecaySimView.prototype.postRender.apply(this, arguments);
-
-            this.renderLegend();
-            this.renderNucleusChooser();
-
-            return this;
-        },
-
-        renderLegend: function() {
-            this.legendView.render();
-            this.$('.legend-panel').append(this.legendView.el);
-        },
-
-        renderNucleusChooser: function() {
-            this.nucleusChooserView.render();
-            this.$('.choose-nucleus-panel').append(this.nucleusChooserView.el);
         },
 
         toggleLabels: function(event) {

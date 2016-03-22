@@ -3,6 +3,9 @@ define(function (require) {
     'use strict';
 
     var NuclearPhysicsSimView = require('views/sim');
+    
+    var BetaDecayLegendView         = require('beta-decay/views/legend');
+    var BetaDecayNucleusChooserView = require('beta-decay/views/nucleus-chooser');
 
     var Constants = require('constants');
 
@@ -47,8 +50,21 @@ define(function (require) {
 
             NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);
 
+            this.initLegend();
+            this.initNucleusChooser();
+
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        initLegend: function() {
+            this.legendView = new BetaDecayLegendView();
+        },
+
+        initNucleusChooser: function() {
+            this.nucleusChooserView = new BetaDecayNucleusChooserView({
+                simulation: this.simulation
+            });
         },
 
         /**
@@ -78,6 +94,28 @@ define(function (require) {
             this.$el.append(this.playbackControlsTemplate({
                 unique: this.cid
             }));
+        },
+
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
+        renderNucleusChooser: function() {
+            this.nucleusChooserView.render();
+            this.$('.choose-nucleus-panel').append(this.nucleusChooserView.el);
+        },
+
+        /**
+         * Renders everything
+         */
+        postRender: function() {
+            NuclearPhysicsSimView.prototype.postRender.apply(this, arguments);
+
+            this.renderLegend();
+            this.renderNucleusChooser();
+
+            return this;
         },
 
         /**
