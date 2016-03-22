@@ -13,7 +13,7 @@ define(function(require) {
     var Constants = require('constants');
 
     // CSS
-    require('less!styles/scene');
+    require('less!rutherford-scattering/styles/scene');
 
     /**
      *

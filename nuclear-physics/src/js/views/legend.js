@@ -62,6 +62,9 @@ define(function(require) {
             var widestItem = _.max(this.items, function(item) {
                 return item.displayObject.width;
             });
+            // Need to grab value now because when the widest item gets mapped to and updates,
+            // the width on widestItem updates as well.
+            var widestWidth = widestItem.displayObject.width;
 
             var items = _.map(this.items, function(item) {
                 return {
@@ -69,7 +72,7 @@ define(function(require) {
                     img: PixiToImage.displayObjectToDataURI(item.displayObject, 1),
                     width: item.displayObject.width,
                     height: item.displayObject.height,
-                    containerWidth: widestItem.displayObject.width
+                    containerWidth: widestWidth
                 };
             });
 
