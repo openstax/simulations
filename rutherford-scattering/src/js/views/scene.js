@@ -52,7 +52,7 @@ define(function(require) {
         initRayGunMVT: function() {
             if (AppView.windowIsShort()) {
                 this.rayGunOriginX = Math.round((this.width - 200 - Constants.BOX_SIZE) / 2);
-                this.rayGunOriginY = Math.round((this.height + 152) / 2);
+                this.rayGunOriginY = Math.round((this.height + 200) / 2);
             }
             else {
                 this.rayGunOriginX = Math.round((this.width - 200 - Constants.BOX_SIZE)  / 2);
