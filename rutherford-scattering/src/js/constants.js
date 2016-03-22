@@ -49,7 +49,15 @@ define(function (require) {
         SPACE_NODE_HEIGHT: 490,
 
         // Animation space size, must be square!
-        BOX_SIZE: 540
+        BOX_SIZE: 540,
+
+        RayGunView: {
+            WIDTH: 20,
+            BARREL_CENTER_X: 0.37,
+            BARREL_CENTER_Y: 0.5,
+            RAY_WIDTH: 0.4,
+            RAY_HEIGHT: 0.85
+        }
     };
 
     _.extend(Constants, RSConstants);
