@@ -345,7 +345,8 @@ define(function(require) {
             var scaleDownWrapper = new PIXI.Container();
             
             scaleUpWrapper.addChild(sprite);
-            scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
+            if (!noCachingAsBitmap)
+                scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
 
             scaleDownWrapper.addChild(scaleUpWrapper);
             scaleDownWrapper.cacheAsBitmap = !noCachingAsBitmap;
