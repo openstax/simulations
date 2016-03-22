@@ -6,7 +6,8 @@ define(function (require, exports, module) {
 
     var Simulation = require('common/simulation/simulation');
 
-    var RayGun = require('./gun')
+    var RayGun = require('./gun');
+    var AlphaParticles  = require('rutherford-scattering/collections/alpha-particles');
 
     /**
      * Constants
@@ -32,10 +33,20 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             this.rayGun = new RayGun();
+
+            this.initAlphaParticles();
+        },
+
+        resetComponents: function() {
+
         },
 
         _update: function(time, deltaTime) {
             
+        },
+
+        initAlphaParticles: function() {
+            this.alphaParticles = new AlphaParticles();
         }
 
     });

@@ -8,6 +8,7 @@ define(function(require) {
     var AppView   = require('common/app/app');
     var PixiSceneView = require('common/v3/pixi/view/scene');
     var RayGunView = require('rutherford-scattering/views/gun');
+    var SpaceBoxView = require('rutherford-scattering/views/space-box');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
@@ -39,11 +40,13 @@ define(function(require) {
         initMVT: function(){
             if (AppView.windowIsShort()) {
                 this.viewOriginX = Math.round(this.width / 2);
-                this.viewOriginY = Math.round(this.height / 2);
+                this.viewOriginY = Math.round((this.height - 50)/ 2);
+                this.spaceBoxSize = Constants.BOX_SIZE_SMALL;
             }
             else {
-                this.viewOriginX = Math.round((this.width - 200)  / 2);
-                this.viewOriginY = Math.round(this.height / 2);
+                this.viewOriginX = Math.round((this.width - 100) / 2);
+                this.viewOriginY = Math.round((this.height - 96) / 2);
+                this.spaceBoxSize = Constants.BOX_SIZE;
             }
 
             this.initRayGunMVT();
@@ -51,11 +54,11 @@ define(function(require) {
 
         initRayGunMVT: function() {
             if (AppView.windowIsShort()) {
-                this.rayGunOriginX = Math.round((this.width - 200 - Constants.BOX_SIZE) / 2);
+                this.rayGunOriginX = 100;
                 this.rayGunOriginY = Math.round((this.height + 200) / 2);
             }
             else {
-                this.rayGunOriginX = Math.round((this.width - 200 - Constants.BOX_SIZE)  / 2);
+                this.rayGunOriginX = 60;
                 this.rayGunOriginY = Math.round(this.height / 2);
             }
 
@@ -83,6 +86,7 @@ define(function(require) {
 
             this.initMVT();
             this.initRayGunView();
+            this.initSpaceBoxView();
         },
 
         initRayGunView: function() {
@@ -92,6 +96,16 @@ define(function(require) {
             });
 
             this.bottomLayer.addChild(this.rayGunView.displayObject);
+        },
+
+        initSpaceBoxView: function() {
+            this.spaceBoxView = new SpaceBoxView({
+                mvt: this.mvt,
+                scale: this.scale,
+                spaceBoxSize: this.spaceBoxSize
+            });
+
+            this.bottomLayer.addChild(this.spaceBoxView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
