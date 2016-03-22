@@ -289,7 +289,7 @@ define(function (require) {
         },
 
         viewToModelScale: function(coordinates) {
-            return this.viewToModelDelta(this.coordinates);
+            return this.viewToModelDelta(coordinates);
         },
 
         viewToModelX: function(x) {
