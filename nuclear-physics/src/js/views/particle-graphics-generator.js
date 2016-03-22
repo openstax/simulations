@@ -6,6 +6,7 @@ define(function(require) {
 
     var Colors      = require('common/colors/colors');
     var PixiToImage = require('common/v3/pixi/pixi-to-image');
+    var Vector2     = require('common/math/vector2');
 
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
@@ -30,6 +31,8 @@ define(function(require) {
      * A utility class for generating nucleus and subatomic-particle graphics
      */
     var ParticleGraphicsGenerator = {
+
+        _vec2: new Vector2(),
 
         // TODO: It might be good at some point in the future when there are a lot of nuclei being
         //   rendered on the screen to check memory usage.  If memory usage keeps climbing, I would
@@ -167,6 +170,38 @@ define(function(require) {
             }
 
             return this.wrapSprite(sprite);
+        },
+
+        createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt) {
+            var container = new PIXI.Container();
+
+            // Determine the size of the nucleus in femtometers.
+            var nucleusRadius = this.getDiameterFromAtomicWeight(numProtons + numNeutrons) / 2;
+            var viewNucleusRadius = mvt.modelToViewDeltaX(nucleusRadius);
+
+            // Populate an array with all the nucleon sprites
+            var nucleons = [];
+            var i;
+            for (i = 0; i < numProtons; i++)
+                nucleons.push(this.createProtonSprite(mvt));
+            for (i = 0; i < numNeutrons; i++)
+                nucleons.push(this.createNeutronSprite(mvt));
+
+            // Shuffle it
+            nucleons = _.shuffle(nucleons);
+
+            // Now arrange them randomly so they all fit within the nucleus radius
+            var rotationStep = (Math.PI * 2) / nucleons.length;
+            var vec = this._vec2;
+            for (i = 0; i < nucleons.length; i++) {
+                vec.set(Math.random() * (viewNucleusRadius - nucleons[i].width / 2), 0);
+                vec.rotate(i * rotationStep);
+                nucleons[i].x = vec.x;
+                nucleons[i].y = vec.y;
+                container.addChild(nucleons[i]);
+            }
+
+            return container;
         },
 
         createNucleusSprite: function(numProtons, numNeutrons, mvt) {
@@ -349,7 +384,8 @@ define(function(require) {
                 scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
 
             scaleDownWrapper.addChild(scaleUpWrapper);
-            scaleDownWrapper.cacheAsBitmap = !noCachingAsBitmap;
+            if (!noCachingAsBitmap)
+                scaleDownWrapper.cacheAsBitmap = true;
             scaleDownWrapper.scale.x = scaleDownWrapper.scale.y = 0.5;
 
             return scaleDownWrapper;
