@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var Hydrogen3CompositeNucleus       = require('models/nucleus/hydrogen-3-composite');
     var Carbon14CompositeNucleus        = require('models/nucleus/carbon-14-composite');
     var LightAdjustableCompositeNucleus = require('models/nucleus/light-adjustable-composite');
+    var SubatomicParticle               = require('models/subatomic-particle');
 
     /**
      * Constants
@@ -125,7 +126,7 @@ define(function (require, exports, module) {
             
             // Register as a listener for the nucleus so we can handle the
             //   particles thrown off by beta decay.
-            this.listenTo(this.atomicNucleus, 'nucleus-changed', this.nucleusChanged);
+            this.listenTo(this.atomicNucleus, 'nucleus-change', this.nucleusChanged);
             
             // In this model, the nucleus is activated (so that it is moving
             //   towards decay) right away.
@@ -171,7 +172,7 @@ define(function (require, exports, module) {
             this.addNewNucleus();
         },
 
-        nucleusChanged: function(nucleus, numProtons, numNeutrons, byProducts) {
+        nucleusChanged: function(nucleus, byProducts) {
             if (byProducts) {
                 // There are some byproducts of this event that need to be
                 //   managed by this object.

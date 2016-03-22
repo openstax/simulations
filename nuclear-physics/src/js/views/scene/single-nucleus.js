@@ -11,9 +11,13 @@ define(function(require) {
 
     var Nucleon       = require('models/nucleon');
     var AlphaParticle = require('models/alpha-particle');
+    var Electron      = require('models/electron');
+    var Antineutrino  = require('models/antineutrino');
 
     var NucleonView               = require('views/nucleon');
     var AlphaParticleView         = require('views/alpha-particle');
+    var ElectronView              = require('views/electron');
+    var AntineutrinoView          = require('views/antineutrino');
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
     var SingleNucleusDecayChart   = require('views/nucleus-decay-chart/single');
     var ExplodingNucleusView      = require('views/nucleus/exploding');
@@ -120,7 +124,20 @@ define(function(require) {
         },
 
         particleEmitted: function(particle) {
-
+            if (particle instanceof Electron) {
+                var electronView = new ElectronView({
+                    model: particle,
+                    mvt: this.mvt
+                });
+                this.nucleusLayer.addChild(electronView.displayObject);
+            }
+            else if (particle instanceof Antineutrino) {
+                var antineutrinoView = new AntineutrinoView({
+                    model: particle,
+                    mvt: this.mvt
+                });
+                this.nucleusLayer.addChild(antineutrinoView.displayObject);
+            }
         },
 
         nucleusTypeChanged: function(simulation, nucleusType) {
