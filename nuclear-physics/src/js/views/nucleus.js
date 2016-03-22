@@ -7,6 +7,7 @@ define(function(require) {
     var PixiView = require('common/v3/pixi/view');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+    var IsotopeSymbolGenerator    = require('views/isotope-symbol-generator');
 
     /**
      * 
@@ -17,7 +18,14 @@ define(function(require) {
          * Initializes the new NucleusView.
          */
         initialize: function(options) {
+            options = _.extend({
+                showSymbol: true,
+                symbolSize: null
+            }, options);
+
             this.mvt = options.mvt;
+            this.showSymbol = options.showSymbol;
+            this.symbolSize = options.symbolSize;
 
             this.initGraphics();
 
@@ -45,6 +53,16 @@ define(function(require) {
 
             this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt);
             this.displayObject.addChild(this.nucleusSprite);
+
+            if (this.showSymbol) {
+                if (this.symbol)
+                    this.displayObject.removeChild(this.symbol);
+
+                var smallerDimension = (this.nucleusSprite.height > this.nucleusSprite.width) ? this.nucleusSprite.width : this.nucleusSprite.height;
+                var fontSize = this.symbolSize ? this.symbolSize : Math.floor(smallerDimension * 0.75);
+                this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize, 0.35);
+                this.displayObject.addChild(this.symbol);
+            }
 
             this.updatePosition(this.model, this.model.get('position'));
         },

@@ -71,6 +71,9 @@ define(function (require, exports, module) {
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {
+            if (this.atomicNucleus)
+                this.atomicNucleus.update(time, deltaTime);
+            
             // Move any emitted particles that have been produced by decay events.
             for (var i = 0; i < this.emittedParticles.length; i++)
                 this.emittedParticles.at(i).update();
@@ -84,7 +87,9 @@ define(function (require, exports, module) {
             this.atomicNucleus.reset();
             
             // Activate decay right away.
-            this.atomicNucleus.activateDecay();
+            this.atomicNucleus.activateDecay(this.time);
+
+            this.trigger('nucleus-reset');
         },
 
         removeCurrentNucleus: function() {
@@ -113,19 +118,8 @@ define(function (require, exports, module) {
                 console.warn('Warning: Removing existing nucleus before adding new one.');
                 this.removeCurrentNucleus();
             }
-            switch (this.get('nucleusType')) {
-                case NucleusType.HYDROGEN_3:
-                    this.atomicNucleus = new Hydrogen3CompositeNucleus();
-                    break;
-                    
-                case NucleusType.CARBON_14:
-                    this.atomicNucleus = new Carbon14CompositeNucleus();
-                    break;
-                    
-                case NucleusType.LIGHT_CUSTOM:
-                    this.atomicNucleus = new LightAdjustableCompositeNucleus();
-                    break;
-            }
+            
+            this.atomicNucleus = this.createNucleus();
 
             this.set('halfLife', this.atomicNucleus.get('halfLife'), { silent: true });
             
@@ -135,10 +129,23 @@ define(function (require, exports, module) {
             
             // In this model, the nucleus is activated (so that it is moving
             //   towards decay) right away.
-            this.atomicNucleus.activateDecay();
+            this.atomicNucleus.activateDecay(this.time);
             
             // Inform any listeners of the changes.
             this.trigger('nucleus-added', this.atomicNucleus);
+        },
+
+        /**
+         * Creates and returns a nucleus of the current type
+         */
+        createNucleus: function() {
+            switch (this.get('nucleusType')) {
+                case NucleusType.HYDROGEN_3: return new Hydrogen3CompositeNucleus();
+                case NucleusType.CARBON_14:  return new Carbon14CompositeNucleus();
+                case NucleusType.LIGHT_CUSTOM: return new LightAdjustableCompositeNucleus();
+            }
+
+            throw 'Other nuclei not yet implemented.';
         },
 
         /**

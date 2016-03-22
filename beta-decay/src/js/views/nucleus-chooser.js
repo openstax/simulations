@@ -19,7 +19,7 @@ define(function(require) {
 
         initialize: function(options) {
             options = _.extend({
-                scale: 16
+                scale: 18
             }, options);
 
             NucleusChooser.prototype.initialize.apply(this, [options]);
@@ -30,6 +30,7 @@ define(function(require) {
          */
         initItems: function() {
             var items = [];
+            var symbolSize = 36;
 
             // Hydrogen-3 to Helium-3
             var hydrogen3 = new Hydrogen3CompositeNucleus();
@@ -43,14 +44,16 @@ define(function(require) {
                     label: 'Hydrogen-3',
                     displayObject: new NucleusView({
                         model: hydrogen3,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 },
                 end: {
                     label: 'Helium-3',
                     displayObject: new NucleusView({
                         model: helium3,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 }
             });
@@ -66,14 +69,16 @@ define(function(require) {
                     label: 'Carbon-14',
                     displayObject: new NucleusView({
                         model: carbon14,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 },
                 end: {
                     label: 'Nitrogen-14',
                     displayObject: new NucleusView({
                         model: nitrogen14,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 }
             });
@@ -89,14 +94,16 @@ define(function(require) {
                     label: 'Custom',
                     displayObject: new NucleusView({
                         model: custom,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 },
                 end: {
                     label: 'Custom<br>(Decayed)',
                     displayObject: new NucleusView({
                         model: decayed,
-                        mvt: this.mvt
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
                     }).displayObject
                 }
             });

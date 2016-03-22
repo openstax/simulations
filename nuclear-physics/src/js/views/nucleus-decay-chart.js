@@ -19,7 +19,8 @@ define(function(require) {
     var NucleusType   = require('models/nucleus-type');
     var AtomicNucleus = require('models/atomic-nucleus');
 
-    var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
+    var IsotopeSymbolGenerator      = require('views/isotope-symbol-generator');
+    var NucleusDecayChartNucleiView = require('views/nucleus-decay-chart/nuclei');
 
     var Constants = require('constants');
     var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR);
@@ -56,6 +57,7 @@ define(function(require) {
                 paddingBottom: 46,
                 paddingRight: 15,
                 paddingTop: 15,
+                padding: 15,
                 bgColor: '#FF9797',
                 bgAlpha: 1,
 
@@ -75,6 +77,7 @@ define(function(require) {
             this.paddingBottom  = options.paddingBottom;
             this.paddingRight   = options.paddingRight;
             this.paddingTop     = options.paddingTop;
+            this.padding        = options.padding;
             this.graphWidth     = this.width - this.paddingLeft - this.paddingRight;
             this.graphHeight    = this.height - this.paddingTop - this.paddingBottom;
             this.graphOriginX   = this.paddingLeft;
@@ -90,11 +93,10 @@ define(function(require) {
             // Initialize the graphics
             this.initGraphics();
 
-            this.updateTimeSpan();
-            this.updateIsotopes();
-
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
             this.listenTo(this.simulation, 'change:halfLife',    this.halfLifeChanged);
+
+            this.nucleusTypeChanged(this.simulation, this.simulation.get('nucleusType'));
         },
 
         /**
@@ -110,15 +112,11 @@ define(function(require) {
                 this.displayObject.y = 20;
             }
 
-            this.initMVT();
             this.initPanel();
             this.initXAxis();
             this.initYAxis();
             this.initHalfLifeBar();
-        },
-
-        initMVT: function() {
-            // Creates an MVT that will scale the nucleus graphics
+            this.initNucleiView();
         },
 
         initPanel: function() {
@@ -289,6 +287,20 @@ define(function(require) {
             graphics.endFill();
         },
 
+        initNucleiView: function() {
+            this.nucleiView = new NucleusDecayChartNucleiView({
+                simulation: this.simulation,
+                width: this.graphWidth,
+                height: this.graphHeight,
+                isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
+                isotope2Y: this.yAxisIsotope2.y - this.paddingTop
+            });
+
+            this.nucleiView.displayObject.y = this.graphOriginY - this.graphHeight;
+
+            this.displayObject.addChild(this.nucleiView.displayObject);
+        },
+
         drawXAxisTicks: function() {
             this.xAxisTicks.clear();
             this.xAxisTicks.lineStyle(NucleusDecayChart.TICK_MARK_WIDTH, this.tickColor, 1);
@@ -329,8 +341,8 @@ define(function(require) {
         },
 
         drawXAxisTick: function(time, labelText) {
-            var timeZeroPosX = this.paddingLeft + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan * this.msToPixelsFactor);
-            var y = this.height - this.paddingBottom;
+            var timeZeroPosX = this.graphOriginX + this.getTimeZeroXOffset();
+            var y = this.graphOriginY;
             var x = timeZeroPosX + (time * this.msToPixelsFactor);
             var length = NucleusDecayChart.TICK_MARK_LENGTH;
             
@@ -396,9 +408,26 @@ define(function(require) {
             }
         },
 
-        update: function() {
-            this.drawXAxisTicks();
-            this.updateHalfLifeMarker();
+        clearNuclei: function() {
+            this.nucleiView.clear();
+        },
+
+        addNucleus: function(nucleus) {
+            this.nucleiView.addNucleus(nucleus);
+        },
+
+        update: function(time, deltaTime, paused) {
+            this.nucleiView.update(time, deltaTime, paused);
+        },
+
+        updateNucleusScale: function() {
+            // Creates an MVT that will scale the nucleus graphics
+            var nucleus = this.getSampleNucleus();
+            var modelDiameter = nucleus.get('diameter');
+            var viewDiameter = this.height * NucleusDecayChart.NUCLEUS_SIZE_PROPORTION;
+            var scale = viewDiameter / modelDiameter;
+
+            this.nucleiView.setNucleusScale(scale);
         },
 
         /**
@@ -497,17 +526,32 @@ define(function(require) {
         setTimeSpan: function(timeSpan) {
             this.timeSpan = timeSpan;
             this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
-            this.update();
+
+            this.nucleiView.setMillisecondsToPixels(this.msToPixelsFactor);
+            this.nucleiView.displayObject.x = this.graphOriginX + this.getTimeZeroXOffset();
+
+            this.drawXAxisTicks();
+            this.updateHalfLifeMarker();
         },
 
         getExponentialMode: function() {
             return (this.simulation.get('nucleusType') === NucleusType.HEAVY_CUSTOM);
         },
 
+        getTimeZeroXOffset: function() {
+            return NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan * this.msToPixelsFactor;
+        },
+
+        getSampleNucleus: function() {
+            return this.simulation.createNucleus();
+        },
+
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.halfLifeHandle.visible = NucleusType.isCustomizable(nucleusType);
+
             this.updateTimeSpan();
             this.updateIsotopes();
+            this.updateNucleusScale();
         },
 
         halfLifeChanged: function(simulation, halfLife) {

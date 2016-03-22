@@ -18,10 +18,6 @@ define(function(require) {
      */
     var BetaDecaySceneView = PixiSceneView.extend({
 
-        events: {
-            
-        },
-
         initialize: function(options) {
             PixiSceneView.prototype.initialize.apply(this, arguments);
         },

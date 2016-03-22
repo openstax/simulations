@@ -71,6 +71,10 @@ define(function (require, exports, module) {
          * Runs every frame of the simulation loop.
          */
         _update: function(time, deltaTime) {
+            // Update all the nuclei
+            for (var j = 0; j < this.atomicNuclei.length; j++)
+                this.atomicNuclei.at(j).update(time, deltaTime);
+
             if (this.get('jitterEnabled')) {
                 // Cause the active nuclei to "jitter".  For efficiency, not every
                 //   active nucleus is moved every time.
@@ -138,7 +142,7 @@ define(function (require, exports, module) {
                 var nucleus = this.atomicNuclei.at(i);
                 if (nucleus.isDecayActive() || nucleus.hasDecayed()){
                     nucleus.reset();
-                    nucleus.activateDecay();
+                    nucleus.activateDecay(this.time);
                     resetCount++;
                 }
             }

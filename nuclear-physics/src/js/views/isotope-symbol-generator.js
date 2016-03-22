@@ -5,6 +5,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView = require('common/v3/pixi/view');
+    var Colors   = require('common/colors/colors');
 
     var AtomicNucleus = require('models/atomic-nucleus');
     var NucleusType   = require('models/nucleus-type');
@@ -12,12 +13,12 @@ define(function(require) {
     var Constants = require('constants');
 
     /**
-     * 
+     * Generates isotope symbols from nucleus models and nucleus types
      */
     var IsotopeSymbolGenerator = {
 
         /**
-         * 
+         * Generates an isotope symbol from either a nucleus type or a nucleus model
          */
         generate: function(nucleusType, fontSize, anchorX, anchorY) {
             // If they pass in a nucleus model instead of a nucleus type, get the nucleus type
@@ -36,12 +37,15 @@ define(function(require) {
             var resolution = PixiView.prototype.getResolution();
             var fontStart = 'bold ';
             var fontEnd = 'px Helvetica Neue';
+            var shadowColor = Colors.hexToValue(color) > Colors.hexToValue('#777') ? '#000' : '#fff';
+            var shadowDistance = 1;
 
             var symbol = new PIXI.Text(chemicalSymbol, {
                 font: fontStart + fontSize + fontEnd,
                 fill: color,
                 dropShadow: true,
-                dropShadowDistance: 1
+                dropShadowDistance: shadowDistance,
+                dropShadowColor: shadowColor
             });
             symbol.resolution = resolution;
             symbol.anchor.x = (anchorX !== undefined) ? anchorX : 0.5;
@@ -51,7 +55,8 @@ define(function(require) {
                 font: fontStart + numberFontSize + fontEnd,
                 fill: color,
                 dropShadow: true,
-                dropShadowDistance: 1
+                dropShadowDistance: shadowDistance,
+                dropShadowColor: shadowColor
             });
             number.resolution = resolution;
             number.anchor.x = 1.1;
