@@ -20,12 +20,12 @@ define(function(require) {
         initMVT: function(){
             RutherfordScatteringSceneView.prototype.initMVT.apply(this, arguments);
 
-            var pixelsPerPicometer = Constants.BOX_SIZE/150;
+            this.scale = this.spaceBoxSize/150;
 
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
-                pixelsPerPicometer
+                this.scale
             );
         }
     });

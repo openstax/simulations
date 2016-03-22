@@ -49,7 +49,8 @@ define(function (require) {
         SPACE_NODE_HEIGHT: 490,
 
         // Animation space size, must be square!
-        BOX_SIZE: 540,
+        BOX_SIZE: 480,
+        BOX_SIZE_SMALL: 400,
 
         RayGunView: {
             WIDTH: 20,
