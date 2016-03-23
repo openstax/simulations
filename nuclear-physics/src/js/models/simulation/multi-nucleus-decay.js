@@ -83,7 +83,7 @@ define(function (require, exports, module) {
                 //   active nucleus is moved every time.
                 for (var i = this._jitterOffsetCount; i < this.atomicNuclei.length; i += MultiNucleusDecaySimulation.FRAMES_PER_JITTER) {
                     var nucleus = this.atomicNuclei.at(i);
-                    if (nucleus.isDecayActive() && !nucleus.isPaused()) {
+                    if (nucleus.isDecayActive()) {
                         // This nucleus is active, so it should be jittered.
                         var jitterOffset = this._jitterOffsets[i];
                         var currentLocation = nucleus.get('position');
@@ -101,7 +101,7 @@ define(function (require, exports, module) {
                                 currentLocation.x - jitterOffset.x,
                                 currentLocation.y - jitterOffset.y
                             );
-                            this._jitterOffsets[i].setLocation(0, 0);
+                            this._jitterOffsets[i].set(0, 0);
                         }
                     }
                 }
@@ -117,7 +117,7 @@ define(function (require, exports, module) {
             if (this.maxJitterLength === 0) {
                 // Calculate the maximum jitter length for the current nucleus.
                 if (this.atomicNuclei.length > 0) {
-                    this.maxJitterLength = this.atomicNuclei.first().getDiameter() / 16;
+                    this.maxJitterLength = this.atomicNuclei.first().get('diameter') / 16;
                 }
                 else {
                     // Shouldn't really get here, but just in case...
@@ -204,7 +204,7 @@ define(function (require, exports, module) {
             this._jitterOffsets.push(new Vector2());
 
             // Just activate it, because it's already where we want it
-            newNucleus.activateDecay();
+            newNucleus.activateDecay(this.time);
         },
 
         createNucleus: function() {

@@ -205,7 +205,7 @@ define(function(require) {
         },
 
         resetNuclei: function() {
-            console.log('reset nuclei');
+            this.simulation.resetActiveAndDecayedNuclei();
         },
 
         addTenNuclei: function() {
