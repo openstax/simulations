@@ -208,6 +208,14 @@ define(function(require) {
          */
         createAndAddObject: function(dummyObject) {},
 
+        /**
+         * Finds a spot for a randomly-placed atom and adds it to the simulation
+         */
+        addNewAtom: function() {
+            console.log('adding an atom')
+            this.simulation.addNucleusAt(0, 0);
+        },
+
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
@@ -318,6 +326,16 @@ define(function(require) {
         hideDragHint: function() {
             this._showingDragHint = false;
             this.dragOverlay.alpha = 0;
+        },
+
+        addAtoms: function(numberOfAtoms) {
+            for (var i = 0; i < numberOfAtoms; i++)
+                this.addNewAtom();
+        },
+
+        removeAtoms: function(numberOfAtoms) {
+            for (var i = 0; i < numberOfAtoms; i++)
+                this.simulation.removeRandomNucleus();
         }
 
     });

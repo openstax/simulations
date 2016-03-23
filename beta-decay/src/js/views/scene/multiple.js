@@ -13,6 +13,7 @@ define(function(require) {
     var NucleusDecayChart         = require('views/nucleus-decay-chart');
     var NuclearPhysicsSceneView   = require('views/scene');
     var AtomCanisterView          = require('views/atom-canister');
+    var ExplodingNucleusView      = require('views/nucleus/exploding');
 
     /**
      *
@@ -25,7 +26,8 @@ define(function(require) {
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.atomicNuclei, 'add', this.nucleusAdded);
+            this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
+            this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
         },
 
         renderContent: function() {
@@ -38,12 +40,12 @@ define(function(require) {
 
             this.$add10Button = $('<button class="btn add-10-btn">+ 10</button>');
             this.$add10Button.on('click', function() {
-                self.add10();
+                self.addTenNuclei();
             });
 
             this.$remove10Button = $('<button class="btn remove-10-btn">- 10</button>');
             this.$remove10Button.on('click', function() {
-                self.remove10();
+                self.removeTenNuclei();
             });
 
             this.$bucketButtonsWrapper = $('<div class="bucket-btns-wrapper">');
@@ -112,30 +114,43 @@ define(function(require) {
             
             this.nucleusDecayChart.update(time, deltaTime, paused);
             this.atomCanisterView.update(time, deltaTime, paused);
+
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].update(time, deltaTime, paused);
         },
 
         nucleusAdded: function(nucleus) {
             var nucleusView = new ExplodingNucleusView({
-                model: this.simulation.atomicNucleus,
+                model: nucleus,
                 mvt: this.mvt,
                 showSymbol: this.showingLabels
             });
 
             this.nucleusViews.push(nucleusView);
 
-            this.nucleusLayer.addChild(this.nucleusView.displayObject);
+            this.nucleusLayer.addChild(nucleusView.displayObject);
+        },
+
+        nucleusRemoved: function(nucleus) {
+            for (var i = 0; i < this.nucleusViews.length; i++) {
+                if (this.nucleusViews[i].model == nucleus) {
+                    this.nucleusViews[i].remove();
+                    this.nucleusViews.splice(i, 1);
+                    break;
+                }
+            }
         },
 
         resetNuclei: function() {
             console.log('reset nuclei');
         },
 
-        add10: function() {
-
+        addTenNuclei: function() {
+            this.atomCanisterView.addAtoms(10);
         },
 
-        remove10: function() {
-
+        removeTenNuclei: function() {
+            this.atomCanisterView.removeAtoms(10);
         },
 
         showLabels: function() {

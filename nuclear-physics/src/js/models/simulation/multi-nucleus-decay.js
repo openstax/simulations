@@ -53,7 +53,7 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             this.removeAllNuclei();
-            this.addMaxNuclei();
+            // this.addMaxNuclei();
         },
 
         /**
@@ -157,19 +157,56 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Removes a random nucleus
+         */
+        removeRandomNucleus: function() {
+            if (this.atomicNuclei.length) {
+                var randomIndex = Math.floor(Math.random() * this.atomicNuclei.length);
+                var nucleus = this.atomicNuclei.at(randomIndex);
+                nucleus.destroy();
+            }
+        },
+
+        /**
          * Add the maximum allowed number of nuclei to the model.
          */
         addMaxNuclei: function() {
             var newNucleus;
             for (var i = 0; i < this.get('maxNuclei'); i++) {
-                if (this.get('nucleusType') === NucleusType.POLONIUM_211)
-                    newNucleus = new Polonium211Nucleus();
-                else
-                    newNucleus = new HeavyAdjustableHalfLifeNucleus();
-                
+                newNucleus = this.createNucleus();
                 this.atomicNuclei.add(newNucleus);
                 this._jitterOffsets[i] = new Vector2();
             }
+        },
+
+        /**
+         * Adds and activates a new nucleus at the specified point.
+         *
+         * Note: I made this as an alternative to using addMaxNuclei. For my
+         *   purposes this is much simpler, but we should also get the added
+         *   performance benefit of not adding the nuclei until we need them,
+         *   which would eliminate the lag problem in the original that can
+         *   occur when switching quickly between nucleus types.
+         */
+        addNucleusAt: function(x, y) {
+            var newNucleus = this.createNucleus();
+            newNucleus.setPosition(x, y);
+            
+            this.atomicNuclei.add(newNucleus);
+
+            this._jitterOffsets.push(new Vector2());
+
+            // Just activate it, because it's already where we want it
+            newNucleus.activateDecay();
+        },
+
+        createNucleus: function() {
+            switch (this.get('nucleusType')) {
+                case NucleusType.POLONIUM_211: return new Polonium211Nucleus();
+                case NucleusType.HEAVY_CUSTOM: return new HeavyAdjustableHalfLifeNucleus();
+            }
+
+            throw 'Other nuclei not yet implemented.';
         },
 
         setHalfLife: function(halfLife) {
@@ -234,7 +271,7 @@ define(function (require, exports, module) {
             // Add all nuclei to the model.  At the time of this writing, this
             //   is the desired behavior for all subclasses.  It may need to
             //   be modified if a more general approach is needed.
-            this.addMaxNuclei();
+            // this.addMaxNuclei();
             
             // Set jitter length to 0 so that it will be set correctly the
             //   next time a jitter offset is generated.
