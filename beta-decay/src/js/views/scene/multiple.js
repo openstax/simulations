@@ -31,6 +31,7 @@ define(function(require) {
 
             this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
             this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
+            this.listenTo(this.simulation.atomicNuclei, 'reset',  this.nucleiReset);
         },
 
         renderContent: function() {
@@ -70,7 +71,7 @@ define(function(require) {
                 pixelsPerFemtometer = 7;
             }
             else {
-                pixelsPerFemtometer = 9;
+                pixelsPerFemtometer = 8;
             }
 
             this.viewOriginX = 0;
@@ -193,6 +194,13 @@ define(function(require) {
                     this.nucleusViews.splice(i, 1);
                     break;
                 }
+            }
+        },
+
+        nucleiReset: function() {
+            for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
+                this.nucleusViews[i].remove();
+                this.nucleusViews.splice(i, 1);
             }
         },
 

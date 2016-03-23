@@ -71,6 +71,12 @@ define(function(require) {
             this.showHints = options.showHints;
             this._showingDragHint = options.showHints;
 
+            this.nucleusPlacementBounds = new Rectangle(this.simulation.getNucleusBounds());
+            this.nucleusPlacementBounds.x += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
+            this.nucleusPlacementBounds.y += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
+            this.nucleusPlacementBounds.w -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
+            this.nucleusPlacementBounds.h -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
+
             // Cached objects
             this._bounds = new Rectangle();
 
@@ -219,7 +225,7 @@ define(function(require) {
             if (this.simulation.atomicNuclei.length >= this.simulation.get('maxNuclei'))
                 return;
 
-            var bounds = this.simulation.getNucleusBounds();
+            var bounds = this.nucleusPlacementBounds;
 
             var x;
             var y;

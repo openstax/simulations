@@ -33,9 +33,9 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
-
             this.emittedParticles = new Backbone.Collection();
+
+            MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
 
             this.listenTo(this.atomicNuclei, 'nucleus-change', this.nucleusChanged);
         },

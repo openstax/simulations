@@ -287,6 +287,7 @@ define(function (require, exports, module) {
             //   is the desired behavior for all subclasses.  It may need to
             //   be modified if a more general approach is needed.
             // this.addMaxNuclei();
+            this.removeAllNuclei();
             
             // Set jitter length to 0 so that it will be set correctly the
             //   next time a jitter offset is generated.
