@@ -104,7 +104,12 @@ define(function(require) {
             });
 
             this.atomCanisterView.displayObject.x = 534;
-            this.atomCanisterView.displayObject.y = 420;
+            this.atomCanisterView.displayObject.y = 440;
+
+            var top = this.atomCanisterView.displayObject.y + 140;
+            var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width / 2;
+            this.$bucketButtonsWrapper.css('top', top + 'px');
+            this.$bucketButtonsWrapper.css('right', right + 'px');
 
             this.stage.addChild(this.atomCanisterView.displayObject);
         },
