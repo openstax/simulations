@@ -193,7 +193,7 @@ define(function (require, exports, module) {
          */
         addNucleusAt: function(x, y) {
             // Don't create one if we've already reached the max nuclei count
-            if (this.nuclei.length >= this.get('maxNuclei'))
+            if (this.atomicNuclei.length >= this.get('maxNuclei'))
                 return;
 
             var newNucleus = this.createNucleus();

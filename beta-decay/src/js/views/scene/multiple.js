@@ -9,11 +9,11 @@ define(function(require) {
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
 
-    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
-    var NucleusDecayChart         = require('views/nucleus-decay-chart');
-    var NuclearPhysicsSceneView   = require('views/scene');
-    var AtomCanisterView          = require('views/atom-canister');
-    var ExplodingNucleusView      = require('views/nucleus/exploding');
+    var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
+    var NucleusDecayChart             = require('views/nucleus-decay-chart');
+    var NuclearPhysicsSceneView       = require('views/scene');
+    var AtomCanisterView              = require('views/atom-canister');
+    var DraggableExplodingNucleusView = require('views/nucleus/draggable');
 
     /**
      *
@@ -136,10 +136,11 @@ define(function(require) {
         },
 
         nucleusAdded: function(nucleus) {
-            var nucleusView = new ExplodingNucleusView({
+            var nucleusView = new DraggableExplodingNucleusView({
                 model: nucleus,
                 mvt: this.mvt,
-                showSymbol: this.showingLabels
+                showSymbol: this.showingLabels,
+                atomCanister: this.atomCanisterView
             });
 
             this.nucleusViews.push(nucleusView);

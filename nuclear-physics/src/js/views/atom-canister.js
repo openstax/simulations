@@ -212,6 +212,10 @@ define(function(require) {
          * Finds a spot for a randomly-placed atom and adds it to the simulation
          */
         addNewAtom: function() {
+            // Don't add one if we've already reached the max nuclei count
+            if (this.simulation.atomicNuclei.length >= this.simulation.get('maxNuclei'))
+                return;
+
             var bounds = this.mvt.modelToView(this.simulation.getNucleusBounds());
 
             var x = bounds.x + Math.random() * bounds.w;
@@ -315,11 +319,11 @@ define(function(require) {
             return this.getBounds().contains(x, y);
         },
 
-        showDestroyHighlight: function() {
+        showDestroyOverlay: function() {
             this.removeOverlay.alpha = this.overlayAlpha;
         },
 
-        hideDestroyHighlight: function() {
+        hideDestroyOverlay: function() {
             this.removeOverlay.alpha = 0;
         },
 

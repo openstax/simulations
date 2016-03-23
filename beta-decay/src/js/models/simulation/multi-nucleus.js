@@ -25,7 +25,8 @@ define(function (require, exports, module) {
     var MultiNucleusBetaDecaySimulation = MultiNucleusDecaySimulation.extend({
 
         defaults: _.extend({}, MultiNucleusDecaySimulation.prototype.defaults, {
-            nucleusType: Constants.MultiNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE
+            nucleusType: Constants.MultiNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE,
+            maxNuclei:   Constants.MultiNucleusBetaDecaySimulation.MAX_NUCLEI
         }),
 
         /**
