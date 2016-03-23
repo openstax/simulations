@@ -56,23 +56,34 @@ define(function(require) {
             this.$ui.append(this.$bucketButtonsWrapper);
         },
 
+        getTopPadding: function() {
+            return 150;
+        },
+
         initMVT: function() {
+            var pixelsPerFemtometer;
             if (AppView.windowIsShort()) {
-                this.viewOriginX = Math.round((this.width - 200) / 2);
-                this.viewOriginY = Math.round(this.height / 2);
+                pixelsPerFemtometer = 7;
             }
             else {
-                this.viewOriginX = Math.round(this.width  / 2);
-                this.viewOriginY = Math.round(this.height / 2);
+                pixelsPerFemtometer = 9;
             }
 
-            var pixelsPerFemtometer = 25;
+            this.viewOriginX = this.getLeftPadding();
+            this.viewOriginY = this.getTopPadding();
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 pixelsPerFemtometer
+            );
+
+            this.simulation.setNucleusBounds(
+                this.mvt.viewToModelX(this.getLeftPadding() + pixelsPerFemtometer),
+                this.mvt.viewToModelY(this.getTopPadding() + pixelsPerFemtometer),
+                this.mvt.viewToModelDeltaX(this.getAvailableWidth() - pixelsPerFemtometer * 2),
+                this.mvt.viewToModelDeltaY(this.getAvailableHeight() - pixelsPerFemtometer * 2)
             );
         },
 

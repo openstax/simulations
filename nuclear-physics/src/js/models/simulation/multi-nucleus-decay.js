@@ -5,7 +5,8 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var NuclearPhysicsSimulation       = require('models/simulation');
     var NucleusType                    = require('models/nucleus-type');
@@ -33,6 +34,8 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             this._jitterOffsets = [];
             this._jitterOffsetCount = 0;
+
+            this._nucleusBounds = new Rectangle();
 
             NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
@@ -189,6 +192,10 @@ define(function (require, exports, module) {
          *   occur when switching quickly between nucleus types.
          */
         addNucleusAt: function(x, y) {
+            // Don't create one if we've already reached the max nuclei count
+            if (this.nuclei.length >= this.get('maxNuclei'))
+                return;
+
             var newNucleus = this.createNucleus();
             newNucleus.setPosition(x, y);
             
@@ -215,6 +222,14 @@ define(function (require, exports, module) {
 
         getHalfLife: function() {
             return this.get('halfLife');
+        },
+
+        setNucleusBounds: function(x, y, width, height) {
+            this._nucleusBounds.set(x, y, width, height);
+        },
+
+        getNucleusBounds: function(x, y, width, height) {
+            return this._nucleusBounds;
         },
         
         /**

@@ -212,8 +212,12 @@ define(function(require) {
          * Finds a spot for a randomly-placed atom and adds it to the simulation
          */
         addNewAtom: function() {
-            console.log('adding an atom')
-            this.simulation.addNucleusAt(0, 0);
+            var bounds = this.mvt.modelToView(this.simulation.getNucleusBounds());
+
+            var x = bounds.x + Math.random() * bounds.w;
+            var y = bounds.y + Math.random() * bounds.h;
+
+            this.simulation.addNucleusAt(this.mvt.viewToModelX(x), this.mvt.viewToModelY(y));
         },
 
         updateMVT: function(mvt) {
