@@ -12,6 +12,7 @@ define(function(require) {
     var NucleusView = require('views/nucleus');
 
     var Assets = require('assets');
+    var Constants = require('constants');
 
     /**
      * A visual representation of some kind of object supply.  The
@@ -40,6 +41,7 @@ define(function(require) {
             options = _.extend({
                 width: 160,
                 height: undefined,
+                areasToAvoid: [],
 
                 labelText: 'Atoms',
                 labelFont: 'bold 16px Helvetica Neue',
@@ -54,6 +56,7 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
             this.dummyLayer = options.dummyLayer;
+            this.areasToAvoid = options.areasToAvoid;
 
             this.width = options.width;
             this.height = options.height;
@@ -216,18 +219,97 @@ define(function(require) {
             if (this.simulation.atomicNuclei.length >= this.simulation.get('maxNuclei'))
                 return;
 
-            var bounds = this.mvt.modelToView(this.simulation.getNucleusBounds());
+            var bounds = this.simulation.getNucleusBounds();
 
-            var x = bounds.x + Math.random() * bounds.w;
-            var y = bounds.y + Math.random() * bounds.h;
+            var x;
+            var y;
+            var openSpotFound = false;
 
-            this.simulation.addNucleusAt(this.mvt.viewToModelX(x), this.mvt.viewToModelY(y));
+            for (var i = 0; i < 3 && !openSpotFound; i++) {
+                var minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE;
+
+                if (i === 1) {
+                    // Lower our standards.
+                    minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE / 2;
+                }
+                else if (i === 3) {
+                    // Anything goes - nuclei may end up on top of each other.
+                    minInterNucleusDistance = 0;
+                    console.warn('WARNING: Allowing nucleus to overlap with others.');
+                }
+
+                for (var j = 0; j < AtomCanisterView.MAX_PLACEMENT_ATTEMPTS & !openSpotFound; j++) {
+                    // Generate a candidate location.
+                    x = bounds.x + Math.random() * bounds.width;
+                    y = bounds.y + Math.random() * bounds.height;
+
+                    // Innocent until proven guilty.
+                    openSpotFound = true;
+
+                    if (this.pointInsideInvalidArea(x, y) || 
+                        this.pointTooCloseToOtherNuclei(x, y, minInterNucleusDistance)
+                    ) {
+                        openSpotFound = false;
+                        continue;
+                    }
+                }
+            }
+
+            this.simulation.addNucleusAt(x, y);
+        },
+
+        pointInsideInvalidArea: function(x, y) {
+            for (var i = 0; i < this.modelAreasToAvoid.length; i++) {
+                if (this.modelAreasToAvoid[i].contains(x, y))
+                    return true;
+            }
+            return false;
+        },
+
+        pointTooCloseToOtherNuclei: function(x, y, minInterNucleusDistance) {
+            var nuclei = this.simulation.atomicNuclei.models;
+            var minDistSquared = minInterNucleusDistance * minInterNucleusDistance;
+
+            for (var i = 0; i < nuclei.length; i++) {
+                if (nuclei[i].get('position').distanceSq(x, y) < minDistSquared)
+                    return true;
+            }
+
+            return false;
+        },
+
+        setAreasToAvoid: function(areas) {
+            this.areasToAvoid = areas;
+            this.updateAreasToAvoid();
         },
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
             this.drawDecorativeDummyObjects();
+
+            this.updateAreasToAvoid();
+        },
+
+        updateAreasToAvoid: function() {
+            var padding = AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
+
+            this.modelAreasToAvoid = [];
+            for (var i = 0; i < this.areasToAvoid.length; i++) {
+                var modelArea = new Rectangle(this.mvt.viewToModel(this.areasToAvoid[i]));
+                modelArea.x -= padding;
+                modelArea.y -= padding;
+                modelArea.w += padding * 2;
+                modelArea.h += padding * 2;
+                this.modelAreasToAvoid.push(modelArea);
+            }
+
+            var canisterBounds = new Rectangle(this.mvt.viewToModel(this.getBounds()));
+            canisterBounds.x -= padding;
+            canisterBounds.y -= padding;
+            canisterBounds.w += padding * 2;
+            canisterBounds.h += padding * 2;
+            this.modelAreasToAvoid.push(canisterBounds);
         },
 
         update: function(time, deltaTime, paused) {
@@ -346,7 +428,7 @@ define(function(require) {
                 this.simulation.removeRandomNucleus();
         }
 
-    });
+    }, Constants.AtomCanisterView);
 
 
     return AtomCanisterView;

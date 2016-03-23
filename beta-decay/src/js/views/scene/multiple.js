@@ -8,6 +8,7 @@ define(function(require) {
     var AppView            = require('common/v3/app/app');
     var ModelViewTransform = require('common/math/model-view-transform');
     var Vector2            = require('common/math/vector2');
+    var Rectangle          = require('common/math/rectangle');
 
     var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
     var NucleusDecayChart             = require('views/nucleus-decay-chart');
@@ -62,6 +63,7 @@ define(function(require) {
 
         initMVT: function() {
             var pixelsPerFemtometer;
+
             if (AppView.windowIsShort()) {
                 pixelsPerFemtometer = 7;
             }
@@ -69,8 +71,8 @@ define(function(require) {
                 pixelsPerFemtometer = 9;
             }
 
-            this.viewOriginX = this.getLeftPadding();
-            this.viewOriginY = this.getTopPadding();
+            this.viewOriginX = 0;
+            this.viewOriginY = 0;
 
             // The center of the screen is actually (5, 5) in the original
             this.mvt = ModelViewTransform.createSinglePointScaleMapping(
@@ -80,11 +82,17 @@ define(function(require) {
             );
 
             this.simulation.setNucleusBounds(
-                this.mvt.viewToModelX(this.getLeftPadding() + pixelsPerFemtometer),
-                this.mvt.viewToModelY(this.getTopPadding() + pixelsPerFemtometer),
-                this.mvt.viewToModelDeltaX(this.getAvailableWidth() - pixelsPerFemtometer * 2),
-                this.mvt.viewToModelDeltaY(this.getAvailableHeight() - pixelsPerFemtometer * 2)
+                this.mvt.viewToModelX(this.getLeftPadding()),
+                this.mvt.viewToModelY(this.getTopPadding()),
+                this.mvt.viewToModelDeltaX(this.getAvailableWidth()),
+                this.mvt.viewToModelDeltaY(this.getAvailableHeight())
             );
+
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFF0000, 1);
+            graphics.drawRect(this.getLeftPadding(), this.getTopPadding(), this.getAvailableWidth(), this.getAvailableHeight());
+            graphics.endFill();
+            this.stage.addChild(graphics);
         },
 
         initGraphics: function() {
@@ -108,19 +116,43 @@ define(function(require) {
         },
 
         initAtomCanister: function() {
+            var canisterX = 534;
+            var canisterY = 440;
+            var canisterWidth = 160
+
             this.atomCanisterView = new AtomCanisterView({
                 simulation: this.simulation,
-                width: 160,
+                width: canisterWidth,
                 mvt: this.mvt
             });
 
-            this.atomCanisterView.displayObject.x = 534;
-            this.atomCanisterView.displayObject.y = 440;
+            this.atomCanisterView.displayObject.x = canisterX;
+            this.atomCanisterView.displayObject.y = canisterY;
 
+            // Position the bucket buttons underneath
             var top = this.atomCanisterView.displayObject.y + 140;
             var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width / 2;
             this.$bucketButtonsWrapper.css('top', top + 'px');
             this.$bucketButtonsWrapper.css('right', right + 'px');
+
+            // Calculate the bounds of the areas to be avoided when placing atoms
+            var buttonHeight = this.$bucketButtonsWrapper.find('button').height();
+            var resetButtonPos = this.$resetButton.position();
+            var bucketButtonsRect = new Rectangle(canisterX, top, this.atomCanisterView.width, buttonHeight);
+            var resetButtonRect = new Rectangle(resetButtonPos.left, resetButtonPos.top, canisterWidth, 46);
+            this.atomCanisterView.setAreasToAvoid([
+                bucketButtonsRect,
+                resetButtonRect
+            ]);
+
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill();
+            for (var i = 0; i < this.atomCanisterView.modelAreasToAvoid.length; i++) {
+                var viewArea = this.mvt.modelToView(this.atomCanisterView.modelAreasToAvoid[i]);
+                graphics.drawRect(viewArea.x, viewArea.y, viewArea.w, viewArea.h);
+            }
+            graphics.endFill();
+            this.stage.addChild(graphics);
 
             this.stage.addChild(this.atomCanisterView.displayObject);
         },

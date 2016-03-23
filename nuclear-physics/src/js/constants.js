@@ -448,5 +448,25 @@ define(function (require) {
     Constants.ExplodingNucleusView = ExplodingNucleusView;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                          ATOM CANISTER VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var AtomCanisterView = {};
+
+    // Number of tries for finding open nucleus location.
+    AtomCanisterView.MAX_PLACEMENT_ATTEMPTS = 100;
+    // Preferred distance between nucleus centers when placing them on the canvas.
+    AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE = 7;  // In femtometers.
+    // Minimum distance between the center of a nucleus and a wall or other obstacle.
+    AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE = 2;  // In femtometers.
+
+    Constants.AtomCanisterView = AtomCanisterView;
+
+    
+
+
     return Constants;
 });
