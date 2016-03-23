@@ -240,8 +240,8 @@ define(function(require) {
 
                 for (var j = 0; j < AtomCanisterView.MAX_PLACEMENT_ATTEMPTS & !openSpotFound; j++) {
                     // Generate a candidate location.
-                    x = bounds.x + Math.random() * bounds.width;
-                    y = bounds.y + Math.random() * bounds.height;
+                    x = bounds.x + Math.random() * bounds.w;
+                    y = bounds.y + Math.random() * bounds.h;
 
                     // Innocent until proven guilty.
                     openSpotFound = true;

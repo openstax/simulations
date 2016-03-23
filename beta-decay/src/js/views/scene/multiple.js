@@ -16,6 +16,8 @@ define(function(require) {
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
 
+    var showNucleusPlacementDebuggingGraphics = false;
+
     /**
      *
      */
@@ -88,11 +90,13 @@ define(function(require) {
                 this.mvt.viewToModelDeltaY(this.getAvailableHeight())
             );
 
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 1);
-            graphics.drawRect(this.getLeftPadding(), this.getTopPadding(), this.getAvailableWidth(), this.getAvailableHeight());
-            graphics.endFill();
-            this.stage.addChild(graphics);
+            if (showNucleusPlacementDebuggingGraphics) {
+                var graphics = new PIXI.Graphics();
+                graphics.beginFill(0xFF0000, 1);
+                graphics.drawRect(this.getLeftPadding(), this.getTopPadding(), this.getAvailableWidth(), this.getAvailableHeight());
+                graphics.endFill();
+                this.stage.addChild(graphics);    
+            }
         },
 
         initGraphics: function() {
@@ -145,14 +149,16 @@ define(function(require) {
                 resetButtonRect
             ]);
 
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill();
-            for (var i = 0; i < this.atomCanisterView.modelAreasToAvoid.length; i++) {
-                var viewArea = this.mvt.modelToView(this.atomCanisterView.modelAreasToAvoid[i]);
-                graphics.drawRect(viewArea.x, viewArea.y, viewArea.w, viewArea.h);
+            if (showNucleusPlacementDebuggingGraphics) {
+                var graphics = new PIXI.Graphics();
+                graphics.beginFill();
+                for (var i = 0; i < this.atomCanisterView.modelAreasToAvoid.length; i++) {
+                    var viewArea = this.mvt.modelToView(this.atomCanisterView.modelAreasToAvoid[i]);
+                    graphics.drawRect(viewArea.x, viewArea.y, viewArea.w, viewArea.h);
+                }
+                graphics.endFill();
+                this.stage.addChild(graphics);    
             }
-            graphics.endFill();
-            this.stage.addChild(graphics);
 
             this.stage.addChild(this.atomCanisterView.displayObject);
         },
