@@ -11,7 +11,7 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
-    var NucleusDecayChart             = require('views/nucleus-decay-chart');
+    var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
     var NuclearPhysicsSceneView       = require('views/scene');
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
@@ -118,7 +118,7 @@ define(function(require) {
         },
 
         initNucleusDecayChart: function() {
-            this.nucleusDecayChart = new NucleusDecayChart({
+            this.nucleusDecayChart = new MultipleNucleusDecayChart({
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels()
             });
