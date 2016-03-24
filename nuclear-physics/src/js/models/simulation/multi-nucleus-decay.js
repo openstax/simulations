@@ -278,6 +278,8 @@ define(function (require, exports, module) {
             // Set the new half life value.
             for (var i = 0; i < this.atomicNuclei.length; i++)
                 this.atomicNuclei.at(i).set('halfLife', halfLife);
+
+            this.resetActiveAndDecayedNuclei();
         },
 
         /**
@@ -293,6 +295,9 @@ define(function (require, exports, module) {
             // Set jitter length to 0 so that it will be set correctly the
             //   next time a jitter offset is generated.
             this.maxJitterLength = 0;
+
+            // Set the half life
+            this.set('halfLife', this.createNucleus().get('halfLife'), { silent: true });
         }
 
     }, Constants.MultiNucleusDecaySimulation);
