@@ -2,6 +2,8 @@ define(function(require) {
 
     'use strict';
 
+    var AppView = require('common/v3/app/app');
+
     var SingleNucleusDecayChart = require('views/nucleus-decay-chart/single');
     var SingleNucleusSceneView  = require('views/scene/single-nucleus');
 
@@ -29,6 +31,15 @@ define(function(require) {
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels()
             });
+
+            if (AppView.windowIsShort()) {
+                this.nucleusDecayChart.displayObject.x = this.getLeftPadding() + 12;
+                this.nucleusDecayChart.displayObject.y = 12;
+            }
+            else {
+                this.nucleusDecayChart.displayObject.x = this.getLeftPadding() + 20;
+                this.nucleusDecayChart.displayObject.y = 20;
+            }
 
             this.stage.addChild(this.nucleusDecayChart.displayObject);
         },

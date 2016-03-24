@@ -103,15 +103,6 @@ define(function(require) {
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            if (AppView.windowIsShort()) {
-                this.displayObject.x = 12;
-                this.displayObject.y = 12;
-            }
-            else {
-                this.displayObject.x = 20;
-                this.displayObject.y = 20;
-            }
-
             this.initPanel();
             this.initXAxis();
             this.initYAxis();
