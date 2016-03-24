@@ -51,7 +51,7 @@ define(function (require, exports, module) {
         },
 
         initAlphaParticles: function() {
-            this.alphaParticles = new AlphaParticles({bounds: {x: -150, y: -150, w: 300, h: 300}});
+            this.alphaParticles = new AlphaParticles(null, {bounds: {x: -150, y: -150, w: 300, h: 300}});
         }
 
     });
