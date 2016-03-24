@@ -55,6 +55,7 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             this.destroyParticles();
+            this.trigger('change:nucleusType', this, this.get('nucleusType'));
         },
 
         /**
