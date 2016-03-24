@@ -15,8 +15,8 @@ define(function (require) {
      */
     var AlphaParticle = SubatomicParticle.extend({
 
-        initialize: function(attributes, options) {
-            SubatomicParticle.prototype.initialize.apply(this, arguments);
+        onCreate: function(attributes, options) {
+            SubatomicParticle.prototype.onCreate.apply(this, arguments);
 
             this.setVelocity(
                 AlphaParticle.MAX_AUTO_TRANSLATE_AMT * ((Math.random() * 2.0) - 1.0), 

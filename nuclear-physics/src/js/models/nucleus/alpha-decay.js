@@ -24,7 +24,7 @@ define(function (require) {
             this.set('numProtons',  this.get('numProtons')  - 2);
 
             var byProducts = [
-                new AlphaParticle({
+                AlphaParticle.create({
                     position: this.get('position')
                 })
             ];

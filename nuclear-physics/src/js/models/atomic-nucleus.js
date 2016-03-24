@@ -4,8 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2      = require('common/math/vector2');
-    var MotionObject = require('common/models/motion-object');
+    var Vector2             = require('common/math/vector2');
+    var VanillaMotionObject = require('common/models/motion-object-vanilla');
 
     var HalfLifeInfo = require('models/half-life-info');
     var NucleusType  = require('models/nucleus-type');
@@ -15,9 +15,9 @@ define(function (require) {
     /**
      * Base class for all atomic nuclei
      */
-    var AtomicNucleus = MotionObject.extend({
+    var AtomicNucleus = VanillaMotionObject.extend({
 
-        defaults: _.extend({}, MotionObject.prototype.defaults, {
+        defaults: _.extend({}, VanillaMotionObject.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: undefined,
             numProtons: undefined,
@@ -34,12 +34,18 @@ define(function (require) {
             halfLife: 0,
             decayTimeScalingFactor: 1
         }),
+
+        init: function() {
+            this.originalPosition = new Vector2();
+        },
         
-        initialize: function(attributes, options) {
-            MotionObject.prototype.initialize.apply(this, [attributes, options]);
+        onCreate: function(attributes, options) {
+            VanillaMotionObject.prototype.initialize.apply(this, [attributes, options]);
+
+            this.simulation = options.simulation;
 
             // Original position
-            this.originalPosition = new Vector2(this.get('position'));
+            this.originalPosition.set(this.get('position'));
             // Original number of neutrons and protons, needed for resets and possibly
             //   for determining whether decay has occurred.
             this.originalNumProtons = this.get('numProtons');
@@ -253,7 +259,8 @@ define(function (require) {
             this.updateDiameter();
 
             // Do the notification.
-            this.trigger('nucleus-change', this, byProducts);
+            if (this.simulation)
+                this.simulation.triggerNucleusChange(this, byProducts);
         }
 
     }, _.extend({

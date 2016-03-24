@@ -2,10 +2,10 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2           = require('common/math/vector2');
+    var VanillaCollection = require('common/collections/vanilla');
 
     var MultiNucleusDecaySimulation    = require('models/simulation/multi-nucleus-decay');
     var NucleusType                    = require('models/nucleus-type');
@@ -34,11 +34,11 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.emittedParticles = new Backbone.Collection();
+            this.emittedParticles = new VanillaCollection();
 
             MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
 
-            this.listenTo(this.atomicNuclei, 'nucleus-change', this.nucleusChanged);
+            this.on('nucleus-change', this.nucleusChanged);
         },
 
         /**
@@ -81,12 +81,16 @@ define(function (require, exports, module) {
          */
         createNucleus: function() {
             switch (this.get('nucleusType')) {
-                case NucleusType.HYDROGEN_3: return new Hydrogen3Nucleus();
-                case NucleusType.CARBON_14:  return new Carbon14Nucleus();
-                case NucleusType.LIGHT_CUSTOM: return new LightAdjustableHalfLifeNucleus();
+                case NucleusType.HYDROGEN_3:   return Hydrogen3Nucleus.create();
+                case NucleusType.CARBON_14:    return Carbon14Nucleus.create();
+                case NucleusType.LIGHT_CUSTOM: return LightAdjustableHalfLifeNucleus.create();
             }
 
             throw 'Other nuclei not yet implemented.';
+        },
+
+        triggerNucleusChange: function(nucleus, byProducts) {
+            this.trigger('nucleus-change', nucleus, byProducts);
         },
 
         nucleusChanged: function(nucleus, byProducts) {
@@ -110,7 +114,12 @@ define(function (require, exports, module) {
             MultiNucleusDecaySimulation.prototype.removeAllNuclei.apply(this, arguments);
             
             // Remove any existing emitted particles
-            this.emittedParticles.reset();
+            this.destroyParticles();
+        },
+
+        destroyParticles: function() {
+            for (var i = this.emittedParticles.length - 1; i >= 0; i--)
+                this.emittedParticles.at(i).destroy();
         }
 
     }, Constants.MultiNucleusBetaDecaySimulation);

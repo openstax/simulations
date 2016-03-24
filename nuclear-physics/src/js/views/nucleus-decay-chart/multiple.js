@@ -35,11 +35,11 @@ define(function(require) {
 
             NucleusDecayChart.prototype.initialize.apply(this, [options]);
 
-            this.listenTo(this.simulation.atomicNuclei, 'add',            this.nucleusAdded);
-            this.listenTo(this.simulation.atomicNuclei, 'remove',         this.nucleusRemoved);
-            this.listenTo(this.simulation.atomicNuclei, 'reset',          this.updatePieChart);
-            this.listenTo(this.simulation.atomicNuclei, 'nucleus-change', this.nucleusChanged);
-            this.listenTo(this.simulation, 'nuclei-reset', this.nucleiReset);
+            this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
+            this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
+            this.listenTo(this.simulation.atomicNuclei, 'reset',  this.updatePieChart);
+            this.listenTo(this.simulation, 'nucleus-change', this.nucleusChanged);
+            this.listenTo(this.simulation, 'nuclei-reset',   this.nucleiReset);
         },
 
         initGraphics: function() {

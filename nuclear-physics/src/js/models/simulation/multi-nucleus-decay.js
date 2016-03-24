@@ -2,11 +2,11 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
-    var Vector2   = require('common/math/vector2');
-    var Rectangle = require('common/math/rectangle');
+    var Vector2           = require('common/math/vector2');
+    var Rectangle         = require('common/math/rectangle');
+    var VanillaCollection = require('common/collections/vanilla');
 
     var NuclearPhysicsSimulation       = require('models/simulation');
     var NucleusType                    = require('models/nucleus-type');
@@ -47,7 +47,7 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.atomicNuclei = new Backbone.Collection();
+            this.atomicNuclei = new VanillaCollection();
             this.nucleusTypeChanged(this, this.get('nucleusType'));
         },
 
@@ -210,8 +210,8 @@ define(function (require, exports, module) {
 
         createNucleus: function() {
             switch (this.get('nucleusType')) {
-                case NucleusType.POLONIUM_211: return new Polonium211Nucleus();
-                case NucleusType.HEAVY_CUSTOM: return new HeavyAdjustableHalfLifeNucleus();
+                case NucleusType.POLONIUM_211: return Polonium211Nucleus.create();
+                case NucleusType.HEAVY_CUSTOM: return HeavyAdjustableHalfLifeNucleus.create();
             }
 
             throw 'Other nuclei not yet implemented.';

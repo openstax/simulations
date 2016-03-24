@@ -2,10 +2,10 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _        = require('underscore');
-    var Backbone = require('backbone');
+    var _ = require('underscore');
 
-    var AppView = require('common/v3/app/app');
+    var AppView           = require('common/v3/app/app');
+    var VanillaCollection = require('common/collections/vanilla');
 
     var NuclearPhysicsSimulation        = require('models/simulation');
     var NucleusType                     = require('models/nucleus-type');
@@ -37,6 +37,7 @@ define(function (require, exports, module) {
 
             this.on('change:nucleusType', this.nucleusTypeChanged);
             this.on('change:halfLife', this.halfLifeChanged);
+            this.on('nucleus-change', this.nucleusChanged);
         },
 
         /**
@@ -45,7 +46,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             this.atomicNucleus = null;
 
-            this.emittedParticles = new Backbone.Collection();
+            this.emittedParticles = new VanillaCollection();
 
             this.nucleusTypeChanged(this, this.get('nucleusType'));
         },
@@ -105,7 +106,7 @@ define(function (require, exports, module) {
             
             // Remove any existing emitted particles and also let any listeners know
             //   of their demise.
-            this.emittedParticles.reset();
+            this.destroyParticles();
         },
 
         /**
@@ -124,10 +125,6 @@ define(function (require, exports, module) {
 
             this.set('halfLife', this.atomicNucleus.get('halfLife'), { silent: true });
             
-            // Register as a listener for the nucleus so we can handle the
-            //   particles thrown off by beta decay.
-            this.listenTo(this.atomicNucleus, 'nucleus-change', this.nucleusChanged);
-            
             // In this model, the nucleus is activated (so that it is moving
             //   towards decay) right away.
             this.atomicNucleus.activateDecay(this.time);
@@ -141,12 +138,21 @@ define(function (require, exports, module) {
          */
         createNucleus: function() {
             switch (this.get('nucleusType')) {
-                case NucleusType.HYDROGEN_3: return new Hydrogen3CompositeNucleus();
-                case NucleusType.CARBON_14:  return new Carbon14CompositeNucleus();
-                case NucleusType.LIGHT_CUSTOM: return new LightAdjustableCompositeNucleus();
+                case NucleusType.HYDROGEN_3:   return Hydrogen3CompositeNucleus.create();
+                case NucleusType.CARBON_14:    return Carbon14CompositeNucleus.create();
+                case NucleusType.LIGHT_CUSTOM: return LightAdjustableCompositeNucleus.create();
             }
 
             throw 'Other nuclei not yet implemented.';
+        },
+
+        triggerNucleusChange: function(nucleus, byProducts) {
+            this.trigger('nucleus-change', nucleus, byProducts);
+        },
+
+        destroyParticles: function() {
+            for (var i = this.emittedParticles.length - 1; i >= 0; i--)
+                this.emittedParticles.at(i).destroy();
         },
 
         /**

@@ -4,12 +4,12 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var MotionObject = require('common/models/motion-object');
+    var VanillaMotionObject = require('common/models/motion-object-vanilla');
 
     /**
      * Base class for all subatomic particles
      */
-    var SubatomicParticle = MotionObject.extend({
+    var SubatomicParticle = VanillaMotionObject.extend({
 
         /**
          * Tunnel to another location.

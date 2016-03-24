@@ -48,7 +48,7 @@ define(function (require) {
             var byProducts = [];
 
             var angle = Math.random() * Math.PI * 2;
-            var electron = new Electron({
+            var electron = Electron.create({
                 position: this.get('position'),
                 velocity: new Vector2(
                     Math.cos(angle) * AbstractBetaDecayNucleus.ELECTRON_EMISSION_SPEED, 
@@ -58,7 +58,7 @@ define(function (require) {
             byProducts.push(electron);
 
             angle = Math.random() * Math.PI * 2;
-            var antineutrino = new Antineutrino({
+            var antineutrino = Antineutrino.create({
                 position: this.get('position'),
                 velocity: new Vector2(
                     Math.cos(angle) * AbstractBetaDecayNucleus.ANTINEUTRINO_EMISSION_SPEED, 
