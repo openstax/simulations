@@ -20,7 +20,7 @@ define(function (require, exports, module) {
     var RutherfordScatteringSimulation = Simulation.extend({
 
         defaults: _.extend(Simulation.prototype.defaults, {
-
+            alphaEnergy: Constants.DEFAULT_ALPHA_ENERGY
         }),
         
         initialize: function(attributes, options) {
@@ -32,9 +32,8 @@ define(function (require, exports, module) {
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            this.rayGun = new RayGun();
-
             this.initAlphaParticles();
+            this.rayGun = new RayGun({alphaParticles: this.alphaParticles});
         },
 
         resetComponents: function() {
@@ -42,11 +41,17 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            
+            this.alphaParticles.each(function(alphaParticle){
+                if(alphaParticle){
+                    alphaParticle.move(deltaTime);                    
+                }
+            });
+
+            this.rayGun.update(deltaTime, {width: 300, minY: -150}, this.get('alphaEnergy'));
         },
 
         initAlphaParticles: function() {
-            this.alphaParticles = new AlphaParticles();
+            this.alphaParticles = new AlphaParticles({bounds: {x: -150, y: -150, w: 300, h: 300}});
         }
 
     });

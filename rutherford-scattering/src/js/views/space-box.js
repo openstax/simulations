@@ -10,6 +10,7 @@ define(function(require) {
     
     var Assets = require('assets');
     var Constants = require('constants');
+    var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
 
     /**
      * A view that represents an electron
@@ -23,8 +24,13 @@ define(function(require) {
             this.mvt = options.mvt;
             this.spaceBoxSize = options.spaceBoxSize;
             this.scale = options.scale;
+            this.alphaParticles = options.alphaParticles;
 
             this.initGraphics();
+
+            this.listenTo(this.alphaParticles, 'add', this.addAlphaParticle);
+            this.listenTo(this.alphaParticles, 'remove', this.removeAlphaParticle);
+            this.listenTo(this.alphaParticles, 'change:position', this.updatePosition);
         },
 
         /**
@@ -35,6 +41,7 @@ define(function(require) {
             this.drawBox();
 
             this.displayObject.addChild(this.box);
+            this.sprites = {};
 
             this.updateMVT(this.mvt);
         },
@@ -67,6 +74,29 @@ define(function(require) {
 
             this.box.lineStyle(1, 0xFFFFFF, 1);
             this.box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
+        },
+
+        updatePosition: function(particle, position){
+            if(this.sprites[particle.cid]){
+                this.sprites[particle.cid].x = this.mvt.modelToViewX(position.x);
+                this.sprites[particle.cid].y = this.mvt.modelToViewY(position.y);
+            }
+        },
+
+        addAlphaParticle: function(particle){
+            var alphaParticle = ParticleGraphicsGenerator.generateAlphaParticle(this.mvt);
+            alphaParticle.x = particle.get('position').x;
+            alphaParticle.y = particle.get('position').y;
+            this.sprites[particle.cid] = alphaParticle;
+
+            this.displayObject.addChild(alphaParticle);
+        },
+
+        removeAlphaParticle: function(particle){
+            var alphaParticle = this.sprites[particle.cid];
+
+            this.displayObject.removeChild(alphaParticle);
+            delete this.sprites[particle.cid];
         }
 
     }, {center: {x: 0, y: 0}});
