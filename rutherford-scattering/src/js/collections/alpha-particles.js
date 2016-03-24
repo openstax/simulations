@@ -12,7 +12,7 @@ define(function (require) {
         model: AlphaParticleModel,
 
         initialize: function(attributes, options) {
-            this._bounds = new Rectangle(attributes.bounds.x, attributes.bounds.y, attributes.bounds.w, attributes.bounds.h);
+            this._bounds = new Rectangle(options.bounds.x, options.bounds.y, options.bounds.w, options.bounds.h);
             this.listenTo(this, 'change:position', this.cullParticles);
         },
 
