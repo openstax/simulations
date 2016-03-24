@@ -39,6 +39,7 @@ define(function(require) {
             this.listenTo(this.simulation.atomicNuclei, 'remove',         this.nucleusRemoved);
             this.listenTo(this.simulation.atomicNuclei, 'reset',          this.updatePieChart);
             this.listenTo(this.simulation.atomicNuclei, 'nucleus-change', this.nucleusChanged);
+            this.listenTo(this.simulation, 'nuclei-reset', this.nucleiReset);
         },
 
         initGraphics: function() {
@@ -128,8 +129,10 @@ define(function(require) {
                 graphics.lineTo(0, 0);
                 graphics.endFill();
 
-                graphics.moveTo(0, 0);
-                graphics.lineTo(radius, 0); 
+                if (numActive > 0) {
+                    graphics.moveTo(0, 0);
+                    graphics.lineTo(radius, 0);     
+                }
 
                 graphics.moveTo(0, 0);
                 graphics.drawCircle(0, 0, radius);   
@@ -163,14 +166,25 @@ define(function(require) {
             this.nucleiView.clearDecayed();
         },
 
+        addAllNuclei: function() {
+            for (var i = 0; i < this.simulation.atomicNuclei.length; i++)
+                this.addNucleus(this.simulation.atomicNuclei.at(i));
+        },
+
         nucleusAdded: function(nucleus) {
             this._nucleusAdded = true;
+            this.addNucleus(nucleus);
             this.updatePieChart();
         },
 
         nucleusRemoved: function(nucleus) {
             this.nucleiView.removeNucleus(nucleus);
             this.updatePieChart();
+        },
+
+        nucleiReset: function() {
+            this.clearNuclei();
+            this.addAllNuclei();
         },
 
         nucleusTypeChanged: function(simulation, nucleusType) {

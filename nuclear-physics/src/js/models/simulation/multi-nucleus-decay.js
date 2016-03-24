@@ -149,6 +149,7 @@ define(function (require, exports, module) {
                     resetCount++;
                 }
             }
+            this.trigger('nuclei-reset');
             return resetCount;
         },
 

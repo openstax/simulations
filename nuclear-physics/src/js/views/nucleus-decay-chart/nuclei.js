@@ -29,6 +29,7 @@ define(function(require) {
 
             this.nuclei = [];
             this.sprites = [];
+            this.decayedNuclei = [];
             this.decayedSprites = [];
 
             this.initGraphics();
@@ -60,8 +61,18 @@ define(function(require) {
 
                     this.nuclei.splice(i, 1);
                     this.sprites.splice(i, 1);
+                    return;
                 }
             }
+
+            for (var i = this.decayedNuclei.length - 1; i >= 0; i--) {
+                if (this.decayedNuclei[i] === nucleus) {
+                    this.displayObject.removeChild(this.decayedSprites[i]);
+
+                    this.decayedNuclei.splice(i, 1);
+                    this.decayedSprites.splice(i, 1);
+                }
+            } 
         },
 
         clear: function() {
@@ -79,6 +90,7 @@ define(function(require) {
             for (var i = this.decayedSprites.length - 1; i >= 0; i--) {
                 this.displayObject.removeChild(this.decayedSprites[i]);
 
+                this.decayedNuclei.splice(i, 1);
                 this.decayedSprites.splice(i, 1);
             }
         },
@@ -119,9 +131,10 @@ define(function(require) {
                 else if (nucleus.hasDecayed()) {
                     sprite.decayTime = 0;
                     this.sprites.splice(i, 1);
-                    this.decayedSprites.push(sprite);
                     this.nuclei.splice(i, 1);
-                    
+
+                    this.decayedSprites.push(sprite);
+                    this.decayedNuclei.push(nucleus);
                 }
             }
 
