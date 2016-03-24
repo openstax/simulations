@@ -83,6 +83,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
+            this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
         },
 
         initGraphics: function() {
@@ -148,9 +149,9 @@ define(function(require) {
 
         initDecorativeDummyObjects: function() {
             this.decorativeDummyObjects = new PIXI.Container();
-            this.displayObject.addChild(this.decorativeDummyObjects);
+            this.backgroundLayer.addChild(this.decorativeDummyObjects);
 
-            this.drawDecorativeDummyObjects();
+            this.decorativeDummyObjectViews = [];
         },
 
         initLabel: function() {
@@ -169,6 +170,12 @@ define(function(require) {
         },
 
         drawDecorativeDummyObjects: function() {
+            for (var i = this.decorativeDummyObjectViews.length - 1; i >= 0; i--) {
+                this.decorativeDummyObjectViews[i].remove();
+                this.decorativeDummyObjectViews[i].model.destroy();
+                this.decorativeDummyObjectViews.splice(i, 1);
+            }
+
             var windowCenterX = this.width / 2;
             var windowCenterY = this.height * (108 / 260);
             var windowRadius  = this.height *  (55 / 260);
@@ -183,10 +190,13 @@ define(function(require) {
             for (var n = 0; n < numberOfDummies; n++) {
                 vec.set(radius, 0).rotate(startingAngle + n * angleStep);
 
-                // dummy = this.createDummyObjectView();
-                // dummy.setPosition(windowCenterX + vec.x, windowCenterY + vec.y);
+                dummy = this.createDummyObjectView();
+                dummy.displayObject.x = windowCenterX + vec.x;
+                dummy.displayObject.y = windowCenterY + vec.y;
+                dummy.displayObject.alpha = 0.7;
 
-                // this.decorativeDummyObjects.addChild(dummy.displayObject);
+                this.decorativeDummyObjects.addChild(dummy.displayObject);
+                this.decorativeDummyObjectViews.push(dummy);
             }
         },
 
@@ -202,7 +212,8 @@ define(function(require) {
             var view = new DraggableExplodingNucleusView({
                 model: model,
                 mvt: this.mvt,
-                atomCanister: this
+                atomCanister: this,
+                interactive: false
             });
             return view;
         },
@@ -342,6 +353,11 @@ define(function(require) {
             this.dragging = true;
 
             this.dummyObjectView = this.createDummyObjectView();
+            this.dummyObjectView.model.setPosition(
+                this.mvt.viewToModelX(event.data.global.x),
+                this.mvt.viewToModelX(event.data.global.y)
+            );
+            
             this.dummyLayer.addChild(this.dummyObjectView.displayObject);
         },
 
@@ -436,6 +452,10 @@ define(function(require) {
         removeAtoms: function(numberOfAtoms) {
             for (var i = 0; i < numberOfAtoms; i++)
                 this.simulation.removeRandomNucleus();
+        },
+
+        nucleusTypeChanged: function() {
+            this.drawDecorativeDummyObjects();
         }
 
     }, Constants.AtomCanisterView);

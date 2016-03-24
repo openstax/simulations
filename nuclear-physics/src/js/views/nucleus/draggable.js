@@ -29,10 +29,11 @@ define(function(require) {
          */
         initialize: function(options) {
             options = _.extend({
-                
+                interactive: true
             }, options);
 
             this.atomCanister = options.atomCanister;
+            this.interactive = options.interactive;
 
             ExplodingNucleusView.prototype.initialize.apply(this, [options]);
         },
@@ -45,6 +46,9 @@ define(function(require) {
         },
 
         dragStart: function(data) {
+            if (!this.interactive)
+                return;
+            
             this.dragging = true;
 
             this.atomCanister.showRemoveOverlay();
