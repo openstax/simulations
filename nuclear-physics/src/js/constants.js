@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
     var HalfLifeInfo = require('models/half-life-info');
     var NucleusType  = require('models/nucleus-type');
 
@@ -426,6 +428,17 @@ define(function (require) {
 
     // Constants that control the way the nuclei look.
     NucleusDecayChart.NUCLEUS_SIZE_PROPORTION = 0.15;  // Fraction of the overall height of the chart.
+
+    // Offsets used when positioning atoms prior to decay so that they look
+    //   like a bunch of atoms instead of just one.  The values are in terms
+    //   of the proportion of the chart height.
+    NucleusDecayChart.BUNCHING_OFFSETS = [
+        new Vector2( 0,      0),
+        new Vector2(-0.02,  -0.025), 
+        new Vector2( 0.025, -0.02), 
+        new Vector2( 0.015,  0.025),
+        new Vector2(-0.015,  0.015)
+    ];
 
     Constants.NucleusDecayChart = NucleusDecayChart;
 
