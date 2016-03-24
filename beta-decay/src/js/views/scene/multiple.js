@@ -224,12 +224,14 @@ define(function(require) {
         },
 
         showLabels: function() {
-            this.nucleusView.showLabel();
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].showLabel();
             this.showingLabels = true;
         },
 
         hideLabels: function() {
-            this.nucleusView.hideLabel();
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].hideLabel();
             this.showingLabels = false;
         }
 

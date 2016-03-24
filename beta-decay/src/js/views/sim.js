@@ -34,7 +34,9 @@ define(function (require) {
         events: {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
-            'click .step-btn'  : 'step'
+            'click .step-btn'  : 'step',
+
+            'click .show-labels-check' : 'toggleLabels'
         },
 
         /**
@@ -127,6 +129,13 @@ define(function (require) {
             else
                 this.$el.addClass('playing');
         },
+
+        toggleLabels: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showLabels();
+            else
+                this.sceneView.hideLabels();
+        }
 
     });
 
