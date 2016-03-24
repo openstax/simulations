@@ -122,6 +122,9 @@ define(function(require) {
             graphics.endFill();
 
             if (numDecayed > 0) {
+                if (numActive === 0)
+                    graphics.lineStyle(0, 0, 0);
+
                 graphics.beginFill(isotope2Color, 1);
                 graphics.moveTo(0, 0);
                 graphics.lineTo(radius, 0);
@@ -134,6 +137,7 @@ define(function(require) {
                     graphics.lineTo(radius, 0);     
                 }
 
+                graphics.lineStyle(1, 0x000000, 1);
                 graphics.moveTo(0, 0);
                 graphics.drawCircle(0, 0, radius);   
             }
