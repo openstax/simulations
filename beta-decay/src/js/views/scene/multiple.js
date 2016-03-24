@@ -10,11 +10,16 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
+    var Electron     = require('models/electron');
+    var Antineutrino = require('models/antineutrino');
+
     var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
     var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
     var NuclearPhysicsSceneView       = require('views/scene');
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+    var ElectronView                  = require('views/electron');
+    var AntineutrinoView              = require('views/antineutrino');
 
     var showNucleusPlacementDebuggingGraphics = false;
 
@@ -32,6 +37,7 @@ define(function(require) {
             this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
             this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
             this.listenTo(this.simulation.atomicNuclei, 'reset',  this.nucleiReset);
+            this.listenTo(this.simulation.emittedParticles, 'add', this.particleEmitted);
         },
 
         renderContent: function() {
@@ -208,6 +214,23 @@ define(function(require) {
             for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
                 this.nucleusViews[i].remove();
                 this.nucleusViews.splice(i, 1);
+            }
+        },
+
+        particleEmitted: function(particle) {
+            if (particle instanceof Electron) {
+                var electronView = new ElectronView({
+                    model: particle,
+                    mvt: this.mvt
+                });
+                this.nucleusLayer.addChild(electronView.displayObject);
+            }
+            else if (particle instanceof Antineutrino) {
+                var antineutrinoView = new AntineutrinoView({
+                    model: particle,
+                    mvt: this.mvt
+                });
+                this.nucleusLayer.addChild(antineutrinoView.displayObject);
             }
         },
 
