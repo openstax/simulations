@@ -88,7 +88,7 @@ define(function (require) {
     var MultiNucleusDecaySimulation = {};
 
     MultiNucleusDecaySimulation.DEFAULT_JITTER_LENGTH = 1;
-    MultiNucleusDecaySimulation.FRAMES_PER_JITTER = 2;
+    MultiNucleusDecaySimulation.FRAMES_PER_JITTER = 1;
 
     Constants.MultiNucleusDecaySimulation = MultiNucleusDecaySimulation;
 
