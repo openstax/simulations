@@ -51,10 +51,11 @@ define(function(require) {
         },
 
         initIsotopeCounts: function() {
+            var x = this.padding + 40;
             this.isotope1CountContainer = new PIXI.Container();
             this.isotope2CountContainer = new PIXI.Container();
-            this.isotope1CountContainer.x = this.padding;
-            this.isotope2CountContainer.x = this.padding;
+            this.isotope1CountContainer.x = x;
+            this.isotope2CountContainer.x = x;
             this.isotope1CountContainer.y = this.yAxisIsotope1.y;
             this.isotope2CountContainer.y = this.yAxisIsotope2.y;
 
@@ -63,20 +64,20 @@ define(function(require) {
                 font: NucleusDecayChart.DECAY_LABEL_FONT
             };
 
-            var x = 92;
+            x += 10;
 
-            this.isotope1Counter = new PIXI.Text('5', settings);
+            this.isotope1Counter = new PIXI.Text('', settings);
             this.isotope1Counter.resolution = this.getResolution();
             this.isotope1Counter.x = x;
             this.isotope1Counter.y = this.yAxisIsotope1.y;
-            this.isotope1Counter.anchor.x = 1;
+            this.isotope1Counter.anchor.x = 0;
             this.isotope1Counter.anchor.y = 0.5;
 
-            this.isotope2Counter = new PIXI.Text('4', settings);
+            this.isotope2Counter = new PIXI.Text('', settings);
             this.isotope2Counter.resolution = this.getResolution();
             this.isotope2Counter.x = x;
             this.isotope2Counter.y = this.yAxisIsotope2.y;
-            this.isotope2Counter.anchor.x = 1;
+            this.isotope2Counter.anchor.x = 0;
             this.isotope2Counter.anchor.y = 0.5;
 
             this.displayObject.addChild(this.isotope1CountContainer);
@@ -87,7 +88,7 @@ define(function(require) {
 
         initPieChart: function() {
             this.pieChartGraphics = new PIXI.Graphics();
-            this.pieChartGraphics.x = 126;
+            this.pieChartGraphics.x = 114;
             this.pieChartGraphics.y = (this.isotope1Counter.y + this.isotope2Counter.y) / 2;
 
             this.displayObject.addChild(this.pieChartGraphics);
@@ -136,6 +137,22 @@ define(function(require) {
 
             this.isotope1Counter.text = numActive;
             this.isotope2Counter.text = numDecayed;
+        },
+
+        updateIsotopes: function() {
+            NucleusDecayChart.prototype.updateIsotopes.apply(this, arguments);
+
+            var nucleusType = this.simulation.get('nucleusType');
+            var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
+
+            var isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            var isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+
+            this.isotope1CountContainer.removeChildren();
+            this.isotope2CountContainer.removeChildren();
+
+            this.isotope1CountContainer.addChild(isotope1Text);
+            this.isotope2CountContainer.addChild(isotope2Text);
         },
 
         clearNuclei: function() {

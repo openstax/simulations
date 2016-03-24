@@ -180,7 +180,7 @@ define(function(require) {
         },
 
         initYAxis: function() {
-            var isotopeLabelThickness = 42;
+            var isotopeLabelThickness = 46;
 
             var label = new PIXI.Text(this.yAxisLabelText, {
                 font: Constants.NucleusDecayChart.AXIS_LABEL_FONT,
