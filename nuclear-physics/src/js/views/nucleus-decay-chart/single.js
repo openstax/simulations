@@ -133,7 +133,7 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {
             if (this._nucleusAdded) {
-                this.addNucleus(this.simulation.atomicNucleus);
+                this.nucleiView.replaceNucleus(this.simulation.atomicNucleus);
                 this._nucleusAdded = false;
             }
 

@@ -62,6 +62,21 @@ define(function(require) {
             this.displayObject.addChild(sprite);
         },
 
+        /**
+         * For use with a single nucleus, this function first removes the undecayed
+         *   nucleus if it exists before adding the new one.
+         */
+        replaceNucleus: function(nucleus) {
+            if (this.nuclei.length) {
+                this.displayObject.removeChild(this.sprites[0]);
+
+                this.nuclei.splice(0, 1);
+                this.sprites.splice(0, 1);
+            }
+
+            this.addNucleus(nucleus);
+        },
+
         removeNucleus: function(nucleus) {
             for (var i = this.nuclei.length - 1; i >= 0; i--) {
                 if (this.nuclei[i] === nucleus) {
