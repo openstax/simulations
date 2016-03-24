@@ -102,7 +102,8 @@ define(function(require) {
             this.spaceBoxView = new SpaceBoxView({
                 mvt: this.mvt,
                 scale: this.scale,
-                spaceBoxSize: this.spaceBoxSize
+                spaceBoxSize: this.spaceBoxSize,
+                alphaParticles: this.simulation.alphaParticles
             });
 
             this.bottomLayer.addChild(this.spaceBoxView.displayObject);

@@ -234,9 +234,9 @@ define(function (require) {
         },
 
         changeAlphaEnergy: function(event) {
-            var value = parseInt($(event.target).val());
-            // set model value
-            console.info('change energy');
+            var alphaEnergy = parseInt($(event.target).val());
+            // set model alphaEnergy
+            this.simulation.set('alphaEnergy', alphaEnergy);
         },
 
         changeProtons: function(event) {
