@@ -355,9 +355,9 @@ define(function(require) {
             this.dummyObjectView = this.createDummyObjectView();
             this.dummyObjectView.model.setPosition(
                 this.mvt.viewToModelX(event.data.global.x),
-                this.mvt.viewToModelX(event.data.global.y)
+                this.mvt.viewToModelY(event.data.global.y)
             );
-            
+
             this.dummyLayer.addChild(this.dummyObjectView.displayObject);
         },
 
@@ -365,7 +365,7 @@ define(function(require) {
             if (this.dragging) {
                 this.dummyObjectView.model.setPosition(
                     this.mvt.viewToModelX(event.data.global.x),
-                    this.mvt.viewToModelX(event.data.global.y)
+                    this.mvt.viewToModelY(event.data.global.y)
                 );
             }
         },
@@ -423,6 +423,15 @@ define(function(require) {
          */
         contains: function(x, y) {
             return this.getBounds().contains(x, y);
+        },
+
+        offerForDestruction: function(atomView) {
+            var viewX = atomView.displayObject.x;
+            var viewY = atomView.displayObject.y;
+            var viewRadius = (atomView.displayObject.width + atomView.displayObject.height) / 4;
+
+            if (this.overlapsCircle(viewX, viewY, viewRadius))
+                atomView.model.destroy();
         },
 
         showRemoveOverlay: function() {

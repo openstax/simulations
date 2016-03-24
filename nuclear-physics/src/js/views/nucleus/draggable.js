@@ -43,27 +43,33 @@ define(function(require) {
          */
         initGraphics: function() {
             ExplodingNucleusView.prototype.initGraphics.apply(this, arguments);
+
+            this.displayObject.buttonMode = true;
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             if (!this.interactive)
                 return;
-            
+
             this.dragging = true;
 
             this.atomCanister.showRemoveOverlay();
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-
+                this.model.setPosition(
+                    this.mvt.viewToModelX(event.data.global.x),
+                    this.mvt.viewToModelY(event.data.global.y)
+                );
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
             this.atomCanister.hideRemoveOverlay();
+            this.atomCanister.offerForDestruction(this);
         }
 
     }, Constants.DraggableExplodingNucleusView);

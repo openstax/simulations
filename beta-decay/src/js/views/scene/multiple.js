@@ -103,9 +103,11 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.canisterLayer = new PIXI.Container();
             this.nucleusLayer = new PIXI.Container();
             this.dummyLayer = new PIXI.Container();
 
+            this.stage.addChild(this.canisterLayer);
             this.stage.addChild(this.nucleusLayer);
 
             this.initMVT();
@@ -166,7 +168,7 @@ define(function(require) {
                 this.stage.addChild(graphics);    
             }
 
-            this.stage.addChild(this.atomCanisterView.displayObject);
+            this.canisterLayer.addChild(this.atomCanisterView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
