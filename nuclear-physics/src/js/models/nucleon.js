@@ -25,6 +25,8 @@ define(function (require) {
         }),
 
         init: function() {
+            SubatomicParticle.prototype.init.apply(this, arguments);
+            
             this.jitterOffset = new Vector2();
         },
 

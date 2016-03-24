@@ -36,13 +36,13 @@ define(function (require) {
         }),
 
         init: function() {
+            VanillaMotionObject.prototype.init.apply(this, arguments);
+            
             this.originalPosition = new Vector2();
         },
         
         onCreate: function(attributes, options) {
-            VanillaMotionObject.prototype.initialize.apply(this, [attributes, options]);
-
-            this.simulation = options.simulation;
+            VanillaMotionObject.prototype.onCreate.apply(this, [attributes, options]);
 
             // Original position
             this.originalPosition.set(this.get('position'));
@@ -62,9 +62,6 @@ define(function (require) {
             // Set the initial half life based on the nucleus' configuration.  It
             //   can be changed through a setter method if needed.
             this.set('halfLife', HalfLifeInfo.getHalfLifeForNucleusConfig(this.get('numProtons'), this.get('numNeutrons')));
-
-            // Bind event listeners
-            this.on('change:tunnelingRegionRadius', this.tunnelingRegionRadiusChanged);
         },
 
         /**
@@ -246,9 +243,11 @@ define(function (require) {
             return simulationTime >= this.decayTime;
         },
 
-        tunnelingRegionRadiusChanged: function(model, tunnelingRegionRadius) {
+        setTunnelingRegionRadius: function(tunnelingRegionRadius) {
             if (tunnelingRegionRadius >= this.get('diameter') / 2)
                 this.set('tunnelingRegionRadius', Math.min(tunnelingRegionRadius, AtomicNucleus.MAX_TUNNELING_REGION_RADIUS));
+            else
+                this.set('tunnelingRegionRadius', tunnelingRegionRadius);
         },
 
         /**
@@ -259,8 +258,8 @@ define(function (require) {
             this.updateDiameter();
 
             // Do the notification.
-            if (this.simulation)
-                this.simulation.triggerNucleusChange(this, byProducts);
+            if (this.get('simulation'))
+                this.get('simulation').triggerNucleusChange(this, byProducts);
         }
 
     }, _.extend({

@@ -81,6 +81,9 @@ define(function(require) {
 
             if (this.nucleusView)
                 this.nucleusView.update(time, deltaTime, paused);
+
+            for (var i = 0; i < this.particleViews.length; i++)
+                this.particleViews[i].update(time, deltaTime, paused);
         },
 
         updateNucleusView: function() {

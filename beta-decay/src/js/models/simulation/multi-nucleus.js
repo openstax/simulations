@@ -81,9 +81,9 @@ define(function (require, exports, module) {
          */
         createNucleus: function() {
             switch (this.get('nucleusType')) {
-                case NucleusType.HYDROGEN_3:   return Hydrogen3Nucleus.create();
-                case NucleusType.CARBON_14:    return Carbon14Nucleus.create();
-                case NucleusType.LIGHT_CUSTOM: return LightAdjustableHalfLifeNucleus.create();
+                case NucleusType.HYDROGEN_3:   return Hydrogen3Nucleus.create(this._newNucleusOptions);
+                case NucleusType.CARBON_14:    return Carbon14Nucleus.create(this._newNucleusOptions);
+                case NucleusType.LIGHT_CUSTOM: return LightAdjustableHalfLifeNucleus.create(this._newNucleusOptions);
             }
 
             throw 'Other nuclei not yet implemented.';

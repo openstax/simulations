@@ -35,6 +35,8 @@ define(function (require, exports, module) {
             this._jitterOffsets = [];
             this._jitterOffsetCount = 0;
 
+            this._newNucleusOptions = { simulation: this };
+
             this._nucleusBounds = new Rectangle();
 
             NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
@@ -157,7 +159,8 @@ define(function (require, exports, module) {
          * Remove all the existing nuclei and alpha particles from the model.
          */
         removeAllNuclei: function() {
-            this.atomicNuclei.reset();
+            for (var i = this.atomicNuclei.length - 1; i >= 0; i--)
+                this.atomicNuclei.at(i).destroy();
         },
 
         /**

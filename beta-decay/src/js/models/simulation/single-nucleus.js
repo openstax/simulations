@@ -30,10 +30,9 @@ define(function (require, exports, module) {
         }),
         
         initialize: function(attributes, options) {
-            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
+            this._newNucleusOptions = { simulation: this };
 
-            this._jitterOffsets = [];
-            this._jitterOffsetCount = 0;
+            NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:nucleusType', this.nucleusTypeChanged);
             this.on('change:halfLife', this.halfLifeChanged);
@@ -138,9 +137,9 @@ define(function (require, exports, module) {
          */
         createNucleus: function() {
             switch (this.get('nucleusType')) {
-                case NucleusType.HYDROGEN_3:   return Hydrogen3CompositeNucleus.create();
-                case NucleusType.CARBON_14:    return Carbon14CompositeNucleus.create();
-                case NucleusType.LIGHT_CUSTOM: return LightAdjustableCompositeNucleus.create();
+                case NucleusType.HYDROGEN_3:   return Hydrogen3CompositeNucleus.create(this._newNucleusOptions);
+                case NucleusType.CARBON_14:    return Carbon14CompositeNucleus.create(this._newNucleusOptions);
+                case NucleusType.LIGHT_CUSTOM: return LightAdjustableCompositeNucleus.create(this._newNucleusOptions);
             }
 
             throw 'Other nuclei not yet implemented.';
