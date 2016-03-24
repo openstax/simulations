@@ -123,14 +123,6 @@ define(function (require) {
         },
 
         /**
-         * Resets all the components of the view.
-         */
-        resetComponents: function() {
-            SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
-        },
-
-        /**
          * This is run every tick of the updater.  It updates the wave
          *   simulation and the views.
          */

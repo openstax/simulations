@@ -69,6 +69,10 @@ define(function(require) {
             this.$ui.append(this.$bucketButtonsWrapper);
         },
 
+        reset: function() {
+            this.showLabels();
+        },
+
         getTopPadding: function() {
             return 150;
         },

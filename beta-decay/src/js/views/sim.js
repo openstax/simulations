@@ -35,6 +35,7 @@ define(function (require) {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
             'click .step-btn'  : 'step',
+            'click .reset-btn' : 'reset',
 
             'click .show-labels-check' : 'toggleLabels'
         },
@@ -118,6 +119,39 @@ define(function (require) {
             this.renderNucleusChooser();
 
             return this;
+        },
+
+        resetSimulation: function() {
+            // Save whether or not it was paused when we reset
+            var wasPaused = this.simulation.get('paused');
+
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+            this.resetControls();
+
+            // Resume normal function
+            this.updater.play();
+            this.play();
+            this.pausedChanged();
+        },
+
+        /**
+         * Resets all the components of the view.
+         */
+        resetComponents: function() {
+            NuclearPhysicsSimView.prototype.resetComponents.apply(this);
+            
+            this.sceneView.reset();
+            this.nucleusChooserView.reset();
+        },
+
+        /**
+         * Resets all the controls back to their default state.
+         */
+        resetControls: function() {
+            this.$('.show-labels-check').prop('checked', true);
         },
 
         /**

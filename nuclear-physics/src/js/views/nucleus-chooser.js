@@ -121,6 +121,10 @@ define(function(require) {
             return this;
         },
 
+        reset: function() {
+            this.$('input[type="radio"]').first().click();
+        },
+
         getMVT: function() {
             return this.mvt;
         },
