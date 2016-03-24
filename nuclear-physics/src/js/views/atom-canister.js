@@ -9,7 +9,7 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
     var Vector2   = require('common/math/vector2');
 
-    var NucleusView = require('views/nucleus');
+    var DraggableExplodingNucleusView = require('views/nucleus/draggable');
 
     var Assets = require('assets');
     var Constants = require('constants');
@@ -183,7 +183,7 @@ define(function(require) {
             for (var n = 0; n < numberOfDummies; n++) {
                 vec.set(radius, 0).rotate(startingAngle + n * angleStep);
 
-                // dummy = this.createDummyObject();
+                // dummy = this.createDummyObjectView();
                 // dummy.setPosition(windowCenterX + vec.x, windowCenterY + vec.y);
 
                 // this.decorativeDummyObjects.addChild(dummy.displayObject);
@@ -197,12 +197,12 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObject: function() {
-            var model = new Charge();
-            var view = new ReservoirObjectView({
+        createDummyObjectView: function() {
+            var model = this.simulation.createNucleus();
+            var view = new DraggableExplodingNucleusView({
                 model: model,
                 mvt: this.mvt,
-                interactive: false
+                atomCanister: this
             });
             return view;
         },
@@ -338,41 +338,43 @@ define(function(require) {
             this.glowSprite.alpha = Math.sin(2 * time) * 0.5 + 0.5;
         },
 
-        dragStart: function(data) {
+        dragStart: function(event) {
             this.dragging = true;
 
-            this.dummyObject = this.createDummyObject();
-            this.dummyLayer.addChild(this.dummyObject.displayObject);
+            this.dummyObjectView = this.createDummyObjectView();
+            this.dummyLayer.addChild(this.dummyObjectView.displayObject);
         },
 
-        drag: function(data) {
+        drag: function(event) {
             if (this.dragging) {
-                this.dummyObject.setPosition(
-                    data.global.x,
-                    data.global.y
+                this.dummyObjectView.model.setPosition(
+                    this.mvt.viewToModelX(event.data.global.x),
+                    this.mvt.viewToModelX(event.data.global.y)
                 );
             }
         },
 
-        dragEnd: function(data) {
+        dragEnd: function(event) {
             this.dragging = false;
 
-            if (this.dummyObject) {
-                var x = this.dummyObject.displayObject.x;
-                var y = this.dummyObject.displayObject.y;
+            if (this.dummyObjectView) {
+                var x = this.dummyObjectView.model.get('position').x;
+                var y = this.dummyObjectView.model.get('position').y;
 
-                if (!this.contains(x, y)) {
+                if (!this.pointInsideInvalidArea(x, y) && !this.pointTooCloseToOtherNuclei(x, y)) {
                     // Create a real object and add it to the sim
-                    this.createAndAddObject(this.dummyObject.model);
+                    this.simulation.addNucleusAt(x, y);
                 }
 
-                this.dummyObject.removeFrom(this.dummyLayer);
-                this.dummyObject.model.destroy();
-                this.dummyObject = null;
+                this.dummyObjectView.remove();
+                this.dummyObjectView.model.destroy();
+                this.dummyObjectView = null;
             }
         },
 
         hover: function(event) {
+            if (this._showingRemoveOverlay)
+                return;
             this.hovering = true;
             this.dragOverlay.alpha = this.overlayAlpha;
         },
@@ -407,11 +409,13 @@ define(function(require) {
             return this.getBounds().contains(x, y);
         },
 
-        showDestroyOverlay: function() {
+        showRemoveOverlay: function() {
+            this._showingRemoveOverlay = true;
             this.removeOverlay.alpha = this.overlayAlpha;
         },
 
-        hideDestroyOverlay: function() {
+        hideRemoveOverlay: function() {
+            this._showingRemoveOverlay = false;
             this.removeOverlay.alpha = 0;
         },
 

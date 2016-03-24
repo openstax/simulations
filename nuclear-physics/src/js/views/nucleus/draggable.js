@@ -47,7 +47,7 @@ define(function(require) {
         dragStart: function(data) {
             this.dragging = true;
 
-            this.atomCanister.showDestroyOverlay();
+            this.atomCanister.showRemoveOverlay();
         },
 
         drag: function(data) {
@@ -59,7 +59,7 @@ define(function(require) {
         dragEnd: function(data) {
             this.dragging = false;
 
-            this.atomCanister.hideDestroyOverlay();
+            this.atomCanister.hideRemoveOverlay();
         }
 
     }, Constants.DraggableExplodingNucleusView);
