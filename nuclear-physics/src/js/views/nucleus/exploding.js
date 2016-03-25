@@ -43,22 +43,14 @@ define(function(require) {
             NucleusView.prototype.initGraphics.apply(this, arguments);
         },
 
-        /**
-         * Updates the model-view-transform and anything that
-         *   relies on it.
-         */
-        updateMVT: function(mvt) {
-            NucleusView.prototype.updateMVT.apply(this, arguments);
-
-
-        },
-
         updateSprite: function() {
             if (this.showNucleus)
                 NucleusView.prototype.updateSprite.apply(this, arguments);
         },
 
         update: function(time, deltaTime, paused) {
+            NucleusView.prototype.update.apply(this, arguments);
+
             if (!paused) {
                 var explosionGraphics = this.explosionGraphics;
 
@@ -89,10 +81,10 @@ define(function(require) {
             }
         },
 
-        nucleusChanged: function(nucleus, byProducts) {
+        nucleusChanged: function() {
             NucleusView.prototype.nucleusChanged.apply(this, arguments);
             
-            if (nucleus.hasDecayed()) {
+            if (this.model.hasDecayed()) {
                 // Kick off the explosion graphic.
                 this.explosionGraphics.clear();
                 this._explosionTime = 0;

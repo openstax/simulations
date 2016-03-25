@@ -29,17 +29,23 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
-            this.listenTo(this.model, 'nucleus-change', this.nucleusChanged);
+            this._nucleusDecayed = this.model.hasDecayed();
         },
 
         /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
-            
-
             this.updateMVT(this.mvt);
+        },
+
+        update: function(time, deltaTime) {
+            this.updatePosition();
+
+            if (this._nucleusDecayed !== this.model.hasDecayed()) {
+                this._nucleusDecayed = this.model.hasDecayed();
+                this.nucleusChanged();
+            }
         },
 
         /**
@@ -73,8 +79,8 @@ define(function(require) {
             }
         },
 
-        updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToView(position);
+        updatePosition: function() {
+            var viewPosition = this.mvt.modelToView(this.model.get('position'));
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
         },

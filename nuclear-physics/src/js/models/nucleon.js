@@ -24,11 +24,17 @@ define(function (require) {
             tunnelingEnabled: false
         }),
 
-        initialize: function(attributes, options) {
-            SubatomicParticle.prototype.initialize.apply(this, arguments);
+        init: function() {
+            SubatomicParticle.prototype.init.apply(this, arguments);
+            
+            this.jitterOffset = new Vector2();
+        },
+
+        onCreate: function(attributes, options) {
+            SubatomicParticle.prototype.onCreate.apply(this, arguments);
 
             // Current jitter offset, used to create a vibrating motion effect.
-            this.jitterOffset = new Vector2();
+            this.jitterOffset.set(0, 0);
         },
 
         /**

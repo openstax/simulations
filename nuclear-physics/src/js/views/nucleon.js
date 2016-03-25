@@ -15,7 +15,16 @@ define(function(require) {
         initialize: function(options) {
             SubatomicParticleView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.model, 'change:type', this.typeChanged);
+            this._type = this.model.get('type');
+        },
+
+        update: function(time, deltaTime) {
+           SubatomicParticleView.prototype.update.apply(this, arguments);
+
+            if (this._type !== this.model.get('type')) {
+                this._type = this.model.get('type');
+                this.typeChanged();
+            }
         },
 
         createSprite: function() {

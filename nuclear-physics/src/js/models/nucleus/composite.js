@@ -26,8 +26,8 @@ define(function (require) {
      */
     var CompositeAtomicNucleus = AtomicNucleus.extend({
 
-        initialize: function(attributes, options) {
-            AtomicNucleus.prototype.initialize.apply(this, [attributes, options]);
+        onCreate: function(attributes, options) {
+            AtomicNucleus.prototype.onCreate.apply(this, [attributes, options]);
 
             // List of the constituent particles that comprise this nucleus.
             this.constituents = [];
@@ -64,13 +64,13 @@ define(function (require) {
 
             for (var i = (maxParticles - 1); i >= 0; i--) {
                 if (i < this.numAlphas) {
-                    this.constituents.push(new AlphaParticle());
+                    this.constituents.push(AlphaParticle.create());
                 }
                 if (i < numFreeProtons) {
-                    this.constituents.push(new Nucleon({ type: Nucleon.PROTON, tunnelingEnabled: true }));
+                    this.constituents.push(Nucleon.create({ type: Nucleon.PROTON, tunnelingEnabled: true }));
                 }
                 if (i < numFreeNeutrons) {
-                    this.constituents.push(new Nucleon({ type: Nucleon.NEUTRON, tunnelingEnabled: true }));
+                    this.constituents.push(Nucleon.create({ type: Nucleon.NEUTRON, tunnelingEnabled: true }));
                 }
             }
             

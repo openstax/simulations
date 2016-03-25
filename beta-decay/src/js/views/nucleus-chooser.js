@@ -33,8 +33,8 @@ define(function(require) {
             var symbolSize = 36;
 
             // Hydrogen-3 to Helium-3
-            var hydrogen3 = new Hydrogen3CompositeNucleus();
-            var helium3   = new Hydrogen3CompositeNucleus();
+            var hydrogen3 = Hydrogen3CompositeNucleus.create();
+            var helium3   = Hydrogen3CompositeNucleus.create();
             helium3.decay(); // Decay from Hydrogen-3 into Helium-3
 
             items.push({
@@ -59,8 +59,8 @@ define(function(require) {
             });
 
             // Carbon-14 to Nitrogen-14
-            var carbon14   = new Carbon14CompositeNucleus();
-            var nitrogen14 = new Carbon14CompositeNucleus();
+            var carbon14   = Carbon14CompositeNucleus.create();
+            var nitrogen14 = Carbon14CompositeNucleus.create();
             nitrogen14.decay(); // Decay from Carbon-14 into Nitrogen-14
 
             items.push({
@@ -84,8 +84,8 @@ define(function(require) {
             });
 
             // Custom to custom decayed
-            var custom  = new LightAdjustableCompositeNucleus();
-            var decayed = new LightAdjustableCompositeNucleus();
+            var custom  = LightAdjustableCompositeNucleus.create();
+            var decayed = LightAdjustableCompositeNucleus.create();
             decayed.decay();
 
             items.push({

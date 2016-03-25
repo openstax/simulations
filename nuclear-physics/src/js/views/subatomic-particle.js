@@ -14,8 +14,10 @@ define(function(require) {
          */
         initialize: function(options) {
             this.updateMVT(options.mvt);
+        },
 
-            this.listenTo(this.model, 'change:position', this.updatePosition);
+        update: function(time, deltaTime, paused) {
+            this.updatePosition();
         },
 
         /**
@@ -26,7 +28,7 @@ define(function(require) {
             this.mvt = mvt;
 
             this.updateSprite();
-            this.updatePosition(this.model, this.model.get('position'));
+            this.updatePosition();
         },
 
         updateSprite: function() {
@@ -40,8 +42,8 @@ define(function(require) {
 
         createSprite: function() {},
 
-        updatePosition: function(model, position) {
-            var viewPosition = this.mvt.modelToView(position);
+        updatePosition: function() {
+            var viewPosition = this.mvt.modelToView(this.model.get('position'));
             this.displayObject.x = viewPosition.x;
             this.displayObject.y = viewPosition.y;
         }

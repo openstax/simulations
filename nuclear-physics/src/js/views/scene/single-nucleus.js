@@ -81,6 +81,9 @@ define(function(require) {
 
             if (this.nucleusView)
                 this.nucleusView.update(time, deltaTime, paused);
+
+            for (var i = 0; i < this.particleViews.length; i++)
+                this.particleViews[i].update(time, deltaTime, paused);
         },
 
         updateNucleusView: function() {
@@ -98,6 +101,7 @@ define(function(require) {
                         mvt: this.mvt
                     });
                     this.nucleusLayer.addChild(nucleonView.displayObject);
+                    this.particleViews.push(nucleonView);
                 }
                 else if (constituent instanceof AlphaParticle) {
                     // Add a visible representation of the alpha particle to the canvas.
@@ -106,6 +110,7 @@ define(function(require) {
                         mvt: this.mvt
                     });
                     this.nucleusLayer.addChild(alphaParticleView.displayObject);
+                    this.particleViews.push(alphaParticleView);
                 }
                 else {
                     // There is some unexpected object in the list of constituents

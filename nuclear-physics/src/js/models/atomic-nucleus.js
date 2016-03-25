@@ -4,8 +4,8 @@ define(function (require) {
 
     var _ = require('underscore');
 
-    var Vector2      = require('common/math/vector2');
-    var MotionObject = require('common/models/motion-object');
+    var Vector2             = require('common/math/vector2');
+    var VanillaMotionObject = require('common/models/motion-object-vanilla');
 
     var HalfLifeInfo = require('models/half-life-info');
     var NucleusType  = require('models/nucleus-type');
@@ -15,9 +15,9 @@ define(function (require) {
     /**
      * Base class for all atomic nuclei
      */
-    var AtomicNucleus = MotionObject.extend({
+    var AtomicNucleus = VanillaMotionObject.extend({
 
-        defaults: _.extend({}, MotionObject.prototype.defaults, {
+        defaults: _.extend({}, VanillaMotionObject.prototype.defaults, {
             // Number of neutrons and protons in this nucleus.
             numNeutrons: undefined,
             numProtons: undefined,
@@ -34,12 +34,18 @@ define(function (require) {
             halfLife: 0,
             decayTimeScalingFactor: 1
         }),
+
+        init: function() {
+            VanillaMotionObject.prototype.init.apply(this, arguments);
+            
+            this.originalPosition = new Vector2();
+        },
         
-        initialize: function(attributes, options) {
-            MotionObject.prototype.initialize.apply(this, [attributes, options]);
+        onCreate: function(attributes, options) {
+            VanillaMotionObject.prototype.onCreate.apply(this, [attributes, options]);
 
             // Original position
-            this.originalPosition = new Vector2(this.get('position'));
+            this.originalPosition.set(this.get('position'));
             // Original number of neutrons and protons, needed for resets and possibly
             //   for determining whether decay has occurred.
             this.originalNumProtons = this.get('numProtons');
@@ -56,9 +62,6 @@ define(function (require) {
             // Set the initial half life based on the nucleus' configuration.  It
             //   can be changed through a setter method if needed.
             this.set('halfLife', HalfLifeInfo.getHalfLifeForNucleusConfig(this.get('numProtons'), this.get('numNeutrons')));
-
-            // Bind event listeners
-            this.on('change:tunnelingRegionRadius', this.tunnelingRegionRadiusChanged);
         },
 
         /**
@@ -240,9 +243,11 @@ define(function (require) {
             return simulationTime >= this.decayTime;
         },
 
-        tunnelingRegionRadiusChanged: function(model, tunnelingRegionRadius) {
+        setTunnelingRegionRadius: function(tunnelingRegionRadius) {
             if (tunnelingRegionRadius >= this.get('diameter') / 2)
                 this.set('tunnelingRegionRadius', Math.min(tunnelingRegionRadius, AtomicNucleus.MAX_TUNNELING_REGION_RADIUS));
+            else
+                this.set('tunnelingRegionRadius', tunnelingRegionRadius);
         },
 
         /**
@@ -253,7 +258,8 @@ define(function (require) {
             this.updateDiameter();
 
             // Do the notification.
-            this.trigger('nucleus-change', this, byProducts);
+            if (this.get('simulation'))
+                this.get('simulation').triggerNucleusChange(this, byProducts);
         }
 
     }, _.extend({

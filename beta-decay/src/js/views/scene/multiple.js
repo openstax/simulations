@@ -188,6 +188,9 @@ define(function(require) {
 
             for (var i = 0; i < this.nucleusViews.length; i++)
                 this.nucleusViews[i].update(time, deltaTime, paused);
+
+            for (var i = 0; i < this.particleViews.length; i++)
+                this.particleViews[i].update(time, deltaTime, paused);
         },
 
         nucleusAdded: function(nucleus) {
