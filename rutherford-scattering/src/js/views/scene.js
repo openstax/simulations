@@ -50,13 +50,13 @@ define(function(require) {
             }
 
             this.scale = this.spaceBoxSize/this.simulation.boundWidth;
-            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
+            this.mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
                 new Vector2(0, 0),
                 new Vector2(this.viewOriginX, this.viewOriginY),
                 this.scale
             );
 
-            this.atomMVT = ModelViewTransform.createScaleMapping(4);
+            this.particleMVT = ModelViewTransform.createScaleMapping(4);
         },
 
         initRayGunMVT: function() {
@@ -110,7 +110,7 @@ define(function(require) {
         initSpaceBoxView: function() {
             this.spaceBoxView = new SpaceBoxView({
                 mvt: this.mvt,
-                atomMVT: this.atomMVT,
+                particleMVT: this.particleMVT,
                 scale: this.scale,
                 spaceBoxSize: this.spaceBoxSize,
                 simulation: this.simulation
