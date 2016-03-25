@@ -12,9 +12,20 @@ define(function (require) {
         model: AlphaParticleModel,
 
         initialize: function(attributes, options) {
-            this._bounds = new Rectangle(options.bounds.x, options.bounds.y, options.bounds.w, options.bounds.h);
+            this._bounds = this.makeCullBounds(options.bounds);
             this.listenTo(this, 'change:position', this.cullParticles);
             this.listenTo(this, 'change:remove', this.remove);
+        },
+
+        makeCullBounds: function(bounds){
+            var boundTolerance = 10;
+            var boundOffset = boundTolerance/2;
+            var boundX = bounds.x - boundOffset;
+            var boundY = bounds.y - boundOffset;
+            var boundWidth = bounds.w + boundTolerance;
+            var boundHeight = bounds.h + boundTolerance;
+
+            return new Rectangle(boundX, boundY, boundWidth, boundHeight);
         },
 
         cullParticles: function(particle, position) {

@@ -14,9 +14,14 @@ define(function (require, exports, module) {
      * Wraps the update function in 
      */
     var RutherfordAtomSimulation = RutherfordScatteringSimulation.extend({
+        
+        initialize: function(attributes, options) {
+            this.boundWidth = Constants.RUTHERFORD_ACTUAL;
+            RutherfordScatteringSimulation.prototype.initialize.apply(this, arguments);
+        },
 
         initAlphaParticles: function() {
-            this.alphaParticles = new RutherfordParticles(null, {bounds: {x: -75, y: -75, w: 150, h: 150}});
+            this.alphaParticles = new RutherfordParticles(null, {bounds: this.bounds});
         }
 
     });

@@ -9,11 +9,11 @@ define(function (require) {
     var RutherfordParticle = AlphaParticleModel.extend({
 
         initialize: function(attributes, options) {
-            AlphaParticleModel.prototype.initialize.apply(this, [attributes, options]);
+            AlphaParticleModel.prototype.initialize.apply(this, arguments);
             this.set('initialPosition', attributes.position);
         },
 
-        move: function(deltaTime, protonCount) {
+        move: function(deltaTime, L, protonCount) {
 
             // algorithm fails for x=0, so use this min value
             var X0_MIN = 0.00001;
@@ -24,10 +24,6 @@ define(function (require) {
             //-------------------------------------------------------------------------------
             // misc constants that we'll need
             //-------------------------------------------------------------------------------
-
-            // TODO set this properly.
-            // var L = this.bounds.getWidth();
-            var L = 150;
 
             var p = protonCount; // protons in the atom's nucleus
             var pd = Constants.DEFAULT_PROTON_COUNT; // default setting for the sim

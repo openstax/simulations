@@ -57,9 +57,13 @@ define(function (require) {
 
             'click .show-traces-check'  : 'toggleTraces',
 
-            'slide .alpha-energy-slider'    : 'changeAlphaEnergy',
-            'slide .protons-slider'   : 'changeProtons',
-            'slide .neutrons-slider'  : 'changeNeutrons',
+            'slide .alpha-energy-slider'    : 'slideAlphaEnergy',
+            'slide .protons-slider'   : 'slideProtons',
+            'slide .neutrons-slider'  : 'slideNeutrons',
+
+            'change .alpha-energy-slider'    : 'changeAlphaEnergy',
+            'change .protons-slider'   : 'changeProtons',
+            'change .neutrons-slider'  : 'changeNeutrons'
         },
 
         /**
@@ -229,21 +233,45 @@ define(function (require) {
             this.simulation.set('trace', trace);
         },
 
+        slideAlphaEnergy: function(event) {
+            var alphaEnergy = parseInt($(event.target).val());
+            // clear atoms
+            this.simulation.pauseRayGun();
+        },
+
+        slideProtons: function(event) {
+            var count = parseInt($(event.target).val());
+            this.controls.protons.$value.text(count);
+            // clear atoms
+            this.simulation.pauseRayGun();
+        },
+
+        slideNeutrons: function(event) {
+            var count = parseInt($(event.target).val());
+            this.controls.neutrons.$value.text(count);
+            // clear atoms
+            this.simulation.pauseRayGun();
+        },
+
         changeAlphaEnergy: function(event) {
             var alphaEnergy = parseInt($(event.target).val());
             this.simulation.set('alphaEnergy', alphaEnergy);
+
+            this.simulation.restartRayGun();
         },
 
         changeProtons: function(event) {
             var count = parseInt($(event.target).val());
-            this.controls.protons.$value.text(count);
             this.simulation.set('protonCount', count);
+
+            this.simulation.restartRayGun();
         },
 
         changeNeutrons: function(event) {
             var count = parseInt($(event.target).val());
-            this.controls.neutrons.$value.text(count);
             this.simulation.set('neutronCount', count);
+
+            this.simulation.restartRayGun();
         }
 
     });

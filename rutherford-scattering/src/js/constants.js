@@ -52,6 +52,9 @@ define(function (require) {
         BOX_SIZE: 480,
         BOX_SIZE_SMALL: 400,
 
+        RUTHERFORD_ACTUAL: 150,
+        PUDDING_ACTUAL: 300,
+
         RayGunView: {
             WIDTH: 20,
             BARREL_CENTER_X: 0.37,

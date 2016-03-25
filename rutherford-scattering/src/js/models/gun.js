@@ -10,6 +10,7 @@ define(function (require) {
 
         defaults: {
             on: false,
+            hold: false,
             dtSinceGunFired: 0,
             center: {
                 x: 0,
@@ -22,23 +23,23 @@ define(function (require) {
             this.alphaParticles = attributes.alphaParticles;
         },
 
-        update: function(deltaTime, bounds, alphaParticleEnergy) {
+        update: function(deltaTime, boundWidth, alphaParticleEnergy) {
 
             var initialSpeed = alphaParticleEnergy;
-            var dtPerGunFired = ( bounds.width / initialSpeed ) / Constants.MAX_PARTICLES;
+            var dtPerGunFired = ( boundWidth / initialSpeed ) / Constants.MAX_PARTICLES;
             var previousDtSinceGunFired = this.get('dtSinceGunFired');
 
             var dtSinceGunFired = previousDtSinceGunFired + Constants.GUN_INTENSITY * deltaTime;
             this.set('dtSinceGunFired', dtSinceGunFired);
 
 
-            if (this.get('on') && dtSinceGunFired >= dtPerGunFired ) {
+            if (this.get('on') && !this.get('hold') && dtSinceGunFired >= dtPerGunFired ) {
 
                 var ySign = ( Math.random() < 0.5 ? 1 : -1 );
 
                 // random position withing model bounds
-                var particleX = ySign * ( Constants.X0_MIN + ( Math.random() * ( ( bounds.width / 2 ) - Constants.X0_MIN ) ) );
-                var particleY = bounds.minY;
+                var particleX = ySign * ( Constants.X0_MIN + ( Math.random() * ( ( boundWidth / 2 ) - Constants.X0_MIN ) ) );
+                var particleY = -1 * boundWidth/2;
 
                 var initialPosition = new Vector2( particleX, particleY );
 

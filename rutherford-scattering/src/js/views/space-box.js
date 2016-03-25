@@ -31,6 +31,7 @@ define(function(require) {
             this.listenTo(this.alphaParticles, 'add', this.addAlphaParticle);
             this.listenTo(this.alphaParticles, 'remove', this.removeAlphaParticle);
             this.listenTo(this.alphaParticles, 'change:position', this.updatePosition);
+            this.listenTo(this.alphaParticles, 'reset', this.resetAlphaParticles);
         },
 
         /**
@@ -38,9 +39,20 @@ define(function(require) {
          */
         initGraphics: function() {
             this.box = new PIXI.Graphics();
-            this.drawBox();
+            this.box.lineStyle(1, 0xFFFFFF, 1);
+            this.drawBox(this.box);
 
+            this.maskBox = new PIXI.Graphics();
+            this.maskBox.beginFill(0x000000, 1);
+            this.drawBox(this.maskBox);
+            this.maskBox.endFill();
+
+            this.atomsLayer = new PIXI.Container();
+            this.atomsLayer.mask = this.maskBox;
+
+            this.displayObject.addChild(this.atomsLayer);
             this.displayObject.addChild(this.box);
+
             this.sprites = {};
             this.traces = {};
 
@@ -66,15 +78,14 @@ define(function(require) {
             this.update();
         },
 
-        drawBox: function() {
+        drawBox: function(box) {
             var boxWidth = this.spaceBoxSize/this.scale;
             var boxCorner = this.mvt.modelToView({
                 x: - boxWidth/2,
                 y: - boxWidth/2
             });
 
-            this.box.lineStyle(1, 0xFFFFFF, 1);
-            this.box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
+            box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
         },
 
         updatePosition: function(particle, position){
@@ -101,19 +112,32 @@ define(function(require) {
             this.traces[particle.cid] =  new PIXI.Graphics();
             this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
 
-            this.displayObject.addChild(this.traces[particle.cid]);
-            this.displayObject.addChild(alphaParticle);
+            this.atomsLayer.addChild(this.traces[particle.cid]);
+            this.atomsLayer.addChild(alphaParticle);
         },
 
         removeAlphaParticle: function(particle){
             var alphaParticle = this.sprites[particle.cid];
 
-            this.displayObject.removeChild(alphaParticle);
+            this.atomsLayer.removeChild(alphaParticle);
             delete this.sprites[particle.cid];
 
             var trace = this.traces[particle.cid];
-            this.displayObject.removeChild(trace);
+            this.atomsLayer.removeChild(trace);
             delete this.traces[particle.cid];
+        },
+
+        resetAlphaParticles: function(){
+            this.traces = {};
+            this.sprites = {};
+
+            this.displayObject.removeChild(this.atomsLayer);
+            this.atomsLayer.destroy();
+
+            this.atomsLayer = new PIXI.Container();
+            this.atomsLayer.mask = this.maskBox;
+
+            this.displayObject.addChildAt(this.atomsLayer, 0);
         }
 
     }, {center: {x: 0, y: 0}});
