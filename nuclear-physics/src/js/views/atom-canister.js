@@ -85,6 +85,7 @@ define(function(require) {
 
             this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
             this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDecorativeDummyObjects);
+            this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDraggability);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
         },
 
@@ -215,6 +216,10 @@ define(function(require) {
                 else
                     this.decorativeDummyObjects.children[i].visible = false;
             }
+        },
+
+        atomsCanBeAdded: function() {
+            return (this.simulation.getTotalNumNuclei() < this.simulation.get('maxNuclei'));
         },
 
         /**
@@ -356,6 +361,12 @@ define(function(require) {
                 this.dummyObjectView.update(time, deltaTime);
         },
 
+        updateDraggability: function() {
+            var atomsCanBeAdded = this.atomsCanBeAdded();
+            this.dragOverlay.visible = atomsCanBeAdded;
+            this.backgroundLayer.buttonMode = atomsCanBeAdded;
+        },
+
         /**
          * Makes the drag overlay fade in and out
          */
@@ -369,6 +380,9 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            if (!this.atomsCanBeAdded())
+                return;
+
             this.dragging = true;
 
             this.dummyObjectView = this.createDummyObjectView();
@@ -449,8 +463,10 @@ define(function(require) {
             var viewY = atomView.displayObject.y;
             var viewRadius = (atomView.displayObject.width + atomView.displayObject.height) / 4;
 
-            if (this.overlapsCircle(viewX, viewY, viewRadius))
+            if (this.overlapsCircle(viewX, viewY, viewRadius)) {
                 atomView.model.destroy();
+                this.hover();
+            }
         },
 
         showRemoveOverlay: function() {
