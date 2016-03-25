@@ -7,8 +7,6 @@ define(function (require, exports, module) {
     var Simulation = require('common/simulation/simulation');
 
     var RayGun = require('./gun');
-    var AlphaParticles  = require('rutherford-scattering/collections/alpha-particles');
-    var RutherfordParticles  = require('rutherford-scattering/collections/rutherford-particles');
 
     /**
      * Constants
@@ -28,7 +26,6 @@ define(function (require, exports, module) {
         
         initialize: function(attributes, options) {
             Simulation.prototype.initialize.apply(this, [attributes, options]);
-
         },
 
         /**
@@ -53,9 +50,7 @@ define(function (require, exports, module) {
             this.rayGun.update(deltaTime, {width: 150, minY: -75}, this.get('alphaEnergy'));
         },
 
-        initAlphaParticles: function() {
-            this.alphaParticles = new AlphaParticles(null, {bounds: {x: -75, y: -75, w: 150, h: 150}});
-        }
+        initAlphaParticles: function() {}
 
     });
 
