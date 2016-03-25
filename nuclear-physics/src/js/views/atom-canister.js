@@ -9,7 +9,7 @@ define(function(require) {
     var Rectangle = require('common/math/rectangle');
     var Vector2   = require('common/math/vector2');
 
-    var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+    var ExplodingNucleusView = require('views/nucleus/exploding');
 
     var Assets = require('assets');
     var Constants = require('constants');
@@ -56,6 +56,7 @@ define(function(require) {
             this.mvt = options.mvt;
             this.simulation = options.simulation;
             this.dummyLayer = options.dummyLayer;
+            this.renderer = options.renderer;
             this.areasToAvoid = options.areasToAvoid;
 
             this.width = options.width;
@@ -209,11 +210,10 @@ define(function(require) {
          */
         createDummyObjectView: function() {
             var model = this.simulation.createNucleus();
-            var view = new DraggableExplodingNucleusView({
+            var view = new ExplodingNucleusView({
                 model: model,
                 mvt: this.mvt,
-                atomCanister: this,
-                interactive: false
+                renderer: this.renderer
             });
             return view;
         },

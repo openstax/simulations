@@ -4,9 +4,9 @@ define(function(require) {
 
     var PIXI = require('pixi');
 
-    var Colors      = require('common/colors/colors');
-    var PixiToImage = require('common/v3/pixi/pixi-to-image');
-    var Vector2     = require('common/math/vector2');
+    var Colors        = require('common/colors/colors');
+    var PixiToTexture = require('common/v3/pixi/pixi-to-texture');
+    var Vector2       = require('common/math/vector2');
 
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
@@ -34,19 +34,19 @@ define(function(require) {
 
         _vec2: new Vector2(),
 
-        // TODO: It might be good at some point in the future when there are a lot of nuclei being
-        //   rendered on the screen to check memory usage.  If memory usage keeps climbing, I would
-        //   think that all the nucleus graphics with cacheAsBitmap=true are not clearing their
-        //   textures when garbage collected.  If that's the case, maybe try explicitly setting
-        //   cacheAsBitmap to null when we're done with them.
         _nucleusCache: {},
         _labeledNucleusCache: {},
         minCachedTextureCount: 5,
 
-        getCachedNucleusTextures: function(cache, numProtons, numNeutrons, mvt) {
+        getCachedNucleusTextures: function(renderer, cacheKey, numProtons, numNeutrons, mvt) {
             var scale = mvt.getXScale();
 
-            if (cache[scale] && 
+            if (!renderer)
+                return null;
+
+            var cache = renderer[cacheKey];
+            if (cache &&
+                cache[scale] && 
                 cache[scale][numProtons] && 
                 cache[scale][numProtons][numNeutrons]
             ) {
@@ -56,8 +56,16 @@ define(function(require) {
             return null;
         },
 
-        addCachedNucleusTexture: function(cache, numProtons, numNeutrons, mvt, texture) {
+        addCachedNucleusTexture: function(renderer, cacheKey, numProtons, numNeutrons, mvt, texture) {
             var scale = mvt.getXScale();
+
+            if (!renderer)
+                return;
+
+            if (!renderer[cacheKey])
+                renderer[cacheKey] = {};
+
+            var cache = renderer[cacheKey];
 
             if (!cache[scale])
                 cache[scale] = [];
@@ -71,9 +79,11 @@ define(function(require) {
             cache[scale][numProtons][numNeutrons].push(texture);
         },
 
-        generateLabeledNucleus: function(nucleus, mvt, hideNucleons) {
+        generateLabeledNucleus: function(nucleus, mvt, renderer, hideNucleons, labelScale) {
             var sprite;
             var noCachingAsBitmap = false;
+            if (labelScale === undefined)
+                labelScale = 1;
             
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
@@ -90,22 +100,25 @@ define(function(require) {
                 var texture;
 
                 // Either create a new texture or get a cached one
-                var cachedTextures = this.getCachedNucleusTextures(this._labeledNucleusCache, numProtons, numNeutrons, mvt);
+                var cachedTextures = this.getCachedNucleusTextures(renderer, '_labeledNucleusCache', numProtons, numNeutrons, mvt);
                 if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
                     // Create a nucleus sprite
                     var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
                     // Create its isotope symbol
-                    var fontSize = mvt.modelToViewDeltaX(nucleus.get('diameter')) * 0.8;
+                    var fontSize = mvt.modelToViewDeltaX(nucleus.get('diameter')) * 0.8 * labelScale;
                     var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize, 1);
                     isotopeSymbol.x = isotopeSymbol.width / 2;
                     // Add them to a container
                     var container = new PIXI.Container();
                     container.addChild(nucleusSprite);
                     container.addChild(isotopeSymbol);
+                    // If we don't have a renderer, don't bother with creating a texture
+                    if (!renderer)
+                        return this.wrapSprite(container);
                     // Render the texture
-                    texture = this.createTexture(container);
+                    texture = this.createTexture(container, renderer);
                     // Save the texture
-                    this.addCachedNucleusTexture(this._labeledNucleusCache, numProtons, numNeutrons, mvt, texture);
+                    this.addCachedNucleusTexture(renderer, '_labeledNucleusCache', numProtons, numNeutrons, mvt, texture);
                 }
                 else {
                     // Get a random texture from the cache
@@ -124,41 +137,10 @@ define(function(require) {
         /**
          * Create the image that will be used to visually represent this nucleus.
          */
-        generateNucleus: function(nucleus, mvt, hideNucleons) {
-            // var sprite;
-            // var noCachingAsBitmap = false;
-            
-            // // Create a graphical image that will represent this nucleus in the view.
-            // if (hideNucleons) {
-            //     // Show as a single sphere
-            //     var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
-            //     sprite.tint = this.getColorForElement(nucleus);
-            // }
-            // else {
-            //     noCachingAsBitmap = true;
-
-            //     var numProtons = nucleus.get('numProtons');
-            //     var numNeutrons = nucleus.get('numNeutrons');
-
-            //     var texture;
-
-            //     var cachedTextures = this.getCachedNucleusTextures(this._nucleusCache, numProtons, numNeutrons, mvt);
-            //     if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
-            //         texture = this.createTexture(this.createNucleusSprite(numProtons, numNeutrons, mvt));
-            //         this.addCachedNucleusTexture(this._nucleusCache, numProtons, numNeutrons, mvt, texture);
-            //     }
-            //     else {
-            //         texture = _.sample(cachedTextures);
-            //     }
-
-            //     sprite = new PIXI.Sprite(texture);
-            //     sprite.anchor.x = 0.5;
-            //     sprite.anchor.y = 0.5;
-            // }
-
-            // return this.wrapSprite(sprite, noCachingAsBitmap);
+        generateNucleus: function(nucleus, mvt, renderer, hideNucleons) {
             var sprite;
-                        
+            var noCachingAsBitmap = false;
+            
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
                 // Show as a single sphere
@@ -166,10 +148,45 @@ define(function(require) {
                 sprite.tint = this.getColorForElement(nucleus);
             }
             else {
-                sprite = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
+                noCachingAsBitmap = true;
+
+                var numProtons = nucleus.get('numProtons');
+                var numNeutrons = nucleus.get('numNeutrons');
+
+                var texture;
+
+                var cachedTextures = this.getCachedNucleusTextures(renderer, '_nucleusCache', numProtons, numNeutrons, mvt);
+                if (cachedTextures === null || cachedTextures.length < this.minCachedTextureCount) {
+                    var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
+                    // If we don't have a renderer, don't bother with creating a texture
+                    if (!renderer)
+                        return this.wrapSprite(nucleusSprite);
+                    texture = this.createTexture(nucleusSprite, renderer);
+                    this.addCachedNucleusTexture(renderer, '_nucleusCache', numProtons, numNeutrons, mvt, texture);
+                }
+                else {
+                    texture = _.sample(cachedTextures);
+                }
+
+                sprite = new PIXI.Sprite(texture);
+                sprite.anchor.x = 0.5;
+                sprite.anchor.y = 0.5;
             }
 
-            return this.wrapSprite(sprite);
+            return this.wrapSprite(sprite, noCachingAsBitmap);
+            // var sprite;
+                        
+            // // Create a graphical image that will represent this nucleus in the view.
+            // if (hideNucleons) {
+            //     // Show as a single sphere
+            //     var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
+            //     sprite.tint = this.getColorForElement(nucleus);
+            // }
+            // else {
+            //     sprite = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
+            // }
+
+            // return this.wrapSprite(sprite);
         },
 
         createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt, tunnelingRegionRadius) {
@@ -434,13 +451,14 @@ define(function(require) {
             return scaleDownWrapper;
         },
 
-        createTexture: function(sprite) {
+        createTexture: function(sprite, renderer) {
             var scaleUpWrapper   = new PIXI.Container();
             
             scaleUpWrapper.addChild(sprite);
             scaleUpWrapper.scale.x = scaleUpWrapper.scale.y = 2;
 
-            var texture = PixiToImage.displayObjectToTexture(scaleUpWrapper, 2);
+            var texture = PixiToTexture.displayObjectToTexture(scaleUpWrapper, renderer, 2);
+            // var texture = scaleUpWrapper.generateTexture(renderer);
 
             return texture;
         },

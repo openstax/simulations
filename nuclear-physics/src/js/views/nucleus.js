@@ -24,6 +24,7 @@ define(function(require) {
             }, options);
 
             this.mvt = options.mvt;
+            this.renderer = options.renderer;
             this.showSymbol = options.showSymbol;
             this.symbolSize = options.symbolSize;
 
@@ -64,7 +65,7 @@ define(function(require) {
             if (this.nucleusSprite)
                 this.displayObject.removeChild(this.nucleusSprite);
 
-            this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt);
+            this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt, this.renderer);
             this.displayObject.addChild(this.nucleusSprite);
         },
 

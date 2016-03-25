@@ -29,7 +29,8 @@ define(function(require) {
         initNucleusDecayChart: function() {
             this.nucleusDecayChart = new SingleNucleusDecayChart({
                 simulation: this.simulation,
-                width: this.getWidthBetweenPanels()
+                width: this.getWidthBetweenPanels(),
+                renderer: this.renderer
             });
 
             if (AppView.windowIsShort()) {

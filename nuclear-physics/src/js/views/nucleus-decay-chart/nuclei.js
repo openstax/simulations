@@ -23,6 +23,7 @@ define(function(require) {
          */
         initialize: function(options) {
             this.simulation = options.simulation;
+            this.renderer = options.renderer;
             this.width = options.width;
             this.height = options.height;
             this.isotope1Y = options.isotope1Y;
@@ -51,7 +52,7 @@ define(function(require) {
         },
 
         addNucleus: function(nucleus) {
-            var sprite = ParticleGraphicsGenerator.generateNucleus(nucleus, this.mvt);
+            var sprite = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, false, 0.6);
             // Set the offset for this node so that the nodes don't
             //   all just stack directly on top of each other.
             sprite.bunchingOffset = BUNCHING_OFFSETS[this.bunchingCounter];
@@ -152,6 +153,8 @@ define(function(require) {
                     sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx + (sprite.bunchingOffset.x * this.height);
                 }
                 else if (nucleus.hasDecayed()) {
+                    var texture = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, false, 0.6).texture;
+                    sprite.texture = texture;
                     sprite.decayTime = 0;
 
                     this.sprites.splice(i, 1);
