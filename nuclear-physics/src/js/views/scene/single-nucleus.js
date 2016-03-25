@@ -129,7 +129,8 @@ define(function(require) {
                 model: this.simulation.atomicNucleus,
                 mvt: this.mvt,
                 showNucleus: false,
-                showSymbol: this.showingLabels
+                showSymbol: this.showingLabels,
+                renderer: this.renderer
             });
             this.nucleusLayer.addChild(this.nucleusView.displayObject);
         },

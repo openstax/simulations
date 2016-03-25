@@ -36,37 +36,6 @@ define(function(require) {
             return canvas.toDataURL('image/png');
         },
 
-        displayObjectToTexture: function(displayObject, padding) {
-            var wrapper = this._wrapDisplayObject(displayObject, padding);
-            stage.addChild(wrapper);
-
-            var resolution = window.devicePixelRatio ? window.devicePixelRatio : 1;
-            var renderTexture = new PIXI.RenderTexture(
-                renderer, 
-                displayObject.width  + padding * 2,
-                displayObject.height + padding * 2,
-                null, 
-                resolution
-            );
-
-            renderTexture.render(stage);
-
-            // Set the displayObject loose again
-            wrapper.removeChild(displayObject);
-            stage.removeChild(wrapper);
-
-            return renderTexture;
-            // if (padding === undefined)
-            //     padding = 0;
-
-            // renderer.resize(
-            //     displayObject.width  + padding * 2,
-            //     displayObject.height + padding * 2
-            // );
-
-            // return displayObject.generateTexture(renderer);
-        },
-
         _wrapDisplayObject: function(displayObject, padding) {
             if (padding === undefined)
                 padding = 0;

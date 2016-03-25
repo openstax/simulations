@@ -69,6 +69,7 @@ define(function(require) {
 
             // Required options
             this.simulation = options.simulation;
+            this.renderer = options.renderer;
             this.width = options.width;
 
             // Optional options
@@ -281,6 +282,7 @@ define(function(require) {
         initNucleiView: function() {
             this.nucleiView = new NucleusDecayChartNucleiView({
                 simulation: this.simulation,
+                renderer: this.renderer,
                 height: this.graphHeight,
                 isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
                 isotope2Y: this.yAxisIsotope2.y - this.paddingTop

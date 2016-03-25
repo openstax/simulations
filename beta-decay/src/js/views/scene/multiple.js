@@ -133,7 +133,8 @@ define(function(require) {
         initNucleusDecayChart: function() {
             this.nucleusDecayChart = new MultipleNucleusDecayChart({
                 simulation: this.simulation,
-                width: this.getWidthBetweenPanels()
+                width: this.getWidthBetweenPanels(),
+                renderer: this.renderer
             });
 
             if (AppView.windowIsShort()) {
@@ -168,7 +169,8 @@ define(function(require) {
                 simulation: this.simulation,
                 width: canisterWidth,
                 mvt: this.mvt,
-                dummyLayer: this.dummyLayer
+                dummyLayer: this.dummyLayer,
+                renderer: this.renderer
             });
 
             this.atomCanisterView.displayObject.x = canisterX;
@@ -229,7 +231,8 @@ define(function(require) {
                 model: nucleus,
                 mvt: this.mvt,
                 showSymbol: this.showingLabels,
-                atomCanister: this.atomCanisterView
+                atomCanister: this.atomCanisterView,
+                renderer: this.renderer
             });
 
             this.nucleusViews.push(nucleusView);
