@@ -16,19 +16,7 @@ define(function(require) {
     /**
      *
      */
-    var PlumPuddingSceneView = RutherfordScatteringSceneView.extend({
-        initMVT: function(){
-            RutherfordScatteringSceneView.prototype.initMVT.apply(this, arguments);
-
-            this.scale = this.spaceBoxSize/300;
-
-            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
-                new Vector2(this.viewOriginX, this.viewOriginY),
-                this.scale
-            );
-        }
-    });
+    var PlumPuddingSceneView = RutherfordScatteringSceneView.extend({});
 
     return PlumPuddingSceneView;
 });

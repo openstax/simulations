@@ -49,7 +49,18 @@ define(function(require) {
                 this.spaceBoxSize = Constants.BOX_SIZE;
             }
 
-            this.initRayGunMVT();
+            this.scale = this.spaceBoxSize/this.simulation.boundWidth;
+            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                this.scale
+            );
+
+            this.atomMVT = ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0),
+                new Vector2(this.viewOriginX, this.viewOriginY),
+                4
+            );
         },
 
         initRayGunMVT: function() {
@@ -85,6 +96,8 @@ define(function(require) {
             this.stage.addChild(this.topLayer);
 
             this.initMVT();
+            this.initRayGunMVT();
+
             this.initRayGunView();
             this.initSpaceBoxView();
         },
@@ -101,9 +114,10 @@ define(function(require) {
         initSpaceBoxView: function() {
             this.spaceBoxView = new SpaceBoxView({
                 mvt: this.mvt,
+                atomMVT: this.atomMVT,
                 scale: this.scale,
                 spaceBoxSize: this.spaceBoxSize,
-                alphaParticles: this.simulation.alphaParticles
+                simulation: this.simulation
             });
 
             this.bottomLayer.addChild(this.spaceBoxView.displayObject);

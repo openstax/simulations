@@ -3,6 +3,8 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    var _ = require('underscore');
+
 
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
@@ -22,9 +24,11 @@ define(function(require) {
          */
         initialize: function(options) {
             this.mvt = options.mvt;
+            this.atomMVT = options.atomMVT;
             this.spaceBoxSize = options.spaceBoxSize;
             this.scale = options.scale;
-            this.alphaParticles = options.alphaParticles;
+            this.simulation = options.simulation
+            this.alphaParticles = options.simulation.alphaParticles;
 
             this.initGraphics();
 
@@ -32,6 +36,8 @@ define(function(require) {
             this.listenTo(this.alphaParticles, 'remove', this.removeAlphaParticle);
             this.listenTo(this.alphaParticles, 'change:position', this.updatePosition);
             this.listenTo(this.alphaParticles, 'reset', this.resetAlphaParticles);
+
+            this.listenTo(this.simulation, 'change:trace', this.clearTraces);
         },
 
         /**
@@ -104,15 +110,17 @@ define(function(require) {
         },
 
         addAlphaParticle: function(particle){
-            var alphaParticle = ParticleGraphicsGenerator.generateAlphaParticle(this.mvt);
+            var alphaParticle = ParticleGraphicsGenerator.generateAlphaParticle(this.atomMVT);
             alphaParticle.x = this.mvt.modelToViewX(particle.get('position').x);
             alphaParticle.y = this.mvt.modelToViewY(particle.get('position').y);
             this.sprites[particle.cid] = alphaParticle;
 
-            this.traces[particle.cid] =  new PIXI.Graphics();
-            this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
+            if(this.simulation.get('trace')){
+                this.traces[particle.cid] =  new PIXI.Graphics();
+                this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
+                this.atomsLayer.addChild(this.traces[particle.cid]);
+            }
 
-            this.atomsLayer.addChild(this.traces[particle.cid]);
             this.atomsLayer.addChild(alphaParticle);
         },
 
@@ -122,9 +130,10 @@ define(function(require) {
             this.atomsLayer.removeChild(alphaParticle);
             delete this.sprites[particle.cid];
 
-            var trace = this.traces[particle.cid];
-            this.atomsLayer.removeChild(trace);
-            delete this.traces[particle.cid];
+            if(this.traces[particle.cid]){
+                this.atomsLayer.removeChild(this.traces[particle.cid]);
+                delete this.traces[particle.cid];
+            }
         },
 
         resetAlphaParticles: function(){
@@ -138,6 +147,13 @@ define(function(require) {
             this.atomsLayer.mask = this.maskBox;
 
             this.displayObject.addChildAt(this.atomsLayer, 0);
+        },
+
+        clearTraces: function(simulation, trace){
+            if(!trace){
+                _.each(this.traces, this.atomsLayer.removeChild, this.atomsLayer);
+                this.traces = {};
+            }
         }
 
     }, {center: {x: 0, y: 0}});
