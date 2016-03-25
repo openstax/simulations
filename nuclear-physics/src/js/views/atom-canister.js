@@ -84,6 +84,7 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
+            this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDecorativeDummyObjects);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
         },
 
@@ -198,6 +199,21 @@ define(function(require) {
 
                 this.decorativeDummyObjects.addChild(dummy.displayObject);
                 this.decorativeDummyObjectViews.push(dummy);
+            }
+        },
+
+        updateDecorativeDummyObjects: function() {
+            var numAtoms = this.simulation.getTotalNumNuclei();
+            var maxAtoms = this.simulation.get('maxNuclei');
+            var numAtomsLeft = maxAtoms - numAtoms;
+            var percentLeft = numAtomsLeft / maxAtoms;
+            var atomsToShow = Math.ceil(percentLeft * this.decorativeDummyObjects.children.length);
+
+            for (var i = 0; i < this.decorativeDummyObjects.children.length; i++) {
+                if (i < atomsToShow)
+                    this.decorativeDummyObjects.children[i].visible = true;
+                else
+                    this.decorativeDummyObjects.children[i].visible = false;
             }
         },
 
