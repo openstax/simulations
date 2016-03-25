@@ -174,19 +174,6 @@ define(function(require) {
             }
 
             return this.wrapSprite(sprite, noCachingAsBitmap);
-            // var sprite;
-                        
-            // // Create a graphical image that will represent this nucleus in the view.
-            // if (hideNucleons) {
-            //     // Show as a single sphere
-            //     var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
-            //     sprite.tint = this.getColorForElement(nucleus);
-            // }
-            // else {
-            //     sprite = this.createNucleusSprite(nucleus.get('numProtons'), nucleus.get('numNeutrons'), mvt);
-            // }
-
-            // return this.wrapSprite(sprite);
         },
 
         createNormalizedNucleusSprite: function(numProtons, numNeutrons, mvt, tunnelingRegionRadius) {
