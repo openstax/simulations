@@ -67,6 +67,8 @@ define(function(require) {
 
             this.$ui.append(this.$resetButton);
             this.$ui.append(this.$bucketButtonsWrapper);
+
+            this.updateAddRemoveButtons();
         },
 
         reset: function() {
@@ -238,6 +240,8 @@ define(function(require) {
             this.nucleusViews.push(nucleusView);
 
             this.nucleusLayer.addChild(nucleusView.displayObject);
+
+            this.updateAddRemoveButtons();
         },
 
         nucleusRemoved: function(nucleus) {
@@ -248,6 +252,7 @@ define(function(require) {
                     break;
                 }
             }
+            this.updateAddRemoveButtons();
         },
 
         nucleiReset: function() {
@@ -255,6 +260,7 @@ define(function(require) {
                 this.nucleusViews[i].remove();
                 this.nucleusViews.splice(i, 1);
             }
+            this.updateAddRemoveButtons();
         },
 
         particleEmitted: function(particle) {
@@ -293,16 +299,23 @@ define(function(require) {
             }
         },
 
+        updateAddRemoveButtons: function() {
+            this.$add10Button.prop('disabled', (this.simulation.atomicNuclei.length >= this.simulation.get('maxNuclei')));
+            this.$remove10Button.prop('disabled', (this.simulation.atomicNuclei.length === 0));
+        },
+
         resetNuclei: function() {
             this.simulation.resetActiveAndDecayedNuclei();
         },
 
         addTenNuclei: function() {
             this.atomCanisterView.addAtoms(10);
+            this.updateAddRemoveButtons();
         },
 
         removeTenNuclei: function() {
             this.atomCanisterView.removeAtoms(10);
+            this.updateAddRemoveButtons();
         },
 
         showLabels: function() {
