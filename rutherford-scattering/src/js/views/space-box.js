@@ -42,6 +42,7 @@ define(function(require) {
 
             this.displayObject.addChild(this.box);
             this.sprites = {};
+            this.traces = {};
 
             this.updateMVT(this.mvt);
         },
@@ -77,18 +78,30 @@ define(function(require) {
         },
 
         updatePosition: function(particle, position){
+            var previous = particle.previous('position');
+            var current = position;
+
             if(this.sprites[particle.cid]){
                 this.sprites[particle.cid].x = this.mvt.modelToViewX(position.x);
                 this.sprites[particle.cid].y = this.mvt.modelToViewY(position.y);
+            }
+
+            if(this.traces[particle.cid]){
+                this.traces[particle.cid].moveTo(this.mvt.modelToViewX(previous.x), this.mvt.modelToViewY(previous.y));
+                this.traces[particle.cid].lineTo(this.sprites[particle.cid].x, this.sprites[particle.cid].y);
             }
         },
 
         addAlphaParticle: function(particle){
             var alphaParticle = ParticleGraphicsGenerator.generateAlphaParticle(this.mvt);
-            alphaParticle.x = particle.get('position').x;
-            alphaParticle.y = particle.get('position').y;
+            alphaParticle.x = this.mvt.modelToViewX(particle.get('position').x);
+            alphaParticle.y = this.mvt.modelToViewY(particle.get('position').y);
             this.sprites[particle.cid] = alphaParticle;
 
+            this.traces[particle.cid] =  new PIXI.Graphics();
+            this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
+
+            this.displayObject.addChild(this.traces[particle.cid]);
             this.displayObject.addChild(alphaParticle);
         },
 
@@ -97,6 +110,10 @@ define(function(require) {
 
             this.displayObject.removeChild(alphaParticle);
             delete this.sprites[particle.cid];
+
+            var trace = this.traces[particle.cid];
+            this.displayObject.removeChild(trace);
+            delete this.traces[particle.cid];
         }
 
     }, {center: {x: 0, y: 0}});

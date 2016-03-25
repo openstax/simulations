@@ -12,8 +12,7 @@ define(function (require) {
           speed: 0,
           defaultSpeed: 0,
           position: {x: 0, y: 0},
-          orientation: Math.PI / 2,
-          positions: []
+          orientation: Math.PI / 2
         },
 
         move: function(deltaTime) {

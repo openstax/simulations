@@ -225,31 +225,24 @@ define(function (require) {
         },
 
         toggleTraces: function(event) {
-            if ($(event.target).is(':checked'))
-                console.info('show traces');
-                // this.sceneView.showTraces();
-            else
-                console.info('hide traces');
-                // this.sceneView.hideTraces();
+            var trace = $(event.target).is(':checked');
+            this.simulation.set('trace', trace);
         },
 
         changeAlphaEnergy: function(event) {
             var alphaEnergy = parseInt($(event.target).val());
-            // set model alphaEnergy
             this.simulation.set('alphaEnergy', alphaEnergy);
         },
 
         changeProtons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.protons.$value.text(count);
-            // set model value
             this.simulation.set('protonCount', count);
         },
 
         changeNeutrons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.neutrons.$value.text(count);
-            // set model value
             this.simulation.set('neutronCount', count);
         }
 
