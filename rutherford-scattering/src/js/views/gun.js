@@ -6,7 +6,6 @@ define(function(require) {
 
     var PixiView = require('common/v3/pixi/view');
     var Colors   = require('common/colors/colors');
-    require('common/v3/pixi/dash-to');
     
     var Assets = require('assets');
     var Constants = require('constants');
@@ -48,9 +47,6 @@ define(function(require) {
             this.rayCap = new PIXI.Container();
             this.drawRayCap();
 
-            this.projectionLines = new PIXI.Graphics();
-            this.drawProjectionLines();
-
             this.triggerButton = Assets.createSprite(this.getTrigger());
             this.triggerButton.buttonMode = true;
             this.triggerButton.defaultCursor = 'pointer';
@@ -61,7 +57,6 @@ define(function(require) {
             this.displayObject.addChild(this.rayCap);
             this.displayObject.addChild(this.rayGun);
             this.displayObject.addChild(this.triggerButton);
-            this.displayObject.addChild(this.projectionLines);
 
             this.updateMVT(this.mvt);
         },
@@ -143,18 +138,6 @@ define(function(require) {
             this.rayCap.addChild(this.rayTarget);
             this.rayCap.addChild(this.rayTargetCap);
             this.rayCap.addChild(this.rayView);
-        },
-
-        drawProjectionLines: function() {
-            var rayViewTop = - this.rayHeight - this.rayTargetHeight / 2;
-            var rayViewDashStyle = [10, 6];
-
-            this.projectionLines.lineStyle(1, 0xFFFFFF, 1);
-            this.projectionLines.moveTo(this.rayViewLeft, rayViewTop);
-            this.projectionLines.dashTo(150, -260, rayViewDashStyle);
-            this.projectionLines.moveTo(this.rayViewLeft, rayViewTop + this.rayViewHeight);
-            this.projectionLines.dashTo(150, 200, rayViewDashStyle);
-
         },
 
         toggle: function() {

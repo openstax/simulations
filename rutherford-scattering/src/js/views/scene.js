@@ -4,6 +4,8 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
+    require('common/v3/pixi/extensions');
+    require('common/v3/pixi/dash-to');
 
     var AppView   = require('common/app/app');
     var PixiSceneView = require('common/v3/pixi/view/scene');
@@ -96,6 +98,7 @@ define(function(require) {
 
             this.initRayGunView();
             this.initSpaceBoxView();
+            this.drawProjectionLines();
         },
 
         initRayGunView: function() {
@@ -117,6 +120,40 @@ define(function(require) {
             });
 
             this.bottomLayer.addChild(this.spaceBoxView.displayObject);
+        },
+
+        drawProjectionLines: function() {
+            var rayViewCorners = this.getLeftCorners(this.rayGunView.rayView);
+            var spaceBoxCorners = this.getLeftCorners(this.spaceBoxView.box);
+
+            var projectionLines = new PIXI.Graphics();
+            var dashStyle = [6, 6];
+
+            projectionLines.lineStyle(1, 0xFFFFFF, 1);
+            projectionLines.moveTo(rayViewCorners.top.x, rayViewCorners.top.y);
+            projectionLines.dashTo(spaceBoxCorners.top.x, spaceBoxCorners.top.y, dashStyle);
+
+            projectionLines.moveTo(rayViewCorners.bottom.x, rayViewCorners.bottom.y);
+            projectionLines.dashTo(spaceBoxCorners.bottom.x, spaceBoxCorners.bottom.y, dashStyle);
+
+            this.middleLayer.addChild(projectionLines);
+        },
+
+        getLeftCorners: function(box) {
+            var offset = box.toGlobal(box.graphicsData[0].shape);
+            var rectangle = box.graphicsData[0].shape;
+
+            var top = {
+                x: offset.x + box.parent.position.x + box.parent.parent.position.x,
+                y: offset.y + box.parent.position.y + box.parent.parent.position.y
+            };
+
+            var bottom = {
+                x: offset.x + box.parent.position.x + box.parent.parent.position.x,
+                y: offset.y + box.parent.position.y + box.parent.parent.position.y + rectangle.height
+            };
+
+            return {top: top, bottom: bottom};
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
