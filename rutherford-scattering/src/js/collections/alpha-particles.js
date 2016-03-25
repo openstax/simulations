@@ -14,6 +14,7 @@ define(function (require) {
         initialize: function(attributes, options) {
             this._bounds = new Rectangle(options.bounds.x, options.bounds.y, options.bounds.w, options.bounds.h);
             this.listenTo(this, 'change:position', this.cullParticles);
+            this.listenTo(this, 'change:remove', this.remove);
         },
 
         cullParticles: function(particle, position) {
