@@ -243,14 +243,14 @@ define(function (require) {
             var count = parseInt($(event.target).val());
             this.controls.protons.$value.text(count);
             // set model value
-            console.info('change proton');
+            this.simulation.set('protonCount', count);
         },
 
         changeNeutrons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.neutrons.$value.text(count);
             // set model value
-            console.info('change neutrons');
+            this.simulation.set('neutronCount', count);
         }
 
     });
