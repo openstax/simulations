@@ -25,16 +25,18 @@ define(function (require, exports, module) {
     var MultiNucleusBetaDecaySimulation = MultiNucleusDecaySimulation.extend({
 
         defaults: _.extend({}, MultiNucleusDecaySimulation.prototype.defaults, {
-            nucleusType: Constants.MultiNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE
+            nucleusType: Constants.MultiNucleusBetaDecaySimulation.DEFAULT_NUCLEUS_TYPE,
+            maxNuclei:   Constants.MultiNucleusBetaDecaySimulation.MAX_NUCLEI,
+            jitterEnabled: true
         }),
 
         /**
          * Initializes the models used in the simulation
          */
         initComponents: function() {
-            MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
-
             this.emittedParticles = new Backbone.Collection();
+
+            MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
 
             this.listenTo(this.atomicNuclei, 'nucleus-change', this.nucleusChanged);
         },

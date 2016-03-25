@@ -42,13 +42,13 @@ define(function (require) {
          * Return a value indicating whether or not the nucleus has decayed.
          */
         hasDecayed: function(){
-            if (this.get('numNeutrons') < Hydrogen3Nucleus.ORIGINAL_NUM_PROTONS)
+            if (this.get('numNeutrons') !== this.originalNumNeutrons)
                 return true;
             else
                 return false;
         }
 
-    });
+    }, Constants.Hydrogen3Nucleus);
 
     return Hydrogen3Nucleus;
 });

@@ -3,6 +3,9 @@ define(function (require) {
     'use strict';
 
     var NuclearPhysicsSimView = require('views/sim');
+    
+    var BetaDecayLegendView         = require('beta-decay/views/legend');
+    var BetaDecayNucleusChooserView = require('beta-decay/views/nucleus-chooser');
 
     var Constants = require('constants');
 
@@ -31,7 +34,9 @@ define(function (require) {
         events: {
             'click .play-btn'  : 'play',
             'click .pause-btn' : 'pause',
-            'click .step-btn'  : 'step'
+            'click .step-btn'  : 'step',
+
+            'click .show-labels-check' : 'toggleLabels'
         },
 
         /**
@@ -47,8 +52,21 @@ define(function (require) {
 
             NuclearPhysicsSimView.prototype.initialize.apply(this, [options]);
 
+            this.initLegend();
+            this.initNucleusChooser();
+
             this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
             this.pausedChanged(this.simulation, this.simulation.get('paused'));
+        },
+
+        initLegend: function() {
+            this.legendView = new BetaDecayLegendView();
+        },
+
+        initNucleusChooser: function() {
+            this.nucleusChooserView = new BetaDecayNucleusChooserView({
+                simulation: this.simulation
+            });
         },
 
         /**
@@ -80,6 +98,28 @@ define(function (require) {
             }));
         },
 
+        renderLegend: function() {
+            this.legendView.render();
+            this.$('.legend-panel').append(this.legendView.el);
+        },
+
+        renderNucleusChooser: function() {
+            this.nucleusChooserView.render();
+            this.$('.choose-nucleus-panel').append(this.nucleusChooserView.el);
+        },
+
+        /**
+         * Renders everything
+         */
+        postRender: function() {
+            NuclearPhysicsSimView.prototype.postRender.apply(this, arguments);
+
+            this.renderLegend();
+            this.renderNucleusChooser();
+
+            return this;
+        },
+
         /**
          * The simulation changed its paused state.
          */
@@ -89,6 +129,13 @@ define(function (require) {
             else
                 this.$el.addClass('playing');
         },
+
+        toggleLabels: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showLabels();
+            else
+                this.sceneView.hideLabels();
+        }
 
     });
 

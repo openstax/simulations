@@ -11,6 +11,7 @@ define(function(require) {
 
     var Constants = require('constants');
     var FALL_TIME = Constants.NucleusDecayChart.FALL_TIME;
+    var BUNCHING_OFFSETS = Constants.NucleusDecayChart.BUNCHING_OFFSETS;
 
     /**
      * 
@@ -29,7 +30,10 @@ define(function(require) {
 
             this.nuclei = [];
             this.sprites = [];
+            this.decayedNuclei = [];
             this.decayedSprites = [];
+
+            this.bunchingCounter = 0;
 
             this.initGraphics();
 
@@ -48,6 +52,11 @@ define(function(require) {
 
         addNucleus: function(nucleus) {
             var sprite = ParticleGraphicsGenerator.generateNucleus(nucleus, this.mvt);
+            // Set the offset for this node so that the nodes don't
+            //   all just stack directly on top of each other.
+            sprite.bunchingOffset = BUNCHING_OFFSETS[this.bunchingCounter];
+            this.bunchingCounter = (this.bunchingCounter + 1) % BUNCHING_OFFSETS.length;
+
             this.sprites.push(sprite);
             this.nuclei.push(nucleus);
             this.displayObject.addChild(sprite);
@@ -60,8 +69,18 @@ define(function(require) {
 
                     this.nuclei.splice(i, 1);
                     this.sprites.splice(i, 1);
+                    return;
                 }
             }
+
+            for (var i = this.decayedNuclei.length - 1; i >= 0; i--) {
+                if (this.decayedNuclei[i] === nucleus) {
+                    this.displayObject.removeChild(this.decayedSprites[i]);
+
+                    this.decayedNuclei.splice(i, 1);
+                    this.decayedSprites.splice(i, 1);
+                }
+            } 
         },
 
         clear: function() {
@@ -79,6 +98,7 @@ define(function(require) {
             for (var i = this.decayedSprites.length - 1; i >= 0; i--) {
                 this.displayObject.removeChild(this.decayedSprites[i]);
 
+                this.decayedNuclei.splice(i, 1);
                 this.decayedSprites.splice(i, 1);
             }
         },
@@ -114,14 +134,16 @@ define(function(require) {
 
                 if (nucleus.isDecayActive()) {
                     sprite.y = isotope1Y;
-                    sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx;
+                    sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx + (sprite.bunchingOffset.x * this.height);
                 }
                 else if (nucleus.hasDecayed()) {
                     sprite.decayTime = 0;
+
                     this.sprites.splice(i, 1);
-                    this.decayedSprites.push(sprite);
                     this.nuclei.splice(i, 1);
-                    
+
+                    this.decayedSprites.push(sprite);
+                    this.decayedNuclei.push(nucleus);
                 }
             }
 
@@ -132,6 +154,8 @@ define(function(require) {
                     sprite.y = isotope1Y + (sprite.decayTime / FALL_TIME) * ySpan;
                 else
                     sprite.y = isotope2Y;
+                // Account for bunching
+                sprite.y +=  sprite.bunchingOffset.y * this.height;
 
                 sprite.decayTime += deltaTime;
             }

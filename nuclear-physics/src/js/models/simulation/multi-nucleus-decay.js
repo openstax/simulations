@@ -5,7 +5,8 @@ define(function (require, exports, module) {
     var _        = require('underscore');
     var Backbone = require('backbone');
 
-    var Vector2 = require('common/math/vector2');
+    var Vector2   = require('common/math/vector2');
+    var Rectangle = require('common/math/rectangle');
 
     var NuclearPhysicsSimulation       = require('models/simulation');
     var NucleusType                    = require('models/nucleus-type');
@@ -34,6 +35,8 @@ define(function (require, exports, module) {
             this._jitterOffsets = [];
             this._jitterOffsetCount = 0;
 
+            this._nucleusBounds = new Rectangle();
+
             NuclearPhysicsSimulation.prototype.initialize.apply(this, [attributes, options]);
 
             this.on('change:nucleusType', this.nucleusTypeChanged);
@@ -53,7 +56,7 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             this.removeAllNuclei();
-            this.addMaxNuclei();
+            // this.addMaxNuclei();
         },
 
         /**
@@ -80,7 +83,7 @@ define(function (require, exports, module) {
                 //   active nucleus is moved every time.
                 for (var i = this._jitterOffsetCount; i < this.atomicNuclei.length; i += MultiNucleusDecaySimulation.FRAMES_PER_JITTER) {
                     var nucleus = this.atomicNuclei.at(i);
-                    if (nucleus.isDecayActive() && !nucleus.isPaused()) {
+                    if (nucleus.isDecayActive()) {
                         // This nucleus is active, so it should be jittered.
                         var jitterOffset = this._jitterOffsets[i];
                         var currentLocation = nucleus.get('position');
@@ -98,7 +101,7 @@ define(function (require, exports, module) {
                                 currentLocation.x - jitterOffset.x,
                                 currentLocation.y - jitterOffset.y
                             );
-                            this._jitterOffsets[i].setLocation(0, 0);
+                            this._jitterOffsets[i].set(0, 0);
                         }
                     }
                 }
@@ -114,7 +117,7 @@ define(function (require, exports, module) {
             if (this.maxJitterLength === 0) {
                 // Calculate the maximum jitter length for the current nucleus.
                 if (this.atomicNuclei.length > 0) {
-                    this.maxJitterLength = this.atomicNuclei.first().getDiameter() / 16;
+                    this.maxJitterLength = this.atomicNuclei.first().get('diameter') / 16;
                 }
                 else {
                     // Shouldn't really get here, but just in case...
@@ -146,6 +149,7 @@ define(function (require, exports, module) {
                     resetCount++;
                 }
             }
+            this.trigger('nuclei-reset');
             return resetCount;
         },
 
@@ -157,19 +161,60 @@ define(function (require, exports, module) {
         },
 
         /**
+         * Removes a random nucleus
+         */
+        removeRandomNucleus: function() {
+            if (this.atomicNuclei.length) {
+                var randomIndex = Math.floor(Math.random() * this.atomicNuclei.length);
+                var nucleus = this.atomicNuclei.at(randomIndex);
+                nucleus.destroy();
+            }
+        },
+
+        /**
          * Add the maximum allowed number of nuclei to the model.
          */
         addMaxNuclei: function() {
             var newNucleus;
             for (var i = 0; i < this.get('maxNuclei'); i++) {
-                if (this.get('nucleusType') === NucleusType.POLONIUM_211)
-                    newNucleus = new Polonium211Nucleus();
-                else
-                    newNucleus = new HeavyAdjustableHalfLifeNucleus();
-                
+                newNucleus = this.createNucleus();
                 this.atomicNuclei.add(newNucleus);
                 this._jitterOffsets[i] = new Vector2();
             }
+        },
+
+        /**
+         * Adds and activates a new nucleus at the specified point.
+         *
+         * Note: I made this as an alternative to using addMaxNuclei. For my
+         *   purposes this is much simpler, but we should also get the added
+         *   performance benefit of not adding the nuclei until we need them,
+         *   which would eliminate the lag problem in the original that can
+         *   occur when switching quickly between nucleus types.
+         */
+        addNucleusAt: function(x, y) {
+            // Don't create one if we've already reached the max nuclei count
+            if (this.atomicNuclei.length >= this.get('maxNuclei'))
+                return;
+
+            var newNucleus = this.createNucleus();
+            newNucleus.setPosition(x, y);
+            
+            this.atomicNuclei.add(newNucleus);
+
+            this._jitterOffsets.push(new Vector2());
+
+            // Just activate it, because it's already where we want it
+            newNucleus.activateDecay(this.time);
+        },
+
+        createNucleus: function() {
+            switch (this.get('nucleusType')) {
+                case NucleusType.POLONIUM_211: return new Polonium211Nucleus();
+                case NucleusType.HEAVY_CUSTOM: return new HeavyAdjustableHalfLifeNucleus();
+            }
+
+            throw 'Other nuclei not yet implemented.';
         },
 
         setHalfLife: function(halfLife) {
@@ -178,6 +223,14 @@ define(function (require, exports, module) {
 
         getHalfLife: function() {
             return this.get('halfLife');
+        },
+
+        setNucleusBounds: function(x, y, width, height) {
+            this._nucleusBounds.set(x, y, width, height);
+        },
+
+        getNucleusBounds: function(x, y, width, height) {
+            return this._nucleusBounds;
         },
         
         /**
@@ -225,6 +278,8 @@ define(function (require, exports, module) {
             // Set the new half life value.
             for (var i = 0; i < this.atomicNuclei.length; i++)
                 this.atomicNuclei.at(i).set('halfLife', halfLife);
+
+            this.resetActiveAndDecayedNuclei();
         },
 
         /**
@@ -234,11 +289,15 @@ define(function (require, exports, module) {
             // Add all nuclei to the model.  At the time of this writing, this
             //   is the desired behavior for all subclasses.  It may need to
             //   be modified if a more general approach is needed.
-            this.addMaxNuclei();
+            // this.addMaxNuclei();
+            this.removeAllNuclei();
             
             // Set jitter length to 0 so that it will be set correctly the
             //   next time a jitter offset is generated.
             this.maxJitterLength = 0;
+
+            // Set the half life
+            this.set('halfLife', this.createNucleus().get('halfLife'), { silent: true });
         }
 
     }, Constants.MultiNucleusDecaySimulation);

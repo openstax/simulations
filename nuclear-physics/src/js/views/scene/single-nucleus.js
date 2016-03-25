@@ -31,10 +31,13 @@ define(function(require) {
 
         initialize: function(options) {
             this.showingLabels = true;
+            this.particleViews = [];
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
 
-            this.listenTo(this.simulation.emittedParticles, 'add', this.particleEmitted);
+            this.listenTo(this.simulation.emittedParticles, 'add',    this.particleEmitted);
+            this.listenTo(this.simulation.emittedParticles, 'remove', this.particleRemoved);
+            this.listenTo(this.simulation.emittedParticles, 'reset',  this.particlesReset);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
         },
 
@@ -133,6 +136,7 @@ define(function(require) {
                     mvt: this.mvt
                 });
                 this.nucleusLayer.addChild(electronView.displayObject);
+                this.particleViews.push(electronView);
             }
             else if (particle instanceof Antineutrino) {
                 var antineutrinoView = new AntineutrinoView({
@@ -140,6 +144,24 @@ define(function(require) {
                     mvt: this.mvt
                 });
                 this.nucleusLayer.addChild(antineutrinoView.displayObject);
+                this.particleViews.push(antineutrinoView);
+            }
+        },
+
+        particleRemoved: function(particle) {
+            for (var i = 0; i < this.particleViews.length; i++) {
+                if (this.particleViews[i].model === particle) {
+                    this.particleViews[i].remove();
+                    this.particleViews.splice(i, 1);
+                    return;
+                }
+            }
+        },
+
+        particlesReset: function() {
+            for (var i = this.particleViews.length - 1; i >= 0; i--) {
+                this.particleViews[i].remove();
+                this.particleViews.splice(i, 1);
             }
         },
 

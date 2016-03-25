@@ -27,7 +27,7 @@ define(function(require) {
 
             var chemicalSymbol = this.getChemicalSymbol(nucleusType);
             var isotopeNumber = this.getIsotopeNumber(nucleusType);
-            var color = this.getLabelColor(nucleusType);
+            var color = this.getColor(nucleusType);
             
             return this.createSymbol(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY);
         },
@@ -108,7 +108,7 @@ define(function(require) {
             }
         },
 
-        getLabelColor: function(nucleusType) {
+        getColor: function(nucleusType) {
             switch (nucleusType) {
                 case NucleusType.HYDROGEN_3:              return Constants.HYDROGEN_3_LABEL_COLOR;
                 case NucleusType.HELIUM_3:                return Constants.HELIUM_3_LABEL_COLOR

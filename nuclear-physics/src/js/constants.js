@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Vector2 = require('common/math/vector2');
+
     var HalfLifeInfo = require('models/half-life-info');
     var NucleusType  = require('models/nucleus-type');
 
@@ -427,6 +429,17 @@ define(function (require) {
     // Constants that control the way the nuclei look.
     NucleusDecayChart.NUCLEUS_SIZE_PROPORTION = 0.15;  // Fraction of the overall height of the chart.
 
+    // Offsets used when positioning atoms prior to decay so that they look
+    //   like a bunch of atoms instead of just one.  The values are in terms
+    //   of the proportion of the chart height.
+    NucleusDecayChart.BUNCHING_OFFSETS = [
+        new Vector2( 0,      0),
+        new Vector2(-0.02,  -0.025), 
+        new Vector2( 0.025, -0.02), 
+        new Vector2( 0.015,  0.025),
+        new Vector2(-0.015,  0.015)
+    ];
+
     Constants.NucleusDecayChart = NucleusDecayChart;
 
 
@@ -446,6 +459,26 @@ define(function (require) {
     ExplodingNucleusView.EXPLOSION_RADIUS_SCALE = 5;
 
     Constants.ExplodingNucleusView = ExplodingNucleusView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                          ATOM CANISTER VIEW                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var AtomCanisterView = {};
+
+    // Number of tries for finding open nucleus location.
+    AtomCanisterView.MAX_PLACEMENT_ATTEMPTS = 100;
+    // Preferred distance between nucleus centers when placing them on the canvas.
+    AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE = 7;  // In femtometers.
+    // Minimum distance between the center of a nucleus and a wall or other obstacle.
+    AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE = 2;  // In femtometers.
+
+    Constants.AtomCanisterView = AtomCanisterView;
+
+    
 
 
     return Constants;

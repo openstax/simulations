@@ -306,6 +306,10 @@ define(function (require) {
             return decayProducts;
         },
 
+        getPostDecayNucleusType: function(preDecayNucleusType) {
+            return AtomicNucleus.getPostDecayNuclei(preDecayNucleusType)[0];
+        }
+
     }, Constants.AtomicNucleus));
 
     return AtomicNucleus;
