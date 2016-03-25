@@ -335,6 +335,9 @@ define(function(require) {
 
             if (!paused)
                 this.oscillateGlow(time);
+
+            if (this.dummyObjectView)
+                this.dummyObjectView.update(time, deltaTime);
         },
 
         /**

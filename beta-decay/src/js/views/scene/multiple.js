@@ -69,6 +69,10 @@ define(function(require) {
             this.$ui.append(this.$bucketButtonsWrapper);
         },
 
+        reset: function() {
+            this.showLabels();
+        },
+
         getTopPadding: function() {
             return 150;
         },
@@ -77,7 +81,7 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 7;
+                pixelsPerFemtometer = 6;
             }
             else {
                 pixelsPerFemtometer = 8;
@@ -132,13 +136,33 @@ define(function(require) {
                 width: this.getWidthBetweenPanels()
             });
 
+            if (AppView.windowIsShort()) {
+                this.nucleusDecayChart.displayObject.x = this.getLeftPadding() + 12;
+                this.nucleusDecayChart.displayObject.y = 12;
+            }
+            else {
+                this.nucleusDecayChart.displayObject.x = this.getLeftPadding() + 20;
+                this.nucleusDecayChart.displayObject.y = 20;
+            }
+
             this.stage.addChild(this.nucleusDecayChart.displayObject);
         },
 
         initAtomCanister: function() {
-            var canisterX = 534;
-            var canisterY = 440;
-            var canisterWidth = 160
+            var canisterX;
+            var canisterY;
+            var canisterWidth;
+
+            if (AppView.windowIsShort()) {
+                canisterX = 12 + 21;
+                canisterY = 260;
+                canisterWidth = 160;
+            }
+            else {
+                canisterX = 534;
+                canisterY = 440;
+                canisterWidth = 160;
+            }
 
             this.atomCanisterView = new AtomCanisterView({
                 simulation: this.simulation,
@@ -152,9 +176,16 @@ define(function(require) {
 
             // Position the bucket buttons underneath
             var top = this.atomCanisterView.displayObject.y + 140;
-            var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width / 2;
             this.$bucketButtonsWrapper.css('top', top + 'px');
-            this.$bucketButtonsWrapper.css('right', right + 'px');
+
+            if (AppView.windowIsShort()) {
+                var left = this.atomCanisterView.displayObject.x + this.atomCanisterView.width / 2;
+                this.$bucketButtonsWrapper.css('left', left + 'px'); 
+            }
+            else {
+                var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width / 2;
+                this.$bucketButtonsWrapper.css('right', right + 'px');    
+            }
 
             // Calculate the bounds of the areas to be avoided when placing atoms
             var buttonHeight = this.$bucketButtonsWrapper.find('button').height();

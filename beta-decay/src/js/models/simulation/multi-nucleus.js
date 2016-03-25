@@ -46,6 +46,8 @@ define(function (require, exports, module) {
          */
         resetComponents: function() {
             MultiNucleusDecaySimulation.prototype.resetComponents.apply(this, arguments);
+
+            this.destroyParticles();
         },
 
         /**

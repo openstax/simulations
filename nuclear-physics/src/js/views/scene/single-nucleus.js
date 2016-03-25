@@ -51,6 +51,10 @@ define(function(require) {
             this.$ui.append(this.$resetButton);
         },
 
+        reset: function() {
+            this.showLabels();
+        },
+
         initMVT: function() {
             this.viewOriginX = this.getLeftPadding() + this.getAvailableWidth() / 2;
             this.viewOriginY = this.getTopPadding() + this.getAvailableHeight() / 2;

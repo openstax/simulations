@@ -57,19 +57,7 @@ define(function (require, exports, module) {
          * Resets the model components
          */
         resetComponents: function() {
-            this.removeAllNuclei();
-            // this.addMaxNuclei();
-        },
-
-        /**
-         * Overrides the reset function to make sure the starting attributes aren't
-         *   set with the silent flag because we want it to fire the change event.
-         */
-        reset: function() {
-            this.time = 0;
-            this.set(this.startingAttributes);
-            this.applyOptions(this.startingOptions);
-            this.resetComponents();
+            this.trigger('change:nucleusType', this, this.get('nucleusType'));
         },
 
         /**
@@ -273,7 +261,10 @@ define(function (require, exports, module) {
          */
         halfLifeChanged: function(simulation, halfLife) {
             // Verify that the current nucleus is custom.
-            if (this.get('nucleusType') !== NucleusType.HEAVY_CUSTOM && this.get('nucleusType') !== NucleusType.LIGHT_CUSTOM) {
+            if (this.get('halfLife') !== undefined && 
+                this.get('nucleusType') !== NucleusType.HEAVY_CUSTOM && 
+                this.get('nucleusType') !== NucleusType.LIGHT_CUSTOM
+            ) {
                 console.warning('Warning: Can only set half life for custom nucleus, ignoring request.');
                 return;
             }
