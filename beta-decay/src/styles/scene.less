@@ -6,7 +6,7 @@
     width: 100%;
     height: @scene-height;
 
-    #gradient.vertical(#FF6A6A; #FFF4F4; 0%; 85%);
+    #gradient.vertical(#FF6A6A; #CAB5E6; 0%; 85%);
 
     @media screen and (max-height: @short-window) {
         height: @short-scene-height;
@@ -45,18 +45,18 @@
         top: 560px;
         width: 0;
 
-        .add-10-btn {
+        .remove-10-btn {
             position: absolute;
             right: 100%;
             margin-right: 6px;
-            .button-variant(#fff, @link-color, #fff, @link-color);
+            .button-variant(@btn-fg, @btn-bg, @btn-fg, @btn-bg);
         }
 
-        .remove-10-btn {
+        .add-10-btn {
             position: absolute;
             left: 100%;
             margin-left: 6px;
-            .button-variant(@btn-fg, @btn-bg, @btn-fg, @btn-bg);
+            .button-variant(#fff, @link-color, #fff, @link-color);
         }
     }
 }

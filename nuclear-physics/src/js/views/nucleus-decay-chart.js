@@ -58,7 +58,7 @@ define(function(require) {
                 paddingRight: 15,
                 paddingTop: 15,
                 padding: 15,
-                bgColor: '#FF9797',
+                bgColor: '#F89198',
                 bgAlpha: 1,
 
                 xAxisLabelText: 'Time (yrs)',

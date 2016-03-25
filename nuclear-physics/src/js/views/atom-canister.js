@@ -84,6 +84,8 @@ define(function(require) {
             this.initGraphics();
 
             this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
+            this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDecorativeDummyObjects);
+            this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDraggability);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
         },
 
@@ -199,6 +201,25 @@ define(function(require) {
                 this.decorativeDummyObjects.addChild(dummy.displayObject);
                 this.decorativeDummyObjectViews.push(dummy);
             }
+        },
+
+        updateDecorativeDummyObjects: function() {
+            var numAtoms = this.simulation.getTotalNumNuclei();
+            var maxAtoms = this.simulation.get('maxNuclei');
+            var numAtomsLeft = maxAtoms - numAtoms;
+            var percentLeft = numAtomsLeft / maxAtoms;
+            var atomsToShow = Math.ceil(percentLeft * this.decorativeDummyObjects.children.length);
+
+            for (var i = 0; i < this.decorativeDummyObjects.children.length; i++) {
+                if (i < atomsToShow)
+                    this.decorativeDummyObjects.children[i].visible = true;
+                else
+                    this.decorativeDummyObjects.children[i].visible = false;
+            }
+        },
+
+        atomsCanBeAdded: function() {
+            return (this.simulation.getTotalNumNuclei() < this.simulation.get('maxNuclei'));
         },
 
         /**
@@ -340,6 +361,12 @@ define(function(require) {
                 this.dummyObjectView.update(time, deltaTime);
         },
 
+        updateDraggability: function() {
+            var atomsCanBeAdded = this.atomsCanBeAdded();
+            this.dragOverlay.visible = atomsCanBeAdded;
+            this.backgroundLayer.buttonMode = atomsCanBeAdded;
+        },
+
         /**
          * Makes the drag overlay fade in and out
          */
@@ -353,6 +380,9 @@ define(function(require) {
         },
 
         dragStart: function(event) {
+            if (!this.atomsCanBeAdded())
+                return;
+
             this.dragging = true;
 
             this.dummyObjectView = this.createDummyObjectView();
@@ -433,8 +463,10 @@ define(function(require) {
             var viewY = atomView.displayObject.y;
             var viewRadius = (atomView.displayObject.width + atomView.displayObject.height) / 4;
 
-            if (this.overlapsCircle(viewX, viewY, viewRadius))
+            if (this.overlapsCircle(viewX, viewY, viewRadius)) {
                 atomView.model.destroy();
+                this.hover();
+            }
         },
 
         showRemoveOverlay: function() {
