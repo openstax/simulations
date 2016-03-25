@@ -56,11 +56,7 @@ define(function(require) {
                 this.scale
             );
 
-            this.atomMVT = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
-                new Vector2(this.viewOriginX, this.viewOriginY),
-                4
-            );
+            this.atomMVT = ModelViewTransform.createScaleMapping(4);
         },
 
         initRayGunMVT: function() {
