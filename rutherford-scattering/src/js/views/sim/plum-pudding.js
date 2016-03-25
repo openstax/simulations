@@ -7,6 +7,8 @@ define(function(require) {
     var RutherfordScatteringSimView    = require('rutherford-scattering/views/sim');
     var PlumPuddingSceneView    = require('rutherford-scattering/views/scene/plum-pudding');
 
+    var PlumPuddingSimulation = require('rutherford-scattering/models/simulation/plum-pudding');
+
     /**
      * Extends the functionality of the RutherfordScattering to create
      *   the Rutherford Atom tab.
@@ -37,6 +39,13 @@ define(function(require) {
             this.sceneView = new PlumPuddingSceneView({
                 simulation: this.simulation
             });
+        },
+
+        /**
+         * Initializes the Simulation.
+         */
+        initSimulation: function() {
+            this.simulation = new PlumPuddingSimulation();
         },
 
         // /**
