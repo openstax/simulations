@@ -4,7 +4,6 @@ define(function (require) {
 
     var AlphaParticleModel = require('rutherford-scattering/models/alpha-particle');
     var Constants = require('constants');
-    var Vector2 = require('common/math/vector2');
 
     var RutherfordParticle = AlphaParticleModel.extend({
 
@@ -157,7 +156,7 @@ define(function (require) {
             // set the alpha particle's new properties
             //-------------------------------------------------------------------------------
 
-            this.set('position', new Vector2( xNew, yNew ));
+            this.setPosition(xNew, yNew);
             this.set('speed', sNew);
             this.set('orientation', phiNew);
         }

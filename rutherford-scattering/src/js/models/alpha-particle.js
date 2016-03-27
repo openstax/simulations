@@ -4,9 +4,9 @@ define(function (require) {
 
     var Backbone = require('backbone');
     var Constants = require('constants');
-    var Vector2 = require('common/math/vector2');
+    var PositionableObject = require('common/models/positionable-object');
 
-    var AlphaParticle = Backbone.Model.extend({
+    var AlphaParticle = PositionableObject.extend({
 
         defaults: {
           speed: 0,
@@ -25,7 +25,7 @@ define(function (require) {
           var x = position.x + dx;
           var y = position.y + dy;
 
-          this.set('position', new Vector2( x, y ));
+          this.setPosition(x, y);
         }
 
     }, {});
