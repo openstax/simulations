@@ -132,7 +132,8 @@ define(function(require) {
                 width: canisterWidth,
                 mvt: this.mvt,
                 dummyLayer: this.dummyLayer,
-                renderer: this.renderer
+                renderer: this.renderer,
+                draggingEnabled: false
             });
 
             this.atomCanisterView.displayObject.x = canisterX;

@@ -50,7 +50,8 @@ define(function(require) {
 
                 overlayAlpha: 0.4,
 
-                showHints: true
+                showHints: true,
+                draggingEnabled: true
             }, options);
 
             this.mvt = options.mvt;
@@ -70,7 +71,8 @@ define(function(require) {
             this.overlayAlpha = options.overlayAlpha;
 
             this.showHints = options.showHints;
-            this._showingDragHint = options.showHints;
+            this.draggingEnabled = options.draggingEnabled;
+            this._showingDragHint = options.showHints && this.draggingEnabled;
 
             this.nucleusPlacementBounds = new Rectangle(this.simulation.getNucleusBounds());
             this.nucleusPlacementBounds.x += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
@@ -82,6 +84,7 @@ define(function(require) {
             this._bounds = new Rectangle();
 
             this.initGraphics();
+            this.updateDraggability();
 
             this.listenTo(this.simulation.atomicNuclei, 'add', this.hideDragHint);
             this.listenTo(this.simulation.atomicNuclei, 'add remove reset', this.updateDecorativeDummyObjects);
@@ -362,9 +365,9 @@ define(function(require) {
         },
 
         updateDraggability: function() {
-            var atomsCanBeAdded = this.atomsCanBeAdded();
-            this.dragOverlay.visible = atomsCanBeAdded;
-            this.backgroundLayer.buttonMode = atomsCanBeAdded;
+            var draggable = this.atomsCanBeAdded() && this.draggingEnabled;
+            this.dragOverlay.visible = draggable;
+            this.backgroundLayer.buttonMode = draggable;
         },
 
         /**
@@ -380,7 +383,7 @@ define(function(require) {
         },
 
         dragStart: function(event) {
-            if (!this.atomsCanBeAdded())
+            if (!this.atomsCanBeAdded() || !this.draggingEnabled)
                 return;
 
             this.dragging = true;
