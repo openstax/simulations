@@ -4,7 +4,8 @@ define(function(require) {
 
     var NuclearPhysicsAppView = require('views/app');
     
-    var RadioactiveDatingGameDecaySimView = require('radioactive-dating-game/views/sim/half-life');
+    var HalfLifeSimView   = require('radioactive-dating-game/views/sim/half-life');
+    var DecayRatesSimView = require('radioactive-dating-game/views/sim/decay-rates');
 
     var Assets = require('assets');
 
@@ -13,7 +14,8 @@ define(function(require) {
         assets: Assets.getAssetList(),
 
         simViewConstructors: [
-            RadioactiveDatingGameDecaySimView
+            HalfLifeSimView,
+            DecayRatesSimView
         ]
 
     });

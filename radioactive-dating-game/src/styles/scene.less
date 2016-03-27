@@ -6,7 +6,7 @@
     width: 100%;
     height: @scene-height;
 
-    #gradient.vertical(#FF6A6A; #FFF4F4; 0%; 85%);
+    #gradient.vertical(#81C8FF; #fff; 0%; 85%);
 
     @media screen and (max-height: @short-window) {
         height: @short-scene-height;
@@ -36,6 +36,10 @@
         @media screen and (max-height: @short-window) {
             right: auto;
             left: 33px;
+        }
+
+        #sim-decay-rates & {
+            top: 270px;
         }
     }
 

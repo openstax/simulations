@@ -11,7 +11,6 @@ define(function (require) {
     require('less!radioactive-dating-game/styles/playback-controls');
 
     // HTML
-    var simHtml              = require('text!radioactive-dating-game/templates/sim.html');
     var playbackControlsHtml = require('text!radioactive-dating-game/templates/playback-controls.html');
 
     /**
@@ -22,7 +21,6 @@ define(function (require) {
         /**
          * Template for rendering the basic scaffolding
          */
-        template: _.template(simHtml),
         playbackControlsTemplate: _.template(playbackControlsHtml),
 
         /**
