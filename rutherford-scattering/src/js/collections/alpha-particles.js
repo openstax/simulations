@@ -4,6 +4,7 @@ define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var _ = require('underscore');
 
     var Rectangle = require('common/math/rectangle');
     var AlphaParticleModel = require('rutherford-scattering/models/alpha-particle');
@@ -13,8 +14,6 @@ define(function (require) {
 
         initialize: function(attributes, options) {
             this._bounds = this.makeCullBounds(options.bounds);
-            this.listenTo(this, 'change:position', this.cullParticles);
-            this.listenTo(this, 'change:remove', this.remove);
         },
 
         makeCullBounds: function(bounds){
@@ -28,11 +27,14 @@ define(function (require) {
             return new Rectangle(boundX, boundY, boundWidth, boundHeight);
         },
 
-        cullParticles: function(particle, position) {
-          if(!this._bounds.contains(position)){
-            this.remove(particle);
-          }
+        isParticleActive: function(particle){
+            return !particle.get('remove') && this._bounds.contains(particle.getPosition());
+        },
 
+        cullParticles: function() {
+            var inactiveParticles = this.reject(this.isParticleActive, this);
+            _.each(inactiveParticles, this.remove, this);
+            return this;
         }
     });
 
