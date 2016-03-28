@@ -40,7 +40,7 @@ define(function (require, exports, module) {
         _update: function(time, deltaTime) {
             this.alphaParticles.cullParticles();
 
-            this.alphaParticles.each(_.partial(this.moveParticle, _, deltaTime), this);
+            this.alphaParticles.moveParticles(deltaTime, this.get('protonCount'));
 
             this.rayGun.update(deltaTime, this.boundWidth, this.get('alphaEnergy'));
         },
@@ -58,12 +58,6 @@ define(function (require, exports, module) {
 
         resetAlphaParticles: function() {
             this.alphaParticles.reset();
-        },
-
-        moveParticle: function(alphaParticle, deltaTime) {
-            if(alphaParticle){
-                alphaParticle.move(deltaTime, this.boundWidth, this.get('protonCount'));
-            }
         },
 
         pauseRayGun: function() {
