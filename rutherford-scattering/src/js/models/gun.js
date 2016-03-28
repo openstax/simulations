@@ -4,14 +4,14 @@ define(function (require) {
 
     var Backbone = require('backbone');
     var Constants = require('constants');
+    var Vector2 = require('common/math/vector2');
 
     var RayGun = Backbone.Model.extend({
 
         defaults: {
             on: false,
+            hold: false,
             dtSinceGunFired: 0,
-            dtPerGunFired: 0,
-            particles: [],
             center: {
                 x: 0,
                 y: 0
@@ -19,33 +19,41 @@ define(function (require) {
         },
 
         initialize: function(attributes, options) {
-
+            Backbone.Model.prototype.initialize.apply(this, [attributes, options]);
+            this.alphaParticles = attributes.alphaParticles;
         },
 
-        reset: function() {
+        update: function(deltaTime, boundWidth, alphaParticleEnergy) {
 
-        },
+            var initialSpeed = alphaParticleEnergy;
+            var dtPerGunFired = ( boundWidth / initialSpeed ) / Constants.MAX_PARTICLES;
+            var previousDtSinceGunFired = this.get('dtSinceGunFired');
 
-        addParticle: function(particle) {
-            this.particles.push(particle);
-        },
+            var dtSinceGunFired = previousDtSinceGunFired + Constants.GUN_INTENSITY * deltaTime;
+            this.set('dtSinceGunFired', dtSinceGunFired);
 
-        removeParticle: function(particle) {
-            for (var i = this.particles.length - 1; i >= 0; i--) {
-                if (this.particles[i] === particle) {
-                    this.particles.splice(i, 1);
-                    return;
-                }
+
+            if (this.get('on') && !this.get('hold') && dtSinceGunFired >= dtPerGunFired ) {
+
+                var ySign = ( Math.random() < 0.5 ? 1 : -1 );
+
+                // random position withing model bounds
+                var particleX = ySign * ( Constants.X0_MIN + ( Math.random() * ( ( boundWidth / 2 ) - Constants.X0_MIN ) ) );
+                var particleY = -1 * boundWidth/2;
+
+                var initialPosition = new Vector2( particleX, particleY );
+
+                this.alphaParticles.add({
+                    speed: initialSpeed,
+                    defaultSpeed: initialSpeed,
+                    position: initialPosition
+                });
+
+                this.set('dtSinceGunFired', dtSinceGunFired % dtPerGunFired);
             }
-        },
-
-        update: function(deltaTime) {
-
-
         }
 
-
-    }, Constants.RayGun);
+    }, {});
 
     return RayGun;
 });

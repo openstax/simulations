@@ -57,9 +57,13 @@ define(function (require) {
 
             'click .show-traces-check'  : 'toggleTraces',
 
-            'slide .alpha-energy-slider'    : 'changeAlphaEnergy',
-            'slide .protons-slider'   : 'changeProtons',
-            'slide .neutrons-slider'  : 'changeNeutrons',
+            'slide .alpha-energy-slider'    : 'slideAlphaEnergy',
+            'slide .protons-slider'   : 'slideProtons',
+            'slide .neutrons-slider'  : 'slideNeutrons',
+
+            'change .alpha-energy-slider'    : 'changeAlphaEnergy',
+            'change .protons-slider'   : 'changeProtons',
+            'change .neutrons-slider'  : 'changeNeutrons'
         },
 
         /**
@@ -225,32 +229,49 @@ define(function (require) {
         },
 
         toggleTraces: function(event) {
-            if ($(event.target).is(':checked'))
-                console.info('show traces');
-                // this.sceneView.showTraces();
-            else
-                console.info('hide traces');
-                // this.sceneView.hideTraces();
+            var trace = $(event.target).is(':checked');
+            this.simulation.set('trace', trace);
+        },
+
+        slideAlphaEnergy: function(event) {
+            var alphaEnergy = parseInt($(event.target).val());
+            // clear atoms
+            this.simulation.pauseRayGun();
+        },
+
+        slideProtons: function(event) {
+            var count = parseInt($(event.target).val());
+            this.controls.protons.$value.text(count);
+            // clear atoms
+            this.simulation.pauseRayGun();
+        },
+
+        slideNeutrons: function(event) {
+            var count = parseInt($(event.target).val());
+            this.controls.neutrons.$value.text(count);
+            // clear atoms
+            this.simulation.pauseRayGun();
         },
 
         changeAlphaEnergy: function(event) {
-            var value = parseInt($(event.target).val());
-            // set model value
-            console.info('change energy');
+            var alphaEnergy = parseInt($(event.target).val());
+            this.simulation.set('alphaEnergy', alphaEnergy);
+
+            this.simulation.restartRayGun();
         },
 
         changeProtons: function(event) {
             var count = parseInt($(event.target).val());
-            this.controls.protons.$value.text(count);
-            // set model value
-            console.info('change proton');
+            this.simulation.set('protonCount', count);
+
+            this.simulation.restartRayGun();
         },
 
         changeNeutrons: function(event) {
             var count = parseInt($(event.target).val());
-            this.controls.neutrons.$value.text(count);
-            // set model value
-            console.info('change neutrons');
+            this.simulation.set('neutronCount', count);
+
+            this.simulation.restartRayGun();
         }
 
     });

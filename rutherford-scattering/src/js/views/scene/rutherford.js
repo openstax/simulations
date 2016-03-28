@@ -16,19 +16,7 @@ define(function(require) {
     /**
      *
      */
-    var RutherfordAtomSceneView = RutherfordScatteringSceneView.extend({
-        initMVT: function(){
-            RutherfordScatteringSceneView.prototype.initMVT.apply(this, arguments);
-
-            var pixelsPerPicometer = Constants.BOX_SIZE/150;
-
-            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
-                new Vector2(this.viewOriginX, this.viewOriginY),
-                pixelsPerPicometer
-            );
-        }
-    });
+    var RutherfordAtomSceneView = RutherfordScatteringSceneView.extend({});
 
     return RutherfordAtomSceneView;
 });
