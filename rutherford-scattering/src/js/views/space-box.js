@@ -32,8 +32,6 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.alphaParticles, 'add', this.addAlphaParticle);
-            this.listenTo(this.alphaParticles, 'remove', this.removeAlphaParticle);
             this.listenTo(this.alphaParticles, 'reset', this.resetAlphaParticles);
 
             this.listenTo(this.simulation, 'change:trace', this.clearTraces);
@@ -89,7 +87,6 @@ define(function(require) {
         updatePosition: function(particle){
             var previous;
             var position = particle.get('position');
-            var current = position;
 
             if(this.sprites[particle.cid]){
                 this.sprites[particle.cid].x = this.mvt.modelToViewX(position.x);
@@ -120,15 +117,13 @@ define(function(require) {
             this.particlesLayer.addChild(alphaParticle);
         },
 
-        removeAlphaParticle: function(particle){
-            var alphaParticle = this.sprites[particle.cid];
+        removeAlphaParticle: function(particleCId){
+            this.particlesLayer.removeChild(this.sprites[particleCId]);
+            delete this.sprites[particleCId];
 
-            this.particlesLayer.removeChild(alphaParticle);
-            delete this.sprites[particle.cid];
-
-            if(this.traces[particle.cid]){
-                this.particlesLayer.removeChild(this.traces[particle.cid]);
-                delete this.traces[particle.cid];
+            if(this.traces[particleCId]){
+                this.particlesLayer.removeChild(this.traces[particleCId]);
+                delete this.traces[particleCId];
             }
         },
 
@@ -161,8 +156,28 @@ define(function(require) {
             }
         },
 
-        updatePositions: function(){
+        isDrawn: function(particle) {
+            return !_.isUndefined(this.sprites[particle.cid]);
+        },
+
+        getOldCIds: function() {
+            var currentCIds = _.keys(this.sprites);
+            return _.difference(currentCIds, this.alphaParticles.pluck('cid'));
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            var newParticles = this.alphaParticles.reject(this.isDrawn, this);
+            var oldParticles = this.getOldCIds();
+
+
+            // add new particles entering the scene
+            _.each(newParticles, this.addAlphaParticle, this);
+
+            // update particles in scene
             this.alphaParticles.each(this.updatePosition, this);
+
+            // clear old particles in scene
+            _.each(oldParticles, this.removeAlphaParticle, this);
         }
 
     }, {center: {x: 0, y: 0}});
