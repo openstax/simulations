@@ -117,7 +117,7 @@ define(function(require) {
             this.particlesLayer.addChild(alphaParticle);
         },
 
-        removeAlphaParticle: function(particleCId){
+        removeAlphaParticle: function(sprite, particleCId){
             this.particlesLayer.removeChild(this.sprites[particleCId]);
             delete this.sprites[particleCId];
 
@@ -160,24 +160,36 @@ define(function(require) {
             return !_.isUndefined(this.sprites[particle.cid]);
         },
 
-        getOldCIds: function() {
-            var currentCIds = _.keys(this.sprites);
-            return _.difference(currentCIds, this.alphaParticles.pluck('cid'));
+        getOldAlphaParticles: function() {
+            var oldSprites = _.pick(this.sprites, function(sprite, cid){
+                var particle = this.alphaParticles.models.find(function(particle){
+                    return particle.cid === cid;
+                });
+                return _.isUndefined(particle);
+            }, this);
+
+            return _.chain(oldSprites);
+        },
+
+        getNewAlphaParticles: function() {
+            var newParticles = this.alphaParticles.models.reject(this.isDrawn, this);
+            return _.chain(newParticles);
+        },
+
+        getAlphaParticles: function() {
+            return this.alphaParticles.models;
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            var newParticles = this.alphaParticles.reject(this.isDrawn, this);
-            var oldParticles = this.getOldCIds();
-
 
             // add new particles entering the scene
-            _.each(newParticles, this.addAlphaParticle, this);
+            this.getNewAlphaParticles().each(this.addAlphaParticle, this);
 
             // update particles in scene
-            this.alphaParticles.each(this.updatePosition, this);
+            this.getAlphaParticles().each(this.updatePosition, this);
 
             // clear old particles in scene
-            _.each(oldParticles, this.removeAlphaParticle, this);
+            this.getOldAlphaParticles().each(this.removeAlphaParticle, this);
         }
 
     }, {center: {x: 0, y: 0}});
