@@ -31,6 +31,10 @@ define(function (require) {
             return !particle.get('remove') && this._bounds.contains(particle.getPosition());
         },
 
+        pluck: function(propertyName){
+            return _.pluck(this.models, propertyName);
+        },
+
         cullParticles: function() {
             var inactiveParticles = this.reject(this.isParticleActive, this);
             _.each(inactiveParticles, this.remove, this);

@@ -157,8 +157,8 @@ define(function(require) {
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
-            this.spaceBoxView.updatePositions();
-        },
+            this.spaceBoxView._update(time, deltaTime, paused, timeScale);
+        }
 
     });
 
