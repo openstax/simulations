@@ -34,7 +34,6 @@ define(function(require) {
 
             this.listenTo(this.alphaParticles, 'add', this.addAlphaParticle);
             this.listenTo(this.alphaParticles, 'remove', this.removeAlphaParticle);
-            this.listenTo(this.alphaParticles, 'change:position', this.updatePosition);
             this.listenTo(this.alphaParticles, 'reset', this.resetAlphaParticles);
 
             this.listenTo(this.simulation, 'change:trace', this.clearTraces);
@@ -73,14 +72,6 @@ define(function(require) {
             var center = SpaceBox.center;
             this.mvt = mvt;
 
-            // var scale = this.spaceBoxSize/150;
-            // this.displayObject.scale.x = scale;
-            // this.displayObject.scale.y = scale;
-
-
-            // this.displayObject.x = Math.floor(this.mvt.modelToViewX(center.x));
-            // this.displayObject.y = Math.floor(this.mvt.modelToViewY(center.y));
-
             this.update();
         },
 
@@ -95,8 +86,9 @@ define(function(require) {
             box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
         },
 
-        updatePosition: function(particle, position){
-            var previous = particle.previous('position');
+        updatePosition: function(particle){
+            var previous;
+            var position = particle.get('position');
             var current = position;
 
             if(this.sprites[particle.cid]){
@@ -105,7 +97,9 @@ define(function(require) {
             }
 
             if(this.traces[particle.cid]){
-                this.traces[particle.cid].moveTo(this.mvt.modelToViewX(previous.x), this.mvt.modelToViewY(previous.y));
+                previous = this.getLastTracePoint(particle);
+
+                this.traces[particle.cid].moveTo(previous.x, previous.y);
                 this.traces[particle.cid].lineTo(this.sprites[particle.cid].x, this.sprites[particle.cid].y);
             }
         },
@@ -119,6 +113,7 @@ define(function(require) {
             if(this.simulation.get('trace')){
                 this.traces[particle.cid] =  new PIXI.Graphics();
                 this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
+                this.traces[particle.cid].moveTo(alphaParticle.x, alphaParticle.y);
                 this.particlesLayer.addChild(this.traces[particle.cid]);
             }
 
@@ -150,11 +145,24 @@ define(function(require) {
             this.displayObject.addChildAt(this.particlesLayer, 0);
         },
 
+        getLastTracePoint: function(particle){
+            var previous = _.last(this.traces[particle.cid].graphicsData).shape.points;
+
+            var previousX = previous[2] || previous[0];
+            var previousY = previous[3] || previous[1];
+
+            return {x: previousX, y: previousY};
+        },
+
         clearTraces: function(simulation, trace){
             if(!trace){
                 _.each(this.traces, this.particlesLayer.removeChild, this.particlesLayer);
                 this.traces = {};
             }
+        },
+
+        updatePositions: function(){
+            this.alphaParticles.each(this.updatePosition, this);
         }
 
     }, {center: {x: 0, y: 0}});
