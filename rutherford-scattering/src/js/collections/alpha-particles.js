@@ -37,7 +37,7 @@ define(function (require) {
 
         cullParticles: function() {
             var inactiveParticles = this.reject(this.isParticleActive, this);
-            _.each(inactiveParticles, this.remove, this);
+            _.each(inactiveParticles, _.partial(this.remove, _, {silent: true}), this);
             return this;
         }
     });
