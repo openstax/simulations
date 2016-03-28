@@ -5,6 +5,7 @@ define(function (require) {
     var _ = require('underscore');
 
     var AtomicNucleus = require('models/atomic-nucleus');
+    var AlphaParticle = require('models/alpha-particle');
 
     var Constants = require('constants');
 

@@ -2,10 +2,10 @@ define(function(require) {
 
     'use strict';
 
-    var NucleusType                     = require('models/nucleus-type');
-    var Hydrogen3CompositeNucleus       = require('models/nucleus/hydrogen-3-composite');
-    var Carbon14CompositeNucleus        = require('models/nucleus/carbon-14-composite');
-    var LightAdjustableCompositeNucleus = require('models/nucleus/light-adjustable-composite');
+    var NucleusType                    = require('models/nucleus-type');
+    var Uranium238Nucleus              = require('models/nucleus/uranium-238');
+    var Carbon14Nucleus                = require('models/nucleus/carbon-14');
+    var HeavyAdjustableHalfLifeNucleus = require('models/nucleus/heavy-adjustable-half-life');
 
     var NucleusChooser = require('views/nucleus-chooser');
     var NucleusView    = require('views/nucleus');
@@ -32,35 +32,9 @@ define(function(require) {
             var items = [];
             var symbolSize = 36;
 
-            // Hydrogen-3 to Helium-3
-            var hydrogen3 = Hydrogen3CompositeNucleus.create();
-            var helium3   = Hydrogen3CompositeNucleus.create();
-            helium3.decay(); // Decay from Hydrogen-3 into Helium-3
-
-            items.push({
-                nucleusType: NucleusType.HYDROGEN_3,
-                isDefault: true,
-                start: {
-                    label: 'Hydrogen-3',
-                    displayObject: new NucleusView({
-                        model: hydrogen3,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
-                    }).displayObject
-                },
-                end: {
-                    label: 'Helium-3',
-                    displayObject: new NucleusView({
-                        model: helium3,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
-                    }).displayObject
-                }
-            });
-
             // Carbon-14 to Nitrogen-14
-            var carbon14   = Carbon14CompositeNucleus.create();
-            var nitrogen14 = Carbon14CompositeNucleus.create();
+            var carbon14   = Carbon14Nucleus.create();
+            var nitrogen14 = Carbon14Nucleus.create();
             nitrogen14.decay(); // Decay from Carbon-14 into Nitrogen-14
 
             items.push({
@@ -83,13 +57,39 @@ define(function(require) {
                 }
             });
 
+            // Uranium-238 to Lead-206
+            var uranium238 = Uranium238Nucleus.create();
+            var lead206    = Uranium238Nucleus.create();
+            lead206.decay(); // Uranium-238 to Lead-206
+
+            items.push({
+                nucleusType: NucleusType.URANIUM_238,
+                isDefault: true,
+                start: {
+                    label: 'Uranium-238',
+                    displayObject: new NucleusView({
+                        model: uranium238,
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
+                    }).displayObject
+                },
+                end: {
+                    label: 'Lead-206',
+                    displayObject: new NucleusView({
+                        model: lead206,
+                        mvt: this.mvt,
+                        symbolSize: symbolSize
+                    }).displayObject
+                }
+            });
+
             // Custom to custom decayed
-            var custom  = LightAdjustableCompositeNucleus.create();
-            var decayed = LightAdjustableCompositeNucleus.create();
+            var custom  = HeavyAdjustableHalfLifeNucleus.create();
+            var decayed = HeavyAdjustableHalfLifeNucleus.create();
             decayed.decay();
 
             items.push({
-                nucleusType: NucleusType.LIGHT_CUSTOM,
+                nucleusType: NucleusType.HEAVY_CUSTOM,
                 start: {
                     label: 'Custom',
                     displayObject: new NucleusView({

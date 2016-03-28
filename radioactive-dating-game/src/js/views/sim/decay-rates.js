@@ -6,7 +6,7 @@ define(function (require) {
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
     var DecayRatesSceneView          = require('radioactive-dating-game/views/scene/decay-rates');
-    var HalfLifeNucleusChooserView   = require('radioactive-dating-game/views/nucleus-chooser/half-life');
+    var DecayRatesNucleusChooserView = require('radioactive-dating-game/views/nucleus-chooser/decay-rates');
 
     var Constants = require('constants');
 
@@ -56,7 +56,7 @@ define(function (require) {
         },
 
         initNucleusChooser: function() {
-            this.nucleusChooserView = new HalfLifeNucleusChooserView({
+            this.nucleusChooserView = new DecayRatesNucleusChooserView({
                 simulation: this.simulation
             });
         },
