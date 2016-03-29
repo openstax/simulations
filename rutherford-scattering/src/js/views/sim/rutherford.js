@@ -46,6 +46,31 @@ define(function(require) {
             this.simulation = new RutherfordAtomSimulation();
         },
 
+        slideProtons: function(event) {
+            RutherfordScatteringSimView.prototype.slideProtons.call(this, event);
+
+            this.simulation.pauseAtomDraw();
+        },
+
+        slideNeutrons: function(event) {
+            RutherfordScatteringSimView.prototype.slideNeutrons.call(this, event);
+
+            // clear atoms
+            this.simulation.pauseAtomDraw();
+        },
+
+        changeProtons: function(event) {
+            RutherfordScatteringSimView.prototype.changeProtons.call(this, event);
+
+            this.simulation.restartAtomDraw();
+        },
+
+        changeNeutrons: function(event) {
+            RutherfordScatteringSimView.prototype.changeNeutrons.call(this, event);
+
+            this.simulation.restartAtomDraw();
+        }
+
         // /**
         //  * Renders everything
         //  */
