@@ -81,6 +81,9 @@ define(function (require) {
 
             this.initLegend();
             this.initSceneView();
+
+            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
+            this.pausedChanged(this.simulation, this.simulation.get('paused'));
         },
 
         /**
@@ -228,6 +231,16 @@ define(function (require) {
             this.sceneView.update(timeSeconds, dtSeconds, this.simulation.get('paused'));
         },
 
+        /**
+         * The simulation changed its paused state.
+         */
+        pausedChanged: function() {
+            if (this.simulation.get('paused'))
+                this.$el.removeClass('playing');
+            else
+                this.$el.addClass('playing');
+        },
+
         toggleTraces: function(event) {
             var trace = $(event.target).is(':checked');
             this.simulation.set('trace', trace);
@@ -242,6 +255,8 @@ define(function (require) {
         slideProtons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.protons.$value.text(count);
+            this.simulation.set('protonCount', count);
+
             // clear atoms
             this.simulation.pauseRayGun();
         },
@@ -249,6 +264,8 @@ define(function (require) {
         slideNeutrons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.neutrons.$value.text(count);
+            this.simulation.set('neutronCount', count);
+
             // clear atoms
             this.simulation.pauseRayGun();
         },

@@ -28,8 +28,6 @@ define(function(require) {
             this.showAtomProperties = true;
 
             RutherfordScatteringSimView.prototype.initialize.apply(this, [ options ]);
-
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
         },
 
         /**
@@ -48,18 +46,29 @@ define(function(require) {
             this.simulation = new RutherfordAtomSimulation();
         },
 
-        // /**
-        //  * Renders everything
-        //  */
-        // render: function() {
-        //     RutherfordScatteringSimView.prototype.render.apply(this);
+        slideProtons: function(event) {
+            RutherfordScatteringSimView.prototype.slideProtons.call(this, event);
 
-        //     this.renderPlaybackControls();
+            this.simulation.pauseAtomDraw();
+        },
 
-        //     this.simulation.trigger('change:paused');
+        slideNeutrons: function(event) {
+            RutherfordScatteringSimView.prototype.slideNeutrons.call(this, event);
 
-        //     return this;
-        // }
+            this.simulation.pauseAtomDraw();
+        },
+
+        changeProtons: function(event) {
+            RutherfordScatteringSimView.prototype.changeProtons.call(this, event);
+
+            this.simulation.restartAtomDraw();
+        },
+
+        changeNeutrons: function(event) {
+            RutherfordScatteringSimView.prototype.changeNeutrons.call(this, event);
+
+            this.simulation.restartAtomDraw();
+        }
 
     });
 

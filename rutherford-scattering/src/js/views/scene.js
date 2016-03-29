@@ -98,10 +98,12 @@ define(function(require) {
 
             this.initRayGunView();
             this.initSpaceBoxView();
+            this.initAtomNodeView();
             this.drawProjectionLines();
         },
 
         initRayGunView: function() {
+            this.simulation.rayGun.set('scale', this.scale);
             this.rayGunView = new RayGunView({
                 mvt: this.rayGunMVT,
                 model: this.simulation.rayGun
@@ -120,6 +122,10 @@ define(function(require) {
             });
 
             this.bottomLayer.addChild(this.spaceBoxView.displayObject);
+        },
+
+        initAtomNodeView: function() {
+
         },
 
         drawProjectionLines: function() {

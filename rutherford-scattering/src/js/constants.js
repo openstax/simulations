@@ -61,7 +61,21 @@ define(function (require) {
             BARREL_CENTER_Y: 0.5,
             RAY_WIDTH: 0.4,
             RAY_HEIGHT: 0.75
+        },
+
+        AtomNodeView: {
+            OUTLINE_LINE_WIDTH: 1.5,
+            OUTLINE_LINE_DASH: [ 2, 3 ],
+            OUTLINE_STROKE_COLOR: 0XFFFFFF,
+            ELECTRON_ANGULAR_SPEED: 0.75
         }
+    };
+
+    RSConstants.AtomNodeModel = {
+        MIN_NUCLEUS_RADIUS: 14,
+        MIN_PARTICLE_COUNT: RSConstants.MIN_PROTON_COUNT + RSConstants.MIN_NEUTRON_COUNT,
+        MAX_PARTICLE_COUNT: RSConstants.MAX_PROTON_COUNT + RSConstants.MAX_NEUTRON_COUNT,
+        PARTICLE_COUNT_EXP: 0.333
     };
 
     _.extend(Constants, RSConstants);

@@ -28,8 +28,6 @@ define(function(require) {
             this.showAtomProperties = false;
             
             RutherfordScatteringSimView.prototype.initialize.apply(this, [ options ]);
-
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
         },
 
         /**
@@ -46,20 +44,7 @@ define(function(require) {
          */
         initSimulation: function() {
             this.simulation = new PlumPuddingSimulation();
-        },
-
-        // /**
-        //  * Renders everything
-        //  */
-        // render: function() {
-        //     RutherfordScatteringSimView.prototype.render.apply(this);
-
-        //     this.renderPlaybackControls();
-
-        //     this.simulation.trigger('change:paused');
-
-        //     return this;
-        // }
+        }
 
     });
 

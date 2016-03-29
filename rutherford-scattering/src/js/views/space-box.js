@@ -42,7 +42,7 @@ define(function(require) {
          */
         initGraphics: function() {
             this.box = new PIXI.Graphics();
-            this.box.lineStyle(1, 0xFFFFFF, 1);
+            this.box.lineStyle(2, 0xFFFFFF, 1);
             this.drawBox(this.box);
 
             this.maskBox = new PIXI.Graphics();
@@ -109,7 +109,7 @@ define(function(require) {
 
             if(this.simulation.get('trace')){
                 this.traces[particle.cid] =  new PIXI.Graphics();
-                this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 1);
+                this.traces[particle.cid].lineStyle(1, 0xFFFFFF, 0.5);
                 this.traces[particle.cid].moveTo(alphaParticle.x, alphaParticle.y);
                 this.particlesLayer.addChild(this.traces[particle.cid]);
             }
