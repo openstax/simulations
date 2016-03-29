@@ -44,20 +44,7 @@ define(function(require) {
          */
         initSimulation: function() {
             this.simulation = new PlumPuddingSimulation();
-        },
-
-        // /**
-        //  * Renders everything
-        //  */
-        // render: function() {
-        //     RutherfordScatteringSimView.prototype.render.apply(this);
-
-        //     this.renderPlaybackControls();
-
-        //     this.simulation.trigger('change:paused');
-
-        //     return this;
-        // }
+        }
 
     });
 
