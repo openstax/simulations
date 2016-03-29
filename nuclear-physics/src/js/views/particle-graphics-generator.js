@@ -88,10 +88,12 @@ define(function(require) {
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
                 // Show as a single sphere
-                var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
-                sprite.tint = this.getColorForElement(nucleus);
+                var sphereSprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
+                sphereSprite.tint = this.getColorForElement(nucleus);
                 // Create its isotope symbol
-                var isotopeFontSize = sprite.width * 0.36 * labelScale;
+                var isotopeFontSize = sphereSprite.width * 0.36 * labelScale;
+                sprite = new PIXI.Container();
+                sprite.addChild(sphereSprite);
                 sprite.addChild(IsotopeSymbolGenerator.generate(nucleus, isotopeFontSize));
             }
             else {
