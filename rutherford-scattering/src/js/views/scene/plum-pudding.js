@@ -10,13 +10,27 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var RutherfordScatteringSceneView = require('rutherford-scattering/views/scene');
+    var PlumPuddingView = require('rutherford-scattering/views/plum-pudding');
 
     // Constants
     var Constants = require('constants');
     /**
      *
      */
-    var PlumPuddingSceneView = RutherfordScatteringSceneView.extend({});
+    var PlumPuddingSceneView = RutherfordScatteringSceneView.extend({
+        initAtomNodeView: function() {
+            this.atomNodeView = new PlumPuddingView({
+                mvt: this.mvt,
+                particleMVT: this.particleMVT,
+                model: this.simulation.atomNode,
+                simulation: this.simulation,
+                scale: this.scale,
+                maskBox: this.spaceBoxView.maskBox
+            });
+
+            this.bottomLayer.addChild(this.atomNodeView.displayObject);
+        }
+    });
 
     return PlumPuddingSceneView;
 });

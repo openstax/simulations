@@ -28,7 +28,7 @@ define(function(require) {
                 maskBox: this.spaceBoxView.maskBox
             });
 
-            this.middleLayer.addChild(this.atomNodeView.displayObject);
+            this.bottomLayer.addChild(this.atomNodeView.displayObject);
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
