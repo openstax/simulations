@@ -19,16 +19,21 @@ define(function(require) {
      */
     var RutherfordAtomSceneView = RutherfordScatteringSceneView.extend({
         initAtomNodeView: function() {
-
             this.atomNodeView = new AtomNodeView({
                 mvt: this.mvt,
                 particleMVT: this.particleMVT,
                 model: this.simulation.atomNode,
                 simulation: this.simulation,
-                scale: this.scale
+                scale: this.scale,
+                maskBox: this.spaceBoxView.maskBox
             });
 
             this.middleLayer.addChild(this.atomNodeView.displayObject);
+        },
+
+        _update: function(time, deltaTime, paused, timeScale) {
+            RutherfordScatteringSceneView.prototype._update.call(this, arguments);
+            this.atomNodeView._update(time, deltaTime, paused, timeScale);
         }
     });
 

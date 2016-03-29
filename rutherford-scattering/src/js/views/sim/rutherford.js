@@ -55,7 +55,6 @@ define(function(require) {
         slideNeutrons: function(event) {
             RutherfordScatteringSimView.prototype.slideNeutrons.call(this, event);
 
-            // clear atoms
             this.simulation.pauseAtomDraw();
         },
 
@@ -70,19 +69,6 @@ define(function(require) {
 
             this.simulation.restartAtomDraw();
         }
-
-        // /**
-        //  * Renders everything
-        //  */
-        // render: function() {
-        //     RutherfordScatteringSimView.prototype.render.apply(this);
-
-        //     this.renderPlaybackControls();
-
-        //     this.simulation.trigger('change:paused');
-
-        //     return this;
-        // }
 
     });
 
