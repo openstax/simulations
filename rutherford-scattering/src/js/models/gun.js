@@ -26,6 +26,7 @@ define(function (require) {
         update: function(deltaTime, boundWidth, alphaParticleEnergy) {
 
             var initialSpeed = alphaParticleEnergy;
+            var xMin = Constants.X0_MIN/this.get('scale');
             var dtPerGunFired = ( boundWidth / initialSpeed ) / Constants.MAX_PARTICLES;
             var previousDtSinceGunFired = this.get('dtSinceGunFired');
 
@@ -38,7 +39,7 @@ define(function (require) {
                 var ySign = ( Math.random() < 0.5 ? 1 : -1 );
 
                 // random position withing model bounds
-                var particleX = ySign * ( Constants.X0_MIN + ( Math.random() * ( ( boundWidth / 2 ) - Constants.X0_MIN ) ) );
+                var particleX = ySign * ( xMin + ( Math.random() * ( ( boundWidth / 2 ) - xMin ) ) );
                 var particleY = -1 * boundWidth/2;
 
                 var initialPosition = new Vector2( particleX, particleY );

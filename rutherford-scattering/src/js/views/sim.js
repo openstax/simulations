@@ -255,6 +255,8 @@ define(function (require) {
         slideProtons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.protons.$value.text(count);
+            this.simulation.set('protonCount', count);
+
             // clear atoms
             this.simulation.pauseRayGun();
         },
@@ -262,6 +264,8 @@ define(function (require) {
         slideNeutrons: function(event) {
             var count = parseInt($(event.target).val());
             this.controls.neutrons.$value.text(count);
+            this.simulation.set('neutronCount', count);
+
             // clear atoms
             this.simulation.pauseRayGun();
         },

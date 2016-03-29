@@ -28,8 +28,6 @@ define(function(require) {
             this.showAtomProperties = false;
             
             RutherfordScatteringSimView.prototype.initialize.apply(this, [ options ]);
-
-            this.listenTo(this.simulation, 'change:paused', this.pausedChanged);
         },
 
         /**
