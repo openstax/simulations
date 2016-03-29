@@ -61,10 +61,8 @@ define(function (require, exports, module) {
         },
 
         pauseRayGun: function() {
-            if(this.rayGun.get('on')){
-                this.rayGun.set('hold', true);
-                this.resetAlphaParticles();
-            }
+            this.rayGun.set('hold', true);
+            this.resetAlphaParticles();
         },
 
         restartRayGun: function() {
