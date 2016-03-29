@@ -109,7 +109,7 @@ define(function(require) {
                 model: this.simulation.rayGun
             });
 
-            this.bottomLayer.addChild(this.rayGunView.displayObject);
+            this.middleLayer.addChild(this.rayGunView.displayObject);
         },
 
         initSpaceBoxView: function() {
@@ -121,7 +121,7 @@ define(function(require) {
                 simulation: this.simulation
             });
 
-            this.bottomLayer.addChild(this.spaceBoxView.displayObject);
+            this.middleLayer.addChild(this.spaceBoxView.displayObject);
         },
 
         initAtomNodeView: function() {
