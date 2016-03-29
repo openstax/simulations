@@ -331,6 +331,29 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                         URANIUM 238 NUCLEUS                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var Uranium238Nucleus = {};
+
+    // Number of neutrons and protons in the nucleus upon construction.
+    Uranium238Nucleus.PROTONS  = 92;
+    Uranium238Nucleus.NEUTRONS = 146;
+
+    // Half life for this nucleus.
+    Uranium238Nucleus.HALF_LIFE = 1.41E20; // 4.46 billion years, converted into milliseconds.
+
+    // Time scaling factor - scales the rate at which decay occurs so that we
+    //   don't really have to wait around thousands of years.  Smaller values
+    //   cause quicker decay.
+    Uranium238Nucleus.DECAY_TIME_SCALING_FACTOR = 2500 / Uranium238Nucleus.HALF_LIFE;
+
+    Constants.Uranium238Nucleus = Uranium238Nucleus;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                 LIGHT ADJUSTABLE-HALF-LIFE NUCLEUS                  **
      **                                                                     **
      *************************************************************************/

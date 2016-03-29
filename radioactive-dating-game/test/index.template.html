@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Beta Decay - Test</title>
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+		<link rel="stylesheet" href="../src/css/main.css" id="app-stylesheet">
+		<link rel="stylesheet" href="../bower_components/mocha/mocha.css" />
+
+		<script type="text/javascript" src="../bower_components/sinonjs/sinon.js"></script>
+		<script type="text/javascript" src="../bower_components/chai/chai.js"></script>
+		<script type="text/javascript" src="../bower_components/mocha/mocha.js"></script>
+		<script type="text/javascript" src="../bower_components/requirejs/require.js"></script>
+	</head>
+	<body>
+		<div id="mocha"></div>
+
+		<script type="text/javascript">
+			mocha.setup('bdd');
+
+			require.config({
+				baseUrl: '../src/js',
+				callback: function () {
+					require(['config'], function() {
+						require.config({
+							less: {
+								logLevel: 1,
+
+								globalVars: {
+									dependencyDir: '"../../bower_components"'
+								}
+							},
+
+							deps: {{ tests }},
+
+							callback: mocha.run
+						});
+					});
+				}
+			})
+		</script>
+	</body>
+</html>
