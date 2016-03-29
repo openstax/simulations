@@ -38,11 +38,9 @@ define(function (require, exports, module) {
         },
 
         _update: function(time, deltaTime) {
-            this.alphaParticles.each(function(alphaParticle){
-                if(alphaParticle){
-                    alphaParticle.move(deltaTime, this.boundWidth, this.get('protonCount'));                    
-                }
-            }, this);
+            this.alphaParticles.cullParticles();
+
+            this.alphaParticles.moveParticles(deltaTime, this.get('protonCount'));
 
             this.rayGun.update(deltaTime, this.boundWidth, this.get('alphaEnergy'));
         },

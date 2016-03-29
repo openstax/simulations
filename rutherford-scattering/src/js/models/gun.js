@@ -47,7 +47,7 @@ define(function (require) {
                     speed: initialSpeed,
                     defaultSpeed: initialSpeed,
                     position: initialPosition
-                });
+                }, {silent: true});
 
                 this.set('dtSinceGunFired', dtSinceGunFired % dtPerGunFired);
             }

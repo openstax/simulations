@@ -4,17 +4,20 @@ define(function (require) {
     'use strict';
 
     var Backbone = require('backbone');
+    var _ = require('underscore');
+    var VanillaCollection = require('common/collections/vanilla');
 
     var Rectangle = require('common/math/rectangle');
     var AlphaParticleModel = require('rutherford-scattering/models/alpha-particle');
 
-    var AlphaParticlesCollection = Backbone.Collection.extend({
+    var AlphaParticlesCollection = Backbone.Model.extend({
         model: AlphaParticleModel,
 
         initialize: function(attributes, options) {
             this._bounds = this.makeCullBounds(options.bounds);
-            this.listenTo(this, 'change:position', this.cullParticles);
-            this.listenTo(this, 'change:remove', this.remove);
+            this.boundWidth = options.bounds.w;
+
+            this.models = new VanillaCollection();
         },
 
         makeCullBounds: function(bounds){
@@ -28,11 +31,28 @@ define(function (require) {
             return new Rectangle(boundX, boundY, boundWidth, boundHeight);
         },
 
-        cullParticles: function(particle, position) {
-          if(!this._bounds.contains(position)){
-            this.remove(particle);
-          }
+        isParticleActive: function(particle){
+            return !particle.get('remove') && this._bounds.contains(particle.getPosition());
+        },
 
+        cullParticles: function() {
+            var inactiveParticles = this.models.reject(this.isParticleActive, this);
+            _.each(inactiveParticles, _.partial(this.models.remove, _, {silent: true}), this.models);
+            return this;
+        },
+
+        add: function(particle) {
+            this.models.add(new this.model(particle), {silent: true});
+        },
+
+        reset: function(particle) {
+            this.models.reset([]);
+        },
+
+        moveParticles: function(deltaTime, protonCount) {
+            this.models.each(function(alphaParticle){
+                alphaParticle.move(deltaTime, this.boundWidth, protonCount);
+            }, this);
         }
     });
 
