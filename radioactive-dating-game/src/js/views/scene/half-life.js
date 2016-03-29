@@ -228,7 +228,8 @@ define(function(require) {
                 mvt: this.mvt,
                 showSymbol: this.showingLabels,
                 atomCanister: this.atomCanisterView,
-                renderer: this.renderer
+                renderer: this.renderer,
+                hideNucleons: true
             });
 
             this.nucleusViews.push(nucleusView);

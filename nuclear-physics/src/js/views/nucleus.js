@@ -76,9 +76,14 @@ define(function(require) {
                 this.displayObject.removeChild(this.symbol);
 
             if (this.showSymbol) {
-                var fontSize = (this.symbolSize !== null) ? 
-                    this.symbolSize :
-                    this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
+                var fontSize;
+                if (this.symbolSize !== null)
+                    fontSize = this.symbolSize;
+                else if (this.hideNucleons)
+                    fontSize = this.nucleusSprite.width * 0.36;
+                else
+                    fontSize = this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
+                    
                 this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize);
                 this.displayObject.addChild(this.symbol);
             }

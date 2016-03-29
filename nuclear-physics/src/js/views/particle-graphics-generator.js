@@ -106,8 +106,7 @@ define(function(require) {
                     var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
                     // Create its isotope symbol
                     var fontSize = mvt.modelToViewDeltaX(nucleus.get('diameter')) * 0.8 * labelScale;
-                    var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize, 1);
-                    isotopeSymbol.x = isotopeSymbol.width / 2;
+                    var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize);
                     // Add them to a container
                     var container = new PIXI.Container();
                     container.addChild(nucleusSprite);

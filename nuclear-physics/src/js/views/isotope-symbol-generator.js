@@ -63,8 +63,10 @@ define(function(require) {
             number.anchor.y = 0.8;
             number.x = -symbol.width * symbol.anchor.x;
 
-            if (anchorX === undefined)
-                symbol.x += number.width / 2;
+            if (anchorX === undefined && isotopeNumber.toString().length)
+                symbol.x = number.width / 2 + fontSize * 0.1;
+            if (anchorY === undefined && isotopeNumber.toString().length)
+                symbol.y += fontSize * 0.1;
 
             symbol.addChild(number);
 

@@ -41,6 +41,7 @@ define(function(require) {
             nitrogen14.decay(); // Decay from Carbon-14 into Nitrogen-14
 
             items.push({
+                isDefault: true,
                 nucleusType: NucleusType.CARBON_14,
                 start: {
                     label: 'Carbon-14',
@@ -67,6 +68,7 @@ define(function(require) {
                 new Vector2(0, 0), 
                 this.scale * 0.4
             );
+            var largeAtomSymbolSize = 26;
 
             // Uranium-238 to Lead-206
             var uranium238 = Uranium238Nucleus.create();
@@ -75,13 +77,12 @@ define(function(require) {
 
             items.push({
                 nucleusType: NucleusType.URANIUM_238,
-                isDefault: true,
                 start: {
                     label: 'Uranium-238',
                     displayObject: new NucleusView({
                         model: uranium238,
                         mvt: largeAtomMVT,
-                        symbolSize: symbolSize,
+                        symbolSize: largeAtomSymbolSize,
                         hideNucleons: true
                     }).displayObject
                 },
@@ -90,7 +91,7 @@ define(function(require) {
                     displayObject: new NucleusView({
                         model: lead206,
                         mvt: largeAtomMVT,
-                        symbolSize: symbolSize,
+                        symbolSize: largeAtomSymbolSize,
                         hideNucleons: true
                     }).displayObject
                 }
@@ -108,7 +109,7 @@ define(function(require) {
                     displayObject: new NucleusView({
                         model: custom,
                         mvt: largeAtomMVT,
-                        symbolSize: symbolSize,
+                        symbolSize: largeAtomSymbolSize,
                         hideNucleons: true
                     }).displayObject
                 },
@@ -117,7 +118,7 @@ define(function(require) {
                     displayObject: new NucleusView({
                         model: decayed,
                         mvt: largeAtomMVT,
-                        symbolSize: symbolSize,
+                        symbolSize: largeAtomSymbolSize,
                         hideNucleons: true
                     }).displayObject
                 }
