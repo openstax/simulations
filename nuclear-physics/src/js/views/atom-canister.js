@@ -51,7 +51,10 @@ define(function(require) {
                 overlayAlpha: 0.4,
 
                 showHints: true,
-                draggingEnabled: true
+                draggingEnabled: true,
+
+                preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
+                minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
             }, options);
 
             this.mvt = options.mvt;
@@ -74,11 +77,14 @@ define(function(require) {
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
 
+            this.preferredInterNucleusDistance = options.preferredInterNucleusDistance;
+            this.minNucleusToObstacleDistance = options.minNucleusToObstacleDistance;
+
             this.nucleusPlacementBounds = new Rectangle(this.simulation.getNucleusBounds());
-            this.nucleusPlacementBounds.x += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
-            this.nucleusPlacementBounds.y += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
-            this.nucleusPlacementBounds.w -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
-            this.nucleusPlacementBounds.h -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
+            this.nucleusPlacementBounds.x += this.minNucleusToObstacleDistance;
+            this.nucleusPlacementBounds.y += this.minNucleusToObstacleDistance;
+            this.nucleusPlacementBounds.w -= this.minNucleusToObstacleDistance * 2;
+            this.nucleusPlacementBounds.h -= this.minNucleusToObstacleDistance * 2;
 
             // Cached objects
             this._bounds = new Rectangle();
@@ -267,11 +273,11 @@ define(function(require) {
             var openSpotFound = false;
 
             for (var i = 0; i < 3 && !openSpotFound; i++) {
-                var minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE;
+                var minInterNucleusDistance = this.preferredInterNucleusDistance;
 
                 if (i === 1) {
                     // Lower our standards.
-                    minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE / 2;
+                    minInterNucleusDistance = this.preferredInterNucleusDistance / 2;
                 }
                 else if (i === 3) {
                     // Anything goes - nuclei may end up on top of each other.
@@ -333,7 +339,7 @@ define(function(require) {
         },
 
         updateAreasToAvoid: function() {
-            var padding = AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
+            var padding = this.minNucleusToObstacleDistance;
 
             this.modelAreasToAvoid = [];
             for (var i = 0; i < this.areasToAvoid.length; i++) {

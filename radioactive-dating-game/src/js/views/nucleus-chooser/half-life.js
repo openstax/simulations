@@ -2,6 +2,9 @@ define(function(require) {
 
     'use strict';
 
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+
     var NucleusType                    = require('models/nucleus-type');
     var Uranium238Nucleus              = require('models/nucleus/uranium-238');
     var Carbon14Nucleus                = require('models/nucleus/carbon-14');
@@ -30,7 +33,7 @@ define(function(require) {
          */
         initItems: function() {
             var items = [];
-            var symbolSize = 36;
+            var symbolSize = 30;
 
             // Carbon-14 to Nitrogen-14
             var carbon14   = Carbon14Nucleus.create();
@@ -44,7 +47,8 @@ define(function(require) {
                     displayObject: new NucleusView({
                         model: carbon14,
                         mvt: this.mvt,
-                        symbolSize: symbolSize
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 },
                 end: {
@@ -52,10 +56,17 @@ define(function(require) {
                     displayObject: new NucleusView({
                         model: nitrogen14,
                         mvt: this.mvt,
-                        symbolSize: symbolSize
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 }
             });
+
+            var largeAtomMVT = new ModelViewTransform.createSinglePointScaleMapping(
+                new Vector2(0, 0), 
+                new Vector2(0, 0), 
+                this.scale * 0.4
+            );
 
             // Uranium-238 to Lead-206
             var uranium238 = Uranium238Nucleus.create();
@@ -69,16 +80,18 @@ define(function(require) {
                     label: 'Uranium-238',
                     displayObject: new NucleusView({
                         model: uranium238,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
+                        mvt: largeAtomMVT,
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 },
                 end: {
                     label: 'Lead-206',
                     displayObject: new NucleusView({
                         model: lead206,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
+                        mvt: largeAtomMVT,
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 }
             });
@@ -94,16 +107,18 @@ define(function(require) {
                     label: 'Custom',
                     displayObject: new NucleusView({
                         model: custom,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
+                        mvt: largeAtomMVT,
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 },
                 end: {
                     label: 'Custom<br>(Decayed)',
                     displayObject: new NucleusView({
                         model: decayed,
-                        mvt: this.mvt,
-                        symbolSize: symbolSize
+                        mvt: largeAtomMVT,
+                        symbolSize: symbolSize,
+                        hideNucleons: true
                     }).displayObject
                 }
             });

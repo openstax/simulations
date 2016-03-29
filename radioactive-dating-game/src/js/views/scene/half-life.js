@@ -16,6 +16,8 @@ define(function(require) {
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
 
+    var Constants = require('constants');
+
     var showNucleusPlacementDebuggingGraphics = false;
 
     // CSS
@@ -165,7 +167,9 @@ define(function(require) {
                 width: canisterWidth,
                 mvt: this.mvt,
                 dummyLayer: this.dummyLayer,
-                renderer: this.renderer
+                renderer: this.renderer,
+                preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
+                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
             });
 
             this.atomCanisterView.displayObject.x = canisterX;

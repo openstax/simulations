@@ -20,13 +20,15 @@ define(function(require) {
         initialize: function(options) {
             options = _.extend({
                 showSymbol: true,
-                symbolSize: null
+                symbolSize: null,
+                hideNucleons: false
             }, options);
 
             this.mvt = options.mvt;
             this.renderer = options.renderer;
             this.showSymbol = options.showSymbol;
             this.symbolSize = options.symbolSize;
+            this.hideNucleons = options.hideNucleons;
 
             this.initGraphics();
 
@@ -65,7 +67,7 @@ define(function(require) {
             if (this.nucleusSprite)
                 this.displayObject.removeChild(this.nucleusSprite);
 
-            this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt, this.renderer);
+            this.nucleusSprite = ParticleGraphicsGenerator.generateNucleus(this.model, this.mvt, this.renderer, this.hideNucleons);
             this.displayObject.addChild(this.nucleusSprite);
         },
 
@@ -74,8 +76,10 @@ define(function(require) {
                 this.displayObject.removeChild(this.symbol);
 
             if (this.showSymbol) {
-                var fontSize = this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
-                this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize, 0.35);
+                var fontSize = (this.symbolSize !== null) ? 
+                    this.symbolSize :
+                    this.mvt.modelToViewDeltaX(this.model.get('diameter')) * 0.55;
+                this.symbol = IsotopeSymbolGenerator.generate(this.model, fontSize);
                 this.displayObject.addChild(this.symbol);
             }
         },

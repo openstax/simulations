@@ -63,9 +63,15 @@ define(function(require) {
             number.anchor.y = 0.8;
             number.x = -symbol.width * symbol.anchor.x;
 
+            if (anchorX === undefined)
+                symbol.x += number.width / 2;
+
             symbol.addChild(number);
 
-            return symbol;
+            var container = new PIXI.Container();
+            container.addChild(symbol);
+
+            return container;
         },
 
         getChemicalSymbol: function(nucleusType) {
