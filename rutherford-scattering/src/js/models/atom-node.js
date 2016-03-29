@@ -10,7 +10,8 @@ define(function (require) {
 
         defaults: {
             protonCount: Constants.DEFAULT_PROTON_COUNT,
-            neutronCount: Constants.DEFAULT_NEUTRON_COUNT
+            neutronCount: Constants.DEFAULT_NEUTRON_COUNT,
+            hold: false
         },
 
         initialize: function(attributes, options) {

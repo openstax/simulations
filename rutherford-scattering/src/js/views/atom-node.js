@@ -23,13 +23,11 @@ define(function(require) {
             this.mvt = options.mvt;
             this.particleMVT = options.particleMVT;
             this.model = options.model;
-            this.simulation = options.simulation;
             this.scale = options.scale;
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:radius', this.updateAtomNode);
-            this.listenTo(this.simulation.rayGun, 'change:hold', this.updateAtomNode);
+            this.listenTo(this.model, 'change:radius change:hold', this.updateAtomNode);
         },
 
         /**
@@ -64,7 +62,7 @@ define(function(require) {
         },
 
         updateAtomNode: function(){
-            if(this.simulation.rayGun.get('hold')){
+            if(this.model.get('hold')){
                 this.drawSimple();
             } else {
                 this.drawAtoms();

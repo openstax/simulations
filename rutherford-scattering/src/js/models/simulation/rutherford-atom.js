@@ -31,6 +31,14 @@ define(function (require, exports, module) {
 
         initAlphaParticles: function() {
             this.alphaParticles = new RutherfordParticles(null, {bounds: this.bounds});
+        },
+
+        pauseAtomDraw: function() {
+            this.atomNode.set('hold', true);
+        },
+
+        restartAtomDraw: function() {
+            this.atomNode.set('hold', false);                
         }
 
     });
