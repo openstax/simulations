@@ -5,9 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/v3/pixi/view');
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var PixiView           = require('common/v3/pixi/view');
+    var Rectangle          = require('common/math/rectangle');
+    var Vector2            = require('common/math/vector2');
+    var ModelViewTransform = require('common/math/model-view-transform');
 
     var ExplodingNucleusView = require('views/nucleus/exploding');
 
@@ -53,6 +54,7 @@ define(function(require) {
                 showHints: true,
                 draggingEnabled: true,
                 hideNucleons: false,
+                numberOfAtomsToShow: 3,
 
                 preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
@@ -78,6 +80,7 @@ define(function(require) {
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
             this.hideNucleons = options.hideNucleons;
+            this.numberOfAtomsToShow = options.numberOfAtomsToShow;
 
             this.preferredInterNucleusDistance = options.preferredInterNucleusDistance;
             this.minNucleusToObstacleDistance = options.minNucleusToObstacleDistance;
@@ -194,7 +197,7 @@ define(function(require) {
             var windowCenterY = this.height * (108 / 260);
             var windowRadius  = this.height *  (55 / 260);
 
-            var numberOfDummies = 3;
+            var numberOfDummies = this.numberOfAtomsToShow;
             var angleStep = (Math.PI * 2) / numberOfDummies;
             var startingAngle = Math.random() * Math.PI;
             var radius = windowRadius * 0.7;
@@ -204,7 +207,7 @@ define(function(require) {
             for (var n = 0; n < numberOfDummies; n++) {
                 vec.set(radius, 0).rotate(startingAngle + n * angleStep);
 
-                dummy = this.createDummyObjectView();
+                dummy = this.createDummyObjectView(this.dummyMVT);
                 dummy.displayObject.x = windowCenterX + vec.x;
                 dummy.displayObject.y = windowCenterY + vec.y;
                 dummy.displayObject.alpha = 0.7;
@@ -240,11 +243,14 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObjectView: function() {
+        createDummyObjectView: function(mvt) {
+            if (!mvt)
+                mvt = this.mvt;
+
             var model = this.simulation.createNucleus();
             var view = new ExplodingNucleusView({
                 model: model,
-                mvt: this.mvt,
+                mvt: mvt,
                 renderer: this.renderer,
                 hideNucleons: this.hideNucleons
             });
@@ -335,6 +341,11 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
+
+            if (this.hideNucleons)
+                this.dummyMVT = ModelViewTransform.createScaleMapping(mvt.getXScale() * 0.6);
+            else
+                this.dummyMVT = mvt;
 
             this.drawDecorativeDummyObjects();
 
