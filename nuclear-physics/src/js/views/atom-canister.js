@@ -52,6 +52,7 @@ define(function(require) {
 
                 showHints: true,
                 draggingEnabled: true,
+                hideNucleons: false,
 
                 preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
@@ -76,6 +77,7 @@ define(function(require) {
             this.showHints = options.showHints;
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
+            this.hideNucleons = options.hideNucleons;
 
             this.preferredInterNucleusDistance = options.preferredInterNucleusDistance;
             this.minNucleusToObstacleDistance = options.minNucleusToObstacleDistance;
@@ -243,7 +245,8 @@ define(function(require) {
             var view = new ExplodingNucleusView({
                 model: model,
                 mvt: this.mvt,
-                renderer: this.renderer
+                renderer: this.renderer,
+                hideNucleons: this.hideNucleons
             });
             return view;
         },

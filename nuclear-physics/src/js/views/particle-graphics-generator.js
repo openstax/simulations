@@ -90,6 +90,9 @@ define(function(require) {
                 // Show as a single sphere
                 var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
                 sprite.tint = this.getColorForElement(nucleus);
+                // Create its isotope symbol
+                var isotopeFontSize = sprite.width * 0.36 * labelScale;
+                sprite.addChild(IsotopeSymbolGenerator.generate(nucleus, isotopeFontSize));
             }
             else {
                 noCachingAsBitmap = true;

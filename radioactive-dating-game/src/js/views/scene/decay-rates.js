@@ -124,7 +124,7 @@ define(function(require) {
                 canisterWidth = 160;
             }
             else {
-                canisterX = 760;
+                canisterX = 534;
                 canisterY = 440;
                 canisterWidth = 160;
             }
@@ -137,7 +137,8 @@ define(function(require) {
                 renderer: this.renderer,
                 draggingEnabled: false,
                 preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
-                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
+                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
+                hideNucleons: true
             });
 
             this.atomCanisterView.displayObject.x = canisterX;

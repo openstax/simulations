@@ -64,7 +64,9 @@ define(function(require) {
                 xAxisLabelText: 'Time (yrs)',
                 yAxisLabelText: 'Isotope',
 
-                timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN
+                timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN,
+
+                hideNucleons: true
             }, options);
 
             // Required options
@@ -90,6 +92,8 @@ define(function(require) {
 
             this.axisLineColor = Colors.parseHex(NucleusDecayChart.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(NucleusDecayChart.TICK_MARK_COLOR);
+
+            this.hideNucleons = options.hideNucleons;
 
             // Initialize the graphics
             this.initGraphics();
@@ -285,7 +289,8 @@ define(function(require) {
                 renderer: this.renderer,
                 height: this.graphHeight,
                 isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
-                isotope2Y: this.yAxisIsotope2.y - this.paddingTop
+                isotope2Y: this.yAxisIsotope2.y - this.paddingTop,
+                hideNucleons: this.hideNucleons
             });
 
             this.nucleiView.displayObject.y = this.graphOriginY - this.graphHeight;

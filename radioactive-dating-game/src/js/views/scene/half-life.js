@@ -77,10 +77,10 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 6;
+                pixelsPerFemtometer = 3;
             }
             else {
-                pixelsPerFemtometer = 8;
+                pixelsPerFemtometer = 4;
             }
 
             this.viewOriginX = 0;
@@ -131,7 +131,8 @@ define(function(require) {
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels(),
                 renderer: this.renderer,
-                bgColor: '#ADDBFF'
+                bgColor: '#ADDBFF',
+                hideNucleons: true
             });
 
             if (AppView.windowIsShort()) {
@@ -157,7 +158,7 @@ define(function(require) {
                 canisterWidth = 160;
             }
             else {
-                canisterX = 760;
+                canisterX = 534;
                 canisterY = 440;
                 canisterWidth = 160;
             }
@@ -169,7 +170,8 @@ define(function(require) {
                 dummyLayer: this.dummyLayer,
                 renderer: this.renderer,
                 preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
-                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
+                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
+                hideNucleons: true
             });
 
             this.atomCanisterView.displayObject.x = canisterX;
