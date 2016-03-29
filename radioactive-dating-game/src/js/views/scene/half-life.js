@@ -11,10 +11,11 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
-    var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
     var NuclearPhysicsSceneView       = require('views/scene');
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+
+    var HalfLifeNucleusDecayChart = require('radioactive-dating-game/views/nucleus-decay-chart/half-life');
 
     var Constants = require('constants');
 
@@ -127,12 +128,13 @@ define(function(require) {
         },
 
         initNucleusDecayChart: function() {
-            this.nucleusDecayChart = new MultipleNucleusDecayChart({
+            this.nucleusDecayChart = new HalfLifeNucleusDecayChart({
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels(),
                 renderer: this.renderer,
                 bgColor: '#ADDBFF',
-                hideNucleons: true
+                hideNucleons: true,
+                useElementColors: true
             });
 
             if (AppView.windowIsShort()) {

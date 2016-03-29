@@ -110,8 +110,18 @@ define(function(require) {
             graphics.lineStyle(1, 0x000000, 1);
 
             var nucleusType = this.simulation.get('nucleusType');
-            var isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getColor(nucleusType));
-            var isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getColor(AtomicNucleus.getPostDecayNucleusType(nucleusType)));
+
+            var isotope1Color;
+            var isotope2Color;
+            if (this.useElementColors) {
+                isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
+                isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(AtomicNucleus.getPostDecayNucleusType(nucleusType)));
+            }
+            else {
+                isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getColor(nucleusType));
+                isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getColor(AtomicNucleus.getPostDecayNucleusType(nucleusType)));
+            }
+            
             var radius = 25;
             var numActive  = this.simulation.getNumActiveNuclei();
             var numDecayed = this.simulation.getNumDecayedNuclei();
@@ -152,8 +162,16 @@ define(function(require) {
             var nucleusType = this.simulation.get('nucleusType');
             var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
 
-            var isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
-            var isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            var isotope1Text;
+            var isotope2Text;
+            if (this.useElementColors) {
+                isotope1Text = IsotopeSymbolGenerator.generateWithElementColor(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generateWithElementColor(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
+            else {
+                isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
 
             this.isotope1CountContainer.removeChildren();
             this.isotope2CountContainer.removeChildren();
@@ -193,6 +211,7 @@ define(function(require) {
 
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.clearNuclei();
+            this.updatePieChart();
             
             NucleusDecayChart.prototype.nucleusTypeChanged.apply(this, arguments);
         },

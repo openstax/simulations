@@ -66,7 +66,8 @@ define(function(require) {
 
                 timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN,
 
-                hideNucleons: true
+                hideNucleons: true,
+                useElementColors: false
             }, options);
 
             // Required options
@@ -94,6 +95,7 @@ define(function(require) {
             this.tickColor     = Colors.parseHex(NucleusDecayChart.TICK_MARK_COLOR);
 
             this.hideNucleons = options.hideNucleons;
+            this.useElementColors = options.useElementColors;
 
             // Initialize the graphics
             this.initGraphics();
@@ -188,6 +190,7 @@ define(function(require) {
             label.anchor.x = 0.5;
             label.anchor.y = 1;
             label.rotation = -Math.PI / 2;
+            this.isotopeLabel = label;
 
             var tickLength = NucleusDecayChart.TICK_MARK_LENGTH;
             var isotope1Y = this.graphOriginY - this.graphHeight * 0.8;
@@ -510,9 +513,17 @@ define(function(require) {
             var nucleusType = this.simulation.get('nucleusType');
             var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
 
-            var isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
-            var isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
-
+            var isotope1Text;
+            var isotope2Text;
+            if (this.useElementColors) {
+                isotope1Text = IsotopeSymbolGenerator.generateWithElementColor(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generateWithElementColor(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
+            else {
+                isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
+            
             this.yAxisIsotope1.removeChildren();
             this.yAxisIsotope2.removeChildren();
 

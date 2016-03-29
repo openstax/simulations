@@ -32,6 +32,18 @@ define(function(require) {
             return this.createSymbol(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY);
         },
 
+        generateWithElementColor: function(nucleusType, fontSize, anchorX, anchorY) {
+            // If they pass in a nucleus model instead of a nucleus type, get the nucleus type
+            if (nucleusType instanceof AtomicNucleus)
+                nucleusType = NucleusType.identifyNucleus(nucleusType.get('numProtons'), nucleusType.get('numNeutrons'));
+
+            var chemicalSymbol = this.getChemicalSymbol(nucleusType);
+            var isotopeNumber = this.getIsotopeNumber(nucleusType);
+            var color = this.getElementColor(nucleusType);
+            
+            return this.createSymbol(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY);
+        },
+
         createSymbol: function(chemicalSymbol, isotopeNumber, color, fontSize, anchorX, anchorY) {
             var numberFontSize = (fontSize > 4) ? Math.floor(fontSize * 0.75) : 2;
             var resolution = PixiView.prototype.getResolution();
@@ -127,14 +139,32 @@ define(function(require) {
                 case NucleusType.LEAD_206:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.LEAD_207:                return Constants.LEAD_LABEL_COLOR;
                 case NucleusType.POLONIUM_211:            return Constants.POLONIUM_LABEL_COLOR;
-                case NucleusType.URANIUM_235:             return Constants.URANIUM_235_LABEL_COLOR;
+                case NucleusType.URANIUM_235:             return Constants.URANIUM_COLOR;
                 case NucleusType.URANIUM_236:             return Constants.URANIUM_236_LABEL_COLOR;
                 case NucleusType.URANIUM_238:             return Constants.URANIUM_238_LABEL_COLOR;
                 case NucleusType.URANIUM_239:             return Constants.URANIUM_239_LABEL_COLOR;
                 case NucleusType.HEAVY_CUSTOM:            return Constants.CUSTOM_NUCLEUS_LABEL_COLOR;
                 case NucleusType.HEAVY_CUSTOM_POST_DECAY: return Constants.CUSTOM_NUCLEUS_POST_DECAY_LABEL_COLOR;
             }
-        }
+        },
+
+        getElementColor: function(nucleusType) {
+            switch (nucleusType) {
+                case NucleusType.CARBON_14:               return Constants.CARBON_COLOR;
+                case NucleusType.NITROGEN_14:             return Constants.NITROGEN_COLOR
+                case NucleusType.LIGHT_CUSTOM:            return Constants.CUSTOM_NUCLEUS_PRE_DECAY_COLOR;
+                case NucleusType.LIGHT_CUSTOM_POST_DECAY: return Constants.CUSTOM_NUCLEUS_POST_DECAY_COLOR;
+                case NucleusType.LEAD_206:
+                case NucleusType.LEAD_207:                return Constants.LEAD_COLOR;
+                case NucleusType.POLONIUM_211:            return Constants.POLONIUM_COLOR;
+                case NucleusType.URANIUM_235:
+                case NucleusType.URANIUM_236:
+                case NucleusType.URANIUM_238:
+                case NucleusType.URANIUM_239:             return Constants.URANIUM_COLOR;
+                case NucleusType.HEAVY_CUSTOM:            return Constants.CUSTOM_NUCLEUS_PRE_DECAY_COLOR;
+                case NucleusType.HEAVY_CUSTOM_POST_DECAY: return Constants.CUSTOM_NUCLEUS_POST_DECAY_COLOR;
+            }
+        },
 
     };
 
