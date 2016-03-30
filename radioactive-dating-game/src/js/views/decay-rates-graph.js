@@ -21,6 +21,10 @@ define(function(require) {
 
     var Constants = require('constants');
 
+    var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.DecayRatesGraphView.HALF_LIFE_LINE_COLOR);
+    var HALF_LIFE_LINE_WIDTH  = Constants.DecayRatesGraphView.HALF_LIFE_LINE_WIDTH;
+    var HALF_LIFE_LINE_ALPHA  = Constants.DecayRatesGraphView.HALF_LIFE_LINE_ALPHA;
+
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
      */
@@ -83,6 +87,7 @@ define(function(require) {
             this.initPanel();
             this.initXAxis();
             this.initYAxis();
+            this.initHalfLifeMarkers();
             this.initPieChart();
         },
 
@@ -190,6 +195,14 @@ define(function(require) {
             this.displayObject.addChild(graphics);
             this.displayObject.addChild(label);
             this.displayObject.addChild(this.yAxisLabels);
+        },
+
+        initHalfLifeMarkers: function() {
+            this.halfLifeLineGraphics = new PIXI.Graphics();
+            this.halfLifeLabels = new PIXI.Container();
+
+            this.displayObject.addChild(this.halfLifeLineGraphics);
+            this.displayObject.addChild(this.halfLifeLabels);
         },
 
         initPieChart: function() {
@@ -334,6 +347,54 @@ define(function(require) {
             }
         },
 
+        /**
+         * Add the vertical lines and the labels that depict the half life
+         *   intervals to the chart.  This does some sanity testing to make
+         *   sure that there isn't a ridiculous number of half life lines
+         *   on the graph.
+         */
+        drawHalfLifeLines: function() {
+            this.halfLifeLabels.removeChildren();
+
+            var graphics = this.halfLifeLineGraphics;
+            graphics.clear();
+            graphics.lineStyle(HALF_LIFE_LINE_WIDTH, HALF_LIFE_LINE_COLOR, HALF_LIFE_LINE_ALPHA);
+
+            var numHalfLifeLines = Math.floor(this.timeSpan / this.halfLife);
+            if (numHalfLifeLines > 10) {
+                // Too many line.  Ignore this.
+                console.warn('Warning: Too many half life lines, ignoring request to draw them.');
+                return;
+            }
+
+            var labelSettings = {
+                font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                fill: this.tickColor
+            };
+
+            // Set the size and location for each of the lines and labels.
+            for (var i = 0; i < numHalfLifeLines; i++) {
+                var x = this.graphOriginX + (i + 1) * this.halfLife * this.msToPixelsFactor;
+                var y = this.graphOriginY - this.graphHeight;
+
+                var label = new PIXI.Text('' + (i + 1), {
+                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                    fill: this.tickColor
+                });
+
+                label.x = x;
+                label.y = y;
+                label.anchor.x = 0.5;
+                label.anchor.y = 1;
+                label.resolution = this.getResolution();
+                
+                this.halfLifeLabels.addChild(label);
+
+                graphics.moveTo(x, y);
+                graphics.dashTo(x, this.graphOriginY, DecayRatesGraphView.HALF_LIFE_LINE_DASHES);
+            }
+        },
+
         update: function(time, deltaTime, paused) {
             this.updatePieChart();
         },
@@ -410,6 +471,7 @@ define(function(require) {
         updateLayout: function() {
             this.drawXAxisTicks();
             this.drawYAxisLabels();
+            this.drawHalfLifeLines();
         },
 
         /**
