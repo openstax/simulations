@@ -55,6 +55,7 @@ define(function(require) {
                 draggingEnabled: true,
                 hideNucleons: false,
                 numberOfAtomsToShow: 3,
+                atomScale: 8,
 
                 preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
@@ -65,6 +66,7 @@ define(function(require) {
             this.dummyLayer = options.dummyLayer;
             this.renderer = options.renderer;
             this.areasToAvoid = options.areasToAvoid;
+            this.dummyMVT = ModelViewTransform.createScaleMapping(options.atomScale);
 
             this.width = options.width;
             this.height = options.height;
@@ -341,11 +343,6 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            if (this.hideNucleons)
-                this.dummyMVT = ModelViewTransform.createScaleMapping(mvt.getXScale() * 0.6);
-            else
-                this.dummyMVT = mvt;
 
             this.drawDecorativeDummyObjects();
 

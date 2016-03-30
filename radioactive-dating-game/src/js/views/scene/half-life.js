@@ -173,7 +173,8 @@ define(function(require) {
                 renderer: this.renderer,
                 preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
-                hideNucleons: true
+                hideNucleons: true,
+                atomScale: 2.5
             });
 
             this.atomCanisterView.displayObject.x = canisterX;
