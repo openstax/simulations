@@ -139,12 +139,9 @@ define(function(require) {
             this.atomCanisterView.displayObject.x = canisterX;
             this.atomCanisterView.displayObject.y = canisterY;
 
-            // Calculate the bounds of the areas to be avoided when placing atoms
-            var resetButtonPos = this.$resetButton.position();
-            var resetButtonRect = new Rectangle(resetButtonPos.left, resetButtonPos.top, canisterWidth, 46);
-            this.atomCanisterView.setAreasToAvoid([
-                resetButtonRect
-            ]);
+            this.simulation.setCanisterBounds(
+                this.mvt.viewToModel(this.atomCanisterView.getBounds())
+            );
 
             if (showNucleusPlacementDebuggingGraphics) {
                 var graphics = new PIXI.Graphics();

@@ -47,6 +47,25 @@ define(function (require, exports, module) {
             MultiNucleusDecaySimulation.prototype.initComponents.apply(this, arguments);
         },
 
+        setNucleusBounds: function(x, y, width, height) {
+            MultiNucleusDecaySimulation.prototype.setNucleusBounds.apply(this, arguments);
+
+            var padding = DEFAULT_MIN_INTER_NUCLEUS_DISTANCE;
+            this._nucleusBounds.x += padding;
+            this._nucleusBounds.y += padding;
+            this._nucleusBounds.w -= padding * 2;
+            this._nucleusBounds.h -= padding * 2;
+        },
+
+        setCanisterBounds: function(bounds) {
+            var padding = DEFAULT_MIN_INTER_NUCLEUS_DISTANCE;
+            this.canisterAreaRect = new Rectangle(bounds);
+            this.canisterAreaRect.x -= padding;
+            this.canisterAreaRect.y -= padding;
+            this.canisterAreaRect.w += padding * 2;
+            this.canisterAreaRect.h += padding * 2;
+        },
+
         /**
          * Creates and returns a nucleus of the current type
          */
@@ -67,7 +86,8 @@ define(function (require, exports, module) {
 
             var pointAvailable = false;
             var atomicNuclei = this.atomicNuclei;
-            var holdingAreaRect = this._nucleusBounds;
+            var bounds = this._nucleusBounds;
+            var canisterAreaRect = this.canisterAreaRect;
             
             // Determine the minimum placement distance between nuclei.
             var minInterNucleusDistance = DEFAULT_MIN_INTER_NUCLEUS_DISTANCE;
@@ -88,15 +108,15 @@ define(function (require, exports, module) {
             for (var i = 0; i < 4; i++){
                 for (var j = 0; j < PLACEMENT_LOCATION_SEARCH_COUNT / 4; j++){
                     // Randomly select an x & y position
-                    x = INITIAL_WORLD_WIDTH  * (Math.random() - 0.5);
-                    y = INITIAL_WORLD_HEIGHT * (Math.random() - 0.5);
+                    x = bounds.x + bounds.w * Math.random();
+                    y = bounds.y + bounds.h * Math.random();
                     
                     // Check if this point is available.
                     pointAvailable = true;
                     for (var k = 0; (k < atomicNuclei.length) && (pointAvailable === true); k++){
                         var nucleus = atomicNuclei.at(k);
                         if (nucleus.getPosition().distanceSq(x, y) < minInterNucleusDistanceSq ||
-                            holdingAreaRect.contains(x, y)
+                            canisterAreaRect.contains(x, y)
                         ){
                             // This point is not available.
                             pointAvailable = false;
@@ -124,9 +144,9 @@ define(function (require, exports, module) {
                 console.warn('Warning: Using arbitrary location because no open location found.');
 
                 do {
-                    x = INITIAL_WORLD_WIDTH * (Math.random() - 0.5);
-                    y = INITIAL_WORLD_HEIGHT * (Math.random() - 0.5);
-                } while (holdingAreaRect.contains(x, y));
+                    x = bounds.x + bounds.w * Math.random();
+                    y = bounds.y + bounds.h * Math.random();
+                } while (canisterAreaRect.contains(x, y));
             }
             
             this.addNucleusAt(x, y);
