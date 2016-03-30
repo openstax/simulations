@@ -10,11 +10,11 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
-    var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
-    var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
-    var NuclearPhysicsSceneView       = require('views/scene');
-    var AtomCanisterView              = require('views/atom-canister');
-    var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+    var ParticleGraphicsGenerator      = require('views/particle-graphics-generator');
+    var MultipleNucleusDecayChart      = require('views/nucleus-decay-chart/multiple');
+    var NuclearPhysicsSceneView        = require('views/scene');
+    var AtomCanisterView               = require('views/atom-canister');
+    var SphericalNucleusCollectionView = require('views/spherical-nucleus-collection');
 
     var Constants = require('constants');
 
@@ -30,13 +30,8 @@ define(function(require) {
 
         initialize: function(options) {
             this.showingLabels = true;
-            this.nucleusViews = [];
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
-
-            this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
-            this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
-            this.listenTo(this.simulation.atomicNuclei, 'reset',  this.nucleiReset);
         },
 
         renderContent: function() {
@@ -48,7 +43,6 @@ define(function(require) {
             });
 
             this.$ui.append(this.$resetButton);
-            this.$ui.append(this.$canisterSliderWrapper);
         },
 
         reset: function() {
@@ -63,10 +57,10 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 6;
+                pixelsPerFemtometer = 0.5;
             }
             else {
-                pixelsPerFemtometer = 8;
+                pixelsPerFemtometer = 1;
             }
 
             this.viewOriginX = 0;
@@ -107,6 +101,7 @@ define(function(require) {
 
             this.initMVT();
             this.initAtomCanister();
+            this.initNucleusCollectionView();
 
             this.stage.addChild(this.dummyLayer);
         },
@@ -165,60 +160,25 @@ define(function(require) {
             this.canisterLayer.addChild(this.atomCanisterView.displayObject);
         },
 
+        initNucleusCollectionView: function() {
+            this.nucleusCollectionView = new SphericalNucleusCollectionView({
+                simulation: this.simulation,
+                collection: this.simulation.atomicNuclei,
+                mvt: this.mvt
+            });
+
+            this.nucleusLayer.addChild(this.nucleusCollectionView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
             
             this.atomCanisterView.update(time, deltaTime, paused);
-
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].update(time, deltaTime, paused);
-        },
-
-        nucleusAdded: function(nucleus) {
-            var nucleusView = new DraggableExplodingNucleusView({
-                model: nucleus,
-                mvt: this.mvt,
-                showSymbol: this.showingLabels,
-                atomCanister: this.atomCanisterView,
-                renderer: this.renderer
-            });
-
-            this.nucleusViews.push(nucleusView);
-
-            this.nucleusLayer.addChild(nucleusView.displayObject);
-        },
-
-        nucleusRemoved: function(nucleus) {
-            for (var i = 0; i < this.nucleusViews.length; i++) {
-                if (this.nucleusViews[i].model == nucleus) {
-                    this.nucleusViews[i].remove();
-                    this.nucleusViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        nucleiReset: function() {
-            for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
-                this.nucleusViews[i].remove();
-                this.nucleusViews.splice(i, 1);
-            }
+            this.nucleusCollectionView.update(time, deltaTime, paused);
         },
 
         resetNuclei: function() {
             this.simulation.resetActiveAndDecayedNuclei();
-        },
-
-        showLabels: function() {
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].showLabel();
-            this.showingLabels = true;
-        },
-
-        hideLabels: function() {
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].hideLabel();
-            this.showingLabels = false;
         }
 
     });
