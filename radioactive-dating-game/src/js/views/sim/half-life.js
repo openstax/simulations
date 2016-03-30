@@ -18,6 +18,10 @@ define(function (require) {
      */
     var HalfLifeSimView = RadioactiveDatingGameSimView.extend({
 
+        events: _.extend({}, RadioactiveDatingGameSimView.prototype.events, {
+            'click .show-labels-check' : 'toggleLabels'
+        }),
+
         /**
          * Template for rendering the basic scaffolding
          */
@@ -75,6 +79,13 @@ define(function (require) {
             this.renderNucleusChooser();
 
             return this;
+        },
+
+        toggleLabels: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showLabels();
+            else
+                this.sceneView.hideLabels();
         }
 
     });

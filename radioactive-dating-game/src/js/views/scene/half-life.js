@@ -268,6 +268,18 @@ define(function(require) {
 
         removeTenNuclei: function() {
             this.atomCanisterView.removeAtoms(10);
+        },
+
+        showLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].showLabel();
+            this.showingLabels = true;
+        },
+
+        hideLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].hideLabel();
+            this.showingLabels = false;
         }
 
     });

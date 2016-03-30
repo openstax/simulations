@@ -223,6 +223,18 @@ define(function(require) {
 
         resetNuclei: function() {
             this.simulation.resetActiveAndDecayedNuclei();
+        },
+
+        showLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].showLabel();
+            this.showingLabels = true;
+        },
+
+        hideLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].hideLabel();
+            this.showingLabels = false;
         }
 
     });

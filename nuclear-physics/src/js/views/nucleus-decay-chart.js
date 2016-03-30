@@ -66,7 +66,7 @@ define(function(require) {
 
                 timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN,
 
-                hideNucleons: true,
+                hideNucleons: false,
                 useElementColors: false
             }, options);
 
