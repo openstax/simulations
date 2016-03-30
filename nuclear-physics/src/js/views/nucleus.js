@@ -102,11 +102,13 @@ define(function(require) {
 
         showLabel: function() {
             this.showSymbol = true;
+            this.updateSprite();
             this.updateSymbol();
         },
 
         hideLabel: function() {
             this.showSymbol = false;
+            this.updateSprite();
             this.updateSymbol();
         }
 
