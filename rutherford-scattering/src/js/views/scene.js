@@ -98,7 +98,7 @@ define(function(require) {
 
             this.initRayGunView();
             this.initSpaceBoxView();
-            this.initAtomNodeView();
+            this.initAtomView();
             this.drawProjectionLines();
         },
 
@@ -124,7 +124,7 @@ define(function(require) {
             this.middleLayer.addChild(this.spaceBoxView.displayObject);
         },
 
-        initAtomNodeView: function() {
+        initAtomView: function() {
 
         },
 

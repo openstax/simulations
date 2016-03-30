@@ -10,7 +10,7 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
 
     var RutherfordScatteringSceneView = require('rutherford-scattering/views/scene');
-    var AtomNodeView = require('rutherford-scattering/views/atom-node');
+    var AtomView = require('rutherford-scattering/views/atom');
 
     // Constants
     var Constants = require('constants');
@@ -18,8 +18,8 @@ define(function(require) {
      *
      */
     var RutherfordAtomSceneView = RutherfordScatteringSceneView.extend({
-        initAtomNodeView: function() {
-            this.atomNodeView = new AtomNodeView({
+        initAtomView: function() {
+            this.atomNodeView = new AtomView({
                 mvt: this.mvt,
                 particleMVT: this.particleMVT,
                 model: this.simulation.atomNode,

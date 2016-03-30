@@ -5,7 +5,7 @@ define(function (require, exports, module) {
     var RutherfordScatteringSimulation = require('rutherford-scattering/models/simulation');
     var RutherfordParticles  = require('rutherford-scattering/collections/rutherford-particles');
 
-    var AtomNode = require('../atom-node');
+    var Atom = require('../atom');
 
     /**
      * Constants
@@ -26,7 +26,7 @@ define(function (require, exports, module) {
 
         initComponents: function(){
             RutherfordScatteringSimulation.prototype.initComponents.apply(this, arguments);
-            this.atomNode = new AtomNode(null, {simulation: this});
+            this.atomNode = new Atom(null, {simulation: this});
         },
 
         initAlphaParticles: function() {
