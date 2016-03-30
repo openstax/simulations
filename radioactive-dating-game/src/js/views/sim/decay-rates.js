@@ -2,7 +2,7 @@ define(function (require) {
 
     'use strict';
 
-    var HalfLifeSimulation = require('radioactive-dating-game/models/simulation/half-life');
+    var DecayRatesSimulation = require('radioactive-dating-game/models/simulation/decay-rates');
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
     var DecayRatesSceneView          = require('radioactive-dating-game/views/scene/decay-rates');
@@ -47,7 +47,7 @@ define(function (require) {
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new HalfLifeSimulation();
+            this.simulation = new DecayRatesSimulation();
         },
 
         /**

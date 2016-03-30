@@ -557,7 +557,7 @@ define(function(require) {
         slide: function(value, prev) {
             if (value > this.simulation.getTotalNumNuclei()) {
                 while (value > this.simulation.getTotalNumNuclei()) {
-                    this.addNewAtom();
+                    this.simulation.addNewNucleus();
                 }
             }
             else if (value < this.simulation.getTotalNumNuclei()) {
