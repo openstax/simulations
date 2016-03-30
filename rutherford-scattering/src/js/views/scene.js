@@ -135,7 +135,7 @@ define(function(require) {
             var projectionLines = new PIXI.Graphics();
             var dashStyle = [6, 6];
 
-            projectionLines.lineStyle(1, 0xFFFFFF, 1);
+            projectionLines.lineStyle(0.75, 0xFFFFFF, 1);
             projectionLines.moveTo(rayViewCorners.top.x, rayViewCorners.top.y);
             projectionLines.dashTo(spaceBoxCorners.top.x, spaceBoxCorners.top.y, dashStyle);
 
