@@ -33,8 +33,9 @@ define(function(require) {
             this.pudding = Assets.createSprite(Assets.Images.PLUM_PUDDING);
             this.pudding.anchor.x = 0.5;
             this.pudding.anchor.y = 0.5;
-            this.pudding.blendMode = PIXI.BLEND_MODES.OVERLAY;
-            this.pudding.alpha = 0.75;
+            window.pudding = this.pudding
+            // this.pudding.blendMode = PIXI.BLEND_MODES.OVERLAY;
+            // this.pudding.alpha = 0.75;
 
             this.displayObject.addChild(this.pudding);
 
