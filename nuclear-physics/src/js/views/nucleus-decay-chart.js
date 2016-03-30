@@ -311,7 +311,7 @@ define(function(require) {
 
             if (this.timeSpan < 10000) {
                 // Tick marks are 1 second apart.
-                numTickMarks = Math.floor(this.timeSpan / 1000 + 1);
+                numTickMarks = Math.floor(this.timeSpan / 1000);
 
                 for (i = 0; i < numTickMarks; i++)
                     this.drawXAxisTick(i * 1000, '' + i);
@@ -437,21 +437,7 @@ define(function(require) {
         updateHalfLifeMarker: function() {
             // Position the marker for the half life.
             var halfLife = this.simulation.get('halfLife');
-            var halfLifeMarkerX = 0;
-
-            if (this.getExponentialMode()) {
-                if (halfLife == Number.POSITIVE_INFINITY) {
-                    halfLifeMarkerX = this.graphOriginX + this.graphWidth;
-                }
-                else {
-                    // halfLifeMarkerX = _exponentialTimeLine.mapTimeToHorizPixels( halfLife ) + _graphOriginX +
-                    //                      ( TIME_ZERO_OFFSET * _msToPixelsFactor );
-                    // halfLifeMarkerX = Math.min( halfLifeMarkerX, _xAxisOfGraph.getFullBoundsReference().getMaxX() );
-                }
-            }
-            else {
-                halfLifeMarkerX = this.graphOriginX + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan + halfLife) * this.msToPixelsFactor;
-            }
+            var halfLifeMarkerX = this.getHalfLifeX();
 
             this.halfLifeMarker.x = halfLifeMarkerX;
 
@@ -487,6 +473,12 @@ define(function(require) {
             //         _halfLifeInfinityText.getFullBoundsReference().height * 0.4 );
 
             // _halfLifeInfinityText.setVisible( _model.getHalfLife() == Double.POSITIVE_INFINITY );
+        },
+
+        getHalfLifeX: function() {
+            var halfLife = this.simulation.get('halfLife');
+            var x = this.graphOriginX + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan + halfLife) * this.msToPixelsFactor;
+            return x;
         },
 
         updateTimeSpan: function() {
