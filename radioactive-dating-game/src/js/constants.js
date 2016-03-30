@@ -43,13 +43,42 @@ define(function (require) {
 
     DecayRatesSimulation.MAX_NUCLEI = 1000;
     DecayRatesSimulation.DEFAULT_NUCLEUS_TYPE = NucleusType.CARBON_14;
-    DecayRatesSimulation.INITIAL_WORLD_WIDTH = 800;  // In femtometers
-    DecayRatesSimulation.INITIAL_WORLD_HEIGHT = DecayRatesSimulation.INITIAL_WORLD_WIDTH * 0.4;  // In femtometers
     
     DecayRatesSimulation.PLACEMENT_LOCATION_SEARCH_COUNT = 100;
     DecayRatesSimulation.DEFAULT_MIN_INTER_NUCLEUS_DISTANCE = 10;
 
     Constants.DecayRatesSimulation = DecayRatesSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                       DECAY RATES GRAPH VIEW                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var DecayRatesGraphView = {};
+
+    DecayRatesGraphView.AXIS_LABEL_FONT   = Constants.NucleusDecayChart.AXIS_LABEL_FONT;
+    DecayRatesGraphView.AXIS_LABEL_COLOR  = Constants.NucleusDecayChart.AXIS_LABEL_COLOR;
+    DecayRatesGraphView.AXIS_LINE_WIDTH   = Constants.NucleusDecayChart.AXIS_LINE_WIDTH;
+    DecayRatesGraphView.AXIS_LINE_COLOR   = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayRatesGraphView.TICK_MARK_LENGTH  = Constants.NucleusDecayChart.TICK_MARK_LENGTH;
+    DecayRatesGraphView.TICK_MARK_WIDTH   = Constants.NucleusDecayChart.TICK_MARK_WIDTH;
+    DecayRatesGraphView.TICK_MARK_COLOR   = Constants.NucleusDecayChart.TICK_MARK_COLOR;
+    DecayRatesGraphView.SMALL_LABEL_FONT  = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
+    DecayRatesGraphView.LARGE_LABEL_FONT  = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
+    DecayRatesGraphView.ISOTOPE_FONT_SIZE = Constants.NucleusDecayChart.ISOTOPE_FONT_SIZE;
+
+    DecayRatesGraphView.HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
+    DecayRatesGraphView.HALF_LIFE_LINE_DASHES = Constants.NucleusDecayChart.HALF_LIFE_LINE_DASHES;
+    DecayRatesGraphView.HALF_LIFE_LINE_COLOR  = Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR;
+    DecayRatesGraphView.HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
+
+    DecayRatesGraphView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
+    DecayRatesGraphView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
+    DecayRatesGraphView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
+
+    Constants.DecayRatesGraphView = DecayRatesGraphView;
 
 
     return Constants;

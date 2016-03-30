@@ -16,6 +16,8 @@ define(function(require) {
     var AtomCanisterView               = require('views/atom-canister');
     var SphericalNucleusCollectionView = require('views/spherical-nucleus-collection');
 
+    var DecayRatesGraphView = require('radioactive-dating-game/views/decay-rates-graph');
+
     var Constants = require('constants');
 
     var showNucleusPlacementDebuggingGraphics = false;
@@ -73,11 +75,13 @@ define(function(require) {
                 pixelsPerFemtometer
             );
 
+            var padding = AppView.windowIsShort() ? 12 : 20;
+
             this.simulation.setNucleusBounds(
-                this.mvt.viewToModelX(this.getLeftPadding()),
-                this.mvt.viewToModelY(this.getTopPadding()),
-                this.mvt.viewToModelDeltaX(this.getAvailableWidth()),
-                this.mvt.viewToModelDeltaY(this.getAvailableHeight())
+                this.mvt.viewToModelX(this.getLeftPadding() + padding),
+                this.mvt.viewToModelY(this.getTopPadding() + padding),
+                this.mvt.viewToModelDeltaX(this.getAvailableWidth() - padding * 2),
+                this.mvt.viewToModelDeltaY(this.getAvailableHeight() - padding * 2)
             );
 
             if (showNucleusPlacementDebuggingGraphics) {
@@ -102,6 +106,7 @@ define(function(require) {
             this.initMVT();
             this.initAtomCanister();
             this.initNucleusCollectionView();
+            this.initDecayRatesGraphView();
 
             this.stage.addChild(this.dummyLayer);
         },
@@ -167,11 +172,30 @@ define(function(require) {
             this.nucleusLayer.addChild(this.nucleusCollectionView.displayObject);
         },
 
+        initDecayRatesGraphView: function() {
+            this.decayRatesGraphView = new DecayRatesGraphView({
+                simulation: this.simulation,
+                width: this.getWidthBetweenPanels()
+            });
+
+            if (AppView.windowIsShort()) {
+                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 12;
+                this.decayRatesGraphView.displayObject.y = 12;
+            }
+            else {
+                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 20;
+                this.decayRatesGraphView.displayObject.y = 20;
+            }
+
+            this.stage.addChild(this.decayRatesGraphView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
             
             this.atomCanisterView.update(time, deltaTime, paused);
             this.nucleusCollectionView.update(time, deltaTime, paused);
+            this.decayRatesGraphView.update(time, deltaTime, paused);
         },
 
         resetNuclei: function() {

@@ -22,8 +22,6 @@ define(function (require, exports, module) {
 
     var PLACEMENT_LOCATION_SEARCH_COUNT    = Constants.DecayRatesSimulation.PLACEMENT_LOCATION_SEARCH_COUNT;
     var DEFAULT_MIN_INTER_NUCLEUS_DISTANCE = Constants.DecayRatesSimulation.DEFAULT_MIN_INTER_NUCLEUS_DISTANCE;
-    var INITIAL_WORLD_WIDTH                = Constants.DecayRatesSimulation.INITIAL_WORLD_WIDTH;
-    var INITIAL_WORLD_HEIGHT               = Constants.DecayRatesSimulation.INITIAL_WORLD_HEIGHT;
 
     /**
      * Simulation model for multi-nucleus radioactive-dating-game simulation
