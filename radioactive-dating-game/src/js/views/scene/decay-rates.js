@@ -59,7 +59,7 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 0.5;
+                pixelsPerFemtometer = 0.7;
             }
             else {
                 pixelsPerFemtometer = 1;

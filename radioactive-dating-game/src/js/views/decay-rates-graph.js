@@ -43,7 +43,8 @@ define(function(require) {
                 xAxisLabelText: 'Years',
                 yAxisLabelText: 'Percent of\nElement Remaining',
 
-                timeSpan: DecayRatesGraphView.DEFAULT_TIME_SPAN
+                timeSpan: DecayRatesGraphView.DEFAULT_TIME_SPAN,
+                pieChartRadius: 25
             }, options);
 
             // Required options
@@ -65,6 +66,7 @@ define(function(require) {
             this.bgAlpha        = options.bgAlpha;
             this.xAxisLabelText = options.xAxisLabelText;
             this.yAxisLabelText = options.yAxisLabelText;
+            this.pieChartRadius = options.pieChartRadius;
 
             this.axisLineColor = Colors.parseHex(DecayRatesGraphView.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(DecayRatesGraphView.TICK_MARK_COLOR);
@@ -83,6 +85,7 @@ define(function(require) {
             this.initPanel();
             this.initXAxis();
             this.initYAxis();
+            this.initPieChart();
         },
 
         initPanel: function() {
@@ -146,71 +149,67 @@ define(function(require) {
         },
 
         initYAxis: function() {
-            var isotopeLabelThickness = 46;
+            var tickLabelThickness = 46;
 
             var label = new PIXI.Text(this.yAxisLabelText, {
                 font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
-                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR
+                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR,
+                align: 'center'
             });
             label.resolution = this.getResolution();
-            label.x = this.graphOriginX - isotopeLabelThickness;
+            label.x = this.graphOriginX - tickLabelThickness;
             label.y = this.graphOriginY - this.graphHeight / 2;
             label.anchor.x = 0.5;
             label.anchor.y = 1;
             label.rotation = -Math.PI / 2;
-            this.isotopeLabel = label;
 
             var tickLength = DecayRatesGraphView.TICK_MARK_LENGTH;
-            var isotope1Y = this.graphOriginY - this.graphHeight * 0.8;
-            var isotope2Y = this.graphOriginY - this.graphHeight * 0.2;
-            this.yAxisIsotope1 = new PIXI.Container();
-            this.yAxisIsotope2 = new PIXI.Container();
-            this.yAxisIsotope1.x = this.yAxisIsotope2.x = this.graphOriginX - tickLength * 2;
-            this.yAxisIsotope1.y = isotope1Y;
-            this.yAxisIsotope2.y = isotope2Y;
-
             var yAxisTicks = new PIXI.Graphics();
             yAxisTicks.lineStyle(DecayRatesGraphView.TICK_MARK_WIDTH, this.tickColor, 1);
-            yAxisTicks.moveTo(this.graphOriginX,              isotope1Y);
-            yAxisTicks.lineTo(this.graphOriginX - tickLength, isotope1Y);
-            yAxisTicks.moveTo(this.graphOriginX,              isotope2Y);
-            yAxisTicks.lineTo(this.graphOriginX - tickLength, isotope2Y);
+            // TODO
 
             this.displayObject.addChild(yAxisTicks);
-            this.displayObject.addChild(this.yAxisIsotope1);
-            this.displayObject.addChild(this.yAxisIsotope2);
             this.displayObject.addChild(label);
         },
 
+        initPieChart: function() {
+            var radius = this.pieChartRadius;
 
-        drawHalfLifeHandles: function(graphics, color) {
-            var y = this.graphHeight / 2;
-            var length     = DecayRatesGraphView.HALF_LIFE_ARROW_LENGTH;
-            var tailWidth  = DecayRatesGraphView.HALF_LIFE_ARROW_TAIL_WIDTH;
-            var headWidth  = DecayRatesGraphView.HALF_LIFE_ARROW_HEAD_WIDTH;
-            var headLength = DecayRatesGraphView.HALF_LIFE_ARROW_HEAD_LENGTH;
+            this.pieChartGraphics = new PIXI.Graphics();
+            this.pieChartGraphics.x = 58;
+            this.pieChartGraphics.y = this.graphOriginY - this.graphHeight / 2;
 
-            graphics.beginFill(color, 1);
-            graphics.moveTo(0, 0);
-            graphics.drawArrow(0, y,  length, y, tailWidth, headWidth, headLength);
-            graphics.moveTo(0, 0);
-            graphics.drawArrow(0, y, -length, y, tailWidth, headWidth, headLength);
-            graphics.endFill();
-        },
+            this.isotope1Container = new PIXI.Container();
+            this.isotope2Container = new PIXI.Container();
+            this.isotope1Container.x = this.isotope2Container.x = this.pieChartGraphics.x;
+            this.isotope1Container.y = this.pieChartGraphics.y - radius - 16;
+            this.isotope2Container.y = this.pieChartGraphics.y + radius + 16;
+            
+            var settings = {
+                fill: DecayRatesGraphView.DECAY_LABEL_COLOR,
+                font: DecayRatesGraphView.DECAY_LABEL_FONT
+            };
+            var x = this.pieChartGraphics.x + 6;
 
-        initNucleiView: function() {
-            this.nucleiView = new DecayRatesGraphViewNucleiView({
-                simulation: this.simulation,
-                renderer: this.renderer,
-                height: this.graphHeight,
-                isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
-                isotope2Y: this.yAxisIsotope2.y - this.paddingTop,
-                hideNucleons: this.hideNucleons
-            });
+            this.isotope1Counter = new PIXI.Text('', settings);
+            this.isotope1Counter.resolution = this.getResolution();
+            this.isotope1Counter.x = x;
+            this.isotope1Counter.y = this.isotope1Container.y;
+            this.isotope1Counter.anchor.x = 0;
+            this.isotope1Counter.anchor.y = 0.35;
 
-            this.nucleiView.displayObject.y = this.graphOriginY - this.graphHeight;
+            this.isotope2Counter = new PIXI.Text('', settings);
+            this.isotope2Counter.resolution = this.getResolution();
+            this.isotope2Counter.x = x;
+            this.isotope2Counter.y = this.isotope2Container.y;
+            this.isotope2Counter.anchor.x = 0;
+            this.isotope2Counter.anchor.y = 0.35;
 
-            this.displayObject.addChild(this.nucleiView.displayObject);
+            this.displayObject.addChild(this.pieChartGraphics);
+            this.displayObject.addChild(this.isotope1Container);
+            this.displayObject.addChild(this.isotope2Container);
+            this.displayObject.addChild(this.isotope1Counter);
+            this.displayObject.addChild(this.isotope2Counter);
         },
 
         drawXAxisTicks: function() {
@@ -276,7 +275,7 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            
+            this.updatePieChart();
         },
 
         updateTimeSpan: function() {
@@ -306,11 +305,55 @@ define(function(require) {
             var isotope1Text = IsotopeSymbolGenerator.generateWithElementColor(nucleusType,        DecayRatesGraphView.ISOTOPE_FONT_SIZE, 1);
             var isotope2Text = IsotopeSymbolGenerator.generateWithElementColor(decayedNucleusType, DecayRatesGraphView.ISOTOPE_FONT_SIZE, 1);
             
-            this.yAxisIsotope1.removeChildren();
-            this.yAxisIsotope2.removeChildren();
+            this.isotope1Container.removeChildren();
+            this.isotope2Container.removeChildren();
 
-            this.yAxisIsotope1.addChild(isotope1Text);
-            this.yAxisIsotope2.addChild(isotope2Text);
+            this.isotope1Container.addChild(isotope1Text);
+            this.isotope2Container.addChild(isotope2Text);
+        },
+
+        updatePieChart: function() {
+            var graphics = this.pieChartGraphics;
+            graphics.clear();
+            graphics.lineStyle(1, 0x000000, 1);
+
+            var nucleusType = this.simulation.get('nucleusType');
+
+            var isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
+            var isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(AtomicNucleus.getPostDecayNucleusType(nucleusType)));
+            
+            var radius = this.pieChartRadius;
+            var numActive  = this.simulation.getNumActiveNuclei();
+            var numDecayed = this.simulation.getNumDecayedNuclei();
+            var decayedAngle = Math.PI * 2 * (numDecayed / (numActive + numDecayed));
+
+            graphics.beginFill(isotope1Color, 1);
+            graphics.drawCircle(0, 0, radius);
+            graphics.endFill();
+
+            if (numDecayed > 0) {
+                if (numActive === 0)
+                    graphics.lineStyle(0, 0, 0);
+
+                graphics.beginFill(isotope2Color, 1);
+                graphics.moveTo(0, 0);
+                graphics.lineTo(radius, 0);
+                graphics.arc(0, 0, radius, 0, decayedAngle);
+                graphics.lineTo(0, 0);
+                graphics.endFill();
+
+                if (numActive > 0) {
+                    graphics.moveTo(0, 0);
+                    graphics.lineTo(radius, 0);     
+                }
+
+                graphics.lineStyle(1, 0x000000, 1);
+                graphics.moveTo(0, 0);
+                graphics.drawCircle(0, 0, radius);   
+            }
+
+            this.isotope1Counter.text = numActive;
+            this.isotope2Counter.text = numDecayed;
         },
 
         setTimeSpan: function(timeSpan) {
