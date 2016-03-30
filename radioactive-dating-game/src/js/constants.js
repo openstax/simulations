@@ -33,6 +33,24 @@ define(function (require) {
     Constants.HalfLifeSimulation = HalfLifeSimulation;
 
 
+    /*************************************************************************
+     **                                                                     **
+     **                        HALF-LIFE SIMULATION                         **
+     **                                                                     **
+     *************************************************************************/
+
+    var DecayRatesSimulation = {};
+
+    DecayRatesSimulation.MAX_NUCLEI = 1000;
+    DecayRatesSimulation.DEFAULT_NUCLEUS_TYPE = NucleusType.CARBON_14;
+    DecayRatesSimulation.INITIAL_WORLD_WIDTH = 800;  // In femtometers
+    DecayRatesSimulation.INITIAL_WORLD_HEIGHT = DecayRatesSimulation.INITIAL_WORLD_WIDTH * 0.4;  // In femtometers
+    
+    DecayRatesSimulation.PLACEMENT_LOCATION_SEARCH_COUNT = 100;
+    DecayRatesSimulation.DEFAULT_MIN_INTER_NUCLEUS_DISTANCE = 10;
+
+    Constants.DecayRatesSimulation = DecayRatesSimulation;
+
 
     return Constants;
 });

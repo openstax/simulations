@@ -47,8 +47,6 @@ define(function(require) {
                 self.resetNuclei();
             });
 
-            this.$canisterSliderWrapper = $('<div class="canister-slider-wrapper">');
-
             this.$ui.append(this.$resetButton);
             this.$ui.append(this.$canisterSliderWrapper);
         },
@@ -136,6 +134,7 @@ define(function(require) {
                 dummyLayer: this.dummyLayer,
                 renderer: this.renderer,
                 draggingEnabled: false,
+                sliderEnabled: true,
                 preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
                 hideNucleons: true,
@@ -145,26 +144,10 @@ define(function(require) {
             this.atomCanisterView.displayObject.x = canisterX;
             this.atomCanisterView.displayObject.y = canisterY;
 
-            // Position the bucket buttons underneath
-            var top = this.atomCanisterView.displayObject.y + 140;
-            this.$canisterSliderWrapper.css('top', top + 'px');
-
-            if (AppView.windowIsShort()) {
-                var left = this.atomCanisterView.displayObject.x;
-                this.$canisterSliderWrapper.css('left', left + 'px'); 
-            }
-            else {
-                var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width;
-                this.$canisterSliderWrapper.css('right', right + 'px');    
-            }
-
             // Calculate the bounds of the areas to be avoided when placing atoms
-            var buttonHeight = this.$canisterSliderWrapper.find('button').height();
             var resetButtonPos = this.$resetButton.position();
-            var bucketButtonsRect = new Rectangle(canisterX, top, this.atomCanisterView.width, buttonHeight);
             var resetButtonRect = new Rectangle(resetButtonPos.left, resetButtonPos.top, canisterWidth, 46);
             this.atomCanisterView.setAreasToAvoid([
-                bucketButtonsRect,
                 resetButtonRect
             ]);
 

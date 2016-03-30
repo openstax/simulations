@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView           = require('common/v3/pixi/view');
+    var SliderView         = require('common/v3/pixi/view/slider');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -53,6 +54,7 @@ define(function(require) {
 
                 showHints: true,
                 draggingEnabled: true,
+                sliderEnabled: false,
                 hideNucleons: false,
                 numberOfAtomsToShow: 3,
                 atomScale: 8,
@@ -81,6 +83,7 @@ define(function(require) {
             this.showHints = options.showHints;
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
+            this.sliderEnabled = options.sliderEnabled;
             this.hideNucleons = options.hideNucleons;
             this.numberOfAtomsToShow = options.numberOfAtomsToShow;
 
@@ -119,12 +122,14 @@ define(function(require) {
             this.initSprites();
             this.initDecorativeDummyObjects();
             this.initLabel();
+            if (this.sliderEnabled)
+                this.initSlider();
 
             this.updateMVT(this.mvt);
         },
 
         initSprites: function() {
-            var fg = Assets.createSprite(Assets.Images.CANISTER_FG);
+            var fg = Assets.createSprite(this.sliderEnabled ? Assets.Images.CANISTER_SLIDER_FG : Assets.Images.CANISTER_FG);
             var bg = Assets.createSprite(Assets.Images.CANISTER_BG);
             var glow = Assets.createSprite(Assets.Images.CANISTER_GLOW);
             var drag = Assets.createSprite(Assets.Images.CANISTER_DRAG);
@@ -186,6 +191,33 @@ define(function(require) {
             label.y = this.thickness;
 
             this.displayObject.addChild(label);
+        },
+
+        initSlider: function() {
+            var width = Math.floor(this.width * (260 / 320));
+
+            // Create the slider view
+            this.sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: Constants.DecayRatesSimulation.MAX_NUCLEI
+                },
+
+                width: width,
+
+                backgroundHeight: 2,
+                backgroundColor: '#000',
+                backgroundAlpha: 0.6,
+
+                handleSize: 14
+            });
+            this.sliderView.displayObject.x = (this.width - width) / 2;
+            this.sliderView.displayObject.y = (212 / 260) * this.height;
+            this.foregroundLayer.addChild(this.sliderView.displayObject);
+
+            // Bind events
+            this.listenTo(this.sliderView, 'slide', this.slide);
         },
 
         drawDecorativeDummyObjects: function() {
@@ -520,6 +552,10 @@ define(function(require) {
 
         nucleusTypeChanged: function() {
             this.drawDecorativeDummyObjects();
+        },
+
+        slide: function(value, prev) {
+
         }
 
     }, Constants.AtomCanisterView);
