@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed; r.js -convert node_modules/object-pool node_modules/object-pool-shimmed",
+    "postinstall": "r.js -convert node_modules/vector2-node node_modules/vector2-node-shimmed r.js -convert node_modules/object-pool node_modules/object-pool-shimmed; r.js -convert node_modules/point-in-polygon node_modules/point-in-polygon-shimmed",
     "prepublish": "bower install",
     "test": "grunt test"
   },
@@ -41,6 +41,7 @@
     "less": "^1.7.4",
     "matchdep": "^0.3.0",
     "object-pool": "^0.1.0",
+    "point-in-polygon": "^1.0.0",
     "requirejs": "^2.1.15",
     "underscore": "^1.7.0",
     "vector2-node": "0.0.3"

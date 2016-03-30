@@ -68,6 +68,10 @@ define(function (require) {
             OUTLINE_LINE_DASH: [ 2, 3 ],
             OUTLINE_STROKE_COLOR: 0XFFFFFF,
             ELECTRON_ANGULAR_SPEED: 0.75
+        },
+
+        PuddingView: {
+            ELECTRON_COUNT: 79
         }
     };
 
