@@ -40,7 +40,6 @@ define(function(require) {
                 bgColor: '#B1DDFF',
                 bgAlpha: 1,
 
-                xAxisLabelText: 'Years',
                 yAxisLabelText: 'Percent of\nElement Remaining',
 
                 timeSpan: DecayRatesGraphView.DEFAULT_TIME_SPAN,
@@ -64,7 +63,6 @@ define(function(require) {
             this.graphOriginY   = this.height - this.paddingBottom;
             this.bgColor        = Colors.parseHex(options.bgColor);
             this.bgAlpha        = options.bgAlpha;
-            this.xAxisLabelText = options.xAxisLabelText;
             this.yAxisLabelText = options.yAxisLabelText;
             this.pieChartRadius = options.pieChartRadius;
 
@@ -121,31 +119,42 @@ define(function(require) {
             // Draw axis line
             var axisLine = new PIXI.Graphics();
             axisLine.lineStyle(DecayRatesGraphView.AXIS_LINE_WIDTH, this.axisLineColor, 1);
-            axisLine.drawStickArrow(
-                this.graphOriginX,                   this.graphOriginY,
-                this.graphOriginX + this.graphWidth, this.graphOriginY,
-                8, 6
-            );
+            axisLine.moveTo(this.graphOriginX,                   this.graphOriginY);
+            axisLine.lineTo(this.graphOriginX + this.graphWidth, this.graphOriginY);
 
-            // Create axis label
-            var label = new PIXI.Text(this.xAxisLabelText, {
+            // Create bottom axis label (time)
+            var yOffset = 16;
+            var bottomAxisLabel = new PIXI.Text('Years', {
                 font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
                 fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR
             });
-            label.resolution = this.getResolution();
-            label.x = this.graphOriginX;
-            label.y = this.graphOriginY + 14;
-            this.xAxisLabel = label;
+            bottomAxisLabel.resolution = this.getResolution();
+            bottomAxisLabel.x = this.graphOriginX + this.graphWidth / 2;
+            bottomAxisLabel.y = this.graphOriginY + yOffset;
+            bottomAxisLabel.anchor.x = 0.5;
+            this.timeAxisLabel = bottomAxisLabel;
 
             // Create ticks
             this.xAxisTicks = new PIXI.Graphics();
             this.xAxisTickLabels = new PIXI.Container();
 
+            // Create top axis label (half lives)
+            var topAxisLabel = new PIXI.Text('Half-Lives', {
+                font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
+                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR
+            });
+            topAxisLabel.resolution = this.getResolution();
+            topAxisLabel.x = this.graphOriginX + this.graphWidth / 2;
+            topAxisLabel.y = this.graphOriginY - this.graphHeight - yOffset;
+            topAxisLabel.anchor.x = 0.5;
+            topAxisLabel.anchor.y = 1;
+
             // Add everything
             this.displayObject.addChild(axisLine);
             this.displayObject.addChild(this.xAxisTicks);
             this.displayObject.addChild(this.xAxisTickLabels);
-            this.displayObject.addChild(label);
+            this.displayObject.addChild(bottomAxisLabel);
+            this.displayObject.addChild(topAxisLabel);
         },
 
         initYAxis: function() {
@@ -163,12 +172,34 @@ define(function(require) {
             label.anchor.y = 1;
             label.rotation = -Math.PI / 2;
 
-            var tickLength = DecayRatesGraphView.TICK_MARK_LENGTH;
-            var yAxisTicks = new PIXI.Graphics();
-            yAxisTicks.lineStyle(DecayRatesGraphView.TICK_MARK_WIDTH, this.tickColor, 1);
-            // TODO
+            // Draw axis line, border, and y-tick lines
+            var graphics = new PIXI.Graphics();
+            graphics.lineStyle(DecayRatesGraphView.BORDER_WIDTH, Colors.parseHex(DecayRatesGraphView.BORDER_COLOR), DecayRatesGraphView.BORDER_ALPHA);
+            graphics.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
 
-            this.displayObject.addChild(yAxisTicks);
+            graphics.lineStyle(DecayRatesGraphView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayRatesGraphView.Y_VALUE_LINE_COLOR), DecayRatesGraphView.Y_VALUE_LINE_ALPHA);
+            for (var p = 0.25; p <= 1; p += 0.25) {
+                var y = this.graphOriginY - p * this.graphHeight;
+
+                if (p < 1) {
+                    graphics.moveTo(this.graphOriginX, y);
+                    graphics.lineTo(this.graphOriginX + this.graphWidth, y);    
+                }
+
+                var tickLabel = new PIXI.Text(Math.round(p * 100) + '%', {
+                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                    fill: this.tickColor
+                });
+                tickLabel.x = this.graphOriginX - 4;
+                tickLabel.y = y;
+                tickLabel.anchor.x = 1;
+                tickLabel.anchor.y = 0.5;
+                tickLabel.resolution = this.getResolution();
+
+                this.displayObject.addChild(tickLabel);
+            }
+
+            this.displayObject.addChild(graphics);
             this.displayObject.addChild(label);
         },
 
