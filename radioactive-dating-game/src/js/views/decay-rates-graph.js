@@ -178,29 +178,18 @@ define(function(require) {
             graphics.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
 
             graphics.lineStyle(DecayRatesGraphView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayRatesGraphView.Y_VALUE_LINE_COLOR), DecayRatesGraphView.Y_VALUE_LINE_ALPHA);
-            for (var p = 0.25; p <= 1; p += 0.25) {
+            for (var p = 0.25; p <= 0.75; p += 0.25) {
                 var y = this.graphOriginY - p * this.graphHeight;
 
-                if (p < 1) {
-                    graphics.moveTo(this.graphOriginX, y);
-                    graphics.lineTo(this.graphOriginX + this.graphWidth, y);    
-                }
-
-                var tickLabel = new PIXI.Text(Math.round(p * 100) + '%', {
-                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
-                    fill: this.tickColor
-                });
-                tickLabel.x = this.graphOriginX - 4;
-                tickLabel.y = y;
-                tickLabel.anchor.x = 1;
-                tickLabel.anchor.y = 0.5;
-                tickLabel.resolution = this.getResolution();
-
-                this.displayObject.addChild(tickLabel);
+                graphics.moveTo(this.graphOriginX, y);
+                graphics.lineTo(this.graphOriginX + this.graphWidth, y);    
             }
+
+            this.yAxisLabels = new PIXI.Container();
 
             this.displayObject.addChild(graphics);
             this.displayObject.addChild(label);
+            this.displayObject.addChild(this.yAxisLabels);
         },
 
         initPieChart: function() {
@@ -244,6 +233,7 @@ define(function(require) {
         },
 
         drawXAxisTicks: function() {
+            // Remove the existing tick marks and labels.
             this.xAxisTicks.clear();
             this.xAxisTicks.lineStyle(DecayRatesGraphView.TICK_MARK_WIDTH, this.tickColor, 1);
             this.xAxisTickLabels.removeChildren();
@@ -251,45 +241,64 @@ define(function(require) {
             var numTickMarks;
             var i;
 
-            if (this.timeSpan < 10000) {
-                // Tick marks are 1 second apart.
-                numTickMarks = Math.floor(this.timeSpan / 1000);
+            // Draw the new ones
+            if (this.timeSpan < HalfLifeInfo.convertYearsToMs(100000)) {
+                // Tick marks are 5000 yrs apart.  This is generally used for
+                // the Carbon 14 range.
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(5000)) + 1;
 
                 for (i = 0; i < numTickMarks; i++)
-                    this.drawXAxisTick(i * 1000, '' + i);
+                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(5000), (i * 5000).toFixed(0));
             }
-            else if (this.timeSpan < HalfLifeInfo.convertYearsToMs(100)) {
-                // Tick marks are 10 yrs apart.
-                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(10) + 1);
+            else if (this.timeSpan < HalfLifeInfo.convertYearsToMs(1E6)) {
+                // Tick marks are 100000 yrs apart.
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(100000)) + 1;
 
                 for (i = 0; i < numTickMarks; i++)
-                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(10), '' + i * 10);
+                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(100000), (i * 100000).toFixed(0));
+            }
+            else if (this.timeSpan < HalfLifeInfo.convertYearsToMs(10E6)) {
+                // Tick marks are 1 million years apart.
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(1E6)) + 1;
+
+                for (i = 0; i < numTickMarks; i++)
+                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(1E6), i.toFixed(1));
+            }
+            else if (this.timeSpan < HalfLifeInfo.convertYearsToMs(100E6)) {
+                // Tick marks are 10 million years apart.
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(10E6)) + 1;
+
+                for (i = 0; i < numTickMarks; i++)
+                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(10E6), (i * 10).toFixed(1));
             }
             else if (this.timeSpan < HalfLifeInfo.convertYearsToMs(1E9)) {
-                // Tick marks are 5000 yrs apart.  This is generally used for
-                //   the Carbon 14 range.
-                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(5000) + 1);
+                // Tick marks are 100 million years apart.
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(100E6)) + 1;
 
                 for (i = 0; i < numTickMarks; i++)
-                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(5000), '' + i * 5000);
+                    this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(100E6), (i * 100).toFixed(0));
             }
             else {
                 // Space the tick marks four billion years apart.
-                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(4E9) + 1);
+                numTickMarks = Math.floor(this.timeSpan / HalfLifeInfo.convertYearsToMs(4E9)) + 1;
 
                 for (i = 0; i < numTickMarks; i++)
                     this.drawXAxisTick(i * HalfLifeInfo.convertYearsToMs(4E9), (i * 4).toFixed(1));
             }
+
+            // Update the label for the lower X axis.
+            this.timeAxisLabel.text = this.getXAxisUnitsText();
         },
 
         drawXAxisTick: function(time, labelText) {
-            var timeZeroPosX = this.graphOriginX + this.getTimeZeroXOffset();
             var y = this.graphOriginY;
-            var x = timeZeroPosX + (time * this.msToPixelsFactor);
+            var x = this.graphOriginX + time * this.msToPixelsFactor;
             var length = DecayRatesGraphView.TICK_MARK_LENGTH;
             
-            this.xAxisTicks.moveTo(x, y);
-            this.xAxisTicks.lineTo(x, y - length);
+            if (time > 0) {
+                this.xAxisTicks.moveTo(x, y);
+                this.xAxisTicks.lineTo(x, y - length);   
+            }
 
             var label = new PIXI.Text(labelText, {
                 font: DecayRatesGraphView.SMALL_LABEL_FONT,
@@ -305,28 +314,35 @@ define(function(require) {
             this.xAxisTickLabels.addChild(label);
         },
 
+        drawYAxisLabels: function() {
+            this.yAxisLabels.removeChildren();
+
+            for (var p = 0.25; p <= 1; p += 0.25) {
+                var y = this.graphOriginY - p * this.graphHeight;
+                var text = Math.round(p * 100) + '%';
+                var tickLabel = new PIXI.Text(text, {
+                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                    fill: this.tickColor
+                });
+                tickLabel.x = this.graphOriginX - 4;
+                tickLabel.y = y;
+                tickLabel.anchor.x = 1;
+                tickLabel.anchor.y = 0.5;
+                tickLabel.resolution = this.getResolution();
+
+                this.yAxisLabels.addChild(tickLabel);
+            }
+        },
+
         update: function(time, deltaTime, paused) {
             this.updatePieChart();
         },
 
         updateTimeSpan: function() {
-            var nucleusType = this.simulation.get('nucleusType');
-
             // Set the time span of the chart based on the nucleus type.
-            switch (nucleusType) {
-                case NucleusType.HEAVY_CUSTOM:
-                    this.setTimeSpan(5000); // Set the chart for five seconds of real time.
-                    break;
-                case NucleusType.CARBON_14:
-                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 2.6);
-                    break;
-                case NucleusType.HYDROGEN_3:
-                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 3.2);
-                    break;
-                default:
-                    this.setTimeSpan(HalfLifeInfo.getHalfLifeForNucleusType(nucleusType) * 2.5);
-                    break;
-            }
+            var nucleusType = this.simulation.get('nucleusType');
+            var halfLife = HalfLifeInfo.getHalfLifeForNucleusType(nucleusType);
+            this.setTimeParameters(halfLife * 3.2, halfLife);
         },
 
         updateIsotopes: function() {
@@ -387,19 +403,49 @@ define(function(require) {
             this.isotope2Counter.text = numDecayed;
         },
 
-        setTimeSpan: function(timeSpan) {
-            this.timeSpan = timeSpan;
-            this.msToPixelsFactor = ((this.width - this.paddingLeft - this.paddingRight) * 0.98) / this.timeSpan;
-
+        /**
+         * Redraw the chart based on the current state.  This is basically the
+         *   place where the chart gets laid out.
+         */
+        updateLayout: function() {
             this.drawXAxisTicks();
+            this.drawYAxisLabels();
         },
 
-        getTimeZeroXOffset: function() {
-            return DecayRatesGraphView.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan * this.msToPixelsFactor;
+        /**
+         * Set the time parameters for the graph.  These are set at the same time
+         *   to avoid problems that can emerge if the two values are at very
+         *   different scales the methods for layout out the chart are called.
+         *
+         * @param totalTimeSpan - Total time period covered by chart.
+         * @param halfLife      - Half life of the element being represented.
+         */
+        setTimeParameters: function(totalTimeSpan, halfLife) {
+            this.timeSpan = totalTimeSpan;
+            this.halfLife = halfLife;
+            this.msToPixelsFactor = this.graphWidth / this.timeSpan;
+            this.updateLayout();
         },
 
         getSampleNucleus: function() {
             return this.simulation.createNucleus();
+        },
+
+        /**
+         * Get the units string for the x axis label.  Note that this does not
+         * handle all ranges of time.  Feel free to add new ranges as needed.
+         */
+        getXAxisUnitsText: function() {
+            var unitsText;
+
+            if (this.timeSpan > HalfLifeInfo.convertYearsToMs(1E9))
+                unitsText = 'Billion Years';
+            else if (this.timeSpan > HalfLifeInfo.convertYearsToMs(1E6))
+                unitsText = 'Million Years';
+            else
+                unitsText = 'Years';
+
+            return unitsText;
         },
 
         nucleusTypeChanged: function(simulation, nucleusType) {
