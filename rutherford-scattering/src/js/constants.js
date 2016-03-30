@@ -63,7 +63,7 @@ define(function (require) {
             RAY_HEIGHT: 0.75
         },
 
-        AtomNodeView: {
+        AtomView: {
             OUTLINE_LINE_WIDTH: 1.5,
             OUTLINE_LINE_DASH: [ 2, 3 ],
             OUTLINE_STROKE_COLOR: 0XFFFFFF,
@@ -71,7 +71,7 @@ define(function (require) {
         }
     };
 
-    RSConstants.AtomNodeModel = {
+    RSConstants.AtomModel = {
         MIN_NUCLEUS_RADIUS: 14,
         MIN_PARTICLE_COUNT: RSConstants.MIN_PROTON_COUNT + RSConstants.MIN_NEUTRON_COUNT,
         MAX_PARTICLE_COUNT: RSConstants.MAX_PROTON_COUNT + RSConstants.MAX_NEUTRON_COUNT,

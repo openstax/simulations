@@ -18,7 +18,7 @@ define(function(require) {
      *
      */
     var PlumPuddingSceneView = RutherfordScatteringSceneView.extend({
-        initAtomNodeView: function() {
+        initAtomView: function() {
             this.atomNodeView = new PlumPuddingView({
                 mvt: this.mvt,
                 particleMVT: this.particleMVT,

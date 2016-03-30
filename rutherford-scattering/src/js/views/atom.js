@@ -14,10 +14,10 @@ define(function(require) {
     /**
      * A view that represents an electron
      */
-    var AtomNodeView = PixiView.extend({
+    var AtomView = PixiView.extend({
 
         /**
-         * Initializes the new AtomNodeView.
+         * Initializes the new AtomView.
          */
         initialize: function(options) {
             this.mvt = options.mvt;
@@ -29,7 +29,7 @@ define(function(require) {
 
             this.initGraphics();
 
-            this.listenTo(this.model, 'change:radius change:hold', this.updateAtomNode);
+            this.listenTo(this.model, 'change:radius change:hold', this.updateAtom);
         },
 
         /**
@@ -59,14 +59,14 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
-            this.updateAtomNode();
+            this.updateAtom();
         },
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.drawElectron(deltaTime);
         },
 
-        updateAtomNode: function(){
+        updateAtom: function(){
             if(this.model.get('hold')){
                 this.drawSimple();
             } else {
@@ -81,8 +81,8 @@ define(function(require) {
             this.nucleusBoundary.lineStyle(1, 0XFFFFFF, 0.5);
 
             this.nucleusBoundary.drawCircle(
-                this.mvt.modelToViewX(AtomNodeView.center.x),
-                this.mvt.modelToViewY(AtomNodeView.center.y),
+                this.mvt.modelToViewX(AtomView.center.x),
+                this.mvt.modelToViewY(AtomView.center.y),
                 this.model.get('radius')
             );
         },
@@ -124,10 +124,11 @@ define(function(require) {
                     this.nucleus.addChild(newNeutron);
                 }
             }
+
         },
 
         initElectron: function() {
-            var atomCenter = _.clone(this.mvt.modelToView(AtomNodeView.center));
+            var atomCenter = _.clone(this.mvt.modelToView(AtomView.center));
 
             this.boundDiagonal = this.boundWidth * this.scale * Math.sqrt(2);
             this.electronOrbitRadius = 0.9 * this.boundDiagonal / 2;
@@ -141,7 +142,7 @@ define(function(require) {
             );
 
             this.electron = ParticleGraphicsGenerator.generateElectron(this.particleMVT);
-            this.electron.x = this.mvt.modelToViewX(AtomNodeView.center.x + this.electronOrbitRadius/this.scale);
+            this.electron.x = this.mvt.modelToViewX(AtomView.center.x + this.electronOrbitRadius/this.scale);
             this.electron.y = atomCenter.y;
 
             this.electronContainer = new PIXI.Container();
@@ -158,21 +159,21 @@ define(function(require) {
 
         drawElectron: function(deltaTime) {
             // Advance the electron along its orbit
-            var deltaAngle = deltaTime * AtomNodeView.ELECTRON_ANGULAR_SPEED;
+            var deltaAngle = deltaTime * AtomView.ELECTRON_ANGULAR_SPEED;
             this.electronContainer.rotation += deltaAngle;
         },
 
         getRandomPointWithinRadius: function(radius) {
             var delta = radius * Math.sqrt( Math.random() ); // random from center distance
             var theta = 2 * Math.PI * Math.random(); // random angle around center
-            var x = ( AtomNodeView.center.x ) + ( delta * Math.cos( theta ) );
-            var y = ( AtomNodeView.center.y ) + ( delta * Math.sin( theta ) );
+            var x = ( AtomView.center.x ) + ( delta * Math.cos( theta ) );
+            var y = ( AtomView.center.y ) + ( delta * Math.sin( theta ) );
 
             return this.mvt.modelToView({x: x, y: y});
         }
 
-    }, _.extend({center: {x: 0, y: 0}}, Constants.AtomNodeView));
+    }, _.extend({center: {x: 0, y: 0}}, Constants.AtomView));
 
 
-    return AtomNodeView;
+    return AtomView;
 });

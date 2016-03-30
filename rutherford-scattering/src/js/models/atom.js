@@ -4,9 +4,9 @@ define(function (require) {
 
     var Backbone = require('backbone');
     var Constants = require('constants');
-    var C = Constants.AtomNodeModel.MIN_NUCLEUS_RADIUS / Math.pow( Constants.AtomNodeModel.MIN_PARTICLE_COUNT, Constants.AtomNodeModel.PARTICLE_COUNT_EXP );
+    var C = Constants.AtomModel.MIN_NUCLEUS_RADIUS / Math.pow( Constants.AtomModel.MIN_PARTICLE_COUNT, Constants.AtomModel.PARTICLE_COUNT_EXP );
 
-    var AtomNode = Backbone.Model.extend({
+    var Atom = Backbone.Model.extend({
 
         defaults: {
             protonCount: Constants.DEFAULT_PROTON_COUNT,
@@ -24,7 +24,7 @@ define(function (require) {
             var neutronCount = simulation.get('neutronCount');
 
             var currentParticles = protonCount + neutronCount;
-            var radius = C * Math.pow( currentParticles, Constants.AtomNodeModel.PARTICLE_COUNT_EXP );
+            var radius = C * Math.pow( currentParticles, Constants.AtomModel.PARTICLE_COUNT_EXP );
 
             this.set({
                 protonCount: protonCount,
@@ -35,5 +35,5 @@ define(function (require) {
 
     });
 
-    return AtomNode;
+    return Atom;
 });
