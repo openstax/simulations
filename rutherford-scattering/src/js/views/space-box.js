@@ -79,7 +79,7 @@ define(function(require) {
             var boxCorner = this.mvt.modelToView({
                 x: - boxWidth/2,
                 y: boxWidth/2
-            });
+            }).clone();
 
             box.drawRect(boxCorner.x, boxCorner.y, boxWidth * this.scale, boxWidth * this.scale);
         },

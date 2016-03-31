@@ -127,7 +127,7 @@ define(function(require) {
         },
 
         initElectron: function() {
-            var atomCenter = _.clone(this.mvt.modelToView(AtomView.center));
+            var atomCenter = this.mvt.modelToView(AtomView.center).clone();
 
             this.boundDiagonal = this.boundWidth * this.scale * Math.sqrt(2);
             this.electronOrbitRadius = 0.9 * this.boundDiagonal / 2;
@@ -168,7 +168,7 @@ define(function(require) {
             var x = ( AtomView.center.x ) + ( delta * Math.cos( theta ) );
             var y = ( AtomView.center.y ) + ( delta * Math.sin( theta ) );
 
-            return this.mvt.modelToView({x: x, y: y});
+            return this.mvt.modelToView({x: x, y: y}).clone();
         }
 
     }, _.extend({center: {x: 0, y: 0}}, Constants.AtomView));
