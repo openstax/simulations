@@ -78,6 +78,7 @@ define(function(require) {
             // Initialize the graphics
             this.initGraphics();
 
+            this.listenTo(this.simulation, 'change:active',      this.activeChanged);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
             this.nucleusTypeChanged(this.simulation, this.simulation.get('nucleusType'));
         },
@@ -256,7 +257,15 @@ define(function(require) {
 
             this.dataGraphics = new PIXI.Graphics();
 
+            var mask = new PIXI.Graphics();
+            mask.beginFill();
+            mask.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
+            mask.endFill();
+
+            this.dataGraphics.mask = mask;
+
             this.displayObject.addChild(this.dataGraphics);
+            this.displayObject.addChild(mask);
         },
 
         drawXAxisTicks: function() {
@@ -566,6 +575,11 @@ define(function(require) {
         nucleusTypeChanged: function(simulation, nucleusType) {
             this.updateTimeSpan();
             this.updateIsotopes();
+        },
+
+        activeChanged: function(simulation, active) {
+            if (active)
+                this.dataGraphics.clear();
         }
 
     }, Constants.DecayRatesGraphView);
