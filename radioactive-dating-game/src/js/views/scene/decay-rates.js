@@ -96,8 +96,8 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.canisterLayer = new PIXI.Container();
             this.nucleusLayer = new PIXI.Container();
+            this.canisterLayer = new PIXI.Container();
             this.dummyLayer = new PIXI.Container();
 
             this.stage.addChild(this.canisterLayer);
