@@ -11,6 +11,7 @@ define(function(require) {
     var Constants = require('constants');
 
     var ParticleGraphicsGenerator = require('views/particle-graphics-generator');
+    var PUDDING_FOOTPRINT = [[-86.25, 78.75], [88.75, 78.75], [121.25, -6.875], [137.5, -92.5], [-137.5, -92.5], [-121.25, -6.875]];
 
     /**
      * A view that represents an electron
@@ -53,24 +54,23 @@ define(function(require) {
         },
 
         drawElectron: function(){
-            var polygon = [[292, 136], [572, 136], [624, 273], [650, 410], [210, 410], [236, 273]];
-            var randomPt = this.makeRandomPointInBounds();
+            var randomPt = this.makeRandomPointInBounds(PUDDING_FOOTPRINT);
 
-            if(insidePolygon([randomPt.x, randomPt.y], polygon)){
+            if(insidePolygon([randomPt.x, randomPt.y], PUDDING_FOOTPRINT)){
                 var electron = ParticleGraphicsGenerator.generateElectron(this.particleMVT);
-                electron.x = randomPt.x;
-                electron.y = randomPt.y;
+                electron.x = this.mvt.modelToViewX(randomPt.x);
+                electron.y = this.mvt.modelToViewY(randomPt.y);
 
                 this.electrons.addChild(electron);
             }
         },
 
-        makeRandomPointInBounds: function(){
-            var randomY = [136, 410];
-            var randomX = [210, 650];
+        makeRandomPointInBounds: function(bounds){
+            var xValues = _.pluck(bounds, '0');
+            var yValues = _.pluck(bounds, '1');
 
-            var x = _.random(randomX[0], randomX[1]);
-            var y = _.random(randomY[0], randomY[1]);
+            var x = _.random(_.min(xValues), _.max(xValues));
+            var y = _.random(_.min(yValues), _.max(yValues));
 
             return {x: x, y: y};
         },
