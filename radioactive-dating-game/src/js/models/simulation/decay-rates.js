@@ -31,7 +31,8 @@ define(function (require, exports, module) {
         defaults: _.extend({}, MultiNucleusDecaySimulation.prototype.defaults, {
             nucleusType: Constants.DecayRatesSimulation.DEFAULT_NUCLEUS_TYPE,
             maxNuclei:   Constants.DecayRatesSimulation.MAX_NUCLEI,
-            jitterEnabled: false
+            jitterEnabled: false,
+            active: true
         }),
 
         /**
@@ -77,6 +78,23 @@ define(function (require, exports, module) {
         },
 
         triggerNucleusChange: function(nucleus, byProducts) {},
+
+        /**
+         * Reset the time back to 0 and resets decay for all nuclei.
+         */
+        resetNuclei: function() {
+            this.time = 0;
+
+            for (var i = 0; i < this.atomicNuclei.length; i++) {
+                this.atomicNuclei.at(i).reset();
+            }
+        },
+
+        activateNuclei: function() {
+            for (var i = 0; i < this.atomicNuclei.length; i++) {
+                this.atomicNuclei.at(i).activateDecay(0);
+            }
+        },
 
         addNewNucleus: function(){
             var x;
@@ -159,9 +177,11 @@ define(function (require, exports, module) {
             newNucleus.setPosition(x, y);
             
             this.atomicNuclei.add(newNucleus);
+        },
 
-            // Just activate it, because it's already where we want it
-            newNucleus.activateDecay(this.time);
+        _update: function(time, deltaTime) {
+            if (this.get('active'))
+                MultiNucleusDecaySimulation.prototype._update.apply(this, arguments);
         },
 
         /**

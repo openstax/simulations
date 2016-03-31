@@ -218,6 +218,7 @@ define(function(require) {
 
             // Bind events
             this.listenTo(this.sliderView, 'slide', this.slide);
+            this.listenTo(this.sliderView, 'set', this.slideEnd);
         },
 
         drawDecorativeDummyObjects: function() {
@@ -555,16 +556,23 @@ define(function(require) {
         },
 
         slide: function(value, prev) {
+            this.simulation.set('active', false);
+            this.simulation.resetNuclei();
+
             if (value > this.simulation.getTotalNumNuclei()) {
-                while (value > this.simulation.getTotalNumNuclei()) {
+                while (value > this.simulation.getTotalNumNuclei())
                     this.simulation.addNewNucleus();
-                }
             }
             else if (value < this.simulation.getTotalNumNuclei()) {
-                while (value < this.simulation.getTotalNumNuclei()) {
+                while (value < this.simulation.getTotalNumNuclei())
                     this.simulation.removeRandomNucleus();
-                }
             }
+        },
+
+        slideEnd: function() {
+            this.simulation.set('active', true);
+            this.simulation.resetNuclei();
+            this.simulation.activateNuclei();
         }
 
     }, Constants.AtomCanisterView);

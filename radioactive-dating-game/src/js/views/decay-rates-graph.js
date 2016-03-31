@@ -440,8 +440,13 @@ define(function(require) {
         update: function(time, deltaTime, paused) {
             this.updatePieChart();
 
-            if (this.simulation.getTotalNumNuclei() > 0)
+            if (this._lastNucleusCount !== this.simulation.getTotalNumNuclei())
+                this.dataGraphics.clear();
+            
+            if (this.simulation.getTotalNumNuclei() > 0 && this.simulation.get('active'))
                 this.drawCurrentGraphData();
+
+            this._lastNucleusCount = this.simulation.getTotalNumNuclei();  
         },
 
         updateTimeSpan: function() {
