@@ -553,6 +553,8 @@ define(function(require) {
 
         nucleusTypeChanged: function() {
             this.drawDecorativeDummyObjects();
+            if (this.sliderEnabled)
+                this.sliderView.val(0);
         },
 
         slide: function(value, prev) {
