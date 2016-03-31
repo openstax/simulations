@@ -80,6 +80,7 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'change:active',      this.activeChanged);
             this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
+            this.listenTo(this.simulation, 'nuclei-reset',       this.nucleiReset);
             this.nucleusTypeChanged(this.simulation, this.simulation.get('nucleusType'));
         },
 
@@ -580,6 +581,10 @@ define(function(require) {
         activeChanged: function(simulation, active) {
             if (active)
                 this.dataGraphics.clear();
+        },
+
+        nucleiReset: function() {
+            this.dataGraphics.clear();
         }
 
     }, Constants.DecayRatesGraphView);

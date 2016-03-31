@@ -79,6 +79,12 @@ define(function (require, exports, module) {
 
         triggerNucleusChange: function(nucleus, byProducts) {},
 
+        resetActiveAndDecayedNuclei: function() {
+            this.resetNuclei();
+            this.activateNuclei();
+            this.trigger('nuclei-reset');
+        },
+
         /**
          * Reset the time back to 0 and resets decay for all nuclei.
          */
