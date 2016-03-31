@@ -11,7 +11,7 @@ define(function (require) {
     var Constants = require('constants');
 
     // HTML
-    var simHtml = require('text!radioactive-dating-game/templates/multi-nucleus-sim.html');
+    var simHtml              = require('text!radioactive-dating-game/templates/multi-nucleus-sim.html');
     var playbackControlsHtml = require('text!radioactive-dating-game/templates/decay-rates-playback-controls.html');
 
     /**

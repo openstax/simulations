@@ -2,6 +2,8 @@ define(function (require) {
 
     'use strict';
 
+    var Assets = require('common/v3/pixi/assets');
+
     var MeasurementSimulation = require('radioactive-dating-game/models/simulation/measurement');
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
@@ -10,7 +12,8 @@ define(function (require) {
     var Constants = require('constants');
 
     // HTML
-    var simHtml = require('text!radioactive-dating-game/templates/measurement-sim.html');
+    var simHtml              = require('text!radioactive-dating-game/templates/measurement-sim.html');
+    var playbackControlsHtml = require('text!radioactive-dating-game/templates/measurement-playback-controls.html');
 
     /**
      * Multiple Atoms tab
@@ -25,6 +28,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        playbackControlsTemplate: _.template(playbackControlsHtml),
 
         /**
          * Inits simulation, views, and variables.
@@ -54,6 +58,29 @@ define(function (require) {
             this.sceneView = new MeasurementSceneView({
                 simulation: this.simulation
             });
+        },
+
+        /**
+         * Renders page content. Should be overriden by child classes
+         */
+        renderScaffolding: function() {
+            var data = {
+                Constants: Constants,
+                simulation: this.simulation,
+                Assets: Assets,
+                objects: [{
+                    name: 'tree',
+                    label: 'Tree',
+                    src: Assets.Images.TREE_ICON,
+                    isDefault: true
+                }, {
+                    name: 'rock',
+                    label: 'Rock',
+                    src: Assets.Images.ROCK_A_2
+                }]
+            };
+            this.$el.html(this.template(data));
+            this.$('select').selectpicker();
         },
 
         /**

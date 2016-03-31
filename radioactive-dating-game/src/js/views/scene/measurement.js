@@ -51,10 +51,16 @@ define(function(require) {
                 self.eruptVolcano();
             });
 
+            this.$coolRockButton = $('<button class="btn btn-lg cool-rock-btn">Erupt Volcano</button>');
+            this.$coolRockButton.on('click', function() {
+                self.coolRock();
+            });
+
             this.$ui.append(this.$resetButton);
             this.$ui.append(this.$plantTreeButton);
             this.$ui.append(this.$killTreeButton);
             this.$ui.append(this.$eruptVolcanoButton);
+            this.$ui.append(this.$coolRockButton);
         },
 
         reset: function() {
@@ -133,6 +139,10 @@ define(function(require) {
         },
 
         eruptVolcano: function() {
+
+        },
+
+        coolRock: function() {
 
         }
 

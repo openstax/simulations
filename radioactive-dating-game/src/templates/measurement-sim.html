@@ -6,7 +6,21 @@
         <div class="sim-controls choose-object-panel">
             <h2>Choose Object</h2>
 
-            
+            <ul class="choose-object-list">
+            <% _.each(objects, function(object, index) { %>
+                <li>
+                    <input type="radio" name="object-chooser" value="<%= object.name %>" id="object-<%= object.name %>" <% if (object.isDefault) { %>checked<% } %>>
+                    <label for="object-<%= object.name %>">
+                        <div class="object-chooser-item-wrapper">
+                            <div class="object-chooser-img-wrapper">
+                                <%= Assets.createIcon(object.src, 70) %>
+                            </div>
+                            <label><%= object.label %></label>
+                        </div>
+                    </label>
+                </li>
+            <% }); %>
+            </ul>
         </div>
     </div>
 </div>
