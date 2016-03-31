@@ -87,6 +87,8 @@ define(function (require) {
     DecayRatesGraphView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
     DecayRatesGraphView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
 
+    DecayRatesGraphView.POINT_RADIUS = 2;
+
     Constants.DecayRatesGraphView = DecayRatesGraphView;
 
 

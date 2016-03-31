@@ -162,6 +162,27 @@ define(function (require, exports, module) {
 
             // Just activate it, because it's already where we want it
             newNucleus.activateDecay(this.time);
+        },
+
+        /**
+         * Convert a value representing simulation time to the corresponding
+         * adjusted value according to the nucleus (which may be as much as
+         * billions of years).
+         * 
+         * @param simTime
+         */
+        convertSimTimeToAdjustedTime: function(simTime) {
+            var conversionFactor = 1;
+            if (this.atomicNuclei.length > 1)
+                conversionFactor = this.atomicNuclei.at(0).get('decayTimeScalingFactor');
+            else
+                console.error('Warning: No nuclei available to provide conversion factor.');
+
+            return simTime / conversionFactor;
+        },
+
+        getAdjustedTime: function() {
+            return this.convertSimTimeToAdjustedTime(this.time);
         }
 
     }, Constants.DecayRatesSimulation);

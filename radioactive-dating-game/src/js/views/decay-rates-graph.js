@@ -47,7 +47,8 @@ define(function(require) {
                 yAxisLabelText: 'Percent of\nElement Remaining',
 
                 timeSpan: DecayRatesGraphView.DEFAULT_TIME_SPAN,
-                pieChartRadius: 25
+                pieChartRadius: 25,
+                lineMode: false
             }, options);
 
             // Required options
@@ -69,6 +70,7 @@ define(function(require) {
             this.bgAlpha        = options.bgAlpha;
             this.yAxisLabelText = options.yAxisLabelText;
             this.pieChartRadius = options.pieChartRadius;
+            this.lineMode       = options.lineMode;
 
             this.axisLineColor = Colors.parseHex(DecayRatesGraphView.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(DecayRatesGraphView.TICK_MARK_COLOR);
@@ -89,6 +91,7 @@ define(function(require) {
             this.initYAxis();
             this.initHalfLifeMarkers();
             this.initPieChart();
+            this.initData();
         },
 
         initPanel: function() {
@@ -245,6 +248,17 @@ define(function(require) {
             this.displayObject.addChild(this.isotope2Counter);
         },
 
+        initData: function() {
+            if (this.lineMode) {
+                this._lastX = 0;
+                this._lastActivePercent = 1;
+            }
+
+            this.dataGraphics = new PIXI.Graphics();
+
+            this.displayObject.addChild(this.dataGraphics);
+        },
+
         drawXAxisTicks: function() {
             // Remove the existing tick marks and labels.
             this.xAxisTicks.clear();
@@ -395,8 +409,39 @@ define(function(require) {
             }
         },
 
+        drawCurrentGraphData: function() {
+            var time = this.simulation.getAdjustedTime();
+            var x = this.graphOriginX + time * this.msToPixelsFactor;
+
+            if (x <= this.graphOriginX + this.graphWidth) {
+                var graphics = this.dataGraphics;
+                var numAtoms = this.simulation.getTotalNumNuclei();
+                var numActive = this.simulation.getNumActiveNuclei();
+                var activePercent = numActive / numAtoms;
+                var decayedPercent = 1 - activePercent;
+
+                if (this.lineMode) {
+
+                }
+                else {
+                    var radius = DecayRatesGraphView.POINT_RADIUS;
+                    
+                    graphics.beginFill(this.isotope1Color, 1);
+                    graphics.drawCircle(x, this.graphOriginY - activePercent * this.graphHeight, radius);
+                    graphics.endFill();
+
+                    graphics.beginFill(this.isotope2Color, 1);
+                    graphics.drawCircle(x, this.graphOriginY - decayedPercent * this.graphHeight, radius);
+                    graphics.endFill();
+                }
+            }
+        },
+
         update: function(time, deltaTime, paused) {
             this.updatePieChart();
+
+            if (this.simulation.getTotalNumNuclei() > 0)
+                this.drawCurrentGraphData();
         },
 
         updateTimeSpan: function() {
@@ -418,6 +463,9 @@ define(function(require) {
 
             this.isotope1Container.addChild(isotope1Text);
             this.isotope2Container.addChild(isotope2Text);
+
+            this.isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
+            this.isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(decayedNucleusType));
         },
 
         updatePieChart: function() {
@@ -427,8 +475,8 @@ define(function(require) {
 
             var nucleusType = this.simulation.get('nucleusType');
 
-            var isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
-            var isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(AtomicNucleus.getPostDecayNucleusType(nucleusType)));
+            var isotope1Color = this.isotope1Color;
+            var isotope2Color = this.isotope2Color;
             
             var radius = this.pieChartRadius;
             var numActive  = this.simulation.getNumActiveNuclei();
