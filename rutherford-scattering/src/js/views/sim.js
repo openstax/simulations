@@ -75,6 +75,7 @@ define(function (require) {
             options = _.extend({
                 title: 'Rutherford Scattering',
                 name: 'rutherford-scattering',
+                link: 'rutherford-scattering'
             }, options);
 
             SimView.prototype.initialize.apply(this, [options]);
