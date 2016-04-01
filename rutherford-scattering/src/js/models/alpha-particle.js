@@ -15,6 +15,8 @@ define(function (require) {
           orientation: Math.PI / 2
         },
 
+        // Alpha Particle Movement from:
+        // https://github.com/phetsims/rutherford-scattering/blob/master/js/plumpuddingatom/model/PlumPuddingAtomModel.js#L34-L44
         move: function(deltaTime) {
           var speed = this.get('speed');
           var distance = speed * deltaTime;

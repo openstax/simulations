@@ -55,6 +55,8 @@ define(function (require) {
         RUTHERFORD_ACTUAL: 150,
         PUDDING_ACTUAL: 300,
 
+        PARTICLE_SCALE: 4,
+
         RayGunView: {
             WIDTH: 20,
             BARREL_CENTER_X: 0.37,

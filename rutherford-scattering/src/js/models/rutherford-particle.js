@@ -12,6 +12,8 @@ define(function (require) {
             this.set('initialPosition', attributes.position);
         },
 
+        // Alpha Particle Movement from:
+        // https://github.com/phetsims/rutherford-scattering/blob/master/js/rutherfordatom/model/RutherfordAtomModel.js#L37-L186
         move: function(deltaTime, L, protonCount) {
 
             // algorithm fails for x=0, so use this min value
