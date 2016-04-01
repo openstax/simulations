@@ -42,7 +42,7 @@ define(function (require) {
     // Color for nuclei when represented as a circle or sphere.
     Constants.HYDROGEN_COLOR = '#FFC0DB';
     Constants.HELIUM_COLOR = '#0ff';
-    Constants.CARBON_COLOR = '#C80000';
+    Constants.CARBON_COLOR = '#E10000';
     Constants.NITROGEN_COLOR = '#0E56C8';
     Constants.URANIUM_COLOR = '#969600';
     Constants.LEAD_COLOR = '#61757E';

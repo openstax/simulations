@@ -6,6 +6,7 @@ define(function(require) {
     var PIXI = require('pixi');
 
     var PixiView           = require('common/v3/pixi/view');
+    var SliderView         = require('common/v3/pixi/view/slider');
     var Rectangle          = require('common/math/rectangle');
     var Vector2            = require('common/math/vector2');
     var ModelViewTransform = require('common/math/model-view-transform');
@@ -53,8 +54,10 @@ define(function(require) {
 
                 showHints: true,
                 draggingEnabled: true,
+                sliderEnabled: false,
                 hideNucleons: false,
                 numberOfAtomsToShow: 3,
+                atomScale: 8,
 
                 preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
@@ -65,6 +68,7 @@ define(function(require) {
             this.dummyLayer = options.dummyLayer;
             this.renderer = options.renderer;
             this.areasToAvoid = options.areasToAvoid;
+            this.dummyMVT = ModelViewTransform.createScaleMapping(options.atomScale);
 
             this.width = options.width;
             this.height = options.height;
@@ -79,6 +83,7 @@ define(function(require) {
             this.showHints = options.showHints;
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
+            this.sliderEnabled = options.sliderEnabled;
             this.hideNucleons = options.hideNucleons;
             this.numberOfAtomsToShow = options.numberOfAtomsToShow;
 
@@ -117,12 +122,14 @@ define(function(require) {
             this.initSprites();
             this.initDecorativeDummyObjects();
             this.initLabel();
+            if (this.sliderEnabled)
+                this.initSlider();
 
             this.updateMVT(this.mvt);
         },
 
         initSprites: function() {
-            var fg = Assets.createSprite(Assets.Images.CANISTER_FG);
+            var fg = Assets.createSprite(this.sliderEnabled ? Assets.Images.CANISTER_SLIDER_FG : Assets.Images.CANISTER_FG);
             var bg = Assets.createSprite(Assets.Images.CANISTER_BG);
             var glow = Assets.createSprite(Assets.Images.CANISTER_GLOW);
             var drag = Assets.createSprite(Assets.Images.CANISTER_DRAG);
@@ -184,6 +191,34 @@ define(function(require) {
             label.y = this.thickness;
 
             this.displayObject.addChild(label);
+        },
+
+        initSlider: function() {
+            var width = Math.floor(this.width * (260 / 320));
+
+            // Create the slider view
+            this.sliderView = new SliderView({
+                start: 0,
+                range: {
+                    min: 0,
+                    max: Constants.DecayRatesSimulation.MAX_NUCLEI
+                },
+
+                width: width,
+
+                backgroundHeight: 2,
+                backgroundColor: '#000',
+                backgroundAlpha: 0.6,
+
+                handleSize: 14
+            });
+            this.sliderView.displayObject.x = (this.width - width) / 2;
+            this.sliderView.displayObject.y = (212 / 260) * this.height;
+            this.foregroundLayer.addChild(this.sliderView.displayObject);
+
+            // Bind events
+            this.listenTo(this.sliderView, 'slide', this.slide);
+            this.listenTo(this.sliderView, 'set', this.slideEnd);
         },
 
         drawDecorativeDummyObjects: function() {
@@ -341,11 +376,6 @@ define(function(require) {
 
         updateMVT: function(mvt) {
             this.mvt = mvt;
-
-            if (this.hideNucleons)
-                this.dummyMVT = ModelViewTransform.createScaleMapping(mvt.getXScale() * 0.6);
-            else
-                this.dummyMVT = mvt;
 
             this.drawDecorativeDummyObjects();
 
@@ -523,6 +553,28 @@ define(function(require) {
 
         nucleusTypeChanged: function() {
             this.drawDecorativeDummyObjects();
+            if (this.sliderEnabled)
+                this.sliderView.val(0);
+        },
+
+        slide: function(value, prev) {
+            this.simulation.set('active', false);
+            this.simulation.resetNuclei();
+
+            if (value > this.simulation.getTotalNumNuclei()) {
+                while (value > this.simulation.getTotalNumNuclei())
+                    this.simulation.addNewNucleus();
+            }
+            else if (value < this.simulation.getTotalNumNuclei()) {
+                while (value < this.simulation.getTotalNumNuclei())
+                    this.simulation.removeRandomNucleus();
+            }
+        },
+
+        slideEnd: function() {
+            this.simulation.set('active', true);
+            this.simulation.resetNuclei();
+            this.simulation.activateNuclei();
         }
 
     }, Constants.AtomCanisterView);

@@ -12,6 +12,7 @@ define(function (require) {
 
     // HTML
     var simHtml = require('text!radioactive-dating-game/templates/multi-nucleus-sim.html');
+    var playbackControlsHtml = require('text!radioactive-dating-game/templates/half-life-playback-controls.html');
 
     /**
      * Multiple Atoms tab
@@ -26,6 +27,7 @@ define(function (require) {
          * Template for rendering the basic scaffolding
          */
         template: _.template(simHtml),
+        playbackControlsTemplate: _.template(playbackControlsHtml),
 
         /**
          * Inits simulation, views, and variables.

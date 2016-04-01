@@ -10,11 +10,13 @@ define(function(require) {
     var Vector2            = require('common/math/vector2');
     var Rectangle          = require('common/math/rectangle');
 
-    var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
-    var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
-    var NuclearPhysicsSceneView       = require('views/scene');
-    var AtomCanisterView              = require('views/atom-canister');
-    var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+    var ParticleGraphicsGenerator      = require('views/particle-graphics-generator');
+    var MultipleNucleusDecayChart      = require('views/nucleus-decay-chart/multiple');
+    var NuclearPhysicsSceneView        = require('views/scene');
+    var AtomCanisterView               = require('views/atom-canister');
+    var SphericalNucleusCollectionView = require('views/spherical-nucleus-collection');
+
+    var DecayRatesGraphView = require('radioactive-dating-game/views/decay-rates-graph');
 
     var Constants = require('constants');
 
@@ -30,13 +32,8 @@ define(function(require) {
 
         initialize: function(options) {
             this.showingLabels = true;
-            this.nucleusViews = [];
 
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
-
-            this.listenTo(this.simulation.atomicNuclei, 'add',    this.nucleusAdded);
-            this.listenTo(this.simulation.atomicNuclei, 'remove', this.nucleusRemoved);
-            this.listenTo(this.simulation.atomicNuclei, 'reset',  this.nucleiReset);
         },
 
         renderContent: function() {
@@ -47,10 +44,7 @@ define(function(require) {
                 self.resetNuclei();
             });
 
-            this.$canisterSliderWrapper = $('<div class="canister-slider-wrapper">');
-
             this.$ui.append(this.$resetButton);
-            this.$ui.append(this.$canisterSliderWrapper);
         },
 
         reset: function() {
@@ -65,10 +59,10 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 6;
+                pixelsPerFemtometer = 0.7;
             }
             else {
-                pixelsPerFemtometer = 8;
+                pixelsPerFemtometer = 1;
             }
 
             this.viewOriginX = 0;
@@ -81,11 +75,13 @@ define(function(require) {
                 pixelsPerFemtometer
             );
 
+            var padding = AppView.windowIsShort() ? 12 : 20;
+
             this.simulation.setNucleusBounds(
-                this.mvt.viewToModelX(this.getLeftPadding()),
-                this.mvt.viewToModelY(this.getTopPadding()),
-                this.mvt.viewToModelDeltaX(this.getAvailableWidth()),
-                this.mvt.viewToModelDeltaY(this.getAvailableHeight())
+                this.mvt.viewToModelX(this.getLeftPadding() + padding),
+                this.mvt.viewToModelY(this.getTopPadding() + padding),
+                this.mvt.viewToModelDeltaX(this.getAvailableWidth() - padding * 2),
+                this.mvt.viewToModelDeltaY(this.getAvailableHeight() - padding * 2)
             );
 
             if (showNucleusPlacementDebuggingGraphics) {
@@ -100,8 +96,8 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.canisterLayer = new PIXI.Container();
             this.nucleusLayer = new PIXI.Container();
+            this.canisterLayer = new PIXI.Container();
             this.dummyLayer = new PIXI.Container();
 
             this.stage.addChild(this.canisterLayer);
@@ -109,6 +105,8 @@ define(function(require) {
 
             this.initMVT();
             this.initAtomCanister();
+            this.initNucleusCollectionView();
+            this.initDecayRatesGraphView();
 
             this.stage.addChild(this.dummyLayer);
         },
@@ -136,36 +134,19 @@ define(function(require) {
                 dummyLayer: this.dummyLayer,
                 renderer: this.renderer,
                 draggingEnabled: false,
+                sliderEnabled: true,
                 preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
                 minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
-                hideNucleons: true
+                hideNucleons: true,
+                atomScale: 2.5
             });
 
             this.atomCanisterView.displayObject.x = canisterX;
             this.atomCanisterView.displayObject.y = canisterY;
 
-            // Position the bucket buttons underneath
-            var top = this.atomCanisterView.displayObject.y + 140;
-            this.$canisterSliderWrapper.css('top', top + 'px');
-
-            if (AppView.windowIsShort()) {
-                var left = this.atomCanisterView.displayObject.x;
-                this.$canisterSliderWrapper.css('left', left + 'px'); 
-            }
-            else {
-                var right = this.width - this.atomCanisterView.displayObject.x - this.atomCanisterView.width;
-                this.$canisterSliderWrapper.css('right', right + 'px');    
-            }
-
-            // Calculate the bounds of the areas to be avoided when placing atoms
-            var buttonHeight = this.$canisterSliderWrapper.find('button').height();
-            var resetButtonPos = this.$resetButton.position();
-            var bucketButtonsRect = new Rectangle(canisterX, top, this.atomCanisterView.width, buttonHeight);
-            var resetButtonRect = new Rectangle(resetButtonPos.left, resetButtonPos.top, canisterWidth, 46);
-            this.atomCanisterView.setAreasToAvoid([
-                bucketButtonsRect,
-                resetButtonRect
-            ]);
+            this.simulation.setCanisterBounds(
+                this.mvt.viewToModel(this.atomCanisterView.getBounds())
+            );
 
             if (showNucleusPlacementDebuggingGraphics) {
                 var graphics = new PIXI.Graphics();
@@ -181,60 +162,44 @@ define(function(require) {
             this.canisterLayer.addChild(this.atomCanisterView.displayObject);
         },
 
+        initNucleusCollectionView: function() {
+            this.nucleusCollectionView = new SphericalNucleusCollectionView({
+                simulation: this.simulation,
+                collection: this.simulation.atomicNuclei,
+                mvt: this.mvt
+            });
+
+            this.nucleusLayer.addChild(this.nucleusCollectionView.displayObject);
+        },
+
+        initDecayRatesGraphView: function() {
+            this.decayRatesGraphView = new DecayRatesGraphView({
+                simulation: this.simulation,
+                width: this.getWidthBetweenPanels()
+            });
+
+            if (AppView.windowIsShort()) {
+                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 12;
+                this.decayRatesGraphView.displayObject.y = 12;
+            }
+            else {
+                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 20;
+                this.decayRatesGraphView.displayObject.y = 20;
+            }
+
+            this.stage.addChild(this.decayRatesGraphView.displayObject);
+        },
+
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
             
             this.atomCanisterView.update(time, deltaTime, paused);
-
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].update(time, deltaTime, paused);
-        },
-
-        nucleusAdded: function(nucleus) {
-            var nucleusView = new DraggableExplodingNucleusView({
-                model: nucleus,
-                mvt: this.mvt,
-                showSymbol: this.showingLabels,
-                atomCanister: this.atomCanisterView,
-                renderer: this.renderer
-            });
-
-            this.nucleusViews.push(nucleusView);
-
-            this.nucleusLayer.addChild(nucleusView.displayObject);
-        },
-
-        nucleusRemoved: function(nucleus) {
-            for (var i = 0; i < this.nucleusViews.length; i++) {
-                if (this.nucleusViews[i].model == nucleus) {
-                    this.nucleusViews[i].remove();
-                    this.nucleusViews.splice(i, 1);
-                    break;
-                }
-            }
-        },
-
-        nucleiReset: function() {
-            for (var i = this.nucleusViews.length - 1; i >= 0; i--) {
-                this.nucleusViews[i].remove();
-                this.nucleusViews.splice(i, 1);
-            }
+            this.nucleusCollectionView.update(time, deltaTime, paused);
+            this.decayRatesGraphView.update(time, deltaTime, paused);
         },
 
         resetNuclei: function() {
             this.simulation.resetActiveAndDecayedNuclei();
-        },
-
-        showLabels: function() {
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].showLabel();
-            this.showingLabels = true;
-        },
-
-        hideLabels: function() {
-            for (var i = 0; i < this.nucleusViews.length; i++)
-                this.nucleusViews[i].hideLabel();
-            this.showingLabels = false;
         }
 
     });
