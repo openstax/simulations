@@ -54,6 +54,7 @@ define(function(require) {
             this.$coolRockButton.on('click', function() {
                 self.coolRock();
             });
+            this.$coolRockButton.hide();
 
             this.$el.append(this.$eruptVolcanoButton);
             this.$el.append(this.$coolRockButton);
@@ -84,6 +85,7 @@ define(function(require) {
 
         eruptVolcano: function() {
             this._volcanoErupting = true;
+            this.$eruptVolcanoButton.hide();
         },
 
         stopErupting: function() {

@@ -29,6 +29,7 @@ define(function(require) {
             this.$killTreeButton.on('click', function() {
                 self.killTree();
             });
+            this.$killTreeButton.hide();
 
             this.$el.append(this.$plantTreeButton);
             this.$el.append(this.$killTreeButton);

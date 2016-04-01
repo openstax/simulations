@@ -24,6 +24,7 @@ define(function(require) {
             // This is a hybrid PIXI/HTML view
             this.el = document.createElement('div');
             this.$el = $(this.el);
+            this.$el.addClass('landscape-buttons-wrapper');
 
             this.initGraphics();
         },
