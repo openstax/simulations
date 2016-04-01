@@ -71,7 +71,7 @@ define(function (require) {
     MeasurementSimulation.FLYING_ROCK_EMISSION_DEVIATION  = 0.5;
     MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME =  800; // Simulation milliseconds
     MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME   = 5000; // Simulation milliseconds
-    MeasurementSimulation.ERUPTION_END_TIME               = 5600; // Simulation milliseconds
+    MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 
@@ -128,7 +128,7 @@ define(function (require) {
     VolcanoSmokeView.PARTICLE_SPREAD_ANGLE = Math.PI / 12;
     VolcanoSmokeView.PARTICLE_SPREAD_ANGLE_RANGE = range({ min: -VolcanoSmokeView.PARTICLE_SPREAD_ANGLE / 2, max: VolcanoSmokeView.PARTICLE_SPREAD_ANGLE / 2 }); // radians
     VolcanoSmokeView.PARTICLE_VELOCITY_RANGE = range({ min: 30, max: 80 });
-    VolcanoSmokeView.PARTICLE_MAX_ANGULAR_ACCELERATION = 0.2;
+    VolcanoSmokeView.PARTICLE_MAX_ANGULAR_ACCELERATION = 0.34;
     VolcanoSmokeView.PARTICLE_LIFE_SPAN = range({ min: 4, max: 6.0 });
     VolcanoSmokeView.PARTICLE_EMISSION_FREQUENCY = 0.01;
     VolcanoSmokeView.PARTICLE_ALPHA = 0.5;

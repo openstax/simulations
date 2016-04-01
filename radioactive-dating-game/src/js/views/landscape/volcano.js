@@ -3,6 +3,7 @@ define(function(require) {
     'use strict';
 
     var PIXI = require('pixi');
+    var buzz = require('buzz');
 
     var AppView = require('common/v3/app/app');
 
@@ -30,6 +31,11 @@ define(function(require) {
             this._xOffset = 0;
 
             LandscapeView.prototype.initialize.apply(this, arguments);
+
+            this.tremorSound = new buzz.sound('audio/tremor', {
+                formats: ['ogg', 'mp3', 'wav'],
+                volume: 50
+            });
 
             this.listenTo(this.simulation, 'eruption-start', this.eruptionStarted);
             this.listenTo(this.simulation, 'eruption-end',   this.eruptionEnded);
@@ -153,7 +159,9 @@ define(function(require) {
             this._fogTimer = 0;
             this._volcanoErupting = true;
             this._volcanoCooling = false;
+
             this.volcanoSmokeView.startSmoking();
+            this.tremorSound.stop().play();
         },
 
         eruptionEnded: function() {
