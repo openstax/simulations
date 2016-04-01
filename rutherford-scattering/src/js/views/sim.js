@@ -10,6 +10,7 @@ define(function (require) {
     var RutherfordScatteringSimulation = require('rutherford-scattering/models/simulation');
     var RutherfordScatteringSceneView  = require('rutherford-scattering/views/scene');
     var RutherfordScatteringLegendView = require('rutherford-scattering/views/legend');
+    var HelpLabelView     = require('common/help-label/index');
 
     var Constants = require('constants');
 
@@ -54,6 +55,7 @@ define(function (require) {
             'click .pause-btn'  : 'pause',
             'click .step-btn'   : 'step',
             'click .reset-btn'  : 'reset',
+            'click .help-btn'   : 'toggleHelp',
 
             'click .show-traces-check'  : 'toggleTraces',
 
@@ -205,6 +207,7 @@ define(function (require) {
             this.sceneView.postRender();
 
             this.renderLegend();
+            this.renderHelp();
         },
 
         resetSimulation: function() {
@@ -301,6 +304,30 @@ define(function (require) {
             this.simulation.set('neutronCount', count);
 
             this.simulation.restartRayGun();
+        },
+
+        renderHelp: function(){
+
+            this.helpLabel = new HelpLabelView({
+                attachTo : this.sceneView.rayGunView.rayGun,
+                title : 'Turn on gun',
+                orientation : 'bottom center',
+                anchor: {
+                    x: 0.5,
+                    y: 0.5
+                },
+                color: '#FFF',
+                font: 'bold 16pt Helvetica Neue'
+            });
+
+            this.helpLabel.render();
+        },
+
+        toggleHelp: function(event){
+
+            $(event.currentTarget).toggleClass('active');
+
+            this.helpLabel.toggle();
         }
 
     });
