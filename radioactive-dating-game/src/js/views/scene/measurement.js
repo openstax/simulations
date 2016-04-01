@@ -63,16 +63,6 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
-            this.backgroundEffectsLayer = new PIXI.Container();
-            this.backgroundLayer = new PIXI.Container();
-            this.foregroundLayer = new PIXI.Container();
-            this.foregroundEffectsLayer = new PIXI.Container();
-
-            this.stage.addChild(this.backgroundEffectsLayer);
-            this.stage.addChild(this.backgroundLayer);
-            this.stage.addChild(this.foregroundLayer);
-            this.stage.addChild(this.foregroundEffectsLayer);
-
             this.initMVT();
             this.initBackground();
             // this.initDecayRatesGraphView();
@@ -89,8 +79,8 @@ define(function(require) {
             this.treeLandscape    = new TreeLandscapeView(landscapeSettings);
             this.volcanoLandscape = new VolcanoLandscapeView(landscapeSettings);
 
-            this.backgroundLayer.addChild(this.treeLandscape.displayObject);
-            this.backgroundLayer.addChild(this.volcanoLandscape.displayObject);
+            this.stage.addChild(this.treeLandscape.displayObject);
+            this.stage.addChild(this.volcanoLandscape.displayObject);
 
             this.$ui.append(this.treeLandscape.renderElement().el);
             this.$ui.append(this.volcanoLandscape.renderElement().el);
@@ -124,8 +114,10 @@ define(function(require) {
 
             // this.decayRatesGraphView.update(time, deltaTime, paused);
 
-            this.treeLandscape.update(time, deltaTime, paused);
-            this.volcanoLandscape.update(time, deltaTime, paused);
+            if (this.simulation.get('mode') === Constants.MeasurementSimulation.MODE_TREE)
+                this.treeLandscape.update(time, deltaTime, paused);
+            else
+                this.volcanoLandscape.update(time, deltaTime, paused);
         },
 
         resetSimulation: function() {

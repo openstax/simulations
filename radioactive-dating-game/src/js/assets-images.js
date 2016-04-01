@@ -16,6 +16,8 @@ define(function (require) {
         TREE_ICON: 'tree-icon.png',
 
         MEASUREMENT_BACKGROUND:         'measurement-background.png',
-        MEASUREMENT_BACKGROUND_VOLCANO: 'measurement-background-volcano.png'
+        MEASUREMENT_BACKGROUND_VOLCANO: 'measurement-background-volcano.png',
+
+        SMOKE_PARTICLE: 'smoke-particle.png'
     };
 });

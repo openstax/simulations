@@ -27,21 +27,30 @@ define(function(require) {
             this.$el.addClass('landscape-buttons-wrapper');
 
             this.initGraphics();
+            this.updateMVT(this.mvt);
         },
 
         /**
          * Initializes everything for rendering graphics
          */
         initGraphics: function() {
+            this.backgroundEffectsLayer = new PIXI.Container();
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
+            this.foregroundEffectsLayer = new PIXI.Container();
+
+            this.displayObject.addChild(this.backgroundEffectsLayer);
+            this.displayObject.addChild(this.backgroundLayer);
+            this.displayObject.addChild(this.foregroundLayer);
+            this.displayObject.addChild(this.foregroundEffectsLayer);
+
             this.background = new PIXI.Sprite(this.getBackgroundTexture());
             this.background.anchor.y = 1;
             this.background.anchor.x = 0.5;
             this.background.y = this.height;
             this.background.x = this.width / 2;
             
-            this.displayObject.addChild(this.background);
-
-            this.updateMVT(this.mvt);
+            this.backgroundLayer.addChild(this.background);
         },
 
         getBackgroundTexture: function() {
