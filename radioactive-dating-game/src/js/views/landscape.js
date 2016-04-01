@@ -48,7 +48,7 @@ define(function(require) {
         },
 
         renderElement: function() {
-
+            return this;
         },
 
         update: function(time, deltaTime, paused) {},
@@ -68,6 +68,16 @@ define(function(require) {
             var scale = targetSceneWidth / this.background.width;
             this.background.scale.x = scale;
             this.background.scale.y = scale;
+        },
+
+        show: function() {
+            PixiView.prototype.show.apply(this, arguments);
+            this.$el.show();
+        },
+
+        hide: function() {
+            PixiView.prototype.hide.apply(this, arguments);
+            this.$el.hide();
         }
 
     });

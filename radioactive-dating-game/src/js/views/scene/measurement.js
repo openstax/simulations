@@ -31,41 +31,6 @@ define(function(require) {
             NuclearPhysicsSceneView.prototype.initialize.apply(this, arguments);
         },
 
-        renderContent: function() {
-            var self = this;
-
-            this.$resetButton = $('<button class="btn btn-lg reset-btn">Reset</button>');
-            this.$resetButton.on('click', function() {
-                self.resetSimulation();
-            });
-
-            this.$plantTreeButton = $('<button class="btn btn-lg plant-tree-btn">Plant Tree</button>');
-            this.$plantTreeButton.on('click', function() {
-                self.plantTree();
-            });
-
-            this.$killTreeButton = $('<button class="btn btn-lg kill-tree-btn">Kill Tree</button>');
-            this.$killTreeButton.on('click', function() {
-                self.killTree();
-            });
-
-            this.$eruptVolcanoButton = $('<button class="btn btn-lg erupt-volcano-btn">Erupt Volcano</button>');
-            this.$eruptVolcanoButton.on('click', function() {
-                self.eruptVolcano();
-            });
-
-            this.$coolRockButton = $('<button class="btn btn-lg cool-rock-btn">Erupt Volcano</button>');
-            this.$coolRockButton.on('click', function() {
-                self.coolRock();
-            });
-
-            this.$ui.append(this.$resetButton);
-            this.$ui.append(this.$plantTreeButton);
-            this.$ui.append(this.$killTreeButton);
-            this.$ui.append(this.$eruptVolcanoButton);
-            this.$ui.append(this.$coolRockButton);
-        },
-
         reset: function() {
             
         },
@@ -127,6 +92,9 @@ define(function(require) {
             this.backgroundLayer.addChild(this.treeLandscape.displayObject);
             this.backgroundLayer.addChild(this.volcanoLandscape.displayObject);
 
+            this.$ui.append(this.treeLandscape.renderElement().el);
+            this.$ui.append(this.volcanoLandscape.renderElement().el);
+
             this.volcanoLandscape.hide();
         },
 
@@ -161,22 +129,6 @@ define(function(require) {
         },
 
         resetSimulation: function() {
-
-        },
-
-        plantTree: function() {
-
-        },
-
-        killTree: function() {
-
-        },
-
-        eruptVolcano: function() {
-
-        },
-
-        coolRock: function() {
 
         },
 
