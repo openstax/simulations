@@ -13,6 +13,9 @@ define(function (require) {
         ROCK_B_0:  'rock-b-0.png',
         ROCK_C_0:  'rock-c-0.png',
 
-        TREE_ICON: 'tree-icon.png'
+        TREE_ICON: 'tree-icon.png',
+
+        MEASUREMENT_BACKGROUND:         'measurement-background.png',
+        MEASUREMENT_BACKGROUND_VOLCANO: 'measurement-background-volcano.png'
     };
 });

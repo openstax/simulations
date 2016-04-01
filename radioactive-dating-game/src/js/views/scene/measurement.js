@@ -15,6 +15,7 @@ define(function(require) {
     var DecayRatesGraphView = require('radioactive-dating-game/views/decay-rates-graph');
 
     var Constants = require('constants');
+    var Assets = require('assets');
 
     // CSS
     require('less!radioactive-dating-game/styles/scene');
@@ -95,8 +96,48 @@ define(function(require) {
         initGraphics: function() {
             NuclearPhysicsSceneView.prototype.initGraphics.apply(this, arguments);
 
+            this.backgroundEffectsLayer = new PIXI.Container();
+            this.backgroundLayer = new PIXI.Container();
+            this.foregroundLayer = new PIXI.Container();
+            this.foregroundEffectsLayer = new PIXI.Container();
+
+            this.stage.addChild(this.backgroundEffectsLayer);
+            this.stage.addChild(this.backgroundLayer);
+            this.stage.addChild(this.foregroundLayer);
+            this.stage.addChild(this.foregroundEffectsLayer);
+
             this.initMVT();
+            this.initBackground();
             // this.initDecayRatesGraphView();
+        },
+
+        initBackground: function() {
+            this.bgTree    = this.createScene(Assets.Images.MEASUREMENT_BACKGROUND);
+            this.bgVolcano = this.createScene(Assets.Images.MEASUREMENT_BACKGROUND_VOLCANO);
+
+            this.backgroundLayer.addChild(this.bgTree);
+            this.backgroundLayer.addChild(this.bgVolcano);
+
+            this.bgTree.visible = true;
+        },
+
+        createScene: function(image) {
+            var scene = Assets.createSprite(image);
+            scene.anchor.y = 1;
+            scene.anchor.x = 0.5;
+            scene.y = this.height;
+            scene.x = this.width / 2;
+            scene.visible = false;
+            this.setSceneScale(scene);
+
+            return scene;
+        },
+
+        setSceneScale: function(scene) {
+            var targetSceneWidth = AppView.windowIsShort() ? this.width : scene.width; // In pixels
+            var scale = targetSceneWidth / scene.width
+            scene.scale.x = scale;
+            scene.scale.y = scale;
         },
 
         initDecayRatesGraphView: function() {
@@ -144,6 +185,16 @@ define(function(require) {
 
         coolRock: function() {
 
+        },
+
+        showTree: function() {
+            this.bgTree.visible = true;
+            this.bgVolcano.visible = false;
+        },
+
+        showVolcano: function() {
+            this.bgVolcano.visible = true;
+            this.bgTree.visible = false;
         }
 
     });

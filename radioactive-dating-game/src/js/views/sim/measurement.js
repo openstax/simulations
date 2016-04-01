@@ -21,7 +21,8 @@ define(function (require) {
     var MeasurementSimView = RadioactiveDatingGameSimView.extend({
 
         events: _.extend({}, RadioactiveDatingGameSimView.prototype.events, {
-            
+            'click #object-tree' : 'treeSelected',
+            'click #object-rock' : 'rockSelected'
         }),
 
         /**
@@ -90,6 +91,14 @@ define(function (require) {
             RadioactiveDatingGameSimView.prototype.postRender.apply(this, arguments);
 
             return this;
+        },
+
+        treeSelected: function() {
+            this.sceneView.showTree();
+        },
+
+        rockSelected: function() {
+            this.sceneView.showVolcano();
         }
 
     });
