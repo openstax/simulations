@@ -48,6 +48,12 @@ define(function(require) {
         },
 
         drawElectrons: function() {
+            var xValues = _.pluck(PUDDING_FOOTPRINT, '0');
+            var yValues = _.pluck(PUDDING_FOOTPRINT, '1');
+
+            this.xBounds = [_.min(xValues), _.max(xValues)];
+            this.yBounds = [_.min(yValues), _.max(yValues)];
+
             while(this.electrons.children.length < PlumPudding.ELECTRON_COUNT){
                 this.drawElectron();
             }
@@ -66,11 +72,8 @@ define(function(require) {
         },
 
         makeRandomPointInBounds: function(bounds){
-            var xValues = _.pluck(bounds, '0');
-            var yValues = _.pluck(bounds, '1');
-
-            var x = _.random(_.min(xValues), _.max(xValues));
-            var y = _.random(_.min(yValues), _.max(yValues));
+            var x = _.random.apply(_, this.xBounds);
+            var y = _.random.apply(_, this.yBounds);
 
             return {x: x, y: y};
         },
