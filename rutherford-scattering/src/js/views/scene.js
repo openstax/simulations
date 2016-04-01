@@ -58,7 +58,7 @@ define(function(require) {
                 this.scale
             );
 
-            this.particleMVT = ModelViewTransform.createScaleMapping(4);
+            this.particleMVT = ModelViewTransform.createScaleMapping(Constants.PARTICLE_SCALE);
         },
 
         initRayGunMVT: function() {
@@ -84,13 +84,9 @@ define(function(require) {
             PixiSceneView.prototype.initGraphics.apply(this, arguments);
 
             this.bottomLayer   = new PIXI.Container();
-            this.middleLayer   = new PIXI.Container();
-            this.electronLayer = new PIXI.Container();
-            this.topLayer      = new PIXI.Container();
+            this.topLayer   = new PIXI.Container();
 
             this.stage.addChild(this.bottomLayer);
-            this.stage.addChild(this.middleLayer);
-            this.stage.addChild(this.electronLayer);
             this.stage.addChild(this.topLayer);
 
             this.initMVT();
@@ -109,7 +105,7 @@ define(function(require) {
                 model: this.simulation.rayGun
             });
 
-            this.middleLayer.addChild(this.rayGunView.displayObject);
+            this.topLayer.addChild(this.rayGunView.displayObject);
         },
 
         initSpaceBoxView: function() {
@@ -121,7 +117,7 @@ define(function(require) {
                 simulation: this.simulation
             });
 
-            this.middleLayer.addChild(this.spaceBoxView.displayObject);
+            this.topLayer.addChild(this.spaceBoxView.displayObject);
         },
 
         initAtomView: function() {
@@ -142,7 +138,7 @@ define(function(require) {
             projectionLines.moveTo(rayViewCorners.bottom.x, rayViewCorners.bottom.y);
             projectionLines.dashTo(spaceBoxCorners.bottom.x, spaceBoxCorners.bottom.y, dashStyle);
 
-            this.middleLayer.addChild(projectionLines);
+            this.topLayer.addChild(projectionLines);
         },
 
         getLeftCorners: function(box) {

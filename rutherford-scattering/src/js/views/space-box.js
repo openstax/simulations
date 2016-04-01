@@ -131,6 +131,7 @@ define(function(require) {
             this.traces = {};
             this.sprites = {};
 
+            this.particlesLayer.visible = false;
             this.displayObject.removeChild(this.particlesLayer);
             this.particlesLayer.destroy();
 

@@ -45,8 +45,9 @@ define(function (require) {
             this.models.add(new this.model(particle), {silent: true});
         },
 
-        reset: function(particle) {
+        reset: function() {
             this.models.reset([]);
+            this.trigger('reset');
         },
 
         moveParticles: function(deltaTime, protonCount) {
