@@ -12,7 +12,9 @@ define(function(require) {
 
     var NuclearPhysicsSceneView = require('views/scene');
 
-    var DecayRatesGraphView = require('radioactive-dating-game/views/decay-rates-graph');
+    var DecayRatesGraphView  = require('radioactive-dating-game/views/decay-rates-graph');
+    var TreeLandscapeView    = require('radioactive-dating-game/views/landscape/tree');
+    var VolcanoLandscapeView = require('radioactive-dating-game/views/landscape/volcano');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -112,32 +114,20 @@ define(function(require) {
         },
 
         initBackground: function() {
-            this.bgTree    = this.createScene(Assets.Images.MEASUREMENT_BACKGROUND);
-            this.bgVolcano = this.createScene(Assets.Images.MEASUREMENT_BACKGROUND_VOLCANO);
+            var landscapeSettings = {
+                mvt: this.mvt,
+                simulation: this.simulation,
+                width: this.width,
+                height: this.height
+            };
 
-            this.backgroundLayer.addChild(this.bgTree);
-            this.backgroundLayer.addChild(this.bgVolcano);
+            this.treeLandscape    = new TreeLandscapeView(landscapeSettings);
+            this.volcanoLandscape = new VolcanoLandscapeView(landscapeSettings);
 
-            this.bgTree.visible = true;
-        },
+            this.backgroundLayer.addChild(this.treeLandscape.displayObject);
+            this.backgroundLayer.addChild(this.volcanoLandscape.displayObject);
 
-        createScene: function(image) {
-            var scene = Assets.createSprite(image);
-            scene.anchor.y = 1;
-            scene.anchor.x = 0.5;
-            scene.y = this.height;
-            scene.x = this.width / 2;
-            scene.visible = false;
-            this.setSceneScale(scene);
-
-            return scene;
-        },
-
-        setSceneScale: function(scene) {
-            var targetSceneWidth = AppView.windowIsShort() ? this.width : scene.width; // In pixels
-            var scale = targetSceneWidth / scene.width
-            scene.scale.x = scale;
-            scene.scale.y = scale;
+            this.volcanoLandscape.hide();
         },
 
         initDecayRatesGraphView: function() {
@@ -165,6 +155,9 @@ define(function(require) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
 
             // this.decayRatesGraphView.update(time, deltaTime, paused);
+
+            this.treeLandscape.update(time, deltaTime, paused);
+            this.volcanoLandscape.update(time, deltaTime, paused);
         },
 
         resetSimulation: function() {
@@ -188,13 +181,13 @@ define(function(require) {
         },
 
         showTree: function() {
-            this.bgTree.visible = true;
-            this.bgVolcano.visible = false;
+            this.treeLandscape.show();
+            this.volcanoLandscape.hide();
         },
 
         showVolcano: function() {
-            this.bgVolcano.visible = true;
-            this.bgTree.visible = false;
+            this.volcanoLandscape.show();
+            this.treeLandscape.hide();
         }
 
     });
