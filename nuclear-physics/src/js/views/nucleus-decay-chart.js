@@ -64,7 +64,10 @@ define(function(require) {
                 xAxisLabelText: 'Time (yrs)',
                 yAxisLabelText: 'Isotope',
 
-                timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN
+                timeSpan: NucleusDecayChart.DEFAULT_TIME_SPAN,
+
+                hideNucleons: false,
+                useElementColors: false
             }, options);
 
             // Required options
@@ -90,6 +93,9 @@ define(function(require) {
 
             this.axisLineColor = Colors.parseHex(NucleusDecayChart.AXIS_LINE_COLOR);
             this.tickColor     = Colors.parseHex(NucleusDecayChart.TICK_MARK_COLOR);
+
+            this.hideNucleons = options.hideNucleons;
+            this.useElementColors = options.useElementColors;
 
             // Initialize the graphics
             this.initGraphics();
@@ -184,6 +190,7 @@ define(function(require) {
             label.anchor.x = 0.5;
             label.anchor.y = 1;
             label.rotation = -Math.PI / 2;
+            this.isotopeLabel = label;
 
             var tickLength = NucleusDecayChart.TICK_MARK_LENGTH;
             var isotope1Y = this.graphOriginY - this.graphHeight * 0.8;
@@ -285,7 +292,8 @@ define(function(require) {
                 renderer: this.renderer,
                 height: this.graphHeight,
                 isotope1Y: this.yAxisIsotope1.y - this.paddingTop,
-                isotope2Y: this.yAxisIsotope2.y - this.paddingTop
+                isotope2Y: this.yAxisIsotope2.y - this.paddingTop,
+                hideNucleons: this.hideNucleons
             });
 
             this.nucleiView.displayObject.y = this.graphOriginY - this.graphHeight;
@@ -303,7 +311,7 @@ define(function(require) {
 
             if (this.timeSpan < 10000) {
                 // Tick marks are 1 second apart.
-                numTickMarks = Math.floor(this.timeSpan / 1000 + 1);
+                numTickMarks = Math.floor(this.timeSpan / 1000);
 
                 for (i = 0; i < numTickMarks; i++)
                     this.drawXAxisTick(i * 1000, '' + i);
@@ -429,21 +437,7 @@ define(function(require) {
         updateHalfLifeMarker: function() {
             // Position the marker for the half life.
             var halfLife = this.simulation.get('halfLife');
-            var halfLifeMarkerX = 0;
-
-            if (this.getExponentialMode()) {
-                if (halfLife == Number.POSITIVE_INFINITY) {
-                    halfLifeMarkerX = this.graphOriginX + this.graphWidth;
-                }
-                else {
-                    // halfLifeMarkerX = _exponentialTimeLine.mapTimeToHorizPixels( halfLife ) + _graphOriginX +
-                    //                      ( TIME_ZERO_OFFSET * _msToPixelsFactor );
-                    // halfLifeMarkerX = Math.min( halfLifeMarkerX, _xAxisOfGraph.getFullBoundsReference().getMaxX() );
-                }
-            }
-            else {
-                halfLifeMarkerX = this.graphOriginX + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan + halfLife) * this.msToPixelsFactor;
-            }
+            var halfLifeMarkerX = this.getHalfLifeX();
 
             this.halfLifeMarker.x = halfLifeMarkerX;
 
@@ -481,6 +475,12 @@ define(function(require) {
             // _halfLifeInfinityText.setVisible( _model.getHalfLife() == Double.POSITIVE_INFINITY );
         },
 
+        getHalfLifeX: function() {
+            var halfLife = this.simulation.get('halfLife');
+            var x = this.graphOriginX + (NucleusDecayChart.TIME_ZERO_OFFSET_PROPORTION * this.timeSpan + halfLife) * this.msToPixelsFactor;
+            return x;
+        },
+
         updateTimeSpan: function() {
             var nucleusType = this.simulation.get('nucleusType');
 
@@ -505,9 +505,17 @@ define(function(require) {
             var nucleusType = this.simulation.get('nucleusType');
             var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
 
-            var isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
-            var isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
-
+            var isotope1Text;
+            var isotope2Text;
+            if (this.useElementColors) {
+                isotope1Text = IsotopeSymbolGenerator.generateWithElementColor(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generateWithElementColor(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
+            else {
+                isotope1Text = IsotopeSymbolGenerator.generate(nucleusType,        NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+                isotope2Text = IsotopeSymbolGenerator.generate(decayedNucleusType, NucleusDecayChart.ISOTOPE_FONT_SIZE, 1);
+            }
+            
             this.yAxisIsotope1.removeChildren();
             this.yAxisIsotope2.removeChildren();
 

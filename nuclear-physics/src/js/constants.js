@@ -47,8 +47,8 @@ define(function (require) {
     Constants.URANIUM_COLOR = '#969600';
     Constants.LEAD_COLOR = '#61757E';
     Constants.POLONIUM_COLOR = '#f80';
-    Constants.CUSTOM_NUCLEUS_PRE_DECAY_COLOR = '#9B612A';
-    Constants.CUSTOM_NUCLEUS_POST_DECAY_COLOR = '#368237';
+    Constants.CUSTOM_NUCLEUS_PRE_DECAY_COLOR = '#9F1E75';
+    Constants.CUSTOM_NUCLEUS_POST_DECAY_COLOR = '#78b04a';
     
     // Colors for the strata in the Radioactive Dating Game, assumed to go
     // from top to bottom.

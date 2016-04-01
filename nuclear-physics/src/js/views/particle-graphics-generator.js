@@ -88,8 +88,13 @@ define(function(require) {
             // Create a graphical image that will represent this nucleus in the view.
             if (hideNucleons) {
                 // Show as a single sphere
-                var sprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
-                sprite.tint = this.getColorForElement(nucleus);
+                var sphereSprite = this.createSphereSprite(nucleus.get('diameter'), mvt);
+                sphereSprite.tint = this.getColorForElement(nucleus);
+                // Create its isotope symbol
+                var isotopeFontSize = sphereSprite.width * 0.36 * labelScale;
+                sprite = new PIXI.Container();
+                sprite.addChild(sphereSprite);
+                sprite.addChild(IsotopeSymbolGenerator.generate(nucleus, isotopeFontSize));
             }
             else {
                 noCachingAsBitmap = true;
@@ -106,8 +111,7 @@ define(function(require) {
                     var nucleusSprite = this.createNucleusSprite(numProtons, numNeutrons, mvt);
                     // Create its isotope symbol
                     var fontSize = mvt.modelToViewDeltaX(nucleus.get('diameter')) * 0.8 * labelScale;
-                    var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize, 1);
-                    isotopeSymbol.x = isotopeSymbol.width / 2;
+                    var isotopeSymbol = IsotopeSymbolGenerator.generate(nucleus, fontSize);
                     // Add them to a container
                     var container = new PIXI.Container();
                     container.addChild(nucleusSprite);

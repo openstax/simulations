@@ -11,10 +11,13 @@ define(function(require) {
     var Rectangle          = require('common/math/rectangle');
 
     var ParticleGraphicsGenerator     = require('views/particle-graphics-generator');
-    var MultipleNucleusDecayChart     = require('views/nucleus-decay-chart/multiple');
     var NuclearPhysicsSceneView       = require('views/scene');
     var AtomCanisterView              = require('views/atom-canister');
     var DraggableExplodingNucleusView = require('views/nucleus/draggable');
+
+    var HalfLifeNucleusDecayChart = require('radioactive-dating-game/views/nucleus-decay-chart/half-life');
+
+    var Constants = require('constants');
 
     var showNucleusPlacementDebuggingGraphics = false;
 
@@ -75,10 +78,10 @@ define(function(require) {
             var pixelsPerFemtometer;
 
             if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 6;
+                pixelsPerFemtometer = 3;
             }
             else {
-                pixelsPerFemtometer = 8;
+                pixelsPerFemtometer = 4;
             }
 
             this.viewOriginX = 0;
@@ -125,11 +128,13 @@ define(function(require) {
         },
 
         initNucleusDecayChart: function() {
-            this.nucleusDecayChart = new MultipleNucleusDecayChart({
+            this.nucleusDecayChart = new HalfLifeNucleusDecayChart({
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels(),
                 renderer: this.renderer,
-                bgColor: '#ADDBFF'
+                bgColor: '#ADDBFF',
+                hideNucleons: true,
+                useElementColors: true
             });
 
             if (AppView.windowIsShort()) {
@@ -155,7 +160,7 @@ define(function(require) {
                 canisterWidth = 160;
             }
             else {
-                canisterX = 760;
+                canisterX = 534;
                 canisterY = 440;
                 canisterWidth = 160;
             }
@@ -165,7 +170,10 @@ define(function(require) {
                 width: canisterWidth,
                 mvt: this.mvt,
                 dummyLayer: this.dummyLayer,
-                renderer: this.renderer
+                renderer: this.renderer,
+                preferredInterNucleusDistance: Constants.PREFERRED_INTER_NUCLEUS_DISTANCE,
+                minNucleusToObstacleDistance: Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE,
+                hideNucleons: true
             });
 
             this.atomCanisterView.displayObject.x = canisterX;
@@ -224,7 +232,8 @@ define(function(require) {
                 mvt: this.mvt,
                 showSymbol: this.showingLabels,
                 atomCanister: this.atomCanisterView,
-                renderer: this.renderer
+                renderer: this.renderer,
+                hideNucleons: true
             });
 
             this.nucleusViews.push(nucleusView);
@@ -259,6 +268,18 @@ define(function(require) {
 
         removeTenNuclei: function() {
             this.atomCanisterView.removeAtoms(10);
+        },
+
+        showLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].showLabel();
+            this.showingLabels = true;
+        },
+
+        hideLabels: function() {
+            for (var i = 0; i < this.nucleusViews.length; i++)
+                this.nucleusViews[i].hideLabel();
+            this.showingLabels = false;
         }
 
     });

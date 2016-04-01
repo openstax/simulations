@@ -6,7 +6,7 @@ define(function (require) {
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
     var DecayRatesSceneView          = require('radioactive-dating-game/views/scene/decay-rates');
-    var HalfLifeNucleusChooserView   = require('radioactive-dating-game/views/nucleus-chooser/half-life');
+    var DecayRatesNucleusChooserView = require('radioactive-dating-game/views/nucleus-chooser/decay-rates');
 
     var Constants = require('constants');
 
@@ -17,6 +17,10 @@ define(function (require) {
      * Multiple Atoms tab
      */
     var DecayRatesSimView = RadioactiveDatingGameSimView.extend({
+
+        events: _.extend({}, RadioactiveDatingGameSimView.prototype.events, {
+            'click .show-labels-check' : 'toggleLabels'
+        }),
 
         /**
          * Template for rendering the basic scaffolding
@@ -56,7 +60,7 @@ define(function (require) {
         },
 
         initNucleusChooser: function() {
-            this.nucleusChooserView = new HalfLifeNucleusChooserView({
+            this.nucleusChooserView = new DecayRatesNucleusChooserView({
                 simulation: this.simulation
             });
         },
@@ -75,6 +79,13 @@ define(function (require) {
             this.renderNucleusChooser();
 
             return this;
+        },
+        
+        toggleLabels: function(event) {
+            if ($(event.target).is(':checked'))
+                this.sceneView.showLabels();
+            else
+                this.sceneView.hideLabels();
         }
 
     });

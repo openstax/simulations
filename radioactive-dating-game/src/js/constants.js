@@ -6,6 +6,11 @@ define(function (require) {
 
     var Constants = require('nuclear-physics/constants'); 
 
+    // Preferred distance between nucleus centers when placing them on the canvas.
+    Constants.PREFERRED_INTER_NUCLEUS_DISTANCE = 15;  // In femtometers.
+    // Minimum distance between the center of a nucleus and a wall or other obstacle.
+    Constants.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE = 10;  // In femtometers.
+
 
     /*************************************************************************
      **                                                                     **

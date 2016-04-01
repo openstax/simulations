@@ -29,6 +29,7 @@ define(function(require) {
             this.isotope1Y = options.isotope1Y;
             this.isotope2Y = options.isotope2Y;
             this.labelScale = 0.6;
+            this.hideNucleons = options.hideNucleons;
 
             this.nuclei = [];
             this.sprites = [];
@@ -53,7 +54,7 @@ define(function(require) {
         },
 
         addNucleus: function(nucleus) {
-            var sprite = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, false, this.labelScale);
+            var sprite = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, this.hideNucleons, this.labelScale);
             // Set the offset for this node so that the nodes don't
             //   all just stack directly on top of each other.
             sprite.bunchingOffset = BUNCHING_OFFSETS[this.bunchingCounter];
@@ -154,7 +155,7 @@ define(function(require) {
                     sprite.x = nucleus.getAdjustedActivatedTime() * this.msToPx + (sprite.bunchingOffset.x * this.height);
                 }
                 else if (nucleus.hasDecayed()) {
-                    var decayedSprite = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, false, this.labelScale);
+                    var decayedSprite = ParticleGraphicsGenerator.generateLabeledNucleus(nucleus, this.mvt, this.renderer, this.hideNucleons, this.labelScale);
                     decayedSprite.decayTime = 0;
                     decayedSprite.x = sprite.x;
                     decayedSprite.y = sprite.y;

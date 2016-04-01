@@ -5,9 +5,10 @@ define(function(require) {
     var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var PixiView  = require('common/v3/pixi/view');
-    var Rectangle = require('common/math/rectangle');
-    var Vector2   = require('common/math/vector2');
+    var PixiView           = require('common/v3/pixi/view');
+    var Rectangle          = require('common/math/rectangle');
+    var Vector2            = require('common/math/vector2');
+    var ModelViewTransform = require('common/math/model-view-transform');
 
     var ExplodingNucleusView = require('views/nucleus/exploding');
 
@@ -51,7 +52,12 @@ define(function(require) {
                 overlayAlpha: 0.4,
 
                 showHints: true,
-                draggingEnabled: true
+                draggingEnabled: true,
+                hideNucleons: false,
+                numberOfAtomsToShow: 3,
+
+                preferredInterNucleusDistance: AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE,
+                minNucleusToObstacleDistance: AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE
             }, options);
 
             this.mvt = options.mvt;
@@ -73,12 +79,17 @@ define(function(require) {
             this.showHints = options.showHints;
             this.draggingEnabled = options.draggingEnabled;
             this._showingDragHint = options.showHints && this.draggingEnabled;
+            this.hideNucleons = options.hideNucleons;
+            this.numberOfAtomsToShow = options.numberOfAtomsToShow;
+
+            this.preferredInterNucleusDistance = options.preferredInterNucleusDistance;
+            this.minNucleusToObstacleDistance = options.minNucleusToObstacleDistance;
 
             this.nucleusPlacementBounds = new Rectangle(this.simulation.getNucleusBounds());
-            this.nucleusPlacementBounds.x += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
-            this.nucleusPlacementBounds.y += AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
-            this.nucleusPlacementBounds.w -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
-            this.nucleusPlacementBounds.h -= AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE * 2;
+            this.nucleusPlacementBounds.x += this.minNucleusToObstacleDistance;
+            this.nucleusPlacementBounds.y += this.minNucleusToObstacleDistance;
+            this.nucleusPlacementBounds.w -= this.minNucleusToObstacleDistance * 2;
+            this.nucleusPlacementBounds.h -= this.minNucleusToObstacleDistance * 2;
 
             // Cached objects
             this._bounds = new Rectangle();
@@ -186,7 +197,7 @@ define(function(require) {
             var windowCenterY = this.height * (108 / 260);
             var windowRadius  = this.height *  (55 / 260);
 
-            var numberOfDummies = 3;
+            var numberOfDummies = this.numberOfAtomsToShow;
             var angleStep = (Math.PI * 2) / numberOfDummies;
             var startingAngle = Math.random() * Math.PI;
             var radius = windowRadius * 0.7;
@@ -196,7 +207,7 @@ define(function(require) {
             for (var n = 0; n < numberOfDummies; n++) {
                 vec.set(radius, 0).rotate(startingAngle + n * angleStep);
 
-                dummy = this.createDummyObjectView();
+                dummy = this.createDummyObjectView(this.dummyMVT);
                 dummy.displayObject.x = windowCenterX + vec.x;
                 dummy.displayObject.y = windowCenterY + vec.y;
                 dummy.displayObject.alpha = 0.7;
@@ -232,12 +243,16 @@ define(function(require) {
          *   to the simulation until it gets turned into a real
          *   object after the user drops it.
          */
-        createDummyObjectView: function() {
+        createDummyObjectView: function(mvt) {
+            if (!mvt)
+                mvt = this.mvt;
+
             var model = this.simulation.createNucleus();
             var view = new ExplodingNucleusView({
                 model: model,
-                mvt: this.mvt,
-                renderer: this.renderer
+                mvt: mvt,
+                renderer: this.renderer,
+                hideNucleons: this.hideNucleons
             });
             return view;
         },
@@ -267,11 +282,11 @@ define(function(require) {
             var openSpotFound = false;
 
             for (var i = 0; i < 3 && !openSpotFound; i++) {
-                var minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE;
+                var minInterNucleusDistance = this.preferredInterNucleusDistance;
 
                 if (i === 1) {
                     // Lower our standards.
-                    minInterNucleusDistance = AtomCanisterView.PREFERRED_INTER_NUCLEUS_DISTANCE / 2;
+                    minInterNucleusDistance = this.preferredInterNucleusDistance / 2;
                 }
                 else if (i === 3) {
                     // Anything goes - nuclei may end up on top of each other.
@@ -327,13 +342,18 @@ define(function(require) {
         updateMVT: function(mvt) {
             this.mvt = mvt;
 
+            if (this.hideNucleons)
+                this.dummyMVT = ModelViewTransform.createScaleMapping(mvt.getXScale() * 0.6);
+            else
+                this.dummyMVT = mvt;
+
             this.drawDecorativeDummyObjects();
 
             this.updateAreasToAvoid();
         },
 
         updateAreasToAvoid: function() {
-            var padding = AtomCanisterView.MIN_NUCLEUS_TO_OBSTACLE_DISTANCE;
+            var padding = this.minNucleusToObstacleDistance;
 
             this.modelAreasToAvoid = [];
             for (var i = 0; i < this.areasToAvoid.length; i++) {
