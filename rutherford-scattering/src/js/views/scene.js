@@ -129,7 +129,7 @@ define(function(require) {
             var spaceBoxCorners = this.getLeftCorners(this.spaceBoxView.box);
 
             var projectionLines = new PIXI.Graphics();
-            var dashStyle = [6, 6];
+            var dashStyle = [3, 3];
 
             projectionLines.lineStyle(0.75, 0xFFFFFF, 1);
             projectionLines.moveTo(rayViewCorners.top.x, rayViewCorners.top.y);
@@ -160,6 +160,10 @@ define(function(require) {
 
         _update: function(time, deltaTime, paused, timeScale) {
             this.spaceBoxView._update(time, deltaTime, paused, timeScale);
+        },
+
+        reset: function() {
+            this.spaceBoxView.reset();
         }
 
     });

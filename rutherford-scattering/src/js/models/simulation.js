@@ -21,7 +21,8 @@ define(function (require, exports, module) {
         defaults: _.extend(Simulation.prototype.defaults, {
             alphaEnergy: Constants.DEFAULT_ALPHA_ENERGY,
             protonCount: Constants.DEFAULT_PROTON_COUNT,
-            neutronCount: Constants.DEFAULT_NEUTRON_COUNT
+            neutronCount: Constants.DEFAULT_NEUTRON_COUNT,
+            trace: false
         }),
 
         /**
@@ -31,10 +32,6 @@ define(function (require, exports, module) {
             this.initBounds();
             this.initAlphaParticles();
             this.rayGun = new RayGun({alphaParticles: this.alphaParticles});
-        },
-
-        resetComponents: function() {
-
         },
 
         _update: function(time, deltaTime) {

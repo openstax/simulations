@@ -67,7 +67,6 @@ define(function(require) {
          *   relies on it.
          */
         updateMVT: function(mvt) {
-            var center = SpaceBox.center;
             this.mvt = mvt;
 
             this.update();
@@ -191,9 +190,13 @@ define(function(require) {
 
             // clear old particles in scene
             this.getOldAlphaParticles().each(this.removeAlphaParticle, this);
+        },
+
+        reset: function() {
+            this.resetAlphaParticles();
         }
 
-    }, {center: {x: 0, y: 0}});
+    });
 
 
     return SpaceBox;

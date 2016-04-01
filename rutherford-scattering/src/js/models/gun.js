@@ -54,7 +54,7 @@ define(function (require) {
             }
         }
 
-    }, {});
+    });
 
     return RayGun;
 });
