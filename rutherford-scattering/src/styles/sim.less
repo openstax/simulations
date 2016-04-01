@@ -5,6 +5,43 @@
     min-height: inherit;
 }
 
+/**
+ * Sim Settings, top right
+ */
+.sim-settings {
+    position: absolute;
+    top: -36px;
+    right: 0;
+    z-index: 10;
+
+    > div {
+        float: left;
+        margin: 0 4px;
+    }
+
+    button {
+        background: @gray-lightest;
+        color: @link-color;
+        outline: none;
+        border: none;
+        border-radius: 50%;
+        width: 28px;
+        height: 28px;
+        text-align: center;
+
+        &:hover, &:active, &.active {
+            background: @link-color;
+            color: #fff;
+        }
+
+        &.active{
+            &:hover{
+                background: fade(@link-color, 75%);
+            }
+        }
+    }
+}
+
 .sim-controls-wrapper {
     position: absolute;
     right: @panel-margin;
