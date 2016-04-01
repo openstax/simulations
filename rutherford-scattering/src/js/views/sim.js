@@ -140,6 +140,8 @@ define(function (require) {
             this.renderScaffolding();
             this.renderSceneView();
             this.renderPlaybackControls();
+
+            this.initControls();
             this.renderControls();
 
             return this;
@@ -179,10 +181,6 @@ define(function (require) {
         },
 
         renderControls: function() {
-            if(!_.isObject(this.controls)){
-                this.initControls();
-            }
-
             _.each(this.controls, function(control, controlOf){
                 control.$slider.noUiSlider({
                     start: control.initial,
@@ -208,12 +206,25 @@ define(function (require) {
             this.renderLegend();
         },
 
+        resetSimulation: function() {
+            // Set pause the updater and reset everything
+            this.updater.pause();
+            this.updater.reset();
+            this.resetComponents();
+            this.rerender();
+
+            // Resume normal function
+            this.updater.play();
+            this.play();
+            this.pausedChanged();
+        },
+
         /**
          * Resets all the components of the view.
          */
         resetComponents: function() {
             SimView.prototype.resetComponents.apply(this);
-            this.initSceneView();
+            this.sceneView.reset();
         },
 
         /**
