@@ -132,6 +132,18 @@ define(function(require) {
         showVolcano: function() {
             this.volcanoLandscape.show();
             this.treeLandscape.hide();
+        },
+
+        setSoundVolumeMute: function() {
+            this.volcanoLandscape.setSoundVolumeMute();
+        },
+
+        setSoundVolumeLow: function() {
+            this.volcanoLandscape.setSoundVolumeLow();
+        },
+
+        setSoundVolumeHigh: function() {
+            this.volcanoLandscape.setSoundVolumeHigh();
         }
 
     });

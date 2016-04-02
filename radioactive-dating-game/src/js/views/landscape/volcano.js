@@ -20,6 +20,8 @@ define(function(require) {
         shakeDistance: 10, // Pixels
         shakeSpeed: 500,   // Pixels per second
         fogTimeOffset: 1,
+        lowVolume: 40,
+        highVolume: 100,
 
         /**
          * Initializes the new LandscapeView.
@@ -34,7 +36,7 @@ define(function(require) {
 
             this.tremorSound = new buzz.sound('audio/tremor', {
                 formats: ['ogg', 'mp3', 'wav'],
-                volume: 50
+                volume: this.lowVolume
             });
 
             this.listenTo(this.simulation, 'eruption-start', this.eruptionStarted);
@@ -172,6 +174,18 @@ define(function(require) {
             this.updateLayerPositions();
             this.volcanoSmokeView.stopSmoking();
             this.$eruptVolcanoButton.show();
+        },
+
+        setSoundVolumeMute: function() {
+            this.tremorSound.setVolume(0);
+        },
+
+        setSoundVolumeLow: function() {
+            this.tremorSound.setVolume(this.lowVolume);
+        },
+
+        setSoundVolumeHigh: function() {
+            this.tremorSound.setVolume(this.highVolume);
         }
 
     });

@@ -101,6 +101,18 @@ define(function (require) {
         rockSelected: function() {
             this.sceneView.showVolcano();
             this.simulation.set('mode', MeasurementSimulation.MODE_ROCK);
+        },
+
+        setSoundVolumeMute: function() {
+            this.sceneView.setSoundVolumeMute();
+        },
+
+        setSoundVolumeLow: function() {
+            this.sceneView.setSoundVolumeLow();
+        },
+
+        setSoundVolumeHigh: function() {
+            this.sceneView.setSoundVolumeHigh();
         }
 
     });
