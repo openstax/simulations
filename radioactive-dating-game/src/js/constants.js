@@ -4,7 +4,8 @@ define(function (require) {
 
     var range = require('common/math/range');
 
-    var NucleusType = require('models/nucleus-type');
+    var NucleusType  = require('models/nucleus-type');
+    var HalfLifeInfo = require('models/half-life-info');
 
     var Constants = require('nuclear-physics/constants'); 
 
@@ -74,6 +75,49 @@ define(function (require) {
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
     Constants.MeasurementSimulation = MeasurementSimulation;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                        ANIMATED DATABLE ITEM                        **
+     **                                                                     **
+     *************************************************************************/
+
+    var AnimatedDatableItem = {};
+
+    /**
+     * This enum defines the possible states with respect to closure, which
+     *   is the time at which the item begins aging radiometrically and its
+     *   radioactive elements start decreasing.  For example, if the item is
+     *   organic, closure occurs when the item dies.
+     */
+    AnimatedDatableItem.CLOSURE_NOT_POSSIBLE = 0; // Closure cannot be forced.
+    AnimatedDatableItem.CLOSURE_POSSIBLE = 1;     // Closure has not occurred, but could be forced.
+    AnimatedDatableItem.CLOSED = 2;               // Closure has occurred.
+
+    Constants.AnimatedDatableItem = AnimatedDatableItem;
+
+    
+    /*************************************************************************
+     **                                                                     **
+     **                             FLYING ROCK                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var FlyingRock = {};
+
+    FlyingRock.MIN_ARC_HEIGHT_INCREMENT = 0.05;
+    FlyingRock.MAX_ARC_HEIGHT_INCREMENT = 0.15;
+    FlyingRock.ARC_HEIGHT_INCREMENT_RANGE = range({
+        min: FlyingRock.MIN_ARC_HEIGHT_INCREMENT,
+        max: FlyingRock.MAX_ARC_HEIGHT_INCREMENT
+    });
+    FlyingRock.MAX_X_TRANSLATION_INCREMENT = 1;
+    FlyingRock.MAX_ROTATION_CHANGE = Math.PI / 10;
+    FlyingRock.NUM_FLIGHT_STEPS = 50;
+    FlyingRock.FLIGHT_STEP_INTERVAL = HalfLifeInfo.convertHoursToMs(10);
+
+    Constants.FlyingRock = FlyingRock;
 
 
     /*************************************************************************

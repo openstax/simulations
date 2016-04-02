@@ -2,10 +2,10 @@ define(function (require, exports, module) {
 
     'use strict';
 
-    var _ = require('underscore');
+    var _        = require('underscore');
+    var Backbone = require('backbone');
 
-    var Vector2           = require('common/math/vector2');
-    var VanillaCollection = require('common/collections/vanilla');
+    var Vector2 = require('common/math/vector2');
 
     var ItemDatingSimulation = require('radioactive-dating-game/models/simulation/item-dating');
 
@@ -28,6 +28,8 @@ define(function (require, exports, module) {
          */
         initComponents: function() {
             ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
+
+            this.items = new Backbone.Collection();
         },
 
         /**
@@ -68,7 +70,7 @@ define(function (require, exports, module) {
                 }
             }
             else if (this._rockCooling) {
-                
+
             }
         },
 
@@ -78,12 +80,26 @@ define(function (require, exports, module) {
             return baseInterval + (Math.random() * baseInterval - baseInterval / 2);
         },
 
+        getAdjustedTime: function() {
+            if (this.get('mode') === MeasurementSimulation.MODE_TREE) {
+                // Return the tree's getTotalAge()
+            }
+            else {
+                // Return the volcano's getTotalAge()
+            }
+            return this.time;
+        },
+
         eruptVolcano: function() {
             this.time = 0;
             this._volcanoErupting = true;
             this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
             this.trigger('eruption-start');
+        },
+
+        modeChanged: function(simulation, mode) {
+
         }
 
     }, Constants.MeasurementSimulation);
