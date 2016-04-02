@@ -2,10 +2,15 @@ define(function(require) {
 
     'use strict';
 
+    var _    = require('underscore');
     var PIXI = require('pixi');
 
-    var AppView  = require('common/v3/app/app');
-    var PixiView = require('common/v3/pixi/view');
+    var AppView            = require('common/v3/app/app');
+    var PixiView           = require('common/v3/pixi/view');
+    var ModelViewTransform = require('common/math/model-view-transform');
+    var Vector2            = require('common/math/vector2');
+
+    var Constants = require('constants');
 
     /**
      * Represents a landscape scene with backdrop and foreground items.
@@ -74,7 +79,9 @@ define(function(require) {
         },
 
         updateBackgroundScale: function() {
-            var targetSceneWidth = AppView.windowIsShort() ? this.width : 1500; // In pixels
+            var targetSceneWidth = AppView.windowIsShort() ? 
+                LandscapeView.SHORT_SCREEN_BACKGROUND_WIDTH : 
+                LandscapeView.DEFAULT_BACKGROUND_WIDTH; // In pixels
             var scale = targetSceneWidth / this.background.width;
             this.background.scale.x = scale;
             this.background.scale.y = scale;
@@ -90,7 +97,21 @@ define(function(require) {
             this.$el.hide();
         }
 
-    });
+    }, _.extend({}, Constants.LandscapeView, {
+
+        createMVT: function(width, height) {
+            var scale = AppView.windowIsShort() ? 
+                LandscapeView.SHORT_SCREEN_BACKGROUND_WIDTH / LandscapeView.BACKGROUND_IMAGE_WIDTH: 
+                LandscapeView.DEFAULT_BACKGROUND_WIDTH      / LandscapeView.BACKGROUND_IMAGE_WIDTH;
+
+            return ModelViewTransform.createSinglePointScaleInvertedYMapping(
+                new Vector2(0, 0),              // Model origin
+                new Vector2(width / 2, height), // View origin
+                scale
+            );
+        }
+
+    }));
 
 
     return LandscapeView;

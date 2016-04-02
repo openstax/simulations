@@ -10,6 +10,7 @@ define(function(require) {
     var LandscapeView    = require('radioactive-dating-game/views/landscape');
     var VolcanoSmokeView = require('radioactive-dating-game/views/volcano-smoke');
 
+    var Constants = require('constants');
     var Assets = require('assets');
 
     /**
@@ -95,14 +96,9 @@ define(function(require) {
         updateMVT: function(mvt) {
             LandscapeView.prototype.updateMVT.apply(this, arguments);
 
-            if (AppView.windowIsShort()) {
-                this.volcanoSmokeView.displayObject.x = 566;
-                this.volcanoSmokeView.displayObject.y = 318;
-            }
-            else {
-                this.volcanoSmokeView.displayObject.x = 612;
-                this.volcanoSmokeView.displayObject.y = 390;
-            }
+            var smokeViewPosition = this.mvt.modelToView(Constants.MeasurementSimulation.VOLCANO_TOP_POSITION);
+            this.volcanoSmokeView.displayObject.x = smokeViewPosition.x;
+            this.volcanoSmokeView.displayObject.y = smokeViewPosition.y;
         },
 
         update: function(time, deltaTime, paused) {

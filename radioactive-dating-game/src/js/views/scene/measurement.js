@@ -13,6 +13,7 @@ define(function(require) {
     var NuclearPhysicsSceneView = require('views/scene');
 
     var DecayRatesGraphView  = require('radioactive-dating-game/views/decay-rates-graph');
+    var LandscapeView        = require('radioactive-dating-game/views/landscape');
     var TreeLandscapeView    = require('radioactive-dating-game/views/landscape/tree');
     var VolcanoLandscapeView = require('radioactive-dating-game/views/landscape/volcano');
 
@@ -40,24 +41,7 @@ define(function(require) {
         },
 
         initMVT: function() {
-            var pixelsPerFemtometer;
-
-            if (AppView.windowIsShort()) {
-                pixelsPerFemtometer = 0.7;
-            }
-            else {
-                pixelsPerFemtometer = 1;
-            }
-
-            this.viewOriginX = 0;
-            this.viewOriginY = 0;
-
-            // The center of the screen is actually (5, 5) in the original
-            this.mvt = ModelViewTransform.createSinglePointScaleMapping(
-                new Vector2(0, 0),
-                new Vector2(this.viewOriginX, this.viewOriginY),
-                pixelsPerFemtometer
-            );
+            this.mvt = LandscapeView.createMVT(this.width, this.height);
         },
 
         initGraphics: function() {
@@ -65,6 +49,13 @@ define(function(require) {
 
             this.initMVT();
             this.initBackground();
+
+            var graphics = new PIXI.Graphics();
+            graphics.beginFill(0xFF0000, 1);
+            var point = this.mvt.modelToView(new Vector2(100, 60));
+            graphics.drawCircle(point.x, point.y, 3);
+            graphics.endFill();
+            this.stage.addChild(graphics);
             // this.initDecayRatesGraphView();
         },
 

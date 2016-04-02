@@ -2,7 +2,8 @@ define(function (require) {
 
     'use strict';
 
-    var range = require('common/math/range');
+    var range   = require('common/math/range');
+    var Vector2 =require('common/math/vector2');
 
     var NucleusType  = require('models/nucleus-type');
     var HalfLifeInfo = require('models/half-life-info');
@@ -73,6 +74,8 @@ define(function (require) {
     MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME =  800; // Simulation milliseconds
     MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME   = 5000; // Simulation milliseconds
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
+
+    MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 
@@ -157,6 +160,21 @@ define(function (require) {
     DecayRatesGraphView.POINT_RADIUS = 2;
 
     Constants.DecayRatesGraphView = DecayRatesGraphView;
+
+
+    /*************************************************************************
+     **                                                                     **
+     **                            LANDSCAPE VIEW                           **
+     **                                                                     **
+     *************************************************************************/
+
+    var LandscapeView = {};
+
+    LandscapeView.BACKGROUND_IMAGE_WIDTH = 1600;
+    LandscapeView.DEFAULT_BACKGROUND_WIDTH = 1500;
+    LandscapeView.SHORT_SCREEN_BACKGROUND_WIDTH = 1060;
+
+    Constants.LandscapeView = LandscapeView;
 
 
     /*************************************************************************
