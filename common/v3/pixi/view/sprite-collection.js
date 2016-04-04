@@ -102,7 +102,7 @@ define(function(require) {
         },
 
         createSprite: function() {
-            var sprite = new PIXI.Sprite(this.texture);
+            var sprite = new PIXI.Sprite(this.getSpriteTexture());
             sprite.anchor.x = 0.5;
             sprite.anchor.y = 0.5;
             this.sprites.push(sprite);

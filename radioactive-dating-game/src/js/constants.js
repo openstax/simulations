@@ -117,13 +117,13 @@ define(function (require) {
 
     var FlyingRock = {};
 
-    FlyingRock.MIN_ARC_HEIGHT_INCREMENT = 0.05;
-    FlyingRock.MAX_ARC_HEIGHT_INCREMENT = 0.15;
+    FlyingRock.MIN_ARC_HEIGHT_INCREMENT = 0.6;
+    FlyingRock.MAX_ARC_HEIGHT_INCREMENT = 1.7;
     FlyingRock.ARC_HEIGHT_INCREMENT_RANGE = range({
         min: FlyingRock.MIN_ARC_HEIGHT_INCREMENT,
         max: FlyingRock.MAX_ARC_HEIGHT_INCREMENT
     });
-    FlyingRock.MAX_X_TRANSLATION_INCREMENT = 1;
+    FlyingRock.MAX_X_TRANSLATION_INCREMENT = 10;
     FlyingRock.MAX_ROTATION_CHANGE = Math.PI / 10;
     FlyingRock.NUM_FLIGHT_STEPS = 50;
     FlyingRock.FLIGHT_STEP_INTERVAL = HalfLifeInfo.convertHoursToMs(10);

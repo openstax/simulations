@@ -77,7 +77,7 @@ define(function(require) {
                 collection: this.simulation.flyingRocks
             });
 
-            this.foregroundLayer.addChild(this.flyingRockCollectionView.displayObject);
+            this.backgroundEffectsLayer.addChild(this.flyingRockCollectionView.displayObject);
         },
 
         getBackgroundTexture: function() {

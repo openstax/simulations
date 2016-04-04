@@ -48,7 +48,7 @@ define(function (require) {
                 this.currentFlightStep++;
 
                 if (this.currentFlightStep < FlyingRock.NUM_FLIGHT_STEPS) {
-                    var flightYTranslation = this.arcHeightControl * ((FlyingRock.NUM_FLIGHT_STEPS * 0.42) - i);
+                    var flightYTranslation = this.arcHeightControl * ((FlyingRock.NUM_FLIGHT_STEPS * 0.42) - this.currentFlightStep);
                     this.translate(this.flightXTranslation, flightYTranslation);
                     this.rotate(this.rotationPerStep)
                 }
