@@ -32,6 +32,13 @@ define(function (require) {
 
         initAnimationParameters: function() {
             this._flyCounter = AgingRock.FLY_COUNT;
+            // Calculate the x translation per step that will get us through our desired
+            //   flight path and to our desired final destination
+            this._flightDxPerStep = (AgingRock.FINAL_X - this.getX()) / AgingRock.FLY_COUNT;
+            // Save the initial y
+            this._initialY = this.getY();
+            // Distance from top of arc to final y
+            this._totalArcHeight = AgingRock.FIRST_PART_ARC_HEIGHT - (AgingRock.FINAL_Y - this.getY()); 
             // Calculate the amount of growth needed per step in order to reach
             //   the right size by the end of the flight.
             this._growthPerStep = Math.pow(AgingRock.FINAL_ROCK_WIDTH / this.get('width'), 1 / AgingRock.FLY_COUNT);
@@ -51,10 +58,11 @@ define(function (require) {
         animate: function(age, deltaTime) {
             if (this._flyCounter > 0) {
                 // Move along the arc
-                var flightXTranslation = AgingRock.FINAL_X_TRANSLATION / AgingRock.FLY_COUNT;
-                var flightYTranslation = (this._flyCounter - (AgingRock.FLY_COUNT * 0.58)) * AgingRock.ARC_HEIGHT_FACTOR;
-                this.translate(flightXTranslation, flightYTranslation);
-                
+                var dx = this._flightDxPerStep;
+                var y = this.getYFromStep(this._flyCounter);
+                var dy = y - this.getY();
+                this.setPosition(this.getX() + dx, y);
+                // console.log(this.get('position'))
                 // Grow
                 this.set('width',  this.get('width')  * this._growthPerStep);
                 this.set('height', this.get('height') * this._growthPerStep);
@@ -66,7 +74,7 @@ define(function (require) {
                 this._flyCounter--;
 
                 // Trigger an event if it's starting its decent so we can change layers in the view
-                if (!this._falling && flightYTranslation < 0) {
+                if (!this._falling && dy < 0) {
                     this._falling = true;
                     this.trigger('falling');
                 }
@@ -107,6 +115,24 @@ define(function (require) {
                 this._closureOccurredSent = true;
             }
         },
+
+        getYFromStep: function(step) {
+            // This is a parabolic equation where x represents the time as a proportion
+            //   of the current step vs the total number of steps in the animation and
+            //   where x = 1 finds us at the resting y value, which is zero.  The zero
+            //   is actually the offset from the final y position.  The equation follows
+            //   the form y = a(x - h)^2 + k
+            var h = AgingRock.FIRST_PART_ARC_TIME;
+            var k = this._totalArcHeight;
+            var yIntercept = this._initialY - AgingRock.FINAL_Y;
+            // Solve for a when x = 0 (when x = 0, y is the y-intercept)
+            var a = (yIntercept - k) / Math.pow(0 - h, 2);
+            // Then plug current x into the equation to get y
+            var x = step / AgingRock.FLY_COUNT;
+            var y = a * Math.pow(x - h, 2) + k;
+console.log(y)
+            return AgingRock.FINAL_Y + y;
+        }
 
     }, Constants.AgingRock);
 

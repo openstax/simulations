@@ -143,9 +143,11 @@ define(function (require) {
     var AgingRock = {};
 
     AgingRock.FLY_COUNT = 50; // Controls how long it takes the rock to fly out and then hit the ground.
-    AgingRock.FINAL_X_TRANSLATION = -100; // Model units
+    AgingRock.FINAL_X = -100; // Model units
+    AgingRock.FINAL_Y = 72;
     AgingRock.FINAL_ROCK_WIDTH = 100; // Model units
-    AgingRock.ARC_HEIGHT_FACTOR = 0.04; // Higher for higher arc.
+    AgingRock.FIRST_PART_ARC_HEIGHT = 200; // Higher for higher arc.
+    AgingRock.FIRST_PART_ARC_TIME = 0.4; // Time at which the rock reaches the top of its arc as the percent of total flight time
     AgingRock.ROTATION_PER_STEP = Math.PI * 0.1605; // Controls rate of rotation when flying.
     AgingRock.COOLING_START_PAUSE_STEPS = 50; // Length of pause before after landing & before starting to cool.
     AgingRock.COOLING_STEPS = 60; // Number of steps to cool down.

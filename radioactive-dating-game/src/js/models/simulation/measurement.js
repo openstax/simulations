@@ -91,7 +91,7 @@ define(function (require, exports, module) {
                 if (this.time >= MeasurementSimulation.AGING_ROCK_EMISSION_TIME && !this.agingRock) {
                     // Create the aging rock
                     this.agingRock = new AgingRock({
-                        position: MeasurementSimulation.INITIAL_ROCK_POSITION, 
+                        position: MeasurementSimulation.VOLCANO_TOP_POSITION, 
                         width: MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH,
                         timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
                     });
