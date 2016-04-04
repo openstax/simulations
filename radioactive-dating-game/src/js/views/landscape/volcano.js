@@ -205,7 +205,7 @@ define(function(require) {
 
             // When the rock starts falling, move it to the foreground
             this.listenTo(this.simulation.agingRock, 'falling', function() {
-                this.agingRockView.remove();
+                this.backgroundEffectsLayer.removeChild(this.agingRockView.displayObject);
                 this.foregroundLayer.addChild(this.agingRockView.displayObject);
             });
         },
