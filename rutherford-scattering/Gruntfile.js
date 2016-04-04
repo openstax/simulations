@@ -24,7 +24,7 @@ module.exports = function(grunt) {
 			},
 			audio: {
 				expand: true, // required when using cwd
-				cwd: '../nuclear-physics/src/audio/',
+				cwd: 'src/audio/',
 				src: '**',
 				dest: 'dist/audio/'
 			},
@@ -32,7 +32,7 @@ module.exports = function(grunt) {
 				expand: true,
 				filter: 'isFile',
 				flatten: true,
-				src: ['../nuclear-physics/node_modules/font-awesome/fonts/**'],
+				src: ['node_modules/font-awesome/fonts/**'],
 				dest: 'dist/node_modules/font-awesome/fonts/'
 			},
 			common: {
@@ -78,14 +78,13 @@ module.exports = function(grunt) {
 					out: 'src/optimized.js',
 
 					paths: {
-						'assets': 'assets-dist',
-						'styles/font-awesome' : '../styles/font-awesome'
+						'assets': 'assets-dist'
 					},
 
 					less: {
-						modifyVars: {
-							'fa-font-path': '"../node_modules/font-awesome/fonts/"',
-						}
+					    modifyVars: {
+					        'fa-font-path': '"../node_modules/font-awesome/fonts/"'
+					    }
 					}
 
 					// Doing it this way doesn't work:
