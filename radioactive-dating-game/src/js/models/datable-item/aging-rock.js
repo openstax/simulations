@@ -34,11 +34,12 @@ define(function (require) {
             this._flyCounter = AgingRock.FLY_COUNT;
             // Calculate the amount of growth needed per step in order to reach
             //   the right size by the end of the flight.
-            this._growthPerStep = Math.pow(AgingRock.FINAL_ROCK_WIDTH / width, 1 / AgingRock.FLY_COUNT);
+            this._growthPerStep = Math.pow(AgingRock.FINAL_ROCK_WIDTH / this.get('width'), 1 / AgingRock.FLY_COUNT);
             this._coolingStartPauseCounter = AgingRock.COOLING_START_PAUSE_STEPS;
             this._coolingCounter = AgingRock.COOLING_STEPS;
             this._closurePossibleSent = false;
             this._closureOccurredSent = false;
+            this._falling = false;
         },
 
         reset: function() {
@@ -63,6 +64,12 @@ define(function (require) {
                 
                 // Move to the next step
                 this._flyCounter--;
+
+                // Trigger an event if it's starting its decent so we can change layers in the view
+                if (!this._falling && flightYTranslation < 0) {
+                    this._falling = true;
+                    this.trigger('falling');
+                }
             }
             else if (this._flyCounter <= 0 && !this._closurePossibleSent) {
                 // The rock has landed, so it is now possible to force closure if desired.

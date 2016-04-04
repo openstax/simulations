@@ -85,6 +85,9 @@ define(function (require) {
     MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
 
+    MeasurementSimulation.INITIAL_TREE_WIDTH = 10;
+    MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH = 10;
+
     Constants.MeasurementSimulation = MeasurementSimulation;
 
 

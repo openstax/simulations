@@ -10,6 +10,7 @@ define(function(require) {
     var LandscapeView            = require('radioactive-dating-game/views/landscape');
     var VolcanoSmokeView         = require('radioactive-dating-game/views/volcano-smoke');
     var FlyingRockCollectionView = require('radioactive-dating-game/views/flying-rock-collection');
+    var AgingRockView            = require('radioactive-dating-game/views/aging-rock');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -41,8 +42,9 @@ define(function(require) {
                 volume: this.lowVolume
             });
 
-            this.listenTo(this.simulation, 'eruption-start', this.eruptionStarted);
-            this.listenTo(this.simulation, 'eruption-end',   this.eruptionEnded);
+            this.listenTo(this.simulation, 'eruption-start',     this.eruptionStarted);
+            this.listenTo(this.simulation, 'eruption-end',       this.eruptionEnded);
+            this.listenTo(this.simulation, 'aging-rock-emitted', this.agingRockEmitted);
         },
 
         initGraphics: function() {
@@ -116,37 +118,40 @@ define(function(require) {
             if (!paused) {
                 this.flyingRockCollectionView.update(time, deltaTime, paused);
 
-                if (this._volcanoErupting) {
-                    this._xOffset += deltaTime * this.shakeSpeed * this._shakeDirection;
-
-                    if (this._xOffset <= -this.shakeDistance / 2) {
-                        this._xOffset = -this.shakeDistance / 2;
-                        this._shakeDirection *= -1;
-                    }
-                    else if (this._xOffset >= this.shakeDistance / 2) {
-                        this._xOffset = this.shakeDistance / 2;
-                        this._shakeDirection *= -1;
-                    }
-
-                    this.updateLayerPositions();
-
-                    this._fogTimer += deltaTime;
-                    if (this._fogTimer >= this.fogTimeOffset) {
-                        this.fog.alpha += deltaTime * 0.7;
-                        if (this.fog.alpha > 1)
-                            this.fog.alpha = 1;    
-                    }
-                }
-                else if (this._volcanoCooling) {
-                    this._fogTimer += deltaTime;
-                    if (this._fogTimer >= this.fogTimeOffset) {
-                        this.fog.alpha -= deltaTime * 0.7;
-                        if (this.fog.alpha < 0)
-                            this.fog.alpha = 0;
-                    }
-                }
-
+                this.animateShakeAndFog(time, deltaTime, paused);
                 this.volcanoSmokeView.update(time, deltaTime, paused);
+            }
+        },
+
+        animateShakeAndFog: function(time, deltaTime, paused) {
+            if (this._volcanoErupting) {
+                this._xOffset += deltaTime * this.shakeSpeed * this._shakeDirection;
+
+                if (this._xOffset <= -this.shakeDistance / 2) {
+                    this._xOffset = -this.shakeDistance / 2;
+                    this._shakeDirection *= -1;
+                }
+                else if (this._xOffset >= this.shakeDistance / 2) {
+                    this._xOffset = this.shakeDistance / 2;
+                    this._shakeDirection *= -1;
+                }
+
+                this.updateLayerPositions();
+
+                this._fogTimer += deltaTime;
+                if (this._fogTimer >= this.fogTimeOffset) {
+                    this.fog.alpha += deltaTime * 0.7;
+                    if (this.fog.alpha > 1)
+                        this.fog.alpha = 1;    
+                }
+            }
+            else if (this._volcanoCooling) {
+                this._fogTimer += deltaTime;
+                if (this._fogTimer >= this.fogTimeOffset) {
+                    this.fog.alpha -= deltaTime * 0.7;
+                    if (this.fog.alpha < 0)
+                        this.fog.alpha = 0;
+                }
             }
         },
 
@@ -171,6 +176,10 @@ define(function(require) {
             this._volcanoErupting = true;
             this._volcanoCooling = false;
 
+            if (this.agingRockView)
+                this.agingRockView.remove();
+            this.agingRockView = null;
+
             this.volcanoSmokeView.startSmoking();
             this.tremorSound.stop().play();
         },
@@ -183,6 +192,22 @@ define(function(require) {
             this.updateLayerPositions();
             this.volcanoSmokeView.stopSmoking();
             this.$eruptVolcanoButton.show();
+        },
+
+        agingRockEmitted: function() {
+            this.agingRockView = new AgingRockView({
+                model: this.simulation.agingRock,
+                mvt: this.mvt
+            });
+
+            // Add it to the background effects layer first so it's behind the volcano
+            this.backgroundEffectsLayer.addChild(this.agingRockView.displayObject);
+
+            // When the rock starts falling, move it to the foreground
+            this.listenTo(this.simulation.agingRock, 'falling', function() {
+                this.agingRockView.remove();
+                this.foregroundLayer.addChild(this.agingRockView.displayObject);
+            });
         },
 
         setSoundVolumeMute: function() {

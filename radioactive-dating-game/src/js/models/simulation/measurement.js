@@ -8,7 +8,8 @@ define(function (require, exports, module) {
     var Vector2 = require('common/math/vector2');
 
     var ItemDatingSimulation = require('radioactive-dating-game/models/simulation/item-dating');
-    var FlyingRock = require('radioactive-dating-game/models/datable-item/flying-rock');
+    var FlyingRock           = require('radioactive-dating-game/models/datable-item/flying-rock');
+    var AgingRock            = require('radioactive-dating-game/models/datable-item/aging-rock');
 
     /**
      * Constants
@@ -94,6 +95,7 @@ define(function (require, exports, module) {
                         width: MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH,
                         timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
                     });
+                    this.trigger('aging-rock-emitted');
                 }
 
                 if (this.time >= MeasurementSimulation.ERUPTION_END_TIME) {
