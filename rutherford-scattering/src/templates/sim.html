@@ -1,0 +1,50 @@
+<div class="sim-settings">
+    <div class="help-btn-wrapper">
+        <button class="help-btn" title="Help" data-toggle="modal" data-target="#help-dialog"><span class="fa fa-question"></span></button>
+    </div>
+</div>
+
+<span class="scene-view-placeholder"></span>
+
+<div class="sim-controls-wrapper">
+    <div class="sim-controls-left">
+        <div class="sim-controls legend-panel">
+            <h2>Legend</h2>
+        </div>
+    </div>
+    <div class="sim-controls-right">
+        <div class="sim-controls alpha-particle-properties-panel">
+            <h2>Alpha Particle Properties</h2>
+
+            <div class="alpha-energy-slider-container">
+                <label class="slider-header"><span class="alpha-energy-title">Energy</span></label>
+                <div class="alpha-energy-slider-wrapper">
+                    <div class="slider alpha-energy-slider"></div>
+                </div>
+            </div>
+
+            <div class="show-traces-container">
+                <input type="checkbox" class="show-traces-check" id="show-traces-check-<%= simulation.cid %>">
+                <label for="show-traces-check-<%= simulation.cid %>">Show traces</label>
+            </div>
+        </div>
+        <% if(showAtomProperties){ %>
+            <div class="sim-controls atom-properties-panel">
+                <h2>Atom Properties</h2>
+                <div class="protons-slider-container slider-container">
+                    <label class="slider-header"><span class="protons-title">Number of protons</span> <span class="slider-value protons-value"></span></label>
+                    <div class="protons-slider-wrapper">
+                        <div class="slider protons-slider"></div>
+                    </div>
+                </div>
+                <div class="neutrons-slider-container slider-container">
+                    <label class="slider-header"><span class="neutrons-title">Number of neutrons</span> <span class="slider-value neutrons-value"></span></label>
+                    <div class="neutrons-slider-wrapper">
+                        <div class="slider neutrons-slider"></div>
+                    </div>
+                </div>
+
+            </div>
+        <% } %>
+    </div>
+</div>
