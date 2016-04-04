@@ -83,7 +83,7 @@ define(function (require) {
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
     MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
-    MeasurementSimulation.FLYING_ROCK_WIDTH = 10;
+    MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 
