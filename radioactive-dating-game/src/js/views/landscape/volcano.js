@@ -7,8 +7,9 @@ define(function(require) {
 
     var AppView = require('common/v3/app/app');
 
-    var LandscapeView    = require('radioactive-dating-game/views/landscape');
-    var VolcanoSmokeView = require('radioactive-dating-game/views/volcano-smoke');
+    var LandscapeView            = require('radioactive-dating-game/views/landscape');
+    var VolcanoSmokeView         = require('radioactive-dating-game/views/volcano-smoke');
+    var FlyingRockCollectionView = require('radioactive-dating-game/views/flying-rock-collection');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -49,6 +50,7 @@ define(function(require) {
 
             this.initSmoke();
             this.initFog();
+            this.initFlyingRocks();
         },
 
         initSmoke: function() {
@@ -67,6 +69,15 @@ define(function(require) {
             this.fog.alpha = 0;
 
             this.foregroundEffectsLayer.addChild(this.fog);
+        },
+
+        initFlyingRocks: function() {
+            this.flyingRockCollectionView = new FlyingRockCollectionView({
+                mvt: this.mvt,
+                collection: this.simulation.flyingRocks
+            });
+
+            this.foregroundLayer.addChild(this.flyingRockCollectionView.displayObject);
         },
 
         getBackgroundTexture: function() {
@@ -103,6 +114,8 @@ define(function(require) {
 
         update: function(time, deltaTime, paused) {
             if (!paused) {
+                this.flyingRockCollectionView.update(time, deltaTime, paused);
+
                 if (this._volcanoErupting) {
                     this._xOffset += deltaTime * this.shakeSpeed * this._shakeDirection;
 

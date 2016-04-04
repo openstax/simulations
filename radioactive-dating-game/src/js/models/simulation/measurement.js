@@ -8,6 +8,7 @@ define(function (require, exports, module) {
     var Vector2 = require('common/math/vector2');
 
     var ItemDatingSimulation = require('radioactive-dating-game/models/simulation/item-dating');
+    var FlyingRock = require('radioactive-dating-game/models/datable-item/flying-rock');
 
     /**
      * Constants
@@ -29,7 +30,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
 
-            this.items = new Backbone.Collection();
+            this.flyingRocks = new Backbone.Collection();
         },
 
         /**
@@ -47,6 +48,9 @@ define(function (require, exports, module) {
                 this.updateRockMode(time, deltaTime);
             else
                 this.updateTreeMode(time, deltaTime);
+
+            for (var i = 0; i < this.flyingRocks.length; i++)
+                this.flyingRocks.at(i).update(time, deltaTime);
         },
 
         updateTreeMode: function(time, deltaTime) {
@@ -58,7 +62,14 @@ define(function (require, exports, module) {
                 if (this.time <= MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME) {
                     this._rockEmissionCounter -= deltaTime;
                     if (this._rockEmissionCounter <= 0) {
-                        console.log('emit rock');
+                        var rock = new FlyingRock({
+                            position: MeasurementSimulation.VOLCANO_TOP_POSITION,
+                            width: MeasurementSimulation.FLYING_ROCK_WIDTH,
+                            timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
+                        });
+                        
+                        this.flyingRocks.add(rock);
+
                         this._rockEmissionCounter += this.getRockEmissionInterval();
                     }
                 }
@@ -92,6 +103,7 @@ define(function (require, exports, module) {
 
         eruptVolcano: function() {
             this.time = 0;
+            this.flyingRocks.reset();
             this._volcanoErupting = true;
             this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;

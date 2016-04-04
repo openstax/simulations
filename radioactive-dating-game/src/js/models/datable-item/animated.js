@@ -16,7 +16,7 @@ define(function (require) {
     var AnimatedDatableItem = DatableItem.extend({
 
         defaults: _.extend({}, DatableItem.prototype.defaults, {
-            closureState: Constants.AnimatedDatableItem.CLOSURE_NOT_POSSIBLE
+            closureState: Constants.AnimatedDatableItem.CLOSURE_NOT_POSSIBLE,
             timeConversionFactor: 1
         }),
 

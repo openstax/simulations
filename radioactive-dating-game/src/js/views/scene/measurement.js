@@ -49,13 +49,6 @@ define(function(require) {
 
             this.initMVT();
             this.initBackground();
-
-            var graphics = new PIXI.Graphics();
-            graphics.beginFill(0xFF0000, 1);
-            var point = this.mvt.modelToView(new Vector2(100, 60));
-            graphics.drawCircle(point.x, point.y, 3);
-            graphics.endFill();
-            this.stage.addChild(graphics);
             // this.initDecayRatesGraphView();
         },
 

@@ -68,6 +68,13 @@ define(function (require) {
     MeasurementSimulation.MODE_TREE = 0;
     MeasurementSimulation.MODE_ROCK = 1;
 
+    // Constants that control the conversion between simulation time (which is
+    // essentially real time) and model time, which is often thousands or
+    // billions of years in this model.
+    MeasurementSimulation.INITIAL_TREE_AGING_RATE = HalfLifeInfo.convertYearsToMs(300) / 1000; // 300 years per second.
+    MeasurementSimulation.INITIAL_ROCK_AGING_RATE = HalfLifeInfo.convertDaysToMs(90) / 10000;  // 90 days over 10 seconds - this will be the total eruption time (~3 months). 
+    MeasurementSimulation.FINAL_ROCK_AGING_RATE   = HalfLifeInfo.convertYearsToMs(1E9) / 5000; // 1 billion years every 5 seconds.
+
     MeasurementSimulation.AGING_ROCK_EMISSION_TIME        = 4000; // Simulation milliseconds
     MeasurementSimulation.FLYING_ROCK_EMISSION_INTERVAL   =  300; // Simulation millisecond between emission attempts
     MeasurementSimulation.FLYING_ROCK_EMISSION_DEVIATION  = 0.5;
@@ -76,6 +83,7 @@ define(function (require) {
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
     MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
+    MeasurementSimulation.FLYING_ROCK_WIDTH = 10;
 
     Constants.MeasurementSimulation = MeasurementSimulation;
 

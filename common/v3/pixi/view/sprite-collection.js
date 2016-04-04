@@ -21,9 +21,7 @@ define(function(require) {
          * Initializes the new SpriteCollectionView.
          */
         initialize: function(options) {
-            this.models = (options.collection.models) ? 
-                options.collection.models : 
-                options.collection;
+            this.collection = options.collection;
 
             this.texture = this.getTexture();
             this.sprites = [];
@@ -39,10 +37,24 @@ define(function(require) {
         },
 
         /**
+         * Returns the texture to be used in a specific sprite instance.  Can
+         *   be overrided in child classes to add things like random textures.
+         */
+        getSpriteTexture: function() {
+            return this.texture;
+        },
+
+        /**
          * Calculates current scale for sprites.  Override in child classes.
          */
         getSpriteScale: function() {
             return 1;
+        },
+
+        getModels: function() {
+            return (this.collection.models) ? 
+                this.collection.models : 
+                this.collection;
         },
 
         /**
@@ -63,7 +75,7 @@ define(function(require) {
 
             var mvt = this.mvt;
             var sprites = this.sprites;
-            var models = this.models;
+            var models = this.getModels();
 
             for (var i = 0; i < models.length; i++) {
                 if (i === sprites.length)
