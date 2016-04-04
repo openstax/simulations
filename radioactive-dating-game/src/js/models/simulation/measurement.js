@@ -40,6 +40,21 @@ define(function (require, exports, module) {
             ItemDatingSimulation.prototype.resetComponents.apply(this, arguments);
         },
 
+        resetRockMode: function() {
+            // Reset sim time
+            this.time = 0;
+            // Clear rocks
+            this.flyingRocks.reset();
+            // Clear aging rock
+            if (this.agingRock)
+                this.agingRock.destroy();
+            this.agingRock = null;
+            // Reset counters and flags
+            this._volcanoErupting = true;
+            this._rockCooling = false;
+            this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
+        },
+
         /**
          * Runs every frame of the simulation loop.
          */
@@ -48,9 +63,6 @@ define(function (require, exports, module) {
                 this.updateRockMode(time, deltaTime);
             else
                 this.updateTreeMode(time, deltaTime);
-
-            for (var i = 0; i < this.flyingRocks.length; i++)
-                this.flyingRocks.at(i).update(time, deltaTime);
         },
 
         updateTreeMode: function(time, deltaTime) {
@@ -62,6 +74,7 @@ define(function (require, exports, module) {
                 if (this.time <= MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME) {
                     this._rockEmissionCounter -= deltaTime;
                     if (this._rockEmissionCounter <= 0) {
+                        // Create a new flying rock
                         var rock = new FlyingRock({
                             position: MeasurementSimulation.VOLCANO_TOP_POSITION,
                             width: MeasurementSimulation.FLYING_ROCK_WIDTH,
@@ -74,6 +87,15 @@ define(function (require, exports, module) {
                     }
                 }
 
+                if (this.time >= MeasurementSimulation.AGING_ROCK_EMISSION_TIME && !this.agingRock) {
+                    // Create the aging rock
+                    this.agingRock = new AgingRock({
+                        position: MeasurementSimulation.INITIAL_ROCK_POSITION, 
+                        width: MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH,
+                        timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
+                    });
+                }
+
                 if (this.time >= MeasurementSimulation.ERUPTION_END_TIME) {
                     this._volcanoErupting = false;
                     this._rockCooling = true;
@@ -83,6 +105,13 @@ define(function (require, exports, module) {
             else if (this._rockCooling) {
 
             }
+
+            // Update the models
+            if (this.agingRock)
+                this.agingRock.update(time, deltaTime);
+
+            for (var i = 0; i < this.flyingRocks.length; i++)
+                this.flyingRocks.at(i).update(time, deltaTime);
         },
 
         getRockEmissionInterval: function() {
@@ -102,11 +131,7 @@ define(function (require, exports, module) {
         },
 
         eruptVolcano: function() {
-            this.time = 0;
-            this.flyingRocks.reset();
-            this._volcanoErupting = true;
-            this._rockCooling = false;
-            this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
+            this.resetRockMode();
             this.trigger('eruption-start');
         },
 

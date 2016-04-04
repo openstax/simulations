@@ -133,6 +133,25 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                              AGING ROCK                             **
+     **                                                                     **
+     *************************************************************************/
+
+    var AgingRock = {};
+
+    AgingRock.FLY_COUNT = 50; // Controls how long it takes the rock to fly out and then hit the ground.
+    AgingRock.FINAL_X_TRANSLATION = -100; // Model units
+    AgingRock.FINAL_ROCK_WIDTH = 100; // Model units
+    AgingRock.ARC_HEIGHT_FACTOR = 0.04; // Higher for higher arc.
+    AgingRock.ROTATION_PER_STEP = Math.PI * 0.1605; // Controls rate of rotation when flying.
+    AgingRock.COOLING_START_PAUSE_STEPS = 50; // Length of pause before after landing & before starting to cool.
+    AgingRock.COOLING_STEPS = 60; // Number of steps to cool down.
+
+    Constants.AgingRock = AgingRock;
+
+
+    /*************************************************************************
+     **                                                                     **
      **                       DECAY RATES GRAPH VIEW                        **
      **                                                                     **
      *************************************************************************/
