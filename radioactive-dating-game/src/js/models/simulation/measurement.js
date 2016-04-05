@@ -51,7 +51,7 @@ define(function (require, exports, module) {
                 this.agingRock.destroy();
             this.agingRock = null;
             // Reset counters and flags
-            this._volcanoErupting = true;
+            this._volcanoErupting = false;
             this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
         },
@@ -134,7 +134,25 @@ define(function (require, exports, module) {
 
         eruptVolcano: function() {
             this.resetRockMode();
+            this._volcanoErupting = true;
             this.trigger('eruption-start');
+        },
+
+        resetVolcano: function() {
+            this.resetRockMode();
+            this.trigger('eruption-end');
+            this.trigger('reset');
+        },
+
+        forceClosure: function() {
+            if (this.get('mode') === MeasurementSimulation.MODE_TREE) {
+                if (this.tree)
+                    this.tree.forceClosure();
+            }
+            else {
+                if (this.agingRock)
+                    this.agingRock.forceClosure();
+            }
         },
 
         modeChanged: function(simulation, mode) {

@@ -104,10 +104,6 @@ define(function(require) {
                 this.volcanoLandscape.update(time, deltaTime, paused);
         },
 
-        resetSimulation: function() {
-
-        },
-
         showTree: function() {
             this.treeLandscape.show();
             this.volcanoLandscape.hide();

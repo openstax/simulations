@@ -7,6 +7,8 @@ define(function(require) {
 
     var AppView = require('common/v3/app/app');
 
+    var AgingRock = require('radioactive-dating-game/models/datable-item/aging-rock');
+
     var LandscapeView            = require('radioactive-dating-game/views/landscape');
     var VolcanoSmokeView         = require('radioactive-dating-game/views/volcano-smoke');
     var FlyingRockCollectionView = require('radioactive-dating-game/views/flying-rock-collection');
@@ -45,6 +47,7 @@ define(function(require) {
             this.listenTo(this.simulation, 'eruption-start',     this.eruptionStarted);
             this.listenTo(this.simulation, 'eruption-end',       this.eruptionEnded);
             this.listenTo(this.simulation, 'aging-rock-emitted', this.agingRockEmitted);
+            this.listenTo(this.simulation, 'reset',              this.simulationReset);
         },
 
         initGraphics: function() {
@@ -100,8 +103,15 @@ define(function(require) {
             });
             this.$coolRockButton.hide();
 
+            this.$resetButton = $('<button class="btn reset-volcano-btn">Reset</button>');
+            this.$resetButton.on('click', function() {
+                self.resetVolcano();
+            });
+            this.$resetButton.hide();
+
             this.$el.append(this.$eruptVolcanoButton);
             this.$el.append(this.$coolRockButton);
+            this.$el.append(this.$resetButton);
 
             return this;
         },
@@ -167,7 +177,12 @@ define(function(require) {
         },
 
         coolRock: function() {
+            this.$coolRockButton.hide();
+            this.simulation.forceClosure();
+        },
 
+        resetVolcano: function() {
+            this.simulation.resetVolcano();
         },
 
         eruptionStarted: function() {
@@ -191,7 +206,6 @@ define(function(require) {
             this._fogTimer = 0;
             this.updateLayerPositions();
             this.volcanoSmokeView.stopSmoking();
-            this.$eruptVolcanoButton.show();
         },
 
         agingRockEmitted: function() {
@@ -208,6 +222,26 @@ define(function(require) {
                 this.backgroundEffectsLayer.removeChild(this.agingRockView.displayObject);
                 this.foregroundLayer.addChild(this.agingRockView.displayObject);
             });
+
+            this.listenTo(this.simulation.agingRock, 'change:closureState', function(model, closureState) {
+                switch (closureState) {
+                    case AgingRock.CLOSURE_POSSIBLE:
+                        this.$coolRockButton.show();
+                        break;
+                    case AgingRock.CLOSED:
+                        this.$resetButton.show();
+                        this.$coolRockButton.hide();
+                        break;
+                }
+            });
+        },
+
+        simulationReset: function() {
+            this.$resetButton.hide();
+            this.$eruptVolcanoButton.show();
+            if (this.agingRockView)
+                this.agingRockView.remove();
+            this.fog.alpha = 0;
         },
 
         setSoundVolumeMute: function() {
