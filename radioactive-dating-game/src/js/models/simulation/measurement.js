@@ -7,9 +7,10 @@ define(function (require, exports, module) {
 
     var Vector2 = require('common/math/vector2');
 
-    var ItemDatingSimulation = require('radioactive-dating-game/models/simulation/item-dating');
-    var FlyingRock           = require('radioactive-dating-game/models/datable-item/flying-rock');
-    var AgingRock            = require('radioactive-dating-game/models/datable-item/aging-rock');
+    var ItemDatingSimulation   = require('radioactive-dating-game/models/simulation/item-dating');
+    var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
+    var FlyingRock             = require('radioactive-dating-game/models/datable-item/flying-rock');
+    var AgingRock              = require('radioactive-dating-game/models/datable-item/aging-rock');
 
     /**
      * Constants
@@ -32,6 +33,8 @@ define(function (require, exports, module) {
             ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
 
             this.flyingRocks = new Backbone.Collection();
+
+            this.meter = new RadiometricDatingMeter();
         },
 
         /**

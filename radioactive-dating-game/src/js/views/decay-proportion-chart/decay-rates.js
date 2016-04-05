@@ -4,14 +4,8 @@ define(function(require) {
 
     var _    = require('underscore');
     var PIXI = require('pixi');
-
-                         require('common/v3/pixi/extensions');
-                         require('common/v3/pixi/dash-to');
-    var AppView        = require('common/v3/app/app');
     
-    var Colors         = require('common/colors/colors');
-    var PiecewiseCurve = require('common/math/piecewise-curve');
-    var Rectangle      = require('common/math/rectangle');
+    var Colors = require('common/colors/colors');
 
     var HalfLifeInfo  = require('models/half-life-info');
     var NucleusType   = require('models/nucleus-type');
@@ -19,12 +13,6 @@ define(function(require) {
 
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
     var DecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart');
-
-    var Constants = require('constants');
-
-    var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.DecayProportionChartView.HALF_LIFE_LINE_COLOR);
-    var HALF_LIFE_LINE_WIDTH  = Constants.DecayProportionChartView.HALF_LIFE_LINE_WIDTH;
-    var HALF_LIFE_LINE_ALPHA  = Constants.DecayProportionChartView.HALF_LIFE_LINE_ALPHA;
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.

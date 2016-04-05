@@ -93,6 +93,20 @@ define(function (require) {
 
     /*************************************************************************
      **                                                                     **
+     **                       RADIOMETRIC DATING METER                      **
+     **                                                                     **
+     *************************************************************************/
+
+    var RadiometricDatingMeter = {};
+
+    RadiometricDatingMeter.OBJECTS = 0;
+    RadiometricDatingMeter.AIR = 1;
+
+    Constants.RadiometricDatingMeter = RadiometricDatingMeter;
+    
+
+    /*************************************************************************
+     **                                                                     **
      **                        ANIMATED DATABLE ITEM                        **
      **                                                                     **
      *************************************************************************/

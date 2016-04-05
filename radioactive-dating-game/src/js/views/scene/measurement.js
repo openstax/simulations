@@ -12,10 +12,10 @@ define(function(require) {
 
     var NuclearPhysicsSceneView = require('views/scene');
 
-    // var DecayRatesGraphView  = require('radioactive-dating-game/views/decay-proportion-chart/measurement');
-    var LandscapeView        = require('radioactive-dating-game/views/landscape');
-    var TreeLandscapeView    = require('radioactive-dating-game/views/landscape/tree');
-    var VolcanoLandscapeView = require('radioactive-dating-game/views/landscape/volcano');
+    var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
+    var LandscapeView                       = require('radioactive-dating-game/views/landscape');
+    var TreeLandscapeView                   = require('radioactive-dating-game/views/landscape/tree');
+    var VolcanoLandscapeView                = require('radioactive-dating-game/views/landscape/volcano');
 
     var Constants = require('constants');
     var Assets = require('assets');
@@ -49,7 +49,7 @@ define(function(require) {
 
             this.initMVT();
             this.initBackground();
-            // this.initDecayRatesGraphView();
+            this.initDecayProportionGraph();
         },
 
         initBackground: function() {
@@ -72,12 +72,12 @@ define(function(require) {
             this.volcanoLandscape.hide();
         },
 
-        initDecayRatesGraphView: function() {
+        initDecayProportionGraph: function() {
             var probePanelWidth = 200;
             var width = this.getWidthBetweenPanels() - probePanelWidth;
             var height = 180;
 
-            this.decayRatesGraphView = new DecayRatesGraphView({
+            this.decayRatesGraphView = new DatableItemDecayProportionChartView({
                 simulation: this.simulation,
                 width: width,
                 height: height
