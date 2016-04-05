@@ -59,7 +59,7 @@ define(function (require) {
             if (this._flyCounter > 0) {
                 // Move along the arc
                 var dx = this._flightDxPerStep;
-                var y = this.getYFromStep(this._flyCounter);
+                var y = this.getYFromStep(AgingRock.FLY_COUNT - this._flyCounter);
                 var dy = y - this.getY();
                 this.setPosition(this.getX() + dx, y);
                 // console.log(this.get('position'))
