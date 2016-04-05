@@ -244,6 +244,8 @@ define(function(require) {
             if (this.agingRockView)
                 this.agingRockView.remove();
             this.fog.alpha = 0;
+            this.volcanoSmokeView.stopSmoking();
+            this.volcanoSmokeView.clearSmoke();
             this.tremorSound.stop();
         },
 

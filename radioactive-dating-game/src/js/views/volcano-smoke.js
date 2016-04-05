@@ -166,6 +166,16 @@ define(function(require) {
 
         stopSmoking: function() {
             this._emittingParticles = false;
+        },
+
+        clearSmoke: function() {
+            var particle;
+            for (var i = this.activeSmokeParticles.length - 1; i >= 0; i--) {
+                particle = this.activeSmokeParticles[i];
+                particle.visible = false;
+                this.activeSmokeParticles.splice(i, 1);
+                this.dormantSmokeParticles.push(particle);
+            }
         }
 
     }, Constants.VolcanoSmokeView);
