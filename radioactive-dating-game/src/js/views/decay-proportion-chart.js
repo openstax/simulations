@@ -11,32 +11,30 @@ define(function(require) {
     var PixiView       = require('common/v3/pixi/view');
     var Colors         = require('common/colors/colors');
     var PiecewiseCurve = require('common/math/piecewise-curve');
-    var Rectangle      = require('common/math/rectangle');
 
     var HalfLifeInfo  = require('models/half-life-info');
-    var NucleusType   = require('models/nucleus-type');
     var AtomicNucleus = require('models/atomic-nucleus');
 
     var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
 
     var Constants = require('constants');
 
-    var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.DecayRatesGraphView.HALF_LIFE_LINE_COLOR);
-    var HALF_LIFE_LINE_WIDTH  = Constants.DecayRatesGraphView.HALF_LIFE_LINE_WIDTH;
-    var HALF_LIFE_LINE_ALPHA  = Constants.DecayRatesGraphView.HALF_LIFE_LINE_ALPHA;
+    var HALF_LIFE_LINE_COLOR  = Colors.parseHex(Constants.DecayProportionChartView.HALF_LIFE_LINE_COLOR);
+    var HALF_LIFE_LINE_WIDTH  = Constants.DecayProportionChartView.HALF_LIFE_LINE_WIDTH;
+    var HALF_LIFE_LINE_ALPHA  = Constants.DecayProportionChartView.HALF_LIFE_LINE_ALPHA;
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
      */
-    var DecayRatesGraphView = PixiView.extend({
+    var DecayProportionChartView = PixiView.extend({
 
         /**
-         * Initializes the new DecayRatesGraphView.
+         * Initializes the new DecayProportionChartView.
          */
         initialize: function(options) {
             options = _.extend({
                 height: 210,
-                paddingLeft: 180, // Number of pixels on the left before the chart starts
+                paddingLeft: 90, // Number of pixels on the left before the chart starts
                 paddingBottom: 45,
                 paddingRight: 15,
                 paddingTop: 45,
@@ -46,8 +44,8 @@ define(function(require) {
 
                 yAxisLabelText: 'Percent of\nElement Remaining',
 
-                timeSpan: DecayRatesGraphView.DEFAULT_TIME_SPAN,
-                pieChartRadius: 25,
+                timeSpan: DecayProportionChartView.DEFAULT_TIME_SPAN,
+                pointRadius: DecayProportionChartView.POINT_RADIUS,
                 lineMode: false
             }, options);
 
@@ -69,19 +67,14 @@ define(function(require) {
             this.bgColor        = Colors.parseHex(options.bgColor);
             this.bgAlpha        = options.bgAlpha;
             this.yAxisLabelText = options.yAxisLabelText;
-            this.pieChartRadius = options.pieChartRadius;
+            this.pointRadius    = options.pointRadius;
             this.lineMode       = options.lineMode;
 
-            this.axisLineColor = Colors.parseHex(DecayRatesGraphView.AXIS_LINE_COLOR);
-            this.tickColor     = Colors.parseHex(DecayRatesGraphView.TICK_MARK_COLOR);
+            this.axisLineColor = Colors.parseHex(DecayProportionChartView.AXIS_LINE_COLOR);
+            this.tickColor     = Colors.parseHex(DecayProportionChartView.TICK_MARK_COLOR);
 
             // Initialize the graphics
             this.initGraphics();
-
-            this.listenTo(this.simulation, 'change:active',      this.activeChanged);
-            this.listenTo(this.simulation, 'change:nucleusType', this.nucleusTypeChanged);
-            this.listenTo(this.simulation, 'nuclei-reset',       this.nucleiReset);
-            this.nucleusTypeChanged(this.simulation, this.simulation.get('nucleusType'));
         },
 
         /**
@@ -92,7 +85,6 @@ define(function(require) {
             this.initXAxis();
             this.initYAxis();
             this.initHalfLifeMarkers();
-            this.initPieChart();
             this.initData();
         },
 
@@ -128,15 +120,15 @@ define(function(require) {
         initXAxis: function() {
             // Draw axis line
             var axisLine = new PIXI.Graphics();
-            axisLine.lineStyle(DecayRatesGraphView.AXIS_LINE_WIDTH, this.axisLineColor, 1);
+            axisLine.lineStyle(DecayProportionChartView.AXIS_LINE_WIDTH, this.axisLineColor, 1);
             axisLine.moveTo(this.graphOriginX,                   this.graphOriginY);
             axisLine.lineTo(this.graphOriginX + this.graphWidth, this.graphOriginY);
 
             // Create bottom axis label (time)
             var yOffset = 16;
             var bottomAxisLabel = new PIXI.Text('Years', {
-                font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
-                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR
+                font: Constants.DecayProportionChartView.AXIS_LABEL_FONT,
+                fill: Constants.DecayProportionChartView.AXIS_LABEL_COLOR
             });
             bottomAxisLabel.resolution = this.getResolution();
             bottomAxisLabel.x = this.graphOriginX + this.graphWidth / 2;
@@ -150,8 +142,8 @@ define(function(require) {
 
             // Create top axis label (half lives)
             var topAxisLabel = new PIXI.Text('Half-Lives', {
-                font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
-                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR
+                font: Constants.DecayProportionChartView.AXIS_LABEL_FONT,
+                fill: Constants.DecayProportionChartView.AXIS_LABEL_COLOR
             });
             topAxisLabel.resolution = this.getResolution();
             topAxisLabel.x = this.graphOriginX + this.graphWidth / 2;
@@ -171,8 +163,8 @@ define(function(require) {
             var tickLabelThickness = 46;
 
             var label = new PIXI.Text(this.yAxisLabelText, {
-                font: Constants.DecayRatesGraphView.AXIS_LABEL_FONT,
-                fill: Constants.DecayRatesGraphView.AXIS_LABEL_COLOR,
+                font: Constants.DecayProportionChartView.AXIS_LABEL_FONT,
+                fill: Constants.DecayProportionChartView.AXIS_LABEL_COLOR,
                 align: 'center'
             });
             label.resolution = this.getResolution();
@@ -184,10 +176,10 @@ define(function(require) {
 
             // Draw axis line, border, and y-tick lines
             var graphics = new PIXI.Graphics();
-            graphics.lineStyle(DecayRatesGraphView.BORDER_WIDTH, Colors.parseHex(DecayRatesGraphView.BORDER_COLOR), DecayRatesGraphView.BORDER_ALPHA);
+            graphics.lineStyle(DecayProportionChartView.BORDER_WIDTH, Colors.parseHex(DecayProportionChartView.BORDER_COLOR), DecayProportionChartView.BORDER_ALPHA);
             graphics.drawRect(this.graphOriginX, this.graphOriginY - this.graphHeight, this.graphWidth, this.graphHeight);
 
-            graphics.lineStyle(DecayRatesGraphView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayRatesGraphView.Y_VALUE_LINE_COLOR), DecayRatesGraphView.Y_VALUE_LINE_ALPHA);
+            graphics.lineStyle(DecayProportionChartView.Y_VALUE_LINE_WIDTH, Colors.parseHex(DecayProportionChartView.Y_VALUE_LINE_COLOR), DecayProportionChartView.Y_VALUE_LINE_ALPHA);
             for (var p = 0.25; p <= 0.75; p += 0.25) {
                 var y = this.graphOriginY - p * this.graphHeight;
 
@@ -208,46 +200,6 @@ define(function(require) {
 
             this.displayObject.addChild(this.halfLifeLineGraphics);
             this.displayObject.addChild(this.halfLifeLabels);
-        },
-
-        initPieChart: function() {
-            var radius = this.pieChartRadius;
-
-            this.pieChartGraphics = new PIXI.Graphics();
-            this.pieChartGraphics.x = 58;
-            this.pieChartGraphics.y = this.graphOriginY - this.graphHeight / 2;
-
-            this.isotope1Container = new PIXI.Container();
-            this.isotope2Container = new PIXI.Container();
-            this.isotope1Container.x = this.isotope2Container.x = this.pieChartGraphics.x;
-            this.isotope1Container.y = this.pieChartGraphics.y - radius - 16;
-            this.isotope2Container.y = this.pieChartGraphics.y + radius + 16;
-            
-            var settings = {
-                fill: DecayRatesGraphView.DECAY_LABEL_COLOR,
-                font: DecayRatesGraphView.DECAY_LABEL_FONT
-            };
-            var x = this.pieChartGraphics.x + 6;
-
-            this.isotope1Counter = new PIXI.Text('', settings);
-            this.isotope1Counter.resolution = this.getResolution();
-            this.isotope1Counter.x = x;
-            this.isotope1Counter.y = this.isotope1Container.y;
-            this.isotope1Counter.anchor.x = 0;
-            this.isotope1Counter.anchor.y = 0.35;
-
-            this.isotope2Counter = new PIXI.Text('', settings);
-            this.isotope2Counter.resolution = this.getResolution();
-            this.isotope2Counter.x = x;
-            this.isotope2Counter.y = this.isotope2Container.y;
-            this.isotope2Counter.anchor.x = 0;
-            this.isotope2Counter.anchor.y = 0.35;
-
-            this.displayObject.addChild(this.pieChartGraphics);
-            this.displayObject.addChild(this.isotope1Container);
-            this.displayObject.addChild(this.isotope2Container);
-            this.displayObject.addChild(this.isotope1Counter);
-            this.displayObject.addChild(this.isotope2Counter);
         },
 
         initData: function() {
@@ -272,7 +224,7 @@ define(function(require) {
         drawXAxisTicks: function() {
             // Remove the existing tick marks and labels.
             this.xAxisTicks.clear();
-            this.xAxisTicks.lineStyle(DecayRatesGraphView.TICK_MARK_WIDTH, this.tickColor, 1);
+            this.xAxisTicks.lineStyle(DecayProportionChartView.TICK_MARK_WIDTH, this.tickColor, 1);
             this.xAxisTickLabels.removeChildren();
 
             var numTickMarks;
@@ -330,7 +282,7 @@ define(function(require) {
         drawXAxisTick: function(time, labelText) {
             var y = this.graphOriginY;
             var x = this.graphOriginX + time * this.msToPixelsFactor;
-            var length = DecayRatesGraphView.TICK_MARK_LENGTH;
+            var length = DecayProportionChartView.TICK_MARK_LENGTH;
             
             if (time > 0) {
                 this.xAxisTicks.moveTo(x, y);
@@ -338,7 +290,7 @@ define(function(require) {
             }
 
             var label = new PIXI.Text(labelText, {
-                font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                font: DecayProportionChartView.SMALL_LABEL_FONT,
                 fill: this.tickColor
             });
 
@@ -358,7 +310,7 @@ define(function(require) {
                 var y = this.graphOriginY - p * this.graphHeight;
                 var text = Math.round(p * 100) + '%';
                 var tickLabel = new PIXI.Text(text, {
-                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                    font: DecayProportionChartView.SMALL_LABEL_FONT,
                     fill: this.tickColor
                 });
                 tickLabel.x = this.graphOriginX - 4;
@@ -392,7 +344,7 @@ define(function(require) {
             }
 
             var labelSettings = {
-                font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                font: DecayProportionChartView.SMALL_LABEL_FONT,
                 fill: this.tickColor
             };
 
@@ -402,7 +354,7 @@ define(function(require) {
                 var y = this.graphOriginY - this.graphHeight;
 
                 var label = new PIXI.Text('' + (i + 1), {
-                    font: DecayRatesGraphView.SMALL_LABEL_FONT,
+                    font: DecayProportionChartView.SMALL_LABEL_FONT,
                     fill: this.tickColor
                 });
 
@@ -415,116 +367,39 @@ define(function(require) {
                 this.halfLifeLabels.addChild(label);
 
                 graphics.moveTo(x, y);
-                graphics.dashTo(x, this.graphOriginY, DecayRatesGraphView.HALF_LIFE_LINE_DASHES);
+                graphics.dashTo(x, this.graphOriginY, DecayProportionChartView.HALF_LIFE_LINE_DASHES);
             }
         },
 
-        drawCurrentGraphData: function() {
-            var time = this.simulation.getAdjustedTime();
+        drawDataPoint: function(time, percent, color) {
             var x = this.graphOriginX + time * this.msToPixelsFactor;
-
             if (x <= this.graphOriginX + this.graphWidth) {
                 var graphics = this.dataGraphics;
-                var numAtoms = this.simulation.getTotalNumNuclei();
-                var numActive = this.simulation.getNumActiveNuclei();
-                var activePercent = numActive / numAtoms;
-                var decayedPercent = 1 - activePercent;
 
                 if (this.lineMode) {
 
                 }
                 else {
-                    var radius = DecayRatesGraphView.POINT_RADIUS;
+                    var radius = this.pointRadius;
                     
-                    graphics.beginFill(this.isotope1Color, 1);
-                    graphics.drawCircle(x, this.graphOriginY - activePercent * this.graphHeight, radius);
-                    graphics.endFill();
-
-                    graphics.beginFill(this.isotope2Color, 1);
-                    graphics.drawCircle(x, this.graphOriginY - decayedPercent * this.graphHeight, radius);
+                    graphics.beginFill(color, 1);
+                    graphics.drawCircle(x, this.graphOriginY - percent * this.graphHeight, radius);
                     graphics.endFill();
                 }
             }
         },
 
-        update: function(time, deltaTime, paused) {
-            this.updatePieChart();
-
-            if (this._lastNucleusCount !== this.simulation.getTotalNumNuclei())
-                this.dataGraphics.clear();
-            
-            if (this.simulation.getTotalNumNuclei() > 0 && this.simulation.get('active'))
-                this.drawCurrentGraphData();
-
-            this._lastNucleusCount = this.simulation.getTotalNumNuclei();  
+        clearData: function() {
+            this.dataGraphics.clear();
         },
+
+        update: function(time, deltaTime, paused) {},
 
         updateTimeSpan: function() {
             // Set the time span of the chart based on the nucleus type.
             var nucleusType = this.simulation.get('nucleusType');
             var halfLife = HalfLifeInfo.getHalfLifeForNucleusType(nucleusType);
             this.setTimeParameters(halfLife * 3.2, halfLife);
-        },
-
-        updateIsotopes: function() {
-            var nucleusType = this.simulation.get('nucleusType');
-            var decayedNucleusType = AtomicNucleus.getPostDecayNuclei(nucleusType)[0];
-
-            var isotope1Text = IsotopeSymbolGenerator.generateWithElementColor(nucleusType,        DecayRatesGraphView.ISOTOPE_FONT_SIZE, 1);
-            var isotope2Text = IsotopeSymbolGenerator.generateWithElementColor(decayedNucleusType, DecayRatesGraphView.ISOTOPE_FONT_SIZE, 1);
-            
-            this.isotope1Container.removeChildren();
-            this.isotope2Container.removeChildren();
-
-            this.isotope1Container.addChild(isotope1Text);
-            this.isotope2Container.addChild(isotope2Text);
-
-            this.isotope1Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
-            this.isotope2Color = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(decayedNucleusType));
-        },
-
-        updatePieChart: function() {
-            var graphics = this.pieChartGraphics;
-            graphics.clear();
-            graphics.lineStyle(1, 0x000000, 1);
-
-            var nucleusType = this.simulation.get('nucleusType');
-
-            var isotope1Color = this.isotope1Color;
-            var isotope2Color = this.isotope2Color;
-            
-            var radius = this.pieChartRadius;
-            var numActive  = this.simulation.getNumActiveNuclei();
-            var numDecayed = this.simulation.getNumDecayedNuclei();
-            var decayedAngle = Math.PI * 2 * (numDecayed / (numActive + numDecayed));
-
-            graphics.beginFill(isotope1Color, 1);
-            graphics.drawCircle(0, 0, radius);
-            graphics.endFill();
-
-            if (numDecayed > 0) {
-                if (numActive === 0)
-                    graphics.lineStyle(0, 0, 0);
-
-                graphics.beginFill(isotope2Color, 1);
-                graphics.moveTo(0, 0);
-                graphics.lineTo(radius, 0);
-                graphics.arc(0, 0, radius, 0, decayedAngle);
-                graphics.lineTo(0, 0);
-                graphics.endFill();
-
-                if (numActive > 0) {
-                    graphics.moveTo(0, 0);
-                    graphics.lineTo(radius, 0);     
-                }
-
-                graphics.lineStyle(1, 0x000000, 1);
-                graphics.moveTo(0, 0);
-                graphics.drawCircle(0, 0, radius);   
-            }
-
-            this.isotope1Counter.text = numActive;
-            this.isotope2Counter.text = numDecayed;
         },
 
         /**
@@ -552,10 +427,6 @@ define(function(require) {
             this.updateLayout();
         },
 
-        getSampleNucleus: function() {
-            return this.simulation.createNucleus();
-        },
-
         /**
          * Get the units string for the x axis label.  Note that this does not
          * handle all ranges of time.  Feel free to add new ranges as needed.
@@ -571,24 +442,10 @@ define(function(require) {
                 unitsText = 'Years';
 
             return unitsText;
-        },
-
-        nucleusTypeChanged: function(simulation, nucleusType) {
-            this.updateTimeSpan();
-            this.updateIsotopes();
-        },
-
-        activeChanged: function(simulation, active) {
-            if (active)
-                this.dataGraphics.clear();
-        },
-
-        nucleiReset: function() {
-            this.dataGraphics.clear();
         }
 
-    }, Constants.DecayRatesGraphView);
+    }, Constants.DecayProportionChartView);
 
 
-    return DecayRatesGraphView;
+    return DecayProportionChartView;
 });

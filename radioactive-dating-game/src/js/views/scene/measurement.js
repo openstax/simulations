@@ -12,7 +12,7 @@ define(function(require) {
 
     var NuclearPhysicsSceneView = require('views/scene');
 
-    var DecayRatesGraphView  = require('radioactive-dating-game/views/decay-rates-graph');
+    // var DecayRatesGraphView  = require('radioactive-dating-game/views/decay-proportion-chart/measurement');
     var LandscapeView        = require('radioactive-dating-game/views/landscape');
     var TreeLandscapeView    = require('radioactive-dating-game/views/landscape/tree');
     var VolcanoLandscapeView = require('radioactive-dating-game/views/landscape/volcano');
@@ -75,10 +75,12 @@ define(function(require) {
         initDecayRatesGraphView: function() {
             var probePanelWidth = 200;
             var width = this.getWidthBetweenPanels() - probePanelWidth;
+            var height = 180;
 
             this.decayRatesGraphView = new DecayRatesGraphView({
                 simulation: this.simulation,
-                width: width
+                width: width,
+                height: height
             });
 
             if (AppView.windowIsShort()) {

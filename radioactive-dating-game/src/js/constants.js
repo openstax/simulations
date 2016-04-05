@@ -161,37 +161,37 @@ define(function (require) {
      **                                                                     **
      *************************************************************************/
 
-    var DecayRatesGraphView = {};
+    var DecayProportionChartView = {};
 
-    DecayRatesGraphView.AXIS_LABEL_FONT    = Constants.NucleusDecayChart.AXIS_LABEL_FONT;
-    DecayRatesGraphView.AXIS_LABEL_COLOR   = Constants.NucleusDecayChart.AXIS_LABEL_COLOR;
-    DecayRatesGraphView.AXIS_LINE_WIDTH    = Constants.NucleusDecayChart.AXIS_LINE_WIDTH;
-    DecayRatesGraphView.AXIS_LINE_COLOR    = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.BORDER_COLOR       = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.BORDER_WIDTH       = 1;
-    DecayRatesGraphView.BORDER_ALPHA       = 0.7;
-    DecayRatesGraphView.Y_VALUE_LINE_COLOR = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
-    DecayRatesGraphView.Y_VALUE_LINE_WIDTH = 1;
-    DecayRatesGraphView.Y_VALUE_LINE_ALPHA = 0.1;
-    DecayRatesGraphView.TICK_MARK_LENGTH   = Constants.NucleusDecayChart.TICK_MARK_LENGTH;
-    DecayRatesGraphView.TICK_MARK_WIDTH    = Constants.NucleusDecayChart.TICK_MARK_WIDTH;
-    DecayRatesGraphView.TICK_MARK_COLOR    = Constants.NucleusDecayChart.TICK_MARK_COLOR;
-    DecayRatesGraphView.SMALL_LABEL_FONT   = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
-    DecayRatesGraphView.LARGE_LABEL_FONT   = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
-    DecayRatesGraphView.ISOTOPE_FONT_SIZE  = Constants.NucleusDecayChart.ISOTOPE_FONT_SIZE;
+    DecayProportionChartView.AXIS_LABEL_FONT    = Constants.NucleusDecayChart.AXIS_LABEL_FONT;
+    DecayProportionChartView.AXIS_LABEL_COLOR   = Constants.NucleusDecayChart.AXIS_LABEL_COLOR;
+    DecayProportionChartView.AXIS_LINE_WIDTH    = Constants.NucleusDecayChart.AXIS_LINE_WIDTH;
+    DecayProportionChartView.AXIS_LINE_COLOR    = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.BORDER_COLOR       = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.BORDER_WIDTH       = 1;
+    DecayProportionChartView.BORDER_ALPHA       = 0.7;
+    DecayProportionChartView.Y_VALUE_LINE_COLOR = Constants.NucleusDecayChart.AXIS_LINE_COLOR;
+    DecayProportionChartView.Y_VALUE_LINE_WIDTH = 1;
+    DecayProportionChartView.Y_VALUE_LINE_ALPHA = 0.1;
+    DecayProportionChartView.TICK_MARK_LENGTH   = Constants.NucleusDecayChart.TICK_MARK_LENGTH;
+    DecayProportionChartView.TICK_MARK_WIDTH    = Constants.NucleusDecayChart.TICK_MARK_WIDTH;
+    DecayProportionChartView.TICK_MARK_COLOR    = Constants.NucleusDecayChart.TICK_MARK_COLOR;
+    DecayProportionChartView.SMALL_LABEL_FONT   = Constants.NucleusDecayChart.SMALL_LABEL_FONT;
+    DecayProportionChartView.LARGE_LABEL_FONT   = Constants.NucleusDecayChart.LARGE_LABEL_FONT;
+    DecayProportionChartView.ISOTOPE_FONT_SIZE  = Constants.NucleusDecayChart.ISOTOPE_FONT_SIZE;
 
-    DecayRatesGraphView.HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
-    DecayRatesGraphView.HALF_LIFE_LINE_DASHES = Constants.NucleusDecayChart.HALF_LIFE_LINE_DASHES;
-    DecayRatesGraphView.HALF_LIFE_LINE_COLOR  = Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR;
-    DecayRatesGraphView.HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
+    DecayProportionChartView.HALF_LIFE_LINE_WIDTH  = Constants.NucleusDecayChart.HALF_LIFE_LINE_WIDTH;
+    DecayProportionChartView.HALF_LIFE_LINE_DASHES = Constants.NucleusDecayChart.HALF_LIFE_LINE_DASHES;
+    DecayProportionChartView.HALF_LIFE_LINE_COLOR  = Constants.NucleusDecayChart.HALF_LIFE_LINE_COLOR;
+    DecayProportionChartView.HALF_LIFE_LINE_ALPHA  = Constants.NucleusDecayChart.HALF_LIFE_LINE_ALPHA;
 
-    DecayRatesGraphView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
-    DecayRatesGraphView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
-    DecayRatesGraphView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
+    DecayProportionChartView.DECAY_LABEL_COLOR = Constants.NucleusDecayChart.DECAY_LABEL_COLOR
+    DecayProportionChartView.DECAY_LABEL_FONT  = Constants.NucleusDecayChart.DECAY_LABEL_FONT
+    DecayProportionChartView.DECAY_VALUE_FONT  = Constants.NucleusDecayChart.DECAY_VALUE_FONT
 
-    DecayRatesGraphView.POINT_RADIUS = 2;
+    DecayProportionChartView.POINT_RADIUS = 2;
 
-    Constants.DecayRatesGraphView = DecayRatesGraphView;
+    Constants.DecayProportionChartView = DecayProportionChartView;
 
 
     /*************************************************************************
