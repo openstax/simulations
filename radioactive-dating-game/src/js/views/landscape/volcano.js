@@ -48,6 +48,7 @@ define(function(require) {
             this.listenTo(this.simulation, 'eruption-end',       this.eruptionEnded);
             this.listenTo(this.simulation, 'aging-rock-emitted', this.agingRockEmitted);
             this.listenTo(this.simulation, 'reset',              this.simulationReset);
+            this.listenTo(this.simulation, 'change:paused',      this.pausedChanged);
         },
 
         initGraphics: function() {
@@ -196,7 +197,8 @@ define(function(require) {
             this.agingRockView = null;
 
             this.volcanoSmokeView.startSmoking();
-            this.tremorSound.stop().play();
+            if (!this.simulation.get('paused'))
+                this.tremorSound.stop().play();
         },
 
         eruptionEnded: function() {
@@ -242,6 +244,21 @@ define(function(require) {
             if (this.agingRockView)
                 this.agingRockView.remove();
             this.fog.alpha = 0;
+            this.tremorSound.stop();
+        },
+
+        pausedChanged: function(simulation, paused) {
+            if (this.tremorSound.getTime() > 0 && !this.tremorSound.isEnded()) {
+                if (paused)
+                    this.tremorSound.pause(); 
+                else
+                    this.tremorSound.play();    
+            }
+            else if (!paused && this._volcanoErupting) {
+                // If it hasn't been playing but we're unpausing during the volcano eruption,
+                //    we need to play it because it was never started.
+                this.tremorSound.play();
+            }
         },
 
         setSoundVolumeMute: function() {
