@@ -132,7 +132,8 @@ define(function(require) {
                 simulation: this.simulation,
                 width: this.getWidthBetweenPanels(),
                 renderer: this.renderer,
-                bgColor: '#ADDBFF',
+                bgColor: '#fff',
+                bgAlpha: 0.2,
                 hideNucleons: true,
                 useElementColors: true
             });
