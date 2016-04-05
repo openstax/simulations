@@ -76,6 +76,9 @@ define(function(require) {
                 this.showTextures(0, 1, cooledPercent / midwayPercent);
             else
                 this.showTextures(1, 2, (cooledPercent - midwayPercent) / (1 - midwayPercent));
+
+            if (cooledPercent === 1)
+                this.sprite1.visible = false;
         },
 
         showTextures: function(texture1Index, texture2Index, percentOfTexture2) {

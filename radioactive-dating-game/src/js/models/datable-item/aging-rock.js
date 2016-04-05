@@ -47,6 +47,45 @@ define(function (require) {
             this._closurePossibleSent = false;
             this._closureOccurredSent = false;
             this._falling = false;
+
+            this.initParabolicEquation();
+        },
+
+        initParabolicEquation: function() {
+            var k = this._totalArcHeight;
+            var yIntercept = this._initialY - AgingRock.FINAL_Y;
+            var initialH = AgingRock.FIRST_PART_ARC_TIME;
+            // Solve for 'a' when x = 0 (when x = 0, y is the y-intercept)
+            var initialA = (yIntercept - k) / Math.pow(0 - initialH, 2);
+
+            // Find approximate 'a' and 'h' values by guess-and-check
+            var aWindowHalf = Math.abs(initialA * 0.1);
+            var hWindowHalf = 0.1;
+            var aStep = (aWindowHalf * 2) / 40;
+            var hStep = (hWindowHalf * 2) / 40;
+            var yEpsilon = 10;
+            var foundApproximation = false;
+
+            for (var a = initialA - aWindowHalf; a <= initialA + aWindowHalf && !foundApproximation; a += aStep) {
+                for (var h = initialH - hWindowHalf; h <= initialH + hWindowHalf && !foundApproximation; h += hStep) {
+                    // Check to see if these values give a good y-intercept and x intercept at x=1
+                    if (yEpsilon >= Math.abs(0          - this.getYFromEquation(1, h, k, a)) &&
+                        yEpsilon >= Math.abs(yIntercept - this.getYFromEquation(0, h, k, a))
+                    ) {
+                        this._a = a;
+                        this._h = h;
+                        foundApproximation = true;
+                    }
+                }
+            }
+
+            // If we didn't find good approximate values, just use our initial values
+            if (this._a === undefined) {
+                this._a = initialA;
+                this._h = initialH;
+            }
+
+            this._k = k;
         },
 
         reset: function() {
@@ -116,21 +155,26 @@ define(function (require) {
             }
         },
 
-        getYFromStep: function(step) {
+        /**
+         * Get y when y = a(x - h)^2 + k
+         */
+        getYFromEquation: function(x, h, k, a) {
             // This is a parabolic equation where x represents the time as a proportion
             //   of the current step vs the total number of steps in the animation and
-            //   where x = 1 finds us at the resting y value, which is zero.  The zero
-            //   is actually the offset from the final y position.  The equation follows
-            //   the form y = a(x - h)^2 + k
-            var h = AgingRock.FIRST_PART_ARC_TIME;
-            var k = this._totalArcHeight;
-            var yIntercept = this._initialY - AgingRock.FINAL_Y;
-            // Solve for a when x = 0 (when x = 0, y is the y-intercept)
-            var a = (yIntercept - k) / Math.pow(0 - h, 2);
-            // Then plug current x into the equation to get y
-            var x = step / AgingRock.FLY_COUNT;
+            //   where x = 1 finds us at the resting y value, which is zero.  
             var y = a * Math.pow(x - h, 2) + k;
-console.log(y)
+            return y;
+        },
+
+        getYFromStep: function(step) {
+            var a = this._a;
+            var h = this._h;
+            var k = this._k;
+            var x = step / AgingRock.FLY_COUNT;
+            var y = this.getYFromEquation(x, h, k, a);
+
+            // The zero returned by the equation is actually the offset from the final y
+            //   position, so we need to add it to the final y to get the real position.
             return AgingRock.FINAL_Y + y;
         }
 
