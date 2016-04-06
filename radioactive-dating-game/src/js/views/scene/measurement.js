@@ -13,6 +13,7 @@ define(function(require) {
     var NuclearPhysicsSceneView = require('views/scene');
 
     var DatableItemDecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart/datable-item');
+    var RadiometricDatingMeterView          = require('radioactive-dating-game/views/radiometric-dating-meter');
     var LandscapeView                       = require('radioactive-dating-game/views/landscape');
     var TreeLandscapeView                   = require('radioactive-dating-game/views/landscape/tree');
     var VolcanoLandscapeView                = require('radioactive-dating-game/views/landscape/volcano');
@@ -49,6 +50,7 @@ define(function(require) {
 
             this.initMVT();
             this.initBackground();
+            this.initRadiometricDatingMeter();
             this.initDecayProportionGraph();
         },
 
@@ -72,10 +74,27 @@ define(function(require) {
             this.volcanoLandscape.hide();
         },
 
+        initRadiometricDatingMeter: function() {
+            this.radiometricDatingMeterView = new RadiometricDatingMeterView({
+                model: this.simulation.meter,
+                simulation: this.simulation,
+                mvt: this.mvt
+            });
+
+            if (AppView.windowIsShort())
+                this.radiometricDatingMeterView.setPanelPosition(this.getLeftPadding() + 12, 12);
+            else
+                this.radiometricDatingMeterView.setPanelPosition(this.getLeftPadding() + 20, 20);
+
+            this.$ui.append(this.radiometricDatingMeterView.el);
+            this.stage.addChild(this.radiometricDatingMeterView.displayObject);
+        },
+
         initDecayProportionGraph: function() {
-            var probePanelWidth = 200;
+            var panelMargin = (AppView.windowIsShort()) ? 12 : 20;
+            var probePanelWidth = this.radiometricDatingMeterView.getPanelWidth() + panelMargin;
             var width = this.getWidthBetweenPanels() - probePanelWidth;
-            var height = 180;
+            var height = 216;
 
             this.decayRatesGraphView = new DatableItemDecayProportionChartView({
                 simulation: this.simulation,
@@ -83,14 +102,8 @@ define(function(require) {
                 height: height
             });
 
-            if (AppView.windowIsShort()) {
-                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 12 + probePanelWidth;
-                this.decayRatesGraphView.displayObject.y = 12;
-            }
-            else {
-                this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + 20 + probePanelWidth;
-                this.decayRatesGraphView.displayObject.y = 20;
-            }
+            this.decayRatesGraphView.displayObject.x = this.getLeftPadding() + panelMargin + probePanelWidth;
+            this.decayRatesGraphView.displayObject.y = panelMargin;
 
             this.stage.addChild(this.decayRatesGraphView.displayObject);
         },
@@ -98,7 +111,8 @@ define(function(require) {
         _update: function(time, deltaTime, paused, timeScale) {
             NuclearPhysicsSceneView.prototype._update.apply(this, arguments);
 
-            // this.decayRatesGraphView.update(time, deltaTime, paused);
+            this.decayRatesGraphView.update(time, deltaTime, paused);
+            this.radiometricDatingMeterView.update(time, deltaTime, paused);
 
             if (this.simulation.get('mode') === Constants.MeasurementSimulation.MODE_TREE)
                 this.treeLandscape.update(time, deltaTime, paused);

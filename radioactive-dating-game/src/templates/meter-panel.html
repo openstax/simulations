@@ -1,0 +1,33 @@
+<div class="sim-controls meter-panel">
+    <h2>Radiometric Dater</h2>
+
+    <div class="readout-wrapper">
+        <label class="readout-label">Uranium-238:</label>
+        <span class="readout-value">100%</span>
+    </div>
+
+    <ul class="radio-buttons">
+        <li>
+            <input type="radio" name="probe-type" value="carbon-14" id="probe-type-carbon-14-<%= unique %>" checked>
+            <label for="probe-type-carbon-14-<%= unique %>">Carbon-14</label>
+        </li>
+        <li>
+            <input type="radio" name="probe-type" value="uranium-238" id="probe-type-uranium-238-<%= unique %>">
+            <label for="probe-type-uranium-238-<%= unique %>">Uranium-238</label>
+        </li>
+    </ul>
+
+    <hr>
+
+    <ul class="radio-buttons">
+        <li>
+            <input type="radio" name="measuring-target" class="measuring-target-objects" value="objects" id="measuring-target-objects-<%= unique %>" checked>
+            <label for="measuring-target-objects-<%= unique %>">Objects</label>
+        </li>
+        <li>
+            <input type="radio" name="measuring-target" class="measuring-target-air" value="air" id="measuring-target-air-<%= unique %>">
+            <label for="measuring-target-air-<%= unique %>">Air</label>
+        </li>
+    </ul>
+
+</div>

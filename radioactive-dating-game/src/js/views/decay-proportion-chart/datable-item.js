@@ -32,6 +32,7 @@ define(function(require) {
 
             this.listenTo(this.simulation, 'reset', this.simulationReset);
             this.listenTo(this.simulation.meter, 'change:nucleus-type', this.nucleusTypeChanged);
+            this.nucleusTypeChanged(this.simulation.meter, this.simulation.meter.get('nucleusType'));
         },
 
         /**
