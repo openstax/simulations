@@ -63,4 +63,33 @@
             .button-variant(@btn-fg, @btn-bg, @btn-fg, @btn-bg);
         }
     }
+
+    .landscape-buttons-wrapper {
+        position: absolute;
+        @height: 50px;
+        height: @height;
+        top: (@scene-height - @height);
+        left: 100%;
+
+        @media screen and (max-height: @short-window) {
+            top: (@short-scene-height - @height);
+        }
+
+        button {
+            position: absolute;
+            right: 15px;
+            bottom: 15px;
+            background-color: #78b04a;
+            color: #fff;
+
+            &:hover {
+                color: #fff;
+                background-color: darken(#78b04a, 5%);
+            }
+
+            @media screen and (max-height: @short-window) {
+                bottom: 9px;
+            }
+        }
+    }
 }

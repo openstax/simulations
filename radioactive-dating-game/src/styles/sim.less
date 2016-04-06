@@ -71,4 +71,39 @@
         color: #222;
     }
 
+    .choose-object-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        margin-bottom: -22px;
+
+        li {
+            @height: 80px;
+            text-align: left;
+            list-style-image: none;
+            margin-top: (@height / 2); 
+
+            label {
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+            .object-chooser-item-wrapper {
+                margin-top: -(@height / 2 - 16);
+
+                .object-chooser-img-wrapper {
+                    display: inline-block;
+                    margin-right: 8px;
+                    text-align: center;
+                }
+
+                label {
+                    vertical-align: top;
+                    line-height: @height;
+                    margin-top: -8px;
+                }
+            }
+        }
+    }
+
 }

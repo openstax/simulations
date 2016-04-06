@@ -86,7 +86,13 @@ define(function (require) {
                 this.$el.removeClass('playing');
             else
                 this.$el.addClass('playing');
-        }
+        },
+
+        setSoundVolumeMute: function() {},
+
+        setSoundVolumeLow: function() {},
+
+        setSoundVolumeHigh: function() {}
 
     });
 

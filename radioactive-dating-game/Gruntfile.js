@@ -24,6 +24,12 @@ module.exports = function(grunt) {
 			},
 			audio: {
 				expand: true, // required when using cwd
+				cwd: 'src/audio/',
+				src: '**',
+				dest: 'dist/audio/'
+			},
+			nuclear_physics_audio: {
+				expand: true, // required when using cwd
 				cwd: '../nuclear-physics/src/audio/',
 				src: '**',
 				dest: 'dist/audio/'
@@ -43,7 +49,7 @@ module.exports = function(grunt) {
 				],
 				dest: 'dist/common/'
 			},
-			nuclear_physics: {
+			nuclear_physics_img: {
 				expand: true, // required when using cwd
 				cwd: '../nuclear-physics/src/img/',
 				src: '**',
