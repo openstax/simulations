@@ -70,6 +70,16 @@ define(function (require) {
                 //   decay curve.
                 return 100 * Math.exp(-0.693 * this.get('itemBeingTouched').getRadiometricAge() / halflife);
             }
+        },
+
+        determineItemBeingTouched: function(items) {
+            for (var i = 0; i < items.length; i++) {
+                if (items[i].contains(this.get('position'))) {
+                    this.set('itemBeingTouched', items[i]);
+                    return;
+                }
+            }
+            this.set('itemBeingTouched', null);
         }
 
     }, Constants.RadiometricDatingMeter);

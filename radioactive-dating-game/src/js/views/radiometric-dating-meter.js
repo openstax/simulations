@@ -76,6 +76,7 @@ define(function(require) {
             this.anchorPoint = new Vector2(this.panelWidth / 2, this.panelHeight);
             this._probeTail = new Vector2();
             this._vec = new Vector2();
+            this._viewPosition = new Vector2();
             this._lastPosition = new PIXI.Point();
 
             // Initialize the graphics
@@ -103,6 +104,8 @@ define(function(require) {
             this.$panel = this.$el.find('.meter-panel');
             this.$panel.width(this.panelWidth);
             this.$panel.height(this.panelHeight);
+
+            this.$readoutValue = this.$el.find('.readout-value');
         },
 
         initTube: function() {
@@ -179,6 +182,19 @@ define(function(require) {
                         this.geigerContainer.visible = true;
                     }
                 }
+
+                if (!paused) {
+                    var percentage = this.model.getPercentageOfDatingElementRemaining();
+                    if (percentage !== this._percentage) {
+                        this._percentage = percentage;
+                        if (isNaN(percentage))
+                            this.$readoutValue.html('--');
+                        else if (Math.round(percentage) === 100)
+                            this.$readoutValue.html(Math.round(percentage) + '%');
+                        else
+                            this.$readoutValue.html(percentage.toFixed(1) + '%');
+                    }
+                }
             }
             else {
                 this.geigerContainer.visible = false;
@@ -216,6 +232,10 @@ define(function(require) {
 
                 this.geigerProbe.x += dx;
                 this.geigerProbe.y += dy;
+
+                var viewPosition = this._viewPosition.set(this.geigerProbe.x, this.geigerProbe.y);
+                var modelPosition = this.mvt.viewToModel(viewPosition);
+                this.model.setPosition(modelPosition);
 
                 this.drawCord();
 

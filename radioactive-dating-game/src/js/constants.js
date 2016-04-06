@@ -82,6 +82,11 @@ define(function (require) {
     MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME   = 5000; // Simulation milliseconds
     MeasurementSimulation.ERUPTION_END_TIME               = 6000; // Simulation milliseconds
 
+    // Constants that control how time accelerates after the volcano has
+    // erupted.
+    MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL = 50;
+    MeasurementSimulation.TIME_ACC_INCREMENT = (MeasurementSimulation.FINAL_ROCK_AGING_RATE - MeasurementSimulation.INITIAL_ROCK_AGING_RATE) / (Math.pow(2, MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL) - 1); 
+
     MeasurementSimulation.VOLCANO_TOP_POSITION = new Vector2(140, 250);
     MeasurementSimulation.FLYING_ROCK_WIDTH = 8;
 
@@ -103,7 +108,7 @@ define(function (require) {
     RadiometricDatingMeter.AIR = 1;
 
     Constants.RadiometricDatingMeter = RadiometricDatingMeter;
-    
+
 
     /*************************************************************************
      **                                                                     **

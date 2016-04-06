@@ -32,6 +32,7 @@ define(function (require, exports, module) {
         initComponents: function() {
             ItemDatingSimulation.prototype.initComponents.apply(this, arguments);
 
+            this.items = new Backbone.Collection();
             this.flyingRocks = new Backbone.Collection();
 
             this.meter = new RadiometricDatingMeter();
@@ -57,6 +58,7 @@ define(function (require, exports, module) {
             this._volcanoErupting = false;
             this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
+            this._timeAccelerationCount = 0;
         },
 
         /**
@@ -67,6 +69,8 @@ define(function (require, exports, module) {
                 this.updateRockMode(time, deltaTime);
             else
                 this.updateTreeMode(time, deltaTime);
+
+            this.meter.determineItemBeingTouched(this.items.models);
         },
 
         updateTreeMode: function(time, deltaTime) {
@@ -74,6 +78,8 @@ define(function (require, exports, module) {
         },
 
         updateRockMode: function(time, deltaTime) {
+            var i;
+
             if (this._volcanoErupting) {
                 if (this.time <= MeasurementSimulation.FLYING_ROCK_END_EMISSION_TIME) {
                     this._rockEmissionCounter -= deltaTime;
@@ -98,6 +104,8 @@ define(function (require, exports, module) {
                         width: MeasurementSimulation.INITIAL_AGING_ROCK_WIDTH,
                         timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
                     });
+                    this.items.add(this.agingRock);
+                    this.listenTo(this.agingRock, 'change:closureState', this.agingRockClosureStateChanged);
                     this.trigger('aging-rock-emitted');
                 }
 
@@ -107,15 +115,34 @@ define(function (require, exports, module) {
                     this.trigger('eruption-end');
                 }
             }
-            else if (this._rockCooling) {
 
+            if (this._timeAccelerationCount > 0) {
+                
+                // The rate at which time is passing for the datable objects
+                //   is changing.  Make the necessary adjustments.
+                var incrementCount = MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL - this._timeAccelerationCount;
+                var agingRate = this.agingRock.get('timeConversionFactor'); // Assume all aging at same rate.
+                
+                // Calculate the new aging rate.  This is non-linear, because
+                // linear was tried and it didn't look good.
+                var newAgingRate = Math.min(
+                    agingRate + Math.pow(2, incrementCount) * MeasurementSimulation.TIME_ACC_INCREMENT,
+                    MeasurementSimulation.FINAL_ROCK_AGING_RATE
+                );
+                
+                for (i = 0; i < this.items.length; i++) {
+                    // Set the new aging rate.
+                    this.items.at(i).set('timeConversionFactor', newAgingRate);
+                }
+                
+                this._timeAccelerationCount--;
             }
 
             // Update the models
             if (this.agingRock)
                 this.agingRock.update(time, deltaTime);
 
-            for (var i = 0; i < this.flyingRocks.length; i++)
+            for (i = 0; i < this.flyingRocks.length; i++)
                 this.flyingRocks.at(i).update(time, deltaTime);
         },
 
@@ -160,6 +187,11 @@ define(function (require, exports, module) {
 
         modeChanged: function(simulation, mode) {
 
+        },
+
+        agingRockClosureStateChanged: function(item, closureState) {
+            // Once closure occurs for the aging rock, the time scale speeds up.
+            this._timeAccelerationCount = MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL;
         }
 
     }, Constants.MeasurementSimulation);
