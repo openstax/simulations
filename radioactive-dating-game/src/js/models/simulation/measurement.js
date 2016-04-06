@@ -11,6 +11,7 @@ define(function (require, exports, module) {
     var RadiometricDatingMeter = require('radioactive-dating-game/models/radiometric-dating-meter');
     var FlyingRock             = require('radioactive-dating-game/models/datable-item/flying-rock');
     var AgingRock              = require('radioactive-dating-game/models/datable-item/aging-rock');
+    var Volcano                = require('radioactive-dating-game/models/datable-item/volcano');
 
     /**
      * Constants
@@ -36,6 +37,13 @@ define(function (require, exports, module) {
             this.flyingRocks = new Backbone.Collection();
 
             this.meter = new RadiometricDatingMeter();
+
+            this.volcano = new Volcano({
+                position: MeasurementSimulation.VOLCANO_POSITION,
+                width: MeasurementSimulation.VOLCANO_WIDTH,
+                height: MeasurementSimulation.VOLCANO_HEIGHT,
+                timeConversionFactor: MeasurementSimulation.INITIAL_ROCK_AGING_RATE
+            });
         },
 
         /**
@@ -54,6 +62,9 @@ define(function (require, exports, module) {
             if (this.agingRock)
                 this.agingRock.destroy();
             this.agingRock = null;
+            // Reset volcano and add it to items
+            this.volcano.reset();
+            this.items.add(this.volcano);
             // Reset counters and flags
             this._volcanoErupting = false;
             this._rockCooling = false;
@@ -139,8 +150,8 @@ define(function (require, exports, module) {
             }
 
             // Update the models
-            if (this.agingRock)
-                this.agingRock.update(time, deltaTime);
+            for (i = 0; i < this.items.length; i++)
+                this.items.at(i).update(time, deltaTime);
 
             for (i = 0; i < this.flyingRocks.length; i++)
                 this.flyingRocks.at(i).update(time, deltaTime);
@@ -158,6 +169,7 @@ define(function (require, exports, module) {
             }
             else {
                 // Return the volcano's getTotalAge()
+                return this.volcano.getTotalAge();
             }
             return this.time;
         },
@@ -186,12 +198,14 @@ define(function (require, exports, module) {
         },
 
         modeChanged: function(simulation, mode) {
-
+            // Clear datable items
+            this.items.reset();
         },
 
         agingRockClosureStateChanged: function(item, closureState) {
             // Once closure occurs for the aging rock, the time scale speeds up.
             this._timeAccelerationCount = MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL;
+            this.volcano.set('closureState', closureState);
         }
 
     }, Constants.MeasurementSimulation);

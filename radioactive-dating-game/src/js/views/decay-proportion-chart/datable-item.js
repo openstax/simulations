@@ -11,6 +11,8 @@ define(function(require) {
     var NucleusType   = require('models/nucleus-type');
     var AtomicNucleus = require('models/atomic-nucleus');
 
+    var IsotopeSymbolGenerator = require('views/isotope-symbol-generator');
+
     var DecayProportionChartView = require('radioactive-dating-game/views/decay-proportion-chart');
 
     var Constants = require('constants');
@@ -31,7 +33,7 @@ define(function(require) {
             DecayProportionChartView.prototype.initialize.apply(this, [options]);
 
             this.listenTo(this.simulation, 'reset', this.simulationReset);
-            this.listenTo(this.simulation.meter, 'change:nucleus-type', this.nucleusTypeChanged);
+            this.listenTo(this.simulation.meter, 'change:nucleusType', this.nucleusTypeChanged);
             this.nucleusTypeChanged(this.simulation.meter, this.simulation.meter.get('nucleusType'));
         },
 
@@ -43,13 +45,17 @@ define(function(require) {
         },
 
         drawCurrentGraphData: function() {
-            var time = this.simulation.getAdjustedTime();
-
-            this.drawDataPoint(time, activePercent,  this.isotope1Color);
+            var percentage = this.simulation.meter.getPercentageOfDatingElementRemaining();
+            if (!isNaN(percentage)) {
+                var time = this.simulation.getAdjustedTime();
+                this.drawDataPoint(time, percentage / 100, this.isotopeColor);
+            }
         },
 
         update: function(time, deltaTime, paused) {
-            
+            if (!paused) {
+                this.drawCurrentGraphData();
+            }
         },
 
         updateTimeSpan: function() {
@@ -59,13 +65,20 @@ define(function(require) {
             this.setTimeParameters(halfLife * 3.2, halfLife);
         },
 
+        updateIsotope: function() {
+            var nucleusType = this.simulation.meter.get('nucleusType');
+
+            this.isotopeColor = Colors.parseHex(IsotopeSymbolGenerator.getElementColor(nucleusType));
+        },
+
         nucleusTypeChanged: function(meter, nucleusType) {
             this.updateTimeSpan();
+            this.updateIsotope();
         },
 
         simulationReset: function() {
             this.clearData();
-        },
+        }
 
     });
 

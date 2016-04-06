@@ -32,9 +32,15 @@ define(function (require) {
             MotionObject.prototype.initialize.apply(this, [attributes, options]);
 
             this.age = this.get('age');
+            this.startingAttributes = this.toJSON();
 
             this._bounds = new Rectangle();
             this._vector = new Vector2();
+        },
+
+        reset: function() {
+            this.set(this.startingAttributes);
+            this.age = this.get('age');
         },
 
         rotate: function(rotationDelta) {
