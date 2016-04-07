@@ -89,9 +89,14 @@ define(function(require) {
         reset: function() {
             this.$resetButton.hide();
             this.$eruptVolcanoButton.show();
+            this._volcanoErupting = false;
+            this._volcanoCooling = false;
+            this._xOffset = 0;
+            this._fogTimer = 0;
             if (this.agingRockView)
                 this.agingRockView.remove();
             this.fog.alpha = 0;
+            this.updateLayerPositions();
             this.volcanoSmokeView.stopSmoking();
             this.volcanoSmokeView.clearSmoke();
             this.tremorSound.stop();
