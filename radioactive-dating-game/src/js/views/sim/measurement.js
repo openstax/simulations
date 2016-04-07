@@ -47,14 +47,16 @@ define(function (require) {
 
             RadioactiveDatingGameSimView.prototype.initialize.apply(this, [options]);
 
-            this.listenTo(this.simulation, 'change:aging', this.agingChanged);
+            this.listenTo(this.simulation, 'reset', this.updateTime);
         },
 
         /**
          * Initializes the Simulation.
          */
         initSimulation: function() {
-            this.simulation = new MeasurementSimulation();
+            this.simulation = new MeasurementSimulation({
+                paused: true
+            });
         },
 
         /**
@@ -115,13 +117,7 @@ define(function (require) {
         },
 
         updateTime: function() {
-            if (this.simulation.isAging())
-                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
-        },
-
-        agingChanged: function(simulation, aging) {
-            if (!aging)
-                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
+            this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
         },
 
         treeSelected: function() {

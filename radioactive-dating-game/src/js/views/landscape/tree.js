@@ -59,6 +59,7 @@ define(function(require) {
 
         reset: function() {
             this.$resetButton.hide();
+            this.$killTreeButton.hide();
             this.$plantTreeButton.show();
             if (this.agingTreeView)
                 this.agingTreeView.remove();
@@ -71,6 +72,8 @@ define(function(require) {
         },
 
         treePlanted: function() {
+            this.$plantTreeButton.hide();
+
             this.agingTreeView = new AgingTreeView({
                 model: this.simulation.agingTree,
                 mvt: this.mvt
@@ -93,7 +96,6 @@ define(function(require) {
         },
 
         plantTree: function() {
-            this.$plantTreeButton.hide();
             this.simulation.plantTree();
         },
 

@@ -88,6 +88,7 @@ define(function(require) {
 
         reset: function() {
             this.$resetButton.hide();
+            this.$coolRockButton.hide();
             this.$eruptVolcanoButton.show();
             this._volcanoErupting = false;
             this._volcanoCooling = false;
@@ -142,9 +143,9 @@ define(function(require) {
         },
 
         update: function(time, deltaTime, paused) {
-            if (!paused) {
-                this.flyingRockCollectionView.update(time, deltaTime, paused);
+            this.flyingRockCollectionView.update(time, deltaTime, paused);
 
+            if (!paused) {
                 this.animateShakeAndFog(time, deltaTime, paused);
                 this.volcanoSmokeView.update(time, deltaTime, paused);
             }
@@ -189,7 +190,6 @@ define(function(require) {
         },
 
         eruptVolcano: function() {
-            this.$eruptVolcanoButton.hide();
             this.simulation.eruptVolcano();
         },
 
@@ -207,6 +207,8 @@ define(function(require) {
             this._fogTimer = 0;
             this._volcanoErupting = true;
             this._volcanoCooling = false;
+
+            this.$eruptVolcanoButton.hide();
 
             if (this.agingRockView)
                 this.agingRockView.remove();

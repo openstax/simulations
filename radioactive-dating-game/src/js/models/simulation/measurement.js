@@ -26,8 +26,7 @@ define(function (require, exports, module) {
     var MeasurementSimulation = ItemDatingSimulation.extend({
 
         defaults: _.extend({}, ItemDatingSimulation.prototype.defaults, {
-            mode: Constants.MeasurementSimulation.MODE_TREE,
-            aging: false
+            mode: Constants.MeasurementSimulation.MODE_TREE
         }),
 
         /**
@@ -36,7 +35,8 @@ define(function (require, exports, module) {
         initialize: function(attributes, options) {
             ItemDatingSimulation.prototype.initialize.apply(this, [attributes, options]);
 
-            this.on('change:mode', this.modeChanged);
+            this.on('change:mode',   this.modeChanged);
+            this.on('change:paused', this.pausedChanged);
         },
 
         /**
@@ -59,6 +59,9 @@ define(function (require, exports, module) {
         },
 
         reset: function() {
+            // It's always paused at the start
+            this.pause();
+
             // Reset sim time
             this.time = 0;
 
@@ -70,6 +73,9 @@ define(function (require, exports, module) {
                 this.resetTreeMode();
             else
                 this.resetRockMode();
+
+            // Reset flags
+            this._simulationStarted = false;
 
             // Trigger the reset event
             this.trigger('reset');
@@ -92,14 +98,16 @@ define(function (require, exports, module) {
             this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
 
             // Reset counters and flags
-            this.set('aging', false);
             this._volcanoErupting = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
             this._timeAccelerationCount = 0;
         },
 
         resetTreeMode: function() {
-            
+            // Clear aging tree
+            if (this.agingTree)
+                this.agingTree.destroy();
+            this.agingTree = null;
         },
 
         /**
@@ -195,23 +203,20 @@ define(function (require, exports, module) {
         },
 
         getAdjustedTime: function() {
-            if (this.get('mode') === MeasurementSimulation.MODE_TREE) {
-                // Return the tree's getTotalAge()
-            }
-            else {
-                // Return the volcano's getTotalAge()
+            if (this.get('mode') === MeasurementSimulation.MODE_ROCK)
                 return this.volcano.getTotalAge();
-            }
-            return this.time;
+            else if (this.agingTree)
+                return this.agingTree.getTotalAge();
+            else
+                return this.time;
         },
 
         eruptVolcano: function() {
-            // Reset sim time
-            this.time = 0;
-            // Let everyone know the scene should be aging now
-            this.set('aging', true);
             // Set internal flags to start the ball rolling
+            this._simulationStarted = true;
             this._volcanoErupting = true;
+            // Unpause it
+            this.play();
             // Trigger an event for the eruption
             this.trigger('eruption-start');
         },
@@ -220,7 +225,10 @@ define(function (require, exports, module) {
          * Start simulating the life of a tree
          */
         plantTree: function() {
-            this.set('aging', true);
+            // Set internal flags to start the ball rolling
+            this._simulationStarted = true;
+            // Unpause it
+            this.play();
             // Create and add the tree
             this.agingTree = new AgingTree({
                 position: MeasurementSimulation.INITIAL_TREE_POSITION, 
@@ -255,8 +263,14 @@ define(function (require, exports, module) {
             this.volcano.set('closureState', closureState);
         },
 
-        isAging: function() {
-            return this.get('aging');
+        pausedChanged: function(simulation, paused) {
+            if (!paused && !this._simulationStarted) {
+                // We're unpausing it, and the starting event hasn't occurred yet, so make it happen.
+                if (this.get('mode') === MeasurementSimulation.MODE_TREE)
+                    this.plantTree();
+                else
+                    this.eruptVolcano();
+            }
         }
 
     }, Constants.MeasurementSimulation);
