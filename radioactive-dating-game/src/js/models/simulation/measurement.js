@@ -12,6 +12,7 @@ define(function (require, exports, module) {
     var FlyingRock             = require('radioactive-dating-game/models/datable-item/flying-rock');
     var AgingRock              = require('radioactive-dating-game/models/datable-item/aging-rock');
     var Volcano                = require('radioactive-dating-game/models/datable-item/volcano');
+    var AnimatedDatableItem    = require('radioactive-dating-game/models/datable-item/animated');
 
     /**
      * Constants
@@ -221,8 +222,11 @@ define(function (require, exports, module) {
         },
 
         agingRockClosureStateChanged: function(item, closureState) {
-            // Once closure occurs for the aging rock, the time scale speeds up.
-            this._timeAccelerationCount = MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL;
+            if (closureState === AnimatedDatableItem.CLOSED) {
+                // Once closure occurs for the aging rock, the time scale speeds up.
+                this._timeAccelerationCount = MeasurementSimulation.TIME_ACC_COUNTER_RESET_VAL;    
+            }
+            
             this.volcano.set('closureState', closureState);
         }
 
