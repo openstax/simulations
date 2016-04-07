@@ -4,6 +4,8 @@ define(function (require) {
 
     var Assets = require('common/v3/pixi/assets');
 
+    var TimeFormatter = require('models/time-formatter');
+
     var MeasurementSimulation = require('radioactive-dating-game/models/simulation/measurement');
 
     var RadioactiveDatingGameSimView = require('radioactive-dating-game/views/sim');
@@ -43,6 +45,8 @@ define(function (require) {
             }, options);
 
             RadioactiveDatingGameSimView.prototype.initialize.apply(this, [options]);
+
+            this.listenTo(this.simulation, 'change:aging', this.agingChanged);
         },
 
         /**
@@ -59,6 +63,12 @@ define(function (require) {
             this.sceneView = new MeasurementSceneView({
                 simulation: this.simulation
             });
+        },
+
+        render: function() {
+            RadioactiveDatingGameSimView.prototype.render.apply(this, arguments);
+
+            this.$time = this.$('.time');
         },
 
         /**
@@ -91,6 +101,22 @@ define(function (require) {
             RadioactiveDatingGameSimView.prototype.postRender.apply(this, arguments);
 
             return this;
+        },
+
+        update: function(time, deltaTime) {
+            RadioactiveDatingGameSimView.prototype.update.apply(this, arguments);
+
+            this.updateTime();
+        },
+
+        updateTime: function() {
+            if (this.simulation.isAging())
+                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
+        },
+
+        agingChanged: function(simulation, aging) {
+            if (!aging)
+                this.$time.html(TimeFormatter.formatTime(this.simulation.getAdjustedTime(), true));
         },
 
         treeSelected: function() {

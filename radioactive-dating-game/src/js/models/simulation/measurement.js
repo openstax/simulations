@@ -25,7 +25,8 @@ define(function (require, exports, module) {
     var MeasurementSimulation = ItemDatingSimulation.extend({
 
         defaults: _.extend({}, ItemDatingSimulation.prototype.defaults, {
-            mode: Constants.MeasurementSimulation.MODE_TREE
+            mode: Constants.MeasurementSimulation.MODE_TREE,
+            aging: false
         }),
 
         /**
@@ -78,6 +79,7 @@ define(function (require, exports, module) {
             // Set the position of the meter to where the rock will be
             this.meter.setPosition(AgingRock.FINAL_X, AgingRock.FINAL_Y);
             // Reset counters and flags
+            this.set('aging', false);
             this._volcanoErupting = false;
             this._rockCooling = false;
             this._rockEmissionCounter = MeasurementSimulation.FLYING_ROCK_START_EMISSION_TIME;
@@ -188,6 +190,7 @@ define(function (require, exports, module) {
 
         eruptVolcano: function() {
             this.resetRockMode();
+            this.set('aging', true);
             this._volcanoErupting = true;
             this.trigger('eruption-start');
         },
@@ -228,6 +231,10 @@ define(function (require, exports, module) {
             }
             
             this.volcano.set('closureState', closureState);
+        },
+
+        isAging: function() {
+            return this.get('aging');
         }
 
     }, Constants.MeasurementSimulation);

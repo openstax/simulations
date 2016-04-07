@@ -10,20 +10,12 @@ define(function(require) {
     var HalfLifeInfo  = require('models/half-life-info');
     var NucleusType   = require('models/nucleus-type');
     var AtomicNucleus = require('models/atomic-nucleus');
+    var TimeFormatter = require('models/time-formatter');
 
     var NucleusDecayChart = require('views/nucleus-decay-chart');
 
     var Constants = require('constants');
-    var MILLISECONDS_PER_SECOND = 1000;
-    var MILLISECONDS_PER_MINUTE = 60000;
-    var MILLISECONDS_PER_HOUR = 3600000;
-    var MILLISECONDS_PER_DAY = 86400000;
-    var MILLISECONDS_PER_YEAR = 3.16e10;
-    var MILLISECONDS_PER_MILLENIUM = 3.16e13;
-    var MILLISECONDS_PER_MILLION_YEARS = 3.16e16;
-    var MILLISECONDS_PER_BILLION_YEARS = 3.16e19;
-    var MILLISECONDS_PER_TRILLION_YEARS = 3.16e22;
-    var MILLISECONDS_PER_QUADRILLION_YEARS = 3.16e25;
+
 
     /**
      * A panel that contains a chart showing the timeline for decay of nuclei over time.
@@ -147,72 +139,9 @@ define(function(require) {
                 return;
 
             var milliseconds = this.simulation.atomicNucleus.getAdjustedActivatedTime();
-            var text;
-
-            if (milliseconds < MILLISECONDS_PER_SECOND) {
-                // Milliseconds range.
-                text = milliseconds.toFixed(0) + ' ms';
-            }
-            else if (milliseconds < MILLISECONDS_PER_MINUTE) {
-                // Seconds range.
-                text = (milliseconds / MILLISECONDS_PER_SECOND).toFixed(1) + ' secs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_HOUR) {
-                // Minutes range.
-                text = (milliseconds / MILLISECONDS_PER_MINUTE).toFixed(1) + ' mins';
-            }
-            else if (milliseconds < MILLISECONDS_PER_DAY) {
-                // Hours range.
-                text = (milliseconds / MILLISECONDS_PER_HOUR).toFixed(1) + ' hrs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_YEAR) {
-                // Days range.
-                text = (milliseconds / MILLISECONDS_PER_DAY).toFixed(0) + ' days';
-            }
-            else if (milliseconds < MILLISECONDS_PER_MILLENIUM) {
-                // Years range.
-                text = (milliseconds / MILLISECONDS_PER_YEAR).toFixed(0) + ' yrs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_MILLION_YEARS) {
-                // Thousand years range (millenia).
-                text = this.toScientificNotation((milliseconds / MILLISECONDS_PER_YEAR), 3) + ' yrs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_BILLION_YEARS) {
-                // Million years range.
-                text = this.toScientificNotation((milliseconds / MILLISECONDS_PER_YEAR), 6) + ' yrs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_TRILLION_YEARS) {
-                // Billion years range.
-                text = this.toScientificNotation((milliseconds / MILLISECONDS_PER_YEAR), 9) + ' yrs';
-            }
-            else if (milliseconds < MILLISECONDS_PER_QUADRILLION_YEARS) {
-                // Trillion years range.
-                text = this.toScientificNotation((milliseconds / MILLISECONDS_PER_YEAR), 12) + ' yrs';
-            }
-            else {
-                text = '\u221e'; // Infinity.
-            }
+            var text = TimeFormatter.formatTimeWithScientificNotation(milliseconds);
 
             this.decayTimeValueText.text = text;
-        },
-
-        toScientificNotation: function(number, exponent, mantissaDecimals) {
-            if (!mantissaDecimals)
-                mantissaDecimals = 3;
-            // Find tha mantissa
-            var mantissa = number / Math.pow(10, exponent);
-            // Render unicode characters representing the exponential digits
-            var exponentString = ' ';
-            var chars = exponent.toString();
-            for (var i = 0; i < chars.length; i++) {
-                var digit = parseInt(chars.charAt(i));
-                if (digit == '2' || digit == '3')
-                    exponentString += String.fromCharCode(parseInt('00B' + digit, 16));
-                else
-                    exponentString += String.fromCharCode(parseInt('207' + digit, 16));
-            }
-            // Put it all together
-            return mantissa.toFixed(mantissaDecimals) + ' x 10' + exponentString;
         },
 
         clearNuclei: function() {
