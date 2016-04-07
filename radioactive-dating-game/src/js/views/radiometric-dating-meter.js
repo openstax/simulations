@@ -183,19 +183,6 @@ define(function(require) {
                         this.geigerContainer.visible = true;
                     }
                 }
-
-                if (!paused) {
-                    var percentage = this.model.getPercentageOfDatingElementRemaining();
-                    if (percentage !== this._percentage) {
-                        this._percentage = percentage;
-                        if (isNaN(percentage))
-                            this.$readoutValue.html('--');
-                        else if (Math.round(percentage) === 100)
-                            this.$readoutValue.html(Math.round(percentage) + '%');
-                        else
-                            this.$readoutValue.html(percentage.toFixed(1) + '%');
-                    }
-                }
             }
             else {
                 this.geigerContainer.visible = false;
@@ -204,6 +191,19 @@ define(function(require) {
                     this.tube.y += this.tubeAnimationSpeed * deltaTime;
                     if (this.tube.y > this.tubeOutY)
                         this.tube.y = this.tubeOutY;
+                }
+            }
+
+            if (!paused) {
+                var percentage = this.model.getPercentageOfDatingElementRemaining();
+                if (percentage !== this._percentage) {
+                    this._percentage = percentage;
+                    if (isNaN(percentage))
+                        this.$readoutValue.html('--');
+                    else if (Math.round(percentage) === 100)
+                        this.$readoutValue.html(Math.round(percentage) + '%');
+                    else
+                        this.$readoutValue.html(percentage.toFixed(1) + '%');
                 }
             }
         },

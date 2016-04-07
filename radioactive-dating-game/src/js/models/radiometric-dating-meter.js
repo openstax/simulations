@@ -10,6 +10,8 @@ define(function (require) {
     var Carbon14Nucleus   = require('models/nucleus/carbon-14');
     var Uranium238Nucleus = require('models/nucleus/uranium-238');
 
+    var DatableItem = require('radioactive-dating-game/models/datable-item');
+
     var Constants = require('constants');
 
     /**
@@ -73,13 +75,18 @@ define(function (require) {
         },
 
         determineItemBeingTouched: function(items) {
-            for (var i = 0; i < items.length; i++) {
-                if (items[i].contains(this.get('position'))) {
-                    this.set('itemBeingTouched', items[i]);
-                    return;
+            if (this.get('measurementMode') === RadiometricDatingMeter.OBJECTS) {
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].contains(this.get('position'))) {
+                        this.set('itemBeingTouched', items[i]);
+                        return;
+                    }
                 }
+                this.set('itemBeingTouched', null);    
             }
-            this.set('itemBeingTouched', null);
+            else {
+                this.set('itemBeingTouched', DatableItem.DATABLE_AIR);
+            }
         }
 
     }, Constants.RadiometricDatingMeter);
